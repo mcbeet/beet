@@ -46,9 +46,10 @@ class Cache:
     def expires_at(self, value: Optional[datetime]):
         self.index["expires_at"] = value and value.isoformat()
 
-    def set_max_age(self, delta: timedelta = None, **kwargs):
+    def timeout(self, delta: timedelta = None, **kwargs):
         if not delta:
-            delta = timedelta(**kwargs)
+            delta = timedelta()
+        delta += timedelta(**kwargs)
         self.expires_at = datetime.fromisoformat(self.index["updated_at"]) + delta
 
     def __enter__(self) -> "Cache":
