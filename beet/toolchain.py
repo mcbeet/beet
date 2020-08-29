@@ -40,7 +40,9 @@ class Toolchain:
         return ensure_optional_value(self._current_project)
 
     def build_project(self):
-        for pack in self.current_project.build():
+        ctx = self.current_project.build()
+
+        for pack in [ctx.assets, ctx.data]:
             print(pack)
 
     def watch_project(self):

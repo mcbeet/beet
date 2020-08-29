@@ -4,9 +4,11 @@ __all__ = ["Project", "Context", "Generator"]
 import sys
 import json
 from contextlib import contextmanager
+from collections import deque
+from copy import deepcopy
 from dataclasses import dataclass
 from pathlib import Path
-from typing import NamedTuple, Union, Sequence, Iterator, Callable, Set, List
+from typing import NamedTuple, Union, Sequence, Iterator, Callable, Set, List, Deque
 
 from .assets import ResourcePack
 from .data import DataPack
@@ -15,28 +17,29 @@ from .utils import FileSystemPath, hidden_field, import_from_string
 
 
 Generator = Callable[["Context"], None]
+GeneratorSpec = Union[Generator, str]
 
 
 class Context(NamedTuple):
-    project: "Project"
     directory: Path
     meta: dict
     cache: MultiCache
     assets: ResourcePack
     data: DataPack
+    queue: Deque[GeneratorSpec]
     applied_generators: Set[Generator]
 
     DEFAULT_GENERATOR = "default_beet_generator"
 
-    def apply(self, generator: Union[Generator, str]):
+    def apply(self, generator: GeneratorSpec):
         func: Generator = (
             import_from_string(generator, default_member=self.DEFAULT_GENERATOR)
             if isinstance(generator, str)
             else generator
         )
         if func not in self.applied_generators:
-            func(self)
             self.applied_generators.add(func)
+            func(self)
 
 
 @dataclass
@@ -47,7 +50,7 @@ class Project:
     version: str
 
     directory: FileSystemPath
-    generators: Sequence[Union[Generator, str]]
+    generators: Sequence[GeneratorSpec]
     meta: dict
 
     resource_pack_name: str = hidden_field(default="{name} Resource Pack")
@@ -110,9 +113,8 @@ class Project:
         try:
             with MultiCache(project_path / self.CACHE_DIRECTORY) as cache:
                 yield Context(
-                    project=self,
                     directory=project_path,
-                    meta=self.meta,
+                    meta=deepcopy(self.meta),
                     cache=cache,
                     assets=ResourcePack(
                         self.resource_pack_name.format_map(variables),
@@ -124,6 +126,7 @@ class Project:
                         self.data_pack_description.format_map(variables),
                         self.data_pack_format,
                     ),
+                    queue=deque(self.generators),
                     applied_generators=set(),
                 )
         finally:
@@ -138,12 +141,8 @@ class Project:
             for name in imported_modules:
                 del sys.modules[name]
 
-    def run_generators(self) -> Context:
+    def build(self) -> Context:
         with self.context() as ctx:
-            for generator in self.generators:
-                ctx.apply(generator)
+            while ctx.queue:
+                ctx.apply(ctx.queue.popleft())
             return ctx
-
-    def build(self) -> List[Union[ResourcePack, DataPack]]:
-        ctx = self.run_generators()
-        return [pack for pack in [ctx.assets, ctx.data] if pack]
