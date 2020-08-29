@@ -91,19 +91,10 @@ def test_cache_refresh(tmpdir):
 
 
 def test_cache_clear(tmpdir):
-    with MultiCache(tmpdir) as cache:
-        cache["foo"].data["hello"] = "world"
-        assert len(tmpdir.listdir()) == 1
-        cache.clear()
-        assert len(cache) == 0
-        assert tmpdir.listdir() == []
-
-
-def test_cache_delete(tmpdir):
     with MultiCache(tmpdir / "cache") as cache:
         cache["foo"].data["hello"] = "world"
         assert len(tmpdir.listdir()) == 1
-        cache.delete()
+        cache.clear()
         assert len(cache) == 0
         assert tmpdir.listdir() == []
 

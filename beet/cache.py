@@ -69,7 +69,8 @@ class Cache:
 
     def delete(self):
         if not self.deleted:
-            shutil.rmtree(self.directory)
+            if self.directory.is_dir():
+                shutil.rmtree(self.directory)
             self.index = self.get_initial_index()
             self.deleted = True
 
@@ -123,14 +124,10 @@ class MultiCache(Dict[str, Cache]):
     def __exit__(self, exc_type, exc_value, exc_traceback):
         self.flush()
 
-    def delete(self):
-        self.clear()
-        self.path.rmdir()
-
     def clear(self):
-        cache_names = list(self)
-        for name in cache_names:
-            del self[name]
+        if self.path.is_dir():
+            shutil.rmtree(self.path)
+        super().clear()
 
     def flush(self):
         for cache in self.values():
