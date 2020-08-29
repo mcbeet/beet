@@ -123,6 +123,15 @@ class Project:
         finally:
             sys.path.remove(path_entry)
 
+            imported_modules = [
+                name
+                for name, module in sys.modules.items()
+                if getattr(module, "__file__", "").startswith(path_entry)
+            ]
+
+            for name in imported_modules:
+                del sys.modules[name]
+
     def run_generators(self) -> Context:
         with self.context() as ctx:
             for generator in self.generators:
