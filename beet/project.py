@@ -10,6 +10,7 @@ from typing import NamedTuple, Union, Sequence, Iterator, Callable, Set, List
 
 from .assets import ResourcePack
 from .data import DataPack
+from .cache import MultiCache
 from .utils import FileSystemPath, hidden_field, import_from_string
 
 
@@ -20,6 +21,7 @@ class Context(NamedTuple):
     project: "Project"
     directory: Path
     meta: dict
+    cache: MultiCache
     assets: ResourcePack
     data: DataPack
     applied_generators: Set[Generator]
@@ -59,6 +61,8 @@ class Project:
     data_pack_description: str = hidden_field(
         default="{description}\n\nVersion {version}\nBy {author}",
     )
+
+    CACHE_DIRECTORY = ".beet_cache"
 
     @classmethod
     def from_config(cls, config_file: FileSystemPath) -> "Project":
@@ -104,22 +108,24 @@ class Project:
         sys.path.append(path_entry)
 
         try:
-            yield Context(
-                project=self,
-                directory=project_path,
-                meta=self.meta,
-                assets=ResourcePack(
-                    self.resource_pack_name.format_map(variables),
-                    self.resource_pack_description.format_map(variables),
-                    self.resource_pack_format,
-                ),
-                data=DataPack(
-                    self.data_pack_name.format_map(variables),
-                    self.data_pack_description.format_map(variables),
-                    self.data_pack_format,
-                ),
-                applied_generators=set(),
-            )
+            with MultiCache(project_path / self.CACHE_DIRECTORY) as cache:
+                yield Context(
+                    project=self,
+                    directory=project_path,
+                    meta=self.meta,
+                    cache=cache,
+                    assets=ResourcePack(
+                        self.resource_pack_name.format_map(variables),
+                        self.resource_pack_description.format_map(variables),
+                        self.resource_pack_format,
+                    ),
+                    data=DataPack(
+                        self.data_pack_name.format_map(variables),
+                        self.data_pack_description.format_map(variables),
+                        self.data_pack_format,
+                    ),
+                    applied_generators=set(),
+                )
         finally:
             sys.path.remove(path_entry)
 
