@@ -1,4 +1,11 @@
-__all__ = ["Project", "Context", "Generator"]
+__all__ = [
+    "Project",
+    "Context",
+    "Generator",
+    "GeneratorSpec",
+    "GeneratorError",
+    "GeneratorImportError",
+]
 
 
 import sys
@@ -20,6 +27,14 @@ Generator = Callable[["Context"], None]
 GeneratorSpec = Union[Generator, str]
 
 
+class GeneratorError(Exception):
+    pass
+
+
+class GeneratorImportError(GeneratorError):
+    pass
+
+
 class Context(NamedTuple):
     directory: Path
     meta: dict
@@ -32,14 +47,30 @@ class Context(NamedTuple):
     DEFAULT_GENERATOR = "default_beet_generator"
 
     def apply(self, generator: GeneratorSpec):
-        func: Generator = (
-            import_from_string(generator, default_member=self.DEFAULT_GENERATOR)
-            if isinstance(generator, str)
-            else generator
-        )
-        if func not in self.applied_generators:
-            self.applied_generators.add(func)
+        try:
+            func: Generator = (
+                import_from_string(generator, default_member=self.DEFAULT_GENERATOR)
+                if isinstance(generator, str)
+                else generator
+            )
+        except GeneratorError:
+            raise
+        except Exception as exc:
+            raise GeneratorImportError(generator) from exc
+
+        if func in self.applied_generators:
+            return
+
+        self.applied_generators.add(func)
+
+        try:
             func(self)
+        except GeneratorError:
+            raise
+        except Exception as exc:
+            raise GeneratorError(func) from exc.with_traceback(
+                exc.__traceback__.tb_next
+            )
 
 
 @dataclass

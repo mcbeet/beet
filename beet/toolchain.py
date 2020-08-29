@@ -10,7 +10,7 @@ from .project import Project
 from .utils import ensure_optional_value
 
 
-class ErrorMessage(ValueError):
+class ErrorMessage(Exception):
     pass
 
 

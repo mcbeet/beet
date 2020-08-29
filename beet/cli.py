@@ -7,7 +7,9 @@ import click
 from click_help_colors import HelpColorsGroup, HelpColorsCommand, version_option
 
 from . import __version__
+from .project import GeneratorError, GeneratorImportError
 from .toolchain import Toolchain, ErrorMessage
+from .utils import format_exc, format_obj
 
 
 @click.group(
@@ -50,6 +52,12 @@ def beet(ctx: click.Context, directory: str):
         ctx.invoke(build)
 
 
+def display_error(message: str, exception: BaseException = None):
+    click.secho("Error: " + message, fg="red", bold=True)
+    if exception:
+        click.echo("\n" + format_exc(exception), nl=False)
+
+
 @contextmanager
 def toolchain_operation(title):
     click.secho(title + "\n", fg="yellow")
@@ -57,9 +65,17 @@ def toolchain_operation(title):
     try:
         yield
     except ErrorMessage as exc:
-        click.secho("Error: " + " ".join(exc.args), fg="red")
+        display_error(" ".join(exc.args))
+    except GeneratorImportError as exc:
+        generator = format_obj(exc.args[0])
+        display_error(f"Couldn't import generator {generator}.", exc.__cause__)
+    except GeneratorError as exc:
+        generator = format_obj(exc.args[0])
+        display_error(f"Generator {generator} raised an exception.", exc.__cause__)
+    except Exception as exc:
+        display_error("An unhandled exception occurred. This could be a bug.", exc)
     else:
-        click.secho("Success.", fg="green")
+        click.secho("Success.", fg="green", bold=True)
 
 
 @beet.command(cls=HelpColorsCommand)
