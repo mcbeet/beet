@@ -13,7 +13,7 @@ from typing import NamedTuple, Union, Sequence, Iterator, Callable, Set, List, D
 from .assets import ResourcePack
 from .data import DataPack
 from .cache import MultiCache
-from .utils import FileSystemPath, hidden_field, import_from_string
+from .utils import FileSystemPath, extra_field, import_from_string
 
 
 Generator = Callable[["Context"], None]
@@ -53,15 +53,15 @@ class Project:
     generators: Sequence[GeneratorSpec]
     meta: dict
 
-    resource_pack_name: str = hidden_field(default="{name} Resource Pack")
-    resource_pack_format: int = hidden_field(default=ResourcePack.LATEST_PACK_FORMAT)
-    resource_pack_description: str = hidden_field(
+    resource_pack_name: str = extra_field(default="{name} Resource Pack")
+    resource_pack_format: int = extra_field(default=ResourcePack.LATEST_PACK_FORMAT)
+    resource_pack_description: str = extra_field(
         default="{description}\n\nVersion {version}\nBy {author}",
     )
 
-    data_pack_name: str = hidden_field(default="{name}")
-    data_pack_format: int = hidden_field(default=DataPack.LATEST_PACK_FORMAT)
-    data_pack_description: str = hidden_field(
+    data_pack_name: str = extra_field(default="{name}")
+    data_pack_format: int = extra_field(default=DataPack.LATEST_PACK_FORMAT)
+    data_pack_description: str = extra_field(
         default="{description}\n\nVersion {version}\nBy {author}",
     )
 

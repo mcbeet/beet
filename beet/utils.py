@@ -1,7 +1,7 @@
 __all__ = [
     "FileSystemPath",
     "ensure_optional_value",
-    "hidden_field",
+    "extra_field",
     "import_from_string",
 ]
 
@@ -23,7 +23,7 @@ def ensure_optional_value(arg: Optional[T]) -> T:
     return arg
 
 
-def hidden_field(**kwargs) -> Any:
+def extra_field(**kwargs) -> Any:
     return field(**kwargs, repr=False)
 
 
