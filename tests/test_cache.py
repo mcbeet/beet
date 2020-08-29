@@ -54,7 +54,7 @@ def test_cache_expiration(tmpdir):
     with MultiCache(tmpdir) as cache:
         hello = cache.directory / "hello.txt"
         hello.write_text("world")
-        cache["default"].set_max_age(milliseconds=200)
+        cache["default"].timeout(milliseconds=200)
 
     sleep(0.1)
 
@@ -64,8 +64,30 @@ def test_cache_expiration(tmpdir):
     sleep(0.1)
 
     with MultiCache(tmpdir) as cache:
-        assert cache["default"].expires_at is None
+        assert cache["default"].expires is None
         assert not (cache.directory / "hello.txt").is_file()
+
+
+def test_cache_refresh(tmpdir):
+    with MultiCache(tmpdir) as cache:
+        cache["foo"].timeout(milliseconds=200)
+        assert cache["foo"].expires is not None
+
+    sleep(0.1)
+
+    with MultiCache(tmpdir) as cache:
+        assert cache["foo"].expires is not None
+        cache["foo"].restart_timeout()
+
+    sleep(0.1)
+
+    with MultiCache(tmpdir) as cache:
+        assert cache["foo"].expires is not None
+
+    sleep(0.1)
+
+    with MultiCache(tmpdir) as cache:
+        assert cache["foo"].expires is None
 
 
 def test_cache_clear(tmpdir):

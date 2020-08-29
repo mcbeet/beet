@@ -28,8 +28,8 @@ class Cache:
 
     def get_initial_index(self) -> Dict[str, Any]:
         return {
-            "updated_at": datetime.now().isoformat(),
-            "expires_at": None,
+            "timestamp": datetime.now().isoformat(),
+            "expires": None,
             "data": {},
         }
 
@@ -38,19 +38,28 @@ class Cache:
         return self.index["data"]
 
     @property
-    def expires_at(self) -> Optional[datetime]:
-        expires_at = self.index["expires_at"]
-        return expires_at and datetime.fromisoformat(expires_at)
+    def expires(self) -> Optional[datetime]:
+        expires = self.index["expires"]
+        return expires and datetime.fromisoformat(expires)
 
-    @expires_at.setter
-    def expires_at(self, value: Optional[datetime]):
-        self.index["expires_at"] = value and value.isoformat()
+    @expires.setter
+    def expires(self, value: Optional[datetime]):
+        self.index["expires"] = value and value.isoformat()
 
     def timeout(self, delta: timedelta = None, **kwargs):
         if not delta:
             delta = timedelta()
         delta += timedelta(**kwargs)
-        self.expires_at = datetime.fromisoformat(self.index["updated_at"]) + delta
+        self.expires = datetime.fromisoformat(self.index["timestamp"]) + delta
+
+    def restart_timeout(self):
+        now = datetime.now()
+        timestamp = datetime.fromisoformat(self.index["timestamp"])
+
+        if self.expires:
+            self.expires += now - timestamp
+
+        self.index["timestamp"] = now.isoformat()
 
     def __enter__(self) -> "Cache":
         return self
@@ -73,7 +82,7 @@ class Cache:
         if self.deleted:
             return
 
-        if self.expires_at and self.expires_at <= datetime.now():
+        if self.expires and self.expires <= datetime.now():
             self.clear()
         else:
             self.directory.mkdir(parents=True, exist_ok=True)
