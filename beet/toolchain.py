@@ -43,5 +43,8 @@ class Toolchain:
         for pack in self.current_project.build():
             print(pack)
 
+    def watch_project(self):
+        yield
+
     def init_project(self):
         pass

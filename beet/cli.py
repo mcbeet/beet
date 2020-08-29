@@ -72,6 +72,15 @@ def build(ctx: click.Context):
 
 @beet.command(cls=HelpColorsCommand)
 @click.pass_context
+def watch(ctx: click.Context):
+    """Watch for file changes and rebuild the current project."""
+    with toolchain_operation("Watching project..."):
+        for change in ctx.obj.watch_project():
+            ctx.obj.build_project()
+
+
+@beet.command(cls=HelpColorsCommand)
+@click.pass_context
 def init(ctx: click.Context):
     """Initialize a new project in the current directory."""
     with toolchain_operation("Initializing new project..."):
