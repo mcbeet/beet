@@ -15,7 +15,7 @@ from collections import deque
 from copy import deepcopy
 from dataclasses import dataclass
 from pathlib import Path
-from typing import NamedTuple, Union, Sequence, Iterator, Callable, Set, List, Deque
+from typing import NamedTuple, Union, Sequence, Iterator, Callable, Set, Deque
 
 from .assets import ResourcePack
 from .data import DataPack
