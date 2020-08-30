@@ -143,6 +143,31 @@ def cache(ctx: click.Context, cache_name: Sequence[str], clear: bool):
 
 @beet.command(cls=HelpColorsCommand)
 @click.pass_context
+@click.argument("directory", required=False)
+@click.option(
+    "-r",
+    "--reset",
+    is_flag=True,
+    help="Reset the link between the current project and Minecraft.",
+)
+def link(ctx: click.Context, directory: Optional[str], reset: bool):
+    """Link the generated resource pack and data pack to Minecraft."""
+    if reset:
+        with toolchain_operation(ctx, "Resetting project link..."):
+            ctx.obj.reset_project_link()
+    else:
+        with toolchain_operation(ctx, "Linking project..."):
+            assets, data = ctx.obj.link_project(directory)
+            report = "\n".join(
+                f"{title}:\n  │  destination = {pack_dir}\n"
+                for title, pack_dir in [("Resource pack", assets), ("Data pack", data)]
+                if pack_dir
+            )
+            click.echo(report)
+
+
+@beet.command(cls=HelpColorsCommand)
+@click.pass_context
 @click.option("--name", help="The name of the project.")
 @click.option("--description", help="The description of the project.")
 @click.option("--author", help="The author of the project.")

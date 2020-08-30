@@ -1,13 +1,14 @@
-__all__ = ["Toolchain", "ErrorMessage"]
+__all__ = ["Toolchain", "ErrorMessage", "locate_minecraft"]
 
 
 import os
 import re
 import json
+import platform
 from pathlib import Path
 from itertools import chain
 from textwrap import dedent
-from typing import Sequence
+from typing import Sequence, Optional, Tuple
 
 from .common import FileSystemPath
 from .project import Project
@@ -84,6 +85,52 @@ class Toolchain:
                 or "The cache is completely clear.\n"
             )
 
+    def reset_project_link(self):
+        with self.current_project.context() as ctx:
+            del ctx.cache["link"]
+
+    def link_project(
+        self, directory: FileSystemPath = None
+    ) -> Tuple[Optional[Path], Optional[Path]]:
+        minecraft = locate_minecraft()
+        target_path = Path(directory).absolute() if directory else minecraft
+
+        if not target_path:
+            raise ErrorMessage("Couldn't locate the Minecraft folder.")
+
+        assets_dir: Optional[Path] = None
+        data_dir: Optional[Path] = None
+
+        if (
+            not target_path.is_dir()
+            and directory
+            and Path(directory).parts == (directory,)
+            and not (
+                minecraft and (target_path := minecraft / "saves" / directory).is_dir()
+            )
+        ):
+            raise ErrorMessage(
+                f"Couldn't find {str(directory)!r} in the Minecraft save folder."
+            )
+
+        if (target_path / "level.dat").is_file():
+            data_dir = target_path / "datapacks"
+            target_path = target_path.parent.parent
+        if (resource_packs := target_path / "resourcepacks").is_dir():
+            assets_dir = resource_packs
+
+        if not (assets_dir or data_dir):
+            raise ErrorMessage(
+                "Couldn't establish any link through the specified directory."
+            )
+
+        with self.current_project.context() as ctx:
+            ctx.cache["link"].data.update(
+                assets_dir=str(assets_dir), data_dir=str(data_dir)
+            )
+
+        return assets_dir, data_dir
+
     def init_project(
         self,
         name: str,
@@ -126,3 +173,17 @@ class Toolchain:
         ):
             ignored += f"\n# Beet cache\n{Project.CACHE_DIRECTORY}/\n"
             gitignore.write_text(ignored)
+
+
+def locate_minecraft() -> Optional[Path]:
+    path = None
+    system = platform.system()
+
+    if system == "Linux":
+        path = Path("~/.minecraft").expanduser().absolute()
+    elif system == "Darwin":
+        path = Path("~/Library/Application Support/minecraft").expanduser().absolute()
+    elif system == "Windows":
+        path = Path(os.path.expandvars(r"%APPDATA%\.minecraft")).absolute()
+
+    return path if path and path.is_dir() else None
