@@ -91,11 +91,15 @@ def toolchain_operation(ctx: click.Context, title: str):
     except GeneratorError as exc:
         generator = format_obj(exc.args[0])
         display_error(f"Generator {generator} raised an exception.", exc.__cause__)
+    except click.Abort:
+        click.echo()
+        display_error(f"Aborted.")
     except Exception as exc:
         display_error("An unhandled exception occurred. This could be a bug.", exc)
     else:
-        click.secho("Done.", fg="green", bold=True)
+        click.secho("Done!", fg="green", bold=True)
         return
+
     ctx.exit(1)
 
 
