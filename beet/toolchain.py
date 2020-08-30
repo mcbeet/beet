@@ -85,7 +85,7 @@ class Toolchain:
                 or "The cache is completely clear.\n"
             )
 
-    def reset_project_link(self):
+    def clear_project_link(self):
         with self.current_project.context() as ctx:
             del ctx.cache["link"]
 

@@ -145,16 +145,16 @@ def cache(ctx: click.Context, cache_name: Sequence[str], clear: bool):
 @click.pass_context
 @click.argument("directory", required=False)
 @click.option(
-    "-r",
-    "--reset",
+    "-c",
+    "--clear",
     is_flag=True,
-    help="Reset the link between the current project and Minecraft.",
+    help="Clear the link between the current project and Minecraft.",
 )
-def link(ctx: click.Context, directory: Optional[str], reset: bool):
+def link(ctx: click.Context, directory: Optional[str], clear: bool):
     """Link the generated resource pack and data pack to Minecraft."""
-    if reset:
-        with toolchain_operation(ctx, "Resetting project link..."):
-            ctx.obj.reset_project_link()
+    if clear:
+        with toolchain_operation(ctx, "Clearing project link..."):
+            ctx.obj.clear_project_link()
     else:
         with toolchain_operation(ctx, "Linking project..."):
             assets, data = ctx.obj.link_project(directory)
