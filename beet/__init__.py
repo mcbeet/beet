@@ -1,6 +1,7 @@
 from .common import *
 from .assets import *
 from .data import *
+from .cache import *
 from .project import *
 from .toolchain import *
 
