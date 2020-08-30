@@ -77,7 +77,7 @@ def toolchain_operation(ctx: click.Context, title: str):
         display_error("An unhandled exception occurred. This could be a bug.", exc)
     else:
         click.secho("Done.", fg="green", bold=True)
-        ctx.exit()
+        return
     ctx.exit(1)
 
 
