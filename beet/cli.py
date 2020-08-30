@@ -2,7 +2,8 @@ __all__ = ["beet", "main"]
 
 
 from contextlib import contextmanager
-from typing import Sequence
+from pathlib import Path
+from typing import Sequence, Optional
 
 import click
 from click_help_colors import HelpColorsGroup, HelpColorsCommand, version_option
@@ -13,8 +14,24 @@ from .toolchain import Toolchain, ErrorMessage
 from .utils import format_exc, format_obj
 
 
+class ShorthandGroup(HelpColorsGroup):
+    def get_command(self, ctx: click.Context, cmd_name: str) -> Optional[click.Command]:
+        if command := super().get_command(ctx, cmd_name):
+            return command
+
+        matches = [cmd for cmd in self.list_commands(ctx) if cmd.startswith(cmd_name)]
+
+        if len(matches) > 1:
+            match_list = ", ".join(sorted(matches))
+            ctx.fail(f"Ambiguous shorthand {cmd_name!r} ({match_list}).")
+        elif matches:
+            return super().get_command(ctx, matches[0])
+        else:
+            return None
+
+
 @click.group(
-    cls=HelpColorsGroup,
+    cls=ShorthandGroup,
     help_headers_color="yellow",
     help_options_color="red",
     invoke_without_command=True,
