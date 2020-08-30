@@ -38,8 +38,14 @@ def import_from_string(dotted_path: str, default_member: str = None) -> Any:
     except ImportError:
         if "." not in dotted_path:
             raise
+
         dotted_path, _, default_member = dotted_path.rpartition(".")
-        module = import_module(dotted_path)
+
+        try:
+            module = import_module(dotted_path)
+        except Exception as exc:
+            raise exc from None
+
     return getattr(module, default_member) if default_member else module
 
 
