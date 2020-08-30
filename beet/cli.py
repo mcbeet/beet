@@ -143,10 +143,46 @@ def cache(ctx: click.Context, cache_name: Sequence[str], clear: bool):
 
 @beet.command(cls=HelpColorsCommand)
 @click.pass_context
-def init(ctx: click.Context):
+@click.option("--name", help="The name of the project.")
+@click.option("--description", help="The description of the project.")
+@click.option("--author", help="The author of the project.")
+@click.option("--version", help="The version of the project.")
+@click.option("-y", "--yes", is_flag=True, help="Confirm new project settings.")
+def init(
+    ctx: click.Context,
+    name: Optional[str],
+    description: Optional[str],
+    author: Optional[str],
+    version: Optional[str],
+    yes: bool,
+):
     """Initialize a new project in the current directory."""
     with toolchain_operation(ctx, "Initializing new project..."):
-        ctx.obj.init_project()
+        if yes:
+            name = name or Path.cwd().name
+            description = description or ""
+            author = author or "Unknown"
+            version = version or "0.0.0"
+        else:
+            user_prompts = not all([name, description, author, version])
+
+            name = name or click.prompt("Project name", Path.cwd().name)
+            description = description or click.prompt("Project description", "")
+            author = author or click.prompt("Project author", "Unknown")
+            version = version or click.prompt("Project version", "0.0.0")
+
+            if user_prompts:
+                click.echo()
+
+            config = Path(ctx.obj.initial_directory, Toolchain.PROJECT_CONFIG_FILE)
+            click.echo("About to create " + click.style(str(config), fg="red") + ".\n")
+
+            if not click.confirm("Is this ok?", default=True):
+                raise click.Abort()
+
+            click.echo()
+
+        ctx.obj.init_project(name, description, author, version)
 
 
 def main():
