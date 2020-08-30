@@ -29,8 +29,9 @@ from .utils import format_exc, format_obj
 @version_option(
     version=__version__,
     prog_name="Beet",
-    version_color="yellow",
+    message="%(prog)s v%(version)s",
     prog_name_color="red",
+    message_color="yellow",
 )
 def beet(ctx: click.Context, directory: str):
     """The Beet toolchain.
