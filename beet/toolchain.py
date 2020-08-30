@@ -4,6 +4,7 @@ __all__ = ["Toolchain", "ErrorMessage"]
 import os
 from pathlib import Path
 from itertools import chain
+from typing import Sequence
 
 from .common import FileSystemPath
 from .project import Project
@@ -47,6 +48,25 @@ class Toolchain:
 
     def watch_project(self):
         yield
+
+    def clear_cache(self, selected_caches: Sequence[str] = ()):
+        with self.current_project.context() as ctx:
+            if selected_caches:
+                for cache_name in selected_caches:
+                    del ctx.cache[cache_name]
+            else:
+                ctx.cache.clear()
+
+    def inspect_cache(self, selected_caches: Sequence[str] = ()) -> str:
+        with self.current_project.context() as ctx:
+            if not selected_caches:
+                ctx.cache.preload()
+                selected_caches = tuple(sorted(ctx.cache.keys()))
+
+            return (
+                "\n".join(f"{ctx.cache[name]}\n" for name in selected_caches)
+                or "The cache is completely clear.\n"
+            )
 
     def init_project(self):
         pass

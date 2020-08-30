@@ -5,14 +5,16 @@ __all__ = [
     "import_from_string",
     "format_exc",
     "format_obj",
+    "format_directory",
 ]
 
 
 import os
 from dataclasses import field
 from importlib import import_module
+from pathlib import Path
 from traceback import format_exception
-from typing import Optional, Union, TypeVar, Any
+from typing import Optional, Union, TypeVar, Any, Iterator
 
 
 FileSystemPath = Union[str, os.PathLike]
@@ -49,3 +51,15 @@ def format_obj(obj: Any) -> str:
     module = getattr(obj, "__module__", None)
     name = getattr(obj, "__qualname__", None)
     return repr(f"{module}.{name}") if module and name else repr(obj)
+
+
+def format_directory(directory: FileSystemPath, prefix: str = "") -> Iterator[str]:
+    entries = list(sorted(Path(directory).iterdir()))
+    indents = ["├─"] * (len(entries) - 1) + ["└─"]
+
+    for indent, entry in zip(indents, entries):
+        yield f"{prefix}{indent} {entry.name}"
+
+        if entry.is_dir():
+            indent = "│  " if indent == "├─" else "   "
+            yield from format_directory(entry, prefix + indent)

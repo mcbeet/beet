@@ -5,9 +5,10 @@ import json
 import shutil
 from datetime import datetime, timedelta
 from pathlib import Path
+from textwrap import indent
 from typing import Any, Dict, Optional
 
-from .utils import FileSystemPath
+from .utils import FileSystemPath, format_directory
 
 
 class Cache:
@@ -92,6 +93,18 @@ class Cache:
     def __repr__(self) -> str:
         return f"{self.__class__.__name__}({str(self.directory)!r})"
 
+    def __str__(self) -> str:
+        formatted_data = indent(json.dumps(self.data, indent=2), "  │  ")[5:]
+        contents = indent("\n".join(format_directory(self.directory)), "  │    ")
+
+        return (
+            f"Cache {self.index_path.parent.name}:\n"
+            f"  │  timestamp = {datetime.fromisoformat(self.index['timestamp']).ctime()}\n"
+            f"  │  expires = {self.expires and self.expires.ctime()}\n  │  \n"
+            f"  │  directory = {self.directory}\n{contents}\n  │  \n"
+            f"  │  data = {formatted_data}"
+        )
+
 
 class MultiCache(Dict[str, Cache]):
     """A container of lazily instantiated named caches."""
@@ -123,6 +136,13 @@ class MultiCache(Dict[str, Cache]):
 
     def __exit__(self, exc_type, exc_value, exc_traceback):
         self.flush()
+
+    def preload(self):
+        if not self.path.is_dir():
+            return
+        for directory in self.path.iterdir():
+            if (directory / Cache.INDEX_FILE).is_file():
+                self[directory.name]
 
     def clear(self):
         if self.path.is_dir():
