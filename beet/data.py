@@ -29,7 +29,15 @@ from dataclasses import dataclass
 from typing import List, Optional
 from zipfile import ZipFile
 
-from .common import Pack, Namespace, FileContainer, File, JsonFile, dump_data
+from .common import (
+    Pack,
+    Namespace,
+    FileContainerProxy,
+    FileContainer,
+    File,
+    JsonFile,
+    dump_data,
+)
 from .utils import FileSystemPath
 
 
@@ -41,9 +49,16 @@ class Advancement(JsonFile):
 @dataclass
 class Function(File):
     lines: Optional[List[str]] = None
+    tags: Optional[List[str]] = None
 
     PATH = ["functions"]
     EXTENSION = ".mcfunction"
+
+    def bind(self, namespace: "DataPackNamespace", path: str):
+        for tag_name in self.tags or ():
+            empty_tag = FunctionTag({"values": []})
+            tag = namespace.pack.function_tags.setdefault(tag_name, empty_tag)
+            tag.content.setdefault("values", []).append(f"{namespace.name}:{path}")
 
     def dump(self, path: FileSystemPath, zipfile: ZipFile = None):
         if self.lines is not None:
@@ -151,27 +166,27 @@ class TemplatePool(JsonFile):
 @dataclass
 class DataPackNamespace(Namespace):
     # fmt: off
-    advancements: FileContainer[Advancement] = FileContainer[Advancement].field()
-    functions: FileContainer[Function] = FileContainer[Function].field()
-    loot_tables: FileContainer[LootTable] = FileContainer[LootTable].field()
-    predicates: FileContainer[Predicate] = FileContainer[Predicate].field()
-    recipes: FileContainer[Recipe] = FileContainer[Recipe].field()
-    structures: FileContainer[Structure] = FileContainer[Structure].field()
-    block_tags: FileContainer[BlockTag] = FileContainer[BlockTag].field()
-    entity_type_tags: FileContainer[EntityTypeTag] = FileContainer[EntityTypeTag].field()
-    fluid_tags: FileContainer[FluidTag] = FileContainer[FluidTag].field()
-    function_tags: FileContainer[FunctionTag] = FileContainer[FunctionTag].field()
-    item_tags: FileContainer[ItemTag] = FileContainer[ItemTag].field()
-    dimension_types: FileContainer[DimensionType] = FileContainer[DimensionType].field()
-    dimensions: FileContainer[Dimension] = FileContainer[Dimension].field()
-    biomes: FileContainer[Biome] = FileContainer[Biome].field()
-    configured_carvers: FileContainer[ConfiguredCarver] = FileContainer[ConfiguredCarver].field()
-    configured_features: FileContainer[ConfiguredFeature] = FileContainer[ConfiguredFeature].field()
-    configured_structure_features: FileContainer[ConfiguredStructureFeature] = FileContainer[ConfiguredStructureFeature].field()
-    configured_surface_builders: FileContainer[ConfiguredSurfaceBuilder] = FileContainer[ConfiguredSurfaceBuilder].field()
-    noise_settings: FileContainer[NoiseSettings] = FileContainer[NoiseSettings].field()
-    processor_lists: FileContainer[ProcessorList] = FileContainer[ProcessorList].field()
-    template_pools: FileContainer[TemplatePool] = FileContainer[TemplatePool].field()
+    advancements: FileContainer[Advancement] = FileContainer.field()
+    functions: FileContainer[Function] = FileContainer.field()
+    loot_tables: FileContainer[LootTable] = FileContainer.field()
+    predicates: FileContainer[Predicate] = FileContainer.field()
+    recipes: FileContainer[Recipe] = FileContainer.field()
+    structures: FileContainer[Structure] = FileContainer.field()
+    block_tags: FileContainer[BlockTag] = FileContainer.field()
+    entity_type_tags: FileContainer[EntityTypeTag] = FileContainer.field()
+    fluid_tags: FileContainer[FluidTag] = FileContainer.field()
+    function_tags: FileContainer[FunctionTag] = FileContainer.field()
+    item_tags: FileContainer[ItemTag] = FileContainer.field()
+    dimension_types: FileContainer[DimensionType] = FileContainer.field()
+    dimensions: FileContainer[Dimension] = FileContainer.field()
+    biomes: FileContainer[Biome] = FileContainer.field()
+    configured_carvers: FileContainer[ConfiguredCarver] = FileContainer.field()
+    configured_features: FileContainer[ConfiguredFeature] = FileContainer.field()
+    configured_structure_features: FileContainer[ConfiguredStructureFeature] = FileContainer.field()
+    configured_surface_builders: FileContainer[ConfiguredSurfaceBuilder] = FileContainer.field()
+    noise_settings: FileContainer[NoiseSettings] = FileContainer.field()
+    processor_lists: FileContainer[ProcessorList] = FileContainer.field()
+    template_pools: FileContainer[TemplatePool] = FileContainer.field()
     # fmt: on
 
     DIRECTORY = "data"
@@ -179,4 +194,26 @@ class DataPackNamespace(Namespace):
 
 @dataclass
 class DataPack(Pack[DataPackNamespace]):
+    advancements = FileContainerProxy.field(Advancement)
+    functions = FileContainerProxy.field(Function)
+    loot_tables = FileContainerProxy.field(LootTable)
+    predicates = FileContainerProxy.field(Predicate)
+    recipes = FileContainerProxy.field(Recipe)
+    structures = FileContainerProxy.field(Structure)
+    block_tags = FileContainerProxy.field(BlockTag)
+    entity_type_tags = FileContainerProxy.field(EntityTypeTag)
+    fluid_tags = FileContainerProxy.field(FluidTag)
+    function_tags = FileContainerProxy.field(FunctionTag)
+    item_tags = FileContainerProxy.field(ItemTag)
+    dimension_types = FileContainerProxy.field(DimensionType)
+    dimensions = FileContainerProxy.field(Dimension)
+    biomes = FileContainerProxy.field(Biome)
+    configured_carvers = FileContainerProxy.field(ConfiguredCarver)
+    configured_features = FileContainerProxy.field(ConfiguredFeature)
+    configured_structure_features = FileContainerProxy.field(ConfiguredStructureFeature)
+    configured_surface_builders = FileContainerProxy.field(ConfiguredSurfaceBuilder)
+    noise_settings = FileContainerProxy.field(NoiseSettings)
+    processor_lists = FileContainerProxy.field(ProcessorList)
+    template_pools = FileContainerProxy.field(TemplatePool)
+
     LATEST_PACK_FORMAT = 6
