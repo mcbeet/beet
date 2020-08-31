@@ -5,12 +5,12 @@ from beet.cache import MultiCache, Cache
 
 def test_cache(tmpdir):
     with Cache(tmpdir) as cache:
-        cache.data["hello"] = "world"
+        cache.json["hello"] = "world"
 
     assert tmpdir.listdir() == [tmpdir / "index.json"]
 
     with Cache(tmpdir) as cache:
-        assert cache.data["hello"] == "world"
+        assert cache.json["hello"] == "world"
 
 
 def test_cache_directory(tmpdir):
@@ -23,23 +23,23 @@ def test_cache_directory(tmpdir):
 
 def test_multi_cache(tmpdir):
     with MultiCache(tmpdir) as cache:
-        cache["foo"].data["hello"] = "world"
+        cache["foo"].json["hello"] = "world"
 
     assert (tmpdir / "foo" / "index.json").isfile()
 
     with MultiCache(tmpdir) as cache:
-        assert cache["foo"].data["hello"] == "world"
+        assert cache["foo"].json["hello"] == "world"
 
 
 def test_default_multi_cache(tmpdir):
     with MultiCache(tmpdir) as cache:
-        cache.data["hello"] = "world"
+        cache.json["hello"] = "world"
 
     assert (tmpdir / "default" / "index.json").isfile()
 
     with MultiCache(tmpdir) as cache:
-        assert cache.data["hello"] == "world"
-        assert cache["default"].data["hello"] == "world"
+        assert cache.json["hello"] == "world"
+        assert cache["default"].json["hello"] == "world"
 
 
 def test_default_multi_cache_directory(tmpdir):
@@ -92,7 +92,7 @@ def test_cache_refresh(tmpdir):
 
 def test_cache_clear(tmpdir):
     with MultiCache(tmpdir / "cache") as cache:
-        cache["foo"].data["hello"] = "world"
+        cache["foo"].json["hello"] = "world"
         assert len(tmpdir.listdir()) == 1
         cache.clear()
         assert len(cache) == 0

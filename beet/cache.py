@@ -32,12 +32,12 @@ class Cache:
         return {
             "timestamp": datetime.now().isoformat(),
             "expires": None,
-            "data": {},
+            "json": {},
         }
 
     @property
-    def data(self) -> Dict[str, Any]:
-        return self.index["data"]
+    def json(self) -> Dict[str, Any]:
+        return self.index["json"]
 
     @property
     def expires(self) -> Optional[datetime]:
@@ -95,7 +95,7 @@ class Cache:
         return f"{self.__class__.__name__}({str(self.directory)!r})"
 
     def __str__(self) -> str:
-        formatted_data = indent(json.dumps(self.data, indent=2), "  │  ")[5:]
+        formatted_json = indent(json.dumps(self.json, indent=2), "  │  ")[5:]
         contents = indent("\n".join(format_directory(self.directory)), "  │    ")
 
         return (
@@ -103,7 +103,7 @@ class Cache:
             f"  │  timestamp = {datetime.fromisoformat(self.index['timestamp']).ctime()}\n"
             f"  │  expires = {self.expires and self.expires.ctime()}\n  │  \n"
             f"  │  directory = {self.directory}\n{contents}\n  │  \n"
-            f"  │  data = {formatted_data}"
+            f"  │  json = {formatted_json}"
         )
 
 
@@ -129,8 +129,8 @@ class MultiCache(Dict[str, Cache]):
         return self[self.DEFAULT_CACHE].directory
 
     @property
-    def data(self) -> Dict[str, Any]:
-        return self[self.DEFAULT_CACHE].data
+    def json(self) -> Dict[str, Any]:
+        return self[self.DEFAULT_CACHE].json
 
     def __enter__(self) -> "MultiCache":
         return self

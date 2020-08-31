@@ -66,7 +66,7 @@ class Toolchain:
 
             pack.dump(ctx.output_directory, overwrite=True)
 
-            if link_dir := ctx.cache["link"].data.get(link_key):
+            if link_dir := ctx.cache["link"].json.get(link_key):
                 pack.dump(link_dir, overwrite=True)
 
     def watch_project(self):
@@ -131,7 +131,7 @@ class Toolchain:
             )
 
         with self.current_project.context() as ctx:
-            ctx.cache["link"].data.update(
+            ctx.cache["link"].json.update(
                 assets_dir=str(assets_dir), data_dir=str(data_dir)
             )
 
