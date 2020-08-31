@@ -8,6 +8,7 @@ from pathlib import Path
 from textwrap import indent
 from typing import Any, Dict, Optional
 
+from .common import dump_json
 from .utils import FileSystemPath, format_directory
 
 
@@ -88,7 +89,7 @@ class Cache:
             self.clear()
         else:
             self.directory.mkdir(parents=True, exist_ok=True)
-            self.index_path.write_text(json.dumps(self.index, indent=2))
+            dump_json(self.index, self.index_path)
 
     def __repr__(self) -> str:
         return f"{self.__class__.__name__}({str(self.directory)!r})"

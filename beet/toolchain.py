@@ -3,14 +3,13 @@ __all__ = ["Toolchain", "ErrorMessage", "locate_minecraft"]
 
 import os
 import re
-import json
 import platform
 from pathlib import Path
 from itertools import chain
 from textwrap import dedent
 from typing import Sequence, Optional, Tuple
 
-from .common import FileSystemPath
+from .common import FileSystemPath, dump_json
 from .project import Project
 from .utils import ensure_optional_value
 
@@ -59,9 +58,16 @@ class Toolchain:
 
     def build_project(self):
         ctx = self.current_project.build()
+        output = {"assets_dir": ctx.assets, "data_dir": ctx.data}
 
-        for pack in [ctx.assets, ctx.data]:
-            print(pack)
+        for link_key, pack in output.items():
+            if not pack:
+                continue
+
+            pack.dump(ctx.output_directory, overwrite=True)
+
+            if link_dir := ctx.cache["link"].data.get(link_key):
+                pack.dump(link_dir, overwrite=True)
 
     def watch_project(self):
         yield
@@ -158,7 +164,7 @@ class Toolchain:
             "meta": {"greeting": "Hello, world!"},
         }
 
-        config.write_text(json.dumps(json_config, indent=2))
+        dump_json(json_config, config)
 
         module_file = Path(self.initial_directory, f"{module_name}.py")
 
