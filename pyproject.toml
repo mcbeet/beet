@@ -15,7 +15,7 @@ keywords = [
   "beet",
   "minecraft",
   "datapack",
-  "resource-pack",
+  "resourcepack",
   "mcfunction"
 ]
 
@@ -23,11 +23,13 @@ keywords = [
 python = "^3.8"
 click = "^7.1.2"
 click-help-colors = "^0.8"
+nbtlib = "^1.8.0"
 
 [tool.poetry.dev-dependencies]
 black = "^20.8b1"
 pytest = "^6.0.1"
 rope = "^0.17.0"
+pytest-minecraft = "^0.1.0"
 
 [tool.poetry.scripts]
 beet = "beet.cli:main"

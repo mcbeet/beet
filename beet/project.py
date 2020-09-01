@@ -17,6 +17,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import NamedTuple, Union, Sequence, Iterator, Callable, Set, Deque
 
+from .common import load_json
 from .assets import ResourcePack
 from .data import DataPack
 from .cache import MultiCache
@@ -107,7 +108,7 @@ class Project:
     def from_config(cls, config_file: FileSystemPath) -> "Project":
         config_path = Path(config_file).absolute()
 
-        config = json.loads(config_path.read_text())
+        config = load_json(config_path)
         meta = config.get("meta", {})
 
         return cls(

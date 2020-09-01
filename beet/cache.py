@@ -8,7 +8,7 @@ from pathlib import Path
 from textwrap import indent
 from typing import Any, Dict, Optional
 
-from .common import dump_json
+from .common import dump_json, load_json
 from .utils import FileSystemPath, format_directory
 
 
@@ -22,7 +22,7 @@ class Cache:
         self.directory = Path(directory).absolute()
         self.index_path = self.directory / self.INDEX_FILE
         self.index = (
-            json.loads(self.index_path.read_text())
+            load_json(self.index_path)
             if self.index_path.is_file()
             else self.get_initial_index()
         )

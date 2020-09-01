@@ -25,9 +25,13 @@ __all__ = [
 ]
 
 
+import io
 from dataclasses import dataclass
-from typing import List, Optional
+from gzip import GzipFile
+from typing import List, Optional, Union
 from zipfile import ZipFile
+
+from nbtlib.contrib.minecraft import StructureFile
 
 from .common import (
     Pack,
@@ -37,22 +41,35 @@ from .common import (
     File,
     JsonFile,
     dump_data,
+    load_data,
+    open_fileobj,
 )
-from .utils import FileSystemPath
+from .utils import FileSystemPath, extra_field
 
 
 @dataclass
 class Advancement(JsonFile):
-    PATH = ["advancements"]
+    PATH = ("advancements",)
 
 
 @dataclass
 class Function(File):
-    lines: Optional[List[str]] = None
-    tags: Optional[List[str]] = None
+    content: Optional[Union[str, List[str]]] = None
 
-    PATH = ["functions"]
+    tags: Optional[List[str]] = extra_field(default=None)
+
+    PATH = ("functions",)
     EXTENSION = ".mcfunction"
+
+    @property
+    def lines(self) -> Optional[List[str]]:
+        if isinstance(self.content, str):
+            self.content = self.content.splitlines()
+        return self.content
+
+    @lines.setter
+    def lines(self, value: Optional[List[str]]):
+        self.content = value
 
     def bind(self, namespace: "DataPackNamespace", path: str):
         for tag_name in self.tags or ():
@@ -61,106 +78,133 @@ class Function(File):
             tag.content.setdefault("values", []).append(f"{namespace.name}:{path}")
 
     def dump(self, path: FileSystemPath, zipfile: ZipFile = None):
-        if self.lines is not None:
-            dump_data(("\n".join(self.lines) + "\n").encode(), path, zipfile)
+        if isinstance(self.content, list):
+            dump_data(("\n".join(self.content) + "\n").encode(), path, zipfile)
         else:
             super().dump(path, zipfile)
 
 
 @dataclass
 class LootTable(JsonFile):
-    PATH = ["loot_tables"]
+    PATH = ("loot_tables",)
 
 
 @dataclass
 class Predicate(JsonFile):
-    PATH = ["predicates"]
+    PATH = ("predicates",)
 
 
 @dataclass
 class Recipe(JsonFile):
-    PATH = ["recipes"]
+    PATH = ("recipes",)
 
 
 @dataclass
 class Structure(File):
-    PATH = ["structures"]
+    content: Optional[Union[bytes, dict]] = None
+
+    PATH = ("structures",)
     EXTENSION = ".nbt"
+
+    @property
+    def data(self) -> Optional[dict]:
+        if isinstance(self.content, bytes):
+            with GzipFile(fileobj=io.BytesIO(self.content)) as fileobj:
+                self.content = StructureFile.parse(fileobj).root
+        return self.content if isinstance(self.content, dict) else None
+
+    @data.setter
+    def data(self, value: Optional[dict]):
+        self.content = value
+
+    @classmethod
+    def load(cls, path: FileSystemPath, zipfile: ZipFile = None) -> "Structure":
+        return cls(load_data(path, zipfile))
+
+    def dump(self, path: FileSystemPath, zipfile: ZipFile = None):
+        if isinstance(self.content, dict):
+            dst = open_fileobj(path, "w", zipfile)
+            with GzipFile(fileobj=dst, mode="wb") as fileobj:
+                StructureFile(self.content).write(fileobj)
+        elif isinstance(self.content, bytes):
+            dump_data(self.content, path, zipfile)
+        else:
+            super().dump(path, zipfile)
 
 
 @dataclass
 class BlockTag(JsonFile):
-    PATH = ["tags", "blocks"]
+    PATH = ("tags", "blocks")
 
 
 @dataclass
 class EntityTypeTag(JsonFile):
-    PATH = ["tags", "entity_types"]
+    PATH = ("tags", "entity_types")
 
 
 @dataclass
 class FluidTag(JsonFile):
-    PATH = ["tags", "fluids"]
+    PATH = ("tags", "fluids")
 
 
 @dataclass
 class FunctionTag(JsonFile):
-    PATH = ["tags", "functions"]
+    PATH = ("tags", "functions")
 
 
 @dataclass
 class ItemTag(JsonFile):
-    PATH = ["tags", "items"]
+    PATH = ("tags", "items")
 
 
 @dataclass
 class DimensionType(JsonFile):
-    PATH = ["dimension_type"]
+    PATH = ("dimension_type",)
 
 
 @dataclass
 class Dimension(JsonFile):
-    PATH = ["dimension"]
+    PATH = ("dimension",)
 
 
 @dataclass
 class Biome(JsonFile):
-    PATH = ["worldgen", "biome"]
+    PATH = ("worldgen", "biome")
 
 
 @dataclass
 class ConfiguredCarver(JsonFile):
-    PATH = ["worldgen", "configured_carver"]
+    PATH = ("worldgen", "configured_carver")
 
 
 @dataclass
 class ConfiguredFeature(JsonFile):
-    PATH = ["worldgen", "configured_feature"]
+    PATH = ("worldgen", "configured_feature")
 
 
 @dataclass
 class ConfiguredStructureFeature(JsonFile):
-    PATH = ["worldgen", "configured_structure_feature"]
+    PATH = ("worldgen", "configured_structure_feature")
 
 
 @dataclass
 class ConfiguredSurfaceBuilder(JsonFile):
-    PATH = ["worldgen", "configured_surface_builder"]
+    PATH = ("worldgen", "configured_surface_builder")
 
 
 @dataclass
 class NoiseSettings(JsonFile):
-    PATH = ["worldgen", "noise_settings"]
+    PATH = ("worldgen", "noise_settings")
 
 
 @dataclass
 class ProcessorList(JsonFile):
-    PATH = ["worldgen", "processor_list"]
+    PATH = ("worldgen", "processor_list")
 
 
 @dataclass
 class TemplatePool(JsonFile):
-    PATH = ["worldgen", "template_pool"]
+    PATH = ("worldgen", "template_pool")
 
 
 @dataclass
@@ -194,6 +238,7 @@ class DataPackNamespace(Namespace):
 
 @dataclass
 class DataPack(Pack[DataPackNamespace]):
+    # fmt: off
     advancements = FileContainerProxy.field(Advancement)
     functions = FileContainerProxy.field(Function)
     loot_tables = FileContainerProxy.field(LootTable)
@@ -215,5 +260,6 @@ class DataPack(Pack[DataPackNamespace]):
     noise_settings = FileContainerProxy.field(NoiseSettings)
     processor_lists = FileContainerProxy.field(ProcessorList)
     template_pools = FileContainerProxy.field(TemplatePool)
+    # fmt: on
 
     LATEST_PACK_FORMAT = 6

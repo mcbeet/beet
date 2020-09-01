@@ -6,6 +6,7 @@ __all__ = [
     "format_exc",
     "format_obj",
     "format_directory",
+    "list_files",
 ]
 
 
@@ -29,7 +30,7 @@ def ensure_optional_value(arg: Optional[T]) -> T:
 
 
 def extra_field(**kwargs) -> Any:
-    return field(**kwargs, repr=False)
+    return field(repr=False, hash=False, compare=False, **kwargs)
 
 
 def import_from_string(dotted_path: str, default_member: str = None) -> Any:
@@ -69,3 +70,9 @@ def format_directory(directory: FileSystemPath, prefix: str = "") -> Iterator[st
         if entry.is_dir():
             indent = "│  " if indent == "├─" else "   "
             yield from format_directory(entry, prefix + indent)
+
+
+def list_files(directory: FileSystemPath) -> Iterator[Path]:
+    for root, _, files in os.walk(directory):
+        for filename in files:
+            yield Path(root, filename).relative_to(directory)

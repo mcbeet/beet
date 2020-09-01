@@ -9,6 +9,9 @@ __all__ = [
     "dump_data",
     "dump_copy",
     "dump_json",
+    "load_data",
+    "load_json",
+    "open_fileobj",
 ]
 
 
@@ -16,8 +19,9 @@ import os
 import json
 import shutil
 from contextlib import nullcontext
-from dataclasses import dataclass, field, fields
+from dataclasses import dataclass, field
 from functools import partial
+from itertools import accumulate
 from pathlib import Path
 from typing import (
     Any,
@@ -25,20 +29,29 @@ from typing import (
     Optional,
     Generic,
     TypeVar,
+    ClassVar,
     Type,
     Iterator,
     Dict,
+    ItemsView,
     Tuple,
     Mapping,
     MutableMapping,
+    IO,
+    get_type_hints,
+    get_origin,
     get_args,
 )
 from zipfile import ZipFile
 
-from .utils import FileSystemPath, ensure_optional_value
+from .utils import FileSystemPath, ensure_optional_value, extra_field, list_files
 
 
 PackOrigin = Union[FileSystemPath, ZipFile]
+
+T = TypeVar("T")
+NamespaceType = TypeVar("NamespaceType", bound="Namespace")
+FileType = TypeVar("FileType", bound="File")
 
 
 def dump_data(data: bytes, dst: FileSystemPath, zipfile: ZipFile = None):
@@ -59,16 +72,40 @@ def dump_json(data: Any, dst: FileSystemPath, zipfile: ZipFile = None):
     dump_data((json.dumps(data, indent=2) + "\n").encode(), dst, zipfile)
 
 
+def load_data(src: FileSystemPath, zipfile: ZipFile = None) -> bytes:
+    if zipfile:
+        return zipfile.read(str(src))
+    else:
+        return Path(src).read_bytes()
+
+
+def load_json(src: FileSystemPath, zipfile: ZipFile = None) -> Any:
+    return json.loads(load_data(src, zipfile).decode())
+
+
+def open_fileobj(path: FileSystemPath, mode: str, zipfile: ZipFile = None) -> IO:
+    if zipfile:
+        return zipfile.open(str(path), mode)
+    else:
+        return open(path, mode + "b")
+
+
 @dataclass
 class File:
     content: Optional[str] = None
     source_path: Optional[FileSystemPath] = None
 
-    PATH = []
-    EXTENSION = ""
+    PATH: ClassVar[Tuple[str, ...]]
+    EXTENSION: ClassVar[str]
 
     def bind(self, namespace: Any, path: str):
         pass
+
+    @classmethod
+    def load(
+        cls: Type[FileType], path: FileSystemPath, zipfile: ZipFile = None
+    ) -> FileType:
+        return cls(load_data(path, zipfile).decode())
 
     def dump(self, path: FileSystemPath, zipfile: ZipFile = None):
         if self.source_path:
@@ -83,14 +120,17 @@ class JsonFile(File):
 
     EXTENSION = ".json"
 
+    @classmethod
+    def load(
+        cls: Type[FileType], path: FileSystemPath, zipfile: ZipFile = None
+    ) -> FileType:
+        return cls(load_json(path, zipfile))
+
     def dump(self, path: FileSystemPath, zipfile: ZipFile = None):
         if self.content is not None:
             dump_json(self.content, path, zipfile)
         else:
             super().dump(path, zipfile)
-
-
-FileType = TypeVar("FileType", bound=File)
 
 
 class FileContainer(Dict[str, FileType]):
@@ -115,7 +155,7 @@ class FileContainer(Dict[str, FileType]):
             item.bind(namespace, path)
 
     def __repr__(self) -> str:
-        return f"<{self.__class__.__name__}: {super().__repr__()}>"
+        return f"<{self.__class__.__name__}: {list(self.keys())}>"
 
     @classmethod
     def field(cls) -> Any:
@@ -159,7 +199,7 @@ class FileContainerProxy(MutableMapping[str, FileType]):
         return getattr(self.pack[namespace], self.container_name), item_path
 
     def __repr__(self) -> str:
-        return f"<{self.__class__.__name__}: {dict(self)!r}>"
+        return f"<{self.__class__.__name__}: {list(self.keys())}>"
 
     @dataclass
     class Descriptor(Generic[FileType]):
@@ -168,8 +208,6 @@ class FileContainerProxy(MutableMapping[str, FileType]):
 
         def __set_name__(self, owner: Type[Any], name: str):
             self.name = name
-            owner._proxy_registry = getattr(owner, "_proxy_registry", {})
-            owner._proxy_registry[self.file_type] = name
 
         def __get__(self, instance: Any, owner=None) -> "FileContainerProxy[FileType]":
             if owner is None:
@@ -182,32 +220,91 @@ class FileContainerProxy(MutableMapping[str, FileType]):
 
 
 @dataclass
-class Namespace:
-    DIRECTORY = None
+class Namespace(Dict[Type[File], FileContainer]):
+    pack: Optional[Any] = extra_field(default=None, init=False)
+    name: Optional[str] = extra_field(default=None, init=False)
+
+    DIRECTORY: ClassVar[str]
+    PATH_MAPPING: ClassVar[Dict[Tuple[Tuple[str, ...], str], Type[File]]]
+    CONTAINER_FIELDS: ClassVar[Dict[Type[File], str]]
+
+    def __init_subclass__(cls: Type["Namespace"]):
+        cls.CONTAINER_FIELDS = {
+            get_args(hint)[0]: attr
+            for attr, hint in get_type_hints(cls).items()
+            if get_origin(hint) is FileContainer
+        }
+        cls.PATH_MAPPING = {
+            (file_type.PATH, file_type.EXTENSION): file_type
+            for file_type in cls.CONTAINER_FIELDS
+        }
 
     def __post_init__(self):
-        self.pack = None
-        self.name = None
-        self.contents: Dict[Type[File], FileContainer] = {
-            get_args(field.type)[0]: getattr(self, field.name) for field in fields(self)
-        }
+        for file_type, attr in self.CONTAINER_FIELDS.items():
+            super().__setitem__(file_type, getattr(self, attr))
+
+    def __setitem__(self, key: str, item: File):
+        self[type(item)][key] = item
+
+    def update(self, mapping: Dict[str, File]):
+        for key, item in mapping.items():
+            self[key] = item
 
     def bind(self, pack: Any, name: str):
         self.pack = pack
         self.name = name
 
-        for container in self.contents.values():
+        for container in self.values():
             container.bind(self)
 
+    @classmethod
+    def load_from(cls: Type[T], pack: PackOrigin) -> Iterator[Tuple[str, T]]:
+        if isinstance(pack, ZipFile):
+            filenames = map(Path, pack.namelist())
+        else:
+            filenames = list_files(pack)
+
+        name = None
+        namespace = None
+
+        for filename in sorted(filenames):
+            try:
+                directory, namespace_dir, head, *rest, basename = filename.parts
+            except ValueError:
+                continue
+
+            if directory != cls.DIRECTORY:
+                continue
+            elif name != namespace_dir:
+                name = namespace_dir
+                namespace = cls()
+                yield name, namespace
+
+            name = ensure_optional_value(name)
+            namespace = ensure_optional_value(namespace)
+            extension = filename.suffix
+
+            for path in accumulate(rest, lambda a, b: (*a, b), initial=(head,)):
+                if file_type := cls.PATH_MAPPING.get((path, extension)):
+                    prefix = Path(directory, name, *path)
+                    key = "/".join(filename.relative_to(prefix).with_suffix("").parts)
+
+                    namespace[file_type][key] = (
+                        file_type.load(str(filename), pack)
+                        if isinstance(pack, ZipFile)
+                        else file_type.load(pack / filename)
+                    )
+                    break
+
     def dump(self, namespace: str, pack: PackOrigin):
-        for content_type, container in self.contents.items():
+        for content_type, container in self.items():
             if not container:
                 continue
 
-            path = [self.DIRECTORY, namespace] + content_type.PATH
+            path = (self.DIRECTORY, namespace) + content_type.PATH
 
             for name, item in container.items():
-                full_path = path + [name + content_type.EXTENSION]
+                full_path = path + (name + content_type.EXTENSION,)
 
                 if isinstance(pack, ZipFile):
                     item.dump("/".join(full_path), pack)
@@ -216,30 +313,37 @@ class Namespace:
                     filename.parent.mkdir(parents=True, exist_ok=True)
                     item.dump(filename)
 
+    def __ne__(self, obj: object) -> bool:
+        return not (self == obj)
+
     def __bool__(self) -> bool:
-        return any(self.contents.values())
-
-
-NamespaceType = TypeVar("NamespaceType", bound=Namespace)
+        return any(self.values())
 
 
 @dataclass
 class Pack(Dict[str, NamespaceType]):
-    name: str
+    name: Optional[str] = None
     description: Union[str, list, dict] = ""
     pack_format: int = 0
 
-    zipped: bool = field(default=False)
+    namespaces: ItemsView[str, NamespaceType] = field(init=False, repr=False)
+    zipped: Optional[bool] = extra_field(default=None)
 
-    LATEST_PACK_FORMAT = -1
+    path: Optional[FileSystemPath] = extra_field(default=None)
+    zipfile: Optional[ZipFile] = extra_field(default=None)
+
+    NAMESPACE_TYPE: ClassVar[Type[NamespaceType]]
+    LATEST_PACK_FORMAT: ClassVar[int]
+
+    def __init_subclass__(cls: Type["Pack"]):
+        cls.NAMESPACE_TYPE = get_args(getattr(cls, "__orig_bases__")[0])[0]
 
     def __post_init__(self):
-        if not self.pack_format:
-            self.pack_format = self.LATEST_PACK_FORMAT
+        self.namespaces = self.items()
+        self.load()
 
     def __missing__(self, name: str) -> NamespaceType:
-        namespace_type = get_args(getattr(self, "__orig_bases__")[0])[0]
-        namespace = namespace_type()
+        namespace = self.NAMESPACE_TYPE()
         self[name] = namespace
         return namespace
 
@@ -248,15 +352,14 @@ class Pack(Dict[str, NamespaceType]):
             super().__setitem__(key, item)
             item.bind(self, key)
         else:
-            proxy_name = getattr(self, "_proxy_registry", {})[type(item)]
-            getattr(self, proxy_name)[key] = item
+            attr = self.NAMESPACE_TYPE.CONTAINER_FIELDS[type(item)]
+            getattr(self, attr)[key] = item
 
     def update(self, mapping: Mapping[str, NamespaceType]):
         for key, item in mapping.items():
             self[key] = item
 
-    @property
-    def mcmeta(self):
+    def get_mcmeta(self) -> dict:
         return {
             "pack": {
                 "pack_format": self.pack_format,
@@ -264,17 +367,72 @@ class Pack(Dict[str, NamespaceType]):
             }
         }
 
+    def set_mcmeta(self, mcmeta: dict):
+        pack = mcmeta.get("pack", {})
+
+        if "pack_format" in pack:
+            self.pack_format = pack["pack_format"]
+        if "description" in pack:
+            self.description = pack["description"]
+
+    mcmeta = property(get_mcmeta, set_mcmeta)
+
+    def __enter__(self: T) -> T:
+        return self
+
+    def __exit__(self, exc_type, exc_value, exc_traceback):
+        self.dump(overwrite=True)
+
+    def load(self, pack: PackOrigin = None):
+        if pack is not None:
+            if isinstance(pack, ZipFile):
+                self.zipfile = pack
+            elif not os.path.exists(pack):
+                raise FileNotFoundError(pack)
+            else:
+                self.path = pack
+
+        path = Path(self.path).absolute() if self.path else None
+
+        if not self.name:
+            self.name = (self.zipfile and self.zipfile.filename) or (path and path.stem)
+        if self.zipped is None:
+            self.zipped = bool(self.zipfile) or (path and path.suffix == ".zip")
+
+        origin = self.zipfile
+
+        if not origin and path:
+            if path.is_file():
+                origin = ZipFile(path)
+            elif path.is_dir():
+                origin = path
+
+        if origin:
+            if isinstance(origin, ZipFile):
+                self.mcmeta = load_json("pack.mcmeta", origin)
+            else:
+                self.mcmeta = load_json(origin / "pack.mcmeta")
+
+            for name, namespace in self.NAMESPACE_TYPE.load_from(origin):
+                self[name] = namespace
+
+        if not self.pack_format:
+            self.pack_format = self.LATEST_PACK_FORMAT
+
     def dump(
         self,
-        directory: FileSystemPath,
+        directory: FileSystemPath = None,
         *,
         zipped: bool = None,
         overwrite: bool = False,
     ) -> Path:
+        if not directory:
+            directory = Path(self.path).parent if self.path else Path.cwd()
+
         path = Path(directory).absolute()
 
         if zipped is None:
-            zipped = self.zipped
+            zipped = bool(self.zipped)
 
         if zipped:
             output_path = path / f"{self.name}.zip"
@@ -303,6 +461,9 @@ class Pack(Dict[str, NamespaceType]):
                 namespace.dump(namespace_name, pack)
 
         return output_path
+
+    def __ne__(self, obj: object) -> bool:
+        return not (self == obj)
 
     def __bool__(self) -> bool:
         return any(self.values())
