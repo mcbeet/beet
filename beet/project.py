@@ -106,7 +106,7 @@ class Project:
 
     @classmethod
     def from_config(cls, config_file: FileSystemPath) -> "Project":
-        config_path = Path(config_file).absolute()
+        config_path = Path(config_file).resolve()
 
         config = load_json(config_path)
         meta = config.get("meta", {})
@@ -138,7 +138,7 @@ class Project:
 
     @contextmanager
     def context(self) -> Iterator[Context]:
-        project_path = Path(self.directory).absolute()
+        project_path = Path(self.directory).resolve()
         path_entry = str(project_path)
 
         output_directory = project_path / self.output_directory
@@ -181,7 +181,8 @@ class Project:
             imported_modules = [
                 name
                 for name, module in sys.modules.items()
-                if getattr(module, "__file__", "").startswith(path_entry)
+                if (filename := getattr(module, "__file__", None))
+                and filename.startswith(path_entry)
             ]
 
             for name in imported_modules:

@@ -309,7 +309,7 @@ class Namespace(Dict[Type[File], FileContainer]):
                 if isinstance(pack, ZipFile):
                     item.dump("/".join(full_path), pack)
                 else:
-                    filename = Path(pack, *full_path).absolute()
+                    filename = Path(pack, *full_path).resolve()
                     filename.parent.mkdir(parents=True, exist_ok=True)
                     item.dump(filename)
 
@@ -392,7 +392,7 @@ class Pack(Dict[str, NamespaceType]):
             else:
                 self.path = pack
 
-        path = Path(self.path).absolute() if self.path else None
+        path = Path(self.path).resolve() if self.path else None
 
         if not self.name:
             self.name = (self.zipfile and self.zipfile.filename) or (path and path.stem)
@@ -429,7 +429,7 @@ class Pack(Dict[str, NamespaceType]):
         if not directory:
             directory = Path(self.path).parent if self.path else Path.cwd()
 
-        path = Path(directory).absolute()
+        path = Path(directory).resolve()
 
         if zipped is None:
             zipped = bool(self.zipped)

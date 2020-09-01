@@ -7,11 +7,12 @@ import platform
 from pathlib import Path
 from itertools import chain
 from textwrap import dedent
-from typing import Sequence, Optional, Tuple
+from typing import Sequence, Optional, Tuple, Iterator
 
 from .common import FileSystemPath, dump_json
 from .project import Project
 from .utils import ensure_optional_value
+from .watch import DirectoryWatcher, FileChanges
 
 
 class ErrorMessage(Exception):
@@ -39,7 +40,7 @@ class Toolchain:
         self._current_project = None
 
     def locate_project(self, initial_directory: FileSystemPath = None):
-        start = Path(initial_directory or self.initial_directory).absolute()
+        start = Path(initial_directory or self.initial_directory).resolve()
 
         for directory in chain([start], start.parents):
             config = directory / self.PROJECT_CONFIG_FILE
@@ -69,8 +70,18 @@ class Toolchain:
             if link_dir := ctx.cache["link"].json.get(link_key):
                 pack.dump(link_dir, overwrite=True)
 
-    def watch_project(self):
-        yield
+    def watch_project(self) -> Iterator[FileChanges]:
+        for changes in DirectoryWatcher(
+            self.current_project.directory,
+            ignore_file=".gitignore",
+            ignore_patterns=[
+                f"/{self.current_project.output_directory}",
+                f"/{self.current_project.CACHE_DIRECTORY}",
+                "*.tmp",
+            ],
+        ):
+            self._current_project = None
+            yield changes
 
     def clear_cache(self, selected_caches: Sequence[str] = ()):
         with self.current_project.context() as ctx:
@@ -99,7 +110,7 @@ class Toolchain:
         self, directory: FileSystemPath = None
     ) -> Tuple[Optional[Path], Optional[Path]]:
         minecraft = locate_minecraft()
-        target_path = Path(directory).absolute() if directory else minecraft
+        target_path = Path(directory).resolve() if directory else minecraft
 
         if not target_path:
             raise ErrorMessage("Couldn't locate the Minecraft folder.")
@@ -186,10 +197,10 @@ def locate_minecraft() -> Optional[Path]:
     system = platform.system()
 
     if system == "Linux":
-        path = Path("~/.minecraft").expanduser().absolute()
+        path = Path("~/.minecraft").expanduser()
     elif system == "Darwin":
-        path = Path("~/Library/Application Support/minecraft").expanduser().absolute()
+        path = Path("~/Library/Application Support/minecraft").expanduser()
     elif system == "Windows":
-        path = Path(os.path.expandvars(r"%APPDATA%\.minecraft")).absolute()
+        path = Path(os.path.expandvars(r"%APPDATA%\.minecraft"))
 
-    return path if path and path.is_dir() else None
+    return path.resolve() if path and path.is_dir() else None

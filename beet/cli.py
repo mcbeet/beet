@@ -1,7 +1,9 @@
 __all__ = ["beet", "main"]
 
 
+import time
 from contextlib import contextmanager
+from functools import partial
 from pathlib import Path
 from typing import Sequence, Optional
 
@@ -71,36 +73,42 @@ def beet(ctx: click.Context, directory: str):
         ctx.invoke(build)
 
 
-def display_error(message: str, exception: BaseException = None):
-    click.secho("Error: " + message, fg="red", bold=True)
+def display_error(message: str, exception: BaseException = None, padding: int = 0):
+    click.secho("\n" * padding + "Error: " + message, fg="red", bold=True)
     if exception:
         click.echo("\n" + format_exc(exception), nl=False)
+    click.echo("\n" * padding, nl=False)
 
 
 @contextmanager
-def toolchain_operation(ctx: click.Context, title: str):
-    click.secho(title + "\n", fg="yellow")
+def toolchain_operation(ctx: click.Context, title: str = None):
+    if title:
+        click.secho(title + "\n", fg="yellow")
+
+    err = partial(display_error, padding=int(not title))
 
     try:
         yield
     except ErrorMessage as exc:
-        display_error(" ".join(exc.args))
+        err(" ".join(exc.args))
     except GeneratorImportError as exc:
         generator = format_obj(exc.args[0])
-        display_error(f"Couldn't import generator {generator}.", exc.__cause__)
+        err(f"Couldn't import generator {generator}.", exc.__cause__)
     except GeneratorError as exc:
         generator = format_obj(exc.args[0])
-        display_error(f"Generator {generator} raised an exception.", exc.__cause__)
-    except click.Abort:
+        err(f"Generator {generator} raised an exception.", exc.__cause__)
+    except (click.Abort, KeyboardInterrupt):
         click.echo()
-        display_error(f"Aborted.")
+        err(f"Aborted.")
     except Exception as exc:
-        display_error("An unhandled exception occurred. This could be a bug.", exc)
+        err("An unhandled exception occurred. This could be a bug.", exc)
     else:
-        click.secho("Done!", fg="green", bold=True)
+        if title:
+            click.secho("Done!", fg="green", bold=True)
         return
 
-    ctx.exit(1)
+    if title:
+        ctx.exit(1)
 
 
 @beet.command(cls=HelpColorsCommand)
@@ -116,8 +124,21 @@ def build(ctx: click.Context):
 def watch(ctx: click.Context):
     """Watch for file changes and rebuild the current project."""
     with toolchain_operation(ctx, "Watching project..."):
-        for change in ctx.obj.watch_project():
-            ctx.obj.build_project()
+        for changes in ctx.obj.watch_project():
+            filename, action = next(iter(changes.items()))
+
+            text = (
+                f"{action.capitalize()} {filename!r}"
+                if changes == {filename: action}
+                else f"{len(changes)} changes detected"
+            )
+
+            now = time.strftime("%H:%M:%S")
+            change_time = click.style(now, fg="green", bold=True)
+            click.echo(f"{change_time} {text}")
+
+            with toolchain_operation(ctx):
+                ctx.obj.build_project()
 
 
 @beet.command(cls=HelpColorsCommand)

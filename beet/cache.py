@@ -19,7 +19,7 @@ class Cache:
 
     def __init__(self, directory: FileSystemPath):
         self.deleted = False
-        self.directory = Path(directory).absolute()
+        self.directory = Path(directory).resolve()
         self.index_path = self.directory / self.INDEX_FILE
         self.index = (
             load_json(self.index_path)
@@ -113,7 +113,7 @@ class MultiCache(Dict[str, Cache]):
     DEFAULT_CACHE = "default"
 
     def __init__(self, directory: FileSystemPath):
-        self.path = Path(directory).absolute()
+        self.path = Path(directory).resolve()
 
     def __missing__(self, key: str) -> Cache:
         cache = Cache(self.path / key)
