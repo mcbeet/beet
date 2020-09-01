@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "beet"
-version = "0.0.0"
+version = "0.1.0"
 description = "A python library and toolchain for composing Minecraft pack generators"
 authors = ["Valentin Berlier <berlier.v@gmail.com>"]
 license = "MIT"
