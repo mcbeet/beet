@@ -22,7 +22,7 @@ from contextlib import nullcontext
 from dataclasses import dataclass, field
 from functools import partial
 from itertools import accumulate
-from pathlib import Path
+from pathlib import Path, PurePath
 from typing import (
     Any,
     Union,
@@ -260,7 +260,7 @@ class Namespace(Dict[Type[File], FileContainer]):
     @classmethod
     def load_from(cls: Type[T], pack: PackOrigin) -> Iterator[Tuple[str, T]]:
         if isinstance(pack, ZipFile):
-            filenames = map(Path, pack.namelist())
+            filenames = map(PurePath, pack.namelist())
         else:
             filenames = list_files(pack)
 
