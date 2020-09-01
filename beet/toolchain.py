@@ -25,7 +25,7 @@ INIT_MODULE_TEMPLATE = """
     def greeting(ctx: Context):
         message = ctx.meta["greeting"]
         ctx.data["{module_name}:greeting"] = Function(
-            lines=[f"say {{message}}"],
+            [f"say {{message}}"],
             tags=["minecraft:load"],
         )
 """
