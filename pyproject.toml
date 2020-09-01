@@ -24,6 +24,7 @@ python = "^3.8"
 click = "^7.1.2"
 click-help-colors = "^0.8"
 nbtlib = "^1.8.0"
+pathspec = "^0.8.0"
 
 [tool.poetry.dev-dependencies]
 black = "^20.8b1"

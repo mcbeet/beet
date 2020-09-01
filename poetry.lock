@@ -161,7 +161,7 @@ pyparsing = ">=2.0.2"
 six = "*"
 
 [[package]]
-category = "dev"
+category = "main"
 description = "Utility library for gitignore style pattern matching of file paths."
 name = "pathspec"
 optional = false
@@ -313,7 +313,7 @@ secure = ["certifi", "cryptography (>=1.3.4)", "idna (>=2.0.0)", "pyOpenSSL (>=0
 socks = ["PySocks (>=1.5.6,<1.5.7 || >1.5.7,<2.0)"]
 
 [metadata]
-content-hash = "22b811964987ebb078bf75201a2e4caad3a2aa6769d7a2c9e33ab1f0a71f5f3e"
+content-hash = "00771d0af608a0140e3d5118e56e333daf6d2b63113be6d4870549cacfdd823f"
 python-versions = "^3.8"
 
 [metadata.files]
