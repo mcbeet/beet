@@ -47,11 +47,12 @@ class Cache:
     def expires(self, value: Optional[datetime]):
         self.index["expires"] = value and value.isoformat()
 
-    def timeout(self, delta: timedelta = None, **kwargs):
+    def timeout(self, delta: timedelta = None, **kwargs) -> "Cache":
         if not delta:
             delta = timedelta()
         delta += timedelta(**kwargs)
         self.expires = datetime.fromisoformat(self.index["timestamp"]) + delta
+        return self
 
     def restart_timeout(self):
         now = datetime.now()
