@@ -3,15 +3,15 @@ __all__ = ["Toolchain", "ErrorMessage", "locate_minecraft"]
 
 import os
 import re
+import json
 import platform
 from pathlib import Path
 from itertools import chain
 from textwrap import dedent
-from typing import Sequence, Optional, Tuple, Iterator
+from typing import Sequence, Optional, Dict, Tuple, Iterator
 
-from .common import FileSystemPath, dump_json
+from .common import FileSystemPath, Pack
 from .project import Project
-from .utils import ensure_optional_value
 from .watch import DirectoryWatcher, FileChanges
 
 
@@ -35,6 +35,9 @@ INIT_MODULE_TEMPLATE = """
 class Toolchain:
     PROJECT_CONFIG_FILE = "beet.json"
 
+    initial_directory: FileSystemPath
+    _current_project: Optional[Project]
+
     def __init__(self, directory: FileSystemPath = None):
         self.initial_directory = directory or os.getcwd()
         self._current_project = None
@@ -55,11 +58,12 @@ class Toolchain:
     def current_project(self) -> Project:
         if not self._current_project:
             self.locate_project()
-        return ensure_optional_value(self._current_project)
+        assert self._current_project
+        return self._current_project
 
     def build_project(self):
         ctx = self.current_project.build()
-        output = {"assets_dir": ctx.assets, "data_dir": ctx.data}
+        output: Dict[str, Pack] = {"assets_dir": ctx.assets, "data_dir": ctx.data}
 
         for link_key, pack in output.items():
             if not pack:
@@ -76,7 +80,7 @@ class Toolchain:
             ignore_file=".gitignore",
             ignore_patterns=[
                 f"/{self.current_project.output_directory}",
-                f"/{self.current_project.CACHE_DIRECTORY}",
+                f"/{self.current_project.cache_directory}",
                 "*.tmp",
             ],
         ):
@@ -175,7 +179,7 @@ class Toolchain:
             "meta": {"greeting": "Hello, world!"},
         }
 
-        dump_json(json_config, config)
+        config.write_text(json.dumps(json_config, indent=2))
 
         module_file = Path(self.initial_directory, f"{module_name}.py")
 
@@ -185,10 +189,10 @@ class Toolchain:
 
         gitignore = Path(self.initial_directory, ".gitignore")
 
-        if gitignore.is_file() and Project.CACHE_DIRECTORY not in (
+        if gitignore.is_file() and Project.cache_directory not in (
             ignored := gitignore.read_text()
         ):
-            ignored += f"\n# Beet cache\n{Project.CACHE_DIRECTORY}/\n"
+            ignored += f"\n# Beet cache\n{Project.cache_directory}/\n"
             gitignore.write_text(ignored)
 
 

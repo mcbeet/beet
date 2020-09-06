@@ -8,21 +8,20 @@ from pathlib import Path
 from textwrap import indent
 from typing import Any, Dict, Optional
 
-from .common import dump_json, load_json
-from .utils import FileSystemPath, format_directory
+from .utils import FileSystemPath, dump_json, format_directory
 
 
 class Cache:
     """An expiring filesystem cache that can store serialized json."""
 
-    INDEX_FILE = "index.json"
+    index_file = "index.json"
 
     def __init__(self, directory: FileSystemPath):
         self.deleted = False
         self.directory = Path(directory).resolve()
-        self.index_path = self.directory / self.INDEX_FILE
+        self.index_path = self.directory / self.index_file
         self.index = (
-            load_json(self.index_path)
+            json.loads(self.index_path.read_text())
             if self.index_path.is_file()
             else self.get_initial_index()
         )
@@ -89,7 +88,7 @@ class Cache:
             self.clear()
         else:
             self.directory.mkdir(parents=True, exist_ok=True)
-            dump_json(self.index, self.index_path)
+            self.index_path.write_text(dump_json(self.index))
 
     def __repr__(self) -> str:
         return f"{self.__class__.__name__}({str(self.directory)!r})"
@@ -110,7 +109,7 @@ class Cache:
 class MultiCache(Dict[str, Cache]):
     """A container of lazily instantiated named caches."""
 
-    DEFAULT_CACHE = "default"
+    default_cache = "default"
 
     def __init__(self, directory: FileSystemPath):
         self.path = Path(directory).resolve()
@@ -126,11 +125,11 @@ class MultiCache(Dict[str, Cache]):
 
     @property
     def directory(self) -> Path:
-        return self[self.DEFAULT_CACHE].directory
+        return self[self.default_cache].directory
 
     @property
     def json(self) -> Dict[str, Any]:
-        return self[self.DEFAULT_CACHE].json
+        return self[self.default_cache].json
 
     def __enter__(self) -> "MultiCache":
         return self
@@ -142,8 +141,8 @@ class MultiCache(Dict[str, Cache]):
         if not self.path.is_dir():
             return
         for directory in self.path.iterdir():
-            if (directory / Cache.INDEX_FILE).is_file():
-                self[directory.name]
+            if (directory / Cache.index_file).is_file():
+                assert self[directory.name]
 
     def clear(self):
         if self.path.is_dir():

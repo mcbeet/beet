@@ -1,6 +1,6 @@
 __all__ = [
     "FileSystemPath",
-    "ensure_optional_value",
+    "dump_json",
     "extra_field",
     "import_from_string",
     "format_exc",
@@ -11,22 +11,19 @@ __all__ = [
 
 
 import os
+import json
 from dataclasses import field
 from importlib import import_module
 from pathlib import Path
 from traceback import format_exception
-from typing import Optional, Union, TypeVar, Any, Iterator
+from typing import Union, Any, Iterator
 
 
 FileSystemPath = Union[str, os.PathLike]
 
 
-T = TypeVar("T")
-
-
-def ensure_optional_value(arg: Optional[T]) -> T:
-    assert arg is not None
-    return arg
+def dump_json(value: Any) -> str:
+    return json.dumps(value, indent=2) + "\n"
 
 
 def extra_field(**kwargs) -> Any:

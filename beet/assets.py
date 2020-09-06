@@ -13,4 +13,4 @@ class ResourcePackNamespace(Namespace):
 
 @dataclass
 class ResourcePack(Pack[ResourcePackNamespace]):
-    LATEST_PACK_FORMAT = 6
+    latest_pack_format = 6

@@ -28,8 +28,7 @@ class ShorthandGroup(HelpColorsGroup):
             ctx.fail(f"Ambiguous shorthand {cmd_name!r} ({match_list}).")
         elif matches:
             return super().get_command(ctx, matches[0])
-        else:
-            return None
+        return None
 
 
 @click.group(
@@ -99,8 +98,8 @@ def toolchain_operation(ctx: click.Context, title: str = None):
         err(f"Generator {generator} raised an exception.", exc.__cause__)
     except (click.Abort, KeyboardInterrupt):
         click.echo()
-        err(f"Aborted.")
-    except Exception as exc:
+        err("Aborted.")
+    except Exception as exc:  # pylint: disable=broad-except
         err("An unhandled exception occurred. This could be a bug.", exc)
     else:
         if title:
@@ -234,4 +233,5 @@ def init(
 
 
 def main():
+    # pylint: disable=unexpected-keyword-arg,no-value-for-parameter
     beet(prog_name="beet")

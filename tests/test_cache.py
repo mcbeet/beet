@@ -101,11 +101,21 @@ def test_cache_clear(tmpdir):
 
 def test_cache_length(tmpdir):
     with MultiCache(tmpdir) as cache:
-        cache["1"]
-        cache["2"]
+        assert cache["1"]
+        assert cache["2"]
         assert len(cache) == 2
         assert len(tmpdir.listdir()) == 2
 
         del cache["1"]
         assert len(cache) == 1
         assert len(tmpdir.listdir()) == 1
+
+
+def test_preload(tmpdir):
+    with MultiCache(tmpdir) as cache:
+        cache["foo"].json["bar"] = 42
+
+    with MultiCache(tmpdir) as cache:
+        assert not cache
+        cache.preload()
+        assert cache.keys() == {"foo"}

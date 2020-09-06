@@ -15,16 +15,19 @@ from collections import deque
 from copy import deepcopy
 from dataclasses import dataclass
 from pathlib import Path
-from typing import NamedTuple, Union, Sequence, Iterator, Callable, Set, Deque
+from typing import ClassVar, Protocol, NamedTuple, Union, Sequence, Iterator, Set, Deque
 
-from .common import load_json
 from .assets import ResourcePack
 from .data import DataPack
 from .cache import MultiCache
 from .utils import FileSystemPath, extra_field, import_from_string
 
 
-Generator = Callable[["Context"], None]
+class Generator(Protocol):
+    def __call__(self, ctx: "Context"):
+        pass
+
+
 GeneratorSpec = Union[Generator, str]
 
 
@@ -45,13 +48,12 @@ class Context(NamedTuple):
     data: DataPack
     queue: Deque[GeneratorSpec]
     applied_generators: Set[Generator]
-
-    DEFAULT_GENERATOR = "default_beet_generator"
+    default_generator: str
 
     def apply(self, generator: GeneratorSpec):
         try:
             func: Generator = (
-                import_from_string(generator, default_member=self.DEFAULT_GENERATOR)
+                import_from_string(generator, default_member=self.default_generator)
                 if isinstance(generator, str)
                 else generator
             )
@@ -71,7 +73,7 @@ class Context(NamedTuple):
             raise
         except Exception as exc:
             raise GeneratorError(func) from exc.with_traceback(
-                exc.__traceback__.tb_next
+                getattr(exc.__traceback__, "tb_next", exc.__traceback__)
             )
 
 
@@ -89,26 +91,27 @@ class Project:
     output_directory: str = extra_field(default="generated")
 
     resource_pack_name: str = extra_field(default="{name} Resource Pack")
-    resource_pack_format: int = extra_field(default=ResourcePack.LATEST_PACK_FORMAT)
+    resource_pack_format: int = extra_field(default=ResourcePack.latest_pack_format)
     resource_pack_zipped: bool = extra_field(default=False)
     resource_pack_description: str = extra_field(
         default="{description}\n\nVersion {version}\nBy {author}",
     )
 
     data_pack_name: str = extra_field(default="{name}")
-    data_pack_format: int = extra_field(default=DataPack.LATEST_PACK_FORMAT)
+    data_pack_format: int = extra_field(default=DataPack.latest_pack_format)
     data_pack_zipped: bool = extra_field(default=False)
     data_pack_description: str = extra_field(
         default="{description}\n\nVersion {version}\nBy {author}",
     )
 
-    CACHE_DIRECTORY = ".beet_cache"
+    cache_directory: ClassVar[str] = ".beet_cache"
+    default_generator: ClassVar[str] = "default_generator"
 
     @classmethod
     def from_config(cls, config_file: FileSystemPath) -> "Project":
         config_path = Path(config_file).resolve()
 
-        config = load_json(config_path)
+        config = json.loads(config_path.read_text())
         meta = config.get("meta", {})
 
         return cls(
@@ -154,7 +157,7 @@ class Project:
         sys.path.append(path_entry)
 
         try:
-            with MultiCache(project_path / self.CACHE_DIRECTORY) as cache:
+            with MultiCache(project_path / self.cache_directory) as cache:
                 yield Context(
                     directory=project_path,
                     output_directory=output_directory,
@@ -174,6 +177,7 @@ class Project:
                     ),
                     queue=deque(self.generators),
                     applied_generators=set(),
+                    default_generator=self.default_generator,
                 )
         finally:
             sys.path.remove(path_entry)
