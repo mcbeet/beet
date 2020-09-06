@@ -10,6 +10,7 @@ __all__ = [
 
 import sys
 import json
+from datetime import datetime
 from contextlib import contextmanager
 from collections import deque
 from copy import deepcopy
@@ -49,6 +50,7 @@ class Context(NamedTuple):
     queue: Deque[GeneratorSpec]
     applied_generators: Set[Generator]
     default_generator: str
+    current_time: datetime
 
     def apply(self, generator: GeneratorSpec):
         try:
@@ -178,6 +180,7 @@ class Project:
                     queue=deque(self.generators),
                     applied_generators=set(),
                     default_generator=self.default_generator,
+                    current_time=datetime.now(),
                 )
         finally:
             sys.path.remove(path_entry)
