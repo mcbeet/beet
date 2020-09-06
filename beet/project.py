@@ -78,6 +78,16 @@ class Context(NamedTuple):
                 getattr(exc.__traceback__, "tb_next", exc.__traceback__)
             )
 
+    @contextmanager
+    def override(self, *args, **kwargs):
+        backup = self.meta.copy()
+        self.meta.update(*args, **kwargs)
+        try:
+            yield
+        finally:
+            self.meta.clear()
+            self.meta.update(backup)
+
 
 @dataclass
 class Project:
