@@ -1,6 +1,7 @@
 __all__ = ["beet", "main"]
 
 
+import json
 import time
 from contextlib import contextmanager
 from functools import partial
@@ -99,6 +100,8 @@ def toolchain_operation(ctx: click.Context, title: str = None):
     except (click.Abort, KeyboardInterrupt):
         click.echo()
         err("Aborted.")
+    except json.JSONDecodeError as exc:
+        err("Attempted to decode invalid json.", exc)
     except Exception as exc:  # pylint: disable=broad-except
         err("An unhandled exception occurred. This could be a bug.", exc)
     else:
