@@ -222,6 +222,10 @@ class Namespace(Dict[Type[File], FileContainer]):
         for key, item in mapping.items():
             self[key] = item
 
+    def merge(self, other: Mapping[Type[File], FileContainer]):
+        for file_type, container in self.items():
+            container.update(other[file_type])
+
     def all_files(self) -> Iterator[Tuple[str, File]]:
         for container in self.values():
             yield from container.items()
@@ -344,6 +348,10 @@ class Pack(Dict[str, NamespaceType]):
         for key, item in mapping.items():
             self[key] = item
 
+    def merge(self, other: Mapping[str, NamespaceType]):
+        for name, namespace in other.items():
+            self[name].merge(namespace)
+
     def get_mcmeta(self) -> dict:
         return {
             "pack": {
@@ -408,7 +416,7 @@ class Pack(Dict[str, NamespaceType]):
                 self.mcmeta = json.loads((origin / "pack.mcmeta").read_text())
 
             for name, namespace in self.namespace_type.load_from(origin):
-                self[name] = namespace
+                self[name].merge(namespace)
 
         if not self.pack_format:
             self.pack_format = self.latest_pack_format
