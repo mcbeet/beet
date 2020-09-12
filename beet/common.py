@@ -77,6 +77,9 @@ class File(Generic[T]):
     def content(self, value: T):
         self.raw = value
 
+    def merge(self: FileType, _other: FileType) -> bool:
+        return False
+
     def bind(self, namespace: Any, path: str):
         pass
 
@@ -224,7 +227,9 @@ class Namespace(Dict[Type[File], FileContainer]):
 
     def merge(self, other: Mapping[Type[File], FileContainer]):
         for file_type, container in self.items():
-            container.update(other[file_type])
+            for name, other_file in other[file_type].items():
+                if name not in container or not container[name].merge(other_file):
+                    container[name] = other_file
 
     def all_files(self) -> Iterator[Tuple[str, File]]:
         for container in self.values():

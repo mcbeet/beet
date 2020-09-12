@@ -1,4 +1,4 @@
-from beet import DataPack, Function, FunctionTag, Structure
+from beet import DataPack, Function, FunctionTag, Structure, BlockTag
 
 
 def test_equality():
@@ -139,3 +139,33 @@ def test_igloo_all_files(minecraft_data_pack):
     igloo_structure = all_files["minecraft:igloo/top"]
     assert isinstance(igloo_structure, Structure)
     assert igloo_structure.content["size"] == [7, 5, 8]
+
+
+def test_merge_tags():
+    p1 = DataPack()
+    p1["hello:func1"] = Function(["say foo"], tags=["minecraft:tick"])
+
+    p2 = DataPack()
+    p2["hello:func2"] = Function(["say bar"], tags=["minecraft:tick"])
+
+    p1.merge(p2)
+
+    assert len(p1.functions) == 2
+    assert len(p1.function_tags) == 1
+    assert p1.function_tags["minecraft:tick"].content == {
+        "values": ["hello:func1", "hello:func2"]
+    }
+
+
+def test_merge_block_tags():
+    p1 = DataPack()
+    p1["custom:blocks"] = BlockTag({"values": ["minecraft:stone"]})
+
+    p2 = DataPack()
+    p2["custom:blocks"] = BlockTag({"values": ["minecraft:dirt"]})
+
+    p1.merge(p2)
+
+    assert p1.block_tags == {
+        "custom:blocks": BlockTag({"values": ["minecraft:stone", "minecraft:dirt"]})
+    }

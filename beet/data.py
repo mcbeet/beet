@@ -7,6 +7,7 @@ __all__ = [
     "Predicate",
     "Recipe",
     "Structure",
+    "TagFile",
     "BlockTag",
     "EntityTypeTag",
     "FluidTag",
@@ -26,9 +27,10 @@ __all__ = [
 
 
 import io
+from copy import deepcopy
 from dataclasses import dataclass, field
 from gzip import GzipFile
-from typing import List, Optional, Union
+from typing import List, Optional, Union, TypeVar
 
 from nbtlib.contrib.minecraft import StructureFile, StructureFileData
 
@@ -41,6 +43,9 @@ from .common import (
     JsonFile,
 )
 from .utils import extra_field
+
+
+JsonFileType = TypeVar("JsonFileType", bound="JsonFile")
 
 
 @dataclass
@@ -70,6 +75,7 @@ class Function(File[List[str]]):
             empty_tag = FunctionTag({"values": []})
             tag = pack.function_tags.setdefault(tag_name, empty_tag)
             tag.content.setdefault("values", []).append(f"{namespace.name}:{path}")
+        self.tags = None
 
 
 @dataclass
@@ -106,27 +112,36 @@ class Structure(File[StructureFileData]):
 
 
 @dataclass
-class BlockTag(JsonFile):
+class TagFile(JsonFile):
+    def merge(self: JsonFileType, other: JsonFileType) -> bool:
+        values = self.content.get("values", [])
+        self.content = deepcopy(other.content)
+        self.content.setdefault("values", [])[:0] = values
+        return True
+
+
+@dataclass
+class BlockTag(TagFile):
     path = ("tags", "blocks")
 
 
 @dataclass
-class EntityTypeTag(JsonFile):
+class EntityTypeTag(TagFile):
     path = ("tags", "entity_types")
 
 
 @dataclass
-class FluidTag(JsonFile):
+class FluidTag(TagFile):
     path = ("tags", "fluids")
 
 
 @dataclass
-class FunctionTag(JsonFile):
+class FunctionTag(TagFile):
     path = ("tags", "functions")
 
 
 @dataclass
-class ItemTag(JsonFile):
+class ItemTag(TagFile):
     path = ("tags", "items")
 
 
