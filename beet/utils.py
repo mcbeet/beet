@@ -7,6 +7,7 @@ __all__ = [
     "format_obj",
     "format_directory",
     "list_files",
+    "container_match",
 ]
 
 
@@ -16,7 +17,9 @@ from dataclasses import field
 from importlib import import_module
 from pathlib import Path
 from traceback import format_exception
-from typing import Union, Any, Iterator
+from typing import Union, Any, Iterator, Set, Mapping
+
+from pathspec import PathSpec
 
 
 FileSystemPath = Union[str, os.PathLike]
@@ -73,3 +76,8 @@ def list_files(directory: FileSystemPath) -> Iterator[Path]:
     for root, _, files in os.walk(directory):
         for filename in files:
             yield Path(root, filename).relative_to(directory)
+
+
+def container_match(container: Mapping[str, Any], *patterns: str) -> Set[str]:
+    spec = PathSpec.from_lines("gitwildmatch", patterns or ["*"])
+    return set(spec.match_files(container.keys()))

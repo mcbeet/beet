@@ -169,3 +169,90 @@ def test_merge_block_tags():
     assert p1.block_tags == {
         "custom:blocks": BlockTag({"values": ["minecraft:stone", "minecraft:dirt"]})
     }
+
+
+def test_match():
+    pack = DataPack()
+    custom = pack["custom"]
+
+    for i in range(100):
+        custom[f"path/to/func_{i:02d}"] = Function([f"say {i}"])
+
+    custom["path/to/end"] = Function(["say end"])
+
+    custom["other/subdir/hello"] = Function(["say hello"])
+    custom["other/subdir/world"] = Function(["say world"])
+    custom["other/thing"] = Function(["say thing"])
+
+    funcs = [f"path/to/func_{i:02d}" for i in range(100)]
+
+    assert custom.functions.match() == set(funcs) | {
+        "path/to/end",
+        "other/subdir/hello",
+        "other/subdir/world",
+        "other/thing",
+    }
+
+    assert custom.functions.match("path/to/func_0*") == set(funcs[:10])
+    assert custom.functions.match("path/to/func_*") == set(funcs)
+
+    assert custom.functions.match("path/to") == set(funcs) | {"path/to/end"}
+    assert custom.functions.match("path/to/func_*", "other") == set(funcs) | {
+        "other/subdir/hello",
+        "other/subdir/world",
+        "other/thing",
+    }
+
+    assert custom.functions.match("other/subdir") == {
+        "other/subdir/hello",
+        "other/subdir/world",
+    }
+
+
+def test_proxy_match():
+    pack = DataPack()
+    custom = pack["custom"]
+    hey = pack["hey"]
+
+    for i in range(100):
+        custom[f"path/to/func_{i:02d}"] = Function([f"say {i}"])
+        hey[f"path/to/func_{i:02d}"] = Function([f"say {i}"])
+
+    custom["path/to/end"] = Function(["say end"])
+
+    custom["other/subdir/hello"] = Function(["say hello"])
+    custom["other/subdir/world"] = Function(["say world"])
+    custom["other/thing"] = Function(["say thing"])
+
+    hey["other/subdir/hello"] = Function(["say hello"])
+
+    custom_funcs = [f"custom:path/to/func_{i:02d}" for i in range(100)]
+    hey_funcs = [f"hey:path/to/func_{i:02d}" for i in range(100)]
+
+    assert pack.functions.match() == set(custom_funcs) | set(hey_funcs) | {
+        "custom:path/to/end",
+        "custom:other/subdir/hello",
+        "custom:other/subdir/world",
+        "custom:other/thing",
+        "hey:other/subdir/hello",
+    }
+
+    assert pack.functions.match("custom:*") == set(custom_funcs) | {
+        "custom:path/to/end",
+        "custom:other/subdir/hello",
+        "custom:other/subdir/world",
+        "custom:other/thing",
+    }
+
+    assert pack.functions.match("*:other/subdir") == {
+        "custom:other/subdir/hello",
+        "custom:other/subdir/world",
+        "hey:other/subdir/hello",
+    }
+
+    assert pack.functions.match(
+        "*:path/to/func_0*", "*:path/to/end", "hey:other"
+    ) == set(custom_funcs[:10]) | set(hey_funcs[:10]) | {
+        "custom:path/to/end",
+        "hey:other/subdir/hello",
+    }

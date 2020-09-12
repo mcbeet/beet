@@ -39,7 +39,7 @@ from typing import (
 )
 from zipfile import ZipFile
 
-from .utils import FileSystemPath, dump_json, extra_field, list_files
+from .utils import FileSystemPath, dump_json, extra_field, list_files, container_match
 
 
 PackOrigin = Union[FileSystemPath, ZipFile]
@@ -120,6 +120,8 @@ class JsonFile(File[dict]):
 class FileContainer(Dict[str, FileType]):
     __slots__ = ("namespace",)
 
+    match = container_match
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.namespace = None
@@ -144,6 +146,8 @@ class FileContainer(Dict[str, FileType]):
 
 class FileContainerProxy(MutableMapping[str, FileType]):
     __slots__ = ("pack", "container_name")
+
+    match = container_match
 
     def __init__(self, pack: Any, container_name: str):
         self.pack = pack
