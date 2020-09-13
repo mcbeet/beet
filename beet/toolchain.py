@@ -38,9 +38,9 @@ class Toolchain:
     initial_directory: FileSystemPath
     _current_project: Optional[Project]
 
-    def __init__(self, directory: FileSystemPath = None):
+    def __init__(self, directory: FileSystemPath = None, project: Project = None):
         self.initial_directory = directory or os.getcwd()
-        self._current_project = None
+        self._current_project = project
 
     def locate_project(self, initial_directory: FileSystemPath = None):
         start = Path(initial_directory or self.initial_directory).resolve()
