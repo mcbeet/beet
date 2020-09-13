@@ -6,7 +6,6 @@ __all__ = [
     "FileContainerProxy",
     "FileContainerProxyDescriptor",
     "File",
-    "JsonFile",
 ]
 
 
@@ -102,19 +101,6 @@ class File(Generic[T]):
                 zipfile.writestr(str(path), raw)
             else:
                 Path(path).write_bytes(raw)
-
-
-@dataclass
-class JsonFile(File[dict]):
-    raw: Optional[Union[dict, bytes]] = None
-
-    extension = ".json"
-
-    def to_content(self, raw: bytes) -> dict:
-        return json.loads(raw.decode())
-
-    def to_bytes(self, content: dict) -> bytes:
-        return dump_json(content).encode()
 
 
 class FileContainer(Dict[str, FileType]):

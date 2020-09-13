@@ -10,8 +10,8 @@ from itertools import chain
 from textwrap import dedent
 from typing import Sequence, Optional, Tuple, Iterator
 
-from .common import FileSystemPath
 from .project import Project
+from .utils import FileSystemPath
 from .watch import DirectoryWatcher, FileChanges
 
 
