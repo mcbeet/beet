@@ -8,9 +8,9 @@ import platform
 from pathlib import Path
 from itertools import chain
 from textwrap import dedent
-from typing import Sequence, Optional, Dict, Tuple, Iterator
+from typing import Sequence, Optional, Tuple, Iterator
 
-from .common import FileSystemPath, Pack
+from .common import FileSystemPath
 from .project import Project
 from .watch import DirectoryWatcher, FileChanges
 
@@ -63,9 +63,8 @@ class Toolchain:
 
     def build_project(self):
         ctx = self.current_project.build()
-        output: Dict[str, Pack] = {"assets_dir": ctx.assets, "data_dir": ctx.data}
 
-        for link_key, pack in output.items():
+        for link_key, pack in zip(["assets_dir", "data_dir"], ctx.packs):
             if not pack:
                 continue
 

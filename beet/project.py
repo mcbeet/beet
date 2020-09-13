@@ -16,8 +16,19 @@ from collections import deque
 from copy import deepcopy
 from dataclasses import dataclass
 from pathlib import Path
-from typing import ClassVar, Protocol, NamedTuple, Union, Sequence, Iterator, Set, Deque
+from typing import (
+    ClassVar,
+    Protocol,
+    NamedTuple,
+    Union,
+    Sequence,
+    Iterator,
+    Set,
+    Deque,
+    Tuple,
+)
 
+from .common import Pack
 from .assets import ResourcePack
 from .data import DataPack
 from .cache import MultiCache
@@ -51,6 +62,10 @@ class Context(NamedTuple):
     applied_generators: Set[Generator]
     default_generator: str
     current_time: datetime
+
+    @property
+    def packs(self) -> Tuple[Pack, Pack]:
+        return (self.assets, self.data)
 
     def apply(self, generator: GeneratorSpec):
         try:
@@ -124,6 +139,10 @@ class Project:
 
         config = json.loads(config_path.read_text())
         meta = config.get("meta", {})
+        generators = config.get("generators", [])
+
+        if config.get("prelude", True):
+            generators.insert(0, "beet.prelude")
 
         return cls(
             name=config.get("name", "Untitled"),
@@ -131,7 +150,7 @@ class Project:
             author=config.get("author", "Unknown"),
             version=config.get("version", "0.0.0"),
             directory=config_path.parent,
-            generators=config.get("generators", []),
+            generators=generators,
             meta=meta,
             **{
                 key: value
