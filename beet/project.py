@@ -8,6 +8,7 @@ __all__ = [
 ]
 
 
+import re
 import sys
 import json
 from datetime import datetime
@@ -116,14 +117,14 @@ class Project:
 
     output_directory: str = extra_field(default="generated")
 
-    resource_pack_name: str = extra_field(default="{name} Resource Pack")
+    resource_pack_name: str = extra_field(default="{normalized_name}_resources")
     resource_pack_format: int = extra_field(default=ResourcePack.latest_pack_format)
     resource_pack_zipped: bool = extra_field(default=False)
     resource_pack_description: str = extra_field(
         default="{description}\n\nVersion {version}\nBy {author}",
     )
 
-    data_pack_name: str = extra_field(default="{name}")
+    data_pack_name: str = extra_field(default="{normalized_name}")
     data_pack_format: int = extra_field(default=DataPack.latest_pack_format)
     data_pack_zipped: bool = extra_field(default=False)
     data_pack_description: str = extra_field(
@@ -182,6 +183,7 @@ class Project:
             "description": self.description,
             "author": self.author,
             "version": self.version,
+            "normalized_name": re.sub(r"[^a-z0-9]+", "_", self.name.lower()),
         }
 
         sys.path.append(path_entry)
