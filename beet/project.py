@@ -13,7 +13,7 @@ import sys
 import json
 from datetime import datetime
 from contextlib import contextmanager
-from collections import deque
+from collections import deque, defaultdict
 from copy import deepcopy
 from dataclasses import dataclass
 from pathlib import Path
@@ -27,9 +27,10 @@ from typing import (
     Set,
     Deque,
     Tuple,
+    DefaultDict,
 )
 
-from .common import Pack
+from .common import Pack, File
 from .assets import ResourcePack
 from .data import DataPack
 from .cache import MultiCache
@@ -63,6 +64,7 @@ class Context(NamedTuple):
     applied_generators: Set[Generator]
     default_generator: str
     current_time: datetime
+    counters: DefaultDict[str, int]
 
     @property
     def packs(self) -> Tuple[Pack, Pack]:
@@ -102,6 +104,23 @@ class Context(NamedTuple):
             yield
         finally:
             self.meta.update(backup)
+
+    def generate(self, item: File) -> str:
+        pack = next(
+            pack
+            for pack in self.packs
+            if type(item) in pack.namespace_type.container_fields
+        )
+        template = self.meta.get("generate_template", "beet:generated/{type}_{id:08X}")
+        name = self.generate_name(
+            template.replace("{type}", type(item).__name__.lower())
+        )
+        pack[name] = item
+        return name
+
+    def generate_name(self, template: str) -> str:
+        self.counters[template] += 1
+        return template.format(id=self.counters[template])
 
 
 @dataclass
@@ -211,6 +230,7 @@ class Project:
                     applied_generators=set(),
                     default_generator=self.default_generator,
                     current_time=datetime.now(),
+                    counters=defaultdict(int),
                 )
         finally:
             sys.path.remove(path_entry)
