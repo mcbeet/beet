@@ -68,7 +68,7 @@ class Context(NamedTuple):
     def packs(self) -> Tuple[Pack, Pack]:
         return (self.assets, self.data)
 
-    def apply(self, generator: GeneratorSpec):
+    def apply(self, generator: GeneratorSpec, force: bool = False):
         try:
             func: Generator = (
                 import_from_string(generator, default_member=self.default_generator)
@@ -80,7 +80,7 @@ class Context(NamedTuple):
         except Exception as exc:
             raise GeneratorImportError(generator) from exc
 
-        if func in self.applied_generators:
+        if func in self.applied_generators and not force:
             return
 
         self.applied_generators.add(func)
