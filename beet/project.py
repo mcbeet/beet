@@ -79,13 +79,12 @@ class Context(NamedTuple):
             )
 
     @contextmanager
-    def override(self, *args, **kwargs):
-        backup = self.meta.copy()
-        self.meta.update(*args, **kwargs)
+    def override(self, **kwargs):
+        backup = {key: self.meta[key] for key in kwargs & self.meta.keys()}
+        self.meta.update(**kwargs)
         try:
             yield
         finally:
-            self.meta.clear()
             self.meta.update(backup)
 
 
