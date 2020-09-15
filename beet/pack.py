@@ -5,7 +5,6 @@ __all__ = [
     "FileContainer",
     "FileContainerProxy",
     "FileContainerProxyDescriptor",
-    "File",
 ]
 
 
@@ -38,6 +37,7 @@ from typing import (
 )
 from zipfile import ZipFile
 
+from .file import File
 from .utils import FileSystemPath, dump_json, extra_field, list_files, container_match
 
 
@@ -46,61 +46,6 @@ PackOrigin = Union[FileSystemPath, ZipFile]
 T = TypeVar("T")
 NamespaceType = TypeVar("NamespaceType", bound="Namespace")
 FileType = TypeVar("FileType", bound="File")
-
-
-@dataclass
-class File(Generic[T]):
-    raw: Optional[Union[T, bytes]] = None
-    source_path: Optional[FileSystemPath] = None
-
-    path: ClassVar[Tuple[str, ...]]
-    extension: ClassVar[str]
-
-    def to_content(self, raw: bytes) -> T:
-        raise NotImplementedError()
-
-    def to_bytes(self, content: T) -> bytes:
-        raise NotImplementedError()
-
-    @property
-    def content(self) -> T:
-        if self.raw is None:
-            assert self.source_path
-            self.raw = Path(self.source_path).read_bytes()
-            self.source_path = None
-        if isinstance(self.raw, bytes):
-            self.raw = self.to_content(self.raw)
-        return self.raw
-
-    @content.setter
-    def content(self, value: T):
-        self.raw = value
-
-    def merge(self: FileType, _other: FileType) -> bool:
-        return False
-
-    def bind(self, namespace: Any, path: str):
-        pass
-
-    @classmethod
-    def load(
-        cls: Type[FileType], path: FileSystemPath, zipfile: ZipFile = None
-    ) -> FileType:
-        return cls(zipfile.read(str(path))) if zipfile else cls(source_path=path)
-
-    def dump(self, path: FileSystemPath, zipfile: ZipFile = None):
-        if self.raw is None:
-            assert self.source_path
-            if zipfile:
-                zipfile.write(self.source_path, str(path))
-            else:
-                shutil.copyfile(self.source_path, str(path))
-        else:
-            raw = self.raw if isinstance(self.raw, bytes) else self.to_bytes(self.raw)
-            if zipfile:
-                zipfile.writestr(str(path), raw)
-            else:
-                Path(path).write_bytes(raw)
 
 
 class FileContainer(Dict[str, FileType]):

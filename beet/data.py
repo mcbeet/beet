@@ -34,8 +34,8 @@ from typing import List, Optional, Union, TypeVar
 
 from nbtlib.contrib.minecraft import StructureFile, StructureFileData
 
-from .core import Pack, Namespace, FileContainer, FileContainerProxyDescriptor, File
-from .files import JsonFile
+from .pack import Pack, Namespace, FileContainer, FileContainerProxyDescriptor, File
+from .file import JsonFile
 from .utils import extra_field
 
 

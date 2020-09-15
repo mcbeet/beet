@@ -30,7 +30,7 @@ from typing import (
     DefaultDict,
 )
 
-from .core import Pack, File
+from .pack import Pack, File
 from .assets import ResourcePack
 from .data import DataPack
 from .cache import MultiCache
