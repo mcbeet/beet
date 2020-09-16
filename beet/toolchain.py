@@ -146,7 +146,8 @@ class Toolchain:
 
         with self.current_project.context() as ctx:
             ctx.cache["link"].json.update(
-                assets_dir=str(assets_dir), data_dir=str(data_dir)
+                assets_dir=str(assets_dir) if assets_dir else None,
+                data_dir=str(data_dir) if data_dir else None,
             )
 
         return assets_dir, data_dir
