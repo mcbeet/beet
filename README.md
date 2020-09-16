@@ -10,44 +10,47 @@
 
 ## Introduction
 
-Over the years, Minecraft [resource packs](https://minecraft.gamepedia.com/Resource_Pack) and [data packs](https://minecraft.gamepedia.com/Data_Pack) evolved into really powerful tools that anyone can use to customize the vanilla experience. It's now possible to implement almost any game mechanic imaginable using a resource pack and a data pack.
+As Minecraft's vanilla customization capabilities keep growing, it's becoming more and more apparent that [resource packs](https://minecraft.gamepedia.com/Resource_Pack) and [data packs](https://minecraft.gamepedia.com/Data_Pack) can be pretty limiting as an _authoring_ format. Their simple structure allows them to fulfill their initial objective as a _distribution_ format, but without the ability to parametrize or create abstractions over assets and data pack resources, the reusability and interoperability of community-created projects and libraries is greatly limited.
 
-With the growing number of capabilities, there's been a matching drive from the community when it comes to establishing interoperability standards and developing reusable data pack libraries. As the community tries to create more and more things with these capabilities, it's becoming more and more apparent that resource packs and data packs aren't really suited as an _authoring_ format. They're simple and straight-forward to parse, which means that they fulfill their initial objective as a _distribution_ format, but they weren't created with a specific developer experience in mind.
+The community is tackling the problem by building independent tooling left and right, from command pre-processors to frameworks of all kinds and full-blown programming languages. However, there's no silver bullet and in situations where a combination of these tools could actually provide the most suited abstractions, the separate toolchains and the poor interoperability make it difficult for them to coexist.
 
-Many people started tackling the problem by building tools, from command pre-processors to full-blown programming languages and all kinds of frameworks, but none of these solutions could really talk to each other. Depending on the situation, some tools would provide more suitable abstractions than others, but most of them would be difficult to use together. Another problem is that by focusing on the abstractions, some of these tools either left out crucial quality-of-life features or each had to re-implement very similar development workflows.
+The `beet` project is meant to serve as a platform for building interoperable higher-level frameworks by providing a flexible composition model and a unified, user-friendly development workflow.
 
-The `beet` project is meant to serve as a platform for building interoperable higher-level frameworks by providing low-level abstractions, a composition model and a unified development workflow.
+### Library
 
-### Features
+> [Documentation]()
 
-- The `beet` library provides carefully crafted abstractions for working with Minecraft resource packs and data packs in Python.
+```python
+from beet import ResourcePack, Texture
 
-  ```python
-  from beet import ResourcePack, Texture
+with ResourcePack(path="stone.zip") as assets:
+    assets["minecraft:block/stone"] = Texture(source_path="custom.png")
+```
 
-  with ResourcePack(path="stone.zip") as assets:
-      assets["minecraft:block/stone"] = Texture(source_path="custom.png")
-  ```
+The `beet` library provides carefully crafted abstractions for working with Minecraft resource packs and data packs in Python.
 
-  - Create, read, edit and merge resource packs and data packs
-  - Handle zipped and unzipped packs
-  - Fast and lazy by default, files are transparently loaded when accessing their content
-  - Statically typed API enabling rich intellisense and autocompletion
+- Create, read, edit and merge resource packs and data packs
+- Handle zipped and unzipped packs
+- Fast and lazy by default, files are transparently loaded when needed
+- Statically typed API enabling rich intellisense and autocompletion
 
-- The `beet` toolchain makes it easy to create configurable resource packs and data packs by composing pack generators.
+### Toolchain
 
-  ```python
-  from beet import Context, Function
+> [Documentation]()
 
-  def greet(ctx: Context):
-      ctx.data["greet:hello"] = Function(["say hello"], tags=["minecraft:load"])
-  ```
+```python
+from beet import Context, Function
 
-  - Generators are simple functions that can edit or inspect the generated resource pack and data pack
-  - Watch mode for building the project on file changes
-  - Link the project to Minecraft to automatically synchronize the generated resource pack and data pack
-  - Versatile caching API to prevent repeating expensive computations
-  - Simple use-cases like merging packs are built into the prelude and don't require any code
+def greet(ctx: Context):
+    ctx.data["greet:hello"] = Function(["say hello"], tags=["minecraft:load"])
+```
+
+The `beet` toolchain makes it easy to create configurable resource packs and data packs by composing pack generators.
+
+- Write simple functions that can edit or inspect the generated resource pack and data pack
+- Cache expensive computations and heavy files with a versatile caching API
+- Automatically rebuild the project on file changes with watch mode
+- Link the project to Minecraft to synchronize the generated resource pack and data pack
 
 ## Installation
 
@@ -60,29 +63,23 @@ $ pip install beet
 You can make sure that `beet` was successfully installed by trying to use the toolchain from the command-line.
 
 ```bash
-$ beet --version
+$ beet --help
+Usage: beet [OPTIONS] COMMAND [ARGS]...
+
+  The beet toolchain.
+
+Options:
+  -C, --directory DIRECTORY  The project directory.
+  --version                  Show the version and exit.
+  --help                     Show this message and exit.
+
+Commands:
+  build  Build the current project.
+  cache  Inspect or clear the cache.
+  init   Initialize a new project.
+  link   Link the generated resource pack and data pack to Minecraft.
+  watch  Watch the project directory and rebuild on file changes.
 ```
-
-## Documentation
-
-The project documentation is available at https://vberlier.github.io/beet/.
-
-### Library
-
-- [Getting Started]()
-- [Resource packs]()
-- [Data packs]()
-- [Generic file types]()
-- [Generic packs and namespaces]()
-
-### Toolchain
-
-- [Getting Started]()
-- [Writing generators]()
-- [Command-line interface]()
-- [Configuration]()
-- [The beet prelude]()
-- [Using the cache]()
 
 ## Contributing
 

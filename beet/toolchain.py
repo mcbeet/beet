@@ -191,7 +191,7 @@ class Toolchain:
         if gitignore.is_file() and Project.cache_directory not in (
             ignored := gitignore.read_text()
         ):
-            ignored += f"\n# Beet cache\n{Project.cache_directory}/\n"
+            ignored += f"\n# beet cache\n{Project.cache_directory}/\n"
             gitignore.write_text(ignored)
 
 
