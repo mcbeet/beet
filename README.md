@@ -70,8 +70,8 @@ Usage: beet [OPTIONS] COMMAND [ARGS]...
 
 Options:
   -C, --directory DIRECTORY  The project directory.
-  --version                  Show the version and exit.
-  --help                     Show this message and exit.
+  -v, --version              Show the version and exit.
+  -h, --help                 Show this message and exit.
 
 Commands:
   build  Build the current project.

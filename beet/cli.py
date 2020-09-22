@@ -37,6 +37,7 @@ class ShorthandGroup(HelpColorsGroup):
     help_headers_color="red",
     help_options_color="green",
     invoke_without_command=True,
+    context_settings={"help_option_names": ("-h", "--help")},
 )
 @click.pass_context
 @click.option(
@@ -46,7 +47,9 @@ class ShorthandGroup(HelpColorsGroup):
     help="The project directory.",
 )
 @version_option(
-    version=__version__,
+    __version__,
+    "-v",
+    "--version",
     prog_name="beet",
     message="%(prog)s v%(version)s",
     prog_name_color="red",
