@@ -10,11 +10,11 @@
 
 ## Introduction
 
-As Minecraft's vanilla customization capabilities keep growing, it's becoming more and more apparent that [resource packs](https://minecraft.gamepedia.com/Resource_Pack) and [data packs](https://minecraft.gamepedia.com/Data_Pack) can be pretty limiting as an _authoring_ format. Their simple structure allows them to fulfill their initial objective as a _distribution_ format, but without the ability to parametrize or create abstractions over assets and data pack resources, the reusability and interoperability of community-created projects and libraries is greatly limited.
+As Minecraft's vanilla customization capabilities keep growing, it's becoming more and more apparent that [resource packs](https://minecraft.gamepedia.com/Resource_Pack) and [data packs](https://minecraft.gamepedia.com/Data_Pack) only work well as a _distribution_ format, and can be pretty limiting as an _authoring_ format. Without the ability to parametrize or create abstractions over assets and data pack resources, the reusability and interoperability of community-created projects and libraries is greatly limited.
 
 The community is tackling the problem by building independent tooling left and right, from command pre-processors to frameworks of all kinds and full-blown programming languages. However, there's no silver bullet and in situations where a combination of these tools could actually provide the most suited abstractions, the separate toolchains and the poor interoperability make it difficult for them to coexist.
 
-The `beet` project is meant to serve as a platform for building interoperable higher-level frameworks by providing a flexible composition model and a unified, user-friendly development workflow.
+The `beet` project is meant to serve as a platform for building a cooperative tooling ecosystem by providing a flexible composition model and a unified, user-friendly development workflow. Higher-level projects like pre-processors, linters and frameworks should be able to reduce their internal complexity and become more interoperable by leveraging the toolchain and `beet` primitives.
 
 ### Library
 
@@ -27,7 +27,7 @@ with ResourcePack(path="stone.zip") as assets:
     assets["minecraft:block/stone"] = Texture(source_path="custom.png")
 ```
 
-The `beet` library provides carefully crafted abstractions for working with Minecraft resource packs and data packs in Python.
+The `beet` library provides carefully crafted primitives for working with Minecraft resource packs and data packs in Python.
 
 - Create, read, edit and merge resource packs and data packs
 - Handle zipped and unzipped packs
@@ -83,7 +83,7 @@ Commands:
 
 ## Contributing
 
-Contributions are welcome. This project uses [`poetry`](https://python-poetry.org).
+Contributions are welcome. Make sure to first open an issue discussing the problem or the new feature before creating a pull request. The project uses [`poetry`](https://python-poetry.org).
 
 ```bash
 $ poetry install
