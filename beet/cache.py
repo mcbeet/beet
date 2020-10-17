@@ -153,6 +153,8 @@ class MultiCache(Dict[str, Cache]):
     def flush(self):
         for cache in self.values():
             cache.flush()
+        if self.path.is_dir() and not (ignore := self.path / ".gitignore").is_file():
+            ignore.write_text("# Automatically created by beet\n*\n")
 
     def __repr__(self) -> str:
         return f"{self.__class__.__name__}({str(self.path)!r})"
