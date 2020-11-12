@@ -44,6 +44,6 @@ def preamble(ctx: Context):
         function.content[:0] = header + [""] if function.content else header
 
 
-def default_generator(ctx: Context):
+def beet_default(ctx: Context):
     ctx.apply(load)
-    ctx.queue.append(preamble)
+    ctx.pipeline.append(preamble)

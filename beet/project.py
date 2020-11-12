@@ -1,10 +1,10 @@
 __all__ = [
     "Project",
     "Context",
-    "Generator",
-    "GeneratorSpec",
-    "GeneratorError",
-    "GeneratorImportError",
+    "Plugin",
+    "PluginSpec",
+    "PluginError",
+    "PluginImportError",
 ]
 
 
@@ -37,19 +37,19 @@ from .cache import MultiCache
 from .utils import FileSystemPath, extra_field, import_from_string
 
 
-class Generator(Protocol):
+class Plugin(Protocol):
     def __call__(self, ctx: "Context"):
         pass
 
 
-GeneratorSpec = Union[Generator, str]
+PluginSpec = Union[Plugin, str]
 
 
-class GeneratorError(Exception):
+class PluginError(Exception):
     pass
 
 
-class GeneratorImportError(GeneratorError):
+class PluginImportError(PluginError):
     pass
 
 
@@ -60,9 +60,9 @@ class Context(NamedTuple):
     cache: MultiCache
     assets: ResourcePack
     data: DataPack
-    queue: Deque[GeneratorSpec]
-    applied_generators: Set[Generator]
-    default_generator: str
+    pipeline: Deque[PluginSpec]
+    applied_plugins: Set[Plugin]
+    beet_default: str
     current_time: datetime
     counters: DefaultDict[str, int]
 
@@ -70,29 +70,29 @@ class Context(NamedTuple):
     def packs(self) -> Tuple[Pack, Pack]:
         return (self.assets, self.data)
 
-    def apply(self, generator: GeneratorSpec, force: bool = False):
+    def apply(self, plugin: PluginSpec, force: bool = False):
         try:
-            func: Generator = (
-                import_from_string(generator, default_member=self.default_generator)
-                if isinstance(generator, str)
-                else generator
+            func: Plugin = (
+                import_from_string(plugin, default_member=self.beet_default)
+                if isinstance(plugin, str)
+                else plugin
             )
-        except GeneratorError:
+        except PluginError:
             raise
         except Exception as exc:
-            raise GeneratorImportError(generator) from exc
+            raise PluginImportError(plugin) from exc
 
-        if func in self.applied_generators and not force:
+        if func in self.applied_plugins and not force:
             return
 
-        self.applied_generators.add(func)
+        self.applied_plugins.add(func)
 
         try:
             func(self)
-        except GeneratorError:
+        except PluginError:
             raise
         except Exception as exc:
-            raise GeneratorError(func) from exc.with_traceback(
+            raise PluginError(func) from exc.with_traceback(
                 getattr(exc.__traceback__, "tb_next", exc.__traceback__)
             )
 
@@ -131,7 +131,7 @@ class Project:
     version: str
 
     directory: FileSystemPath
-    generators: Sequence[GeneratorSpec]
+    pipeline: Sequence[PluginSpec]
     meta: dict
 
     output_directory: str = extra_field(default="generated")
@@ -151,7 +151,7 @@ class Project:
     )
 
     cache_directory: ClassVar[str] = ".beet_cache"
-    default_generator: ClassVar[str] = "default_generator"
+    beet_default: ClassVar[str] = "beet_default"
 
     @classmethod
     def from_config(cls, config_file: FileSystemPath) -> "Project":
@@ -159,10 +159,10 @@ class Project:
 
         config = json.loads(config_path.read_text())
         meta = config.get("meta", {})
-        generators = config.get("generators", [])
+        pipeline = config.get("pipeline", [])
 
         if config.get("prelude", True):
-            generators.insert(0, "beet.prelude")
+            pipeline.insert(0, "beet.prelude")
 
         return cls(
             name=config.get("name", "Untitled"),
@@ -170,7 +170,7 @@ class Project:
             author=config.get("author", "Unknown"),
             version=config.get("version", "0.0.0"),
             directory=config_path.parent,
-            generators=generators,
+            pipeline=pipeline,
             meta=meta,
             **{
                 key: value
@@ -226,9 +226,9 @@ class Project:
                         self.data_pack_format,
                         self.data_pack_zipped,
                     ),
-                    queue=deque(self.generators),
-                    applied_generators=set(),
-                    default_generator=self.default_generator,
+                    pipeline=deque(self.pipeline),
+                    applied_plugins=set(),
+                    beet_default=self.beet_default,
                     current_time=datetime.now(),
                     counters=defaultdict(int),
                 )
@@ -247,6 +247,6 @@ class Project:
 
     def build(self) -> Context:
         with self.context() as ctx:
-            while ctx.queue:
-                ctx.apply(ctx.queue.popleft())
+            while ctx.pipeline:
+                ctx.apply(ctx.pipeline.popleft())
             return ctx

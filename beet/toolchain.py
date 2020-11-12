@@ -175,7 +175,7 @@ class Toolchain:
 
         json_config = {
             **{key: value for key, value in arguments.items() if value is not None},
-            "generators": [f"{module_name}.greeting"],
+            "pipeline": [f"{module_name}.greeting"],
             "meta": {"greeting": "Hello, world!"},
         }
 
