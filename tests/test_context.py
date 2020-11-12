@@ -1,4 +1,4 @@
-from beet import Project, Function, FunctionTag
+from beet import Function, FunctionTag, Project
 
 
 def test_generate(tmp_path):

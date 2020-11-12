@@ -11,16 +11,15 @@ __all__ = [
 ]
 
 
-import os
 import json
+import os
 from dataclasses import field
 from importlib import import_module
 from pathlib import Path
 from traceback import format_exception
-from typing import Union, Any, Iterator, Set, Mapping
+from typing import Any, Iterator, Mapping, Set, Union
 
 from pathspec import PathSpec
-
 
 FileSystemPath = Union[str, os.PathLike]
 

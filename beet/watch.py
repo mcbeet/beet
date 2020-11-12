@@ -5,12 +5,11 @@ import os
 import time
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Dict, Optional, Sequence, Tuple, Iterator, Literal
+from typing import Dict, Iterator, Literal, Optional, Sequence, Tuple
 
 from pathspec import PathSpec
 
 from .utils import FileSystemPath, extra_field
-
 
 FileChanges = Dict[str, Literal["created", "edited", "removed"]]
 

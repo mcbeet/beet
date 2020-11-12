@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 
-from beet import Project, DataPack, Function, FunctionTag
+from beet import DataPack, Function, FunctionTag, Project
 
 
 def build_data_pack(path: Path, config: dict):

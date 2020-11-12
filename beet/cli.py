@@ -6,14 +6,14 @@ import time
 from contextlib import contextmanager
 from functools import partial
 from pathlib import Path
-from typing import Sequence, Optional
+from typing import Optional, Sequence
 
 import click
-from click_help_colors import HelpColorsGroup, HelpColorsCommand, version_option
+from click_help_colors import HelpColorsCommand, HelpColorsGroup, version_option
 
 from . import __version__
 from .project import PluginError, PluginImportError
-from .toolchain import Toolchain, ErrorMessage
+from .toolchain import ErrorMessage, Toolchain
 from .utils import format_exc, format_obj
 
 

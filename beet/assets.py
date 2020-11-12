@@ -10,8 +10,8 @@ __all__ = [
 
 from dataclasses import dataclass, field
 
-from .pack import Pack, Namespace, FileContainer, FileContainerProxyDescriptor
-from .file import PlainTextFile, JsonFile, PngFile
+from .file import JsonFile, PlainTextFile, PngFile
+from .pack import FileContainer, FileContainerProxyDescriptor, Namespace, Pack
 
 
 @dataclass

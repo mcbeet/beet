@@ -30,14 +30,13 @@ import io
 from copy import deepcopy
 from dataclasses import dataclass, field
 from gzip import GzipFile
-from typing import List, Optional, Union, TypeVar
+from typing import List, Optional, TypeVar, Union
 
 from nbtlib.contrib.minecraft import StructureFile, StructureFileData
 
-from .pack import Pack, Namespace, FileContainer, FileContainerProxyDescriptor, File
 from .file import JsonFile
+from .pack import File, FileContainer, FileContainerProxyDescriptor, Namespace, Pack
 from .utils import extra_field
-
 
 JsonFileType = TypeVar("JsonFileType", bound="JsonFile")
 

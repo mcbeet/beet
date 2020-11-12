@@ -8,8 +8,8 @@ __all__ = [
 ]
 
 
-import os
 import json
+import os
 import shutil
 from contextlib import nullcontext
 from dataclasses import dataclass, field
@@ -18,28 +18,27 @@ from itertools import accumulate
 from pathlib import Path, PurePath
 from typing import (
     Any,
-    Union,
-    Optional,
-    Generic,
-    TypeVar,
     ClassVar,
-    Type,
-    Iterator,
     Dict,
+    Generic,
     ItemsView,
-    Tuple,
+    Iterator,
     Mapping,
     MutableMapping,
-    get_type_hints,
-    get_origin,
-    get_args,
+    Optional,
+    Tuple,
+    Type,
+    TypeVar,
+    Union,
     cast,
+    get_args,
+    get_origin,
+    get_type_hints,
 )
 from zipfile import ZipFile
 
 from .file import File
-from .utils import FileSystemPath, dump_json, extra_field, list_files, container_match
-
+from .utils import FileSystemPath, container_match, dump_json, extra_field, list_files
 
 PackOrigin = Union[FileSystemPath, ZipFile]
 

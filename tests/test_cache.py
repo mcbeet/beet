@@ -1,6 +1,6 @@
 from time import sleep
 
-from beet.cache import MultiCache, Cache
+from beet.cache import Cache, MultiCache
 
 
 def test_cache(tmpdir):

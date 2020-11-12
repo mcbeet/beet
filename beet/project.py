@@ -8,32 +8,32 @@ __all__ = [
 ]
 
 
+import json
 import re
 import sys
-import json
-from datetime import datetime
+from collections import defaultdict, deque
 from contextlib import contextmanager
-from collections import deque, defaultdict
 from copy import deepcopy
 from dataclasses import dataclass
+from datetime import datetime
 from pathlib import Path
 from typing import (
     ClassVar,
-    Protocol,
-    NamedTuple,
-    Union,
-    Sequence,
-    Iterator,
-    Set,
-    Deque,
-    Tuple,
     DefaultDict,
+    Deque,
+    Iterator,
+    NamedTuple,
+    Protocol,
+    Sequence,
+    Set,
+    Tuple,
+    Union,
 )
 
-from .pack import Pack, File
 from .assets import ResourcePack
-from .data import DataPack
 from .cache import MultiCache
+from .data import DataPack
+from .pack import File, Pack
 from .utils import FileSystemPath, extra_field, import_from_string
 
 

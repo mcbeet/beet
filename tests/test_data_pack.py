@@ -1,4 +1,4 @@
-from beet import DataPack, Function, FunctionTag, Structure, BlockTag
+from beet import BlockTag, DataPack, Function, FunctionTag, Structure
 
 
 def test_equality():

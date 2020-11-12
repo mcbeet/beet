@@ -105,9 +105,10 @@ $ poetry run mypy
 $ poetry run pylint beet tests
 ```
 
-The code follows the [`black`](https://github.com/psf/black) code style.
+The code follows the [`black`](https://github.com/psf/black) code style. Import statements are sorted with [`isort`](https://pycqa.github.io/isort/).
 
 ```bash
+$ poetry run isort beet tests
 $ poetry run black beet tests
 $ poetry run black --check beet tests
 ```

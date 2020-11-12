@@ -1,14 +1,14 @@
 __all__ = ["Toolchain", "ErrorMessage", "locate_minecraft"]
 
 
-import os
-import re
 import json
+import os
 import platform
-from pathlib import Path
+import re
 from itertools import chain
+from pathlib import Path
 from textwrap import dedent
-from typing import Sequence, Optional, Tuple, Iterator
+from typing import Iterator, Optional, Sequence, Tuple
 
 from .project import Project
 from .utils import FileSystemPath

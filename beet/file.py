@@ -6,13 +6,12 @@ import json
 import shutil
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Generic, TypeVar, ClassVar, Optional, Union, Type, Any, Tuple
+from typing import Any, ClassVar, Generic, Optional, Tuple, Type, TypeVar, Union
 from zipfile import ZipFile
 
 from PIL import Image as img
 
 from .utils import FileSystemPath, dump_json
-
 
 T = TypeVar("T")
 FileType = TypeVar("FileType", bound="File")
