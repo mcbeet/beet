@@ -10,11 +10,11 @@
 
 ## Introduction
 
-As Minecraft's vanilla customization capabilities keep growing, it's becoming more and more apparent that [resource packs](https://minecraft.gamepedia.com/Resource_Pack) and [data packs](https://minecraft.gamepedia.com/Data_Pack) only work well as a _distribution_ format, and can be pretty limiting as an _authoring_ format. Without the ability to parametrize or create abstractions over assets and data pack resources, the reusability and interoperability of community-created projects and libraries is greatly limited.
+Minecraft [resource packs](https://minecraft.gamepedia.com/Resource_Pack) and [data packs](https://minecraft.gamepedia.com/Data_Pack) work well as _distribution_ formats but can be pretty limiting as _authoring_ formats. Without the ability to parametrize or create abstractions over assets and data pack resources, the reusability and interoperability of community-created projects and libraries is greatly limited.
 
 The community is tackling the problem by building independent tooling left and right, from command pre-processors to frameworks of all kinds and full-blown programming languages. However, there's no silver bullet and in situations where a combination of these tools could actually provide the most suited abstractions, the separate toolchains and the poor interoperability make it difficult for them to coexist.
 
-The `beet` project is meant to serve as a platform for building a cooperative tooling ecosystem by providing a flexible composition model and a unified, user-friendly development workflow. Higher-level projects like pre-processors, linters and frameworks should be able to reduce their internal complexity and become more interoperable by leveraging the toolchain and `beet` primitives.
+The `beet` project is meant to serve as a platform for building a cooperative tooling ecosystem by providing a flexible composition model and a unified, user-friendly development workflow. Higher-level projects should be able to leverage the toolchain and `beet` primitives in order to reduce their internal complexity and become more interoperable.
 
 ### Library
 
@@ -45,9 +45,9 @@ def greet(ctx: Context):
     ctx.data["greet:hello"] = Function(["say hello"], tags=["minecraft:load"])
 ```
 
-The `beet` toolchain makes it easy to create configurable resource packs and data packs by composing pack generators.
+The `beet` toolchain is designed to support a wide range of use-cases. The most basic pipeline will let you create configurable resource packs and data packs, but plugins make it easy to implement arbitrarily advanced workflows and tools like linters, asset generators and function pre-processors.
 
-- Write simple functions that can edit or inspect the generated resource pack and data pack
+- Compose simple functions that can edit or inspect the generated resource pack and data pack
 - Cache expensive computations and heavy files with a versatile caching API
 - Automatically rebuild the project on file changes with watch mode
 - Link the project to Minecraft to synchronize the generated resource pack and data pack
@@ -59,6 +59,8 @@ The package can be installed with `pip`.
 ```bash
 $ pip install beet
 ```
+
+We're not envisioning any major breaking changes, but the project should probably still be considered alpha as resource pack and data pack coverage is currently lacking in certain areas. We're also actively listening to first impressions and incorporating community feedback.
 
 You can make sure that `beet` was successfully installed by trying to use the toolchain from the command-line.
 
