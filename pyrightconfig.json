@@ -1,0 +1,4 @@
+{
+  "typeCheckingMode": "basic",
+  "strict": ["beet/library", "beet/toolchain"]
+}
