@@ -218,6 +218,18 @@ testing = ["argcomplete", "hypothesis (>=3.56)", "mock", "nose", "requests", "xm
 
 [[package]]
 category = "dev"
+description = "A practical snapshot testing plugin for pytest"
+name = "pytest-insta"
+optional = false
+python-versions = ">=3.8,<4.0"
+version = "0.1.4"
+
+[package.dependencies]
+pytest = ">=6.0.2,<7.0.0"
+wrapt = ">=1.12.1,<2.0.0"
+
+[[package]]
+category = "dev"
 description = "A pytest plugin for running tests against Minecraft releases"
 name = "pytest-minecraft"
 optional = false
@@ -302,8 +314,16 @@ brotli = ["brotlipy (>=0.6.0)"]
 secure = ["pyOpenSSL (>=0.14)", "cryptography (>=1.3.4)", "idna (>=2.0.0)", "certifi", "ipaddress"]
 socks = ["PySocks (>=1.5.6,<1.5.7 || >1.5.7,<2.0)"]
 
+[[package]]
+category = "dev"
+description = "Module for decorators, wrappers and monkey patching."
+name = "wrapt"
+optional = false
+python-versions = "*"
+version = "1.12.1"
+
 [metadata]
-content-hash = "79f6c686056a9f0dfd9e221f4f5769bcbf16d727c5b71a277b5a352ce24739b2"
+content-hash = "a2d2be27313fde202caca1395ce519a248819692e123e598815d64057cc83777"
 python-versions = "^3.8"
 
 [metadata.files]
@@ -449,6 +469,10 @@ pytest = [
     {file = "pytest-6.1.2-py3-none-any.whl", hash = "sha256:4288fed0d9153d9646bfcdf0c0428197dba1ecb27a33bb6e031d002fa88653fe"},
     {file = "pytest-6.1.2.tar.gz", hash = "sha256:c0a7e94a8cdbc5422a51ccdad8e6f1024795939cc89159a0ae7f0b316ad3823e"},
 ]
+pytest-insta = [
+    {file = "pytest-insta-0.1.4.tar.gz", hash = "sha256:d5d52cc70282b1d3c5e9d3f9ac6198e8a96c98cc360bfc1549b621493c36d418"},
+    {file = "pytest_insta-0.1.4-py3-none-any.whl", hash = "sha256:01390475e4de1e77197aa407082bad69895d4039484be6742e8558c5042d4c51"},
+]
 pytest-minecraft = [
     {file = "pytest-minecraft-0.1.1.tar.gz", hash = "sha256:d8ff39bafa0e2d2d268b2f6bd122ab8457d95b0deff5928d0c1a60b4da5c54a4"},
     {file = "pytest_minecraft-0.1.1-py3-none-any.whl", hash = "sha256:4df46ba87de22932c03b031b498e5c6fea9abf727ffb546e89431ce3a4952e02"},
@@ -538,4 +562,7 @@ typing-extensions = [
 urllib3 = [
     {file = "urllib3-1.26.2-py2.py3-none-any.whl", hash = "sha256:d8ff90d979214d7b4f8ce956e80f4028fc6860e4431f731ea4a8c08f23f99473"},
     {file = "urllib3-1.26.2.tar.gz", hash = "sha256:19188f96923873c92ccb987120ec4acaa12f0461fa9ce5d3d0772bc965a39e08"},
+]
+wrapt = [
+    {file = "wrapt-1.12.1.tar.gz", hash = "sha256:b62ffa81fb85f4332a4f609cab4ac40709470da05643a082ec1eb88e6d9b97d7"},
 ]

@@ -1,5 +1,6 @@
 {
   "scripts": {
+    "watch": "poetry run pyright -w",
     "check": "poetry run pyright"
   },
   "devDependencies": {
