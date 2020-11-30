@@ -268,3 +268,34 @@ def test_proxy_match():
         "custom:path/to/end",
         "hey:other/subdir/hello",
     }
+
+
+def test_accessors_with_function(tmp_path: Path):
+    func1 = Function(["say hello"])
+
+    assert func1.raw == ["say hello"]
+
+    assert func1.data == b"say hello\n"
+    assert func1.raw == func1.data
+
+    assert func1.content == ["say hello"]
+    assert func1.raw == func1.content
+
+    assert func1.text == "say hello\n"
+    assert func1.raw == b"say hello\n"
+
+    filename = tmp_path / "foo.mcfunction"
+    filename.write_text("say world")
+    func2 = Function(source_path=filename)
+
+    assert func2.raw is None
+
+    assert func2.data == b"say world"
+    assert func2.raw == func2.data
+    assert func2.source_path is None
+
+    assert func2.content == ["say world"]
+    assert func2.raw == func2.content
+
+    assert func2.data == b"say world\n"
+    assert func2.raw == func2.data

@@ -57,10 +57,22 @@ class File(Generic[T]):
         raise NotImplementedError()
 
     @property
+    def data(self) -> bytes:
+        if self.raw is None:
+            self.data = Path(self._ensure_source_path()).read_bytes()
+        elif not isinstance(self.raw, bytes):
+            self.raw = self.to_bytes(self.raw)
+        return self.raw
+
+    @data.setter
+    def data(self, value: bytes):
+        self.raw = value
+        self.source_path = None
+
+    @property
     def content(self) -> T:
         if self.raw is None:
-            self.raw = Path(self._ensure_source_path()).read_bytes()
-            self.source_path = None
+            self.data = Path(self._ensure_source_path()).read_bytes()
         if isinstance(self.raw, bytes):
             self.raw = self.to_content(self.raw)
         return self.raw
@@ -68,6 +80,15 @@ class File(Generic[T]):
     @content.setter
     def content(self, value: T):
         self.raw = value
+        self.source_path = None
+
+    @property
+    def text(self) -> str:
+        return self.data.decode()
+
+    @text.setter
+    def text(self, value: str):
+        self.data = value.encode()
 
     def merge(self: FileType, other: FileType) -> bool:
         """Merge the given file or return False to indicate no special handling."""
