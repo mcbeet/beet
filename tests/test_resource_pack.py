@@ -4,7 +4,7 @@ from typing import Any
 import pytest
 from PIL import Image, ImageDraw
 
-from beet import ResourcePack, Texture
+from beet import JsonFile, PngFile, ResourcePack, Texture
 
 
 def test_default():
@@ -16,10 +16,11 @@ def test_default():
     "pack",
     [
         ResourcePack("p1"),
-        ResourcePack("p2", mcmeta={"pack": {"description": "world"}}),
+        ResourcePack("p2", mcmeta=JsonFile({"pack": {"description": "world"}})),
         ResourcePack(
-            "p3", mcmeta={"pack": {"description": "world", "pack_format": 42}}
+            "p3", mcmeta=JsonFile({"pack": {"description": "world", "pack_format": 42}})
         ),
+        ResourcePack("p4", image=PngFile(Image.new("RGB", (32, 32), color="blue"))),
     ],
 )
 def test_empty(snapshot: Any, pack: ResourcePack):
@@ -42,6 +43,16 @@ def test_empty_namespaces():
 
     assert pack
     assert pack.empty
+
+
+def test_mcmeta_properties():
+    pack = ResourcePack()
+    pack.description = "Something"
+    pack.pack_format = 1
+
+    assert pack.mcmeta.content == {
+        "pack": {"description": "Something", "pack_format": 1}
+    }
 
 
 def test_texture(snapshot: Any):

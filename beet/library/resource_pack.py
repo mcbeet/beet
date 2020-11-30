@@ -20,15 +20,15 @@ from .base import FileContainer, FileContainerProxyDescriptor, Namespace, Pack
 from .file import JsonFile, PlainTextFile, PngFile
 
 
-class Blockstate(JsonFile[JsonDict]):
+class Blockstate(JsonFile):
     scope = ("blockstates",)
 
 
-class Model(JsonFile[JsonDict]):
+class Model(JsonFile):
     scope = ("models",)
 
 
-class TextureMcmeta(JsonFile[JsonDict]):
+class TextureMcmeta(JsonFile):
     scope = ("textures",)
     extension = ".png.mcmeta"
 

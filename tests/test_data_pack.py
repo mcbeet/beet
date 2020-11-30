@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from beet import BlockTag, DataPack, Function, FunctionTag, Structure
+from beet import BlockTag, DataPack, Function, FunctionTag, JsonFile, Structure
 
 
 def test_equality():
@@ -8,12 +8,16 @@ def test_equality():
     assert DataPack("hello") == DataPack("hello")
     assert DataPack("hello") != DataPack("world")
 
-    p1 = DataPack("foo", mcmeta={"pack": {"description": "bar"}})
-    p2 = DataPack("foo", mcmeta={"pack": {"description": "bar"}})
+    p1 = DataPack("foo", mcmeta=JsonFile({"pack": {"description": "bar"}}))
+    p2 = DataPack("foo", mcmeta=JsonFile({"pack": {"description": "bar"}}))
     assert p1 == p2
 
-    p1 = DataPack("foo", mcmeta={"pack": {"description": "bar", "pack_format": 6}})
-    p2 = DataPack("foo", mcmeta={"pack": {"description": "bar", "pack_format": 5}})
+    p1 = DataPack(
+        "foo", mcmeta=JsonFile({"pack": {"description": "bar", "pack_format": 6}})
+    )
+    p2 = DataPack(
+        "foo", mcmeta=JsonFile({"pack": {"description": "bar", "pack_format": 5}})
+    )
     assert p1 != p2
 
 

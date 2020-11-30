@@ -34,13 +34,13 @@ from typing import List, Optional, TypeVar
 
 from nbtlib.contrib.minecraft import StructureFile, StructureFileData
 
-from beet.core.utils import JsonDict, extra_field
+from beet.core.utils import extra_field
 
 from .base import File, FileContainer, FileContainerProxyDescriptor, Namespace, Pack
 from .file import JsonFile
 
 
-class Advancement(JsonFile[JsonDict]):
+class Advancement(JsonFile):
     scope = ("advancements",)
 
 
@@ -65,15 +65,15 @@ class Function(File[List[str]]):
             )
 
 
-class LootTable(JsonFile[JsonDict]):
+class LootTable(JsonFile):
     scope = ("loot_tables",)
 
 
-class Predicate(JsonFile[JsonDict]):
+class Predicate(JsonFile):
     scope = ("predicates",)
 
 
-class Recipe(JsonFile[JsonDict]):
+class Recipe(JsonFile):
     scope = ("recipes",)
 
 
@@ -95,7 +95,7 @@ class Structure(File[StructureFileData]):
 TagFileType = TypeVar("TagFileType", bound="TagFile")
 
 
-class TagFile(JsonFile[JsonDict]):
+class TagFile(JsonFile):
     def merge(self: TagFileType, other: TagFileType) -> bool:
         if other.content.get("replace"):
             self.content["replace"] = True
@@ -128,43 +128,43 @@ class ItemTag(TagFile):
     scope = ("tags", "items")
 
 
-class DimensionType(JsonFile[JsonDict]):
+class DimensionType(JsonFile):
     scope = ("dimension_type",)
 
 
-class Dimension(JsonFile[JsonDict]):
+class Dimension(JsonFile):
     scope = ("dimension",)
 
 
-class Biome(JsonFile[JsonDict]):
+class Biome(JsonFile):
     scope = ("worldgen", "biome")
 
 
-class ConfiguredCarver(JsonFile[JsonDict]):
+class ConfiguredCarver(JsonFile):
     scope = ("worldgen", "configured_carver")
 
 
-class ConfiguredFeature(JsonFile[JsonDict]):
+class ConfiguredFeature(JsonFile):
     scope = ("worldgen", "configured_feature")
 
 
-class ConfiguredStructureFeature(JsonFile[JsonDict]):
+class ConfiguredStructureFeature(JsonFile):
     scope = ("worldgen", "configured_structure_feature")
 
 
-class ConfiguredSurfaceBuilder(JsonFile[JsonDict]):
+class ConfiguredSurfaceBuilder(JsonFile):
     scope = ("worldgen", "configured_surface_builder")
 
 
-class NoiseSettings(JsonFile[JsonDict]):
+class NoiseSettings(JsonFile):
     scope = ("worldgen", "noise_settings")
 
 
-class ProcessorList(JsonFile[JsonDict]):
+class ProcessorList(JsonFile):
     scope = ("worldgen", "processor_list")
 
 
-class TemplatePool(JsonFile[JsonDict]):
+class TemplatePool(JsonFile):
     scope = ("worldgen", "template_pool")
 
 

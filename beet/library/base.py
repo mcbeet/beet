@@ -8,7 +8,6 @@ __all__ = [
 ]
 
 
-import json
 import shutil
 from contextlib import nullcontext
 from dataclasses import InitVar, dataclass, field
@@ -34,104 +33,13 @@ from typing import (
 from zipfile import ZipFile
 
 from beet.core.container import Container, ContainerProxy, MatchMixin, MergeMixin
-from beet.core.utils import (
-    FileSystemPath,
-    JsonDict,
-    dump_json,
-    extra_field,
-    unreachable,
-)
+from beet.core.utils import FileSystemPath, extra_field, unreachable
 
+from .file import File, JsonFile, PngFile
 from .utils import list_files
 
 T = TypeVar("T")
 FileType = TypeVar("FileType", bound="File[object]")
-
-
-@dataclass
-class File(Generic[T]):
-    """Base file class.
-
-    All resource pack and data pack files inherit from this class. The
-    content of the file is generic and lazy, meaning that derived
-    classes are responsible for implementing their own loading strategy,
-    but that the code will not be executed until you try to access the
-    content of the file.
-    """
-
-    value: InitVar[Optional[T]] = None
-    raw: Any = None
-    source_path: Optional[FileSystemPath] = None
-
-    scope: ClassVar[Tuple[str, ...]] = ()
-    extension: ClassVar[str] = ""
-
-    def __post_init__(self, value: Optional[T]):
-        if value is not None:
-            self.raw = value
-
-    def to_content(self, raw: bytes) -> T:
-        """Load file content from bytes."""
-        raise NotImplementedError()
-
-    def to_bytes(self, content: T) -> bytes:
-        """Serialize file content to bytes."""
-        raise NotImplementedError()
-
-    @property
-    def content(self) -> T:
-        if self.raw is None:
-            self.raw = Path(self._ensure_source_path()).read_bytes()
-            self.source_path = None
-        if isinstance(self.raw, bytes):
-            self.raw = self.to_content(self.raw)
-        return self.raw
-
-    @content.setter
-    def content(self, value: T):
-        self.raw = value
-
-    def merge(self: FileType, other: FileType) -> bool:
-        """Merge the given file or return False to indicate no special handling."""
-        return False
-
-    def bind(self, pack: Any, namespace: str, path: str):
-        """Handle insertion."""
-
-    @classmethod
-    def load(
-        cls: Type[FileType],
-        path: FileSystemPath,
-        zipfile: Optional[ZipFile] = None,
-    ) -> FileType:
-        """Load file from a zipfile or from the filesystem."""
-        return cls(raw=zipfile.read(str(path))) if zipfile else cls(source_path=path)
-
-    def dump(
-        self,
-        path: FileSystemPath,
-        zipfile: Optional[ZipFile] = None,
-    ):
-        """Write the file to a zipfile or to the filesystem."""
-        if self.raw is None:
-            if zipfile:
-                zipfile.write(self._ensure_source_path(), str(path))
-            else:
-                shutil.copyfile(self._ensure_source_path(), str(path))
-        else:
-            raw = self.raw if isinstance(self.raw, bytes) else self.to_bytes(self.raw)
-            if zipfile:
-                zipfile.writestr(str(path), raw)
-            else:
-                Path(path).write_bytes(raw)
-
-    def _ensure_source_path(self) -> FileSystemPath:
-        if self.source_path:
-            return self.source_path
-        raise ValueError(
-            f"{self.__class__.__name__} object must be initialized with "
-            "either a value, raw bytes or a source path."
-        )
 
 
 @dataclass(repr=False)
@@ -351,7 +259,8 @@ class Pack(
     """
 
     name: Optional[str] = None
-    mcmeta: JsonDict = field(default_factory=dict)
+    mcmeta: JsonFile = field(default_factory=lambda: JsonFile({}))
+    image: Optional[PngFile] = None
 
     zipped: Optional[bool] = extra_field(default=None)
     path: Optional[FileSystemPath] = extra_field(default=None)
@@ -420,22 +329,22 @@ class Pack(
 
     @property
     def description(self) -> Any:
-        info = self.mcmeta.get("pack", {})
+        info = self.mcmeta.content.get("pack", {})
         return info.get("description", "")
 
     @description.setter
     def description(self, value: Any):
-        info = self.mcmeta.setdefault("pack", {})
+        info = self.mcmeta.content.setdefault("pack", {})
         info["description"] = value
 
     @property
     def pack_format(self) -> int:
-        info = self.mcmeta.get("pack", {})
+        info = self.mcmeta.content.get("pack", {})
         return info.get("pack_format", 0)
 
     @pack_format.setter
     def pack_format(self, value: int):
-        info = self.mcmeta.setdefault("pack", {})
+        info = self.mcmeta.content.setdefault("pack", {})
         info["pack_format"] = value
 
     def load(self, pack: Optional[PackOrigin] = None, lazy: bool = False):
@@ -475,9 +384,11 @@ class Pack(
 
         if origin:
             if isinstance(origin, ZipFile):
-                self.mcmeta = json.loads(origin.read("pack.mcmeta").decode())
+                self.mcmeta = JsonFile.load("pack.mcmeta", origin)
+                self.image = PngFile.load_if_exists("pack.png", origin)
             else:
-                self.mcmeta = json.loads((origin / "pack.mcmeta").read_text())
+                self.mcmeta = JsonFile.load(origin / "pack.mcmeta")
+                self.image = PngFile.load_if_exists(origin / "pack.png")
 
             for name, namespace in self.namespace_type.scan(origin):
                 self[name].merge(namespace)
@@ -527,13 +438,15 @@ class Pack(
                 Path(output_path).unlink()
 
         with pack_factory(output_path) as pack:
-            mcmeta = dump_json(self.mcmeta)
-
             if isinstance(pack, ZipFile):
-                pack.writestr("pack.mcmeta", mcmeta)
+                self.mcmeta.dump("pack.mcmeta", pack)
+                if self.image:
+                    self.image.dump("pack.png", pack)
             else:
                 pack.mkdir(parents=True)
-                (pack / "pack.mcmeta").write_text(mcmeta)
+                self.mcmeta.dump(pack / "pack.mcmeta")
+                if self.image:
+                    self.image.dump(pack / "pack.png")
 
             for namespace_name, namespace in self.items():
                 namespace.dump(namespace_name, pack)
