@@ -35,7 +35,7 @@ from zipfile import ZipFile
 from beet.core.container import Container, ContainerProxy, MatchMixin, MergeMixin
 from beet.core.utils import FileSystemPath, extra_field, unreachable
 
-from .file import File, JsonFile, PngFile
+from .file import File, JsonFile, PackOrigin, PngFile
 from .utils import list_files
 
 T = TypeVar("T")
@@ -64,8 +64,6 @@ class FileContainer(
         for key, value in self.items():
             self.process(key, value)
 
-
-PackOrigin = Union[FileSystemPath, ZipFile]
 
 NamespaceType = TypeVar("NamespaceType", bound="Namespace")
 
@@ -174,11 +172,7 @@ class Namespace(Mapping[Type[File[object]], FileContainer[File[object]]]):
                         filename.relative_to(Path(directory, name, *path)).parts
                     )[: -len(extension)]
 
-                    namespace[file_type][key] = (
-                        file_type.load(str(filename), pack)
-                        if isinstance(pack, ZipFile)
-                        else file_type.load(pack / filename)
-                    )
+                    namespace[file_type][key] = file_type.load(pack, filename)
 
         if name and namespace:
             yield name, namespace
@@ -195,11 +189,11 @@ class Namespace(Mapping[Type[File[object]], FileContainer[File[object]]]):
                 full_path = path + (name + content_type.extension,)
 
                 if isinstance(pack, ZipFile):
-                    item.dump(PurePosixPath(*full_path), pack)
+                    item.dump(pack, PurePosixPath(*full_path))
                 else:
                     filename = Path(pack, *full_path).resolve()
                     filename.parent.mkdir(parents=True, exist_ok=True)
-                    item.dump(filename)
+                    item.dump(pack, Path(*full_path))
 
     def __repr__(self) -> str:
         args = ", ".join(
@@ -383,12 +377,8 @@ class Pack(
                 origin = path
 
         if origin:
-            if isinstance(origin, ZipFile):
-                self.mcmeta = JsonFile.load("pack.mcmeta", origin)
-                self.image = PngFile.load_if_exists("pack.png", origin)
-            else:
-                self.mcmeta = JsonFile.load(origin / "pack.mcmeta")
-                self.image = PngFile.load_if_exists(origin / "pack.png")
+            self.mcmeta = JsonFile.load(origin, "pack.mcmeta")
+            self.image = PngFile.try_load(origin, "pack.png")
 
             for name, namespace in self.namespace_type.scan(origin):
                 self[name].merge(namespace)
@@ -437,16 +427,13 @@ class Pack(
             else:
                 Path(output_path).unlink()
 
+        if not zipped:
+            output_path.mkdir(parents=True)
+
         with pack_factory(output_path) as pack:
-            if isinstance(pack, ZipFile):
-                self.mcmeta.dump("pack.mcmeta", pack)
-                if self.image:
-                    self.image.dump("pack.png", pack)
-            else:
-                pack.mkdir(parents=True)
-                self.mcmeta.dump(pack / "pack.mcmeta")
-                if self.image:
-                    self.image.dump(pack / "pack.png")
+            self.mcmeta.dump(pack, "pack.mcmeta")
+            if self.image:
+                self.image.dump(pack, "pack.png")
 
             for namespace_name, namespace in self.items():
                 namespace.dump(namespace_name, pack)

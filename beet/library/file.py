@@ -13,12 +13,14 @@ import json
 import shutil
 from dataclasses import InitVar, dataclass
 from pathlib import Path
-from typing import Any, ClassVar, Generic, Optional, Tuple, Type, TypeVar
+from typing import Any, ClassVar, Generic, Optional, Tuple, Type, TypeVar, Union
 from zipfile import ZipFile
 
 from PIL import Image as img
 
 from beet.core.utils import FileSystemPath, JsonDict, dump_json
+
+PackOrigin = Union[FileSystemPath, ZipFile]
 
 T = TypeVar("T")
 FileType = TypeVar("FileType", bound="File[object]")
@@ -77,43 +79,48 @@ class File(Generic[T]):
     @classmethod
     def load(
         cls: Type[FileType],
+        origin: PackOrigin,
         path: FileSystemPath,
-        zipfile: Optional[ZipFile] = None,
     ) -> FileType:
-        """Load file from a zipfile or from the filesystem."""
-        return cls(raw=zipfile.read(str(path))) if zipfile else cls(source_path=path)
+        """Load a file from a zipfile or from the filesystem."""
+        return (
+            cls(raw=origin.read(str(path)))
+            if isinstance(origin, ZipFile)
+            else cls(source_path=Path(origin, path))
+        )
 
     @classmethod
-    def load_if_exists(
+    def try_load(
         cls: Type[FileType],
+        origin: PackOrigin,
         path: FileSystemPath,
-        zipfile: Optional[ZipFile] = None,
     ) -> Optional[FileType]:
-        """Try to load the file if it exists."""
-        if not zipfile and not Path(path).exists():
-            return None
-        try:
-            return cls.load(path, zipfile)
-        except KeyError:
-            return None
+        """Try to load a file from a zipfile or from the filesystem."""
+        if isinstance(origin, ZipFile):
+            try:
+                return cls(raw=origin.read(str(path)))
+            except KeyError:
+                return None
+        path = Path(origin, path)
+        return cls(source_path=path) if path.is_file() else None
 
     def dump(
         self,
+        origin: PackOrigin,
         path: FileSystemPath,
-        zipfile: Optional[ZipFile] = None,
     ):
         """Write the file to a zipfile or to the filesystem."""
         if self.raw is None:
-            if zipfile:
-                zipfile.write(self._ensure_source_path(), str(path))
+            if isinstance(origin, ZipFile):
+                origin.write(self._ensure_source_path(), str(path))
             else:
-                shutil.copyfile(self._ensure_source_path(), str(path))
+                shutil.copyfile(self._ensure_source_path(), str(Path(origin, path)))
         else:
             raw = self.raw if isinstance(self.raw, bytes) else self.to_bytes(self.raw)
-            if zipfile:
-                zipfile.writestr(str(path), raw)
+            if isinstance(origin, ZipFile):
+                origin.writestr(str(path), raw)
             else:
-                Path(path).write_bytes(raw)
+                Path(origin, path).write_bytes(raw)
 
     def _ensure_source_path(self) -> FileSystemPath:
         if self.source_path:
