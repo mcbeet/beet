@@ -12,7 +12,7 @@ from typing import TypeVar
 
 from PIL import Image as img
 
-from beet.shared_utils import dump_json
+from beet.core.utils import dump_json
 
 from .base import File
 

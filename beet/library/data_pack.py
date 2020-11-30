@@ -34,7 +34,7 @@ from typing import List, Optional, TypeVar
 
 from nbtlib.contrib.minecraft import StructureFile, StructureFileData
 
-from beet.shared_utils import JsonDict, extra_field
+from beet.core.utils import JsonDict, extra_field
 
 from .base import File, FileContainer, FileContainerProxyDescriptor, Namespace, Pack
 from .file import JsonFile

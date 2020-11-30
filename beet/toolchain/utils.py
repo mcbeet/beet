@@ -1,21 +1,23 @@
 __all__ = [
-    "format_directory",
+    "locate_minecraft",
 ]
 
 
+import os
+import platform
 from pathlib import Path
-from typing import Iterator
-
-from beet.shared_utils import FileSystemPath
+from typing import Optional
 
 
-def format_directory(directory: FileSystemPath, prefix: str = "") -> Iterator[str]:
-    entries = list(sorted(Path(directory).iterdir()))
-    indents = ["├─"] * (len(entries) - 1) + ["└─"]
+def locate_minecraft() -> Optional[Path]:
+    path = None
+    system = platform.system()
 
-    for indent, entry in zip(indents, entries):
-        yield f"{prefix}{indent} {entry.name}"
+    if system == "Linux":
+        path = Path("~/.minecraft").expanduser()
+    elif system == "Darwin":
+        path = Path("~/Library/Application Support/minecraft").expanduser()
+    elif system == "Windows":
+        path = Path(os.path.expandvars(r"%APPDATA%\.minecraft"))
 
-        if entry.is_dir():
-            indent = "│  " if indent == "├─" else "   "
-            yield from format_directory(entry, prefix + indent)
+    return path.resolve() if path and path.is_dir() else None

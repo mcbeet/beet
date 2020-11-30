@@ -1,7 +1,7 @@
 from pathlib import Path
 from time import sleep
 
-from beet.toolchain.cache import Cache, MultiCache
+from beet.core.cache import Cache, MultiCache
 
 
 def test_cache(tmp_path: Path):

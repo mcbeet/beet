@@ -7,7 +7,7 @@ import os
 from pathlib import Path
 from typing import Iterator
 
-from beet.shared_utils import FileSystemPath
+from beet.core.utils import FileSystemPath
 
 
 def list_files(directory: FileSystemPath) -> Iterator[Path]:

@@ -33,7 +33,8 @@ from typing import (
 )
 from zipfile import ZipFile
 
-from beet.shared_utils import (
+from beet.core.container import Container, ContainerProxy, MatchMixin, MergeMixin
+from beet.core.utils import (
     FileSystemPath,
     JsonDict,
     dump_json,
@@ -41,7 +42,6 @@ from beet.shared_utils import (
     unreachable,
 )
 
-from .container import Container, ContainerProxy, MatchMixin, MergeMixin
 from .utils import list_files
 
 T = TypeVar("T")
@@ -63,8 +63,8 @@ class File(Generic[T]):
     raw: Any = None
     source_path: Optional[FileSystemPath] = None
 
-    scope: ClassVar[Tuple[str, ...]]
-    extension: ClassVar[str]
+    scope: ClassVar[Tuple[str, ...]] = ()
+    extension: ClassVar[str] = ""
 
     def __post_init__(self, value: Optional[T]):
         if value is not None:

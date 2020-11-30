@@ -9,11 +9,9 @@ import shutil
 from datetime import datetime, timedelta
 from pathlib import Path
 from textwrap import indent
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Iterator, Optional
 
-from beet.shared_utils import FileSystemPath, dump_json
-
-from .utils import format_directory
+from beet.core.utils import FileSystemPath, dump_json
 
 
 class Cache:
@@ -100,8 +98,8 @@ class Cache:
         return f"{self.__class__.__name__}({str(self.directory)!r})"
 
     def __str__(self) -> str:
-        formatted_json = indent(json.dumps(self.json, indent=2), "  │  ")[5:]
-        contents = indent("\n".join(format_directory(self.directory)), "  │    ")
+        formatted_json = indent(dump_json(self.json), "  │  ")[5:]
+        contents = indent("\n".join(self._format_directory()), "  │    ")
 
         return (
             f"Cache {self.index_path.parent.name}:\n"
@@ -110,6 +108,21 @@ class Cache:
             f"  │  directory = {self.directory}\n{contents}\n  │  \n"
             f"  │  json = {formatted_json}"
         )
+
+    def _format_directory(
+        self,
+        directory: Optional[FileSystemPath] = None,
+        prefix: str = "",
+    ) -> Iterator[str]:
+        entries = list(sorted(Path(directory or self.directory).iterdir()))
+        indents = ["├─"] * (len(entries) - 1) + ["└─"]
+
+        for indent, entry in zip(indents, entries):
+            yield f"{prefix}{indent} {entry.name}"
+
+            if entry.is_dir():
+                indent = "│  " if indent == "├─" else "   "
+                yield from self._format_directory(entry, prefix + indent)
 
 
 class MultiCache(Dict[str, Cache]):

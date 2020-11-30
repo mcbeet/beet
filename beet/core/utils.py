@@ -1,6 +1,3 @@
-# pyright: strict
-
-
 __all__ = [
     "JsonDict",
     "FileSystemPath",

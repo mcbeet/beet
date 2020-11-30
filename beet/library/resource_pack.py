@@ -14,7 +14,7 @@ from typing import Optional
 
 from PIL import Image as img
 
-from beet.shared_utils import JsonDict, extra_field
+from beet.core.utils import JsonDict, extra_field
 
 from .base import FileContainer, FileContainerProxyDescriptor, Namespace, Pack
 from .file import JsonFile, PlainTextFile, PngFile

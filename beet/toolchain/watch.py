@@ -12,7 +12,7 @@ from typing import Dict, Iterator, Literal, Optional, Sequence, Tuple, cast
 
 from pathspec import PathSpec
 
-from beet.shared_utils import FileSystemPath, extra_field
+from beet.core.utils import FileSystemPath, extra_field
 
 FileChanges = Dict[str, Literal["created", "edited", "removed"]]
 
