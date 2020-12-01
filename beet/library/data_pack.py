@@ -34,24 +34,25 @@ from typing import MutableSequence, Optional, TypeVar
 
 from nbtlib.contrib.minecraft import StructureFile, StructureFileData
 
+from beet.core.file import BinaryFileBase, FileValueAlias, TextFileBase, TextFileContent
 from beet.core.utils import extra_field
 
-from .base import FileContainer, FileContainerProxyDescriptor, Namespace, Pack
-from .file import (
-    BinaryFileBase,
-    FileValueAlias,
-    JsonFile,
-    TextFileBase,
-    TextFileContent,
+from .base import (
+    FileContainer,
+    FileContainerProxyDescriptor,
+    Namespace,
+    NamespaceFile,
+    NamespaceJsonFile,
+    Pack,
 )
 
 
-class Advancement(JsonFile):
+class Advancement(NamespaceJsonFile):
     scope = ("advancements",)
 
 
 @dataclass
-class Function(TextFileBase[MutableSequence[str]]):
+class Function(TextFileBase[MutableSequence[str]], NamespaceFile):
     content: TextFileContent[MutableSequence[str]] = None
     tags: Optional[MutableSequence[str]] = extra_field(default=None)
 
@@ -75,19 +76,19 @@ class Function(TextFileBase[MutableSequence[str]]):
             )
 
 
-class LootTable(JsonFile):
+class LootTable(NamespaceJsonFile):
     scope = ("loot_tables",)
 
 
-class Predicate(JsonFile):
+class Predicate(NamespaceJsonFile):
     scope = ("predicates",)
 
 
-class Recipe(JsonFile):
+class Recipe(NamespaceJsonFile):
     scope = ("recipes",)
 
 
-class Structure(BinaryFileBase[StructureFileData]):
+class Structure(BinaryFileBase[StructureFileData], NamespaceFile):
     scope = ("structures",)
     extension = ".nbt"
 
@@ -109,7 +110,7 @@ class Structure(BinaryFileBase[StructureFileData]):
 TagFileType = TypeVar("TagFileType", bound="TagFile")
 
 
-class TagFile(JsonFile):
+class TagFile(NamespaceJsonFile):
     def merge(self: TagFileType, other: TagFileType) -> bool:
         if other.data.get("replace"):
             self.data["replace"] = True
@@ -142,43 +143,43 @@ class ItemTag(TagFile):
     scope = ("tags", "items")
 
 
-class DimensionType(JsonFile):
+class DimensionType(NamespaceJsonFile):
     scope = ("dimension_type",)
 
 
-class Dimension(JsonFile):
+class Dimension(NamespaceJsonFile):
     scope = ("dimension",)
 
 
-class Biome(JsonFile):
+class Biome(NamespaceJsonFile):
     scope = ("worldgen", "biome")
 
 
-class ConfiguredCarver(JsonFile):
+class ConfiguredCarver(NamespaceJsonFile):
     scope = ("worldgen", "configured_carver")
 
 
-class ConfiguredFeature(JsonFile):
+class ConfiguredFeature(NamespaceJsonFile):
     scope = ("worldgen", "configured_feature")
 
 
-class ConfiguredStructureFeature(JsonFile):
+class ConfiguredStructureFeature(NamespaceJsonFile):
     scope = ("worldgen", "configured_structure_feature")
 
 
-class ConfiguredSurfaceBuilder(JsonFile):
+class ConfiguredSurfaceBuilder(NamespaceJsonFile):
     scope = ("worldgen", "configured_surface_builder")
 
 
-class NoiseSettings(JsonFile):
+class NoiseSettings(NamespaceJsonFile):
     scope = ("worldgen", "noise_settings")
 
 
-class ProcessorList(JsonFile):
+class ProcessorList(NamespaceJsonFile):
     scope = ("worldgen", "processor_list")
 
 
-class TemplatePool(JsonFile):
+class TemplatePool(NamespaceJsonFile):
     scope = ("worldgen", "template_pool")
 
 

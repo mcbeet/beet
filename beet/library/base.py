@@ -1,10 +1,11 @@
 __all__ = [
-    "File",
-    "FileContainer",
+    "Pack",
     "Namespace",
+    "NamespaceFile",
+    "NamespaceJsonFile",
+    "FileContainer",
     "FileContainerProxy",
     "FileContainerProxyDescriptor",
-    "Pack",
 ]
 
 
@@ -33,32 +34,45 @@ from typing import (
 from zipfile import ZipFile
 
 from beet.core.container import Container, ContainerProxy, MatchMixin, MergeMixin
+from beet.core.file import File, FileOrigin, JsonFile, PngFile
 from beet.core.utils import FileSystemPath, extra_field, unreachable
 
-from .file import File, FileOrigin, JsonFile, PngFile
 from .utils import list_files
 
-AnyFile = File[object, object]
-
-
 T = TypeVar("T")
-FileType = TypeVar("FileType", bound="AnyFile")
+NamespaceFileType = TypeVar("NamespaceFileType", bound="NamespaceFile")
 
 
 # TODO: Redo load/dump
+
+
+class NamespaceFile(File[object, object]):
+    scope: ClassVar[Tuple[str, ...]]
+    extension: ClassVar[str]
+
+    def merge(self: NamespaceFileType, other: NamespaceFileType) -> bool:
+        """Merge the given file or return False to indicate no special handling."""
+        return False
+
+    def bind(self, pack: Any, namespace: str, path: str):
+        """Handle insertion."""
+
+
+class NamespaceJsonFile(JsonFile, NamespaceFile):
+    extension = ".json"
 
 
 @dataclass(repr=False)
 class FileContainer(
     MergeMixin,
     MatchMixin,
-    Container[str, FileType],
+    Container[str, NamespaceFileType],
 ):
     """Generic container that maps a string path to a file instance."""
 
     namespace: Optional["Namespace"] = extra_field(default=None)
 
-    def process(self, key: str, value: FileType) -> FileType:
+    def process(self, key: str, value: NamespaceFileType) -> NamespaceFileType:
         if self.namespace and self.namespace.pack and self.namespace.name:
             value.bind(self.namespace.pack, self.namespace.name, key)
         return value
@@ -75,7 +89,7 @@ NamespaceType = TypeVar("NamespaceType", bound="Namespace")
 
 
 @dataclass
-class Namespace(Mapping[Type[AnyFile], FileContainer[AnyFile]]):
+class Namespace(Mapping[Type[NamespaceFile], FileContainer[NamespaceFile]]):
     """Base class for pack namespaces.
 
     Subclasses are expected to extend the dataclass by adding fields of
@@ -88,8 +102,8 @@ class Namespace(Mapping[Type[AnyFile], FileContainer[AnyFile]]):
     name: Optional[str] = extra_field(default=None)
 
     directory: ClassVar[str]
-    scope_map: ClassVar[Mapping[Tuple[Tuple[str, ...], str], Type[AnyFile]]]
-    container_fields: ClassVar[Mapping[Type[AnyFile], str]]
+    scope_map: ClassVar[Mapping[Tuple[Tuple[str, ...], str], Type[NamespaceFile]]]
+    container_fields: ClassVar[Mapping[Type[NamespaceFile], str]]
 
     def __init_subclass__(cls: Type["Namespace"]):
         cls.container_fields = {
@@ -102,14 +116,16 @@ class Namespace(Mapping[Type[AnyFile], FileContainer[AnyFile]]):
             for file_type in cls.container_fields
         }
 
-    def __getitem__(self, key: Type[FileType]) -> FileContainer[FileType]:
+    def __getitem__(
+        self, key: Type[NamespaceFileType]
+    ) -> FileContainer[NamespaceFileType]:
         return getattr(self, self.container_fields[key])
 
-    def __setitem__(self, key: str, item: FileType):
+    def __setitem__(self, key: str, item: NamespaceFileType):
         container = getattr(self, self.container_fields[type(item)])
         container[key] = item
 
-    def __iter__(self) -> Iterator[Type[AnyFile]]:
+    def __iter__(self) -> Iterator[Type[NamespaceFile]]:
         return iter(self.container_fields)
 
     def __len__(self) -> int:
@@ -124,7 +140,7 @@ class Namespace(Mapping[Type[AnyFile], FileContainer[AnyFile]]):
             container.bind(self)
 
     @property
-    def content(self) -> Iterator[Tuple[str, AnyFile]]:
+    def content(self) -> Iterator[Tuple[str, NamespaceFile]]:
         """Iterator that yields all the files stored in the namespace."""
         for container in self.values():
             yield from container.items()
@@ -136,7 +152,7 @@ class Namespace(Mapping[Type[AnyFile], FileContainer[AnyFile]]):
 
     def merge(
         self,
-        other: Mapping[Type[AnyFile], FileContainer[AnyFile]],
+        other: Mapping[Type[NamespaceFile], FileContainer[NamespaceFile]],
     ) -> bool:
         """Merge containers from the given namespace."""
         for file_type, container in self.items():
@@ -214,7 +230,7 @@ class Namespace(Mapping[Type[AnyFile], FileContainer[AnyFile]]):
 class FileContainerProxy(
     MergeMixin,
     MatchMixin,
-    ContainerProxy[Type[FileType], str, FileType],
+    ContainerProxy[Type[NamespaceFileType], str, NamespaceFileType],
 ):
     """Aggregated view over files of a specific type from all namespaces."""
 
@@ -229,16 +245,16 @@ class FileContainerProxy(
 
 
 @dataclass
-class FileContainerProxyDescriptor(Generic[FileType]):
+class FileContainerProxyDescriptor(Generic[NamespaceFileType]):
     """Descriptor providing a bounded `FileContainerProxy`."""
 
-    proxy_key: Type[FileType]
+    proxy_key: Type[NamespaceFileType]
 
     def __get__(
         self,
         obj: Any,
         objtype: Optional[Type[object]] = None,
-    ) -> FileContainerProxy[FileType]:
+    ) -> FileContainerProxy[NamespaceFileType]:
         return FileContainerProxy(obj, self.proxy_key)
 
 
@@ -269,9 +285,9 @@ class Pack(
 
     eager: InitVar[bool] = extra_field(default=False)
 
-    proxy_map: Mapping[Type[AnyFile], FileContainerProxy[AnyFile]] = extra_field(
-        init=False
-    )
+    proxy_map: Mapping[
+        Type[NamespaceFile], FileContainerProxy[NamespaceFile]
+    ] = extra_field(init=False)
 
     namespace_type: ClassVar[Type[NamespaceType]]
     default_name: ClassVar[str]
@@ -295,7 +311,7 @@ class Pack(
         ...
 
     @overload
-    def __setitem__(self, key: str, file: AnyFile):
+    def __setitem__(self, key: str, file: NamespaceFile):
         ...
 
     def __setitem__(self, key: str, value: Any):
@@ -318,7 +334,7 @@ class Pack(
         return self.namespace_type()
 
     @property
-    def content(self) -> Iterator[Tuple[str, AnyFile]]:
+    def content(self) -> Iterator[Tuple[str, NamespaceFile]]:
         """Iterator that yields all the files stored in the pack."""
         for container_proxy in self.proxy_map.values():
             yield from container_proxy.items()

@@ -4,9 +4,9 @@ __all__ = [
     "FileValueAlias",
     "TextFileBase",
     "TextFileContent",
+    "TextFile",
     "BinaryFileBase",
     "BinaryFileContent",
-    "TextFile",
     "BinaryFile",
     "JsonFileBase",
     "JsonFile",
@@ -19,12 +19,12 @@ import json
 import shutil
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, ClassVar, Generic, Optional, Tuple, Type, TypeVar, Union, cast
+from typing import Any, Generic, Optional, Type, TypeVar, Union, cast
 from zipfile import ZipFile
 
 from PIL import Image as img
 
-from beet.core.utils import FileSystemPath, JsonDict, dump_json
+from .utils import FileSystemPath, JsonDict, dump_json
 
 ValueType = TypeVar("ValueType")
 SerializeType = TypeVar("SerializeType")
@@ -49,9 +49,6 @@ class File(Generic[ValueType, SerializeType]):
     content: Union[ValueType, SerializeType, None] = None
     source_path: Optional[FileSystemPath] = None
 
-    scope: ClassVar[Tuple[str, ...]] = ()
-    extension: ClassVar[str] = ""
-
     def set_content(self, content: Union[ValueType, SerializeType]):
         """Update the internal content."""
         self.content = content
@@ -64,13 +61,6 @@ class File(Generic[ValueType, SerializeType]):
             if self.content is None
             else self.content
         )
-
-    def merge(self: FileType, other: FileType) -> bool:
-        """Merge the given file or return False to indicate no special handling."""
-        return False
-
-    def bind(self, pack: Any, namespace: str, path: str):
-        """Handle insertion."""
 
     @property
     def value(self) -> ValueType:
@@ -200,8 +190,6 @@ class TextFileBase(File[ValueType, str]):
 
 
 class TextFile(TextFileBase[str]):
-    extension = ".txt"
-
     @classmethod
     def to_str(cls, content: str) -> str:
         return content
@@ -254,8 +242,6 @@ class BinaryFileBase(File[ValueType, bytes]):
 
 
 class BinaryFile(BinaryFileBase[bytes]):
-    extension = ".bin"
-
     @classmethod
     def to_bytes(cls, content: bytes) -> bytes:
         return content
@@ -266,8 +252,6 @@ class BinaryFile(BinaryFileBase[bytes]):
 
 
 class JsonFileBase(TextFileBase[ValueType]):
-    extension = ".json"
-
     data = FileValueAlias[ValueType]()
 
     @classmethod
@@ -284,8 +268,6 @@ class JsonFile(JsonFileBase[JsonDict]):
 
 
 class PngFile(BinaryFileBase[img.Image]):
-    extension = ".png"
-
     image = FileValueAlias[img.Image]()
 
     @classmethod

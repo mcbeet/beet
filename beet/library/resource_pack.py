@@ -14,39 +14,48 @@ from typing import Optional
 
 from PIL import Image as img
 
+from beet.core.file import BinaryFileContent, PngFile, TextFile
 from beet.core.utils import JsonDict, extra_field
 
-from .base import FileContainer, FileContainerProxyDescriptor, Namespace, Pack
-from .file import BinaryFileContent, JsonFile, PngFile, TextFile
+from .base import (
+    FileContainer,
+    FileContainerProxyDescriptor,
+    Namespace,
+    NamespaceFile,
+    NamespaceJsonFile,
+    Pack,
+)
 
 
-class Blockstate(JsonFile):
+class Blockstate(NamespaceJsonFile):
     scope = ("blockstates",)
 
 
-class Model(JsonFile):
+class Model(NamespaceJsonFile):
     scope = ("models",)
 
 
-class TextureMcmeta(JsonFile):
+class TextureMcmeta(NamespaceJsonFile):
     scope = ("textures",)
     extension = ".png.mcmeta"
 
 
 @dataclass(eq=False)
-class Texture(PngFile):
+class Texture(PngFile, NamespaceFile):
     content: BinaryFileContent[img.Image] = None
     mcmeta: Optional[JsonDict] = extra_field(default=None)
 
     scope = ("textures",)
+    extension = ".png"
 
     def bind(self, pack: "ResourcePack", namespace: str, path: str):
         if self.mcmeta:
             pack.textures_mcmeta[f"{namespace}:{path}"] = TextureMcmeta(self.mcmeta)
 
 
-class Text(TextFile):
+class Text(TextFile, NamespaceFile):
     scope = ("texts",)
+    extension = ".txt"
 
 
 @dataclass(repr=False)
