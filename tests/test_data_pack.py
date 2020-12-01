@@ -44,13 +44,13 @@ def test_namespaces():
     assert p1 == p2
     assert p1["hello"] == p2["hello"]
 
-    p2.functions["hello:world"].content.append("say world")
+    p2.functions["hello:world"].lines.append("say world")
 
     assert p1.functions["hello:world"] != p2.functions["hello:world"]
     assert p1["hello"] != p2["hello"]
     assert p1 != p2
 
-    p1["hello"].functions["world"].content.append("say world")
+    p1["hello"].functions["world"].lines.append("say world")
 
     assert p1.functions["hello:world"] == p2.functions["hello:world"]
     assert p1["hello"] == p2["hello"]
@@ -78,8 +78,8 @@ def test_context_manager(tmp_path: Path):
     p2 = DataPack(path=tmp_path / "foobar")
     assert p2 != p1
 
-    assert p2.functions["hello:world"].content == ["say hello"]
-    assert p2.function_tags["minecraft:load"].content == {"values": ["hello:world"]}
+    assert p2.functions["hello:world"].lines == ["say hello"]
+    assert p2.function_tags["minecraft:load"].data == {"values": ["hello:world"]}
     assert p2 == p1
 
 
@@ -114,14 +114,14 @@ def test_context_manager_zipped(tmp_path: Path):
 
     p2 = DataPack(path=tmp_path / "foobar.zip")
 
-    assert p2.functions["hello:world"].content == ["say hello"]
-    assert p2.function_tags["minecraft:load"].content == {"values": ["hello:world"]}
+    assert p2.functions["hello:world"].lines == ["say hello"]
+    assert p2.function_tags["minecraft:load"].data == {"values": ["hello:world"]}
     assert p2 == p1
 
-    p1.functions["hello:world"].content.append("say world")
+    p1.functions["hello:world"].lines.append("say world")
     assert p2 != p1
 
-    p2["hello"].functions["world"].content.append("say world")
+    p2["hello"].functions["world"].lines.append("say world")
     assert p2 == p1
 
 
@@ -142,7 +142,7 @@ def test_vanilla_content(minecraft_data_pack: Path):
 
 def test_vanilla_igloo(minecraft_data_pack: Path):
     pack = DataPack(path=minecraft_data_pack)
-    assert pack.structures["minecraft:igloo/top"].content["size"] == [7, 5, 8]
+    assert pack.structures["minecraft:igloo/top"].data["size"] == [7, 5, 8]
 
 
 def test_vanilla_igloo_content(minecraft_data_pack: Path):
@@ -150,7 +150,7 @@ def test_vanilla_igloo_content(minecraft_data_pack: Path):
     content = dict(pack.content)
     igloo_structure = content["minecraft:igloo/top"]
     assert isinstance(igloo_structure, Structure)
-    assert igloo_structure.content["size"] == [7, 5, 8]
+    assert igloo_structure.data["size"] == [7, 5, 8]
 
 
 def test_merge_tags():
@@ -164,7 +164,7 @@ def test_merge_tags():
 
     assert len(p1.functions) == 2
     assert len(p1.function_tags) == 1
-    assert p1.function_tags["minecraft:tick"].content == {
+    assert p1.function_tags["minecraft:tick"].data == {
         "values": ["hello:func1", "hello:func2"]
     }
 
@@ -273,29 +273,26 @@ def test_proxy_match():
 def test_accessors_with_function(tmp_path: Path):
     func1 = Function(["say hello"])
 
-    assert func1.raw == ["say hello"]
-
-    assert func1.data == b"say hello\n"
-    assert func1.raw == func1.data
-
     assert func1.content == ["say hello"]
-    assert func1.raw == func1.content
+
+    assert func1.lines == ["say hello"]
+    assert func1.content == func1.lines
 
     assert func1.text == "say hello\n"
-    assert func1.raw == b"say hello\n"
+    assert func1.content == "say hello\n"
 
     filename = tmp_path / "foo.mcfunction"
     filename.write_text("say world")
     func2 = Function(source_path=filename)
 
-    assert func2.raw is None
+    assert func2.content is None
 
-    assert func2.data == b"say world"
-    assert func2.raw == func2.data
+    assert func2.text == "say world"
+    assert func2.content == func2.text
     assert func2.source_path is None
 
-    assert func2.content == ["say world"]
-    assert func2.raw == func2.content
+    assert func2.lines == ["say world"]
+    assert func2.content == func2.lines
 
-    assert func2.data == b"say world\n"
-    assert func2.raw == func2.data
+    assert func2.text == "say world\n"
+    assert func2.content == func2.text

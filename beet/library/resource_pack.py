@@ -9,7 +9,7 @@ __all__ = [
 ]
 
 
-from dataclasses import InitVar, dataclass, field
+from dataclasses import dataclass, field
 from typing import Optional
 
 from PIL import Image as img
@@ -17,7 +17,7 @@ from PIL import Image as img
 from beet.core.utils import JsonDict, extra_field
 
 from .base import FileContainer, FileContainerProxyDescriptor, Namespace, Pack
-from .file import JsonFile, PlainTextFile, PngFile
+from .file import BinaryFileContent, JsonFile, PngFile, TextFile
 
 
 class Blockstate(JsonFile):
@@ -35,7 +35,7 @@ class TextureMcmeta(JsonFile):
 
 @dataclass(eq=False)
 class Texture(PngFile):
-    value: InitVar[Optional[img.Image]] = None
+    content: BinaryFileContent[img.Image] = None
     mcmeta: Optional[JsonDict] = extra_field(default=None)
 
     scope = ("textures",)
@@ -45,7 +45,7 @@ class Texture(PngFile):
             pack.textures_mcmeta[f"{namespace}:{path}"] = TextureMcmeta(self.mcmeta)
 
 
-class Text(PlainTextFile):
+class Text(TextFile):
     scope = ("texts",)
 
 

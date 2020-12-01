@@ -28,16 +28,22 @@ __all__ = [
 
 import io
 from copy import deepcopy
-from dataclasses import InitVar, dataclass, field
+from dataclasses import dataclass, field
 from gzip import GzipFile
-from typing import List, Optional, TypeVar
+from typing import MutableSequence, Optional, TypeVar
 
 from nbtlib.contrib.minecraft import StructureFile, StructureFileData
 
 from beet.core.utils import extra_field
 
-from .base import File, FileContainer, FileContainerProxyDescriptor, Namespace, Pack
-from .file import JsonFile
+from .base import FileContainer, FileContainerProxyDescriptor, Namespace, Pack
+from .file import (
+    BinaryFileBase,
+    FileValueAlias,
+    JsonFile,
+    TextFileBase,
+    TextFileContent,
+)
 
 
 class Advancement(JsonFile):
@@ -45,18 +51,22 @@ class Advancement(JsonFile):
 
 
 @dataclass
-class Function(File[List[str]]):
-    value: InitVar[Optional[List[str]]] = None
-    tags: Optional[List[str]] = extra_field(default=None)
+class Function(TextFileBase[MutableSequence[str]]):
+    content: TextFileContent[MutableSequence[str]] = None
+    tags: Optional[MutableSequence[str]] = extra_field(default=None)
 
     scope = ("functions",)
     extension = ".mcfunction"
 
-    def to_content(self, raw: bytes) -> List[str]:
-        return raw.decode().splitlines()
+    lines = FileValueAlias[MutableSequence[str]]()
 
-    def to_bytes(self, content: List[str]) -> bytes:
-        return ("\n".join(content) + "\n").encode()
+    @classmethod
+    def to_str(cls, content: MutableSequence[str]) -> str:
+        return "\n".join(content) + "\n"
+
+    @classmethod
+    def from_str(cls, content: str) -> MutableSequence[str]:
+        return content.splitlines()
 
     def bind(self, pack: "DataPack", namespace: str, path: str):
         for tag_name in self.tags or ():
@@ -77,15 +87,19 @@ class Recipe(JsonFile):
     scope = ("recipes",)
 
 
-class Structure(File[StructureFileData]):
+class Structure(BinaryFileBase[StructureFileData]):
     scope = ("structures",)
     extension = ".nbt"
 
-    def to_content(self, raw: bytes) -> StructureFileData:
-        with GzipFile(fileobj=io.BytesIO(raw)) as fileobj:
+    data = FileValueAlias[StructureFileData]()
+
+    @classmethod
+    def from_bytes(cls, content: bytes) -> StructureFileData:
+        with GzipFile(fileobj=io.BytesIO(content)) as fileobj:
             return StructureFile.parse(fileobj).root
 
-    def to_bytes(self, content: StructureFileData) -> bytes:
+    @classmethod
+    def to_bytes(cls, content: StructureFileData) -> bytes:
         dst = io.BytesIO()
         with GzipFile(fileobj=dst, mode="wb") as fileobj:
             StructureFile(content).write(fileobj)
@@ -97,12 +111,12 @@ TagFileType = TypeVar("TagFileType", bound="TagFile")
 
 class TagFile(JsonFile):
     def merge(self: TagFileType, other: TagFileType) -> bool:
-        if other.content.get("replace"):
-            self.content["replace"] = True
+        if other.data.get("replace"):
+            self.data["replace"] = True
 
-        values = self.content.setdefault("values", [])
+        values = self.data.setdefault("values", [])
 
-        for value in other.content.get("values", []):
+        for value in other.data.get("values", []):
             if value not in values:
                 values.append(deepcopy(value))
         return True

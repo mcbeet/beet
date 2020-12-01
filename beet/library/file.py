@@ -1,8 +1,14 @@
 __all__ = [
     "File",
-    "PlainTextFile",
+    "FileOrigin",
+    "FileValueAlias",
+    "TextFileBase",
+    "TextFileContent",
+    "BinaryFileBase",
+    "BinaryFileContent",
+    "TextFile",
     "BinaryFile",
-    "GenericJsonFile",
+    "JsonFileBase",
     "JsonFile",
     "PngFile",
 ]
@@ -11,23 +17,26 @@ __all__ = [
 import io
 import json
 import shutil
-from dataclasses import InitVar, dataclass
+from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, ClassVar, Generic, Optional, Tuple, Type, TypeVar, Union
+from typing import Any, ClassVar, Generic, Optional, Tuple, Type, TypeVar, Union, cast
 from zipfile import ZipFile
 
 from PIL import Image as img
 
 from beet.core.utils import FileSystemPath, JsonDict, dump_json
 
-PackOrigin = Union[FileSystemPath, ZipFile]
+ValueType = TypeVar("ValueType")
+SerializeType = TypeVar("SerializeType")
+FileType = TypeVar("FileType", bound="File[object, object]")
 
-T = TypeVar("T")
-FileType = TypeVar("FileType", bound="File[object]")
+FileOrigin = Union[FileSystemPath, ZipFile]
+TextFileContent = Union[ValueType, str, None]
+BinaryFileContent = Union[ValueType, bytes, None]
 
 
 @dataclass
-class File(Generic[T]):
+class File(Generic[ValueType, SerializeType]):
     """Base file class.
 
     All resource pack and data pack files inherit from this class. The
@@ -37,58 +46,24 @@ class File(Generic[T]):
     content of the file.
     """
 
-    value: InitVar[Optional[T]] = None
-    raw: Any = None
+    content: Union[ValueType, SerializeType, None] = None
     source_path: Optional[FileSystemPath] = None
 
     scope: ClassVar[Tuple[str, ...]] = ()
     extension: ClassVar[str] = ""
 
-    def __post_init__(self, value: Optional[T]):
-        if value is not None:
-            self.raw = value
-
-    def to_content(self, raw: bytes) -> T:
-        """Load file content from bytes."""
-        raise NotImplementedError()
-
-    def to_bytes(self, content: T) -> bytes:
-        """Serialize file content to bytes."""
-        raise NotImplementedError()
-
-    @property
-    def data(self) -> bytes:
-        if self.raw is None:
-            self.data = Path(self._ensure_source_path()).read_bytes()
-        elif not isinstance(self.raw, bytes):
-            self.raw = self.to_bytes(self.raw)
-        return self.raw
-
-    @data.setter
-    def data(self, value: bytes):
-        self.raw = value
+    def set_content(self, content: Union[ValueType, SerializeType]):
+        """Update the internal content."""
+        self.content = content
         self.source_path = None
 
-    @property
-    def content(self) -> T:
-        if self.raw is None:
-            self.data = Path(self._ensure_source_path()).read_bytes()
-        if isinstance(self.raw, bytes):
-            self.raw = self.to_content(self.raw)
-        return self.raw
-
-    @content.setter
-    def content(self, value: T):
-        self.raw = value
-        self.source_path = None
-
-    @property
-    def text(self) -> str:
-        return self.data.decode()
-
-    @text.setter
-    def text(self, value: str):
-        self.data = value.encode()
+    def get_content(self) -> Union[ValueType, SerializeType]:
+        """Return the internal content."""
+        return (
+            self.decode(Path(self.ensure_source_path()).read_bytes())
+            if self.content is None
+            else self.content
+        )
 
     def merge(self: FileType, other: FileType) -> bool:
         """Merge the given file or return False to indicate no special handling."""
@@ -97,53 +72,73 @@ class File(Generic[T]):
     def bind(self, pack: Any, namespace: str, path: str):
         """Handle insertion."""
 
+    @property
+    def value(self) -> ValueType:
+        content = self.deserialize(self.get_content())
+        self.set_content(content)
+        return content
+
+    @value.setter
+    def value(self, value: ValueType):
+        self.set_content(value)
+
     @classmethod
-    def load(
-        cls: Type[FileType],
-        origin: PackOrigin,
-        path: FileSystemPath,
-    ) -> FileType:
+    def serialize(cls, content: Union[ValueType, SerializeType]) -> SerializeType:
+        """Serialize file content."""
+        raise NotImplementedError()
+
+    @classmethod
+    def deserialize(cls, content: Union[ValueType, SerializeType]) -> ValueType:
+        """Deserialize file content."""
+        raise NotImplementedError()
+
+    @classmethod
+    def decode(cls, raw: bytes) -> SerializeType:
+        """Convert bytes to serialized representation."""
+        raise NotImplementedError()
+
+    @classmethod
+    def encode(cls, raw: SerializeType) -> bytes:
+        """Convert serialized representation to bytes."""
+        raise NotImplementedError()
+
+    @classmethod
+    def load(cls: Type[FileType], origin: FileOrigin, path: FileSystemPath) -> FileType:
         """Load a file from a zipfile or from the filesystem."""
-        return (
-            cls(raw=origin.read(str(path)))
-            if isinstance(origin, ZipFile)
-            else cls(source_path=Path(origin, path))
-        )
+        instance = cls.try_load(origin, path)
+        if instance is None:
+            raise FileNotFoundError(path)
+        return cast(FileType, instance)
 
     @classmethod
     def try_load(
-        cls: Type[FileType],
-        origin: PackOrigin,
-        path: FileSystemPath,
+        cls: Type[FileType], origin: FileOrigin, path: FileSystemPath
     ) -> Optional[FileType]:
         """Try to load a file from a zipfile or from the filesystem."""
         if isinstance(origin, ZipFile):
             try:
-                return cls(raw=origin.read(str(path)))
+                return cls(cls.decode(origin.read(str(path))))
             except KeyError:
                 return None
         path = Path(origin, path)
         return cls(source_path=path) if path.is_file() else None
 
-    def dump(
-        self,
-        origin: PackOrigin,
-        path: FileSystemPath,
-    ):
+    def dump(self, origin: FileOrigin, path: FileSystemPath):
         """Write the file to a zipfile or to the filesystem."""
-        if self.raw is None:
+        if self.content is None:
             if isinstance(origin, ZipFile):
-                origin.write(self._ensure_source_path(), str(path))
+                origin.write(self.ensure_source_path(), str(path))
             else:
-                shutil.copyfile(self._ensure_source_path(), str(Path(origin, path)))
+                shutil.copyfile(self.ensure_source_path(), str(Path(origin, path)))
         else:
-            raw = self.raw if isinstance(self.raw, bytes) else self.to_bytes(self.raw)
+            raw = self.encode(self.serialize(self.get_content()))
             if isinstance(origin, ZipFile):
                 origin.writestr(str(path), raw)
             else:
                 Path(origin, path).write_bytes(raw)
 
-    def _ensure_source_path(self) -> FileSystemPath:
+    def ensure_source_path(self) -> FileSystemPath:
+        """Make sure that the file has a source path and return it."""
         if self.source_path:
             return self.source_path
         raise ValueError(
@@ -152,54 +147,163 @@ class File(Generic[T]):
         )
 
 
-class PlainTextFile(File[str]):
-    extension = ".txt"
+class FileValueAlias(Generic[ValueType]):
+    def __get__(
+        self, obj: File[ValueType, object], objtype: Optional[Type[object]] = None
+    ) -> ValueType:
+        return obj.value
 
-    def to_content(self, raw: bytes) -> str:
+    def __set__(self, obj: File[ValueType, object], value: ValueType):
+        obj.value = value
+
+
+class TextFileBase(File[ValueType, str]):
+    @classmethod
+    def serialize(cls, content: Any) -> str:
+        return content if isinstance(content, str) else cls.to_str(content)
+
+    @classmethod
+    def deserialize(cls, content: Any) -> ValueType:
+        return (
+            cls.from_str(content)
+            if isinstance(content, str)
+            else cast(ValueType, content)
+        )
+
+    @classmethod
+    def decode(cls, raw: bytes) -> str:
         return raw.decode()
 
-    def to_bytes(self, content: str) -> bytes:
-        return content.encode()
+    @classmethod
+    def encode(cls, raw: str) -> bytes:
+        return raw.encode()
+
+    @classmethod
+    def to_str(cls, content: ValueType) -> str:
+        """Convert content to string."""
+        raise NotImplementedError()
+
+    @classmethod
+    def from_str(cls, content: str) -> ValueType:
+        """Convert string to content."""
+        raise NotImplementedError()
+
+    @property
+    def text(self) -> str:
+        content = self.serialize(self.get_content())
+        self.set_content(content)
+        return content
+
+    @text.setter
+    def text(self, text: str):
+        self.set_content(text)
 
 
-class BinaryFile(File[bytes]):
-    def to_content(self, raw: bytes) -> bytes:
-        return raw
+class TextFile(TextFileBase[str]):
+    extension = ".txt"
 
-    def to_bytes(self, content: bytes) -> bytes:
+    @classmethod
+    def to_str(cls, content: str) -> str:
+        return content
+
+    @classmethod
+    def from_str(cls, content: str) -> str:
         return content
 
 
-class GenericJsonFile(File[T]):
+class BinaryFileBase(File[ValueType, bytes]):
+    @classmethod
+    def serialize(cls, content: Any) -> bytes:
+        return content if isinstance(content, bytes) else cls.to_bytes(content)
+
+    @classmethod
+    def deserialize(cls, content: Any) -> ValueType:
+        return (
+            cls.from_bytes(content)
+            if isinstance(content, bytes)
+            else cast(ValueType, content)
+        )
+
+    @classmethod
+    def decode(cls, raw: bytes) -> bytes:
+        return raw
+
+    @classmethod
+    def encode(cls, raw: bytes) -> bytes:
+        return raw
+
+    @classmethod
+    def to_bytes(cls, content: ValueType) -> bytes:
+        """Convert content to bytes."""
+        raise NotImplementedError()
+
+    @classmethod
+    def from_bytes(cls, content: bytes) -> ValueType:
+        """Convert bytes to content."""
+        raise NotImplementedError()
+
+    @property
+    def blob(self) -> bytes:
+        content = self.serialize(self.get_content())
+        self.set_content(content)
+        return content
+
+    @blob.setter
+    def blob(self, value: bytes):
+        self.set_content(value)
+
+
+class BinaryFile(BinaryFileBase[bytes]):
+    extension = ".bin"
+
+    @classmethod
+    def to_bytes(cls, content: bytes) -> bytes:
+        return content
+
+    @classmethod
+    def from_bytes(cls, content: bytes) -> bytes:
+        return content
+
+
+class JsonFileBase(TextFileBase[ValueType]):
     extension = ".json"
 
-    def to_content(self, raw: bytes) -> T:
-        return json.loads(raw.decode())
+    data = FileValueAlias[ValueType]()
 
-    def to_bytes(self, content: T) -> bytes:
-        return dump_json(content).encode()
+    @classmethod
+    def to_str(cls, content: ValueType) -> str:
+        return dump_json(content)
+
+    @classmethod
+    def from_str(cls, content: str) -> ValueType:
+        return json.loads(content)
 
 
-class JsonFile(GenericJsonFile[JsonDict]):
+class JsonFile(JsonFileBase[JsonDict]):
     pass
 
 
-class PngFile(File[img.Image]):
+class PngFile(BinaryFileBase[img.Image]):
     extension = ".png"
 
-    def to_content(self, raw: bytes) -> img.Image:
-        return img.open(io.BytesIO(raw))
+    image = FileValueAlias[img.Image]()
 
-    def to_bytes(self, content: img.Image) -> bytes:
+    @classmethod
+    def to_bytes(cls, content: img.Image) -> bytes:
         dst = io.BytesIO()
         content.save(dst, format="png")
         return dst.getvalue()
+
+    @classmethod
+    def from_bytes(cls, content: bytes) -> img.Image:
+        return img.open(io.BytesIO(content))
 
     def __eq__(self, other: object) -> bool:
         if result := super().__eq__(other):
             return result
         if isinstance(other, PngFile):
             return type(self) == type(other) and (
-                self.to_bytes(self.content) == other.to_bytes(other.content)
+                self.serialize(self.get_content())
+                == other.serialize(other.get_content())
             )
         return False
