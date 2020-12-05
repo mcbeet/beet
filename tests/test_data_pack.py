@@ -70,7 +70,6 @@ def test_with_tags():
 
     p2["hello"]["world"] = Function(["say hello"])
     p2["minecraft"].function_tags["load"] = FunctionTag({"values": ["hello:world"]})
-
     assert p1 == p2
 
 
@@ -79,27 +78,11 @@ def test_context_manager(tmp_path: Path):
         p1["hello:world"] = Function(["say hello"], tags=["minecraft:load"])
 
     p2 = DataPack(path=tmp_path / "foobar")
-    assert p2 != p1
+    assert p2 == p1
 
     assert p2.functions["hello:world"].lines == ["say hello"]
     assert p2.function_tags["minecraft:load"].data == {"values": ["hello:world"]}
     assert p2 == p1
-
-
-def test_context_manager_eager(tmp_path: Path):
-    with DataPack(path=tmp_path / "foobar") as p1:
-        p1["hello:world"] = Function(["say hello"], tags=["minecraft:load"])
-
-    assert DataPack(path=tmp_path / "foobar", eager=True) == p1
-
-
-def test_context_manager_load_lazy(tmp_path: Path):
-    with DataPack(path=tmp_path / "foobar") as p1:
-        p1["hello:world"] = Function(["say hello"], tags=["minecraft:load"])
-
-    p2 = DataPack()
-    p2.load(tmp_path / "foobar", lazy=True)
-    assert p2 != p1
 
 
 def test_context_manager_load(tmp_path: Path):

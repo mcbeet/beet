@@ -1,8 +1,10 @@
 __all__ = [
-    "MatchMixin",
     "SupportsMerge",
     "MergeMixin",
+    "MatchMixin",
     "Pin",
+    "PinDefault",
+    "PinDefaultFactory",
     "Container",
     "ContainerProxy",
 ]
@@ -24,23 +26,19 @@ from typing import (
     Type,
     TypeVar,
     Union,
-    cast,
 )
 
 from pathspec import PathSpec
 
 from .utils import SENTINEL_OBJ, Sentinel
 
-
-class MatchMixin:
-    def match(self: Mapping[str, object], *patterns: str) -> Set[str]:
-        """Return keys matching the given path patterns."""
-        spec = PathSpec.from_lines("gitwildmatch", patterns or ["*"])
-        return set(spec.match_files(self.keys()))
-
-
 K = TypeVar("K")
 V = TypeVar("V")
+MergeableType = TypeVar("MergeableType", bound="SupportsMerge[Any]")
+ProxyKeyType = TypeVar("ProxyKeyType")
+
+PinDefault = Union[V, Sentinel]
+PinDefaultFactory = Union[Callable[[], V], Sentinel]
 
 
 class SupportsMerge(Protocol[V]):
@@ -48,9 +46,6 @@ class SupportsMerge(Protocol[V]):
 
     def merge(self: V, other: V) -> bool:
         ...
-
-
-MergeableType = TypeVar("MergeableType", bound="SupportsMerge[object]")
 
 
 class MergeMixin:
@@ -68,20 +63,22 @@ class MergeMixin:
         return True
 
 
-PinType = TypeVar("PinType", bound="Pin[object]")
-
-
-PinDefault = Union[V, Sentinel]
-PinDefaultFactory = Union[Callable[[], V], Sentinel]
+class MatchMixin:
+    def match(self: Mapping[str, Any], *patterns: str) -> Set[str]:
+        """Return keys matching the given path patterns."""
+        spec = PathSpec.from_lines("gitwildmatch", patterns or ["*"])
+        return set(spec.match_files(self.keys()))
 
 
 @dataclass
 class Pin(Generic[V]):
+    """Descriptor that exposes a specific value from a dict-like object."""
+
     key: Any
     default: PinDefault[V] = SENTINEL_OBJ
     default_factory: PinDefaultFactory[V] = SENTINEL_OBJ
 
-    def __get__(self, obj: Any, objtype: Optional[Type[object]] = None) -> V:
+    def __get__(self, obj: Any, objtype: Optional[Type[Any]] = None) -> V:
         mapping = self.forward(obj)
 
         try:
@@ -110,20 +107,14 @@ class Pin(Generic[V]):
         return obj
 
     @classmethod
-    def collect_from(cls: Type[PinType], target: Type[object]) -> Dict[str, PinType]:
+    def collect_from(cls: Type["Pin[V]"], target: Type[Any]) -> Dict[str, "Pin[V]"]:
         return {
-            key: cast(PinType, value)
-            for key, value in vars(target).items()
-            if isinstance(value, cls)
+            key: value for key, value in vars(target).items() if isinstance(value, cls)
         }
 
 
 class Container(MergeMixin, MutableMapping[K, V]):
-    """Generic dict-like container.
-
-    The class wraps a builtin dictionnary and exposes overrideable hooks
-    for intercepting updates and missing items.
-    """
+    """Generic dict-like container."""
 
     _wrapped: Dict[K, V]
 
@@ -162,9 +153,6 @@ class Container(MergeMixin, MutableMapping[K, V]):
 
     def __repr__(self) -> str:
         return f"{self.__class__.__name__}(keys={list(self.keys())})"
-
-
-ProxyKeyType = TypeVar("ProxyKeyType")
 
 
 class ContainerProxy(Generic[ProxyKeyType, K, V], MergeMixin, MutableMapping[K, V]):

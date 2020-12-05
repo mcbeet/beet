@@ -9,7 +9,7 @@ from beet import JsonFile, PngFile, ResourcePack, Texture
 
 def test_default():
     assert ResourcePack() == ResourcePack()
-    assert ResourcePack().empty
+    assert not ResourcePack()
 
 
 @pytest.mark.parametrize(  # type: ignore
@@ -28,7 +28,7 @@ def test_default():
 )
 def test_empty(snapshot: Any, pack: ResourcePack):
     assert snapshot("resource_pack") == pack
-    assert pack.empty
+    assert not pack
     assert dict(pack) == {}
 
 
@@ -36,14 +36,8 @@ def test_empty_namespaces():
     pack = ResourcePack()
 
     assert not pack
-    assert pack.empty
-
-    assert pack["hello"].empty
-
-    assert pack["world"].empty
-
-    assert pack
-    assert pack.empty
+    assert not pack["hello"]
+    assert not pack["world"]
 
 
 def test_mcmeta_properties():

@@ -37,35 +37,36 @@ from nbtlib.contrib.minecraft import StructureFile, StructureFileData
 from beet.core.file import (
     BinaryFileBase,
     BinaryFileContent,
-    FileValueAlias,
+    FileDeserialize,
+    JsonFile,
     TextFileBase,
     TextFileContent,
 )
 from beet.core.utils import extra_field
 
-from .base import (
-    Namespace,
-    NamespaceFile,
-    NamespaceJsonFile,
-    NamespacePin,
-    NamespaceProxyDescriptor,
-    Pack,
-)
+from .base import Namespace, NamespaceFile, NamespacePin, NamespaceProxyDescriptor, Pack
+
+TagFileType = TypeVar("TagFileType", bound="TagFile")
 
 
-class Advancement(NamespaceJsonFile):
+class Advancement(JsonFile, NamespaceFile):
+    """Class representing a data pack advancement."""
+
     scope = ("advancements",)
+    extension = ".json"
 
 
-@dataclass
+@dataclass(eq=False)
 class Function(TextFileBase[MutableSequence[str]], NamespaceFile):
+    """Class representing a data pack function."""
+
     content: TextFileContent[MutableSequence[str]] = None
     tags: Optional[MutableSequence[str]] = extra_field(default=None)
 
     scope = ("functions",)
     extension = ".mcfunction"
 
-    lines = FileValueAlias[MutableSequence[str]]()
+    lines = FileDeserialize[MutableSequence[str]]()
 
     @classmethod
     def to_str(cls, content: MutableSequence[str]) -> str:
@@ -82,24 +83,37 @@ class Function(TextFileBase[MutableSequence[str]], NamespaceFile):
             )
 
 
-class LootTable(NamespaceJsonFile):
+class LootTable(JsonFile, NamespaceFile):
+    """Class representing a data pack loot table."""
+
     scope = ("loot_tables",)
+    extension = ".json"
 
 
-class Predicate(NamespaceJsonFile):
+class Predicate(JsonFile, NamespaceFile):
+    """Class representing a data pack predicate."""
+
     scope = ("predicates",)
+    extension = ".json"
 
 
-class Recipe(NamespaceJsonFile):
+class Recipe(JsonFile, NamespaceFile):
+    """Class representing a data pack recipe."""
+
     scope = ("recipes",)
+    extension = ".json"
 
 
+@dataclass(eq=False)
 class Structure(BinaryFileBase[StructureFileData], NamespaceFile):
+    """Class representing a data pack structure file."""
+
     content: BinaryFileContent[StructureFileData] = None
+
     scope = ("structures",)
     extension = ".nbt"
 
-    data = FileValueAlias[StructureFileData]()
+    data = FileDeserialize[StructureFileData]()
 
     @classmethod
     def from_bytes(cls, content: bytes) -> StructureFileData:
@@ -114,10 +128,11 @@ class Structure(BinaryFileBase[StructureFileData], NamespaceFile):
         return dst.getvalue()
 
 
-TagFileType = TypeVar("TagFileType", bound="TagFile")
+class TagFile(JsonFile, NamespaceFile):
+    """Base class for data pack tag files."""
 
+    extension = ".json"
 
-class TagFile(NamespaceJsonFile):
     def merge(self: TagFileType, other: TagFileType) -> bool:
         if other.data.get("replace"):
             self.data["replace"] = True
@@ -131,66 +146,110 @@ class TagFile(NamespaceJsonFile):
 
 
 class BlockTag(TagFile):
+    """Class representing a data pack block tag."""
+
     scope = ("tags", "blocks")
 
 
 class EntityTypeTag(TagFile):
+    """Class representing a data pack entity tag."""
+
     scope = ("tags", "entity_types")
 
 
 class FluidTag(TagFile):
+    """Class representing a data pack fluid tag."""
+
     scope = ("tags", "fluids")
 
 
 class FunctionTag(TagFile):
+    """Class representing a data pack function tag."""
+
     scope = ("tags", "functions")
 
 
 class ItemTag(TagFile):
+    """Class representing a data pack item tag."""
+
     scope = ("tags", "items")
 
 
-class DimensionType(NamespaceJsonFile):
+class DimensionType(JsonFile, NamespaceFile):
+    """Class representing a data pack dimension type."""
+
     scope = ("dimension_type",)
+    extension = ".json"
 
 
-class Dimension(NamespaceJsonFile):
+class Dimension(JsonFile, NamespaceFile):
+    """Class representing a data pack dimension."""
+
     scope = ("dimension",)
+    extension = ".json"
 
 
-class Biome(NamespaceJsonFile):
+class Biome(JsonFile, NamespaceFile):
+    """Class representing a data pack biome."""
+
     scope = ("worldgen", "biome")
+    extension = ".json"
 
 
-class ConfiguredCarver(NamespaceJsonFile):
+class ConfiguredCarver(JsonFile, NamespaceFile):
+    """Class representing a data pack worldgen carver."""
+
     scope = ("worldgen", "configured_carver")
+    extension = ".json"
 
 
-class ConfiguredFeature(NamespaceJsonFile):
+class ConfiguredFeature(JsonFile, NamespaceFile):
+    """Class representing a data pack worldgen feature."""
+
     scope = ("worldgen", "configured_feature")
+    extension = ".json"
 
 
-class ConfiguredStructureFeature(NamespaceJsonFile):
+class ConfiguredStructureFeature(JsonFile, NamespaceFile):
+    """Class representing a data pack worldgen structure feature."""
+
     scope = ("worldgen", "configured_structure_feature")
+    extension = ".json"
 
 
-class ConfiguredSurfaceBuilder(NamespaceJsonFile):
+class ConfiguredSurfaceBuilder(JsonFile, NamespaceFile):
+    """Class representing a data pack worldgen surface builder."""
+
     scope = ("worldgen", "configured_surface_builder")
+    extension = ".json"
 
 
-class NoiseSettings(NamespaceJsonFile):
+class NoiseSettings(JsonFile, NamespaceFile):
+    """Class representing a data pack worldgen noise settings."""
+
     scope = ("worldgen", "noise_settings")
+    extension = ".json"
 
 
-class ProcessorList(NamespaceJsonFile):
+class ProcessorList(JsonFile, NamespaceFile):
+    """Class representing a data pack worldgen processor list."""
+
     scope = ("worldgen", "processor_list")
+    extension = ".json"
 
 
-class TemplatePool(NamespaceJsonFile):
+class TemplatePool(JsonFile, NamespaceFile):
+    """Class representing a data pack worldgen template pool."""
+
     scope = ("worldgen", "template_pool")
+    extension = ".json"
 
 
 class DataPackNamespace(Namespace):
+    """Class representing a data pack namespace."""
+
+    directory = "data"
+
     # fmt: off
     advancements                  = NamespacePin(Advancement)
     functions                     = NamespacePin(Function)
@@ -215,10 +274,13 @@ class DataPackNamespace(Namespace):
     template_pools                = NamespacePin(TemplatePool)
     # fmt: on
 
-    directory = "data"
-
 
 class DataPack(Pack[DataPackNamespace]):
+    """Class representing a data pack."""
+
+    default_name = "untitled_data_pack"
+    latest_pack_format = 6
+
     # fmt: off
     advancements                  = NamespaceProxyDescriptor(Advancement)
     functions                     = NamespaceProxyDescriptor(Function)
@@ -242,6 +304,3 @@ class DataPack(Pack[DataPackNamespace]):
     processor_lists               = NamespaceProxyDescriptor(ProcessorList)
     template_pools                = NamespaceProxyDescriptor(TemplatePool)
     # fmt: on
-
-    default_name = "untitled_data_pack"
-    latest_pack_format = 6

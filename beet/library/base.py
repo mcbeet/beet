@@ -1,3 +1,18 @@
+__all__ = [
+    "Pack",
+    "PackFile",
+    "PackContainer",
+    "PackPin",
+    "McmetaPin",
+    "Namespace",
+    "NamespaceFile",
+    "NamespaceContainer",
+    "namespacePin",
+    "NamespaceProxy",
+    "NamespaceProxyDescriptor",
+]
+
+
 import shutil
 from collections import defaultdict
 from contextlib import nullcontext
@@ -9,6 +24,7 @@ from typing import (
     Any,
     ClassVar,
     DefaultDict,
+    Dict,
     Generic,
     Iterator,
     List,
@@ -36,10 +52,17 @@ from beet.core.utils import SENTINEL_OBJ, FileSystemPath, JsonDict
 
 from .utils import list_files
 
-PackFile = File[object, object]
+T = TypeVar("T")
+PackFileType = TypeVar("PackFileType", bound="PackFile")
+NamespaceType = TypeVar("NamespaceType", bound="Namespace")
+NamespaceFileType = TypeVar("NamespaceFileType", bound="NamespaceFile")
+
+PackFile = File[Any, Any]
 
 
 class NamespaceFile(PackFile):
+    """Base class for files that belong in pack namespaces."""
+
     scope: ClassVar[Tuple[str, ...]]
     extension: ClassVar[str]
 
@@ -47,19 +70,18 @@ class NamespaceFile(PackFile):
         """Handle insertion."""
 
 
-class NamespaceJsonFile(JsonFile, NamespaceFile):
-    extension = ".json"
-
-
-NamespaceFileType = TypeVar("NamespaceFileType", bound="NamespaceFile")
-
-
 class NamespaceContainer(MatchMixin, Container[str, NamespaceFileType]):
+    """Container that stores one type of files in a namespace."""
+
     namespace: Optional["Namespace"] = None
     file_type: Optional[Type[NamespaceFileType]] = None
 
     def process(self, key: str, value: NamespaceFileType) -> NamespaceFileType:
-        if self.namespace and self.namespace.pack and self.namespace.name:
+        if (
+            self.namespace is not None
+            and self.namespace.pack is not None
+            and self.namespace.name
+        ):
             value.bind(self.namespace.pack, self.namespace.name, key)
         return value
 
@@ -74,13 +96,14 @@ class NamespaceContainer(MatchMixin, Container[str, NamespaceFileType]):
 
 @dataclass
 class NamespacePin(Pin[NamespaceContainer[NamespaceFileType]]):
-    key: Type[NamespaceFileType]
+    """Descriptor for accessing namespace containers by attribute lookup."""
 
-    def forward(self, obj: "Namespace") -> "Namespace":
-        return obj
+    key: Type[NamespaceFileType]
 
 
 class Namespace(Container[Type[NamespaceFile], NamespaceContainer[NamespaceFile]]):
+    """Class representing a namespace."""
+
     pack: Optional["Pack[Namespace]"] = None
     name: Optional[str] = None
 
@@ -125,10 +148,11 @@ class Namespace(Container[Type[NamespaceFile], NamespaceContainer[NamespaceFile]
         else:
             self[type(value)][key] = value
 
-    def __eq__(self, other: object) -> bool:
-        if not isinstance(other, Mapping):
-            return NotImplemented
-        return all(self[key] == other[key] for key in self.keys() | other.keys())  # type: ignore
+    def __eq__(self, other: Any) -> bool:
+        return all(self[key] == other[key] for key in self.field_map)
+
+    def __bool__(self) -> bool:
+        return any(self.values())
 
     def missing(self, key: Type[NamespaceFile]) -> NamespaceContainer[NamespaceFile]:
         return NamespaceContainer()
@@ -138,11 +162,6 @@ class Namespace(Container[Type[NamespaceFile], NamespaceContainer[NamespaceFile]
         """Iterator that yields all the files stored in the namespace."""
         for container in self.values():
             yield from container.items()
-
-    @property
-    def empty(self) -> bool:
-        """Whether all the containers in the namespace are empty."""
-        return not any(self.values())
 
     @classmethod
     def scan(cls, pack: FileOrigin) -> Iterator[Tuple[str, "Namespace"]]:
@@ -183,7 +202,7 @@ class Namespace(Container[Type[NamespaceFile], NamespaceContainer[NamespaceFile]
 
     def dump(self, namespace: str, origin: FileOrigin):
         """Write the namespace to a zipfile or to the filesystem."""
-        dump_files(
+        _dump_files(
             origin,
             {
                 "/".join((self.directory, namespace) + content_type.scope)
@@ -201,23 +220,11 @@ class Namespace(Container[Type[NamespaceFile], NamespaceContainer[NamespaceFile]
         return f"{self.__class__.__name__}({args})"
 
 
-def dump_files(origin: FileOrigin, files: Mapping[str, PackFile]):
-    dirs: DefaultDict[Tuple[str, ...], List[Tuple[str, PackFile]]] = defaultdict(list)
-
-    for full_path, item in files.items():
-        directory, _, filename = full_path.rpartition("/")
-        dirs[(directory,) if directory else ()].append((filename, item))
-
-    for directory, entries in dirs.items():
-        if not isinstance(origin, ZipFile):
-            Path(origin, *directory).resolve().mkdir(parents=True, exist_ok=True)
-        for (filename, f) in entries:
-            f.dump(origin, "/".join(directory + (filename,)))
-
-
 class NamespaceProxy(
     MatchMixin, ContainerProxy[Type[NamespaceFileType], str, NamespaceFileType]
 ):
+    """Aggregated view that exposes a certain type of files over all namespaces."""
+
     def split_key(self, key: str) -> Tuple[str, str]:
         namespace, _, file_path = key.partition(":")
         if not file_path:
@@ -228,36 +235,34 @@ class NamespaceProxy(
         return f"{key1}:{key2}"
 
 
-NamespaceProxyDescriptorType = TypeVar(
-    "NamespaceProxyDescriptorType", bound="NamespaceProxyDescriptor[NamespaceFile]"
-)
-
-
 @dataclass
 class NamespaceProxyDescriptor(Generic[NamespaceFileType]):
+    """Descriptor that dynamically instantiates a namespace proxy."""
+
     proxy_key: Type[NamespaceFileType]
 
     def __get__(
-        self, obj: Any, objtype: Optional[Type[object]] = None
+        self, obj: Any, objtype: Optional[Type[Any]] = None
     ) -> NamespaceProxy[NamespaceFileType]:
         return NamespaceProxy(obj, self.proxy_key)
 
 
-PackFileType = TypeVar("PackFileType", bound="PackFile")
-
-
 class PackContainer(MatchMixin, Container[str, Optional[PackFile]]):
-    def __eq__(self, other: object) -> bool:
-        if not isinstance(other, Mapping):
-            return NotImplemented
-        return all(self.get(key) == other.get(key) for key in self.keys() | other.keys())  # type: ignore
+    """Container that stores non-namespaced files in a pack."""
 
+    def __eq__(self, other: Any) -> bool:
+        return all(
+            self.get(key) == other.get(key) for key in self.keys() | other.keys()
+        )
 
-T = TypeVar("T")
+    def __bool__(self) -> bool:
+        return any(self.values())
 
 
 @dataclass
 class PackPin(Pin[T]):
+    """Descriptor that makes a specific file accessible through attribute lookup."""
+
     key: str
     default: PinDefault[T] = SENTINEL_OBJ
     default_factory: PinDefaultFactory[T] = SENTINEL_OBJ
@@ -268,6 +273,8 @@ class PackPin(Pin[T]):
 
 @dataclass
 class McmetaPin(Pin[T]):
+    """Descriptor that makes it possible to bind pack.mcmeta information to attribute lookup."""
+
     key: str
     default: PinDefault[T] = SENTINEL_OBJ
     default_factory: PinDefaultFactory[T] = SENTINEL_OBJ
@@ -276,10 +283,9 @@ class McmetaPin(Pin[T]):
         return obj.mcmeta.data.setdefault("pack", {})
 
 
-NamespaceType = TypeVar("NamespaceType", bound="Namespace")
-
-
 class Pack(MatchMixin, Container[str, NamespaceType]):
+    """Class representing a pack."""
+
     name: Optional[str]
     path: Optional[Path]
     zipped: bool
@@ -308,7 +314,6 @@ class Pack(MatchMixin, Container[str, NamespaceType]):
         image: Optional[PngFile] = None,
         description: Optional[str] = None,
         pack_format: Optional[int] = None,
-        eager: bool = False,
     ):
         super().__init__()
         self.name = name
@@ -326,7 +331,7 @@ class Pack(MatchMixin, Container[str, NamespaceType]):
         if pack_format is not None:
             self.pack_format = pack_format
 
-        self.load(path or zipfile, lazy=not eager)
+        self.load(path or zipfile)
 
     @overload
     def __setitem__(self, key: str, value: NamespaceType):
@@ -342,14 +347,17 @@ class Pack(MatchMixin, Container[str, NamespaceType]):
         else:
             NamespaceProxy(self, type(value))[key] = value
 
-    def __eq__(self, other: object) -> bool:
-        if not isinstance(other, Pack) or type(self) != type(other):
+    def __eq__(self, other: Any) -> bool:
+        if type(self) != type(other):
             return NotImplemented
         return (
             self.name == other.name
             and self.files == other.files
             and all(self[key] == other[key] for key in self.keys() | other.keys())
         )
+
+    def __bool__(self) -> bool:
+        return any(self.values())
 
     def __enter__(self: T) -> T:
         return self
@@ -370,12 +378,12 @@ class Pack(MatchMixin, Container[str, NamespaceType]):
         for file_type in self.namespace_type.field_map:
             yield from NamespaceProxy(self, file_type).items()
 
-    @property
-    def empty(self) -> bool:
-        """Whether all the namespaces in the pack are empty."""
-        return all(namespace.empty for namespace in self.values())
+    @classmethod
+    def get_structure(cls) -> Dict[str, Type[PackFile]]:
+        return {"pack.mcmeta": JsonFile, "pack.png": PngFile}
 
-    def load(self, origin: Optional[FileOrigin] = None, lazy: bool = False):
+    def load(self, origin: Optional[FileOrigin] = None):
+        """Load pack from a zipfile or from the filesystem."""
         if origin:
             if not isinstance(origin, ZipFile):
                 origin = Path(origin).resolve()
@@ -394,8 +402,9 @@ class Pack(MatchMixin, Container[str, NamespaceType]):
                 self.name = origin.stem
 
         if origin:
-            self.mcmeta = JsonFile.load(origin, "pack.mcmeta")
-            self.image = PngFile.try_load(origin, "pack.png")
+            for filename, file_type in self.get_structure().items():
+                if loaded := file_type.try_load(origin, filename):
+                    self.files[filename] = loaded
 
             namespaces = {
                 name: cast(NamespaceType, namespace)
@@ -409,13 +418,10 @@ class Pack(MatchMixin, Container[str, NamespaceType]):
         if not self.description:
             self.description = ""
 
-        if not lazy:
-            for _, pack_file in self.content:
-                pack_file.value
-
     def dump(self, origin: FileOrigin):
+        """Write the content of the pack to a zipfile or to the filesystem """
         files = {path: item for path, item in self.files.items() if item is not None}
-        dump_files(origin, files)
+        _dump_files(origin, files)
 
         for namespace_name, namespace in self.items():
             namespace.dump(namespace_name, origin)
@@ -426,6 +432,7 @@ class Pack(MatchMixin, Container[str, NamespaceType]):
         zipped: Optional[bool] = None,
         overwrite: Optional[bool] = False,
     ) -> Path:
+        """Save the pack at the specified location."""
         if zipped is not None:
             self.zipped = zipped
         suffix = ".zip" if self.zipped else ""
@@ -467,3 +474,17 @@ class Pack(MatchMixin, Container[str, NamespaceType]):
             f"{self.__class__.__name__}(name={self.name!r}, "
             f"description={self.description!r}, pack_format={self.pack_format!r})"
         )
+
+
+def _dump_files(origin: FileOrigin, files: Mapping[str, PackFile]):
+    dirs: DefaultDict[Tuple[str, ...], List[Tuple[str, PackFile]]] = defaultdict(list)
+
+    for full_path, item in files.items():
+        directory, _, filename = full_path.rpartition("/")
+        dirs[(directory,) if directory else ()].append((filename, item))
+
+    for directory, entries in dirs.items():
+        if not isinstance(origin, ZipFile):
+            Path(origin, *directory).resolve().mkdir(parents=True, exist_ok=True)
+        for (filename, f) in entries:
+            f.dump(origin, "/".join(directory + (filename,)))

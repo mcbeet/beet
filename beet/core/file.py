@@ -1,7 +1,8 @@
 __all__ = [
     "File",
     "FileOrigin",
-    "FileValueAlias",
+    "FileSerialize",
+    "FileDeserialize",
     "TextFileBase",
     "TextFileContent",
     "TextFile",
@@ -28,26 +29,16 @@ from .utils import FileSystemPath, JsonDict, dump_json
 
 ValueType = TypeVar("ValueType")
 SerializeType = TypeVar("SerializeType")
-FileType = TypeVar("FileType", bound="File[object, object]")
+FileType = TypeVar("FileType", bound="File[Any, Any]")
 
 FileOrigin = Union[FileSystemPath, ZipFile]
 TextFileContent = Union[ValueType, str, None]
 BinaryFileContent = Union[ValueType, bytes, None]
 
 
-# TODO: Docstrings
-
-
 @dataclass
 class File(Generic[ValueType, SerializeType]):
-    """Base file class.
-
-    All resource pack and data pack files inherit from this class. The
-    content of the file is generic and lazy, meaning that derived
-    classes are responsible for implementing their own loading strategy,
-    but that the code will not be executed until you try to access the
-    content of the file.
-    """
+    """Base file class."""
 
     content: Union[ValueType, SerializeType, None] = None
     source_path: Optional[FileSystemPath] = None
@@ -69,15 +60,32 @@ class File(Generic[ValueType, SerializeType]):
             else self.content
         )
 
-    @property
-    def value(self) -> ValueType:
+    def ensure_source_path(self) -> FileSystemPath:
+        """Make sure that the file has a source path and return it."""
+        if self.source_path:
+            return self.source_path
+        raise ValueError(
+            f"{self.__class__.__name__} object must be initialized with "
+            "either a value, raw bytes or a source path."
+        )
+
+    def ensure_serialized(self) -> SerializeType:
+        """Make sure that the content of the file is serialized."""
+        content = self.serialize(self.get_content())
+        self.set_content(content)
+        return content
+
+    def ensure_deserialized(self) -> ValueType:
+        """Make sure that the content of the file is deserialized."""
         content = self.deserialize(self.get_content())
         self.set_content(content)
         return content
 
-    @value.setter
-    def value(self, value: ValueType):
-        self.set_content(value)
+    def __eq__(self, other: Any) -> bool:
+        return (
+            type(self) == type(other)
+            and self.ensure_serialized() == other.ensure_serialized()
+        )
 
     @classmethod
     def serialize(cls, content: Union[ValueType, SerializeType]) -> SerializeType:
@@ -134,27 +142,36 @@ class File(Generic[ValueType, SerializeType]):
             else:
                 Path(origin, path).write_bytes(raw)
 
-    def ensure_source_path(self) -> FileSystemPath:
-        """Make sure that the file has a source path and return it."""
-        if self.source_path:
-            return self.source_path
-        raise ValueError(
-            f"{self.__class__.__name__} object must be initialized with "
-            "either a value, raw bytes or a source path."
-        )
 
+class FileSerialize(Generic[SerializeType]):
+    """Descriptor that makes sure that content of the file is serialized."""
 
-class FileValueAlias(Generic[ValueType]):
     def __get__(
-        self, obj: File[ValueType, object], objtype: Optional[Type[object]] = None
-    ) -> ValueType:
-        return obj.value
+        self, obj: File[Any, SerializeType], objtype: Optional[Type[Any]] = None
+    ) -> SerializeType:
+        return obj.ensure_serialized()
 
-    def __set__(self, obj: File[ValueType, object], value: ValueType):
-        obj.value = value
+    def __set__(self, obj: File[SerializeType, Any], value: SerializeType):
+        obj.set_content(value)
+
+
+class FileDeserialize(Generic[ValueType]):
+    """Descriptor that makes sure that content of the file is deserialized."""
+
+    def __get__(
+        self, obj: File[ValueType, Any], objtype: Optional[Type[Any]] = None
+    ) -> ValueType:
+        return obj.ensure_deserialized()
+
+    def __set__(self, obj: File[ValueType, Any], value: ValueType):
+        obj.set_content(value)
 
 
 class TextFileBase(File[ValueType, str]):
+    """Base class for files that get serialized to strings."""
+
+    text = FileSerialize[str]()
+
     @classmethod
     def serialize(cls, content: Any) -> str:
         return content if isinstance(content, str) else cls.to_str(content)
@@ -185,18 +202,10 @@ class TextFileBase(File[ValueType, str]):
         """Convert string to content."""
         raise NotImplementedError()
 
-    @property
-    def text(self) -> str:
-        content = self.serialize(self.get_content())
-        self.set_content(content)
-        return content
-
-    @text.setter
-    def text(self, text: str):
-        self.set_content(text)
-
 
 class TextFile(TextFileBase[str]):
+    """Class representing a text file."""
+
     @classmethod
     def to_str(cls, content: str) -> str:
         return content
@@ -207,6 +216,10 @@ class TextFile(TextFileBase[str]):
 
 
 class BinaryFileBase(File[ValueType, bytes]):
+    """Base class for files that get serialized to bytes."""
+
+    blob = FileSerialize[bytes]()
+
     @classmethod
     def serialize(cls, content: Any) -> bytes:
         return content if isinstance(content, bytes) else cls.to_bytes(content)
@@ -237,18 +250,10 @@ class BinaryFileBase(File[ValueType, bytes]):
         """Convert bytes to content."""
         raise NotImplementedError()
 
-    @property
-    def blob(self) -> bytes:
-        content = self.serialize(self.get_content())
-        self.set_content(content)
-        return content
-
-    @blob.setter
-    def blob(self, value: bytes):
-        self.set_content(value)
-
 
 class BinaryFile(BinaryFileBase[bytes]):
+    """Class representing a binary file."""
+
     @classmethod
     def to_bytes(cls, content: bytes) -> bytes:
         return content
@@ -259,7 +264,9 @@ class BinaryFile(BinaryFileBase[bytes]):
 
 
 class JsonFileBase(TextFileBase[ValueType]):
-    data = FileValueAlias[ValueType]()
+    """Base class for json files."""
+
+    data = FileDeserialize[ValueType]()
 
     @classmethod
     def to_str(cls, content: ValueType) -> str:
@@ -271,11 +278,15 @@ class JsonFileBase(TextFileBase[ValueType]):
 
 
 class JsonFile(JsonFileBase[JsonDict]):
-    data = FileValueAlias[JsonDict]()
+    """Class representing a json file."""
+
+    data = FileDeserialize[JsonDict]()
 
 
 class PngFile(BinaryFileBase[img.Image]):
-    image = FileValueAlias[img.Image]()
+    """Class representing a png file."""
+
+    image = FileDeserialize[img.Image]()
 
     @classmethod
     def to_bytes(cls, content: img.Image) -> bytes:
@@ -286,13 +297,3 @@ class PngFile(BinaryFileBase[img.Image]):
     @classmethod
     def from_bytes(cls, content: bytes) -> img.Image:
         return img.open(io.BytesIO(content))
-
-    def __eq__(self, other: object) -> bool:
-        if result := super().__eq__(other):
-            return result
-        if isinstance(other, PngFile):
-            return type(self) == type(other) and (
-                self.serialize(self.get_content())
-                == other.serialize(other.get_content())
-            )
-        return False
