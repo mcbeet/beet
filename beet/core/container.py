@@ -113,7 +113,7 @@ class Pin(Generic[V]):
         }
 
 
-class Container(MergeMixin, MutableMapping[K, V]):
+class Container(MutableMapping[K, V]):
     """Generic dict-like container."""
 
     _wrapped: Dict[K, V]
@@ -155,7 +155,7 @@ class Container(MergeMixin, MutableMapping[K, V]):
         return f"{self.__class__.__name__}(keys={list(self.keys())})"
 
 
-class ContainerProxy(Generic[ProxyKeyType, K, V], MergeMixin, MutableMapping[K, V]):
+class ContainerProxy(Generic[ProxyKeyType, K, V], MutableMapping[K, V]):
     """Generic aggregated view over several nested bounded dict-like objects."""
 
     proxy: Mapping[K, Mapping[ProxyKeyType, MutableMapping[K, V]]]

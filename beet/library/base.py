@@ -43,6 +43,7 @@ from beet.core.container import (
     Container,
     ContainerProxy,
     MatchMixin,
+    MergeMixin,
     Pin,
     PinDefault,
     PinDefaultFactory,
@@ -70,7 +71,7 @@ class NamespaceFile(PackFile):
         """Handle insertion."""
 
 
-class NamespaceContainer(MatchMixin, Container[str, NamespaceFileType]):
+class NamespaceContainer(MatchMixin, MergeMixin, Container[str, NamespaceFileType]):
     """Container that stores one type of files in a namespace."""
 
     namespace: Optional["Namespace"] = None
@@ -101,7 +102,9 @@ class NamespacePin(Pin[NamespaceContainer[NamespaceFileType]]):
     key: Type[NamespaceFileType]
 
 
-class Namespace(Container[Type[NamespaceFile], NamespaceContainer[NamespaceFile]]):
+class Namespace(
+    MergeMixin, Container[Type[NamespaceFile], NamespaceContainer[NamespaceFile]]
+):
     """Class representing a namespace."""
 
     pack: Optional["Pack[Namespace]"] = None
@@ -221,7 +224,9 @@ class Namespace(Container[Type[NamespaceFile], NamespaceContainer[NamespaceFile]
 
 
 class NamespaceProxy(
-    MatchMixin, ContainerProxy[Type[NamespaceFileType], str, NamespaceFileType]
+    MatchMixin,
+    MergeMixin,
+    ContainerProxy[Type[NamespaceFileType], str, NamespaceFileType],
 ):
     """Aggregated view that exposes a certain type of files over all namespaces."""
 
@@ -247,13 +252,8 @@ class NamespaceProxyDescriptor(Generic[NamespaceFileType]):
         return NamespaceProxy(obj, self.proxy_key)
 
 
-class PackContainer(MatchMixin, Container[str, Optional[PackFile]]):
+class PackContainer(MatchMixin, MergeMixin, Container[str, PackFile]):
     """Container that stores non-namespaced files in a pack."""
-
-    def __eq__(self, other: Any) -> bool:
-        return all(
-            self.get(key) == other.get(key) for key in self.keys() | other.keys()
-        )
 
     def __bool__(self) -> bool:
         return any(self.values())
@@ -283,7 +283,7 @@ class McmetaPin(Pin[T]):
         return obj.mcmeta.data.setdefault("pack", {})
 
 
-class Pack(MatchMixin, Container[str, NamespaceType]):
+class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
     """Class representing a pack."""
 
     name: Optional[str]
@@ -402,9 +402,13 @@ class Pack(MatchMixin, Container[str, NamespaceType]):
                 self.name = origin.stem
 
         if origin:
-            for filename, file_type in self.get_structure().items():
-                if loaded := file_type.try_load(origin, filename):
-                    self.files[filename] = loaded
+            files = {
+                filename: loaded
+                for filename, file_type in self.get_structure().items()
+                if (loaded := file_type.try_load(origin, filename))
+            }
+
+            self.files.merge(files)
 
             namespaces = {
                 name: cast(NamespaceType, namespace)

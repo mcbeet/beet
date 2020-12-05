@@ -13,6 +13,12 @@ def test_cache(tmp_path: Path):
     with Cache(tmp_path) as cache:
         assert cache.json["hello"] == "world"
 
+    with Cache(tmp_path) as cache:
+        cache.json = {"foo": "bar"}
+
+    with Cache(tmp_path) as cache:
+        assert cache.json == {"foo": "bar"}
+
 
 def test_cache_directory(tmp_path: Path):
     with Cache(tmp_path) as cache:
@@ -65,30 +71,30 @@ def test_cache_expiration(tmp_path: Path):
     sleep(0.1)
 
     with MultiCache(tmp_path) as cache:
-        assert cache["default"].expires is None
+        assert cache["default"].expire is None
         assert not (cache.directory / "hello.txt").is_file()
 
 
 def test_cache_refresh(tmp_path: Path):
     with MultiCache(tmp_path) as cache:
         cache["foo"].timeout(milliseconds=200)
-        assert cache["foo"].expires is not None
+        assert cache["foo"].expire is not None
 
     sleep(0.1)
 
     with MultiCache(tmp_path) as cache:
-        assert cache["foo"].expires is not None
+        assert cache["foo"].expire is not None
         cache["foo"].restart_timeout()
 
     sleep(0.1)
 
     with MultiCache(tmp_path) as cache:
-        assert cache["foo"].expires is not None
+        assert cache["foo"].expire is not None
 
     sleep(0.1)
 
     with MultiCache(tmp_path) as cache:
-        assert cache["foo"].expires is None
+        assert cache["foo"].expire is None
 
 
 def test_cache_clear(tmp_path: Path):
@@ -120,3 +126,11 @@ def test_preload(tmp_path: Path):
         assert not cache
         cache.preload()
         assert cache.keys() == {"foo"}
+
+
+def test_match(tmp_path: Path):
+    with MultiCache(tmp_path) as cache:
+        cache["test:foo"]
+        cache["test:bar"]
+        cache["other:hello"]
+        assert cache.match("test:*") == {"test:foo", "test:bar"}

@@ -9,15 +9,21 @@ import shutil
 from datetime import datetime, timedelta
 from pathlib import Path
 from textwrap import indent
-from typing import Any, Dict, Iterator, Optional
+from typing import Any, ClassVar, Iterator, Optional
 
-from beet.core.utils import FileSystemPath, dump_json
+from .container import Container, MatchMixin
+from .utils import FileSystemPath, JsonDict, dump_json
 
 
 class Cache:
     """An expiring filesystem cache that can store serialized json."""
 
-    index_file = "index.json"
+    deleted: bool
+    directory: Path
+    index_path: Path
+    index: JsonDict
+
+    index_file: ClassVar[str] = "index.json"
 
     def __init__(self, directory: FileSystemPath):
         self.deleted = False
@@ -30,39 +36,46 @@ class Cache:
         )
         self.flush()
 
-    def get_initial_index(self) -> Dict[str, Any]:
+    def get_initial_index(self) -> JsonDict:
+        """Return the initial cache index."""
         return {
             "timestamp": datetime.now().isoformat(),
-            "expires": None,
+            "expire": None,
             "json": {},
         }
 
     @property
-    def json(self) -> Dict[str, Any]:
+    def json(self) -> JsonDict:
         return self.index["json"]
 
-    @property
-    def expires(self) -> Optional[datetime]:
-        expires = self.index["expires"]
-        return expires and datetime.fromisoformat(expires)
+    @json.setter
+    def json(self, value: JsonDict):
+        self.index["json"] = value
 
-    @expires.setter
-    def expires(self, value: Optional[datetime]):
-        self.index["expires"] = value and value.isoformat()
+    @property
+    def expire(self) -> Optional[datetime]:
+        expire = self.index["expire"]
+        return expire and datetime.fromisoformat(expire)
+
+    @expire.setter
+    def expire(self, value: Optional[datetime]):
+        self.index["expire"] = value and value.isoformat()
 
     def timeout(self, delta: Optional[timedelta] = None, **kwargs: Any) -> "Cache":
+        """Invalidate the cache after a given timeout."""
         if not delta:
             delta = timedelta()
         delta += timedelta(**kwargs)
-        self.expires = datetime.fromisoformat(self.index["timestamp"]) + delta
+        self.expire = datetime.fromisoformat(self.index["timestamp"]) + delta
         return self
 
     def restart_timeout(self):
+        """Restart the invalidation timeout."""
         now = datetime.now()
         timestamp = datetime.fromisoformat(self.index["timestamp"])
 
-        if self.expires:
-            self.expires += now - timestamp
+        if self.expire:
+            self.expire += now - timestamp
 
         self.index["timestamp"] = now.isoformat()
 
@@ -73,6 +86,7 @@ class Cache:
         self.flush()
 
     def delete(self):
+        """Delete the entire cache."""
         if not self.deleted:
             if self.directory.is_dir():
                 shutil.rmtree(self.directory)
@@ -80,15 +94,17 @@ class Cache:
             self.deleted = True
 
     def clear(self):
+        """Clear the cache by deleting it and creating it again."""
         self.delete()
         self.deleted = False
         self.flush()
 
     def flush(self):
+        """Flush the modifications to the filesystem."""
         if self.deleted:
             return
 
-        if self.expires and self.expires <= datetime.now():
+        if self.expire and self.expire <= datetime.now():
             self.clear()
         else:
             self.directory.mkdir(parents=True, exist_ok=True)
@@ -104,7 +120,7 @@ class Cache:
         return (
             f"Cache {self.index_path.parent.name}:\n"
             f"  │  timestamp = {datetime.fromisoformat(self.index['timestamp']).ctime()}\n"
-            f"  │  expires = {self.expires and self.expires.ctime()}\n  │  \n"
+            f"  │  expire = {self.expire and self.expire.ctime()}\n  │  \n"
             f"  │  directory = {self.directory}\n{contents}\n  │  \n"
             f"  │  json = {formatted_json}"
         )
@@ -125,15 +141,18 @@ class Cache:
                 yield from self._format_directory(entry, prefix + indent)
 
 
-class MultiCache(Dict[str, Cache]):
+class MultiCache(MatchMixin, Container[str, Cache]):
     """A container of lazily instantiated named caches."""
 
-    default_cache = "default"
+    path: Path
+    default_cache: str
 
-    def __init__(self, directory: FileSystemPath):
+    def __init__(self, directory: FileSystemPath, default_cache: str = "default"):
+        super().__init__()
         self.path = Path(directory).resolve()
+        self.default_cache = default_cache
 
-    def __missing__(self, key: str) -> Cache:
+    def missing(self, key: str) -> Cache:
         cache = Cache(self.path / key)
         self[key] = cache
         return cache
@@ -147,7 +166,7 @@ class MultiCache(Dict[str, Cache]):
         return self[self.default_cache].directory
 
     @property
-    def json(self) -> Dict[str, Any]:
+    def json(self) -> JsonDict:
         return self[self.default_cache].json
 
     def __enter__(self) -> "MultiCache":
@@ -157,6 +176,7 @@ class MultiCache(Dict[str, Cache]):
         self.flush()
 
     def preload(self):
+        """Preload all the named caches."""
         if not self.path.is_dir():
             return
         for directory in self.path.iterdir():
@@ -164,11 +184,13 @@ class MultiCache(Dict[str, Cache]):
                 assert self[directory.name]
 
     def clear(self):
+        """Clear the entire cache."""
         if self.path.is_dir():
             shutil.rmtree(self.path)
         super().clear()
 
     def flush(self):
+        """Flush the modifications to the filesystem."""
         for cache in self.values():
             cache.flush()
         if self.path.is_dir() and not (ignore := self.path / ".gitignore").is_file():
