@@ -30,8 +30,11 @@ def test_namespaces():
 
     del p1["hello"]
 
-    assert p1 != p2
+    assert dict(p1) != dict(p2)
     assert p1.keys() != p2.keys()
+    assert p1 == p2
+
+    del p1["hello"]
 
     p1["hello:world"] = Function(["say hello"])
 
@@ -131,7 +134,7 @@ def test_vanilla_compare(minecraft_data_pack: Path):
 
 def test_vanilla_zip(minecraft_data_pack: Path, tmp_path: Path):
     pack = DataPack(path=minecraft_data_pack)
-    zipped_pack = pack.dump(tmp_path, zipped=True)
+    zipped_pack = pack.save(tmp_path, zipped=True)
     assert DataPack(path=zipped_pack) == DataPack(path=zipped_pack)
 
 

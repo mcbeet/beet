@@ -12,7 +12,7 @@ class FmtResourcePack(Fmt[ResourcePack]):
         return ResourcePack(path=next(path.iterdir()), eager=True)
 
     def dump(self, path: Path, value: ResourcePack):
-        value.dump(path, overwrite=True)
+        value.save(path, overwrite=True)
 
 
 class FmtDataPack(Fmt[DataPack]):
@@ -22,4 +22,4 @@ class FmtDataPack(Fmt[DataPack]):
         return DataPack(path=next(path.iterdir()), eager=True)
 
     def dump(self, path: Path, value: DataPack):
-        value.dump(path, overwrite=True)
+        value.save(path, overwrite=True)

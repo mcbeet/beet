@@ -35,6 +35,9 @@ TextFileContent = Union[ValueType, str, None]
 BinaryFileContent = Union[ValueType, bytes, None]
 
 
+# TODO: Docstrings
+
+
 @dataclass
 class File(Generic[ValueType, SerializeType]):
     """Base file class.
@@ -48,6 +51,10 @@ class File(Generic[ValueType, SerializeType]):
 
     content: Union[ValueType, SerializeType, None] = None
     source_path: Optional[FileSystemPath] = None
+
+    def merge(self: FileType, other: FileType) -> bool:
+        """Merge the given file or return False to indicate no special handling."""
+        return False
 
     def set_content(self, content: Union[ValueType, SerializeType]):
         """Update the internal content."""
@@ -264,7 +271,7 @@ class JsonFileBase(TextFileBase[ValueType]):
 
 
 class JsonFile(JsonFileBase[JsonDict]):
-    pass
+    data = FileValueAlias[JsonDict]()
 
 
 class PngFile(BinaryFileBase[img.Image]):

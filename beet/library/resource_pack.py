@@ -9,7 +9,7 @@ __all__ = [
 ]
 
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Optional
 
 from PIL import Image as img
@@ -18,11 +18,11 @@ from beet.core.file import BinaryFileContent, PngFile, TextFile
 from beet.core.utils import JsonDict, extra_field
 
 from .base import (
-    FileContainer,
-    FileContainerProxyDescriptor,
     Namespace,
     NamespaceFile,
     NamespaceJsonFile,
+    NamespacePin,
+    NamespaceProxyDescriptor,
     Pack,
 )
 
@@ -58,14 +58,13 @@ class Text(TextFile, NamespaceFile):
     extension = ".txt"
 
 
-@dataclass(repr=False)
 class ResourcePackNamespace(Namespace):
     # fmt: off
-    blockstates     : FileContainer[Blockstate]    = field(default_factory=FileContainer)
-    models          : FileContainer[Model]         = field(default_factory=FileContainer)
-    textures_mcmeta : FileContainer[TextureMcmeta] = field(default_factory=FileContainer)
-    textures        : FileContainer[Texture]       = field(default_factory=FileContainer)
-    texts           : FileContainer[Text]          = field(default_factory=FileContainer)
+    blockstates     = NamespacePin(Blockstate)
+    models          = NamespacePin(Model)
+    textures_mcmeta = NamespacePin(TextureMcmeta)
+    textures        = NamespacePin(Texture)
+    texts           = NamespacePin(Text)
     # fmt: on
 
     directory = "assets"
@@ -73,11 +72,11 @@ class ResourcePackNamespace(Namespace):
 
 class ResourcePack(Pack[ResourcePackNamespace]):
     # fmt: off
-    blockstates     = FileContainerProxyDescriptor(Blockstate)
-    models          = FileContainerProxyDescriptor(Model)
-    textures_mcmeta = FileContainerProxyDescriptor(TextureMcmeta)
-    textures        = FileContainerProxyDescriptor(Texture)
-    texts           = FileContainerProxyDescriptor(Text)
+    blockstates     = NamespaceProxyDescriptor(Blockstate)
+    models          = NamespaceProxyDescriptor(Model)
+    textures_mcmeta = NamespaceProxyDescriptor(TextureMcmeta)
+    textures        = NamespaceProxyDescriptor(Texture)
+    texts           = NamespaceProxyDescriptor(Text)
     # fmt: on
 
     default_name = "untitled_resource_pack"

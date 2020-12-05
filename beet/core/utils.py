@@ -1,6 +1,8 @@
 __all__ = [
     "JsonDict",
     "FileSystemPath",
+    "Sentinel",
+    "SENTINEL_OBJ",
     "dump_json",
     "extra_field",
     "unreachable",
@@ -14,6 +16,14 @@ from typing import Any, Dict, NoReturn, Union
 
 JsonDict = Dict[str, Any]
 FileSystemPath = Union[str, os.PathLike]
+
+
+class Sentinel:
+    def __repr__(self) -> str:
+        return f"<{self.__class__.__name__}>"
+
+
+SENTINEL_OBJ = Sentinel()
 
 
 def dump_json(value: Any) -> str:

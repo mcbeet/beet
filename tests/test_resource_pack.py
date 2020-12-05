@@ -21,6 +21,9 @@ def test_default():
             "p3", mcmeta=JsonFile({"pack": {"description": "world", "pack_format": 42}})
         ),
         ResourcePack("p4", image=PngFile(Image.new("RGB", (32, 32), color="blue"))),
+        ResourcePack(
+            "p5", image=PngFile(Image.new("RGB", (32, 32), color="blue")), zipped=True
+        ),
     ],
 )
 def test_empty(snapshot: Any, pack: ResourcePack):
@@ -35,10 +38,8 @@ def test_empty_namespaces():
     assert not pack
     assert pack.empty
 
-    assert pack["hello"]
     assert pack["hello"].empty
 
-    assert pack["world"]
     assert pack["world"].empty
 
     assert pack
@@ -106,5 +107,5 @@ def test_vanilla_compare(minecraft_resource_pack: Path):
 
 def test_vanilla_zip(minecraft_resource_pack: Path, tmp_path: Path):
     pack = ResourcePack(path=minecraft_resource_pack)
-    zipped_pack = pack.dump(tmp_path, zipped=True)
+    zipped_pack = pack.save(tmp_path, zipped=True)
     assert ResourcePack(path=zipped_pack) == ResourcePack(path=zipped_pack)

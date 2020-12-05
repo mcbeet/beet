@@ -28,21 +28,27 @@ __all__ = [
 
 import io
 from copy import deepcopy
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from gzip import GzipFile
 from typing import MutableSequence, Optional, TypeVar
 
 from nbtlib.contrib.minecraft import StructureFile, StructureFileData
 
-from beet.core.file import BinaryFileBase, FileValueAlias, TextFileBase, TextFileContent
+from beet.core.file import (
+    BinaryFileBase,
+    BinaryFileContent,
+    FileValueAlias,
+    TextFileBase,
+    TextFileContent,
+)
 from beet.core.utils import extra_field
 
 from .base import (
-    FileContainer,
-    FileContainerProxyDescriptor,
     Namespace,
     NamespaceFile,
     NamespaceJsonFile,
+    NamespacePin,
+    NamespaceProxyDescriptor,
     Pack,
 )
 
@@ -89,6 +95,7 @@ class Recipe(NamespaceJsonFile):
 
 
 class Structure(BinaryFileBase[StructureFileData], NamespaceFile):
+    content: BinaryFileContent[StructureFileData] = None
     scope = ("structures",)
     extension = ".nbt"
 
@@ -183,30 +190,29 @@ class TemplatePool(NamespaceJsonFile):
     scope = ("worldgen", "template_pool")
 
 
-@dataclass(repr=False)
 class DataPackNamespace(Namespace):
     # fmt: off
-    advancements                 : FileContainer[Advancement]                = field(default_factory=FileContainer)
-    functions                    : FileContainer[Function]                   = field(default_factory=FileContainer)
-    loot_tables                  : FileContainer[LootTable]                  = field(default_factory=FileContainer)
-    predicates                   : FileContainer[Predicate]                  = field(default_factory=FileContainer)
-    recipes                      : FileContainer[Recipe]                     = field(default_factory=FileContainer)
-    structures                   : FileContainer[Structure]                  = field(default_factory=FileContainer)
-    block_tags                   : FileContainer[BlockTag]                   = field(default_factory=FileContainer)
-    entity_type_tags             : FileContainer[EntityTypeTag]              = field(default_factory=FileContainer)
-    fluid_tags                   : FileContainer[FluidTag]                   = field(default_factory=FileContainer)
-    function_tags                : FileContainer[FunctionTag]                = field(default_factory=FileContainer)
-    item_tags                    : FileContainer[ItemTag]                    = field(default_factory=FileContainer)
-    dimension_types              : FileContainer[DimensionType]              = field(default_factory=FileContainer)
-    dimensions                   : FileContainer[Dimension]                  = field(default_factory=FileContainer)
-    biomes                       : FileContainer[Biome]                      = field(default_factory=FileContainer)
-    configured_carvers           : FileContainer[ConfiguredCarver]           = field(default_factory=FileContainer)
-    configured_features          : FileContainer[ConfiguredFeature]          = field(default_factory=FileContainer)
-    configured_structure_features: FileContainer[ConfiguredStructureFeature] = field(default_factory=FileContainer)
-    configured_surface_builders  : FileContainer[ConfiguredSurfaceBuilder]   = field(default_factory=FileContainer)
-    noise_settings               : FileContainer[NoiseSettings]              = field(default_factory=FileContainer)
-    processor_lists              : FileContainer[ProcessorList]              = field(default_factory=FileContainer)
-    template_pools               : FileContainer[TemplatePool]               = field(default_factory=FileContainer)
+    advancements                  = NamespacePin(Advancement)
+    functions                     = NamespacePin(Function)
+    loot_tables                   = NamespacePin(LootTable)
+    predicates                    = NamespacePin(Predicate)
+    recipes                       = NamespacePin(Recipe)
+    structures                    = NamespacePin(Structure)
+    block_tags                    = NamespacePin(BlockTag)
+    entity_type_tags              = NamespacePin(EntityTypeTag)
+    fluid_tags                    = NamespacePin(FluidTag)
+    function_tags                 = NamespacePin(FunctionTag)
+    item_tags                     = NamespacePin(ItemTag)
+    dimension_types               = NamespacePin(DimensionType)
+    dimensions                    = NamespacePin(Dimension)
+    biomes                        = NamespacePin(Biome)
+    configured_carvers            = NamespacePin(ConfiguredCarver)
+    configured_features           = NamespacePin(ConfiguredFeature)
+    configured_structure_features = NamespacePin(ConfiguredStructureFeature)
+    configured_surface_builders   = NamespacePin(ConfiguredSurfaceBuilder)
+    noise_settings                = NamespacePin(NoiseSettings)
+    processor_lists               = NamespacePin(ProcessorList)
+    template_pools                = NamespacePin(TemplatePool)
     # fmt: on
 
     directory = "data"
@@ -214,27 +220,27 @@ class DataPackNamespace(Namespace):
 
 class DataPack(Pack[DataPackNamespace]):
     # fmt: off
-    advancements                  = FileContainerProxyDescriptor(Advancement)
-    functions                     = FileContainerProxyDescriptor(Function)
-    loot_tables                   = FileContainerProxyDescriptor(LootTable)
-    predicates                    = FileContainerProxyDescriptor(Predicate)
-    recipes                       = FileContainerProxyDescriptor(Recipe)
-    structures                    = FileContainerProxyDescriptor(Structure)
-    block_tags                    = FileContainerProxyDescriptor(BlockTag)
-    entity_type_tags              = FileContainerProxyDescriptor(EntityTypeTag)
-    fluid_tags                    = FileContainerProxyDescriptor(FluidTag)
-    function_tags                 = FileContainerProxyDescriptor(FunctionTag)
-    item_tags                     = FileContainerProxyDescriptor(ItemTag)
-    dimension_types               = FileContainerProxyDescriptor(DimensionType)
-    dimensions                    = FileContainerProxyDescriptor(Dimension)
-    biomes                        = FileContainerProxyDescriptor(Biome)
-    configured_carvers            = FileContainerProxyDescriptor(ConfiguredCarver)
-    configured_features           = FileContainerProxyDescriptor(ConfiguredFeature)
-    configured_structure_features = FileContainerProxyDescriptor(ConfiguredStructureFeature)
-    configured_surface_builders   = FileContainerProxyDescriptor(ConfiguredSurfaceBuilder)
-    noise_settings                = FileContainerProxyDescriptor(NoiseSettings)
-    processor_lists               = FileContainerProxyDescriptor(ProcessorList)
-    template_pools                = FileContainerProxyDescriptor(TemplatePool)
+    advancements                  = NamespaceProxyDescriptor(Advancement)
+    functions                     = NamespaceProxyDescriptor(Function)
+    loot_tables                   = NamespaceProxyDescriptor(LootTable)
+    predicates                    = NamespaceProxyDescriptor(Predicate)
+    recipes                       = NamespaceProxyDescriptor(Recipe)
+    structures                    = NamespaceProxyDescriptor(Structure)
+    block_tags                    = NamespaceProxyDescriptor(BlockTag)
+    entity_type_tags              = NamespaceProxyDescriptor(EntityTypeTag)
+    fluid_tags                    = NamespaceProxyDescriptor(FluidTag)
+    function_tags                 = NamespaceProxyDescriptor(FunctionTag)
+    item_tags                     = NamespaceProxyDescriptor(ItemTag)
+    dimension_types               = NamespaceProxyDescriptor(DimensionType)
+    dimensions                    = NamespaceProxyDescriptor(Dimension)
+    biomes                        = NamespaceProxyDescriptor(Biome)
+    configured_carvers            = NamespaceProxyDescriptor(ConfiguredCarver)
+    configured_features           = NamespaceProxyDescriptor(ConfiguredFeature)
+    configured_structure_features = NamespaceProxyDescriptor(ConfiguredStructureFeature)
+    configured_surface_builders   = NamespaceProxyDescriptor(ConfiguredSurfaceBuilder)
+    noise_settings                = NamespaceProxyDescriptor(NoiseSettings)
+    processor_lists               = NamespaceProxyDescriptor(ProcessorList)
+    template_pools                = NamespaceProxyDescriptor(TemplatePool)
     # fmt: on
 
     default_name = "untitled_data_pack"

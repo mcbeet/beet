@@ -2,25 +2,34 @@ __all__ = [
     "MatchMixin",
     "SupportsMerge",
     "MergeMixin",
+    "Pin",
     "Container",
     "ContainerProxy",
 ]
 
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import (
+    Any,
+    Callable,
     Dict,
     Generic,
     Iterator,
     Mapping,
     MutableMapping,
+    Optional,
     Protocol,
     Set,
     Tuple,
+    Type,
     TypeVar,
+    Union,
+    cast,
 )
 
 from pathspec import PathSpec
+
+from .utils import SENTINEL_OBJ, Sentinel
 
 
 class MatchMixin:
@@ -46,31 +55,80 @@ MergeableType = TypeVar("MergeableType", bound="SupportsMerge[object]")
 
 class MergeMixin:
     def merge(
-        self: MutableMapping[K, MergeableType],
-        other: Mapping[K, MergeableType],
+        self: MutableMapping[K, MergeableType], other: Mapping[K, MergeableType]
     ) -> bool:
         """Merge values from the given dict-like object."""
         for key, value in other.items():
-            if current := self.get(key):
-                if current.merge(value):
+            try:
+                if self[key].merge(value):
                     continue
+            except KeyError:
+                pass
             self[key] = value
         return True
 
 
+PinType = TypeVar("PinType", bound="Pin[object]")
+
+
+PinDefault = Union[V, Sentinel]
+PinDefaultFactory = Union[Callable[[], V], Sentinel]
+
+
 @dataclass
-class Container(MutableMapping[K, V]):
+class Pin(Generic[V]):
+    key: Any
+    default: PinDefault[V] = SENTINEL_OBJ
+    default_factory: PinDefaultFactory[V] = SENTINEL_OBJ
+
+    def __get__(self, obj: Any, objtype: Optional[Type[object]] = None) -> V:
+        mapping = self.forward(obj)
+
+        try:
+            return mapping[self.key]
+        except KeyError:
+            value = (
+                self.default
+                if isinstance(self.default_factory, Sentinel)
+                else self.default_factory()
+            )
+
+            if isinstance(value, Sentinel):
+                raise
+
+            mapping[self.key] = value
+            return self.__get__(obj, objtype)
+
+    def __set__(self, obj: Any, value: V):
+        self.forward(obj)[self.key] = value
+
+    def __delete__(self, obj: Any):
+        del self.forward(obj)[self.key]
+
+    def forward(self, obj: Any) -> Any:
+        """Return the dict-like object that contains the pinned value."""
+        return obj
+
+    @classmethod
+    def collect_from(cls: Type[PinType], target: Type[object]) -> Dict[str, PinType]:
+        return {
+            key: cast(PinType, value)
+            for key, value in vars(target).items()
+            if isinstance(value, cls)
+        }
+
+
+class Container(MergeMixin, MutableMapping[K, V]):
     """Generic dict-like container.
 
     The class wraps a builtin dictionnary and exposes overrideable hooks
     for intercepting updates and missing items.
     """
 
-    _wrapped: Dict[K, V] = field(default_factory=dict, init=False, repr=False)
+    _wrapped: Dict[K, V]
 
-    def __post_init__(self):
-        for key, value in self._wrapped.items():
-            self.process(key, value)
+    def __init__(self):
+        self._wrapped = {}
 
     def __getitem__(self, key: K) -> V:
         try:
@@ -109,12 +167,19 @@ class Container(MutableMapping[K, V]):
 ProxyKeyType = TypeVar("ProxyKeyType")
 
 
-@dataclass
-class ContainerProxy(Generic[ProxyKeyType, K, V], MutableMapping[K, V]):
+class ContainerProxy(Generic[ProxyKeyType, K, V], MergeMixin, MutableMapping[K, V]):
     """Generic aggregated view over several nested bounded dict-like objects."""
 
     proxy: Mapping[K, Mapping[ProxyKeyType, MutableMapping[K, V]]]
     proxy_key: ProxyKeyType
+
+    def __init__(
+        self,
+        proxy: Mapping[K, Mapping[ProxyKeyType, MutableMapping[K, V]]],
+        proxy_key: ProxyKeyType,
+    ) -> None:
+        self.proxy = proxy
+        self.proxy_key = proxy_key
 
     def __getitem__(self, key: K) -> V:
         key1, key2 = self.split_key(key)
