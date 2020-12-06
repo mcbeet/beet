@@ -1,0 +1,61 @@
+{
+  "name": "my_project",
+  "description": "The description of my project",
+  "author": "N/A",
+  "version": "1.2.3",
+  "directory": "tests/config_examples/more_stuff",
+  "extend": [],
+  "output": "tests/config_examples/more_stuff/build",
+  "ignore": [],
+  "cache": "",
+  "require": [
+    "some_kind_of_template_extension"
+  ],
+  "templates": [],
+  "data_pack": {
+    "name": "my_data_pack",
+    "description": "The description of my data pack",
+    "pack_format": 6,
+    "zipped": true,
+    "load": [
+      "tests/config_examples/more_stuff/vendor/some_library",
+      "tests/config_examples/more_stuff/src/data_pack"
+    ],
+    "render": {
+      "functions": [
+        "my_project:configurable/*"
+      ]
+    }
+  },
+  "resource_pack": {
+    "name": "my_resource_pack",
+    "description": "The description of my resource pack",
+    "pack_format": 6,
+    "zipped": true,
+    "load": [
+      "tests/config_examples/more_stuff/vendor/textures_from_somewhere",
+      "tests/config_examples/more_stuff/src/resource_pack"
+    ],
+    "render": {}
+  },
+  "pipeline": [
+    "custom_plugin",
+    "other_custom_plugin",
+    "plugin_that_adds_function_preamble",
+    "plugin_that_runs_linter"
+  ],
+  "meta": {
+    "function_preamble": {
+      "match": [
+        "my_project:*"
+      ],
+      "template": "function_preamble.txt"
+    },
+    "linter_options": {
+      "ignore_warnings": [
+        "some_warning_name",
+        "other_warning_name"
+      ]
+    }
+  }
+}

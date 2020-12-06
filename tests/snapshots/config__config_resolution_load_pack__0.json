@@ -1,0 +1,35 @@
+{
+  "name": "",
+  "description": "",
+  "author": "",
+  "version": "",
+  "directory": "tests/config_examples/load_pack",
+  "extend": [],
+  "output": "",
+  "ignore": [],
+  "cache": "",
+  "require": [],
+  "templates": [],
+  "data_pack": {
+    "name": "",
+    "description": "",
+    "pack_format": 0,
+    "zipped": null,
+    "load": [
+      "tests/config_examples/load_pack/src/my_data_pack"
+    ],
+    "render": {}
+  },
+  "resource_pack": {
+    "name": "",
+    "description": "",
+    "pack_format": 0,
+    "zipped": null,
+    "load": [
+      "tests/config_examples/load_pack/src/my_resource_pack"
+    ],
+    "render": {}
+  },
+  "pipeline": [],
+  "meta": {}
+}

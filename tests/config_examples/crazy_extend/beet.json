@@ -1,0 +1,36 @@
+{
+  "output": "build",
+  "pipeline": [
+    {
+      "extend": ["vendor/beet.json"],
+      "data_pack": {
+        "load": ["thing"]
+      },
+      "resource_pack": {
+        "load": ["thing"]
+      }
+    },
+    {
+      "extend": ["src/data_pack/beet.json"],
+      "data_pack": {
+        "load": ["thing"],
+        "render": {
+          "functions": ["other:thing"]
+        }
+      },
+      "resource_pack": {
+        "load": ["thing"]
+      }
+    },
+    {
+      "directory": "src",
+      "extend": ["resource_pack/beet.json"],
+      "data_pack": {
+        "load": ["thing"]
+      },
+      "resource_pack": {
+        "load": ["thing"]
+      }
+    }
+  ]
+}

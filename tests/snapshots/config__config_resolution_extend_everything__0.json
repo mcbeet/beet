@@ -1,0 +1,56 @@
+{
+  "name": "foo",
+  "description": "foo",
+  "author": "foo",
+  "version": "foo",
+  "directory": "tests/config_examples/extend_everything",
+  "extend": [],
+  "output": "tests/config_examples/extend_everything/subdir/base",
+  "ignore": [
+    "base",
+    "thing"
+  ],
+  "cache": "tests/config_examples/extend_everything/subdir/base",
+  "require": [
+    "1",
+    "2",
+    "3",
+    "base",
+    "thing"
+  ],
+  "templates": [
+    "tests/config_examples/extend_everything/subdir/base",
+    "tests/config_examples/extend_everything/thing"
+  ],
+  "data_pack": {
+    "name": "thing",
+    "description": "base",
+    "pack_format": 4,
+    "zipped": false,
+    "load": [
+      "tests/config_examples/extend_everything/subdir/base",
+      "tests/config_examples/extend_everything/thing"
+    ],
+    "render": {}
+  },
+  "resource_pack": {
+    "name": "base",
+    "description": "base",
+    "pack_format": 88,
+    "zipped": true,
+    "load": [
+      "tests/config_examples/extend_everything/subdir/base",
+      "tests/config_examples/extend_everything/thing"
+    ],
+    "render": {}
+  },
+  "pipeline": [
+    "base",
+    "thing"
+  ],
+  "meta": {
+    "foo": 2,
+    "base": 4,
+    "thing": 8
+  }
+}

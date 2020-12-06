@@ -1,0 +1,13 @@
+{
+  "name": "foo",
+  "data_pack": {
+    "load": ["hello"]
+  },
+  "pipeline": [
+    {
+      "data_pack": {
+        "load": ["world"]
+      }
+    }
+  ]
+}

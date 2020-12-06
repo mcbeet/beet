@@ -1,0 +1,6 @@
+{
+  "output": "releases",
+  "data_pack": {
+    "load": ["some_library", "my_data_pack"]
+  }
+}

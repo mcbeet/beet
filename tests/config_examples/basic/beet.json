@@ -1,0 +1,10 @@
+{
+  "name": "my_project",
+  "output": "build",
+  "data_pack": {
+    "load": ["src"],
+    "render": {
+      "functions": ["my_project:*"]
+    }
+  }
+}

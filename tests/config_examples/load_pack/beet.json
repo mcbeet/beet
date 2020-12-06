@@ -1,0 +1,8 @@
+{
+  "data_pack": {
+    "load": ["src/my_data_pack"]
+  },
+  "resource_pack": {
+    "load": ["src/my_resource_pack"]
+  }
+}

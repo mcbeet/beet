@@ -1,0 +1,40 @@
+{
+  "name": "my_project",
+  "description": "The description of my project",
+  "author": "N/A",
+  "version": "1.2.3",
+  "output": "build",
+  "require": ["some_kind_of_template_extension"],
+  "data_pack": {
+    "name": "my_data_pack",
+    "description": "The description of my data pack",
+    "pack_format": 6,
+    "zipped": true,
+    "load": ["vendor/some_library", "src/data_pack"],
+    "render": {
+      "functions": ["my_project:configurable/*"]
+    }
+  },
+  "resource_pack": {
+    "name": "my_resource_pack",
+    "description": "The description of my resource pack",
+    "pack_format": 6,
+    "zipped": true,
+    "load": ["vendor/textures_from_somewhere", "src/resource_pack"]
+  },
+  "pipeline": [
+    "custom_plugin",
+    "other_custom_plugin",
+    "plugin_that_adds_function_preamble",
+    "plugin_that_runs_linter"
+  ],
+  "meta": {
+    "function_preamble": {
+      "match": ["my_project:*"],
+      "template": "function_preamble.txt"
+    },
+    "linter_options": {
+      "ignore_warnings": ["some_warning_name", "other_warning_name"]
+    }
+  }
+}

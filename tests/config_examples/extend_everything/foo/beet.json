@@ -1,0 +1,18 @@
+{
+  "name": "foo",
+  "description": "foo",
+  "author": "foo",
+  "version": "foo",
+  "require": ["1", "2", "3"],
+  "data_pack": {
+    "pack_format": 4,
+    "zipped": true
+  },
+  "resource_pack": {
+    "pack_format": 4,
+    "zipped": true
+  },
+  "meta": {
+    "foo": 2
+  }
+}

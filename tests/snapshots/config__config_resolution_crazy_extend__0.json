@@ -1,0 +1,147 @@
+{
+  "name": "",
+  "description": "",
+  "author": "",
+  "version": "",
+  "directory": "tests/config_examples/crazy_extend",
+  "extend": [],
+  "output": "tests/config_examples/crazy_extend/build",
+  "ignore": [],
+  "cache": "",
+  "require": [],
+  "templates": [],
+  "data_pack": {
+    "name": "",
+    "description": "",
+    "pack_format": 0,
+    "zipped": null,
+    "load": [],
+    "render": {}
+  },
+  "resource_pack": {
+    "name": "",
+    "description": "",
+    "pack_format": 0,
+    "zipped": null,
+    "load": [],
+    "render": {}
+  },
+  "pipeline": [
+    {
+      "name": "",
+      "description": "",
+      "author": "",
+      "version": "",
+      "directory": "tests/config_examples/crazy_extend",
+      "extend": [],
+      "output": "",
+      "ignore": [],
+      "cache": "",
+      "require": [],
+      "templates": [],
+      "data_pack": {
+        "name": "",
+        "description": "",
+        "pack_format": 0,
+        "zipped": null,
+        "load": [
+          "tests/config_examples/crazy_extend/vendor/lib1",
+          "tests/config_examples/crazy_extend/vendor/lib2",
+          "tests/config_examples/crazy_extend/vendor/lib3",
+          "tests/config_examples/crazy_extend/thing"
+        ],
+        "render": {}
+      },
+      "resource_pack": {
+        "name": "",
+        "description": "",
+        "pack_format": 0,
+        "zipped": null,
+        "load": [
+          "tests/config_examples/crazy_extend/thing"
+        ],
+        "render": {}
+      },
+      "pipeline": [],
+      "meta": {}
+    },
+    {
+      "name": "",
+      "description": "",
+      "author": "",
+      "version": "",
+      "directory": "tests/config_examples/crazy_extend",
+      "extend": [],
+      "output": "",
+      "ignore": [],
+      "cache": "",
+      "require": [],
+      "templates": [],
+      "data_pack": {
+        "name": "",
+        "description": "",
+        "pack_format": 0,
+        "zipped": null,
+        "load": [
+          "tests/config_examples/crazy_extend/src/data_pack",
+          "tests/config_examples/crazy_extend/thing"
+        ],
+        "render": {
+          "functions": [
+            "foo:bar",
+            "other:thing"
+          ]
+        }
+      },
+      "resource_pack": {
+        "name": "",
+        "description": "",
+        "pack_format": 0,
+        "zipped": null,
+        "load": [
+          "tests/config_examples/crazy_extend/thing"
+        ],
+        "render": {}
+      },
+      "pipeline": [],
+      "meta": {}
+    },
+    {
+      "name": "",
+      "description": "",
+      "author": "",
+      "version": "",
+      "directory": "tests/config_examples/crazy_extend/src",
+      "extend": [],
+      "output": "",
+      "ignore": [],
+      "cache": "",
+      "require": [],
+      "templates": [],
+      "data_pack": {
+        "name": "",
+        "description": "",
+        "pack_format": 0,
+        "zipped": null,
+        "load": [
+          "tests/config_examples/crazy_extend/src/thing"
+        ],
+        "render": {}
+      },
+      "resource_pack": {
+        "name": "",
+        "description": "",
+        "pack_format": 0,
+        "zipped": null,
+        "load": [
+          "tests/config_examples/crazy_extend/src/resource_pack",
+          "tests/config_examples/crazy_extend/src/thing"
+        ],
+        "render": {}
+      },
+      "pipeline": [],
+      "meta": {}
+    }
+  ],
+  "meta": {}
+}

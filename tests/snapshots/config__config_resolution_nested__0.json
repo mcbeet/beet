@@ -1,0 +1,67 @@
+{
+  "name": "foo",
+  "description": "",
+  "author": "",
+  "version": "",
+  "directory": "tests/config_examples/nested",
+  "extend": [],
+  "output": "",
+  "ignore": [],
+  "cache": "",
+  "require": [],
+  "templates": [],
+  "data_pack": {
+    "name": "",
+    "description": "",
+    "pack_format": 0,
+    "zipped": null,
+    "load": [
+      "tests/config_examples/nested/hello"
+    ],
+    "render": {}
+  },
+  "resource_pack": {
+    "name": "",
+    "description": "",
+    "pack_format": 0,
+    "zipped": null,
+    "load": [],
+    "render": {}
+  },
+  "pipeline": [
+    {
+      "name": "",
+      "description": "",
+      "author": "",
+      "version": "",
+      "directory": "tests/config_examples/nested",
+      "extend": [],
+      "output": "",
+      "ignore": [],
+      "cache": "",
+      "require": [],
+      "templates": [],
+      "data_pack": {
+        "name": "",
+        "description": "",
+        "pack_format": 0,
+        "zipped": null,
+        "load": [
+          "tests/config_examples/nested/world"
+        ],
+        "render": {}
+      },
+      "resource_pack": {
+        "name": "",
+        "description": "",
+        "pack_format": 0,
+        "zipped": null,
+        "load": [],
+        "render": {}
+      },
+      "pipeline": [],
+      "meta": {}
+    }
+  ],
+  "meta": {}
+}

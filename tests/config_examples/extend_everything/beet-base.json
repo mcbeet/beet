@@ -1,0 +1,24 @@
+{
+  "directory": "subdir",
+  "output": "base",
+  "ignore": ["base"],
+  "cache": "base",
+  "require": ["base"],
+  "templates": ["base"],
+  "data_pack": {
+    "name": "base",
+    "description": "base",
+    "zipped": false,
+    "load": ["base"]
+  },
+  "resource_pack": {
+    "name": "base",
+    "description": "base",
+    "pack_format": 88,
+    "load": ["base"]
+  },
+  "pipeline": ["base"],
+  "meta": {
+    "base": 4
+  }
+}

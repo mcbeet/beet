@@ -1,0 +1,6 @@
+{
+  "templates": ["templates1", "templates2"],
+  "data_pack": {
+    "load": ["src/my_data_pack"]
+  }
+}

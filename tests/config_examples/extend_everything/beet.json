@@ -1,0 +1,17 @@
+{
+  "extend": ["foo/beet.json", "beet-base.json"],
+  "ignore": ["thing"],
+  "require": ["thing"],
+  "templates": ["thing"],
+  "data_pack": {
+    "name": "thing",
+    "load": ["thing"]
+  },
+  "resource_pack": {
+    "load": ["thing"]
+  },
+  "pipeline": ["thing"],
+  "meta": {
+    "thing": 8
+  }
+}
