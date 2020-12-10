@@ -4,7 +4,6 @@
 [![PyPI](https://img.shields.io/pypi/v/beet.svg)](https://pypi.org/project/beet/)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/beet.svg)](https://pypi.org/project/beet/)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
-[![Checked with mypy](http://www.mypy-lang.org/static/mypy_badge.svg)](http://mypy-lang.org/)
 
 > The Minecraft pack development kit.
 
@@ -27,7 +26,7 @@ with ResourcePack(path="stone.zip") as assets:
     assets["minecraft:block/stone"] = Texture(source_path="custom.png")
 ```
 
-The `beet` library provides carefully crafted primitives for working with Minecraft resource packs and data packs in Python.
+The `beet` library provides carefully crafted primitives for working with Minecraft resource packs and data packs.
 
 - Create, read, edit and merge resource packs and data packs
 - Handle zipped and unzipped packs
