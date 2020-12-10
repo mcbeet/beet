@@ -7,7 +7,6 @@
   "extend": [],
   "output": "tests/config_examples/more_stuff/build",
   "ignore": [],
-  "cache": "",
   "require": [
     "some_kind_of_template_extension"
   ],

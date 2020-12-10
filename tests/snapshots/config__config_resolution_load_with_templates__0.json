@@ -7,7 +7,6 @@
   "extend": [],
   "output": "",
   "ignore": [],
-  "cache": "",
   "require": [],
   "templates": [
     "tests/config_examples/load_with_templates/templates1",

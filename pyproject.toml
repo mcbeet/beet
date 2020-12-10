@@ -23,10 +23,12 @@ include = ["beet/py.typed"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
-click = "^7.1.2"
 nbtlib = "^1.8.1"
 pathspec = "^0.8.1"
 Pillow = "^8.0.1"
+pydantic = "^1.7.3"
+click = "^7.1.2"
+click-help-colors = "^0.9"
 
 [tool.poetry.dev-dependencies]
 black = "^20.8b1"
@@ -35,6 +37,9 @@ rope = "^0.18.0"
 pytest-minecraft = "^0.1.1"
 isort = "^5.6.4"
 pytest-insta = "^0.1.4"
+
+[tool.poetry.scripts]
+beet = "beet.toolchain.cli:main"
 
 [tool.black]
 target-version = ["py38"]

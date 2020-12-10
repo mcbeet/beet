@@ -1,6 +1,0 @@
-{
-  "cache": "custom_folder",
-  "data_pack": {
-    "load": ["my_data_pack"]
-  }
-}

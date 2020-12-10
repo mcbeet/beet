@@ -2,7 +2,6 @@
   "directory": "subdir",
   "output": "base",
   "ignore": ["base"],
-  "cache": "base",
   "require": ["base"],
   "templates": ["base"],
   "data_pack": {

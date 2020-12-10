@@ -1,18 +1,25 @@
 __all__ = [
+    "InvalidProjectConfig",
     "ProjectConfig",
     "PackConfig",
+    "locate_config",
     "load_config",
 ]
 
 
 import json
 from copy import deepcopy
+from itertools import chain
 from pathlib import Path
 from typing import Dict, List, Optional, Union
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ValidationError
 
 from beet.core.utils import FileSystemPath, JsonDict
+
+
+class InvalidProjectConfig(Exception):
+    """Raised when trying to load an invalid project config."""
 
 
 class PackConfig(BaseModel):
@@ -56,7 +63,6 @@ class ProjectConfig(BaseModel):
     extend: List[str] = Field(default_factory=list)
     output: str = ""
     ignore: List[str] = Field(default_factory=list)
-    cache: str = ""
 
     require: List[str] = Field(default_factory=list)
     templates: List[str] = Field(default_factory=list)
@@ -79,8 +85,6 @@ class ProjectConfig(BaseModel):
 
         if self.output:
             self.output = str(path / self.output)
-        if self.cache:
-            self.cache = str(path / self.cache)
 
         self.templates = [str(path / template_path) for template_path in self.templates]
 
@@ -114,7 +118,6 @@ class ProjectConfig(BaseModel):
             extend=self.extend,
             output=self.output or other.output,
             ignore=other.ignore + self.ignore,
-            cache=other.cache + self.cache,
             data_pack=self.data_pack.with_defaults(other.data_pack),
             resource_pack=self.resource_pack.with_defaults(other.resource_pack),
             templates=other.templates + self.templates,
@@ -127,7 +130,35 @@ class ProjectConfig(BaseModel):
 ProjectConfig.update_forward_refs()
 
 
+def locate_config(initial_directory: FileSystemPath, filename: str) -> Optional[Path]:
+    """Try to locate a config file in the given directory or its parents."""
+    start = Path(initial_directory).resolve()
+    for directory in chain([start], start.parents):
+        if (config := directory / filename).is_file():
+            return config
+    return None
+
+
 def load_config(filename: FileSystemPath) -> ProjectConfig:
     """Load the project config at the specified location."""
     path = Path(filename)
-    return ProjectConfig(**json.loads(path.read_text())).resolve(path.parent)
+    try:
+        return ProjectConfig(**json.loads(path.read_text())).resolve(path.parent)
+    except json.JSONDecodeError as exc:
+        raise InvalidProjectConfig(f"{path}:{exc.lineno}: {exc.msg}.") from exc
+    except FileNotFoundError as exc:
+        raise InvalidProjectConfig(f"{path}: File not found.") from exc
+    except ValidationError as exc:
+        errors = [
+            (
+                "config" + "".join(json.dumps([item]) for item in error["loc"]),
+                error["msg"].capitalize(),
+            )
+            for error in exc.errors()
+        ]
+        width = max(len(loc) for loc, _ in errors) + 1
+        message = f"{path}: Validation error.\n\n" + "\n".join(
+            "{loc:<{width}} => {msg}.".format(loc=loc, width=width, msg=msg)
+            for loc, msg in errors
+        )
+        raise InvalidProjectConfig(message) from exc

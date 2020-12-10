@@ -12,15 +12,17 @@ from typing import Dict, Iterator, Literal, Optional, Sequence, Tuple, cast
 
 from pathspec import PathSpec
 
-from beet.core.utils import FileSystemPath, extra_field
+from .utils import FileSystemPath, extra_field
 
 FileChanges = Dict[str, Literal["created", "edited", "removed"]]
 
 
 @dataclass
 class DirectoryWatcher:
+    """Iterator that detects and yields file changes by polling the filesystem."""
+
     path: FileSystemPath
-    interval: float = 0.4
+    interval: float = 0.6
     ignore: PathSpec = field(init=False)
 
     ignore_file: Optional[FileSystemPath] = extra_field(default=None)
@@ -53,6 +55,7 @@ class DirectoryWatcher:
             time.sleep(self.interval)
 
     def poll(self) -> FileChanges:
+        """Return the files created, edited, or removed since the last poll."""
         changes: FileChanges = {}
         new_files = dict(self.walk())
 
@@ -76,6 +79,7 @@ class DirectoryWatcher:
         self,
         path: Optional[FileSystemPath] = None,
     ) -> Iterator[Tuple[str, float]]:
+        """Walk down the watched directories."""
         base_path = Path(self.path).resolve()
         directory = base_path / path if path else base_path
 
