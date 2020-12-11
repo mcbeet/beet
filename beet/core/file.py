@@ -136,7 +136,7 @@ class File(Generic[ValueType, SerializeType]):
             else:
                 shutil.copyfile(self.ensure_source_path(), str(Path(origin, path)))
         else:
-            raw = self.encode(self.serialize(self.get_content()))
+            raw = self.encode(self.ensure_serialized())
             if isinstance(origin, ZipFile):
                 origin.writestr(str(path), raw)
             else:
