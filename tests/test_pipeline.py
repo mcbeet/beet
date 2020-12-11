@@ -1,8 +1,8 @@
 from typing import List
 
-from beet.toolchain.pipeline import Pipeline
+from beet.toolchain.pipeline import GenericPipeline
 
-TestPipeline = Pipeline[List[str]]
+TestPipeline = GenericPipeline[List[str]]
 
 
 def test_empty():
