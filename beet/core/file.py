@@ -20,7 +20,7 @@ import json
 import shutil
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Generic, Optional, Type, TypeVar, Union, cast
+from typing import Any, Generic, Optional, Type, TypeVar, Union
 from zipfile import ZipFile
 
 from PIL import Image as img
@@ -113,7 +113,7 @@ class File(Generic[ValueType, SerializeType]):
         instance = cls.try_load(origin, path)
         if instance is None:
             raise FileNotFoundError(path)
-        return cast(FileType, instance)
+        return instance  # type: ignore
 
     @classmethod
     def try_load(
@@ -173,16 +173,12 @@ class TextFileBase(File[ValueType, str]):
     text = FileSerialize[str]()
 
     @classmethod
-    def serialize(cls, content: Any) -> str:
+    def serialize(cls, content: Union[ValueType, str]) -> str:
         return content if isinstance(content, str) else cls.to_str(content)
 
     @classmethod
-    def deserialize(cls, content: Any) -> ValueType:
-        return (
-            cls.from_str(content)
-            if isinstance(content, str)
-            else cast(ValueType, content)
-        )
+    def deserialize(cls, content: Union[ValueType, str]) -> ValueType:
+        return cls.from_str(content) if isinstance(content, str) else content
 
     @classmethod
     def decode(cls, raw: bytes) -> str:
@@ -221,16 +217,12 @@ class BinaryFileBase(File[ValueType, bytes]):
     blob = FileSerialize[bytes]()
 
     @classmethod
-    def serialize(cls, content: Any) -> bytes:
+    def serialize(cls, content: Union[ValueType, bytes]) -> bytes:
         return content if isinstance(content, bytes) else cls.to_bytes(content)
 
     @classmethod
-    def deserialize(cls, content: Any) -> ValueType:
-        return (
-            cls.from_bytes(content)
-            if isinstance(content, bytes)
-            else cast(ValueType, content)
-        )
+    def deserialize(cls, content: Union[ValueType, bytes]) -> ValueType:
+        return cls.from_bytes(content) if isinstance(content, bytes) else content
 
     @classmethod
     def decode(cls, raw: bytes) -> bytes:

@@ -33,7 +33,6 @@ from typing import (
     Tuple,
     Type,
     TypeVar,
-    cast,
     get_args,
     overload,
 )
@@ -343,7 +342,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
 
     def __setitem__(self, key: str, value: Any):
         if isinstance(value, Namespace):
-            super().__setitem__(key, cast(NamespaceType, value))
+            super().__setitem__(key, value)  # type: ignore
         else:
             NamespaceProxy(self, type(value))[key] = value
 
@@ -411,8 +410,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
             self.files.merge(files)
 
             namespaces = {
-                name: cast(NamespaceType, namespace)
-                for name, namespace in self.namespace_type.scan(origin)
+                name: namespace for name, namespace in self.namespace_type.scan(origin)
             }
 
             self.merge(namespaces)
