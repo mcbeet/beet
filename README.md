@@ -11,7 +11,7 @@
 
 Minecraft [resource packs](https://minecraft.gamepedia.com/Resource_Pack) and [data packs](https://minecraft.gamepedia.com/Data_Pack) work well as _distribution_ formats but can be pretty limiting as _authoring_ formats. Without the ability to parametrize or create abstractions over assets and data pack resources, the reusability and interoperability of community-created projects and libraries is greatly limited.
 
-The community is tackling the problem by building independent tooling left and right, from command pre-processors to frameworks of all kinds and full-blown programming languages. However, there's no silver bullet and in situations where a combination of these tools could actually provide the most suited abstractions, the separate toolchains and the poor interoperability make it difficult for them to coexist.
+The community is tackling the problem by building independent tooling left and right, from command pre-processors to frameworks of all kinds and full-blown programming languages. However, there's no silver bullet and in situations where a combination of these tools could actually provide the most effective workflow, the separate toolchains and the poor interoperability make it difficult for them to coexist.
 
 The `beet` project is meant to serve as a platform for building a cooperative tooling ecosystem by providing a flexible composition model and a unified, user-friendly development workflow. Higher-level projects should be able to leverage the toolchain and `beet` primitives to reduce their internal complexity and become more interoperable.
 
@@ -50,6 +50,7 @@ The `beet` toolchain is designed to support a wide range of use-cases. The most 
 - Cache expensive computations and heavy files with a versatile caching API
 - Automatically rebuild the project on file changes with watch mode
 - Link the generated resource pack and data pack to Minecraft
+- Configure advanced build systems for development and creating releases
 
 ## Installation
 
@@ -68,16 +69,16 @@ Usage: beet [OPTIONS] COMMAND [ARGS]...
   The beet toolchain.
 
 Options:
-  -C, --directory DIRECTORY  The project directory.
+  -d, --directory DIRECTORY  Use the specified project directory.
+  -c, --config FILE          Use the specified config file.
   -v, --version              Show the version and exit.
   -h, --help                 Show this message and exit.
 
 Commands:
   build  Build the current project.
   cache  Inspect or clear the cache.
-  init   Initialize a new project.
   link   Link the generated resource pack and data pack to Minecraft.
-  watch  Watch the project directory and rebuild on file changes.
+  watch  Watch the project directory and build on file changes.
 ```
 
 ## Status
