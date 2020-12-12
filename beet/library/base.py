@@ -7,7 +7,7 @@ __all__ = [
     "Namespace",
     "NamespaceFile",
     "NamespaceContainer",
-    "namespacePin",
+    "NamespacePin",
     "NamespaceProxy",
     "NamespaceProxyDescriptor",
 ]
