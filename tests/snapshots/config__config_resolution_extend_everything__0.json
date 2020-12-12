@@ -5,7 +5,7 @@
   "version": "foo",
   "directory": "tests/config_examples/extend_everything",
   "extend": [],
-  "output": "tests/config_examples/extend_everything/subdir/base",
+  "output": "",
   "ignore": [
     "base",
     "thing"
