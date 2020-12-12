@@ -10,7 +10,7 @@ from typing import Any, Optional, Sequence, TypeVar
 
 import click
 from click.decorators import pass_context
-from click_help_colors import HelpColorsGroup  # type: ignore
+from click_help_colors import HelpColorsGroup
 
 from beet import __version__
 
@@ -26,7 +26,7 @@ pass_project = click.make_pass_decorator(Project, ensure=True)
 
 class CustomGroup(HelpColorsGroup):
     def __init__(self, *args: Any, **kwargs: Any):
-        super().__init__(  # type: ignore
+        super().__init__(
             *args,
             **kwargs,
             invoke_without_command=True,
@@ -49,8 +49,8 @@ class CustomGroup(HelpColorsGroup):
 
         return None
 
-    def format_usage(self, ctx: click.Context, formatter: click.HelpFormatter):
-        formatter.write_usage(  # type: ignore
+    def format_usage(self, ctx: click.Context, formatter: Any):
+        formatter.write_usage(
             ctx.command_path,
             " ".join(self.collect_usage_pieces(ctx)),
             click.style("Usage", fg="red") + ": ",
