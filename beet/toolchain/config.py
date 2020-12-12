@@ -116,7 +116,7 @@ class ProjectConfig(BaseModel):
             version=self.version or other.version,
             directory=self.directory,
             extend=self.extend,
-            output=self.output or other.output,
+            output=self.output,
             ignore=other.ignore + self.ignore,
             data_pack=self.data_pack.with_defaults(other.data_pack),
             resource_pack=self.resource_pack.with_defaults(other.resource_pack),

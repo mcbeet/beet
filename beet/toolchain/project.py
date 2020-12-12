@@ -1,28 +1,22 @@
 __all__ = [
     "ErrorMessage",
     "Project",
+    "ProjectBuilder",
 ]
 
 
+import re
 from copy import deepcopy
 from dataclasses import dataclass
 from pathlib import Path
-from typing import (
-    Any,
-    ChainMap,
-    Iterable,
-    Iterator,
-    List,
-    MutableMapping,
-    Optional,
-    Sequence,
-)
+from typing import Iterable, Iterator, List, Optional, Sequence
 
 from beet.core.cache import MultiCache
 from beet.core.utils import FileSystemPath
 from beet.core.watch import DirectoryWatcher, FileChanges
 
-from .config import ProjectConfig, load_config, locate_config
+from .config import PackConfig, ProjectConfig, load_config, locate_config
+from .context import Context, Pipeline
 from .utils import locate_minecraft
 
 
@@ -34,8 +28,6 @@ class ErrorMessage(Exception):
 class Project:
     """Class for interacting with a beet project."""
 
-    parent: Optional["Project"] = None
-
     resolved_config: Optional[ProjectConfig] = None
     config_directory: Optional[FileSystemPath] = None
     config_path: Optional[FileSystemPath] = None
@@ -43,8 +35,6 @@ class Project:
 
     resolved_cache: Optional[MultiCache] = None
     cache_name: str = ".beet_cache"
-
-    resolved_meta: Optional[MutableMapping[str, Any]] = None
 
     @property
     def config(self) -> ProjectConfig:
@@ -65,36 +55,22 @@ class Project:
         return Path(self.config.directory)
 
     @property
-    def output(self) -> Optional[Path]:
+    def output_directory(self) -> Optional[Path]:
         return self.directory / self.config.output if self.config.output else None
 
     @property
     def cache(self) -> MultiCache:
         if self.resolved_cache is not None:
             return self.resolved_cache
-        if self.parent is None:
-            self.resolved_cache = MultiCache(self.directory / self.cache_name)
-        else:
-            self.resolved_cache = self.parent.cache
+        self.resolved_cache = MultiCache(self.directory / self.cache_name)
         return self.resolved_cache
 
     @property
-    def meta(self) -> MutableMapping[str, Any]:
-        if self.resolved_meta is not None:
-            return self.resolved_meta
-        if self.parent is None:
-            self.resolved_meta = deepcopy(self.config.meta)
-        else:
-            self.resolved_meta = ChainMap(deepcopy(self.config.meta), self.parent.meta)
-        return self.resolved_meta
-
-    @property
     def ignore(self) -> List[str]:
-        return (
-            self.config.ignore
-            + ([] if self.parent is None else self.parent.ignore)
-            + ([] if self.output is None else [f"/{self.output}"])
-        )
+        ignore = list(self.config.ignore)
+        if self.output_directory:
+            ignore.append(f"{self.output_directory.relative_to(self.directory)}/")
+        return ignore
 
     def reset(self):
         """Clear the cached config and force subsequent operations to load it again."""
@@ -104,6 +80,11 @@ class Project:
 
     def build(self):
         """Build the project."""
+        ctx = ProjectBuilder(self).build()
+
+        for link_key, pack in zip(["resource_pack", "data_pack"], ctx.packs):
+            if pack and (link_dir := ctx.cache["link"].json.get(link_key)):
+                pack.save(link_dir, overwrite=True)
 
     def watch(self, interval: float = 0.6) -> Iterator[FileChanges]:
         """Watch the project."""
@@ -111,7 +92,12 @@ class Project:
             self.directory,
             interval,
             ignore_file=".gitignore",
-            ignore_patterns=[f"/{self.cache.path}", "*.tmp", ".*", *self.ignore],
+            ignore_patterns=[
+                f"{self.cache.path.relative_to(self.directory)}/",
+                "*.tmp",
+                ".*",
+                *self.ignore,
+            ],
         ):
             self.reset()
             yield changes
@@ -182,3 +168,98 @@ class Project:
         """Remove the linked resource pack directory and data pack directory."""
         with self.cache:
             del self.cache["link"]
+
+
+class ProjectBuilder:
+    """Class capable of building a project."""
+
+    project: Project
+    config: ProjectConfig
+
+    def __init__(self, project: Project):
+        self.project = project
+        self.config = self.project.config
+
+    def build(self) -> Context:
+        """Create the context, run the pipeline, and return the context."""
+        ctx = Context(
+            directory=self.project.directory,
+            output_directory=self.project.output_directory,
+            meta=deepcopy(self.config.meta),
+            cache=self.project.cache,
+        )
+
+        with ctx, ctx.cache:
+            pipeline = ctx.inject(Pipeline)
+            pipeline.require(self.bootstrap)
+            pipeline.run(
+                (
+                    item
+                    if isinstance(item, str)
+                    else ProjectBuilder(
+                        Project(resolved_config=item, resolved_cache=ctx.cache)
+                    )
+                )
+                for item in self.config.pipeline
+            )
+
+        return ctx
+
+    def bootstrap(self, ctx: Context):
+        """Plugin that handles the project configuration."""
+        for plugin in self.config.require:
+            ctx.require(plugin)
+
+        pack_configs = [self.config.resource_pack, self.config.data_pack]
+
+        for config, pack in zip(pack_configs, ctx.packs):
+            for path in config.load:
+                pack.load(path)
+
+        yield
+
+        name = self.config.name or ctx.directory.stem
+        normalized_name = re.sub(r"[^a-z0-9]+", "_", name.lower())
+
+        description_parts = [
+            self.config.description,
+            self.config.author and f"Author: {self.config.author}",
+            self.config.version and f"Version: {self.config.version}",
+        ]
+        description = "\n".join(filter(None, description_parts))
+
+        for is_data_pack, (config, pack) in enumerate(zip(pack_configs, ctx.packs)):
+            default_name = normalized_name
+            if self.config.version:
+                default_name += "_" + self.config.version
+            default_name += "_data_pack" if is_data_pack else "_resource_pack"
+
+            options = config.with_defaults(
+                PackConfig(
+                    name=default_name,
+                    description=description,
+                    pack_format=pack.pack_format,
+                    zipped=pack.zipped,
+                )
+            )
+
+            pack.name = options.name
+            pack.description = options.description
+            pack.pack_format = options.pack_format
+            pack.zipped = bool(options.zipped)
+
+            if pack and ctx.output_directory:
+                pack.save(ctx.output_directory, overwrite=True)
+
+    def __call__(self, ctx: Context):
+        """The builder instance is itself a plugin used for merging subpipelines."""
+        child_ctx = self.build()
+
+        if child_ctx.output_directory:
+            return
+
+        ctx.assets.files.merge(child_ctx.assets.files)
+        ctx.assets.merge(child_ctx.assets)
+
+        ctx.data.files.merge(child_ctx.data.files)
+        ctx.data.merge(child_ctx.data)
