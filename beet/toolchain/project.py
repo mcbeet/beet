@@ -76,7 +76,6 @@ class Project:
         """Clear the cached config and force subsequent operations to load it again."""
         self.resolved_config = None
         self.resolved_cache = None
-        self.resolved_meta = None
 
     def build(self):
         """Build the project."""
