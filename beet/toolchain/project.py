@@ -93,6 +93,7 @@ class Project:
             ignore_file=".gitignore",
             ignore_patterns=[
                 f"{self.cache.path.relative_to(self.directory)}/",
+                "__pycache__/",
                 "*.tmp",
                 ".*",
                 *self.ignore,
