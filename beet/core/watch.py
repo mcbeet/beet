@@ -31,6 +31,8 @@ class DirectoryWatcher:
     files: Dict[str, float] = extra_field(init=False, default_factory=dict)
 
     def __post_init__(self):
+        self.ignore_patterns = list(self.ignore_patterns)
+
         if self.ignore_file:
             ignore_file = Path(self.ignore_file)
 
@@ -40,11 +42,12 @@ class DirectoryWatcher:
                         ignore_file = path
                         break
 
-            self.ignore_patterns = list(self.ignore_patterns) + [
-                pattern
-                for line in ignore_file.read_text().splitlines()
-                if not line.startswith("#") and (pattern := line.strip())
-            ]
+            if ignore_file.is_file():
+                self.ignore_patterns += [
+                    pattern
+                    for line in ignore_file.read_text().splitlines()
+                    if not line.startswith("#") and (pattern := line.strip())
+                ]
 
         self.ignore = PathSpec.from_lines("gitwildmatch", self.ignore_patterns)
 
