@@ -2,6 +2,7 @@ __all__ = [
     "ErrorMessage",
     "Project",
     "ProjectBuilder",
+    "RenderInfo",
 ]
 
 
@@ -9,14 +10,22 @@ import re
 from copy import deepcopy
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Iterable, Iterator, List, Optional, Sequence
+from typing import Iterable, Iterator, List, Optional, Sequence, TypedDict
 
 from beet.core.cache import MultiCache
 from beet.core.utils import FileSystemPath
 from beet.core.watch import DirectoryWatcher, FileChanges
 
-from .config import PackConfig, ProjectConfig, load_config, locate_config
+from .config import (
+    InvalidProjectConfig,
+    PackConfig,
+    ProjectConfig,
+    load_config,
+    locate_config,
+)
 from .context import Context, Pipeline
+from .pipeline import PluginError
+from .template import TemplateError, TemplateManager
 from .utils import locate_minecraft
 
 
@@ -57,6 +66,13 @@ class Project:
     @property
     def output_directory(self) -> Optional[Path]:
         return self.directory / self.config.output if self.config.output else None
+
+    @property
+    def template_directories(self) -> List[FileSystemPath]:
+        return [
+            self.directory / directory
+            for directory in (self.config.templates or ["templates"])
+        ]
 
     @property
     def cache(self) -> MultiCache:
@@ -170,6 +186,13 @@ class Project:
             del self.cache["link"]
 
 
+class RenderInfo(TypedDict):
+    """Information provided to templates rendered by the builder."""
+
+    path: str
+    group: str
+
+
 class ProjectBuilder:
     """Class capable of building a project."""
 
@@ -187,11 +210,22 @@ class ProjectBuilder:
             output_directory=self.project.output_directory,
             meta=deepcopy(self.config.meta),
             cache=self.project.cache,
+            template=TemplateManager(self.project.template_directories),
         )
+
+        ctx.template.env.globals["ctx"] = ctx
 
         with ctx, ctx.cache:
             pipeline = ctx.inject(Pipeline)
+            pipeline.exception_fallthrough = (
+                ErrorMessage,
+                InvalidProjectConfig,
+                PluginError,
+                TemplateError,
+            )
+
             pipeline.require(self.bootstrap)
+
             pipeline.run(
                 (
                     item
@@ -215,6 +249,21 @@ class ProjectBuilder:
         for config, pack in zip(pack_configs, ctx.packs):
             for path in config.load:
                 pack.load(path)
+
+        for config, pack in zip(pack_configs, ctx.packs):
+            for group, patterns in config.render.items():
+                try:
+                    proxy = getattr(pack, group)
+                    file_paths = proxy.match(*patterns)
+                except:
+                    message = f"Invalid pattern group {group!r} in configuration."
+                    raise ErrorMessage(message) from None
+                else:
+                    for path in file_paths:
+                        ctx.template.render_file(
+                            proxy[path],
+                            render_info=RenderInfo(path=path, group=group),
+                        )
 
         yield
 

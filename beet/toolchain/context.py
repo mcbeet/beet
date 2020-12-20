@@ -19,6 +19,7 @@ from beet.library.data_pack import DataPack
 from beet.library.resource_pack import ResourcePack
 
 from .pipeline import GenericPipeline, GenericPlugin, GenericPluginSpec
+from .template import TemplateManager
 
 T = TypeVar("T")
 
@@ -46,6 +47,7 @@ class Context:
     output_directory: Optional[Path]
     meta: JsonDict
     cache: MultiCache
+    template: TemplateManager
 
     assets: ResourcePack = field(default_factory=ResourcePack)
     data: DataPack = field(default_factory=DataPack)
@@ -82,5 +84,5 @@ class Context:
         return self.assets, self.data
 
     def require(self, spec: PluginSpec):
-        """Delegate to the pipeline."""
+        """Execute the specified plugin."""
         self.inject(Pipeline).require(spec)

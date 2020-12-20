@@ -9,5 +9,6 @@ from .toolchain.config import *
 from .toolchain.context import *
 from .toolchain.pipeline import *
 from .toolchain.project import *
+from .toolchain.template import *
 
 __version__ = "0.1.3"

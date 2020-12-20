@@ -17,6 +17,7 @@ from beet import __version__
 from .config import InvalidProjectConfig
 from .pipeline import PluginError, PluginImportError
 from .project import ErrorMessage, Project
+from .template import TemplateError
 from .utils import format_exc, format_obj
 
 T = TypeVar("T")
@@ -125,6 +126,9 @@ def error_handler(should_exit: bool = False, format_padding: int = 0):
         message = "Aborted."
     except InvalidProjectConfig as exc:
         message = f"Couldn't load config file.\n\n{exc}"
+    except TemplateError as exc:
+        message = " ".join(exc.args)
+        exception = exc.__cause__
     except Exception as exc:
         message = "An unhandled exception occurred. This could be a bug."
         exception = exc
