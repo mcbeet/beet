@@ -13,6 +13,7 @@ from jinja2 import (
     BaseLoader,
     ChoiceLoader,
     Environment,
+    FileSystemBytecodeCache,
     FileSystemLoader,
     PackageLoader,
     PrefixLoader,
@@ -37,11 +38,11 @@ class TemplateManager:
     loaders: List[BaseLoader]
     prefix_map: Dict[str, BaseLoader]
 
-    def __init__(self, directories: List[FileSystemPath]):
+    def __init__(self, templates: List[FileSystemPath], cache_dir: FileSystemPath):
         self.prefix_map = {}
 
         self.loaders = [
-            FileSystemLoader(directories),
+            FileSystemLoader(templates),
             PrefixLoader(self.prefix_map),
         ]
 
@@ -50,6 +51,7 @@ class TemplateManager:
             line_statement_prefix="#!",
             keep_trailing_newline=True,
             loader=ChoiceLoader(self.loaders),
+            bytecode_cache=FileSystemBytecodeCache(cache_dir),
             extensions=[
                 DebugExtension,
                 ExprStmtExtension,

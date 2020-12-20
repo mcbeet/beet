@@ -202,7 +202,10 @@ class ProjectBuilder:
             output_directory=self.project.output_directory,
             meta=deepcopy(self.config.meta),
             cache=self.project.cache,
-            template=TemplateManager(self.project.template_directories),
+            template=TemplateManager(
+                templates=self.project.template_directories,
+                cache_dir=self.project.cache["template"].directory,
+            ),
         )
 
         ctx.template.env.globals["ctx"] = ctx
