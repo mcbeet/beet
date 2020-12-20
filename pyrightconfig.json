@@ -1,3 +1,4 @@
 {
-  "typeCheckingMode": "strict"
+  "typeCheckingMode": "basic",
+  "strict": ["beet/core", "beet/library", "beet/toolchain", "tests"]
 }

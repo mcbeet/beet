@@ -2,7 +2,6 @@ __all__ = [
     "ErrorMessage",
     "Project",
     "ProjectBuilder",
-    "RenderInfo",
 ]
 
 
@@ -10,7 +9,7 @@ import re
 from copy import deepcopy
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Iterable, Iterator, List, Optional, Sequence, TypedDict
+from typing import Iterable, Iterator, List, Optional, Sequence
 
 from beet.core.cache import MultiCache
 from beet.core.utils import FileSystemPath
@@ -186,13 +185,6 @@ class Project:
             del self.cache["link"]
 
 
-class RenderInfo(TypedDict):
-    """Information provided to templates rendered by the builder."""
-
-    path: str
-    group: str
-
-
 class ProjectBuilder:
     """Class capable of building a project."""
 
@@ -262,7 +254,7 @@ class ProjectBuilder:
                     for path in file_paths:
                         ctx.template.render_file(
                             proxy[path],
-                            render_info=RenderInfo(path=path, group=group),
+                            __render__={"path": path, "group": group},
                         )
 
         yield
