@@ -46,11 +46,12 @@ def greet(ctx: Context):
 
 The `beet` toolchain is designed to support a wide range of use-cases. The most basic pipeline will let you create configurable resource packs and data packs, but plugins make it easy to implement arbitrarily advanced workflows and tools like linters, asset generators and function pre-processors.
 
-- Compose simple functions that can edit or inspect the generated resource pack and data pack
+- Compose plugins that can inspect and edit the generated resource pack and data pack
+- Configure flexible build systems for development and creating releases
 - Cache expensive computations and heavy files with a versatile caching API
 - Automatically rebuild the project on file changes with watch mode
 - Link the generated resource pack and data pack to Minecraft
-- Configure advanced build systems for development and creating releases
+- First-class template integration approachable without prior Python knowledge
 
 ## Installation
 
