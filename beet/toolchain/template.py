@@ -7,7 +7,7 @@ __all__ = [
 
 from contextlib import contextmanager
 from textwrap import dedent
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, TypeVar
 
 from jinja2 import (
     BaseLoader,
@@ -25,6 +25,8 @@ from jinja2.loaders import BaseLoader
 
 from beet.core.file import TextFileBase
 from beet.core.utils import FileSystemPath
+
+TextFileType = TypeVar("TextFileType", bound=TextFileBase[Any])
 
 
 class TemplateError(Exception):
@@ -77,11 +79,10 @@ class TemplateManager:
         with self.error_handler("Couldn't render template."):
             return self.env.from_string(template).render(kwargs)  # type: ignore
 
-    def render_file(self, file: TextFileBase[Any], **kwargs: Any) -> str:
+    def render_file(self, file: TextFileType, **kwargs: Any) -> TextFileType:
         """Render a given file in-place."""
-        result = self.render_string(file.text, **kwargs)
-        file.text = result
-        return result
+        file.text = self.render_string(file.text, **kwargs)
+        return file
 
     @contextmanager
     def error_handler(self, message: str):
