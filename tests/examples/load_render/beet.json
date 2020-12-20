@@ -1,0 +1,11 @@
+{
+  "data_pack": {
+    "load": ["src"],
+    "render": {
+      "functions": ["demo:*"]
+    }
+  },
+  "meta": {
+    "message": "hello world"
+  }
+}

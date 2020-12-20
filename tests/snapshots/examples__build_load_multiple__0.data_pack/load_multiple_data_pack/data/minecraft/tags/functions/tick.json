@@ -1,0 +1,7 @@
+{
+  "values": [
+    "demo:foo",
+    "lib1:main",
+    "lib2:main"
+  ]
+}

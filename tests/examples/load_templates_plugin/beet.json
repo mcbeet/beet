@@ -1,0 +1,9 @@
+{
+  "require": ["plugin_with_templates"],
+  "data_pack": {
+    "load": ["src"],
+    "render": {
+      "functions": ["demo:*"]
+    }
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "templates": ["templates", "macros"],
+  "data_pack": {
+    "load": ["src"],
+    "render": {
+      "functions": ["demo:*"]
+    }
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "data_pack": {
+    "load": ["src", "vendor/lib1", "vendor/lib2"]
+  },
+  "resource_pack": {
+    "load": ["src"]
+  }
+}
