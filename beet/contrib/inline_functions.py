@@ -34,7 +34,7 @@ class InlineFunctions(Extension):
 
     def _function_handler(self, context: Any, path: str, caller: Any) -> str:
         ctx: Context = context["ctx"]
-        render: JsonDict = context["__render__"]
+        render: JsonDict = context.get("__render__", {})
 
         commands = caller(dict(render, path=path, group="functions"))
         ctx.data[path] = Function(commands)
