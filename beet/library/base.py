@@ -267,7 +267,7 @@ class PackPin(Pin[T]):
     default_factory: PinDefaultFactory[T] = SENTINEL_OBJ
 
     def forward(self, obj: "Pack[Namespace]") -> PackContainer:
-        return obj.files
+        return obj.extra
 
 
 @dataclass
@@ -289,7 +289,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
     path: Optional[Path]
     zipped: bool
 
-    files: PackContainer
+    extra: PackContainer
     mcmeta = PackPin[JsonFile]("pack.mcmeta", default_factory=lambda: JsonFile({}))
     image = PackPin[Optional[PngFile]]("pack.png", default=None)
 
@@ -319,7 +319,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
         self.path = None
         self.zipped = zipped
 
-        self.files = PackContainer()
+        self.extra = PackContainer()
 
         if mcmeta is not None:
             self.mcmeta = mcmeta
@@ -351,7 +351,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
             return NotImplemented
         return (
             self.name == other.name
-            and self.files == other.files
+            and self.extra == other.extra
             and all(self[key] == other[key] for key in self.keys() | other.keys())
         )
 
@@ -378,7 +378,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
             yield from NamespaceProxy(self, file_type).items()
 
     @classmethod
-    def get_structure(cls) -> Dict[str, Type[PackFile]]:
+    def get_extra_info(cls) -> Dict[str, Type[PackFile]]:
         return {"pack.mcmeta": JsonFile, "pack.png": PngFile}
 
     def load(self, origin: Optional[FileOrigin] = None):
@@ -403,11 +403,11 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
         if origin:
             files = {
                 filename: loaded
-                for filename, file_type in self.get_structure().items()
+                for filename, file_type in self.get_extra_info().items()
                 if (loaded := file_type.try_load(origin, filename))
             }
 
-            self.files.merge(files)
+            self.extra.merge(files)
 
             namespaces = {
                 name: namespace for name, namespace in self.namespace_type.scan(origin)
@@ -422,8 +422,8 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
 
     def dump(self, origin: FileOrigin):
         """Write the content of the pack to a zipfile or to the filesystem """
-        files = {path: item for path, item in self.files.items() if item is not None}
-        _dump_files(origin, files)
+        extra = {path: item for path, item in self.extra.items() if item is not None}
+        _dump_files(origin, extra)
 
         for namespace_name, namespace in self.items():
             namespace.dump(namespace_name, origin)

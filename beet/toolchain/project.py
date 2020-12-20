@@ -302,8 +302,8 @@ class ProjectBuilder:
         if child_ctx.output_directory:
             return
 
-        ctx.assets.files.merge(child_ctx.assets.files)
+        ctx.assets.extra.merge(child_ctx.assets.extra)
         ctx.assets.merge(child_ctx.assets)
 
-        ctx.data.files.merge(child_ctx.data.files)
+        ctx.data.extra.merge(child_ctx.data.extra)
         ctx.data.merge(child_ctx.data)
