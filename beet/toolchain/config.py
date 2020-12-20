@@ -88,14 +88,8 @@ class ProjectConfig(BaseModel):
 
         self.templates = [str(path / template_path) for template_path in self.templates]
 
-        self.data_pack.load = [
-            str(path / data_pack_path) for data_pack_path in self.data_pack.load
-        ]
-
-        self.resource_pack.load = [
-            str(path / resource_pack_path)
-            for resource_pack_path in self.resource_pack.load
-        ]
+        for pack_config in [self.data_pack, self.resource_pack]:
+            pack_config.load = [str(path / load_path) for load_path in pack_config.load]
 
         self.pipeline = [
             item.resolve(path) if isinstance(item, ProjectConfig) else item
