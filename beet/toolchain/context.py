@@ -21,11 +21,15 @@ from beet.library.resource_pack import ResourcePack
 from .pipeline import GenericPipeline, GenericPlugin, GenericPluginSpec
 from .template import TemplateManager
 
-T = TypeVar("T")
+InjectedType = TypeVar("InjectedType")
 
-Pipeline = GenericPipeline["Context"]
 Plugin = GenericPlugin["Context"]
 PluginSpec = GenericPluginSpec["Context"]
+
+
+@dataclass
+class Pipeline(GenericPipeline["Context"]):
+    ctx: "Context"
 
 
 class ContextContainer(Container[Callable[["Context"], Any], Any]):
@@ -59,7 +63,7 @@ class Context:
         self._container = ContextContainer(self)
         self._path_entry = str(self.directory.resolve())
 
-    def inject(self, cls: Callable[["Context"], T]) -> T:
+    def inject(self, cls: Callable[["Context"], InjectedType]) -> InjectedType:
         return self._container[cls]
 
     def __enter__(self) -> "Context":
