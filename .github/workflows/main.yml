@@ -22,6 +22,8 @@ jobs:
         uses: snok/install-poetry@v1.1.1
         with:
           virtualenvs-in-project: true
+      - name: Install Pyright
+        run: npm install
       - name: Setup cache
         id: cached-poetry-dependencies
         uses: actions/cache@v2
@@ -33,22 +35,13 @@ jobs:
         run: poetry install
       - name: Run tests
         run: poetry run pytest -v
-
-  pyright:
-    name: Pyright
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v2
-      - name: Install pyright
-        run: npm install
-      - name: Check
+      - name: Run type-checking
         run: npm run check
 
   release:
     name: Release
     runs-on: ubuntu-latest
-    needs: [test, pyright]
+    needs: [test]
     if: github.repository == 'vberlier/beet'
 
     steps:
