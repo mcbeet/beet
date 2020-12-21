@@ -68,7 +68,7 @@ profile = "black"
 branch = "main"
 version_variable = ["beet/__init__.py:__version__"]
 major_on_zero = false
-build_command = "poetry build"
+build_command = "pip install poetry && poetry build"
 
 [build-system]
 requires = ["poetry>=0.12"]
