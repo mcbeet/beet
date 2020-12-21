@@ -1,4 +1,4 @@
-name: Test and release
+name: CI
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
 
 jobs:
   main:
-    name: Python 3.9
+    name: Test and release
     runs-on: ubuntu-latest
 
     steps:
