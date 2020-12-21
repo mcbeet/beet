@@ -1,6 +1,6 @@
 # <img src="https://github.com/vberlier/beet/blob/master/docs/assets/logo.svg" alt="beet logo" width="30"> beet
 
-[![Build Status](https://travis-ci.com/vberlier/beet.svg?token=HSyYhdxSKy5kTTrkmWq7&branch=master)](https://travis-ci.com/vberlier/beet)
+[![GitHub Actions](https://github.com/vberlier/beet/workflows/CI/badge.svg)](https://github.com/vberlier/beet/actions)
 [![PyPI](https://img.shields.io/pypi/v/beet.svg)](https://pypi.org/project/beet/)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/beet.svg)](https://pypi.org/project/beet/)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
