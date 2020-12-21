@@ -68,6 +68,7 @@ profile = "black"
 [tool.semantic_release]
 branch = "main"
 version_variable = ["beet/__init__.py:__version__"]
+version_pattern = ['pyproject.toml:\nversion = "{version}"']
 major_on_zero = false
 build_command = "poetry build"
 
