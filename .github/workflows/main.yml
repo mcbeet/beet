@@ -58,7 +58,7 @@ jobs:
         with:
           virtualenvs-in-project: true
       - name: Python Semantic Release
-        uses: relekang/python-semantic-release@master
+        uses: relekang/python-semantic-release@v7.8.2
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           pypi_token: ${{ secrets.PYPI_TOKEN }}
