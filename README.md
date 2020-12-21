@@ -9,19 +9,20 @@
 
 ## Introduction
 
-Minecraft [resource packs](https://minecraft.gamepedia.com/Resource_Pack) and [data packs](https://minecraft.gamepedia.com/Data_Pack) work well as _distribution_ formats but can be pretty limiting as _authoring_ formats. Without the ability to parametrize or create abstractions over assets and data pack resources, the reusability and interoperability of community-created projects and libraries is greatly limited.
+Minecraft [resource packs](https://minecraft.gamepedia.com/Resource_Pack) and [data packs](https://minecraft.gamepedia.com/Data_Pack) work well as _distribution_ formats but can be pretty limiting as _authoring_ formats. Without the ability to parametrize or create abstractions over assets and data pack resources, projects and libraries created by the community are greatly limited when it comes to reusability and interoperability.
 
-The community is tackling the problem by building independent tooling left and right, from command pre-processors to frameworks of all kinds and full-blown programming languages. However, there's no silver bullet and in situations where a combination of these tools could actually provide the most effective workflow, the separate toolchains and the poor interoperability make it difficult for them to coexist.
+There's been a lot of attempts at establishing standardized tooling to improve the development experience and it's becoming more and more apparent that the problem space is fundamentally multi-paradigm. Different problems require different solutions, so providing unified cross-project reusability needs to involve an interoperability layer that's sufficiently unopinionated to let all these paradigms shine through.
 
-The `beet` project is meant to serve as a platform for building a cooperative tooling ecosystem by providing a flexible composition model and a unified, user-friendly development workflow. Higher-level projects should be able to leverage the toolchain and `beet` primitives to reduce their internal complexity and become more interoperable.
+The `beet` project is meant to serve as a platform for building a cooperative tooling ecosystem by providing a flexible composition model and a user-friendly development workflow.
 
 ### Library
 
-> [Documentation]()
+> [Documentation](https://vberlier.github.io/beet/library/)
 
 ```python
 from beet import ResourcePack, Texture
 
+# Open a zipped resource pack and add a custom stone texture
 with ResourcePack(path="stone.zip") as assets:
     assets["minecraft:block/stone"] = Texture(source_path="custom.png")
 ```
@@ -35,23 +36,23 @@ The `beet` library provides carefully crafted primitives for working with Minecr
 
 ### Toolchain
 
-> [Documentation]()
+> [Documentation](https://vberlier.github.io/beet/toolchain/)
 
 ```python
 from beet import Context, Function
 
 def greet(ctx: Context):
+    """Plugin that adds a function for greeting the player."""
     ctx.data["greet:hello"] = Function(["say hello"], tags=["minecraft:load"])
 ```
 
 The `beet` toolchain is designed to support a wide range of use-cases. The most basic pipeline will let you create configurable resource packs and data packs, but plugins make it easy to implement arbitrarily advanced workflows and tools like linters, asset generators and function pre-processors.
 
 - Compose plugins that can inspect and edit the generated resource pack and data pack
-- Configure flexible build systems for development and creating releases
-- Cache expensive computations and heavy files with a versatile caching API
-- Automatically rebuild the project on file changes with watch mode
-- Link the generated resource pack and data pack to Minecraft
+- Configure powerful build systems for development and creating releases
 - First-class template integration approachable without prior Python knowledge
+- Link the generated resource pack and data pack to Minecraft
+- Automatically rebuild the project on file changes with watch mode
 
 ## Installation
 
