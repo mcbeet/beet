@@ -1,4 +1,4 @@
-# <img src="https://github.com/vberlier/beet/blob/master/docs/assets/logo.svg" alt="beet logo" width="30"> beet
+# <img src="https://github.com/vberlier/beet/blob/main/docs/assets/logo.svg" alt="beet logo" width="30"> beet
 
 [![GitHub Actions](https://github.com/vberlier/beet/workflows/CI/badge.svg)](https://github.com/vberlier/beet/actions)
 [![PyPI](https://img.shields.io/pypi/v/beet.svg)](https://pypi.org/project/beet/)
@@ -126,4 +126,4 @@ $ poetry run black --check beet tests
 
 ---
 
-License - [MIT](https://github.com/vberlier/beet/blob/master/LICENSE)
+License - [MIT](https://github.com/vberlier/beet/blob/main/LICENSE)
