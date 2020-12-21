@@ -38,6 +38,8 @@ jobs:
         run: poetry run pytest -v
       - name: Run type-checking
         run: npm run check
+      - name: Check formatting
+        run: poetry run black --check beet tests
       - name: Release
         if: |
           github.repository == 'vberlier/beet'
