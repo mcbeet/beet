@@ -2,6 +2,16 @@
 
 <!--next-version-placeholder-->
 
+## v0.3.0 (2020-12-22)
+### Feature
+* Add function_header plugin ([`bb73eee`](https://github.com/vberlier/beet/commit/bb73eeef0d984ca80cfd378ab2b0a99d89a33d47))
+
+### Fix
+* Rename inline plugins ([`a6b7aaa`](https://github.com/vberlier/beet/commit/a6b7aaa60d97bf203d771861effc0ee61425786d))
+
+### Documentation
+* Add module docstring to inline plugins ([`d829d89`](https://github.com/vberlier/beet/commit/d829d89c815c15b34dd51ac6e3a68d563906b3c4))
+
 ## v0.2.2 (2020-12-21)
 ### Fix
 * Trigger release to update readme ([`d409af5`](https://github.com/vberlier/beet/commit/d409af56d4c82da5d3c2743a158128cb4ed0b062))
