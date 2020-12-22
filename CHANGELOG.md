@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.3.1 (2020-12-22)
+### Fix
+* Default match shouldn't match anything ([`6f01d6a`](https://github.com/vberlier/beet/commit/6f01d6a19d63d9374e575942cf40dc1b14a4df88))
+
 ## v0.3.0 (2020-12-22)
 ### Feature
 * Add function_header plugin ([`bb73eee`](https://github.com/vberlier/beet/commit/bb73eeef0d984ca80cfd378ab2b0a99d89a33d47))
