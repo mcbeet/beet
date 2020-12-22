@@ -1,5 +1,5 @@
 {
-  "require": ["beet.contrib.inline_function_tags"],
+  "require": ["beet.contrib.inline_function_tag"],
   "data_pack": {
     "load": ["src"],
     "render": {

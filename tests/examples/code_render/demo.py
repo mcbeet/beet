@@ -2,8 +2,8 @@ from beet import Context, Function
 
 
 def beet_default(ctx: Context):
-    ctx.require("beet.contrib.inline_functions")
-    ctx.require("beet.contrib.inline_function_tags")
+    ctx.require("beet.contrib.inline_function")
+    ctx.require("beet.contrib.inline_function_tag")
 
     ctx.data["demo:hello"] = ctx.template.render_file(
         Function(

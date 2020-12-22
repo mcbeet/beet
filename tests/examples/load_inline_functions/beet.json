@@ -1,7 +1,7 @@
 {
   "require": [
-    "beet.contrib.inline_functions",
-    "beet.contrib.inline_function_tags"
+    "beet.contrib.inline_function",
+    "beet.contrib.inline_function_tag"
   ],
   "data_pack": {
     "load": ["src"],
