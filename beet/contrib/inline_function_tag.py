@@ -1,3 +1,6 @@
+"""Plugin that installs a Jinja extension for declaring function tags inline."""
+
+
 __all__ = [
     "InlineFunctionTags",
 ]
