@@ -1,0 +1,2 @@
+# demo:foo
+say hello
