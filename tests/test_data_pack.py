@@ -184,7 +184,9 @@ def test_match():
 
     funcs = [f"path/to/func_{i:02d}" for i in range(100)]
 
-    assert custom.functions.match() == set(funcs) | {
+    assert custom.functions.match() == set()
+
+    assert custom.functions.match("*") == set(funcs) | {
         "path/to/end",
         "other/subdir/hello",
         "other/subdir/world",
@@ -227,7 +229,9 @@ def test_proxy_match():
     custom_funcs = [f"custom:path/to/func_{i:02d}" for i in range(100)]
     hey_funcs = [f"hey:path/to/func_{i:02d}" for i in range(100)]
 
-    assert pack.functions.match() == set(custom_funcs) | set(hey_funcs) | {
+    assert pack.functions.match() == set()
+
+    assert pack.functions.match("*") == set(custom_funcs) | set(hey_funcs) | {
         "custom:path/to/end",
         "custom:other/subdir/hello",
         "custom:other/subdir/world",

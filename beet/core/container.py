@@ -66,7 +66,7 @@ class MergeMixin:
 class MatchMixin:
     def match(self: Mapping[str, Any], *patterns: str) -> Set[str]:
         """Return keys matching the given path patterns."""
-        spec = PathSpec.from_lines("gitwildmatch", patterns or ["*"])
+        spec = PathSpec.from_lines("gitwildmatch", patterns)
         return set(spec.match_files(self.keys()))
 
 
