@@ -19,7 +19,10 @@ There's been a lot of attempts at establishing standardized tooling to improve t
 
 The `beet` project is meant to serve as a platform for building a cooperative tooling ecosystem by providing a flexible composition model and a user-friendly development workflow.
 
-- **Quick start screencast** [https://youtu.be/JGrJTOhG3pY](https://youtu.be/JGrJTOhG3pY)
+### Screencasts
+
+- **Quick start** [https://youtu.be/JGrJTOhG3pY](https://youtu.be/JGrJTOhG3pY)
+- **Command-line** [https://youtu.be/fQ9up0ELPNE](https://youtu.be/fQ9up0ELPNE)
 
 ### Library
 
