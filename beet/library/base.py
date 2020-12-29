@@ -19,7 +19,7 @@ from contextlib import nullcontext
 from dataclasses import dataclass
 from functools import partial
 from itertools import accumulate, count
-from pathlib import Path, PurePath
+from pathlib import Path, PurePosixPath
 from typing import (
     Any,
     ClassVar,
@@ -170,7 +170,7 @@ class Namespace(
         """Load namespaces by walking through a zipfile or directory."""
         name, namespace = None, None
         filenames = (
-            map(PurePath, pack.namelist())
+            map(PurePosixPath, pack.namelist())
             if isinstance(pack, ZipFile)
             else list_files(pack)
         )
