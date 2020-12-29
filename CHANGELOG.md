@@ -2,6 +2,14 @@
 
 <!--next-version-placeholder-->
 
+## v0.3.2 (2020-12-29)
+### Fix
+* Use forward slash for zipfile paths on windows ([`b605c07`](https://github.com/vberlier/beet/commit/b605c07a06106fd97866b9c442b39313381aabb5))
+
+### Documentation
+* Link to command-line video ([`1f45b03`](https://github.com/vberlier/beet/commit/1f45b036c55902d1736f1f63cc26202291f29842))
+* Add quick start to readme ([`3310d16`](https://github.com/vberlier/beet/commit/3310d16d5490c9554c40acb0c4d295b4d8e10e68))
+
 ## v0.3.1 (2020-12-22)
 ### Fix
 * Default match shouldn't match anything ([`6f01d6a`](https://github.com/vberlier/beet/commit/6f01d6a19d63d9374e575942cf40dc1b14a4df88))
