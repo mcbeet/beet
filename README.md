@@ -23,6 +23,7 @@ The `beet` project is meant to serve as a platform for building a cooperative to
 
 - **Quick start** [https://youtu.be/JGrJTOhG3pY](https://youtu.be/JGrJTOhG3pY)
 - **Command-line** [https://youtu.be/fQ9up0ELPNE](https://youtu.be/fQ9up0ELPNE)
+- **Library overview** [https://youtu.be/LDvV4_l-PSc](https://youtu.be/LDvV4_l-PSc)
 
 ### Library
 
