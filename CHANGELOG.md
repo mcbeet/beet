@@ -2,6 +2,13 @@
 
 <!--next-version-placeholder-->
 
+## v0.3.3 (2021-01-10)
+### Fix
+* Tweak typing for merge implementation ([`8efa444`](https://github.com/vberlier/beet/commit/8efa444ccf67dd25eb1fd23d4e89f07407bf404c))
+
+### Documentation
+* Add link to library overview video ([`4f37a74`](https://github.com/vberlier/beet/commit/4f37a7496d863b0535b39a1b6c1ad3df786bc89b))
+
 ## v0.3.2 (2020-12-29)
 ### Fix
 * Use forward slash for zipfile paths on windows ([`b605c07`](https://github.com/vberlier/beet/commit/b605c07a06106fd97866b9c442b39313381aabb5))
