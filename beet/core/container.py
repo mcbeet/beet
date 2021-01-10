@@ -34,17 +34,17 @@ from .utils import SENTINEL_OBJ, Sentinel
 
 K = TypeVar("K")
 V = TypeVar("V")
-MergeableType = TypeVar("MergeableType", bound="SupportsMerge[Any]")
+MergeableType = TypeVar("MergeableType", bound="SupportsMerge")
 ProxyKeyType = TypeVar("ProxyKeyType")
 
 PinDefault = Union[V, Sentinel]
 PinDefaultFactory = Union[Callable[[], V], Sentinel]
 
 
-class SupportsMerge(Protocol[V]):
+class SupportsMerge(Protocol):
     """Protocol for detecting mergeable types."""
 
-    def merge(self: V, other: V) -> bool:
+    def merge(self, other: Any) -> bool:
         ...
 
 
