@@ -133,7 +133,7 @@ class TagFile(JsonFile, NamespaceFile):
 
     extension = ".json"
 
-    def merge(self: TagFileType, other: TagFileType) -> bool:
+    def merge(self: TagFileType, other: TagFileType) -> bool:  # type: ignore
         if other.data.get("replace"):
             self.data["replace"] = True
 
