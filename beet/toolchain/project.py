@@ -240,6 +240,7 @@ class ProjectBuilder:
             ctx.require(plugin)
 
         pack_configs = [self.config.resource_pack, self.config.data_pack]
+        pack_suffixes = ["_resource_pack", "_data_pack"]
 
         for config, pack in zip(pack_configs, ctx.packs):
             for path in config.load:
@@ -272,11 +273,11 @@ class ProjectBuilder:
         ]
         description = "\n".join(filter(None, description_parts))
 
-        for is_data_pack, (config, pack) in enumerate(zip(pack_configs, ctx.packs)):
+        for config, suffix, pack in zip(pack_configs, pack_suffixes, ctx.packs):
             default_name = normalized_name
             if self.config.version:
                 default_name += "_" + self.config.version
-            default_name += "_data_pack" if is_data_pack else "_resource_pack"
+            default_name += suffix
 
             options = config.with_defaults(
                 PackConfig(
