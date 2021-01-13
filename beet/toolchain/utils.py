@@ -11,7 +11,7 @@ import platform
 from importlib import import_module
 from pathlib import Path
 from traceback import format_exception
-from typing import Any, Optional
+from typing import Any, List, Optional
 
 
 def format_exc(exc: BaseException) -> str:
@@ -42,14 +42,17 @@ def import_from_string(dotted_path: str, default_member: Optional[str] = None) -
 
 
 def locate_minecraft() -> Optional[Path]:
-    path = None
+    locations: List[Path] = []
     system = platform.system()
 
     if system == "Linux":
-        path = Path("~/.minecraft").expanduser()
+        locations.append(Path("~/.minecraft").expanduser())
+        locations.append(
+            Path("~/.var/app/com.mojang.Minecraft/data/minecraft").expanduser()
+        )
     elif system == "Darwin":
-        path = Path("~/Library/Application Support/minecraft").expanduser()
+        locations.append(Path("~/Library/Application Support/minecraft").expanduser())
     elif system == "Windows":
-        path = Path(os.path.expandvars(r"%APPDATA%\.minecraft"))
+        locations.append(Path(os.path.expandvars(r"%APPDATA%\.minecraft")))
 
-    return path.resolve() if path and path.is_dir() else None
+    return next((path.resolve() for path in locations if path and path.is_dir()), None)
