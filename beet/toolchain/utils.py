@@ -11,7 +11,7 @@ import platform
 from importlib import import_module
 from pathlib import Path
 from traceback import format_exception
-from typing import Any, List, Optional
+from typing import Any, Optional
 
 
 def format_exc(exc: BaseException) -> str:
@@ -42,7 +42,7 @@ def import_from_string(dotted_path: str, default_member: Optional[str] = None) -
 
 
 def locate_minecraft() -> Optional[Path]:
-    locations: List[Path] = []
+    locations = [Path(path) for path in os.environ.get("MINECRAFT_PATH", "").split(":") if path]
     system = platform.system()
 
     if system == "Linux":
