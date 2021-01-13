@@ -264,7 +264,7 @@ class ProjectBuilder:
         yield
 
         name = self.config.name or ctx.directory.stem
-        normalized_name = re.sub(r"[^a-z0-9]+", "_", name.lower())
+        normalized_name = re.sub(r"[^a-z0-9]+", "_", name.lower()).strip("_")
 
         description_parts = [
             self.config.description,
