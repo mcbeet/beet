@@ -103,3 +103,11 @@ def test_vanilla_zip(minecraft_resource_pack: Path, tmp_path: Path):
     pack = ResourcePack(path=minecraft_resource_pack)
     zipped_pack = pack.save(tmp_path, zipped=True)
     assert ResourcePack(path=zipped_pack) == ResourcePack(path=zipped_pack)
+
+
+def test_vanilla_shaders(snapshot: Any, minecraft_resource_pack: Path):
+    pack = ResourcePack(path=minecraft_resource_pack)
+    assert snapshot("json") == pack.shader_posts["minecraft:spider"].data
+    assert snapshot("json") == pack.shader_programs["minecraft:entity_outline"].data
+    assert snapshot() == pack.fragment_shaders["minecraft:wobble"].text
+    assert snapshot() == pack.vertex_shaders["minecraft:sobel"].text

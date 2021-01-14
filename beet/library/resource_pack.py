@@ -3,9 +3,13 @@ __all__ = [
     "ResourcePackNamespace",
     "Blockstate",
     "Model",
+    "ShaderPost",
+    "ShaderProgram",
+    "FragmentShader",
+    "VertexShader",
+    "Text",
     "TextureMcmeta",
     "Texture",
-    "Text",
 ]
 
 
@@ -34,6 +38,41 @@ class Model(JsonFile, NamespaceFile):
     extension = ".json"
 
 
+class ShaderPost(JsonFile, NamespaceFile):
+    """Class representing a resource pack shader post."""
+
+    scope = ("shaders", "post")
+    extension = ".json"
+
+
+class ShaderProgram(JsonFile, NamespaceFile):
+    """Class representing a resource pack shader program."""
+
+    scope = ("shaders", "program")
+    extension = ".json"
+
+
+class FragmentShader(TextFile, NamespaceFile):
+    """Class representing a resource pack fragment shader."""
+
+    scope = ("shaders", "program")
+    extension = ".fsh"
+
+
+class VertexShader(TextFile, NamespaceFile):
+    """Class representing a resource pack vertex shader."""
+
+    scope = ("shaders", "program")
+    extension = ".vsh"
+
+
+class Text(TextFile, NamespaceFile):
+    """Class representing a resource pack text file."""
+
+    scope = ("texts",)
+    extension = ".txt"
+
+
 class TextureMcmeta(JsonFile, NamespaceFile):
     """Class representing a resource pack texture mcmeta."""
 
@@ -56,24 +95,21 @@ class Texture(PngFile, NamespaceFile):
             pack.textures_mcmeta[f"{namespace}:{path}"] = TextureMcmeta(self.mcmeta)
 
 
-class Text(TextFile, NamespaceFile):
-    """Class representing a resource pack text file."""
-
-    scope = ("texts",)
-    extension = ".txt"
-
-
 class ResourcePackNamespace(Namespace):
     """Class representing a resource pack namespace."""
 
     directory = "assets"
 
     # fmt: off
-    blockstates     = NamespacePin(Blockstate)
-    models          = NamespacePin(Model)
-    textures_mcmeta = NamespacePin(TextureMcmeta)
-    textures        = NamespacePin(Texture)
-    texts           = NamespacePin(Text)
+    blockstates         = NamespacePin(Blockstate)
+    models              = NamespacePin(Model)
+    shader_posts        = NamespacePin(ShaderPost)
+    shader_programs     = NamespacePin(ShaderProgram)
+    fragment_shaders    = NamespacePin(FragmentShader)
+    vertex_shaders      = NamespacePin(VertexShader)
+    texts               = NamespacePin(Text)
+    textures_mcmeta     = NamespacePin(TextureMcmeta)
+    textures            = NamespacePin(Texture)
     # fmt: on
 
 
@@ -84,9 +120,13 @@ class ResourcePack(Pack[ResourcePackNamespace]):
     latest_pack_format = 6
 
     # fmt: off
-    blockstates     = NamespaceProxyDescriptor(Blockstate)
-    models          = NamespaceProxyDescriptor(Model)
-    textures_mcmeta = NamespaceProxyDescriptor(TextureMcmeta)
-    textures        = NamespaceProxyDescriptor(Texture)
-    texts           = NamespaceProxyDescriptor(Text)
+    blockstates         = NamespaceProxyDescriptor(Blockstate)
+    models              = NamespaceProxyDescriptor(Model)
+    shader_posts        = NamespaceProxyDescriptor(ShaderPost)
+    shader_programs     = NamespaceProxyDescriptor(ShaderProgram)
+    fragment_shaders    = NamespaceProxyDescriptor(FragmentShader)
+    vertex_shaders      = NamespaceProxyDescriptor(VertexShader)
+    texts               = NamespaceProxyDescriptor(Text)
+    textures_mcmeta     = NamespaceProxyDescriptor(TextureMcmeta)
+    textures            = NamespaceProxyDescriptor(Texture)
     # fmt: on
