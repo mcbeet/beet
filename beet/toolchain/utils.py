@@ -42,7 +42,9 @@ def import_from_string(dotted_path: str, default_member: Optional[str] = None) -
 
 
 def locate_minecraft() -> Optional[Path]:
-    locations = [Path(path) for path in os.environ.get("MINECRAFT_PATH", "").split(":") if path]
+    locations = [
+        Path(path) for path in os.environ.get("MINECRAFT_PATH", "").split(":") if path
+    ]
     system = platform.system()
 
     if system == "Linux":
