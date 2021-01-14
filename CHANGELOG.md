@@ -2,6 +2,16 @@
 
 <!--next-version-placeholder-->
 
+## v0.4.0 (2021-01-14)
+### Feature
+* Handle resource pack fonts and tweak docstrings ([`57cce73`](https://github.com/vberlier/beet/commit/57cce7380a2f9b9a15a61bac4d824e2d6ce48a2f))
+* Add shaders ([`34505d9`](https://github.com/vberlier/beet/commit/34505d99e9b6714c593a4a5f5b919d22dacd6fa2))
+* Locate_minecraft() now takes into account the MINECRAFT_PATH environment variable ([`ad6668b`](https://github.com/vberlier/beet/commit/ad6668b639a8ed6eba18cff1a41b11666b2db488))
+
+### Fix
+* Also look for the .minecraft folder in the launcher files on linux ([`5645789`](https://github.com/vberlier/beet/commit/564578935b25193a2cbbcf8e71f44d942336a5b7))
+* Strip extra underscores from normalized name ([`55b8494`](https://github.com/vberlier/beet/commit/55b8494248098aa532fa816b0abdf6d46b236021))
+
 ## v0.3.3 (2021-01-10)
 ### Fix
 * Tweak typing for merge implementation ([`8efa444`](https://github.com/vberlier/beet/commit/8efa444ccf67dd25eb1fd23d4e89f07407bf404c))
