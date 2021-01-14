@@ -3,6 +3,9 @@ __all__ = [
     "ResourcePackNamespace",
     "Blockstate",
     "Model",
+    "Font",
+    "GlyphSizeFile",
+    "TrueTypeFont",
     "ShaderPost",
     "ShaderProgram",
     "FragmentShader",
@@ -13,68 +16,97 @@ __all__ = [
 ]
 
 
+from copy import deepcopy
 from dataclasses import dataclass
 from typing import Optional
 
 from PIL import Image as img
 
-from beet.core.file import BinaryFileContent, JsonFile, PngFile, TextFile
+from beet.core.file import BinaryFile, BinaryFileContent, JsonFile, PngFile, TextFile
 from beet.core.utils import JsonDict, extra_field
 
 from .base import Namespace, NamespaceFile, NamespacePin, NamespaceProxyDescriptor, Pack
 
 
 class Blockstate(JsonFile, NamespaceFile):
-    """Class representing a resource pack block state."""
+    """Class representing a blockstate."""
 
     scope = ("blockstates",)
     extension = ".json"
 
 
 class Model(JsonFile, NamespaceFile):
-    """Class representing a resource pack model."""
+    """Class representing a model."""
 
     scope = ("models",)
     extension = ".json"
 
 
+class Font(JsonFile, NamespaceFile):
+    """Class representing a font configuration file."""
+
+    scope = ("font",)
+    extension = ".json"
+
+    def merge(self, other: "Font") -> bool:  # type: ignore
+        providers = self.data.setdefault("providers", [])
+
+        for provider in other.data.get("providers", []):
+            providers.append(deepcopy(provider))
+        return True
+
+
+class GlyphSizeFile(BinaryFile, NamespaceFile):
+    """Class representing a legacy unicode glyph size file."""
+
+    scope = ("font",)
+    extension = ".bin"
+
+
+class TrueTypeFont(BinaryFile, NamespaceFile):
+    """Class representing a TrueType font."""
+
+    scope = ("font",)
+    extension = ".ttf"
+
+
 class ShaderPost(JsonFile, NamespaceFile):
-    """Class representing a resource pack shader post."""
+    """Class representing a shader post-processing pipeline."""
 
     scope = ("shaders", "post")
     extension = ".json"
 
 
 class ShaderProgram(JsonFile, NamespaceFile):
-    """Class representing a resource pack shader program."""
+    """Class representing a shader program."""
 
     scope = ("shaders", "program")
     extension = ".json"
 
 
 class FragmentShader(TextFile, NamespaceFile):
-    """Class representing a resource pack fragment shader."""
+    """Class representing a fragment shader."""
 
     scope = ("shaders", "program")
     extension = ".fsh"
 
 
 class VertexShader(TextFile, NamespaceFile):
-    """Class representing a resource pack vertex shader."""
+    """Class representing a vertex shader."""
 
     scope = ("shaders", "program")
     extension = ".vsh"
 
 
 class Text(TextFile, NamespaceFile):
-    """Class representing a resource pack text file."""
+    """Class representing a text file."""
 
     scope = ("texts",)
     extension = ".txt"
 
 
 class TextureMcmeta(JsonFile, NamespaceFile):
-    """Class representing a resource pack texture mcmeta."""
+    """Class representing a texture mcmeta."""
 
     scope = ("textures",)
     extension = ".png.mcmeta"
@@ -82,7 +114,7 @@ class TextureMcmeta(JsonFile, NamespaceFile):
 
 @dataclass(eq=False)
 class Texture(PngFile, NamespaceFile):
-    """Class representing a resource pack texture."""
+    """Class representing a texture."""
 
     content: BinaryFileContent[img.Image] = None
     mcmeta: Optional[JsonDict] = extra_field(default=None)
@@ -103,6 +135,9 @@ class ResourcePackNamespace(Namespace):
     # fmt: off
     blockstates         = NamespacePin(Blockstate)
     models              = NamespacePin(Model)
+    fonts               = NamespacePin(Font)
+    glyph_sizes         = NamespacePin(GlyphSizeFile)
+    truetype_fonts      = NamespacePin(TrueTypeFont)
     shader_posts        = NamespacePin(ShaderPost)
     shader_programs     = NamespacePin(ShaderProgram)
     fragment_shaders    = NamespacePin(FragmentShader)
@@ -122,6 +157,9 @@ class ResourcePack(Pack[ResourcePackNamespace]):
     # fmt: off
     blockstates         = NamespaceProxyDescriptor(Blockstate)
     models              = NamespaceProxyDescriptor(Model)
+    fonts               = NamespaceProxyDescriptor(Font)
+    glyph_sizes         = NamespaceProxyDescriptor(GlyphSizeFile)
+    truetype_fonts      = NamespaceProxyDescriptor(TrueTypeFont)
     shader_posts        = NamespaceProxyDescriptor(ShaderPost)
     shader_programs     = NamespaceProxyDescriptor(ShaderProgram)
     fragment_shaders    = NamespaceProxyDescriptor(FragmentShader)

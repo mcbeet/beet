@@ -50,7 +50,7 @@ TagFileType = TypeVar("TagFileType", bound="TagFile")
 
 
 class Advancement(JsonFile, NamespaceFile):
-    """Class representing a data pack advancement."""
+    """Class representing an advancement."""
 
     scope = ("advancements",)
     extension = ".json"
@@ -58,7 +58,7 @@ class Advancement(JsonFile, NamespaceFile):
 
 @dataclass(eq=False)
 class Function(TextFileBase[MutableSequence[str]], NamespaceFile):
-    """Class representing a data pack function."""
+    """Class representing a function."""
 
     content: TextFileContent[MutableSequence[str]] = None
     tags: Optional[MutableSequence[str]] = extra_field(default=None)
@@ -84,21 +84,21 @@ class Function(TextFileBase[MutableSequence[str]], NamespaceFile):
 
 
 class LootTable(JsonFile, NamespaceFile):
-    """Class representing a data pack loot table."""
+    """Class representing a loot table."""
 
     scope = ("loot_tables",)
     extension = ".json"
 
 
 class Predicate(JsonFile, NamespaceFile):
-    """Class representing a data pack predicate."""
+    """Class representing a predicate."""
 
     scope = ("predicates",)
     extension = ".json"
 
 
 class Recipe(JsonFile, NamespaceFile):
-    """Class representing a data pack recipe."""
+    """Class representing a recipe."""
 
     scope = ("recipes",)
     extension = ".json"
@@ -106,7 +106,7 @@ class Recipe(JsonFile, NamespaceFile):
 
 @dataclass(eq=False)
 class Structure(BinaryFileBase[StructureFileData], NamespaceFile):
-    """Class representing a data pack structure file."""
+    """Class representing a structure file."""
 
     content: BinaryFileContent[StructureFileData] = None
 
@@ -129,7 +129,7 @@ class Structure(BinaryFileBase[StructureFileData], NamespaceFile):
 
 
 class TagFile(JsonFile, NamespaceFile):
-    """Base class for data pack tag files."""
+    """Base class for tag files."""
 
     extension = ".json"
 
@@ -146,100 +146,100 @@ class TagFile(JsonFile, NamespaceFile):
 
 
 class BlockTag(TagFile):
-    """Class representing a data pack block tag."""
+    """Class representing a block tag."""
 
     scope = ("tags", "blocks")
 
 
 class EntityTypeTag(TagFile):
-    """Class representing a data pack entity tag."""
+    """Class representing an entity tag."""
 
     scope = ("tags", "entity_types")
 
 
 class FluidTag(TagFile):
-    """Class representing a data pack fluid tag."""
+    """Class representing a fluid tag."""
 
     scope = ("tags", "fluids")
 
 
 class FunctionTag(TagFile):
-    """Class representing a data pack function tag."""
+    """Class representing a function tag."""
 
     scope = ("tags", "functions")
 
 
 class ItemTag(TagFile):
-    """Class representing a data pack item tag."""
+    """Class representing an item tag."""
 
     scope = ("tags", "items")
 
 
 class DimensionType(JsonFile, NamespaceFile):
-    """Class representing a data pack dimension type."""
+    """Class representing a dimension type."""
 
     scope = ("dimension_type",)
     extension = ".json"
 
 
 class Dimension(JsonFile, NamespaceFile):
-    """Class representing a data pack dimension."""
+    """Class representing a dimension."""
 
     scope = ("dimension",)
     extension = ".json"
 
 
 class Biome(JsonFile, NamespaceFile):
-    """Class representing a data pack biome."""
+    """Class representing a biome."""
 
     scope = ("worldgen", "biome")
     extension = ".json"
 
 
 class ConfiguredCarver(JsonFile, NamespaceFile):
-    """Class representing a data pack worldgen carver."""
+    """Class representing a worldgen carver."""
 
     scope = ("worldgen", "configured_carver")
     extension = ".json"
 
 
 class ConfiguredFeature(JsonFile, NamespaceFile):
-    """Class representing a data pack worldgen feature."""
+    """Class representing a worldgen feature."""
 
     scope = ("worldgen", "configured_feature")
     extension = ".json"
 
 
 class ConfiguredStructureFeature(JsonFile, NamespaceFile):
-    """Class representing a data pack worldgen structure feature."""
+    """Class representing a worldgen structure feature."""
 
     scope = ("worldgen", "configured_structure_feature")
     extension = ".json"
 
 
 class ConfiguredSurfaceBuilder(JsonFile, NamespaceFile):
-    """Class representing a data pack worldgen surface builder."""
+    """Class representing a worldgen surface builder."""
 
     scope = ("worldgen", "configured_surface_builder")
     extension = ".json"
 
 
 class NoiseSettings(JsonFile, NamespaceFile):
-    """Class representing a data pack worldgen noise settings."""
+    """Class representing worldgen noise settings."""
 
     scope = ("worldgen", "noise_settings")
     extension = ".json"
 
 
 class ProcessorList(JsonFile, NamespaceFile):
-    """Class representing a data pack worldgen processor list."""
+    """Class representing a worldgen processor list."""
 
     scope = ("worldgen", "processor_list")
     extension = ".json"
 
 
 class TemplatePool(JsonFile, NamespaceFile):
-    """Class representing a data pack worldgen template pool."""
+    """Class representing a worldgen template pool."""
 
     scope = ("worldgen", "template_pool")
     extension = ".json"
