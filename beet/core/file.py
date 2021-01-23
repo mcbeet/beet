@@ -151,7 +151,7 @@ class FileSerialize(Generic[SerializeType]):
     ) -> SerializeType:
         return obj.ensure_serialized()
 
-    def __set__(self, obj: File[SerializeType, Any], value: SerializeType):
+    def __set__(self, obj: File[Any, SerializeType], value: SerializeType):
         obj.set_content(value)
 
 
