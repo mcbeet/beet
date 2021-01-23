@@ -10,6 +10,7 @@ __all__ = [
     "NamespacePin",
     "NamespaceProxy",
     "NamespaceProxyDescriptor",
+    "OnBindCallback",
 ]
 
 
@@ -30,6 +31,7 @@ from typing import (
     List,
     Mapping,
     Optional,
+    Protocol,
     Tuple,
     Type,
     TypeVar,
@@ -40,7 +42,7 @@ from zipfile import ZipFile
 
 from beet.core.container import Container, ContainerProxy, MatchMixin, MergeMixin, Pin
 from beet.core.file import File, FileOrigin, JsonFile, PngFile
-from beet.core.utils import FileSystemPath, JsonDict
+from beet.core.utils import FileSystemPath, JsonDict, extra_field
 
 from .utils import list_files
 
@@ -52,16 +54,26 @@ NamespaceFileType = TypeVar("NamespaceFileType", bound="NamespaceFile")
 PackFile = File[Any, Any]
 
 
+class OnBindCallback(Protocol):
+    """Protocol for on_bind callback."""
+
+    def __call__(self, instance: Any, pack: Any, namespace: str, path: str):
+        ...
+
+
+@dataclass(eq=False)
 class NamespaceFile(PackFile):
     """Base class for files that belong in pack namespaces."""
 
-    # TODO: add bind_callback
+    on_bind: Optional[OnBindCallback] = extra_field(default=None)
 
     scope: ClassVar[Tuple[str, ...]]
     extension: ClassVar[str]
 
     def bind(self, pack: Any, namespace: str, path: str):
         """Handle insertion."""
+        if self.on_bind:
+            self.on_bind(self, pack, namespace, path)
 
 
 class NamespaceContainer(MatchMixin, MergeMixin, Container[str, NamespaceFileType]):

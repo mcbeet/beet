@@ -77,6 +77,8 @@ class Function(TextFileBase[MutableSequence[str]], NamespaceFile):
         return content.splitlines()
 
     def bind(self, pack: "DataPack", namespace: str, path: str):
+        super().bind(pack, namespace, path)
+
         for tag_name in self.tags or ():
             pack.function_tags.merge(
                 {tag_name: FunctionTag({"values": [f"{namespace}:{path}"]})}

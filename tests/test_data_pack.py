@@ -286,3 +286,23 @@ def test_accessors_with_function(tmp_path: Path):
 
     assert func2.text == "say world\n"
     assert func2.content == func2.text
+
+
+def test_on_bind():
+    def on_bind_callback(instance: Function, pack: DataPack, namespace: str, path: str):
+        name = f"{namespace}:{path}"
+        pack[name + "_alias"] = Function([f"function {name}"])
+
+    pack = DataPack()
+    pack["hello:world"] = Function(
+        ["say hello"], tags=["minecraft:load"], on_bind=on_bind_callback
+    )
+
+    assert pack.functions == {
+        "hello:world": Function(["say hello"]),
+        "hello:world_alias": Function(["function hello:world"]),
+    }
+
+    assert pack.function_tags == {
+        "minecraft:load": FunctionTag({"values": ["hello:world"]})
+    }

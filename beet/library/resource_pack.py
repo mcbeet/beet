@@ -123,6 +123,8 @@ class Texture(PngFile, NamespaceFile):
     extension = ".png"
 
     def bind(self, pack: "ResourcePack", namespace: str, path: str):
+        super().bind(pack, namespace, path)
+
         if self.mcmeta is not None:
             pack.textures_mcmeta[f"{namespace}:{path}"] = TextureMcmeta(self.mcmeta)
 
