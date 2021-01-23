@@ -2,6 +2,17 @@
 
 <!--next-version-placeholder-->
 
+## v0.5.0 (2021-01-23)
+### Feature
+* Add beet.contrib.minify_functions plugin ([`a7774a9`](https://github.com/vberlier/beet/commit/a7774a9b799eac7eceb078759e02b8714da9d9c1))
+* Add beet.contrib.minify_json plugin ([`78cd972`](https://github.com/vberlier/beet/commit/78cd9728401570ad772a3684577667c126eef0a9))
+
+### Fix
+* Typo in serialization descriptor ([`edbe174`](https://github.com/vberlier/beet/commit/edbe1740bd9bb0b85877746f693f3ba7247bbf57))
+
+### Documentation
+* Add link to plugins basics video ([`3d7a3db`](https://github.com/vberlier/beet/commit/3d7a3dbceefeb4afc998a2599f02c441016c8c31))
+
 ## v0.4.0 (2021-01-14)
 ### Feature
 * Handle resource pack fonts and tweak docstrings ([`57cce73`](https://github.com/vberlier/beet/commit/57cce7380a2f9b9a15a61bac4d824e2d6ce48a2f))
