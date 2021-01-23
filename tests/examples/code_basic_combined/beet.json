@@ -1,0 +1,7 @@
+{
+  "pipeline": [
+    { "directory": "../code_basic1", "extend": ["beet.json"] },
+    { "directory": "../code_basic2", "extend": ["beet.json"] },
+    { "directory": "../code_basic3", "extend": ["beet.json"] }
+  ]
+}

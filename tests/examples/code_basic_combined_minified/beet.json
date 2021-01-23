@@ -1,0 +1,5 @@
+{
+  "directory": "../code_basic_combined",
+  "extend": ["beet.json"],
+  "pipeline": ["beet.contrib.minify_json"]
+}
