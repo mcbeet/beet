@@ -71,10 +71,10 @@ class MatchMixin:
 
 
 @dataclass
-class Pin(Generic[V]):
+class Pin(Generic[K, V]):
     """Descriptor that exposes a specific value from a dict-like object."""
 
-    key: Any
+    key: K
     default: PinDefault[V] = SENTINEL_OBJ
     default_factory: PinDefaultFactory[V] = SENTINEL_OBJ
 
@@ -107,7 +107,9 @@ class Pin(Generic[V]):
         return obj
 
     @classmethod
-    def collect_from(cls: Type["Pin[V]"], target: Type[Any]) -> Dict[str, "Pin[V]"]:
+    def collect_from(
+        cls: Type["Pin[K, V]"], target: Type[Any]
+    ) -> Dict[str, "Pin[K, V]"]:
         return {
             key: value for key, value in vars(target).items() if isinstance(value, cls)
         }

@@ -38,17 +38,9 @@ from typing import (
 )
 from zipfile import ZipFile
 
-from beet.core.container import (
-    Container,
-    ContainerProxy,
-    MatchMixin,
-    MergeMixin,
-    Pin,
-    PinDefault,
-    PinDefaultFactory,
-)
+from beet.core.container import Container, ContainerProxy, MatchMixin, MergeMixin, Pin
 from beet.core.file import File, FileOrigin, JsonFile, PngFile
-from beet.core.utils import SENTINEL_OBJ, FileSystemPath, JsonDict
+from beet.core.utils import FileSystemPath, JsonDict
 
 from .utils import list_files
 
@@ -62,6 +54,8 @@ PackFile = File[Any, Any]
 
 class NamespaceFile(PackFile):
     """Base class for files that belong in pack namespaces."""
+
+    # TODO: add bind_callback
 
     scope: ClassVar[Tuple[str, ...]]
     extension: ClassVar[str]
@@ -94,11 +88,8 @@ class NamespaceContainer(MatchMixin, MergeMixin, Container[str, NamespaceFileTyp
             self.process(key, value)
 
 
-@dataclass
-class NamespacePin(Pin[NamespaceContainer[NamespaceFileType]]):
+class NamespacePin(Pin[Type[NamespaceFileType], NamespaceContainer[NamespaceFileType]]):
     """Descriptor for accessing namespace containers by attribute lookup."""
-
-    key: Type[NamespaceFileType]
 
 
 class Namespace(
@@ -258,25 +249,15 @@ class PackContainer(MatchMixin, MergeMixin, Container[str, PackFile]):
         return any(self.values())
 
 
-@dataclass
-class PackPin(Pin[T]):
+class PackPin(Pin[str, T]):
     """Descriptor that makes a specific file accessible through attribute lookup."""
-
-    key: str
-    default: PinDefault[T] = SENTINEL_OBJ
-    default_factory: PinDefaultFactory[T] = SENTINEL_OBJ
 
     def forward(self, obj: "Pack[Namespace]") -> PackContainer:
         return obj.extra
 
 
-@dataclass
-class McmetaPin(Pin[T]):
+class McmetaPin(Pin[str, T]):
     """Descriptor that makes it possible to bind pack.mcmeta information to attribute lookup."""
-
-    key: str
-    default: PinDefault[T] = SENTINEL_OBJ
-    default_factory: PinDefaultFactory[T] = SENTINEL_OBJ
 
     def forward(self, obj: "Pack[Namespace]") -> JsonDict:
         return obj.mcmeta.data.setdefault("pack", {})
