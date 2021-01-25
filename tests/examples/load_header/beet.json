@@ -1,15 +1,11 @@
 {
   "data_pack": {
-    "load": ["src"],
-    "render": {
-      "functions": ["demo:*"]
-    }
+    "load": ["src"]
   },
   "pipeline": ["beet.contrib.function_header"],
   "meta": {
     "function_header": {
-      "match": ["demo:*"],
-      "template": "function_header.mcfunction"
+      "match": ["demo:*"]
     }
   }
 }
