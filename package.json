@@ -4,6 +4,6 @@
     "check": "poetry run pyright"
   },
   "devDependencies": {
-    "pyright": "^1.1.104"
+    "pyright": "^1.1.105"
   }
 }
