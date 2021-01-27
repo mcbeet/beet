@@ -197,7 +197,15 @@ class ProjectBuilder:
 
     def build(self) -> Context:
         """Create the context, run the pipeline, and return the context."""
+
+        name = self.config.name or self.project.directory.stem
+        normalized_name = re.sub(r"[^a-z0-9]+", "_", name.lower()).strip("_")
+
         ctx = Context(
+            project_name=normalized_name,
+            project_description=self.config.description,
+            project_author=self.config.author,
+            project_version=self.config.version,
             directory=self.project.directory,
             output_directory=self.project.output_directory,
             meta=deepcopy(self.config.meta),
@@ -263,20 +271,17 @@ class ProjectBuilder:
 
         yield
 
-        name = self.config.name or ctx.directory.stem
-        normalized_name = re.sub(r"[^a-z0-9]+", "_", name.lower()).strip("_")
-
         description_parts = [
-            self.config.description,
-            self.config.author and f"Author: {self.config.author}",
-            self.config.version and f"Version: {self.config.version}",
+            ctx.project_description,
+            ctx.project_author and f"Author: {ctx.project_author}",
+            ctx.project_version and f"Version: {ctx.project_version}",
         ]
         description = "\n".join(filter(None, description_parts))
 
         for config, suffix, pack in zip(pack_configs, pack_suffixes, ctx.packs):
-            default_name = normalized_name
-            if self.config.version:
-                default_name += "_" + self.config.version
+            default_name = ctx.project_name
+            if ctx.project_version:
+                default_name += "_" + ctx.project_version
             default_name += suffix
 
             options = config.with_defaults(

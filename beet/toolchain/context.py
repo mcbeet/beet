@@ -47,6 +47,11 @@ class ContextContainer(Container[Callable[["Context"], Any], Any]):
 class Context:
     """The build context."""
 
+    project_name: str
+    project_description: str
+    project_author: str
+    project_version: str
+
     directory: Path
     output_directory: Optional[Path]
     meta: JsonDict

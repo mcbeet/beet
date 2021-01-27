@@ -1,0 +1,12 @@
+{
+  "name": "demo",
+  "description": "The description of my project",
+  "author": "Example",
+  "version": "1.7.4",
+  "data_pack": {
+    "load": ["src"],
+    "render": {
+      "functions": ["demo:*"]
+    }
+  }
+}
