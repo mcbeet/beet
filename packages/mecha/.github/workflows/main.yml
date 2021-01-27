@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  main:
+    name: Test and release
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Install Poetry
+        uses: snok/install-poetry@v1.1.1
+        with:
+          virtualenvs-in-project: true
+      - name: Install Pyright
+        run: npm install
+      - name: Setup cache
+        id: cached-poetry-dependencies
+        uses: actions/cache@v2
+        with:
+          path: .venv
+          key: venv-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}
+      - name: Install dependencies
+        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
+        run: poetry install
+      - name: Run tests
+        run: poetry run pytest -v
+      - name: Run type-checking
+        run: npm run check
+      - name: Check formatting
+        run: poetry run black --check mecha tests
+      - name: Release
+        if: |
+          github.repository == 'vberlier/mecha'
+          && github.event_name == 'push'
+          && github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "action@github.com"
+          poetry run semantic-release publish -v DEBUG -D commit_author="github-actions <action@github.com>"

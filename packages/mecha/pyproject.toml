@@ -1,0 +1,65 @@
+[tool.poetry]
+name = "mecha"
+version = "0.0.0"
+description = "A bulletproof Minecraft command generation library"
+authors = ["Valentin Berlier <berlier.v@gmail.com>"]
+license = "MIT"
+
+homepage = "https://github.com/vberlier/mecha"
+repository = "https://github.com/vberlier/mecha"
+documentation = "https://github.com/vberlier/mecha"
+
+readme = "README.md"
+
+keywords = [
+  "beet",
+  "minecraft",
+  "datapack",
+  "minecraft-commands",
+  "mcfunction"
+]
+
+include = ["mecha/py.typed"]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+beet = "^0.5.1"
+
+[tool.poetry.dev-dependencies]
+black = "^20.8b1"
+isort = "^5.7.0"
+pytest = "^6.2.2"
+python-semantic-release = "^7.13.1"
+
+[tool.black]
+target-version = ["py38"]
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | node_modules
+  | _build
+  | buck-out
+  | build
+  | dist
+)/
+'''
+
+[tool.isort]
+profile = "black"
+
+[tool.semantic_release]
+branch = "main"
+version_variable = ["mecha/__init__.py:__version__"]
+version_toml = "pyproject.toml:poetry.tool.version"
+major_on_zero = false
+build_command = "poetry build"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
