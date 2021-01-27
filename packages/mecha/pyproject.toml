@@ -56,7 +56,7 @@ profile = "black"
 [tool.semantic_release]
 branch = "main"
 version_variable = ["mecha/__init__.py:__version__"]
-version_toml = "pyproject.toml:poetry.tool.version"
+version_toml = "pyproject.toml:tool.poetry.version"
 major_on_zero = false
 build_command = "poetry build"
 
