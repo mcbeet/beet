@@ -2,6 +2,11 @@
 
 <!--next-version-placeholder-->
 
+## v0.5.1 (2021-01-27)
+### Fix
+* Expose project metadata in context ([`a04081c`](https://github.com/vberlier/beet/commit/a04081ce23c941bd240ff1187fc40645fce7e627))
+* Better dotted pack name handling ([`79fccff`](https://github.com/vberlier/beet/commit/79fccfff9d92353cebbdc631b6ae56b2e6a99be3))
+
 ## v0.5.0 (2021-01-23)
 ### Feature
 * Add beet.contrib.minify_functions plugin ([`a7774a9`](https://github.com/vberlier/beet/commit/a7774a9b799eac7eceb078759e02b8714da9d9c1))
