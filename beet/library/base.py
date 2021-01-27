@@ -383,15 +383,17 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
                 if origin.is_file():
                     origin = ZipFile(origin)
                 elif not origin.is_dir():
-                    self.name = origin.stem
+                    self.name = origin.name
                     self.zipped = origin.suffix == ".zip"
                     origin = None
             if isinstance(origin, ZipFile):
                 self.zipped = True
-                self.name = origin.filename and Path(origin.filename).stem
+                self.name = origin.filename and Path(origin.filename).name
             elif origin:
                 self.zipped = False
-                self.name = origin.stem
+                self.name = origin.name
+            if self.name and self.name.endswith(".zip"):
+                self.name = self.name[:-4]
 
         if origin:
             files = {
