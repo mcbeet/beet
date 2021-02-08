@@ -69,6 +69,7 @@ class Context:
         self._path_entry = str(self.directory.resolve())
 
     def inject(self, cls: Callable[["Context"], InjectedType]) -> InjectedType:
+        """Retrieve the instance provided by the specified service factory."""
         return self._container[cls]
 
     def __enter__(self) -> "Context":
