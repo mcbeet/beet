@@ -39,7 +39,7 @@ rope = "^0.18.0"
 pytest-minecraft = "^0.1.1"
 isort = "^5.7.0"
 pytest-insta = "^0.1.4"
-python-semantic-release = "^7.13.2"
+python-semantic-release = "^7.14.0"
 mudkip = "^0.3.8"
 
 [tool.poetry.scripts]
