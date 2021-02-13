@@ -2,6 +2,14 @@
 
 <!--next-version-placeholder-->
 
+## v0.6.0 (2021-02-13)
+### Feature
+* Add subproject helper ([`d604179`](https://github.com/vberlier/beet/commit/d60417924b44284dac45d5ad4b23d4b5a08aee99))
+
+### Documentation
+* Add link to pipeline configuration video ([`811d426`](https://github.com/vberlier/beet/commit/811d426ebe5943b683e957a2e98e97a8522b3122))
+* Add docstring to context inject method ([`2f09ffe`](https://github.com/vberlier/beet/commit/2f09ffe591612246c23d8997467630aa79002c75))
+
 ## v0.5.1 (2021-01-27)
 ### Fix
 * Expose project metadata in context ([`a04081c`](https://github.com/vberlier/beet/commit/a04081ce23c941bd240ff1187fc40645fce7e627))
