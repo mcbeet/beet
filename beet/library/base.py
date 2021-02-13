@@ -42,7 +42,7 @@ from zipfile import ZipFile
 
 from beet.core.container import Container, ContainerProxy, MatchMixin, MergeMixin, Pin
 from beet.core.file import File, FileOrigin, JsonFile, PngFile
-from beet.core.utils import FileSystemPath, JsonDict, extra_field
+from beet.core.utils import FileSystemPath, JsonDict, TextComponent, extra_field
 
 from .utils import list_files
 
@@ -286,7 +286,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
     mcmeta = PackPin[JsonFile]("pack.mcmeta", default_factory=lambda: JsonFile({}))
     image = PackPin[Optional[PngFile]]("pack.png", default=None)
 
-    description = McmetaPin[str]("description", default="")
+    description = McmetaPin[TextComponent]("description", default="")
     pack_format = McmetaPin[int]("pack_format", default=0)
 
     namespace_type: ClassVar[Type[NamespaceType]]

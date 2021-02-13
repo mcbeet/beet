@@ -13,7 +13,7 @@ from pathlib import Path
 from typing import Iterable, Iterator, List, Optional, Sequence, Union
 
 from beet.core.cache import MultiCache
-from beet.core.utils import FileSystemPath, JsonDict
+from beet.core.utils import FileSystemPath, JsonDict, intersperse
 from beet.core.watch import DirectoryWatcher, FileChanges
 
 from .config import (
@@ -273,11 +273,16 @@ class ProjectBuilder:
         yield
 
         description_parts = [
-            ctx.project_description,
+            ctx.project_description if isinstance(ctx.project_description, str) else "",
             ctx.project_author and f"Author: {ctx.project_author}",
             ctx.project_version and f"Version: {ctx.project_version}",
         ]
+
         description = "\n".join(filter(None, description_parts))
+        if not isinstance(ctx.project_description, str):
+            description = list(
+                intersperse(filter(None, [ctx.project_description, description]), "\n")
+            )
 
         for config, suffix, pack in zip(pack_configs, pack_suffixes, ctx.packs):
             default_name = ctx.project_name
@@ -285,19 +290,19 @@ class ProjectBuilder:
                 default_name += "_" + ctx.project_version
             default_name += suffix
 
-            options = config.with_defaults(
+            config = config.with_defaults(
                 PackConfig(
                     name=default_name,
-                    description=description,
+                    description=pack.description or description,
                     pack_format=pack.pack_format,
                     zipped=pack.zipped,
                 )
             )
 
-            pack.name = options.name
-            pack.description = options.description
-            pack.pack_format = options.pack_format
-            pack.zipped = bool(options.zipped)
+            pack.name = config.name
+            pack.description = config.description
+            pack.pack_format = config.pack_format
+            pack.zipped = bool(config.zipped)
 
             if pack and ctx.output_directory:
                 pack.save(ctx.output_directory, overwrite=True)

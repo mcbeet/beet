@@ -1,0 +1,12 @@
+{
+  "pack": {
+    "pack_format": 6,
+    "description": [
+      "override for ",
+      {
+        "text": "data pack",
+        "color": "red"
+      }
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "pack": {
+    "pack_format": 6,
+    "description": [
+      {
+        "text": "bold description",
+        "bold": true
+      },
+      "\n",
+      "Author: Fizzy\nVersion: 1.2.3"
+    ]
+  }
+}

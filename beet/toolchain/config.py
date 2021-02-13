@@ -15,7 +15,7 @@ from typing import Dict, List, Optional, Union
 
 from pydantic import BaseModel, Field, ValidationError
 
-from beet.core.utils import FileSystemPath, JsonDict
+from beet.core.utils import FileSystemPath, JsonDict, TextComponent
 
 
 class InvalidProjectConfig(Exception):
@@ -26,7 +26,7 @@ class PackConfig(BaseModel):
     """Data pack and resource pack configuration."""
 
     name: str = ""
-    description: str = ""
+    description: TextComponent = ""
     pack_format: int = 0
     zipped: Optional[bool] = None
 
@@ -55,7 +55,7 @@ class ProjectConfig(BaseModel):
     """Beet project configuration."""
 
     name: str = ""
-    description: str = ""
+    description: TextComponent = ""
     author: str = ""
     version: str = ""
 

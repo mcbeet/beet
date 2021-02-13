@@ -14,7 +14,7 @@ from typing import Any, Callable, Optional, Tuple, TypeVar
 
 from beet.core.cache import MultiCache
 from beet.core.container import Container
-from beet.core.utils import JsonDict, extra_field
+from beet.core.utils import JsonDict, TextComponent, extra_field
 from beet.library.data_pack import DataPack
 from beet.library.resource_pack import ResourcePack
 
@@ -48,7 +48,7 @@ class Context:
     """The build context."""
 
     project_name: str
-    project_description: str
+    project_description: TextComponent
     project_author: str
     project_version: str
 
