@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.6.1 (2021-02-13)
+### Fix
+* Make it possible to use text components and override the description in plugins ([`ad972d0`](https://github.com/vberlier/beet/commit/ad972d011f10e7006d34c07a37f8116f7bc2227f))
+
 ## v0.6.0 (2021-02-13)
 ### Feature
 * Add subproject helper ([`d604179`](https://github.com/vberlier/beet/commit/d60417924b44284dac45d5ad4b23d4b5a08aee99))
