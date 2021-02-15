@@ -30,7 +30,7 @@ tests_no_zope = ["coverage[toml] (>=5.0.2)", "hypothesis", "pympler", "pytest (>
 
 [[package]]
 name = "beet"
-version = "0.5.1"
+version = "0.6.1"
 description = "The Minecraft pack development kit"
 category = "main"
 optional = false
@@ -681,7 +681,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "6d42e6a404cbfc5575816d70e4d57b952d8b4fdc487043745adbd286a4c5bfcf"
+content-hash = "072cac6b5fc0c83c57201eb9031a13ae81c1b136971beb8071e407339613b5f2"
 
 [metadata.files]
 appdirs = [
@@ -697,8 +697,8 @@ attrs = [
     {file = "attrs-20.3.0.tar.gz", hash = "sha256:832aa3cde19744e49938b91fea06d69ecb9e649c93ba974535d08ad92164f700"},
 ]
 beet = [
-    {file = "beet-0.5.1-py3-none-any.whl", hash = "sha256:82a3659cd7e34db62ad3a7cb95c79b2c43db1aad69b52282fb23fb29dc5cd55e"},
-    {file = "beet-0.5.1.tar.gz", hash = "sha256:581a341786cd40a6d3d58fcfb7ea0f63f011b5e18ee359ec2da7735dca16b634"},
+    {file = "beet-0.6.1-py3-none-any.whl", hash = "sha256:8a5adbbd7dfb6fa6e8b8427d02d7c9f277b0d7d5539492a693b0ac060c557bf5"},
+    {file = "beet-0.6.1.tar.gz", hash = "sha256:98dfbab10bd036b8faf9547faa3323aadafb5c5e9836099413764fb4c6b15ea3"},
 ]
 black = [
     {file = "black-20.8b1.tar.gz", hash = "sha256:1c02557aa099101b9d21496f8a914e9ed2222ef70336404eeeac8edba836fbea"},
