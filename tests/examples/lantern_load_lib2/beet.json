@@ -1,0 +1,15 @@
+{
+  "data_pack": {
+    "load": ["src"]
+  },
+  "pipeline": ["beet.contrib.lantern_load"],
+  "meta": {
+    "lantern_load": {
+      "id": "demo_lib2",
+      "version": 7,
+      "dependencies": {
+        "demo_lib1": "42.."
+      }
+    }
+  }
+}

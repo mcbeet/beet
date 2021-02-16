@@ -1,0 +1,9 @@
+{
+  "values": [
+    {
+      "id": "#demo_lib1:load",
+      "required": false
+    },
+    "demo_lib2:load"
+  ]
+}
