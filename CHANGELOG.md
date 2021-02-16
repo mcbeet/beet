@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.7.0 (2021-02-16)
+### Feature
+* Add lantern_load plugin ([`7118f10`](https://github.com/vberlier/beet/commit/7118f10f49e574b8701004fdcc5f30dc56e89167))
+
 ## v0.6.1 (2021-02-13)
 ### Fix
 * Make it possible to use text components and override the description in plugins ([`ad972d0`](https://github.com/vberlier/beet/commit/ad972d011f10e7006d34c07a37f8116f7bc2227f))
