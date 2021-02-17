@@ -39,12 +39,14 @@ class TemplateManager:
     env: Environment
     loaders: List[BaseLoader]
     prefix_map: Dict[str, BaseLoader]
+    directories: List[FileSystemPath]
 
     def __init__(self, templates: List[FileSystemPath], cache_dir: FileSystemPath):
         self.prefix_map = {}
+        self.directories = templates
 
         self.loaders = [
-            FileSystemLoader(templates),
+            FileSystemLoader(self.directories),
             PrefixLoader(self.prefix_map),
         ]
 
