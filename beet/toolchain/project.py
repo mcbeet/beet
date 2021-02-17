@@ -217,8 +217,6 @@ class ProjectBuilder:
             ),
         )
 
-        ctx.template.env.globals["ctx"] = ctx
-
         with ctx, ctx.cache:
             pipeline = ctx.inject(Pipeline)
             pipeline.exception_fallthrough = (

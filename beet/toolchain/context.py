@@ -67,6 +67,7 @@ class Context:
     def __post_init__(self):
         self._container = ContextContainer(self)
         self._path_entry = str(self.directory.resolve())
+        self.template.env.globals["ctx"] = self
 
     def inject(self, cls: Callable[["Context"], InjectedType]) -> InjectedType:
         """Retrieve the instance provided by the specified service factory."""
