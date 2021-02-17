@@ -17,7 +17,7 @@ from beet.core.utils import FileSystemPath, JsonDict, intersperse
 from beet.core.watch import DirectoryWatcher, FileChanges
 
 from .config import PackConfig, ProjectConfig, load_config, locate_config
-from .context import Context, Pipeline, Plugin
+from .context import Context, Plugin
 from .pipeline import PipelineFallthroughException
 from .template import TemplateManager
 from .utils import locate_minecraft
@@ -211,9 +211,9 @@ class ProjectBuilder:
             ),
         )
 
-        with ctx, ctx.cache:
-            ctx.require(self.bootstrap)
-            ctx.inject(Pipeline).run(
+        with ctx.activate() as pipeline:
+            pipeline.require(self.bootstrap)
+            pipeline.run(
                 (
                     item
                     if isinstance(item, str)

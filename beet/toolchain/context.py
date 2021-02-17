@@ -8,6 +8,7 @@ __all__ = [
 
 
 import sys
+from contextlib import contextmanager
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Callable, Optional, Tuple, TypeVar
@@ -73,22 +74,25 @@ class Context:
         """Retrieve the instance provided by the specified service factory."""
         return self._container[cls]
 
-    def __enter__(self) -> "Context":
+    @contextmanager
+    def activate(self):
         sys.path.append(self._path_entry)
-        return self
 
-    def __exit__(self, *_):
-        sys.path.remove(self._path_entry)
+        try:
+            with self.cache:
+                yield self.inject(Pipeline)
+        finally:
+            sys.path.remove(self._path_entry)
 
-        imported_modules = [
-            name
-            for name, module in sys.modules.items()
-            if (filename := getattr(module, "__file__", None))
-            and filename.startswith(self._path_entry)
-        ]
+            imported_modules = [
+                name
+                for name, module in sys.modules.items()
+                if (filename := getattr(module, "__file__", None))
+                and filename.startswith(self._path_entry)
+            ]
 
-        for name in imported_modules:
-            del sys.modules[name]
+            for name in imported_modules:
+                del sys.modules[name]
 
     @property
     def packs(self) -> Tuple[ResourcePack, DataPack]:
