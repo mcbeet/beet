@@ -3,6 +3,7 @@ __all__ = [
     "Task",
     "GenericPlugin",
     "GenericPluginSpec",
+    "PipelineFallthroughException",
     "PluginError",
     "PluginImportError",
 ]
@@ -18,8 +19,6 @@ from typing import (
     Optional,
     Protocol,
     Set,
-    Tuple,
-    Type,
     TypeVar,
     Union,
     cast,
@@ -40,11 +39,15 @@ class GenericPlugin(Protocol[T]):
 GenericPluginSpec = Union[GenericPlugin[T], str]
 
 
-class PluginError(Exception):
+class PipelineFallthroughException(Exception):
+    """Exceptions inheriting from this class will fall through the pipeline exception handling."""
+
+
+class PluginError(PipelineFallthroughException):
     """Raised when a plugin raises an exception."""
 
 
-class PluginImportError(PluginError):
+class PluginImportError(PipelineFallthroughException):
     """Raised when a plugin couldn't be imported."""
 
 
@@ -54,7 +57,6 @@ class Task(Generic[T]):
 
     plugin: GenericPlugin[T]
     iterator: Optional[Iterator[Any]] = None
-    exception_fallthrough: Tuple[Type[Exception], ...] = ()
 
     def advance(self, ctx: T) -> Optional["Task[T]"]:
         """Make progress on the task and return it unless no more work is necessary."""
@@ -66,7 +68,7 @@ class Task(Generic[T]):
                 )
             for _ in self.iterator:
                 return self
-        except (PluginError,) + self.exception_fallthrough:
+        except PipelineFallthroughException:
             raise
         except Exception as exc:
             raise PluginError(self.plugin) from exc.with_traceback(
@@ -81,7 +83,6 @@ class GenericPipeline(Generic[T]):
 
     ctx: T
     default_symbol: str = "beet_default"
-    exception_fallthrough: Tuple[Type[Exception], ...] = ()
 
     plugins: Set[GenericPlugin[T]] = field(default_factory=set)
     tasks: List[Task[T]] = field(default_factory=list)
@@ -94,9 +95,7 @@ class GenericPipeline(Generic[T]):
 
         self.plugins.add(plugin)
 
-        task = Task(plugin, exception_fallthrough=self.exception_fallthrough)
-
-        if remaining_work := task.advance(self.ctx):
+        if remaining_work := Task(plugin).advance(self.ctx):
             self.tasks.append(remaining_work)
 
     def resolve(self, spec: GenericPluginSpec[T]) -> GenericPlugin[T]:
@@ -107,7 +106,7 @@ class GenericPipeline(Generic[T]):
                 if isinstance(spec, str)
                 else spec
             )
-        except (PluginError,) + self.exception_fallthrough:
+        except PipelineFallthroughException:
             raise
         except Exception as exc:
             raise PluginImportError(spec) from exc

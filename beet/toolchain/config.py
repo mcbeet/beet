@@ -17,8 +17,10 @@ from pydantic import BaseModel, Field, ValidationError
 
 from beet.core.utils import FileSystemPath, JsonDict, TextComponent
 
+from .pipeline import PipelineFallthroughException
 
-class InvalidProjectConfig(Exception):
+
+class InvalidProjectConfig(PipelineFallthroughException):
     """Raised when trying to load an invalid project config."""
 
 

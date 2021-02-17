@@ -16,20 +16,14 @@ from beet.core.cache import MultiCache
 from beet.core.utils import FileSystemPath, JsonDict, intersperse
 from beet.core.watch import DirectoryWatcher, FileChanges
 
-from .config import (
-    InvalidProjectConfig,
-    PackConfig,
-    ProjectConfig,
-    load_config,
-    locate_config,
-)
+from .config import PackConfig, ProjectConfig, load_config, locate_config
 from .context import Context, Pipeline, Plugin
-from .pipeline import PluginError
-from .template import TemplateError, TemplateManager
+from .pipeline import PipelineFallthroughException
+from .template import TemplateManager
 from .utils import locate_minecraft
 
 
-class ErrorMessage(Exception):
+class ErrorMessage(PipelineFallthroughException):
     """Exception used to display nice error messages when something goes wrong."""
 
 
@@ -218,17 +212,8 @@ class ProjectBuilder:
         )
 
         with ctx, ctx.cache:
-            pipeline = ctx.inject(Pipeline)
-            pipeline.exception_fallthrough = (
-                ErrorMessage,
-                InvalidProjectConfig,
-                PluginError,
-                TemplateError,
-            )
-
-            pipeline.require(self.bootstrap)
-
-            pipeline.run(
+            ctx.require(self.bootstrap)
+            ctx.inject(Pipeline).run(
                 (
                     item
                     if isinstance(item, str)
