@@ -108,7 +108,7 @@ class Project:
             interval,
             ignore_file=".gitignore",
             ignore_patterns=[
-                f"{self.cache.path.relative_to(self.directory)}/",
+                f"{self.cache.path.relative_to(self.directory.resolve())}/",
                 "__pycache__/",
                 "*.tmp",
                 ".*",
