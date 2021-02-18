@@ -26,13 +26,18 @@ from jinja2.loaders import BaseLoader
 from beet.core.file import TextFileBase
 from beet.core.utils import FileSystemPath
 
-from .pipeline import PipelineFallthroughException
+from .pipeline import FormattedPipelineException, PipelineFallthroughException
 
 TextFileType = TypeVar("TextFileType", bound=TextFileBase[Any])
 
 
-class TemplateError(PipelineFallthroughException):
+class TemplateError(FormattedPipelineException):
     """Raised when an error occurs during template rendering."""
+
+    def __init__(self, message: str):
+        super().__init__(message)
+        self.message = message
+        self.format_cause = True
 
 
 class TemplateManager:
@@ -93,7 +98,7 @@ class TemplateManager:
         """Handle template errors."""
         try:
             yield
-        except TemplateError:
+        except PipelineFallthroughException:
             raise
         except Exception as exc:
             tb = exc.__traceback__

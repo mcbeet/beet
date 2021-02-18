@@ -4,24 +4,30 @@ __all__ = [
     "PackConfig",
     "locate_config",
     "load_config",
+    "config_error_handler",
 ]
 
 
 import json
+from contextlib import contextmanager
 from copy import deepcopy
 from itertools import chain
 from pathlib import Path
-from typing import Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional, Union
 
 from pydantic import BaseModel, Field, ValidationError
 
 from beet.core.utils import FileSystemPath, JsonDict, TextComponent
 
-from .pipeline import PipelineFallthroughException
+from .pipeline import FormattedPipelineException
 
 
-class InvalidProjectConfig(PipelineFallthroughException):
+class InvalidProjectConfig(FormattedPipelineException):
     """Raised when trying to load an invalid project config."""
+
+    def __init__(self, *args: Any):
+        super().__init__(*args)
+        self.message = f"Couldn't load config file.\n\n{self}"
 
 
 class PackConfig(BaseModel):
@@ -138,8 +144,15 @@ def locate_config(initial_directory: FileSystemPath, filename: str) -> Optional[
 def load_config(filename: FileSystemPath) -> ProjectConfig:
     """Load the project config at the specified location."""
     path = Path(filename)
-    try:
+    with config_error_handler(path):
         return ProjectConfig(**json.loads(path.read_text())).resolve(path.parent)
+
+
+@contextmanager
+def config_error_handler(path: FileSystemPath = "<unknown>"):
+    """Handle configuration errors."""
+    try:
+        yield
     except json.JSONDecodeError as exc:
         raise InvalidProjectConfig(f"{path}:{exc.lineno}: {exc.msg}.") from exc
     except FileNotFoundError as exc:

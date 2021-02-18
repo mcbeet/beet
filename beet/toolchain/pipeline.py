@@ -4,6 +4,7 @@ __all__ = [
     "GenericPlugin",
     "GenericPluginSpec",
     "PipelineFallthroughException",
+    "FormattedPipelineException",
     "PluginError",
     "PluginImportError",
 ]
@@ -24,7 +25,7 @@ from typing import (
     cast,
 )
 
-from .utils import import_from_string
+from .utils import format_obj, import_from_string
 
 T = TypeVar("T")
 
@@ -43,12 +44,31 @@ class PipelineFallthroughException(Exception):
     """Exceptions inheriting from this class will fall through the pipeline exception handling."""
 
 
-class PluginError(PipelineFallthroughException):
+class FormattedPipelineException(PipelineFallthroughException):
+    """Exceptions inheriting from this class can expose a formatted message."""
+
+    def __init__(self, *args: Any):
+        super().__init__(*args)
+        self.message = ""
+        self.format_cause = False
+
+
+class PluginError(FormattedPipelineException):
     """Raised when a plugin raises an exception."""
 
+    def __init__(self, plugin: Any):
+        super().__init__(plugin)
+        self.message = f"Plugin {format_obj(plugin)} raised an exception."
+        self.format_cause = True
 
-class PluginImportError(PipelineFallthroughException):
+
+class PluginImportError(FormattedPipelineException):
     """Raised when a plugin couldn't be imported."""
+
+    def __init__(self, plugin: Any):
+        super().__init__(plugin)
+        self.message = f"Couldn't import plugin {format_obj(plugin)}."
+        self.format_cause = True
 
 
 @dataclass

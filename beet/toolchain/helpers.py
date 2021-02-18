@@ -9,7 +9,7 @@ from typing import Union
 
 from beet.core.utils import FileSystemPath, JsonDict
 
-from .config import ProjectConfig
+from .config import ProjectConfig, config_error_handler
 from .context import Context, Plugin, PluginSpec
 from .project import Project, ProjectBuilder
 from .template import TemplateManager
@@ -24,7 +24,8 @@ def subproject(config: Union[ProjectConfig, JsonDict, FileSystemPath]) -> Plugin
         if isinstance(config, ProjectConfig):
             project.resolved_config = config
         elif isinstance(config, dict):
-            project.resolved_config = ProjectConfig(**config).resolve(ctx.directory)
+            with config_error_handler("<subproject>"):
+                project.resolved_config = ProjectConfig(**config).resolve(ctx.directory)
         else:
             path = Path(config)
 

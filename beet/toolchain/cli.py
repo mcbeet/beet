@@ -14,11 +14,9 @@ from click_help_colors import HelpColorsGroup
 
 from beet import __version__
 
-from .config import InvalidProjectConfig
-from .pipeline import PluginError, PluginImportError
-from .project import ErrorMessage, Project
-from .template import TemplateError
-from .utils import format_exc, format_obj
+from .pipeline import FormattedPipelineException
+from .project import Project
+from .utils import format_exc
 
 T = TypeVar("T")
 
@@ -113,22 +111,11 @@ def error_handler(should_exit: bool = False, format_padding: int = 0):
 
     try:
         yield
-    except ErrorMessage as exc:
-        message = " ".join(exc.args)
-    except PluginImportError as exc:
-        message = f"Couldn't import plugin {format_obj(exc.args[0])}."
-        exception = exc.__cause__
-    except PluginError as exc:
-        message = f"Plugin {format_obj(exc.args[0])} raised an exception."
-        exception = exc.__cause__
+    except FormattedPipelineException as exc:
+        message, exception = exc.message, exc.__cause__ if exc.format_cause else None
     except (click.Abort, KeyboardInterrupt):
         click.echo()
         message = "Aborted."
-    except InvalidProjectConfig as exc:
-        message = f"Couldn't load config file.\n\n{exc}"
-    except TemplateError as exc:
-        message = " ".join(exc.args)
-        exception = exc.__cause__
     except Exception as exc:
         message = "An unhandled exception occurred. This could be a bug."
         exception = exc

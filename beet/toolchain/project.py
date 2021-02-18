@@ -18,13 +18,17 @@ from beet.core.watch import DirectoryWatcher, FileChanges
 
 from .config import PackConfig, ProjectConfig, load_config, locate_config
 from .context import Context
-from .pipeline import PipelineFallthroughException
+from .pipeline import FormattedPipelineException
 from .template import TemplateManager
 from .utils import locate_minecraft
 
 
-class ErrorMessage(PipelineFallthroughException):
+class ErrorMessage(FormattedPipelineException):
     """Exception used to display nice error messages when something goes wrong."""
+
+    def __init__(self, message: str):
+        super().__init__(message)
+        self.message = message
 
 
 @dataclass
