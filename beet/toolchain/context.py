@@ -76,6 +76,7 @@ class Context:
 
     @contextmanager
     def activate(self):
+        """Push the context directory to sys.path and handle cleanup to allow module reloading."""
         sys.path.append(self._path_entry)
 
         try:
@@ -96,6 +97,7 @@ class Context:
 
     @contextmanager
     def override(self, **meta: Any):
+        """Temporarily update the context meta."""
         to_restore = {}
         to_remove = set()
 
