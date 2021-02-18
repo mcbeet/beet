@@ -10,7 +10,7 @@ from typing import Any
 
 from jinja2.ext import Extension
 from jinja2.nodes import DerivedContextReference  # type: ignore
-from jinja2.nodes import CallBlock, Name, Node
+from jinja2.nodes import CallBlock, Node
 
 from beet import Context, Function
 from beet.core.utils import JsonDict
@@ -32,13 +32,13 @@ class InlineFunctions(Extension):
         body = parser.parse_statements(["name:endfunction"], drop_needle=True)
 
         handler = self.call_method("_function_handler", args)
-        render = Name("__render__", "param")
-        return CallBlock(handler, [render], [], body).set_lineno(lineno)
+        return CallBlock(handler, [], [], body).set_lineno(lineno)
 
     def _function_handler(self, context: Any, path: str, caller: Any) -> str:
         ctx: Context = context["ctx"]
-        render: JsonDict = context.get("__render__", {})
 
-        commands = caller(dict(render, path=path, group="functions"))
+        with ctx.override(render_path=path, render_group="functions"):
+            commands = caller()
+
         ctx.data[path] = Function(commands)
         return ""

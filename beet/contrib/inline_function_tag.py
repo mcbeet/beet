@@ -35,11 +35,10 @@ class InlineFunctionTags(Extension):
 
     def _function_tag_handler(self, context: Any, function_tag: str):
         ctx: Context = context["ctx"]
-        render: JsonDict = context["__render__"]
 
-        if render["group"] != "functions":
+        if ctx.meta["render_group"] != "functions":
             raise TypeError("Inline tags can only be used inside functions.")
 
         ctx.data.function_tags.merge(
-            {function_tag: FunctionTag({"values": [render["path"]]})}
+            {function_tag: FunctionTag({"values": [ctx.meta["render_path"]]})}
         )

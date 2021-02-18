@@ -10,8 +10,7 @@ def beet_default(ctx: Context):
     template = config.get("template", "function_header.mcfunction")
 
     for path in ctx.data.functions.match(*patterns):
-        header = ctx.template.render(
-            template, __render__={"path": path, "group": "functions"}
-        )
+        with ctx.override(render_path=path, render_group="functions"):
+            header = ctx.template.render(template)
         function = ctx.data.functions[path]
         function.content = header + function.text

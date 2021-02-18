@@ -34,12 +34,10 @@ def render(
                     proxy = getattr(pack, group)
                     file_paths = proxy.match(*patterns)
                 except:
-                    raise ValueError(f"Invalid pattern group {group!r}.") from None
+                    raise ValueError(f"Invalid render group {group!r}.") from None
                 else:
                     for path in file_paths:
-                        ctx.template.render_file(
-                            proxy[path],
-                            __render__={"path": path, "group": group},
-                        )
+                        with ctx.override(render_path=path, render_group=group):
+                            ctx.template.render_file(proxy[path])
 
     return plugin
