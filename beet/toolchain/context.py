@@ -94,6 +94,25 @@ class Context:
             for name in imported_modules:
                 del sys.modules[name]
 
+    @contextmanager
+    def override(self, **meta: Any):
+        to_restore = {}
+        to_remove = set()
+
+        for key, value in meta.items():
+            if key in self.meta:
+                to_restore[key] = self.meta[key]
+            else:
+                to_remove.add(key)
+            self.meta[key] = value
+
+        try:
+            yield self
+        finally:
+            for key in to_remove:
+                del self.meta[key]
+            self.meta.update(to_restore)
+
     @property
     def packs(self) -> Tuple[ResourcePack, DataPack]:
         return self.assets, self.data
