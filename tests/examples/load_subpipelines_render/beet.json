@@ -1,0 +1,24 @@
+{
+  "pipeline": [
+    {
+      "data_pack": {
+        "load": ["pack1"]
+      }
+    },
+    {
+      "data_pack": {
+        "load": ["pack2"]
+      }
+    },
+    "beet.contrib.render"
+  ],
+  "meta": {
+    "pack1_message": "foo",
+    "pack2_message": "bar",
+    "render": {
+      "data_pack": {
+        "functions": ["demo:*"]
+      }
+    }
+  }
+}

@@ -11,6 +11,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable, Iterator, List, Optional, Sequence
 
+from beet.contrib.render import render
 from beet.core.cache import MultiCache
 from beet.core.utils import FileSystemPath, intersperse
 from beet.core.watch import DirectoryWatcher, FileChanges
@@ -237,20 +238,12 @@ class ProjectBuilder:
             for path in config.load:
                 pack.load(path)
 
-        for config, pack in zip(pack_configs, ctx.packs):
-            for group, patterns in config.render.items():
-                try:
-                    proxy = getattr(pack, group)
-                    file_paths = proxy.match(*patterns)
-                except:
-                    message = f"Invalid pattern group {group!r} in configuration."
-                    raise ErrorMessage(message) from None
-                else:
-                    for path in file_paths:
-                        ctx.template.render_file(
-                            proxy[path],
-                            __render__={"path": path, "group": group},
-                        )
+        ctx.require(
+            render(
+                resource_pack=self.config.resource_pack.render,
+                data_pack=self.config.data_pack.render,
+            )
+        )
 
         yield
 
