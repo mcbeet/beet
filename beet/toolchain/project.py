@@ -2,7 +2,6 @@ __all__ = [
     "ErrorMessage",
     "Project",
     "ProjectBuilder",
-    "subproject",
 ]
 
 
@@ -10,14 +9,14 @@ import re
 from copy import deepcopy
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Iterable, Iterator, List, Optional, Sequence, Union
+from typing import Iterable, Iterator, List, Optional, Sequence
 
 from beet.core.cache import MultiCache
-from beet.core.utils import FileSystemPath, JsonDict, intersperse
+from beet.core.utils import FileSystemPath, intersperse
 from beet.core.watch import DirectoryWatcher, FileChanges
 
 from .config import PackConfig, ProjectConfig, load_config, locate_config
-from .context import Context, Plugin
+from .context import Context
 from .pipeline import PipelineFallthroughException
 from .template import TemplateManager
 from .utils import locate_minecraft
@@ -302,26 +301,3 @@ class ProjectBuilder:
 
         ctx.data.extra.merge(child_ctx.data.extra)
         ctx.data.merge(child_ctx.data)
-
-
-def subproject(config: Union[ProjectConfig, JsonDict, FileSystemPath]) -> Plugin:
-    """Return a plugin that runs a subproject."""
-
-    def plugin(ctx: Context):
-        project = Project(resolved_cache=ctx.cache)
-
-        if isinstance(config, ProjectConfig):
-            project.resolved_config = config
-        elif isinstance(config, dict):
-            project.resolved_config = ProjectConfig(**config).resolve(ctx.directory)
-        else:
-            path = Path(config)
-
-            if path.is_dir():
-                project.config_directory = path
-            else:
-                project.config_path = path
-
-        ctx.require(ProjectBuilder(project))
-
-    return plugin

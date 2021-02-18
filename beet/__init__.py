@@ -7,6 +7,7 @@ from .library.data_pack import *
 from .library.resource_pack import *
 from .toolchain.config import *
 from .toolchain.context import *
+from .toolchain.helpers import *
 from .toolchain.pipeline import *
 from .toolchain.project import *
 from .toolchain.template import *

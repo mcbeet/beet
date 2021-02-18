@@ -4,7 +4,6 @@ __all__ = [
     "PluginSpec",
     "Context",
     "ContextContainer",
-    "sandbox",
 ]
 
 
@@ -102,34 +101,3 @@ class Context:
     def require(self, spec: PluginSpec):
         """Execute the specified plugin."""
         self.inject(Pipeline).require(spec)
-
-
-def sandbox(*specs: PluginSpec) -> Plugin:
-    """Return a plugin that runs the specified plugins in an isolated pipeline."""
-
-    def plugin(ctx: Context):
-        child_ctx = Context(
-            project_name=ctx.project_name,
-            project_description=ctx.project_description,
-            project_author=ctx.project_author,
-            project_version=ctx.project_version,
-            directory=ctx.directory,
-            output_directory=None,
-            meta={},
-            cache=ctx.cache,
-            template=TemplateManager(
-                templates=list(ctx.template.directories),
-                cache_dir=ctx.cache["template"].directory,
-            ),
-        )
-
-        with child_ctx.activate() as pipeline:
-            pipeline.run(specs)
-
-        ctx.assets.extra.merge(child_ctx.assets.extra)
-        ctx.assets.merge(child_ctx.assets)
-
-        ctx.data.extra.merge(child_ctx.data.extra)
-        ctx.data.merge(child_ctx.data)
-
-    return plugin
