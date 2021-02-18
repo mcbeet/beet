@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.8.1 (2021-02-18)
+### Fix
+* Add FormattedPipelineException and use config_error_handler in subproject ([`49895e3`](https://github.com/vberlier/beet/commit/49895e34246f39529dd984cec434863977be5da8))
+
 ## v0.8.0 (2021-02-18)
 ### Feature
 * Remove __render__ and expose render path and render group in meta ([`adc9452`](https://github.com/vberlier/beet/commit/adc945207098bdf4eed7699cd01a855ad899e846))
