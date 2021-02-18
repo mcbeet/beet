@@ -2,6 +2,23 @@
 
 <!--next-version-placeholder-->
 
+## v0.8.0 (2021-02-18)
+### Feature
+* Remove __render__ and expose render path and render group in meta ([`adc9452`](https://github.com/vberlier/beet/commit/adc945207098bdf4eed7699cd01a855ad899e846))
+* Add ctx.override to temporarily change meta ([`c1483d0`](https://github.com/vberlier/beet/commit/c1483d08244ed159f055d18ab487191b40a49cde))
+* Expose renderer as a standalone plugin ([`e935383`](https://github.com/vberlier/beet/commit/e935383abf7f8de9db0a7ce354b50fa78eca45fb))
+* Add sandbox ([`bd538af`](https://github.com/vberlier/beet/commit/bd538af938b740c07a1f1bdf6834816f4c476e51))
+* Add explicit activate context manager ([`1e21f66`](https://github.com/vberlier/beet/commit/1e21f66fa8068cc7309951f9924dce85ab27b333))
+
+### Fix
+* Replace exception_fallthrough with PipelineFallthroughException ([`35ace13`](https://github.com/vberlier/beet/commit/35ace13821338f699a3426858c3b2257fbf2e73e))
+* Set ctx template global in __post_init__ ([`96d928b`](https://github.com/vberlier/beet/commit/96d928b6a81f1f272930b2ed30eac082ff455e66))
+* Expose the template directories ([`7d6f7a1`](https://github.com/vberlier/beet/commit/7d6f7a1b009770984515b09550bc36e0c7b39d96))
+* Ignore cache relative to the resolved directory ([`3e77d79`](https://github.com/vberlier/beet/commit/3e77d7929b5c2c3b71c994f52b19e2dccafbdbff))
+
+### Documentation
+* Document ctx.activate() and ctx.override() ([`286eca2`](https://github.com/vberlier/beet/commit/286eca20b7d5b0ab64ff74048f0f8c1ecaef5e2e))
+
 ## v0.7.0 (2021-02-16)
 ### Feature
 * Add lantern_load plugin ([`7118f10`](https://github.com/vberlier/beet/commit/7118f10f49e574b8701004fdcc5f30dc56e89167))
