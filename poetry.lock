@@ -683,7 +683,7 @@ traitlets = "*"
 
 [[package]]
 name = "nbtlib"
-version = "1.11.1"
+version = "1.12.0"
 description = "A python package to read and edit nbt data"
 category = "main"
 optional = false
@@ -1822,8 +1822,8 @@ nbsphinx = [
     {file = "nbsphinx-0.8.0.tar.gz", hash = "sha256:369c16fe93af14c878d61fb3e81d838196fb35b27deade2cd7b95efe1fe56ea0"},
 ]
 nbtlib = [
-    {file = "nbtlib-1.11.1-py3-none-any.whl", hash = "sha256:4382cae9de8c41460231aaf346b425f151f0d4e040b5df1caa7ca2122a59e63f"},
-    {file = "nbtlib-1.11.1.tar.gz", hash = "sha256:d56f8786ebd9d8a6d720b1dc9313e9ea02ff6f81d866c45c6e789353feb3fadc"},
+    {file = "nbtlib-1.12.0-py3-none-any.whl", hash = "sha256:30a3545cf7e654624cd1bf23ec2590d0a0e3a7bca2a8af4725d7d758453d8686"},
+    {file = "nbtlib-1.12.0.tar.gz", hash = "sha256:2554d16bbf51b087442f4d55981ba476ae5d1f046f89dd7904914a7412a80a2e"},
 ]
 nest-asyncio = [
     {file = "nest_asyncio-1.4.3-py3-none-any.whl", hash = "sha256:dbe032f3e9ff7f120e76be22bf6e7958e867aed1743e6894b8a9585fe8495cc9"},
