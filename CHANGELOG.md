@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.8.2 (2021-02-20)
+### Fix
+* Overload merge to automatically merge pack extras too ([`a586ee3`](https://github.com/vberlier/beet/commit/a586ee30eb00aadb0276a6bb7b2c4b2a637ed236))
+
 ## v0.8.1 (2021-02-18)
 ### Fix
 * Add FormattedPipelineException and use config_error_handler in subproject ([`49895e3`](https://github.com/vberlier/beet/commit/49895e34246f39529dd984cec434863977be5da8))
