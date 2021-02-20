@@ -1,12 +1,16 @@
 __all__ = [
     "subproject",
     "sandbox",
+    "run_beet",
 ]
 
 
+from contextlib import ExitStack
 from pathlib import Path
-from typing import Union
+from tempfile import TemporaryDirectory
+from typing import Optional, Union
 
+from beet.core.cache import MultiCache
 from beet.core.utils import FileSystemPath, JsonDict
 
 from .config import ProjectConfig, config_error_handler
@@ -65,3 +69,30 @@ def sandbox(*specs: PluginSpec) -> Plugin:
         ctx.data.merge(child_ctx.data)
 
     return plugin
+
+
+def run_beet(
+    config: Optional[Union[JsonDict, FileSystemPath]] = None,
+    directory: Optional[FileSystemPath] = None,
+    enable_cache: bool = False,
+) -> Context:  # type: ignore
+    """Run the entire toolchain programmatically."""
+    if not directory:
+        directory = Path.cwd()
+
+    with ExitStack() as stack:
+        project = Project()
+
+        if not enable_cache:
+            project.resolved_cache = MultiCache(
+                stack.enter_context(TemporaryDirectory())
+            )
+
+        if isinstance(config, dict):
+            project.resolved_config = ProjectConfig(**config).resolve(directory)
+        elif config:
+            project.config_path = config
+        else:
+            project.config_directory = directory
+
+        return ProjectBuilder(project).build()
