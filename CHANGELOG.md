@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.9.1 (2021-02-20)
+### Fix
+* Make it possible to specify an existing cache and use run_beet in examples ([`5cdea1d`](https://github.com/vberlier/beet/commit/5cdea1d46d36a4324582232a6773edefcadb4350))
+
 ## v0.9.0 (2021-02-20)
 ### Feature
 * Add run_beet helper function ([`a2cb545`](https://github.com/vberlier/beet/commit/a2cb5454972f768b215248fbc95575fd26a34dfc))
