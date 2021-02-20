@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.9.0 (2021-02-20)
+### Feature
+* Add run_beet helper function ([`a2cb545`](https://github.com/vberlier/beet/commit/a2cb5454972f768b215248fbc95575fd26a34dfc))
+
 ## v0.8.2 (2021-02-20)
 ### Fix
 * Overload merge to automatically merge pack extras too ([`a586ee3`](https://github.com/vberlier/beet/commit/a586ee30eb00aadb0276a6bb7b2c4b2a637ed236))
