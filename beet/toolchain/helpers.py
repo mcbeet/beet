@@ -74,7 +74,7 @@ def sandbox(*specs: PluginSpec) -> Plugin:
 def run_beet(
     config: Optional[Union[JsonDict, FileSystemPath]] = None,
     directory: Optional[FileSystemPath] = None,
-    enable_cache: bool = False,
+    cache: Union[bool, MultiCache] = False,
 ) -> Context:  # type: ignore
     """Run the entire toolchain programmatically."""
     if not directory:
@@ -83,13 +83,16 @@ def run_beet(
     with ExitStack() as stack:
         project = Project()
 
-        if not enable_cache:
+        if isinstance(cache, MultiCache):
+            project.resolved_cache = cache
+        elif not cache:
             project.resolved_cache = MultiCache(
                 stack.enter_context(TemporaryDirectory())
             )
 
         if isinstance(config, dict):
-            project.resolved_config = ProjectConfig(**config).resolve(directory)
+            with config_error_handler("<project>"):
+                project.resolved_config = ProjectConfig(**config).resolve(directory)
         elif config:
             project.config_path = config
         else:
