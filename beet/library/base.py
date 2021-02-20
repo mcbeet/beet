@@ -30,6 +30,7 @@ from typing import (
     Iterator,
     List,
     Mapping,
+    MutableMapping,
     Optional,
     Protocol,
     Tuple,
@@ -40,7 +41,14 @@ from typing import (
 )
 from zipfile import ZipFile
 
-from beet.core.container import Container, ContainerProxy, MatchMixin, MergeMixin, Pin
+from beet.core.container import (
+    Container,
+    ContainerProxy,
+    MatchMixin,
+    MergeMixin,
+    Pin,
+    SupportsMerge,
+)
 from beet.core.file import File, FileOrigin, JsonFile, PngFile
 from beet.core.utils import FileSystemPath, JsonDict, TextComponent, extra_field
 
@@ -50,6 +58,7 @@ T = TypeVar("T")
 PackFileType = TypeVar("PackFileType", bound="PackFile")
 NamespaceType = TypeVar("NamespaceType", bound="Namespace")
 NamespaceFileType = TypeVar("NamespaceFileType", bound="NamespaceFile")
+MergeableType = TypeVar("MergeableType", bound=SupportsMerge)
 
 PackFile = File[Any, Any]
 
@@ -363,6 +372,22 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
 
     def missing(self, key: str) -> NamespaceType:
         return self.namespace_type()
+
+    @overload
+    def merge(self: T, other: T) -> bool:
+        ...
+
+    @overload
+    def merge(
+        self: MutableMapping[T, MergeableType], other: Mapping[T, MergeableType]
+    ) -> bool:
+        ...
+
+    def merge(self, other: Any) -> bool:
+        super().merge(other)  # type: ignore
+        if isinstance(other, Pack):
+            self.extra.merge(other.extra)
+        return True
 
     @property
     def content(self) -> Iterator[Tuple[str, NamespaceFile]]:

@@ -169,6 +169,13 @@ def test_merge_block_tags():
     }
 
 
+def test_merge_extra():
+    pack = DataPack()
+    pack.merge(DataPack(description="hello", pack_format=88))
+    assert pack.description == "hello"
+    assert pack.pack_format == 88
+
+
 def test_match():
     pack = DataPack()
     custom = pack["custom"]

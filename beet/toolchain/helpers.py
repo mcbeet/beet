@@ -61,10 +61,7 @@ def sandbox(*specs: PluginSpec) -> Plugin:
         with child_ctx.activate() as pipeline:
             pipeline.run(specs)
 
-        ctx.assets.extra.merge(child_ctx.assets.extra)
         ctx.assets.merge(child_ctx.assets)
-
-        ctx.data.extra.merge(child_ctx.data.extra)
         ctx.data.merge(child_ctx.data)
 
     return plugin
