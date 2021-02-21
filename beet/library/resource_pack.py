@@ -135,18 +135,18 @@ class ResourcePackNamespace(Namespace):
     directory = "assets"
 
     # fmt: off
-    blockstates         = NamespacePin(Blockstate)
-    models              = NamespacePin(Model)
-    fonts               = NamespacePin(Font)
-    glyph_sizes         = NamespacePin(GlyphSizeFile)
-    truetype_fonts      = NamespacePin(TrueTypeFont)
-    shader_posts        = NamespacePin(ShaderPost)
-    shader_programs     = NamespacePin(ShaderProgram)
-    fragment_shaders    = NamespacePin(FragmentShader)
-    vertex_shaders      = NamespacePin(VertexShader)
-    texts               = NamespacePin(Text)
-    textures_mcmeta     = NamespacePin(TextureMcmeta)
-    textures            = NamespacePin(Texture)
+    blockstates:      NamespacePin[Blockstate]     = NamespacePin(Blockstate)
+    models:           NamespacePin[Model]          = NamespacePin(Model)
+    fonts:            NamespacePin[Font]           = NamespacePin(Font)
+    glyph_sizes:      NamespacePin[GlyphSizeFile]  = NamespacePin(GlyphSizeFile)
+    truetype_fonts:   NamespacePin[TrueTypeFont]   = NamespacePin(TrueTypeFont)
+    shader_posts:     NamespacePin[ShaderPost]     = NamespacePin(ShaderPost)
+    shader_programs:  NamespacePin[ShaderProgram]  = NamespacePin(ShaderProgram)
+    fragment_shaders: NamespacePin[FragmentShader] = NamespacePin(FragmentShader)
+    vertex_shaders:   NamespacePin[VertexShader]   = NamespacePin(VertexShader)
+    texts:            NamespacePin[Text]           = NamespacePin(Text)
+    textures_mcmeta:  NamespacePin[TextureMcmeta]  = NamespacePin(TextureMcmeta)
+    textures:         NamespacePin[Texture]        = NamespacePin(Texture)
     # fmt: on
 
 
@@ -157,16 +157,16 @@ class ResourcePack(Pack[ResourcePackNamespace]):
     latest_pack_format = 6
 
     # fmt: off
-    blockstates         = NamespaceProxyDescriptor(Blockstate)
-    models              = NamespaceProxyDescriptor(Model)
-    fonts               = NamespaceProxyDescriptor(Font)
-    glyph_sizes         = NamespaceProxyDescriptor(GlyphSizeFile)
-    truetype_fonts      = NamespaceProxyDescriptor(TrueTypeFont)
-    shader_posts        = NamespaceProxyDescriptor(ShaderPost)
-    shader_programs     = NamespaceProxyDescriptor(ShaderProgram)
-    fragment_shaders    = NamespaceProxyDescriptor(FragmentShader)
-    vertex_shaders      = NamespaceProxyDescriptor(VertexShader)
-    texts               = NamespaceProxyDescriptor(Text)
-    textures_mcmeta     = NamespaceProxyDescriptor(TextureMcmeta)
-    textures            = NamespaceProxyDescriptor(Texture)
+    blockstates:      NamespaceProxyDescriptor[Blockstate]     = NamespaceProxyDescriptor(Blockstate)
+    models:           NamespaceProxyDescriptor[Model]          = NamespaceProxyDescriptor(Model)
+    fonts:            NamespaceProxyDescriptor[Font]           = NamespaceProxyDescriptor(Font)
+    glyph_sizes:      NamespaceProxyDescriptor[GlyphSizeFile]  = NamespaceProxyDescriptor(GlyphSizeFile)
+    truetype_fonts:   NamespaceProxyDescriptor[TrueTypeFont]   = NamespaceProxyDescriptor(TrueTypeFont)
+    shader_posts:     NamespaceProxyDescriptor[ShaderPost]     = NamespaceProxyDescriptor(ShaderPost)
+    shader_programs:  NamespaceProxyDescriptor[ShaderProgram]  = NamespaceProxyDescriptor(ShaderProgram)
+    fragment_shaders: NamespaceProxyDescriptor[FragmentShader] = NamespaceProxyDescriptor(FragmentShader)
+    vertex_shaders:   NamespaceProxyDescriptor[VertexShader]   = NamespaceProxyDescriptor(VertexShader)
+    texts:            NamespaceProxyDescriptor[Text]           = NamespaceProxyDescriptor(Text)
+    textures_mcmeta:  NamespaceProxyDescriptor[TextureMcmeta]  = NamespaceProxyDescriptor(TextureMcmeta)
+    textures:         NamespaceProxyDescriptor[Texture]        = NamespaceProxyDescriptor(Texture)
     # fmt: on

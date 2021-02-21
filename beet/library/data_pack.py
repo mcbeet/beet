@@ -66,7 +66,7 @@ class Function(TextFileBase[MutableSequence[str]], NamespaceFile):
     scope = ("functions",)
     extension = ".mcfunction"
 
-    lines = FileDeserialize[MutableSequence[str]]()
+    lines = FileDeserialize()  # type: FileDeserialize[MutableSequence[str]]
 
     @classmethod
     def to_str(cls, content: MutableSequence[str]) -> str:
@@ -115,7 +115,7 @@ class Structure(BinaryFileBase[StructureFileData], NamespaceFile):
     scope = ("structures",)
     extension = ".nbt"
 
-    data = FileDeserialize[StructureFileData]()
+    data = FileDeserialize()  # type: FileDeserialize[StructureFileData]
 
     @classmethod
     def from_bytes(cls, content: bytes) -> StructureFileData:
@@ -253,27 +253,27 @@ class DataPackNamespace(Namespace):
     directory = "data"
 
     # fmt: off
-    advancements                  = NamespacePin(Advancement)
-    functions                     = NamespacePin(Function)
-    loot_tables                   = NamespacePin(LootTable)
-    predicates                    = NamespacePin(Predicate)
-    recipes                       = NamespacePin(Recipe)
-    structures                    = NamespacePin(Structure)
-    block_tags                    = NamespacePin(BlockTag)
-    entity_type_tags              = NamespacePin(EntityTypeTag)
-    fluid_tags                    = NamespacePin(FluidTag)
-    function_tags                 = NamespacePin(FunctionTag)
-    item_tags                     = NamespacePin(ItemTag)
-    dimension_types               = NamespacePin(DimensionType)
-    dimensions                    = NamespacePin(Dimension)
-    biomes                        = NamespacePin(Biome)
-    configured_carvers            = NamespacePin(ConfiguredCarver)
-    configured_features           = NamespacePin(ConfiguredFeature)
-    configured_structure_features = NamespacePin(ConfiguredStructureFeature)
-    configured_surface_builders   = NamespacePin(ConfiguredSurfaceBuilder)
-    noise_settings                = NamespacePin(NoiseSettings)
-    processor_lists               = NamespacePin(ProcessorList)
-    template_pools                = NamespacePin(TemplatePool)
+    advancements:                  NamespacePin[Advancement]                = NamespacePin(Advancement)
+    functions:                     NamespacePin[Function]                   = NamespacePin(Function)
+    loot_tables:                   NamespacePin[LootTable]                  = NamespacePin(LootTable)
+    predicates:                    NamespacePin[Predicate]                  = NamespacePin(Predicate)
+    recipes:                       NamespacePin[Recipe]                     = NamespacePin(Recipe)
+    structures:                    NamespacePin[Structure]                  = NamespacePin(Structure)
+    block_tags:                    NamespacePin[BlockTag]                   = NamespacePin(BlockTag)
+    entity_type_tags:              NamespacePin[EntityTypeTag]              = NamespacePin(EntityTypeTag)
+    fluid_tags:                    NamespacePin[FluidTag]                   = NamespacePin(FluidTag)
+    function_tags:                 NamespacePin[FunctionTag]                = NamespacePin(FunctionTag)
+    item_tags:                     NamespacePin[ItemTag]                    = NamespacePin(ItemTag)
+    dimension_types:               NamespacePin[DimensionType]              = NamespacePin(DimensionType)
+    dimensions:                    NamespacePin[Dimension]                  = NamespacePin(Dimension)
+    biomes:                        NamespacePin[Biome]                      = NamespacePin(Biome)
+    configured_carvers:            NamespacePin[ConfiguredCarver]           = NamespacePin(ConfiguredCarver)
+    configured_features:           NamespacePin[ConfiguredFeature]          = NamespacePin(ConfiguredFeature)
+    configured_structure_features: NamespacePin[ConfiguredStructureFeature] = NamespacePin(ConfiguredStructureFeature)
+    configured_surface_builders:   NamespacePin[ConfiguredSurfaceBuilder]   = NamespacePin(ConfiguredSurfaceBuilder)
+    noise_settings:                NamespacePin[NoiseSettings]              = NamespacePin(NoiseSettings)
+    processor_lists:               NamespacePin[ProcessorList]              = NamespacePin(ProcessorList)
+    template_pools:                NamespacePin[TemplatePool]               = NamespacePin(TemplatePool)
     # fmt: on
 
 
@@ -284,25 +284,25 @@ class DataPack(Pack[DataPackNamespace]):
     latest_pack_format = 6
 
     # fmt: off
-    advancements                  = NamespaceProxyDescriptor(Advancement)
-    functions                     = NamespaceProxyDescriptor(Function)
-    loot_tables                   = NamespaceProxyDescriptor(LootTable)
-    predicates                    = NamespaceProxyDescriptor(Predicate)
-    recipes                       = NamespaceProxyDescriptor(Recipe)
-    structures                    = NamespaceProxyDescriptor(Structure)
-    block_tags                    = NamespaceProxyDescriptor(BlockTag)
-    entity_type_tags              = NamespaceProxyDescriptor(EntityTypeTag)
-    fluid_tags                    = NamespaceProxyDescriptor(FluidTag)
-    function_tags                 = NamespaceProxyDescriptor(FunctionTag)
-    item_tags                     = NamespaceProxyDescriptor(ItemTag)
-    dimension_types               = NamespaceProxyDescriptor(DimensionType)
-    dimensions                    = NamespaceProxyDescriptor(Dimension)
-    biomes                        = NamespaceProxyDescriptor(Biome)
-    configured_carvers            = NamespaceProxyDescriptor(ConfiguredCarver)
-    configured_features           = NamespaceProxyDescriptor(ConfiguredFeature)
-    configured_structure_features = NamespaceProxyDescriptor(ConfiguredStructureFeature)
-    configured_surface_builders   = NamespaceProxyDescriptor(ConfiguredSurfaceBuilder)
-    noise_settings                = NamespaceProxyDescriptor(NoiseSettings)
-    processor_lists               = NamespaceProxyDescriptor(ProcessorList)
-    template_pools                = NamespaceProxyDescriptor(TemplatePool)
+    advancements:                  NamespaceProxyDescriptor[Advancement]                = NamespaceProxyDescriptor(Advancement)
+    functions:                     NamespaceProxyDescriptor[Function]                   = NamespaceProxyDescriptor(Function)
+    loot_tables:                   NamespaceProxyDescriptor[LootTable]                  = NamespaceProxyDescriptor(LootTable)
+    predicates:                    NamespaceProxyDescriptor[Predicate]                  = NamespaceProxyDescriptor(Predicate)
+    recipes:                       NamespaceProxyDescriptor[Recipe]                     = NamespaceProxyDescriptor(Recipe)
+    structures:                    NamespaceProxyDescriptor[Structure]                  = NamespaceProxyDescriptor(Structure)
+    block_tags:                    NamespaceProxyDescriptor[BlockTag]                   = NamespaceProxyDescriptor(BlockTag)
+    entity_type_tags:              NamespaceProxyDescriptor[EntityTypeTag]              = NamespaceProxyDescriptor(EntityTypeTag)
+    fluid_tags:                    NamespaceProxyDescriptor[FluidTag]                   = NamespaceProxyDescriptor(FluidTag)
+    function_tags:                 NamespaceProxyDescriptor[FunctionTag]                = NamespaceProxyDescriptor(FunctionTag)
+    item_tags:                     NamespaceProxyDescriptor[ItemTag]                    = NamespaceProxyDescriptor(ItemTag)
+    dimension_types:               NamespaceProxyDescriptor[DimensionType]              = NamespaceProxyDescriptor(DimensionType)
+    dimensions:                    NamespaceProxyDescriptor[Dimension]                  = NamespaceProxyDescriptor(Dimension)
+    biomes:                        NamespaceProxyDescriptor[Biome]                      = NamespaceProxyDescriptor(Biome)
+    configured_carvers:            NamespaceProxyDescriptor[ConfiguredCarver]           = NamespaceProxyDescriptor(ConfiguredCarver)
+    configured_features:           NamespaceProxyDescriptor[ConfiguredFeature]          = NamespaceProxyDescriptor(ConfiguredFeature)
+    configured_structure_features: NamespaceProxyDescriptor[ConfiguredStructureFeature] = NamespaceProxyDescriptor(ConfiguredStructureFeature)
+    configured_surface_builders:   NamespaceProxyDescriptor[ConfiguredSurfaceBuilder]   = NamespaceProxyDescriptor(ConfiguredSurfaceBuilder)
+    noise_settings:                NamespaceProxyDescriptor[NoiseSettings]              = NamespaceProxyDescriptor(NoiseSettings)
+    processor_lists:               NamespaceProxyDescriptor[ProcessorList]              = NamespaceProxyDescriptor(ProcessorList)
+    template_pools:                NamespaceProxyDescriptor[TemplatePool]               = NamespaceProxyDescriptor(TemplatePool)
     # fmt: on

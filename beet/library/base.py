@@ -292,11 +292,13 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
     zipped: bool
 
     extra: PackContainer
-    mcmeta = PackPin[JsonFile]("pack.mcmeta", default_factory=lambda: JsonFile({}))
-    image = PackPin[Optional[PngFile]]("pack.png", default=None)
+    mcmeta: PackPin[JsonFile] = PackPin(
+        "pack.mcmeta", default_factory=lambda: JsonFile({})
+    )
+    image: PackPin[Optional[PngFile]] = PackPin("pack.png", default=None)
 
-    description = McmetaPin[TextComponent]("description", default="")
-    pack_format = McmetaPin[int]("pack_format", default=0)
+    description: McmetaPin[TextComponent] = McmetaPin("description", default="")
+    pack_format: McmetaPin[int] = McmetaPin("pack_format", default=0)
 
     namespace_type: ClassVar[Type[NamespaceType]]
     default_name: ClassVar[str]

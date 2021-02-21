@@ -170,7 +170,7 @@ class FileDeserialize(Generic[ValueType]):
 class TextFileBase(File[ValueType, str]):
     """Base class for files that get serialized to strings."""
 
-    text = FileSerialize[str]()
+    text: FileSerialize[str] = FileSerialize()
 
     @classmethod
     def serialize(cls, content: Union[ValueType, str]) -> str:
@@ -214,7 +214,7 @@ class TextFile(TextFileBase[str]):
 class BinaryFileBase(File[ValueType, bytes]):
     """Base class for files that get serialized to bytes."""
 
-    blob = FileSerialize[bytes]()
+    blob: FileSerialize[bytes] = FileSerialize()
 
     @classmethod
     def serialize(cls, content: Union[ValueType, bytes]) -> bytes:
@@ -258,7 +258,7 @@ class BinaryFile(BinaryFileBase[bytes]):
 class JsonFileBase(TextFileBase[ValueType]):
     """Base class for json files."""
 
-    data = FileDeserialize[ValueType]()
+    data: FileDeserialize[ValueType] = FileDeserialize()
 
     @classmethod
     def to_str(cls, content: ValueType) -> str:
@@ -272,13 +272,13 @@ class JsonFileBase(TextFileBase[ValueType]):
 class JsonFile(JsonFileBase[JsonDict]):
     """Class representing a json file."""
 
-    data = FileDeserialize[JsonDict]()
+    data: FileDeserialize[JsonDict] = FileDeserialize()
 
 
 class PngFile(BinaryFileBase[img.Image]):
     """Class representing a png file."""
 
-    image = FileDeserialize[img.Image]()
+    image: FileDeserialize[img.Image] = FileDeserialize()
 
     @classmethod
     def to_bytes(cls, content: img.Image) -> bytes:
