@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.9.2 (2021-02-21)
+### Fix
+* Annotate descriptors ([`4e47cc6`](https://github.com/vberlier/beet/commit/4e47cc6dc612eb0f804dc8f24454f5f590a24544))
+
 ## v0.9.1 (2021-02-20)
 ### Fix
 * Make it possible to specify an existing cache and use run_beet in examples ([`5cdea1d`](https://github.com/vberlier/beet/commit/5cdea1d46d36a4324582232a6773edefcadb4350))
