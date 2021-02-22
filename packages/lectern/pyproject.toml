@@ -32,6 +32,7 @@ black = "^20.8b1"
 rope = "^0.18.0"
 pytest = "^6.2.2"
 isort = "^5.7.0"
+python-semantic-release = "^7.15.0"
 
 [tool.poetry.scripts]
 lectern = "lectern.cli:main"
@@ -57,6 +58,13 @@ exclude = '''
 
 [tool.isort]
 profile = "black"
+
+[tool.semantic_release]
+branch = "main"
+version_variable = ["lectern/__init__.py:__version__"]
+version_toml = "pyproject.toml:tool.poetry.version"
+major_on_zero = false
+build_command = "poetry build"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
