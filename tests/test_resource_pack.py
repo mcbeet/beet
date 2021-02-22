@@ -20,15 +20,20 @@ def test_default():
         ResourcePack(
             "p3", mcmeta=JsonFile({"pack": {"description": "world", "pack_format": 42}})
         ),
-        ResourcePack("p4", image=PngFile(Image.new("RGB", (32, 32), color="blue"))),
-        ResourcePack(
-            "p5", image=PngFile(Image.new("RGB", (32, 32), color="blue")), zipped=True
-        ),
     ],
 )
 def test_empty(snapshot: Any, pack: ResourcePack):
     assert snapshot("resource_pack") == pack
     assert not pack
+    assert dict(pack) == {}
+
+
+def test_empty_with_image():
+    pack = ResourcePack(image=PngFile(Image.new("RGB", (32, 32), color="blue")))
+    assert pack
+    assert pack == ResourcePack(image=PngFile(Image.new("RGB", (32, 32), color="blue")))
+    assert pack != ResourcePack(image=PngFile(Image.new("RGB", (32, 32), color="red")))
+    assert pack != ResourcePack(image=PngFile(Image.new("RGB", (16, 16), color="blue")))
     assert dict(pack) == {}
 
 

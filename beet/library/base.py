@@ -266,9 +266,6 @@ class NamespaceProxyDescriptor(Generic[NamespaceFileType]):
 class PackContainer(MatchMixin, MergeMixin, Container[str, PackFile]):
     """Container that stores non-namespaced files in a pack."""
 
-    def __bool__(self) -> bool:
-        return any(self.values())
-
 
 class PackPin(Pin[str, T]):
     """Descriptor that makes a specific file accessible through attribute lookup."""
@@ -360,7 +357,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
         )
 
     def __bool__(self) -> bool:
-        return any(self.values())
+        return any(self.values()) or self.extra.keys() > {"pack.mcmeta"}
 
     def __enter__(self: T) -> T:
         return self
