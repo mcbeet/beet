@@ -224,6 +224,16 @@ TODO
 
 ```bash
 $ lectern --help
+Usage: lectern [OPTIONS] [PATH]...
+
+  Literate Minecraft data packs and resource packs.
+
+Options:
+  -d, --data-pack <path>          Extract data pack.
+  -r, --resource-pack <path>      Extract resource pack.
+  -o, --output-files <directory>  Output the associated files.
+  -v, --version                   Show the version and exit.
+  -h, --help                      Show this message and exit.
 ```
 
 You can extract data packs from markdown files with the `-d/--data-pack` option. If the name ends with `.zip` the generated data pack will be zipped. Multiple markdown files can be merged together into a single data pack.
