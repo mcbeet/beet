@@ -20,6 +20,7 @@ class Document:
     """Class representing a lectern document."""
 
     ctx: InitVar[Optional[Context]] = None
+    path: InitVar[Optional[FileSystemPath]] = None
     text: InitVar[Optional[str]] = None
     markdown: InitVar[Optional[str]] = None
     files: InitVar[Optional[FileSystemPath]] = None
@@ -44,6 +45,7 @@ class Document:
     def __post_init__(
         self,
         ctx: Optional[Context],
+        path: Optional[FileSystemPath] = None,
         text: Optional[str] = None,
         markdown: Optional[str] = None,
         files: Optional[FileSystemPath] = None,
@@ -51,10 +53,20 @@ class Document:
         if ctx:
             self.assets = ctx.assets
             self.data = ctx.data
+        if path:
+            self.load(path)
         if text:
             self.add_text(text)
         if markdown:
             self.add_markdown(markdown, files)
+
+    def load(self, path: FileSystemPath):
+        """Load and extract fragments from the file at the specified location."""
+        path = Path(path).resolve()
+        if path.suffix == ".md":
+            self.add_markdown(path.read_text(), files=path.parent)
+        else:
+            self.add_text(path.read_text())
 
     def add_text(self, source: str):
         """Extract pack fragments from plain text."""

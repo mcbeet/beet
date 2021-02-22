@@ -33,12 +33,8 @@ def lectern(
         document = ctx.inject(Document)
 
         for pattern in load:
-            for filename in ctx.directory.glob(pattern):
-                path = filename.resolve()
-                if path.suffix == ".md":
-                    document.add_markdown(path.read_text(), files=path.parent)
-                else:
-                    document.add_text(path.read_text())
+            for path in ctx.directory.glob(pattern):
+                document.load(path)
 
         yield
 
