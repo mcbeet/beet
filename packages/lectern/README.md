@@ -214,7 +214,7 @@ TODO
 
 TODO
 
-## Operators
+## Modifiers
 
 TODO
 
