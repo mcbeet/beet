@@ -39,6 +39,9 @@ def lectern(
         yield
 
         if output:
-            document.save(ctx.directory / output, output_files)
+            document.save(
+                ctx.directory / output,
+                ctx.directory / output_files if output_files else None,
+            )
 
     return plugin
