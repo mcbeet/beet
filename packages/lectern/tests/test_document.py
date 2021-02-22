@@ -9,8 +9,9 @@ def test_empty():
     assert Document().data == DataPack()
     assert Document().assets == ResourcePack()
     assert Document().get_text() == ""
-    assert Document().get_markdown() == ""
-    assert Document().get_markdown(emit_files=True) == ("", {})
+    empty = "# Lectern snapshot\n\nThe data pack and resource pack are empty.\n"
+    assert Document().get_markdown() == empty
+    assert Document().get_markdown(emit_files=True) == (empty, {})
     assert Document(text="Nothing to see here") == Document()
     assert Document(markdown="Nothing to see here") == Document()
 
