@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.9.3 (2021-02-22)
+### Fix
+* Take into account pack.mcmeta in pack bool() ([`62af388`](https://github.com/vberlier/beet/commit/62af3881a898eb4a260abeffb460df4e1d2d055e))
+
 ## v0.9.2 (2021-02-21)
 ### Fix
 * Annotate descriptors ([`4e47cc6`](https://github.com/vberlier/beet/commit/4e47cc6dc612eb0f804dc8f24454f5f590a24544))
