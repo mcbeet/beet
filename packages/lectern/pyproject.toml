@@ -19,6 +19,8 @@ keywords = [
   "datapack"
 ]
 
+classifiers = ["Framework :: Pytest"]
+
 include = ["lectern/py.typed"]
 
 [tool.poetry.dependencies]
@@ -33,9 +35,13 @@ rope = "^0.18.0"
 pytest = "^6.2.2"
 isort = "^5.7.0"
 python-semantic-release = "^7.15.0"
+pytest-insta = "^0.1.5"
 
 [tool.poetry.scripts]
 lectern = "lectern.cli:main"
+
+[tool.poetry.plugins.pytest11]
+lectern = "lectern.pytest_plugin"
 
 [tool.black]
 target-version = ["py38"]

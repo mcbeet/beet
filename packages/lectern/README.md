@@ -26,6 +26,7 @@ This markdown file is interspersed with code fragments describing the content of
 - Convert data packs and resource packs into markdown snapshots
 - Can be used as a [`beet`](https://github.com/vberlier/beet) plugin
 - Highly extensible with custom directives
+- Automatically integrates with [`pytest-insta`](https://github.com/vberlier/pytest-insta)
 
 **Hmmkay but why?**
 
@@ -260,6 +261,14 @@ $ lectern demo_data_pack demo.md -o .
 ```
 
 ## Beet plugin
+
+TODO
+
+## Plain text documents
+
+TODO
+
+## Lectern for snapshot testing
 
 TODO
 

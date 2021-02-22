@@ -1,0 +1,19 @@
+Directives are resolved ahead-of-time so the content of each file is free to contain
+lines beginning with @ as long as the following characters don't match the name of
+a registered directive. Directives can't be indented.
+
+In the following document only two functions are actually defined.
+
+@function demo:foo
+say foo
+@functionn demo:foo
+say still in the same function
+@@@@
+@ @ @
+
+@function demo:bar
+say bar
+ @function demo:bar
+ say hello
+  @function demo:bar
+  say world

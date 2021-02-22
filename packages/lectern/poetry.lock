@@ -473,6 +473,18 @@ toml = "*"
 testing = ["argcomplete", "hypothesis (>=3.56)", "mock", "nose", "requests", "xmlschema"]
 
 [[package]]
+name = "pytest-insta"
+version = "0.1.5"
+description = "A practical snapshot testing plugin for pytest"
+category = "dev"
+optional = false
+python-versions = ">=3.8,<4.0"
+
+[package.dependencies]
+pytest = ">=6.0.2,<7.0.0"
+wrapt = ">=1.12.1,<2.0.0"
+
+[[package]]
 name = "python-gitlab"
 version = "1.15.0"
 description = "Interact with GitLab API"
@@ -723,10 +735,18 @@ category = "dev"
 optional = false
 python-versions = "*"
 
+[[package]]
+name = "wrapt"
+version = "1.12.1"
+description = "Module for decorators, wrappers and monkey patching."
+category = "dev"
+optional = false
+python-versions = "*"
+
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "81364d31047d6523867d6a09b6ed817bf8d15ec86f78fc13dea9e4cbdd5d77dc"
+content-hash = "0f0247dc786a688b5b57c48a4c68ab35b011b4fefcd29bdf085e9bb000ebb82b"
 
 [metadata.files]
 appdirs = [
@@ -1040,6 +1060,10 @@ pytest = [
     {file = "pytest-6.2.2-py3-none-any.whl", hash = "sha256:b574b57423e818210672e07ca1fa90aaf194a4f63f3ab909a2c67ebb22913839"},
     {file = "pytest-6.2.2.tar.gz", hash = "sha256:9d1edf9e7d0b84d72ea3dbcdfd22b35fb543a5e8f2a60092dd578936bf63d7f9"},
 ]
+pytest-insta = [
+    {file = "pytest-insta-0.1.5.tar.gz", hash = "sha256:eef19de353aed704754a34feed286b711e6cdc24f258be017aed09840da59a09"},
+    {file = "pytest_insta-0.1.5-py3-none-any.whl", hash = "sha256:4f49f6c49a1e14780df6505aab31fd3f13df0ae8cb6b4e35545d02d4b267904f"},
+]
 python-gitlab = [
     {file = "python-gitlab-1.15.0.tar.gz", hash = "sha256:45125a0ed4d0027d4317bdbd71ca02fc52b0ac160b9d2c3c5be131b4d19f867e"},
     {file = "python_gitlab-1.15.0-py3-none-any.whl", hash = "sha256:51ad36873b5c20cd21d9373db0936fb99c521575668320025d0fb519398d2e17"},
@@ -1200,4 +1224,7 @@ urllib3 = [
 webencodings = [
     {file = "webencodings-0.5.1-py2.py3-none-any.whl", hash = "sha256:a0af1213f3c2226497a97e2b3aa01a7e4bee4f403f95be16fc9acd2947514a78"},
     {file = "webencodings-0.5.1.tar.gz", hash = "sha256:b36a1c245f2d304965eb4e0a82848379241dc04b865afcc4aab16748587e1923"},
+]
+wrapt = [
+    {file = "wrapt-1.12.1.tar.gz", hash = "sha256:b62ffa81fb85f4332a4f609cab4ac40709470da05643a082ec1eb88e6d9b97d7"},
 ]
