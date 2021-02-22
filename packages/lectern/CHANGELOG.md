@@ -2,6 +2,13 @@
 
 <!--next-version-placeholder-->
 
+## v0.2.2 (2021-02-22)
+### Fix
+* Resolve output_files relative to the context directory ([`73e4bcd`](https://github.com/vberlier/lectern/commit/73e4bcdda5be64f5296641a9e66a048aaf35f1d5))
+
+### Documentation
+* Add command-line utility help text ([`e615ba1`](https://github.com/vberlier/lectern/commit/e615ba13b61fc0c1625c538d8290b142d16e3ea3))
+
 ## v0.2.1 (2021-02-22)
 ### Fix
 * Handle strip_final_newline in the fragment itself ([`d031607`](https://github.com/vberlier/lectern/commit/d03160756140dc8fe6406a57869b39780c7f7846))
