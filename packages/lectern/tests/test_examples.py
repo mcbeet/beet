@@ -11,9 +11,9 @@ EXAMPLES_DIRECTORY = Path(__file__, "../../examples").resolve()
 @pytest.mark.parametrize(
     "path",
     [
-        *sorted(EXAMPLES_DIRECTORY.glob("*.pack.txt")),
-        *sorted(EXAMPLES_DIRECTORY.glob("*.pack.md")),
+        *sorted(EXAMPLES_DIRECTORY.glob("*.txt")),
+        *sorted(EXAMPLES_DIRECTORY.glob("*.md")),
     ],
 )
 def test_load(snapshot: Any, path: Path):
-    assert snapshot(path.name) == Document(path=path)
+    assert snapshot(path.stem + ".pack.txt") == Document(path=path)
