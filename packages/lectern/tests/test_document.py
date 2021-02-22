@@ -11,6 +11,8 @@ def test_empty():
     assert Document().get_text() == ""
     assert Document().get_markdown() == ""
     assert Document().get_markdown(emit_files=True) == ("", {})
+    assert Document(text="Nothing to see here") == Document()
+    assert Document(markdown="Nothing to see here") == Document()
 
 
 def test_data_pack():
