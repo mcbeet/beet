@@ -30,9 +30,9 @@ class Extractor:
     def generate_regex(self) -> str:
         """Return a regex that can match the current directives."""
         names = "|".join(name for name in self.directives)
-        modifier = r"(?:\((?P<modifier>[^)]+)\))?"
+        modifier = r"(?:\((?P<modifier>[^)]+)\)|\b)"
         arguments = r"(?P<arguments>.*)"
-        return f"@(?P<name>{names}){modifier}\\b{arguments}"
+        return f"@(?P<name>{names}){modifier}{arguments}"
 
     def compile_regex(self, regex: str) -> "re.Pattern[str]":
         """Return the compiled pattern for the directive regex."""
