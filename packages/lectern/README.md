@@ -1,4 +1,4 @@
-<img align="right" src="logo.svg" alt="logo" width="52">
+<img align="right" src="https://raw.githubusercontent.com/vberlier/lectern/main/logo.svg?sanitize=true" alt="logo" width="52">
 
 # Lectern
 
