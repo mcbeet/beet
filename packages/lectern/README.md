@@ -181,6 +181,7 @@ Embedded directives are striped from the output. You can use multiple directives
     }
   ]
 }
+
 // @advancement tutorial:obtained_dead_bush
 {
   "criteria": {
