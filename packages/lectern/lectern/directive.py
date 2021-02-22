@@ -71,7 +71,12 @@ class NamespacedResourceDirective:
 
     def __call__(self, fragment: Fragment, assets: ResourcePack, data: DataPack):
         full_name = fragment.expect("full_name")
-        file_instance = self.file_type(fragment.content)
+        content = fragment.content
+
+        if fragment.modifier == "strip_final_newline" and content[-1:] == "\n":
+            content = content[:-1]
+
+        file_instance = self.file_type(content)
 
         if self.file_type in assets.namespace_type.field_map:
             assets[full_name] = file_instance
