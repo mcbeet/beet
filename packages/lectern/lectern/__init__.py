@@ -5,4 +5,4 @@ from .fragment import *
 from .plugin import *
 from .serialize import *
 
-__version__ = "0.0.0"
+__version__ = "0.1.0"
