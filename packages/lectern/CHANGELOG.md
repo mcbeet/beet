@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.2.1 (2021-02-22)
+### Fix
+* Handle strip_final_newline in the fragment itself ([`d031607`](https://github.com/vberlier/lectern/commit/d03160756140dc8fe6406a57869b39780c7f7846))
+
 ## v0.2.0 (2021-02-22)
 ### Feature
 * Extract and serialize markdown ([`7827d61`](https://github.com/vberlier/lectern/commit/7827d61a9fa298da55e05246c294c2a011750017))
