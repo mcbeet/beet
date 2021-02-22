@@ -51,3 +51,8 @@ class Fragment:
         if len(self.arguments) == 1:
             return self.arguments[0]
         return self.arguments
+
+    def apply_modifier(self) -> Union[str, bytes]:
+        if self.modifier == "strip_final_newline" and self.content[-1:] == "\n":
+            return self.content[:-1]
+        return self.content

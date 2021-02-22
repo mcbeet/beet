@@ -71,10 +71,7 @@ class NamespacedResourceDirective:
 
     def __call__(self, fragment: Fragment, assets: ResourcePack, data: DataPack):
         full_name = fragment.expect("full_name")
-        content = fragment.content
-
-        if fragment.modifier == "strip_final_newline" and content[-1:] == "\n":
-            content = content[:-1]
+        content = fragment.apply_modifier()
 
         file_instance = self.file_type(content)
 
@@ -90,10 +87,11 @@ class BundleFragmentMixin:
     def bundle_pack_fragment(self, fragment: Fragment) -> ZipFile:
         """Return a zipfile containing the pack fragment."""
         relative_path = fragment.expect("relative_path")
+        content = fragment.apply_modifier()
 
         data = io.BytesIO()
         with ZipFile(data, mode="w") as zip_file:
-            zip_file.writestr(relative_path, fragment.content)
+            zip_file.writestr(relative_path, content)
 
         return ZipFile(io.BytesIO(data.getvalue()))
 
