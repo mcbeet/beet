@@ -1,4 +1,4 @@
-<img align="right" src="https://vberlier.github.io/beet/_images/logo.svg" alt="logo" width="76">
+<img align="right" src="logo.png" alt="logo" width="76">
 
 # Beet
 

@@ -1,6 +1,6 @@
-.. figure:: assets/logo.svg
+.. figure:: ../logo.png
   :width: 76px
-  :align: center
+  :align: right
 
 Beet documentation
 ==================
