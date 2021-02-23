@@ -2,6 +2,13 @@
 
 <!--next-version-placeholder-->
 
+## v0.9.4 (2021-02-23)
+### Fix
+* Add 1.17 item modifiers ([`9463ac8`](https://github.com/mcbeet/beet/commit/9463ac857d36044563f712f890662720b4123608))
+
+### Documentation
+* Add toolchain ([`a6abf05`](https://github.com/mcbeet/beet/commit/a6abf0522a76e3121b6125879ae85e1c355f7e6c))
+
 ## v0.9.3 (2021-02-22)
 ### Fix
 * Take into account pack.mcmeta in pack bool() ([`62af388`](https://github.com/mcbeet/beet/commit/62af3881a898eb4a260abeffb460df4e1d2d055e))
