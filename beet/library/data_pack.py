@@ -23,6 +23,7 @@ __all__ = [
     "NoiseSettings",
     "ProcessorList",
     "TemplatePool",
+    "ItemModifier",
 ]
 
 
@@ -247,6 +248,13 @@ class TemplatePool(JsonFile, NamespaceFile):
     extension = ".json"
 
 
+class ItemModifier(JsonFile, NamespaceFile):
+    """Class representing an item modifier."""
+
+    scope = ("item_modifiers",)
+    extension = ".json"
+
+
 class DataPackNamespace(Namespace):
     """Class representing a data pack namespace."""
 
@@ -274,6 +282,7 @@ class DataPackNamespace(Namespace):
     noise_settings:                NamespacePin[NoiseSettings]              = NamespacePin(NoiseSettings)
     processor_lists:               NamespacePin[ProcessorList]              = NamespacePin(ProcessorList)
     template_pools:                NamespacePin[TemplatePool]               = NamespacePin(TemplatePool)
+    item_modifiers:                NamespacePin[ItemModifier]               = NamespacePin(ItemModifier)
     # fmt: on
 
 
@@ -305,4 +314,5 @@ class DataPack(Pack[DataPackNamespace]):
     noise_settings:                NamespaceProxyDescriptor[NoiseSettings]              = NamespaceProxyDescriptor(NoiseSettings)
     processor_lists:               NamespaceProxyDescriptor[ProcessorList]              = NamespaceProxyDescriptor(ProcessorList)
     template_pools:                NamespaceProxyDescriptor[TemplatePool]               = NamespaceProxyDescriptor(TemplatePool)
+    item_modifiers:                NamespaceProxyDescriptor[ItemModifier]               = NamespaceProxyDescriptor(ItemModifier)
     # fmt: on
