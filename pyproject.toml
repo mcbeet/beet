@@ -5,9 +5,9 @@ description = "The Minecraft pack development kit"
 authors = ["Valentin Berlier <berlier.v@gmail.com>"]
 license = "MIT"
 
-homepage = "https://github.com/vberlier/beet"
-repository = "https://github.com/vberlier/beet"
-documentation = "https://github.com/vberlier/beet"
+homepage = "https://github.com/mcbeet/beet"
+repository = "https://github.com/mcbeet/beet"
+documentation = "https://github.com/mcbeet/beet"
 
 readme = "README.md"
 

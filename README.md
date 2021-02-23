@@ -2,7 +2,7 @@
 
 # Beet
 
-[![GitHub Actions](https://github.com/vberlier/beet/workflows/CI/badge.svg)](https://github.com/vberlier/beet/actions)
+[![GitHub Actions](https://github.com/mcbeet/beet/workflows/CI/badge.svg)](https://github.com/mcbeet/beet/actions)
 [![PyPI](https://img.shields.io/pypi/v/beet.svg)](https://pypi.org/project/beet/)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/beet.svg)](https://pypi.org/project/beet/)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
@@ -27,7 +27,7 @@ The `beet` project is meant to serve as a platform for building a cooperative to
 
 ### Library
 
-> [Documentation](https://vberlier.github.io/beet/library/)
+> [Documentation](https://mcbeet.dev/library/)
 
 ```python
 from beet import ResourcePack, Texture
@@ -46,7 +46,7 @@ The `beet` library provides carefully crafted primitives for working with Minecr
 
 ### Toolchain
 
-> [Documentation](https://vberlier.github.io/beet/toolchain/)
+> [Documentation](https://mcbeet.dev/toolchain/)
 
 ```python
 from beet import Context, Function
@@ -137,4 +137,4 @@ $ poetry run black --check beet tests
 
 ---
 
-License - [MIT](https://github.com/vberlier/beet/blob/main/LICENSE)
+License - [MIT](https://github.com/mcbeet/beet/blob/main/LICENSE)
