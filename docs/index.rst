@@ -18,6 +18,7 @@ Welcome! This is the place where you'll eventually find everything there is to k
   :name: toc
 
   library
+  toolchain
 
 .. mdinclude:: ../README.md
   :start-line: 13
