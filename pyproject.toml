@@ -75,7 +75,7 @@ major_on_zero = false
 build_command = "poetry build"
 
 [tool.mudkip]
-base_url = "mcbeet.dev"
+base_url = "https://mcbeet.dev"
 
 [build-system]
 requires = ["poetry>=0.12"]
