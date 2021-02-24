@@ -2,9 +2,9 @@
 
 ## Data pack
 
-### Files
-
 - `@data_pack pack.mcmeta`
+
+  <details>
 
   ```json
   {
@@ -15,20 +15,30 @@
   }
   ```
 
-### Tutorial namespace
+  </details>
+
+### tutorial
 
 - `@function tutorial:greeting`
+
+  <details>
 
   ```mcfunction
   say Hello, world!
   ```
 
-### Minecraft namespace
+  </details>
+
+### minecraft
 
 - `@function_tag minecraft:load`
+
+  <details>
 
   ```json
   {
     "values": ["tutorial:greeting"]
   }
   ```
+
+  </details>

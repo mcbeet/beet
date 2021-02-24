@@ -95,15 +95,13 @@ class MarkdownSerializer:
         """Yield markdown chunks for the given pack."""
         yield f"## {title}"
 
-        yield "\n### Files"
-
         for path, file_instance in pack.extra.items():
             yield from self.serialize_file_instance(
                 pack_directive, path, file_instance, files
             )
 
         for name, namespace in pack.items():
-            yield f"\n### {name.title()} namespace"
+            yield f"\n### {name}"
 
             for file_type, container in namespace.items():
                 directive_name = NAMESPACED_RESOURCE_DIRECTIVES[file_type]
@@ -137,5 +135,7 @@ class MarkdownSerializer:
                 content += "\n"
 
             yield f"\n- `@{directive} {argument}`"
+            yield "\n  <details>"
             yield "\n  ```" + EXTENSION_HIGHLIGHTING.get(extension, "")
             yield indent(content, "  ") + "  ```"
+            yield "\n  </details>"

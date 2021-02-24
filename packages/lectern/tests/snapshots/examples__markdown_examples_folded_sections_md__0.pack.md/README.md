@@ -2,9 +2,9 @@
 
 ## Data pack
 
-### Files
-
 - `@data_pack pack.mcmeta`
+
+  <details>
 
   ```json
   {
@@ -15,16 +15,26 @@
   }
   ```
 
-### Demo namespace
+  </details>
+
+### demo
 
 - `@function demo:foo`
+
+  <details>
 
   ```mcfunction
   say foo
   ```
 
+  </details>
+
 - `@function demo:bar`
+
+  <details>
 
   ```mcfunction
   say bar
   ```
+
+  </details>

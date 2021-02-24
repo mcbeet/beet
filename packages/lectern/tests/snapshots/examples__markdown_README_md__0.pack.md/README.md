@@ -2,9 +2,9 @@
 
 ## Data pack
 
-### Files
-
 - `@data_pack pack.mcmeta`
+
+  <details>
 
   ```json
   {
@@ -15,21 +15,33 @@
   }
   ```
 
-### Tutorial namespace
+  </details>
+
+### tutorial
 
 - `@function tutorial:greeting`
+
+  <details>
 
   ```mcfunction
   say Hello, world!
   ```
 
+  </details>
+
 - `@function tutorial:obtained_dead_bush`
+
+  <details>
 
   ```mcfunction
   say You obtained a dead bush!
   ```
 
+  </details>
+
 - `@advancement tutorial:obtained_dead_bush`
+
+  <details>
 
   ```json
   {
@@ -56,9 +68,13 @@
   }
   ```
 
-### Minecraft namespace
+  </details>
+
+### minecraft
 
 - `@function_tag minecraft:load`
+
+  <details>
 
   ```json
   {
@@ -66,7 +82,11 @@
   }
   ```
 
+  </details>
+
 - `@loot_table minecraft:blocks/diamond_ore`
+
+  <details>
 
   ```json
   {
@@ -83,3 +103,5 @@
     ]
   }
   ```
+
+  </details>

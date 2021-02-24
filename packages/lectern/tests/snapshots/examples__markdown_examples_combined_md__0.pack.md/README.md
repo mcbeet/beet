@@ -2,9 +2,9 @@
 
 ## Data pack
 
-### Files
-
 - `@data_pack pack.mcmeta`
+
+  <details>
 
   ```json
   {
@@ -15,19 +15,25 @@
   }
   ```
 
-### Demo namespace
+  </details>
+
+### demo
 
 - `@function demo:foo`
+
+  <details>
 
   ```mcfunction
   say foo
   ```
 
+  </details>
+
 ## Resource pack
 
-### Files
-
 - `@resource_pack pack.mcmeta`
+
+  <details>
 
   ```json
   {
@@ -38,9 +44,13 @@
   }
   ```
 
-### Minecraft namespace
+  </details>
+
+### minecraft
 
 - `@blockstate minecraft:grass_block`
+
+  <details>
 
   ```json
   {
@@ -50,3 +60,5 @@
     }
   }
   ```
+
+  </details>
