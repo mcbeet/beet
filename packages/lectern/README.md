@@ -1,4 +1,4 @@
-<img align="right" src="logo.png" alt="logo" width="52">
+<img align="right" src="https://raw.githubusercontent.com/mcbeet/lectern/main/logo.png?sanitize=true" alt="logo" width="52">
 
 # Lectern
 
