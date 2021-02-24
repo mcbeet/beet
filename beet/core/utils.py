@@ -6,11 +6,13 @@ __all__ = [
     "dump_json",
     "extra_field",
     "intersperse",
+    "normalize_string",
 ]
 
 
 import json
 import os
+import re
 from dataclasses import field
 from typing import Any, Dict, Iterable, Iterator, List, TypeVar, Union
 
@@ -43,3 +45,10 @@ def intersperse(iterable: Iterable[T], delimitter: T) -> Iterator[T]:
     for x in it:
         yield delimitter
         yield x
+
+
+NORMALIZE_REGEX = re.compile(r"[^a-z0-9]+")
+
+
+def normalize_string(string: str) -> str:
+    return NORMALIZE_REGEX.sub("_", string.lower()).strip("_")

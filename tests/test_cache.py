@@ -28,6 +28,28 @@ def test_cache_directory(tmp_path: Path):
     assert (tmp_path / "hello.txt").is_file()
 
 
+def test_cache_get_path(tmp_path: Path):
+    with Cache(tmp_path) as cache:
+        path = cache.get_path(f"foo{id(cache)}")
+        assert path == cache.directory / "0x0"
+
+        for i in range(15):
+            cache.get_path(f"{i}")
+
+        assert cache.get_path("1") == cache.directory / "0x2"
+        assert cache.get_path("") == cache.directory / "0x10"
+
+
+def test_cache_get_path_extension(tmp_path: Path):
+    with Cache(tmp_path) as cache:
+        assert cache.get_path(".json").name == "0x0.json"
+        assert cache.get_path(".json").name == "0x0.json"
+        assert cache.get_path("\\^&~}#[|`\\^@]}{.json").name == "0x1.json"
+        assert cache.get_path("\\^&~}#.[|`\\.^@]}{.png").name == "0x2.png"
+        assert cache.get_path("\\^&~}#.[|`\\.^@]}{.txt").name == "0x3.txt"
+        assert cache.get_path(".").name == "0x4"
+
+
 def test_multi_cache(tmp_path: Path):
     with MultiCache(tmp_path) as cache:
         cache["foo"].json["hello"] = "world"

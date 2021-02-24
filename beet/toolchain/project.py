@@ -5,7 +5,6 @@ __all__ = [
 ]
 
 
-import re
 from copy import deepcopy
 from dataclasses import dataclass
 from pathlib import Path
@@ -13,7 +12,7 @@ from typing import Iterable, Iterator, List, Optional, Sequence
 
 from beet.contrib.render import render
 from beet.core.cache import MultiCache
-from beet.core.utils import FileSystemPath, intersperse
+from beet.core.utils import FileSystemPath, intersperse, normalize_string
 from beet.core.watch import DirectoryWatcher, FileChanges
 
 from .config import PackConfig, ProjectConfig, load_config, locate_config
@@ -198,7 +197,7 @@ class ProjectBuilder:
         """Create the context, run the pipeline, and return the context."""
 
         name = self.config.name or self.project.directory.stem
-        normalized_name = re.sub(r"[^a-z0-9]+", "_", name.lower()).strip("_")
+        normalized_name = normalize_string(name)
 
         ctx = Context(
             project_name=normalized_name,

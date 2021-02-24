@@ -12,7 +12,7 @@ from textwrap import indent
 from typing import Any, ClassVar, Iterator, Optional
 
 from .container import Container, MatchMixin
-from .utils import FileSystemPath, JsonDict, dump_json
+from .utils import FileSystemPath, JsonDict, dump_json, normalize_string
 
 
 class Cache:
@@ -51,6 +51,18 @@ class Cache:
     @json.setter
     def json(self, value: JsonDict):
         self.index["json"] = value
+
+    def get_path(self, key: str) -> Path:
+        """Return a unique file path associated with the given key."""
+        keys = self.index.setdefault("keys", {})
+
+        if not (path := keys.get(key)):
+            _, dot, extension = key[-12:].rpartition(".")
+            suffix = normalize_string(extension) if dot else ""
+            path = hex(len(keys)) + (suffix and f".{suffix}")
+            keys[key] = path
+
+        return self.directory / path
 
     @property
     def expire(self) -> Optional[datetime]:
