@@ -168,6 +168,27 @@ class MarkdownExtractor(Extractor):
                 )
             elif (
                 self.match_tokens(
+                    tokens[i : i + 6],
+                    "paragraph_open",
+                    "inline",
+                    "paragraph_close",
+                    "html_block",
+                    ["fence", "code_block"],
+                    "html_block",
+                )
+                and (inline := tokens[i + 1])
+                and inline.children
+                and self.match_tokens(inline.children, "code_inline")
+                and tokens[i + 3].content == "<details>\n"
+                and tokens[i + 5].content == "</details>\n"
+                and (match := regex.match(inline.children[0].content))
+            ):
+                directive, modifier, arguments = match.groups()
+                yield directive, Fragment(
+                    modifier, arguments.split(), tokens[i + 4].content
+                )
+            elif (
+                self.match_tokens(
                     tokens[i : i + 2], "html_block", ["fence", "code_block"]
                 )
                 and (comment := self.html_comment_regex.match(token.content))
