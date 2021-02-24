@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.3.1 (2021-02-24)
+### Fix
+* Markdown snapshots now use foldable sections ([`76359e0`](https://github.com/mcbeet/lectern/commit/76359e005ff0f833e0e3a134e78f15089a6dd3ba))
+
 ## v0.3.0 (2021-02-24)
 ### Feature
 * Handle folded sections ([`9f611e5`](https://github.com/mcbeet/lectern/commit/9f611e57e766ba3e78bf7a15392fc4ab0e97650a))
