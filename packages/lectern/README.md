@@ -1,4 +1,4 @@
-<img align="right" src="logo.svg" alt="logo" width="52">
+<img align="right" src="logo.png" alt="logo" width="52">
 
 # Lectern
 
