@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.3.0 (2021-02-24)
+### Feature
+* Handle folded sections ([`9f611e5`](https://github.com/mcbeet/lectern/commit/9f611e57e766ba3e78bf7a15392fc4ab0e97650a))
+
 ## v0.2.2 (2021-02-22)
 ### Fix
 * Resolve output_files relative to the context directory ([`73e4bcd`](https://github.com/mcbeet/lectern/commit/73e4bcdda5be64f5296641a9e66a048aaf35f1d5))
