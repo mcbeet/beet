@@ -2,6 +2,14 @@
 
 <!--next-version-placeholder-->
 
+## v0.10.0 (2021-02-24)
+### Feature
+* Add cache.get_path() ([`f72b51c`](https://github.com/mcbeet/beet/commit/f72b51c8aa617ff1e923fc8cad6b3f75c0566299))
+
+### Documentation
+* Add custom domain ([`899d09f`](https://github.com/mcbeet/beet/commit/899d09f0e33ab45589ffb65849abf8c8d8ae1569))
+* Fix malformed table ([`3dd0a15`](https://github.com/mcbeet/beet/commit/3dd0a15ffcf9deb289e0a630d838dc0c21944251))
+
 ## v0.9.4 (2021-02-23)
 ### Fix
 * Add 1.17 item modifiers ([`9463ac8`](https://github.com/mcbeet/beet/commit/9463ac857d36044563f712f890662720b4123608))
