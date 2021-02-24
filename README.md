@@ -1,4 +1,4 @@
-<img align="right" src="logo.png" alt="logo" width="76">
+<img align="right" src="https://raw.githubusercontent.com/mcbeet/beet/main/logo.png?sanitize=true" alt="logo" width="76">
 
 # Beet
 
