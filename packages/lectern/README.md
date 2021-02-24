@@ -1,8 +1,8 @@
-<img align="right" src="https://raw.githubusercontent.com/vberlier/lectern/main/logo.svg?sanitize=true" alt="logo" width="52">
+<img align="right" src="logo.svg" alt="logo" width="52">
 
 # Lectern
 
-[![GitHub Actions](https://github.com/vberlier/lectern/workflows/CI/badge.svg)](https://github.com/vberlier/lectern/actions)
+[![GitHub Actions](https://github.com/mcbeet/lectern/workflows/CI/badge.svg)](https://github.com/mcbeet/lectern/actions)
 [![PyPI](https://img.shields.io/pypi/v/lectern.svg)](https://pypi.org/project/lectern/)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/lectern.svg)](https://pypi.org/project/lectern/)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
@@ -24,7 +24,7 @@ This markdown file is interspersed with code fragments describing the content of
 - Turn markdown files into data packs and resource packs
 - Merge resources from several markdown files
 - Convert data packs and resource packs into markdown snapshots
-- Can be used as a [`beet`](https://github.com/vberlier/beet) plugin
+- Can be used as a [`beet`](https://github.com/mcbeet/beet) plugin
 - Highly extensible with custom directives
 - Automatically integrates with [`pytest-insta`](https://github.com/vberlier/pytest-insta)
 
@@ -72,7 +72,7 @@ You can use the `lectern` command-line utility to turn the markdown file into a 
 $ lectern tutorial.md --data-pack path/to/tutorial_data_pack
 ```
 
-If you're using [`beet`](https://github.com/vberlier/beet) you can use `lectern` as a plugin in your pipeline.
+If you're using [`beet`](https://github.com/mcbeet/beet) you can use `lectern` as a plugin in your pipeline.
 
 ```json
 {
@@ -313,4 +313,4 @@ $ poetry run black --check lectern tests
 
 ---
 
-License - [MIT](https://github.com/vberlier/lectern/blob/main/LICENSE)
+License - [MIT](https://github.com/mcbeet/lectern/blob/main/LICENSE)

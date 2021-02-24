@@ -42,7 +42,7 @@ jobs:
         run: poetry run black --check lectern tests
       - name: Release
         if: |
-          github.repository == 'vberlier/lectern'
+          github.repository == 'mcbeet/lectern'
           && github.event_name == 'push'
           && github.ref == 'refs/heads/main'
         env:
