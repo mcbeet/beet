@@ -5,10 +5,10 @@ __all__ = [
 ]
 
 
-from contextlib import ExitStack
+from contextlib import ExitStack, contextmanager
 from pathlib import Path
 from tempfile import TemporaryDirectory
-from typing import Optional, Union
+from typing import Iterator, Optional, Union
 
 from beet.core.cache import MultiCache
 from beet.core.utils import FileSystemPath, JsonDict
@@ -71,11 +71,12 @@ def sandbox(*specs: PluginSpec) -> Plugin:
     return plugin
 
 
+@contextmanager
 def run_beet(
     config: Optional[Union[JsonDict, FileSystemPath]] = None,
     directory: Optional[FileSystemPath] = None,
     cache: Union[bool, MultiCache] = False,
-) -> Context:  # type: ignore
+) -> Iterator[Context]:
     """Run the entire toolchain programmatically."""
     if not directory:
         directory = Path.cwd()
@@ -98,4 +99,4 @@ def run_beet(
         else:
             project.config_directory = directory
 
-        return ProjectBuilder(project).build()
+        yield ProjectBuilder(project).build()
