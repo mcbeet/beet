@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.10.1 (2021-02-25)
+### Fix
+* Use plain list to hold commands ([`9b02b77`](https://github.com/mcbeet/beet/commit/9b02b7711e3e63596f6250984a320059b6e47156))
+
 ## v0.10.0 (2021-02-24)
 ### Feature
 * Add cache.get_path() ([`f72b51c`](https://github.com/mcbeet/beet/commit/f72b51c8aa617ff1e923fc8cad6b3f75c0566299))
