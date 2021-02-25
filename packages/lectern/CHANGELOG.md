@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.3.2 (2021-02-25)
+### Fix
+* Patch markdown_it to allow arbitrary data urls ([`bb5c05d`](https://github.com/mcbeet/lectern/commit/bb5c05df7d30e144d014fcaef36c84a802b7c51a))
+
 ## v0.3.1 (2021-02-24)
 ### Fix
 * Markdown snapshots now use foldable sections ([`76359e0`](https://github.com/mcbeet/lectern/commit/76359e005ff0f833e0e3a134e78f15089a6dd3ba))
