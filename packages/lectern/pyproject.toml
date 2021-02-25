@@ -25,7 +25,7 @@ include = ["lectern/py.typed"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
-beet = "^0.10.2"
+beet = "^0.10.4"
 markdown-it-py = "^0.6.2"
 click = "^7.1.2"
 
@@ -35,7 +35,7 @@ rope = "^0.18.0"
 pytest = "^6.2.2"
 isort = "^5.7.0"
 python-semantic-release = "^7.15.0"
-pytest-insta = "^0.1.5"
+pytest-insta = "^0.1.6"
 
 [tool.poetry.scripts]
 lectern = "lectern.cli:main"
