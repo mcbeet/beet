@@ -162,12 +162,21 @@ class MarkdownSerializer:
                 guess_type(f"{filename}{extension}")[0] or "application/octet-stream"
             )
             url = f"data:{content_type};base64,{b64encode(content).decode()}"
+
         else:
             while (url := f"{external_prefix}{filename}{extension}") in external_files:
                 stem, _, number = filename.rpartition("_")
                 if not number.isdigit():
                     stem, number = filename, "0"
                 filename = f"{stem}_{int(number) + 1}"
+
+            content_type = guess_type(url)[0] or "application/octet-stream"
             external_files[url] = file_instance
 
-        yield f"\n- [`@{directive} {argument}`]({url})"
+        if content_type.startswith("image/"):
+            yield f"\n- `@{directive} {argument}`"
+            yield "\n  <details>"
+            yield f"\n  ![{directive}{extension}]({url})"
+            yield "\n  </details>"
+        else:
+            yield f"\n- [`@{directive} {argument}`]({url})"

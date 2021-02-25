@@ -17,4 +17,10 @@
 
   </details>
 
-- [`@data_pack pack.png`](pack.png)
+- `@data_pack pack.png`
+
+  <details>
+
+  ![data_pack.png](pack.png)
+
+  </details>

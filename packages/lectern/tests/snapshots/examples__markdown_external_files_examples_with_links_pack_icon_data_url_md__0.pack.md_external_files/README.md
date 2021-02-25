@@ -42,32 +42,10 @@
 
   </details>
 
-### foo
-
-- `@texture foo:hello`
+- `@resource_pack pack.png`
 
   <details>
 
-  ![texture.png](hello.png)
-
-  </details>
-
-### bar
-
-- `@texture bar:hello`
-
-  <details>
-
-  ![texture.png](hello_1.png)
-
-  </details>
-
-### baz
-
-- `@texture baz:hello`
-
-  <details>
-
-  ![texture.png](hello_2.png)
+  ![resource_pack.png](pack_1.png)
 
   </details>
