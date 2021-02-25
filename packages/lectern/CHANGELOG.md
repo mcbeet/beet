@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.4.0 (2021-02-25)
+### Feature
+* Add link fragments ([`b0d26d5`](https://github.com/mcbeet/lectern/commit/b0d26d530bd5029ea33bba8b1886a913af6ce125))
+
 ## v0.3.2 (2021-02-25)
 ### Fix
 * Patch markdown_it to allow arbitrary data urls ([`bb5c05d`](https://github.com/mcbeet/lectern/commit/bb5c05df7d30e144d014fcaef36c84a802b7c51a))
