@@ -10,6 +10,7 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from textwrap import indent
 from typing import Any, ClassVar, Iterator, Optional
+from urllib.request import urlopen
 
 from .container import Container, MatchMixin
 from .utils import FileSystemPath, JsonDict, dump_json, normalize_string
@@ -63,6 +64,16 @@ class Cache:
             keys[key] = path
 
         return self.directory / path
+
+    def download(self, url: str) -> Path:
+        """Download and cache a given url."""
+        path = self.get_path(url)
+
+        if not path.is_file():
+            with urlopen(url) as f:
+                path.write_bytes(f.read())
+
+        return path
 
     @property
     def expire(self) -> Optional[datetime]:
