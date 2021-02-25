@@ -16,16 +16,16 @@ def beet_default(ctx: Context):
     config = ctx.meta.get("lectern", {})
 
     load = config.get("load", [])
-    output = config.get("output")
-    output_files = config.get("output_files")
+    snapshot = config.get("snapshot")
+    external_files = config.get("external_files")
 
-    ctx.require(lectern(load, output, output_files))
+    ctx.require(lectern(load, snapshot, external_files))
 
 
 def lectern(
     load: Iterable[str] = (),
-    output: Optional[str] = None,
-    output_files: Optional[str] = None,
+    snapshot: Optional[str] = None,
+    external_files: Optional[str] = None,
 ) -> Plugin:
     """Return a plugin that handles markdown files with lectern."""
 
@@ -38,10 +38,10 @@ def lectern(
 
         yield
 
-        if output:
+        if snapshot:
             document.save(
-                ctx.directory / output,
-                ctx.directory / output_files if output_files else None,
+                ctx.directory / snapshot,
+                ctx.directory / external_files if external_files else None,
             )
 
     return plugin

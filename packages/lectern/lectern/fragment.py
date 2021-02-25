@@ -5,9 +5,13 @@ __all__ = [
 
 
 from dataclasses import dataclass
-from typing import List, Optional, Tuple, Union, overload
+from typing import Any, Optional, Sequence, Type, TypeVar, overload
+from urllib.request import urlopen
 
-from beet import FormattedPipelineException
+from beet import BinaryFile, BinaryFileBase, Cache, File, FormattedPipelineException
+from beet.core.utils import FileSystemPath
+
+FileType = TypeVar("FileType", bound=File[Any, Any])
 
 
 class InvalidFragment(FormattedPipelineException):
@@ -22,9 +26,13 @@ class InvalidFragment(FormattedPipelineException):
 class Fragment:
     """Class representing a fragment annotated by a directive."""
 
-    modifier: Optional[str]
-    arguments: List[str]
-    content: Union[str, bytes]
+    directive: str
+    modifier: Optional[str] = None
+    arguments: Sequence[str] = ()
+    content: Optional[str] = None
+    url: Optional[str] = None
+    path: Optional[FileSystemPath] = None
+    cache: Optional[Cache] = None
 
     @overload
     def expect(self):
@@ -35,16 +43,16 @@ class Fragment:
         ...
 
     @overload
-    def expect(self, name1: str, name2: str, *names: str) -> Tuple[str, ...]:
+    def expect(self, name1: str, name2: str, *names: str) -> Sequence[str]:
         ...
 
     def expect(self, *names: str):
         """Check directive arguments."""
         if missing := names[len(self.arguments) :]:
-            msg = f"Missing directive argument {', '.join(map(repr, missing))}."
+            msg = f"Missing argument {', '.join(map(repr, missing))} for directive @{self.directive}."
             raise InvalidFragment(msg)
         if extra := self.arguments[len(names) :]:
-            msg = f"Unexpected directive argument {', '.join(map(repr, extra))}."
+            msg = f"Unexpected argument {', '.join(map(repr, extra))} for directive @{self.directive}."
             raise InvalidFragment(msg)
         if len(self.arguments) == 0:
             return
@@ -52,7 +60,31 @@ class Fragment:
             return self.arguments[0]
         return self.arguments
 
-    def apply_modifier(self) -> Union[str, bytes]:
-        if self.modifier == "strip_final_newline" and self.content[-1:] == "\n":
-            return self.content[:-1]
-        return self.content
+    def as_file(self, file_type: Type[FileType] = BinaryFile) -> FileType:
+        """Retrieve the content of the fragment as a file."""
+        is_binary = issubclass(file_type, BinaryFileBase)
+        content = self.content
+
+        if content is not None:
+            if self.modifier == "strip_final_newline" and content.endswith("\n"):
+                content = content[:-1]
+            if is_binary:
+                content = content.encode()
+
+        elif self.path:
+            return file_type(source_path=self.path)
+
+        elif self.url:
+            if self.cache:
+                return file_type(source_path=self.cache.download(self.url))
+
+            with urlopen(self.url) as f:
+                content = f.read()
+            if not is_binary:
+                content = content.decode(errors="replace")
+
+        else:
+            msg = f"Expected content, path or url for directive @{self.directive}."
+            raise InvalidFragment(msg)
+
+        return file_type(content)

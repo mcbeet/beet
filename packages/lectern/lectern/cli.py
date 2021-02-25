@@ -7,7 +7,7 @@ __all__ = [
 from typing import Any, Optional, Tuple
 
 import click
-from beet import DataPack, ResourcePack, run_beet
+from beet import run_beet
 from beet.toolchain.cli import error_handler
 
 from lectern import __version__
@@ -29,10 +29,10 @@ from lectern import __version__
     help="Extract resource pack.",
 )
 @click.option(
-    "-o",
-    "--output-files",
-    metavar="<directory>",
-    help="Output the associated files.",
+    "-e",
+    "--external-files",
+    metavar="<path>",
+    help="Emit external files.",
 )
 @click.version_option(
     __version__,
@@ -46,7 +46,7 @@ def lectern(
     path: Tuple[str],
     data_pack: Optional[str],
     resource_pack: Optional[str],
-    output_files: Optional[str],
+    external_files: Optional[str],
 ):
     """Literate Minecraft data packs and resource packs."""
     config: Any
@@ -69,18 +69,15 @@ def lectern(
             "resource_pack": {"load": packs},
             "pipeline": ["lectern"],
             "meta": {
-                "lectern": {"output": dest, "output_files": output_files},
+                "lectern": {"snapshot": dest, "external_files": external_files},
             },
         }
 
-    output_assets, output_data = run_beet(config).packs
-
-    if data_pack:
-        with DataPack(path=data_pack) as data:
-            data.merge(output_data)
-    if resource_pack:
-        with ResourcePack(path=resource_pack) as assets:
-            assets.merge(output_assets)
+    with run_beet(config) as beet_ctx:
+        if data_pack:
+            beet_ctx.data.save(path=data_pack, overwrite=True)
+        if resource_pack:
+            beet_ctx.assets.save(path=resource_pack, overwrite=True)
 
 
 def main():

@@ -11,7 +11,7 @@ def test_empty():
     assert Document().get_text() == ""
     empty = "# Lectern snapshot\n\nThe data pack and resource pack are empty.\n"
     assert Document().get_markdown() == empty
-    assert Document().get_markdown(emit_files=True) == (empty, {})
+    assert Document().get_markdown(emit_external_files=True) == (empty, {})
     assert Document(text="Nothing to see here") == Document()
     assert Document(markdown="Nothing to see here") == Document()
 
@@ -63,13 +63,13 @@ def test_text_tricky():
 
 def test_missing_argument():
     with pytest.raises(
-        InvalidFragment, match="Missing directive argument 'full_name'."
+        InvalidFragment, match="Missing argument 'full_name' for directive @function."
     ):
         Document(text="@function\nsay hello")
 
 
 def test_extra_argument():
     with pytest.raises(
-        InvalidFragment, match="Unexpected directive argument 'banana'."
+        InvalidFragment, match="Unexpected argument 'banana' for directive @function."
     ):
         Document(text="@function demo:foo banana\nsay hello")

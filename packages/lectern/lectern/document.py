@@ -3,14 +3,15 @@ __all__ = [
 ]
 
 
+import os
 from dataclasses import InitVar, dataclass, field
 from pathlib import Path
-from typing import Any, Dict, Literal, MutableMapping, Optional, Tuple, overload
+from typing import Any, Dict, Literal, MutableMapping, Optional, Tuple, Union, overload
 
-from beet import Context, DataPack, File, ResourcePack
+from beet import Cache, Context, DataPack, File, ResourcePack
 from beet.core.utils import FileSystemPath, extra_field
 
-from .directive import Directive, get_builtin_directives
+from .directive import Directive, RequireDirective, get_builtin_directives
 from .extract import MarkdownExtractor, TextExtractor
 from .serialize import MarkdownSerializer, TextSerializer
 
@@ -23,7 +24,8 @@ class Document:
     path: InitVar[Optional[FileSystemPath]] = None
     text: InitVar[Optional[str]] = None
     markdown: InitVar[Optional[str]] = None
-    files: InitVar[Optional[FileSystemPath]] = None
+    cache: InitVar[Optional[Cache]] = None
+    external_files: InitVar[Optional[FileSystemPath]] = None
 
     assets: ResourcePack = field(default_factory=ResourcePack)
     data: DataPack = field(default_factory=DataPack)
@@ -48,23 +50,30 @@ class Document:
         path: Optional[FileSystemPath] = None,
         text: Optional[str] = None,
         markdown: Optional[str] = None,
-        files: Optional[FileSystemPath] = None,
+        cache: Optional[Cache] = None,
+        external_files: Optional[FileSystemPath] = None,
     ):
         if ctx:
             self.assets = ctx.assets
             self.data = ctx.data
+            self.directives["require"] = RequireDirective(ctx)
+            if cache is None:
+                cache = ctx.cache["lectern"].timeout(minutes=30)
+        if cache:
+            self.text_extractor.cache = cache
+            self.markdown_extractor.cache = cache
         if path:
             self.load(path)
         if text:
             self.add_text(text)
         if markdown:
-            self.add_markdown(markdown, files)
+            self.add_markdown(markdown, external_files)
 
     def load(self, path: FileSystemPath):
         """Load and extract fragments from the file at the specified location."""
         path = Path(path).resolve()
         if path.suffix == ".md":
-            self.add_markdown(path.read_text(), files=path.parent)
+            self.add_markdown(path.read_text(), external_files=path.parent)
         else:
             self.add_text(path.read_text())
 
@@ -74,9 +83,17 @@ class Document:
         self.assets.merge(assets)
         self.data.merge(data)
 
-    def add_markdown(self, source: str, files: Optional[FileSystemPath] = None):
+    def add_markdown(
+        self,
+        source: str,
+        external_files: Optional[FileSystemPath] = None,
+    ):
         """Extract pack fragments from markdown."""
-        assets, data = self.markdown_extractor.extract(source, self.directives, files)
+        assets, data = self.markdown_extractor.extract(
+            source=source,
+            directives=self.directives,
+            external_files=external_files,
+        )
         self.assets.merge(assets)
         self.data.merge(data)
 
@@ -86,36 +103,65 @@ class Document:
 
     @overload
     def get_markdown(
-        self, emit_files: Literal[True]
+        self,
+        emit_external_files: Literal[True],
+        external_prefix: str = "",
     ) -> Tuple[str, Dict[str, File[Any, Any]]]:
         ...
 
     @overload
-    def get_markdown(self, emit_files: Literal[False] = False) -> str:
+    def get_markdown(self, emit_external_files: Literal[False] = False) -> str:
         ...
 
-    def get_markdown(self, emit_files: bool = False):
+    def get_markdown(
+        self,
+        emit_external_files: bool = False,
+        external_prefix: str = "",
+    ) -> Union[str, Tuple[str, Dict[str, File[Any, Any]]]]:
         """Turn the data pack and the resource pack into markdown."""
-        data, files = self.markdown_serializer.serialize_and_emit_files(
-            self.assets, self.data
-        )
-        return (data, files) if emit_files else data
+        external_files = {} if emit_external_files else None
 
-    def save(self, path: FileSystemPath, files: Optional[FileSystemPath] = None):
+        content = self.markdown_serializer.serialize(
+            assets=self.assets,
+            data=self.data,
+            external_files=external_files,
+            external_prefix=external_prefix,
+        )
+
+        if external_files is None:
+            return content
+        else:
+            return content, external_files
+
+    def save(
+        self,
+        path: FileSystemPath,
+        external_files: Optional[FileSystemPath] = None,
+    ):
         """Save the serialized document at the specified location."""
         path = Path(path).resolve()
 
         if path.suffix == ".md":
-            data, emit = self.markdown_serializer.serialize_and_emit_files(
-                self.assets, self.data
-            )
-            if files:
-                files = Path(files).resolve()
-                files.parent.mkdir(parents=True, exist_ok=True)
-                for key, value in emit.items():
-                    value.dump(files, key)
+            if external_files:
+                external_files = Path(external_files).resolve()
+
+                prefix = os.path.relpath(external_files, path.parent)
+                prefix = prefix.replace(os.path.sep, "/")
+                prefix = "" if prefix == "." else prefix.rstrip("/") + "/"
+
+                content, files = self.get_markdown(
+                    emit_external_files=True,
+                    external_prefix=prefix,
+                )
+
+                if files:
+                    external_files.mkdir(parents=True, exist_ok=True)
+                    for filename, file_instance in files.items():
+                        file_instance.dump(external_files, path.parent / filename)
+            else:
+                content = self.get_markdown()
         else:
-            data = self.text_serializer.serialize(self.assets, self.data)
+            content = self.get_text()
 
         path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(data)
+        path.write_text(content)

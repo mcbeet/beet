@@ -4,16 +4,18 @@ __all__ = [
     "DataPackDirective",
     "ResourcePackDirective",
     "BundleFragmentMixin",
+    "RequireDirective",
+    "SkipDirective",
     "get_builtin_directives",
 ]
 
 
 import io
 from dataclasses import dataclass
-from typing import Dict, Protocol, Type, Union
+from typing import Any, Dict, Protocol, Type, Union
 from zipfile import ZipFile
 
-from beet import DataPack, ResourcePack
+from beet import Context, DataPack, ResourcePack
 from beet.library.base import NamespaceFile
 from beet.library.data_pack import (
     Advancement,
@@ -71,9 +73,7 @@ class NamespacedResourceDirective:
 
     def __call__(self, fragment: Fragment, assets: ResourcePack, data: DataPack):
         full_name = fragment.expect("full_name")
-        content = fragment.apply_modifier()
-
-        file_instance = self.file_type(content)
+        file_instance: Any = fragment.as_file(self.file_type)
 
         if self.file_type in assets.namespace_type.field_map:
             assets[full_name] = file_instance
@@ -87,13 +87,14 @@ class BundleFragmentMixin:
     def bundle_pack_fragment(self, fragment: Fragment) -> ZipFile:
         """Return a zipfile containing the pack fragment."""
         relative_path = fragment.expect("relative_path")
-        content = fragment.apply_modifier()
+        file_instance = fragment.as_file()
 
         data = io.BytesIO()
         with ZipFile(data, mode="w") as zip_file:
-            zip_file.writestr(relative_path, content)
+            file_instance.dump(zip_file, relative_path)
 
-        return ZipFile(io.BytesIO(data.getvalue()))
+        data.seek(0)
+        return ZipFile(data)
 
 
 @dataclass
@@ -112,8 +113,32 @@ class ResourcePackDirective(BundleFragmentMixin):
         assets.load(self.bundle_pack_fragment(fragment))
 
 
+@dataclass
+class RequireDirective:
+    """Directive that requires a given plugin."""
+
+    ctx: Context
+
+    def __call__(self, fragment: Fragment, assets: ResourcePack, data: DataPack):
+        self.ctx.require(fragment.expect("plugin"))
+
+
+@dataclass
+class SkipDirective:
+    """Directive that ignores the fragment and skips to the next one."""
+
+    def __call__(self, fragment: Fragment, assets: ResourcePack, data: DataPack):
+        pass
+
+
 def get_builtin_directives() -> Dict[
-    str, Union[NamespacedResourceDirective, DataPackDirective, ResourcePackDirective]
+    str,
+    Union[
+        NamespacedResourceDirective,
+        DataPackDirective,
+        ResourcePackDirective,
+        SkipDirective,
+    ],
 ]:
     """Return the built-in directives."""
     return {
@@ -155,5 +180,7 @@ def get_builtin_directives() -> Dict[
 
         "data_pack":     DataPackDirective(),
         "resource_pack": ResourcePackDirective(),
+
+        "skip": SkipDirective(),
         # fmt: on
     }

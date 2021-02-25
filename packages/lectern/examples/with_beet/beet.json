@@ -1,0 +1,9 @@
+{
+  "require": ["custom_directive"],
+  "pipeline": ["lectern"],
+  "meta": {
+    "lectern": {
+      "load": ["*.md"]
+    }
+  }
+}

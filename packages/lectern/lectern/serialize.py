@@ -2,14 +2,17 @@ __all__ = [
     "TextSerializer",
     "MarkdownSerializer",
     "NAMESPACED_RESOURCE_DIRECTIVES",
+    "EXTENSION_HIGHLIGHTING",
 ]
 
+from base64 import b64encode
 from itertools import chain
+from mimetypes import guess_type
 from pathlib import Path
 from textwrap import indent
-from typing import Any, Dict, Iterator, Tuple, Union
+from typing import Any, Dict, Iterator, Optional, Union
 
-from beet import DataPack, File, ResourcePack
+from beet import DataPack, File, ResourcePack, TextFileBase
 from beet.library.base import NamespaceFile
 
 from .directive import NamespacedResourceDirective, get_builtin_directives
@@ -62,15 +65,15 @@ class TextSerializer:
 class MarkdownSerializer:
     """Document serializer that outputs markdown and emits associated files."""
 
-    def serialize_and_emit_files(
+    def serialize(
         self,
         assets: ResourcePack,
         data: DataPack,
-    ) -> Tuple[str, Dict[str, File[Any, Any]]]:
+        external_files: Optional[Dict[str, File[Any, Any]]] = None,
+        external_prefix: str = "",
+    ) -> str:
         """Return the serialized representation and the files emitted in the process."""
-        files: Dict[str, File[Any, Any]] = {}
-
-        content = (
+        return "# Lectern snapshot\n\n" + (
             "\n".join(
                 text
                 for title, directive, pack in [
@@ -78,26 +81,27 @@ class MarkdownSerializer:
                     ("Resource pack", "resource_pack", assets),
                 ]
                 if pack
-                for text in self.serialize_pack(title, directive, pack, files)
+                for text in self.serialize_pack(
+                    title, directive, pack, external_files, external_prefix
+                )
             )
             or "The data pack and resource pack are empty.\n"
         )
-
-        return "# Lectern snapshot\n\n" + (content), files
 
     def serialize_pack(
         self,
         title: str,
         pack_directive: str,
         pack: Union[DataPack, ResourcePack],
-        files: Dict[str, File[Any, Any]],
+        external_files: Optional[Dict[str, File[Any, Any]]],
+        external_prefix: str = "",
     ) -> Iterator[str]:
         """Yield markdown chunks for the given pack."""
         yield f"## {title}"
 
         for path, file_instance in pack.extra.items():
             yield from self.serialize_file_instance(
-                pack_directive, path, file_instance, files
+                pack_directive, path, file_instance, external_files, external_prefix
             )
 
         for name, namespace in pack.items():
@@ -108,7 +112,11 @@ class MarkdownSerializer:
 
                 for path, file_instance in container.items():
                     yield from self.serialize_file_instance(
-                        directive_name, f"{name}:{path}", file_instance, files
+                        directive_name,
+                        f"{name}:{path}",
+                        file_instance,
+                        external_files,
+                        external_prefix,
                     )
 
         yield ""
@@ -118,17 +126,23 @@ class MarkdownSerializer:
         directive: str,
         argument: str,
         file_instance: Union[File[Any, Any], NamespaceFile],
-        files: Dict[str, File[Any, Any]],
+        external_files: Optional[Dict[str, File[Any, Any]]],
+        external_prefix: str = "",
     ) -> Iterator[str]:
         """Yield markdown chunks for including the given file instance."""
-        content = file_instance.ensure_serialized()
+        if directive in ["data_pack", "resource_pack"]:
+            filename = Path(argument).name
+            extension = "".join(Path(filename).suffixes)
+            filename = filename[: -len(extension)]
+        elif isinstance(file_instance, NamespaceFile):
+            filename = Path(argument.rpartition(":")[-1]).name
+            extension = file_instance.extension
+        else:
+            filename = f"{directive}_data"
+            extension = ""
 
-        if isinstance(content, str):
-            extension = (
-                file_instance.extension
-                if isinstance(file_instance, NamespaceFile)
-                else Path(argument).suffix
-            )
+        if isinstance(file_instance, TextFileBase):
+            content = file_instance.text
 
             if not content.endswith("\n"):
                 directive += "(strip_final_newline)"
@@ -139,3 +153,21 @@ class MarkdownSerializer:
             yield "\n  ```" + EXTENSION_HIGHLIGHTING.get(extension, "")
             yield indent(content, "  ") + "  ```"
             yield "\n  </details>"
+
+            return
+
+        if external_files is None:
+            content = file_instance.ensure_serialized()
+            content_type = (
+                guess_type(f"{filename}{extension}")[0] or "application/octet-stream"
+            )
+            url = f"data:{content_type};base64,{b64encode(content).decode()}"
+        else:
+            while (url := f"{external_prefix}{filename}{extension}") in external_files:
+                stem, _, number = filename.rpartition("_")
+                if not number.isdigit():
+                    stem, number = filename, "0"
+                filename = f"{stem}_{int(number) + 1}"
+            external_files[url] = file_instance
+
+        yield f"\n- [`@{directive} {argument}`]({url})"

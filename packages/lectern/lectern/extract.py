@@ -8,9 +8,11 @@ __all__ = [
 
 import re
 from itertools import islice
+from pathlib import Path
 from typing import Dict, Iterable, Iterator, List, Mapping, Optional, Tuple, Union
+from urllib.parse import unquote, urlparse
 
-from beet import DataPack, ResourcePack
+from beet import Cache, DataPack, ResourcePack
 from beet.core.utils import FileSystemPath
 from markdown_it import MarkdownIt
 from markdown_it.common import normalize_url
@@ -29,10 +31,12 @@ class Extractor:
 
     directives: Dict[str, Directive]
     regex: Optional["re.Pattern[str]"]
+    cache: Optional[Cache]
 
-    def __init__(self):
+    def __init__(self, cache: Optional[Cache] = None):
         self.directives = {}
         self.regex = None
+        self.cache = cache
 
     def generate_regex(self) -> str:
         """Return a regex that can match the current directives."""
@@ -68,13 +72,13 @@ class Extractor:
     def apply_directives(
         self,
         directives: Mapping[str, Directive],
-        fragments: Iterable[Tuple[str, Fragment]],
+        fragments: Iterable[Fragment],
     ) -> Tuple[ResourcePack, DataPack]:
         """Apply directives into a blank data pack and a blank resource pack."""
         assets, data = ResourcePack(), DataPack()
 
-        for directive_name, fragment in fragments:
-            directives[directive_name](fragment, assets, data)
+        for fragment in fragments:
+            directives[fragment.directive](fragment, assets, data)
 
         return assets, data
 
@@ -82,9 +86,28 @@ class Extractor:
         self,
         source: str,
         directives: Mapping[str, Directive],
-    ) -> Iterator[Tuple[str, Fragment]]:
+    ) -> Iterator[Fragment]:
         """Parse and yield pack fragments."""
         return iter([])
+
+    def create_fragment(
+        self,
+        match: "re.Match[str]",
+        content: Optional[str] = None,
+        url: Optional[str] = None,
+        path: Optional[FileSystemPath] = None,
+    ):
+        """Helper for creating a fragment from a matched pattern."""
+        directive, modifier, arguments = match.groups()
+        return Fragment(
+            directive=directive,
+            modifier=modifier,
+            arguments=arguments.split(),
+            content=content,
+            url=url,
+            path=path,
+            cache=self.cache,
+        )
 
 
 class TextExtractor(Extractor):
@@ -94,7 +117,7 @@ class TextExtractor(Extractor):
         self,
         source: str,
         directives: Mapping[str, Directive],
-    ) -> Iterator[Tuple[str, Fragment]]:
+    ) -> Iterator[Fragment]:
         tokens = self.get_regex(directives).split(source + "\n")
 
         it = iter(tokens)
@@ -107,10 +130,12 @@ class TextExtractor(Extractor):
                 return
             else:
                 content = content.partition("\n")[-1]
-                yield directive, Fragment(
-                    modifier,
-                    arguments.split(),
-                    content[:-1] if content.endswith("\n") else content,
+                yield Fragment(
+                    directive=directive,
+                    modifier=modifier,
+                    arguments=arguments.split(),
+                    content=content[:-1] if content.endswith("\n") else content,
+                    cache=self.cache,
                 )
 
 
@@ -128,9 +153,9 @@ class MarkdownExtractor(Extractor):
     parser: MarkdownIt
     html_comment_regex: "re.Pattern[str]"
 
-    def __init__(self):
-        super().__init__()
-        self.embedded_extractor = EmbeddedExtractor()
+    def __init__(self, cache: Optional[Cache] = None):
+        super().__init__(cache)
+        self.embedded_extractor = EmbeddedExtractor(cache)
         self.parser = MarkdownIt()
         self.html_comment_regex = re.compile(r"<!--\s*(.+?)\s*-->")
 
@@ -138,22 +163,35 @@ class MarkdownExtractor(Extractor):
         self,
         source: str,
         directives: Mapping[str, Directive],
-        files: Optional[FileSystemPath] = None,
+        external_files: Optional[FileSystemPath] = None,
     ) -> Tuple[ResourcePack, DataPack]:
         return self.apply_directives(
-            directives, self.parse_fragments(source, directives, files)
+            directives, self.parse_fragments(source, directives, external_files)
         )
 
     def parse_fragments(
         self,
         source: str,
         directives: Mapping[str, Directive],
-        files: Optional[FileSystemPath] = None,
-    ) -> Iterator[Tuple[str, Fragment]]:
+        external_files: Optional[FileSystemPath] = None,
+    ) -> Iterator[Fragment]:
         tokens = self.parser.parse(source)  # type: ignore
         regex = self.get_regex(directives)
 
+        skip = 0
+
         for i, token in enumerate(tokens):
+            if skip > 0:
+                skip -= 1
+                continue
+
+            #
+            # `@directive args...`
+            #
+            # ```
+            # content
+            # ```
+            #
             if (
                 self.match_tokens(
                     tokens[i : i + 4],
@@ -164,13 +202,23 @@ class MarkdownExtractor(Extractor):
                 )
                 and (inline := tokens[i + 1])
                 and inline.children
-                and self.match_tokens(inline.children, "code_inline")
+                and inline.children[0].type == "code_inline"
                 and (match := regex.match(inline.children[0].content))
             ):
-                directive, modifier, arguments = match.groups()
-                yield directive, Fragment(
-                    modifier, arguments.split(), tokens[i + 3].content
-                )
+                yield self.create_fragment(match, content=tokens[i + 3].content)
+                skip = 3
+
+            #
+            # `@directive args...`
+            #
+            # <details>
+            #
+            # ```
+            # content
+            # ```
+            #
+            # </details>
+            #
             elif (
                 self.match_tokens(
                     tokens[i : i + 6],
@@ -183,33 +231,110 @@ class MarkdownExtractor(Extractor):
                 )
                 and (inline := tokens[i + 1])
                 and inline.children
-                and self.match_tokens(inline.children, "code_inline")
+                and inline.children[0].type == "code_inline"
                 and tokens[i + 3].content == "<details>\n"
                 and tokens[i + 5].content == "</details>\n"
                 and (match := regex.match(inline.children[0].content))
             ):
-                directive, modifier, arguments = match.groups()
-                yield directive, Fragment(
-                    modifier, arguments.split(), tokens[i + 4].content
-                )
+                yield self.create_fragment(match, content=tokens[i + 4].content)
+                skip = 5
+
+            #
+            # [`@directive args...`](path/to/content)
+            #
             elif (
                 self.match_tokens(
-                    tokens[i : i + 2], "html_block", ["fence", "code_block"]
+                    tokens[i : i + 3],
+                    "paragraph_open",
+                    "inline",
+                    "paragraph_close",
+                )
+                and (inline := tokens[i + 1])
+                and inline.children
+                and self.match_tokens(
+                    inline.children,
+                    "link_open",
+                    "code_inline",
+                    "link_close",
+                )
+                and (url := inline.children[0].attrGet("href"))
+                and (match := regex.match(inline.children[1].content))
+            ):
+                url = unquote(url)
+                path = None
+
+                if urlparse(url).path == url:
+                    if external_files:
+                        path = Path(external_files, url).resolve()
+                    url = None
+
+                yield self.create_fragment(match, url=url, path=path)
+                skip = 2
+
+            #
+            # <!-- @directive args... -->
+            #
+            # ```
+            # content
+            # ```
+            #
+            elif (
+                self.match_tokens(
+                    tokens[i : i + 2],
+                    "html_block",
+                    ["fence", "code_block"],
                 )
                 and (comment := self.html_comment_regex.match(token.content))
                 and (match := regex.match(comment.group(1)))
             ):
-                directive, modifier, arguments = match.groups()
-                yield directive, Fragment(
-                    modifier, arguments.split(), tokens[i + 1].content
+                yield self.create_fragment(match, content=tokens[i + 1].content)
+                skip = 1
+
+            #
+            # `@directive args...`
+            #
+            elif (
+                self.match_tokens(
+                    tokens[i : i + 3],
+                    "paragraph_open",
+                    "inline",
+                    "paragraph_close",
                 )
+                and (inline := tokens[i + 1])
+                and inline.children
+                and inline.children[0].type == "code_inline"
+                and (match := regex.match(inline.children[0].content))
+            ):
+                yield self.create_fragment(match)
+                skip = 2
+
+            #
+            # <!-- @directive args... -->
+            #
+            elif (
+                token.type == "html_block"
+                and (comment := self.html_comment_regex.match(token.content))
+                and (match := regex.match(comment.group(1)))
+            ):
+                yield self.create_fragment(match)
+
+            #
+            # ```
+            # @directive args...
+            #
+            # content
+            # ```
+            #
             elif token.type in ["fence", "code_block"]:
                 yield from self.embedded_extractor.parse_fragments(
-                    token.content, directives
+                    token.content,
+                    directives,
                 )
 
     def match_tokens(
-        self, tokens: Optional[List[Token]], *token_types: Union[List[str], str]
+        self,
+        tokens: Optional[List[Token]],
+        *token_types: Union[List[str], str],
     ) -> bool:
         """Return whether the list of tokens matches the provided token types."""
         return (
