@@ -2,6 +2,14 @@
 
 <!--next-version-placeholder-->
 
+## v0.5.0 (2021-02-25)
+### Feature
+* Serialize images ([`7cf6fd9`](https://github.com/mcbeet/lectern/commit/7cf6fd944533a4ea9210f1f795bc4839c1a793de))
+* Extract image fragments ([`1c6b71b`](https://github.com/mcbeet/lectern/commit/1c6b71bd0008163226394d77b8909f7459584732))
+
+### Fix
+* Use match_tokens() to check for a single code_inline ([`7117521`](https://github.com/mcbeet/lectern/commit/7117521388f5b76e0085d19301d1a9d5d5b7d86f))
+
 ## v0.4.0 (2021-02-25)
 ### Feature
 * Add link fragments ([`b0d26d5`](https://github.com/mcbeet/lectern/commit/b0d26d530bd5029ea33bba8b1886a913af6ce125))
