@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.10.3 (2021-02-25)
+### Fix
+* Turn run_beet() into a context manager ([`852cebb`](https://github.com/mcbeet/beet/commit/852cebbb71a09be66d318cd5ce6d2f8c9d6ffb7a))
+
 ## v0.10.2 (2021-02-25)
 ### Fix
 * Add download method ([`7951470`](https://github.com/mcbeet/beet/commit/7951470a5f7be4973816b686b311e52fd29f9a32))
