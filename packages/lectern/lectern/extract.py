@@ -202,7 +202,7 @@ class MarkdownExtractor(Extractor):
                 )
                 and (inline := tokens[i + 1])
                 and inline.children
-                and inline.children[0].type == "code_inline"
+                and self.match_tokens(inline.children, "code_inline")
                 and (match := regex.match(inline.children[0].content))
             ):
                 yield self.create_fragment(match, content=tokens[i + 3].content)
@@ -231,7 +231,7 @@ class MarkdownExtractor(Extractor):
                 )
                 and (inline := tokens[i + 1])
                 and inline.children
-                and inline.children[0].type == "code_inline"
+                and self.match_tokens(inline.children, "code_inline")
                 and tokens[i + 3].content == "<details>\n"
                 and tokens[i + 5].content == "</details>\n"
                 and (match := regex.match(inline.children[0].content))
@@ -302,7 +302,7 @@ class MarkdownExtractor(Extractor):
                 )
                 and (inline := tokens[i + 1])
                 and inline.children
-                and inline.children[0].type == "code_inline"
+                and self.match_tokens(inline.children, "code_inline")
                 and (match := regex.match(inline.children[0].content))
             ):
                 yield self.create_fragment(match)
