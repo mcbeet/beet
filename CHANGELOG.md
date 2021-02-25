@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.10.2 (2021-02-25)
+### Fix
+* Add download method ([`7951470`](https://github.com/mcbeet/beet/commit/7951470a5f7be4973816b686b311e52fd29f9a32))
+
 ## v0.10.1 (2021-02-25)
 ### Fix
 * Use plain list to hold commands ([`9b02b77`](https://github.com/mcbeet/beet/commit/9b02b7711e3e63596f6250984a320059b6e47156))
