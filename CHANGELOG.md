@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.10.4 (2021-02-25)
+### Fix
+* Change path and save ([`ecc6593`](https://github.com/mcbeet/beet/commit/ecc659385bb64fa884a01648e2f0db553542160a))
+
 ## v0.10.3 (2021-02-25)
 ### Fix
 * Turn run_beet() into a context manager ([`852cebb`](https://github.com/mcbeet/beet/commit/852cebbb71a09be66d318cd5ce6d2f8c9d6ffb7a))
