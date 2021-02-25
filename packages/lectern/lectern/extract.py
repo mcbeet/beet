@@ -13,10 +13,15 @@ from typing import Dict, Iterable, Iterator, List, Mapping, Optional, Tuple, Uni
 from beet import DataPack, ResourcePack
 from beet.core.utils import FileSystemPath
 from markdown_it import MarkdownIt
+from markdown_it.common import normalize_url
 from markdown_it.token import Token
 
 from .directive import Directive
 from .fragment import Fragment
+
+# Patch markdown_it to allow arbitrary data urls
+# https://github.com/executablebooks/markdown-it-py/issues/128
+normalize_url.GOOD_DATA_RE = re.compile(r"^data:")
 
 
 class Extractor:
