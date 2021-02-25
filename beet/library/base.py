@@ -450,10 +450,17 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
     def save(
         self,
         directory: Optional[FileSystemPath] = None,
+        path: Optional[FileSystemPath] = None,
         zipped: Optional[bool] = None,
         overwrite: Optional[bool] = False,
     ) -> Path:
         """Save the pack at the specified location."""
+        if path:
+            path = Path(path).resolve()
+            self.zipped = path.suffix == ".zip"
+            self.name = path.name[:-4] if self.zipped else path.name
+            self.path = path.parent
+
         if zipped is not None:
             self.zipped = zipped
         suffix = ".zip" if self.zipped else ""
