@@ -31,7 +31,7 @@ import io
 from copy import deepcopy
 from dataclasses import dataclass
 from gzip import GzipFile
-from typing import MutableSequence, Optional, TypeVar
+from typing import List, Optional, TypeVar
 
 from nbtlib.contrib.minecraft import StructureFile, StructureFileData
 
@@ -58,23 +58,23 @@ class Advancement(JsonFile, NamespaceFile):
 
 
 @dataclass(eq=False)
-class Function(TextFileBase[MutableSequence[str]], NamespaceFile):
+class Function(TextFileBase[List[str]], NamespaceFile):
     """Class representing a function."""
 
-    content: TextFileContent[MutableSequence[str]] = None
-    tags: Optional[MutableSequence[str]] = extra_field(default=None)
+    content: TextFileContent[List[str]] = None
+    tags: Optional[List[str]] = extra_field(default=None)
 
     scope = ("functions",)
     extension = ".mcfunction"
 
-    lines = FileDeserialize()  # type: FileDeserialize[MutableSequence[str]]
+    lines = FileDeserialize()  # type: FileDeserialize[List[str]]
 
     @classmethod
-    def to_str(cls, content: MutableSequence[str]) -> str:
+    def to_str(cls, content: List[str]) -> str:
         return "\n".join(content) + "\n"
 
     @classmethod
-    def from_str(cls, content: str) -> MutableSequence[str]:
+    def from_str(cls, content: str) -> List[str]:
         return content.splitlines()
 
     def bind(self, pack: "DataPack", namespace: str, path: str):
