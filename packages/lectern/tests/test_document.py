@@ -73,3 +73,10 @@ def test_extra_argument():
         InvalidFragment, match="Unexpected argument 'banana' for directive @function."
     ):
         Document(text="@function demo:foo banana\nsay hello")
+
+
+def test_no_content():
+    with pytest.raises(
+        InvalidFragment, match="Expected content, path or url for directive @function."
+    ):
+        Document(markdown="`@function demo:foo`\n")

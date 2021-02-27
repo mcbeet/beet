@@ -6,28 +6,27 @@ from beet import run_beet
 
 from lectern import Document
 
-EXAMPLES_TXT = glob("examples/*.txt")
-EXAMPLES_MD = glob("examples/*.md")
 EXAMPLES_LINKS = glob("examples/with_links/*.md") + ["README.md"]
+EXAMPLES = glob("examples/*.txt") + glob("examples/*.md") + EXAMPLES_LINKS
 
 
-@pytest.mark.parametrize("path", EXAMPLES_TXT + EXAMPLES_MD)
+@pytest.mark.parametrize("path", EXAMPLES)
 def test_text(snapshot: Any, path: str):
     assert snapshot("pack.txt") == Document(path=path)
 
 
-@pytest.mark.parametrize("path", EXAMPLES_TXT + EXAMPLES_MD)
+@pytest.mark.parametrize("path", EXAMPLES)
 def test_text_equality(snapshot: Any, path: str):
     document = Document(path=path)
     assert document == Document(text=document.get_text())
 
 
-@pytest.mark.parametrize("path", EXAMPLES_TXT + EXAMPLES_MD + EXAMPLES_LINKS)
+@pytest.mark.parametrize("path", EXAMPLES)
 def test_markdown(snapshot: Any, path: str):
     assert snapshot("pack.md") == Document(path=path)
 
 
-@pytest.mark.parametrize("path", EXAMPLES_TXT + EXAMPLES_MD + EXAMPLES_LINKS)
+@pytest.mark.parametrize("path", EXAMPLES)
 def test_markdown_equality(snapshot: Any, path: str):
     document = Document(path=path)
     assert document == Document(markdown=document.get_markdown())

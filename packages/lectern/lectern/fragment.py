@@ -4,6 +4,7 @@ __all__ = [
 ]
 
 
+from base64 import b64decode
 from dataclasses import dataclass
 from typing import Any, Optional, Sequence, Type, TypeVar, overload
 from urllib.request import urlopen
@@ -65,11 +66,14 @@ class Fragment:
         is_binary = issubclass(file_type, BinaryFileBase)
         content = self.content
 
-        if content is not None:
+        if content is not None and self.modifier == "base64":
+            content = b64decode(content.strip())
+
+        elif content is not None:
             if self.modifier == "strip_final_newline" and content.endswith("\n"):
                 content = content[:-1]
-            if is_binary:
-                content = content.encode()
+
+            return file_type(content.encode() if is_binary else content)
 
         elif self.path:
             return file_type(source_path=self.path)
@@ -80,11 +84,9 @@ class Fragment:
 
             with urlopen(self.url) as f:
                 content = f.read()
-            if not is_binary:
-                content = content.decode(errors="replace")
 
         else:
             msg = f"Expected content, path or url for directive @{self.directive}."
             raise InvalidFragment(msg)
 
-        return file_type(content)
+        return file_type(content if is_binary else content.decode(errors="replace"))

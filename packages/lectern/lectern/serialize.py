@@ -36,7 +36,13 @@ class TextSerializer:
     def serialize(self, assets: ResourcePack, data: DataPack) -> str:
         """Return the serialized representation."""
         return "\n".join(
-            f"@{directive_name} {argument}\n{content}"
+            (
+                f"@{directive_name} {argument}\n{content}"
+                if isinstance(content := file_instance.ensure_serialized(), str)
+                else f"@{directive_name}(base64) {argument}\n"
+                + b64encode(content).decode()
+                + "\n"
+            )
             for pack, extra_directive in [
                 (assets, "resource_pack"),
                 (data, "data_pack"),
@@ -58,7 +64,6 @@ class TextSerializer:
                     for path, file_instance in container.items()
                 ),
             )
-            if isinstance(content := file_instance.ensure_serialized(), str)
         )
 
 
