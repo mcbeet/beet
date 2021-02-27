@@ -129,7 +129,7 @@ class SkipDirective:
     """Directive that ignores the fragment and skips to the next one."""
 
     def __call__(self, fragment: Fragment, assets: ResourcePack, data: DataPack):
-        pass
+        fragment.expect()
 
 
 def get_builtin_directives() -> Dict[
