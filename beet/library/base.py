@@ -334,6 +334,21 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
         self.load(path or zipfile)
 
     @overload
+    def __getitem__(self, key: str) -> NamespaceType:
+        ...
+
+    @overload
+    def __getitem__(
+        self, key: Type[NamespaceFileType]
+    ) -> NamespaceProxy[NamespaceFileType]:
+        ...
+
+    def __getitem__(self, key: Any) -> Any:
+        if isinstance(key, str):
+            return super().__getitem__(key)
+        return NamespaceProxy(self, key)
+
+    @overload
     def __setitem__(self, key: str, value: NamespaceType):
         ...
 

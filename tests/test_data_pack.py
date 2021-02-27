@@ -267,6 +267,12 @@ def test_proxy_match():
     }
 
 
+def test_overload_proxy():
+    pack = DataPack()
+    pack["demo:foo"] = Function(["say foo"])
+    assert pack[Function]["demo:foo"] is pack.functions["demo:foo"]
+
+
 def test_accessors_with_function(tmp_path: Path):
     func1 = Function(["say hello"])
 
