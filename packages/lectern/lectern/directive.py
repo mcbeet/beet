@@ -77,13 +77,15 @@ class NamespacedResourceDirective:
         file_instance: Any = fragment.as_file(self.file_type)
 
         pack = assets if self.file_type in assets.namespace_type.field_map else data
+        proxy: NamespaceProxy[Any] = pack[self.file_type]  # type: ignore
 
         if fragment.modifier == "append":
-            proxy: NamespaceProxy[Any] = pack[self.file_type]  # type: ignore
             current_file = proxy.setdefault(full_name, self.file_type(""))
             current_file.text += file_instance.text
+        elif fragment.modifier == "merge":
+            proxy.merge({full_name: file_instance})
         else:
-            pack[full_name] = file_instance
+            proxy[full_name] = file_instance
 
 
 class BundleFragmentMixin:

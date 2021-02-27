@@ -1,0 +1,9 @@
+@function_tag(merge) minecraft:load
+{
+  "values": ["demo:foo"]
+}
+
+@function_tag(merge) minecraft:load
+{
+  "values": ["demo:bar"]
+}
