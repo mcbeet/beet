@@ -1,5 +1,5 @@
 {
-  "require": ["custom_directive"],
+  "require": ["custom_directive", "hello_directive"],
   "pipeline": ["lectern"],
   "meta": {
     "lectern": {

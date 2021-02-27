@@ -120,6 +120,19 @@
 
   </details>
 
+### hello
+
+- `@function hello:greetings`
+
+  <details>
+
+  ```mcfunction
+  say Hello, Alice!
+  say Hello, Bob!
+  ```
+
+  </details>
+
 ## Resource pack
 
 - `@resource_pack pack.mcmeta`
