@@ -17,6 +17,14 @@
 
   </details>
 
+- `@data_pack pack.png`
+
+  <details>
+
+  ![data_pack.png](pack.png)
+
+  </details>
+
 ### tutorial
 
 - `@function tutorial:greeting`
@@ -25,6 +33,7 @@
 
   ```mcfunction
   say Hello, world!
+  say This is added afterwards.
   ```
 
   </details>
@@ -35,6 +44,16 @@
 
   ```mcfunction
   say You obtained a dead bush!
+  ```
+
+  </details>
+
+- `@function(strip_final_newline) tutorial:stripped`
+
+  <details>
+
+  ```mcfunction
+  say This function doesn't have a final newline.
   ```
 
   </details>
@@ -70,6 +89,18 @@
 
   </details>
 
+- `@function_tag(strip_final_newline) tutorial:something_else`
+
+  <details>
+
+  ```json
+  {
+    "values": ["tutorial:stripped"]
+  }
+  ```
+
+  </details>
+
 ### minecraft
 
 - `@function_tag minecraft:load`
@@ -78,7 +109,10 @@
 
   ```json
   {
-    "values": ["tutorial:greeting"]
+    "values": [
+      "tutorial:greeting",
+      "#tutorial:something_else"
+    ]
   }
   ```
 
@@ -101,6 +135,83 @@
         ]
       }
     ]
+  }
+  ```
+
+  </details>
+
+- `@loot_table minecraft:blocks/yellow_shulker_box`
+
+  <details>
+
+  ```json
+  {
+      "type": "minecraft:block",
+      "pools": [
+          {
+              "rolls": 1,
+              "entries": [
+                  {
+                      "type": "minecraft:alternatives",
+                      "children": [
+                          {
+                              "type": "minecraft:dynamic",
+                              "name": "minecraft:contents",
+                              "conditions": [
+                                  {
+                                      "condition": "minecraft:match_tool",
+                                      "predicate": {
+                                          "item": "minecraft:air",
+                                          "nbt": "{drop_contents:1b}"
+                                      }
+                                  }
+                              ]
+                          },
+                          {
+                              "type": "minecraft:item",
+                              "name": "minecraft:yellow_shulker_box",
+                              "functions": [
+                                  {
+                                      "function": "minecraft:copy_name",
+                                      "source": "block_entity"
+                                  },
+                                  {
+                                      "function": "minecraft:copy_nbt",
+                                      "source": "block_entity",
+                                      "ops": [
+                                          {
+                                              "source": "Lock",
+                                              "target": "BlockEntityTag.Lock",
+                                              "op": "replace"
+                                          },
+                                          {
+                                              "source": "LootTable",
+                                              "target": "BlockEntityTag.LootTable",
+                                              "op": "replace"
+                                          },
+                                          {
+                                              "source": "LootTableSeed",
+                                              "target": "BlockEntityTag.LootTableSeed",
+                                              "op": "replace"
+                                          }
+                                      ]
+                                  },
+                                  {
+                                      "function": "minecraft:set_contents",
+                                      "entries": [
+                                          {
+                                              "type": "minecraft:dynamic",
+                                              "name": "minecraft:contents"
+                                          }
+                                      ]
+                                  }
+                              ]
+                          }
+                      ]
+                  }
+              ]
+          }
+      ]
   }
   ```
 

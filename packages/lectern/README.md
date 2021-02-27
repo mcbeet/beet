@@ -85,6 +85,25 @@ If you're using [`beet`](https://github.com/mcbeet/beet) you can use `lectern` a
 }
 ```
 
+## Document formats
+
+`lectern` implements two closely-related document formats: markdown and plain text. The markdown format builds upon the plain text format.
+
+The markdown format lets you present the various elements of your data pack or resource pack and how they fit together. It's a format that's meant to support [literate programming](https://en.wikipedia.org/wiki/Literate_programming). You can use it when your document is meant to be read by other people. It allows you to emphasize the important parts, explain tradeoffs and discuss alternatives, implementation details, etc...
+
+    `@function tutorial:greeting`
+
+    ```mcfunction
+    say Hello, world!
+    ```
+
+On the other hand if you don't intend to produce literate documents you can use the plain text format to author data packs and resource packs as a single file without having to deal with markdown formatting.
+
+```
+@function tutorial:greeting
+say Hello, world!
+```
+
 ## Directives
 
 Data pack and resource pack fragments are code blocks, links or images annotated with a special `lectern` directive. Directives are prefixed with the `@` symbol and can be followed by zero or more arguments.
@@ -102,33 +121,32 @@ Data pack and resource pack fragments are code blocks, links or images annotated
 
 Here is a reference of all the supported resources:
 
-| Data pack                       |     | Resource pack      |     |
-| ------------------------------- | --- | ------------------ | --- |
-| `@advancement`                  |     | `@blockstate`      |     |
-| `@function`                     |     | `@model`           |     |
-| `@loot_table`                   |     | `@font`            |     |
-| `@predicate`                    |     | `@glyph_sizes`     | ⚠️  |
-| `@recipe`                       |     | `@truetype_font`   | ⚠️  |
-| `@structure`                    | ⚠️  | `@shader_post`     |     |
-| `@block_tag`                    |     | `@shader_program`  |     |
-| `@entity_type_tag`              |     | `@fragment_shader` |     |
-| `@fluid_tag`                    |     | `@vertex_shader`   |     |
-| `@function_tag`                 |     | `@text`            |     |
-| `@item_tag`                     |     | `@texture_mcmeta`  |     |
-| `@dimension_type`               |     | `@texture`         | ⚠️  |
-| `@dimension`                    |     |                    |     |
-| `@biome`                        |     |                    |     |
-| `@configured_carver`            |     |                    |     |
-| `@configured_feature`           |     |                    |     |
-| `@configured_structure_feature` |     |                    |     |
-| `@configured_surface_builder`   |     |                    |     |
-| `@noise_settings`               |     |                    |     |
-| `@processor_list`               |     |                    |     |
-| `@template_pool`                |     |                    |     |
+| Data pack                       | Resource pack      |
+| ------------------------------- | ------------------ |
+| `@advancement`                  | `@blockstate`      |
+| `@function`                     | `@model`           |
+| `@loot_table`                   | `@font`            |
+| `@predicate`                    | `@glyph_sizes`     |
+| `@recipe`                       | `@truetype_font`   |
+| `@structure`                    | `@shader_post`     |
+| `@block_tag`                    | `@shader_program`  |
+| `@entity_type_tag`              | `@fragment_shader` |
+| `@fluid_tag`                    | `@vertex_shader`   |
+| `@function_tag`                 | `@text`            |
+| `@item_tag`                     | `@texture_mcmeta`  |
+| `@dimension_type`               | `@texture`         |
+| `@dimension`                    |                    |
+| `@biome`                        |                    |
+| `@configured_carver`            |                    |
+| `@configured_feature`           |                    |
+| `@configured_structure_feature` |                    |
+| `@configured_surface_builder`   |                    |
+| `@noise_settings`               |                    |
+| `@processor_list`               |                    |
+| `@template_pool`                |                    |
+| `@item_modifier`                |                    |
 
-> ⚠️ Binary resources are supported but aren't compatible with code block fragments.
-
-There are two additional built-in directives that can be used to include files using a path relative to the root of the data pack or the resource pack.
+There are also two built-in directives that can be used to include files using a path relative to the root of the data pack or the resource pack.
 
 ```
 @data_pack pack.mcmeta
@@ -137,6 +155,22 @@ There are two additional built-in directives that can be used to include files u
 ```
 
 This is useful for adding files that aren't part of any particular namespace.
+
+If you're using `lectern` as a `beet` plugin you will be able to require plugins dynamically wih the `@require` directive.
+
+```
+@require my_plugins.hello
+```
+
+Finally, the `@skip` directive is simply ignored and allows you to end a previous fragment in the plain text format.
+
+```
+@function tutorial:greeting
+say Hello, world!
+
+@skip
+This will not be included in the output.
+```
 
 ## Code block fragments
 
@@ -148,7 +182,11 @@ You can include the content of a code block in a data pack or a resource pack by
 say Hello, world!
 ```
 
-You can put the directive in an html comment to make it invisible.
+You can put the directive in an html comment to make it invisible. Here the code block is annotated with the following comment:
+
+```html
+<!-- @function_tag minecraft:load -->
+```
 
 <!-- @function_tag minecraft:load -->
 
@@ -158,6 +196,18 @@ You can put the directive in an html comment to make it invisible.
 }
 ```
 
+When using backticks you can surround the code block in a `<details>` element to make the code fragment foldable.
+
+`@function tutorial:greeting`
+
+<details>
+
+```mcfunction
+say Hello, world!
+```
+
+</details>
+
 The directive can also be embedded directly inside the code block. You can insert a directive preceded by either `#` or `//` and the following lines will be included in the specified file.
 
 ```mcfunction
@@ -165,7 +215,7 @@ The directive can also be embedded directly inside the code block. You can inser
 say You obtained a dead bush!
 ```
 
-Embedded directives are striped from the output. You can use multiple directives in a single code block.
+Embedded directives are stripped from the output. You can use multiple directives in a single code block.
 
 ```json
 // @loot_table minecraft:blocks/diamond_ore
@@ -210,15 +260,63 @@ Embedded directives are striped from the output. You can use multiple directives
 
 ## Link fragments
 
-TODO
+Link fragments make it possible to refer to external files, online assets, and to embed binary files in the markdown as data urls. You can create a link fragment by turning a directive surrounded by backticks into a markdown link.
+
+[`@loot_table minecraft:blocks/yellow_shulker_box`](https://lanternmc.com/yellow_shulker_box.json)
+
+The link itself can be a path to a local file or any url supported by the built-in [`urlopen`](https://docs.python.org/3/library/urllib.request.html#urllib.request.urlopen) function.
 
 ## Image fragments
 
-TODO
+You can include inline markdown images in the output data pack or resource pack by preceding the image with a directive surrounded by backticks.
+
+`@data_pack pack.png`
+
+![](https://static.wikia.nocookie.net/minecraft_gamepedia/images/3/3a/Pack.png/revision/latest?cb=20210210114950)
+
+Image fragments support the same variations as code block fragments. You can put the directive in a comment or surround the image with a `<details>` element to make it foldable.
 
 ## Modifiers
 
-TODO
+The behavior of particular directives can be adjusted with modifiers. A modifier is specified between parentheses right after the name of the directive.
+
+```
+@<directive_name>(<modifier>) <arg1> <arg2> <arg3>...
+```
+
+The `append` modifier is implemented by all the text-based built-in namespaced resource directives and makes it possible to concatenate the content of the fragment to the already-existing content.
+
+`@function(append) tutorial:greeting`
+
+```mcfunction
+say This is added afterwards.
+```
+
+The `merge` modifier is similar but instead of concatenating the contents it uses the `beet` merging strategy to combine the fragment with the existing file.
+
+`@function_tag(merge) minecraft:load`
+
+```json
+{
+  "values": ["#tutorial:something_else"]
+}
+```
+
+There are also modifiers that are applied to the content of the fragment directly. The `base64` modifier will decode the content of the code fragment as [base64](https://en.wikipedia.org/wiki/Base64).
+
+`@function_tag(base64) tutorial:something_else`
+
+```json
+ewogICJ2YWx1ZXMiOiBbInR1dG9yaWFsOnN0cmlwcGVkIl0KfQ==
+```
+
+Finally, there's a `strip_final_newline` modifier that removes the final newline at the end of code block fragments. It's mostly used to make sure that `lectern` snapshots can reconstruct the original content byte for byte in case the file wasn't terminated by a newline.
+
+`@function(strip_final_newline) tutorial:stripped`
+
+```mcfunction
+say This function doesn't have a final newline.
+```
 
 ## Command-line utility
 
@@ -262,25 +360,209 @@ $ lectern demo_data_pack demo_resource_pack demo.md
 $ lectern foo_data_pack bar_data_pack demo.md
 ```
 
-The last argument is the name of the generated markdown file. By default, the `lectern` utility won't save the files that can't be directly defined inside the markdown file. You can use the `-o/--output-files` option to dump the files in the specified directory.
+The last argument is the name of the generated markdown file. By default, the `lectern` utility will bundle binary files into the markdown file as data urls. You can use the `-e/--external-files` option to dump the binary files in a given directory instead.
 
 ```bash
-$ lectern demo_data_pack demo.md --output-files files
-$ lectern demo_data_pack demo.md -o files
-$ lectern demo_data_pack demo.md -o .
+$ lectern demo_data_pack demo.md --external-files files
+$ lectern demo_data_pack demo.md -e files
+$ lectern demo_data_pack demo.md -e .
 ```
+
+All these commands also work with plain text files. `lectern` will only use the markdown document format when the filename ends with `.md`.
+
+## Python API
+
+The API revolves around `Document` objects. A `lectern` document holds a `DataPack` and a `ResourcePack`, as well as a dictionary defining the usable directives. The extractors and serializers are also exposed on the document to make it possible to swap them out with custom ones if needed.
+
+```python
+from beet import DataPack, ResourcePack
+from lectern import Document
+
+document = Document()
+assert document.data == DataPack()
+assert document.assets == ResourcePack()
+```
+
+The constructor makes it possible to provide existing `DataPack` and `ResourcePack` instances, some initial text or markdown content, or a path from which to load an existing `lectern` document.
+
+```python
+Document(data=DataPack(), assets=ResourcePack())
+Document(text=...)
+Document(markdown=...)
+Document(path="path/to/document.md")
+```
+
+`Document` instances will compare equal if the underlying data packs and resource packs also compare equal.
+
+You can use the `load` method to read a markdown or a plain text file and update the internal data pack and resource pack with the extracted fragments.
+
+```python
+document.load("path/to/document.md")
+```
+
+If you already have some text or markdown ready to go, you can use the `add_text` and `add_markdown` methods.
+
+```python
+document.add_text(...)
+document.add_markdown(...)
+```
+
+If the markdown content refers to local files you can specify the directory from which the external files should be loaded from with the `external_files` argument.
+
+```python
+document.add_markdown(..., external_files="path/to/directory")
+```
+
+You can use the `get_text` and `get_markdown` methods to serialize the entire content of the internal data pack and resource pack. By default the `get_markdown` method will produce markdown that embeds binary files as data urls. You can enable `emit_external_files` and optionally provide a path prefix to generate a dictionary of associated files instead.
+
+```python
+text = document.get_text()
+markdown = document.get_markdown()
+markdown, external_files = document.get_markdown(emit_external_files=True)
+markdown, external_files = document.get_markdown(emit_external_files=True, prefix="path/to/directory")
+```
+
+Finally, the `save` method lets you serialize and write the document to a given path. If the filename ends with `.md` the generated markdown will bundle binary files as data urls by default. You can use the `external_files` argument to emit the binary files in the given directory instead.
+
+```python
+document.save("path/to/document.txt")
+document.save("path/to/document.md")
+document.save("path/to/document.md", external_files="path/to/files")
+```
+
+## Custom directives
+
+Directives are simply callable objects that receive the document fragment, the resource pack, and the data pack as arguments.
+
+```python
+from beet import DataPack, ResourcePack, Function
+from lectern import Document, Fragment
+
+def my_directive(fragment: Fragment, assets: ResourcePack, data: DataPack):
+    num1, num2 = fragment.expect("num1", "num2")
+    result = int(num1) + int(num2)
+    data["demo:output_result"] = Function([f"say {result}"])
+
+document = Document()
+document.directives["my_directive"] = my_directive
+document.add_text("@my_directive 32 10")
+assert document.data.functions["demo:output_result"] == Function(["say 42"])
+```
+
+The `expect` method allows you to unpack the directive arguments and automatically raises an error if the user didn't specify the arguments properly. You can use the `as_file` method to get the content of the fragment as a specific type of file.
+
+```python
+def repeated_function(fragment: Fragment, assets: ResourcePack, data: DataPack):
+    full_name, count = fragment.expect("full_name", "count")
+    function = fragment.as_file(Function)
+    function.lines *= int(count)
+    data[full_name] = function
+```
+
+The `as_file` method will take care of reading the file or downloading it if the directive is used with a link fragment. It will also handle the `base64` and `strip_final_newline` modifiers.
+
+You can handle custom modifiers by checking the content of the `modifier` attribute.
 
 ## Beet plugin
 
-TODO
+Using `lectern` as a `beet` plugin makes it possible to combine your markdown files with arbitrary `beet` plugins for further processing. The plugin can load files using the plain text and markdown document formats and emit a snapshot of the `beet` context at the end of the build.
 
-## Plain text documents
+```json
+{
+  "pipeline": ["lectern"],
+  "meta": {
+    "lectern": {
+      "load": ["*.md"],
+      "snapshot": "out/snapshot.md",
+      "external_files": "out"
+    }
+  }
+}
+```
 
-TODO
+You can require the plugin programmatically by using the `lectern` plugin factory.
 
-## Lectern for snapshot testing
+```python
+from beet import Context
+from lectern import lectern
 
-TODO
+def my_plugin(ctx: Context):
+    ctx.require(
+        lectern(
+            load=["*.md"],
+            snapshot="out/snapshot.md",
+            external_files="out",
+        )
+    )
+```
+
+All the configuration is optional. The plugin is a no-op if the `load` or `snapshot` options are not specified.
+
+You can retrieve the `Document` instance with the `inject` method. This is useful for adding custom directives.
+
+```python
+from beet import Context, DataPack, ResourcePack, Function
+from lectern import Document, Fragment
+
+def hello_directive(ctx: Context):
+    """"Plugin that defines the `@hello <name>` directive."""
+    document = ctx.inject(Document)
+    document.directives["hello"] = hello
+
+def hello(fragment: Fragment, assets: ResourcePack, data: DataPack):
+    name = fragment.expect("name")
+    function = data.functions.setdefault("hello:greetings", Function([]))
+    function.lines.append(f"say Hello, {name}!")
+```
+
+It's worth mentioning that `lectern` uses the `beet` cache to avoid downloading link fragments repeatedly and keeping your build snappy, especially in watch mode. If you need to re-download link fragments you can clear the `lectern` cache.
+
+```bash
+$ beet cache --clear lectern
+```
+
+You can also use a plugin to configure a custom cache timeout if you want to make sure that your assets are re-downloaded periodically.
+
+```python
+from beet import Context
+
+def download_every_day(ctx: Context):
+    ctx.cache["lectern"].timeout(hours=24)
+```
+
+## Snapshot testing
+
+A lot of Minecraft tooling involves generating data packs and resource packs. Writing tests for this kind of tooling takes time because you need to painstakingly compare everything that you care about with a reference value. This makes it hard to get good coverage, and then even harder to keep making changes to the code being tested afterwards. You're trading robustness and stability for a shackle that massively slows down development.
+
+That's where snapshot testing comes into play. Snapshot testing allows you to record a reference value and then make sure that your code keeps producing the same results. It provides the necessary tools for reviewing snapshots and updating them as your project evolves.
+
+`lectern` documents are useful as snapshot formats because they represent entire data packs and resource packs in a single file that's human-readable and diff-friendly.
+
+[`pytest-insta`](https://github.com/vberlier/pytest-insta) is an extensible snapshot testing plugin for [`pytest`](https://docs.pytest.org/en/stable/). When it's installed, `lectern` defines three additional snapshot formats.
+
+| Extension                 | Format description                                               |
+| ------------------------- | ---------------------------------------------------------------- |
+| `.pack.txt`               | Plain text snapshot.                                             |
+| `.pack.md`                | Markdown snapshot with bundled binary files.                     |
+| `.pack.md_external_files` | Directory with a README.md that refers to external binary files. |
+
+You can use these snapshot formats when comparing `Document` objects with the `snapshot` fixture.
+
+```python
+def test_generate(snapshot):
+    data = generate_some_data_pack()
+    assert snapshot("pack.txt") == Document(data=data)
+```
+
+If you're using the `beet` toolchain, keep in mind that you can get a `Document` instance bound to the context object by using the `inject` method.
+
+```python
+def test_generate_with_beet(snapshot):
+    ctx = run_beet(...)
+    assert snapshot("pack.txt") == ctx.inject(Document)
+```
+
+This will save the entire data pack and resource pack in the snapshot. For more details about working with the generated snapshots check out the [`pytest-insta` documentation](https://github.com/vberlier/pytest-insta#command-line-options).
 
 ## Contributing
 
