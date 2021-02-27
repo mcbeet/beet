@@ -1,0 +1,8 @@
+@function(append) demo:hello
+say hello
+
+@skip
+This is ignored.
+
+@function(append) demo:hello
+say world
