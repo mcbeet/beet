@@ -2,6 +2,21 @@
 
 <!--next-version-placeholder-->
 
+## v0.6.0 (2021-02-27)
+### Feature
+* Add merge modifier ([`907b630`](https://github.com/mcbeet/lectern/commit/907b630a23bf3f4d88c7a343c529a6a6e2fce07b))
+* Add append modifier ([`d4e8be4`](https://github.com/mcbeet/lectern/commit/d4e8be4fb54da6c75b959ce569974b612aedde1a))
+* Add base64 modifier ([`acd9d77`](https://github.com/mcbeet/lectern/commit/acd9d7740df3d519b7a19d59f1b98af0d0092d76))
+
+### Fix
+* Don't set any cache timeout ([`ebbb5a6`](https://github.com/mcbeet/lectern/commit/ebbb5a6710c8e63fdfe73d9dc7b07848c4ca6818))
+* Report unexpected arguments for skip directive ([`f7ff720`](https://github.com/mcbeet/lectern/commit/f7ff720b7444135d888154940f7ed226e0a9dfdb))
+* Add item_modifier directive ([`5e034d5`](https://github.com/mcbeet/lectern/commit/5e034d57f36a1f8719e88cd653e7fab8ffbfb5c2))
+* Don't cache data url ([`c7517a8`](https://github.com/mcbeet/lectern/commit/c7517a844a3c09da9a448f8742c69f30b9478cc2))
+
+### Documentation
+* Udpate readme ([`a110a82`](https://github.com/mcbeet/lectern/commit/a110a823f333f277deff7137f32b133eb2d16ce5))
+
 ## v0.5.0 (2021-02-25)
 ### Feature
 * Serialize images ([`7cf6fd9`](https://github.com/mcbeet/lectern/commit/7cf6fd944533a4ea9210f1f795bc4839c1a793de))
