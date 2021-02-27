@@ -31,6 +31,7 @@ from beet.library.data_pack import (
     FluidTag,
     Function,
     FunctionTag,
+    ItemModifier,
     ItemTag,
     LootTable,
     NoiseSettings,
@@ -164,6 +165,7 @@ def get_builtin_directives() -> Dict[
         "noise_settings":               NamespacedResourceDirective(NoiseSettings),
         "processor_list":               NamespacedResourceDirective(ProcessorList),
         "template_pool":                NamespacedResourceDirective(TemplatePool),
+        "item_modifier":                NamespacedResourceDirective(ItemModifier),
 
         "blockstate":      NamespacedResourceDirective(Blockstate),
         "model":           NamespacedResourceDirective(Model),
