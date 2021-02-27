@@ -75,7 +75,7 @@ class Fragment:
             return file_type(source_path=self.path)
 
         elif self.url:
-            if self.cache:
+            if self.cache and not self.url.startswith("data:"):
                 return file_type(source_path=self.cache.download(self.url))
 
             with urlopen(self.url) as f:
