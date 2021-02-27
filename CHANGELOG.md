@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.10.5 (2021-02-27)
+### Fix
+* Overload getitem to return namespaceproxy ([`6b0b731`](https://github.com/mcbeet/beet/commit/6b0b731c77253d7cf335cda09b778feee61045d8))
+
 ## v0.10.4 (2021-02-25)
 ### Fix
 * Change path and save ([`ecc6593`](https://github.com/mcbeet/beet/commit/ecc659385bb64fa884a01648e2f0db553542160a))
