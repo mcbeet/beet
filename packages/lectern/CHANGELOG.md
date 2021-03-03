@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.6.1 (2021-03-03)
+### Fix
+* Make pyright happy ([`f15700c`](https://github.com/mcbeet/lectern/commit/f15700c1c5a5348248ac9947a167fe3931d74c31))
+
 ## v0.6.0 (2021-02-27)
 ### Feature
 * Add merge modifier ([`907b630`](https://github.com/mcbeet/lectern/commit/907b630a23bf3f4d88c7a343c529a6a6e2fce07b))
