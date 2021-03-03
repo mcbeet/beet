@@ -2,6 +2,11 @@
 
 <!--next-version-placeholder-->
 
+## v0.11.0 (2021-03-03)
+### Feature
+* Add pytest plugin for rich explanations ([`947a6b5`](https://github.com/mcbeet/beet/commit/947a6b5fe251fe630afa326e62e365d5ebaca990))
+* Add whitelist ([`f5730ba`](https://github.com/mcbeet/beet/commit/f5730ba152921b64afbe4c629553c182815a7877))
+
 ## v0.10.5 (2021-02-27)
 ### Fix
 * Overload getitem to return namespaceproxy ([`6b0b731`](https://github.com/mcbeet/beet/commit/6b0b731c77253d7cf335cda09b778feee61045d8))
