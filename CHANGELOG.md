@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.11.1 (2021-03-03)
+### Fix
+* Ignore click exceptions in error_handler ([`9544765`](https://github.com/mcbeet/beet/commit/95447651b9c40a46484d8edafc4145b587369509))
+
 ## v0.11.0 (2021-03-03)
 ### Feature
 * Add pytest plugin for rich explanations ([`947a6b5`](https://github.com/mcbeet/beet/commit/947a6b5fe251fe630afa326e62e365d5ebaca990))
