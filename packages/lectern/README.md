@@ -262,7 +262,7 @@ Embedded directives are stripped from the output. You can use multiple directive
 
 Link fragments make it possible to refer to external files, online assets, and to embed binary files in the markdown as data urls. You can create a link fragment by turning a directive surrounded by backticks into a markdown link.
 
-[`@loot_table minecraft:blocks/yellow_shulker_box`](https://lanternmc.com/yellow_shulker_box.json)
+[`@loot_table minecraft:blocks/yellow_shulker_box`](examples/with_links/yellow_shulker_box.json)
 
 The link itself can be a path to a local file or any url supported by the built-in [`urlopen`](https://docs.python.org/3/library/urllib.request.html#urllib.request.urlopen) function.
 
