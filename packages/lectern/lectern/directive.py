@@ -16,7 +16,7 @@ from typing import Any, Dict, Protocol, Type, Union
 from zipfile import ZipFile
 
 from beet import Context, DataPack, ResourcePack
-from beet.library.base import NamespaceFile, NamespaceProxy
+from beet.library.base import NamespaceFile
 from beet.library.data_pack import (
     Advancement,
     Biome,
@@ -77,7 +77,7 @@ class NamespacedResourceDirective:
         file_instance: Any = fragment.as_file(self.file_type)
 
         pack = assets if self.file_type in assets.namespace_type.field_map else data
-        proxy: NamespaceProxy[Any] = pack[self.file_type]  # type: ignore
+        proxy: Any = pack[self.file_type]  # type: ignore
 
         if fragment.modifier == "append":
             current_file = proxy.setdefault(full_name, self.file_type(""))
