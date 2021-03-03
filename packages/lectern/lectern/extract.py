@@ -10,7 +10,7 @@ import re
 from itertools import islice
 from pathlib import Path
 from typing import Dict, Iterable, Iterator, List, Mapping, Optional, Tuple, Union
-from urllib.parse import unquote, urlparse
+from urllib.parse import unquote
 
 from beet import Cache, DataPack, ResourcePack
 from beet.core.utils import FileSystemPath
@@ -20,9 +20,11 @@ from markdown_it.token import Token
 
 from .directive import Directive
 from .fragment import Fragment
+from .utils import is_path
 
 # Patch markdown_it to allow arbitrary data urls
 # https://github.com/executablebooks/markdown-it-py/issues/128
+# TODO: Will soon be able to use custom validateLink
 normalize_url.GOOD_DATA_RE = re.compile(r"^data:")
 
 
@@ -443,10 +445,10 @@ class MarkdownExtractor(Extractor):
         external_files: Optional[FileSystemPath] = None,
     ) -> Fragment:
         """Helper for creating a fragment from a link."""
-        url = unquote(link)
+        url = unquote(link)  # TODO: Will soon be able to use custom normalizeLink
         path = None
 
-        if urlparse(url).path == url:
+        if is_path(url):
             if external_files:
                 path = Path(external_files, url).resolve()
             url = None
