@@ -1,0 +1,4 @@
+{
+  "whitelist": ["foo", "bar"],
+  "pipeline": ["foo", "bar", "not_foo"]
+}

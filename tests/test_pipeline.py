@@ -1,6 +1,8 @@
 from typing import List
 
-from beet.toolchain.pipeline import GenericPipeline
+import pytest
+
+from beet.toolchain.pipeline import GenericPipeline, PluginImportError
 
 TestPipeline = GenericPipeline[List[str]]
 
@@ -107,3 +109,37 @@ def test_self_require():
 
     pipeline.run([p1])
     assert pipeline.ctx == ["p1"]
+
+
+def some_plugin(ctx: List[str]):
+    ctx.append("hello")
+
+
+def test_import_require():
+    pipeline = TestPipeline([])
+    pipeline.run([f"{__name__}.some_plugin"])
+    assert pipeline.ctx == ["hello"]
+
+
+def test_import_require_not_found():
+    pipeline = TestPipeline([])
+    dotted_path = f"{__name__}.does_not_exist"
+
+    with pytest.raises(PluginImportError, match=dotted_path):
+        pipeline.run([dotted_path])
+
+
+def test_import_require_whitelist():
+    pipeline = TestPipeline([], whitelist=["thing"])
+    dotted_path = f"{__name__}.some_plugin"
+
+    with pytest.raises(PluginImportError, match=dotted_path):
+        pipeline.run([dotted_path])
+
+
+def test_import_require_whitelist_match():
+    dotted_path = f"{__name__}.some_plugin"
+    pipeline = TestPipeline([], whitelist=[dotted_path])
+
+    pipeline.run([dotted_path])
+    assert pipeline.ctx == ["hello"]

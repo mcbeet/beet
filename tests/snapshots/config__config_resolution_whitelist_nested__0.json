@@ -3,11 +3,15 @@
   "description": "",
   "author": "",
   "version": "",
-  "directory": "tests/config_examples/crazy_extend",
+  "directory": "tests/config_examples/whitelist_nested",
   "extend": [],
-  "output": "tests/config_examples/crazy_extend/build",
+  "output": "",
   "ignore": [],
-  "whitelist": null,
+  "whitelist": [
+    "foo",
+    "bar",
+    "hello"
+  ],
   "require": [],
   "templates": [],
   "data_pack": {
@@ -27,16 +31,21 @@
     "render": {}
   },
   "pipeline": [
+    "foo",
+    "bar",
+    "hello",
     {
       "name": "",
       "description": "",
       "author": "",
       "version": "",
-      "directory": "tests/config_examples/crazy_extend",
+      "directory": "tests/config_examples/whitelist_nested",
       "extend": [],
       "output": "",
       "ignore": [],
-      "whitelist": null,
+      "whitelist": [
+        "other"
+      ],
       "require": [],
       "templates": [],
       "data_pack": {
@@ -44,12 +53,7 @@
         "description": "",
         "pack_format": 0,
         "zipped": null,
-        "load": [
-          "tests/config_examples/crazy_extend/vendor/lib1",
-          "tests/config_examples/crazy_extend/vendor/lib2",
-          "tests/config_examples/crazy_extend/vendor/lib3",
-          "tests/config_examples/crazy_extend/thing"
-        ],
+        "load": [],
         "render": {}
       },
       "resource_pack": {
@@ -57,12 +61,13 @@
         "description": "",
         "pack_format": 0,
         "zipped": null,
-        "load": [
-          "tests/config_examples/crazy_extend/thing"
-        ],
+        "load": [],
         "render": {}
       },
-      "pipeline": [],
+      "pipeline": [
+        "other",
+        "not_other"
+      ],
       "meta": {}
     },
     {
@@ -70,7 +75,7 @@
       "description": "",
       "author": "",
       "version": "",
-      "directory": "tests/config_examples/crazy_extend",
+      "directory": "tests/config_examples/whitelist_nested",
       "extend": [],
       "output": "",
       "ignore": [],
@@ -82,28 +87,20 @@
         "description": "",
         "pack_format": 0,
         "zipped": null,
-        "load": [
-          "tests/config_examples/crazy_extend/src/data_pack",
-          "tests/config_examples/crazy_extend/thing"
-        ],
-        "render": {
-          "functions": [
-            "foo:bar",
-            "other:thing"
-          ]
-        }
+        "load": [],
+        "render": {}
       },
       "resource_pack": {
         "name": "",
         "description": "",
         "pack_format": 0,
         "zipped": null,
-        "load": [
-          "tests/config_examples/crazy_extend/thing"
-        ],
+        "load": [],
         "render": {}
       },
-      "pipeline": [],
+      "pipeline": [
+        "hello"
+      ],
       "meta": {}
     },
     {
@@ -111,11 +108,14 @@
       "description": "",
       "author": "",
       "version": "",
-      "directory": "tests/config_examples/crazy_extend/src",
+      "directory": "tests/config_examples/whitelist_nested",
       "extend": [],
       "output": "",
       "ignore": [],
-      "whitelist": null,
+      "whitelist": [
+        "foo",
+        "bar"
+      ],
       "require": [],
       "templates": [],
       "data_pack": {
@@ -123,9 +123,7 @@
         "description": "",
         "pack_format": 0,
         "zipped": null,
-        "load": [
-          "tests/config_examples/crazy_extend/src/thing"
-        ],
+        "load": [],
         "render": {}
       },
       "resource_pack": {
@@ -133,13 +131,13 @@
         "description": "",
         "pack_format": 0,
         "zipped": null,
-        "load": [
-          "tests/config_examples/crazy_extend/src/resource_pack",
-          "tests/config_examples/crazy_extend/src/thing"
-        ],
+        "load": [],
         "render": {}
       },
-      "pipeline": [],
+      "pipeline": [
+        "foo",
+        "bar"
+      ],
       "meta": {}
     }
   ],

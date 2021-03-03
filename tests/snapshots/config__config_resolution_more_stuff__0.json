@@ -7,6 +7,7 @@
   "extend": [],
   "output": "tests/config_examples/more_stuff/build",
   "ignore": [],
+  "whitelist": null,
   "require": [
     "some_kind_of_template_extension"
   ],

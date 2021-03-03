@@ -1,0 +1,20 @@
+{
+  "extend": ["beet-base.json"],
+  "whitelist": ["hello"],
+  "pipeline": [
+    "foo",
+    "bar",
+    "hello",
+    {
+      "whitelist": ["other"],
+      "pipeline": ["other", "not_other"]
+    },
+    {
+      "pipeline": ["hello"]
+    },
+    {
+      "extend": ["beet-base.json"],
+      "pipeline": ["foo", "bar"]
+    }
+  ]
+}

@@ -7,6 +7,7 @@
   "extend": [],
   "output": "",
   "ignore": [],
+  "whitelist": null,
   "require": [],
   "templates": [
     "tests/config_examples/load_with_templates/templates1",

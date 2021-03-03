@@ -11,7 +11,7 @@ import platform
 from importlib import import_module
 from pathlib import Path
 from traceback import format_exception
-from typing import Any, Optional
+from typing import Any, List, Optional
 
 
 def format_exc(exc: BaseException) -> str:
@@ -24,7 +24,13 @@ def format_obj(obj: Any) -> str:
     return repr(f"{module}.{name}") if module and name else repr(obj)
 
 
-def import_from_string(dotted_path: str, default_member: Optional[str] = None) -> Any:
+def import_from_string(
+    dotted_path: str,
+    default_member: Optional[str] = None,
+    whitelist: Optional[List[str]] = None,
+) -> Any:
+    if whitelist is not None and dotted_path not in whitelist:
+        raise ModuleNotFoundError(f"No module named {dotted_path!r}")
     try:
         module = import_module(dotted_path)
     except ImportError:

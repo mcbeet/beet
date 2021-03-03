@@ -104,6 +104,7 @@ class GenericPipeline(Generic[T]):
     ctx: T
     default_symbol: str = "beet_default"
 
+    whitelist: Optional[List[str]] = None
     plugins: Set[GenericPlugin[T]] = field(default_factory=set)
     tasks: List[Task[T]] = field(default_factory=list)
 
@@ -122,7 +123,11 @@ class GenericPipeline(Generic[T]):
         """Return the imported plugin if the argument is a dotted path."""
         try:
             return (
-                import_from_string(spec, default_member=self.default_symbol)
+                import_from_string(
+                    dotted_path=spec,
+                    default_member=self.default_symbol,
+                    whitelist=self.whitelist,
+                )
                 if isinstance(spec, str)
                 else spec
             )

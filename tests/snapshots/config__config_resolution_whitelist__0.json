@@ -3,11 +3,14 @@
   "description": "",
   "author": "",
   "version": "",
-  "directory": "tests/config_examples/empty",
+  "directory": "tests/config_examples/whitelist",
   "extend": [],
   "output": "",
   "ignore": [],
-  "whitelist": null,
+  "whitelist": [
+    "foo",
+    "bar"
+  ],
   "require": [],
   "templates": [],
   "data_pack": {
@@ -26,6 +29,10 @@
     "load": [],
     "render": {}
   },
-  "pipeline": [],
+  "pipeline": [
+    "foo",
+    "bar",
+    "not_foo"
+  ],
   "meta": {}
 }

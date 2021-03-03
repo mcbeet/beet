@@ -71,6 +71,7 @@ class ProjectConfig(BaseModel):
     extend: List[str] = Field(default_factory=list)
     output: str = ""
     ignore: List[str] = Field(default_factory=list)
+    whitelist: Optional[List[str]] = None
 
     require: List[str] = Field(default_factory=list)
     templates: List[str] = Field(default_factory=list)
@@ -123,6 +124,11 @@ class ProjectConfig(BaseModel):
             data_pack=self.data_pack.with_defaults(other.data_pack),
             resource_pack=self.resource_pack.with_defaults(other.resource_pack),
             templates=other.templates + self.templates,
+            whitelist=(
+                self.whitelist
+                if other.whitelist is None
+                else other.whitelist + (self.whitelist or [])
+            ),
             require=other.require + self.require,
             pipeline=other.pipeline + self.pipeline,
             meta={**deepcopy(other.meta), **deepcopy(self.meta)},

@@ -212,6 +212,7 @@ class ProjectBuilder:
                 templates=self.project.template_directories,
                 cache_dir=self.project.cache["template"].directory,
             ),
+            whitelist=self.config.whitelist,
         )
 
         with ctx.activate() as pipeline:

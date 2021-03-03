@@ -9,9 +9,9 @@ __all__ = [
 
 import sys
 from contextlib import contextmanager
-from dataclasses import dataclass, field
+from dataclasses import InitVar, dataclass, field
 from pathlib import Path
-from typing import Any, Callable, Optional, Tuple, TypeVar
+from typing import Any, Callable, List, Optional, Tuple, TypeVar
 
 from beet.core.cache import MultiCache
 from beet.core.container import Container
@@ -62,13 +62,16 @@ class Context:
     assets: ResourcePack = field(default_factory=ResourcePack)
     data: DataPack = field(default_factory=DataPack)
 
+    whitelist: InitVar[Optional[List[str]]] = None
+
     _container: ContextContainer = extra_field(init=False)
     _path_entry: str = extra_field(init=False)
 
-    def __post_init__(self):
+    def __post_init__(self, whitelist: Optional[List[str]]):
         self._container = ContextContainer(self)
         self._path_entry = str(self.directory.resolve())
         self.template.env.globals["ctx"] = self
+        self.inject(Pipeline).whitelist = whitelist
 
     def inject(self, cls: Callable[["Context"], InjectedType]) -> InjectedType:
         """Retrieve the instance provided by the specified service factory."""
