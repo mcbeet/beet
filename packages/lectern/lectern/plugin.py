@@ -4,18 +4,19 @@ __all__ = [
 ]
 
 
-from typing import Iterable, Optional
+from typing import Iterable, List, Optional, cast
 
 from beet import Context
+from beet.core.utils import JsonDict
 from beet.toolchain.context import Plugin
 
 from .document import Document
 
 
 def beet_default(ctx: Context):
-    config = ctx.meta.get("lectern", {})
+    config = ctx.meta.get("lectern", cast(JsonDict, {}))
 
-    load = config.get("load", [])
+    load = config.get("load", cast(List[str], []))
     snapshot = config.get("snapshot")
     external_files = config.get("external_files")
 

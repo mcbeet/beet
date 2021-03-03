@@ -119,7 +119,9 @@ class Document:
         external_prefix: str = "",
     ) -> Union[str, Tuple[str, Dict[str, File[Any, Any]]]]:
         """Turn the data pack and the resource pack into markdown."""
-        external_files = {} if emit_external_files else None
+        external_files: Optional[Dict[str, File[Any, Any]]] = (
+            {} if emit_external_files else None
+        )
 
         content = self.markdown_serializer.serialize(
             assets=self.assets,
