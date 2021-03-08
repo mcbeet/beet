@@ -3,7 +3,6 @@ __all__ = [
 ]
 
 
-import os
 from dataclasses import InitVar, dataclass, field
 from pathlib import Path
 from typing import Any, Dict, Literal, MutableMapping, Optional, Tuple, Union, overload
@@ -13,7 +12,7 @@ from beet.core.utils import FileSystemPath, extra_field
 
 from .directive import Directive, RequireDirective, get_builtin_directives
 from .extract import MarkdownExtractor, TextExtractor
-from .serialize import MarkdownSerializer, TextSerializer
+from .serialize import ExternalFilesManager, MarkdownSerializer, TextSerializer
 
 
 @dataclass
@@ -145,21 +144,14 @@ class Document:
 
         if path.suffix == ".md":
             if external_files:
-                external_files = Path(external_files).resolve()
-
-                prefix = os.path.relpath(external_files, path.parent)
-                prefix = prefix.replace(os.path.sep, "/")
-                prefix = "" if prefix == "." else prefix.rstrip("/") + "/"
-
-                content, files = self.get_markdown(
-                    emit_external_files=True,
-                    external_prefix=prefix,
-                )
-
-                if files:
-                    external_files.mkdir(parents=True, exist_ok=True)
-                    for filename, file_instance in files.items():
-                        file_instance.dump(external_files, path.parent / filename)
+                with ExternalFilesManager(
+                    Path(external_files).resolve(), path
+                ) as manager:
+                    content, files = self.get_markdown(
+                        emit_external_files=True,
+                        external_prefix=manager.external_prefix,
+                    )
+                    manager.external_files.update(files)
             else:
                 content = self.get_markdown()
         else:

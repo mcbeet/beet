@@ -11,7 +11,7 @@ from dataclasses import replace
 from itertools import islice
 from pathlib import Path
 from typing import Dict, Iterable, Iterator, List, Mapping, Optional, Tuple, Union
-from urllib.parse import unquote
+from urllib.parse import unquote, urlparse
 
 from beet import Cache, DataPack, ResourcePack
 from beet.core.utils import FileSystemPath
@@ -21,7 +21,6 @@ from markdown_it.token import Token
 
 from .directive import Directive
 from .fragment import Fragment
-from .utils import is_path
 
 # Patch markdown_it to allow arbitrary data urls
 # https://github.com/executablebooks/markdown-it-py/issues/128
@@ -497,7 +496,7 @@ class MarkdownExtractor(Extractor):
         url = unquote(link)  # TODO: Will soon be able to use custom normalizeLink
         path = None
 
-        if is_path(url):
+        if urlparse(url).path == url:
             if external_files:
                 path = Path(external_files, url).resolve()
             url = None
