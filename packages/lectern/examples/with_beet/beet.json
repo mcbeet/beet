@@ -3,7 +3,11 @@
   "pipeline": ["lectern"],
   "meta": {
     "lectern": {
-      "load": ["*.md"]
+      "load": ["*.md"],
+      "scripts": [
+        ["python", "some_script.py"],
+        ["python", "other_script.py"]
+      ]
     }
   }
 }
