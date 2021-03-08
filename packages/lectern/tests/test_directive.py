@@ -1,7 +1,6 @@
 import pytest
 
-from lectern import TextExtractor
-from lectern.directive import Fragment, get_builtin_directives
+from lectern import Fragment, TextExtractor, get_builtin_directives
 
 
 @pytest.mark.parametrize(
@@ -9,15 +8,17 @@ from lectern.directive import Fragment, get_builtin_directives
     [
         (
             "@function demo:foo\nsay foo\n",
-            Fragment("function", None, ["demo:foo"], "say foo\n"),
+            Fragment(0, 3, "function", None, ["demo:foo"], "say foo\n"),
         ),
         (
             "@function() demo:foo\nsay foo\n",
-            Fragment("function", "", ["demo:foo"], "say foo\n"),
+            Fragment(0, 3, "function", "", ["demo:foo"], "say foo\n"),
         ),
         (
             "@function(strip_final_newline) demo:foo\nsay foo\n",
-            Fragment("function", "strip_final_newline", ["demo:foo"], "say foo\n"),
+            Fragment(
+                0, 3, "function", "strip_final_newline", ["demo:foo"], "say foo\n"
+            ),
         ),
     ],
 )

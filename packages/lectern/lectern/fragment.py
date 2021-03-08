@@ -27,6 +27,8 @@ class InvalidFragment(FormattedPipelineException):
 class Fragment:
     """Class representing a fragment annotated by a directive."""
 
+    start_line: int
+    end_line: int
     directive: str
     modifier: Optional[str] = None
     arguments: Sequence[str] = ()

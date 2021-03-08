@@ -7,6 +7,7 @@ __all__ = [
 
 
 import re
+from dataclasses import replace
 from itertools import islice
 from pathlib import Path
 from typing import Dict, Iterable, Iterator, List, Mapping, Optional, Tuple, Union
@@ -61,6 +62,24 @@ class Extractor:
 
         return self.regex
 
+    def split(
+        self,
+        source: str,
+        directives: Mapping[str, Directive],
+    ) -> Iterator[Tuple[str, Optional[Fragment]]]:
+        """Split the given content into fragments."""
+        lines = source.splitlines(keepends=True)
+        previous_line = 0
+
+        for fragment in self.parse_fragments(source, directives):
+            if fragment.start_line > previous_line:
+                yield "".join(lines[previous_line : fragment.start_line]), None
+            yield "".join(lines[fragment.start_line : fragment.end_line]), fragment
+            previous_line = fragment.end_line
+
+        if previous_line < len(lines):
+            yield "".join(lines[previous_line:]), None
+
     def extract(
         self,
         source: str,
@@ -94,6 +113,8 @@ class Extractor:
 
     def create_fragment(
         self,
+        start_line: int,
+        end_line: int,
         match: "re.Match[str]",
         content: Optional[str] = None,
         url: Optional[str] = None,
@@ -102,6 +123,8 @@ class Extractor:
         """Helper for creating a fragment from a matched pattern."""
         directive, modifier, arguments = match.groups()
         return Fragment(
+            start_line=start_line,
+            end_line=end_line,
             directive=directive,
             modifier=modifier,
             arguments=arguments.split(),
@@ -123,7 +146,7 @@ class TextExtractor(Extractor):
         tokens = self.get_regex(directives).split(source + "\n")
 
         it = iter(tokens)
-        next(it)
+        newlines = next(it).count("\n")
 
         while True:
             try:
@@ -133,6 +156,8 @@ class TextExtractor(Extractor):
             else:
                 content = content.partition("\n")[-1]
                 yield Fragment(
+                    start_line=newlines,
+                    end_line=(newlines := newlines + content.count("\n") + 1),
                     directive=directive,
                     modifier=modifier,
                     arguments=arguments.split(),
@@ -180,11 +205,14 @@ class MarkdownExtractor(Extractor):
         tokens = self.parser.parse(source)  # type: ignore
         regex = self.get_regex(directives)
 
-        skip = 1
+        skip_to = 0
 
         for i, token in enumerate(tokens):
-            if skip > 1:
-                skip -= 1
+            if not token.map:
+                continue
+
+            current_line = token.map[0]
+            if skip_to > current_line:
                 continue
 
             #
@@ -196,7 +224,7 @@ class MarkdownExtractor(Extractor):
             #
             if (
                 (
-                    skip := self.match_tokens(
+                    skip_to := self.match_tokens(
                         tokens[i : i + 4],
                         "paragraph_open",
                         "inline",
@@ -209,7 +237,9 @@ class MarkdownExtractor(Extractor):
                 and self.match_tokens(inline.children, "code_inline")
                 and (match := regex.match(inline.children[0].content))
             ):
-                yield self.create_fragment(match, content=tokens[i + 3].content)
+                yield self.create_fragment(
+                    current_line, skip_to, match, content=tokens[i + 3].content
+                )
 
             #
             # `@directive args...`
@@ -218,7 +248,7 @@ class MarkdownExtractor(Extractor):
             #
             elif (
                 (
-                    skip := self.match_tokens(
+                    skip_to := self.match_tokens(
                         tokens[i : i + 6],
                         "paragraph_open",
                         "inline",
@@ -237,7 +267,9 @@ class MarkdownExtractor(Extractor):
                 and (link := image.children[0].attrGet("src"))
                 and (match := regex.match(inline.children[0].content))
             ):
-                yield self.create_link_fragment(match, link, external_files)
+                yield self.create_link_fragment(
+                    current_line, skip_to, match, link, external_files
+                )
 
             #
             # `@directive args...`
@@ -252,7 +284,7 @@ class MarkdownExtractor(Extractor):
             #
             elif (
                 (
-                    skip := self.match_tokens(
+                    skip_to := self.match_tokens(
                         tokens[i : i + 6],
                         "paragraph_open",
                         "inline",
@@ -269,7 +301,9 @@ class MarkdownExtractor(Extractor):
                 and tokens[i + 5].content == "</details>\n"
                 and (match := regex.match(inline.children[0].content))
             ):
-                yield self.create_fragment(match, content=tokens[i + 4].content)
+                yield self.create_fragment(
+                    current_line, skip_to, match, content=tokens[i + 4].content
+                )
 
             #
             # `@directive args...`
@@ -282,7 +316,7 @@ class MarkdownExtractor(Extractor):
             #
             elif (
                 (
-                    skip := self.match_tokens(
+                    skip_to := self.match_tokens(
                         tokens[i : i + 8],
                         "paragraph_open",
                         "inline",
@@ -305,14 +339,16 @@ class MarkdownExtractor(Extractor):
                 and (link := image.children[0].attrGet("src"))
                 and (match := regex.match(inline.children[0].content))
             ):
-                yield self.create_link_fragment(match, link, external_files)
+                yield self.create_link_fragment(
+                    current_line, skip_to, match, link, external_files
+                )
 
             #
             # [`@directive args...`](path/to/content)
             #
             elif (
                 (
-                    skip := self.match_tokens(
+                    skip_to := self.match_tokens(
                         tokens[i : i + 3],
                         "paragraph_open",
                         "inline",
@@ -330,7 +366,9 @@ class MarkdownExtractor(Extractor):
                 and (link := inline.children[0].attrGet("href"))
                 and (match := regex.match(inline.children[1].content))
             ):
-                yield self.create_link_fragment(match, link, external_files)
+                yield self.create_link_fragment(
+                    current_line, skip_to, match, link, external_files
+                )
 
             #
             # <!-- @directive args... -->
@@ -341,7 +379,7 @@ class MarkdownExtractor(Extractor):
             #
             elif (
                 (
-                    skip := self.match_tokens(
+                    skip_to := self.match_tokens(
                         tokens[i : i + 2],
                         "html_block",
                         ["fence", "code_block"],
@@ -350,7 +388,9 @@ class MarkdownExtractor(Extractor):
                 and (comment := self.html_comment_regex.match(token.content))
                 and (match := regex.match(comment.group(1)))
             ):
-                yield self.create_fragment(match, content=tokens[i + 1].content)
+                yield self.create_fragment(
+                    current_line, skip_to, match, content=tokens[i + 1].content
+                )
 
             #
             # <!-- @directive args... -->
@@ -359,7 +399,7 @@ class MarkdownExtractor(Extractor):
             #
             elif (
                 (
-                    skip := self.match_tokens(
+                    skip_to := self.match_tokens(
                         tokens[i : i + 4],
                         "html_block",
                         "paragraph_open",
@@ -374,14 +414,16 @@ class MarkdownExtractor(Extractor):
                 and (link := image.children[0].attrGet("src"))
                 and (match := regex.match(comment.group(1)))
             ):
-                yield self.create_link_fragment(match, link, external_files)
+                yield self.create_link_fragment(
+                    current_line, skip_to, match, link, external_files
+                )
 
             #
             # `@directive args...`
             #
             elif (
                 (
-                    skip := self.match_tokens(
+                    skip_to := self.match_tokens(
                         tokens[i : i + 3],
                         "paragraph_open",
                         "inline",
@@ -393,7 +435,7 @@ class MarkdownExtractor(Extractor):
                 and self.match_tokens(inline.children, "code_inline")
                 and (match := regex.match(inline.children[0].content))
             ):
-                yield self.create_fragment(match)
+                yield self.create_fragment(current_line, skip_to, match)
 
             #
             # <!-- @directive args... -->
@@ -403,7 +445,7 @@ class MarkdownExtractor(Extractor):
                 and (comment := self.html_comment_regex.match(token.content))
                 and (match := regex.match(comment.group(1)))
             ):
-                yield self.create_fragment(match)
+                yield self.create_fragment(current_line, skip_to, match)
 
             #
             # ```
@@ -413,10 +455,15 @@ class MarkdownExtractor(Extractor):
             # ```
             #
             elif token.type in ["fence", "code_block"]:
-                yield from self.embedded_extractor.parse_fragments(
+                for fragment in self.embedded_extractor.parse_fragments(
                     token.content,
                     directives,
-                )
+                ):
+                    yield replace(
+                        fragment,
+                        start_line=fragment.start_line + current_line,
+                        end_line=(skip_to := fragment.end_line + current_line),
+                    )
 
     def match_tokens(
         self,
@@ -435,11 +482,13 @@ class MarkdownExtractor(Extractor):
                 )
                 for token, token_type in zip(tokens, token_types)
             )
-            and len(tokens)
+            and next((token.map[-1] for token in reversed(tokens) if token.map), 1)
         )
 
     def create_link_fragment(
         self,
+        start_line: int,
+        end_line: int,
         match: "re.Match[str]",
         link: str,
         external_files: Optional[FileSystemPath] = None,
@@ -453,4 +502,4 @@ class MarkdownExtractor(Extractor):
                 path = Path(external_files, url).resolve()
             url = None
 
-        return self.create_fragment(match, url=url, path=path)
+        return self.create_fragment(start_line, end_line, match, url=url, path=path)
