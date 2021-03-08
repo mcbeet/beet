@@ -549,6 +549,39 @@ def download_every_day(ctx: Context):
     ctx.cache["lectern"].timeout(hours=24)
 ```
 
+## Lectern scripts
+
+The text format is pretty well-suited for writing basic data pack and resource pack generators. You can very easily write scripts that produce lectern syntax that can then be turned into a data pack or a resource pack.
+
+```python
+# my_script.py
+print("@function tutorial:count")
+
+for i in range(10):
+    print(f"say {i}")
+```
+
+```bash
+$ python my_script.py > output.txt
+$ lectern output.txt -d my_data_pack
+```
+
+The `beet` plugin supports this use-case natively and allows you to run lectern scripts within your pipeline.
+
+```json
+// beet.json
+{
+  "pipeline": ["lectern"],
+  "meta": {
+    "lectern": {
+      "scripts": [["python", "my_script.py"]]
+    }
+  }
+}
+```
+
+The `scripts` option lets you specify the command-line arguments for your scripts. The scripts don't even have to be written in Python. As long as the command prints out valid `lectern` syntax you can use any language you want.
+
 ## Snapshot testing
 
 A lot of Minecraft tooling involves generating data packs and resource packs. Writing tests for this kind of tooling takes time because you need to painstakingly compare everything that you care about with a reference value. This makes it hard to get good coverage, and then even harder to keep making changes to the code being tested afterwards. You're trading robustness and stability for a shackle that massively slows down development.
