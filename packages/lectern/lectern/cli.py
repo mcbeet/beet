@@ -12,6 +12,8 @@ from beet.toolchain.cli import error_handler
 
 from lectern import __version__
 
+from .prefetch import MarkdownPrefetcher
+
 
 @click.command(context_settings={"help_option_names": ("-h", "--help")})
 @click.pass_context
@@ -34,6 +36,12 @@ from lectern import __version__
     metavar="<path>",
     help="Emit external files.",
 )
+@click.option(
+    "-p",
+    "--prefetch-urls",
+    metavar="<path>",
+    help="Prefetch markdown links.",
+)
 @click.version_option(
     __version__,
     "-v",
@@ -47,9 +55,24 @@ def lectern(
     data_pack: Optional[str],
     resource_pack: Optional[str],
     external_files: Optional[str],
+    prefetch_urls: Optional[str],
 ):
     """Literate Minecraft data packs and resource packs."""
     config: Any
+
+    if prefetch_urls:
+        if len(path) > 1:
+            click.echo(ctx.get_usage())
+            click.echo("\nError: expected a single output path")
+            ctx.exit(1)
+
+        prefetcher = MarkdownPrefetcher()
+        prefetcher.process_file(
+            prefetch_urls,
+            path[0] if path else prefetch_urls,
+            external_files=external_files,
+        )
+        return
 
     if data_pack or resource_pack:
         config = {
