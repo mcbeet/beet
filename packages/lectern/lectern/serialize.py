@@ -79,7 +79,9 @@ class SerializedFile:
     def __post_init__(self):
         path = Path(urlparse(self.hint).path)
         self.extension = "".join(path.suffixes)
-        self.filename = normalize_string(path.name[: -len(self.extension)])
+        self.filename = normalize_string(
+            path.name[: -len(self.extension)] if self.extension else path.name
+        )
 
         if not self.extension and isinstance(self.file_instance, NamespaceFile):
             self.extension = self.file_instance.extension
@@ -258,7 +260,7 @@ class MarkdownSerializer:
             yield f"`@{directive} {argument}`"
             yield "\n<details>"
             yield "\n```" + EXTENSION_HIGHLIGHTING.get(serialized_file.extension, "")
-            yield content + "  ```"
+            yield content + "```"
             yield "\n</details>"
 
             return
