@@ -330,6 +330,7 @@ Options:
   -d, --data-pack <path>       Extract data pack.
   -r, --resource-pack <path>   Extract resource pack.
   -e, --external-files <path>  Emit external files.
+  -p, --prefetch-urls <path>   Prefetch markdown links.
   -v, --version                Show the version and exit.
   -h, --help                   Show this message and exit.
 ```
@@ -369,6 +370,24 @@ $ lectern demo_data_pack demo.md -e .
 ```
 
 All these commands also work with plain text files. `lectern` will only use the markdown document format when the filename ends with `.md`.
+
+Finally, you can also use the command-line utility to prefetch markdown urls. The `-p/--prefetch-urls` option can replace the urls in-place or in a copy.
+
+```bash
+$ lectern --prefetch-urls demo.md
+$ lectern --prefetch-urls demo.md demo_prefetched.md
+$ lectern -p demo.md demo_prefetched.md
+$ lectern -p demo.md
+```
+
+By default, the remote files will be bundled as data urls but you can use the `-e/--external-files` option to dump everything in a given directory.
+
+```bash
+$ lectern --prefetch-urls demo.md --external-files files
+$ lectern --prefetch-urls demo.md demo_prefetched.md --external-files files
+$ lectern -p demo.md demo_prefetched.md -e files
+$ lectern -p demo.md -e .
+```
 
 ## Python API
 
