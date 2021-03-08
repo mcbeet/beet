@@ -2,6 +2,21 @@
 
 <!--next-version-placeholder-->
 
+## v0.7.0 (2021-03-08)
+### Feature
+* Add lectern scripts ([`0890b9d`](https://github.com/mcbeet/lectern/commit/0890b9dafd219a4ff9a19698c29def0e1d77e855))
+* Add markdown prefetcher ([`e5f65dd`](https://github.com/mcbeet/lectern/commit/e5f65dd0ed01b1066723a176c221627412e12762))
+* Add fragment location ([`d79f987`](https://github.com/mcbeet/lectern/commit/d79f987142a1148171cc005aceb6698c2edb564a))
+* Enhance pytest explanation ([`8f9b18d`](https://github.com/mcbeet/lectern/commit/8f9b18dbc94e1cd760897826fc30254ad1a4718d))
+
+### Fix
+* Accidentally broke emitted filenames ([`5f034b5`](https://github.com/mcbeet/lectern/commit/5f034b59db0cf64fe056650983ae36efeae98f24))
+* Lanternmc.com now returns a 403 ([`faaa2d3`](https://github.com/mcbeet/lectern/commit/faaa2d3b26bb1b20b3ae6ad73255edb6e11b0840))
+
+### Documentation
+* Document lectern scripts ([`fea9bbf`](https://github.com/mcbeet/lectern/commit/fea9bbf7682cd756022869eccdccd67a67e532d5))
+* Document --prefetch-urls ([`4b4eaae`](https://github.com/mcbeet/lectern/commit/4b4eaae89fcd118eab2a3ff9a81cd3f340b4f61b))
+
 ## v0.6.1 (2021-03-03)
 ### Fix
 * Make pyright happy ([`f15700c`](https://github.com/mcbeet/lectern/commit/f15700c1c5a5348248ac9947a167fe3931d74c31))
