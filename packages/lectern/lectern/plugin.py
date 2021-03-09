@@ -40,8 +40,13 @@ def lectern(
                 document.load(path)
 
         for arguments in scripts:
-            stdout = subprocess.check_output(arguments, cwd=ctx.directory).decode()
-            document.add_text(stdout)
+            result = subprocess.run(
+                arguments,
+                cwd=ctx.directory,
+                check=True,
+                stdout=subprocess.PIPE,
+            )
+            document.add_text(result.stdout.decode())
 
         yield
 
