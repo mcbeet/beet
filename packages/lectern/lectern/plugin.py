@@ -7,9 +7,8 @@ __all__ = [
 import subprocess
 from typing import Iterable, List, Optional, cast
 
-from beet import Context
+from beet import Context, Plugin
 from beet.core.utils import JsonDict
-from beet.toolchain.context import Plugin
 
 from .document import Document
 
