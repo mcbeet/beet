@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.12.0 (2021-03-09)
+### Feature
+* Add sandstone plugin ([`cad9101`](https://github.com/mcbeet/beet/commit/cad910153131315097a6cf65f35a396ddfa525f9))
+
 ## v0.11.2 (2021-03-09)
 ### Fix
 * Accept ProjectConfig instances for run_beet ([`9939b10`](https://github.com/mcbeet/beet/commit/9939b107c3e6dadc5e3fc8cdaba34bd06b019a53))
