@@ -104,7 +104,7 @@ class Document:
     def get_markdown(
         self,
         emit_external_files: Literal[True],
-        external_prefix: str = "",
+        prefix: str = "",
     ) -> Tuple[str, Dict[str, File[Any, Any]]]:
         ...
 
@@ -115,7 +115,7 @@ class Document:
     def get_markdown(
         self,
         emit_external_files: bool = False,
-        external_prefix: str = "",
+        prefix: str = "",
     ) -> Union[str, Tuple[str, Dict[str, File[Any, Any]]]]:
         """Turn the data pack and the resource pack into markdown."""
         external_files: Optional[Dict[str, File[Any, Any]]] = (
@@ -126,7 +126,7 @@ class Document:
             assets=self.assets,
             data=self.data,
             external_files=external_files,
-            external_prefix=external_prefix,
+            external_prefix=prefix,
         )
 
         if external_files is None:
@@ -149,7 +149,7 @@ class Document:
                 ) as manager:
                     content, files = self.get_markdown(
                         emit_external_files=True,
-                        external_prefix=manager.external_prefix,
+                        prefix=manager.external_prefix,
                     )
                     manager.external_files.update(files)
             else:
