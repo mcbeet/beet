@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.7.1 (2021-03-09)
+### Fix
+* Rename get_markdown prefix argument ([`85650fa`](https://github.com/mcbeet/lectern/commit/85650fa930fdeb27b24244b772412e72030b14d3))
+
 ## v0.7.0 (2021-03-08)
 ### Feature
 * Add lectern scripts ([`0890b9d`](https://github.com/mcbeet/lectern/commit/0890b9dafd219a4ff9a19698c29def0e1d77e855))
