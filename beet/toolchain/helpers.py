@@ -73,7 +73,7 @@ def sandbox(*specs: PluginSpec) -> Plugin:
 
 @contextmanager
 def run_beet(
-    config: Optional[Union[JsonDict, FileSystemPath]] = None,
+    config: Optional[Union[ProjectConfig, JsonDict, FileSystemPath]] = None,
     directory: Optional[FileSystemPath] = None,
     cache: Union[bool, MultiCache] = False,
 ) -> Iterator[Context]:
@@ -91,7 +91,9 @@ def run_beet(
                 stack.enter_context(TemporaryDirectory())
             )
 
-        if isinstance(config, dict):
+        if isinstance(config, ProjectConfig):
+            project.resolved_config = config
+        elif isinstance(config, dict):
             with config_error_handler("<project>"):
                 project.resolved_config = ProjectConfig(**config).resolve(directory)
         elif config:
