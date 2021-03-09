@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.11.2 (2021-03-09)
+### Fix
+* Accept ProjectConfig instances for run_beet ([`9939b10`](https://github.com/mcbeet/beet/commit/9939b107c3e6dadc5e3fc8cdaba34bd06b019a53))
+
 ## v0.11.1 (2021-03-03)
 ### Fix
 * Ignore click exceptions in error_handler ([`9544765`](https://github.com/mcbeet/beet/commit/95447651b9c40a46484d8edafc4145b587369509))
