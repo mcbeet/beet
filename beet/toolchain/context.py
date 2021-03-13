@@ -101,7 +101,7 @@ class Context:
     @contextmanager
     def override(self, **meta: Any):
         """Temporarily update the context meta."""
-        to_restore = {}
+        to_restore: JsonDict = {}
         to_remove = set()
 
         for key, value in meta.items():

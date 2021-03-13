@@ -260,7 +260,7 @@ class NamespaceProxyDescriptor(Generic[NamespaceFileType]):
     def __get__(
         self, obj: Any, objtype: Optional[Type[Any]] = None
     ) -> NamespaceProxy[NamespaceFileType]:
-        return NamespaceProxy(obj, self.proxy_key)
+        return NamespaceProxy[NamespaceFileType](obj, self.proxy_key)
 
 
 class PackContainer(MatchMixin, MergeMixin, Container[str, PackFile]):
@@ -360,7 +360,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
         if isinstance(value, Namespace):
             super().__setitem__(key, value)  # type: ignore
         else:
-            NamespaceProxy(self, type(value))[key] = value
+            NamespaceProxy[NamespaceFile](self, type(value))[key] = value
 
     def __eq__(self, other: Any) -> bool:
         if type(self) != type(other):
@@ -387,19 +387,11 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
     def missing(self, key: str) -> NamespaceType:
         return self.namespace_type()
 
-    @overload
-    def merge(self: T, other: T) -> bool:
-        ...
-
-    @overload
     def merge(
         self: MutableMapping[T, MergeableType], other: Mapping[T, MergeableType]
     ) -> bool:
-        ...
-
-    def merge(self, other: Any) -> bool:
         super().merge(other)  # type: ignore
-        if isinstance(other, Pack):
+        if isinstance(self, Pack) and isinstance(other, Pack):
             self.extra.merge(other.extra)
         return True
 
@@ -407,7 +399,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
     def content(self) -> Iterator[Tuple[str, NamespaceFile]]:
         """Iterator that yields all the files stored in the pack."""
         for file_type in self.namespace_type.field_map:
-            yield from NamespaceProxy(self, file_type).items()
+            yield from NamespaceProxy[NamespaceFile](self, file_type).items()
 
     @classmethod
     def get_extra_info(cls) -> Dict[str, Type[PackFile]]:
