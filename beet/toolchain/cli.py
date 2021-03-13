@@ -1,16 +1,23 @@
 __all__ = [
+    "MainGroup",
+    "BeetHelpColorsMixin",
+    "BeetCommand",
+    "BeetGroup",
     "main",
     "beet",
+    "format_error",
+    "error_handler",
+    "message_fence",
 ]
 
 
-import time
 from contextlib import contextmanager
-from typing import Any, Optional, Sequence, TypeVar
+from importlib.metadata import entry_points
+from typing import Any, Callable, Iterable, Iterator, Optional
 
 import click
 from click.decorators import pass_context
-from click_help_colors import HelpColorsGroup
+from click_help_colors import HelpColorsCommand, HelpColorsGroup
 
 from beet import __version__
 
@@ -18,85 +25,13 @@ from .pipeline import FormattedPipelineException
 from .project import Project
 from .utils import format_exc
 
-T = TypeVar("T")
-
-pass_project = click.make_pass_decorator(Project, ensure=True)
-
-
-class CustomGroup(HelpColorsGroup):
-    def __init__(self, *args: Any, **kwargs: Any):
-        super().__init__(
-            *args,
-            **kwargs,
-            invoke_without_command=True,
-            context_settings={"help_option_names": ("-h", "--help")},
-            help_headers_color="red",
-            help_options_color="green",
-        )
-
-    def get_command(self, ctx: click.Context, cmd_name: str) -> Optional[click.Command]:
-        if command := super().get_command(ctx, cmd_name):
-            return command
-
-        matches = [cmd for cmd in self.list_commands(ctx) if cmd.startswith(cmd_name)]
-
-        if len(matches) > 1:
-            match_list = ", ".join(sorted(matches))
-            ctx.fail(f"Ambiguous shorthand {cmd_name!r} ({match_list}).")
-        elif matches:
-            return super().get_command(ctx, matches[0])
-
-        return None
-
-    def format_usage(self, ctx: click.Context, formatter: Any):
-        formatter.write_usage(
-            ctx.command_path,
-            " ".join(self.collect_usage_pieces(ctx)),
-            click.style("Usage", fg="red") + ": ",
-        )
-
-
-@click.group(cls=CustomGroup)
-@pass_project
-@pass_context
-@click.option(
-    "-d",
-    "--directory",
-    type=click.Path(exists=True, file_okay=False),
-    help="Use the specified project directory.",
-)
-@click.option(
-    "-c",
-    "--config",
-    type=click.Path(exists=True, dir_okay=False),
-    help="Use the specified config file.",
-)
-@click.version_option(
-    __version__,
-    "-v",
-    "--version",
-    message=click.style("%(prog)s", fg="red")
-    + click.style(" v%(version)s", fg="green"),
-)
-def beet(
-    ctx: click.Context,
-    project: Project,
-    directory: Optional[str],
-    config: Optional[str],
-):
-    """The beet toolchain."""
-    if config:
-        project.config_path = config
-    elif directory:
-        project.config_directory = directory
-
-    if not ctx.invoked_subcommand:
-        ctx.invoke(build)  # type: ignore
-
 
 def format_error(
-    message: str, exception: Optional[BaseException] = None, padding: int = 0
+    message: str,
+    exception: Optional[BaseException] = None,
+    padding: int = 0,
 ) -> str:
+    """Format a given error message and exception."""
     output = "\n" * padding
     output += click.style("Error: " + message, fg="red", bold=True) + "\n"
     if exception:
@@ -106,7 +41,8 @@ def format_error(
 
 
 @contextmanager
-def error_handler(should_exit: bool = False, format_padding: int = 0):
+def error_handler(should_exit: bool = False, format_padding: int = 0) -> Iterator[None]:
+    """Context manager that catches and displays exceptions."""
     exception = None
 
     try:
@@ -131,120 +67,139 @@ def error_handler(should_exit: bool = False, format_padding: int = 0):
 
 
 @contextmanager
-def message_fence(message: str):
-    click.secho(message + "\n", fg="red")  # type: ignore
+def message_fence(message: str) -> Iterator[None]:
+    """Context manager used to report the begining and the end of a cli operation."""
+    click.secho(message + "\n", fg="red")
     yield
-    click.secho("Done!", fg="green", bold=True)  # type: ignore
+    click.secho("Done!", fg="green", bold=True)
 
 
-def command(func: T) -> T:
-    return beet.command()(pass_project(error_handler(should_exit=True)(func)))  # type: ignore
+class BeetHelpColorsMixin:
+    """Mixin that fixes usage formatting."""
+
+    help_headers_color: str
+    help_options_color: str
+
+    def __init__(self, *args: Any, **kwargs: Any):
+        kwargs.setdefault("help_headers_color", "red")
+        kwargs.setdefault("help_options_color", "green")
+        super().__init__(*args, **kwargs)
+
+    def format_usage(self, ctx: click.Context, formatter: Any):
+        formatter.write_usage(
+            ctx.command_path,
+            " ".join(self.collect_usage_pieces(ctx)),  # type: ignore
+            click.style("Usage", fg=self.help_headers_color) + ": ",
+        )
 
 
-@command
+class BeetCommand(BeetHelpColorsMixin, HelpColorsCommand):
+    """Click command subclass for the beet command-line."""
+
+
+class BeetGroup(BeetHelpColorsMixin, HelpColorsGroup):
+    """Click group subclass for the beet command-line."""
+
+    def get_command(self, ctx: click.Context, cmd_name: str) -> Optional[click.Command]:
+        if command := super().get_command(ctx, cmd_name):
+            return command
+
+        matches = [cmd for cmd in self.list_commands(ctx) if cmd.startswith(cmd_name)]
+
+        if len(matches) > 1:
+            match_list = ", ".join(sorted(matches))
+            ctx.fail(f"Ambiguous shorthand {cmd_name!r} ({match_list}).")
+        elif matches:
+            return super().get_command(ctx, matches[0])
+
+        return None
+
+    def add_command(self, cmd: click.Command, name: Optional[str] = None) -> None:
+        if cmd.callback:
+            cmd.callback = error_handler(should_exit=True)(cmd.callback)
+        return super().add_command(cmd, name=name)
+
+    def command(
+        self,
+        *args: Any,
+        **kwargs: Any,
+    ) -> Callable[[Callable[..., Any]], click.Command]:
+        kwargs.setdefault("cls", BeetCommand)
+        return super().command(*args, **kwargs)
+
+    def group(
+        self,
+        *args: Any,
+        **kwargs: Any,
+    ) -> Callable[[Callable[..., Any]], click.Group]:
+        kwargs.setdefault("cls", BeetGroup)
+        return super().group(*args, **kwargs)
+
+
+class MainGroup(BeetGroup):
+    """The root group of the beet command-line."""
+
+    def __init__(self, *args: Any, **kwargs: Any):
+        kwargs.setdefault("invoke_without_command", True)
+        kwargs.setdefault("context_settings", {"help_option_names": ("-h", "--help")})
+        super().__init__(*args, **kwargs)
+        self.entry_points_loaded = False
+
+    def load_entry_points(self):
+        """Load commands from installed entry points if they haven't been loaded yet."""
+        if self.entry_points_loaded:
+            return
+
+        self.entry_points_loaded = True
+
+        for ep in entry_points()["beet"]:
+            if ep.name == "commands":
+                ep.load()
+
+    def get_command(self, ctx: click.Context, cmd_name: str) -> Optional[click.Command]:
+        self.load_entry_points()
+        return super().get_command(ctx, cmd_name)
+
+    def list_commands(self, ctx: click.Context) -> Iterable[str]:
+        self.load_entry_points()
+        return super().list_commands(ctx)
+
+
+@click.group(cls=MainGroup)
+@pass_context
 @click.option(
-    "-l",
-    "--link",
-    metavar="TARGET",
-    help="Link the project before building.",
+    "-d",
+    "--directory",
+    type=click.Path(exists=True, file_okay=False),
+    help="Use the specified project directory.",
 )
-def build(project: Project, link: Optional[str]):
-    """Build the current project."""
-    text = "Linking and building project..." if link else "Building project..."
-    with message_fence(text):
-        if link:
-            click.echo("\n".join(project.link(target=link)))
-        project.build()
-
-
-@command
-@click.option(
-    "-l",
-    "--link",
-    metavar="TARGET",
-    help="Link the project before watching.",
-)
-@click.option(
-    "-i",
-    "--interval",
-    metavar="SECONDS",
-    default=0.6,
-    help="Configure the polling interval.",
-)
-def watch(project: Project, link: Optional[str], interval: float):
-    """Watch the project directory and build on file changes."""
-    text = "Linking and watching project..." if link else "Watching project..."
-    with message_fence(text):
-        if link:
-            click.echo("\n".join(project.link(target=link)))
-
-        for changes in project.watch(interval):
-            filename, action = next(iter(changes.items()))
-
-            text = (
-                f"{action.capitalize()} {filename!r}"
-                if changes == {filename: action}
-                else f"{len(changes)} changes detected"
-            )
-
-            now = time.strftime("%H:%M:%S")
-            change_time = click.style(now, fg="green", bold=True)
-            click.echo(f"{change_time} {text}")
-
-            with error_handler(format_padding=1):
-                project.build()
-
-
-@command
-@click.argument("patterns", nargs=-1)
 @click.option(
     "-c",
-    "--clear",
-    is_flag=True,
-    help="Clear the cache.",
+    "--config",
+    type=click.Path(exists=True, dir_okay=False),
+    help="Use the specified config file.",
 )
-def cache(project: Project, patterns: Sequence[str], clear: bool):
-    """Inspect or clear the cache."""
-    if clear:
-        with message_fence("Clearing cache..."):
-            if cache_names := ", ".join(project.clear_cache(patterns)):
-                click.echo(f"Cache cleared successfully: {cache_names}.\n")
-            else:
-                click.echo(
-                    "No matching results.\n"
-                    if patterns
-                    else "The cache is already cleared.\n"
-                )
-    else:
-        with message_fence("Inspecting cache..."):
-            click.echo(
-                "\n".join(project.inspect_cache(patterns))
-                or (
-                    "No matching results.\n"
-                    if patterns
-                    else "The cache is completely clear.\n"
-                )
-            )
-
-
-@command
-@click.argument("target", required=False)
-@click.option(
-    "-c",
-    "--clear",
-    is_flag=True,
-    help="Clear the link.",
+@click.version_option(
+    __version__,
+    "-v",
+    "--version",
+    message=click.style("%(prog)s", fg="red")
+    + click.style(" v%(version)s", fg="green"),
 )
-def link(project: Project, target: Optional[str], clear: bool):
-    """Link the generated resource pack and data pack to Minecraft."""
-    if clear:
-        with message_fence("Clearing project link..."):
-            project.clear_link()
-    else:
-        with message_fence("Linking project..."):
-            click.echo("\n".join(project.link(target)))
+def beet(ctx: click.Context, directory: Optional[str], config: Optional[str]):
+    """The beet toolchain."""
+    project = ctx.ensure_object(Project)
+
+    if config:
+        project.config_path = config
+    elif directory:
+        project.config_directory = directory
+
+    if not ctx.invoked_subcommand:
+        if build := beet.get_command(ctx, "build"):
+            ctx.invoke(build)
 
 
 def main():
-    """Invoke the command-line entrypoint."""
+    """Invoke the beet command-line."""
     beet(prog_name="beet")
