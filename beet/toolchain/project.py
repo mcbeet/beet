@@ -7,8 +7,9 @@ __all__ = [
 
 from copy import deepcopy
 from dataclasses import dataclass
+from importlib.metadata import entry_points
 from pathlib import Path
-from typing import Iterable, Iterator, List, Optional, Sequence
+from typing import ClassVar, Iterable, Iterator, List, Optional, Sequence
 
 from beet.contrib.render import render
 from beet.core.cache import MultiCache
@@ -189,9 +190,16 @@ class ProjectBuilder:
     project: Project
     config: ProjectConfig
 
+    autoload: ClassVar[Optional[List[str]]] = None
+
     def __init__(self, project: Project):
         self.project = project
         self.config = self.project.config
+
+        if ProjectBuilder.autoload is None:
+            ProjectBuilder.autoload = [
+                ep.value for ep in entry_points()["beet"] if ep.name == "autoload"
+            ]
 
     def build(self) -> Context:
         """Create the context, run the pipeline, and return the context."""
@@ -232,7 +240,9 @@ class ProjectBuilder:
 
     def bootstrap(self, ctx: Context):
         """Plugin that handles the project configuration."""
-        for plugin in self.config.require:
+        plugins = (self.autoload or []) + self.config.require
+
+        for plugin in plugins:
             ctx.require(plugin)
 
         pack_configs = [self.config.resource_pack, self.config.data_pack]
