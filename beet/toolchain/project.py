@@ -198,7 +198,9 @@ class ProjectBuilder:
 
         if ProjectBuilder.autoload is None:
             ProjectBuilder.autoload = [
-                ep.value for ep in entry_points()["beet"] if ep.name == "autoload"
+                ep.value
+                for ep in entry_points().get("beet", ())
+                if ep.name == "autoload"
             ]
 
     def build(self) -> Context:

@@ -152,7 +152,7 @@ class MainGroup(BeetGroup):
 
         self.entry_points_loaded = True
 
-        for ep in entry_points()["beet"]:
+        for ep in entry_points().get("beet", ()):
             if ep.name == "commands":
                 ep.load()
 
