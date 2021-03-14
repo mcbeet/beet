@@ -2,6 +2,14 @@
 
 <!--next-version-placeholder-->
 
+## v0.13.0 (2021-03-14)
+### Feature
+* Add plugin autoload ([`9cac58e`](https://github.com/mcbeet/beet/commit/9cac58e2ea5348509fde32ccfbd3e71a5c503678))
+* Make cli extensible ([`9adb10c`](https://github.com/mcbeet/beet/commit/9adb10c5664362fb782a417eaf7b8aaf784e7e5c))
+
+### Fix
+* Don't crash when there are no entry points ([`85f6bd7`](https://github.com/mcbeet/beet/commit/85f6bd7408c98cc02b03a2a28165da2c576b42fb))
+
 ## v0.12.0 (2021-03-09)
 ### Feature
 * Add sandstone plugin ([`cad9101`](https://github.com/mcbeet/beet/commit/cad910153131315097a6cf65f35a396ddfa525f9))

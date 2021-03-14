@@ -12,4 +12,4 @@ from .toolchain.pipeline import *
 from .toolchain.project import *
 from .toolchain.template import *
 
-__version__ = "0.12.0"
+__version__ = "0.13.0"
