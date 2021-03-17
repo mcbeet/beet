@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.8.1 (2021-03-17)
+### Fix
+* Make the directive comment regex a little more forgiving ([`0471780`](https://github.com/mcbeet/lectern/commit/0471780274e10b3bab2d66d04529af5b269618a4))
+
 ## v0.8.0 (2021-03-17)
 ### Feature
 * Add hidden fragments ([`510a213`](https://github.com/mcbeet/lectern/commit/510a2131906257893e23e452dee6336dc38a94eb))
