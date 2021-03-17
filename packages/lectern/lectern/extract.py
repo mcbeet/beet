@@ -185,7 +185,7 @@ class MarkdownExtractor(Extractor):
         self.embedded_extractor = EmbeddedExtractor(cache)
         self.comment_extractor = TextExtractor(cache)
         self.parser = MarkdownIt()
-        self.html_comment_regex = re.compile(r"<!--\s*(.+?)\s*-->")
+        self.html_comment_regex = re.compile(r"\s*<!--\s*(.+?)\s*-->\s*")
 
     def extract(
         self,
