@@ -2,6 +2,14 @@
 
 <!--next-version-placeholder-->
 
+## v0.8.0 (2021-03-17)
+### Feature
+* Add hidden fragments ([`510a213`](https://github.com/mcbeet/lectern/commit/510a2131906257893e23e452dee6336dc38a94eb))
+
+### Fix
+* Report line number in error messages ([`c998d68`](https://github.com/mcbeet/lectern/commit/c998d6877c33a91d6ef6a8f9b5cac8dbd0db53dd))
+* Take the backticks into account for code fence start line ([`a2c442c`](https://github.com/mcbeet/lectern/commit/a2c442c628ea1087d8f898b9ff504f627070f2f2))
+
 ## v0.7.1 (2021-03-09)
 ### Fix
 * Rename get_markdown prefix argument ([`85650fa`](https://github.com/mcbeet/lectern/commit/85650fa930fdeb27b24244b772412e72030b14d3))
