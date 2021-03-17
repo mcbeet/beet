@@ -48,6 +48,26 @@
 
   </details>
 
+- `@function tutorial:hidden`
+
+  <details>
+
+  ```mcfunction
+  say This will not appear in the rendered markdown.
+  ```
+
+  </details>
+
+- `@function tutorial:also_hidden`
+
+  <details>
+
+  ```mcfunction
+  say This is also hidden.
+  ```
+
+  </details>
+
 - `@function(strip_final_newline) tutorial:stripped`
 
   <details>

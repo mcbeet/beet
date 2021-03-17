@@ -16,6 +16,12 @@ say This is added afterwards.
 @function tutorial:obtained_dead_bush
 say You obtained a dead bush!
 
+@function tutorial:hidden
+say This will not appear in the rendered markdown.
+
+@function tutorial:also_hidden
+say This is also hidden.
+
 @function tutorial:stripped
 say This function doesn't have a final newline.
 @advancement tutorial:obtained_dead_bush

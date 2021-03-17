@@ -176,12 +176,14 @@ class MarkdownExtractor(Extractor):
     """Extractor for markdown files."""
 
     embedded_extractor: TextExtractor
+    comment_extractor: TextExtractor
     parser: MarkdownIt
     html_comment_regex: "re.Pattern[str]"
 
     def __init__(self, cache: Optional[Cache] = None):
         super().__init__(cache)
         self.embedded_extractor = EmbeddedExtractor(cache)
+        self.comment_extractor = TextExtractor(cache)
         self.parser = MarkdownIt()
         self.html_comment_regex = re.compile(r"<!--\s*(.+?)\s*-->")
 
@@ -462,6 +464,29 @@ class MarkdownExtractor(Extractor):
                     yield replace(
                         fragment,
                         start_line=fragment.start_line + current_line + offset,
+                        end_line=(skip_to := fragment.end_line + current_line),
+                    )
+
+            #
+            # <!--
+            # @directive args...
+            #
+            # content
+            # -->
+            #
+            elif (
+                token.type == "html_block"
+                and (html := token.content.rstrip())
+                and html.startswith("<!--")
+                and html.endswith("-->")
+            ):
+                for fragment in self.comment_extractor.parse_fragments(
+                    html[4:-3],
+                    directives,
+                ):
+                    yield replace(
+                        fragment,
+                        start_line=fragment.start_line + current_line,
                         end_line=(skip_to := fragment.end_line + current_line),
                     )
 

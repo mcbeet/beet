@@ -276,6 +276,28 @@ You can include inline markdown images in the output data pack or resource pack 
 
 Image fragments support the same variations as code block fragments. You can put the directive in a comment or surround the image with a `<details>` element to make it foldable.
 
+## Hidden fragments
+
+You can use html comments to add fragments that will be completely hidden in the rendered markdown.
+
+```html
+<!--
+@function tutorial:hidden
+say This will not appear in the rendered markdown.
+
+@function tutorial:also_hidden
+say This is also hidden.
+-->
+```
+
+<!--
+@function tutorial:hidden
+say This will not appear in the rendered markdown.
+
+@function tutorial:also_hidden
+say This is also hidden.
+-->
+
 ## Modifiers
 
 The behavior of particular directives can be adjusted with modifiers. A modifier is specified between parentheses right after the name of the directive.
