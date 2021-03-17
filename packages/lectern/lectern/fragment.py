@@ -18,9 +18,9 @@ FileType = TypeVar("FileType", bound=File[Any, Any])
 class InvalidFragment(FormattedPipelineException):
     """Raised when a fragment can not be processed."""
 
-    def __init__(self, message: str):
-        super().__init__(message)
-        self.message = message
+    def __init__(self, message: str, line: int):
+        super().__init__(message, line)
+        self.message = message + f" (line {line + 1})"
 
 
 @dataclass(frozen=True)
@@ -53,10 +53,10 @@ class Fragment:
         """Check directive arguments."""
         if missing := names[len(self.arguments) :]:
             msg = f"Missing argument {', '.join(map(repr, missing))} for directive @{self.directive}."
-            raise InvalidFragment(msg)
+            raise InvalidFragment(msg, self.start_line)
         if extra := self.arguments[len(names) :]:
             msg = f"Unexpected argument {', '.join(map(repr, extra))} for directive @{self.directive}."
-            raise InvalidFragment(msg)
+            raise InvalidFragment(msg, self.start_line)
         if len(self.arguments) == 0:
             return
         if len(self.arguments) == 1:
@@ -89,6 +89,6 @@ class Fragment:
 
         else:
             msg = f"Expected content, path or url for directive @{self.directive}."
-            raise InvalidFragment(msg)
+            raise InvalidFragment(msg, self.start_line)
 
         return file_type(content if is_binary else content.decode(errors="replace"))
