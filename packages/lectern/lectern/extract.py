@@ -454,13 +454,14 @@ class MarkdownExtractor(Extractor):
             # ```
             #
             elif token.type in ["fence", "code_block"]:
+                offset = int(token.type == "fence")
                 for fragment in self.embedded_extractor.parse_fragments(
                     token.content,
                     directives,
                 ):
                     yield replace(
                         fragment,
-                        start_line=fragment.start_line + current_line,
+                        start_line=fragment.start_line + current_line + offset,
                         end_line=(skip_to := fragment.end_line + current_line),
                     )
 
