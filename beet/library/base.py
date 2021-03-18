@@ -2,8 +2,9 @@ __all__ = [
     "Pack",
     "PackFile",
     "PackContainer",
-    "PackPin",
+    "ExtraPin",
     "McmetaPin",
+    "PackPin",
     "Namespace",
     "NamespaceFile",
     "NamespaceContainer",
@@ -267,7 +268,7 @@ class PackContainer(MatchMixin, MergeMixin, Container[str, PackFile]):
     """Container that stores non-namespaced files in a pack."""
 
 
-class PackPin(Pin[str, T]):
+class ExtraPin(Pin[str, T]):
     """Descriptor that makes a specific file accessible through attribute lookup."""
 
     def forward(self, obj: "Pack[Namespace]") -> PackContainer:
@@ -278,7 +279,14 @@ class McmetaPin(Pin[str, T]):
     """Descriptor that makes it possible to bind pack.mcmeta information to attribute lookup."""
 
     def forward(self, obj: "Pack[Namespace]") -> JsonDict:
-        return obj.mcmeta.data.setdefault("pack", {})
+        return obj.mcmeta.data
+
+
+class PackPin(McmetaPin[T]):
+    """Descriptor that makes pack metadata accessible through attribute lookup."""
+
+    def forward(self, obj: "Pack[Namespace]") -> JsonDict:
+        return super().forward(obj).setdefault("pack", {})
 
 
 class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
@@ -289,13 +297,13 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
     zipped: bool
 
     extra: PackContainer
-    mcmeta: PackPin[JsonFile] = PackPin(
+    mcmeta: ExtraPin[JsonFile] = ExtraPin(
         "pack.mcmeta", default_factory=lambda: JsonFile({})
     )
-    image: PackPin[Optional[PngFile]] = PackPin("pack.png", default=None)
+    image: ExtraPin[Optional[PngFile]] = ExtraPin("pack.png", default=None)
 
-    description: McmetaPin[TextComponent] = McmetaPin("description", default="")
-    pack_format: McmetaPin[int] = McmetaPin("pack_format", default=0)
+    description: PackPin[TextComponent] = PackPin("description", default="")
+    pack_format: PackPin[int] = PackPin("pack_format", default=0)
 
     namespace_type: ClassVar[Type[NamespaceType]]
     default_name: ClassVar[str]

@@ -3,6 +3,7 @@ __all__ = [
     "ResourcePackNamespace",
     "Blockstate",
     "Model",
+    "Language",
     "Font",
     "GlyphSizeFile",
     "TrueTypeFont",
@@ -18,14 +19,21 @@ __all__ = [
 
 from copy import deepcopy
 from dataclasses import dataclass
-from typing import Optional
+from typing import Dict, Optional
 
 from PIL import Image as img
 
 from beet.core.file import BinaryFile, BinaryFileContent, JsonFile, PngFile, TextFile
 from beet.core.utils import JsonDict, extra_field
 
-from .base import Namespace, NamespaceFile, NamespacePin, NamespaceProxyDescriptor, Pack
+from .base import (
+    McmetaPin,
+    Namespace,
+    NamespaceFile,
+    NamespacePin,
+    NamespaceProxyDescriptor,
+    Pack,
+)
 
 
 class Blockstate(JsonFile, NamespaceFile):
@@ -40,6 +48,17 @@ class Model(JsonFile, NamespaceFile):
 
     scope = ("models",)
     extension = ".json"
+
+
+class Language(JsonFile, NamespaceFile):
+    """Class representing a language file."""
+
+    scope = ("lang",)
+    extension = ".json"
+
+    def merge(self, other: "Language") -> bool:  # type: ignore
+        self.data.update(other.data)
+        return True
 
 
 class Font(JsonFile, NamespaceFile):
@@ -137,6 +156,7 @@ class ResourcePackNamespace(Namespace):
     # fmt: off
     blockstates:      NamespacePin[Blockstate]     = NamespacePin(Blockstate)
     models:           NamespacePin[Model]          = NamespacePin(Model)
+    languages:        NamespacePin[Language]       = NamespacePin(Language)
     fonts:            NamespacePin[Font]           = NamespacePin(Font)
     glyph_sizes:      NamespacePin[GlyphSizeFile]  = NamespacePin(GlyphSizeFile)
     truetype_fonts:   NamespacePin[TrueTypeFont]   = NamespacePin(TrueTypeFont)
@@ -156,9 +176,14 @@ class ResourcePack(Pack[ResourcePackNamespace]):
     default_name = "untitled_resource_pack"
     latest_pack_format = 6
 
+    language_config: McmetaPin[Dict[str, JsonDict]] = McmetaPin(
+        "language", default_factory=dict
+    )
+
     # fmt: off
     blockstates:      NamespaceProxyDescriptor[Blockstate]     = NamespaceProxyDescriptor(Blockstate)
     models:           NamespaceProxyDescriptor[Model]          = NamespaceProxyDescriptor(Model)
+    languages:        NamespaceProxyDescriptor[Language]       = NamespaceProxyDescriptor(Language)
     fonts:            NamespaceProxyDescriptor[Font]           = NamespaceProxyDescriptor(Font)
     glyph_sizes:      NamespaceProxyDescriptor[GlyphSizeFile]  = NamespaceProxyDescriptor(GlyphSizeFile)
     truetype_fonts:   NamespaceProxyDescriptor[TrueTypeFont]   = NamespaceProxyDescriptor(TrueTypeFont)

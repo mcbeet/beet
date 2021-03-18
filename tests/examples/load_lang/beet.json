@@ -1,0 +1,5 @@
+{
+  "resource_pack": {
+    "load": ["lang1", "lang2"]
+  }
+}
