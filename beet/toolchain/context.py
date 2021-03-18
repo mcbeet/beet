@@ -80,13 +80,16 @@ class Context:
     @contextmanager
     def activate(self):
         """Push the context directory to sys.path and handle cleanup to allow module reloading."""
-        sys.path.append(self._path_entry)
+        not_in_path = self._path_entry not in sys.path
+        if not_in_path:
+            sys.path.append(self._path_entry)
 
         try:
             with self.cache:
                 yield self.inject(Pipeline)
         finally:
-            sys.path.remove(self._path_entry)
+            if not_in_path:
+                sys.path.remove(self._path_entry)
 
             imported_modules = [
                 name
