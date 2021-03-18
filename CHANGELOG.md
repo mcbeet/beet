@@ -2,6 +2,16 @@
 
 <!--next-version-placeholder-->
 
+## v0.14.0 (2021-03-18)
+### Feature
+* Support language files and custom languages ([`abec2b1`](https://github.com/mcbeet/beet/commit/abec2b1b4f2fc27ff6b0ddf84fb9ace81834c104))
+
+### Fix
+* Only modify sys.path if the directory is not already present ([`8575d31`](https://github.com/mcbeet/beet/commit/8575d31b14c71063479af584715cfe9e7c92086f))
+
+### Breaking
+* rename pin descriptors  ([`abec2b1`](https://github.com/mcbeet/beet/commit/abec2b1b4f2fc27ff6b0ddf84fb9ace81834c104))
+
 ## v0.13.0 (2021-03-14)
 ### Feature
 * Add plugin autoload ([`9cac58e`](https://github.com/mcbeet/beet/commit/9cac58e2ea5348509fde32ccfbd3e71a5c503678))
