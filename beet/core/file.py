@@ -268,6 +268,9 @@ class JsonFileBase(TextFileBase[ValueType]):
     def from_str(cls, content: str) -> ValueType:
         return json.loads(content)
 
+    def __eq__(self, other: Any) -> bool:
+        return type(self) == type(other) and self.data == other.data
+
 
 class JsonFile(JsonFileBase[JsonDict]):
     """Class representing a json file."""
