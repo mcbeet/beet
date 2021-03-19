@@ -2,6 +2,15 @@
 
 <!--next-version-placeholder-->
 
+## v0.15.0 (2021-03-19)
+### Feature
+* Add logging ([`6505cbb`](https://github.com/mcbeet/beet/commit/6505cbb47feed1d0c4934468b67e2bd9be4aafe9))
+* Add babelbox plugin ([`70e1829`](https://github.com/mcbeet/beet/commit/70e1829de45e61400c9dfcd3698ef10b41091be7))
+* Add workers ([`eacd2ae`](https://github.com/mcbeet/beet/commit/eacd2ae4a6bad9fdc018f3849b748c12e9b91946))
+
+### Fix
+* Compare data for equality for json files ([`298e2e1`](https://github.com/mcbeet/beet/commit/298e2e1989d90d11dc7706c5d24e8741a86901af))
+
 ## v0.14.0 (2021-03-18)
 ### Feature
 * Support language files and custom languages ([`abec2b1`](https://github.com/mcbeet/beet/commit/abec2b1b4f2fc27ff6b0ddf84fb9ace81834c104))
