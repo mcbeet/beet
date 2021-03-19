@@ -1,0 +1,21 @@
+{
+  "pipeline": [
+    {
+      "pipeline": ["beet.contrib.babelbox"],
+      "meta": {
+        "babelbox": {
+          "load": ["translations/*.csv"],
+          "filename_prefix": true
+        }
+      }
+    },
+    {
+      "pipeline": ["beet.contrib.babelbox"],
+      "meta": {
+        "babelbox": {
+          "load": ["translations.csv"]
+        }
+      }
+    }
+  ]
+}

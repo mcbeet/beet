@@ -1,0 +1,9 @@
+{
+  "some.prefix.foo": "world",
+  "some.prefix.bar": "spam",
+  "other.prefix.foo": "t2",
+  "other.prefix.bar": "u2",
+  "other.prefix.baz": "v2",
+  "foo.hello": "2",
+  "foo.world": "5"
+}
