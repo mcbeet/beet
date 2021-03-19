@@ -21,6 +21,7 @@ from beet.library.resource_pack import ResourcePack
 
 from .pipeline import GenericPipeline, GenericPlugin, GenericPluginSpec
 from .template import TemplateManager
+from .worker import WorkerPoolHandle
 
 InjectedType = TypeVar("InjectedType")
 
@@ -57,6 +58,7 @@ class Context:
     output_directory: Optional[Path]
     meta: JsonDict
     cache: MultiCache
+    worker: WorkerPoolHandle
     template: TemplateManager
 
     assets: ResourcePack = field(default_factory=ResourcePack)

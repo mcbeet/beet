@@ -17,13 +17,17 @@ from .config import ProjectConfig, config_error_handler
 from .context import Context, Plugin, PluginSpec
 from .project import Project, ProjectBuilder
 from .template import TemplateManager
+from .worker import WorkerPool
 
 
 def subproject(config: Union[ProjectConfig, JsonDict, FileSystemPath]) -> Plugin:
     """Return a plugin that runs a subproject."""
 
     def plugin(ctx: Context):
-        project = Project(resolved_cache=ctx.cache)
+        project = Project(
+            resolved_cache=ctx.cache,
+            resolved_worker_pool=WorkerPool(resolved_handle=ctx.worker),
+        )
 
         if isinstance(config, ProjectConfig):
             project.resolved_config = config
@@ -56,6 +60,7 @@ def sandbox(*specs: PluginSpec) -> Plugin:
             output_directory=None,
             meta={},
             cache=ctx.cache,
+            worker=ctx.worker,
             template=TemplateManager(
                 templates=list(ctx.template.directories),
                 cache_dir=ctx.cache["template"].directory,

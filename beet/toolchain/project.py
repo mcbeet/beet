@@ -21,6 +21,7 @@ from .context import Context
 from .pipeline import FormattedPipelineException
 from .template import TemplateManager
 from .utils import locate_minecraft
+from .worker import WorkerPool
 
 
 class ErrorMessage(FormattedPipelineException):
@@ -42,6 +43,8 @@ class Project:
 
     resolved_cache: Optional[MultiCache] = None
     cache_name: str = ".beet_cache"
+
+    resolved_worker_pool: Optional[WorkerPool] = None
 
     @property
     def config(self) -> ProjectConfig:
@@ -86,6 +89,13 @@ class Project:
             ignore.append(f"{self.output_directory.relative_to(self.directory)}/")
         return ignore
 
+    @property
+    def worker_pool(self):
+        if self.resolved_worker_pool is not None:
+            return self.resolved_worker_pool
+        self.resolved_worker_pool = WorkerPool()
+        return self.resolved_worker_pool
+
     def reset(self):
         """Clear the cached config and force subsequent operations to load it again."""
         self.resolved_config = None
@@ -101,20 +111,21 @@ class Project:
 
     def watch(self, interval: float = 0.6) -> Iterator[FileChanges]:
         """Watch the project."""
-        for changes in DirectoryWatcher(
-            self.directory,
-            interval,
-            ignore_file=".gitignore",
-            ignore_patterns=[
-                f"{self.cache.path.relative_to(self.directory.resolve())}/",
-                "__pycache__/",
-                "*.tmp",
-                ".*",
-                *self.ignore,
-            ],
-        ):
-            self.reset()
-            yield changes
+        with self.worker_pool.long_lived_session():
+            for changes in DirectoryWatcher(
+                self.directory,
+                interval,
+                ignore_file=".gitignore",
+                ignore_patterns=[
+                    f"{self.cache.path.relative_to(self.directory.resolve())}/",
+                    "__pycache__/",
+                    "*.tmp",
+                    ".*",
+                    *self.ignore,
+                ],
+            ):
+                self.reset()
+                yield changes
 
     def inspect_cache(self, patterns: Sequence[str] = ()) -> Iterable[str]:
         """Return a detailed representation for each matching cache."""
@@ -209,34 +220,40 @@ class ProjectBuilder:
         name = self.config.name or self.project.directory.stem
         normalized_name = normalize_string(name)
 
-        ctx = Context(
-            project_name=normalized_name,
-            project_description=self.config.description,
-            project_author=self.config.author,
-            project_version=self.config.version,
-            directory=self.project.directory,
-            output_directory=self.project.output_directory,
-            meta=deepcopy(self.config.meta),
-            cache=self.project.cache,
-            template=TemplateManager(
-                templates=self.project.template_directories,
-                cache_dir=self.project.cache["template"].directory,
-            ),
-            whitelist=self.config.whitelist,
-        )
-
-        with ctx.activate() as pipeline:
-            pipeline.require(self.bootstrap)
-            pipeline.run(
-                (
-                    item
-                    if isinstance(item, str)
-                    else ProjectBuilder(
-                        Project(resolved_config=item, resolved_cache=ctx.cache)
-                    )
-                )
-                for item in self.config.pipeline
+        with self.project.worker_pool.handle() as worker_pool_handle:
+            ctx = Context(
+                project_name=normalized_name,
+                project_description=self.config.description,
+                project_author=self.config.author,
+                project_version=self.config.version,
+                directory=self.project.directory,
+                output_directory=self.project.output_directory,
+                meta=deepcopy(self.config.meta),
+                cache=self.project.cache,
+                worker=worker_pool_handle,
+                template=TemplateManager(
+                    templates=self.project.template_directories,
+                    cache_dir=self.project.cache["template"].directory,
+                ),
+                whitelist=self.config.whitelist,
             )
+
+            with ctx.activate() as pipeline:
+                pipeline.require(self.bootstrap)
+                pipeline.run(
+                    (
+                        item
+                        if isinstance(item, str)
+                        else ProjectBuilder(
+                            Project(
+                                resolved_config=item,
+                                resolved_cache=ctx.cache,
+                                resolved_worker_pool=self.project.worker_pool,
+                            )
+                        )
+                    )
+                    for item in self.config.pipeline
+                )
 
         return ctx
 
