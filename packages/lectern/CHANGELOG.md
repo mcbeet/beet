@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.8.2 (2021-03-19)
+### Fix
+* Update beet ([`87b0931`](https://github.com/mcbeet/lectern/commit/87b0931c9ec156af4ea468ca27084dd69d92545a))
+
 ## v0.8.1 (2021-03-17)
 ### Fix
 * Make the directive comment regex a little more forgiving ([`0471780`](https://github.com/mcbeet/lectern/commit/0471780274e10b3bab2d66d04529af5b269618a4))
