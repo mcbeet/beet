@@ -83,6 +83,7 @@ Usage: beet [OPTIONS] COMMAND [ARGS]...
 Options:
   -d, --directory DIRECTORY  Use the specified project directory.
   -c, --config FILE          Use the specified config file.
+  -l, --log LEVEL            Configure output verbosity.
   -v, --version              Show the version and exit.
   -h, --help                 Show this message and exit.
 

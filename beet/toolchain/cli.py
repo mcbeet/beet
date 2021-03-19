@@ -3,6 +3,7 @@ __all__ = [
     "BeetHelpColorsMixin",
     "BeetCommand",
     "BeetGroup",
+    "LogHandler",
     "main",
     "beet",
     "format_error",
@@ -11,6 +12,7 @@ __all__ = [
 ]
 
 
+import logging
 from contextlib import contextmanager
 from importlib.metadata import entry_points
 from typing import Any, Callable, Iterable, Iterator, Optional
@@ -71,7 +73,46 @@ def message_fence(message: str) -> Iterator[None]:
     """Context manager used to report the begining and the end of a cli operation."""
     click.secho(message + "\n", fg="red")
     yield
+    if LogHandler.has_output:
+        click.echo()
     click.secho("Done!", fg="green", bold=True)
+    LogHandler.has_output = False
+
+
+class LogHandler(logging.Handler):
+    """Logging handler for the beet cli."""
+
+    style: Any = {
+        "CRITICAL": {"fg": "red", "bold": True},
+        "ERROR": {"fg": "red", "bold": True},
+        "WARNING": {"fg": "yellow", "bold": True},
+        "INFO": {},
+        "DEBUG": {"fg": "magenta"},
+    }
+
+    abbreviations: Any = {
+        "CRITICAL": "CRIT",
+        "WARNING": "WARN",
+    }
+
+    has_output: bool = False
+
+    def __init__(self):
+        super().__init__()
+        self.setFormatter(
+            logging.Formatter(
+                click.style("%(name)s", bold=True, fg="black") + "  %(message)s"
+            )
+        )
+
+    def emit(self, record: logging.LogRecord):
+        LogHandler.has_output = True
+        level = self.abbreviations.get(record.levelname, record.levelname)
+        click.echo(
+            click.style(f"{level:<7}|", **self.style[record.levelname])
+            + " "
+            + self.format(record)
+        )
 
 
 class BeetHelpColorsMixin:
@@ -179,6 +220,16 @@ class MainGroup(BeetGroup):
     type=click.Path(exists=True, dir_okay=False),
     help="Use the specified config file.",
 )
+@click.option(
+    "-l",
+    "--log",
+    metavar="LEVEL",
+    type=click.Choice(
+        ["CRITICAL", "ERROR", "WARNING", "INFO", "DEBUG"], case_sensitive=False
+    ),
+    default="WARNING",
+    help="Configure output verbosity.",
+)
 @click.version_option(
     __version__,
     "-v",
@@ -186,8 +237,17 @@ class MainGroup(BeetGroup):
     message=click.style("%(prog)s", fg="red")
     + click.style(" v%(version)s", fg="green"),
 )
-def beet(ctx: click.Context, directory: Optional[str], config: Optional[str]):
+def beet(
+    ctx: click.Context,
+    directory: Optional[str],
+    log: str,
+    config: Optional[str],
+):
     """The beet toolchain."""
+    logger = logging.getLogger()
+    logger.setLevel(log)
+    logger.addHandler(LogHandler())
+
     project = ctx.ensure_object(Project)
 
     if config:

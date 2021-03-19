@@ -74,12 +74,16 @@ def load_languages(
         languages = {code: Language({}) for code in language_codes}
 
         for row in reader:
-            if identifier := row[key]:
-                for code in language_codes:
-                    if value := row[code]:
-                        languages[code].data[prefix + identifier] = value
-                    else:
-                        msg = f"Locale {code!r} has no translation for {identifier!r}."
-                        logger.warning(msg)
+            if not (identifier := row[key]):
+                continue
+
+            identifier = prefix + identifier
+
+            for code in language_codes:
+                if value := row[code]:
+                    languages[code].data[identifier] = value
+                else:
+                    msg = f"Locale {code!r} has no translation for {identifier!r}"
+                    logger.warning(msg)
 
         return languages

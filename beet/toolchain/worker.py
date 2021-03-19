@@ -10,6 +10,7 @@ __all__ = [
 ]
 
 
+import logging
 from contextlib import ExitStack, contextmanager
 from dataclasses import dataclass, field
 from queue import Queue
@@ -21,6 +22,7 @@ from typing import (
     Iterator,
     Optional,
     Protocol,
+    Set,
     Tuple,
     TypeVar,
     Union,
@@ -34,6 +36,9 @@ from .utils import format_obj
 T = TypeVar("T")
 U = TypeVar("U")
 SelfType = TypeVar("SelfType")
+
+
+logger = logging.getLogger(__name__)
 
 
 class Worker(Protocol[T, U]):
@@ -259,13 +264,17 @@ class WorkerPoolHandle:
         default_factory=dict
     )
     active_workers: Dict[str, Worker[Any, Any]] = field(default_factory=dict)
+    reload_skipped: Set[str] = field(default_factory=set)
 
     def __call__(self, func: Worker[T, U]) -> Channel[U, T]:
         if self.exit_stack is None:
             raise ValueError("Worker pool has shut down.")
 
-        if active_func := self.active_workers.get(format_obj(func)):
+        if active_func := self.active_workers.get(ident := format_obj(func)):
             if active_func is not func:
+                if ident not in self.reload_skipped:
+                    logger.warning(f"Skipping worker reload {ident}")
+                    self.reload_skipped.add(ident)
                 func = active_func
 
         connection = self.connections.get(func)
