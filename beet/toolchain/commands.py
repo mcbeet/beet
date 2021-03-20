@@ -52,7 +52,7 @@ def watch(project: Project, link: Optional[str], interval: float):
             filename, action = next(iter(changes.items()))
 
             text = (
-                f"{action.capitalize()} {filename!r}"
+                f"{action.capitalize()} '{filename}'"
                 if changes == {filename: action}
                 else f"{len(changes)} changes detected"
             )
