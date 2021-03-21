@@ -32,6 +32,9 @@ EXTENSION_HIGHLIGHTING = {
     ".mcfunction": "mcfunction",
     ".json": "json",
     ".mcmeta": "json",
+    ".fsh": "glsl",
+    ".vsh": "glsl",
+    ".glsl": "glsl",
 }
 
 

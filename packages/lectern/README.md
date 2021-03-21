@@ -125,18 +125,18 @@ Here is a reference of all the supported resources:
 | ------------------------------- | ------------------ |
 | `@advancement`                  | `@blockstate`      |
 | `@function`                     | `@model`           |
-| `@loot_table`                   | `@font`            |
-| `@predicate`                    | `@glyph_sizes`     |
-| `@recipe`                       | `@truetype_font`   |
-| `@structure`                    | `@shader_post`     |
-| `@block_tag`                    | `@shader_program`  |
-| `@entity_type_tag`              | `@fragment_shader` |
-| `@fluid_tag`                    | `@vertex_shader`   |
-| `@function_tag`                 | `@text`            |
-| `@item_tag`                     | `@texture_mcmeta`  |
-| `@dimension_type`               | `@texture`         |
-| `@dimension`                    |                    |
-| `@biome`                        |                    |
+| `@loot_table`                   | `@language`        |
+| `@predicate`                    | `@font`            |
+| `@recipe`                       | `@glyph_sizes`     |
+| `@structure`                    | `@truetype_font`   |
+| `@block_tag`                    | `@shader_post`     |
+| `@entity_type_tag`              | `@shader`          |
+| `@fluid_tag`                    | `@fragment_shader` |
+| `@function_tag`                 | `@vertex_shader`   |
+| `@item_tag`                     | `@glsl_shader`     |
+| `@dimension_type`               | `@text`            |
+| `@dimension`                    | `@texture_mcmeta`  |
+| `@biome`                        | `@texture`         |
 | `@configured_carver`            |                    |
 | `@configured_feature`           |                    |
 | `@configured_structure_feature` |                    |
@@ -546,7 +546,7 @@ from beet import Context, DataPack, ResourcePack, Function
 from lectern import Document, Fragment
 
 def hello_directive(ctx: Context):
-    """"Plugin that defines the `@hello <name>` directive."""
+    """Plugin that defines the `@hello <name>` directive."""
     document = ctx.inject(Document)
     document.directives["hello"] = hello
 
