@@ -8,9 +8,10 @@ __all__ = [
     "GlyphSizeFile",
     "TrueTypeFont",
     "ShaderPost",
-    "ShaderProgram",
+    "Shader",
     "FragmentShader",
     "VertexShader",
+    "GlslShader",
     "Text",
     "TextureMcmeta",
     "Texture",
@@ -96,25 +97,32 @@ class ShaderPost(JsonFile, NamespaceFile):
     extension = ".json"
 
 
-class ShaderProgram(JsonFile, NamespaceFile):
-    """Class representing a shader program."""
+class Shader(JsonFile, NamespaceFile):
+    """Class representing a shader."""
 
-    scope = ("shaders", "program")
+    scope = ("shaders",)
     extension = ".json"
 
 
 class FragmentShader(TextFile, NamespaceFile):
     """Class representing a fragment shader."""
 
-    scope = ("shaders", "program")
+    scope = ("shaders",)
     extension = ".fsh"
 
 
 class VertexShader(TextFile, NamespaceFile):
     """Class representing a vertex shader."""
 
-    scope = ("shaders", "program")
+    scope = ("shaders",)
     extension = ".vsh"
+
+
+class GlslShader(TextFile, NamespaceFile):
+    """Class representing a glsl shader."""
+
+    scope = ("shaders",)
+    extension = ".glsl"
 
 
 class Text(TextFile, NamespaceFile):
@@ -161,9 +169,10 @@ class ResourcePackNamespace(Namespace):
     glyph_sizes:      NamespacePin[GlyphSizeFile]  = NamespacePin(GlyphSizeFile)
     truetype_fonts:   NamespacePin[TrueTypeFont]   = NamespacePin(TrueTypeFont)
     shader_posts:     NamespacePin[ShaderPost]     = NamespacePin(ShaderPost)
-    shader_programs:  NamespacePin[ShaderProgram]  = NamespacePin(ShaderProgram)
+    shaders:          NamespacePin[Shader]         = NamespacePin(Shader)
     fragment_shaders: NamespacePin[FragmentShader] = NamespacePin(FragmentShader)
     vertex_shaders:   NamespacePin[VertexShader]   = NamespacePin(VertexShader)
+    glsl_shaders:     NamespacePin[GlslShader]     = NamespacePin(GlslShader)
     texts:            NamespacePin[Text]           = NamespacePin(Text)
     textures_mcmeta:  NamespacePin[TextureMcmeta]  = NamespacePin(TextureMcmeta)
     textures:         NamespacePin[Texture]        = NamespacePin(Texture)
@@ -188,9 +197,10 @@ class ResourcePack(Pack[ResourcePackNamespace]):
     glyph_sizes:      NamespaceProxyDescriptor[GlyphSizeFile]  = NamespaceProxyDescriptor(GlyphSizeFile)
     truetype_fonts:   NamespaceProxyDescriptor[TrueTypeFont]   = NamespaceProxyDescriptor(TrueTypeFont)
     shader_posts:     NamespaceProxyDescriptor[ShaderPost]     = NamespaceProxyDescriptor(ShaderPost)
-    shader_programs:  NamespaceProxyDescriptor[ShaderProgram]  = NamespaceProxyDescriptor(ShaderProgram)
+    shaders:          NamespaceProxyDescriptor[Shader]         = NamespaceProxyDescriptor(Shader)
     fragment_shaders: NamespaceProxyDescriptor[FragmentShader] = NamespaceProxyDescriptor(FragmentShader)
     vertex_shaders:   NamespaceProxyDescriptor[VertexShader]   = NamespaceProxyDescriptor(VertexShader)
+    glsl_shaders:     NamespaceProxyDescriptor[GlslShader]     = NamespaceProxyDescriptor(GlslShader)
     texts:            NamespaceProxyDescriptor[Text]           = NamespaceProxyDescriptor(Text)
     textures_mcmeta:  NamespaceProxyDescriptor[TextureMcmeta]  = NamespaceProxyDescriptor(TextureMcmeta)
     textures:         NamespaceProxyDescriptor[Texture]        = NamespaceProxyDescriptor(Texture)
