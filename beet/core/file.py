@@ -82,9 +82,13 @@ class File(Generic[ValueType, SerializeType]):
         return content
 
     def __eq__(self, other: Any) -> bool:
+        if type(self) != type(other):
+            return NotImplemented
+
         return (
-            type(self) == type(other)
-            and self.ensure_serialized() == other.ensure_serialized()
+            (self.source_path is not None and self.source_path == other.source_path)
+            or self.ensure_serialized() == other.ensure_serialized()
+            or self.ensure_deserialized() == other.ensure_deserialized()
         )
 
     @classmethod
@@ -267,9 +271,6 @@ class JsonFileBase(TextFileBase[ValueType]):
     @classmethod
     def from_str(cls, content: str) -> ValueType:
         return json.loads(content)
-
-    def __eq__(self, other: Any) -> bool:
-        return type(self) == type(other) and self.data == other.data
 
 
 class JsonFile(JsonFileBase[JsonDict]):
