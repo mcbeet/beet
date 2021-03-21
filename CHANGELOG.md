@@ -2,6 +2,17 @@
 
 <!--next-version-placeholder-->
 
+## v0.16.0 (2021-03-21)
+### Feature
+* Support core shaders ([`69e3d19`](https://github.com/mcbeet/beet/commit/69e3d1928891891b26408ca50f6faa558df629c1))
+
+### Fix
+* Better file comparisons with source_path fast path ([`3c12aa7`](https://github.com/mcbeet/beet/commit/3c12aa7bee647d411393711e869d99f40713effe))
+* Properly display edited filename on windows ([`e3c1890`](https://github.com/mcbeet/beet/commit/e3c189035d155a234aff9a9beed4caf950040e3e))
+
+### Breaking
+* ShaderProgram was renamed to Shader  ([`69e3d19`](https://github.com/mcbeet/beet/commit/69e3d1928891891b26408ca50f6faa558df629c1))
+
 ## v0.15.0 (2021-03-19)
 ### Feature
 * Add logging ([`6505cbb`](https://github.com/mcbeet/beet/commit/6505cbb47feed1d0c4934468b67e2bd9be4aafe9))
