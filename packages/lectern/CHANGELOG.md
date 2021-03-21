@@ -2,6 +2,13 @@
 
 <!--next-version-placeholder-->
 
+## v0.9.0 (2021-03-21)
+### Feature
+* Update beet and add shader highlighting ([`13e4659`](https://github.com/mcbeet/lectern/commit/13e465995c09a7bc9d974c64e829fca82721fb39))
+
+### Breaking
+* `@shader_program` directive renamed to `@shader`  ([`13e4659`](https://github.com/mcbeet/lectern/commit/13e465995c09a7bc9d974c64e829fca82721fb39))
+
 ## v0.8.2 (2021-03-19)
 ### Fix
 * Update beet ([`87b0931`](https://github.com/mcbeet/lectern/commit/87b0931c9ec156af4ea468ca27084dd69d92545a))
