@@ -20,7 +20,7 @@ from collections import defaultdict
 from contextlib import nullcontext
 from dataclasses import dataclass
 from functools import partial
-from itertools import accumulate, count
+from itertools import count
 from pathlib import Path, PurePosixPath
 from typing import (
     Any,
@@ -190,7 +190,7 @@ class Namespace(
 
         for filename in sorted(filenames):
             try:
-                directory, namespace_dir, head, *rest, _ = filename.parts
+                directory, namespace_dir, *scope, _ = filename.parts
             except ValueError:
                 continue
 
@@ -204,13 +204,15 @@ class Namespace(
             assert name and namespace is not None
             extension = "".join(filename.suffixes)
 
-            for path in accumulate(rest, lambda a, b: a + (b,), initial=(head,)):
+            while path := tuple(scope):
                 if file_type := cls.scope_map.get((path, extension)):
                     key = "/".join(
                         filename.relative_to(Path(directory, name, *path)).parts
                     )[: -len(extension)]
 
                     namespace[file_type][key] = file_type.load(pack, filename)
+                    break
+                scope.pop()
 
         if name and namespace:
             yield name, namespace
