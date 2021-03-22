@@ -23,7 +23,7 @@ include = ["mecha/py.typed"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
-beet = ">=0.5.1,<0.15.0"
+beet = ">=0.5.1,<0.17.0"
 
 [tool.poetry.dev-dependencies]
 black = "^20.8b1"
