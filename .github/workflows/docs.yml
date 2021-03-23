@@ -36,4 +36,4 @@ jobs:
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "action@github.com"
-          poetry run mudkip build --check --update-gh-pages
+          poetry run mudkip build --check --update-gh-pages --repository https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
