@@ -61,15 +61,3 @@ def greet_on_load(ctx: Context):
     ctx.require(greet)
     ctx.data["minecraft:load"] = FunctionTag({"values": ["greet:hello"]})
 ```
-
-Plugins can have an entry phase and an exit phase
-
-Internally the project configuration file is actually handled using a beet plugin, the bootstrapping plugin. The bootstrapping plugin is in charge of loading and merging data packs and resource packs, render templates, and run the specified plugins into the pipeline.
-
-```python
-def beet_default(ctx: Context):
-    config = ProjectConfig(data_pack={"load": ["src"]}).resolve(ctx.directory)
-    ctx.require(ProjectBuilder(Project(config, resolved_cache=ctx.cache)))
-```
-
-This is a plugin that manually invokes a sub-pipeline. You can clearly see how the pipeline works internally. The project config is resolved relative to the project directory. This turns all the relative file paths into absolute ones and applies the config file inheritance through the "extend" option.
