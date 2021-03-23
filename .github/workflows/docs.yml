@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - "docs/**"
+      - "README.md"
       - "pyproject.toml"
 
 jobs:
@@ -32,4 +33,7 @@ jobs:
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
         run: poetry install
       - name: Build and deploy documentation
-        run: poetry run mudkip build --check --update-gh-pages
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "action@github.com"
+          poetry run mudkip build --check --update-gh-pages
