@@ -152,7 +152,7 @@ def test_preload(tmp_path: Path):
 
 def test_match(tmp_path: Path):
     with MultiCache(tmp_path) as cache:
-        cache["test:foo"]
-        cache["test:bar"]
-        cache["other:hello"]
-        assert cache.match("test:*") == {"test:foo", "test:bar"}
+        cache["test-foo"]
+        cache["test-bar"]
+        cache["other-hello"]
+        assert cache.match("test-*") == {"test-foo", "test-bar"}
