@@ -11,6 +11,7 @@ You can ask questions about `beet` and get general help about Minecraft map-maki
 
 library
 toolchain
+changelog
 ```
 
 ```{toctree}

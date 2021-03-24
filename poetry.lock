@@ -692,7 +692,7 @@ python-versions = "*"
 
 [[package]]
 name = "mudkip"
-version = "0.4.3"
+version = "0.4.4"
 description = "A friendly Sphinx wrapper"
 category = "dev"
 optional = false
@@ -1730,7 +1730,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=1.2.3)", "pytest-flake8", "pyt
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "7d18448ed78f83cd04ddbd77dcfb50ef1d320f94e168fa88841cf0b5d59a4324"
+content-hash = "712121bebef32c8ca7414f3536da49994b1b432eb23425372a72fe35cf61ebfd"
 
 [metadata.files]
 alabaster = [
@@ -2063,8 +2063,8 @@ mistune = [
     {file = "mistune-0.8.4.tar.gz", hash = "sha256:59a3429db53c50b5c6bcc8a07f8848cb00d7dc8bdb431a4ab41920d201d4756e"},
 ]
 mudkip = [
-    {file = "mudkip-0.4.3-py3-none-any.whl", hash = "sha256:543f59c3837751c6a5a6fabfcd12e208a77b41853addbd6a05fa8e2bedfe0338"},
-    {file = "mudkip-0.4.3.tar.gz", hash = "sha256:6db26dddc33018737738e4639deedeab7ce39c680d7bb333548ec05fc667ec62"},
+    {file = "mudkip-0.4.4-py3-none-any.whl", hash = "sha256:4a4e2e130d2ee8f30b8b1ccab26cd9b407c737272c09c8b319f92aa2b034c088"},
+    {file = "mudkip-0.4.4.tar.gz", hash = "sha256:9aa524d89043b5938c93efd4888032b6486e5a9e0171b0b49b17cb59f59ace8a"},
 ]
 mypy-extensions = [
     {file = "mypy_extensions-0.4.3-py2.py3-none-any.whl", hash = "sha256:090fedd75945a69ae91ce1303b5824f428daf5a028d2f6ab8a299250a846f15d"},
