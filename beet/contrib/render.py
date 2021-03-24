@@ -9,7 +9,6 @@ __all__ = [
 from typing import Dict, List, Optional
 
 from beet import Context, Plugin
-from beet.core.utils import JsonDict
 
 
 def beet_default(ctx: Context):
