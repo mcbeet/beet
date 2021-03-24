@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.17.2 (2021-03-24)
+### Fix
+* **hangman:** Handle trailing comments ([`ff7ba22`](https://github.com/mcbeet/beet/commit/ff7ba225a099f6e5c3b5b22fb3bcfab7114acfe6))
+
 ## v0.17.1 (2021-03-24)
 ### Fix
 * Remove dedent extension ([`ab0797a`](https://github.com/mcbeet/beet/commit/ab0797af365e9c77d6c0bf62234c232c137785bf))
