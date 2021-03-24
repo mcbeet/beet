@@ -1,12 +1,10 @@
 __all__ = [
     "TemplateError",
     "TemplateManager",
-    "DedentExtension",
 ]
 
 
 from contextlib import contextmanager
-from textwrap import dedent
 from typing import Any, Dict, List, Optional, TypeVar
 
 from jinja2 import (
@@ -19,8 +17,7 @@ from jinja2 import (
     PrefixLoader,
 )
 from jinja2.ext import DebugExtension  # type: ignore
-from jinja2.ext import ExprStmtExtension, Extension, LoopControlExtension, WithExtension
-from jinja2.lexer import Token
+from jinja2.ext import ExprStmtExtension, LoopControlExtension, WithExtension
 from jinja2.loaders import BaseLoader
 
 from beet.core.file import TextFileBase
@@ -68,7 +65,6 @@ class TemplateManager:
                 ExprStmtExtension,
                 LoopControlExtension,
                 WithExtension,
-                DedentExtension,
             ],
         )
 
@@ -107,18 +103,3 @@ class TemplateManager:
                     exc = exc.with_traceback(tb)
                 tb = tb.tb_next
             raise TemplateError(message) from exc
-
-
-class DedentExtension(Extension):
-    """Extension that removes indention from templates."""
-
-    def filter_stream(self, stream: Any):
-        lineno = 0
-        for token in stream:
-            if token.type == "data":
-                prefix, newline, value = token.value.partition("\n")
-                if token.lineno > lineno:
-                    prefix = dedent(prefix)
-                token = Token(token.lineno, "data", prefix + newline + dedent(value))
-            yield token
-            lineno = token.lineno
