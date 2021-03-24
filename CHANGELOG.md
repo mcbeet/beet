@@ -2,6 +2,16 @@
 
 <!--next-version-placeholder-->
 
+## v0.17.0 (2021-03-24)
+### Feature
+* Add hangman plugin ([`2a96811`](https://github.com/mcbeet/beet/commit/2a96811892ad0bd4d4f858b973f10bff794eabdf))
+
+### Documentation
+* Update homepage ([`3a25a4c`](https://github.com/mcbeet/beet/commit/3a25a4cba0ca15b05b09d1e1ec8f134aefc9e0f3))
+* Update ([`825181b`](https://github.com/mcbeet/beet/commit/825181bfe51abfb59d5658e38d4be67c9833d33f))
+* Update cli help text ([`6093b61`](https://github.com/mcbeet/beet/commit/6093b61180031560aab4f04ba65cc75860aa9b2b))
+* Add action ([`579ea4f`](https://github.com/mcbeet/beet/commit/579ea4f177f045ea3fc2d096c7d04f91de60a4ba))
+
 ## v0.16.0 (2021-03-21)
 ### Feature
 * Support core shaders ([`69e3d19`](https://github.com/mcbeet/beet/commit/69e3d1928891891b26408ca50f6faa558df629c1))
