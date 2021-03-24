@@ -25,7 +25,7 @@ include = ["lectern/py.typed"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
-beet = "^0.16.0"
+beet = "^0.17.2"
 markdown-it-py = "^0.6.2"
 click = "^7.1.2"
 
