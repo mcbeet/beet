@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.17.1 (2021-03-24)
+### Fix
+* Remove dedent extension ([`ab0797a`](https://github.com/mcbeet/beet/commit/ab0797af365e9c77d6c0bf62234c232c137785bf))
+
 ## v0.17.0 (2021-03-24)
 ### Feature
 * Add hangman plugin ([`2a96811`](https://github.com/mcbeet/beet/commit/2a96811892ad0bd4d4f858b973f10bff794eabdf))
