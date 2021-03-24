@@ -88,6 +88,7 @@ preset = "furo"
 [tool.mudkip.override]
 html_title = "Beet documentation"
 html_logo = "assets/logo.png"
+html_favicon = "assets/favicon.png"
 
 [tool.mudkip.override.html_theme_options]
 sidebar_hide_name = true
