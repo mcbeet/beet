@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.9.1 (2021-03-24)
+### Fix
+* Version ranges were weird again ([`bc37fd9`](https://github.com/mcbeet/lectern/commit/bc37fd943021e2d4ab7203f3ac20afb21945d3c4))
+
 ## v0.9.0 (2021-03-21)
 ### Feature
 * Update beet and add shader highlighting ([`13e4659`](https://github.com/mcbeet/lectern/commit/13e465995c09a7bc9d974c64e829fca82721fb39))
