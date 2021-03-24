@@ -28,16 +28,17 @@ from typing import (
 from .utils import format_obj, import_from_string
 
 T = TypeVar("T")
+ContextType = TypeVar("ContextType", contravariant=True)
 
 
-class GenericPlugin(Protocol[T]):
+class GenericPlugin(Protocol[ContextType]):
     """Protocol for detecting plugins."""
 
-    def __call__(self, ctx: T) -> Any:
+    def __call__(self, ctx: ContextType) -> Any:
         ...
 
 
-GenericPluginSpec = Union[GenericPlugin[T], str]
+GenericPluginSpec = Union[GenericPlugin[ContextType], str]
 
 
 class PipelineFallthroughException(Exception):

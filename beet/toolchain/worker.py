@@ -35,13 +35,15 @@ from .utils import format_obj
 
 T = TypeVar("T")
 U = TypeVar("U")
+SendType = TypeVar("SendType", contravariant=True)
+RecvType = TypeVar("RecvType", contravariant=True)
 SelfType = TypeVar("SelfType")
 
 
 logger = logging.getLogger(__name__)
 
 
-class Worker(Protocol[T, U]):
+class Worker(Protocol[SendType, RecvType]):
     """Protocol for detecting workers.
 
     Workers can be arbitrary objects as long as they can be called with
@@ -49,7 +51,7 @@ class Worker(Protocol[T, U]):
     clients.
     """
 
-    def __call__(self, connection: "Connection[T, U]") -> Any:
+    def __call__(self, connection: "Connection[SendType, RecvType]") -> Any:
         ...
 
 

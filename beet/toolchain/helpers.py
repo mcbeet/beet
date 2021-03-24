@@ -93,7 +93,7 @@ def run_beet(
             project.resolved_cache = cache
         elif not cache:
             project.resolved_cache = MultiCache(
-                stack.enter_context(TemporaryDirectory())
+                stack.enter_context(TemporaryDirectory())  # type: ignore
             )
 
         if isinstance(config, ProjectConfig):

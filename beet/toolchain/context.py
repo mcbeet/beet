@@ -11,7 +11,7 @@ import sys
 from contextlib import contextmanager
 from dataclasses import InitVar, dataclass, field
 from pathlib import Path
-from typing import Any, Callable, List, Optional, Tuple, TypeVar
+from typing import Any, Callable, List, Optional, Set, Tuple, TypeVar
 
 from beet.core.cache import MultiCache
 from beet.core.container import Container
@@ -107,7 +107,7 @@ class Context:
     def override(self, **meta: Any):
         """Temporarily update the context meta."""
         to_restore: JsonDict = {}
-        to_remove = set()
+        to_remove: Set[str] = set()
 
         for key, value in meta.items():
             if key in self.meta:
