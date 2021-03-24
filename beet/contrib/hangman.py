@@ -3,12 +3,17 @@
 
 __all__ = [
     "fold_hanging_commands",
+    "parse_trailing_comment",
 ]
 
 
-from typing import List
+import re
+from typing import List, Optional, Tuple
 
 from beet import Context
+
+REGEX_COMMENT = re.compile(r"(\s+#(?:\s+.*)?$)")
+REGEX_QUOTE = re.compile(r"(\"(?:.*?[^\\])?\"|'(?:.*?[^\\])?')")
 
 
 def beet_default(ctx: Context):
@@ -32,16 +37,40 @@ def fold_hanging_commands(lines: List[str]) -> List[str]:
         if indentation > 0:
             if stripped.startswith("#"):
                 result.append(stripped)
-            elif stripped:
                 hanging_blank_lines = 0
+            elif stripped:
+                stripped, comment = parse_trailing_comment(stripped)
+                if comment:
+                    result.append(comment)
                 current += " " + stripped
+                hanging_blank_lines = 0
             else:
                 hanging_blank_lines += 1
         else:
             result.append(current)
             result.extend([""] * hanging_blank_lines)
+            hanging_blank_lines = 0
+            stripped, comment = parse_trailing_comment(stripped)
+            if comment:
+                result.append(comment)
             current = stripped
 
     result.append(current)
 
     return result
+
+
+def parse_trailing_comment(line: str) -> Tuple[str, Optional[str]]:
+    """Split the line and return the extracted trailing comment."""
+    chunks = REGEX_QUOTE.split(line)
+    result = ""
+
+    while chunks:
+        notcomment, *comment = REGEX_COMMENT.split(chunks.pop(0))
+        result += notcomment
+        if comment:
+            return result, comment[0].lstrip() + "".join(chunks)
+        if chunks:
+            result += chunks.pop(0)
+
+    return result, None
