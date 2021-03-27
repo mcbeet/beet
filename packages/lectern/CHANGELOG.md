@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.9.2 (2021-03-27)
+### Fix
+* Snapshots shouldn't compare data pack and resource pack names ([`941605b`](https://github.com/mcbeet/lectern/commit/941605b24ef11452e7534af3a7a4bf2597f3f164))
+
 ## v0.9.1 (2021-03-24)
 ### Fix
 * Version ranges were weird again ([`bc37fd9`](https://github.com/mcbeet/lectern/commit/bc37fd943021e2d4ab7203f3ac20afb21945d3c4))
