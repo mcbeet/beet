@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.18.0 (2021-03-27)
+### Feature
+* Add ignore_name test utility ([`e5ee8f2`](https://github.com/mcbeet/beet/commit/e5ee8f22791a8fa500a5f6093ec95ea00ef4fe51))
+
 ## v0.17.3 (2021-03-27)
 ### Fix
 * Prevent explanation from crashing when assertrepr_compare returns None ([`0ed03ed`](https://github.com/mcbeet/beet/commit/0ed03ed8c5180455934d0bc90e294391b059e04f))
