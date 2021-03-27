@@ -2,6 +2,13 @@
 
 <!--next-version-placeholder-->
 
+## v0.17.3 (2021-03-27)
+### Fix
+* Prevent explanation from crashing when assertrepr_compare returns None ([`0ed03ed`](https://github.com/mcbeet/beet/commit/0ed03ed8c5180455934d0bc90e294391b059e04f))
+
+### Documentation
+* Add changelog page ([`3c554ac`](https://github.com/mcbeet/beet/commit/3c554ac03be1ef71b94c52ea28ee7e404031b86a))
+
 ## v0.17.2 (2021-03-24)
 ### Fix
 * **hangman:** Handle trailing comments ([`ff7ba22`](https://github.com/mcbeet/beet/commit/ff7ba225a099f6e5c3b5b22fb3bcfab7114acfe6))
