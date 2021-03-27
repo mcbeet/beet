@@ -13,9 +13,8 @@ def pytest_assertrepr_compare(config, op, left, right):
 
     if isinstance(left, Pack):
         if left.name != right.name:
-            explanation += ["", "Differing attribute 'name':"] + assertrepr_compare(
-                config, op, left.name, right.name
-            )[1:]
+            if diff := assertrepr_compare(config, op, left.name, right.name):
+                explanation += ["", "Differing attribute 'name':"] + diff[1:]
         if left.extra != right.extra:
             explanation += generate_explanation(config, left.extra, right.extra, "file")
         if dict(left) != dict(right):
