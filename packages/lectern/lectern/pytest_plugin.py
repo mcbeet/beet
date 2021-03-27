@@ -1,7 +1,10 @@
 # type: ignore
 
 
+from pathlib import Path
+
 from _pytest.assertion.util import assertrepr_compare
+from beet.library.test_utils import ignore_name
 
 from lectern import Document
 
@@ -10,15 +13,18 @@ try:
 except ImportError:
     pass
 else:
-    from pathlib import Path
 
-    from lectern import Document
+    def load_snapshot(path: Path) -> Document:
+        document = Document(path=path)
+        ignore_name(document.assets)
+        ignore_name(document.data)
+        return document
 
     class FmtPackText(Fmt[Document]):
         extension = ".pack.txt"
 
         def load(self, path: Path) -> Document:
-            return Document(path=path)
+            return load_snapshot(path)
 
         def dump(self, path: Path, value: Document):
             value.save(path)
@@ -27,7 +33,7 @@ else:
         extension = ".pack.md"
 
         def load(self, path: Path) -> Document:
-            return Document(path=path)
+            return load_snapshot(path)
 
         def dump(self, path: Path, value: Document):
             value.save(path)
@@ -36,7 +42,7 @@ else:
         extension = ".pack.md_external_files"
 
         def load(self, path: Path) -> Document:
-            return Document(path=path / "README.md")
+            return load_snapshot(path / "README.md")
 
         def dump(self, path: Path, value: Document):
             path.mkdir(exist_ok=True)
