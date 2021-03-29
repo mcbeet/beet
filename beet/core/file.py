@@ -43,6 +43,10 @@ class File(Generic[ValueType, SerializeType]):
     content: Union[ValueType, SerializeType, None] = None
     source_path: Optional[FileSystemPath] = None
 
+    def __post_init__(self):
+        if self.content is self.source_path is None:
+            self.content = self.default()
+
     def merge(self: FileType, other: FileType) -> bool:
         """Merge the given file or return False to indicate no special handling."""
         return False
@@ -65,8 +69,8 @@ class File(Generic[ValueType, SerializeType]):
         if self.source_path:
             return self.source_path
         raise ValueError(
-            f"{self.__class__.__name__} object must be initialized with "
-            "either a value, raw bytes or a source path."
+            f"Expected {self.__class__.__name__} object to be initialized with "
+            "a source path."
         )
 
     def ensure_serialized(self) -> SerializeType:
@@ -89,6 +93,14 @@ class File(Generic[ValueType, SerializeType]):
             (self.source_path is not None and self.source_path == other.source_path)
             or self.ensure_serialized() == other.ensure_serialized()
             or self.ensure_deserialized() == other.ensure_deserialized()
+        )
+
+    @classmethod
+    def default(cls) -> ValueType:
+        """Return the file's default value."""
+        raise ValueError(
+            f"{cls.__name__} object must be initialized with "
+            "either a value, serialized data, or a source path."
         )
 
     @classmethod
@@ -263,6 +275,10 @@ class JsonFileBase(TextFileBase[ValueType]):
     """Base class for json files."""
 
     data: FileDeserialize[ValueType] = FileDeserialize()
+
+    @classmethod
+    def default(cls) -> ValueType:
+        return {}  # type: ignore
 
     @classmethod
     def to_str(cls, content: ValueType) -> str:

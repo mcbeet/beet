@@ -43,7 +43,7 @@ from beet.core.file import (
     TextFileBase,
     TextFileContent,
 )
-from beet.core.utils import extra_field
+from beet.core.utils import JsonDict, extra_field
 
 from .base import Namespace, NamespaceFile, NamespacePin, NamespaceProxyDescriptor, Pack
 
@@ -68,6 +68,10 @@ class Function(TextFileBase[List[str]], NamespaceFile):
     extension = ".mcfunction"
 
     lines = FileDeserialize()  # type: FileDeserialize[List[str]]
+
+    @classmethod
+    def default(cls) -> List[str]:
+        return []
 
     @classmethod
     def to_str(cls, content: List[str]) -> str:
@@ -146,6 +150,10 @@ class TagFile(JsonFile, NamespaceFile):
             if value not in values:
                 values.append(deepcopy(value))
         return True
+
+    @classmethod
+    def default(cls) -> JsonDict:
+        return {"values": []}
 
 
 class BlockTag(TagFile):
