@@ -5,6 +5,7 @@
     "beet/core",
     "beet/library",
     "beet/toolchain",
+    "examples",
     "tests"
   ],
   "ignore": ["docs"]
