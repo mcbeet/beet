@@ -34,8 +34,14 @@ class Generator:
 
     def get_prefix(self, separator: str = ".") -> str:
         """Join the serializable parts of the scope into a key prefix."""
+        prefix = ()
+        if prefix_value := self.ctx.meta.get("generate_prefix"):
+            prefix = (prefix_value,)
+
         return "".join(
-            part + separator for part in self.scope if part and isinstance(part, str)
+            part + separator
+            for part in prefix + self.scope
+            if part and isinstance(part, str)
         )
 
     def format(self, fmt: str, hash: Optional[StableHashable] = None) -> str:
@@ -46,7 +52,7 @@ class Generator:
         self.registry[key] += 1
 
         env = {
-            "root": self.ctx.project_name,
+            "namespace": self.ctx.meta.get("generate_namespace", self.ctx.project_name),
             "path": LazyFormat(lambda: self.get_prefix("/")),
             "scope": LazyFormat(lambda: self.get_prefix()),
             "incr": count,
@@ -73,7 +79,7 @@ class Generator:
         else:
             file_instance = args[0]
             template = self.ctx.meta.get(
-                "generate_format", "{root}:{path}generated_{incr}"
+                "generate_format", "{namespace}:{path}generated_{incr}"
             )
 
         file_type = type(file_instance)
