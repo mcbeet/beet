@@ -19,6 +19,7 @@ from beet.core.utils import JsonDict, TextComponent, extra_field
 from beet.library.data_pack import DataPack
 from beet.library.resource_pack import ResourcePack
 
+from .generator import Generator
 from .pipeline import GenericPipeline, GenericPlugin, GenericPluginSpec
 from .template import TemplateManager
 from .worker import WorkerPoolHandle
@@ -126,6 +127,10 @@ class Context:
     @property
     def packs(self) -> Tuple[ResourcePack, DataPack]:
         return self.assets, self.data
+
+    @property
+    def generate(self) -> Generator:
+        return self.inject(Generator)
 
     def require(self, spec: PluginSpec):
         """Execute the specified plugin."""

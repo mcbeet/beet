@@ -31,6 +31,8 @@ click = "^7.1.2"
 click-help-colors = "^0.9"
 Jinja2 = "^2.11.2"
 colorama = {version = "*", markers = 'sys_platform == "win32"'}
+fnvhash = "^0.1.0"
+base58 = "^2.1.0"
 
 [tool.poetry.dev-dependencies]
 black = "^20.8b1"

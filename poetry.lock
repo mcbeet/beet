@@ -89,6 +89,17 @@ optional = false
 python-versions = "*"
 
 [[package]]
+name = "base58"
+version = "2.1.0"
+description = "Base58 and Base58Check implementation."
+category = "main"
+optional = false
+python-versions = ">=3.5"
+
+[package.extras]
+tests = ["pytest (>=4.6)", "pytest-flake8", "pytest-cov", "PyHamcrest (>=2.0.2)", "coveralls", "pytest-benchmark"]
+
+[[package]]
 name = "beautifulsoup4"
 version = "4.9.3"
 description = "Screen-scraping library"
@@ -267,6 +278,14 @@ description = "Discover and load entry points from installed packages."
 category = "dev"
 optional = false
 python-versions = ">=2.7"
+
+[[package]]
+name = "fnvhash"
+version = "0.1.0"
+description = "Pure Python FNV hash implementation"
+category = "main"
+optional = false
+python-versions = "*"
 
 [[package]]
 name = "furo"
@@ -1730,7 +1749,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=1.2.3)", "pytest-flake8", "pyt
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "712121bebef32c8ca7414f3536da49994b1b432eb23425372a72fe35cf61ebfd"
+content-hash = "c99502238e6d7d94f58cff11b46e3fc84517e91bf04153fe7e3004c34474597e"
 
 [metadata.files]
 alabaster = [
@@ -1784,6 +1803,10 @@ babel = [
 backcall = [
     {file = "backcall-0.2.0-py2.py3-none-any.whl", hash = "sha256:fbbce6a29f263178a1f7915c1940bde0ec2b2a967566fe1c65c1dfb7422bd255"},
     {file = "backcall-0.2.0.tar.gz", hash = "sha256:5cbdbf27be5e7cfadb448baf0aa95508f91f2bbc6c6437cd9cd06e2a4c215e1e"},
+]
+base58 = [
+    {file = "base58-2.1.0-py3-none-any.whl", hash = "sha256:8225891d501b68c843ffe30b86371f844a21c6ba00da76f52f9b998ba771fb48"},
+    {file = "base58-2.1.0.tar.gz", hash = "sha256:171a547b4a3c61e1ae3807224a6f7aec75e364c4395e7562649d7335768001a2"},
 ]
 beautifulsoup4 = [
     {file = "beautifulsoup4-4.9.3-py2-none-any.whl", hash = "sha256:4c98143716ef1cb40bf7f39a8e3eec8f8b009509e74904ba3a7b315431577e35"},
@@ -1892,6 +1915,9 @@ dotty-dict = [
 entrypoints = [
     {file = "entrypoints-0.3-py2.py3-none-any.whl", hash = "sha256:589f874b313739ad35be6e0cd7efde2a4e9b6fea91edcc34e58ecbb8dbe56d19"},
     {file = "entrypoints-0.3.tar.gz", hash = "sha256:c70dd71abe5a8c85e55e12c19bd91ccfeec11a6e99044204511f9ed547d48451"},
+]
+fnvhash = [
+    {file = "fnvhash-0.1.0.tar.gz", hash = "sha256:3e82d505054f9f3987b2b5b649f7e7b6f48349f6af8a1b8e4d66779699c85a8e"},
 ]
 furo = [
     {file = "furo-2021.3.20b31-py3-none-any.whl", hash = "sha256:34bd70a839794872d4ba6656d18b4d94cca16684e16e224a0073cf1977f29e43"},
