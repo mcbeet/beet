@@ -2,6 +2,13 @@
 
 <!--next-version-placeholder-->
 
+## v0.19.0 (2021-03-29)
+### Feature
+* Make generator prefix and namespace configurable and add tests ([`4972534`](https://github.com/mcbeet/beet/commit/4972534239f1a994c3382f16973f08cecebadf0b))
+* Refactor hangman plugin to support run commands syntax ([`849697b`](https://github.com/mcbeet/beet/commit/849697b4f62be42dade6e5ac6c728a156a6c583b))
+* Add context generator ([`09eb6ab`](https://github.com/mcbeet/beet/commit/09eb6ab4bbaf8de0dc9ed968fc6d277a7eb0c07b))
+* Add file default value ([`205c9ff`](https://github.com/mcbeet/beet/commit/205c9ff16b060ea91ab1b5eda0c1de9583ca5e6b))
+
 ## v0.18.0 (2021-03-27)
 ### Feature
 * Add ignore_name test utility ([`e5ee8f2`](https://github.com/mcbeet/beet/commit/e5ee8f22791a8fa500a5f6093ec95ea00ef4fe51))

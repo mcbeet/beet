@@ -14,4 +14,4 @@ from .toolchain.project import *
 from .toolchain.template import *
 from .toolchain.worker import *
 
-__version__ = "0.18.0"
+__version__ = "0.19.0"
