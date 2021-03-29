@@ -1,7 +1,10 @@
 """Plugin that implements Lantern Load runtime dependencies."""
 
 
+from typing import cast
+
 from beet import Context, Function, FunctionTag
+from beet.core.utils import JsonDict
 
 
 def beet_default(ctx: Context):
@@ -11,11 +14,11 @@ def beet_default(ctx: Context):
 
     # Grab the Lantern Load configuration.
     # The id defaults to the project name and the version to the project version.
-    config = ctx.meta.get("lantern_load", {})
+    config = ctx.meta.get("lantern_load", cast(JsonDict, {}))
 
     id = config.get("id", ctx.project_name)
     version = config.get("version", ctx.project_version)
-    dependencies = config.get("dependencies", {})
+    dependencies = config.get("dependencies", cast(JsonDict, {}))
 
     # Populate the #load:load tag with the dependencies followed by the pack's
     # own load function.
@@ -73,8 +76,8 @@ def base_data_pack(ctx: Context):
 
     ctx.data.function_tags.merge(
         {
-            "load:pre_load": FunctionTag({"values": []}),
-            "load:load": FunctionTag({"values": []}),
-            "load:post_load": FunctionTag({"values": []}),
+            "load:pre_load": FunctionTag(),
+            "load:load": FunctionTag(),
+            "load:post_load": FunctionTag(),
         }
     )

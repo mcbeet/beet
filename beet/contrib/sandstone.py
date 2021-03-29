@@ -7,14 +7,14 @@ __all__ = [
 
 
 import subprocess
-from typing import Optional
+from typing import Optional, cast
 
 from beet import Context, Plugin
-from beet.core.utils import FileSystemPath
+from beet.core.utils import FileSystemPath, JsonDict
 
 
 def beet_default(ctx: Context):
-    config = ctx.meta.get("sandstone", {})
+    config = ctx.meta.get("sandstone", cast(JsonDict, {}))
 
     path = config.get("path")
 

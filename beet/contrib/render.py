@@ -6,13 +6,14 @@ __all__ = [
 ]
 
 
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, cast
 
 from beet import Context, Plugin
+from beet.core.utils import JsonDict
 
 
 def beet_default(ctx: Context):
-    config = ctx.meta.get("render", {})
+    config = ctx.meta.get("render", cast(JsonDict, {}))
 
     resource_pack = config.get("resource_pack")
     data_pack = config.get("data_pack")

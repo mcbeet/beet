@@ -6,15 +6,16 @@ __all__ = [
 ]
 
 
-from typing import Iterable, Optional
+from typing import Iterable, Optional, cast
 
 from beet import Context, Plugin
+from beet.core.utils import JsonDict
 
 
 def beet_default(ctx: Context):
-    config = ctx.meta.get("function_header", {})
+    config = ctx.meta.get("function_header", cast(JsonDict, {}))
 
-    match = config.get("match", [])
+    match = config.get("match", ())
     template = config.get("template", "function_header.mcfunction")
 
     ctx.require(function_header(match, template))

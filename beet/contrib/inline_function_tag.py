@@ -6,18 +6,17 @@ __all__ = [
 ]
 
 
-from typing import Any
+from typing import Any, List
 
 from jinja2.ext import Extension
 from jinja2.nodes import DerivedContextReference  # type: ignore
 from jinja2.nodes import ExprStmt, Node
 
 from beet import Context, FunctionTag
-from beet.core.utils import JsonDict
 
 
 def beet_default(ctx: Context):
-    ctx.template.env.add_extension(InlineFunctionTags)
+    ctx.template.env.add_extension(InlineFunctionTags)  # type: ignore
 
 
 class InlineFunctionTags(Extension):
@@ -28,10 +27,12 @@ class InlineFunctionTags(Extension):
     def parse(self, parser: Any) -> Node:
         lineno = next(parser.stream).lineno
 
-        args = [DerivedContextReference(), parser.parse_expression()]
+        args: List[Any] = [DerivedContextReference(), parser.parse_expression()]
 
-        handler = self.call_method("_function_tag_handler", args, lineno=lineno)
-        return ExprStmt(handler, lineno=lineno)
+        return ExprStmt(
+            self.call_method("_function_tag_handler", args, lineno=lineno),  # type: ignore
+            lineno=lineno,
+        )
 
     def _function_tag_handler(self, context: Any, function_tag: str):
         ctx: Context = context["ctx"]

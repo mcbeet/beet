@@ -13,10 +13,10 @@ __all__ = [
 
 import logging
 from csv import Dialect, DictReader, Sniffer
-from typing import Dict, Iterable, Optional, Type, Union
+from typing import Dict, Iterable, Optional, Type, Union, cast
 
 from beet import Context, Language, Plugin
-from beet.core.utils import FileSystemPath
+from beet.core.utils import FileSystemPath, JsonDict
 
 DialectLike = Union[str, Dialect, Type[Dialect]]
 
@@ -25,7 +25,7 @@ logger = logging.getLogger(__name__)
 
 
 def beet_default(ctx: Context):
-    config = ctx.meta.get("babelbox", {})
+    config = ctx.meta.get("babelbox", cast(JsonDict, {}))
 
     load = config.get("load", ())
     dialect = config.get("dialect")
@@ -71,7 +71,7 @@ def load_languages(
         reader = DictReader(csv_file, dialect=dialect)
 
         key, *language_codes = reader.fieldnames or [""]
-        languages = {code: Language({}) for code in language_codes}
+        languages = {code: Language() for code in language_codes}
 
         for row in reader:
             if not (identifier := row[key]):
