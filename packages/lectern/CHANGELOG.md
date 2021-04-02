@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.9.3 (2021-04-02)
+### Fix
+* **deps:** Don't use caret to depend on beet because it's not 1.0 yet ([`a97779f`](https://github.com/mcbeet/lectern/commit/a97779fd7bcb22efafeb95b4f383cbd86d61000f))
+
 ## v0.9.2 (2021-03-27)
 ### Fix
 * Snapshots shouldn't compare data pack and resource pack names ([`941605b`](https://github.com/mcbeet/lectern/commit/941605b24ef11452e7534af3a7a4bf2597f3f164))
