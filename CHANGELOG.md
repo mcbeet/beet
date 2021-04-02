@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.19.1 (2021-04-02)
+### Fix
+* **generator:** Only default to content hash if hash wasn't explicitly provided ([`bee1df4`](https://github.com/mcbeet/beet/commit/bee1df4d1ea1ed12de8150c87043915f70ef5372))
+
 ## v0.19.0 (2021-03-29)
 ### Feature
 * Make generator prefix and namespace configurable and add tests ([`4972534`](https://github.com/mcbeet/beet/commit/4972534239f1a994c3382f16973f08cecebadf0b))
