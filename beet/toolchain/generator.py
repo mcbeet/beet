@@ -66,14 +66,25 @@ class Generator:
         return fmt.format_map(env)
 
     @overload
-    def __call__(self, template: str, file_instance: NamespaceFile) -> str:
+    def __call__(
+        self,
+        template: str,
+        file_instance: NamespaceFile,
+        *,
+        hash: Optional[StableHashable] = None,
+    ) -> str:
         ...
 
     @overload
-    def __call__(self, file_instance: NamespaceFile) -> str:
+    def __call__(
+        self,
+        file_instance: NamespaceFile,
+        *,
+        hash: Optional[StableHashable] = None,
+    ) -> str:
         ...
 
-    def __call__(self, *args: Any) -> Any:
+    def __call__(self, *args: Any, hash: Optional[StableHashable] = None) -> Any:
         if len(args) == 2:
             template, file_instance = args
         else:
@@ -82,11 +93,11 @@ class Generator:
                 "generate_format", "{namespace}:{path}generated_{incr}"
             )
 
+        if hash is None:
+            hash = lambda: file_instance.ensure_serialized()
+
         file_type = type(file_instance)
-        key = self[file_type].format(
-            template,
-            hash=lambda: file_instance.ensure_serialized(),
-        )
+        key = self[file_type].format(template, hash)
 
         if file_type in self.ctx.data.namespace_type.field_map:
             self.ctx.data[key] = file_instance

@@ -23,3 +23,9 @@ def beet_default(ctx: Context):
             ctx.generate["a"]["b"](Function(["say c", f"function {key}"]))
 
         ctx.generate("creeper{incr}:boom", Function(["say boom"]))
+
+        ctx.generate["nested"](
+            "{namespace}:{path}{hash}",
+            Function(["say hello"]),
+            hash=f"something/other thing, {i} blah",
+        )
