@@ -1130,7 +1130,7 @@ testing = ["argcomplete", "hypothesis (>=3.56)", "mock", "nose", "requests", "xm
 
 [[package]]
 name = "pytest-insta"
-version = "0.1.7"
+version = "0.1.8"
 description = "A practical snapshot testing plugin for pytest"
 category = "dev"
 optional = false
@@ -1749,7 +1749,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=1.2.3)", "pytest-flake8", "pyt
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "92cc8141086fb1df4aabf2878030037452ab349b2166c440d04bb854c3304f1a"
+content-hash = "993ba68a7f45c43002d5abe140a7bcb52fce9f3890dfe0983f22a4d42767a5cc"
 
 [metadata.files]
 alabaster = [
@@ -2284,8 +2284,8 @@ pytest = [
     {file = "pytest-6.2.2.tar.gz", hash = "sha256:9d1edf9e7d0b84d72ea3dbcdfd22b35fb543a5e8f2a60092dd578936bf63d7f9"},
 ]
 pytest-insta = [
-    {file = "pytest-insta-0.1.7.tar.gz", hash = "sha256:daa265c8f31920f215b9363ce57c820ade7a87d0bd1239e91514eec63ea50ad2"},
-    {file = "pytest_insta-0.1.7-py3-none-any.whl", hash = "sha256:618ca678fb2c32b1e332903b283179d5fd08d43ea3c8445fc4fc42e30dba95f6"},
+    {file = "pytest-insta-0.1.8.tar.gz", hash = "sha256:a60a3c4b24df56cadefba8b74513c356dbb991c345097a0f236a8228209ced72"},
+    {file = "pytest_insta-0.1.8-py3-none-any.whl", hash = "sha256:9f3322bdc4e9dff3621aab8729873178dc784af402209715ed6ca5a1b913ac6d"},
 ]
 pytest-minecraft = [
     {file = "pytest-minecraft-0.1.1.tar.gz", hash = "sha256:d8ff39bafa0e2d2d268b2f6bd122ab8457d95b0deff5928d0c1a60b4da5c54a4"},
