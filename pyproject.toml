@@ -43,7 +43,7 @@ isort = "^5.7.0"
 pytest-insta = "^0.1.5"
 python-semantic-release = "^7.15.1"
 mudkip = "^0.4.4"
-furo = "^2021.3.20-beta.31"
+furo = "^2021.4.11b34"
 
 [tool.poetry.scripts]
 beet = "beet.toolchain.cli:main"
