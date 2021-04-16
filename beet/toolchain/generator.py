@@ -22,7 +22,7 @@ class Generator:
     ctx: "Context"
     scope: Tuple[Any, ...] = ()
     registry: DefaultDict[Tuple[Any, ...], int] = field(
-        default_factory=lambda: defaultdict(int)
+        default_factory=lambda: defaultdict(int)  # type: ignore
     )
 
     def __getitem__(self, key: Any) -> "Generator":
