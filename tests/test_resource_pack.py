@@ -1,8 +1,8 @@
 from pathlib import Path
-from typing import Any
 
 import pytest
 from PIL import Image, ImageDraw
+from pytest_insta import SnapshotFixture
 
 from beet import JsonFile, PngFile, ResourcePack, Texture
 
@@ -22,7 +22,7 @@ def test_default():
         ),
     ],
 )
-def test_empty(snapshot: Any, pack: ResourcePack):
+def test_empty(snapshot: SnapshotFixture, pack: ResourcePack):
     assert snapshot("resource_pack") == pack
     assert not pack
     assert dict(pack) == {}
@@ -55,7 +55,7 @@ def test_mcmeta_properties():
     }
 
 
-def test_texture(snapshot: Any):
+def test_texture(snapshot: SnapshotFixture):
     image = Image.new("RGB", (64, 64))
     d = ImageDraw.Draw(image)
     d.text((10, 10), "hello", fill="white")
@@ -66,7 +66,7 @@ def test_texture(snapshot: Any):
     assert snapshot("resource_pack") == pack
 
 
-def test_texture_mcmeta(snapshot: Any):
+def test_texture_mcmeta(snapshot: SnapshotFixture):
     image = Image.new("RGB", (64, 128))
     d = ImageDraw.Draw(image)
     d.text((10, 10), "hello", fill="white")
@@ -78,7 +78,7 @@ def test_texture_mcmeta(snapshot: Any):
     assert snapshot("resource_pack") == pack
 
 
-def test_merge(snapshot: Any):
+def test_merge(snapshot: SnapshotFixture):
     p1 = ResourcePack("p1")
     p1["custom:red"] = Texture(Image.new("RGB", (32, 32), color="red"))
 
@@ -110,7 +110,7 @@ def test_vanilla_zip(minecraft_resource_pack: Path, tmp_path: Path):
     assert ResourcePack(path=zipped_pack) == ResourcePack(path=zipped_pack)
 
 
-def test_vanilla_shaders(snapshot: Any, minecraft_resource_pack: Path):
+def test_vanilla_shaders(snapshot: SnapshotFixture, minecraft_resource_pack: Path):
     pack = ResourcePack(path=minecraft_resource_pack)
     assert snapshot("json") == pack.shader_posts["minecraft:spider"].data
     assert snapshot("json") == pack.shaders["minecraft:program/entity_outline"].data
