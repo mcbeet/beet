@@ -50,7 +50,8 @@ class SupportsMerge(Protocol):
 
 class MergeMixin:
     def merge(
-        self: MutableMapping[K, MergeableType], other: Mapping[K, MergeableType]
+        self: MutableMapping[K, MergeableType],  # type: ignore
+        other: Mapping[K, MergeableType],
     ) -> bool:
         """Merge values from the given dict-like object."""
         for key, value in other.items():
@@ -64,7 +65,7 @@ class MergeMixin:
 
 
 class MatchMixin:
-    def match(self: Mapping[str, Any], *patterns: str) -> Set[str]:
+    def match(self: Mapping[str, Any], *patterns: str) -> Set[str]:  # type: ignore
         """Return keys matching the given path patterns."""
         spec = PathSpec.from_lines("gitwildmatch", patterns)
         return set(spec.match_files(self.keys()))
