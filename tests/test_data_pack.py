@@ -139,6 +139,22 @@ def test_vanilla_igloo_content(minecraft_data_pack: Path):
     assert igloo_structure.data["size"] == [7, 5, 8]
 
 
+def test_append_functions():
+    func1 = Function(["say foo"])
+    func2 = Function(["say bar"])
+    func1.append(func2)
+
+    assert func1 == Function(["say foo", "say bar"])
+
+
+def test_prepend_functions():
+    func1 = Function(["say foo"])
+    func2 = Function(["say bar"])
+    func1.prepend(func2)
+
+    assert func1 == Function(["say bar", "say foo"])
+
+
 def test_merge_tags():
     p1 = DataPack()
     p1["hello:func1"] = Function(["say foo"], tags=["minecraft:tick"])
@@ -153,6 +169,14 @@ def test_merge_tags():
     assert p1.function_tags["minecraft:tick"].data == {
         "values": ["hello:func1", "hello:func2"]
     }
+
+
+def test_prepend_tags():
+    tag1 = FunctionTag({"values": ["hello:func1"]})
+    tag2 = FunctionTag({"values": ["hello:func2"]})
+    tag1.prepend(tag2)
+
+    assert tag1.data == {"values": ["hello:func2", "hello:func1"]}
 
 
 def test_merge_block_tags():

@@ -1,0 +1,14 @@
+{
+  "data_pack": {
+    "load": ["src"],
+    "render": {
+      "functions": ["*"]
+    }
+  },
+  "pipeline": ["beet.contrib.scoreboard"],
+  "meta": {
+    "generate_scoreboard": {
+      "from_config": "dummy"
+    }
+  }
+}

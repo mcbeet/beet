@@ -63,11 +63,20 @@ class Function(TextFileBase[List[str]], NamespaceFile):
 
     content: TextFileContent[List[str]] = None
     tags: Optional[List[str]] = extra_field(default=None)
+    prepend_tags: Optional[List[str]] = extra_field(default=None)
 
     scope = ("functions",)
     extension = ".mcfunction"
 
     lines = FileDeserialize()  # type: FileDeserialize[List[str]]
+
+    def append(self, other: "Function"):
+        """Append lines from another function."""
+        self.lines.extend(other.lines)
+
+    def prepend(self, other: "Function"):
+        """Prepend lines from another function."""
+        self.lines[0:0] = other.lines
 
     @classmethod
     def default(cls) -> List[str]:
@@ -88,6 +97,10 @@ class Function(TextFileBase[List[str]], NamespaceFile):
             pack.function_tags.merge(
                 {tag_name: FunctionTag({"values": [f"{namespace}:{path}"]})}
             )
+
+        for tag_name in self.prepend_tags or ():
+            function_tag = pack.function_tags.setdefault(tag_name, FunctionTag())
+            function_tag.prepend(FunctionTag({"values": [f"{namespace}:{path}"]}))
 
 
 class LootTable(JsonFile, NamespaceFile):
@@ -150,6 +163,17 @@ class TagFile(JsonFile, NamespaceFile):
             if value not in values:
                 values.append(deepcopy(value))
         return True
+
+    def prepend(self: TagFileType, other: TagFileType) -> bool:  # type: ignore
+        """Prepend values from another tag."""
+        if other.data.get("replace"):
+            self.data["replace"] = True
+
+        values = self.data.setdefault("values", [])
+
+        for value in other.data.get("values", []):
+            if value not in values:
+                values.insert(0, deepcopy(value))
 
     @classmethod
     def default(cls) -> JsonDict:

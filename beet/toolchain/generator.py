@@ -3,10 +3,12 @@ __all__ = [
 ]
 
 
+import json
 from collections import defaultdict
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Any, DefaultDict, Optional, Tuple, TypeVar, overload
 
+from beet.core.utils import TextComponent
 from beet.library.base import NamespaceFile
 
 from .utils import LazyFormat, StableHashable, stable_hash
@@ -125,3 +127,21 @@ class Generator:
         """Generate a scoped hash."""
         template = self.ctx.meta.get("generate_hash", "{namespace}.{scope}")
         return stable_hash(self.format(template + fmt, hash), short)
+
+    def objective(
+        self,
+        fmt: str = "{incr}",
+        hash: Optional[StableHashable] = None,
+        criterion: str = "dummy",
+        display: Optional[TextComponent] = None,
+    ) -> str:
+        """Generate a scoreboard objective."""
+        template = self.ctx.meta.get("generate_objective", "{namespace}.{scope}")
+        key = self.format(template + fmt, hash)
+        objective = stable_hash(key)
+        display = json.dumps(display or key)
+
+        scoreboard = self.ctx.meta.setdefault("generate_scoreboard", {})
+        scoreboard[objective] = f"{criterion} {display}"
+
+        return objective
