@@ -111,7 +111,7 @@ class Generator:
 
         return key
 
-    def id(self, fmt: str, hash: Optional[StableHashable] = None) -> str:
+    def id(self, fmt: str = "{incr}", hash: Optional[StableHashable] = None) -> str:
         """Generate a scoped id."""
         template = self.ctx.meta.get("generate_id", "{namespace}.{scope}")
         return self.format(template + fmt, hash)
