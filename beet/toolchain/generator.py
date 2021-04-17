@@ -5,7 +5,7 @@ __all__ = [
 
 from collections import defaultdict
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, Any, DefaultDict, Optional, Tuple, overload
+from typing import TYPE_CHECKING, Any, DefaultDict, Optional, Tuple, TypeVar, overload
 
 from beet.library.base import NamespaceFile
 
@@ -13,6 +13,9 @@ from .utils import LazyFormat, StableHashable, stable_hash
 
 if TYPE_CHECKING:
     from .context import Context
+
+
+GeneratorType = TypeVar("GeneratorType", bound="Generator")
 
 
 @dataclass
@@ -25,8 +28,8 @@ class Generator:
         default_factory=lambda: defaultdict(int)  # type: ignore
     )
 
-    def __getitem__(self, key: Any) -> "Generator":
-        return Generator(
+    def __getitem__(self: GeneratorType, key: Any) -> GeneratorType:
+        return self.__class__(
             ctx=self.ctx,
             scope=self.scope + (key,),
             registry=self.registry,
@@ -118,7 +121,7 @@ class Generator:
         fmt: str,
         hash: Optional[StableHashable] = None,
         short: bool = False,
-    ):
+    ) -> str:
         """Generate a scoped hash."""
         template = self.ctx.meta.get("generate_hash", "{namespace}.{scope}")
         return stable_hash(self.format(template + fmt, hash), short)
