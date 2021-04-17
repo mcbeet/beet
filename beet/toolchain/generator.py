@@ -105,3 +105,18 @@ class Generator:
             self.ctx.assets[key] = file_instance
 
         return key
+
+    def id(self, fmt: str, hash: Optional[StableHashable] = None) -> str:
+        """Generate a scoped id."""
+        template = self.ctx.meta.get("generate_id", "{namespace}.{scope}")
+        return self.format(template + fmt, hash)
+
+    def hash(
+        self,
+        fmt: str,
+        hash: Optional[StableHashable] = None,
+        short: bool = False,
+    ):
+        """Generate a scoped hash."""
+        template = self.ctx.meta.get("generate_hash", "{namespace}.{scope}")
+        return stable_hash(self.format(template + fmt, hash), short)

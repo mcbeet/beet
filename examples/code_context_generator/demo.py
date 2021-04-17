@@ -29,3 +29,13 @@ def beet_default(ctx: Context):
             Function(["say hello"]),
             hash=f"something/other thing, {i} blah",
         )
+
+    tag1 = ctx.generate.id("foo")
+    obj1 = ctx.generate.hash("foo")
+    ctx.generate(Function([f"scoreboard players set @s[tag={tag1}] {obj1} 1"]))
+
+    generate = ctx.generate["hello"]
+
+    tag2 = generate.id("foo")
+    obj2 = generate.hash("foo")
+    generate(Function([f"scoreboard players set @s[tag={tag2}] {obj2} 1"]))
