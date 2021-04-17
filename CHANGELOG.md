@@ -2,6 +2,16 @@
 
 <!--next-version-placeholder-->
 
+## v0.20.0 (2021-04-17)
+### Feature
+* Add generate.objective() and beet.contrib.scoreboard ([`6a5376a`](https://github.com/mcbeet/beet/commit/6a5376a237a6669283aa79885a0c21998e389b71))
+* Add id and hash generate helpers ([`00cd667`](https://github.com/mcbeet/beet/commit/00cd667f94701ecffe4e31f1c8eaf1cbd923e54b))
+
+### Fix
+* Default generate.id() to {incr} ([`4429ff6`](https://github.com/mcbeet/beet/commit/4429ff6a69a3f56e94b2650897313e1aac7c6901))
+* Propagate generator type and forgot return annotation for hash() ([`b1b1766`](https://github.com/mcbeet/beet/commit/b1b1766dc78bd651a8065a1d11252a2bcceb1e46))
+* Don't increment registry keys unless {incr} is present ([`9786c36`](https://github.com/mcbeet/beet/commit/9786c369fa4bf3ff28d2ef5fb4dbb7263ae01f87))
+
 ## v0.19.1 (2021-04-02)
 ### Fix
 * **generator:** Only default to content hash if hash wasn't explicitly provided ([`bee1df4`](https://github.com/mcbeet/beet/commit/bee1df4d1ea1ed12de8150c87043915f70ef5372))
