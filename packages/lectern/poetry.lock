@@ -41,7 +41,7 @@ tests = ["pytest (>=4.6)", "pytest-flake8", "pytest-cov", "PyHamcrest (>=2.0.2)"
 
 [[package]]
 name = "beet"
-version = "0.19.1"
+version = "0.20.0"
 description = "The Minecraft pack development kit"
 category = "main"
 optional = false
@@ -53,11 +53,11 @@ click = ">=7.1.2,<8.0.0"
 click-help-colors = ">=0.9,<0.10"
 colorama = {version = "*", markers = "sys_platform == \"win32\""}
 fnvhash = ">=0.1.0,<0.2.0"
-Jinja2 = ">=2.11.2,<3.0.0"
-nbtlib = ">=1.8.2,<2.0.0"
+Jinja2 = ">=2.11.3,<3.0.0"
+nbtlib = ">=1.12.0,<2.0.0"
 pathspec = ">=0.8.1,<0.9.0"
-Pillow = ">=8.0.1,<9.0.0"
-pydantic = ">=1.7.3,<2.0.0"
+Pillow = ">=8.2.0,<9.0.0"
+pydantic = ">=1.8.1,<2.0.0"
 
 [[package]]
 name = "black"
@@ -823,8 +823,8 @@ base58 = [
     {file = "base58-2.1.0.tar.gz", hash = "sha256:171a547b4a3c61e1ae3807224a6f7aec75e364c4395e7562649d7335768001a2"},
 ]
 beet = [
-    {file = "beet-0.19.1-py3-none-any.whl", hash = "sha256:894b00e78084b236e0ecdb4180b9c563c26ffb1c20a5a6f77a83cc1c2142260d"},
-    {file = "beet-0.19.1.tar.gz", hash = "sha256:8530978d1663b0364f7e7b722530b2c20c27287e8b07031c44099d7fd46ce2f4"},
+    {file = "beet-0.20.0-py3-none-any.whl", hash = "sha256:4e0da69cefe166f604c8f991fbaddf710a7b21146fc1c8e2f577e4bdfabf3407"},
+    {file = "beet-0.20.0.tar.gz", hash = "sha256:5911436686028b9f6fc3a29aa8a1ed3c67cea14650b1ec27a8098f088dc6c226"},
 ]
 black = [
     {file = "black-20.8b1.tar.gz", hash = "sha256:1c02557aa099101b9d21496f8a914e9ed2222ef70336404eeeac8edba836fbea"},
