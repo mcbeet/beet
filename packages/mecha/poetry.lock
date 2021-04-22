@@ -41,7 +41,7 @@ tests = ["pytest (>=4.6)", "pytest-flake8", "pytest-cov", "PyHamcrest (>=2.0.2)"
 
 [[package]]
 name = "beet"
-version = "0.20.0"
+version = "0.20.1"
 description = "The Minecraft pack development kit"
 category = "main"
 optional = false
@@ -724,8 +724,8 @@ base58 = [
     {file = "base58-2.1.0.tar.gz", hash = "sha256:171a547b4a3c61e1ae3807224a6f7aec75e364c4395e7562649d7335768001a2"},
 ]
 beet = [
-    {file = "beet-0.20.0-py3-none-any.whl", hash = "sha256:4e0da69cefe166f604c8f991fbaddf710a7b21146fc1c8e2f577e4bdfabf3407"},
-    {file = "beet-0.20.0.tar.gz", hash = "sha256:5911436686028b9f6fc3a29aa8a1ed3c67cea14650b1ec27a8098f088dc6c226"},
+    {file = "beet-0.20.1-py3-none-any.whl", hash = "sha256:10b37bc1a989d04606b9c453b5b959a81d204b9a21b89078f631cfd5ce4f86cd"},
+    {file = "beet-0.20.1.tar.gz", hash = "sha256:e014d7a39ea2ce101544c9bd21787972a8000f9a47a7e3310503bbe4d7f44e88"},
 ]
 black = [
     {file = "black-20.8b1.tar.gz", hash = "sha256:1c02557aa099101b9d21496f8a914e9ed2222ef70336404eeeac8edba836fbea"},
