@@ -5,8 +5,18 @@ __all__ = [
 
 import json
 from collections import defaultdict
+from contextlib import contextmanager
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, Any, DefaultDict, Optional, Tuple, TypeVar, overload
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    DefaultDict,
+    Iterator,
+    Optional,
+    Tuple,
+    TypeVar,
+    overload,
+)
 
 from beet.core.utils import TextComponent
 from beet.library.base import NamespaceFile
@@ -36,6 +46,17 @@ class Generator:
             scope=self.scope + (key,),
             registry=self.registry,
         )
+
+    @contextmanager
+    def push(self) -> Iterator[None]:
+        """Temporarily push the current scope into the root context generator."""
+        root = self.ctx.generate
+        previous = root.scope
+        root.scope = self.scope
+        try:
+            yield
+        finally:
+            root.scope = previous
 
     def get_prefix(self, separator: str = ".") -> str:
         """Join the serializable parts of the scope into a key prefix."""

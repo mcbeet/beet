@@ -19,7 +19,8 @@ def beet_default(ctx: Context):
                 with ctx.override(generate_file="{namespace}:generated/"):
                     key = ctx.generate("{short_hash}", Function([f"say {i}"]))
 
-            ctx.generate["a"]["b"](Function(["say c", f"function {key}"]))
+            with ctx.generate["a"].push():
+                ctx.generate["b"](Function(["say c", f"function {key}"]))
 
         with ctx.override(generate_file="creeper{incr}:"):
             ctx.generate("boom", Function(["say boom"]))
