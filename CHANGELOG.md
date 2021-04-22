@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.20.1 (2021-04-22)
+### Fix
+* Join generate argument with current template ([`074ee28`](https://github.com/mcbeet/beet/commit/074ee288bfdf2e94af344363e511a59cd9c61572))
+
 ## v0.20.0 (2021-04-17)
 ### Feature
 * Add generate.objective() and beet.contrib.scoreboard ([`6a5376a`](https://github.com/mcbeet/beet/commit/6a5376a237a6669283aa79885a0c21998e389b71))
