@@ -86,7 +86,13 @@ class TemplateManager:
 
     def render_file(self, file: TextFileType, **kwargs: Any) -> TextFileType:
         """Render a given file in-place."""
-        file.text = self.render_string(file.text, **kwargs)
+        try:
+            file.text = self.render_string(file.text, **kwargs)
+            return file
+        except OSError:
+            if not file.source_path:
+                raise
+        file.text = self.render(str(file.source_path), **kwargs)
         return file
 
     @contextmanager
