@@ -2,7 +2,7 @@
   "pipeline": ["demo", "beet.contrib.scoreboard"],
   "meta": {
     "scoreboard": {
-      "function": "{namespace}:add_objectives"
+      "function": "add_objectives"
     }
   }
 }

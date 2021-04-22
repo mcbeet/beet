@@ -12,20 +12,20 @@ def beet_default(ctx: Context):
             with ctx.override(generate_prefix="thing"):
                 ctx.generate(Function(["say thing"]))
 
-                with ctx.override(generate_format="other:{namespace}/{incr}_{hash}"):
+                with ctx.override(generate_file="other:{namespace}/"):
                     for j in range(3):
-                        ctx.generate["fish"]["zombie"](Function([f"say {i}{j}"]))
+                        ctx.generate["foo"]("{incr}_{hash}", Function([f"say {i}{j}"]))
 
-                key = ctx.generate(
-                    "{namespace}:generated/{short_hash}", Function([f"say {i}"])
-                )
+                with ctx.override(generate_file="{namespace}:generated/"):
+                    key = ctx.generate("{short_hash}", Function([f"say {i}"]))
 
             ctx.generate["a"]["b"](Function(["say c", f"function {key}"]))
 
-        ctx.generate("creeper{incr}:boom", Function(["say boom"]))
+        with ctx.override(generate_file="creeper{incr}:"):
+            ctx.generate("boom", Function(["say boom"]))
 
         ctx.generate["nested"](
-            "{namespace}:{path}{hash}",
+            "{hash}",
             Function(["say hello"]),
             hash=f"something/other thing, {i} blah",
         )

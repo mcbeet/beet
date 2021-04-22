@@ -75,7 +75,7 @@ class Generator:
     @overload
     def __call__(
         self,
-        template: str,
+        fmt: str,
         file_instance: NamespaceFile,
         *,
         hash: Optional[StableHashable] = None,
@@ -93,18 +93,17 @@ class Generator:
 
     def __call__(self, *args: Any, hash: Optional[StableHashable] = None) -> Any:
         if len(args) == 2:
-            template, file_instance = args
+            fmt, file_instance = args
         else:
             file_instance = args[0]
-            template = self.ctx.meta.get(
-                "generate_format", "{namespace}:{path}generated_{incr}"
-            )
+            fmt = "generated_{incr}"
 
         if hash is None:
             hash = lambda: file_instance.ensure_serialized()
 
+        template = self.ctx.meta.get("generate_file", "{namespace}:{path}")
         file_type = type(file_instance)
-        key = self[file_type].format(template, hash)
+        key = self[file_type].format(template + fmt, hash)
 
         if file_type in self.ctx.data.namespace_type.field_map:
             self.ctx.data[key] = file_instance

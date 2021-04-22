@@ -15,14 +15,14 @@ from beet.core.utils import JsonDict
 def beet_default(ctx: Context):
     config = ctx.meta.get("scoreboard", cast(JsonDict, {}))
 
-    function = config.get("function", "{namespace}:{path}scoreboard")
+    function = config.get("function", "scoreboard")
     tags = config.get("tags", ["minecraft:load"])
 
     ctx.require(scoreboard(function, tags))
 
 
 def scoreboard(
-    function: str = "{namespace}:{path}scoreboard",
+    function: str = "scoreboard",
     tags: Iterable[str] = ("minecraft:load",),
 ) -> Plugin:
     """Return a plugin that adds generated scoreboards to the data pack."""
