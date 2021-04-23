@@ -1,2 +1,2 @@
 say c
-function demo:generated/44MTbP
+function demo:generated/2b6vt4q

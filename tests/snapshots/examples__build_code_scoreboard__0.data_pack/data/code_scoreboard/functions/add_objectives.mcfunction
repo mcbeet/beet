@@ -1,8 +1,8 @@
-scoreboard objectives add 2ZVpgb8kGcG dummy "code_scoreboard.0"
-scoreboard objectives add 7TSQihUbNLa dummy {"text": "Update name", "color": "red"}
-scoreboard objectives add c27bB4cS5F6 playerKillCount "code_scoreboard.hello"
-scoreboard objectives add 9WJtktDktnC dummy "Something"
-scoreboard objectives add F3hNMFMkWK1 dummy "code_scoreboard.foo.bar.0"
-scoreboard objectives add bCnEsPUVaU1 dummy "code_scoreboard.foo.bar.gJha1dTMehg"
-scoreboard objectives add XFFrTkAcRD9 playerKillCount "code_scoreboard.foo.bar.hello"
-scoreboard objectives add 5SYSLQGpc3D dummy "Something"
+scoreboard objectives add akmq7z364r4g dummy "code_scoreboard.0"
+scoreboard objectives add 4hjk92nrnmv5w dummy {"text": "Update name", "color": "red"}
+scoreboard objectives add 7bxz4tx4bqmnx playerKillCount "code_scoreboard.hello"
+scoreboard objectives add 2j7xnppptfsip dummy "Something"
+scoreboard objectives add 3j8arw4cus4h5 dummy "code_scoreboard.foo.bar.0"
+scoreboard objectives add 31jxbni3m16r6 dummy "code_scoreboard.foo.bar.849e8uwpfoxqg"
+scoreboard objectives add 6gnugdfvgvef1 playerKillCount "code_scoreboard.foo.bar.hello"
+scoreboard objectives add t9nre4a4h1qm dummy "Something"

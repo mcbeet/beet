@@ -18,10 +18,11 @@ from typing import (
     overload,
 )
 
+from beet.core.file import TextFileBase
 from beet.core.utils import TextComponent
 from beet.library.base import NamespaceFile
 
-from .utils import LazyFormat, StableHashable, stable_hash
+from .utils import LazyFormat, stable_hash
 
 if TYPE_CHECKING:
     from .context import Context
@@ -77,7 +78,7 @@ class Generator:
         self.registry[key] += 1
         return count
 
-    def format(self, fmt: str, hash: Optional[StableHashable] = None) -> str:
+    def format(self, fmt: str, hash: Any = None) -> str:
         """Generate a unique key depending on the given template."""
         env = {
             "namespace": self.ctx.meta.get("generate_namespace", self.ctx.project_name),
@@ -99,7 +100,18 @@ class Generator:
         fmt: str,
         file_instance: NamespaceFile,
         *,
-        hash: Optional[StableHashable] = None,
+        hash: Any = None,
+    ) -> str:
+        ...
+
+    @overload
+    def __call__(
+        self,
+        fmt: str,
+        *,
+        render: TextFileBase[Any],
+        hash: Any = None,
+        **kwargs: Any,
     ) -> str:
         ...
 
@@ -108,32 +120,63 @@ class Generator:
         self,
         file_instance: NamespaceFile,
         *,
-        hash: Optional[StableHashable] = None,
+        hash: Any = None,
     ) -> str:
         ...
 
-    def __call__(self, *args: Any, hash: Optional[StableHashable] = None) -> Any:
-        if len(args) == 2:
+    @overload
+    def __call__(
+        self,
+        *,
+        render: TextFileBase[Any],
+        hash: Any = None,
+        **kwargs: Any,
+    ) -> str:
+        ...
+
+    def __call__(
+        self,
+        *args: Any,
+        render: Optional[TextFileBase[Any]] = None,
+        hash: Any = None,
+        **kwargs: Any,
+    ) -> Any:
+        file_instance: NamespaceFile
+
+        if render:
+            file_instance = render  # type: ignore
+            fmt = args[0] if args else "generated_{incr}"
+        elif len(args) == 2:
             fmt, file_instance = args
         else:
             file_instance = args[0]
             fmt = "generated_{incr}"
 
-        if hash is None:
+        if hash is None and not render:
             hash = lambda: file_instance.ensure_serialized()
 
         template = self.ctx.meta.get("generate_file", "{namespace}:{path}")
         file_type = type(file_instance)
         key = self[file_type].format(template + fmt, hash)
 
-        if file_type in self.ctx.data.namespace_type.field_map:
-            self.ctx.data[key] = file_instance
-        else:
-            self.ctx.assets[key] = file_instance
+        pack = (
+            self.ctx.data
+            if file_type in self.ctx.data.namespace_type.field_map
+            else self.ctx.assets
+        )
+
+        pack[key] = file_instance
+
+        if render:
+            with self.ctx.override(
+                render_path=key,
+                render_group=pack.namespace_type.field_map[file_type],
+            ):
+                self.ctx.template.render_file(render, **kwargs)
 
         return key
 
-    def id(self, fmt: str = "{incr}", hash: Optional[StableHashable] = None) -> str:
+    def id(self, fmt: str = "{incr}", hash: Any = None) -> str:
         """Generate a scoped id."""
         template = self.ctx.meta.get("generate_id", "{namespace}.{scope}")
         return self.format(template + fmt, hash)
@@ -141,7 +184,7 @@ class Generator:
     def hash(
         self,
         fmt: str,
-        hash: Optional[StableHashable] = None,
+        hash: Any = None,
         short: bool = False,
     ) -> str:
         """Generate a scoped hash."""
@@ -151,7 +194,7 @@ class Generator:
     def objective(
         self,
         fmt: str = "{incr}",
-        hash: Optional[StableHashable] = None,
+        hash: Any = None,
         criterion: str = "dummy",
         display: Optional[TextComponent] = None,
     ) -> str:
