@@ -2,6 +2,24 @@
 
 <!--next-version-placeholder-->
 
+## v0.21.0 (2021-04-23)
+### Feature
+* Expose generate_path in templates ([`9354b78`](https://github.com/mcbeet/beet/commit/9354b78a3fe73d513e0b3a287d6fd0c7944d13b2))
+* Add generate.function_tree() ([`f9aac53`](https://github.com/mcbeet/beet/commit/f9aac53c2d1c46076faf270bad85317a9f856911))
+* Add TreeNode.root ([`0f0078f`](https://github.com/mcbeet/beet/commit/0f0078f8b182cf9df492e1281727b3d686e33865))
+* Add generate.path() ([`80d2689`](https://github.com/mcbeet/beet/commit/80d26892a42fd6c7052f3041659bafbab7957b4f))
+* Make it possible to specify a node key ([`2b0595e`](https://github.com/mcbeet/beet/commit/2b0595e3ee34847eceb9e6bfef725ee15eaf78d5))
+* Add generate_tree ([`d37df14`](https://github.com/mcbeet/beet/commit/d37df14d6c6b45579fb64b2f7b254ac1bdd1d076))
+* Output the commands in-place when the path matches the current function ([`dff5d51`](https://github.com/mcbeet/beet/commit/dff5d51a87b031557b374c669c54ca827ecf734f))
+* Add beet.contrib.template_context ([`12bc6ef`](https://github.com/mcbeet/beet/commit/12bc6ef83ce62f03b6238abae351259a94c32fc0))
+* Add beet.contrib.template_sandbox ([`55fbe92`](https://github.com/mcbeet/beet/commit/55fbe92c8a04d04f4696323ce4605536be3afa73))
+* Ctx is no longer exposed to templates ([`00ca7e9`](https://github.com/mcbeet/beet/commit/00ca7e97513aa2638fb5cf27e48186e661b93015))
+* Inject can now import services on the fly ([`edfe5af`](https://github.com/mcbeet/beet/commit/edfe5af659f4deda69c99a08ea2526d72eccc13d))
+* Add prepend and append to inline_function plugin ([`e12347f`](https://github.com/mcbeet/beet/commit/e12347f1b4b96a64dc8ee5348a4d5a85b5964977))
+* Add generate(render=) and make hash lowercase ([`a08c73c`](https://github.com/mcbeet/beet/commit/a08c73c8cd8bb9efc8513092cdc4c78dc07206c2))
+* Render_file template source_path fallback ([`666b697`](https://github.com/mcbeet/beet/commit/666b697b5e3bb01a7093c5a589896124204833d7))
+* Add generate.push() ([`40b7680`](https://github.com/mcbeet/beet/commit/40b7680465f4a0bd7888d5a9b0dba61fee8f3712))
+
 ## v0.20.1 (2021-04-22)
 ### Fix
 * Join generate argument with current template ([`074ee28`](https://github.com/mcbeet/beet/commit/074ee288bfdf2e94af344363e511a59cd9c61572))
