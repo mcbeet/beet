@@ -1,1 +1,1 @@
-# {{ ctx.meta.render_path }}
+# {{ render_path }}

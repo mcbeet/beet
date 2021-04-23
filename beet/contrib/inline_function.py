@@ -8,26 +8,23 @@ __all__ = [
 
 from typing import Any, List
 
-from jinja2.ext import Extension
-from jinja2.nodes import DerivedContextReference  # type: ignore
 from jinja2.nodes import CallBlock, Node, TemplateData
 
-from beet import Context, Function
+from beet import Context, Function, JinjaExtension
 
 
 def beet_default(ctx: Context):
     ctx.template.env.add_extension(InlineFunctions)  # type: ignore
 
 
-class InlineFunctions(Extension):
+class InlineFunctions(JinjaExtension):
     """A Jinja extension that allows you to declare functions inline."""
 
     tags = {"function"}
 
     def parse(self, parser: Any) -> Node:
         lineno = next(parser.stream).lineno
-
-        args: List[Any] = [DerivedContextReference(), parser.parse_expression()]
+        args: List[Any] = [parser.parse_expression()]
 
         if parser.stream.current.test("name:append"):
             args.append(TemplateData("append"))
@@ -48,17 +45,17 @@ class InlineFunctions(Extension):
             lineno=lineno,
         )
 
-    def _function_handler(self, context: Any, path: str, op: str, caller: Any) -> str:
-        ctx: Context = context["ctx"]
-
-        with ctx.override(render_path=path, render_group="functions"):
+    def _function_handler(self, path: str, op: str, caller: Any) -> str:
+        with self.ctx.override(render_path=path, render_group="functions"):
             commands = caller()
 
+        function = Function(commands)
+
         if op == "replace":
-            ctx.data[path] = Function(commands)
+            self.ctx.data[path] = function
         elif op == "append":
-            ctx.data.functions.setdefault(path, Function()).append(Function(commands))
+            self.ctx.data.functions.setdefault(path, Function()).append(function)
         elif op == "prepend":
-            ctx.data.functions.setdefault(path, Function()).prepend(Function(commands))
+            self.ctx.data.functions.setdefault(path, Function()).prepend(function)
 
         return ""

@@ -5,9 +5,11 @@ __all__ = [
     "format_exc",
     "import_from_string",
     "locate_minecraft",
+    "ensure_builtins",
 ]
 
 
+import json
 import os
 import platform
 import struct
@@ -90,3 +92,10 @@ def locate_minecraft() -> Optional[Path]:
         locations.append(Path(os.path.expandvars(r"%APPDATA%\.minecraft")))
 
     return next((path.resolve() for path in locations if path and path.is_dir()), None)
+
+
+def ensure_builtins(value: Any) -> Any:
+    try:
+        return json.loads(json.dumps(value))
+    except Exception:
+        raise TypeError(value) from None

@@ -1,1 +1,1 @@
-say {{ ctx.meta.pack1_message }}
+say {{ pack1_message }}

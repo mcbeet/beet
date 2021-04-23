@@ -1,1 +1,1 @@
-say {{ ctx.meta.message }}
+say {{ message }}

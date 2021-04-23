@@ -74,8 +74,13 @@ class Context:
     def __post_init__(self, whitelist: Optional[List[str]]):
         self._container = ContextContainer(self)
         self._path_entry = str(self.directory.resolve())
-        self.template.env.globals["ctx"] = self
+
         self.inject(Pipeline).whitelist = whitelist
+        self.template.bind(self)
+
+        self.template.expose("generate_id", self.generate.id)
+        self.template.expose("generate_hash", self.generate.hash)
+        self.template.expose("generate_objective", self.generate.objective)
 
     @overload
     def inject(self, cls: Callable[["Context"], InjectedType]) -> InjectedType:

@@ -2,6 +2,7 @@ __all__ = [
     "subproject",
     "sandbox",
     "run_beet",
+    "JinjaExtension",
 ]
 
 
@@ -9,6 +10,8 @@ from contextlib import ExitStack, contextmanager
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from typing import Iterator, Optional, Union
+
+from jinja2.ext import Extension
 
 from beet.core.cache import MultiCache
 from beet.core.utils import FileSystemPath, JsonDict
@@ -107,3 +110,11 @@ def run_beet(
             project.config_directory = directory
 
         yield ProjectBuilder(project).build()
+
+
+class JinjaExtension(Extension):
+    """Base extension that provides a reference to the beet context."""
+
+    @property
+    def ctx(self) -> Context:
+        return getattr(self.environment, "_beet_template_manager").ctx

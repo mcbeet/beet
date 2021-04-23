@@ -3,6 +3,6 @@ from beet.contrib.render import render
 
 
 def beet_default(ctx: Context):
-    ctx.data["demo:foo"] = Function(["say {{ ctx.meta.message }}"])
+    ctx.data["demo:foo"] = Function(["say {{ message }}"])
 
     ctx.require(render(data_pack={"functions": ["*"]}))
