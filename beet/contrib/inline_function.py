@@ -46,6 +46,12 @@ class InlineFunctions(JinjaExtension):
         )
 
     def _function_handler(self, path: str, op: str, caller: Any) -> str:
+        if (
+            path == self.ctx.meta.get("render_path")
+            and self.ctx.meta.get("render_group") == "functions"
+        ):
+            return caller()
+
         with self.ctx.override(render_path=path, render_group="functions"):
             commands = caller()
 
