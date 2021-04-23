@@ -19,6 +19,12 @@ function demo:inner
             #!tag "demo:nested"
 
             say from nested {{ i }}
+            #!function "demo:forward" append
+                function {{ nested_function }}
+            #!endfunction
+            #!function "demo:reverse" prepend
+                function {{ nested_function }}
+            #!endfunction
         #!endfunction
     #!endfor
 
