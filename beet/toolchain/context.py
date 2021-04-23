@@ -11,7 +11,7 @@ import sys
 from contextlib import contextmanager
 from dataclasses import InitVar, dataclass, field
 from pathlib import Path
-from typing import Any, Callable, List, Optional, Set, Tuple, TypeVar
+from typing import Any, Callable, List, Optional, Set, Tuple, TypeVar, overload
 
 from beet.core.cache import MultiCache
 from beet.core.container import Container
@@ -22,6 +22,7 @@ from beet.library.resource_pack import ResourcePack
 from .generator import Generator
 from .pipeline import GenericPipeline, GenericPlugin, GenericPluginSpec
 from .template import TemplateManager
+from .utils import import_from_string
 from .worker import WorkerPoolHandle
 
 InjectedType = TypeVar("InjectedType")
@@ -76,8 +77,18 @@ class Context:
         self.template.env.globals["ctx"] = self
         self.inject(Pipeline).whitelist = whitelist
 
+    @overload
     def inject(self, cls: Callable[["Context"], InjectedType]) -> InjectedType:
+        ...
+
+    @overload
+    def inject(self, cls: str) -> Any:
+        ...
+
+    def inject(self, cls: Any) -> Any:
         """Retrieve the instance provided by the specified service factory."""
+        if not callable(cls):
+            cls = import_from_string(cls, whitelist=self.inject(Pipeline).whitelist)
         return self._container[cls]
 
     @contextmanager
