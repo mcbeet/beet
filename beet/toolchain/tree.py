@@ -109,6 +109,10 @@ class TreeNode(Generic[T]):
         begin, end = self.delimitters
         return f"{self.data.root}/{begin}_{end}"
 
+    @property
+    def root(self) -> bool:
+        return self.stop - self.start == len(self.data.items)
+
 
 def generate_tree(
     root: str,
