@@ -6,9 +6,19 @@ __all__ = [
 
 from dataclasses import dataclass
 from math import ceil
-from typing import Generic, Iterable, Iterator, List, TypeVar
+from typing import Callable, Generic, Iterable, Iterator, List, Optional, Tuple, TypeVar
 
 T = TypeVar("T")
+
+
+@dataclass
+class TreeData(Generic[T]):
+    """Holds the static data for the search tree."""
+
+    root: str
+    stack: List["TreeNode[T]"]
+    items: List[T]
+    key: Optional[Callable[[T], int]]
 
 
 @dataclass
@@ -22,9 +32,7 @@ class TreeNode(Generic[T]):
     sibling: int
     first_sibling: bool
     last_sibling: bool
-    root: str
-    stack: List["TreeNode[T]"]
-    items: List[T]
+    data: TreeData[T]
 
     def partition(self, n: int = 2) -> bool:
         """Attempt to split the current node into a given number of partitions."""
@@ -32,7 +40,8 @@ class TreeNode(Generic[T]):
         pivot = ceil(self.start + (self.stop - self.start) / (n - self.sibling))
 
         if pivot < self.stop:
-            self.stack.append(
+            last_partition = pivot - self.start >= self.stop - pivot
+            self.data.stack.append(
                 TreeNode(
                     parent=self.parent,
                     start=pivot,
@@ -40,17 +49,14 @@ class TreeNode(Generic[T]):
                     depth=self.depth,
                     sibling=self.sibling + 1,
                     first_sibling=False,
-                    last_sibling=pivot - self.start >= self.stop - pivot
-                    and self.depth > 0,
-                    root=self.root,
-                    stack=self.stack,
-                    items=self.items,
+                    last_sibling=last_partition and self.depth > 0,
+                    data=self.data,
                 )
             )
             self.stop = pivot
 
         if self.stop - self.start > 1:
-            self.stack.append(
+            self.data.stack.append(
                 TreeNode(
                     parent=self.children,
                     start=self.start,
@@ -59,9 +65,7 @@ class TreeNode(Generic[T]):
                     sibling=0,
                     first_sibling=True,
                     last_sibling=False,
-                    root=self.root,
-                    stack=self.stack,
-                    items=self.items,
+                    data=self.data,
                 )
             )
             return True
@@ -70,11 +74,25 @@ class TreeNode(Generic[T]):
 
     @property
     def value(self) -> T:
-        return self.items[self.start]
+        return self.data.items[self.start]
+
+    @property
+    def items(self) -> List[T]:
+        return self.data.items[self.start : self.stop]
+
+    @property
+    def delimitters(self) -> Tuple[int, int]:
+        begin, end = self.start, self.stop - 1
+
+        if self.data.key:
+            begin = self.data.key(self.data.items[begin])
+            end = self.data.key(self.data.items[end])
+
+        return begin, end
 
     @property
     def range(self) -> str:
-        begin, end = self.start, self.stop - 1
+        begin, end = self.delimitters
 
         if begin == end:
             return f"{begin}"
@@ -88,28 +106,30 @@ class TreeNode(Generic[T]):
 
     @property
     def children(self) -> str:
-        return f"{self.root}/{self.start}_{self.stop - 1}"
+        begin, end = self.delimitters
+        return f"{self.data.root}/{begin}_{end}"
 
 
-def generate_tree(root: str, items: Iterable[T]) -> Iterator[TreeNode[T]]:
-    """Depth-first traversal generating a search tree that associates each item to a leaf."""
-    stack: List["TreeNode[T]"] = []
-    items = list(items)
+def generate_tree(
+    root: str,
+    items: Iterable[T],
+    key: Optional[Callable[[T], int]] = None,
+) -> Iterator[TreeNode[T]]:
+    """Generate a search tree and yield nodes in a depth-first traversal."""
+    data = TreeData(root, [], list(items), key)
 
-    stack.append(
+    data.stack.append(
         TreeNode(
             parent=root,
             start=0,
-            stop=len(items),
+            stop=len(data.items),
             depth=0,
             sibling=0,
             first_sibling=False,
             last_sibling=False,
-            root=root,
-            stack=stack,
-            items=items,
+            data=data,
         )
     )
 
-    while stack:
-        yield stack.pop()
+    while data.stack:
+        yield data.stack.pop()

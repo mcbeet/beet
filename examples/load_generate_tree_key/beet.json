@@ -1,0 +1,9 @@
+{
+  "require": ["beet.contrib.inline_function", "ord_function"],
+  "data_pack": {
+    "load": ["src"],
+    "render": {
+      "functions": ["*"]
+    }
+  }
+}
