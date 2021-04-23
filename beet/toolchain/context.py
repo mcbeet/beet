@@ -79,6 +79,7 @@ class Context:
         self.inject(Pipeline).whitelist = whitelist
         self.template.bind(self)
 
+        self.template.expose("generate_path", self.generate.path)
         self.template.expose("generate_id", self.generate.id)
         self.template.expose("generate_hash", self.generate.hash)
         self.template.expose("generate_objective", self.generate.objective)
