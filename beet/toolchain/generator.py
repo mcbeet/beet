@@ -10,7 +10,9 @@ from dataclasses import dataclass, field
 from typing import (
     TYPE_CHECKING,
     Any,
+    Callable,
     DefaultDict,
+    Iterable,
     Iterator,
     Optional,
     Tuple,
@@ -21,13 +23,16 @@ from typing import (
 from beet.core.file import TextFileBase
 from beet.core.utils import TextComponent
 from beet.library.base import NamespaceFile
+from beet.library.data_pack import Function
 
+from .tree import TreeNode, generate_tree
 from .utils import LazyFormat, stable_hash
 
 if TYPE_CHECKING:
     from .context import Context
 
 
+T = TypeVar("T", contravariant=True)
 GeneratorType = TypeVar("GeneratorType", bound="Generator")
 
 
@@ -214,3 +219,45 @@ class Generator:
         scoreboard[objective] = f"{criterion} {display}"
 
         return objective
+
+    @overload
+    def function_tree(
+        self,
+        fmt: str,
+        items: Iterable[T],
+        *,
+        key: Optional[Callable[[T], int]] = None,
+        hash: Any = None,
+    ) -> Iterator[Tuple[TreeNode[T], Function]]:
+        ...
+
+    @overload
+    def function_tree(
+        self,
+        items: Iterable[T],
+        *,
+        key: Optional[Callable[[T], int]] = None,
+        hash: Any = None,
+    ) -> Iterator[Tuple[TreeNode[T], Function]]:
+        ...
+
+    def function_tree(
+        self,
+        *args: Any,
+        key: Any = None,
+        hash: Any = None,
+    ) -> Iterator[Tuple[TreeNode[Any], Function]]:
+        """Generate a function tree."""
+        if len(args) == 2:
+            fmt, items = args
+        else:
+            items = args[0]
+            fmt = None
+
+        if hash is None:
+            hash = lambda: str(items)
+
+        root = self[Function].path(fmt, hash) if fmt else self[Function].path(hash=hash)
+
+        for node in generate_tree(root, items, key):
+            yield node, self.ctx.data.functions.setdefault(node.parent, Function())
