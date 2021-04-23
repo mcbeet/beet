@@ -1,4 +1,5 @@
 {
+  "require": ["beet.contrib.template_context"],
   "data_pack": {
     "load": ["src"],
     "render": {
