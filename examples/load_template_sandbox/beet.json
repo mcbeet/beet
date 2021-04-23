@@ -1,0 +1,12 @@
+{
+  "require": ["beet.contrib.template_sandbox"],
+  "data_pack": {
+    "load": ["src"],
+    "render": {
+      "functions": ["*"]
+    }
+  },
+  "meta": {
+    "something": 6
+  }
+}
