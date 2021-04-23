@@ -145,19 +145,20 @@ class Generator:
 
         if render:
             file_instance = render  # type: ignore
-            fmt = args[0] if args else "generated_{incr}"
+            fmt = args[0] if args else None
         elif len(args) == 2:
             fmt, file_instance = args
         else:
             file_instance = args[0]
-            fmt = "generated_{incr}"
+            fmt = None
 
         if hash is None and not render:
             hash = lambda: file_instance.ensure_serialized()
 
-        template = self.ctx.meta.get("generate_file", "{namespace}:{path}")
         file_type = type(file_instance)
-        key = self[file_type].format(template + fmt, hash)
+        key = (
+            self[file_type].path(fmt, hash) if fmt else self[file_type].path(hash=hash)
+        )
 
         pack = (
             self.ctx.data
@@ -175,6 +176,11 @@ class Generator:
                 self.ctx.template.render_file(render, **kwargs)
 
         return key
+
+    def path(self, fmt: str = "generated_{incr}", hash: Any = None) -> str:
+        """Generate a scoped resource path."""
+        template = self.ctx.meta.get("generate_path", "{namespace}:{path}")
+        return self.format(template + fmt, hash)
 
     def id(self, fmt: str = "{incr}", hash: Any = None) -> str:
         """Generate a scoped id."""
