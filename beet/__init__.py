@@ -12,6 +12,7 @@ from .toolchain.helpers import *
 from .toolchain.pipeline import *
 from .toolchain.project import *
 from .toolchain.template import *
+from .toolchain.tree import *
 from .toolchain.worker import *
 
 __version__ = "0.20.1"

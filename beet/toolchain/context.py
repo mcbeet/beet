@@ -22,6 +22,7 @@ from beet.library.resource_pack import ResourcePack
 from .generator import Generator
 from .pipeline import GenericPipeline, GenericPlugin, GenericPluginSpec
 from .template import TemplateManager
+from .tree import generate_tree
 from .utils import import_from_string
 from .worker import WorkerPoolHandle
 
@@ -81,6 +82,7 @@ class Context:
         self.template.expose("generate_id", self.generate.id)
         self.template.expose("generate_hash", self.generate.hash)
         self.template.expose("generate_objective", self.generate.objective)
+        self.template.expose("generate_tree", generate_tree)
 
     @overload
     def inject(self, cls: Callable[["Context"], InjectedType]) -> InjectedType:

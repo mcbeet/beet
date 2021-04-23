@@ -1,0 +1,13 @@
+{
+  "require": [
+    "beet.contrib.inline_function",
+    "beet.contrib.inline_function_tag"
+  ],
+  "data_pack": {
+    "load": ["src"],
+    "render": {
+      "functions": ["*"]
+    }
+  },
+  "pipeline": ["beet.contrib.scoreboard"]
+}
