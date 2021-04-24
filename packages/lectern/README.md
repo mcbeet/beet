@@ -314,6 +314,14 @@ The `append` modifier is implemented by all the text-based built-in namespaced r
 say This is added afterwards.
 ```
 
+You can also use `prepend` to add the fragment before the already-existing content.
+
+`@function(prepend) tutorial:greeting`
+
+```mcfunction
+say This is added before.
+```
+
 The `merge` modifier is similar but instead of concatenating the contents it uses the `beet` merging strategy to combine the fragment with the existing file.
 
 `@function_tag(merge) minecraft:load`

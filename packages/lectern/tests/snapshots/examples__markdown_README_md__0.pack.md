@@ -32,6 +32,7 @@
   <details>
 
   ```mcfunction
+  say This is added before.
   say Hello, world!
   say This is added afterwards.
   ```

@@ -84,6 +84,9 @@ class NamespacedResourceDirective:
         if fragment.modifier == "append":
             current_file = proxy.setdefault(full_name, self.file_type(""))
             current_file.text += file_instance.text
+        elif fragment.modifier == "prepend":
+            current_file = proxy.setdefault(full_name, self.file_type(""))
+            current_file.text = file_instance.text + current_file.text
         elif fragment.modifier == "merge":
             proxy.merge({full_name: file_instance})
         else:
