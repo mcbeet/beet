@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.10.0 (2021-04-24)
+### Feature
+* Add prepend modifier ([`5e1bb1e`](https://github.com/mcbeet/lectern/commit/5e1bb1e81835b8a8aaaedab0f1d2fb138bd3d993))
+
 ## v0.9.3 (2021-04-02)
 ### Fix
 * **deps:** Don't use caret to depend on beet because it's not 1.0 yet ([`a97779f`](https://github.com/mcbeet/lectern/commit/a97779fd7bcb22efafeb95b4f383cbd86d61000f))
