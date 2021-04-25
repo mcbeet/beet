@@ -640,8 +640,8 @@ If you're using the `beet` toolchain, keep in mind that you can get a `Document`
 
 ```python
 def test_generate_with_beet(snapshot):
-    ctx = run_beet(...)
-    assert snapshot("pack.txt") == ctx.inject(Document)
+    with run_beet(...) as ctx:
+        assert snapshot("pack.txt") == ctx.inject(Document)
 ```
 
 This will save the entire data pack and resource pack in the snapshot. For more details about working with the generated snapshots check out the [`pytest-insta` documentation](https://github.com/vberlier/pytest-insta#command-line-options).
