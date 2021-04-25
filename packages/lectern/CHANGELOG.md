@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.10.1 (2021-04-25)
+### Fix
+* The snapshot testing example was not using run_beet properly ([`3c933e8`](https://github.com/mcbeet/lectern/commit/3c933e81080a1180b31d2940afca023ac9a7daf3))
+
 ## v0.10.0 (2021-04-24)
 ### Feature
 * Add prepend modifier ([`5e1bb1e`](https://github.com/mcbeet/lectern/commit/5e1bb1e81835b8a8aaaedab0f1d2fb138bd3d993))
