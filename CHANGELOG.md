@@ -2,6 +2,13 @@
 
 <!--next-version-placeholder-->
 
+## v0.22.0 (2021-04-27)
+### Feature
+* Make it possible to temporarily disable folding ([`489ad7c`](https://github.com/mcbeet/beet/commit/489ad7c65643c14633358396389dedc7d96a4d8d))
+* Add particles ([`adaaf0d`](https://github.com/mcbeet/beet/commit/adaaf0d9fbdd69bbfde42a3cf24c632b0c135d36))
+* Add sounds ([`6d88263`](https://github.com/mcbeet/beet/commit/6d88263228174fa21d594398210c026d00a7130e))
+* Add namespace extra ([`bd7b148`](https://github.com/mcbeet/beet/commit/bd7b1480df469fdeaf1a9ce1bf6b27051e758c24))
+
 ## v0.21.0 (2021-04-23)
 ### Feature
 * Expose generate_path in templates ([`9354b78`](https://github.com/mcbeet/beet/commit/9354b78a3fe73d513e0b3a287d6fd0c7944d13b2))
