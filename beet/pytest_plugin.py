@@ -20,7 +20,10 @@ def pytest_assertrepr_compare(config, op, left, right):
         if dict(left) != dict(right):
             explanation += generate_explanation(config, left, right, "namespace")
     elif isinstance(left, Namespace):
-        explanation += generate_explanation(config, left, right, "container")
+        if left.extra != right.extra:
+            explanation += generate_explanation(config, left.extra, right.extra, "file")
+        if dict(left) != dict(right):
+            explanation += generate_explanation(config, left, right, "container")
     elif isinstance(left, NamespaceContainer):
         explanation += generate_explanation(config, left, right, "file")
 

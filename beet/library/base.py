@@ -1,7 +1,8 @@
 __all__ = [
     "Pack",
     "PackFile",
-    "PackContainer",
+    "ExtraContainer",
+    "SupportsExtra",
     "ExtraPin",
     "McmetaPin",
     "PackPin",
@@ -71,6 +72,23 @@ class OnBindCallback(Protocol):
         ...
 
 
+class ExtraContainer(MatchMixin, MergeMixin, Container[str, PackFile]):
+    """Container that stores extra files in a pack or a namespace."""
+
+
+class SupportsExtra(Protocol):
+    """Protocol for detecting extra container."""
+
+    extra: ExtraContainer
+
+
+class ExtraPin(Pin[str, T]):
+    """Descriptor that makes a specific file accessible through attribute lookup."""
+
+    def forward(self, obj: SupportsExtra) -> ExtraContainer:
+        return obj.extra
+
+
 @dataclass(eq=False)
 class NamespaceFile(PackFile):
     """Base class for files that belong in pack namespaces."""
@@ -121,6 +139,7 @@ class Namespace(
 
     pack: Optional["Pack[Namespace]"] = None
     name: Optional[str] = None
+    extra: ExtraContainer
 
     directory: ClassVar[str]
     field_map: ClassVar[Mapping[Type[NamespaceFile], str]]
@@ -132,6 +151,10 @@ class Namespace(
         cls.scope_map = {
             (pin.key.scope, pin.key.extension): pin.key for pin in pins.values()
         }
+
+    def __init__(self):
+        super().__init__()
+        self.extra = ExtraContainer()
 
     def process(
         self, key: Type[NamespaceFile], value: NamespaceContainer[NamespaceFile]
@@ -164,19 +187,34 @@ class Namespace(
             self[type(value)][key] = value
 
     def __eq__(self, other: Any) -> bool:
-        return all(self[key] == other[key] for key in self.field_map)
+        return self.extra == other.extra and all(
+            self[key] == other[key] for key in self.field_map
+        )
 
     def __bool__(self) -> bool:
-        return any(self.values())
+        return any(self.values()) or bool(self.extra)
 
     def missing(self, key: Type[NamespaceFile]) -> NamespaceContainer[NamespaceFile]:
         return NamespaceContainer()
+
+    def merge(
+        self: MutableMapping[T, MergeableType],  # type: ignore
+        other: Mapping[T, MergeableType],
+    ) -> bool:
+        super().merge(other)  # type: ignore
+        if isinstance(self, Namespace) and isinstance(other, Namespace):
+            self.extra.merge(other.extra)
+        return True
 
     @property
     def content(self) -> Iterator[Tuple[str, NamespaceFile]]:
         """Iterator that yields all the files stored in the namespace."""
         for container in self.values():
             yield from container.items()
+
+    @classmethod
+    def get_extra_info(cls) -> Dict[str, Type[PackFile]]:
+        return {}
 
     @classmethod
     def scan(cls, pack: FileOrigin) -> Iterator[Tuple[str, "Namespace"]]:
@@ -188,9 +226,11 @@ class Namespace(
             else list_files(pack)
         )
 
+        extra_info = cls.get_extra_info()
+
         for filename in sorted(filenames):
             try:
-                directory, namespace_dir, *scope, _ = filename.parts
+                directory, namespace_dir, *scope, extra_name = filename.parts
             except ValueError:
                 continue
 
@@ -203,6 +243,10 @@ class Namespace(
 
             assert name and namespace is not None
             extension = "".join(filename.suffixes)
+
+            if file_type := extra_info.get(path := "/".join(scope + [extra_name])):
+                namespace.extra[path] = file_type.load(pack, filename)
+                continue
 
             while path := tuple(scope):
                 if file_type := cls.scope_map.get((path, extension)):
@@ -219,6 +263,14 @@ class Namespace(
 
     def dump(self, namespace: str, origin: FileOrigin):
         """Write the namespace to a zipfile or to the filesystem."""
+        _dump_files(
+            origin,
+            {
+                f"{self.directory}/{namespace}/{path}": item
+                for path, item in self.extra.items()
+                if item is not None
+            },
+        )
         _dump_files(
             origin,
             {
@@ -266,17 +318,6 @@ class NamespaceProxyDescriptor(Generic[NamespaceFileType]):
         return NamespaceProxy[NamespaceFileType](obj, self.proxy_key)
 
 
-class PackContainer(MatchMixin, MergeMixin, Container[str, PackFile]):
-    """Container that stores non-namespaced files in a pack."""
-
-
-class ExtraPin(Pin[str, T]):
-    """Descriptor that makes a specific file accessible through attribute lookup."""
-
-    def forward(self, obj: "Pack[Namespace]") -> PackContainer:
-        return obj.extra
-
-
 class McmetaPin(Pin[str, T]):
     """Descriptor that makes it possible to bind pack.mcmeta information to attribute lookup."""
 
@@ -298,7 +339,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
     path: Optional[Path]
     zipped: bool
 
-    extra: PackContainer
+    extra: ExtraContainer
     mcmeta: ExtraPin[JsonFile] = ExtraPin(
         "pack.mcmeta", default_factory=lambda: JsonFile({})
     )
@@ -330,7 +371,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
         self.path = None
         self.zipped = zipped
 
-        self.extra = PackContainer()
+        self.extra = ExtraContainer()
 
         if mcmeta is not None:
             self.mcmeta = mcmeta
@@ -457,7 +498,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
             self.description = ""
 
     def dump(self, origin: FileOrigin):
-        """Write the content of the pack to a zipfile or to the filesystem """
+        """Write the content of the pack to a zipfile or to the filesystem"""
         extra = {path: item for path, item in self.extra.items() if item is not None}
         _dump_files(origin, extra)
 
