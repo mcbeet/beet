@@ -4,7 +4,7 @@ import pytest
 from PIL import Image, ImageDraw
 from pytest_insta import SnapshotFixture
 
-from beet import JsonFile, PngFile, ResourcePack, Texture
+from beet import JsonFile, PngFile, ResourcePack, Sound, SoundConfig, Texture
 
 
 def test_default():
@@ -76,6 +76,28 @@ def test_texture_mcmeta(snapshot: SnapshotFixture):
     pack["custom:hello"] = Texture(image, mcmeta={"animation": {"frametime": 20}})
 
     assert snapshot("resource_pack") == pack
+
+
+def test_sounds():
+    pack = ResourcePack()
+    pack["minecraft:block/note_block/banjo_1"] = Sound(
+        b"abc", event="block.note_block.banjo", subtitle="foo"
+    )
+    pack["minecraft:block/note_block/banjo_2"] = Sound(
+        b"123", event="block.note_block.banjo", weight=2, pitch=1.1
+    )
+
+    config = {
+        "block.note_block.banjo": {
+            "sounds": [
+                "block/note_block/banjo_1",
+                {"name": "block/note_block/banjo_2", "weight": 2, "pitch": 1.1},
+            ],
+            "subtitle": "foo",
+        }
+    }
+
+    assert pack["minecraft"].sound_config == SoundConfig(config)
 
 
 def test_merge(snapshot: SnapshotFixture):

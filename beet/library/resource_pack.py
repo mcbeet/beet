@@ -15,12 +15,14 @@ __all__ = [
     "Text",
     "TextureMcmeta",
     "Texture",
+    "Sound",
+    "SoundConfig",
 ]
 
 
 from copy import deepcopy
 from dataclasses import dataclass
-from typing import Dict, Optional
+from typing import Dict, Optional, Type
 
 from PIL import Image as img
 
@@ -28,12 +30,14 @@ from beet.core.file import BinaryFile, BinaryFileContent, JsonFile, PngFile, Tex
 from beet.core.utils import JsonDict, extra_field
 
 from .base import (
+    ExtraPin,
     McmetaPin,
     Namespace,
     NamespaceFile,
     NamespacePin,
     NamespaceProxyDescriptor,
     Pack,
+    PackFile,
 )
 
 
@@ -156,10 +160,81 @@ class Texture(PngFile, NamespaceFile):
             pack.textures_mcmeta[f"{namespace}:{path}"] = TextureMcmeta(self.mcmeta)
 
 
+@dataclass(eq=False)
+class Sound(BinaryFile, NamespaceFile):
+    """Class representing a sound file."""
+
+    event: Optional[str] = extra_field(default=None)
+    subtitle: Optional[str] = extra_field(default=None)
+    replace: Optional[bool] = extra_field(default=None)
+    volume: Optional[float] = extra_field(default=None)
+    pitch: Optional[float] = extra_field(default=None)
+    weight: Optional[int] = extra_field(default=None)
+    stream: Optional[bool] = extra_field(default=None)
+    attenuation_distance: Optional[int] = extra_field(default=None)
+    preload: Optional[bool] = extra_field(default=None)
+
+    scope = ("sounds",)
+    extension = ".ogg"
+
+    def bind(self, pack: "ResourcePack", namespace: str, path: str):
+        super().bind(pack, namespace, path)
+
+        if self.event is not None:
+            attributes = {
+                "volume": self.volume,
+                "pitch": self.pitch,
+                "weight": self.weight,
+                "stream": self.stream,
+                "attenuation_distance": self.attenuation_distance,
+                "preload": self.preload,
+            }
+
+            attributes = {k: v for k, v in attributes.items() if v is not None}
+            event: JsonDict = {
+                "sounds": [{"name": path, **attributes} if attributes else path]
+            }
+
+            if self.replace is not None:
+                event["replace"] = self.replace
+            if self.subtitle is not None:
+                event["subtitle"] = self.subtitle
+
+            pack[namespace].extra.merge(
+                {"sounds.json": SoundConfig({self.event: event})}
+            )
+
+
+class SoundConfig(JsonFile):
+    """Class representing the sounds.json configuration."""
+
+    def merge(self, other: "SoundConfig") -> bool:  # type: ignore
+        for key, other_event in other.data.items():
+            if other_event.get("replace"):
+                self.data[key] = deepcopy(other_event)
+                continue
+
+            event = self.data.setdefault(key, {})
+
+            if subtitle := other_event.get("subtitle"):
+                event["subtitle"] = subtitle
+
+            sounds = event.setdefault("sounds", [])
+            for sound in other_event.get("sounds", []):
+                if sound not in sounds:
+                    sounds.append(deepcopy(sound))
+
+        return True
+
+
 class ResourcePackNamespace(Namespace):
     """Class representing a resource pack namespace."""
 
     directory = "assets"
+
+    sound_config: ExtraPin[Optional[SoundConfig]] = ExtraPin(
+        "sounds.json", default=None
+    )
 
     # fmt: off
     blockstates:      NamespacePin[Blockstate]     = NamespacePin(Blockstate)
@@ -176,7 +251,12 @@ class ResourcePackNamespace(Namespace):
     texts:            NamespacePin[Text]           = NamespacePin(Text)
     textures_mcmeta:  NamespacePin[TextureMcmeta]  = NamespacePin(TextureMcmeta)
     textures:         NamespacePin[Texture]        = NamespacePin(Texture)
+    sounds:           NamespacePin[Sound]          = NamespacePin(Sound)
     # fmt: on
+
+    @classmethod
+    def get_extra_info(cls) -> Dict[str, Type[PackFile]]:
+        return {**super().get_extra_info(), "sounds.json": SoundConfig}
 
 
 class ResourcePack(Pack[ResourcePackNamespace]):
@@ -204,4 +284,5 @@ class ResourcePack(Pack[ResourcePackNamespace]):
     texts:            NamespaceProxyDescriptor[Text]           = NamespaceProxyDescriptor(Text)
     textures_mcmeta:  NamespaceProxyDescriptor[TextureMcmeta]  = NamespaceProxyDescriptor(TextureMcmeta)
     textures:         NamespaceProxyDescriptor[Texture]        = NamespaceProxyDescriptor(Texture)
+    sounds:           NamespaceProxyDescriptor[Sound]          = NamespaceProxyDescriptor(Sound)
     # fmt: on
