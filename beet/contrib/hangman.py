@@ -25,6 +25,7 @@ from beet import Context, Function
 REGEX_COMMENT = re.compile(r"(\s+#(?:\s+.*)?$)")
 REGEX_QUOTE = re.compile(r"(\"(?:.*?[^\\])?\"|'(?:.*?[^\\])?')")
 REGEX_RUN_COMMANDS = re.compile(r"(\s*execute\b(?:.*)\b)run\s+commands(\s*)")
+REGEX_FOLD_COMMENT = re.compile(r"\s*#\s*fold\s*:\s*(\w+)\s*")
 
 
 TokenType = Union[
@@ -85,8 +86,23 @@ def parse_lines(lines: Iterable[str]) -> Iterable[Token]:
     """Split the input lines into tokens."""
     indentation = [0]
     blanks: List[Token] = []
+    fold_off = False
 
     for line in lines:
+        if match := REGEX_FOLD_COMMENT.match(line):
+            if match[1] in ["on", "off"]:
+                fold_off = match[1] == "off"
+            continue
+
+        if fold_off:
+            while len(indentation) > 1:
+                yield "DEDENT", ""
+                indentation.pop()
+            yield from blanks
+            blanks = []
+            yield "TEXT", line
+            continue
+
         stripped = line.lstrip()
 
         if not stripped:
