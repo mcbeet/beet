@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.11.0 (2021-04-27)
+### Feature
+* Add sound and particle directives ([`87aa5f9`](https://github.com/mcbeet/lectern/commit/87aa5f981bac2db1289ffd55d583e6f5af818108))
+
 ## v0.10.1 (2021-04-25)
 ### Fix
 * The snapshot testing example was not using run_beet properly ([`3c933e8`](https://github.com/mcbeet/lectern/commit/3c933e81080a1180b31d2940afca023ac9a7daf3))
