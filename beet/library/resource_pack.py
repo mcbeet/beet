@@ -17,6 +17,7 @@ __all__ = [
     "Texture",
     "Sound",
     "SoundConfig",
+    "Particle",
 ]
 
 
@@ -227,6 +228,13 @@ class SoundConfig(JsonFile):
         return True
 
 
+class Particle(JsonFile, NamespaceFile):
+    """Class representing a particle configuration file."""
+
+    scope = ("particles",)
+    extension = ".json"
+
+
 class ResourcePackNamespace(Namespace):
     """Class representing a resource pack namespace."""
 
@@ -252,6 +260,7 @@ class ResourcePackNamespace(Namespace):
     textures_mcmeta:  NamespacePin[TextureMcmeta]  = NamespacePin(TextureMcmeta)
     textures:         NamespacePin[Texture]        = NamespacePin(Texture)
     sounds:           NamespacePin[Sound]          = NamespacePin(Sound)
+    particles:        NamespacePin[Particle]       = NamespacePin(Particle)
     # fmt: on
 
     @classmethod
@@ -285,4 +294,5 @@ class ResourcePack(Pack[ResourcePackNamespace]):
     textures_mcmeta:  NamespaceProxyDescriptor[TextureMcmeta]  = NamespaceProxyDescriptor(TextureMcmeta)
     textures:         NamespaceProxyDescriptor[Texture]        = NamespaceProxyDescriptor(Texture)
     sounds:           NamespaceProxyDescriptor[Sound]          = NamespaceProxyDescriptor(Sound)
+    particles:        NamespaceProxyDescriptor[Particle]       = NamespaceProxyDescriptor(Particle)
     # fmt: on
