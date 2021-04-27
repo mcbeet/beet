@@ -153,6 +153,15 @@ class TextSerializer:
                 ),
                 (
                     (
+                        extra_directive,
+                        f"{namespace.directory}/{name}/{path}",
+                        file_instance,
+                    )
+                    for name, namespace in pack.items()
+                    for path, file_instance in namespace.extra.items()
+                ),
+                (
+                    (
                         NAMESPACED_RESOURCE_DIRECTIVES[file_type],
                         f"{name}:{path}",
                         file_instance,
@@ -219,6 +228,17 @@ class MarkdownSerializer:
 
         for name, namespace in pack.items():
             yield f"\n### {name}"
+
+            for path, file_instance in namespace.extra.items():
+                yield from self.format_serialized_file(
+                    self.serialize_file_instance(
+                        pack_directive,
+                        f"{namespace.directory}/{name}/{path}",
+                        file_instance,
+                        external_files,
+                        external_prefix,
+                    )
+                )
 
             for file_type, container in namespace.items():
                 directive_name = NAMESPACED_RESOURCE_DIRECTIVES[file_type]
