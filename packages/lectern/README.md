@@ -137,8 +137,8 @@ Here is a reference of all the supported resources:
 | `@dimension_type`               | `@text`            |
 | `@dimension`                    | `@texture_mcmeta`  |
 | `@biome`                        | `@texture`         |
-| `@configured_carver`            |                    |
-| `@configured_feature`           |                    |
+| `@configured_carver`            | `@sound`           |
+| `@configured_feature`           | `@particle`        |
 | `@configured_structure_feature` |                    |
 | `@configured_surface_builder`   |                    |
 | `@noise_settings`               |                    |
