@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.11.1 (2021-04-27)
+### Fix
+* Serialize namespace extra ([`94f1995`](https://github.com/mcbeet/lectern/commit/94f1995808d9be25c5a604132b99aff7554984ba))
+
 ## v0.11.0 (2021-04-27)
 ### Feature
 * Add sound and particle directives ([`87aa5f9`](https://github.com/mcbeet/lectern/commit/87aa5f981bac2db1289ffd55d583e6f5af818108))
