@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.22.1 (2021-05-02)
+### Fix
+* Keep template globals across environment resets ([`02379e2`](https://github.com/mcbeet/beet/commit/02379e2f1e7b043e02b570e41ce05b1d6ab2cd87))
+
 ## v0.22.0 (2021-04-27)
 ### Feature
 * Make it possible to temporarily disable folding ([`489ad7c`](https://github.com/mcbeet/beet/commit/489ad7c65643c14633358396389dedc7d96a4d8d))
