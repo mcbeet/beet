@@ -23,7 +23,7 @@ from jinja2.runtime import Context as JinjaContext
 from jinja2.runtime import missing as jinja_missing
 
 from beet.core.file import TextFileBase
-from beet.core.utils import FileSystemPath
+from beet.core.utils import FileSystemPath, JsonDict
 
 from .pipeline import FormattedPipelineException, PipelineFallthroughException
 from .utils import ensure_builtins
@@ -41,26 +41,29 @@ class TemplateError(FormattedPipelineException):
 
 
 class FallbackContext(JinjaContext):
-    """Template context that falls back to meta entries."""
+    """Template context that falls back to globals and meta entries."""
 
     def resolve_or_missing(self, key: str) -> Any:
         value: Any = super().resolve_or_missing(key)  # type: ignore
 
         if value is jinja_missing:
+            manager: TemplateManager = getattr(
+                self.environment, "_beet_template_manager"
+            )
+
+            if key in manager.globals:
+                return manager.globals[key]
+
+            if key in [
+                "project_name",
+                "project_description",
+                "project_author",
+                "project_version",
+            ]:
+                return getattr(manager.ctx, key)
+
             try:
-                ctx = getattr(self.environment, "_beet_template_manager").ctx
-                fallback = (
-                    getattr(ctx, key)
-                    if key
-                    in [
-                        "project_name",
-                        "project_description",
-                        "project_author",
-                        "project_version",
-                    ]
-                    else ctx.meta[key]
-                )
-                return ensure_builtins(fallback)
+                return ensure_builtins(manager.ctx.meta[key])
             except (KeyError, TypeError):
                 pass
 
@@ -76,12 +79,14 @@ class TemplateManager:
     directories: List[FileSystemPath]
     cache_dir: FileSystemPath
     ctx: Any
+    globals: JsonDict
 
     def __init__(self, templates: List[FileSystemPath], cache_dir: FileSystemPath):
         self.prefix_map = {}
         self.directories = templates
         self.cache_dir = cache_dir
         self.ctx = None
+        self.globals = {}
 
         self.loaders = [
             FileSystemLoader(self.directories),
@@ -114,7 +119,7 @@ class TemplateManager:
 
     def expose(self, name: str, function: Callable[..., Any]):
         """Expose a utility function to the template context."""
-        self.env.globals[name] = lambda *args, **kwargs: function(*args, **kwargs)  # type: ignore
+        self.globals[name] = lambda *args, **kwargs: function(*args, **kwargs)  # type: ignore
 
     def add_package(self, dotted_path: str, prefix: Optional[str] = None):
         """Make the templates included in the specified package available."""

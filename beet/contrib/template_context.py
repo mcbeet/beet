@@ -5,4 +5,4 @@ from beet import Context
 
 
 def beet_default(ctx: Context):
-    ctx.template.env.globals["ctx"] = ctx
+    ctx.template.globals["ctx"] = ctx
