@@ -11,15 +11,20 @@ __all__ = [
 
 
 import json
-import os
 import re
 from dataclasses import field
-from typing import Any, Dict, Iterable, Iterator, List, TypeVar, Union
+from typing import Any, Dict, Iterable, Iterator, List, Protocol, TypeVar, Union
 
 T = TypeVar("T")
 
+
+class PathLike(Protocol):
+    def __fspath__(self) -> str:
+        ...
+
+
 JsonDict = Dict[str, Any]
-FileSystemPath = Union[str, "os.PathLike[str]"]
+FileSystemPath = Union[str, PathLike]
 TextComponent = Union[str, List[Any], JsonDict]
 
 
