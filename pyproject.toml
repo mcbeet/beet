@@ -42,7 +42,7 @@ pytest-minecraft = "^0.1.1"
 isort = "^5.7.0"
 pytest-insta = "^0.1.10"
 python-semantic-release = "^7.15.3"
-mudkip = "^0.4.5"
+mudkip = "^0.4.8"
 furo = "^2021.4.11b34"
 
 [tool.poetry.scripts]
@@ -91,6 +91,7 @@ preset = "furo"
 html_title = "Beet documentation"
 html_logo = "assets/logo.png"
 html_favicon = "assets/favicon.png"
+suppress_warnings = ["myst.header"]
 
 [tool.mudkip.override.html_theme_options]
 sidebar_hide_name = true

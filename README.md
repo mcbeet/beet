@@ -11,11 +11,9 @@
 
 ## Introduction
 
-Minecraft [resource packs](https://minecraft.gamepedia.com/Resource_Pack) and [data packs](https://minecraft.gamepedia.com/Data_Pack) work well as _distribution_ formats but can be pretty limiting as _authoring_ formats. Without the ability to parametrize or create abstractions over assets and data pack resources, projects and libraries created by the community are greatly limited when it comes to reusability and interoperability.
+Minecraft [resource packs](https://minecraft.gamepedia.com/Resource_Pack) and [data packs](https://minecraft.gamepedia.com/Data_Pack) work well as _distribution_ formats but can be pretty limiting as _authoring_ formats. You can quickly end up having to manage hundreds of files, some of which might be buried within the bundled output of various generators.
 
-There's been a lot of attempts at establishing standardized tooling to improve the development experience and it's becoming more and more apparent that the problem space is fundamentally multi-paradigm. Different problems require different solutions, so providing unified cross-project reusability needs to involve an interoperability layer that's sufficiently unopinionated to let all these paradigms shine through.
-
-The `beet` project is meant to serve as a platform for building a cooperative tooling ecosystem by providing a flexible composition model and a user-friendly development workflow.
+The `beet` project is a development kit that tries to unify data pack and resource pack tooling into a single pipeline. The community is always coming up with pre-processors, frameworks, and generators of all kinds to make the developer experience more ergonomic. With `beet` you can seamlessly integrate all these tools in your project. You can think of it as the cookie dough that binds chocolate chips together!
 
 ### Screencasts
 
@@ -26,8 +24,6 @@ The `beet` project is meant to serve as a platform for building a cooperative to
 - **Pipeline configuration** [https://youtu.be/QsnQncGxAAs](https://youtu.be/QsnQncGxAAs)
 
 ### Library
-
-> [Documentation](https://mcbeet.dev/library/)
 
 ```python
 from beet import ResourcePack, Texture
@@ -43,10 +39,9 @@ The `beet` library provides carefully crafted primitives for working with Minecr
 - Handle zipped and unzipped packs
 - Fast and lazy by default, files are transparently loaded when needed
 - Statically typed API enabling rich intellisense and autocompletion
+- First-class [`pytest`](https://github.com/pytest-dev/pytest/) integration with detailed assertion explanations
 
 ### Toolchain
-
-> [Documentation](https://mcbeet.dev/toolchain/)
 
 ```python
 from beet import Context, Function
@@ -63,6 +58,8 @@ The `beet` toolchain is designed to support a wide range of use-cases. The most 
 - First-class template integration approachable without prior Python knowledge
 - Link the generated resource pack and data pack to Minecraft
 - Automatically rebuild the project on file changes with watch mode
+- Batteries-included package that comes with a few handy plugins out of the box
+- Rich ecosystem, extensible CLI, and powerful generator and worker API
 
 ## Installation
 
@@ -93,12 +90,6 @@ Commands:
   link   Link the generated resource pack and data pack to Minecraft.
   watch  Watch the project directory and build on file changes.
 ```
-
-## Status
-
-You can expect current releases to be pretty stable, but the project as a whole should still be considered alpha.
-
-The main reason is that resource pack and data pack coverage is currently lacking in certain areas. Exposing a consistent interface for every data pack and resource pack feature can involve design decisions that aren't immediately obvious. You're welcome to open an issue to discuss the implementation of currently unsupported resources. And feel free to ask questions, report bugs, and share your thoughts and impressions.
 
 ## Contributing
 
