@@ -2,6 +2,13 @@
 
 <!--next-version-placeholder-->
 
+## v0.22.2 (2021-05-04)
+### Fix
+* Use custom PathLike ([`b569367`](https://github.com/mcbeet/beet/commit/b569367f472e4d95f1c28dc3162a49be06b602e4))
+
+### Documentation
+* Update README ([`ab8056b`](https://github.com/mcbeet/beet/commit/ab8056b8c186460a59d969faa1a81af322954421))
+
 ## v0.22.1 (2021-05-02)
 ### Fix
 * Keep template globals across environment resets ([`02379e2`](https://github.com/mcbeet/beet/commit/02379e2f1e7b043e02b570e41ce05b1d6ab2cd87))
