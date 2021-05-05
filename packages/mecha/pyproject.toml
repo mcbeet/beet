@@ -28,7 +28,7 @@ beet = ">=0.5.1,<0.23.0"
 [tool.poetry.dev-dependencies]
 black = "^21.5b0"
 isort = "^5.8.0"
-pytest = "^6.2.3"
+pytest = "^6.2.4"
 python-semantic-release = "^7.15.4"
 
 [tool.black]
