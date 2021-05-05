@@ -226,6 +226,10 @@ class TextFile(TextFileBase[str]):
     def from_str(cls, content: str) -> str:
         return content
 
+    @classmethod
+    def default(cls) -> str:
+        return ""
+
 
 class BinaryFileBase(File[ValueType, bytes]):
     """Base class for files that get serialized to bytes."""
@@ -270,15 +274,15 @@ class BinaryFile(BinaryFileBase[bytes]):
     def from_bytes(cls, content: bytes) -> bytes:
         return content
 
+    @classmethod
+    def default(cls) -> bytes:
+        return b""
+
 
 class JsonFileBase(TextFileBase[ValueType]):
     """Base class for json files."""
 
     data: FileDeserialize[ValueType] = FileDeserialize()
-
-    @classmethod
-    def default(cls) -> ValueType:
-        return {}  # type: ignore
 
     @classmethod
     def to_str(cls, content: ValueType) -> str:
@@ -293,6 +297,10 @@ class JsonFile(JsonFileBase[JsonDict]):
     """Class representing a json file."""
 
     data: FileDeserialize[JsonDict] = FileDeserialize()
+
+    @classmethod
+    def default(cls) -> JsonDict:
+        return {}
 
 
 class PngFile(BinaryFileBase[img.Image]):
@@ -309,3 +317,7 @@ class PngFile(BinaryFileBase[img.Image]):
     @classmethod
     def from_bytes(cls, content: bytes) -> img.Image:
         return img.open(io.BytesIO(content))
+
+    @classmethod
+    def default(cls) -> img.Image:
+        return img.new("RGB", (16, 16), "black")
