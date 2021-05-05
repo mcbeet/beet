@@ -343,7 +343,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
     mcmeta: ExtraPin[JsonFile] = ExtraPin(
         "pack.mcmeta", default_factory=lambda: JsonFile({})
     )
-    image: ExtraPin[Optional[PngFile]] = ExtraPin("pack.png", default=None)
+    icon: ExtraPin[Optional[PngFile]] = ExtraPin("pack.png", default=None)
 
     description: PackPin[TextComponent] = PackPin("description", default="")
     pack_format: PackPin[int] = PackPin("pack_format", default=0)
@@ -362,7 +362,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
         zipfile: Optional[ZipFile] = None,
         zipped: bool = False,
         mcmeta: Optional[JsonFile] = None,
-        image: Optional[PngFile] = None,
+        icon: Optional[PngFile] = None,
         description: Optional[str] = None,
         pack_format: Optional[int] = None,
     ):
@@ -375,8 +375,8 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
 
         if mcmeta is not None:
             self.mcmeta = mcmeta
-        if image is not None:
-            self.image = image
+        if icon is not None:
+            self.icon = icon
         if description is not None:
             self.description = description
         if pack_format is not None:

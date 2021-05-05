@@ -29,11 +29,11 @@ def test_empty(snapshot: SnapshotFixture, pack: ResourcePack):
 
 
 def test_empty_with_image():
-    pack = ResourcePack(image=PngFile(Image.new("RGB", (32, 32), color="blue")))
+    pack = ResourcePack(icon=PngFile(Image.new("RGB", (32, 32), color="blue")))
     assert pack
-    assert pack == ResourcePack(image=PngFile(Image.new("RGB", (32, 32), color="blue")))
-    assert pack != ResourcePack(image=PngFile(Image.new("RGB", (32, 32), color="red")))
-    assert pack != ResourcePack(image=PngFile(Image.new("RGB", (16, 16), color="blue")))
+    assert pack == ResourcePack(icon=PngFile(Image.new("RGB", (32, 32), color="blue")))
+    assert pack != ResourcePack(icon=PngFile(Image.new("RGB", (32, 32), color="red")))
+    assert pack != ResourcePack(icon=PngFile(Image.new("RGB", (16, 16), color="blue")))
     assert dict(pack) == {}
 
 
