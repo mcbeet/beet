@@ -187,9 +187,12 @@ class Namespace(
             self[type(value)][key] = value
 
     def __eq__(self, other: Any) -> bool:
-        return self.extra == other.extra and all(
-            self[key] == other[key] for key in self.field_map
-        )
+        if type(self) == type(other) and not self.extra == other.extra:
+            return False
+        if isinstance(other, Mapping):
+            rhs: Mapping[Type[NamespaceFile], NamespaceContainer[NamespaceFile]] = other
+            return all(self[key] == rhs[key] for key in self.keys() | rhs.keys())
+        return NotImplemented
 
     def __bool__(self) -> bool:
         return any(self.values()) or bool(self.extra)
@@ -414,13 +417,14 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
             NamespaceProxy[NamespaceFile](self, type(value))[key] = value
 
     def __eq__(self, other: Any) -> bool:
-        if type(self) != type(other):
-            return NotImplemented
-        return (
-            self.name == other.name
-            and self.extra == other.extra
-            and all(self[key] == other[key] for key in self.keys() | other.keys())
-        )
+        if type(self) == type(other) and not (
+            self.name == other.name and self.extra == other.extra
+        ):
+            return False
+        if isinstance(other, Mapping):
+            rhs: Mapping[str, Namespace] = other
+            return all(self[key] == rhs[key] for key in self.keys() | rhs.keys())
+        return NotImplemented
 
     def __bool__(self) -> bool:
         return any(self.values()) or self.extra.keys() > {"pack.mcmeta"}
