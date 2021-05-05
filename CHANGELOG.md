@@ -2,6 +2,15 @@
 
 <!--next-version-placeholder-->
 
+## v0.22.3 (2021-05-05)
+### Fix
+* Add defaults for everything ([`f229b3c`](https://github.com/mcbeet/beet/commit/f229b3c2bcba413008600fc38116ad0eede95eee))
+* Tweak pack and namespace equality ([`5906fb2`](https://github.com/mcbeet/beet/commit/5906fb2e6632a845ffe6364c9785ba02ee80ea20))
+* Rename pack image ([`a3007a1`](https://github.com/mcbeet/beet/commit/a3007a158875178b064aae50b384871c6f31adc7))
+
+### Documentation
+* Start writing general overview ([`fd9348d`](https://github.com/mcbeet/beet/commit/fd9348d11f7d7513ce0fd3e31864a5216880f047))
+
 ## v0.22.2 (2021-05-04)
 ### Fix
 * Use custom PathLike ([`b569367`](https://github.com/mcbeet/beet/commit/b569367f472e4d95f1c28dc3162a49be06b602e4))
