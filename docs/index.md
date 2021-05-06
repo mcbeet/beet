@@ -8,7 +8,6 @@ You can ask questions about `beet` and get general help about Minecraft map-maki
 :hidden:
 
 overview
-library
 toolchain
 changelog
 ```

@@ -17,7 +17,7 @@ To keep the API surface manageable, abstractions are designed to provide orthogo
 
 The `beet` library allows you to work with data packs and resource packs at a high level. Data pack and resource pack objects are fast and flexible primitives that make it easy inspect, generate, merge and transform files, and perform bulk operations.
 
-Data packs and resource packs are identical in nature and only differ in the types of resources they can contain. As a result, `beet` derives the concrete `DataPack` and `ResourcePack` classes from a generic `Pack` definition. It's the shared base class that's responsible for implementing all the operations that we'll be discussing in the next sections, so the examples will only be focusing on data packs as resource packs would work exactly the same.
+Data packs and resource packs are identical in nature and only differ in the types of resources they can contain. As a result, `beet` derives the concrete `DataPack` and `ResourcePack` classes from a generic `Pack` definition. It's the shared base class that's responsible for implementing all the operations that we'll be discussing in the next sections.
 
 ### Object hierarchy
 
@@ -286,8 +286,147 @@ You can specify multiple patterns. The exclamation mark lets you invert a patter
 pack.functions.match("demo:*", "!demo:foo")
 ```
 
-<!--
 ## File handles
 
-The core `beet` file handles make all the interactions with the filesystem lazy and as efficient as possible. They're responsible for exposing files in their serialized or deserialized state transparently.
--->
+The core `beet` file handles make all the interactions with the filesystem lazy and as efficient as possible. They're responsible for exposing files in their serialized or deserialized state transparently and avoiding deserialization entirely whenever possible. This allows `beet` to load data packs and resource packs with thousands of files instantly.
+
+### Text files and binary files
+
+The implementation defines a base `File` class that's generic over the types of its serialized and deserialized representation. Files that inherit from `TextFileBase` store their serialized content as strings while files that inherit from `BinaryFileBase` store their serialized content as bytes. All concrete file types are then derived from one or the other. The most straight-forward concrete file types are `TextFile` and `BinaryFile`.
+
+```{code-cell}
+from beet import TextFile
+
+TextFile("hello")
+```
+
+```{code-cell}
+from beet import BinaryFile
+
+BinaryFile(b"\x00\x01\x02\x03")
+```
+
+You can create files by providing the serialized or deserialized content to the constructor, or specifying a source path to an existing file. `TextFile` and `BinaryFile` are a bit special though because their serialized and deserialized state are identical.
+
+```{code-cell}
+handle = TextFile(source_path="../examples/load_basic/beet.json")
+handle
+```
+
+Note that this didn't perform any filesystem operation. The file handle is still in an unloaded state. Accessing the content in one way or another will load the file and discard the source path.
+
+```{code-cell}
+print(handle.text)
+handle
+```
+
+### File states
+
+File handles can be in three distinct states:
+
+- Unloaded
+
+  Files with a source path are unloaded. You can use the `ensure_source_path()` method to make sure that files are in an unloaded state and retrieve the source path.
+
+- Serialized
+
+  Files with plain string or bytes content are treated as serialized. You can use the `ensure_serialized()` method to get the serialized content of the file no matter the state it's currently in. Text files let you access the string content through the `text` attribute and binary files let you access the raw bytes through the `blob` attribute.
+
+- Deserialized
+
+  Files with a content that's different from a plain string or bytes are treated as deserialized. You can use the `ensure_deserialized()` method to get the deserialized content of the file no matter the state it's currently in. Classes deriving from `TextFile` and `BinaryFile` will expose the most suited and practical deserialized representation depending on the type of file.
+
+Most of the time, code that works with files doesn't need to know about the state it's currently in. If the file is already deserialized then accessing the deserialized representation will simply return the current content of the file, otherwise `beet` will transparently load the file if necessary and turn the string or bytes into the deserialized representation. The same thing happens when trying to access the string or bytes content. If the file is not loaded then `beet` will transparently load it on the fly and if the file is in its deserialized state it will automatically turn it into its serialized representation.
+
+The different states make it possible to optimize various operations. For instance, dumping an unloaded file to the filesystem results in a native file copy operation, so if you're shuffling files around in a data pack you're not incurring extra loading and parsing costs by using the provided abstractions. Similarly, if you're using `beet` to zip a data pack the file handles won't needlessly turn any of the files into their deserialized representation. Another example would be equality checks. If two files are unloaded and point to the same source path they're considered equal.
+
+### Json files
+
+With the `JsonFile` class we can play around and see the differences between the unloaded, serialized, and deserialized states.
+
+```{code-cell}
+from beet import JsonFile
+
+handle = JsonFile(source_path="../examples/load_basic/beet.json")
+handle
+```
+
+The file is currently unloaded. By accessing the `text` attribute, which is the same as calling the `ensure_serialized()` method, `beet` will load the file and return the string content.
+
+```{code-cell}
+print(handle.text)
+handle
+```
+
+We can see that now the content of the file holds the string representing the json file. Json files expose their deserialized content as a dictionary of plain Python objects. By accessing the `data` attribute, which is the same as calling the `ensure_deserialized()` method, `beet` will parse the json and return the deserialized content.
+
+```{code-cell}
+del handle.data["data_pack"]["load"]
+handle
+```
+
+Now the file is in its deserialized state, and any further code accessing the `data` attribute will be able to operate directly on the parsed dictionary. However, accessing the `text` attribute will transform the file into its serialized state again.
+
+```{code-cell}
+print(handle.text)
+handle
+```
+
+The different states aren't something you explicitly need to worry about in code that works with files but it's good to keep in mind that it doesn't play well with weird access patterns.
+
+```{code-cell}
+handle.data["data_pack"]["pack_format"] = 0
+
+for i in range(3):
+    handle.data["data_pack"]["pack_format"] += 1
+    print(handle.text)
+```
+
+As you could've guessed, this kind of code is pretty problematic because even though it doesn't look like there's much going on, each iteration of the loop actually ends up parsing and serializing json.
+
+### Png files
+
+Another example of files with really distinct unloaded, serialized and deserialized states are png files.
+
+```{code-cell}
+from beet import PngFile
+
+handle = PngFile(source_path="../logo.png")
+handle
+```
+
+As usual, the file starts out unloaded. Because images are binary files, we need to access the `blob` attribute to get the serialized content.
+
+```{code-cell}
+handle.blob[:20]
+```
+
+Now the file is loaded and isn't linked to the original source file anymore.
+
+```{code-cell}
+handle.source_path is None
+```
+
+Accessing the `image` attribute will deserialize the file into a `PIL` image, which makes it possible to edit the image programmatically.
+
+```{code-cell}
+handle.image = handle.image.rotate(45)
+handle.image.thumbnail((128, 128))
+handle.image
+```
+
+### Files and data packs
+
+The files used in data packs and resource packs are derived from the core file handles. For example, you can create function files from a source path, a string representing the content of the function, or a list of strings corresponding to the lines of the function.
+
+```{code-cell}
+pack = DataPack(path="../examples/load_basic/src")
+pack.functions["demo:foo"]
+```
+
+As you can see, when we load an unzipped data pack all the files remain in their unloaded state. The moment we start interacting with the content of the function `beet` will load the file automatically.
+
+```{code-cell}
+pack.functions["demo:foo"].lines.append("say bar")
+pack.functions["demo:foo"]
+```
