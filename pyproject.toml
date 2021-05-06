@@ -36,7 +36,7 @@ base58 = "^2.1.0"
 
 [tool.poetry.dev-dependencies]
 black = "^21.4b0"
-pytest = "^6.2.3"
+pytest = "^6.2.4"
 rope = "^0.19.0"
 pytest-minecraft = "^0.1.1"
 isort = "^5.7.0"
