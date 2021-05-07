@@ -2,6 +2,13 @@
 
 <!--next-version-placeholder-->
 
+## v0.22.4 (2021-05-07)
+### Fix
+* Make hangman plugin configurable ([`cc56cd8`](https://github.com/mcbeet/beet/commit/cc56cd8116d650376aa4f052255691ae869e375a))
+
+### Documentation
+* Add file handles overview ([`f6741ac`](https://github.com/mcbeet/beet/commit/f6741ac63d3dbb12379e2df16f2c6c1bf4923b4a))
+
 ## v0.22.3 (2021-05-05)
 ### Fix
 * Add defaults for everything ([`f229b3c`](https://github.com/mcbeet/beet/commit/f229b3c2bcba413008600fc38116ad0eede95eee))
