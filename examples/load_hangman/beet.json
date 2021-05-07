@@ -2,5 +2,10 @@
   "data_pack": {
     "load": ["src"]
   },
-  "pipeline": ["beet.contrib.hangman"]
+  "pipeline": ["beet.contrib.hangman"],
+  "meta": {
+    "hangman": {
+      "match": ["*"]
+    }
+  }
 }

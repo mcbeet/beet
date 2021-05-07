@@ -11,6 +11,7 @@ https://feedback.minecraft.net/hc/en-us/community/posts/360077450811-In-line-fun
 
 
 __all__ = [
+    "hangman",
     "parse_lines",
     "parse_trailing_comment",
     "fold_hanging_commands",
@@ -18,9 +19,10 @@ __all__ = [
 
 
 import re
-from typing import Iterable, List, Literal, Optional, Tuple, Union
+from typing import Iterable, Iterator, List, Literal, Optional, Tuple, Union, cast
 
-from beet import Context, Function
+from beet import Context, Function, Plugin
+from beet.core.utils import JsonDict
 
 REGEX_COMMENT = re.compile(r"(\s+#(?:\s+.*)?$)")
 REGEX_QUOTE = re.compile(r"(\"(?:.*?[^\\])?\"|'(?:.*?[^\\])?')")
@@ -39,11 +41,27 @@ Token = Tuple[TokenType, str]
 
 
 def beet_default(ctx: Context):
-    for function in list(ctx.data.functions.values()):
-        function.lines = list(fold_hanging_commands(ctx, parse_lines(function.lines)))
+    config = ctx.meta.get("hangman", cast(JsonDict, {}))
+
+    match = config.get("match", ())
+
+    ctx.require(hangman(match))
 
 
-def fold_hanging_commands(ctx: Context, tokens: Iterable[Token]) -> Iterable[str]:
+def hangman(match: Iterable[str] = ()) -> Plugin:
+    """Return a plugin that provides indentation-based syntactic extensions for functions."""
+
+    def plugin(ctx: Context):
+        for path in ctx.data.functions.match(*match):
+            function = ctx.data.functions[path]
+            function.lines = list(
+                fold_hanging_commands(ctx, parse_lines(function.lines))
+            )
+
+    return plugin
+
+
+def fold_hanging_commands(ctx: Context, tokens: Iterable[Token]) -> Iterator[str]:
     """Fold hanging commands on a single line."""
     tokens = iter(tokens)
 
@@ -82,7 +100,7 @@ def fold_hanging_commands(ctx: Context, tokens: Iterable[Token]) -> Iterable[str
         yield current
 
 
-def parse_lines(lines: Iterable[str]) -> Iterable[Token]:
+def parse_lines(lines: Iterable[str]) -> Iterator[Token]:
     """Split the input lines into tokens."""
     indentation = [0]
     blanks: List[Token] = []
