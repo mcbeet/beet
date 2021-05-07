@@ -117,6 +117,7 @@ class Context:
                 name
                 for name, module in sys.modules.items()
                 if (filename := getattr(module, "__file__", None))
+                and "site-packages" not in filename
                 and filename.startswith(self._path_entry)
             ]
 
