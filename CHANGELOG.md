@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.22.5 (2021-05-07)
+### Fix
+* Don't reload modules from site-packages ([`de2ecab`](https://github.com/mcbeet/beet/commit/de2ecab29b22dd0cd72edb368d709868a6fe5e9e))
+
 ## v0.22.4 (2021-05-07)
 ### Fix
 * Make hangman plugin configurable ([`cc56cd8`](https://github.com/mcbeet/beet/commit/cc56cd8116d650376aa4f052255691ae869e375a))
