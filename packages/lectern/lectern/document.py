@@ -10,12 +10,7 @@ from typing import Any, Dict, Literal, MutableMapping, Optional, Tuple, Union, o
 from beet import Cache, Context, DataPack, File, ResourcePack
 from beet.core.utils import FileSystemPath, extra_field
 
-from .directive import (
-    Directive,
-    RequireDirective,
-    ScriptDirective,
-    get_builtin_directives,
-)
+from .directive import Directive, get_builtin_directives
 from .extract import MarkdownExtractor, TextExtractor
 from .serialize import ExternalFilesManager, MarkdownSerializer, TextSerializer
 
@@ -60,8 +55,6 @@ class Document:
         if ctx:
             self.assets = ctx.assets
             self.data = ctx.data
-            self.directives["require"] = RequireDirective(ctx)
-            self.directives["script"] = ScriptDirective(ctx, self)
             if cache is None:
                 cache = ctx.cache["lectern"]
         if cache:

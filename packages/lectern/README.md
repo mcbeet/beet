@@ -156,22 +156,6 @@ There are also two built-in directives that can be used to include files using a
 
 This is useful for adding files that aren't part of any particular namespace.
 
-If you're using `lectern` as a `beet` plugin you will be able to require plugins dynamically wih the `@require` directive.
-
-```
-@require my_plugins.hello
-```
-
-With `beet` you can also use the `@script` directive to render a fragment with Jinja and interpret the result as `lectern` text. Note that the text format requires you to escape the directives in the fragment with an additional `@` symbol.
-
-```
-@script
-{% for i in range(10) %}
-@@function demo:script_{{ i }}
-say {{ i }}
-{% endfor %}
-```
-
 Finally, the `@skip` directive is simply ignored and allows you to end a previous fragment in the plain text format.
 
 ```
@@ -595,6 +579,47 @@ from beet import Context
 
 def download_every_day(ctx: Context):
     ctx.cache["lectern"].timeout(hours=24)
+```
+
+## Extra directives
+
+If you're using `lectern` as a `beet` plugin you will be able to use additional directives by adding the corresponding plugins to the `require` option.
+
+```json
+{
+  "require": ["lectern.contrib.require", "lectern.contrib.script"],
+  "pipeline": ["lectern"],
+  "meta": {
+    "lectern": {
+      "load": ["*.md"]
+    }
+  }
+}
+```
+
+The `lectern.contrib.require` plugin adds a directive that lets you require plugins dynamically.
+
+`@require my_plugins.hello`
+
+The `lectern.contrib.script` plugin adds a directive that renders a fragment with Jinja and interprets the result as `lectern` text.
+
+`@script`
+
+```
+{% for i in range(10) %}
+@function demo:script_{{ i }}
+say {{ i }}
+{% endfor %}
+```
+
+Note that using `@script` with the text format requires you to escape the directives in the fragment with an additional `@` symbol.
+
+```
+@script
+{% for i in range(10) %}
+@@function demo:script_{{ i }}
+say {{ i }}
+{% endfor %}
 ```
 
 ## Lectern scripts
