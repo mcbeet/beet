@@ -33,19 +33,26 @@ class Extractor:
 
     directives: Dict[str, Directive]
     regex: Optional["re.Pattern[str]"]
+    escaped_regex: Optional["re.Pattern[str]"]
     cache: Optional[Cache]
 
     def __init__(self, cache: Optional[Cache] = None):
         self.directives = {}
         self.regex = None
+        self.escaped_regex = None
         self.cache = cache
 
     def generate_regex(self) -> str:
         """Return a regex that can match the current directives."""
-        names = "|".join(name for name in self.directives)
+        names = "|".join(self.directives)
         modifier = r"(?:\((?P<modifier>[^)]*)\)|\b)"
         arguments = r"(?P<arguments>.*)"
         return f"@(?P<name>{names}){modifier}{arguments}"
+
+    def generate_escaped_regex(self) -> str:
+        """Return a regex that can match escaped fragments."""
+        names = "|".join(self.directives)
+        return fr"(@@+(?:{names})\b.*)"
 
     def compile_regex(self, regex: str) -> "re.Pattern[str]":
         """Return the compiled pattern for the directive regex."""
@@ -58,6 +65,7 @@ class Extractor:
         if self.regex is None or self.directives != directives:
             self.directives = directives
             self.regex = self.compile_regex(self.generate_regex())
+            self.escaped_regex = self.compile_regex(self.generate_escaped_regex())
 
         return self.regex
 
@@ -143,6 +151,7 @@ class TextExtractor(Extractor):
         directives: Mapping[str, Directive],
     ) -> Iterator[Fragment]:
         tokens = self.get_regex(directives).split(source + "\n")
+        assert self.escaped_regex
 
         it = iter(tokens)
         newlines = next(it).count("\n")
@@ -154,6 +163,10 @@ class TextExtractor(Extractor):
                 return
             else:
                 content = content.partition("\n")[-1]
+                content = "".join(
+                    s.replace("@@", "@", 1) if i % 2 else s
+                    for i, s in enumerate(self.escaped_regex.split(content))
+                )
                 yield Fragment(
                     start_line=newlines,
                     end_line=(newlines := newlines + content.count("\n") + 1),
@@ -170,6 +183,9 @@ class EmbeddedExtractor(TextExtractor):
 
     def generate_regex(self) -> str:
         return r"(?://|#)\s*" + super().generate_regex()
+
+    def generate_escaped_regex(self) -> str:
+        return r"(?://|#)\s*" + super().generate_escaped_regex()
 
 
 class MarkdownExtractor(Extractor):

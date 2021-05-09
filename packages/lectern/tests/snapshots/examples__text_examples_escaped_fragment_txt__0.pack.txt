@@ -1,0 +1,14 @@
+@data_pack pack.mcmeta
+{
+  "pack": {
+    "pack_format": 6,
+    "description": ""
+  }
+}
+
+@function demo:foo
+@@function demo:foo
+@@blah demo:foo
+@@function(@@) demo:bar
+@@@function(@@@) demo:bar
+@@function demo:bar

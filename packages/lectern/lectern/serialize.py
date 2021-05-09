@@ -8,6 +8,7 @@ __all__ = [
 ]
 
 import os
+import re
 from base64 import b64encode
 from dataclasses import dataclass, field
 from itertools import chain
@@ -131,11 +132,19 @@ class SerializedFile:
 class TextSerializer:
     """Document serializer that outputs plain text."""
 
+    escaped_regex: "re.Pattern[str]"
+
+    def __init__(self):
+        names = "|".join(
+            [*NAMESPACED_RESOURCE_DIRECTIVES.values(), "resource_pack", "data_pack"]
+        )
+        self.escaped_regex = re.compile(fr"^(@+(?:{names})\b.*)$", flags=re.MULTILINE)
+
     def serialize(self, assets: ResourcePack, data: DataPack) -> str:
         """Return the serialized representation."""
         return "\n".join(
             (
-                f"@{directive_name} {argument}\n{content}"
+                f"@{directive_name} {argument}\n{self.escape_fragment(content)}"
                 if isinstance(content := file_instance.ensure_serialized(), str)
                 else f"@{directive_name}(base64) {argument}\n"
                 + b64encode(content).decode()
@@ -171,6 +180,13 @@ class TextSerializer:
                     for path, file_instance in container.items()
                 ),
             )
+        )
+
+    def escape_fragment(self, content: str) -> str:
+        """Escape embedded directives."""
+        return "".join(
+            s.replace("@", "@@", 1) if i % 2 else s
+            for i, s in enumerate(self.escaped_regex.split(content))
         )
 
 
