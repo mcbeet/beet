@@ -2,6 +2,13 @@
 
 <!--next-version-placeholder-->
 
+## v0.12.0 (2021-05-09)
+### Feature
+* Clean error message for invalid urls ([`7964d24`](https://github.com/mcbeet/lectern/commit/7964d24ba0991cfa8a8b8d40d426a295075117ae))
+* Add script directive ([`81603f9`](https://github.com/mcbeet/lectern/commit/81603f9b845e178d011e66c70f85495dcaaf00ea))
+* Add directive escaping ([`5fbd90c`](https://github.com/mcbeet/lectern/commit/5fbd90c8d95a341a56942cd6d4df1e73f4da31b9))
+* Add download modifier ([`77f0864`](https://github.com/mcbeet/lectern/commit/77f086407a9393a735bec32fc437e4b45a097893))
+
 ## v0.11.1 (2021-04-27)
 ### Fix
 * Serialize namespace extra ([`94f1995`](https://github.com/mcbeet/lectern/commit/94f1995808d9be25c5a604132b99aff7554984ba))
