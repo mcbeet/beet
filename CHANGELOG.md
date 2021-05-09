@@ -2,6 +2,13 @@
 
 <!--next-version-placeholder-->
 
+## v0.23.0 (2021-05-09)
+### Feature
+* Add parse_json() to template environment ([`287acd9`](https://github.com/mcbeet/beet/commit/287acd99d2e1d2d5bc2513bf42ba93454c9e4307))
+
+### Fix
+* Change hangman nested commands destination ([`7733ec5`](https://github.com/mcbeet/beet/commit/7733ec5b9fb8e1a8ef0de2ddf2119f20f2a1cfa0))
+
 ## v0.22.5 (2021-05-07)
 ### Fix
 * Don't reload modules from site-packages ([`de2ecab`](https://github.com/mcbeet/beet/commit/de2ecab29b22dd0cd72edb368d709868a6fe5e9e))
