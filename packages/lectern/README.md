@@ -587,7 +587,11 @@ If you're using `lectern` as a `beet` plugin you will be able to use additional 
 
 ```json
 {
-  "require": ["lectern.contrib.require", "lectern.contrib.script"],
+  "require": [
+    "lectern.contrib.require",
+    "lectern.contrib.script",
+    "lectern.contrib.define"
+  ],
   "pipeline": ["lectern"],
   "meta": {
     "lectern": {
@@ -620,6 +624,14 @@ Note that using `@script` with the text format requires you to escape the direct
 @@function demo:script_{{ i }}
 say {{ i }}
 {% endfor %}
+```
+
+The `lectern.contrib.define` plugin adds a directive that renders a fragment with Jinja and stores the resulting string as a template global.
+
+`@define(strip_final_newline) math_message`
+
+```
+2 + 2 is {{ 2 + 2 }}
 ```
 
 ## Lectern scripts

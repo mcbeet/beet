@@ -171,6 +171,36 @@
 
   </details>
 
+- `@function demo:define_1`
+
+  <details>
+
+  ```mcfunction
+  say azertyuiop
+  ```
+
+  </details>
+
+- `@function demo:define_2`
+
+  <details>
+
+  ```mcfunction
+  say azertyuiopqsdfghjklm
+  ```
+
+  </details>
+
+- `@function demo:define_3`
+
+  <details>
+
+  ```mcfunction
+  say 2 + 2 is 4 (end of citation)
+  ```
+
+  </details>
+
 ### embedded
 
 - `@function(strip_final_newline) embedded:foo`

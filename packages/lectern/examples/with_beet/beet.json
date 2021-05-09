@@ -2,6 +2,7 @@
   "require": [
     "lectern.contrib.require",
     "lectern.contrib.script",
+    "lectern.contrib.define",
     "custom_directive",
     "hello_directive"
   ],
