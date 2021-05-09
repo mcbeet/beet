@@ -7,6 +7,7 @@ __all__ = [
 ]
 
 
+import json
 import sys
 from contextlib import contextmanager
 from dataclasses import InitVar, dataclass, field
@@ -84,6 +85,8 @@ class Context:
         self.template.expose("generate_hash", self.generate.hash)
         self.template.expose("generate_objective", self.generate.objective)
         self.template.expose("generate_tree", generate_tree)
+
+        self.template.expose("parse_json", lambda string: json.loads(string))
 
     @overload
     def inject(self, cls: Callable[["Context"], InjectedType]) -> InjectedType:
