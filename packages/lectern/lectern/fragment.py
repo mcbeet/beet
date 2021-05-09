@@ -71,8 +71,11 @@ class Fragment:
         if content is not None and self.modifier == "base64":
             content = b64decode(content.strip())
 
-        elif content is not None and self.modifier == "download":
-            url = content.strip()
+        elif content is not None and self.modifier == "download" or self.url:
+            url = content.strip() if content is not None else self.url
+
+            if not (url and url.startswith(("http:", "https:", "data:"))):
+                raise InvalidFragment(f"Invalid url {url!r}.", self.start_line)
 
             if self.cache and not url.startswith("data:"):
                 return file_type(source_path=self.cache.download(url))
@@ -88,13 +91,6 @@ class Fragment:
 
         elif self.path:
             return file_type(source_path=self.path)
-
-        elif self.url:
-            if self.cache and not self.url.startswith("data:"):
-                return file_type(source_path=self.cache.download(self.url))
-
-            with urlopen(self.url) as f:
-                content = f.read()
 
         else:
             msg = f"Expected content, path or url for directive @{self.directive}."
