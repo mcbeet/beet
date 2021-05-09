@@ -340,6 +340,14 @@ There are also modifiers that are applied to the content of the fragment directl
 ewogICJ2YWx1ZXMiOiBbInR1dG9yaWFsOnN0cmlwcGVkIl0KfQ==
 ```
 
+You can use block fragments to download remote files with the `download` modifier.
+
+`@function_tag(download) tutorial:from_github`
+
+```json
+https://raw.githubusercontent.com/mcbeet/beet/main/examples/load_basic/src/data/demo/functions/foo.mcfunction
+```
+
 Finally, there's a `strip_final_newline` modifier that removes the final newline at the end of code block fragments. It's mostly used to make sure that `lectern` snapshots can reconstruct the original content byte for byte in case the file wasn't terminated by a newline.
 
 `@function(strip_final_newline) tutorial:stripped`

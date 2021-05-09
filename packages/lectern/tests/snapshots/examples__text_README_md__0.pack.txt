@@ -53,6 +53,9 @@ say This function doesn't have a final newline.
 {
   "values": ["tutorial:stripped"]
 }
+@function_tag tutorial:from_github
+say foo
+
 @function_tag minecraft:load
 {
   "values": [

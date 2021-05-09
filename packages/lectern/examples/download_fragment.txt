@@ -1,0 +1,2 @@
+@function(download) demo:foo
+https://raw.githubusercontent.com/mcbeet/beet/main/examples/load_basic/src/data/demo/functions/foo.mcfunction

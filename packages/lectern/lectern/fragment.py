@@ -71,6 +71,15 @@ class Fragment:
         if content is not None and self.modifier == "base64":
             content = b64decode(content.strip())
 
+        elif content is not None and self.modifier == "download":
+            url = content.strip()
+
+            if self.cache and not url.startswith("data:"):
+                return file_type(source_path=self.cache.download(url))
+
+            with urlopen(url) as f:
+                content = f.read()
+
         elif content is not None:
             if self.modifier == "strip_final_newline" and content.endswith("\n"):
                 content = content[:-1]

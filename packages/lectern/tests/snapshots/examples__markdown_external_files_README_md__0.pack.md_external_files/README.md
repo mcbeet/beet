@@ -122,6 +122,16 @@
 
   </details>
 
+- `@function_tag tutorial:from_github`
+
+  <details>
+
+  ```json
+  say foo
+  ```
+
+  </details>
+
 ### minecraft
 
 - `@function_tag minecraft:load`
