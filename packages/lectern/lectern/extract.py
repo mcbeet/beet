@@ -3,6 +3,7 @@ __all__ = [
     "TextExtractor",
     "EmbeddedExtractor",
     "MarkdownExtractor",
+    "MarkdownParserWithUncheckedLinks",
 ]
 
 
@@ -10,22 +11,16 @@ import re
 from dataclasses import replace
 from itertools import islice
 from pathlib import Path
-from typing import Dict, Iterable, Iterator, List, Mapping, Optional, Tuple, Union
-from urllib.parse import unquote, urlparse
+from typing import Any, Dict, Iterable, Iterator, List, Mapping, Optional, Tuple, Union
+from urllib.parse import urlparse
 
 from beet import Cache, DataPack, ResourcePack
 from beet.core.utils import FileSystemPath
 from markdown_it import MarkdownIt
-from markdown_it.common import normalize_url
 from markdown_it.token import Token
 
 from .directive import Directive
 from .fragment import Fragment
-
-# Patch markdown_it to allow arbitrary data urls
-# https://github.com/executablebooks/markdown-it-py/issues/128
-# TODO: Will soon be able to use custom validateLink
-normalize_url.GOOD_DATA_RE = re.compile(r"^data:")
 
 
 class Extractor:
@@ -188,6 +183,19 @@ class EmbeddedExtractor(TextExtractor):
         return r"(?://|#)\s*" + super().generate_escaped_regex()
 
 
+class MarkdownParserWithUncheckedLinks(MarkdownIt):
+    """MarkownIt subclass that removes link checks because lectern has its own logic."""
+
+    def normalizeLink(self, url: str) -> str:
+        return url
+
+    def normalizeLinkText(self, link: str) -> str:
+        return link
+
+    def validateLink(self, url: str) -> bool:
+        return True
+
+
 class MarkdownExtractor(Extractor):
     """Extractor for markdown files."""
 
@@ -200,7 +208,7 @@ class MarkdownExtractor(Extractor):
         super().__init__(cache)
         self.embedded_extractor = EmbeddedExtractor(cache)
         self.comment_extractor = TextExtractor(cache)
-        self.parser = MarkdownIt()
+        self.parser = MarkdownParserWithUncheckedLinks()
         self.html_comment_regex = re.compile(r"\s*<!--\s*(.+?)\s*-->\s*")
 
     def extract(
@@ -531,11 +539,11 @@ class MarkdownExtractor(Extractor):
         start_line: int,
         end_line: int,
         match: "re.Match[str]",
-        link: str,
+        link: Any,
         external_files: Optional[FileSystemPath] = None,
     ) -> Fragment:
         """Helper for creating a fragment from a link."""
-        url = unquote(link)  # TODO: Will soon be able to use custom normalizeLink
+        url = str(link)
         path = None
 
         if urlparse(url).path == url:
