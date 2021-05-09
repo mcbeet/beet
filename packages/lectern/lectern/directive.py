@@ -5,6 +5,7 @@ __all__ = [
     "ResourcePackDirective",
     "BundleFragmentMixin",
     "RequireDirective",
+    "ScriptDirective",
     "SkipDirective",
     "get_builtin_directives",
 ]
@@ -15,7 +16,7 @@ from dataclasses import dataclass
 from typing import Any, Dict, Protocol, Type, Union
 from zipfile import ZipFile
 
-from beet import Context, DataPack, ResourcePack
+from beet import Context, DataPack, ResourcePack, TextFile
 from beet.library.base import NamespaceFile
 from beet.library.data_pack import (
     Advancement,
@@ -134,7 +135,24 @@ class RequireDirective:
     ctx: Context
 
     def __call__(self, fragment: Fragment, assets: ResourcePack, data: DataPack):
-        self.ctx.require(fragment.expect("plugin"))
+        plugin = fragment.expect("plugin")
+
+        self.ctx.require(plugin)
+
+
+@dataclass
+class ScriptDirective:
+    """Directive that renders the fragment and interprets the result as lectern text."""
+
+    ctx: Context
+    document: Any
+
+    def __call__(self, fragment: Fragment, assets: ResourcePack, data: DataPack):
+        fragment.expect()
+        file_instance = fragment.as_file(TextFile)
+
+        source = self.ctx.template.render_file(file_instance)
+        self.document.add_text(source.text)
 
 
 @dataclass

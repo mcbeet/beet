@@ -162,6 +162,16 @@ If you're using `lectern` as a `beet` plugin you will be able to require plugins
 @require my_plugins.hello
 ```
 
+With `beet` you can also use the `@script` directive to render a fragment with Jinja and interpret the result as `lectern` text. Note that the text format requires you to escape the directives in the fragment with an additional `@` symbol.
+
+```
+@script
+{% for i in range(10) %}
+@@function demo:script_{{ i }}
+say {{ i }}
+{% endfor %}
+```
+
 Finally, the `@skip` directive is simply ignored and allows you to end a previous fragment in the plain text format.
 
 ```

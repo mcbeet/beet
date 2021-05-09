@@ -39,6 +39,138 @@
 
   </details>
 
+- `@function demo:script_foo`
+
+  <details>
+
+  ```mcfunction
+  say something
+
+  ```
+
+  </details>
+
+- `@function demo:script_0`
+
+  <details>
+
+  ```mcfunction
+  say 0
+  ```
+
+  </details>
+
+- `@function demo:script_1`
+
+  <details>
+
+  ```mcfunction
+  say 1
+  ```
+
+  </details>
+
+- `@function demo:script_2`
+
+  <details>
+
+  ```mcfunction
+  say 2
+  ```
+
+  </details>
+
+- `@function demo:script_3`
+
+  <details>
+
+  ```mcfunction
+  say 3
+  ```
+
+  </details>
+
+- `@function demo:script_4`
+
+  <details>
+
+  ```mcfunction
+  say 4
+  ```
+
+  </details>
+
+- `@function demo:script_5`
+
+  <details>
+
+  ```mcfunction
+  say 5
+  ```
+
+  </details>
+
+- `@function demo:script_6`
+
+  <details>
+
+  ```mcfunction
+  say 6
+  ```
+
+  </details>
+
+- `@function demo:script_7`
+
+  <details>
+
+  ```mcfunction
+  say 7
+  ```
+
+  </details>
+
+- `@function demo:script_8`
+
+  <details>
+
+  ```mcfunction
+  say 8
+  ```
+
+  </details>
+
+- `@function demo:script_9`
+
+  <details>
+
+  ```mcfunction
+  say 9
+
+  ```
+
+  </details>
+
+- `@function demo:script_nested`
+
+  <details>
+
+  ```mcfunction
+  say wow
+  ```
+
+  </details>
+
+- `@function demo:script_please_avoid_this`
+
+  <details>
+
+  ```mcfunction
+  say no
+  ```
+
+  </details>
+
 ### embedded
 
 - `@function(strip_final_newline) embedded:foo`
