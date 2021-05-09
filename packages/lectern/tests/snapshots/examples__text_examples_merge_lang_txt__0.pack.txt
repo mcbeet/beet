@@ -1,0 +1,13 @@
+@resource_pack pack.mcmeta
+{
+  "pack": {
+    "pack_format": 6,
+    "description": ""
+  }
+}
+
+@language minecraft:custom
+{
+  "custom.foo": "foo",
+  "custom.bar": "bar"
+}
