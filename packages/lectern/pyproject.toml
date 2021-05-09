@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "lectern"
-version = "0.12.0"
+version = "0.13.0"
 description = "Literate Minecraft data packs and resource packs."
 authors = ["Valentin Berlier <berlier.v@gmail.com>"]
 license = "MIT"

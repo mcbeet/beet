@@ -2,6 +2,14 @@
 
 <!--next-version-placeholder-->
 
+## v0.13.0 (2021-05-09)
+### Feature
+* Add define directive ([`85ec3cc`](https://github.com/mcbeet/lectern/commit/85ec3ccdd682f35c0e3556e116dab48cb55a27a9))
+* Move require and script directives into their own beet plugins ([`a1e33cd`](https://github.com/mcbeet/lectern/commit/a1e33cd1312040794cb11900b0c64ae1835208b5))
+
+### Fix
+* Pack.png url now uses a static revision ([`1f7013c`](https://github.com/mcbeet/lectern/commit/1f7013cad5b6bd185322da5fb5880f285df30de5))
+
 ## v0.12.0 (2021-05-09)
 ### Feature
 * Clean error message for invalid urls ([`7964d24`](https://github.com/mcbeet/lectern/commit/7964d24ba0991cfa8a8b8d40d426a295075117ae))
