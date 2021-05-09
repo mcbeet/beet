@@ -2,4 +2,4 @@
 execute as @p run say run commands
 
 # This one works
-execute as @a run function load_hangman_commands:generated_1
+execute as @a run function load_hangman_commands:nested/7en2v13ig9giz

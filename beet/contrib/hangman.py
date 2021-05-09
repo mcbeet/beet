@@ -76,7 +76,8 @@ def fold_hanging_commands(ctx: Context, tokens: Iterable[Token]) -> Iterator[str
 
         elif token_type == "INDENT":
             if REGEX_RUN_COMMANDS.match(current):
-                key = ctx.generate(Function(list(fold_hanging_commands(ctx, tokens))))
+                nested_commands = list(fold_hanging_commands(ctx, tokens))
+                key = ctx.generate["nested"]("{hash}", Function(nested_commands))
                 current = REGEX_RUN_COMMANDS.sub(fr"\1run function {key}\2", current)
             else:
                 indent_level += 1
