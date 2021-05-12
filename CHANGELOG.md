@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.24.0 (2021-05-12)
+### Feature
+* Add beet.contrib.relative_function_path plugin ([`72b5730`](https://github.com/mcbeet/beet/commit/72b57307b58082d9fc51f13451653a086249fa48))
+
 ## v0.23.0 (2021-05-09)
 ### Feature
 * Add parse_json() to template environment ([`287acd9`](https://github.com/mcbeet/beet/commit/287acd99d2e1d2d5bc2513bf42ba93454c9e4307))
