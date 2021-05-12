@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.24.1 (2021-05-12)
+### Fix
+* Use partition instead of rpartition to split namespaced id ([`336dbc1`](https://github.com/mcbeet/beet/commit/336dbc1910a665556f7798c97bacb6769692ce78))
+
 ## v0.24.0 (2021-05-12)
 ### Feature
 * Add beet.contrib.relative_function_path plugin ([`72b5730`](https://github.com/mcbeet/beet/commit/72b57307b58082d9fc51f13451653a086249fa48))
