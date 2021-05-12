@@ -11,7 +11,7 @@ REGEX_RELATIVE_PATH = re.compile(r"^(|.*\s)function\s+(\.\.?/\S+)(\s*)$")
 
 def beet_default(ctx: Context):
     for path, function in ctx.data.functions.items():
-        namespace, _, original_path = path.rpartition(":")
+        namespace, _, original_path = path.partition(":")
         current_dir = PurePosixPath(original_path).parent
 
         for i, line in enumerate(function.lines):
