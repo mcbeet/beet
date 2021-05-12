@@ -1,0 +1,6 @@
+{
+  "data_pack": {
+    "load": ["src"]
+  },
+  "pipeline": ["beet.contrib.relative_function_path"]
+}
