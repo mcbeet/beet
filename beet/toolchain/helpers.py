@@ -11,6 +11,7 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 from typing import Iterator, Optional, Union
 
+from jinja2 import Environment
 from jinja2.ext import Extension
 
 from beet.core.cache import MultiCache
@@ -114,6 +115,8 @@ def run_beet(
 
 class JinjaExtension(Extension):
     """Base extension that provides a reference to the beet context."""
+
+    environment: Environment
 
     @property
     def ctx(self) -> Context:

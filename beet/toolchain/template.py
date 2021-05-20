@@ -102,7 +102,7 @@ class TemplateManager:
             line_statement_prefix="#!",
             keep_trailing_newline=True,
             loader=ChoiceLoader(self.loaders),
-            bytecode_cache=FileSystemBytecodeCache(self.cache_dir),
+            bytecode_cache=FileSystemBytecodeCache(str(self.cache_dir)),
             extensions=[
                 DebugExtension,
                 ExprStmtExtension,
