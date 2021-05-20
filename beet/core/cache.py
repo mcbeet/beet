@@ -75,6 +75,25 @@ class Cache:
 
         return path
 
+    def has_changed(self, *filenames: Optional[FileSystemPath]) -> bool:
+        """Return whether any of the given files changed since the last check."""
+        mtime = self.index.setdefault("mtime", {})
+        changed = False
+
+        for filename in filenames:
+            if not filename:
+                continue
+
+            path = Path(filename)
+            key = str(path)
+            last_modified = path.stat().st_mtime
+
+            if mtime.get(key) != last_modified:
+                mtime[key] = last_modified
+                changed = True
+
+        return changed
+
     @property
     def expire(self) -> Optional[datetime]:
         expire = self.index["expire"]

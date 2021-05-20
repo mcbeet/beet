@@ -50,6 +50,24 @@ def test_cache_get_path_extension(tmp_path: Path):
         assert cache.get_path(".").name == "0x4"
 
 
+def test_cache_has_changed(tmp_path: Path):
+    with Cache(tmp_path) as cache:
+        foo = cache.get_path("foo")
+        bar = cache.get_path("bar")
+
+        foo.write_text("0")
+        bar.write_text("0")
+
+        assert cache.has_changed(foo, bar)
+        assert not cache.has_changed(foo, bar)
+
+        sleep(0.1)
+        foo.write_text("1")
+
+        assert cache.has_changed(foo, bar)
+        assert not cache.has_changed(foo, bar)
+
+
 def test_multi_cache(tmp_path: Path):
     with MultiCache(tmp_path) as cache:
         cache["foo"].json["hello"] = "world"
