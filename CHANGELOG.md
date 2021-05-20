@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.25.0 (2021-05-20)
+### Feature
+* Add cache.has_changed method ([`20e3658`](https://github.com/mcbeet/beet/commit/20e365886189f96bc1b244f52da9bc89d3baddea))
+
 ## v0.24.1 (2021-05-12)
 ### Fix
 * Use partition instead of rpartition to split namespaced id ([`336dbc1`](https://github.com/mcbeet/beet/commit/336dbc1910a665556f7798c97bacb6769692ce78))
