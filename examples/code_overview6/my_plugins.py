@@ -1,8 +1,11 @@
+from typing import cast
+
 from beet import Context, Function, Language
+from beet.core.utils import JsonDict
 
 
 def add_greeting_translations(ctx: Context):
-    ctx.meta["greeting_translations"] = {}
+    ctx.meta["greeting_translations"] = cast(JsonDict, {})
 
     yield
 

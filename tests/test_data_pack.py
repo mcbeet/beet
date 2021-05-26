@@ -53,7 +53,7 @@ def test_namespaces():
     assert p1["hello"] != p2["hello"]
     assert p1 != p2
 
-    p1["hello"].functions["world"].lines.append("say world")
+    p1["hello"].functions["world"].lines.append("say world")  # type: ignore
 
     assert p1.functions["hello:world"] == p2.functions["hello:world"]
     assert p1["hello"] == p2["hello"]
