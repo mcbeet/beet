@@ -1,0 +1,4 @@
+{
+  "name": "greeting",
+  "pipeline": ["my_plugins.add_greeting"]
+}

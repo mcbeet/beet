@@ -1,0 +1,7 @@
+{
+  "name": "greeting",
+  "pipeline": [
+    "my_plugins.add_greeting_translations",
+    "my_plugins.add_greeting"
+  ]
+}
