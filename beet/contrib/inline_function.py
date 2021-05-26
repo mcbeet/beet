@@ -14,7 +14,7 @@ from beet import Context, Function, JinjaExtension
 
 
 def beet_default(ctx: Context):
-    ctx.template.env.add_extension(InlineFunctions)  # type: ignore
+    ctx.template.env.add_extension(InlineFunctions)
 
 
 class InlineFunctions(JinjaExtension):
@@ -38,7 +38,7 @@ class InlineFunctions(JinjaExtension):
         body = parser.parse_statements(["name:endfunction"], drop_needle=True)
 
         return CallBlock(
-            self.call_method("_function_handler", args, lineno=lineno),  # type: ignore
+            self.call_method("_function_handler", args, lineno=lineno),
             [],
             [],
             body,

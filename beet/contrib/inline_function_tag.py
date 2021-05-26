@@ -14,7 +14,7 @@ from beet import Context, FunctionTag, JinjaExtension
 
 
 def beet_default(ctx: Context):
-    ctx.template.env.add_extension(InlineFunctionTags)  # type: ignore
+    ctx.template.env.add_extension(InlineFunctionTags)
 
 
 class InlineFunctionTags(JinjaExtension):
@@ -27,7 +27,7 @@ class InlineFunctionTags(JinjaExtension):
         args: List[Any] = [parser.parse_expression()]
 
         return ExprStmt(
-            self.call_method("_function_tag_handler", args, lineno=lineno),  # type: ignore
+            self.call_method("_function_tag_handler", args, lineno=lineno),
             lineno=lineno,
         )
 

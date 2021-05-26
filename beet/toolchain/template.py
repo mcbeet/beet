@@ -17,8 +17,7 @@ from jinja2 import (
     PackageLoader,
     PrefixLoader,
 )
-from jinja2.ext import DebugExtension  # type: ignore
-from jinja2.ext import ExprStmtExtension, LoopControlExtension
+from jinja2.ext import DebugExtension, ExprStmtExtension, LoopControlExtension
 from jinja2.runtime import Context as JinjaContext
 from jinja2.runtime import missing as jinja_missing
 
@@ -44,7 +43,7 @@ class FallbackContext(JinjaContext):
     """Template context that falls back to globals and meta entries."""
 
     def resolve_or_missing(self, key: str) -> Any:
-        value: Any = super().resolve_or_missing(key)  # type: ignore
+        value: Any = super().resolve_or_missing(key)
 
         if value is jinja_missing:
             manager: TemplateManager = getattr(
@@ -130,12 +129,12 @@ class TemplateManager:
     def render(self, filename: str, **kwargs: Any) -> str:
         """Render the specified template."""
         with self.error_handler(f"Couldn't render template {filename!r}."):
-            return self.env.get_template(filename).render(kwargs)  # type: ignore
+            return self.env.get_template(filename).render(kwargs)
 
     def render_string(self, template: str, **kwargs: Any) -> str:
         """Render a string template."""
         with self.error_handler("Couldn't render template."):
-            return self.env.from_string(template).render(kwargs)  # type: ignore
+            return self.env.from_string(template).render(kwargs)
 
     def render_file(self, file: TextFileType, **kwargs: Any) -> TextFileType:
         """Render a given file in-place."""
