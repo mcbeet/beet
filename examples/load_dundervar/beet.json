@@ -1,0 +1,9 @@
+{
+  "require": ["beet.contrib.dundervar"],
+  "data_pack": {
+    "load": ["src"],
+    "render": {
+      "functions": ["*"]
+    }
+  }
+}
