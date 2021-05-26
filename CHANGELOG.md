@@ -2,6 +2,14 @@
 
 <!--next-version-placeholder-->
 
+## v0.26.0 (2021-05-26)
+### Feature
+* Add beet.contrib.dundervar plugin ([`2ad5024`](https://github.com/mcbeet/beet/commit/2ad50242521c1fd5459c483aead0ff013f2e853c))
+
+### Documentation
+* Remove toolchain page for the moment ([`42e01b5`](https://github.com/mcbeet/beet/commit/42e01b5a8ce7141200778fb556694ad67ae269b0))
+* Add toolchain overview ([`b95fc26`](https://github.com/mcbeet/beet/commit/b95fc260fc013db2256cd66e4bae57d33e035a99))
+
 ## v0.25.0 (2021-05-20)
 ### Feature
 * Add cache.has_changed method ([`20e3658`](https://github.com/mcbeet/beet/commit/20e365886189f96bc1b244f52da9bc89d3baddea))
