@@ -502,7 +502,7 @@ The plugin takes a `Context` object that lets you access the data pack with the 
 }
 ```
 
-The `name` option sets name of the project to "greeting". The `output` option tells the toolchain to output the generated data pack into a directory called "out". The `pipeline` option lets you specify the plugins that should be called when building the data pack. If you save the `add_greeting` plugin in a file called "my_plugins.py", you'll be able to run the `beet` command to generate the data pack.
+The `name` option sets the name of the project to "greeting". The `output` option tells the toolchain to output the generated data pack into a directory called "out". The `pipeline` option lets you specify the plugins that should be called when building the data pack. If you save the `add_greeting` plugin in a file called "my_plugins.py", you'll be able to run the `beet` command to generate the data pack.
 
 ```
 $ beet
@@ -714,7 +714,7 @@ One thing that we didn't experiment with until now is that plugins are actually 
       └──────────────────────────────────────────────┘
 ```
 
-If we apply this to the example that we've been using so far, `add_greeting_translations` conceptually surrounds `add_greeting`, because the `add_greeting_translations` plugin is required by `add_greeting`.
+If we apply this to the example we've been using so far, `add_greeting_translations` conceptually surrounds `add_greeting`, because the `add_greeting_translations` plugin is required by `add_greeting`.
 
 The pipeline runs all plugins from the outermost layer until it reaches the innermost layer. Then the execution goes back through each plugin in reverse, like nested context managers. Because of this each plugin has an entry phase and an exit phase. Plugins can run code during the exit phase by using the `yield` statement to wait for the execution to come back, when all the dependent plugins are done.
 
