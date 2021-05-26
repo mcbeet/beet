@@ -72,9 +72,9 @@ demo_namespace["bar"] = Function(["say world"])
 demo_namespace.functions
 ```
 
-### Namespaced file identifiers
+### Resource locations
 
-The object hierarchy is a 1-to-1 representation that lets you work with data packs as pure Python objects. However, it can be a bit tedious to navigate depending on what you're trying to do. Most of the time, it's easier to reason about files in the data pack with their namespaced identifiers, to reflect the way we interact with them in-game.
+The object hierarchy is a 1-to-1 representation that lets you work with data packs as pure Python objects. However, it can be a bit tedious to navigate depending on what you're trying to do. Most of the time, it's easier to reason about files in the data pack with their namespaced location, to reflect the way we interact with them in-game.
 
 Data pack objects let you access files in a single lookup with proxies that expose a namespaced view of all the files of a specific type over all the namespaces in the data pack.
 
@@ -430,3 +430,381 @@ As you can see, when we load an unzipped data pack all the files remain in their
 pack.functions["demo:foo"].lines.append("say bar")
 pack.functions["demo:foo"]
 ```
+
+## The toolchain
+
+In the previous sections we briefly introduced some of the operations that you can do with data packs and resource packs. For example, you can easily add generated resources to a data pack by writing a simple script that uses the previously mentioned APIs. The problem is that none of these scripts are likely to be reusable.
+
+The `beet` toolchain is a fully-fledged build system that lets you implement the behavior you need as plugins that can be composed with one another. It helps with making your code reusable and not just one-off scripts, and provides a cohesive developer experience.
+
+The idea is that each plugin is a callable Python object that accepts a context that exposes a data pack and a resource pack. The toolchain initializes the context with an empty data pack and an empty resource pack, and then feeds it to the plugins one by one. When a plugin is called it can load and merge existing data packs into the context, inspect the various files, or generate resources programmatically. When all the plugins are done, the toolchain can then output the generated data pack or link it to a Minecraft world.
+
+### Plugins
+
+We're going to transform a simple script into a plugin to introduce the concept one step at a time.
+
+```python
+from beet import DataPack, Function
+
+with DataPack(path="out/greeting_data_pack") as data:
+    data["greeting:hello"] = Function(["say hello"] * 5, tags=["minecraft:load"])
+```
+
+If you download and run this script with the Python interpreter, it will create a data pack in a new "out" directory called "greeting_data_pack". The script generates a function that says "hello" five times when the data pack is loaded.
+
+```
+$ tree out
+out
+└── greeting_data_pack
+    ├── data
+    │   ├── greeting
+    │   │   └── functions
+    │   │       └── hello.mcfunction
+    │   └── minecraft
+    │       └── tags
+    │           └── functions
+    │               └── load.json
+    └── pack.mcmeta
+
+7 directories, 3 files
+```
+
+Now, let's say you want to be able to greet players like this in another data pack. The first thing to do would be to separate the logic in its own function.
+
+```python
+from beet import DataPack, Function
+
+def add_greeting(data: DataPack):
+    data["greeting:hello"] = Function(["say hello"] * 5, tags=["minecraft:load"])
+
+with DataPack(path="out/greeting_data_pack") as data:
+    add_greeting(data)
+```
+
+Running the script still does the same thing as before, but now if you wanted to create a second data pack you could use the `add_greeting` function to add the same greeting to the second data pack.
+
+It turns out that now that we have extracted the logic into a function that takes a data pack as input, we can easily turn it into a `beet` plugin.
+
+```python
+from beet import Context, Function
+
+def add_greeting(ctx: Context):
+    ctx.data["greeting:hello"] = Function(["say hello"] * 5, tags=["minecraft:load"])
+```
+
+The plugin takes a `Context` object that lets you access the data pack with the `data` attribute. Implementing our logic as a plugin means that we no longer need to create the data pack ourselves and call the function manually. Instead, we can create a `beet.json` config file and let the toolchain create the data pack for us. The toolchain knows how to call our plugin on its own so we removed the rest of the code.
+
+```json
+{
+  "name": "greeting",
+  "output": "out",
+  "pipeline": ["my_plugins.add_greeting"]
+}
+```
+
+The `name` option sets name of the project to "greeting". The `output` option tells the toolchain to output the generated data pack into a directory called "out". The `pipeline` option lets you specify the plugins that should be called when building the data pack. If you save the `add_greeting` plugin in a file called "my_plugins.py", you'll be able to run the `beet` command to generate the data pack.
+
+```
+$ beet
+Building project...
+
+Done!
+```
+
+We can see that again, this results in the exact same data pack as before, but with the added benefit that now we can potentially reuse our plugin in other projects.
+
+```
+$ tree out
+out
+└── greeting_data_pack
+    ├── data
+    │   ├── greeting
+    │   │   └── functions
+    │   │       └── hello.mcfunction
+    │   └── minecraft
+    │       └── tags
+    │           └── functions
+    │               └── load.json
+    └── pack.mcmeta
+
+7 directories, 3 files
+```
+
+### The context object
+
+We've seen that plugins take a `Context` object as input, but what exactly is it? What can you do with it?
+
+So far we know there's a `data` attribute that holds a `DataPack` instance. This data pack starts out completely empty, and then as plugins get called, they can inspect the content of the data pack and change it. When the build ends the toolchain then outputs the resulting data pack in one way or another.
+
+The `assets` attribute holds a `ResourcePack` instance. It works exactly like the `data` attribute and plugins can generate assets that the toolchain outputs alongside the data pack at the end of the build. We can try this out by making the `add_greeting` plugin greet players in their own language.
+
+```python
+from beet import Context, Function, Language
+
+def add_greeting(ctx: Context):
+    ctx.assets["minecraft:en_us"] = Language({"greeting.hello": "hello"})
+    ctx.assets["minecraft:fr_fr"] = Language({"greeting.hello": "bonjour"})
+
+    ctx.data["greeting:hello"] = Function(
+        ['tellraw @a {"translate": "greeting.hello"}'] * 5,
+        tags=["minecraft:load"],
+    )
+```
+
+We're using the `assets` attribute to add language files to the resource pack. We also changed the function to use the `tellraw` command to translate the message depending on the player's language.
+
+```
+$ tree out
+out
+├── greeting_data_pack
+│   ├── data
+│   │   ├── greeting
+│   │   │   └── functions
+│   │   │       └── hello.mcfunction
+│   │   └── minecraft
+│   │       └── tags
+│   │           └── functions
+│   │               └── load.json
+│   └── pack.mcmeta
+└── greeting_resource_pack
+    ├── assets
+    │   └── minecraft
+    │       └── lang
+    │           ├── en_us.json
+    │           └── fr_fr.json
+    └── pack.mcmeta
+
+11 directories, 6 files
+```
+
+After running the `beet` command we can see that the toolchain generated a resource pack called "greeting_resource_pack" in the output directory.
+
+Now, let's say the translated message could be used on its own in another project that greets players differently. We can extract the code that adds the language files into its own plugin.
+
+```python
+from beet import Context, Function, Language
+
+def add_greeting_translations(ctx: Context):
+    ctx.assets["minecraft:en_us"] = Language({"greeting.hello": "hello"})
+    ctx.assets["minecraft:fr_fr"] = Language({"greeting.hello": "bonjour"})
+
+def add_greeting(ctx: Context):
+    ctx.data["greeting:hello"] = Function(
+        ['tellraw @a {"translate": "greeting.hello"}'] * 5,
+        tags=["minecraft:load"],
+    )
+```
+
+The `add_greeting_translations` plugin is now responsible for adding our translations to the generated resource pack. We can add it to the `pipeline` option in the `beet.json` config file.
+
+```json
+{
+  "name": "greeting",
+  "output": "out",
+  "pipeline": [
+    "my_plugins.add_greeting_translations",
+    "my_plugins.add_greeting"
+  ]
+}
+```
+
+The resulting data pack and resource pack didn't change, but now we're composing the behavior of two plugins together.
+
+The basic idea behind the `Context` object is that it's responsible for holding the shared state that makes it possible for plugins to cooperate. In addition to the data pack and the resource pack, plugins can use the `Context` object to access a bunch of other things such as the caching and generator APIs, the template manager, background workers and pipeline metadata.
+
+An example would be using the `meta` attribute to make the `add_greeting` plugin configurable. Right now it always shows the message five times but by using pipeline metadata we can configure how many repetitions we want right from the config file.
+
+```python
+from beet import Context, Function, Language
+
+def add_greeting_translations(ctx: Context):
+    ctx.assets["minecraft:en_us"] = Language({"greeting.hello": "hello"})
+    ctx.assets["minecraft:fr_fr"] = Language({"greeting.hello": "bonjour"})
+
+def add_greeting(ctx: Context):
+    greeting_count = ctx.meta["greeting_count"]
+
+    ctx.data["greeting:hello"] = Function(
+        ['tellraw @a {"translate": "greeting.hello"}'] * greeting_count,
+        tags=["minecraft:load"],
+    )
+```
+
+Now in the config file we can use the `meta` option to specify the "greeting_count" used by the `add_greeting` plugin.
+
+```json
+{
+  "name": "greeting",
+  "output": "out",
+  "pipeline": [
+    "my_plugins.add_greeting_translations",
+    "my_plugins.add_greeting"
+  ],
+  "meta": {
+    "greeting_count": 7
+  }
+}
+```
+
+The generated data pack now shows the greeting seven times when the data pack is loaded.
+
+### Plugin dependencies
+
+You might have noticed that in the previous example, when we separated the code that adds the translations into its own plugin, we made it easy to introduce a potential bug.
+
+The `add_greeting_translations` plugin can be used on its own, it simply adds language files to the resource pack. However, the `add_greeting` plugin relies on being able to use the message defined in the language files. Now that the translations are in their own plugin, the `add_greeting` plugin can't be used on its own anymore in the `pipeline` option.
+
+```json
+{
+  "name": "greeting",
+  "output": "out",
+  "pipeline": ["my_plugins.add_greeting"],
+  "meta": {
+    "greeting_count": 7
+  }
+}
+```
+
+If we forget to use `add_greeting_translations` we won't see any output in-game. The `add_greeting` plugin requires you to use `add_greeting_translations` as well.
+
+It's not always this trivial to keep track of plugin dependencies manually so the `Context` object provides a `require()` method that adds a given plugin to the pipeline if it hasn't already been called.
+
+```python
+from beet import Context, Function, Language
+
+def add_greeting_translations(ctx: Context):
+    ctx.assets["minecraft:en_us"] = Language({"greeting.hello": "hello"})
+    ctx.assets["minecraft:fr_fr"] = Language({"greeting.hello": "bonjour"})
+
+def add_greeting(ctx: Context):
+    ctx.require(add_greeting_translations)
+    greeting_count = ctx.meta["greeting_count"]
+
+    ctx.data["greeting:hello"] = Function(
+        ['tellraw @a {"translate": "greeting.hello"}'] * greeting_count,
+        tags=["minecraft:load"],
+    )
+```
+
+Now the resource pack gets generated again and the message properly shows up in-game. The `add_greeting_translations` plugin can still be used on its own if we want to use the translated message for something else, but using the `add_greeting` plugin will now make sure that the `add_greeting_translations` plugin has been called before adding the function that greets players.
+
+### The pipeline
+
+We've seen how plugins can cooperate with the `Context` object, and we just learned how to make plugins that depend on other plugins. In these sections we mentioned the pipeline a few times already but never actually explained what it is.
+
+To put it simply, the pipeline is the thing that runs plugins. Plugins can only run once per pipeline. The pipeline can import plugins dynamically and knows when a plugin has already been executed. This means that if a plugin is required multiple times, it will still only be executed once.
+
+One thing that we didn't experiment with until now is that plugins are actually wrapping each other, and not just being called sequentially. Each plugin in the pipeline surrounds the ones after, like layers. The last plugin in the pipeline is the innermost layer.
+
+```
+┌────────────────────────┐
+│ Context initialization │
+└─┬──────────────────────┘
+  │
+  │   ┌──────────────────────────────────────────────┐
+  │   │ def add_greeting_translations(ctx: Context): │
+  │   │     ...                                      │
+  │   │   ┌─────────────────────────────────┐        │
+  │   │   │ def add_greeting(ctx: Context): │        │
+  │   │   │     ...                         │        │
+  │   │   │                                 │        │
+  └───┼───┼───► Entry phase ────────────────┼────────┼───► Exit phase
+      │   │                                 │        │
+      │   └─────────────────────────────────┘        │
+      └──────────────────────────────────────────────┘
+```
+
+If we apply this to the example that we've been using so far, `add_greeting_translations` conceptually surrounds `add_greeting`, because the `add_greeting_translations` plugin is required by `add_greeting`.
+
+The pipeline runs all plugins from the outermost layer until it reaches the innermost layer. Then the execution goes back through each plugin in reverse, like nested context managers. Because of this each plugin has an entry phase and an exit phase. Plugins can run code during the exit phase by using the `yield` statement to wait for the execution to come back, when all the dependent plugins are done.
+
+```python
+from beet import Context, Function, Language
+
+def add_greeting_translations(ctx: Context):                              # [3]
+    ctx.meta["greeting_translations"] = {}
+
+    yield                                                                 # [4]
+
+    for key, translations in ctx.meta["greeting_translations"].items():   # [6]
+        for code, value in translations.items():
+            ctx.assets.languages.merge(
+                {f"minecraft:{code}": Language({f"greeting.{key}": value})}
+            )
+
+def add_greeting(ctx: Context):                                           # [1]
+    ctx.require(add_greeting_translations)                                # [2]
+    greeting_count = ctx.meta["greeting_count"]
+
+    ctx.meta["greeting_translations"]["hello"] = {                        # [5]
+        "en_us": "hello",
+        "fr_fr": "bonjour",
+    }
+
+    ctx.data["greeting:hello"] = Function(
+        ['tellraw @a {"translate": "greeting.hello"}'] * greeting_count,
+        tags=["minecraft:load"],
+    )
+```
+
+To illustrate the idea, we made a few changes to the `add_greeting_translations` plugin. We now generate the language files depending on the messages added to the `greeting_translations` dictionary by dependent plugins. This definitely adds a lot of unnecessary complexity to our simple example, but you could imagine the pattern being useful on a larger scale.
+
+Let's walk through the example step by step:
+
+1. The pipeline first begins with `add_greeting`.
+2. `add_greeting` requires `add_greeting_translations`, so all the remaining code gets conceptually surrounded by `add_greeting_translations`.
+3. The execution then jumps to `add_greeting_translations` and the `greeting_translations` dictionary gets initialized.
+4. Next, since the yield statement waits for dependent plugins to be done, the pipeline resumes the execution of the `add_greeting` plugin.
+5. The `add_greeting` plugin runs to completion and the `greeting_translations` dictionary now contains the message needed by the tellraw command.
+6. All the plugins that require `add_greeting_translations` are done so the execution resumes and the plugin generates language files according to the updated `greeting_translations` dictionary.
+
+This is a pretty advanced topic. Most plugins don't actually need to care about any of this, but it can be helpful to remember that the `yield` statement lets you wait for dependent plugins to be done.
+
+### Service injection
+
+Our previous attempt at generalizing the plugin responsible for generating language files helped us introduce the `yield` statement, but it's ultimately not that much of an improvement compared to dealing with the language files directly. The API is also kind of implicit so it would be nice if we could package everything into a proper abstraction.
+
+The context object acts as a very basic service container. The `inject()` method lets you instantiate and retrieve service objects that live for the duration of the current pipeline.
+
+```python
+from beet import Context, Function
+
+def add_greeting(ctx: Context):
+    i18n = ctx.inject(Internationalization)
+    i18n.set("greeting.hello", en_us="hello", fr_fr="bonjour")
+
+    greeting_count = ctx.meta["greeting_count"]
+
+    ctx.data["greeting:hello"] = Function(
+        ['tellraw @a {"translate": "greeting.hello"}'] * greeting_count,
+        tags=["minecraft:load"],
+    )
+```
+
+Let's try to come up with an `Internationalization` service that can be used to create translated messages. We removed the `add_greeting_translations` plugin and instead of having to populate some arbitrary context metadata, we're going to implement a more explicit `set()` method for creating translated messages.
+
+```python
+from collections import defaultdict
+from typing import DefaultDict
+
+from beet import Language
+
+class Internationalization:
+    languages: DefaultDict[str, Language]
+
+    def __init__(self, ctx: Context):
+        self.languages = defaultdict(Language)
+        ctx.require(self.add_translations)
+
+    def add_translations(self, ctx: Context):
+        yield
+        ctx.assets["minecraft"].languages.merge(self.languages)
+
+    def set(self, key: str, **kwargs: str):
+        for code, message in kwargs.items():
+            self.languages[code].data[key] = message
+```
+
+Services are instantiated when they're injected for the first time with the context object as argument. The `set()` method adds translated messages to the language files stored in the `languages` attribute. When the `Internationalization` service is created, the constructor requires its `add_translations` method as a plugin. The plugin uses the `yield` statement to wait for all the plugins using the `Internationalization` service to be done and then merges the generated language files.
+
+In general, service injection makes it possible to package context operations into proper abstractions. With the `inject()` method we refactored the awkward `add_greeting_translations` plugin into a decoupled, strongly-typed `Internationalization` service with an explicit API.
