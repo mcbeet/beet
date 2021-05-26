@@ -129,7 +129,7 @@ class File(Generic[ValueType, SerializeType]):
         instance = cls.try_load(origin, path)
         if instance is None:
             raise FileNotFoundError(path)
-        return instance  # type: ignore
+        return instance
 
     @classmethod
     def try_load(

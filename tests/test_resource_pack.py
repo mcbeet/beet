@@ -12,7 +12,7 @@ def test_default():
     assert not ResourcePack()
 
 
-@pytest.mark.parametrize(  # type: ignore
+@pytest.mark.parametrize(
     "pack",
     [
         ResourcePack("p1"),

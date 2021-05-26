@@ -6,7 +6,7 @@ from pytest_insta import SnapshotFixture
 from beet import run_beet
 
 
-@pytest.mark.parametrize("directory", os.listdir("examples"))  # type: ignore
+@pytest.mark.parametrize("directory", os.listdir("examples"))
 def test_build(snapshot: SnapshotFixture, directory: str):
     with run_beet(directory=f"examples/{directory}") as ctx:
         assert snapshot("data_pack") == ctx.data
