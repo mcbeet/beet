@@ -474,7 +474,7 @@ six = "*"
 
 [[package]]
 name = "python-semantic-release"
-version = "7.15.4"
+version = "7.15.5"
 description = "Automatic Semantic Versioning for Python projects"
 category = "dev"
 optional = false
@@ -489,7 +489,7 @@ invoke = ">=1.4.1,<2"
 python-gitlab = ">=1.10,<3"
 requests = ">=2.25,<3"
 semver = ">=2.10,<3"
-tomlkit = ">=0.7.0,<1.0.0"
+tomlkit = "0.7.0"
 twine = ">=3,<4"
 
 [package.extras]
@@ -695,7 +695,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "8b227cb7f3c164ca023089c8f1d8a7bcd72cd5e4ecd0778c8c1d2dcad730e0a2"
+content-hash = "604134e5255a3a1a76637029e21dc8840c3be3d953995933b55b6d242f4a6680"
 
 [metadata.files]
 appdirs = [
@@ -991,6 +991,7 @@ pillow = [
     {file = "Pillow-8.2.0-pp37-pypy37_pp73-manylinux2010_i686.whl", hash = "sha256:aac00e4bc94d1b7813fe882c28990c1bc2f9d0e1aa765a5f2b516e8a6a16a9e4"},
     {file = "Pillow-8.2.0-pp37-pypy37_pp73-manylinux2010_x86_64.whl", hash = "sha256:22fd0f42ad15dfdde6c581347eaa4adb9a6fc4b865f90b23378aa7914895e120"},
     {file = "Pillow-8.2.0-pp37-pypy37_pp73-win32.whl", hash = "sha256:e98eca29a05913e82177b3ba3d198b1728e164869c613d76d0de4bde6768a50e"},
+    {file = "Pillow-8.2.0-pp37-pypy37_pp73-win_amd64.whl", hash = "sha256:8b56553c0345ad6dcb2e9b433ae47d67f95fc23fe28a0bde15a120f25257e291"},
     {file = "Pillow-8.2.0.tar.gz", hash = "sha256:a787ab10d7bb5494e5f76536ac460741788f1fbce851068d73a87ca7c35fc3e1"},
 ]
 pkginfo = [
@@ -1050,8 +1051,8 @@ python-gitlab = [
     {file = "python_gitlab-1.15.0-py3-none-any.whl", hash = "sha256:51ad36873b5c20cd21d9373db0936fb99c521575668320025d0fb519398d2e17"},
 ]
 python-semantic-release = [
-    {file = "python-semantic-release-7.15.4.tar.gz", hash = "sha256:cb2a02a35c48d8ea81b83c3d913ee0bf5f4e26e97f4cbc8f25930e4a80792eae"},
-    {file = "python_semantic_release-7.15.4-py3-none-any.whl", hash = "sha256:a62ff8a9c909737fb45adb1c90dfa4938eb0e329831b91a26b7b586b378e4f94"},
+    {file = "python-semantic-release-7.15.5.tar.gz", hash = "sha256:b5d726026701ff0c1e428c1ffe9666fb8dcdfbf6328a747504d1eefd3c8779d3"},
+    {file = "python_semantic_release-7.15.5-py3-none-any.whl", hash = "sha256:798de4c09e6ac26aecd489d002a6ddbf0b9d1e6aae8cab64ff4df8e4a1107e15"},
 ]
 pywin32-ctypes = [
     {file = "pywin32-ctypes-0.2.0.tar.gz", hash = "sha256:24ffc3b341d457d48e8922352130cf2644024a4ff09762a2261fd34c36ee5942"},
