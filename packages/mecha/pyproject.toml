@@ -29,7 +29,7 @@ beet = ">=0.5.1,<0.26.0"
 black = "^21.5b1"
 isort = "^5.8.0"
 pytest = "^6.2.4"
-python-semantic-release = "^7.15.4"
+python-semantic-release = "^7.15.5"
 
 [tool.black]
 target-version = ["py38"]
