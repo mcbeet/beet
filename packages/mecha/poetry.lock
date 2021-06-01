@@ -61,7 +61,7 @@ pydantic = ">=1.8.1,<2.0.0"
 
 [[package]]
 name = "black"
-version = "21.5b1"
+version = "21.5b2"
 description = "The uncompromising code formatter."
 category = "dev"
 optional = false
@@ -77,8 +77,9 @@ toml = ">=0.10.1"
 
 [package.extras]
 colorama = ["colorama (>=0.4.3)"]
-d = ["aiohttp (>=3.6.0)", "aiohttp-cors"]
+d = ["aiohttp (>=3.6.0)", "aiohttp-cors (>=0.4.0)"]
 python2 = ["typed-ast (>=1.4.2)"]
+uvloop = ["uvloop (>=0.15.2)"]
 
 [[package]]
 name = "bleach"
@@ -695,7 +696,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "04a5b21408e2610e9a5d99828dd6c077585bcdbace7605501ad09d1fce73f6d5"
+content-hash = "a720ccb5dec92f1cf49d7334072242449e2896502e87dba1f7f7314eab7dcd07"
 
 [metadata.files]
 appdirs = [
@@ -719,8 +720,8 @@ beet = [
     {file = "beet-0.26.0.tar.gz", hash = "sha256:f4e10cb61e43a935294b54d4c342e7c33323325302960d1405856f1574ebf91b"},
 ]
 black = [
-    {file = "black-21.5b1-py3-none-any.whl", hash = "sha256:8a60071a0043876a4ae96e6c69bd3a127dad2c1ca7c8083573eb82f92705d008"},
-    {file = "black-21.5b1.tar.gz", hash = "sha256:23695358dbcb3deafe7f0a3ad89feee5999a46be5fec21f4f1d108be0bcdb3b1"},
+    {file = "black-21.5b2-py3-none-any.whl", hash = "sha256:e5cf21ebdffc7a9b29d73912b6a6a9a4df4ce70220d523c21647da2eae0751ef"},
+    {file = "black-21.5b2.tar.gz", hash = "sha256:1fc0e0a2c8ae7d269dfcf0c60a89afa299664f3e811395d40b1922dff8f854b5"},
 ]
 bleach = [
     {file = "bleach-3.3.0-py2.py3-none-any.whl", hash = "sha256:6123ddc1052673e52bab52cdc955bcb57a015264a1c57d37bea2f6b817af0125"},
