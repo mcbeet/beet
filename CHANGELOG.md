@@ -2,6 +2,11 @@
 
 <!--next-version-placeholder-->
 
+## v0.28.0 (2021-06-09)
+### Feature
+* Add beet.contrib.yellow_shulker_box plugin ([`5f7b5ec`](https://github.com/mcbeet/beet/commit/5f7b5ec9bab952edd67030dda853f709bc809a96))
+* Add version substitution ([`9ed16e6`](https://github.com/mcbeet/beet/commit/9ed16e66957e8051a476ed9f3fe060e8766bda91))
+
 ## v0.27.0 (2021-06-09)
 ### Feature
 * Support yaml config file ([`14e6dee`](https://github.com/mcbeet/beet/commit/14e6dee04aec841d2e27c22806bd35193e9bdf23))
