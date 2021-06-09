@@ -39,7 +39,7 @@ class Project:
     resolved_config: Optional[ProjectConfig] = None
     config_directory: Optional[FileSystemPath] = None
     config_path: Optional[FileSystemPath] = None
-    config_name: str = "beet.json"
+    config_detect: Iterable[str] = ("beet.json", "beet.toml", "beet.yml", "beet.yaml")
 
     resolved_cache: Optional[MultiCache] = None
     cache_name: str = ".beet_cache"
@@ -50,14 +50,22 @@ class Project:
     def config(self) -> ProjectConfig:
         if self.resolved_config is not None:
             return self.resolved_config
-        path = (
-            self.config_path
-            or (self.config_directory and Path(self.config_directory, self.config_name))
-            or locate_config(Path.cwd(), self.config_name)
-        )
-        if not path:
+
+        if self.config_path:
+            paths = [self.config_path]
+        elif self.config_directory:
+            paths = [
+                path
+                for filename in self.config_detect
+                if (path := Path(self.config_directory, filename)).is_file()
+            ]
+        else:
+            paths = locate_config(Path.cwd(), *self.config_detect)
+
+        if not paths:
             raise ErrorMessage("Couldn't locate config file.")
-        self.resolved_config = load_config(Path(path).resolve())
+
+        self.resolved_config = load_config(Path(paths[0]).resolve())
         return self.resolved_config
 
     @property

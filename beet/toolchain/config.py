@@ -15,6 +15,8 @@ from itertools import chain
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 
+import toml
+import yaml
 from pydantic import BaseModel, Field, ValidationError
 
 from beet.core.utils import FileSystemPath, JsonDict, TextComponent
@@ -138,20 +140,32 @@ class ProjectConfig(BaseModel):
 ProjectConfig.update_forward_refs()
 
 
-def locate_config(initial_directory: FileSystemPath, filename: str) -> Optional[Path]:
+def locate_config(initial_directory: FileSystemPath, *filenames: str) -> List[Path]:
     """Try to locate a config file in the given directory or its parents."""
     start = Path(initial_directory).resolve()
+    results: List[Path] = []
+
     for directory in chain([start], start.parents):
-        if (config := directory / filename).is_file():
-            return config
-    return None
+        for filename in filenames:
+            if (path := directory / filename).is_file():
+                results.append(path)
+        if results:
+            break
+
+    return results
 
 
 def load_config(filename: FileSystemPath) -> ProjectConfig:
     """Load the project config at the specified location."""
     path = Path(filename)
     with config_error_handler(path):
-        return ProjectConfig(**json.loads(path.read_text())).resolve(path.parent)
+        if path.suffix == ".toml":
+            config = toml.loads(path.read_text())
+        elif path.suffix in [".yml", ".yaml"]:
+            config = yaml.safe_load(path.read_text())
+        else:
+            config = json.loads(path.read_text())
+        return ProjectConfig(**config).resolve(path.parent)
 
 
 @contextmanager
@@ -159,8 +173,14 @@ def config_error_handler(path: FileSystemPath = "<unknown>"):
     """Handle configuration errors."""
     try:
         yield
-    except json.JSONDecodeError as exc:
-        raise InvalidProjectConfig(f"{path}:{exc.lineno}: {exc.msg}.") from exc
+    except (json.JSONDecodeError, toml.TomlDecodeError) as exc:
+        raise InvalidProjectConfig(f"{path}:{exc.lineno}: {exc.msg}.") from exc  # type: ignore
+    except yaml.MarkedYAMLError as exc:
+        if exc.context_mark:
+            exc.context_mark.name = str(path)
+        if exc.problem_mark:
+            exc.problem_mark.name = str(path)
+        raise InvalidProjectConfig(str(exc)) from exc
     except FileNotFoundError as exc:
         raise InvalidProjectConfig(f"{path}: File not found.") from exc
     except ValidationError as exc:

@@ -33,6 +33,8 @@ Jinja2 = "^3.0.1"
 colorama = {version = "*", markers = 'sys_platform == "win32"'}
 fnvhash = "^0.1.0"
 base58 = "^2.1.0"
+toml = "^0.10.2"
+PyYAML = "^5.4.1"
 
 [tool.poetry.dev-dependencies]
 black = "^21.5b2"
