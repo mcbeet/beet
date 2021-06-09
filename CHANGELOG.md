@@ -2,6 +2,14 @@
 
 <!--next-version-placeholder-->
 
+## v0.27.0 (2021-06-09)
+### Feature
+* Support yaml config file ([`14e6dee`](https://github.com/mcbeet/beet/commit/14e6dee04aec841d2e27c22806bd35193e9bdf23))
+* Support toml config file ([`2f97394`](https://github.com/mcbeet/beet/commit/2f9739447682a4834cda4c5f66be6f0dc6d70359))
+
+### Documentation
+* Typo ([`a9a1a28`](https://github.com/mcbeet/beet/commit/a9a1a28a582e651ff2217d959339bed46c372dc8))
+
 ## v0.26.0 (2021-05-26)
 ### Feature
 * Add beet.contrib.dundervar plugin ([`2ad5024`](https://github.com/mcbeet/beet/commit/2ad50242521c1fd5459c483aead0ff013f2e853c))
