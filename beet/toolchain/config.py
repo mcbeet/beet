@@ -16,6 +16,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 
 import toml
+import yaml
 from pydantic import BaseModel, Field, ValidationError
 
 from beet.core.utils import FileSystemPath, JsonDict, TextComponent
@@ -160,6 +161,8 @@ def load_config(filename: FileSystemPath) -> ProjectConfig:
     with config_error_handler(path):
         if path.suffix == ".toml":
             config = toml.loads(path.read_text())
+        elif path.suffix in [".yml", ".yaml"]:
+            config = yaml.safe_load(path.read_text())
         else:
             config = json.loads(path.read_text())
         return ProjectConfig(**config).resolve(path.parent)
@@ -172,6 +175,12 @@ def config_error_handler(path: FileSystemPath = "<unknown>"):
         yield
     except (json.JSONDecodeError, toml.TomlDecodeError) as exc:
         raise InvalidProjectConfig(f"{path}:{exc.lineno}: {exc.msg}.") from exc  # type: ignore
+    except yaml.MarkedYAMLError as exc:
+        if exc.context_mark:
+            exc.context_mark.name = str(path)
+        if exc.problem_mark:
+            exc.problem_mark.name = str(path)
+        raise InvalidProjectConfig(str(exc)) from exc
     except FileNotFoundError as exc:
         raise InvalidProjectConfig(f"{path}: File not found.") from exc
     except ValidationError as exc:
