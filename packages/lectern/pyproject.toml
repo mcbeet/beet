@@ -34,7 +34,7 @@ black = "^21.5b2"
 rope = "^0.19.0"
 pytest = "^6.2.4"
 isort = "^5.8.0"
-python-semantic-release = "^7.15.4"
+python-semantic-release = "^7.16.1"
 pytest-insta = "^0.1.10"
 
 [tool.poetry.scripts]
