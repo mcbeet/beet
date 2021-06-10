@@ -39,6 +39,7 @@ from typing import (
     Type,
     TypeVar,
     get_args,
+    get_origin,
     overload,
 )
 from zipfile import ZipFile
@@ -215,6 +216,50 @@ class Namespace(
         for container in self.values():
             yield from container.items()
 
+    @overload
+    def list_files(
+        self,
+        namespace: str,
+        *extensions: str,
+    ) -> Iterator[Tuple[str, PackFile]]:
+        ...
+
+    @overload
+    def list_files(
+        self,
+        namespace: str,
+        *extensions: str,
+        extend: Type[T],
+    ) -> Iterator[Tuple[str, T]]:
+        ...
+
+    def list_files(
+        self, namespace: str, *extensions: str, extend: Optional[Any] = None
+    ) -> Iterator[Tuple[str, Any]]:
+        """List and filter all the files in the namespace."""
+        if extend and (origin := get_origin(extend)):
+            extend = origin
+
+        for path, item in self.extra.items():
+            if item is None:
+                continue
+            if extensions and not any(path.endswith(ext) for ext in extensions):
+                continue
+            if extend and not isinstance(item, extend):
+                continue
+            yield f"{self.directory}/{namespace}/{path}", item
+
+        for content_type, container in self.items():
+            if not container:
+                continue
+            if extensions and content_type.extension not in extensions:
+                continue
+            prefix = "/".join((self.directory, namespace) + content_type.scope)
+            for name, item in container.items():
+                if extend and not isinstance(item, extend):
+                    continue
+                yield f"{prefix}/{name}{content_type.extension}", item
+
     @classmethod
     def get_extra_info(cls) -> Dict[str, Type[PackFile]]:
         return {}
@@ -266,24 +311,7 @@ class Namespace(
 
     def dump(self, namespace: str, origin: FileOrigin):
         """Write the namespace to a zipfile or to the filesystem."""
-        _dump_files(
-            origin,
-            {
-                f"{self.directory}/{namespace}/{path}": item
-                for path, item in self.extra.items()
-                if item is not None
-            },
-        )
-        _dump_files(
-            origin,
-            {
-                "/".join((self.directory, namespace) + content_type.scope)
-                + f"/{name}{content_type.extension}": item
-                for content_type, container in self.items()
-                if container
-                for name, item in container.items()
-            },
-        )
+        _dump_files(origin, dict(self.list_files(namespace)))
 
     def __repr__(self) -> str:
         args = ", ".join(
@@ -455,6 +483,42 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
         """Iterator that yields all the files stored in the pack."""
         for file_type in self.namespace_type.field_map:
             yield from NamespaceProxy[NamespaceFile](self, file_type).items()
+
+    @overload
+    def list_files(
+        self,
+        *extensions: str,
+    ) -> Iterator[Tuple[str, PackFile]]:
+        ...
+
+    @overload
+    def list_files(
+        self,
+        *extensions: str,
+        extend: Type[T],
+    ) -> Iterator[Tuple[str, T]]:
+        ...
+
+    def list_files(
+        self,
+        *extensions: str,
+        extend: Optional[Any] = None,
+    ) -> Iterator[Tuple[str, Any]]:
+        """List and filter all the files in the pack."""
+        if extend and (origin := get_origin(extend)):
+            extend = origin
+
+        for path, item in self.extra.items():
+            if item is None:
+                continue
+            if extensions and not any(path.endswith(ext) for ext in extensions):
+                continue
+            if extend and not isinstance(item, extend):
+                continue
+            yield path, item
+
+        for namespace_name, namespace in self.items():
+            yield from namespace.list_files(namespace_name, *extensions, extend=extend)  # type: ignore
 
     @classmethod
     def get_extra_info(cls) -> Dict[str, Type[PackFile]]:

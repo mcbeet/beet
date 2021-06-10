@@ -2,25 +2,12 @@
 
 
 import json
-from typing import Any, Iterator, Union
+from typing import Any
 
-from beet import Context, DataPack, JsonFileBase, ResourcePack
+from beet import Context, JsonFileBase
 
 
 def beet_default(ctx: Context):
     for pack in ctx.packs:
-        for json_file in find_json_files(pack):
+        for _, json_file in pack.list_files(extend=JsonFileBase[Any]):
             json_file.text = json.dumps(json_file.data, separators=(",", ":"))
-
-
-def find_json_files(pack: Union[ResourcePack, DataPack]) -> Iterator[JsonFileBase[Any]]:
-    for extra_file in pack.extra.values():
-        if isinstance(extra_file, JsonFileBase):
-            yield extra_file
-    for namespace in pack.values():
-        for extra_file in namespace.extra.values():
-            if isinstance(extra_file, JsonFileBase):
-                yield extra_file
-        for file_type, container in namespace.items():
-            if issubclass(file_type, JsonFileBase):  # type: ignore
-                yield from container.values()  # type: ignore
