@@ -1,0 +1,8 @@
+{
+  "name": "thing",
+  "version": "1.2.3",
+  "data_pack": {
+    "name": "{{ project_name | capitalize }} {{ project_version }}",
+    "load": ["src"]
+  }
+}

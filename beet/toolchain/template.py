@@ -27,6 +27,7 @@ from beet.core.utils import FileSystemPath, JsonDict
 from .pipeline import FormattedPipelineException, PipelineFallthroughException
 from .utils import ensure_builtins
 
+T = TypeVar("T")
 TextFileType = TypeVar("TextFileType", bound=TextFileBase[Any])
 
 
@@ -146,6 +147,17 @@ class TemplateManager:
                 raise
         file.text = self.render(str(file.source_path), **kwargs)
         return file
+
+    def render_json(self, data: T, **kwargs: Any) -> T:
+        """Render all strings in a json value."""
+        if isinstance(data, str):
+            return self.render_string(data, **kwargs)  # type: ignore
+        elif isinstance(data, list):
+            return [self.render_json(element) for element in data]  # type: ignore
+        elif isinstance(data, dict):
+            return {key: self.render_json(value) for key, value in data.items()}  # type: ignore
+        else:
+            return data
 
     @contextmanager
     def error_handler(self, message: str):

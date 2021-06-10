@@ -1,0 +1,13 @@
+{
+  "name": "thing",
+  "version": "1.2.3",
+  "description": "Something cool",
+  "data_pack": {
+    "description": [
+      { "text": "{{ project_name | capitalize }} ", "color": "#9273ff" },
+      { "text": "v{{ project_version }}\n", "color": "#66c546" },
+      { "text": "{{ project_description }}", "color": "#00aced" }
+    ],
+    "load": ["src"]
+  }
+}

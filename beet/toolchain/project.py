@@ -316,8 +316,8 @@ class ProjectBuilder:
                 )
             )
 
-            pack.name = config.name.replace("<version>", ctx.project_version)
-            pack.description = config.description
+            pack.name = ctx.template.render_string(config.name)
+            pack.description = ctx.template.render_json(config.description)
             pack.pack_format = config.pack_format
             pack.zipped = bool(config.zipped)
 

@@ -1,0 +1,19 @@
+{
+  "pack": {
+    "pack_format": 6,
+    "description": [
+      {
+        "text": "Thing ",
+        "color": "#9273ff"
+      },
+      {
+        "text": "v1.2.3\n",
+        "color": "#66c546"
+      },
+      {
+        "text": "Something cool",
+        "color": "#00aced"
+      }
+    ]
+  }
+}
