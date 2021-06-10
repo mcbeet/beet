@@ -2,6 +2,20 @@
 
 <!--next-version-placeholder-->
 
+## v0.29.0 (2021-06-10)
+### Feature
+* Add beet.contrib.format_json plugin ([`4d579be`](https://github.com/mcbeet/beet/commit/4d579bef41b20bba6ac0381b48c337e258289ea9))
+* Add configurable file serializer and deserializer ([`68cf41f`](https://github.com/mcbeet/beet/commit/68cf41feb2c6b7e919016404d872b9892626a515))
+* Render pack name and description with jinja ([`15bf25c`](https://github.com/mcbeet/beet/commit/15bf25caa0da57dafa63d89ae683868fde7dd88c))
+* Add ctx.cache.generated ([`6b9d6b5`](https://github.com/mcbeet/beet/commit/6b9d6b52f02b55365eb1460a0722fe7dae322687))
+* Make it possible to disable the cache gitignore ([`ecea21b`](https://github.com/mcbeet/beet/commit/ecea21b3f3d82b8740bd6ffdee93c4d45035acac))
+* Log download and cache expiration ([`b4346c5`](https://github.com/mcbeet/beet/commit/b4346c50f68102b63468932c6becda5fc95ad873))
+* Add list_files() method ([`d873e8b`](https://github.com/mcbeet/beet/commit/d873e8bb48403a8845047e8194e00f584d178e4a))
+
+### Fix
+* Update yellow shulker box loot table ([`1ead861`](https://github.com/mcbeet/beet/commit/1ead861d2eb452fbb6a087ab0b9fade3656edc99))
+* Update run_beet() to use the project cache ([`3a20c69`](https://github.com/mcbeet/beet/commit/3a20c6930a9ae4a6b5cab41b4366521c89ad7198))
+
 ## v0.28.0 (2021-06-09)
 ### Feature
 * Add beet.contrib.yellow_shulker_box plugin ([`5f7b5ec`](https://github.com/mcbeet/beet/commit/5f7b5ec9bab952edd67030dda853f709bc809a96))
