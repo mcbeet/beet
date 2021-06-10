@@ -14,7 +14,6 @@ pipeline = ["beet.contrib.format_json"]
 
 [tool.beet.data_pack]
 name = "{{ project_name | capitalize }} {{ project_version }}"
-pack_format = 7
 description = [
     { text = "{{ project_name | capitalize }} ", color = "#9273ff" },
     { text = "v{{ project_version }}\n", color = "#66c546" },
