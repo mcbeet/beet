@@ -5,6 +5,7 @@ __all__ = [
 
 
 import json
+import logging
 import shutil
 from datetime import datetime, timedelta
 from pathlib import Path
@@ -14,6 +15,8 @@ from urllib.request import urlopen
 
 from .container import Container, MatchMixin
 from .utils import FileSystemPath, JsonDict, dump_json, normalize_string
+
+logger = logging.getLogger(__name__)
 
 
 class Cache:
@@ -70,6 +73,7 @@ class Cache:
         path = self.get_path(url)
 
         if not path.is_file():
+            logger.info(f"Downloading {url}")
             with urlopen(url) as f:
                 path.write_bytes(f.read())
 
@@ -147,6 +151,7 @@ class Cache:
             return
 
         if self.expire and self.expire <= datetime.now():
+            logger.info(f"Cache {self.directory.name} expired")
             self.clear()
         else:
             self.directory.mkdir(parents=True, exist_ok=True)
