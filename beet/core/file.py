@@ -20,12 +20,12 @@ import json
 import shutil
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Generic, Optional, Type, TypeVar, Union
+from typing import Any, Callable, Generic, Optional, Type, TypeVar, Union
 from zipfile import ZipFile
 
 from PIL import Image as img
 
-from .utils import FileSystemPath, JsonDict, dump_json
+from .utils import FileSystemPath, JsonDict, dump_json, extra_field
 
 ValueType = TypeVar("ValueType")
 SerializeType = TypeVar("SerializeType")
@@ -42,6 +42,9 @@ class File(Generic[ValueType, SerializeType]):
 
     content: Union[ValueType, SerializeType, None] = None
     source_path: Optional[FileSystemPath] = None
+
+    serializer: Callable[[ValueType], SerializeType] = extra_field(init=False)
+    deserializer: Callable[[SerializeType], ValueType] = extra_field(init=False)
 
     def __post_init__(self):
         if self.content is self.source_path is None:
@@ -103,13 +106,11 @@ class File(Generic[ValueType, SerializeType]):
             "either a value, serialized data, or a source path."
         )
 
-    @classmethod
-    def serialize(cls, content: Union[ValueType, SerializeType]) -> SerializeType:
+    def serialize(self, content: Union[ValueType, SerializeType]) -> SerializeType:
         """Serialize file content."""
         raise NotImplementedError()
 
-    @classmethod
-    def deserialize(cls, content: Union[ValueType, SerializeType]) -> ValueType:
+    def deserialize(self, content: Union[ValueType, SerializeType]) -> ValueType:
         """Deserialize file content."""
         raise NotImplementedError()
 
@@ -163,7 +164,9 @@ class FileSerialize(Generic[SerializeType]):
     """Descriptor that makes sure that content of the file is serialized."""
 
     def __get__(
-        self, obj: File[Any, SerializeType], objtype: Optional[Type[Any]] = None
+        self,
+        obj: File[Any, SerializeType],
+        objtype: Optional[Type[Any]] = None,
     ) -> SerializeType:
         return obj.ensure_serialized()
 
@@ -175,7 +178,9 @@ class FileDeserialize(Generic[ValueType]):
     """Descriptor that makes sure that content of the file is deserialized."""
 
     def __get__(
-        self, obj: File[ValueType, Any], objtype: Optional[Type[Any]] = None
+        self,
+        obj: File[ValueType, Any],
+        objtype: Optional[Type[Any]] = None,
     ) -> ValueType:
         return obj.ensure_deserialized()
 
@@ -188,13 +193,16 @@ class TextFileBase(File[ValueType, str]):
 
     text: FileSerialize[str] = FileSerialize()
 
-    @classmethod
-    def serialize(cls, content: Union[ValueType, str]) -> str:
-        return content if isinstance(content, str) else cls.to_str(content)
+    def __post_init__(self):
+        super().__post_init__()
+        self.serializer = self.to_str
+        self.deserializer = self.from_str
 
-    @classmethod
-    def deserialize(cls, content: Union[ValueType, str]) -> ValueType:
-        return cls.from_str(content) if isinstance(content, str) else content
+    def serialize(self, content: Union[ValueType, str]) -> str:
+        return content if isinstance(content, str) else self.serializer(content)
+
+    def deserialize(self, content: Union[ValueType, str]) -> ValueType:
+        return self.deserializer(content) if isinstance(content, str) else content
 
     @classmethod
     def decode(cls, raw: bytes) -> str:
@@ -236,13 +244,16 @@ class BinaryFileBase(File[ValueType, bytes]):
 
     blob: FileSerialize[bytes] = FileSerialize()
 
-    @classmethod
-    def serialize(cls, content: Union[ValueType, bytes]) -> bytes:
-        return content if isinstance(content, bytes) else cls.to_bytes(content)
+    def __post_init__(self):
+        super().__post_init__()
+        self.serializer = self.to_bytes
+        self.deserializer = self.from_bytes
 
-    @classmethod
-    def deserialize(cls, content: Union[ValueType, bytes]) -> ValueType:
-        return cls.from_bytes(content) if isinstance(content, bytes) else content
+    def serialize(self, content: Union[ValueType, bytes]) -> bytes:
+        return content if isinstance(content, bytes) else self.serializer(content)
+
+    def deserialize(self, content: Union[ValueType, bytes]) -> ValueType:
+        return self.deserializer(content) if isinstance(content, bytes) else content
 
     @classmethod
     def decode(cls, raw: bytes) -> bytes:
