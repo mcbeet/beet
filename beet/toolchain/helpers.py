@@ -14,11 +14,10 @@ from typing import Iterator, Optional, Union
 from jinja2 import Environment
 from jinja2.ext import Extension
 
-from beet.core.cache import MultiCache
 from beet.core.utils import FileSystemPath, JsonDict
 
 from .config import ProjectConfig, config_error_handler
-from .context import Context, Plugin, PluginSpec
+from .context import Context, Plugin, PluginSpec, ProjectCache
 from .project import Project, ProjectBuilder
 from .template import TemplateManager
 from .worker import WorkerPool
@@ -84,7 +83,7 @@ def sandbox(*specs: PluginSpec) -> Plugin:
 def run_beet(
     config: Optional[Union[ProjectConfig, JsonDict, FileSystemPath]] = None,
     directory: Optional[FileSystemPath] = None,
-    cache: Union[bool, MultiCache] = False,
+    cache: Union[bool, ProjectCache] = False,
 ) -> Iterator[Context]:
     """Run the entire toolchain programmatically."""
     if not directory:
@@ -93,11 +92,11 @@ def run_beet(
     with ExitStack() as stack:
         project = Project()
 
-        if isinstance(cache, MultiCache):
+        if isinstance(cache, ProjectCache):
             project.resolved_cache = cache
         elif not cache:
-            project.resolved_cache = MultiCache(
-                stack.enter_context(TemporaryDirectory())
+            project.resolved_cache = ProjectCache(
+                stack.enter_context(TemporaryDirectory()), Path(directory) / "generated"
             )
 
         if isinstance(config, ProjectConfig):
