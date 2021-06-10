@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.31.1 (2021-06-10)
+### Fix
+* Render_json doesn't pass kwargs ([#86](https://github.com/mcbeet/beet/issues/86)) ([`b85ef48`](https://github.com/mcbeet/beet/commit/b85ef48a4bbbb880d8257eb7bef0945f42d4a03c))
+
 ## v0.31.0 (2021-06-10)
 ### Feature
 * Update latest pack format ([`80a5aad`](https://github.com/mcbeet/beet/commit/80a5aad6c37ee44a209e49af10b1eb21a04f97fa))
