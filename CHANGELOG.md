@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.30.0 (2021-06-10)
+### Feature
+* Support pyproject.toml config file ([`836573a`](https://github.com/mcbeet/beet/commit/836573a5226b524d43127eb11b5daf6d1ed57644))
+
 ## v0.29.0 (2021-06-10)
 ### Feature
 * Add beet.contrib.format_json plugin ([`4d579be`](https://github.com/mcbeet/beet/commit/4d579bef41b20bba6ac0381b48c337e258289ea9))
