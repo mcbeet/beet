@@ -13,7 +13,7 @@ def beet_default(ctx: Context):
                 {
                     "condition": "minecraft:match_tool",
                     "predicate": {
-                        "item": "minecraft:air",
+                        "items": ["minecraft:air"],
                         "nbt": "{drop_contents:1b}",
                     },
                 }
