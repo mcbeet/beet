@@ -2,6 +2,11 @@
 
 <!--next-version-placeholder-->
 
+## v0.31.0 (2021-06-10)
+### Feature
+* Update latest pack format ([`80a5aad`](https://github.com/mcbeet/beet/commit/80a5aad6c37ee44a209e49af10b1eb21a04f97fa))
+* Use poetry project data when available ([`aa4c823`](https://github.com/mcbeet/beet/commit/aa4c823e42914d4d9a9078315cb93b2eb16a930f))
+
 ## v0.30.0 (2021-06-10)
 ### Feature
 * Support pyproject.toml config file ([`836573a`](https://github.com/mcbeet/beet/commit/836573a5226b524d43127eb11b5daf6d1ed57644))
