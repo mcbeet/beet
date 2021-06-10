@@ -12,12 +12,11 @@ from pathlib import Path
 from typing import ClassVar, Iterable, Iterator, List, Optional, Sequence
 
 from beet.contrib.render import render
-from beet.core.cache import MultiCache
 from beet.core.utils import FileSystemPath, intersperse, normalize_string
 from beet.core.watch import DirectoryWatcher, FileChanges
 
 from .config import PackConfig, ProjectConfig, load_config, locate_config
-from .context import Context
+from .context import Context, ProjectCache
 from .pipeline import FormattedPipelineException
 from .template import TemplateManager
 from .utils import locate_minecraft
@@ -41,7 +40,7 @@ class Project:
     config_path: Optional[FileSystemPath] = None
     config_detect: Iterable[str] = ("beet.json", "beet.toml", "beet.yml", "beet.yaml")
 
-    resolved_cache: Optional[MultiCache] = None
+    resolved_cache: Optional[ProjectCache] = None
     cache_name: str = ".beet_cache"
 
     resolved_worker_pool: Optional[WorkerPool] = None
@@ -84,10 +83,12 @@ class Project:
         ]
 
     @property
-    def cache(self) -> MultiCache:
+    def cache(self) -> ProjectCache:
         if self.resolved_cache is not None:
             return self.resolved_cache
-        self.resolved_cache = MultiCache(self.directory / self.cache_name)
+        self.resolved_cache = ProjectCache(
+            self.directory / self.cache_name, self.directory / "generated"
+        )
         return self.resolved_cache
 
     @property

@@ -2,6 +2,7 @@ __all__ = [
     "Pipeline",
     "Plugin",
     "PluginSpec",
+    "ProjectCache",
     "Context",
     "ContextContainer",
 ]
@@ -16,7 +17,7 @@ from typing import Any, Callable, List, Optional, Set, Tuple, TypeVar, overload
 
 from beet.core.cache import MultiCache
 from beet.core.container import Container
-from beet.core.utils import JsonDict, TextComponent, extra_field
+from beet.core.utils import FileSystemPath, JsonDict, TextComponent, extra_field
 from beet.library.data_pack import DataPack
 from beet.library.resource_pack import ResourcePack
 
@@ -49,6 +50,31 @@ class ContextContainer(Container[Callable[["Context"], Any], Any]):
         return key(self.ctx)
 
 
+class ProjectCache(MultiCache):
+    """The project cache.
+
+    The `generated` attribute is a MultiCache instance that's
+    meant to be tracked by version control, unlike the main project
+    cache that usually lives in the ignored `.beet_cache` directory.
+    """
+
+    generated: MultiCache
+
+    def __init__(
+        self,
+        directory: FileSystemPath,
+        generated_directory: FileSystemPath,
+        default_cache: str = "default",
+        gitignore: bool = True,
+    ):
+        super().__init__(directory, default_cache, gitignore)
+        self.generated = MultiCache(generated_directory, default_cache, gitignore=False)
+
+    def flush(self):
+        super().flush()
+        self.generated.flush()
+
+
 @dataclass
 class Context:
     """The build context."""
@@ -61,7 +87,7 @@ class Context:
     directory: Path
     output_directory: Optional[Path]
     meta: JsonDict
-    cache: MultiCache
+    cache: ProjectCache
     worker: WorkerPoolHandle
     template: TemplateManager
 
