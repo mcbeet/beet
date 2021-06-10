@@ -193,11 +193,18 @@ class MultiCache(MatchMixin, Container[str, Cache]):
 
     path: Path
     default_cache: str
+    gitignore: bool
 
-    def __init__(self, directory: FileSystemPath, default_cache: str = "default"):
+    def __init__(
+        self,
+        directory: FileSystemPath,
+        default_cache: str = "default",
+        gitignore: bool = True,
+    ):
         super().__init__()
         self.path = Path(directory).resolve()
         self.default_cache = default_cache
+        self.gitignore = gitignore
 
     def missing(self, key: str) -> Cache:
         cache = Cache(self.path / key)
@@ -240,7 +247,11 @@ class MultiCache(MatchMixin, Container[str, Cache]):
         """Flush the modifications to the filesystem."""
         for cache in self.values():
             cache.flush()
-        if self.path.is_dir() and not (ignore := self.path / ".gitignore").is_file():
+        if (
+            self.gitignore
+            and self.path.is_dir()
+            and not (ignore := self.path / ".gitignore").is_file()
+        ):
             ignore.write_text("# Automatically created by beet\n*\n")
 
     def __repr__(self) -> str:
