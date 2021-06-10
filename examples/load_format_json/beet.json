@@ -1,0 +1,12 @@
+{
+  "resource_pack": {
+    "load": ["src"]
+  },
+  "pipeline": ["beet.contrib.format_json"],
+  "meta": {
+    "format_json": {
+      "indent": 4,
+      "sort_keys": true
+    }
+  }
+}

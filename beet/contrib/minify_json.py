@@ -2,12 +2,10 @@
 
 
 import json
-from typing import Any
 
-from beet import Context, JsonFileBase
+from beet import Context
+from beet.contrib.format_json import format_json
 
 
 def beet_default(ctx: Context):
-    for pack in ctx.packs:
-        for _, json_file in pack.list_files(extend=JsonFileBase[Any]):
-            json_file.text = json.dumps(json_file.data, separators=(",", ":"))
+    ctx.require(format_json(lambda content: json.dumps(content, separators=(",", ":"))))
