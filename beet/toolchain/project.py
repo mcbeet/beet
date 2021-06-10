@@ -38,7 +38,13 @@ class Project:
     resolved_config: Optional[ProjectConfig] = None
     config_directory: Optional[FileSystemPath] = None
     config_path: Optional[FileSystemPath] = None
-    config_detect: Iterable[str] = ("beet.json", "beet.toml", "beet.yml", "beet.yaml")
+    config_detect: Iterable[str] = (
+        "beet.json",
+        "beet.toml",
+        "beet.yml",
+        "beet.yaml",
+        "pyproject.toml",
+    )
 
     resolved_cache: Optional[ProjectCache] = None
     cache_name: str = ".beet_cache"

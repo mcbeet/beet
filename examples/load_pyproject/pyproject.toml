@@ -1,0 +1,8 @@
+[tool.beet.data_pack]
+load = ["src"]
+
+[tool.beet.data_pack.render]
+functions = ["demo:*"]
+
+[tool.beet.meta]
+message = "hello world"

@@ -165,6 +165,13 @@ def load_config(filename: FileSystemPath) -> ProjectConfig:
             config = yaml.safe_load(path.read_text())
         else:
             config = json.loads(path.read_text())
+        if path.name == "pyproject.toml":
+            try:
+                config = config["tool"]["beet"]
+            except KeyError as exc:
+                raise InvalidProjectConfig(
+                    f"{path}: Missing [tool.beet] section"
+                ) from exc
         return ProjectConfig(**config).resolve(path.parent)
 
 
