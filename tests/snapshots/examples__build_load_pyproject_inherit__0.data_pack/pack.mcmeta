@@ -1,0 +1,19 @@
+{
+    "pack": {
+        "pack_format": 7,
+        "description": [
+            {
+                "text": "Demo ",
+                "color": "#9273ff"
+            },
+            {
+                "text": "v0.1.0\n",
+                "color": "#66c546"
+            },
+            {
+                "text": "Demo project",
+                "color": "#00aced"
+            }
+        ]
+    }
+}

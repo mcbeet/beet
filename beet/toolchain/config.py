@@ -158,6 +158,7 @@ def locate_config(initial_directory: FileSystemPath, *filenames: str) -> List[Pa
 def load_config(filename: FileSystemPath) -> ProjectConfig:
     """Load the project config at the specified location."""
     path = Path(filename)
+
     with config_error_handler(path):
         if path.suffix == ".toml":
             config = toml.loads(path.read_text())
@@ -165,13 +166,22 @@ def load_config(filename: FileSystemPath) -> ProjectConfig:
             config = yaml.safe_load(path.read_text())
         else:
             config = json.loads(path.read_text())
+
         if path.name == "pyproject.toml":
-            try:
-                config = config["tool"]["beet"]
-            except KeyError as exc:
-                raise InvalidProjectConfig(
-                    f"{path}: Missing [tool.beet] section"
-                ) from exc
+            tool = config.get("tool")
+            if tool is None or (config := tool.get("beet")) is None:
+                raise InvalidProjectConfig(f"{path}: Missing [tool.beet] section")
+
+            if poetry := tool.get("poetry"):
+                if name := poetry.get("name"):
+                    config.setdefault("name", name)
+                if description := poetry.get("description"):
+                    config.setdefault("description", description)
+                if version := poetry.get("version"):
+                    config.setdefault("version", version)
+                if authors := poetry.get("authors"):
+                    config.setdefault("author", authors[0])
+
         return ProjectConfig(**config).resolve(path.parent)
 
 

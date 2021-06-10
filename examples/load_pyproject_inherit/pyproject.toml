@@ -1,0 +1,30 @@
+[tool.poetry]
+name = "demo"
+version = "0.1.0"
+description = "Demo project"
+authors = ["Valentin Berlier <berlier.v@gmail.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+beet = "^0.30.0"
+
+[tool.beet]
+pipeline = ["beet.contrib.format_json"]
+
+[tool.beet.data_pack]
+name = "{{ project_name | capitalize }} {{ project_version }}"
+pack_format = 7
+description = [
+    { text = "{{ project_name | capitalize }} ", color = "#9273ff" },
+    { text = "v{{ project_version }}\n", color = "#66c546" },
+    { text = "{{ project_description }}", color = "#00aced" },
+]
+load = ["src"]
+
+[tool.beet.meta.format_json]
+indent = 4
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
