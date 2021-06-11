@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.13.1 (2021-06-11)
+### Fix
+* Update logo ([`cafaf65`](https://github.com/mcbeet/lectern/commit/cafaf65ef92c141cc952409fd6962cef1b801a99))
+
 ## v0.13.0 (2021-05-09)
 ### Feature
 * Add define directive ([`85ec3cc`](https://github.com/mcbeet/lectern/commit/85ec3ccdd682f35c0e3556e116dab48cb55a27a9))
