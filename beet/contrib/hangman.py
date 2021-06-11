@@ -27,7 +27,7 @@ from beet.toolchain.utils import stable_hash
 
 REGEX_COMMENT = re.compile(r"(\s+#(?:\s+.*)?$)")
 REGEX_QUOTE = re.compile(r"(\"(?:.*?[^\\])?\"|'(?:.*?[^\\])?')")
-REGEX_RUN_COMMANDS = re.compile(r"(\s*execute\b(?:.*)\b)run\s+commands(\s*)")
+REGEX_RUN_COMMANDS = re.compile(r"(\s*execute\b(?:.*)\b)run\s+commands(\s+\w+|)(\s*)")
 REGEX_FOLD_COMMENT = re.compile(r"\s*#\s*fold\s*:\s*(\w+)\s*")
 
 
@@ -80,13 +80,14 @@ def fold_hanging_commands(
                 break
 
         elif token_type == "INDENT":
-            if REGEX_RUN_COMMANDS.match(current):
+            if match := REGEX_RUN_COMMANDS.match(current):
                 nested_commands = list(
                     fold_hanging_commands(ctx, tokens, original_function)
                 )
-                key = f"{original_function}/{stable_hash(nested_commands)}"
+                name = match[2].strip() or stable_hash(nested_commands)
+                key = f"{original_function}/{name}"
                 ctx.data[key] = Function(nested_commands)
-                current = REGEX_RUN_COMMANDS.sub(fr"\1run function {key}\2", current)
+                current = REGEX_RUN_COMMANDS.sub(fr"\1run function {key}\3", current)
             else:
                 indent_level += 1
 
