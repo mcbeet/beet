@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.31.2 (2021-06-11)
+### Fix
+* Generate nested commands relative to the original function ([`d0493c9`](https://github.com/mcbeet/beet/commit/d0493c9ba17d53ebadc26260c6325ea80329ea86))
+
 ## v0.31.1 (2021-06-10)
 ### Fix
 * Render_json doesn't pass kwargs ([#86](https://github.com/mcbeet/beet/issues/86)) ([`b85ef48`](https://github.com/mcbeet/beet/commit/b85ef48a4bbbb880d8257eb7bef0945f42d4a03c))
