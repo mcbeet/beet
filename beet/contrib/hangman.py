@@ -23,6 +23,7 @@ from typing import Iterable, Iterator, List, Literal, Optional, Tuple, Union, ca
 
 from beet import Context, Function, Plugin
 from beet.core.utils import JsonDict
+from beet.toolchain.utils import stable_hash
 
 REGEX_COMMENT = re.compile(r"(\s+#(?:\s+.*)?$)")
 REGEX_QUOTE = re.compile(r"(\"(?:.*?[^\\])?\"|'(?:.*?[^\\])?')")
@@ -55,13 +56,17 @@ def hangman(match: Iterable[str] = ()) -> Plugin:
         for path in ctx.data.functions.match(*match):
             function = ctx.data.functions[path]
             function.lines = list(
-                fold_hanging_commands(ctx, parse_lines(function.lines))
+                fold_hanging_commands(ctx, parse_lines(function.lines), path)
             )
 
     return plugin
 
 
-def fold_hanging_commands(ctx: Context, tokens: Iterable[Token]) -> Iterator[str]:
+def fold_hanging_commands(
+    ctx: Context,
+    tokens: Iterable[Token],
+    original_function: str,
+) -> Iterator[str]:
     """Fold hanging commands on a single line."""
     tokens = iter(tokens)
 
@@ -76,8 +81,11 @@ def fold_hanging_commands(ctx: Context, tokens: Iterable[Token]) -> Iterator[str
 
         elif token_type == "INDENT":
             if REGEX_RUN_COMMANDS.match(current):
-                nested_commands = list(fold_hanging_commands(ctx, tokens))
-                key = ctx.generate["nested"]("{hash}", Function(nested_commands))
+                nested_commands = list(
+                    fold_hanging_commands(ctx, tokens, original_function)
+                )
+                key = f"{original_function}/{stable_hash(nested_commands)}"
+                ctx.data[key] = Function(nested_commands)
                 current = REGEX_RUN_COMMANDS.sub(fr"\1run function {key}\2", current)
             else:
                 indent_level += 1
