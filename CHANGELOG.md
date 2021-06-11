@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.31.3 (2021-06-11)
+### Fix
+* Support named nested commands ([`d209774`](https://github.com/mcbeet/beet/commit/d209774c6c475df4af0527580bde1e39cd496e09))
+
 ## v0.31.2 (2021-06-11)
 ### Fix
 * Generate nested commands relative to the original function ([`d0493c9`](https://github.com/mcbeet/beet/commit/d0493c9ba17d53ebadc26260c6325ea80329ea86))
