@@ -1,4 +1,4 @@
-<img align="right" src="docs/assets/logo.svg" alt="logo" width="76">
+<img align="right" src="https://raw.githubusercontent.com/vberlier/mecha/main/logo.png?sanitize=true" alt="logo" width="76">
 
 # Mecha
 
@@ -7,7 +7,7 @@
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/mecha.svg)](https://pypi.org/project/mecha/)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
 
-> A flexible Minecraft command generation library.
+> A flexible Minecraft command library.
 
 ## Introduction
 
