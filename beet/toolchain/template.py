@@ -55,6 +55,7 @@ class FallbackContext(JinjaContext):
                 return manager.globals[key]
 
             if key in [
+                "project_id",
                 "project_name",
                 "project_description",
                 "project_author",

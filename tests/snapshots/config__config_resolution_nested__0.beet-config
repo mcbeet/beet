@@ -1,4 +1,5 @@
 {
+  "id": "",
   "name": "foo",
   "description": "",
   "author": "",
@@ -30,6 +31,7 @@
   },
   "pipeline": [
     {
+      "id": "",
       "name": "",
       "description": "",
       "author": "",

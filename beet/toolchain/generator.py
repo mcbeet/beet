@@ -78,7 +78,7 @@ class Generator:
 
     def get_increment(self, *key: Any) -> int:
         """Return the current value for the given key and increment it."""
-        key = (self.ctx.project_name, *self.scope, *key)
+        key = (self.ctx.project_id, *self.scope, *key)
         count = self.registry[key]
         self.registry[key] += 1
         return count
@@ -86,7 +86,7 @@ class Generator:
     def format(self, fmt: str, hash: Any = None) -> str:
         """Generate a unique key depending on the given template."""
         env = {
-            "namespace": self.ctx.meta.get("generate_namespace", self.ctx.project_name),
+            "namespace": self.ctx.meta.get("generate_namespace", self.ctx.project_id),
             "path": LazyFormat(lambda: self.get_prefix("/")),
             "scope": LazyFormat(lambda: self.get_prefix()),
             "incr": LazyFormat(lambda: self.get_increment(fmt)),

@@ -55,6 +55,7 @@ def sandbox(*specs: PluginSpec) -> Plugin:
 
     def plugin(ctx: Context):
         child_ctx = Context(
+            project_id=ctx.project_id,
             project_name=ctx.project_name,
             project_description=ctx.project_description,
             project_author=ctx.project_author,

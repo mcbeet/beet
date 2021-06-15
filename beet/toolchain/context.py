@@ -79,6 +79,7 @@ class ProjectCache(MultiCache):
 class Context:
     """The build context."""
 
+    project_id: str
     project_name: str
     project_description: TextComponent
     project_author: str

@@ -16,7 +16,7 @@ def beet_default(ctx: Context):
     # The id defaults to the project name and the version to the project version.
     config = ctx.meta.get("lantern_load", cast(JsonDict, {}))
 
-    id = config.get("id", ctx.project_name)
+    id = config.get("id", ctx.project_id)
     version = config.get("version", ctx.project_version)
     dependencies = config.get("dependencies", cast(JsonDict, {}))
 

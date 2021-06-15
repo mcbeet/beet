@@ -231,13 +231,12 @@ class ProjectBuilder:
 
     def build(self) -> Context:
         """Create the context, run the pipeline, and return the context."""
-
         name = self.config.name or self.project.directory.stem
-        normalized_name = normalize_string(name)
 
         with self.project.worker_pool.handle() as worker_pool_handle:
             ctx = Context(
-                project_name=normalized_name,
+                project_id=self.config.id or normalize_string(name),
+                project_name=name,
                 project_description=self.config.description,
                 project_author=self.config.author,
                 project_version=self.config.version,
@@ -308,7 +307,7 @@ class ProjectBuilder:
             )
 
         for config, suffix, pack in zip(pack_configs, pack_suffixes, ctx.packs):
-            default_name = ctx.project_name
+            default_name = ctx.project_id
             if ctx.project_version:
                 default_name += "_" + ctx.project_version
             default_name += suffix

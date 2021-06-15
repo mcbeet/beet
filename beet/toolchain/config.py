@@ -64,6 +64,7 @@ class PackConfig(BaseModel):
 class ProjectConfig(BaseModel):
     """Beet project configuration."""
 
+    id: str = ""
     name: str = ""
     description: TextComponent = ""
     author: str = ""
@@ -115,6 +116,7 @@ class ProjectConfig(BaseModel):
     def with_defaults(self, other: "ProjectConfig") -> "ProjectConfig":
         """Combine the current project config with another one."""
         return ProjectConfig(
+            id=self.id or other.id,
             name=self.name or other.name,
             description=self.description or other.description,
             author=self.author or other.author,
