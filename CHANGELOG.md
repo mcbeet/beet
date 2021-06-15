@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.31.4 (2021-06-15)
+### Fix
+* Separate normalized project id into its own context attribute ([`1487fcf`](https://github.com/mcbeet/beet/commit/1487fcf0bb08411d7095fa30d96ac9cbe2164ca8))
+
 ## v0.31.3 (2021-06-11)
 ### Fix
 * Support named nested commands ([`d209774`](https://github.com/mcbeet/beet/commit/d209774c6c475df4af0527580bde1e39cd496e09))
