@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.32.0 (2021-06-18)
+### Feature
+* Make pillow optional ([`9778883`](https://github.com/mcbeet/beet/commit/977888375b0ca3ca334a391b0ab4bc4a1ed9a0d5))
+
 ## v0.31.4 (2021-06-15)
 ### Fix
 * Separate normalized project id into its own context attribute ([`1487fcf`](https://github.com/mcbeet/beet/commit/1487fcf0bb08411d7095fa30d96ac9cbe2164ca8))
