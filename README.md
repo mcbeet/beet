@@ -69,6 +69,13 @@ The package can be installed with `pip`.
 $ pip install beet
 ```
 
+To create and edit images programmatically you should install `beet` with the `image` extra or install `Pillow` separately.
+
+```bash
+$ pip install beet[image]
+$ pip install beet Pillow
+```
+
 You can make sure that `beet` was successfully installed by trying to use the toolchain from the command-line.
 
 ```bash
@@ -96,7 +103,7 @@ Commands:
 Contributions are welcome. Make sure to first open an issue discussing the problem or the new feature before creating a pull request. The project uses [`poetry`](https://python-poetry.org).
 
 ```bash
-$ poetry install
+$ poetry install --extras image
 ```
 
 You can run the tests with `poetry run pytest`. We use [`pytest-minecraft`](https://github.com/vberlier/pytest-minecraft) to run tests against actual Minecraft releases.

@@ -23,7 +23,19 @@ from pathlib import Path
 from typing import Any, Callable, Generic, Optional, Type, TypeVar, Union
 from zipfile import ZipFile
 
-from PIL import Image as img
+try:
+    from PIL.Image import Image
+    from PIL.Image import new as new_image
+    from PIL.Image import open as open_image
+except ImportError:
+    Image = Any
+
+    def new_image(*args: Any, **kwargs: Any) -> Any:
+        raise RuntimeError("Please install Pillow to create images programmatically")
+
+    def open_image(*args: Any, **kwargs: Any) -> Any:
+        raise RuntimeError("Please install Pillow to edit images programmatically")
+
 
 from .utils import FileSystemPath, JsonDict, dump_json, extra_field
 
@@ -314,21 +326,21 @@ class JsonFile(JsonFileBase[JsonDict]):
         return {}
 
 
-class PngFile(BinaryFileBase[img.Image]):
+class PngFile(BinaryFileBase[Image]):
     """Class representing a png file."""
 
-    image: FileDeserialize[img.Image] = FileDeserialize()
+    image: FileDeserialize[Image] = FileDeserialize()
 
     @classmethod
-    def to_bytes(cls, content: img.Image) -> bytes:
+    def to_bytes(cls, content: Image) -> bytes:
         dst = io.BytesIO()
         content.save(dst, format="png")
         return dst.getvalue()
 
     @classmethod
-    def from_bytes(cls, content: bytes) -> img.Image:
-        return img.open(io.BytesIO(content))
+    def from_bytes(cls, content: bytes) -> Image:
+        return open_image(io.BytesIO(content))
 
     @classmethod
-    def default(cls) -> img.Image:
-        return img.new("RGB", (16, 16), "black")
+    def default(cls) -> Image:
+        return new_image("RGB", (16, 16), "black")

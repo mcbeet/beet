@@ -23,9 +23,12 @@ __all__ = [
 
 from copy import deepcopy
 from dataclasses import dataclass
-from typing import Dict, Optional, Type
+from typing import Any, Dict, Optional, Type
 
-from PIL import Image as img
+try:
+    from PIL.Image import Image
+except ImportError:
+    Image = Any
 
 from beet.core.file import BinaryFile, BinaryFileContent, JsonFile, PngFile, TextFile
 from beet.core.utils import JsonDict, extra_field
@@ -148,7 +151,7 @@ class TextureMcmeta(JsonFile, NamespaceFile):
 class Texture(PngFile, NamespaceFile):
     """Class representing a texture."""
 
-    content: BinaryFileContent[img.Image] = None
+    content: BinaryFileContent[Image] = None
     mcmeta: Optional[JsonDict] = extra_field(default=None)
 
     scope = ("textures",)
