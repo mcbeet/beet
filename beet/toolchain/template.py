@@ -16,6 +16,7 @@ from jinja2 import (
     FileSystemLoader,
     PackageLoader,
     PrefixLoader,
+    Template,
 )
 from jinja2.ext import DebugExtension, ExprStmtExtension, LoopControlExtension
 from jinja2.runtime import Context as JinjaContext
@@ -128,28 +129,44 @@ class TemplateManager:
             prefix = dotted_path.replace(".", "/")
         self.prefix_map[prefix] = PackageLoader(dotted_path)
 
-    def render(self, filename: str, **kwargs: Any) -> str:
+    def compile(
+        self,
+        source: str,
+        filename: Optional[FileSystemPath] = None,
+    ) -> Template:
+        """Compile a template from a string."""
+        return Template.from_code(
+            self.env,
+            self.env.compile(source, filename=filename and str(filename)),
+            self.env.make_globals(None),
+        )
+
+    def render(self, filename: str, /, **kwargs: Any) -> str:
         """Render the specified template."""
         with self.error_handler(f"Couldn't render template {filename!r}."):
             return self.env.get_template(filename).render(kwargs)
 
-    def render_string(self, template: str, **kwargs: Any) -> str:
+    def render_string(self, template: str, /, **kwargs: Any) -> str:
         """Render a string template."""
         with self.error_handler("Couldn't render template."):
-            return self.env.from_string(template).render(kwargs)
+            return self.compile(template).render(kwargs)
 
-    def render_file(self, file: TextFileType, **kwargs: Any) -> TextFileType:
+    def render_file(self, file: TextFileType, /, **kwargs: Any) -> TextFileType:
         """Render a given file in-place."""
+        original_path = file.source_path
         try:
-            file.text = self.render_string(file.text, **kwargs)
+            source = file.text
+            with self.error_handler("Couldn't render file."):
+                template = self.compile(source, filename=original_path)
+                file.text = template.render(kwargs)
             return file
         except OSError:
-            if not file.source_path:
+            if not original_path:
                 raise
-        file.text = self.render(str(file.source_path), **kwargs)
+        file.text = self.render(str(original_path), **kwargs)
         return file
 
-    def render_json(self, data: T, **kwargs: Any) -> T:
+    def render_json(self, data: T, /, **kwargs: Any) -> T:
         """Render all strings in a json value."""
         if isinstance(data, str):
             return self.render_string(data, **kwargs)  # type: ignore
