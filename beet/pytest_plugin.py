@@ -27,8 +27,8 @@ def pytest_assertrepr_compare(config, op, left, right):
     elif isinstance(left, NamespaceContainer):
         explanation += generate_explanation(config, left, right, "file")
 
-    if explanation:
-        return [assertrepr_compare(config, op, left, right)[0]] + explanation
+    if explanation and (diff := assertrepr_compare(config, op, left, right)):
+        return [diff[0]] + explanation
 
 
 def plural(name, count):

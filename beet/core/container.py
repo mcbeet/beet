@@ -34,7 +34,6 @@ from .utils import SENTINEL_OBJ, Sentinel
 
 K = TypeVar("K")
 V = TypeVar("V")
-MergeableType = TypeVar("MergeableType", bound="SupportsMerge")
 ProxyKeyType = TypeVar("ProxyKeyType")
 
 PinDefault = Union[V, Sentinel]
@@ -49,26 +48,23 @@ class SupportsMerge(Protocol):
 
 
 class MergeMixin:
-    def merge(
-        self: MutableMapping[K, MergeableType],  # type: ignore
-        other: Mapping[K, MergeableType],
-    ) -> bool:
+    def merge(self, other: Mapping[Any, SupportsMerge]) -> bool:
         """Merge values from the given dict-like object."""
         for key, value in other.items():
             try:
-                if self[key].merge(value):
+                if self[key].merge(value):  # type: ignore
                     continue
             except KeyError:
                 pass
-            self[key] = value
+            self[key] = value  # type: ignore
         return True
 
 
 class MatchMixin:
-    def match(self: Mapping[str, Any], *patterns: str) -> Set[str]:  # type: ignore
+    def match(self, *patterns: str) -> Set[str]:
         """Return keys matching the given path patterns."""
         spec = PathSpec.from_lines("gitwildmatch", patterns)
-        return set(spec.match_files(self.keys()))
+        return set(spec.match_files(self.keys()))  # type: ignore
 
 
 @dataclass
