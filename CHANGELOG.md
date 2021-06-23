@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.32.1 (2021-06-23)
+### Fix
+* Show template filename in traceback ([`695fab6`](https://github.com/mcbeet/beet/commit/695fab62cea3e0a3c2dd53128d2769e40fc998ff))
+
 ## v0.32.0 (2021-06-18)
 ### Feature
 * Make pillow optional ([`9778883`](https://github.com/mcbeet/beet/commit/977888375b0ca3ca334a391b0ab4bc4a1ed9a0d5))
