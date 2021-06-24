@@ -2,6 +2,13 @@
 
 <!--next-version-placeholder-->
 
+## v0.14.0 (2021-06-24)
+### Feature
+* Add lectern.contrib.relative_location ([`9ce8cff`](https://github.com/mcbeet/lectern/commit/9ce8cff3681b0a54d15cf3db5a8e328d56e80784))
+
+### Fix
+* Add type alias for AnyDirective ([`87b73de`](https://github.com/mcbeet/lectern/commit/87b73deea1aab47eeb374100e33ddff8d74a3548))
+
 ## v0.13.1 (2021-06-11)
 ### Fix
 * Update logo ([`cafaf65`](https://github.com/mcbeet/lectern/commit/cafaf65ef92c141cc952409fd6962cef1b801a99))
