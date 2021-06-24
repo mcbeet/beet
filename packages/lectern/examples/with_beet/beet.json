@@ -3,10 +3,11 @@
     "lectern.contrib.require",
     "lectern.contrib.script",
     "lectern.contrib.define",
+    "lectern.contrib.relative_location",
     "custom_directive",
     "hello_directive"
   ],
-  "pipeline": ["lectern"],
+  "pipeline": ["lectern", "beet.contrib.relative_function_path"],
   "meta": {
     "lectern": {
       "load": ["*.md"],

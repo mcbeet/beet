@@ -17,6 +17,28 @@
 
   </details>
 
+### with_beet
+
+- `@function with_beet:abc`
+
+  <details>
+
+  ```mcfunction
+  function with_beet:def
+  ```
+
+  </details>
+
+- `@function with_beet:def`
+
+  <details>
+
+  ```mcfunction
+  say relative
+  ```
+
+  </details>
+
 ### demo
 
 - `@function demo:foo`
@@ -203,7 +225,7 @@
 
 ### embedded
 
-- `@function(strip_final_newline) embedded:foo`
+- `@function embedded:foo`
 
   <details>
 

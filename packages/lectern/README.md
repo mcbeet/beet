@@ -667,6 +667,43 @@ The `beet` plugin supports this use-case natively and allows you to run lectern 
 
 The `scripts` option lets you specify the command-line arguments for your scripts. The scripts don't even have to be written in Python. As long as the command prints out valid `lectern` syntax you can use any language you want.
 
+## Relative resource locations
+
+The `lectern.contrib.relative_location` plugin uses the `beet` context generator to generate namespaced resources in a default location automatically if you don't specify any namespace.
+
+```
+@function foo
+function tutorial:bar
+
+@function bar
+say hello
+```
+
+You can customize the root of unqualified resource locations by using the `generate_namespace` and `generate_prefix` meta variables. By default, `generate_namespace` is set to the `project_id` and `generate_prefix` is empty.
+
+The plugin works pretty nicely with `beet.contrib.relative_function_path`.
+
+```json
+// beet.json
+{
+  "require": ["lectern.contrib.relative_location"],
+  "pipeline": ["lectern", "beet.contrib.relative_function_path"],
+  "meta": {
+    "lectern": {
+      "load": ["*.md"]
+    }
+  }
+}
+```
+
+```
+@function foo
+function ./bar
+
+@function bar
+say hello
+```
+
 ## Snapshot testing
 
 A lot of Minecraft tooling involves generating data packs and resource packs. Writing tests for this kind of tooling takes time because you need to painstakingly compare everything that you care about with a reference value. This makes it hard to get good coverage, and then even harder to keep making changes to the code being tested afterwards. You're trading robustness and stability for a shackle that massively slows down development.
