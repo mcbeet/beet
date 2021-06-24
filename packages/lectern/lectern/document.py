@@ -10,7 +10,7 @@ from typing import Any, Dict, Literal, MutableMapping, Optional, Tuple, Union, o
 from beet import Cache, Context, DataPack, File, ResourcePack
 from beet.core.utils import FileSystemPath, extra_field
 
-from .directive import Directive, get_builtin_directives
+from .directive import AnyDirective, get_builtin_directives
 from .extract import MarkdownExtractor, TextExtractor
 from .serialize import ExternalFilesManager, MarkdownSerializer, TextSerializer
 
@@ -29,7 +29,7 @@ class Document:
     assets: ResourcePack = field(default_factory=ResourcePack)
     data: DataPack = field(default_factory=DataPack)
 
-    directives: MutableMapping[str, Directive] = extra_field(
+    directives: MutableMapping[str, AnyDirective] = extra_field(
         default_factory=get_builtin_directives
     )
 

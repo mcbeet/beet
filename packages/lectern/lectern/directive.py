@@ -1,5 +1,6 @@
 __all__ = [
     "Directive",
+    "AnyDirective",
     "NamespacedResourceDirective",
     "DataPackDirective",
     "ResourcePackDirective",
@@ -60,6 +61,14 @@ from beet.library.resource_pack import (
 )
 
 from .fragment import Fragment
+
+AnyDirective = Union[
+    "Directive",
+    "NamespacedResourceDirective",
+    "DataPackDirective",
+    "ResourcePackDirective",
+    "SkipDirective",
+]
 
 
 class Directive(Protocol):
@@ -134,15 +143,7 @@ class SkipDirective:
         fragment.expect()
 
 
-def get_builtin_directives() -> Dict[
-    str,
-    Union[
-        NamespacedResourceDirective,
-        DataPackDirective,
-        ResourcePackDirective,
-        SkipDirective,
-    ],
-]:
+def get_builtin_directives() -> Dict[str, AnyDirective]:
     """Return the built-in directives."""
     return {
         # fmt: off
