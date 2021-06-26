@@ -7,7 +7,19 @@
     "custom_directive",
     "hello_directive"
   ],
-  "pipeline": ["lectern", "beet.contrib.relative_function_path"],
+  "pipeline": [
+    "lectern",
+    "beet.contrib.relative_function_path",
+    {
+      "require": ["lectern.contrib.yaml_to_json"],
+      "pipeline": ["lectern"],
+      "meta": {
+        "lectern": {
+          "load": ["isolated/yaml_test.md"]
+        }
+      }
+    }
+  ],
   "meta": {
     "lectern": {
       "load": ["*.md"],

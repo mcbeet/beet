@@ -726,6 +726,26 @@ function ./bar
 say hello
 ```
 
+## Using YAML
+
+You can use the `lectern.contrib.yaml_to_json` plugin to author JSON files with YAML. Since YAML is a superset of JSON, you don't have to do anything when you use the plugin. YAML fragments are transparently converted to JSON.
+
+```
+@function_tag minecraft:tick
+values:
+  - demo:foo
+```
+
+The `@data_pack` and `@resource_pack` directives will also convert the fragment to JSON if the file extension matches `.yml` or `.yaml`.
+
+```
+@resource_pack assets/minecraft/sounds.yml
+block.note_block.bit_1:
+  sounds:
+    - block/note_block/bit_1
+  subtitle: subtitles.block.note_block.note
+```
+
 ## Snapshot testing
 
 A lot of Minecraft tooling involves generating data packs and resource packs. Writing tests for this kind of tooling takes time because you need to painstakingly compare everything that you care about with a reference value. This makes it hard to get good coverage, and then even harder to keep making changes to the code being tested afterwards. You're trading robustness and stability for a shackle that massively slows down development.
