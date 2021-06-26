@@ -5,13 +5,23 @@ __all__ = [
 
 from dataclasses import InitVar, dataclass, field
 from pathlib import Path
-from typing import Any, Dict, Literal, MutableMapping, Optional, Tuple, Union, overload
+from typing import (
+    Any,
+    Dict,
+    List,
+    Literal,
+    MutableMapping,
+    Optional,
+    Tuple,
+    Union,
+    overload,
+)
 
 from beet import Cache, Context, DataPack, File, ResourcePack
 from beet.core.utils import FileSystemPath, extra_field
 
 from .directive import AnyDirective, get_builtin_directives
-from .extract import MarkdownExtractor, TextExtractor
+from .extract import FragmentLoader, MarkdownExtractor, TextExtractor
 from .serialize import ExternalFilesManager, MarkdownSerializer, TextSerializer
 
 
@@ -29,6 +39,7 @@ class Document:
     assets: ResourcePack = field(default_factory=ResourcePack)
     data: DataPack = field(default_factory=DataPack)
 
+    loaders: List[FragmentLoader] = extra_field(default_factory=list)
     directives: MutableMapping[str, AnyDirective] = extra_field(
         default_factory=get_builtin_directives
     )
@@ -77,7 +88,11 @@ class Document:
 
     def add_text(self, source: str):
         """Extract pack fragments from plain text."""
-        assets, data = self.text_extractor.extract(source, self.directives)
+        assets, data = self.text_extractor.extract(
+            source=source,
+            directives=self.directives,
+            loaders=self.loaders,
+        )
         self.assets.merge(assets)
         self.data.merge(data)
 
@@ -90,6 +105,7 @@ class Document:
         assets, data = self.markdown_extractor.extract(
             source=source,
             directives=self.directives,
+            loaders=self.loaders,
             external_files=external_files,
         )
         self.assets.merge(assets)

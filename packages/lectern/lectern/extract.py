@@ -4,6 +4,7 @@ __all__ = [
     "EmbeddedExtractor",
     "MarkdownExtractor",
     "MarkdownParserWithUncheckedLinks",
+    "FragmentLoader",
 ]
 
 
@@ -11,7 +12,18 @@ import re
 from dataclasses import replace
 from itertools import islice
 from pathlib import Path
-from typing import Any, Dict, Iterable, Iterator, List, Mapping, Optional, Tuple, Union
+from typing import (
+    Any,
+    Callable,
+    Dict,
+    Iterable,
+    Iterator,
+    List,
+    Mapping,
+    Optional,
+    Tuple,
+    Union,
+)
 from urllib.parse import urlparse
 
 from beet import Cache, DataPack, ResourcePack
@@ -21,6 +33,8 @@ from markdown_it.token import Token
 
 from .directive import Directive
 from .fragment import Fragment
+
+FragmentLoader = Callable[[Fragment, Mapping[str, Directive]], Optional[Fragment]]
 
 
 class Extractor:
@@ -86,22 +100,29 @@ class Extractor:
         self,
         source: str,
         directives: Mapping[str, Directive],
+        loaders: Iterable[FragmentLoader] = (),
     ) -> Tuple[ResourcePack, DataPack]:
         """Extract a resource pack and a data pack."""
         return self.apply_directives(
-            directives, self.parse_fragments(source, directives)
+            directives, self.parse_fragments(source, directives), loaders
         )
 
     def apply_directives(
         self,
         directives: Mapping[str, Directive],
         fragments: Iterable[Fragment],
+        loaders: Iterable[FragmentLoader] = (),
     ) -> Tuple[ResourcePack, DataPack]:
         """Apply directives into a blank data pack and a blank resource pack."""
         assets, data = ResourcePack(), DataPack()
 
         for fragment in fragments:
-            directives[fragment.directive](fragment, assets, data)
+            for loader in loaders:
+                fragment = loader(fragment, directives)
+                if not fragment:
+                    break
+            if fragment:
+                directives[fragment.directive](fragment, assets, data)
 
         return assets, data
 
@@ -215,10 +236,13 @@ class MarkdownExtractor(Extractor):
         self,
         source: str,
         directives: Mapping[str, Directive],
+        loaders: Iterable[FragmentLoader] = (),
         external_files: Optional[FileSystemPath] = None,
     ) -> Tuple[ResourcePack, DataPack]:
         return self.apply_directives(
-            directives, self.parse_fragments(source, directives, external_files)
+            directives,
+            self.parse_fragments(source, directives, external_files),
+            loaders,
         )
 
     def parse_fragments(

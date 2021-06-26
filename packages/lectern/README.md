@@ -514,6 +514,28 @@ The `as_file` method will take care of reading the file or downloading it if the
 
 You can handle custom modifiers by checking the content of the `modifier` attribute.
 
+## Fragment loaders
+
+The `Document` object lets you register fragment loaders that intercept and potentially modify fragments before they're handled by directives. The `loaders` attribute is a list of callable objects that receive the fragment and the available directives as arguments. Each loader can then forward the fragment as-is or return a modified fragment. You can also return `None` to drop the fragment.
+
+```python
+from typing import Mapping, Optional
+from lectern import Directive, Document, Fragment
+
+def handle_ignore_modifier(
+    fragment: Fragment,
+    directives: Mapping[str, Directive],
+) -> Optional[Fragment]:
+    if fragment.modifier == "ignore":
+        return None
+    return fragment
+
+document = Document()
+document.loaders.append(handle_ignore_modifier)
+document.add_text("@function(ignore) demo:foo\nsay hello")
+assert not document.data
+```
+
 ## Beet plugin
 
 Using `lectern` as a `beet` plugin makes it possible to combine your markdown files with arbitrary `beet` plugins for further processing. The plugin can load files using the plain text and markdown document formats and emit a snapshot of the `beet` context at the end of the build.

@@ -1,7 +1,9 @@
+from typing import Mapping, Optional
+
 import pytest
 from beet import DataPack, Function, ResourcePack
 
-from lectern import Document, InvalidFragment
+from lectern import Directive, Document, Fragment, InvalidFragment
 
 
 def test_empty():
@@ -80,3 +82,17 @@ def test_no_content():
         InvalidFragment, match="Expected content, path or url for directive @function."
     ):
         Document(markdown="`@function demo:foo`\n")
+
+
+def test_loader():
+    def handle_ignore_modifier(
+        fragment: Fragment, directives: Mapping[str, Directive]
+    ) -> Optional[Fragment]:
+        if fragment.modifier == "ignore":
+            return None
+        return fragment
+
+    document = Document()
+    document.loaders.append(handle_ignore_modifier)
+    document.add_text("@function(ignore) demo:foo\nsay hello")
+    assert not document.data
