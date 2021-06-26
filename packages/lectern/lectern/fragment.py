@@ -35,6 +35,7 @@ class Fragment:
     content: Optional[str] = None
     url: Optional[str] = None
     path: Optional[FileSystemPath] = None
+    file: Optional[File[Any, Any]] = None
     cache: Optional[Cache] = None
 
     @overload
@@ -65,6 +66,9 @@ class Fragment:
 
     def as_file(self, file_type: Type[FileType] = BinaryFile) -> FileType:
         """Retrieve the content of the fragment as a file."""
+        if self.file:
+            return file_type(self.file.ensure_serialized())
+
         is_binary = issubclass(file_type, BinaryFileBase)
         content = self.content
 
