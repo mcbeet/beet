@@ -2,6 +2,11 @@
 
 <!--next-version-placeholder-->
 
+## v0.33.0 (2021-06-26)
+### Feature
+* Add beet.contrib.load_yaml plugin ([`86af226`](https://github.com/mcbeet/beet/commit/86af2264faa9f9484896fbe925e9d61def648186))
+* Make it possible to pass a custom callback to ensure_serialized() and ensure_deserialized() ([`d75648b`](https://github.com/mcbeet/beet/commit/d75648b9f23cd66e87b79dd663370f8288291cd3))
+
 ## v0.32.1 (2021-06-23)
 ### Fix
 * Show template filename in traceback ([`695fab6`](https://github.com/mcbeet/beet/commit/695fab62cea3e0a3c2dd53128d2769e40fc998ff))
