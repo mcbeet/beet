@@ -88,15 +88,37 @@ class File(Generic[ValueType, SerializeType]):
             "a source path."
         )
 
-    def ensure_serialized(self) -> SerializeType:
+    def ensure_serialized(
+        self,
+        serializer: Optional[Callable[[ValueType], SerializeType]] = None,
+    ) -> SerializeType:
         """Make sure that the content of the file is serialized."""
-        content = self.serialize(self.get_content())
+        backup = self.serializer
+        if serializer:
+            self.serializer = serializer
+
+        try:
+            content = self.serialize(self.get_content())
+        finally:
+            self.serializer = backup
+
         self.set_content(content)
         return content
 
-    def ensure_deserialized(self) -> ValueType:
+    def ensure_deserialized(
+        self,
+        deserializer: Optional[Callable[[SerializeType], ValueType]] = None,
+    ) -> ValueType:
         """Make sure that the content of the file is deserialized."""
-        content = self.deserialize(self.get_content())
+        backup = self.deserializer
+        if deserializer:
+            self.deserializer = deserializer
+
+        try:
+            content = self.deserialize(self.get_content())
+        finally:
+            self.deserializer = backup
+
         self.set_content(content)
         return content
 
