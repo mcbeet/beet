@@ -2,6 +2,13 @@
 
 <!--next-version-placeholder-->
 
+## v0.15.0 (2021-06-26)
+### Feature
+* Add lectern.contrib.yaml_to_json plugin ([`9a3ab5e`](https://github.com/mcbeet/lectern/commit/9a3ab5eb30740b3946d765246f3ad40545768989))
+* Baked files can now be stored back into fragments ([`430e539`](https://github.com/mcbeet/lectern/commit/430e539e7fcb9496c8245c81159aed9a59f8ec40))
+* Rewrite lectern.contrib.relative_location with a fragment loader ([`f26e167`](https://github.com/mcbeet/lectern/commit/f26e1672f42208a257dfea68a081f13e6fd4c809))
+* Add fragment loaders ([`c46184a`](https://github.com/mcbeet/lectern/commit/c46184a557438024e604efe5accdb168c9402e05))
+
 ## v0.14.0 (2021-06-24)
 ### Feature
 * Add lectern.contrib.relative_location ([`9ce8cff`](https://github.com/mcbeet/lectern/commit/9ce8cff3681b0a54d15cf3db5a8e328d56e80784))
