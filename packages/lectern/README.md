@@ -730,6 +730,18 @@ say hello
 
 You can use the `lectern.contrib.yaml_to_json` plugin to author JSON files with YAML. Since YAML is a superset of JSON, you don't have to do anything when you use the plugin. YAML fragments are transparently converted to JSON.
 
+```json
+{
+  "require": ["lectern.contrib.yaml_to_json"],
+  "pipeline": ["lectern"],
+  "meta": {
+    "lectern": {
+      "load": ["*.md"]
+    }
+  }
+}
+```
+
 ```
 @function_tag minecraft:tick
 values:
