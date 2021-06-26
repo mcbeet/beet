@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.15.1 (2021-06-26)
+### Fix
+* Forgot to document lectern.contrib.yaml_to_json usage in config file ([`97d5cab`](https://github.com/mcbeet/lectern/commit/97d5cabbc9376d141f05dc687647ce49524f01f5))
+
 ## v0.15.0 (2021-06-26)
 ### Feature
 * Add lectern.contrib.yaml_to_json plugin ([`9a3ab5e`](https://github.com/mcbeet/lectern/commit/9a3ab5eb30740b3946d765246f3ad40545768989))
