@@ -2,36 +2,36 @@
 
 
 __all__ = [
-    "RelativeNamespacedResourceDirective",
+    "RelativeNamespacedResourceLoader",
 ]
 
 
 from dataclasses import dataclass, replace
+from typing import Mapping
 
-from beet import Context, DataPack, ResourcePack
+from beet import Context
 
-from lectern import Document, Fragment, NamespacedResourceDirective
+from lectern import AnyDirective, Document, Fragment, NamespacedResourceDirective
 
 
 def beet_default(ctx: Context):
     document = ctx.inject(Document)
-    document.directives.update(
-        (name, RelativeNamespacedResourceDirective(directive.file_type, ctx))
-        for name, directive in document.directives.items()
-        if isinstance(directive, NamespacedResourceDirective)
-    )
+    document.loaders.append(RelativeNamespacedResourceLoader(ctx))
 
 
 @dataclass
-class RelativeNamespacedResourceDirective(NamespacedResourceDirective):
-    """Directive that handles relative resource locations."""
+class RelativeNamespacedResourceLoader:
+    """Loader that resolves relative resource locations."""
 
     ctx: Context
 
-    def __call__(self, fragment: Fragment, assets: ResourcePack, data: DataPack):
-        name = fragment.expect("name")
-
-        if ":" not in name:
-            fragment = replace(fragment, arguments=[self.ctx.generate.path(name)])
-
-        super().__call__(fragment, assets, data)
+    def __call__(
+        self,
+        fragment: Fragment,
+        directives: Mapping[str, AnyDirective],
+    ) -> Fragment:
+        if isinstance(directives[fragment.directive], NamespacedResourceDirective):
+            name = fragment.expect("name")
+            if ":" not in name:
+                fragment = replace(fragment, arguments=[self.ctx.generate.path(name)])
+        return fragment
