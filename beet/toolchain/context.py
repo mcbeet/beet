@@ -5,6 +5,7 @@ __all__ = [
     "ProjectCache",
     "Context",
     "ContextContainer",
+    "InvalidContextOptions",
 ]
 
 
@@ -15,6 +16,8 @@ from dataclasses import InitVar, dataclass, field
 from pathlib import Path
 from typing import Any, Callable, List, Optional, Set, Tuple, TypeVar, overload
 
+from pydantic import ValidationError
+
 from beet.core.cache import MultiCache
 from beet.core.container import Container
 from beet.core.utils import FileSystemPath, JsonDict, TextComponent, extra_field
@@ -22,16 +25,39 @@ from beet.library.data_pack import DataPack
 from beet.library.resource_pack import ResourcePack
 
 from .generator import Generator
-from .pipeline import GenericPipeline, GenericPlugin, GenericPluginSpec
+from .pipeline import (
+    FormattedPipelineException,
+    GenericPipeline,
+    GenericPlugin,
+    GenericPluginSpec,
+    PipelineFallthroughException,
+)
 from .template import TemplateManager
 from .tree import generate_tree
-from .utils import import_from_string
+from .utils import format_validation_error, import_from_string
 from .worker import WorkerPoolHandle
 
-InjectedType = TypeVar("InjectedType")
+T = TypeVar("T")
 
 Plugin = GenericPlugin["Context"]
 PluginSpec = GenericPluginSpec["Context"]
+
+
+class InvalidContextOptions(FormattedPipelineException):
+    """Raised when validating context metadata."""
+
+    key: str
+    explanation: Optional[str]
+
+    def __init__(self, key: str, explanation: Optional[str] = None):
+        super().__init__(key, explanation)
+        self.key = key
+        self.explanation = explanation
+        self.message = f"Invalid context options {key!r}."
+        self.format_cause = True
+
+        if explanation:
+            self.message += f"\n\n{explanation}"
 
 
 @dataclass
@@ -116,7 +142,7 @@ class Context:
         self.template.expose("parse_json", lambda string: json.loads(string))
 
     @overload
-    def inject(self, cls: Callable[["Context"], InjectedType]) -> InjectedType:
+    def inject(self, cls: Callable[["Context"], T]) -> T:
         ...
 
     @overload
@@ -173,6 +199,18 @@ class Context:
             for key in to_remove:
                 del self.meta[key]
             self.meta.update(to_restore)
+
+    def validate(self, key: str, validator: Callable[..., T]) -> T:
+        """Validate context metadata."""
+        try:
+            return validator(**self.meta.get(key, {}))
+        except ValidationError as exc:
+            explanation = format_validation_error(key, exc)
+            raise InvalidContextOptions(key, explanation) from None
+        except PipelineFallthroughException:
+            raise
+        except Exception as exc:
+            raise InvalidContextOptions(key) from exc
 
     @property
     def packs(self) -> Tuple[ResourcePack, DataPack]:

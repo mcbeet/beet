@@ -22,6 +22,7 @@ from pydantic import BaseModel, Field, ValidationError
 from beet.core.utils import FileSystemPath, JsonDict, TextComponent
 
 from .pipeline import FormattedPipelineException
+from .utils import format_validation_error
 
 
 class InvalidProjectConfig(FormattedPipelineException):
@@ -203,16 +204,6 @@ def config_error_handler(path: FileSystemPath = "<unknown>"):
     except FileNotFoundError as exc:
         raise InvalidProjectConfig(f"{path}: File not found.") from exc
     except ValidationError as exc:
-        errors = [
-            (
-                "config" + "".join(json.dumps([item]) for item in error["loc"]),
-                error["msg"].capitalize(),
-            )
-            for error in exc.errors()
-        ]
-        width = max(len(loc) for loc, _ in errors) + 1
-        message = f"{path}: Validation error.\n\n" + "\n".join(
-            "{loc:<{width}} => {msg}.".format(loc=loc, width=width, msg=msg)
-            for loc, msg in errors
-        )
+        message = f"{path}: Validation error.\n\n"
+        message += format_validation_error("config", exc)
         raise InvalidProjectConfig(message) from exc

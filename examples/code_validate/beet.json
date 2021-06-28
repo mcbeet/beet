@@ -1,0 +1,9 @@
+{
+  "pipeline": ["demo"],
+  "meta": {
+    "demo": {
+      "message": "hello",
+      "repeat": 7
+    }
+  }
+}

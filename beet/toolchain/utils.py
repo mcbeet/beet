@@ -4,6 +4,7 @@ __all__ = [
     "stable_hash",
     "format_obj",
     "format_exc",
+    "format_validation_error",
     "import_from_string",
     "locate_minecraft",
     "ensure_builtins",
@@ -21,6 +22,7 @@ from typing import Any, Callable, List, Literal, Optional
 
 from base58 import b58encode
 from fnvhash import fnv1a_32, fnv1a_64
+from pydantic import ValidationError
 
 HASH_ALPHABET = b"123456789abcdefghijkmnopqrstuvwxyz"
 
@@ -56,6 +58,21 @@ def format_obj(obj: Any) -> str:
     module = getattr(obj, "__module__", None)
     name = getattr(obj, "__qualname__", None)
     return repr(f"{module}.{name}") if module and name else repr(obj)
+
+
+def format_validation_error(prefix: str, exc: ValidationError) -> str:
+    errors = [
+        (
+            prefix + "".join(json.dumps([item]) for item in error["loc"]),
+            error["msg"].capitalize(),
+        )
+        for error in exc.errors()
+    ]
+    width = max(len(loc) for loc, _ in errors) + 1
+    return "\n".join(
+        "{loc:<{width}} => {msg}.".format(loc=loc, width=width, msg=msg)
+        for loc, msg in errors
+    )
 
 
 def import_from_string(
