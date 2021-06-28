@@ -1,5 +1,6 @@
 __all__ = [
     "LazyFormat",
+    "stable_int_hash",
     "stable_hash",
     "format_obj",
     "format_exc",
@@ -16,7 +17,7 @@ import struct
 from importlib import import_module
 from pathlib import Path
 from traceback import format_exception
-from typing import Any, Callable, List, Optional
+from typing import Any, Callable, List, Literal, Optional
 
 from base58 import b58encode
 from fnvhash import fnv1a_32, fnv1a_64
@@ -32,14 +33,19 @@ class LazyFormat:
         return self.func().__format__(format_spec)
 
 
-def stable_hash(value: Any, short: bool = False) -> str:
+def stable_int_hash(value: Any, size: Literal[32, 64] = 64) -> int:
     if callable(value):
         value = value()
     if not isinstance(value, bytes):
         value = str(value).encode()
-    hasher = fnv1a_32 if short else fnv1a_64
+    hasher = fnv1a_32 if size == 32 else fnv1a_64
+    return hasher(value)
+
+
+def stable_hash(value: Any, short: bool = False) -> str:
+    result = stable_int_hash(value, size=32 if short else 64)
     fmt = ">I" if short else ">Q"
-    return b58encode(struct.pack(fmt, hasher(value)), HASH_ALPHABET).decode()
+    return b58encode(struct.pack(fmt, result), HASH_ALPHABET).decode()
 
 
 def format_exc(exc: BaseException) -> str:
