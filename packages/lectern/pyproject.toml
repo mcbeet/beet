@@ -34,7 +34,7 @@ black = {version = "^21.6b0", allow-prereleases = true}
 rope = "^0.19.0"
 pytest = "^6.2.4"
 isort = {version = "^5.9.1", allow-prereleases = true}
-python-semantic-release = "^7.16.1"
+python-semantic-release = "^7.16.2"
 pytest-insta = "^0.1.10"
 
 [tool.poetry.scripts]
