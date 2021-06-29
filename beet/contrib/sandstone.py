@@ -2,35 +2,34 @@
 
 
 __all__ = [
+    "SandstoneOption",
     "sandstone",
 ]
 
 
 import subprocess
-from typing import Optional, cast
+from typing import Optional
 
-from beet import Context, Plugin
-from beet.core.utils import FileSystemPath, JsonDict
+from pydantic import BaseModel
+
+from beet import Context, configurable
+
+
+class SandstoneOption(BaseModel):
+    path: Optional[str] = None
 
 
 def beet_default(ctx: Context):
-    config = ctx.meta.get("sandstone", cast(JsonDict, {}))
-
-    path = config.get("path")
-
-    ctx.require(sandstone(path))
+    ctx.require(sandstone)
 
 
-def sandstone(path: Optional[FileSystemPath] = None) -> Plugin:
-    """Return a plugin that builds a given sandstone project."""
+@configurable(validator=SandstoneOption)
+def sandstone(ctx: Context, opts: SandstoneOption):
+    """Plugin that builds a given sandstone project."""
+    directory = (ctx.directory / opts.path).resolve() if opts.path else ctx.directory
+    output_directory = ctx.cache["sandstone"].directory
 
-    def plugin(ctx: Context):
-        directory = (ctx.directory / path).resolve() if path else ctx.directory
-        output_directory = ctx.cache["sandstone"].directory
+    arguments = ["npx", "sand", "build", "--path", str(output_directory)]
+    subprocess.run(arguments, cwd=directory, check=True)
 
-        arguments = ["npx", "sand", "build", "--path", str(output_directory)]
-        subprocess.run(arguments, cwd=directory, check=True)
-
-        ctx.data.load(next(output_directory.iterdir()))
-
-    return plugin
+    ctx.data.load(next(output_directory.iterdir()))

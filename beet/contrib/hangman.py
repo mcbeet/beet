@@ -11,6 +11,7 @@ https://feedback.minecraft.net/hc/en-us/community/posts/360077450811-In-line-fun
 
 
 __all__ = [
+    "HangmanOptions",
     "hangman",
     "parse_lines",
     "parse_trailing_comment",
@@ -19,10 +20,11 @@ __all__ = [
 
 
 import re
-from typing import Iterable, Iterator, List, Literal, Optional, Tuple, Union, cast
+from typing import Iterable, Iterator, List, Literal, Optional, Tuple
 
-from beet import Context, Function, Plugin
-from beet.core.utils import JsonDict
+from pydantic import BaseModel
+
+from beet import Context, Function, configurable
 from beet.toolchain.utils import stable_hash
 
 REGEX_COMMENT = re.compile(r"(\s+#(?:\s+.*)?$)")
@@ -31,35 +33,33 @@ REGEX_RUN_COMMANDS = re.compile(r"(\s*execute\b(?:.*)\b)run\s+commands(\s+\w+|)(
 REGEX_FOLD_COMMENT = re.compile(r"\s*#\s*fold\s*:\s*(\w+)\s*")
 
 
-TokenType = Union[
-    Literal["TEXT"],
-    Literal["BLANK"],
-    Literal["COMMENT"],
-    Literal["INDENT"],
-    Literal["DEDENT"],
+TokenType = Literal[
+    "TEXT",
+    "BLANK",
+    "COMMENT",
+    "INDENT",
+    "DEDENT",
 ]
 Token = Tuple[TokenType, str]
 
 
+class HangmanOptions(BaseModel):
+    match: Iterable[str] = ()
+
+
 def beet_default(ctx: Context):
-    config = ctx.meta.get("hangman", cast(JsonDict, {}))
-
-    match = config.get("match", ())
-
-    ctx.require(hangman(match))
+    ctx.require(hangman)
 
 
-def hangman(match: Iterable[str] = ()) -> Plugin:
-    """Return a plugin that provides indentation-based syntactic extensions for functions."""
+@configurable(validator=HangmanOptions)
+def hangman(ctx: Context, opts: HangmanOptions):
+    """Plugin that provides indentation-based syntactic extensions for functions."""
 
-    def plugin(ctx: Context):
-        for path in ctx.data.functions.match(*match):
-            function = ctx.data.functions[path]
-            function.lines = list(
-                fold_hanging_commands(ctx, parse_lines(function.lines), path)
-            )
-
-    return plugin
+    for path in ctx.data.functions.match(*opts.match):
+        function = ctx.data.functions[path]
+        function.lines = list(
+            fold_hanging_commands(ctx, parse_lines(function.lines), path)
+        )
 
 
 def fold_hanging_commands(

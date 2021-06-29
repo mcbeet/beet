@@ -2,39 +2,35 @@
 
 
 __all__ = [
+    "FunctionHeaderOptions",
     "function_header",
 ]
 
 
-from typing import Iterable, Optional, cast
+from typing import Iterable, Optional
 
-from beet import Context, Plugin
-from beet.core.utils import JsonDict
+from pydantic import BaseModel
+
+from beet import Context, configurable
+
+
+class FunctionHeaderOptions(BaseModel):
+    match: Iterable[str] = ()
+    template: Optional[str] = "function_header.mcfunction"
 
 
 def beet_default(ctx: Context):
-    config = ctx.meta.get("function_header", cast(JsonDict, {}))
-
-    match = config.get("match", ())
-    template = config.get("template", "function_header.mcfunction")
-
-    ctx.require(function_header(match, template))
+    ctx.require(function_header)
 
 
-def function_header(
-    match: Iterable[str] = (),
-    template: Optional[str] = "function_header.mcfunction",
-) -> Plugin:
-    """Return a plugin that adds a header to functions automatically."""
+@configurable(validator=FunctionHeaderOptions)
+def function_header(ctx: Context, opts: FunctionHeaderOptions):
+    """Plugin that adds a header to functions automatically."""
+    if not opts.template:
+        return
 
-    def plugin(ctx: Context):
-        if not template:
-            return
-
-        for path in ctx.data.functions.match(*match):
-            with ctx.override(render_path=path, render_group="functions"):
-                header = ctx.template.render(template)
-            function = ctx.data.functions[path]
-            function.text = header + function.text
-
-    return plugin
+    for path in ctx.data.functions.match(*opts.match):
+        with ctx.override(render_path=path, render_group="functions"):
+            header = ctx.template.render(opts.template)
+        function = ctx.data.functions[path]
+        function.text = header + function.text

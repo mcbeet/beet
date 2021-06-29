@@ -34,7 +34,7 @@ ContextType = TypeVar("ContextType", contravariant=True)
 class GenericPlugin(Protocol[ContextType]):
     """Protocol for detecting plugins."""
 
-    def __call__(self, ctx: ContextType) -> Any:
+    def __call__(self, ctx: ContextType, /) -> Any:
         ...
 
 

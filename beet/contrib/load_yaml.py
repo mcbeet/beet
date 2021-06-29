@@ -2,15 +2,17 @@
 
 
 __all__ = [
+    "LoadYamlOptions",
     "YamlPackLoader",
     "load_yaml",
 ]
 
 
 from dataclasses import InitVar, dataclass, field
-from typing import Any, Dict, Iterable, Optional, Type, TypeVar, cast
+from typing import Any, Dict, Iterable, Optional, Type, TypeVar
 
 import yaml
+from pydantic import BaseModel
 
 from beet import (
     Context,
@@ -18,40 +20,33 @@ from beet import (
     File,
     FileOrigin,
     Pack,
-    Plugin,
     ResourcePack,
     SupportsExtra,
+    configurable,
 )
-from beet.core.utils import JsonDict
 
 PackType = TypeVar("PackType", bound=Pack[Any])
 PackFile = File[Any, Any]
 
 
+class LoadYamlOptions(BaseModel):
+    resource_pack: Iterable[str] = ()
+    data_pack: Iterable[str] = ()
+
+
 def beet_default(ctx: Context):
-    config = ctx.meta.get("load_yaml", cast(JsonDict, {}))
-
-    resource_pack = config.get("resource_pack", ())
-    data_pack = config.get("data_pack", ())
-
-    ctx.require(load_yaml(resource_pack, data_pack))
+    ctx.require(load_yaml)
 
 
-def load_yaml(
-    resource_pack: Iterable[str] = (),
-    data_pack: Iterable[str] = (),
-) -> Plugin:
-    """Return a plugin that loads yaml resources for data packs and resource packs."""
+@configurable(validator=LoadYamlOptions)
+def load_yaml(ctx: Context, opts: LoadYamlOptions):
+    """Plugin that loads yaml resources for data packs and resource packs."""
+    yaml_pack_loader = ctx.inject(YamlPackLoader)
 
-    def plugin(ctx: Context):
-        yaml_pack_loader = ctx.inject(YamlPackLoader)
-
-        for path in resource_pack:
-            yaml_pack_loader.load_resource_pack(ctx.directory / path)
-        for path in data_pack:
-            yaml_pack_loader.load_data_pack(ctx.directory / path)
-
-    return plugin
+    for path in opts.resource_pack:
+        yaml_pack_loader.load_resource_pack(ctx.directory / path)
+    for path in opts.data_pack:
+        yaml_pack_loader.load_data_pack(ctx.directory / path)
 
 
 @dataclass

@@ -2,10 +2,15 @@ __all__ = [
     "Pipeline",
     "Plugin",
     "PluginSpec",
+    "PluginWithOptions",
+    "ConfigurablePlugin",
+    "ServiceFactory",
+    "Validator",
     "ProjectCache",
     "Context",
     "ContextContainer",
-    "InvalidContextOptions",
+    "InvalidOptions",
+    "configurable",
 ]
 
 
@@ -13,8 +18,19 @@ import json
 import sys
 from contextlib import contextmanager
 from dataclasses import InitVar, dataclass, field
+from functools import partial, wraps
 from pathlib import Path
-from typing import Any, Callable, List, Optional, Set, Tuple, TypeVar, overload
+from typing import (
+    Any,
+    Callable,
+    List,
+    Optional,
+    Protocol,
+    Set,
+    Tuple,
+    TypeVar,
+    overload,
+)
 
 from pydantic import ValidationError
 
@@ -38,13 +54,16 @@ from .utils import format_validation_error, import_from_string
 from .worker import WorkerPoolHandle
 
 T = TypeVar("T")
+OptionsType = TypeVar("OptionsType", contravariant=True)
 
 Plugin = GenericPlugin["Context"]
 PluginSpec = GenericPluginSpec["Context"]
+ServiceFactory = Callable[["Context"], T]
+Validator = Callable[..., T]
 
 
-class InvalidContextOptions(FormattedPipelineException):
-    """Raised when validating context metadata."""
+class InvalidOptions(FormattedPipelineException):
+    """Raised when a validation error occurs."""
 
     key: str
     explanation: Optional[str]
@@ -53,7 +72,7 @@ class InvalidContextOptions(FormattedPipelineException):
         super().__init__(key, explanation)
         self.key = key
         self.explanation = explanation
-        self.message = f"Invalid context options {key!r}."
+        self.message = f"Invalid options {key!r}."
         self.format_cause = True
 
         if explanation:
@@ -63,6 +82,21 @@ class InvalidContextOptions(FormattedPipelineException):
 @dataclass
 class Pipeline(GenericPipeline["Context"]):
     ctx: "Context"
+
+
+class PluginWithOptions(Protocol[OptionsType]):
+    def __call__(self, ctx: "Context", opts: OptionsType, /) -> Any:
+        ...
+
+
+class ConfigurablePlugin(Protocol):
+    @overload
+    def __call__(self, **kwds: Any) -> "ConfigurablePlugin":  # type: ignore
+        ...
+
+    @overload
+    def __call__(self, ctx: "Context", /) -> Any:
+        ...
 
 
 class ContextContainer(Container[Callable[["Context"], Any], Any]):
@@ -142,7 +176,7 @@ class Context:
         self.template.expose("parse_json", lambda string: json.loads(string))
 
     @overload
-    def inject(self, cls: Callable[["Context"], T]) -> T:
+    def inject(self, cls: ServiceFactory[T]) -> T:
         ...
 
     @overload
@@ -200,17 +234,24 @@ class Context:
                 del self.meta[key]
             self.meta.update(to_restore)
 
-    def validate(self, key: str, validator: Callable[..., T]) -> T:
-        """Validate context metadata."""
+    def validate(
+        self,
+        key: str,
+        validator: Validator[T],
+        options: Optional[JsonDict] = None,
+    ) -> T:
+        """Validate options."""
+        if options is None:
+            options = self.meta.get(key)
         try:
-            return validator(**self.meta.get(key, {}))
+            return validator(**(options or {}))
         except ValidationError as exc:
             explanation = format_validation_error(key, exc)
-            raise InvalidContextOptions(key, explanation) from None
+            raise InvalidOptions(key, explanation) from None
         except PipelineFallthroughException:
             raise
         except Exception as exc:
-            raise InvalidContextOptions(key) from exc
+            raise InvalidOptions(key) from exc
 
     @property
     def packs(self) -> Tuple[ResourcePack, DataPack]:
@@ -223,3 +264,54 @@ class Context:
     def require(self, spec: PluginSpec):
         """Execute the specified plugin."""
         self.inject(Pipeline).require(spec)
+
+
+@overload
+def configurable(
+    name: Optional[str] = None,
+    /,
+    *,
+    validator: Validator[OptionsType],
+) -> Callable[[PluginWithOptions[OptionsType]], ConfigurablePlugin]:
+    ...
+
+
+@overload
+def configurable(
+    name: Optional[str] = None,
+    /,
+) -> Callable[[PluginWithOptions[JsonDict]], ConfigurablePlugin]:
+    ...
+
+
+@overload
+def configurable(plugin: PluginWithOptions[JsonDict]) -> ConfigurablePlugin:
+    ...
+
+
+def configurable(
+    plugin: Any = None,
+    *,
+    name: Optional[str] = None,
+    validator: Optional[Validator[Any]] = None,
+) -> Any:
+    """Decorator for making a plugin configurable."""
+    if not callable(plugin):
+        if isinstance(plugin, str):
+            name = plugin
+        return partial(configurable, name=name, validator=validator)
+
+    @wraps(plugin)
+    def wrapper(ctx: Optional[Context] = None, /, **kwargs: Any) -> Any:
+        if ctx is None:
+            return partial(wrapper, **kwargs)
+        return plugin(
+            ctx,
+            ctx.validate(
+                key=name or plugin.__name__,
+                validator=validator or (lambda **kw: kw),
+                options=kwargs or None,
+            ),
+        )
+
+    return wrapper

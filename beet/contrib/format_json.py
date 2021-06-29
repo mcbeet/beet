@@ -2,54 +2,61 @@
 
 
 __all__ = [
+    "FormatJsonOptions",
     "format_json",
 ]
 
 
 import json
-from typing import Any, Callable, cast
+from typing import Any, Callable, Optional, Tuple, Union
 
-from beet import Context, JsonFileBase, Plugin
-from beet.core.utils import JsonDict
+from pydantic import BaseModel
+
+from beet import Context, JsonFileBase
+from beet.toolchain.context import configurable
 
 
-def beet_default(ctx: Context):
-    config = ctx.meta.get("format_json", cast(JsonDict, {}))
+class FormatJsonOptions(BaseModel):
+    ensure_ascii: bool = True
+    allow_nan: bool = True
+    indent: Optional[Union[int, str]] = 2
+    separators: Optional[Tuple[str, str]] = None
+    sort_keys: bool = False
+    final_newline: bool = True
 
-    ensure_ascii = config.get("ensure_ascii", True)
-    allow_nan = config.get("allow_nan", True)
-    indent = config.get("indent", 2)
-    separators = config.get("separators")
-    sort_keys = config.get("sort_keys", False)
-    final_newline = config.get("final_newline", True)
 
-    if separators:
-        separators = (separators[0], separators[1])
+def get_formatter(
+    formatter: Optional[Callable[[Any], str]] = None,
+    **kwargs: Any,
+) -> Callable[[Any], str]:
+    if callable(formatter):
+        return formatter
 
-    suffix = "\n" if final_newline else ""
+    opts = FormatJsonOptions(**kwargs)
 
-    ctx.require(
-        format_json(
-            lambda content: json.dumps(
-                content,
-                ensure_ascii=ensure_ascii,
-                allow_nan=allow_nan,
-                indent=indent,
-                separators=separators,
-                sort_keys=sort_keys,
-            )
-            + suffix
+    suffix = "\n" if opts.final_newline else ""
+
+    return (
+        lambda content: json.dumps(
+            content,
+            ensure_ascii=opts.ensure_ascii,
+            allow_nan=opts.allow_nan,
+            indent=opts.indent,
+            separators=opts.separators,
+            sort_keys=opts.sort_keys,
         )
+        + suffix
     )
 
 
-def format_json(formatter: Callable[[Any], str]) -> Plugin:
-    """Return a plugin that formats json files with the given formatter."""
+def beet_default(ctx: Context):
+    ctx.require(format_json)
 
-    def plugin(ctx: Context):
-        for pack in ctx.packs:
-            for _, json_file in pack.list_files(extend=JsonFileBase[Any]):
-                json_file.serializer = formatter
-                json_file.text = formatter(json_file.data)
 
-    return plugin
+@configurable(validator=get_formatter)
+def format_json(ctx: Context, formatter: Callable[[Any], str]):
+    """Plugin that formats json files with the given formatter."""
+    for pack in ctx.packs:
+        for _, json_file in pack.list_files(extend=JsonFileBase[Any]):
+            json_file.serializer = formatter
+            json_file.text = formatter(json_file.data)

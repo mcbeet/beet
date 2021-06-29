@@ -6,6 +6,7 @@ Credit: Oran9eUtan <Oran9eUtan@gmail.com>
 
 
 __all__ = [
+    "BabelboxOptions",
     "babelbox",
     "load_languages",
 ]
@@ -13,10 +14,12 @@ __all__ = [
 
 import logging
 from csv import Dialect, DictReader, Sniffer
-from typing import Dict, Iterable, Optional, Type, Union, cast
+from typing import Dict, Iterable, Optional, Type, Union
 
-from beet import Context, Language, Plugin
-from beet.core.utils import FileSystemPath, JsonDict
+from pydantic import BaseModel
+
+from beet import Context, Language, configurable
+from beet.core.utils import FileSystemPath
 
 DialectLike = Union[str, Dialect, Type[Dialect]]
 
@@ -24,37 +27,30 @@ DialectLike = Union[str, Dialect, Type[Dialect]]
 logger = logging.getLogger(__name__)
 
 
+class BabelboxOptions(BaseModel):
+    load: Iterable[str] = ()
+    dialect: Optional[str] = None
+    filename_prefix: bool = False
+
+
 def beet_default(ctx: Context):
-    config = ctx.meta.get("babelbox", cast(JsonDict, {}))
-
-    load = config.get("load", ())
-    dialect = config.get("dialect")
-    filename_prefix = config.get("filename_prefix", False)
-
-    ctx.require(babelbox(load, dialect, filename_prefix))
+    ctx.require(babelbox)
 
 
-def babelbox(
-    load: Iterable[str] = (),
-    dialect: Optional[str] = None,
-    filename_prefix: bool = False,
-) -> Plugin:
-    """Return a plugin that loads translations from csv files."""
+@configurable(validator=BabelboxOptions)
+def babelbox(ctx: Context, opts: BabelboxOptions):
+    """Plugin that loads translations from csv files."""
+    minecraft = ctx.assets["minecraft"]
 
-    def plugin(ctx: Context):
-        minecraft = ctx.assets["minecraft"]
-
-        for pattern in load:
-            for path in ctx.directory.glob(pattern):
-                minecraft.languages.merge(
-                    load_languages(
-                        path=path,
-                        dialect=dialect,
-                        prefix=path.stem + "." if filename_prefix else "",
-                    )
+    for pattern in opts.load:
+        for path in ctx.directory.glob(pattern):
+            minecraft.languages.merge(
+                load_languages(
+                    path=path,
+                    dialect=opts.dialect,
+                    prefix=path.stem + "." if opts.filename_prefix else "",
                 )
-
-    return plugin
+            )
 
 
 def load_languages(

@@ -1,0 +1,19 @@
+pipeline:
+  - demo
+  - demo.plugin2
+  - demo.plugin4
+
+meta:
+  plugin1:
+    commands:
+      - say hello
+      - say world
+  different_name:
+    commands:
+      - say thing
+  plugin3:
+    commands:
+      - say with validator
+  something_else:
+    commands:
+      - say other
