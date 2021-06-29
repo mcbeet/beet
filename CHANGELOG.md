@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.34.0 (2021-06-29)
+### Feature
+* Add configurable decorator to load and validate plugin options ([`a3a39fe`](https://github.com/mcbeet/beet/commit/a3a39fe2cc6668b8e098b6bb597f3febb35119a1))
+* Add ctx.validate() ([`e1210cf`](https://github.com/mcbeet/beet/commit/e1210cf287127e08abccd3040f9ef602d1392485))
+* Add stable_int_hash() utility ([`e08d004`](https://github.com/mcbeet/beet/commit/e08d004d818652d6301f885171ebef9cfaa2875e))
+
 ## v0.33.0 (2021-06-26)
 ### Feature
 * Add beet.contrib.load_yaml plugin ([`86af226`](https://github.com/mcbeet/beet/commit/86af2264faa9f9484896fbe925e9d61def648186))
