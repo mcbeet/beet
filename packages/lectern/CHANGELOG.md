@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.15.2 (2021-07-01)
+### Fix
+* Declare lectern plugin with configurable decorator ([`dbcd46c`](https://github.com/mcbeet/lectern/commit/dbcd46c6c7fd3acc476268576344a60e6095b652))
+
 ## v0.15.1 (2021-06-26)
 ### Fix
 * Forgot to document lectern.contrib.yaml_to_json usage in config file ([`97d5cab`](https://github.com/mcbeet/lectern/commit/97d5cabbc9376d141f05dc687647ce49524f01f5))
