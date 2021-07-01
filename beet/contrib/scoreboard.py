@@ -7,7 +7,7 @@ __all__ = [
 ]
 
 
-from typing import Iterable
+from typing import List
 
 from pydantic import BaseModel
 
@@ -16,7 +16,7 @@ from beet import Context, Function, configurable
 
 class ScoreboardOptions(BaseModel):
     function: str = "scoreboard"
-    tags: Iterable[str] = ("minecraft:load",)
+    tags: List[str] = ["minecraft:load"]
 
 
 def beet_default(ctx: Context):

@@ -7,7 +7,7 @@ __all__ = [
 ]
 
 
-from typing import Iterable, Optional
+from typing import List, Optional
 
 from pydantic import BaseModel
 
@@ -15,7 +15,7 @@ from beet import Context, configurable
 
 
 class FunctionHeaderOptions(BaseModel):
-    match: Iterable[str] = ()
+    match: List[str] = []
     template: Optional[str] = "function_header.mcfunction"
 
 

@@ -44,7 +44,7 @@ Token = Tuple[TokenType, str]
 
 
 class HangmanOptions(BaseModel):
-    match: Iterable[str] = ()
+    match: List[str] = []
 
 
 def beet_default(ctx: Context):

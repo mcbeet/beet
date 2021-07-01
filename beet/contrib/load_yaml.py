@@ -9,7 +9,7 @@ __all__ = [
 
 
 from dataclasses import InitVar, dataclass, field
-from typing import Any, Dict, Iterable, Optional, Type, TypeVar
+from typing import Any, Dict, List, Optional, Type, TypeVar
 
 import yaml
 from pydantic import BaseModel
@@ -30,8 +30,8 @@ PackFile = File[Any, Any]
 
 
 class LoadYamlOptions(BaseModel):
-    resource_pack: Iterable[str] = ()
-    data_pack: Iterable[str] = ()
+    resource_pack: List[str] = []
+    data_pack: List[str] = []
 
 
 def beet_default(ctx: Context):

@@ -14,7 +14,7 @@ __all__ = [
 
 import logging
 from csv import Dialect, DictReader, Sniffer
-from typing import Dict, Iterable, Optional, Type, Union
+from typing import Dict, List, Optional, Type, Union
 
 from pydantic import BaseModel
 
@@ -28,7 +28,7 @@ logger = logging.getLogger(__name__)
 
 
 class BabelboxOptions(BaseModel):
-    load: Iterable[str] = ()
+    load: List[str] = []
     dialect: Optional[str] = None
     filename_prefix: bool = False
 
