@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.34.1 (2021-07-01)
+### Fix
+* Coerce plugin options to concrete types ([`dd2de5a`](https://github.com/mcbeet/beet/commit/dd2de5a10c01f8e8dd6ef59072879751c3f7a3e8))
+
 ## v0.34.0 (2021-06-29)
 ### Feature
 * Add configurable decorator to load and validate plugin options ([`a3a39fe`](https://github.com/mcbeet/beet/commit/a3a39fe2cc6668b8e098b6bb597f3febb35119a1))
