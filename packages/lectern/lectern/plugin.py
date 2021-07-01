@@ -5,55 +5,47 @@ __all__ = [
 
 
 import subprocess
-from typing import Iterable, List, Optional, cast
+from typing import List, Optional
 
-from beet import Context, Plugin
-from beet.core.utils import JsonDict
+from beet import Context, configurable
+from pydantic import BaseModel
 
 from .document import Document
 
 
+class LecternOptions(BaseModel):
+    load: List[str] = []
+    snapshot: Optional[str] = None
+    external_files: Optional[str] = None
+    scripts: List[List[str]] = []
+
+
 def beet_default(ctx: Context):
-    config = ctx.meta.get("lectern", cast(JsonDict, {}))
-
-    load = config.get("load", ())
-    snapshot = config.get("snapshot")
-    external_files = config.get("external_files")
-    scripts = config.get("scripts", ())
-
-    ctx.require(lectern(load, snapshot, external_files, scripts))
+    ctx.require(lectern)
 
 
-def lectern(
-    load: Iterable[str] = (),
-    snapshot: Optional[str] = None,
-    external_files: Optional[str] = None,
-    scripts: Iterable[List[str]] = (),
-) -> Plugin:
-    """Return a plugin that handles markdown files with lectern."""
+@configurable(validator=LecternOptions)
+def lectern(ctx: Context, opts: LecternOptions):
+    """Plugin that handles markdown files with lectern."""
+    document = ctx.inject(Document)
 
-    def plugin(ctx: Context):
-        document = ctx.inject(Document)
+    for pattern in opts.load:
+        for path in ctx.directory.glob(pattern):
+            document.load(path)
 
-        for pattern in load:
-            for path in ctx.directory.glob(pattern):
-                document.load(path)
+    for arguments in opts.scripts:
+        result = subprocess.run(
+            arguments,
+            cwd=ctx.directory,
+            check=True,
+            stdout=subprocess.PIPE,
+        )
+        document.add_text(result.stdout.decode())
 
-        for arguments in scripts:
-            result = subprocess.run(
-                arguments,
-                cwd=ctx.directory,
-                check=True,
-                stdout=subprocess.PIPE,
-            )
-            document.add_text(result.stdout.decode())
+    yield
 
-        yield
-
-        if snapshot:
-            document.save(
-                ctx.directory / snapshot,
-                ctx.directory / external_files if external_files else None,
-            )
-
-    return plugin
+    if opts.snapshot:
+        document.save(
+            ctx.directory / opts.snapshot,
+            ctx.directory / opts.external_files if opts.external_files else None,
+        )
