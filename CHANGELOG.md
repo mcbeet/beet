@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.35.0 (2021-07-05)
+### Feature
+* Plugin "project_advancement" ([`160ec91`](https://github.com/mcbeet/beet/commit/160ec918ab1a600742a19ddb8b09ae23fd81265c))
+
 ## v0.34.1 (2021-07-01)
 ### Fix
 * Coerce plugin options to concrete types ([`dd2de5a`](https://github.com/mcbeet/beet/commit/dd2de5a10c01f8e8dd6ef59072879751c3f7a3e8))
