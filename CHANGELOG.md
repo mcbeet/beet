@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.35.1 (2021-07-05)
+### Fix
+* **format_json:** Make pydantic keep int values for indent option ([`ef0169f`](https://github.com/mcbeet/beet/commit/ef0169fe2957feda11dece7a07bcda9d7aed3973))
+
 ## v0.35.0 (2021-07-05)
 ### Feature
 * Plugin "project_advancement" ([`160ec91`](https://github.com/mcbeet/beet/commit/160ec918ab1a600742a19ddb8b09ae23fd81265c))
