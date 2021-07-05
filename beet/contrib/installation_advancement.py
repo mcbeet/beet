@@ -1,36 +1,42 @@
-"""
-    Plugin that generates a advancement for this project.
+"""Plugin that generates an installation advancement.
 
-    The aim of a project advancement is to replace installation messages in an easily viewable and non-obstructive way by putting them on a single advancement page.
+Installation advancements replace installation messages in an easily viewable
+and non-obstructive way by putting them on a single advancement page.
+
+Reference: https://mc-datapacks.github.io/en/conventions/datapack_advancement.html
 """
 
-from typing import Any, Optional
+
+__all__ = [
+    "InstallationAdvancementOptions",
+    "installation_advancement",
+]
+
+
+from typing import Optional
 
 from pydantic import BaseModel
 
-from beet import Context, configurable
-from beet.core.utils import TextComponent
-from beet.library.data_pack import Advancement
-
-AdvancementIcon = dict[str, Any]
+from beet import Advancement, Context, configurable
+from beet.core.utils import JsonDict, TextComponent, normalize_string
 
 
-class ProjectAdvancementOptions(BaseModel):
-    icon: AdvancementIcon = {"item": "minecraft:apple"}
-    author_namespace: Optional[str]
+class InstallationAdvancementOptions(BaseModel):
+    icon: JsonDict = {"item": "minecraft:apple"}
+    author_namespace: Optional[str] = None
     author_description: str = ""
-    author_skull_owner: Optional[str]
-    project_namespace: Optional[str]
-    project_advancement_path: Optional[str]
+    author_skull_owner: Optional[str] = None
+    project_namespace: Optional[str] = None
+    project_advancement_path: Optional[str] = None
 
 
 def beet_default(ctx: Context):
-    ctx.require(project_advancement)
+    ctx.require(installation_advancement)
 
 
-@configurable(validator=ProjectAdvancementOptions)
-def project_advancement(ctx: Context, opts: ProjectAdvancementOptions):
-    author_namespace = opts.author_namespace or ctx.project_author.lower()
+@configurable(validator=InstallationAdvancementOptions)
+def installation_advancement(ctx: Context, opts: InstallationAdvancementOptions):
+    author_namespace = opts.author_namespace or normalize_string(ctx.project_author)
     project_namespace = opts.project_namespace or ctx.project_id
     project_advancement_path = (
         opts.project_advancement_path
@@ -49,7 +55,7 @@ def project_advancement(ctx: Context, opts: ProjectAdvancementOptions):
         )
 
     ctx.data["global:root"] = create_root_advancement()
-    ctx.data[f"global:{author_namespace}"] = create_author_advancment(
+    ctx.data[f"global:{author_namespace}"] = create_author_advancement(
         ctx.project_author, opts.author_description, skull_owner
     )
     ctx.data[project_advancement_path] = create_project_advancement(
@@ -73,8 +79,10 @@ def create_root_advancement():
     )
 
 
-def create_author_advancment(
-    author: TextComponent, author_description: TextComponent, skull_owner: str
+def create_author_advancement(
+    author: TextComponent,
+    author_description: TextComponent,
+    skull_owner: str,
 ):
     return Advancement(
         {
@@ -98,7 +106,7 @@ def create_project_advancement(
     project_name: TextComponent,
     project_description: TextComponent,
     author_namespace: str,
-    icon: AdvancementIcon,
+    icon: JsonDict,
 ):
     return Advancement(
         {
