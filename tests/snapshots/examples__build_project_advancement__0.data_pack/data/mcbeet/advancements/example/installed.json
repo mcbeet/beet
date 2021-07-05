@@ -1,0 +1,18 @@
+{
+  "display": {
+    "title": "Example",
+    "description": "An example project",
+    "icon": {
+      "item": "minecraft:red_mushroom",
+      "nbt": "{Enchantments:[{}]}"
+    },
+    "announce_to_chat": false,
+    "show_toast": false
+  },
+  "parent": "global:mcbeet",
+  "criteria": {
+    "trigger": {
+      "trigger": "minecraft:tick"
+    }
+  }
+}

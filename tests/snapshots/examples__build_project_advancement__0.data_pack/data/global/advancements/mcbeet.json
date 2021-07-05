@@ -1,0 +1,18 @@
+{
+  "display": {
+    "title": "mcbeet",
+    "description": "Organization behind the beet project",
+    "icon": {
+      "item": "minecraft:player_head",
+      "nbt": "{'SkullOwner': 'mcbeet'}"
+    },
+    "show_toast": false,
+    "announce_to_chat": false
+  },
+  "parent": "global:root",
+  "criteria": {
+    "trigger": {
+      "trigger": "minecraft:tick"
+    }
+  }
+}
