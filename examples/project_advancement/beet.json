@@ -1,0 +1,17 @@
+{
+	"author": "mcbeet",
+	"name": "Example",
+	"description": "An example project",
+	"pipeline": [
+		"beet.contrib.project_advancement"
+	],
+	"meta": {
+		"project_advancement": {
+			"icon": {
+				"item": "minecraft:red_mushroom",
+				"nbt": "{Enchantments:[{}]}"
+			},
+			"author_description": "Organization behind the beet project"
+		}
+	}
+}
