@@ -19,7 +19,7 @@ from beet.toolchain.context import configurable
 class FormatJsonOptions(BaseModel):
     ensure_ascii: bool = True
     allow_nan: bool = True
-    indent: Optional[Union[int, str]] = 2
+    indent: Union[int, str, None] = 2
     separators: Optional[Tuple[str, str]] = None
     sort_keys: bool = False
     final_newline: bool = True
