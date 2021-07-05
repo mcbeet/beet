@@ -183,7 +183,7 @@ class Namespace(
 
     def __setitem__(self, key: Any, value: Any):
         if isinstance(key, type):
-            super().__setitem__(key, value)
+            super().__setitem__(key, value)  # type: ignore
         else:
             self[type(value)][key] = value
 
