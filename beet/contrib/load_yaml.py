@@ -43,10 +43,12 @@ def load_yaml(ctx: Context, opts: LoadYamlOptions):
     """Plugin that loads yaml resources for data packs and resource packs."""
     yaml_pack_loader = ctx.inject(YamlPackLoader)
 
-    for path in opts.resource_pack:
-        yaml_pack_loader.load_resource_pack(ctx.directory / path)
-    for path in opts.data_pack:
-        yaml_pack_loader.load_data_pack(ctx.directory / path)
+    for pattern in opts.resource_pack:
+        for path in ctx.directory.glob(pattern):
+            yaml_pack_loader.load_resource_pack(ctx.directory / path)
+    for pattern in opts.data_pack:
+        for path in ctx.directory.glob(pattern):
+            yaml_pack_loader.load_data_pack(ctx.directory / path)
 
 
 @dataclass

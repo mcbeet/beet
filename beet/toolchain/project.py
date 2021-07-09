@@ -7,6 +7,7 @@ __all__ = [
 
 from copy import deepcopy
 from dataclasses import dataclass
+from glob import glob
 from importlib.metadata import entry_points
 from pathlib import Path
 from typing import ClassVar, Iterable, Iterator, List, Optional, Sequence
@@ -282,8 +283,9 @@ class ProjectBuilder:
         pack_suffixes = ["_resource_pack", "_data_pack"]
 
         for config, pack in zip(pack_configs, ctx.packs):
-            for path in config.load:
-                pack.load(path)
+            for pattern in config.load:
+                for path in glob(pattern):
+                    pack.load(path)
 
         ctx.require(
             render(
