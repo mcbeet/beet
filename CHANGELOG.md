@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.36.0 (2021-07-09)
+### Feature
+* Handle wildcards in config when loading packs ([`2cf1181`](https://github.com/mcbeet/beet/commit/2cf1181ebccce2782ee5e072e6eeb8bb29331679))
+
 ## v0.35.1 (2021-07-05)
 ### Fix
 * **format_json:** Make pydantic keep int values for indent option ([`ef0169f`](https://github.com/mcbeet/beet/commit/ef0169fe2957feda11dece7a07bcda9d7aed3973))
