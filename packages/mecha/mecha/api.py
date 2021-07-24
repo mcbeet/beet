@@ -3,47 +3,54 @@ __all__ = [
 ]
 
 
-from dataclasses import InitVar, dataclass, field
-from typing import Optional, Union
+from dataclasses import InitVar, dataclass, replace
+from typing import Any, List, Optional, Union
 
-from beet import Context, DataPack
+from beet import Context, Function, TextFileBase
+from beet.core.utils import extra_field
+from tokenstream import TokenStream
+
+from .ast import AstCommand, AstRoot
+from .parse import delegate, get_default_parsers
+from .spec import CommandSpecification
 
 
 @dataclass
 class Mecha:
     """Class exposing the command api."""
 
-    target: InitVar[Union[Context, DataPack]]
+    ctx: InitVar[Optional[Context]] = None
 
-    default_namespace: Optional[str] = None
-    default_path: Optional[str] = None
+    spec: CommandSpecification = extra_field(
+        default_factory=lambda: CommandSpecification(parsers=get_default_parsers())
+    )
 
-    data_pack: DataPack = field(init=False)
+    def parse_function(
+        self,
+        function: Union[TextFileBase[Any], str, List[str]],
+        filename: Optional[str] = None,
+    ) -> AstRoot:
+        """Parse a function and return the ast."""
+        if isinstance(function, (str, list)):
+            function = Function(function)
 
-    def __post_init__(self, target: Union[Context, DataPack]):
-        if isinstance(target, Context):
-            self.data_pack = target.data
-            config = target.meta.get("mecha", {})
-            default_namespace = config.get("default_namespace", target.project_name)
-            default_path = config.get("default_path", "")
-        else:
-            self.data_pack = target
-            default_namespace = self.data_pack.name or ""
-            default_path = ""
+        if not filename and function.source_path:
+            filename = str(function.source_path)
 
-        if self.default_namespace is None:
-            self.default_namespace = default_namespace
+        stream = TokenStream(function.text + "\n")
 
-        if self.default_path is None:
-            self.default_path = default_path
+        with stream.provide(spec=self.spec):
+            return replace(delegate(stream, "root"), filename=filename)
 
-    def resolve_path(self, path: str) -> str:
-        """Resolve partial path."""
-        namespace, sep, path = path.rpartition(":")
+    def parse_command(self, command: str) -> AstCommand:
+        """Parse a single command from a string and return the ast."""
+        ast = self.parse_function(command)
 
-        if not namespace:
-            namespace = self.default_namespace
-        if not sep:
-            path = f"{self.default_path}/{path}"
+        if len(ast.commands) != 1:
+            raise ValueError(
+                "Expected a single command but more than one command were provided."
+                if ast.commands
+                else "Expected a single command but no command were provided.",
+            )
 
-        return f"{namespace}:{path.strip('/')}".replace("//", "/").lower()
+        return ast.commands[0]

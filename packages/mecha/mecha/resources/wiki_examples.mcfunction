@@ -1,0 +1,7 @@
+gamerule doDaylightCycle false
+gamerule naturalRegeneration false
+gamerule mobGriefing false
+gamerule doWeatherCycle false
+gamerule keepInventory true
+gamerule commandBlockOutput false
+gamerule doInsomnia false

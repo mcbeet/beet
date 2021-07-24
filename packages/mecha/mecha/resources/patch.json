@@ -1,0 +1,14 @@
+{
+  "type": "root",
+  "children": {
+    "execute": {
+      "type": "literal",
+      "children": {
+        "run": {
+          "type": "literal",
+          "redirect": []
+        }
+      }
+    }
+  }
+}

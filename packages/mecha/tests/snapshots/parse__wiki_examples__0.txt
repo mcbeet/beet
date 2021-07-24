@@ -1,0 +1,68 @@
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=212, lineno=9, colno=1)
+  filename: None
+  commands:
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=30, lineno=1, colno=31)
+      identifier: 'gamerule:doDaylightCycle:value'
+      arguments:
+        <class 'mecha.ast.AstValue'>
+          location: SourceLocation(pos=25, lineno=1, colno=26)
+          end_location: SourceLocation(pos=30, lineno=1, colno=31)
+          value: False
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=31, lineno=2, colno=1)
+      end_location: SourceLocation(pos=65, lineno=2, colno=35)
+      identifier: 'gamerule:naturalRegeneration:value'
+      arguments:
+        <class 'mecha.ast.AstValue'>
+          location: SourceLocation(pos=60, lineno=2, colno=30)
+          end_location: SourceLocation(pos=65, lineno=2, colno=35)
+          value: False
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=66, lineno=3, colno=1)
+      end_location: SourceLocation(pos=92, lineno=3, colno=27)
+      identifier: 'gamerule:mobGriefing:value'
+      arguments:
+        <class 'mecha.ast.AstValue'>
+          location: SourceLocation(pos=87, lineno=3, colno=22)
+          end_location: SourceLocation(pos=92, lineno=3, colno=27)
+          value: False
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=93, lineno=4, colno=1)
+      end_location: SourceLocation(pos=122, lineno=4, colno=30)
+      identifier: 'gamerule:doWeatherCycle:value'
+      arguments:
+        <class 'mecha.ast.AstValue'>
+          location: SourceLocation(pos=117, lineno=4, colno=25)
+          end_location: SourceLocation(pos=122, lineno=4, colno=30)
+          value: False
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=123, lineno=5, colno=1)
+      end_location: SourceLocation(pos=150, lineno=5, colno=28)
+      identifier: 'gamerule:keepInventory:value'
+      arguments:
+        <class 'mecha.ast.AstValue'>
+          location: SourceLocation(pos=146, lineno=5, colno=24)
+          end_location: SourceLocation(pos=150, lineno=5, colno=28)
+          value: True
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=151, lineno=6, colno=1)
+      end_location: SourceLocation(pos=184, lineno=6, colno=34)
+      identifier: 'gamerule:commandBlockOutput:value'
+      arguments:
+        <class 'mecha.ast.AstValue'>
+          location: SourceLocation(pos=179, lineno=6, colno=29)
+          end_location: SourceLocation(pos=184, lineno=6, colno=34)
+          value: False
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=185, lineno=7, colno=1)
+      end_location: SourceLocation(pos=210, lineno=7, colno=26)
+      identifier: 'gamerule:doInsomnia:value'
+      arguments:
+        <class 'mecha.ast.AstValue'>
+          location: SourceLocation(pos=205, lineno=7, colno=21)
+          end_location: SourceLocation(pos=210, lineno=7, colno=26)
+          value: False
