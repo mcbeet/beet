@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.2.0 (2021-07-24)
+### Feature
+* Add initial parser implementation ([`117d76d`](https://github.com/vberlier/mecha/commit/117d76d807b5a27e8b83a9cebd63c0d8ec70d8d4))
+
 ## v0.1.0 (2021-06-12)
 ### Feature
 * Start working on a parser ([`739335c`](https://github.com/vberlier/mecha/commit/739335c4d2f1d09136291e03c2324491eb69279b))
