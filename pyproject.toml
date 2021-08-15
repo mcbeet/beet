@@ -24,10 +24,10 @@ include = ["beet/py.typed"]
 [tool.poetry.dependencies]
 python = "^3.8"
 nbtlib = "^1.12.0"
-pathspec = "^0.8.1"
+pathspec = "^0.9.0"
 pydantic = "^1.8.1"
-click = "^7.1.2"
-click-help-colors = "^0.9"
+click = "^8.0.1"
+click-help-colors = "^0.9.1"
 Jinja2 = "^3.0.1"
 fnvhash = "^0.1.0"
 base58 = "^2.1.0"
@@ -40,14 +40,14 @@ colorama = {version = "*", markers = 'sys_platform == "win32"'}
 image = ["Pillow"]
 
 [tool.poetry.dev-dependencies]
-black = "^21.6b0"
+black = "^21.7b0"
 pytest = "^6.2.4"
 rope = "^0.19.0"
 pytest-minecraft = "^0.1.1"
-isort = "^5.9.1"
+isort = "^5.9.3"
 pytest-insta = "^0.1.10"
 python-semantic-release = "^7.18.0"
-mudkip = "^0.4.9"
+mudkip = "^0.4.10"
 furo = "^2021.4.11b34"
 
 [tool.poetry.scripts]
