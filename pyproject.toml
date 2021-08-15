@@ -40,13 +40,13 @@ colorama = {version = "*", markers = 'sys_platform == "win32"'}
 image = ["Pillow"]
 
 [tool.poetry.dev-dependencies]
-black = "^21.6b0"
+black = "^21.7b0"
 pytest = "^6.2.4"
 rope = "^0.19.0"
 pytest-minecraft = "^0.1.1"
 isort = "^5.9.1"
 pytest-insta = "^0.1.10"
-python-semantic-release = "^7.16.1"
+python-semantic-release = "^7.18.0"
 mudkip = "^0.4.9"
 furo = "^2021.4.11b34"
 
