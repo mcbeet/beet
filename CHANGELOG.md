@@ -2,6 +2,11 @@
 
 <!--next-version-placeholder-->
 
+## v0.37.0 (2021-08-16)
+### Feature
+* Add pack extensions and walk method ([`dc7bf85`](https://github.com/mcbeet/beet/commit/dc7bf85cfc40d500dfb7e8c0e8cea1470e6f70e0))
+* Add core yaml file ([`8e109e4`](https://github.com/mcbeet/beet/commit/8e109e4b7244a0ea83318651bc2a2d53f372e8c4))
+
 ## v0.36.0 (2021-07-09)
 ### Feature
 * Handle wildcards in config when loading packs ([`2cf1181`](https://github.com/mcbeet/beet/commit/2cf1181ebccce2782ee5e072e6eeb8bb29331679))
