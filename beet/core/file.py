@@ -11,6 +11,8 @@ __all__ = [
     "BinaryFile",
     "JsonFileBase",
     "JsonFile",
+    "YamlFileBase",
+    "YamlFile",
     "PngFile",
 ]
 
@@ -22,6 +24,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Callable, Generic, Optional, Type, TypeVar, Union
 from zipfile import ZipFile
+
+import yaml
 
 try:
     from PIL.Image import Image
@@ -340,6 +344,30 @@ class JsonFileBase(TextFileBase[ValueType]):
 
 class JsonFile(JsonFileBase[JsonDict]):
     """Class representing a json file."""
+
+    data: FileDeserialize[JsonDict] = FileDeserialize()
+
+    @classmethod
+    def default(cls) -> JsonDict:
+        return {}
+
+
+class YamlFileBase(TextFileBase[ValueType]):
+    """Base class for yaml files."""
+
+    data: FileDeserialize[ValueType] = FileDeserialize()
+
+    @classmethod
+    def to_str(cls, content: ValueType) -> str:
+        return yaml.dump(content)  # type: ignore
+
+    @classmethod
+    def from_str(cls, content: str) -> ValueType:
+        return yaml.safe_load(content)
+
+
+class YamlFile(YamlFileBase[JsonDict]):
+    """Class representing a yaml file."""
 
     data: FileDeserialize[JsonDict] = FileDeserialize()
 
