@@ -9,13 +9,15 @@ __all__ = [
     "format_error",
     "error_handler",
     "message_fence",
+    "echo",
+    "secho",
 ]
 
 
 import logging
 from contextlib import contextmanager
 from importlib.metadata import entry_points
-from typing import Any, Callable, Iterable, Iterator, Optional
+from typing import Any, Callable, Iterator, List, Optional
 
 import click
 from click.decorators import pass_context
@@ -26,6 +28,16 @@ from beet import __version__
 from .pipeline import FormattedPipelineException
 from .project import Project
 from .utils import format_exc
+
+
+def echo(*args: Any, **kwargs: Any) -> None:
+    """Wrap click.echo."""
+    click.echo(*args, **kwargs)  # type: ignore
+
+
+def secho(*args: Any, **kwargs: Any) -> None:
+    """Wrap click.secho."""
+    click.secho(*args, **kwargs)  # type: ignore
 
 
 def format_error(
@@ -52,7 +64,7 @@ def error_handler(should_exit: bool = False, format_padding: int = 0) -> Iterato
     except FormattedPipelineException as exc:
         message, exception = exc.message, exc.__cause__ if exc.format_cause else None
     except (click.Abort, KeyboardInterrupt):
-        click.echo()
+        echo()
         message = "Aborted."
     except (click.ClickException, click.exceptions.Exit):
         raise
@@ -62,7 +74,7 @@ def error_handler(should_exit: bool = False, format_padding: int = 0) -> Iterato
     else:
         return
 
-    click.echo(format_error(message, exception, format_padding), nl=False)
+    echo(format_error(message, exception, format_padding), nl=False)
 
     if should_exit:
         raise click.exceptions.Exit(1)
@@ -71,11 +83,11 @@ def error_handler(should_exit: bool = False, format_padding: int = 0) -> Iterato
 @contextmanager
 def message_fence(message: str) -> Iterator[None]:
     """Context manager used to report the begining and the end of a cli operation."""
-    click.secho(message + "\n", fg="red")
+    secho(message + "\n", fg="red")
     yield
     if LogHandler.has_output:
-        click.echo()
-    click.secho("Done!", fg="green", bold=True)
+        echo()
+    secho("Done!", fg="green", bold=True)
     LogHandler.has_output = False
 
 
@@ -108,7 +120,7 @@ class LogHandler(logging.Handler):
     def emit(self, record: logging.LogRecord):
         LogHandler.has_output = True
         level = self.abbreviations.get(record.levelname, record.levelname)
-        click.echo(
+        echo(
             click.style(f"{level:<7}|", **self.style[record.levelname])
             + " "
             + self.format(record)
@@ -156,8 +168,8 @@ class BeetGroup(BeetHelpColorsMixin, HelpColorsGroup):
         return None
 
     def add_command(self, cmd: click.Command, name: Optional[str] = None) -> None:
-        if cmd.callback:
-            cmd.callback = error_handler(should_exit=True)(cmd.callback)
+        if cmd.callback:  # type: ignore
+            cmd.callback = error_handler(should_exit=True)(cmd.callback)  # type: ignore
         return super().add_command(cmd, name=name)
 
     def command(
@@ -201,7 +213,7 @@ class MainGroup(BeetGroup):
         self.load_entry_points()
         return super().get_command(ctx, cmd_name)
 
-    def list_commands(self, ctx: click.Context) -> Iterable[str]:
+    def list_commands(self, ctx: click.Context) -> List[str]:
         self.load_entry_points()
         return super().list_commands(ctx)
 
