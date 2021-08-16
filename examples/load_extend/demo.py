@@ -1,7 +1,6 @@
 from typing import cast
 
-from beet import Context, JsonFile, NamespaceFile, TextFile, YamlFile
-from beet.library.data_pack import Function
+from beet import Context, Function, JsonFile, NamespaceFile, TextFile, YamlFile
 
 
 class FunctionConfig(YamlFile, NamespaceFile):
