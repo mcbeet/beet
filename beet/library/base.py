@@ -29,12 +29,14 @@ from typing import (
     DefaultDict,
     Dict,
     Generic,
+    Iterable,
     Iterator,
     List,
     Mapping,
     MutableMapping,
     Optional,
     Protocol,
+    Set,
     Tuple,
     Type,
     TypeVar,
@@ -127,6 +129,25 @@ class NamespaceContainer(MatchMixin, MergeMixin, Container[str, NamespaceFileTyp
 
         for key, value in self.items():
             self.process(key, value)
+
+    def generate_tree(self, path: str = "") -> Dict[Any, Any]:
+        """Generate a hierarchy of nested dictionaries representing the files and folders."""
+        prefix = path.split("/") if path else []
+        tree: Dict[Any, Any] = {}
+
+        for filename, file_instance in self.items():
+            parts = filename.split("/")
+
+            if parts[: len(prefix)] != prefix:
+                continue
+
+            parent = tree
+            for part in parts[len(prefix) :]:
+                parent = parent.setdefault(part, {})
+
+            parent[self.file_type] = file_instance
+
+        return tree
 
 
 class NamespacePin(Pin[Type[NamespaceFileType], NamespaceContainer[NamespaceFileType]]):
@@ -265,7 +286,12 @@ class Namespace(
         return {}
 
     @classmethod
-    def scan(cls, pack: FileOrigin) -> Iterator[Tuple[str, "Namespace"]]:
+    def scan(
+        cls,
+        pack: FileOrigin,
+        extend_namespace: Iterable[Type[NamespaceFile]] = (),
+        extend_namespace_extra: Optional[Mapping[str, Type[PackFile]]] = None,
+    ) -> Iterator[Tuple[str, "Namespace"]]:
         """Load namespaces by walking through a zipfile or directory."""
         name, namespace = None, None
         filenames = (
@@ -275,6 +301,12 @@ class Namespace(
         )
 
         extra_info = cls.get_extra_info()
+        if extend_namespace_extra:
+            extra_info.update(extend_namespace_extra)
+
+        scope_map = dict(cls.scope_map)
+        for file_type in extend_namespace:
+            scope_map[file_type.scope, file_type.extension] = file_type
 
         for filename in sorted(filenames):
             try:
@@ -297,7 +329,7 @@ class Namespace(
                 continue
 
             while path := tuple(scope):
-                if file_type := cls.scope_map.get((path, extension)):
+                if file_type := scope_map.get((path, extension)):
                     key = "/".join(
                         filename.relative_to(Path(directory, name, *path)).parts
                     )[: -len(extension)]
@@ -335,6 +367,35 @@ class NamespaceProxy(
 
     def join_key(self, key1: str, key2: str) -> str:
         return f"{key1}:{key2}"
+
+    def walk(self) -> Iterator[Tuple[str, Set[str], Dict[str, NamespaceFileType]]]:
+        """Walk over the file hierarchy."""
+        for prefix, namespace in self.proxy.items():
+            separator = ":"
+            roots: List[Tuple[str, Dict[Any, Any]]] = [
+                (prefix, namespace[self.proxy_key].generate_tree())  # type: ignore
+            ]
+
+            while roots:
+                prefix, root = roots.pop()
+
+                dirs: Set[str] = set()
+                files: Dict[str, NamespaceFileType] = {}
+
+                for key, value in root.items():
+                    if not isinstance(key, str):
+                        continue
+                    if any(isinstance(name, str) for name in value):
+                        dirs.add(key)
+                    if file_instance := value.get(self.proxy_key, None):
+                        files[key] = file_instance
+
+                yield prefix + separator, dirs, files
+
+                for directory in dirs:
+                    roots.append((prefix + separator + directory, root[directory]))
+
+                separator = "/"
 
 
 @dataclass
@@ -379,6 +440,10 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
     description: PackPin[TextComponent] = PackPin("description", default="")
     pack_format: PackPin[int] = PackPin("pack_format", default=0)
 
+    extend_extra: Dict[str, Type[PackFile]]
+    extend_namespace: List[Type[NamespaceFile]]
+    extend_namespace_extra: Dict[str, Type[PackFile]]
+
     namespace_type: ClassVar[Type[NamespaceType]]
     default_name: ClassVar[str]
     latest_pack_format: ClassVar[int]
@@ -396,6 +461,9 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
         icon: Optional[PngFile] = None,
         description: Optional[str] = None,
         pack_format: Optional[int] = None,
+        extend_extra: Optional[Mapping[str, Type[PackFile]]] = None,
+        extend_namespace: Iterable[Type[NamespaceFile]] = (),
+        extend_namespace_extra: Optional[Mapping[str, Type[PackFile]]] = None,
     ):
         super().__init__()
         self.name = name
@@ -412,6 +480,10 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
             self.description = description
         if pack_format is not None:
             self.pack_format = pack_format
+
+        self.extend_extra = dict(extend_extra or {})
+        self.extend_namespace = list(extend_namespace)
+        self.extend_namespace_extra = dict(extend_namespace_extra or {})
 
         self.load(path or zipfile)
 
@@ -524,8 +596,18 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
     def get_extra_info(cls) -> Dict[str, Type[PackFile]]:
         return {"pack.mcmeta": JsonFile, "pack.png": PngFile}
 
-    def load(self, origin: Optional[FileOrigin] = None):
+    def load(
+        self,
+        origin: Optional[FileOrigin] = None,
+        extend_extra: Optional[Mapping[str, Type[PackFile]]] = None,
+        extend_namespace: Iterable[Type[NamespaceFile]] = (),
+        extend_namespace_extra: Optional[Mapping[str, Type[PackFile]]] = None,
+    ):
         """Load pack from a zipfile or from the filesystem."""
+        self.extend_extra.update(extend_extra or {})
+        self.extend_namespace.extend(extend_namespace)
+        self.extend_namespace_extra.update(extend_namespace_extra or {})
+
         if origin:
             if not isinstance(origin, ZipFile):
                 origin = Path(origin).resolve()
@@ -546,16 +628,25 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
                 self.name = self.name[:-4]
 
         if origin:
+            extra_info = self.get_extra_info()
+            if self.extend_extra:
+                extra_info.update(self.extend_extra)
+
             files = {
                 filename: loaded
-                for filename, file_type in self.get_extra_info().items()
+                for filename, file_type in extra_info.items()
                 if (loaded := file_type.try_load(origin, filename))
             }
 
             self.extra.merge(files)
 
             namespaces = {
-                name: namespace for name, namespace in self.namespace_type.scan(origin)
+                name: namespace
+                for name, namespace in self.namespace_type.scan(
+                    origin,
+                    self.extend_namespace,
+                    self.extend_namespace_extra,
+                )
             }
 
             self.merge(namespaces)

@@ -1,0 +1,4 @@
+require: ["demo.extend_data_pack"]
+data_pack:
+  load: ["src"]
+pipeline: ["demo.process_functions"]
