@@ -31,7 +31,7 @@ import io
 from copy import deepcopy
 from dataclasses import dataclass
 from gzip import GzipFile
-from typing import List, Optional, TypeVar
+from typing import Iterable, List, Optional, TypeVar, Union
 
 from nbtlib.contrib.minecraft import StructureFile, StructureFileData
 
@@ -70,13 +70,25 @@ class Function(TextFileBase[List[str]], NamespaceFile):
 
     lines = FileDeserialize()  # type: FileDeserialize[List[str]]
 
-    def append(self, other: "Function"):
+    def append(self, other: Union["Function", Iterable[str], str]):
         """Append lines from another function."""
-        self.lines.extend(other.lines)
+        self.lines.extend(
+            other.lines
+            if isinstance(other, Function)
+            else [other]
+            if isinstance(other, str)
+            else other
+        )
 
-    def prepend(self, other: "Function"):
+    def prepend(self, other: Union["Function", Iterable[str], str]):
         """Prepend lines from another function."""
-        self.lines[0:0] = other.lines
+        self.lines[0:0] = (
+            other.lines
+            if isinstance(other, Function)
+            else [other]
+            if isinstance(other, str)
+            else other
+        )
 
     @classmethod
     def default(cls) -> List[str]:

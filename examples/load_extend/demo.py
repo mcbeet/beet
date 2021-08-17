@@ -1,6 +1,6 @@
 from typing import cast
 
-from beet import Context, Function, JsonFile, NamespaceFile, TextFile, YamlFile
+from beet import Context, JsonFile, NamespaceFile, TextFile, YamlFile
 
 
 class FunctionConfig(YamlFile, NamespaceFile):
@@ -27,13 +27,11 @@ def process_functions(ctx: Context):
 
         for function in functions.values():
             function.prepend(
-                Function(
-                    [
-                        f"# config.yml = {folder_config}",
-                        f"# numbers.txt = {numbers}",
-                        f"# myproject.json = {project_data}",
-                    ]
-                )
+                [
+                    f"# config.yml = {folder_config}",
+                    f"# numbers.txt = {numbers}",
+                    f"# myproject.json = {project_data}",
+                ]
             )
 
     del ctx.data.extra["myproject.json"]
