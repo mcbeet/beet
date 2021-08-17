@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.38.0 (2021-08-17)
+### Feature
+* Handle strings and iterables when appending or prepending to functions ([`c8d2795`](https://github.com/mcbeet/beet/commit/c8d2795b1589b8f7e0d025da02b3577d12f4afcf))
+
 ## v0.37.0 (2021-08-16)
 ### Feature
 * Add pack extensions and walk method ([`dc7bf85`](https://github.com/mcbeet/beet/commit/dc7bf85cfc40d500dfb7e8c0e8cea1470e6f70e0))
