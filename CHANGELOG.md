@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.39.0 (2021-08-22)
+### Feature
+* Expose resolved schemas ([`35a7800`](https://github.com/mcbeet/beet/commit/35a7800189d842fd904b4055fadd8ebf6dc879d7))
+
 ## v0.38.0 (2021-08-17)
 ### Feature
 * Handle strings and iterables when appending or prepending to functions ([`c8d2795`](https://github.com/mcbeet/beet/commit/c8d2795b1589b8f7e0d025da02b3577d12f4afcf))
