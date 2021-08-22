@@ -596,6 +596,24 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
     def get_extra_info(cls) -> Dict[str, Type[PackFile]]:
         return {"pack.mcmeta": JsonFile, "pack.png": PngFile}
 
+    def resolve_extra_info(self) -> Dict[str, Type[PackFile]]:
+        extra_info = self.get_extra_info()
+        if self.extend_extra:
+            extra_info.update(self.extend_extra)
+        return extra_info
+
+    def resolve_scope_map(self):
+        scope_map = dict(self.namespace_type.scope_map)
+        for file_type in self.extend_namespace:
+            scope_map[file_type.scope, file_type.extension] = file_type
+        return scope_map
+
+    def resolve_namespace_extra_info(self) -> Dict[str, Type[PackFile]]:
+        namespace_extra_info = self.namespace_type.get_extra_info()
+        if self.extend_namespace_extra:
+            namespace_extra_info.update(self.extend_namespace_extra)
+        return namespace_extra_info
+
     def load(
         self,
         origin: Optional[FileOrigin] = None,
@@ -628,13 +646,9 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
                 self.name = self.name[:-4]
 
         if origin:
-            extra_info = self.get_extra_info()
-            if self.extend_extra:
-                extra_info.update(self.extend_extra)
-
             files = {
                 filename: loaded
-                for filename, file_type in extra_info.items()
+                for filename, file_type in self.resolve_extra_info().items()
                 if (loaded := file_type.try_load(origin, filename))
             }
 
