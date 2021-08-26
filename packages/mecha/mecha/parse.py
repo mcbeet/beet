@@ -8,7 +8,6 @@ __all__ = [
 ]
 
 
-from contextlib import nullcontext
 from typing import TYPE_CHECKING, Any, Dict, List, Tuple
 
 from tokenstream import SourceLocation, TokenStream
@@ -83,7 +82,7 @@ def parse_command(stream: TokenStream) -> AstCommand:
         literal_names = list(tree.get_literal_children())
         argument_names = list(tree.get_argument_children())
 
-        with stream.alternative() if argument_names else nullcontext():
+        with stream.alternative(bool(argument_names)):
             patterns = [("literal", name) for name in literal_names]
             token = stream.expect_any(*patterns)
             scope += (token.value,)

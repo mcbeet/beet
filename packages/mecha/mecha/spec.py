@@ -77,7 +77,7 @@ class CommandTree(BaseModel):
     children: Optional[Dict[str, "CommandTree"]] = None
 
     @classmethod
-    def load(
+    def load_from(
         cls,
         filename: Optional[FileSystemPath] = None,
         version: Optional[str] = None,
@@ -159,7 +159,7 @@ class CommandSpecification:
     """Class responsible for managing the command specification."""
 
     tree: CommandTree = extra_field(
-        default_factory=lambda: CommandTree.load(version="1_17")
+        default_factory=lambda: CommandTree.load_from(version="1_17")
     )
     flattened_tree: Dict[Tuple[str, ...], CommandTree] = extra_field(
         default_factory=dict

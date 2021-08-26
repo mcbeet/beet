@@ -25,6 +25,12 @@ class Mecha:
         default_factory=lambda: CommandSpecification(parsers=get_default_parsers())
     )
 
+    def create_token_stream(self, text: str) -> TokenStream:
+        """Instantiate a token stream for parsing the given input."""
+        stream = TokenStream(text)
+        stream.data["spec"] = self.spec
+        return stream
+
     def parse_function(
         self,
         function: Union[TextFileBase[Any], str, List[str]],
@@ -37,10 +43,8 @@ class Mecha:
         if not filename and function.source_path:
             filename = str(function.source_path)
 
-        stream = TokenStream(function.text + "\n")
-
-        with stream.provide(spec=self.spec):
-            return replace(delegate(stream, "root"), filename=filename)
+        ast = delegate(self.create_token_stream(function.text + "\n"), "root")
+        return replace(ast, filename=filename)
 
     def parse_command(self, command: str) -> AstCommand:
         """Parse a single command from a string and return the ast."""
