@@ -251,7 +251,6 @@ python-versions = ">=3.6"
 
 [package.dependencies]
 gitdb = ">=4.0.1,<5"
-typing-extensions = {version = ">=3.7.4.3", markers = "python_version < \"3.10\""}
 
 [[package]]
 name = "idna"
@@ -731,7 +730,7 @@ python-versions = ">=3.6"
 
 [[package]]
 name = "tokenstream"
-version = "0.6.2"
+version = "0.7.0"
 description = "A versatile token stream for handwritten parsers"
 category = "main"
 optional = false
@@ -848,7 +847,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytes
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "8bccf356911d154beb5ac213aa20dad6656baf78f7f2afd9d5f1d093d4dee47d"
+content-hash = "bcd8ecac257bad9cf73cd289951f27e953e7a47aae4da210d67ea597da52eed2"
 
 [metadata.files]
 appdirs = [
@@ -1293,8 +1292,8 @@ soupsieve = [
     {file = "soupsieve-2.2.1.tar.gz", hash = "sha256:052774848f448cf19c7e959adf5566904d525f33a3f8b6ba6f6f8f26ec7de0cc"},
 ]
 tokenstream = [
-    {file = "tokenstream-0.6.2-py3-none-any.whl", hash = "sha256:fe30bb66038673998e7d3290e622abaca5d2ed13edc8500cbae4b9f0d301b46c"},
-    {file = "tokenstream-0.6.2.tar.gz", hash = "sha256:3ad0391f8d81b25f636c8abe0bdbf7ee34715812ef482a3ebe162e24f5a382b3"},
+    {file = "tokenstream-0.7.0-py3-none-any.whl", hash = "sha256:c2e7302ded3f326adca228160173126fbe85a5c31ebe18d598fbebe84adf818d"},
+    {file = "tokenstream-0.7.0.tar.gz", hash = "sha256:5201459d2482cef050db254ee47727915f71e6cd9fc0ab5044843019ffa705b1"},
 ]
 toml = [
     {file = "toml-0.10.2-py2.py3-none-any.whl", hash = "sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b"},
