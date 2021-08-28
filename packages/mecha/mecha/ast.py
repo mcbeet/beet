@@ -4,15 +4,19 @@ __all__ = [
     "AstRoot",
     "AstCommand",
     "AstValue",
+    "AstCoordinate",
+    "AstVector2",
+    "AstVector3",
 ]
 
 
 from dataclasses import dataclass, field, fields
-from typing import Generic, Iterator, Optional, Tuple, TypeVar
+from typing import Generic, Iterator, Literal, Optional, Tuple, TypeVar
 
 from tokenstream import SourceLocation
 
 T = TypeVar("T")
+NumericType = TypeVar("NumericType", float, int)
 AstNodeType = TypeVar("AstNodeType", bound="AstNode")
 
 
@@ -76,3 +80,27 @@ class AstValue(AstNode, Generic[T]):
     """Value ast node"""
 
     value: T
+
+
+@dataclass(frozen=True)
+class AstCoordinate(AstValue[NumericType]):
+    """Coordinate ast node."""
+
+    prefix: Literal["absolute", "relative", "local"]
+
+
+@dataclass(frozen=True)
+class AstVector2(AstNode, Generic[NumericType]):
+    """Vector 2 ast node."""
+
+    x: AstCoordinate[NumericType]
+    y: AstCoordinate[NumericType]
+
+
+@dataclass(frozen=True)
+class AstVector3(AstNode, Generic[NumericType]):
+    """Vector 3 ast node."""
+
+    x: AstCoordinate[NumericType]
+    y: AstCoordinate[NumericType]
+    z: AstCoordinate[NumericType]

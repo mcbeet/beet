@@ -1,0 +1,269 @@
+{
+  "brigadier:bool": [
+    {
+      "examples": ["true", "false"]
+    }
+  ],
+  "brigadier:double": [
+    {
+      "examples": ["0", "1.2", ".5", "-1", "-.5", "-1234.56"]
+    }
+  ],
+  "brigadier:float": [
+    {
+      "examples": ["0", "1.2", ".5", "-1", "-.5", "-1234.56"]
+    }
+  ],
+  "brigadier:integer": [
+    {
+      "examples": ["0", "123", "-123"]
+    }
+  ],
+  "brigadier:long": [
+    {
+      "examples": ["0", "123", "-123"]
+    }
+  ],
+  "brigadier:string": [
+    {
+      "properties": { "type": "word" },
+      "examples": ["word", "word_with_underscores"]
+    },
+    {
+      "properties": { "type": "phrase" },
+      "examples": ["\"quoted phrase\"", "word", "\"\""]
+    },
+    {
+      "properties": { "type": "greedy" },
+      "examples": ["word", "words with spaces", "\"and symbols\""]
+    }
+  ],
+  "minecraft:angle": [
+    {
+      "examples": ["0", "~", "~-0.5"]
+    }
+  ],
+  "minecraft:block_pos": [
+    {
+      "examples": ["0 0 0", "~ ~ ~", "^ ^ ^", "^1 ^ ^-5", "~0.5 ~1 ~-5"]
+    }
+  ],
+  "minecraft:block_predicate": [
+    {
+      "examples": [
+        "stone",
+        "minecraft:stone",
+        "stone[foo=bar]",
+        "#stone",
+        "#stone[foo=bar]{baz:nbt}"
+      ]
+    }
+  ],
+  "minecraft:block_state": [
+    {
+      "examples": ["stone", "minecraft:stone", "stone[foo=bar]", "foo{bar:baz}"]
+    }
+  ],
+  "minecraft:color": [
+    {
+      "examples": ["red", "green"]
+    }
+  ],
+  "minecraft:column_pos": [
+    {
+      "examples": ["0 0", "~ ~", "~1 ~-2"]
+    }
+  ],
+  "minecraft:component": [
+    {
+      "examples": [
+        "\"hello world\"",
+        "\"\"",
+        "\"{\"text\":\"hello world\"}\"",
+        "[\"\"]"
+      ]
+    }
+  ],
+  "minecraft:dimension": [
+    {
+      "examples": ["minecraft:overworld", "minecraft:the_nether"]
+    }
+  ],
+  "minecraft:entity": [
+    {
+      "examples": [
+        "Player",
+        "0123",
+        "@e",
+        "@e[type=foo]",
+        "dd12be42-52a9-4a91-a8a1-11c01849e498"
+      ]
+    }
+  ],
+  "minecraft:entity_anchor": [
+    {
+      "examples": ["eyes", "feet"]
+    }
+  ],
+  "minecraft:entity_summon": [
+    {
+      "examples": ["minecraft:pig", "cow"]
+    }
+  ],
+  "minecraft:float_range": [
+    {
+      "examples": ["0..5.2", "0", "-5.4", "-100.76..", "..100"]
+    }
+  ],
+  "minecraft:function": [
+    {
+      "examples": ["foo", "foo:bar", "#foo"]
+    }
+  ],
+  "minecraft:game_profile": [
+    {
+      "examples": [
+        "Player",
+        "0123",
+        "dd12be42-52a9-4a91-a8a1-11c01849e498",
+        "@e"
+      ]
+    }
+  ],
+  "minecraft:int_range": [
+    {
+      "examples": ["0..5", "0", "-5", "-100..", "..100"]
+    }
+  ],
+  "minecraft:item_enchantment": [
+    {
+      "examples": ["unbreaking", "silk_touch"]
+    }
+  ],
+  "minecraft:item_predicate": [
+    {
+      "examples": ["stick", "minecraft:stick", "#stick", "#stick{foo:bar}"]
+    }
+  ],
+  "minecraft:item_slot": [
+    {
+      "examples": ["container.5", "12", "weapon"]
+    }
+  ],
+  "minecraft:item_stack": [
+    {
+      "examples": ["stick", "minecraft:stick", "stick{foo:bar}"]
+    }
+  ],
+  "minecraft:message": [
+    {
+      "examples": ["Hello world!", "foo", "@e", "Hello @p\u00a0:)"]
+    }
+  ],
+  "minecraft:mob_effect": [
+    {
+      "examples": ["spooky", "effect"]
+    }
+  ],
+  "minecraft:nbt_compound_tag": [
+    {
+      "examples": ["{}", "{foo:bar}"]
+    }
+  ],
+  "minecraft:nbt_path": [
+    {
+      "examples": ["foo", "bar", "A [crazy name]"]
+    },
+    {
+      "examples": ["bar", "A [crazy name]"]
+    },
+    {
+      "examples": ["A [crazy name]"]
+    },
+    {
+      "examples": ["A [crazy name]"]
+    }
+  ],
+  "minecraft:nbt_tag": [
+    {
+      "examples": ["0", "0b", "0l", "0.0", "\"foo\"", "{foo:bar}"]
+    }
+  ],
+  "minecraft:objective": [
+    {
+      "examples": ["foo", "*", "012"]
+    }
+  ],
+  "minecraft:objective_criteria": [
+    {
+      "examples": ["foo", "foo.bar.baz", "minecraft:foo"]
+    }
+  ],
+  "minecraft:operation": [
+    {
+      "examples": ["=", ">", "<"]
+    }
+  ],
+  "minecraft:particle": [
+    {
+      "examples": ["foo", "foo:bar", "particle with options"]
+    }
+  ],
+  "minecraft:resource_location": [
+    {
+      "examples": ["foo", "foo:bar", "012"]
+    }
+  ],
+  "minecraft:rotation": [
+    {
+      "examples": ["0 0", "~ ~", "~-5 ~5"]
+    }
+  ],
+  "minecraft:score_holder": [
+    {
+      "examples": ["Player", "0123", "*", "@e"]
+    }
+  ],
+  "minecraft:scoreboard_slot": [
+    {
+      "examples": ["sidebar", "foo.bar"]
+    }
+  ],
+  "minecraft:swizzle": [
+    {
+      "examples": ["xyz", "x"]
+    }
+  ],
+  "minecraft:team": [
+    {
+      "examples": ["foo", "123"]
+    }
+  ],
+  "minecraft:time": [
+    {
+      "examples": ["0d", "0s", "0t", "0"]
+    }
+  ],
+  "minecraft:uuid": [
+    {
+      "examples": ["dd12be42-52a9-4a91-a8a1-11c01849e498"]
+    }
+  ],
+  "minecraft:vec2": [
+    {
+      "examples": ["0 0", "~ ~", "0.1 -0.5", "~1 ~-2"]
+    }
+  ],
+  "minecraft:vec3": [
+    {
+      "examples": [
+        "0 0 0",
+        "~ ~ ~",
+        "^ ^ ^",
+        "^1 ^ ^-5",
+        "0.1 -0.5 .9",
+        "~0.5 ~1 ~-5"
+      ]
+    }
+  ]
+}

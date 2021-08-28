@@ -1,19 +1,19 @@
 __all__ = [
-    "get_wiki_argument_types",
-    "get_wiki_examples",
+    "get_argument_examples",
+    "get_command_examples",
 ]
 
 
 import json
 from importlib.resources import read_text
-from typing import Dict, List
 
 from beet import Function
+from beet.core.utils import JsonDict
 
 
-def get_wiki_argument_types() -> Dict[str, List[str]]:
-    return json.loads(read_text("mecha.resources", "wiki_argument_types.json"))
+def get_argument_examples() -> JsonDict:
+    return json.loads(read_text("mecha.resources", "argument_examples.json"))
 
 
-def get_wiki_examples() -> Function:
-    return Function(read_text("mecha.resources", "wiki_examples.mcfunction"))
+def get_command_examples() -> Function:
+    return Function(read_text("mecha.resources", "command_examples.mcfunction"))

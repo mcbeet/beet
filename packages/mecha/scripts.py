@@ -1,11 +1,7 @@
-from pathlib import Path
-
 import click
 import mcwiki
 from beet import Function
 from beet.core.utils import dump_json
-
-PROJECT_DIRECTORY = Path(__file__).parent
 
 
 @click.group()
@@ -14,7 +10,7 @@ def cli():
 
 
 @cli.command()
-def download_wiki_examples():
+def download_command_examples():
     """Download command examples from the wiki."""
     generated_function = Function()
 
@@ -37,29 +33,25 @@ def download_wiki_examples():
                 if code.startswith(command) and code not in ignored_examples:
                     generated_function.lines.append(code)
 
-    generated_function.dump(
-        PROJECT_DIRECTORY / "mecha/resources",
-        "wiki_examples.mcfunction",
-    )
+    click.echo(generated_function.text, nl=False)
 
 
 @cli.command()
-def download_wiki_argument_types():
-    """Download argument type examples from the wiki."""
+def download_argument_examples():
+    """Download argument examples from the wiki."""
     page = mcwiki.load("argument types")
     section = page["java edition"]
 
-    examples = mcwiki.TextExtractor(".collapsible-content > ul > li > code")
-    output_file = PROJECT_DIRECTORY / "mecha/resources/wiki_argument_types.json"
+    argument_examples = {
+        argument_type: [
+            {"examples": examples}
+            for ul in documentation.html.select_one(".collapsible-content").select("ul")  # type: ignore
+            if (examples := [example.string for example in ul.select("li > code")])  # type: ignore
+        ]
+        for argument_type, documentation in section.items()
+    }
 
-    output_file.write_text(
-        dump_json(
-            {
-                argument_type: list(documentation.extract_all(examples))
-                for argument_type, documentation in section.items()
-            }
-        )
-    )
+    click.echo(dump_json(argument_examples), nl=False)
 
 
 if __name__ == "__main__":
