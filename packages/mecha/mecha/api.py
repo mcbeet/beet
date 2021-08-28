@@ -43,7 +43,7 @@ class Mecha:
         if not filename and function.source_path:
             filename = str(function.source_path)
 
-        ast = delegate(self.create_token_stream(function.text + "\n"), "root")
+        ast = delegate("root", self.create_token_stream(function.text + "\n"))
         return replace(ast, filename=filename)
 
     def parse_command(self, command: str) -> AstCommand:

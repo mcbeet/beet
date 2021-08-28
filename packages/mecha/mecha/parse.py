@@ -13,13 +13,14 @@ __all__ = [
     "CoordinateParser",
     "Vector2Parser",
     "Vector3Parser",
+    "JsonParser",
     "INTEGER_PATTERN",
     "FLOAT_PATTERN",
 ]
 
-
 import re
 from dataclasses import dataclass, field
+from functools import partial
 from typing import (
     TYPE_CHECKING,
     Any,
@@ -30,6 +31,7 @@ from typing import (
     Tuple,
     Type,
     TypeVar,
+    overload,
 )
 
 from tokenstream import InvalidSyntax, SourceLocation, Token, TokenStream
@@ -38,12 +40,18 @@ from .ast import (
     AstChildren,
     AstCommand,
     AstCoordinate,
+    AstJson,
+    AstJsonArray,
+    AstJsonObject,
+    AstJsonObjectEntry,
+    AstJsonValue,
     AstNode,
     AstRoot,
     AstValue,
     AstVector2,
     AstVector3,
 )
+from .error import InvalidEscapeSequence
 from .spec import CommandSpecification, Parser
 
 NumericType = TypeVar("NumericType", float, int)
@@ -59,29 +67,30 @@ def get_default_parsers() -> Dict[str, Parser]:
         "root": parse_root,
         "command": parse_command,
         "argument": parse_argument,
+        "json": JsonParser(),
         "brigadier:bool": parse_bool,
-        "brigadier:double": NumericParser(
+        "brigadier:double": NumericParser[float](
             type=float,
             name="double",
             pattern=FLOAT_PATTERN,
             min=-1.7976931348623157e308,
             max=1.7976931348623157e308,
         ),
-        "brigadier:float": NumericParser(
+        "brigadier:float": NumericParser[float](
             type=float,
             name="float",
             pattern=FLOAT_PATTERN,
             min=-3.4028234663852886e38,
             max=3.4028234663852886e38,
         ),
-        "brigadier:integer": NumericParser(
+        "brigadier:integer": NumericParser[int](
             type=int,
             name="integer",
             pattern=INTEGER_PATTERN,
             min=-2147483648,
             max=2147483647,
         ),
-        "brigadier:long": NumericParser(
+        "brigadier:long": NumericParser[int](
             type=int,
             name="long",
             pattern=INTEGER_PATTERN,
@@ -89,16 +98,17 @@ def get_default_parsers() -> Dict[str, Parser]:
             max=9223372036854775807,
         ),
         "brigadier:string": StringParser(),
-        "minecraft:angle": CoordinateParser(
+        "minecraft:angle": CoordinateParser[float](
             type=float,
             name="angle",
             min=-180.0,
             max=180.0,
             allow_local=False,
         ),
-        "minecraft:block_pos": Vector3Parser(
-            coordinate_parser=CoordinateParser(type=float),
+        "minecraft:block_pos": Vector3Parser[float](
+            coordinate_parser=CoordinateParser[float](type=float),
         ),
+        "minecraft:component": delegate("json"),
     }
 
 
@@ -117,14 +127,65 @@ def get_stream_properties(stream: TokenStream) -> Dict[str, Any]:
     return stream.data.get("properties", {})
 
 
-def delegate(stream: TokenStream, parser: str) -> Any:
+@overload
+def delegate(parser: str) -> Parser:
+    ...
+
+
+@overload
+def delegate(parser: str, stream: TokenStream) -> Any:
+    ...
+
+
+def delegate(parser: str, stream: Optional[TokenStream] = None) -> Any:
     """Delegate parsing to a registered subparser."""
+    if stream is None:
+        return partial(delegate, parser)
+
     spec = get_stream_spec(stream)
 
     if parser not in spec.parsers:
         raise ValueError(f"Unrecognized parser {parser!r}.")
 
     return spec.parsers[parser](stream)
+
+
+@dataclass
+class QuotedStringHandler:
+    """Class responsible for removing quotes and interpreting escape sequences."""
+
+    escape_regex: "re.Pattern[str]" = field(default_factory=lambda: re.compile(r"\\."))
+    escape_sequences: Dict[str, str] = field(default_factory=dict)
+
+    def unquote_string(self, token: Token) -> str:
+        """Remove quotes and substitute escaped characters."""
+        try:
+            return self.escape_regex.sub(
+                lambda match: self.handle_substitution(token, match),
+                token.value[1:-1],
+            )
+        except InvalidEscapeSequence as exc:
+            location = token.location.with_horizontal_offset(exc.index + 1)
+            raise (
+                InvalidSyntax(
+                    f"Invalid escape sequence {exc.characters!r}."
+                ).set_location(
+                    location,
+                    location.with_horizontal_offset(len(exc.characters)),
+                )
+            )
+
+    def handle_substitution(self, token: Token, match: "re.Match[str]") -> str:
+        """Handle escaped character sequence."""
+        characters = match[0]
+
+        if characters == "\\" + token.value[0]:
+            return token.value[0]
+
+        try:
+            return self.escape_sequences[characters]
+        except KeyError:
+            raise InvalidEscapeSequence(characters, match.pos) from None
 
 
 def parse_root(stream: TokenStream) -> AstRoot:
@@ -146,7 +207,7 @@ def parse_root(stream: TokenStream) -> AstRoot:
             while stream.get("newline", "comment"):
                 continue
             if stream.peek():
-                commands.append(delegate(stream, "command"))
+                commands.append(delegate("command", stream))
 
         return AstRoot(
             filename=None,
@@ -182,7 +243,7 @@ def parse_command(stream: TokenStream) -> AstCommand:
 
         for name, alternative in stream.choose(*argument_names):
             with alternative, stream.provide(scope=scope + (name,)):
-                arguments.append(delegate(stream, "argument"))
+                arguments.append(delegate("argument", stream))
                 scope += (name,)
 
         end_location = stream.current.end_location
@@ -204,13 +265,13 @@ def parse_argument(stream: TokenStream) -> AstNode:
 
     if tree.parser:
         with stream.provide(properties=tree.properties or {}):
-            return delegate(stream, tree.parser)
+            return delegate(tree.parser, stream)
 
     raise ValueError(f"Missing argument parser in command tree {scope}.")
 
 
 def parse_bool(stream: TokenStream) -> AstValue[bool]:
-    """Parse brigadier bool."""
+    """Parse bool."""
     token = stream.expect_any(("literal", "true"), ("literal", "false"))
 
     return AstValue[bool](
@@ -234,7 +295,7 @@ class NumericParser(Generic[NumericType]):
         properties = get_stream_properties(stream)
 
         with stream.syntax(**{self.name: self.pattern}):
-            stream.expect(self.name)
+            token = stream.expect(self.name)
 
         node = self.create_node(stream)
 
@@ -242,11 +303,11 @@ class NumericParser(Generic[NumericType]):
         maximum = properties.get("max", self.max)
 
         if minimum is not None and node.value < minimum:
-            raise stream.emit_error(
+            raise token.emit_error(
                 InvalidSyntax(f"Expected value to be at least {minimum}.")
             )
         if maximum is not None and node.value > maximum:
-            raise stream.emit_error(
+            raise token.emit_error(
                 InvalidSyntax(f"Expected value to be at most {maximum}.")
             )
 
@@ -269,13 +330,8 @@ class StringParser:
     """Parser for string values."""
 
     type: str = "phrase"
-    escape_regex: "re.Pattern[str]" = field(default_factory=lambda: re.compile(r"\\."))
-    escape_sequences: Dict[str, str] = field(
-        default_factory=lambda: {
-            r"\n": "\n",
-            r"\"": '"',
-            r"\\": "\\",
-        }
+    quoted_string_handler: QuotedStringHandler = field(
+        default_factory=QuotedStringHandler
     )
 
     def __call__(self, stream: TokenStream) -> AstValue[str]:
@@ -299,18 +355,12 @@ class StringParser:
 
         return AstValue[str](
             value=(
-                self.unquote_string(token)
+                self.quoted_string_handler.unquote_string(token)
                 if token.match("quoted_string")
                 else token.value
             ),
             location=token.location,
             end_location=token.end_location,
-        )
-
-    def unquote_string(self, token: Token) -> str:
-        """Remove quotes and substitute escaped characters."""
-        return self.escape_regex.sub(
-            lambda match: self.escape_sequences[match[0]], token.value[1:-1]
         )
 
 
@@ -331,22 +381,20 @@ class CoordinateParser(NumericParser[NumericType]):
         token = stream.current
 
         if issubclass(self.type, int) and "." in token.value:
-            raise stream.emit_error(InvalidSyntax(f"Decimal {self.name} not allowed."))
+            raise token.emit_error(InvalidSyntax(f"Decimal {self.name} not allowed."))
 
         value = token.value
 
         if token.value.startswith("~"):
             if not self.allow_relative:
-                raise stream.emit_error(
+                raise token.emit_error(
                     InvalidSyntax(f"Relative {self.name} not allowed.")
                 )
             prefix = "relative"
             value = value[1:]
         elif token.value.startswith("^"):
             if not self.allow_local:
-                raise stream.emit_error(
-                    InvalidSyntax(f"Local {self.name} not allowed.")
-                )
+                raise token.emit_error(InvalidSyntax(f"Local {self.name} not allowed."))
             prefix = "local"
             value = value[1:]
         else:
@@ -396,3 +444,107 @@ class Vector3Parser(Generic[NumericType]):
             location=x.location,
             end_location=z.end_location,
         )
+
+
+@dataclass
+class JsonParser:
+    """Parser for json values."""
+
+    quoted_string_handler: QuotedStringHandler = field(
+        default_factory=lambda: QuotedStringHandler(
+            escape_sequences={
+                r"\\": "\\",
+                r"\f": "\f",
+                r"\n": "\n",
+                r"\r": "\r",
+                r"\t": "\t",
+            }
+        )
+    )
+
+    def __call__(self, stream: TokenStream) -> AstJson:
+        with stream.syntax(
+            curly=r"\{|\}",
+            bracket=r"\[|\]",
+            string=r'"(?:\\.|[^\\\n])*?"',
+            number=r"-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?",
+            colon=r":",
+            comma=r",",
+        ):
+            curly, bracket, string, number, null, true, false = stream.expect(
+                ("curly", "{"),
+                ("bracket", "["),
+                "string",
+                "number",
+                ("literal", "null"),
+                ("literal", "true"),
+                ("literal", "false"),
+            )
+
+            if curly:
+                entries: List[AstJsonObjectEntry] = []
+
+                for key in stream.collect("string"):
+                    stream.expect("colon")
+                    value = self(stream)
+                    entries.append(
+                        AstJsonObjectEntry(
+                            key=AstValue[str](
+                                value=self.quoted_string_handler.unquote_string(key),
+                                location=key.location,
+                                end_location=key.end_location,
+                            ),
+                            value=value,
+                            location=key.location,
+                            end_location=value.end_location,
+                        )
+                    )
+
+                    if not stream.get("comma"):
+                        break
+
+                close_curly = stream.expect(("curly", "}"))
+
+                return AstJsonObject(
+                    entries=AstChildren(entries),
+                    location=curly.location,
+                    end_location=close_curly.end_location,
+                )
+
+            elif bracket:
+                elements: List[AstJson] = []
+
+                close_bracket = stream.get(("bracket", "]"))
+
+                if not close_bracket:
+                    elements.append(self(stream))
+
+                    for _ in stream.collect("comma"):
+                        elements.append(self(stream))
+
+                    close_bracket = stream.expect(("bracket", "]"))
+
+                return AstJsonArray(
+                    elements=AstChildren(elements),
+                    location=bracket.location,
+                    end_location=close_bracket.end_location,
+                )
+
+            value = None
+
+            if null:
+                pass
+            elif true:
+                value = True
+            elif false:
+                value = False
+            elif string:
+                value = self.quoted_string_handler.unquote_string(string)
+            elif number:
+                value = float(number.value)
+
+            return AstJsonValue(
+                value=value,
+                location=stream.current.location,
+                end_location=stream.current.end_location,
+            )

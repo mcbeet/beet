@@ -52,6 +52,6 @@ def test_argument_examples(
                 argument_parser,
                 str(properties),
                 value,
-                delegate(stream, argument_parser).dump(),
+                delegate(argument_parser, stream).dump(),
             ]
         )

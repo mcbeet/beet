@@ -79,7 +79,7 @@
       "examples": [
         "\"hello world\"",
         "\"\"",
-        "\"{\"text\":\"hello world\"}\"",
+        "{\"text\":\"hello world\"}",
         "[\"\"]"
       ]
     }

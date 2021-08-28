@@ -730,7 +730,7 @@ python-versions = ">=3.6"
 
 [[package]]
 name = "tokenstream"
-version = "0.7.0"
+version = "0.7.1"
 description = "A versatile token stream for handwritten parsers"
 category = "main"
 optional = false
@@ -847,7 +847,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytes
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "bcd8ecac257bad9cf73cd289951f27e953e7a47aae4da210d67ea597da52eed2"
+content-hash = "2c073d95f4cd36df15d3bf06fa3c8af3a361733bc221c2b48729b9c9fa3cdb3a"
 
 [metadata.files]
 appdirs = [
@@ -1292,8 +1292,8 @@ soupsieve = [
     {file = "soupsieve-2.2.1.tar.gz", hash = "sha256:052774848f448cf19c7e959adf5566904d525f33a3f8b6ba6f6f8f26ec7de0cc"},
 ]
 tokenstream = [
-    {file = "tokenstream-0.7.0-py3-none-any.whl", hash = "sha256:c2e7302ded3f326adca228160173126fbe85a5c31ebe18d598fbebe84adf818d"},
-    {file = "tokenstream-0.7.0.tar.gz", hash = "sha256:5201459d2482cef050db254ee47727915f71e6cd9fc0ab5044843019ffa705b1"},
+    {file = "tokenstream-0.7.1-py3-none-any.whl", hash = "sha256:9ac6629bc6ebd07d2ca4d8db83b3c789d937cdaac21b57760003873773fe400d"},
+    {file = "tokenstream-0.7.1.tar.gz", hash = "sha256:75e46c2524c9bd404aacfd4c40b280f129f1405c35989ea0fdfd9389702ad095"},
 ]
 toml = [
     {file = "toml-0.10.2-py2.py3-none-any.whl", hash = "sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b"},

@@ -1,0 +1,23 @@
+minecraft:component
+---
+{}
+---
+{"text":"hello world"}
+---
+<class 'mecha.ast.AstJsonObject'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=22, lineno=1, colno=23)
+  entries:
+    <class 'mecha.ast.AstJsonObjectEntry'>
+      location: SourceLocation(pos=1, lineno=1, colno=2)
+      end_location: SourceLocation(pos=21, lineno=1, colno=22)
+      key:
+        <class 'mecha.ast.AstValue'>
+          location: SourceLocation(pos=1, lineno=1, colno=2)
+          end_location: SourceLocation(pos=7, lineno=1, colno=8)
+          value: 'text'
+      value:
+        <class 'mecha.ast.AstJsonValue'>
+          location: SourceLocation(pos=8, lineno=1, colno=9)
+          end_location: SourceLocation(pos=21, lineno=1, colno=22)
+          value: 'hello world'

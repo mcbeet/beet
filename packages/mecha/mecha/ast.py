@@ -7,12 +7,28 @@ __all__ = [
     "AstCoordinate",
     "AstVector2",
     "AstVector3",
+    "AstJson",
+    "AstJsonValue",
+    "AstJsonArray",
+    "AstJsonObjectEntry",
+    "AstJsonObject",
 ]
 
 
 from dataclasses import dataclass, field, fields
-from typing import Generic, Iterator, Literal, Optional, Tuple, TypeVar
+from typing import (
+    Any,
+    Generic,
+    Iterator,
+    List,
+    Literal,
+    Optional,
+    Tuple,
+    TypeVar,
+    Union,
+)
 
+from beet.core.utils import JsonDict
 from tokenstream import SourceLocation
 
 T = TypeVar("T")
@@ -72,7 +88,7 @@ class AstCommand(AstNode):
     """Command ast node"""
 
     identifier: str
-    arguments: AstChildren["AstNode"]
+    arguments: AstChildren[AstNode]
 
 
 @dataclass(frozen=True)
@@ -104,3 +120,50 @@ class AstVector3(AstNode, Generic[NumericType]):
     x: AstCoordinate[NumericType]
     y: AstCoordinate[NumericType]
     z: AstCoordinate[NumericType]
+
+
+@dataclass(frozen=True)
+class AstJson(AstNode):
+    """Base ast node for json."""
+
+    def get_value(self) -> Any:
+        """Return the json value."""
+        raise NotImplementedError()
+
+
+@dataclass(frozen=True)
+class AstJsonValue(AstJson):
+    """Ast json value node."""
+
+    value: Union[None, bool, str, float]
+
+    def get_value(self) -> Union[None, bool, str, float]:
+        return self.value
+
+
+@dataclass(frozen=True)
+class AstJsonArray(AstJson):
+    """Ast json array node."""
+
+    elements: AstChildren[AstJson]
+
+    def get_value(self) -> List[Any]:
+        return [element.get_value() for element in self.elements]
+
+
+@dataclass(frozen=True)
+class AstJsonObjectEntry(AstNode):
+    """Ast json object entry node."""
+
+    key: AstValue[str]
+    value: AstJson
+
+
+@dataclass(frozen=True)
+class AstJsonObject(AstJson):
+    """Ast json object node."""
+
+    entries: AstChildren[AstJsonObjectEntry]
+
+    def get_value(self) -> JsonDict:
+        return {entry.key.value: entry.value.get_value() for entry in self.entries}
