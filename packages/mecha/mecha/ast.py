@@ -61,7 +61,7 @@ class AstNode:
         return f"{prefix}{self.__class__}\n" + "\n".join(
             f"{prefix}  {f.name}:"
             + (
-                "\n" + "\n".join(child.dump(prefix + "    ") for child in attribute)  # type: ignore
+                "\n" + ("\n".join(child.dump(prefix + "    ") for child in attribute) if attribute else prefix + "    <empty>\n")  # type: ignore
                 if isinstance(attribute := getattr(self, f.name), AstChildren)
                 else "\n" + attribute.dump(prefix + "    ")
                 if isinstance(attribute, AstNode)
