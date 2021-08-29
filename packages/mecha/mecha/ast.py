@@ -24,24 +24,11 @@ __all__ = [
 
 
 from dataclasses import dataclass, field, fields
-from typing import (
-    Any,
-    Generic,
-    Iterator,
-    List,
-    Literal,
-    Optional,
-    Tuple,
-    TypeVar,
-    Union,
-)
-
-from beet.core.utils import JsonDict
+from typing import Any, Generic, Iterator, Literal, Optional, Tuple, TypeVar
 
 # pyright: reportMissingTypeStubs=false
-from nbtlib import Byte, Compound, Double, Float, Int
+from nbtlib import Compound
 from nbtlib import List as ListTag
-from nbtlib import Long, Short, String
 from tokenstream import SourceLocation
 
 T = TypeVar("T")
@@ -148,9 +135,9 @@ class AstJson(AstNode):
 class AstJsonValue(AstJson):
     """Ast json value node."""
 
-    value: Union[None, bool, str, float]
+    value: Any
 
-    def get_value(self) -> Union[None, bool, str, float]:
+    def get_value(self) -> Any:
         return self.value
 
 
@@ -160,7 +147,7 @@ class AstJsonArray(AstJson):
 
     elements: AstChildren[AstJson]
 
-    def get_value(self) -> List[Any]:
+    def get_value(self) -> Any:
         return [element.get_value() for element in self.elements]
 
 
@@ -178,7 +165,7 @@ class AstJsonObject(AstJson):
 
     entries: AstChildren[AstJsonObjectEntry]
 
-    def get_value(self) -> JsonDict:
+    def get_value(self) -> Any:
         return {entry.key.value: entry.value.get_value() for entry in self.entries}
 
 
@@ -195,9 +182,9 @@ class AstNbt(AstNode):
 class AstNbtValue(AstNbt):
     """Ast nbt value node."""
 
-    value: Union[Byte, Short, Int, Long, Float, Double, String]
+    value: Any
 
-    def get_value(self) -> Union[Byte, Short, Int, Long, Float, Double, String]:
+    def get_value(self) -> Any:
         return self.value
 
 
@@ -207,8 +194,8 @@ class AstNbtList(AstNbt):
 
     elements: AstChildren[AstNbt]
 
-    def get_value(self) -> ListTag:
-        return ListTag([element.get_value() for element in self.elements])
+    def get_value(self) -> Any:
+        return ListTag([element.get_value() for element in self.elements])  # type: ignore
 
 
 @dataclass(frozen=True)
@@ -226,7 +213,7 @@ class AstNbtCompound(AstNbt):
     entries: AstChildren[AstNbtCompoundEntry]
 
     def get_value(self) -> Any:
-        return Compound(
+        return Compound(  # type: ignore
             {entry.key.value: entry.value.get_value() for entry in self.entries},
         )
 
