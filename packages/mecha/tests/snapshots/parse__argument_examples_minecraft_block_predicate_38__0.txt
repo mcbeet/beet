@@ -22,7 +22,7 @@ stone[foo=bar]
     <class 'mecha.ast.AstBlockState'>
       location: SourceLocation(pos=6, lineno=1, colno=7)
       end_location: SourceLocation(pos=13, lineno=1, colno=14)
-      name:
+      key:
         <class 'mecha.ast.AstValue'>
           location: SourceLocation(pos=6, lineno=1, colno=7)
           end_location: SourceLocation(pos=9, lineno=1, colno=10)

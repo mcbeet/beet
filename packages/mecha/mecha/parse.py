@@ -638,7 +638,7 @@ class BlockParser:
 
                 block_states.append(
                     AstBlockState(
-                        name=AstValue[str](
+                        key=AstValue[str](
                             value=name.value,
                             location=name.location,
                             end_location=name.end_location,

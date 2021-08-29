@@ -182,7 +182,7 @@ class AstResourceLocation(AstNode):
 class AstBlockState(AstNode):
     """Ast block state node."""
 
-    name: AstValue[str]
+    key: AstValue[str]
     value: AstValue[str]
 
 
