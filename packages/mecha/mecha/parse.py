@@ -19,6 +19,7 @@ __all__ = [
     "parse_adjacent_nbt",
     "ResourceLocationParser",
     "BlockParser",
+    "ItemParser",
     "INTEGER_PATTERN",
     "FLOAT_PATTERN",
 ]
@@ -49,6 +50,7 @@ from .ast import (
     AstChildren,
     AstCommand,
     AstCoordinate,
+    AstItem,
     AstJson,
     AstJsonArray,
     AstJsonObject,
@@ -126,12 +128,16 @@ def get_default_parsers() -> Dict[str, Parser]:
         ),
         "minecraft:block_predicate": BlockParser(),
         "minecraft:block_state": BlockParser(
-            resource_location_parser=ResourceLocationParser(allow_tag=False)
+            resource_location_parser=ResourceLocationParser(allow_tag=False),
         ),
         "minecraft:component": delegate("json"),
         "minecraft:dimension": delegate("minecraft:resource_location"),
         "minecraft:entity_summon": delegate("minecraft:resource_location"),
         "minecraft:function": ResourceLocationParser(),
+        "minecraft:item_predicate": ItemParser(),
+        "minecraft:item_stack": ItemParser(
+            resource_location_parser=ResourceLocationParser(allow_tag=False),
+        ),
         "minecraft:nbt_compound_tag": parse_compound_tag,
         "minecraft:nbt_tag": delegate("nbt"),
         "minecraft:resource_location": ResourceLocationParser(allow_tag=False),
@@ -854,6 +860,37 @@ class BlockParser:
         return AstBlock(
             identifier=identifier,
             block_states=AstChildren(block_states),
+            data_tags=data_tags,
+            location=location,
+            end_location=(
+                data_tags.end_location if data_tags is not None else end_location
+            ),
+        )
+
+
+@dataclass
+class ItemParser:
+    """Parser for minecraft items."""
+
+    resource_location_parser: Parser = field(default_factory=ResourceLocationParser)
+
+    allow_data_tags: bool = True
+
+    def __call__(self, stream: TokenStream) -> AstItem:
+        identifier = self.resource_location_parser(stream)
+        location = identifier.location
+        end_location = identifier.end_location
+
+        data_tags = parse_adjacent_nbt(stream)
+
+        if data_tags is not None and not self.allow_data_tags:
+            raise InvalidSyntax("Data tags not allowed.").set_location(
+                location=data_tags.location,
+                end_location=data_tags.end_location,
+            )
+
+        return AstItem(
+            identifier=identifier,
             data_tags=data_tags,
             location=location,
             end_location=(

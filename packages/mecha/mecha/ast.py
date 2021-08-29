@@ -20,6 +20,7 @@ __all__ = [
     "AstResourceLocation",
     "AstBlockState",
     "AstBlock",
+    "AstItem",
 ]
 
 
@@ -241,4 +242,12 @@ class AstBlock(AstNode):
 
     identifier: AstResourceLocation
     block_states: AstChildren[AstBlockState]
+    data_tags: Optional[AstNbt]
+
+
+@dataclass(frozen=True)
+class AstItem(AstNode):
+    """Ast item node."""
+
+    identifier: AstResourceLocation
     data_tags: Optional[AstNbt]
