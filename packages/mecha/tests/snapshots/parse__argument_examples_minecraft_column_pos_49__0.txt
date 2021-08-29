@@ -1,0 +1,21 @@
+minecraft:column_pos
+---
+{}
+---
+~1 ~-2
+---
+<class 'mecha.ast.AstVector2'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=6, lineno=1, colno=7)
+  x:
+    <class 'mecha.ast.AstCoordinate'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=2, lineno=1, colno=3)
+      value: 1
+      prefix: 'relative'
+  y:
+    <class 'mecha.ast.AstCoordinate'>
+      location: SourceLocation(pos=3, lineno=1, colno=4)
+      end_location: SourceLocation(pos=6, lineno=1, colno=7)
+      value: -2
+      prefix: 'relative'

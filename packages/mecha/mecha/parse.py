@@ -20,6 +20,8 @@ __all__ = [
     "ResourceLocationParser",
     "BlockParser",
     "ItemParser",
+    "LiteralStringParser",
+    "RangeParser",
     "INTEGER_PATTERN",
     "FLOAT_PATTERN",
 ]
@@ -62,6 +64,7 @@ from .ast import (
     AstNbtList,
     AstNbtValue,
     AstNode,
+    AstRange,
     AstResourceLocation,
     AstRoot,
     AstValue,
@@ -130,9 +133,39 @@ def get_default_parsers() -> Dict[str, Parser]:
         "minecraft:block_state": BlockParser(
             resource_location_parser=ResourceLocationParser(allow_tag=False),
         ),
+        "minecraft:color": LiteralStringParser(
+            [
+                "reset",
+                "black",
+                "dark_blue",
+                "dark_green",
+                "dark_aqua",
+                "dark_red",
+                "dark_purple",
+                "gold",
+                "gray",
+                "dark_gray",
+                "blue",
+                "green",
+                "aqua",
+                "red",
+                "light_purple",
+                "yellow",
+                "white",
+            ]
+        ),
+        "minecraft:column_pos": Vector2Parser(
+            coordinate_parser=CoordinateParser[int](
+                type=int,
+                allow_local=False,
+            ),
+        ),
         "minecraft:component": delegate("json"),
         "minecraft:dimension": delegate("minecraft:resource_location"),
+        "minecraft:entity_anchor": LiteralStringParser(["eyes", "feet"]),
         "minecraft:entity_summon": delegate("minecraft:resource_location"),
+        "minecraft:float_range": RangeParser[float](type=float),
+        "minecraft:int_range": RangeParser[int](type=int),
         "minecraft:function": ResourceLocationParser(),
         "minecraft:item_predicate": ItemParser(),
         "minecraft:item_stack": ItemParser(
@@ -897,3 +930,50 @@ class ItemParser:
                 data_tags.end_location if data_tags is not None else end_location
             ),
         )
+
+
+@dataclass
+class LiteralStringParser:
+    """Parser for literal strings."""
+
+    values: List[str]
+
+    def __call__(self, stream: TokenStream) -> AstValue[str]:
+        patterns = [("literal", value) for value in self.values]
+        token = stream.expect_any(*patterns)
+
+        return AstValue[str](
+            value=token.value,
+            location=token.location,
+            end_location=token.end_location,
+        )
+
+
+@dataclass
+class RangeParser(Generic[NumericType]):
+    """Parser for ranges."""
+
+    type: Type[NumericType]
+    pattern: str = (
+        fr"\.\.{FLOAT_PATTERN}|{FLOAT_PATTERN}\.\.(?:{FLOAT_PATTERN})?|{FLOAT_PATTERN}"
+    )
+
+    def __call__(self, stream: TokenStream) -> AstRange[NumericType]:
+        with stream.syntax(range=self.pattern):
+            token = stream.expect("range")
+            minimum, separator, maximum = token.value.partition("..")
+
+            if not separator:
+                maximum = minimum
+
+            if issubclass(self.type, int) and "." in minimum:
+                raise token.emit_error(InvalidSyntax(f"Decimal minimum not allowed."))
+            if issubclass(self.type, int) and "." in maximum:
+                raise token.emit_error(InvalidSyntax(f"Decimal maximum not allowed."))
+
+            return AstRange[NumericType](
+                min=self.type(minimum) if minimum else None,
+                max=self.type(maximum) if maximum else None,
+                location=token.location,
+                end_location=token.end_location,
+            )

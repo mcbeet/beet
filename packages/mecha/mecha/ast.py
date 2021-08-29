@@ -21,6 +21,7 @@ __all__ = [
     "AstBlockState",
     "AstBlock",
     "AstItem",
+    "AstRange",
 ]
 
 
@@ -251,3 +252,21 @@ class AstItem(AstNode):
 
     identifier: AstResourceLocation
     data_tags: Optional[AstNbt]
+
+
+@dataclass(frozen=True)
+class AstRange(AstNode, Generic[NumericType]):
+    """Ast range node."""
+
+    min: Optional[NumericType]
+    max: Optional[NumericType]
+
+    @property
+    def exact(self) -> bool:
+        """Wether the range is an exact match."""
+        return self.min == self.max
+
+    @property
+    def value(self) -> NumericType:
+        """Return the exact value."""
+        return self.min  # type: ignore
