@@ -1,0 +1,10 @@
+minecraft:nbt_tag
+---
+{}
+---
+0l
+---
+<class 'mecha.ast.AstNbtValue'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=2, lineno=1, colno=3)
+  value: Long(0)

@@ -32,3 +32,4 @@ stone[foo=bar]
           location: SourceLocation(pos=10, lineno=1, colno=11)
           end_location: SourceLocation(pos=13, lineno=1, colno=14)
           value: 'bar'
+  data_tags: None

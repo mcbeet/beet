@@ -14,6 +14,9 @@ __all__ = [
     "Vector2Parser",
     "Vector3Parser",
     "JsonParser",
+    "NbtParser",
+    "parse_compound_tag",
+    "parse_adjacent_nbt",
     "ResourceLocationParser",
     "BlockParser",
     "INTEGER_PATTERN",
@@ -36,6 +39,8 @@ from typing import (
     overload,
 )
 
+# pyright: reportMissingTypeStubs=false
+from nbtlib import Byte, Double, Float, Int, Long, OutOfRange, Short, String
 from tokenstream import InvalidSyntax, SourceLocation, Token, TokenStream
 
 from .ast import (
@@ -49,6 +54,11 @@ from .ast import (
     AstJsonObject,
     AstJsonObjectEntry,
     AstJsonValue,
+    AstNbt,
+    AstNbtCompound,
+    AstNbtCompoundEntry,
+    AstNbtList,
+    AstNbtValue,
     AstNode,
     AstResourceLocation,
     AstRoot,
@@ -73,6 +83,7 @@ def get_default_parsers() -> Dict[str, Parser]:
         "command": parse_command,
         "argument": parse_argument,
         "json": JsonParser(),
+        "nbt": NbtParser(),
         "brigadier:bool": parse_bool,
         "brigadier:double": NumericParser[float](
             type=float,
@@ -121,6 +132,8 @@ def get_default_parsers() -> Dict[str, Parser]:
         "minecraft:dimension": delegate("minecraft:resource_location"),
         "minecraft:entity_summon": delegate("minecraft:resource_location"),
         "minecraft:function": ResourceLocationParser(),
+        "minecraft:nbt_compound_tag": parse_compound_tag,
+        "minecraft:nbt_tag": delegate("nbt"),
         "minecraft:resource_location": ResourceLocationParser(allow_tag=False),
     }
 
@@ -543,10 +556,8 @@ class JsonParser:
                     end_location=close_bracket.end_location,
                 )
 
-            value = None
-
             if null:
-                pass
+                value = None
             elif true:
                 value = True
             elif false:
@@ -557,10 +568,176 @@ class JsonParser:
                 value = float(number.value)
 
             return AstJsonValue(
-                value=value,
+                value=value,  # type: ignore
                 location=stream.current.location,
                 end_location=stream.current.end_location,
             )
+
+
+@dataclass
+class NbtParser:
+    """Parser for nbt tags."""
+
+    number_suffixes: Dict[str, Type[Any]] = field(
+        default_factory=lambda: {
+            "b": Byte,
+            "s": Short,
+            "l": Long,
+            "f": Float,
+            "d": Double,
+        }
+    )
+
+    literal_aliases: Dict[str, Any] = field(
+        default_factory=lambda: {
+            "true": Byte(1),
+            "false": Byte(0),
+        }
+    )
+
+    quoted_string_handler: QuotedStringHandler = field(
+        default_factory=lambda: QuotedStringHandler(
+            escape_sequences={
+                r"\\": "\\",
+            }
+        )
+    )
+
+    def __call__(self, stream: TokenStream) -> AstNbt:
+        with stream.syntax(
+            curly=r"\{|\}",
+            bracket=r"\[|\]",
+            quoted_string=r'"(?:\\.|[^\\\n])*?"' "|" r"'(?:\\.|[^\\\n])*?'",
+            number=r"[+-]?(?:[0-9]*?\.[0-9]+|[0-9]+\.[0-9]*?|[1-9][0-9]*|0)([eE][+-]?[0-9]+)?[bslfdBSLFD]?(?![a-zA-Z0-9._+-])",
+            string=r"[a-zA-Z0-9._+-]+",
+            colon=r":",
+            comma=r",",
+        ):
+            curly, bracket, number, string, quoted_string = stream.expect(
+                ("curly", "{"),
+                ("bracket", "["),
+                "number",
+                "string",
+                "quoted_string",
+            )
+
+            if curly:
+                entries: List[AstNbtCompoundEntry] = []
+
+                for key in stream.collect_any("number", "string", "quoted_string"):
+                    stream.expect("colon")
+                    value = self(stream)
+                    entries.append(
+                        AstNbtCompoundEntry(
+                            key=AstValue[str](
+                                value=(
+                                    self.quoted_string_handler.unquote_string(key)
+                                    if key.match("quoted_string")
+                                    else key.value
+                                ),
+                                location=key.location,
+                                end_location=key.end_location,
+                            ),
+                            value=value,
+                            location=key.location,
+                            end_location=value.end_location,
+                        )
+                    )
+
+                    if not stream.get("comma"):
+                        break
+
+                close_curly = stream.expect(("curly", "}"))
+
+                return AstNbtCompound(
+                    entries=AstChildren(entries),
+                    location=curly.location,
+                    end_location=close_curly.end_location,
+                )
+
+            elif bracket:
+                elements: List[AstNbt] = []
+
+                for _ in stream.peek_until(("bracket", "]")):
+                    elements.append(self(stream))
+
+                    if not stream.get("comma"):
+                        stream.expect(("bracket", "]"))
+                        break
+
+                for element in elements[1:]:
+                    node_type = type(elements[0])
+                    if (
+                        type(element) != node_type
+                        or isinstance(element, AstNbtValue)
+                        and type(element.get_value()) != type(elements[0].get_value())
+                    ):
+                        raise InvalidSyntax(
+                            "All the elements should have the same type."
+                        ).set_location(
+                            location=elements[0].location,
+                            end_location=elements[-1].end_location,
+                        )
+
+                return AstNbtList(
+                    elements=AstChildren(elements),
+                    location=bracket.location,
+                    end_location=stream.current.end_location,
+                )
+
+            if number:
+                suffix = number.value[-1].lower()
+
+                try:
+                    if suffix in self.number_suffixes:
+                        value = self.number_suffixes[suffix](number.value[:-1])
+                    else:
+                        value = (
+                            Double(number.value)
+                            if "." in number.value
+                            else Int(number.value)
+                        )
+                except (OutOfRange, ValueError):
+                    value = String(number.value)
+
+            elif string:
+                alias = string.value.lower()
+
+                if alias in self.literal_aliases:
+                    value = self.literal_aliases[alias]
+                else:
+                    value = String(string.value)
+
+            elif quoted_string:
+                value = String(self.quoted_string_handler.unquote_string(quoted_string))
+
+            return AstNbtValue(
+                value=value,  # type: ignore
+                location=stream.current.location,
+                end_location=stream.current.end_location,
+            )
+
+
+def parse_compound_tag(stream: TokenStream) -> AstNbtCompound:
+    """Parse compound tag."""
+    node = delegate("nbt", stream)
+
+    if isinstance(node, AstNbtCompound):
+        return node
+
+    raise InvalidSyntax("Expected nbt compound tag.").set_location(
+        location=node.location,
+        end_location=node.end_location,
+    )
+
+
+def parse_adjacent_nbt(stream: TokenStream) -> Optional[AstNbtCompound]:
+    """Parse adjacent nbt."""
+    with stream.syntax(curly=r"\{"), stream.intercept("whitespace"):
+        found_curly = (
+            lookahead.match("curly") if (lookahead := stream.peek()) else False
+        )
+    return parse_compound_tag(stream) if found_curly else None
 
 
 @dataclass
@@ -613,6 +790,7 @@ class BlockParser:
     resource_location_parser: Parser = field(default_factory=ResourceLocationParser)
 
     allow_block_states: bool = True
+    allow_data_tags: bool = True
 
     def __call__(self, stream: TokenStream) -> AstBlock:
         identifier = self.resource_location_parser(stream)
@@ -659,9 +837,26 @@ class BlockParser:
             close_bracket = stream.expect(("bracket", "]"))
             end_location = close_bracket.end_location
 
+        data_tags = parse_adjacent_nbt(stream)
+
+        if block_states and not self.allow_block_states:
+            raise InvalidSyntax("Block states not allowed.").set_location(
+                location=block_states[0].location,
+                end_location=block_states[-1].end_location,
+            )
+
+        if data_tags is not None and not self.allow_data_tags:
+            raise InvalidSyntax("Data tags not allowed.").set_location(
+                location=data_tags.location,
+                end_location=data_tags.end_location,
+            )
+
         return AstBlock(
             identifier=identifier,
             block_states=AstChildren(block_states),
+            data_tags=data_tags,
             location=location,
-            end_location=end_location,
+            end_location=(
+                data_tags.end_location if data_tags is not None else end_location
+            ),
         )

@@ -20,3 +20,4 @@ stone
           value: 'stone'
   block_states:
     <empty>
+  data_tags: None

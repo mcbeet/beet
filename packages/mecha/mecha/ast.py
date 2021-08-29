@@ -12,6 +12,14 @@ __all__ = [
     "AstJsonArray",
     "AstJsonObjectEntry",
     "AstJsonObject",
+    "AstNbt",
+    "AstNbtValue",
+    "AstNbtList",
+    "AstNbtCompoundEntry",
+    "AstNbtCompound",
+    "AstResourceLocation",
+    "AstBlockState",
+    "AstBlock",
 ]
 
 
@@ -29,6 +37,11 @@ from typing import (
 )
 
 from beet.core.utils import JsonDict
+
+# pyright: reportMissingTypeStubs=false
+from nbtlib import Byte, Compound, Double, Float, Int
+from nbtlib import List as ListTag
+from nbtlib import Long, Short, String
 from tokenstream import SourceLocation
 
 T = TypeVar("T")
@@ -61,7 +74,7 @@ class AstNode:
         return f"{prefix}{self.__class__}\n" + "\n".join(
             f"{prefix}  {f.name}:"
             + (
-                "\n" + ("\n".join(child.dump(prefix + "    ") for child in attribute) if attribute else prefix + "    <empty>\n")  # type: ignore
+                "\n" + ("\n".join(child.dump(prefix + "    ") for child in attribute) if attribute else prefix + "    <empty>")  # type: ignore
                 if isinstance(attribute := getattr(self, f.name), AstChildren)
                 else "\n" + attribute.dump(prefix + "    ")
                 if isinstance(attribute, AstNode)
@@ -170,6 +183,55 @@ class AstJsonObject(AstJson):
 
 
 @dataclass(frozen=True)
+class AstNbt(AstNode):
+    """Base ast node for nbt."""
+
+    def get_value(self) -> Any:
+        """Return the nbt value."""
+        raise NotImplementedError()
+
+
+@dataclass(frozen=True)
+class AstNbtValue(AstNbt):
+    """Ast nbt value node."""
+
+    value: Union[Byte, Short, Int, Long, Float, Double, String]
+
+    def get_value(self) -> Union[Byte, Short, Int, Long, Float, Double, String]:
+        return self.value
+
+
+@dataclass(frozen=True)
+class AstNbtList(AstNbt):
+    """Ast nbt list node."""
+
+    elements: AstChildren[AstNbt]
+
+    def get_value(self) -> ListTag:
+        return ListTag([element.get_value() for element in self.elements])
+
+
+@dataclass(frozen=True)
+class AstNbtCompoundEntry(AstNode):
+    """Ast nbt compound entry node."""
+
+    key: AstValue[str]
+    value: AstNbt
+
+
+@dataclass(frozen=True)
+class AstNbtCompound(AstNbt):
+    """Ast nbt compound node."""
+
+    entries: AstChildren[AstNbtCompoundEntry]
+
+    def get_value(self) -> Any:
+        return Compound(
+            {entry.key.value: entry.value.get_value() for entry in self.entries},
+        )
+
+
+@dataclass(frozen=True)
 class AstResourceLocation(AstNode):
     """Ast resource location node."""
 
@@ -192,3 +254,4 @@ class AstBlock(AstNode):
 
     identifier: AstResourceLocation
     block_states: AstChildren[AstBlockState]
+    data_tags: Optional[AstNbt]

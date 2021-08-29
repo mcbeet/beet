@@ -20,3 +20,4 @@ minecraft:block_predicate
           value: 'stone'
   block_states:
     <empty>
+  data_tags: None
