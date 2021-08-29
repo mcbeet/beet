@@ -14,6 +14,8 @@ __all__ = [
     "Vector2Parser",
     "Vector3Parser",
     "JsonParser",
+    "ResourceLocationParser",
+    "BlockParser",
     "INTEGER_PATTERN",
     "FLOAT_PATTERN",
 ]
@@ -37,6 +39,8 @@ from typing import (
 from tokenstream import InvalidSyntax, SourceLocation, Token, TokenStream
 
 from .ast import (
+    AstBlock,
+    AstBlockState,
     AstChildren,
     AstCommand,
     AstCoordinate,
@@ -46,6 +50,7 @@ from .ast import (
     AstJsonObjectEntry,
     AstJsonValue,
     AstNode,
+    AstResourceLocation,
     AstRoot,
     AstValue,
     AstVector2,
@@ -108,7 +113,15 @@ def get_default_parsers() -> Dict[str, Parser]:
         "minecraft:block_pos": Vector3Parser[float](
             coordinate_parser=CoordinateParser[float](type=float),
         ),
+        "minecraft:block_predicate": BlockParser(),
+        "minecraft:block_state": BlockParser(
+            resource_location_parser=ResourceLocationParser(allow_tag=False)
+        ),
         "minecraft:component": delegate("json"),
+        "minecraft:dimension": delegate("minecraft:resource_location"),
+        "minecraft:entity_summon": delegate("minecraft:resource_location"),
+        "minecraft:function": ResourceLocationParser(),
+        "minecraft:resource_location": ResourceLocationParser(allow_tag=False),
     }
 
 
@@ -548,3 +561,107 @@ class JsonParser:
                 location=stream.current.location,
                 end_location=stream.current.end_location,
             )
+
+
+@dataclass
+class ResourceLocationParser:
+    """Parser for resource locations."""
+
+    allow_tag: bool = True
+
+    def __call__(self, stream: TokenStream) -> AstResourceLocation:
+        with stream.syntax(resource_location=r"#?(?:[0-9a-z_\-\.]+:)?[0-9a-z_\-\.]+"):
+            token = stream.expect("resource_location")
+            value = token.value
+            location = token.location
+
+            if is_tag := value.startswith("#"):
+                if not self.allow_tag:
+                    raise token.emit_error(
+                        InvalidSyntax(f"Reference to tag {token.value!r} not allowed.")
+                    )
+                value = value[1:]
+                location = location.with_horizontal_offset(1)
+
+            namespace, _, path = value.rpartition(":")
+
+            if namespace:
+                namespace = AstValue[str](
+                    value=namespace,
+                    location=location,
+                    end_location=location.with_horizontal_offset(len(namespace)),
+                )
+                location = namespace.end_location.with_horizontal_offset(1)
+            else:
+                namespace = None
+
+            return AstResourceLocation(
+                is_tag=is_tag,
+                namespace=namespace,
+                path=AstValue[str](
+                    value=path, location=location, end_location=token.end_location
+                ),
+                location=token.location,
+                end_location=token.end_location,
+            )
+
+
+@dataclass
+class BlockParser:
+    """Parser for minecraft blocks."""
+
+    resource_location_parser: Parser = field(default_factory=ResourceLocationParser)
+
+    allow_block_states: bool = True
+
+    def __call__(self, stream: TokenStream) -> AstBlock:
+        identifier = self.resource_location_parser(stream)
+        location = identifier.location
+        end_location = identifier.end_location
+
+        with stream.syntax(
+            bracket=r"\[|\]",
+            state=r"[a-z0-9_]+",
+            equal=r"=",
+            comma=r",",
+        ), stream.checkpoint() as commit:
+            block_states: List[AstBlockState] = []
+
+            with stream.intercept("whitespace"):
+                stream.expect(("bracket", "["))
+
+            commit()
+
+            for name in stream.collect("state"):
+                stream.expect("equal")
+                value = stream.expect("state")
+
+                block_states.append(
+                    AstBlockState(
+                        name=AstValue[str](
+                            value=name.value,
+                            location=name.location,
+                            end_location=name.end_location,
+                        ),
+                        value=AstValue[str](
+                            value=value.value,
+                            location=value.location,
+                            end_location=value.end_location,
+                        ),
+                        location=name.location,
+                        end_location=value.end_location,
+                    )
+                )
+
+                if not stream.get("comma"):
+                    break
+
+            close_bracket = stream.expect(("bracket", "]"))
+            end_location = close_bracket.end_location
+
+        return AstBlock(
+            identifier=identifier,
+            block_states=AstChildren(block_states),
+            location=location,
+            end_location=end_location,
+        )

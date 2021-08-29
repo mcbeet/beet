@@ -167,3 +167,28 @@ class AstJsonObject(AstJson):
 
     def get_value(self) -> JsonDict:
         return {entry.key.value: entry.value.get_value() for entry in self.entries}
+
+
+@dataclass(frozen=True)
+class AstResourceLocation(AstNode):
+    """Ast resource location node."""
+
+    is_tag: bool
+    namespace: Optional[AstValue[str]]
+    path: AstValue[str]
+
+
+@dataclass(frozen=True)
+class AstBlockState(AstNode):
+    """Ast block state node."""
+
+    name: AstValue[str]
+    value: AstValue[str]
+
+
+@dataclass(frozen=True)
+class AstBlock(AstNode):
+    """Ast block node."""
+
+    identifier: AstResourceLocation
+    block_states: AstChildren[AstBlockState]
