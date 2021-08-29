@@ -22,6 +22,7 @@ __all__ = [
     "AstBlock",
     "AstItem",
     "AstRange",
+    "AstTime",
 ]
 
 
@@ -101,9 +102,10 @@ class AstValue(AstNode, Generic[T]):
 
 
 @dataclass(frozen=True)
-class AstCoordinate(AstValue[NumericType]):
+class AstCoordinate(AstNode, Generic[NumericType]):
     """Coordinate ast node."""
 
+    value: NumericType
     prefix: Literal["absolute", "relative", "local"]
 
 
@@ -270,3 +272,11 @@ class AstRange(AstNode, Generic[NumericType]):
     def value(self) -> NumericType:
         """Return the exact value."""
         return self.min  # type: ignore
+
+
+@dataclass(frozen=True)
+class AstTime(AstNode):
+    """Ast time node."""
+
+    value: float
+    suffix: Literal[None, "d", "s", "t"]

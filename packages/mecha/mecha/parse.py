@@ -22,8 +22,14 @@ __all__ = [
     "ItemParser",
     "LiteralStringParser",
     "RangeParser",
+    "parse_objective",
+    "parse_swizzle",
+    "parse_team",
+    "TimeParser",
+    "parse_uuid",
     "INTEGER_PATTERN",
     "FLOAT_PATTERN",
+    "CHAT_COLORS",
 ]
 
 import re
@@ -67,6 +73,7 @@ from .ast import (
     AstRange,
     AstResourceLocation,
     AstRoot,
+    AstTime,
     AstValue,
     AstVector2,
     AstVector3,
@@ -79,6 +86,26 @@ NumericType = TypeVar("NumericType", float, int)
 
 INTEGER_PATTERN: str = r"-?\d+"
 FLOAT_PATTERN: str = r"-?(?:\d+\.?\d*|\.\d+)"
+
+
+CHAT_COLORS: List[str] = [
+    "black",
+    "dark_blue",
+    "dark_green",
+    "dark_aqua",
+    "dark_red",
+    "dark_purple",
+    "gold",
+    "gray",
+    "dark_gray",
+    "blue",
+    "green",
+    "aqua",
+    "red",
+    "light_purple",
+    "yellow",
+    "white",
+]
 
 
 def get_default_parsers() -> Dict[str, Parser]:
@@ -133,28 +160,8 @@ def get_default_parsers() -> Dict[str, Parser]:
         "minecraft:block_state": BlockParser(
             resource_location_parser=ResourceLocationParser(allow_tag=False),
         ),
-        "minecraft:color": LiteralStringParser(
-            [
-                "reset",
-                "black",
-                "dark_blue",
-                "dark_green",
-                "dark_aqua",
-                "dark_red",
-                "dark_purple",
-                "gold",
-                "gray",
-                "dark_gray",
-                "blue",
-                "green",
-                "aqua",
-                "red",
-                "light_purple",
-                "yellow",
-                "white",
-            ]
-        ),
-        "minecraft:column_pos": Vector2Parser(
+        "minecraft:color": LiteralStringParser(["reset"] + CHAT_COLORS),
+        "minecraft:column_pos": Vector2Parser[int](
             coordinate_parser=CoordinateParser[int](
                 type=int,
                 allow_local=False,
@@ -162,18 +169,62 @@ def get_default_parsers() -> Dict[str, Parser]:
         ),
         "minecraft:component": delegate("json"),
         "minecraft:dimension": delegate("minecraft:resource_location"),
+        # TODO: "minecraft:entity"
         "minecraft:entity_anchor": LiteralStringParser(["eyes", "feet"]),
         "minecraft:entity_summon": delegate("minecraft:resource_location"),
         "minecraft:float_range": RangeParser[float](type=float),
-        "minecraft:int_range": RangeParser[int](type=int),
         "minecraft:function": ResourceLocationParser(),
+        # TODO: "minecraft:game_profile"
+        "minecraft:int_range": RangeParser[int](type=int),
+        "minecraft:item_enchantment": StringParser(type="word"),
         "minecraft:item_predicate": ItemParser(),
+        "minecraft:item_slot": StringParser(type="word"),
         "minecraft:item_stack": ItemParser(
             resource_location_parser=ResourceLocationParser(allow_tag=False),
         ),
+        # TODO: "minecraft:message"
+        "minecraft:mob_effect": StringParser(type="word"),
         "minecraft:nbt_compound_tag": parse_compound_tag,
+        # TODO: "minecraft:nbt_path"
         "minecraft:nbt_tag": delegate("nbt"),
+        "minecraft:objective": parse_objective,
+        "minecraft:objective_criteria": ResourceLocationParser(allow_tag=False),
+        "minecraft:operation": LiteralStringParser(
+            [
+                "+=",
+                "-=",
+                "*=",
+                "/=",
+                "%=",
+                "=",
+                "<",
+                ">",
+                "><",
+            ],
+        ),
+        # TODO: "minecraft:particle"
         "minecraft:resource_location": ResourceLocationParser(allow_tag=False),
+        "minecraft:rotation": Vector2Parser[float](
+            coordinate_parser=CoordinateParser[float](
+                type=float,
+                name="angle",
+                min=-180.0,
+                max=180.0,
+                allow_local=False,
+            )
+        ),
+        # TODO: "minecraft:score_holder"
+        "minecraft:scoreboard_slot": StringParser(type="word"),
+        "minecraft:swizzle": parse_swizzle,
+        "minecraft:team": parse_team,
+        "minecraft:time": TimeParser(),
+        "minecraft:uuid": parse_uuid,
+        "minecraft:vec2": Vector2Parser(
+            coordinate_parser=CoordinateParser[float](type=float),
+        ),
+        "minecraft:vec3": Vector3Parser(
+            coordinate_parser=CoordinateParser[float](type=float),
+        ),
     }
 
 
@@ -439,10 +490,7 @@ class CoordinateParser(NumericParser[NumericType]):
     allow_relative: bool = True
     allow_local: bool = True
 
-    def __call__(self, stream: TokenStream) -> AstCoordinate[NumericType]:
-        return super().__call__(stream)  # type: ignore
-
-    def create_node(self, stream: TokenStream) -> AstCoordinate[NumericType]:
+    def create_node(self, stream: TokenStream) -> AstCoordinate[NumericType]:  # type: ignore
         token = stream.current
 
         if issubclass(self.type, int) and "." in token.value:
@@ -786,7 +834,7 @@ class ResourceLocationParser:
     allow_tag: bool = True
 
     def __call__(self, stream: TokenStream) -> AstResourceLocation:
-        with stream.syntax(resource_location=r"#?(?:[0-9a-z_\-\.]+:)?[0-9a-z_\-\.]+"):
+        with stream.syntax(resource_location=r"#?(?:[0-9a-z_\-\.]+:)?[0-9a-z_./-]+"):
             token = stream.expect("resource_location")
             value = token.value
             location = token.location
@@ -977,3 +1025,85 @@ class RangeParser(Generic[NumericType]):
                 location=token.location,
                 end_location=token.end_location,
             )
+
+
+def parse_objective(stream: TokenStream) -> AstValue[str]:
+    """Parse objective."""
+    with stream.syntax(objective=r"[a-zA-Z0-9_.+-]+|\*"):
+        token = stream.expect("objective")
+
+        if len(token.value) > 16:
+            raise token.emit_error(
+                InvalidSyntax("Objective name must be limited to 16 characters.")
+            )
+
+        return AstValue[str](
+            value=token.value,
+            location=token.location,
+            end_location=token.end_location,
+        )
+
+
+def parse_swizzle(stream: TokenStream) -> AstValue[str]:
+    """Parse swizzle."""
+    token = stream.expect("literal")
+
+    if not 1 <= len(token.value) <= 3 or len(set(token.value)) < len(token.value):
+        raise token.emit_error(InvalidSyntax(f"Invalid swizzle {token.value!r}."))
+
+    return AstValue[str](
+        value=token.value,
+        location=token.location,
+        end_location=token.end_location,
+    )
+
+
+def parse_team(stream: TokenStream) -> AstValue[str]:
+    """Parse team."""
+    with stream.syntax(team=r"[a-zA-Z0-9_.+-]+"):
+        token = stream.expect("team")
+
+        return AstValue[str](
+            value=token.value,
+            location=token.location,
+            end_location=token.end_location,
+        )
+
+
+@dataclass
+class TimeParser(NumericParser[float]):
+    """Parser for time."""
+
+    type: Type[float] = float
+    name: str = "time"
+    pattern: str = FLOAT_PATTERN + r"[dst]?"
+
+    def create_node(self, stream: TokenStream) -> AstTime:  # type: ignore
+        """Create the ast node."""
+        token = stream.current
+        value = token.value
+
+        if value.endswith(("d", "s", "t")):
+            suffix = value[-1]
+            value = value[:-1]
+        else:
+            suffix = None
+
+        return AstTime(
+            value=self.type(value),
+            suffix=suffix,  # type: ignore
+            location=token.location,
+            end_location=token.end_location,
+        )
+
+
+def parse_uuid(stream: TokenStream) -> AstValue[str]:
+    """Parse uuid."""
+    with stream.syntax(uuid="-".join([r"[a-fA-F0-9]+"] * 5)):
+        token = stream.expect("uuid")
+
+        return AstValue[str](
+            value=token.value,
+            location=token.location,
+            end_location=token.end_location,
+        )

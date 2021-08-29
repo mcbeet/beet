@@ -1,0 +1,27 @@
+minecraft:vec3
+---
+{}
+---
+^1 ^ ^-5
+---
+<class 'mecha.ast.AstVector3'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=8, lineno=1, colno=9)
+  x:
+    <class 'mecha.ast.AstCoordinate'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=2, lineno=1, colno=3)
+      value: 1.0
+      prefix: 'local'
+  y:
+    <class 'mecha.ast.AstCoordinate'>
+      location: SourceLocation(pos=3, lineno=1, colno=4)
+      end_location: SourceLocation(pos=4, lineno=1, colno=5)
+      value: 0.0
+      prefix: 'local'
+  z:
+    <class 'mecha.ast.AstCoordinate'>
+      location: SourceLocation(pos=5, lineno=1, colno=6)
+      end_location: SourceLocation(pos=8, lineno=1, colno=9)
+      value: -5.0
+      prefix: 'local'
