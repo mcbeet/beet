@@ -32,6 +32,7 @@ __all__ = [
     "CHAT_COLORS",
 ]
 
+
 import re
 from dataclasses import dataclass, field
 from functools import partial
@@ -47,6 +48,7 @@ from typing import (
     TypeVar,
     overload,
 )
+from uuid import UUID
 
 # pyright: reportMissingTypeStubs=false
 from nbtlib import Byte, Double, Float, Int, Long, OutOfRange, Short, String
@@ -1097,13 +1099,13 @@ class TimeParser(NumericParser[float]):
         )
 
 
-def parse_uuid(stream: TokenStream) -> AstValue[str]:
+def parse_uuid(stream: TokenStream) -> AstValue[UUID]:
     """Parse uuid."""
     with stream.syntax(uuid="-".join([r"[a-fA-F0-9]+"] * 5)):
         token = stream.expect("uuid")
 
-        return AstValue[str](
-            value=token.value,
+        return AstValue[UUID](
+            value=UUID(token.value),
             location=token.location,
             end_location=token.end_location,
         )
