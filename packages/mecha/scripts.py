@@ -1,7 +1,40 @@
+from typing import Optional
+
 import click
 import mcwiki
 from beet import Function
 from beet.core.utils import dump_json
+from bs4 import BeautifulSoup, Tag
+
+
+class JavaExampleExtractor(mcwiki.TextExtractor):
+    def scan(  # type: ignore
+        self,
+        html: BeautifulSoup,
+        limit: Optional[int] = None,
+    ) -> mcwiki.ScanResult["JavaExampleExtractor", str]:
+        result = super().scan(html, limit=limit)
+        result.elements[:] = [
+            element
+            for element in result.elements
+            if not (
+                isinstance(element, Tag)
+                and (
+                    any(
+                        parent.text.startswith("Bedrock Edition:")
+                        for parent in element.find_parents("li")
+                    )
+                    or element.parent
+                    and (sup := element.parent.find("sup"))
+                    and (annotation := sup.get_text().lower())  # type: ignore
+                    and (
+                        "[be only]" in annotation
+                        or "[bedrock edition only]" in annotation
+                    )
+                )
+            )
+        ]
+        return result
 
 
 @click.group()
@@ -15,22 +48,28 @@ def download_command_examples():
     generated_function = Function()
 
     commands = [
+        "defaultgamemode",
+        "fill",
+        "function",
         "gamerule",
+        "locate",
+        "setblock",
+        "summon",
+        "time",
+        "weather",
     ]
 
-    ignored_examples = {
-        "gamerule tntExplodes false",
-    }
+    java_example = JavaExampleExtractor("li > code")
 
     for command in commands:
         page = mcwiki.load(f"commands/{command}")
         examples = page.get("examples")
 
         if examples is not None:
-            for code in examples.extract_all(mcwiki.CODE):
+            for code in examples.extract_all(java_example):
                 if code.startswith("/"):
                     code = code[1:]
-                if code.startswith(command) and code not in ignored_examples:
+                if code.startswith(command):
                     generated_function.lines.append(code)
 
     click.echo(generated_function.text, nl=False)

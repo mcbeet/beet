@@ -392,7 +392,7 @@ python-versions = ">=3.6"
 
 [[package]]
 name = "mcwiki"
-version = "0.2.0"
+version = "0.2.1"
 description = "A scraping library for the Minecraft Wiki"
 category = "dev"
 optional = false
@@ -730,7 +730,7 @@ python-versions = ">=3.6"
 
 [[package]]
 name = "tokenstream"
-version = "0.7.2"
+version = "0.7.4"
 description = "A versatile token stream for handwritten parsers"
 category = "main"
 optional = false
@@ -847,7 +847,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytes
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "34af40fc7704495fe089b39b395fdbc01c8d04eecff3bcdafddb3110d20dc6e4"
+content-hash = "0c6fc1ead7625348360deb13d43014f84011e34c4a23339546e09eb30727c532"
 
 [metadata.files]
 appdirs = [
@@ -1064,8 +1064,8 @@ markupsafe = [
     {file = "MarkupSafe-2.0.1.tar.gz", hash = "sha256:594c67807fb16238b30c44bdf74f36c02cdf22d1c8cda91ef8a0ed8dabf5620a"},
 ]
 mcwiki = [
-    {file = "mcwiki-0.2.0-py3-none-any.whl", hash = "sha256:64495234e6648c40001aa3c9e33c2fd38fc340d9eb21af853857035703f20894"},
-    {file = "mcwiki-0.2.0.tar.gz", hash = "sha256:0d09949c1c7ddf3b9988de4507e26fc6675c8b907e620642d30371e7f9484569"},
+    {file = "mcwiki-0.2.1-py3-none-any.whl", hash = "sha256:eefe2fbe9afabe89d4d65158cb646bf4ba261c834b82761da7ee0d1c7fe2db57"},
+    {file = "mcwiki-0.2.1.tar.gz", hash = "sha256:8546145e5e8d3d9db5b4a03fefe44ab9655d4d7601fe176694199cb967a1063f"},
 ]
 mypy-extensions = [
     {file = "mypy_extensions-0.4.3-py2.py3-none-any.whl", hash = "sha256:090fedd75945a69ae91ce1303b5824f428daf5a028d2f6ab8a299250a846f15d"},
@@ -1292,8 +1292,8 @@ soupsieve = [
     {file = "soupsieve-2.2.1.tar.gz", hash = "sha256:052774848f448cf19c7e959adf5566904d525f33a3f8b6ba6f6f8f26ec7de0cc"},
 ]
 tokenstream = [
-    {file = "tokenstream-0.7.2-py3-none-any.whl", hash = "sha256:e2229be2978887ddd52192e3d63c25ce6fe6fa5aa6217bb4428c2a182efed8da"},
-    {file = "tokenstream-0.7.2.tar.gz", hash = "sha256:c276fa74b5473e1ee295bbc1c9b689903ff00e56b83d5ff7a027ecee1036fbb1"},
+    {file = "tokenstream-0.7.4-py3-none-any.whl", hash = "sha256:bbe62bddb48926c9d49442df05a72ff2f835c2db61488d8c3694c936ad7e5ae8"},
+    {file = "tokenstream-0.7.4.tar.gz", hash = "sha256:e435dbab9d8c07622671d9e51cc23a8e999bc4b459a8eb90d69d81bf47239740"},
 ]
 toml = [
     {file = "toml-0.10.2-py2.py3-none-any.whl", hash = "sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b"},
