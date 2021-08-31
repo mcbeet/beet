@@ -1,0 +1,10 @@
+minecraft:score_holder
+---
+{}
+---
+Player
+---
+<class 'mecha.ast.AstValue'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=6, lineno=1, colno=7)
+  value: 'Player'

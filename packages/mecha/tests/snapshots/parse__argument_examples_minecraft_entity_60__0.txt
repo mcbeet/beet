@@ -1,0 +1,10 @@
+minecraft:entity
+---
+{}
+---
+dd12be42-52a9-4a91-a8a1-11c01849e498
+---
+<class 'mecha.ast.AstValue'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=36, lineno=1, colno=37)
+  value: UUID('dd12be42-52a9-4a91-a8a1-11c01849e498')

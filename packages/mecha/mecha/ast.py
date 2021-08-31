@@ -23,11 +23,16 @@ __all__ = [
     "AstItem",
     "AstRange",
     "AstTime",
+    "AstSelectorScoreMatch",
+    "AstSelectorScores",
+    "AstSelectorArgument",
+    "AstSelector",
+    "AstMessage",
 ]
 
 
 from dataclasses import dataclass, field, fields
-from typing import Any, Generic, Iterator, Literal, Optional, Tuple, TypeVar
+from typing import Any, Generic, Iterator, Literal, Optional, Tuple, TypeVar, Union
 
 # pyright: reportMissingTypeStubs=false
 from nbtlib import Compound
@@ -280,3 +285,57 @@ class AstTime(AstNode):
 
     value: float
     suffix: Literal[None, "d", "s", "t"]
+
+
+@dataclass(frozen=True)
+class AstSelectorScoreMatch(AstNode):
+    """Ast selector score match node."""
+
+    objective: AstValue[str]
+    value: AstRange[int]
+
+
+@dataclass(frozen=True)
+class AstSelectorScores(AstNode):
+    """Ast selector scores node."""
+
+    scores: AstChildren[AstSelectorScoreMatch]
+
+
+@dataclass(frozen=True)
+class AstSelectorAdvancementMatch(AstNode):
+    """Ast selector advancement match node."""
+
+    name: AstResourceLocation
+    value: AstValue[bool]
+
+
+@dataclass(frozen=True)
+class AstSelectorAdvancements(AstNode):
+    """Ast selector advancements node."""
+
+    advancements: AstChildren[AstSelectorAdvancementMatch]
+
+
+@dataclass(frozen=True)
+class AstSelectorArgument(AstNode):
+    """Ast selector argument node."""
+
+    inverted: bool
+    key: AstValue[str]
+    value: AstNode
+
+
+@dataclass(frozen=True)
+class AstSelector(AstNode):
+    """Ast selector node."""
+
+    variable: Literal["p", "r", "a", "e", "s"]
+    arguments: AstChildren[AstSelectorArgument]
+
+
+@dataclass(frozen=True)
+class AstMessage(AstNode):
+    """Ast message node."""
+
+    sentence: AstChildren[Union[AstValue[str], AstSelector]]

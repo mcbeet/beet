@@ -23,10 +23,17 @@ __all__ = [
     "LiteralStringParser",
     "RangeParser",
     "parse_objective",
+    "parse_player_name",
     "parse_swizzle",
     "parse_team",
     "TimeParser",
     "parse_uuid",
+    "SelectorParser",
+    "parse_selector_scores",
+    "parse_selector_advancements",
+    "parse_entity",
+    "parse_score_holder",
+    "parse_message",
     "INTEGER_PATTERN",
     "FLOAT_PATTERN",
     "CHAT_COLORS",
@@ -66,6 +73,7 @@ from .ast import (
     AstJsonObject,
     AstJsonObjectEntry,
     AstJsonValue,
+    AstMessage,
     AstNbt,
     AstNbtCompound,
     AstNbtCompoundEntry,
@@ -75,12 +83,18 @@ from .ast import (
     AstRange,
     AstResourceLocation,
     AstRoot,
+    AstSelector,
+    AstSelectorAdvancementMatch,
+    AstSelectorAdvancements,
+    AstSelectorArgument,
+    AstSelectorScoreMatch,
+    AstSelectorScores,
     AstTime,
     AstValue,
     AstVector2,
     AstVector3,
 )
-from .error import InvalidEscapeSequence
+from .error import InvalidEscapeSequence, UnrecognizedParser
 from .spec import CommandSpecification, Parser
 
 NumericType = TypeVar("NumericType", float, int)
@@ -110,6 +124,10 @@ CHAT_COLORS: List[str] = [
 ]
 
 
+# TODO: Move validation that doesn't break parsing into a separate pass
+# TODO: Handle the extended syntax by default and validate vanilla compatibility in a separate pass
+
+
 def get_default_parsers() -> Dict[str, Parser]:
     """Return the default parsers."""
     return {
@@ -118,6 +136,42 @@ def get_default_parsers() -> Dict[str, Parser]:
         "argument": parse_argument,
         "json": JsonParser(),
         "nbt": NbtParser(),
+        "selector": SelectorParser(),
+        "selector:argument:x": delegate("brigadier:double"),
+        "selector:argument:y": delegate("brigadier:double"),
+        "selector:argument:z": delegate("brigadier:double"),
+        "selector:argument:distance": delegate("minecraft:float_range"),
+        "selector:argument:dx": delegate("brigadier:double"),
+        "selector:argument:dy": delegate("brigadier:double"),
+        "selector:argument:dz": delegate("brigadier:double"),
+        "selector:argument:scores": parse_selector_scores,
+        "selector:argument:tag": StringParser(type="word"),
+        "selector:argument:team": StringParser(type="word"),
+        "selector:argument:limit": delegate("brigadier:integer"),
+        "selector:argument:sort": LiteralStringParser(
+            [
+                "nearest",
+                "furthest",
+                "random",
+                "arbitrary",
+            ],
+        ),
+        "selector:argument:level": delegate("minecraft:int_range"),
+        "selector:argument:gamemode": LiteralStringParser(
+            [
+                "adventure",
+                "creative",
+                "spectator",
+                "survival",
+            ],
+        ),
+        "selector:argument:name": StringParser(type="phrase"),
+        "selector:argument:x_rotation": delegate("minecraft:float_range"),
+        "selector:argument:y_rotation": delegate("minecraft:float_range"),
+        "selector:argument:type": ResourceLocationParser(),
+        "selector:argument:nbt": delegate("minecraft:nbt_compound_tag"),
+        "selector:argument:advancements": parse_selector_advancements,
+        "selector:argument:predicate": delegate("minecraft:resource_location"),
         "brigadier:bool": parse_bool,
         "brigadier:double": NumericParser[float](
             type=float,
@@ -171,12 +225,12 @@ def get_default_parsers() -> Dict[str, Parser]:
         ),
         "minecraft:component": delegate("json"),
         "minecraft:dimension": delegate("minecraft:resource_location"),
-        # TODO: "minecraft:entity"
+        "minecraft:entity": parse_entity,
         "minecraft:entity_anchor": LiteralStringParser(["eyes", "feet"]),
         "minecraft:entity_summon": delegate("minecraft:resource_location"),
         "minecraft:float_range": RangeParser[float](type=float),
         "minecraft:function": ResourceLocationParser(),
-        # TODO: "minecraft:game_profile"
+        "minecraft:game_profile": delegate("minecraft:entity"),
         "minecraft:int_range": RangeParser[int](type=int),
         "minecraft:item_enchantment": StringParser(type="word"),
         "minecraft:item_predicate": ItemParser(),
@@ -184,7 +238,7 @@ def get_default_parsers() -> Dict[str, Parser]:
         "minecraft:item_stack": ItemParser(
             resource_location_parser=ResourceLocationParser(allow_tag=False),
         ),
-        # TODO: "minecraft:message"
+        "minecraft:message": parse_message,
         "minecraft:mob_effect": StringParser(type="word"),
         "minecraft:nbt_compound_tag": parse_compound_tag,
         # TODO: "minecraft:nbt_path"
@@ -215,7 +269,7 @@ def get_default_parsers() -> Dict[str, Parser]:
                 allow_local=False,
             )
         ),
-        # TODO: "minecraft:score_holder"
+        "minecraft:score_holder": parse_score_holder,
         "minecraft:scoreboard_slot": StringParser(type="word"),
         "minecraft:swizzle": parse_swizzle,
         "minecraft:team": parse_team,
@@ -263,7 +317,7 @@ def delegate(parser: str, stream: Optional[TokenStream] = None) -> Any:
     spec = get_stream_spec(stream)
 
     if parser not in spec.parsers:
-        raise ValueError(f"Unrecognized parser {parser!r}.")
+        raise UnrecognizedParser(parser)
 
     return spec.parsers[parser](stream)
 
@@ -457,6 +511,9 @@ class StringParser:
         string_type = properties.get("type", self.type)
 
         if string_type == "greedy":
+            with stream.intercept("whitespace"):
+                while stream.get("whitespace"):
+                    continue
             with stream.syntax(line=r".+"):
                 token = stream.expect("line")
         else:
@@ -823,9 +880,7 @@ def parse_compound_tag(stream: TokenStream) -> AstNbtCompound:
 def parse_adjacent_nbt(stream: TokenStream) -> Optional[AstNbtCompound]:
     """Parse adjacent nbt."""
     with stream.syntax(curly=r"\{"), stream.intercept("whitespace"):
-        found_curly = (
-            lookahead.match("curly") if (lookahead := stream.peek()) else False
-        )
+        found_curly = hint.match("curly") if (hint := stream.peek()) else False
     return parse_compound_tag(stream) if found_curly else None
 
 
@@ -1046,6 +1101,23 @@ def parse_objective(stream: TokenStream) -> AstValue[str]:
         )
 
 
+def parse_player_name(stream: TokenStream) -> AstValue[str]:
+    """Parse player name."""
+    with stream.syntax(name=r"[a-zA-Z0-9_.+-]+"):
+        token = stream.expect("name")
+
+        if len(token.value) > 16:
+            raise token.emit_error(
+                InvalidSyntax("Player name must be limited to 16 characters.")
+            )
+
+        return AstValue[str](
+            value=token.value,
+            location=token.location,
+            end_location=token.end_location,
+        )
+
+
 def parse_swizzle(stream: TokenStream) -> AstValue[str]:
     """Parse swizzle."""
     token = stream.expect("literal")
@@ -1109,3 +1181,225 @@ def parse_uuid(stream: TokenStream) -> AstValue[UUID]:
             location=token.location,
             end_location=token.end_location,
         )
+
+
+@dataclass
+class SelectorParser:
+    """Parser for selectors."""
+
+    amount: str = "multiple"
+    type: str = "entities"
+
+    def __call__(self, stream: TokenStream) -> AstSelector:
+        properties = get_stream_properties(stream)
+
+        with stream.syntax(
+            selector=r"@[praes]\[?",
+            bracket=r"\]",
+            argument=r"[a-z_]+",
+            equal=r"=",
+            comma=r",",
+            exclamation=r"!",
+        ):
+            token = stream.expect("selector")
+            variable = token.value[1]
+            location = token.location
+            end_location = token.end_location
+
+            is_player = variable in "pra"
+            is_single = variable in "prs"
+
+            arguments: List[AstSelectorArgument] = []
+
+            if token.value.endswith("["):
+                for key in stream.collect("argument"):
+                    stream.expect("equal")
+
+                    inverted = stream.get("exclamation") is not None
+
+                    try:
+                        value = delegate(f"selector:argument:{key.value}", stream)
+                    except UnrecognizedParser as exc:
+                        if not exc.parser.startswith("selector:argument:"):
+                            raise
+                        raise key.emit_error(
+                            InvalidSyntax(f"Invalid selector argument {key.value!r}.")
+                        ) from exc
+
+                    arguments.append(
+                        AstSelectorArgument(
+                            inverted=inverted,
+                            key=AstValue[str](
+                                value=key.value,
+                                location=key.location,
+                                end_location=key.end_location,
+                            ),
+                            value=value,
+                            location=key.location,
+                            end_location=value.end_location,
+                        )
+                    )
+
+                    if not stream.get("comma"):
+                        break
+
+                close_bracket = stream.expect(("bracket", "]"))
+                end_location = close_bracket.end_location
+
+        amount = properties.get("amount", self.amount)
+        type = properties.get("type", self.type)
+
+        if amount not in ["single", "multiple"]:
+            raise ValueError(f"Invalid selector amount {amount!r}.")
+        if type not in ["players", "entities"]:
+            raise ValueError(f"Invalid selector type {type!r}.")
+
+        if amount == "single" and not is_single:
+            raise InvalidSyntax(f"Multiple entities not allowed.").set_location(
+                location=location,
+                end_location=end_location,
+            )
+        if type == "players" and not is_player:
+            raise InvalidSyntax(f"Non-player entities not allowed.").set_location(
+                location=location,
+                end_location=end_location,
+            )
+
+        return AstSelector(
+            variable=variable,  # type: ignore
+            arguments=AstChildren(arguments),
+            location=location,
+            end_location=end_location,
+        )
+
+
+def parse_selector_scores(stream: TokenStream) -> AstSelectorScores:
+    """Parse selector scores."""
+    with stream.syntax(
+        curly=r"\{|\}",
+        objective=r"[a-zA-Z0-9_.+-]+",
+        equal=r"=",
+        comma=r",",
+    ):
+        curly = stream.expect(("curly", "{"))
+
+        scores: List[AstSelectorScoreMatch] = []
+
+        for objective in stream.collect("objective"):
+            stream.expect("equal")
+            value = delegate("minecraft:integer_range", stream)
+
+            scores.append(
+                AstSelectorScoreMatch(
+                    objective=AstValue[str](
+                        value=objective.value,
+                        location=objective.location,
+                        end_location=objective.end_location,
+                    ),
+                    value=value,
+                    location=objective.location,
+                    end_location=value.end_location,
+                )
+            )
+
+            if not stream.get("comma"):
+                break
+
+        close_curly = stream.expect(("curly", "}"))
+
+        return AstSelectorScores(
+            scores=AstChildren(scores),
+            location=curly.location,
+            end_location=close_curly.end_location,
+        )
+
+
+def parse_selector_advancements(stream: TokenStream) -> AstSelectorAdvancements:
+    """Parse selector advancements."""
+    with stream.syntax(curly=r"\{|\}", equal=r"=", comma=r","):
+        curly = stream.expect(("curly", "{"))
+
+        advancements: List[AstSelectorAdvancementMatch] = []
+
+        for _ in stream.peek_until(("curly", "}")):
+            name = delegate("minecraft:resource_location", stream)
+            stream.expect("equal")
+            value = delegate("brigadier:bool", stream)
+
+            advancements.append(
+                AstSelectorAdvancementMatch(
+                    name=name,
+                    value=value,
+                    location=name.location,
+                    end_location=value.end_location,
+                )
+            )
+
+            if not stream.get("comma"):
+                stream.expect(("curly", "}"))
+                break
+
+        return AstSelectorAdvancements(
+            advancements=AstChildren(advancements),
+            location=curly.location,
+            end_location=stream.current.end_location,
+        )
+
+
+def parse_entity(stream: TokenStream) -> Any:
+    """Parse entity."""
+    hint = stream.peek()
+
+    if hint:
+        if hint.value.startswith("@"):
+            return delegate("selector", stream)
+
+        if hint.value.count("-") == 4:
+            with stream.alternative():
+                return delegate("minecraft:uuid", stream)
+
+    return parse_player_name(stream)
+
+
+def parse_score_holder(stream: TokenStream) -> Any:
+    """Parse score holder."""
+    with stream.syntax(wildcard=r"\*"):
+        if token := stream.get("wildcard"):
+            return AstValue[str](
+                value=token.value,
+                location=token.location,
+                end_location=token.end_location,
+            )
+    return delegate("minecraft:entity", stream)
+
+
+def parse_message(stream: TokenStream) -> AstMessage:
+    """Parse message."""
+    with stream.intercept("whitespace"):
+        while stream.get("whitespace"):
+            continue
+
+    with stream.syntax(selector=r"@[praes]"):
+        sentence: List[Any] = []
+
+        for selector, literal in stream.collect("selector", "literal"):
+            if selector:
+                stream.index -= 1
+                sentence.append(delegate("selector", stream))
+            elif literal:
+                sentence.append(
+                    AstValue[str](
+                        value=literal.value,
+                        location=literal.location,
+                        end_location=literal.end_location,
+                    )
+                )
+
+    if not sentence:
+        raise stream.emit_error(InvalidSyntax("Empty message not allowed."))
+
+    return AstMessage(
+        sentence=AstChildren(sentence),
+        location=sentence[0].location,
+        end_location=sentence[-1].end_location,
+    )

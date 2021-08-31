@@ -14,6 +14,7 @@ gamerule keepInventory true
 gamerule commandBlockOutput false
 gamerule doInsomnia false
 locate mansion
+msg @a Hi
 setblock ~ ~ ~ chest[facing=east]
 setblock ~ ~ ~-1 birch_sign{Text1:'"My chest"',Text2:'"Do not open!"'}
 setblock ~ ~2 ~ quartz_slab[type=top]

@@ -53,6 +53,7 @@ def download_command_examples():
         "function",
         "gamerule",
         "locate",
+        "msg",
         "setblock",
         "summon",
         "time",

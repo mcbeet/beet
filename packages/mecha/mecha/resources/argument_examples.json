@@ -157,7 +157,7 @@
   ],
   "minecraft:message": [
     {
-      "examples": ["Hello world!", "foo", "@e", "Hello @p\u00a0:)"]
+      "examples": ["Hello world!", "foo", "@e", "Hello @p :)"]
     }
   ],
   "minecraft:mob_effect": [
