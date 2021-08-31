@@ -28,6 +28,8 @@ __all__ = [
     "AstSelectorArgument",
     "AstSelector",
     "AstMessage",
+    "AstNbtPathSubscript",
+    "AstNbtPath",
 ]
 
 
@@ -339,3 +341,17 @@ class AstMessage(AstNode):
     """Ast message node."""
 
     sentence: AstChildren[Union[AstValue[str], AstSelector]]
+
+
+@dataclass(frozen=True)
+class AstNbtPathSubscript(AstNode):
+    """Ast nbt path subscript node."""
+
+    match: Union[None, AstValue[int], AstNbtCompound]
+
+
+@dataclass(frozen=True)
+class AstNbtPath(AstNode):
+    """Ast nbt path node."""
+
+    nodes: AstChildren[Union[AstValue[str], AstNbtCompound, AstNbtPathSubscript]]

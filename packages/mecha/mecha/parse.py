@@ -34,6 +34,7 @@ __all__ = [
     "parse_entity",
     "parse_score_holder",
     "parse_message",
+    "NbtPathParser",
     "INTEGER_PATTERN",
     "FLOAT_PATTERN",
     "CHAT_COLORS",
@@ -48,6 +49,7 @@ from typing import (
     Any,
     Dict,
     Generic,
+    Iterator,
     List,
     Optional,
     Tuple,
@@ -78,6 +80,8 @@ from .ast import (
     AstNbtCompound,
     AstNbtCompoundEntry,
     AstNbtList,
+    AstNbtPath,
+    AstNbtPathSubscript,
     AstNbtValue,
     AstNode,
     AstRange,
@@ -241,7 +245,7 @@ def get_default_parsers() -> Dict[str, Parser]:
         "minecraft:message": parse_message,
         "minecraft:mob_effect": StringParser(type="word"),
         "minecraft:nbt_compound_tag": parse_compound_tag,
-        # TODO: "minecraft:nbt_path"
+        "minecraft:nbt_path": NbtPathParser(),
         "minecraft:nbt_tag": delegate("nbt"),
         "minecraft:objective": parse_objective,
         "minecraft:objective_criteria": ResourceLocationParser(allow_tag=False),
@@ -879,8 +883,8 @@ def parse_compound_tag(stream: TokenStream) -> AstNbtCompound:
 
 def parse_adjacent_nbt(stream: TokenStream) -> Optional[AstNbtCompound]:
     """Parse adjacent nbt."""
-    with stream.syntax(curly=r"\{"), stream.intercept("whitespace"):
-        found_curly = hint.match("curly") if (hint := stream.peek()) else False
+    with stream.syntax(curly=r"\{|\}"), stream.intercept("whitespace"):
+        found_curly = hint.match(("curly", "{")) if (hint := stream.peek()) else False
     return parse_compound_tag(stream) if found_curly else None
 
 
@@ -1195,7 +1199,7 @@ class SelectorParser:
 
         with stream.syntax(
             selector=r"@[praes]\[?",
-            bracket=r"\]",
+            bracket=r"\[|\]",
             argument=r"[a-z_]+",
             equal=r"=",
             comma=r",",
@@ -1403,3 +1407,84 @@ def parse_message(stream: TokenStream) -> AstMessage:
         location=sentence[0].location,
         end_location=sentence[-1].end_location,
     )
+
+
+@dataclass
+class NbtPathParser:
+    quoted_string_handler: QuotedStringHandler = field(
+        default_factory=lambda: QuotedStringHandler(
+            escape_sequences={
+                r"\\": "\\",
+            }
+        )
+    )
+
+    def __call__(self, stream: TokenStream) -> AstNbtPath:
+        nodes: List[Any] = []
+
+        with stream.syntax(
+            dot=r"\.",
+            curly=r"\{|\}",
+            bracket=r"\[|\]",
+            quoted_string=r'"(?:\\.|[^\\\n])*?"' "|" r"'(?:\\.|[^\\\n])*?'",
+            string=r"[a-zA-Z0-9_+-]+",
+        ):
+            nodes.extend(self.parse_modifiers(stream))
+
+            while not nodes or stream.get("dot"):
+                quoted_string, string = stream.expect("quoted_string", "string")
+
+                if quoted_string:
+                    nodes.append(
+                        AstValue[str](
+                            value=self.quoted_string_handler.unquote_string(
+                                quoted_string
+                            ),
+                            location=quoted_string.location,
+                            end_location=quoted_string.end_location,
+                        )
+                    )
+                elif string:
+                    nodes.append(
+                        AstValue[str](
+                            value=string.value,
+                            location=string.location,
+                            end_location=string.end_location,
+                        )
+                    )
+
+                nodes.extend(self.parse_modifiers(stream))
+
+        if not nodes:
+            raise stream.emit_error(InvalidSyntax("Empty nbt path not allowed."))
+
+        return AstNbtPath(
+            nodes=AstChildren(nodes),
+            location=nodes[0].location,
+            end_location=nodes[-1].end_location,
+        )
+
+    def parse_modifiers(self, stream: TokenStream) -> Iterator[Any]:
+        """Parse named tag modifiers."""
+        hint = stream.peek()
+
+        if hint and hint.match(("curly", "{")):
+            yield delegate("minecraft:nbt_compound_tag", stream)
+            return
+
+        while bracket := stream.get(("bracket", "[")):
+            match = None
+
+            hint = stream.peek()
+            if hint and hint.match(("curly", "{")):
+                match = delegate("minecraft:nbt_compound_tag", stream)
+            elif hint and not hint.match(("bracket", "]")):
+                match = delegate("brigadier:integer", stream)
+
+            close_bracket = stream.expect(("bracket", "]"))
+
+            yield AstNbtPathSubscript(
+                match=match,
+                location=bracket.location,
+                end_location=close_bracket.end_location,
+            )
