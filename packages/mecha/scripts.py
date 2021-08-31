@@ -5,6 +5,7 @@ import mcwiki
 from beet import Function
 from beet.core.utils import dump_json
 from bs4 import BeautifulSoup, Tag
+from mcwiki.utils import normalize_string
 
 
 class JavaExampleExtractor(mcwiki.TextExtractor):
@@ -85,8 +86,8 @@ def download_argument_examples():
     argument_examples = {
         argument_type: [
             {"examples": examples}
-            for ul in documentation.html.select_one(".collapsible-content").select("ul")  # type: ignore
-            if (examples := [example.string for example in ul.select("li > code")])  # type: ignore
+            for ul in documentation.html.select(".collapsible-content > ul")  # type: ignore
+            if not (ul.parent and (p := ul.parent.find_previous_sibling("p")) and not p.get_text().startswith("Official examples")) and (examples := [normalize_string(example.string) for example in ul.select("li > code")])  # type: ignore
         ]
         for argument_type, documentation in section.items()
     }

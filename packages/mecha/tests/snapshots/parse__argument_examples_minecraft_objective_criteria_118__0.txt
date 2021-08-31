@@ -2,15 +2,15 @@ minecraft:objective_criteria
 ---
 {}
 ---
-foo
+foo.bar.baz
 ---
 <class 'mecha.ast.AstResourceLocation'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
-  end_location: SourceLocation(pos=3, lineno=1, colno=4)
+  end_location: SourceLocation(pos=11, lineno=1, colno=12)
   is_tag: False
   namespace: None
   path:
     <class 'mecha.ast.AstValue'>
       location: SourceLocation(pos=0, lineno=1, colno=1)
-      end_location: SourceLocation(pos=3, lineno=1, colno=4)
-      value: 'foo'
+      end_location: SourceLocation(pos=11, lineno=1, colno=12)
+      value: 'foo.bar.baz'

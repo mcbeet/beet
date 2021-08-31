@@ -172,16 +172,7 @@
   ],
   "minecraft:nbt_path": [
     {
-      "examples": ["foo", "bar", "A [crazy name]"]
-    },
-    {
-      "examples": ["bar", "A [crazy name]"]
-    },
-    {
-      "examples": ["A [crazy name]"]
-    },
-    {
-      "examples": ["A [crazy name]"]
+      "examples": ["foo", "foo.bar", "foo[0]", "[0]", "[]", "{foo:bar}"]
     }
   ],
   "minecraft:nbt_tag": [

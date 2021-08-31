@@ -2,15 +2,19 @@ minecraft:resource_location
 ---
 {}
 ---
-foo
+foo:bar
 ---
 <class 'mecha.ast.AstResourceLocation'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
-  end_location: SourceLocation(pos=3, lineno=1, colno=4)
+  end_location: SourceLocation(pos=7, lineno=1, colno=8)
   is_tag: False
-  namespace: None
-  path:
+  namespace:
     <class 'mecha.ast.AstValue'>
       location: SourceLocation(pos=0, lineno=1, colno=1)
       end_location: SourceLocation(pos=3, lineno=1, colno=4)
       value: 'foo'
+  path:
+    <class 'mecha.ast.AstValue'>
+      location: SourceLocation(pos=4, lineno=1, colno=5)
+      end_location: SourceLocation(pos=7, lineno=1, colno=8)
+      value: 'bar'

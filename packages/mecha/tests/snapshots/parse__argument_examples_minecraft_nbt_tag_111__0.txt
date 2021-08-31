@@ -2,9 +2,9 @@ minecraft:nbt_tag
 ---
 {}
 ---
-0l
+0.0
 ---
 <class 'mecha.ast.AstNbtValue'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
-  end_location: SourceLocation(pos=2, lineno=1, colno=3)
-  value: Long(0)
+  end_location: SourceLocation(pos=3, lineno=1, colno=4)
+  value: Double(0.0)
