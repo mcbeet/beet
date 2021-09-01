@@ -2,6 +2,11 @@
 
 <!--next-version-placeholder-->
 
+## v0.40.1 (2021-09-01)
+### Fix
+* Output pack after the exit phase of autoload plugins ([`e6871cb`](https://github.com/mcbeet/beet/commit/e6871cb69c95f00d2e9851bf0c641ebed43c9fbe))
+* **docs:** Forgot to update on_bind in overview ([`6962f3b`](https://github.com/mcbeet/beet/commit/6962f3b3353f62b62db1c5e981f93ed2b7f44301))
+
 ## v0.40.0 (2021-09-01)
 ### Feature
 * Add merge policy ([`ff4e104`](https://github.com/mcbeet/beet/commit/ff4e104adf78c00436d9a3a3139aaf1a3f8ba510))
