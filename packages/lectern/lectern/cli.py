@@ -15,6 +15,11 @@ from lectern import __version__
 from .prefetch import MarkdownPrefetcher
 
 
+def echo(*args: Any, **kwargs: Any):
+    """Wrap click.echo."""
+    click.echo(*args, **kwargs)  # type: ignore
+
+
 @click.command(context_settings={"help_option_names": ("-h", "--help")})
 @click.pass_context
 @click.argument("path", nargs=-1)
@@ -62,8 +67,8 @@ def lectern(
 
     if prefetch_urls:
         if len(path) > 1:
-            click.echo(ctx.get_usage())
-            click.echo("\nError: expected a single output path")
+            echo(ctx.get_usage())
+            echo("\nError: expected a single output path")
             ctx.exit(1)
 
         prefetcher = MarkdownPrefetcher()
@@ -85,7 +90,7 @@ def lectern(
         try:
             *packs, dest = path
         except ValueError:
-            click.echo(ctx.get_help())
+            echo(ctx.get_help())
             ctx.exit(1)
         config = {
             "data_pack": {"load": packs},
