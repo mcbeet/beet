@@ -102,17 +102,15 @@ class Function(TextFileBase[List[str]], NamespaceFile):
     def from_str(cls, content: str) -> List[str]:
         return content.splitlines()
 
-    def bind(self, pack: "DataPack", namespace: str, path: str):
-        super().bind(pack, namespace, path)
+    def bind(self, pack: "DataPack", path: str):
+        super().bind(pack, path)
 
         for tag_name in self.tags or ():
-            pack.function_tags.merge(
-                {tag_name: FunctionTag({"values": [f"{namespace}:{path}"]})}
-            )
+            pack.function_tags.merge({tag_name: FunctionTag({"values": [path]})})
 
         for tag_name in self.prepend_tags or ():
             function_tag = pack.function_tags.setdefault(tag_name, FunctionTag())
-            function_tag.prepend(FunctionTag({"values": [f"{namespace}:{path}"]}))
+            function_tag.prepend(FunctionTag({"values": [path]}))
 
 
 class LootTable(JsonFile, NamespaceFile):

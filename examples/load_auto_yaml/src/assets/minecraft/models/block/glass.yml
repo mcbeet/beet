@@ -1,0 +1,4 @@
+parent: block/custom/funky_model
+textures:
+  foo: minecraft:block/stone
+  bar: minecraft:block/dirt

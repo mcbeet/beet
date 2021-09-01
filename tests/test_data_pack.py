@@ -1,6 +1,7 @@
+from dataclasses import dataclass
 from pathlib import Path
 
-from beet import BlockTag, DataPack, Function, FunctionTag, JsonFile, Structure
+from beet import BlockTag, DataPack, Drop, Function, FunctionTag, JsonFile, Structure
 
 
 def test_equality():
@@ -326,9 +327,8 @@ def test_accessors_with_function(tmp_path: Path):
 
 
 def test_on_bind():
-    def on_bind_callback(instance: Function, pack: DataPack, namespace: str, path: str):
-        name = f"{namespace}:{path}"
-        pack[name + "_alias"] = Function([f"function {name}"])
+    def on_bind_callback(instance: Function, pack: DataPack, path: str):
+        pack[path + "_alias"] = Function([f"function {path}"])
 
     pack = DataPack()
     pack["hello:world"] = Function(
@@ -342,4 +342,25 @@ def test_on_bind():
 
     assert pack.function_tags == {
         "minecraft:load": FunctionTag({"values": ["hello:world"]})
+    }
+
+
+def test_on_bind_rename():
+    @dataclass
+    class RenameTo:
+        name: str
+
+        def __call__(self, instance: Function, pack: DataPack, path: str):
+            if path != self.name:
+                pack[self.name] = instance
+                raise Drop()
+
+    pack = DataPack()
+    pack["hello:world"] = Function(
+        ["say hello"], tags=["minecraft:load"], on_bind=RenameTo("hello:other")
+    )
+
+    assert pack == {
+        "hello": {Function: {"other": Function(["say hello"])}},
+        "minecraft": {FunctionTag: {"load": FunctionTag({"values": ["hello:other"]})}},
     }

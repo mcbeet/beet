@@ -157,11 +157,11 @@ class Texture(PngFile, NamespaceFile):
     scope = ("textures",)
     extension = ".png"
 
-    def bind(self, pack: "ResourcePack", namespace: str, path: str):
-        super().bind(pack, namespace, path)
+    def bind(self, pack: "ResourcePack", path: str):
+        super().bind(pack, path)
 
         if self.mcmeta is not None:
-            pack.textures_mcmeta[f"{namespace}:{path}"] = TextureMcmeta(self.mcmeta)
+            pack.textures_mcmeta[path] = TextureMcmeta(self.mcmeta)
 
 
 @dataclass(eq=False)
@@ -181,8 +181,10 @@ class Sound(BinaryFile, NamespaceFile):
     scope = ("sounds",)
     extension = ".ogg"
 
-    def bind(self, pack: "ResourcePack", namespace: str, path: str):
-        super().bind(pack, namespace, path)
+    def bind(self, pack: "ResourcePack", path: str):
+        super().bind(pack, path)
+
+        namespace, _, path = path.partition(":")
 
         if self.event is not None:
             attributes = {

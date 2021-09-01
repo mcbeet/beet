@@ -22,10 +22,11 @@ import json
 import shutil
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Callable, Generic, Optional, Type, TypeVar, Union
+from typing import Any, Callable, ClassVar, Generic, Optional, Type, TypeVar, Union
 from zipfile import ZipFile
 
 import yaml
+from pydantic import BaseModel
 
 try:
     from PIL.Image import Image
@@ -59,6 +60,7 @@ class File(Generic[ValueType, SerializeType]):
     content: Union[ValueType, SerializeType, None] = None
     source_path: Optional[FileSystemPath] = None
 
+    on_bind: Optional[Callable[[Any, Any, str], Any]] = extra_field(default=None)
     serializer: Callable[[ValueType], SerializeType] = extra_field(init=False)
     deserializer: Callable[[SerializeType], ValueType] = extra_field(init=False)
 
@@ -69,6 +71,11 @@ class File(Generic[ValueType, SerializeType]):
     def merge(self: FileType, other: FileType) -> bool:
         """Merge the given file or return False to indicate no special handling."""
         return False
+
+    def bind(self, pack: Any, path: str) -> Any:
+        """Handle file binding."""
+        if self.on_bind:
+            self.on_bind(self, pack, path)
 
     def set_content(self, content: Union[ValueType, SerializeType]):
         """Update the internal content."""
@@ -333,13 +340,28 @@ class JsonFileBase(TextFileBase[ValueType]):
 
     data: FileDeserialize[ValueType] = FileDeserialize()
 
+    model: ClassVar[Optional[Type[ValueType]]] = None
+
     @classmethod
     def to_str(cls, content: ValueType) -> str:
+        if (
+            cls.model
+            and issubclass(cls.model, BaseModel)
+            and isinstance(content, cls.model)
+        ):
+            content = content.dict()
         return dump_json(content)
 
     @classmethod
     def from_str(cls, content: str) -> ValueType:
-        return json.loads(content)
+        value = json.loads(content)
+        if cls.model and issubclass(cls.model, BaseModel):
+            value = cls.model(**value)
+        return value  # type: ignore
+
+    @classmethod
+    def default(cls) -> ValueType:
+        return cls.model() if cls.model and issubclass(cls.model, BaseModel) else {}  # type: ignore
 
 
 class JsonFile(JsonFileBase[JsonDict]):
@@ -357,13 +379,28 @@ class YamlFileBase(TextFileBase[ValueType]):
 
     data: FileDeserialize[ValueType] = FileDeserialize()
 
+    model: ClassVar[Optional[Type[ValueType]]] = None
+
     @classmethod
     def to_str(cls, content: ValueType) -> str:
+        if (
+            cls.model
+            and issubclass(cls.model, BaseModel)
+            and isinstance(content, cls.model)
+        ):
+            content = content.dict()
         return yaml.dump(content)  # type: ignore
 
     @classmethod
     def from_str(cls, content: str) -> ValueType:
-        return yaml.safe_load(content)
+        value = yaml.safe_load(content)
+        if cls.model and issubclass(cls.model, BaseModel):
+            value = cls.model(**value)
+        return value  # type: ignore
+
+    @classmethod
+    def default(cls) -> ValueType:
+        return cls.model() if cls.model and issubclass(cls.model, BaseModel) else {}  # type: ignore
 
 
 class YamlFile(YamlFileBase[JsonDict]):

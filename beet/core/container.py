@@ -7,6 +7,7 @@ __all__ = [
     "PinDefaultFactory",
     "Container",
     "ContainerProxy",
+    "Drop",
 ]
 
 
@@ -38,6 +39,10 @@ ProxyKeyType = TypeVar("ProxyKeyType")
 
 PinDefault = Union[V, Sentinel]
 PinDefaultFactory = Union[Callable[[], V], Sentinel]
+
+
+class Drop(Exception):
+    """Raised to signal that an item shouldn't be added to a container."""
 
 
 class SupportsMerge(Protocol):
@@ -131,7 +136,17 @@ class Container(MutableMapping[K, V]):
         return value
 
     def __setitem__(self, key: K, value: V):
-        self._wrapped[key] = self.process(key, value)
+        should_delete = False
+
+        try:
+            value = self.process(key, value)
+        except Drop:
+            should_delete = True
+
+        self._wrapped[key] = value
+
+        if should_delete:
+            del self[key]
 
     def __delitem__(self, key: K):
         del self._wrapped[key]

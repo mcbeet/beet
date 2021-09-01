@@ -4,6 +4,8 @@ __all__ = [
     "ExtraContainer",
     "SupportsExtra",
     "ExtraPin",
+    "NamespaceExtraContainer",
+    "PackExtraContainer",
     "McmetaPin",
     "PackPin",
     "Namespace",
@@ -12,7 +14,6 @@ __all__ = [
     "NamespacePin",
     "NamespaceProxy",
     "NamespaceProxyDescriptor",
-    "OnBindCallback",
 ]
 
 
@@ -49,13 +50,14 @@ from zipfile import ZipFile
 from beet.core.container import (
     Container,
     ContainerProxy,
+    Drop,
     MatchMixin,
     MergeMixin,
     Pin,
     SupportsMerge,
 )
 from beet.core.file import File, FileOrigin, JsonFile, PngFile
-from beet.core.utils import FileSystemPath, JsonDict, TextComponent, extra_field
+from beet.core.utils import FileSystemPath, JsonDict, TextComponent
 
 from .utils import list_files
 
@@ -63,16 +65,10 @@ T = TypeVar("T")
 PackFileType = TypeVar("PackFileType", bound="PackFile")
 NamespaceType = TypeVar("NamespaceType", bound="Namespace")
 NamespaceFileType = TypeVar("NamespaceFileType", bound="NamespaceFile")
+PackType = TypeVar("PackType", bound="Pack[Any]")
 MergeableType = TypeVar("MergeableType", bound=SupportsMerge)
 
 PackFile = File[Any, Any]
-
-
-class OnBindCallback(Protocol):
-    """Protocol for on_bind callback."""
-
-    def __call__(self, instance: Any, pack: Any, namespace: str, path: str):
-        ...
 
 
 class ExtraContainer(MatchMixin, MergeMixin, Container[str, PackFile]):
@@ -92,19 +88,58 @@ class ExtraPin(Pin[str, T]):
         return obj.extra
 
 
+class NamespaceExtraContainer(ExtraContainer, Generic[NamespaceType]):
+    """Namespace extra container."""
+
+    namespace: Optional[NamespaceType] = None
+
+    def process(self, key: str, value: PackFile) -> PackFile:
+        if (
+            self.namespace is not None
+            and self.namespace.pack is not None
+            and self.namespace.name
+        ):
+            value.bind(self.namespace.pack, f"{self.namespace.name}:{key}")
+        return value
+
+    def bind(self, namespace: NamespaceType):
+        """Handle insertion."""
+        self.namespace = namespace
+
+        for key, value in self.items():
+            try:
+                self.process(key, value)
+            except Drop:
+                del self[key]
+
+
+class PackExtraContainer(ExtraContainer, Generic[PackType]):
+    """Pack extra container."""
+
+    pack: Optional[PackType] = None
+
+    def process(self, key: str, value: PackFile) -> PackFile:
+        if self.pack is not None:
+            value.bind(self.pack, key)
+        return value
+
+    def bind(self, pack: PackType):
+        """Handle insertion."""
+        self.pack = pack
+
+        for key, value in self.items():
+            try:
+                self.process(key, value)
+            except Drop:
+                del self[key]
+
+
 @dataclass(eq=False)
 class NamespaceFile(PackFile):
     """Base class for files that belong in pack namespaces."""
 
-    on_bind: Optional[OnBindCallback] = extra_field(default=None)
-
     scope: ClassVar[Tuple[str, ...]]
     extension: ClassVar[str]
-
-    def bind(self, pack: Any, namespace: str, path: str):
-        """Handle insertion."""
-        if self.on_bind:
-            self.on_bind(self, pack, namespace, path)
 
 
 class NamespaceContainer(MatchMixin, MergeMixin, Container[str, NamespaceFileType]):
@@ -119,7 +154,7 @@ class NamespaceContainer(MatchMixin, MergeMixin, Container[str, NamespaceFileTyp
             and self.namespace.pack is not None
             and self.namespace.name
         ):
-            value.bind(self.namespace.pack, self.namespace.name, key)
+            value.bind(self.namespace.pack, f"{self.namespace.name}:{key}")
         return value
 
     def bind(self, namespace: "Namespace", file_type: Type[NamespaceFileType]):
@@ -128,7 +163,10 @@ class NamespaceContainer(MatchMixin, MergeMixin, Container[str, NamespaceFileTyp
         self.file_type = file_type
 
         for key, value in self.items():
-            self.process(key, value)
+            try:
+                self.process(key, value)
+            except Drop:
+                del self[key]
 
     def generate_tree(self, path: str = "") -> Dict[Any, Any]:
         """Generate a hierarchy of nested dictionaries representing the files and folders."""
@@ -161,7 +199,7 @@ class Namespace(
 
     pack: Optional["Pack[Namespace]"] = None
     name: Optional[str] = None
-    extra: ExtraContainer
+    extra: NamespaceExtraContainer["Namespace"]
 
     directory: ClassVar[str]
     field_map: ClassVar[Mapping[Type[NamespaceFile], str]]
@@ -176,7 +214,7 @@ class Namespace(
 
     def __init__(self):
         super().__init__()
-        self.extra = ExtraContainer()
+        self.extra = NamespaceExtraContainer()
 
     def process(
         self, key: Type[NamespaceFile], value: NamespaceContainer[NamespaceFile]
@@ -191,6 +229,8 @@ class Namespace(
 
         for key, value in self.items():
             self.process(key, value)
+
+        self.extra.bind(self)
 
     @overload
     def __setitem__(
@@ -431,7 +471,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
     path: Optional[Path]
     zipped: bool
 
-    extra: ExtraContainer
+    extra: PackExtraContainer["Pack[NamespaceType]"]
     mcmeta: ExtraPin[JsonFile] = ExtraPin(
         "pack.mcmeta", default_factory=lambda: JsonFile({})
     )
@@ -470,7 +510,8 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
         self.path = None
         self.zipped = zipped
 
-        self.extra = ExtraContainer()
+        self.extra = PackExtraContainer()
+        self.extra.bind(self)
 
         if mcmeta is not None:
             self.mcmeta = mcmeta
@@ -547,7 +588,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
     ) -> bool:
         super().merge(other)  # type: ignore
         if isinstance(self, Pack) and isinstance(other, Pack):
-            self.extra.merge(other.extra)
+            self.extra.merge(other.extra)  # type: ignore
         return True
 
     @property

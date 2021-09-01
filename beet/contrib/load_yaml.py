@@ -8,6 +8,7 @@ __all__ = [
 ]
 
 
+import logging
 from dataclasses import InitVar, dataclass, field
 from typing import Any, Dict, List, Optional, Type, TypeVar
 
@@ -24,6 +25,9 @@ from beet import (
     SupportsExtra,
     configurable,
 )
+
+logger = logging.getLogger(__name__)
+
 
 PackType = TypeVar("PackType", bound=Pack[Any])
 PackFile = File[Any, Any]
@@ -61,6 +65,7 @@ class YamlPackLoader:
     data: DataPack = field(default_factory=DataPack)
 
     def __post_init__(self, ctx: Optional[Context]):
+        logger.warning("Deprecated in favor of beet.contrib.auto_yaml")
         if ctx:
             self.assets = ctx.assets
             self.data = ctx.data
