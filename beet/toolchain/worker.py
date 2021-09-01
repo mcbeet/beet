@@ -35,8 +35,8 @@ from .utils import format_obj
 
 T = TypeVar("T")
 U = TypeVar("U")
-SendType = TypeVar("SendType", contravariant=True)
-RecvType = TypeVar("RecvType", contravariant=True)
+SendType = TypeVar("SendType")
+RecvType = TypeVar("RecvType")
 SelfType = TypeVar("SelfType")
 
 

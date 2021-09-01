@@ -322,7 +322,7 @@ def test_accessors_with_function(tmp_path: Path):
     assert func2.content == func2.lines
 
     assert func2.text == "say world\n"
-    assert func2.content == func2.text
+    assert func2.content == func2.text  # type: ignore
 
 
 def test_on_bind():

@@ -107,7 +107,7 @@ class File(Generic[ValueType, SerializeType]):
             self.serializer = backup
 
         self.set_content(content)
-        return content
+        return content  # type: ignore
 
     def ensure_deserialized(
         self,
@@ -124,7 +124,7 @@ class File(Generic[ValueType, SerializeType]):
             self.deserializer = backup
 
         self.set_content(content)
-        return content
+        return content  # type: ignore
 
     def __eq__(self, other: Any) -> bool:
         if type(self) != type(other):

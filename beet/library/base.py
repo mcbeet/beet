@@ -536,7 +536,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
         self.save(overwrite=True)
 
     def process(self, key: str, value: NamespaceType) -> NamespaceType:
-        value.bind(self, key)
+        value.bind(self, key)  # type: ignore
         return value
 
     def missing(self, key: str) -> NamespaceType:
