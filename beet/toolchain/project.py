@@ -272,8 +272,17 @@ class ProjectBuilder:
 
         return ctx
 
+    def autosave(self, ctx: Context):
+        """Plugin that outputs the data pack and the resource pack at the end of the build."""
+        yield
+        for pack in ctx.packs:
+            if pack and ctx.output_directory:
+                pack.save(ctx.output_directory, overwrite=True)
+
     def bootstrap(self, ctx: Context):
         """Plugin that handles the project configuration."""
+        ctx.require(self.autosave)
+
         plugins = (self.autoload or []) + self.config.require
 
         for plugin in plugins:
@@ -327,9 +336,6 @@ class ProjectBuilder:
             pack.description = ctx.template.render_json(config.description)
             pack.pack_format = config.pack_format
             pack.zipped = bool(config.zipped)
-
-            if pack and ctx.output_directory:
-                pack.save(ctx.output_directory, overwrite=True)
 
     def __call__(self, ctx: Context):
         """The builder instance is itself a plugin used for merging subpipelines."""
