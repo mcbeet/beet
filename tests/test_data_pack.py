@@ -1,7 +1,17 @@
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Any
 
-from beet import BlockTag, DataPack, Drop, Function, FunctionTag, JsonFile, Structure
+from beet import (
+    BlockTag,
+    DataPack,
+    Drop,
+    Function,
+    FunctionTag,
+    JsonFile,
+    MergePolicy,
+    Structure,
+)
 
 
 def test_equality():
@@ -364,3 +374,50 @@ def test_on_bind_rename():
         "hello": {Function: {"other": Function(["say hello"])}},
         "minecraft": {FunctionTag: {"load": FunctionTag({"values": ["hello:other"]})}},
     }
+
+
+def test_merge_rules():
+    def combine_description(
+        pack: DataPack,
+        path: str,
+        current: JsonFile,
+        conflict: JsonFile,
+    ) -> bool:
+        current.data["pack"]["description"] += conflict.data["pack"]["description"]
+        return True
+
+    pack = DataPack(description="hello")
+    pack.merge_policy.extend_extra("pack.mcmeta", combine_description)
+
+    pack.merge(DataPack(description="world"))
+
+    assert pack.description == "helloworld"
+
+
+def test_merge_nuke():
+    def nuke(*args: Any) -> bool:
+        raise Drop()
+
+    p1 = DataPack(
+        description="hello",
+        merge_policy=MergePolicy(extra={"pack.mcmeta": [nuke]}),
+    )
+
+    p1.merge_policy.extend(MergePolicy(namespace={Function: [nuke]}))
+    p1.merge_policy.extend_namespace_extra("foo.json", nuke)
+
+    p1["demo:foo"] = Function()
+    p1["demo"].extra["foo.json"] = JsonFile()
+    p1["thing"].extra["foo.json"] = JsonFile()
+
+    p2 = DataPack(description="world")
+    p2["demo:foo"] = Function()
+    p2["demo:bar"] = Function()
+    p2["demo"].extra["foo.json"] = JsonFile()
+
+    p1.merge(p2)
+
+    assert p1.description == ""
+    assert list(p1.functions) == ["demo:bar"]
+    assert list(p1["demo"].extra) == []
+    assert p1["thing"].extra["foo.json"] == JsonFile()

@@ -14,18 +14,21 @@ __all__ = [
     "NamespacePin",
     "NamespaceProxy",
     "NamespaceProxyDescriptor",
+    "MergeCallback",
+    "MergePolicy",
 ]
 
 
 import shutil
 from collections import defaultdict
 from contextlib import nullcontext
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from functools import partial
 from itertools import count
 from pathlib import Path, PurePosixPath
 from typing import (
     Any,
+    Callable,
     ClassVar,
     DefaultDict,
     Dict,
@@ -71,6 +74,81 @@ MergeableType = TypeVar("MergeableType", bound=SupportsMerge)
 PackFile = File[Any, Any]
 
 
+@dataclass(eq=False)
+class NamespaceFile(PackFile):
+    """Base class for files that belong in pack namespaces."""
+
+    scope: ClassVar[Tuple[str, ...]]
+    extension: ClassVar[str]
+
+
+class MergeCallback(Protocol):
+    """Protocol for detecting merge callbacks."""
+
+    def __call__(self, pack: Any, path: str, current: Any, conflict: Any) -> bool:
+        ...
+
+
+@dataclass
+class MergePolicy:
+    """Class holding lists of rules for merging files."""
+
+    extra: Dict[str, List[MergeCallback]] = field(default_factory=dict)
+    namespace: Dict[Type[NamespaceFile], List[MergeCallback]] = field(
+        default_factory=dict
+    )
+    namespace_extra: Dict[str, List[MergeCallback]] = field(default_factory=dict)
+
+    def extend(self, other: "MergePolicy"):
+        for rules, other_rules in [
+            (self.extra, other.extra),
+            (self.namespace, other.namespace),
+            (self.namespace_extra, other.namespace_extra),
+        ]:
+            for key, value in other_rules.items():
+                rules.setdefault(key, []).extend(value)  # type: ignore
+
+    def extend_extra(self, filename: str, rule: MergeCallback):
+        """Add rule for merging extra files."""
+        self.extra.setdefault(filename, []).append(rule)
+
+    def extend_namespace(self, file_type: Type[NamespaceFile], rule: MergeCallback):
+        """Add rule for merging namespace files."""
+        self.namespace.setdefault(file_type, []).append(rule)
+
+    def extend_namespace_extra(self, filename: str, rule: MergeCallback):
+        """Add rule for merging namespace extra files."""
+        self.namespace_extra.setdefault(filename, []).append(rule)
+
+    def merge_with_rules(
+        self,
+        pack: Any,
+        current: MutableMapping[Any, SupportsMerge],
+        other: Mapping[Any, SupportsMerge],
+        map_rules: Callable[[str], Tuple[str, List[MergeCallback]]],
+    ) -> bool:
+        """Merge values according to the given rules."""
+        for key, value in other.items():
+            if key not in current:
+                current[key] = value
+                continue
+
+            current_value = current[key]
+            path, rules = map_rules(key)
+
+            try:
+                for rule in rules:
+                    if rule(pack, path, current_value, value):
+                        break
+                else:
+                    if not current_value.merge(value):
+                        current[key] = value
+            except Drop:
+                del current[key]
+
+        return True
+
+
 class ExtraContainer(MatchMixin, MergeMixin, Container[str, PackFile]):
     """Container that stores extra files in a pack or a namespace."""
 
@@ -112,6 +190,26 @@ class NamespaceExtraContainer(ExtraContainer, Generic[NamespaceType]):
             except Drop:
                 del self[key]
 
+    def merge(self, other: Mapping[Any, SupportsMerge]) -> bool:
+        if (
+            self.namespace is not None
+            and self.namespace.pack is not None
+            and self.namespace.name
+        ):
+            pack = self.namespace.pack
+            name = self.namespace.name
+
+            return pack.merge_policy.merge_with_rules(
+                pack=pack,
+                current=self,
+                other=other,
+                map_rules=lambda key: (
+                    f"{name}:{key}",
+                    pack.merge_policy.namespace_extra.get(key, []),
+                ),
+            )
+        return super().merge(other)
+
 
 class PackExtraContainer(ExtraContainer, Generic[PackType]):
     """Pack extra container."""
@@ -133,13 +231,20 @@ class PackExtraContainer(ExtraContainer, Generic[PackType]):
             except Drop:
                 del self[key]
 
+    def merge(self, other: Mapping[Any, SupportsMerge]) -> bool:
+        if self.pack is not None:
+            pack = self.pack
 
-@dataclass(eq=False)
-class NamespaceFile(PackFile):
-    """Base class for files that belong in pack namespaces."""
-
-    scope: ClassVar[Tuple[str, ...]]
-    extension: ClassVar[str]
+            return pack.merge_policy.merge_with_rules(
+                pack=pack,
+                current=self,
+                other=other,
+                map_rules=lambda key: (
+                    key,
+                    pack.merge_policy.extra.get(key, []),
+                ),
+            )
+        return super().merge(other)
 
 
 class NamespaceContainer(MatchMixin, MergeMixin, Container[str, NamespaceFileType]):
@@ -167,6 +272,28 @@ class NamespaceContainer(MatchMixin, MergeMixin, Container[str, NamespaceFileTyp
                 self.process(key, value)
             except Drop:
                 del self[key]
+
+    def merge(self, other: Mapping[Any, SupportsMerge]) -> bool:
+        if (
+            self.namespace is not None
+            and self.namespace.pack is not None
+            and self.namespace.name
+            and self.file_type is not None
+        ):
+            pack = self.namespace.pack
+            name = self.namespace.name
+            file_type = self.file_type
+
+            return pack.merge_policy.merge_with_rules(
+                pack=pack,
+                current=self,  # type: ignore
+                other=other,
+                map_rules=lambda key: (
+                    f"{name}:{key}",
+                    pack.merge_policy.namespace.get(file_type, []),
+                ),
+            )
+        return super().merge(other)
 
     def generate_tree(self, path: str = "") -> Dict[Any, Any]:
         """Generate a hierarchy of nested dictionaries representing the files and folders."""
@@ -484,6 +611,8 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
     extend_namespace: List[Type[NamespaceFile]]
     extend_namespace_extra: Dict[str, Type[PackFile]]
 
+    merge_policy: MergePolicy
+
     namespace_type: ClassVar[Type[NamespaceType]]
     default_name: ClassVar[str]
     latest_pack_format: ClassVar[int]
@@ -504,6 +633,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
         extend_extra: Optional[Mapping[str, Type[PackFile]]] = None,
         extend_namespace: Iterable[Type[NamespaceFile]] = (),
         extend_namespace_extra: Optional[Mapping[str, Type[PackFile]]] = None,
+        merge_policy: Optional[MergePolicy] = None,
     ):
         super().__init__()
         self.name = name
@@ -525,6 +655,10 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
         self.extend_extra = dict(extend_extra or {})
         self.extend_namespace = list(extend_namespace)
         self.extend_namespace_extra = dict(extend_namespace_extra or {})
+
+        self.merge_policy = MergePolicy()
+        if merge_policy:
+            self.merge_policy.extend(merge_policy)
 
         self.load(path or zipfile)
 
@@ -661,11 +795,15 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
         extend_extra: Optional[Mapping[str, Type[PackFile]]] = None,
         extend_namespace: Iterable[Type[NamespaceFile]] = (),
         extend_namespace_extra: Optional[Mapping[str, Type[PackFile]]] = None,
+        merge_policy: Optional[MergePolicy] = None,
     ):
         """Load pack from a zipfile or from the filesystem."""
         self.extend_extra.update(extend_extra or {})
         self.extend_namespace.extend(extend_namespace)
         self.extend_namespace_extra.update(extend_namespace_extra or {})
+
+        if merge_policy:
+            self.merge_policy.extend(merge_policy)
 
         if origin:
             if not isinstance(origin, ZipFile):

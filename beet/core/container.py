@@ -57,11 +57,10 @@ class MergeMixin:
         """Merge values from the given dict-like object."""
         for key, value in other.items():
             try:
-                if self[key].merge(value):  # type: ignore
-                    continue
-            except KeyError:
-                pass
-            self[key] = value  # type: ignore
+                if key not in self or not self[key].merge(value):  # type: ignore
+                    self[key] = value  # type: ignore
+            except Drop:
+                del self[key]  # type: ignore
         return True
 
 
