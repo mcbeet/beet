@@ -2,6 +2,14 @@
 
 <!--next-version-placeholder-->
 
+## v0.40.0 (2021-09-01)
+### Feature
+* Add merge policy ([`ff4e104`](https://github.com/mcbeet/beet/commit/ff4e104adf78c00436d9a3a3139aaf1a3f8ba510))
+* Add beet.contrib.auto_yaml ([`f505b8b`](https://github.com/mcbeet/beet/commit/f505b8be69aaddba380354d84d35f6e0d6f45de3))
+
+### Fix
+* Update dependencies and deal with pyright delusions ([`be9ed6a`](https://github.com/mcbeet/beet/commit/be9ed6a894fed82597559909778b8aff88eb6789))
+
 ## v0.39.0 (2021-08-22)
 ### Feature
 * Expose resolved schemas ([`35a7800`](https://github.com/mcbeet/beet/commit/35a7800189d842fd904b4055fadd8ebf6dc879d7))
