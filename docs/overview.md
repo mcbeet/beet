@@ -217,10 +217,9 @@ You can also create files with a custom `on_bind` callback.
 ```{code-cell}
 pack = DataPack()
 
-def on_bind(function: Function, pack: DataPack, namespace: str, path: str):
+def on_bind(function: Function, pack: DataPack, path: str):
     print(function)
     print(pack)
-    print(namespace)
     print(path)
 
 pack["demo:foo"] = Function(["say hello"], on_bind=on_bind)
