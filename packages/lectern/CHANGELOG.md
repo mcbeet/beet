@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.15.3 (2021-09-01)
+### Fix
+* Update dependencies and make pyright happy with new click typings ([`9edd063`](https://github.com/mcbeet/lectern/commit/9edd06327146f065ed348bddebf8aec0d1ea128a))
+
 ## v0.15.2 (2021-07-01)
 ### Fix
 * Declare lectern plugin with configurable decorator ([`dbcd46c`](https://github.com/mcbeet/lectern/commit/dbcd46c6c7fd3acc476268576344a60e6095b652))
