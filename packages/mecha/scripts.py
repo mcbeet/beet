@@ -22,7 +22,9 @@ class JavaExampleExtractor(mcwiki.TextExtractor):
                 isinstance(element, Tag)
                 and (
                     any(
-                        parent.text.startswith("Bedrock Edition:")
+                        parent.get_text().startswith(
+                            ("Bedrock Edition:", "In Bedrock Edition")
+                        )
                         for parent in element.find_parents("li")
                     )
                     or element.parent
@@ -49,30 +51,48 @@ def download_command_examples():
     generated_function = Function()
 
     commands = [
+        "advancement",
+        "attribute",
+        "clear",
+        "data",
         "defaultgamemode",
+        "effect",
+        "enchant",
+        # "execute",
+        "experience",
         "fill",
         "function",
+        "gamemode",
         "gamerule",
+        "give",
+        "item",
+        "kill",
         "locate",
         "msg",
+        # "particle",
         "setblock",
+        "spreadplayers",
         "summon",
+        "teleport",
+        "tellraw",
         "time",
+        "title",
         "weather",
     ]
 
-    java_example = JavaExampleExtractor("li > code")
+    java_example = JavaExampleExtractor("li code")
 
     for command in commands:
         page = mcwiki.load(f"commands/{command}")
         examples = page.get("examples")
 
         if examples is not None:
+            generated_function.append(f"# {command}")
             for code in examples.extract_all(java_example):
                 if code.startswith("/"):
                     code = code[1:]
                 if code.startswith(command):
-                    generated_function.lines.append(code)
+                    generated_function.append(code)
 
     click.echo(generated_function.text, nl=False)
 

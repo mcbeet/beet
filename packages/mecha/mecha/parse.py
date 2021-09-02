@@ -243,7 +243,7 @@ def get_default_parsers() -> Dict[str, Parser]:
             resource_location_parser=ResourceLocationParser(allow_tag=False),
         ),
         "minecraft:message": parse_message,
-        "minecraft:mob_effect": StringParser(type="word"),
+        "minecraft:mob_effect": delegate("minecraft:resource_location"),
         "minecraft:nbt_compound_tag": parse_compound_tag,
         "minecraft:nbt_path": NbtPathParser(),
         "minecraft:nbt_tag": delegate("nbt"),
@@ -261,6 +261,7 @@ def get_default_parsers() -> Dict[str, Parser]:
                 ">",
                 "><",
             ],
+            r"\S+",
         ),
         # TODO: "minecraft:particle"
         "minecraft:resource_location": ResourceLocationParser(allow_tag=False),
@@ -448,7 +449,8 @@ def parse_argument(stream: TokenStream) -> AstNode:
 
 def parse_bool(stream: TokenStream) -> AstValue[bool]:
     """Parse bool."""
-    token = stream.expect_any(("literal", "true"), ("literal", "false"))
+    with stream.syntax(literal=r"\w+"):
+        token = stream.expect_any(("literal", "true"), ("literal", "false"))
 
     return AstValue[bool](
         value=token.value == "true",
@@ -505,14 +507,13 @@ class NumericParser(Generic[NumericType]):
 class StringParser:
     """Parser for string values."""
 
-    type: str = "phrase"
+    type: Optional[str] = None
     quoted_string_handler: QuotedStringHandler = field(
         default_factory=QuotedStringHandler
     )
 
     def __call__(self, stream: TokenStream) -> AstValue[str]:
-        properties = get_stream_properties(stream)
-        string_type = properties.get("type", self.type)
+        string_type = self.type or get_stream_properties(stream)["type"]
 
         if string_type == "greedy":
             with stream.intercept("whitespace"):
@@ -646,6 +647,7 @@ class JsonParser:
             number=r"-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?",
             colon=r":",
             comma=r",",
+            literal=r"\w+",
         ):
             curly, bracket, string, number, null, true, false = stream.expect(
                 ("curly", "{"),
@@ -1046,10 +1048,12 @@ class LiteralStringParser:
     """Parser for literal strings."""
 
     values: List[str]
+    pattern: str = r"\w+"
 
     def __call__(self, stream: TokenStream) -> AstValue[str]:
-        patterns = [("literal", value) for value in self.values]
-        token = stream.expect_any(*patterns)
+        with stream.syntax(literal=self.pattern):
+            patterns = [("literal", value) for value in self.values]
+            token = stream.expect_any(*patterns)
 
         return AstValue[str](
             value=token.value,
@@ -1124,7 +1128,8 @@ def parse_player_name(stream: TokenStream) -> AstValue[str]:
 
 def parse_swizzle(stream: TokenStream) -> AstValue[str]:
     """Parse swizzle."""
-    token = stream.expect("literal")
+    with stream.syntax(literal=r"\w+"):
+        token = stream.expect("literal")
 
     if not 1 <= len(token.value) <= 3 or len(set(token.value)) < len(token.value):
         raise token.emit_error(InvalidSyntax(f"Invalid swizzle {token.value!r}."))
@@ -1192,7 +1197,6 @@ class SelectorParser:
     """Parser for selectors."""
 
     amount: str = "multiple"
-    type: str = "entities"
 
     def __call__(self, stream: TokenStream) -> AstSelector:
         properties = get_stream_properties(stream)
@@ -1210,7 +1214,6 @@ class SelectorParser:
             location = token.location
             end_location = token.end_location
 
-            is_player = variable in "pra"
             is_single = variable in "prs"
 
             arguments: List[AstSelectorArgument] = []
@@ -1244,6 +1247,9 @@ class SelectorParser:
                         )
                     )
 
+                    if key.value == "limit":
+                        is_single = value.value == 1
+
                     if not stream.get("comma"):
                         break
 
@@ -1251,20 +1257,12 @@ class SelectorParser:
                 end_location = close_bracket.end_location
 
         amount = properties.get("amount", self.amount)
-        type = properties.get("type", self.type)
 
         if amount not in ["single", "multiple"]:
             raise ValueError(f"Invalid selector amount {amount!r}.")
-        if type not in ["players", "entities"]:
-            raise ValueError(f"Invalid selector type {type!r}.")
 
         if amount == "single" and not is_single:
             raise InvalidSyntax(f"Multiple entities not allowed.").set_location(
-                location=location,
-                end_location=end_location,
-            )
-        if type == "players" and not is_player:
-            raise InvalidSyntax(f"Non-player entities not allowed.").set_location(
                 location=location,
                 end_location=end_location,
             )
