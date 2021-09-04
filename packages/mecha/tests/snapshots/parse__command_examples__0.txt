@@ -30,7 +30,7 @@
               value: 'story/shiny_gear'
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=67, lineno=3, colno=1)
-      end_location: SourceLocation(pos=87, lineno=3, colno=21)
+      end_location: SourceLocation(pos=98, lineno=3, colno=32)
       identifier: 'advancement:grant:targets:everything'
       arguments:
         <class 'mecha.ast.AstSelector'>
@@ -70,7 +70,7 @@
           value: 5.0
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=167, lineno=7, colno=1)
-      end_location: SourceLocation(pos=167, lineno=7, colno=1)
+      end_location: SourceLocation(pos=172, lineno=7, colno=6)
       identifier: 'clear'
       arguments:
         <empty>
@@ -746,7 +746,7 @@
           value: Float(0.8)
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=915, lineno=21, colno=1)
-      end_location: SourceLocation(pos=915, lineno=21, colno=1)
+      end_location: SourceLocation(pos=939, lineno=21, colno=25)
       identifier: 'defaultgamemode:survival'
       arguments:
         <empty>
@@ -944,7 +944,7 @@
           value: 5
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=1199, lineno=32, colno=1)
-      end_location: SourceLocation(pos=1221, lineno=32, colno=23)
+      end_location: SourceLocation(pos=1228, lineno=32, colno=30)
       identifier: 'experience:query:targets:levels'
       arguments:
         <class 'mecha.ast.AstValue'>
@@ -1106,7 +1106,7 @@
           data_tags: None
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=1362, lineno=36, colno=1)
-      end_location: SourceLocation(pos=1401, lineno=36, colno=40)
+      end_location: SourceLocation(pos=1408, lineno=36, colno=47)
       identifier: 'fill:from:to:block:hollow'
       arguments:
         <class 'mecha.ast.AstVector3'>
@@ -1369,7 +1369,7 @@
               value: 'example/test'
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=1613, lineno=43, colno=1)
-      end_location: SourceLocation(pos=1613, lineno=43, colno=1)
+      end_location: SourceLocation(pos=1630, lineno=43, colno=18)
       identifier: 'gamemode:creative'
       arguments:
         <empty>
@@ -2148,7 +2148,7 @@
                                   value: String('minecraft:target')
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=2682, lineno=72, colno=1)
-      end_location: SourceLocation(pos=2682, lineno=72, colno=1)
+      end_location: SourceLocation(pos=2696, lineno=72, colno=15)
       identifier: 'locate:mansion'
       arguments:
         <empty>
@@ -3011,7 +3011,7 @@
           suffix: 't'
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=3600, lineno=98, colno=1)
-      end_location: SourceLocation(pos=3600, lineno=98, colno=1)
+      end_location: SourceLocation(pos=3612, lineno=98, colno=13)
       identifier: 'time:set:day'
       arguments:
         <empty>
@@ -3131,7 +3131,7 @@
           value: 1200
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=3792, lineno=105, colno=1)
-      end_location: SourceLocation(pos=3792, lineno=105, colno=1)
+      end_location: SourceLocation(pos=3804, lineno=105, colno=13)
       identifier: 'weather:rain'
       arguments:
         <empty>

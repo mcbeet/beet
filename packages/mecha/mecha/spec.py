@@ -14,7 +14,6 @@ from pathlib import Path
 from typing import (
     Any,
     Dict,
-    Iterable,
     List,
     Literal,
     NamedTuple,
@@ -75,6 +74,7 @@ class CommandTree(BaseModel):
     executable: Optional[bool] = None
     redirect: Optional[Tuple[str, ...]] = None
     children: Optional[Dict[str, "CommandTree"]] = None
+    subcommand: bool = False
 
     @classmethod
     def load_from(
@@ -99,6 +99,19 @@ class CommandTree(BaseModel):
             tree = tree.extend(cls.parse_raw(source))
 
         return tree
+
+    def get(self, *scope: Union[str, Tuple[str, ...], None]) -> Optional["CommandTree"]:
+        """Retrieve a nested node."""
+        node = self
+        for arg in scope:
+            if arg is None:
+                return None
+            for name in [arg] if isinstance(arg, str) else arg:
+                if node.children:
+                    node = node.children.get(name)
+                    if not node:
+                        return None
+        return node
 
     def extend(self, other: "CommandTree") -> "CommandTree":
         """Merge nodes from another command tree."""
@@ -127,28 +140,28 @@ class CommandTree(BaseModel):
 
         return self
 
-    def get(self, *scope: str) -> Optional["CommandTree"]:
-        """Retrieve a nested node."""
-        if not scope:
-            return self
-        if not self.children:
-            return None
-        child = self.children.get(scope[0])
-        return child and child.get(*scope[1:])
+    def resolve(
+        self,
+        root: Optional["CommandTree"] = None,
+        scope: Tuple[str, ...] = (),
+    ) -> "CommandTree":
+        """Resolve redirections and subcommands."""
+        if not root:
+            root = self
 
-    def get_literal_children(self) -> Iterable[str]:
-        """Yield the name of all the literal children."""
-        if self.children:
-            for name, child in self.children.items():
-                if child.type == "literal":
-                    yield name
+        if self.redirect is not None:
+            if target := root.get(self.redirect):
+                if scope[: len(self.redirect)] == self.redirect:
+                    target.subcommand = True
+                self.children = target.children
+            else:
+                raise ValueError(f"Invalid redirect {self.redirect}.")
 
-    def get_argument_children(self) -> Iterable[str]:
-        """Yield the name of all the argument children."""
-        if self.children:
+        elif self.children:
             for name, child in self.children.items():
-                if child.type == "argument":
-                    yield name
+                child.resolve(root, scope + (name,))
+
+        return self
 
 
 CommandTree.update_forward_refs()
@@ -161,11 +174,9 @@ class CommandSpecification:
     tree: CommandTree = extra_field(
         default_factory=lambda: CommandTree.load_from(version="1_17")
     )
-    flattened_tree: Dict[Tuple[str, ...], CommandTree] = extra_field(
-        default_factory=dict
-    )
-    prototypes: Dict[str, CommandPrototype] = extra_field(default_factory=dict)
     parsers: Dict[str, Parser] = extra_field(default_factory=dict)
+
+    prototypes: Dict[str, CommandPrototype] = extra_field(init=False)
 
     def __post_init__(self):
         self.update()
@@ -176,59 +187,11 @@ class CommandSpecification:
         self.update()
 
     def update(self):
-        """Recalculate flattened tree and command prototypes."""
-        self.flattened_tree = {}
+        """Recalculate command prototypes."""
+        self.tree.resolve()
+
         self.prototypes = {}
-
-        self.generate_flattened_tree(self.tree)
         self.generate_prototypes(self.tree)
-
-        subcommands = {
-            last_arg.scope: ":".join(last_arg.scope) + ":"
-            for prototype in self.prototypes.values()
-            if prototype.signature
-            and isinstance(last_arg := prototype.signature[-1], CommandArgument)
-            and last_arg.name == "subcommand"
-            and last_arg.scope
-        }
-
-        truncated: Dict[Tuple[str, ...], CommandPrototype] = {}
-
-        for identifier, prototype in self.prototypes.items():
-            for scope, prefix in subcommands.items():
-                pivot = len(scope)
-                if identifier.startswith(prefix):
-                    truncated[scope] = prototype
-                    self.prototypes[identifier] = CommandPrototype(
-                        prototype.identifier,
-                        prototype.signature[pivot:],
-                        tuple(
-                            offset
-                            for arg in prototype.arguments
-                            if (offset := arg - pivot) >= 0
-                        ),
-                    )
-
-        for scope, prototype in truncated.items():
-            pivot = len(scope)
-            identifier = ":".join(scope + ("subcommand",))
-            self.prototypes[identifier] = CommandPrototype(
-                identifier,
-                prototype.signature[:pivot] + (CommandArgument("subcommand", scope),),
-                tuple(arg for arg in prototype.arguments if arg < pivot) + (pivot,),
-            )
-
-    def generate_flattened_tree(
-        self,
-        tree: CommandTree,
-        scope: Tuple[str, ...] = (),
-    ):
-        """Traverse command tree and generate flattened lookup table."""
-        self.flattened_tree[scope] = tree
-
-        if tree.children:
-            for name, child in tree.children.items():
-                self.generate_flattened_tree(child, scope + (name,))
 
     def generate_prototypes(
         self,
@@ -238,41 +201,41 @@ class CommandSpecification:
         arguments: Tuple[int, ...] = (),
     ):
         """Traverse command tree and generate prototypes."""
-        subcommand = (
-            tree.redirect is not None and scope[: len(tree.redirect)] == tree.redirect
-        )
-
-        if tree.redirect is not None and subcommand:
-            identifier = ":".join(scope + ("subcommand",))
-            self.prototypes[identifier] = CommandPrototype(
-                identifier,
-                signature + (CommandArgument("subcommand", tree.redirect),),
-                arguments + (len(signature),),
-            )
-
         if tree.executable:
             identifier = ":".join(scope)
             self.prototypes[identifier] = CommandPrototype(
                 identifier, signature, arguments
             )
 
-        children: Dict[str, CommandTree] = {}
+        target = self.tree.get(tree.redirect)
+        recursive = target and target.subcommand
 
-        if tree.children:
-            children.update(tree.children)
-        if tree.redirect is not None and not subcommand:
-            if redirect := self.flattened_tree[tree.redirect]:
-                children.update(redirect.children or {})
-
-        for name, child in children.items():
-            self.generate_prototypes(
-                child,
-                scope + (name,),
-                signature
-                + (
-                    CommandArgument(name, scope + (name,))
-                    if child.type == "argument"
-                    else name,
-                ),
-                arguments + ((len(signature),) if child.type == "argument" else ()),
+        if scope and tree.subcommand or recursive:
+            identifier = ":".join(scope + ("subcommand",))
+            argument_scope = tree.redirect if tree.redirect is not None else scope
+            self.prototypes[identifier] = CommandPrototype(
+                identifier,
+                signature + (CommandArgument("subcommand", argument_scope),),
+                arguments + (len(signature),),
             )
+            signature = signature[len(scope) :]
+            arguments = tuple(
+                offset for arg in arguments if (offset := arg - len(scope)) >= 0
+            )
+
+        if tree.children and not recursive:
+            for name, child in tree.children.items():
+                if child.type == "literal":
+                    self.generate_prototypes(
+                        child,
+                        scope + (name,),
+                        signature + (name,),
+                        arguments,
+                    )
+                elif child.type == "argument":
+                    self.generate_prototypes(
+                        child,
+                        scope + (name,),
+                        signature + (CommandArgument(name, scope + (name,)),),
+                        arguments + (len(signature),),
+                    )

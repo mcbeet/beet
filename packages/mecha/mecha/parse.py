@@ -45,7 +45,6 @@ import re
 from dataclasses import dataclass, field
 from functools import partial
 from typing import (
-    TYPE_CHECKING,
     Any,
     Dict,
     Generic,
@@ -397,33 +396,44 @@ def parse_root(stream: TokenStream) -> AstRoot:
 def parse_command(stream: TokenStream) -> AstCommand:
     """Parse command."""
     spec = get_stream_spec(stream)
+    scope = get_stream_scope(stream)
+    tree = spec.tree.get(scope)
 
     arguments: List[AstNode] = []
-    scope: Tuple[str, ...] = ()
 
     with stream.checkpoint():
         location = stream.expect().location
         end_location = location
 
-    while (tree := spec.flattened_tree[scope]) and not (
-        tree.executable and stream.get("newline")
-    ):
-        literal_names = list(tree.get_literal_children())
-        argument_names = list(tree.get_argument_children())
-
-        with stream.alternative(bool(argument_names)):
-            patterns = [("literal", name) for name in literal_names]
-            token = stream.expect_any(*patterns)
-            scope += (token.value,)
-            if not TYPE_CHECKING:
-                continue
-
-        for name, alternative in stream.choose(*argument_names):
+    while tree and tree.children:
+        for (name, child), alternative in stream.choose(*tree.children.items()):
             with alternative, stream.provide(scope=scope + (name,)):
-                arguments.append(delegate("argument", stream))
-                scope += (name,)
+                if child.type == "literal":
+                    token = stream.expect(("literal", name))
+                    end_location = token.end_location
 
-        end_location = stream.current.end_location
+                elif child.type == "argument":
+                    node = delegate("argument", stream)
+                    arguments.append(node)
+                    end_location = node.end_location
+
+                scope = stream.data["scope"]
+                tree = child
+
+        if tree.executable and stream.get("newline"):
+            break
+
+        target = spec.tree.get(tree.redirect)
+        recursive = target and target.subcommand
+
+        if tree.subcommand or recursive:
+            subcommand_scope = tree.redirect if tree.redirect is not None else scope
+            with stream.provide(scope=subcommand_scope):
+                node = delegate("command", stream)
+                arguments.append(node)
+                end_location = node.end_location
+                scope += ("subcommand",)
+                break
 
     return AstCommand(
         identifier=":".join(scope),
@@ -437,10 +447,9 @@ def parse_argument(stream: TokenStream) -> AstNode:
     """Parse argument."""
     spec = get_stream_spec(stream)
     scope = get_stream_scope(stream)
+    tree = spec.tree.get(scope)
 
-    tree = spec.flattened_tree[scope]
-
-    if tree.parser:
+    if tree and tree.parser:
         with stream.provide(properties=tree.properties or {}):
             return delegate(tree.parser, stream)
 
