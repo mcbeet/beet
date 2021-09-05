@@ -81,7 +81,6 @@ class CommandTree(BaseModel):
         cls,
         filename: Optional[FileSystemPath] = None,
         version: Optional[str] = None,
-        patch: bool = True,
     ) -> "CommandTree":
         """Load the command tree from a file."""
         sources: List[str] = []
@@ -90,8 +89,6 @@ class CommandTree(BaseModel):
             sources.append(Path(filename).read_text())
         if version:
             sources.append(read_text("mecha.resources", f"{version}.json"))
-        if patch:
-            sources.append(read_text("mecha.resources", "patch.json"))
 
         tree = cls.parse_raw(sources[0])
 
@@ -160,6 +157,10 @@ class CommandTree(BaseModel):
         elif self.children:
             for name, child in self.children.items():
                 child.resolve(root, scope + (name,))
+
+        elif not self.executable:
+            self.redirect = ()
+            self.resolve(root, scope)
 
         return self
 
