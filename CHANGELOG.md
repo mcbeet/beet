@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.41.0 (2021-09-08)
+### Feature
+* **hangman:** Add run sequentially ([`b918e6e`](https://github.com/mcbeet/beet/commit/b918e6e0a166e01e02f851acd9c74a77b600a929))
+
 ## v0.40.1 (2021-09-01)
 ### Fix
 * Output pack after the exit phase of autoload plugins ([`e6871cb`](https://github.com/mcbeet/beet/commit/e6871cb69c95f00d2e9851bf0c641ebed43c9fbe))
