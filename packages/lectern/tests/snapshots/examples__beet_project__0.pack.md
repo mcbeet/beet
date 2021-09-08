@@ -455,6 +455,28 @@
 
   </details>
 
+- `@function isolated:plugin_test/foo`
+
+  <details>
+
+  ```mcfunction
+  say running isolated:plugin_test/foo
+  say hello
+  ```
+
+  </details>
+
+- `@function isolated:plugin_test/foo_copy`
+
+  <details>
+
+  ```mcfunction
+  say running isolated:plugin_test/foo
+  say hello
+  ```
+
+  </details>
+
 ## Resource pack
 
 - `@resource_pack pack.mcmeta`

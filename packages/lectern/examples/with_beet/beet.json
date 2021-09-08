@@ -18,6 +18,20 @@
           "load": ["isolated/yaml_test.md"]
         }
       }
+    },
+    {
+      "require": [
+        "lectern.contrib.plugin",
+        "lectern.contrib.relative_location"
+      ],
+      "pipeline": ["lectern"],
+      "meta": {
+        "generate_namespace": "isolated",
+        "generate_prefix": "plugin_test",
+        "lectern": {
+          "load": ["isolated/plugin_test.md"]
+        }
+      }
     }
   ],
   "meta": {
