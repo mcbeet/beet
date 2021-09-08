@@ -29,7 +29,9 @@ from beet.toolchain.utils import stable_hash
 
 REGEX_COMMENT = re.compile(r"(\s+#(?:\s+.*)?$)")
 REGEX_QUOTE = re.compile(r"(\"(?:.*?[^\\])?\"|'(?:.*?[^\\])?')")
-REGEX_RUN_COMMANDS = re.compile(r"(\s*execute\b(?:.*)\b)run\s+commands(\s+\w+|)(\s*)")
+REGEX_EXECUTE_RUN = re.compile(
+    r"(\s*execute\b(?:.*)\b)run\s+(commands|sequentially)(\s+\w+|)(\s*)"
+)
 REGEX_FOLD_COMMENT = re.compile(r"\s*#\s*fold\s*:\s*(\w+)\s*")
 
 
@@ -80,14 +82,26 @@ def fold_hanging_commands(
                 break
 
         elif token_type == "INDENT":
-            if match := REGEX_RUN_COMMANDS.match(current):
+            if match := REGEX_EXECUTE_RUN.match(current):
                 nested_commands = list(
                     fold_hanging_commands(ctx, tokens, original_function)
                 )
-                name = match[2].strip() or stable_hash(nested_commands)
-                key = f"{original_function}/{name}"
-                ctx.data[key] = Function(nested_commands)
-                current = REGEX_RUN_COMMANDS.sub(fr"\1run function {key}\3", current)
+                if match[2] == "commands":
+                    name = match[3].strip() or stable_hash(nested_commands)
+                    key = f"{original_function}/{name}"
+                    ctx.data[key] = Function(nested_commands)
+                    current = REGEX_EXECUTE_RUN.sub(fr"\1run function {key}\4", current)
+
+                elif match[2] == "sequentially":
+                    for nested_command in nested_commands:
+                        yield REGEX_EXECUTE_RUN.sub(
+                            fr"\1{nested_command[8:]}\4"
+                            if nested_command.startswith("execute")
+                            else fr"\1run {nested_command}\4",
+                            current,
+                        )
+                    current = ""
+
             else:
                 indent_level += 1
 
