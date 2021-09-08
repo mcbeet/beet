@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.16.0 (2021-09-08)
+### Feature
+* Add lectern.contrib.plugin ([`17e1c78`](https://github.com/mcbeet/lectern/commit/17e1c7830d73035b561388aece25d85a542057f8))
+
 ## v0.15.3 (2021-09-01)
 ### Fix
 * Update dependencies and make pyright happy with new click typings ([`9edd063`](https://github.com/mcbeet/lectern/commit/9edd06327146f065ed348bddebf8aec0d1ea128a))
