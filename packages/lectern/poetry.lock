@@ -536,7 +536,7 @@ yaml = ["PyYaml (>=5.2)"]
 
 [[package]]
 name = "python-semantic-release"
-version = "7.19.1"
+version = "7.19.2"
 description = "Automatic Semantic Versioning for Python projects"
 category = "dev"
 optional = false
@@ -807,7 +807,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=1.2.3)", "pytest-flake8", "pyt
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "b24230701ee39a7e0d68d4a93f44764079175056b24cd13a53fa57dab008e6d5"
+content-hash = "6a4b126fe2ccc3bb4f19d647fec6c121cc3b913cbd156e215df458ec816adfff"
 
 [metadata.files]
 atomicwrites = [
@@ -1143,8 +1143,8 @@ python-gitlab = [
     {file = "python_gitlab-2.7.1-py3-none-any.whl", hash = "sha256:b1dbb66f53ad7cf33fbdce8e9e7e6a09b18c75a9c506b099af1f6f9191542cfb"},
 ]
 python-semantic-release = [
-    {file = "python-semantic-release-7.19.1.tar.gz", hash = "sha256:43f52f9a97677c029009063807f1fec9ffaabf049bd02f3fd898f0edf1ce5155"},
-    {file = "python_semantic_release-7.19.1-py3-none-any.whl", hash = "sha256:8f5bfe18e78d44dc296966376f2bae2177ea881b628473d685b46f09a75ea92b"},
+    {file = "python-semantic-release-7.19.2.tar.gz", hash = "sha256:8ca0e5f72d31e7b0603b95caad6fb2d5315483ac1fadd86648771966d9ec6f2c"},
+    {file = "python_semantic_release-7.19.2-py3-none-any.whl", hash = "sha256:b2c8bb16a643fee0831be4d06138bc1440ebd4f252c3397d41abde179ea56852"},
 ]
 pywin32-ctypes = [
     {file = "pywin32-ctypes-0.2.0.tar.gz", hash = "sha256:24ffc3b341d457d48e8922352130cf2644024a4ff09762a2261fd34c36ee5942"},
