@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.41.1 (2021-09-11)
+### Fix
+* Provide the required_field utility ([`f5cbf9c`](https://github.com/mcbeet/beet/commit/f5cbf9c0fb22f47f6d14001b50c72bf839752c68))
+
 ## v0.41.0 (2021-09-08)
 ### Feature
 * **hangman:** Add run sequentially ([`b918e6e`](https://github.com/mcbeet/beet/commit/b918e6e0a166e01e02f851acd9c74a77b600a929))
