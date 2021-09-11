@@ -5,6 +5,7 @@ __all__ = [
     "SENTINEL_OBJ",
     "dump_json",
     "extra_field",
+    "required_field",
     "intersperse",
     "normalize_string",
 ]
@@ -38,6 +39,14 @@ def dump_json(value: Any) -> str:
 
 def extra_field(**kwargs: Any) -> Any:
     return field(repr=False, hash=False, compare=False, **kwargs)
+
+
+def required_field(**kwargs: Any) -> Any:
+    return field(**kwargs, default_factory=_raise_required_field)
+
+
+def _raise_required_field():
+    raise ValueError("Field required.")
 
 
 def intersperse(iterable: Iterable[T], delimitter: T) -> Iterator[T]:
