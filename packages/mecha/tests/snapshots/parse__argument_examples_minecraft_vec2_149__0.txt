@@ -11,11 +11,11 @@ minecraft:vec2
     <class 'mecha.ast.AstCoordinate'>
       location: SourceLocation(pos=0, lineno=1, colno=1)
       end_location: SourceLocation(pos=3, lineno=1, colno=4)
+      type: 'absolute'
       value: 0.1
-      prefix: 'absolute'
   y:
     <class 'mecha.ast.AstCoordinate'>
       location: SourceLocation(pos=4, lineno=1, colno=5)
       end_location: SourceLocation(pos=8, lineno=1, colno=9)
+      type: 'absolute'
       value: -0.5
-      prefix: 'absolute'

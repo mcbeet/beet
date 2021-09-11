@@ -11,11 +11,11 @@ minecraft:column_pos
     <class 'mecha.ast.AstCoordinate'>
       location: SourceLocation(pos=0, lineno=1, colno=1)
       end_location: SourceLocation(pos=2, lineno=1, colno=3)
+      type: 'relative'
       value: 1
-      prefix: 'relative'
   y:
     <class 'mecha.ast.AstCoordinate'>
       location: SourceLocation(pos=3, lineno=1, colno=4)
       end_location: SourceLocation(pos=6, lineno=1, colno=7)
+      type: 'relative'
       value: -2
-      prefix: 'relative'

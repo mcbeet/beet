@@ -11,11 +11,11 @@ minecraft:rotation
     <class 'mecha.ast.AstCoordinate'>
       location: SourceLocation(pos=0, lineno=1, colno=1)
       end_location: SourceLocation(pos=1, lineno=1, colno=2)
-      value: 0.0
-      prefix: 'absolute'
+      type: 'absolute'
+      value: 0
   y:
     <class 'mecha.ast.AstCoordinate'>
       location: SourceLocation(pos=2, lineno=1, colno=3)
       end_location: SourceLocation(pos=3, lineno=1, colno=4)
-      value: 0.0
-      prefix: 'absolute'
+      type: 'absolute'
+      value: 0

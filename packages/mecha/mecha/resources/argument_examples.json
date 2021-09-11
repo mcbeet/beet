@@ -91,6 +91,7 @@
   ],
   "minecraft:entity": [
     {
+      "properties": { "type": "entities", "amount": "multiple" },
       "examples": [
         "Player",
         "0123",
@@ -126,7 +127,7 @@
         "Player",
         "0123",
         "dd12be42-52a9-4a91-a8a1-11c01849e498",
-        "@e"
+        "@p"
       ]
     }
   ],
@@ -212,6 +213,7 @@
   ],
   "minecraft:score_holder": [
     {
+      "properties": { "amount": "multiple" },
       "examples": ["Player", "0123", "*", "@e"]
     }
   ],

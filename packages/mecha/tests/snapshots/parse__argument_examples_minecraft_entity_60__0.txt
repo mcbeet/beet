@@ -1,6 +1,6 @@
 minecraft:entity
 ---
-{}
+{'type': 'entities', 'amount': 'multiple'}
 ---
 dd12be42-52a9-4a91-a8a1-11c01849e498
 ---

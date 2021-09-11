@@ -11,17 +11,17 @@ minecraft:vec3
     <class 'mecha.ast.AstCoordinate'>
       location: SourceLocation(pos=0, lineno=1, colno=1)
       end_location: SourceLocation(pos=4, lineno=1, colno=5)
+      type: 'relative'
       value: 0.5
-      prefix: 'relative'
   y:
     <class 'mecha.ast.AstCoordinate'>
       location: SourceLocation(pos=5, lineno=1, colno=6)
       end_location: SourceLocation(pos=7, lineno=1, colno=8)
-      value: 1.0
-      prefix: 'relative'
+      type: 'relative'
+      value: 1
   z:
     <class 'mecha.ast.AstCoordinate'>
       location: SourceLocation(pos=8, lineno=1, colno=9)
       end_location: SourceLocation(pos=11, lineno=1, colno=12)
-      value: -5.0
-      prefix: 'relative'
+      type: 'relative'
+      value: -5

@@ -12,7 +12,7 @@ from tokenstream import TokenStream
 
 from .ast import AstCommand, AstRoot
 from .parse import delegate, get_default_parsers
-from .spec import CommandSpecification
+from .spec import CommandSpec
 
 
 @dataclass
@@ -21,8 +21,8 @@ class Mecha:
 
     ctx: InitVar[Optional[Context]] = None
 
-    spec: CommandSpecification = extra_field(
-        default_factory=lambda: CommandSpecification(parsers=get_default_parsers())
+    spec: CommandSpec = extra_field(
+        default_factory=lambda: CommandSpec(parsers=get_default_parsers())
     )
 
     def create_token_stream(self, text: str) -> TokenStream:

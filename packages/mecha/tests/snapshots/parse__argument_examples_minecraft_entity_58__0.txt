@@ -1,6 +1,6 @@
 minecraft:entity
 ---
-{}
+{'type': 'entities', 'amount': 'multiple'}
 ---
 @e
 ---

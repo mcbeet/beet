@@ -7,5 +7,5 @@ minecraft:angle
 <class 'mecha.ast.AstCoordinate'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=5, lineno=1, colno=6)
+  type: 'relative'
   value: -0.5
-  prefix: 'relative'

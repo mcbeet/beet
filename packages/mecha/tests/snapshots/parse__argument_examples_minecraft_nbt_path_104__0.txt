@@ -7,7 +7,7 @@ foo[0]
 <class 'mecha.ast.AstNbtPath'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=6, lineno=1, colno=7)
-  nodes:
+  components:
     <class 'mecha.ast.AstValue'>
       location: SourceLocation(pos=0, lineno=1, colno=1)
       end_location: SourceLocation(pos=3, lineno=1, colno=4)
@@ -15,7 +15,7 @@ foo[0]
     <class 'mecha.ast.AstNbtPathSubscript'>
       location: SourceLocation(pos=3, lineno=1, colno=4)
       end_location: SourceLocation(pos=6, lineno=1, colno=7)
-      match:
+      index:
         <class 'mecha.ast.AstValue'>
           location: SourceLocation(pos=4, lineno=1, colno=5)
           end_location: SourceLocation(pos=5, lineno=1, colno=6)

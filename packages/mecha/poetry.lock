@@ -48,7 +48,7 @@ lxml = ["lxml"]
 
 [[package]]
 name = "beet"
-version = "0.40.1"
+version = "0.41.1"
 description = "The Minecraft pack development kit"
 category = "main"
 optional = false
@@ -744,7 +744,7 @@ python-versions = ">=3.6"
 
 [[package]]
 name = "tokenstream"
-version = "0.7.5"
+version = "1.0.1"
 description = "A versatile token stream for handwritten parsers"
 category = "main"
 optional = false
@@ -861,7 +861,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytes
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "4ba84303e554d007af09a4b537ed6119ff8dbe0ce53335938abca2d5d2b9496d"
+content-hash = "2969aeeaaab6bc58c68b8b24d2354bfae59cbe99819ba448a6245b410c42efde"
 
 [metadata.files]
 atomicwrites = [
@@ -882,8 +882,8 @@ beautifulsoup4 = [
     {file = "beautifulsoup4-4.9.3.tar.gz", hash = "sha256:84729e322ad1d5b4d25f805bfa05b902dd96450f43842c4e99067d5e1369eb25"},
 ]
 beet = [
-    {file = "beet-0.40.1-py3-none-any.whl", hash = "sha256:faac0ea0b0f5300206856329c656384036a45df585ad1e3ca51c7c7f4801ec26"},
-    {file = "beet-0.40.1.tar.gz", hash = "sha256:cfb7e7e57c147109c156b960295d3e05bfa62cbc0b731a0149d9649853a20e43"},
+    {file = "beet-0.41.1-py3-none-any.whl", hash = "sha256:38381d525c6a2905b7d8615863648657e81c246dd3660d719979c4083dcd57f7"},
+    {file = "beet-0.41.1.tar.gz", hash = "sha256:fda29893a304e257f99ff5e632c49dbd932ef8ca3a749a1f70b6287d5eda5f66"},
 ]
 black = [
     {file = "black-21.8b0-py3-none-any.whl", hash = "sha256:2a0f9a8c2b2a60dbcf1ccb058842fb22bdbbcb2f32c6cc02d9578f90b92ce8b7"},
@@ -1315,8 +1315,8 @@ soupsieve = [
     {file = "soupsieve-2.2.1.tar.gz", hash = "sha256:052774848f448cf19c7e959adf5566904d525f33a3f8b6ba6f6f8f26ec7de0cc"},
 ]
 tokenstream = [
-    {file = "tokenstream-0.7.5-py3-none-any.whl", hash = "sha256:ddba116c816d50b97c9236da5bee699f3044d9649e52c2c6e73ff43f4de67574"},
-    {file = "tokenstream-0.7.5.tar.gz", hash = "sha256:892d8a55d9612d7b3540ee6f4733e89c84454801ae528aa5fb6107170964c90d"},
+    {file = "tokenstream-1.0.1-py3-none-any.whl", hash = "sha256:7464300fb8835986232a93e38579b3b85cf92201b1c24fbea094f624c356f219"},
+    {file = "tokenstream-1.0.1.tar.gz", hash = "sha256:fefd356436f69c66095800e8fa59431438e53b503c81b6010f47a61b2ee409f6"},
 ]
 toml = [
     {file = "toml-0.10.2-py2.py3-none-any.whl", hash = "sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b"},

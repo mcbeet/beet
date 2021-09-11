@@ -4,63 +4,63 @@ __all__ = [
     "get_stream_scope",
     "get_stream_properties",
     "delegate",
+    "QuoteHelper",
     "parse_root",
     "parse_command",
     "parse_argument",
     "parse_bool",
     "NumericParser",
-    "StringParser",
     "CoordinateParser",
+    "IntegerConstraint",
+    "MinMaxConstraint",
+    "RestrictCoordinateConstraint",
+    "StringParser",
+    "parse_string_argument",
     "Vector2Parser",
     "Vector3Parser",
     "JsonParser",
     "NbtParser",
-    "parse_compound_tag",
-    "parse_adjacent_nbt",
+    "NbtCompoundConstraint",
+    "AdjacentConstraint",
     "ResourceLocationParser",
+    "NoTagConstraint",
     "BlockParser",
     "ItemParser",
-    "LiteralStringParser",
+    "NoBlockStatesConstraint",
+    "NoDataTagsConstraint",
+    "ValueParser",
+    "ValueConstraint",
     "RangeParser",
-    "parse_objective",
-    "parse_player_name",
+    "LengthConstraint",
     "parse_swizzle",
-    "parse_team",
     "TimeParser",
     "parse_uuid",
     "SelectorParser",
+    "SelectorArgumentParser",
+    "SelectorArgumentInvertConstraint",
     "parse_selector_scores",
     "parse_selector_advancements",
-    "parse_entity",
-    "parse_score_holder",
+    "SelectorPlayerConstraint",
+    "SelectorTypeConstraint",
+    "SelectorSingleConstraint",
+    "SelectorAmountConstraint",
+    "EntityParser",
+    "ScoreHolderParser",
     "parse_message",
     "NbtPathParser",
-    "INTEGER_PATTERN",
-    "FLOAT_PATTERN",
-    "CHAT_COLORS",
+    "NUMBER_PATTERN",
 ]
 
 
 import re
 from dataclasses import dataclass, field
 from functools import partial
-from typing import (
-    Any,
-    Dict,
-    Generic,
-    Iterator,
-    List,
-    Optional,
-    Tuple,
-    Type,
-    TypeVar,
-    overload,
-)
+from typing import Any, Dict, Iterator, List, Literal, Optional, Tuple, Type, overload
 from uuid import UUID
 
 # pyright: reportMissingTypeStubs=false
 from nbtlib import Byte, Double, Float, Int, Long, OutOfRange, Short, String
-from tokenstream import InvalidSyntax, SourceLocation, Token, TokenStream
+from tokenstream import InvalidSyntax, SourceLocation, Token, TokenStream, set_location
 
 from .ast import (
     AstBlock,
@@ -98,158 +98,193 @@ from .ast import (
     AstVector3,
 )
 from .error import InvalidEscapeSequence, UnrecognizedParser
-from .spec import CommandSpecification, Parser
+from .spec import CommandSpec, Parser
 
-NumericType = TypeVar("NumericType", float, int)
-
-
-INTEGER_PATTERN: str = r"-?\d+"
-FLOAT_PATTERN: str = r"-?(?:\d+\.?\d*|\.\d+)"
+NUMBER_PATTERN: str = r"-?(?:\d+\.?\d*|\.\d+)"
 
 
-CHAT_COLORS: List[str] = [
-    "black",
-    "dark_blue",
-    "dark_green",
-    "dark_aqua",
-    "dark_red",
-    "dark_purple",
-    "gold",
-    "gray",
-    "dark_gray",
-    "blue",
-    "green",
-    "aqua",
-    "red",
-    "light_purple",
-    "yellow",
-    "white",
-]
-
-
-# TODO: Move validation that doesn't break parsing into a separate pass
 # TODO: Handle the extended syntax by default and validate vanilla compatibility in a separate pass
 
 
 def get_default_parsers() -> Dict[str, Parser]:
     """Return the default parsers."""
     return {
-        "root": parse_root,
-        "command": parse_command,
-        "argument": parse_argument,
+        ################################################################################
+        # Primitives
+        ################################################################################
+        "literal": ValueParser(name="literal"),
+        "bool": parse_bool,
+        "numeric": NumericParser(),
+        "integer": IntegerConstraint(delegate("numeric")),
+        "coordinate": CoordinateParser(),
+        "integer_coordinate": IntegerConstraint(delegate("coordinate")),
+        "time": TimeParser(),
+        "word": StringParser(type="word"),
+        "phrase": StringParser(type="phrase"),
+        "greedy": StringParser(type="greedy"),
         "json": JsonParser(),
         "nbt": NbtParser(),
+        "nbt_compound": NbtCompoundConstraint(delegate("nbt")),
+        "adjacent_nbt_compound": AdjacentConstraint(
+            parser=delegate("nbt_compound"),
+            hint=r"\{",
+        ),
+        "nbt_path": NbtPathParser(),
+        "range": RangeParser(type=float),
+        "integer_range": RangeParser(type=int),
+        "resource_location_or_tag": ResourceLocationParser(),
+        "resource_location": NoTagConstraint(delegate("resource_location_or_tag")),
+        "uuid": parse_uuid,
+        "objective": LengthConstraint(
+            parser=ValueParser("objective", r"[a-zA-Z0-9_.+-]+|\*"),
+            limit=16,
+        ),
+        "player_name": LengthConstraint(
+            parser=ValueParser("player_name", r"[a-zA-Z0-9_.+-]+"),
+            limit=16,
+        ),
+        "swizzle": parse_swizzle,
+        "team": ValueParser("team", r"[a-zA-Z0-9_.+-]+"),
+        ################################################################################
+        # Selector
+        ################################################################################
         "selector": SelectorParser(),
-        "selector:argument:x": delegate("brigadier:double"),
-        "selector:argument:y": delegate("brigadier:double"),
-        "selector:argument:z": delegate("brigadier:double"),
-        "selector:argument:distance": delegate("minecraft:float_range"),
-        "selector:argument:dx": delegate("brigadier:double"),
-        "selector:argument:dy": delegate("brigadier:double"),
-        "selector:argument:dz": delegate("brigadier:double"),
+        "selector:argument": SelectorArgumentInvertConstraint(
+            SelectorArgumentParser(),
+            allow_invert=[
+                "tag",
+                "team",
+                "gamemode",
+                "name",
+                "type",
+                "nbt",
+                "predicate",
+            ],
+        ),
+        "selector:argument:x": delegate("numeric"),
+        "selector:argument:y": delegate("numeric"),
+        "selector:argument:z": delegate("numeric"),
+        "selector:argument:distance": delegate("range"),
+        "selector:argument:dx": delegate("numeric"),
+        "selector:argument:dy": delegate("numeric"),
+        "selector:argument:dz": delegate("numeric"),
         "selector:argument:scores": parse_selector_scores,
-        "selector:argument:tag": StringParser(type="word"),
-        "selector:argument:team": StringParser(type="word"),
-        "selector:argument:limit": delegate("brigadier:integer"),
-        "selector:argument:sort": LiteralStringParser(
-            [
+        "selector:argument:tag": delegate("word"),
+        "selector:argument:team": delegate("word"),
+        "selector:argument:limit": delegate("integer"),
+        "selector:argument:sort": ValueConstraint(
+            parser=delegate("word"),
+            values=[
                 "nearest",
                 "furthest",
                 "random",
                 "arbitrary",
             ],
         ),
-        "selector:argument:level": delegate("minecraft:int_range"),
-        "selector:argument:gamemode": LiteralStringParser(
-            [
+        "selector:argument:level": delegate("integer_range"),
+        "selector:argument:gamemode": ValueConstraint(
+            parser=delegate("word"),
+            values=[
                 "adventure",
                 "creative",
                 "spectator",
                 "survival",
             ],
         ),
-        "selector:argument:name": StringParser(type="phrase"),
-        "selector:argument:x_rotation": delegate("minecraft:float_range"),
-        "selector:argument:y_rotation": delegate("minecraft:float_range"),
-        "selector:argument:type": ResourceLocationParser(),
-        "selector:argument:nbt": delegate("minecraft:nbt_compound_tag"),
+        "selector:argument:name": delegate("phrase"),
+        "selector:argument:x_rotation": delegate("range"),
+        "selector:argument:y_rotation": delegate("range"),
+        "selector:argument:type": delegate("resource_location_or_tag"),
+        "selector:argument:nbt": delegate("nbt_compound"),
         "selector:argument:advancements": parse_selector_advancements,
-        "selector:argument:predicate": delegate("minecraft:resource_location"),
-        "brigadier:bool": parse_bool,
-        "brigadier:double": NumericParser[float](
-            type=float,
-            name="double",
-            pattern=FLOAT_PATTERN,
-            min=-1.7976931348623157e308,
-            max=1.7976931348623157e308,
+        "selector:argument:predicate": delegate("resource_location"),
+        ################################################################################
+        # Command
+        ################################################################################
+        "root": parse_root,
+        "command": parse_command,
+        "command:argument": parse_argument,
+        "command:argument:brigadier:bool": delegate("bool"),
+        "command:argument:brigadier:double": MinMaxConstraint(delegate("numeric")),
+        "command:argument:brigadier:float": MinMaxConstraint(delegate("numeric")),
+        "command:argument:brigadier:integer": MinMaxConstraint(delegate("integer")),
+        "command:argument:brigadier:long": MinMaxConstraint(delegate("integer")),
+        "command:argument:brigadier:string": parse_string_argument,
+        "command:argument:minecraft:angle": RestrictCoordinateConstraint(
+            parser=delegate("coordinate"),
+            disallow=["local"],
         ),
-        "brigadier:float": NumericParser[float](
-            type=float,
-            name="float",
-            pattern=FLOAT_PATTERN,
-            min=-3.4028234663852886e38,
-            max=3.4028234663852886e38,
+        "command:argument:minecraft:block_pos": Vector3Parser(delegate("coordinate")),
+        "command:argument:minecraft:block_predicate": BlockParser(
+            resource_location_parser=delegate("resource_location_or_tag"),
         ),
-        "brigadier:integer": NumericParser[int](
-            type=int,
-            name="integer",
-            pattern=INTEGER_PATTERN,
-            min=-2147483648,
-            max=2147483647,
+        "command:argument:minecraft:block_state": BlockParser(
+            resource_location_parser=delegate("resource_location"),
         ),
-        "brigadier:long": NumericParser[int](
-            type=int,
-            name="long",
-            pattern=INTEGER_PATTERN,
-            min=-9223372036854775808,
-            max=9223372036854775807,
+        "command:argument:minecraft:color": ValueConstraint(
+            parser=delegate("word"),
+            values=[
+                "reset",
+                "black",
+                "dark_blue",
+                "dark_green",
+                "dark_aqua",
+                "dark_red",
+                "dark_purple",
+                "gold",
+                "gray",
+                "dark_gray",
+                "blue",
+                "green",
+                "aqua",
+                "red",
+                "light_purple",
+                "yellow",
+                "white",
+            ],
         ),
-        "brigadier:string": StringParser(),
-        "minecraft:angle": CoordinateParser[float](
-            type=float,
-            name="angle",
-            min=-180.0,
-            max=180.0,
-            allow_local=False,
-        ),
-        "minecraft:block_pos": Vector3Parser[float](
-            coordinate_parser=CoordinateParser[float](type=float),
-        ),
-        "minecraft:block_predicate": BlockParser(),
-        "minecraft:block_state": BlockParser(
-            resource_location_parser=ResourceLocationParser(allow_tag=False),
-        ),
-        "minecraft:color": LiteralStringParser(["reset"] + CHAT_COLORS),
-        "minecraft:column_pos": Vector2Parser[int](
-            coordinate_parser=CoordinateParser[int](
-                type=int,
-                allow_local=False,
+        "command:argument:minecraft:column_pos": Vector2Parser(
+            coordinate_parser=RestrictCoordinateConstraint(
+                parser=delegate("integer_coordinate"),
+                disallow=["local"],
             ),
         ),
-        "minecraft:component": delegate("json"),
-        "minecraft:dimension": delegate("minecraft:resource_location"),
-        "minecraft:entity": parse_entity,
-        "minecraft:entity_anchor": LiteralStringParser(["eyes", "feet"]),
-        "minecraft:entity_summon": delegate("minecraft:resource_location"),
-        "minecraft:float_range": RangeParser[float](type=float),
-        "minecraft:function": ResourceLocationParser(),
-        "minecraft:game_profile": delegate("minecraft:entity"),
-        "minecraft:int_range": RangeParser[int](type=int),
-        "minecraft:item_enchantment": StringParser(type="word"),
-        "minecraft:item_predicate": ItemParser(),
-        "minecraft:item_slot": StringParser(type="word"),
-        "minecraft:item_stack": ItemParser(
-            resource_location_parser=ResourceLocationParser(allow_tag=False),
+        "command:argument:minecraft:component": delegate("json"),
+        "command:argument:minecraft:dimension": delegate("resource_location"),
+        "command:argument:minecraft:entity": EntityParser(
+            selector_parser=SelectorTypeConstraint(
+                SelectorAmountConstraint(delegate("selector"))
+            ),
         ),
-        "minecraft:message": parse_message,
-        "minecraft:mob_effect": delegate("minecraft:resource_location"),
-        "minecraft:nbt_compound_tag": parse_compound_tag,
-        "minecraft:nbt_path": NbtPathParser(),
-        "minecraft:nbt_tag": delegate("nbt"),
-        "minecraft:objective": parse_objective,
-        "minecraft:objective_criteria": ResourceLocationParser(allow_tag=False),
-        "minecraft:operation": LiteralStringParser(
-            [
+        "command:argument:minecraft:entity_anchor": ValueConstraint(
+            parser=delegate("word"),
+            values=["eyes", "feet"],
+        ),
+        "command:argument:minecraft:entity_summon": delegate("resource_location"),
+        "command:argument:minecraft:float_range": delegate("range"),
+        "command:argument:minecraft:function": delegate("resource_location_or_tag"),
+        "command:argument:minecraft:game_profile": EntityParser(
+            selector_parser=SelectorPlayerConstraint(delegate("selector")),
+        ),
+        "command:argument:minecraft:int_range": delegate("integer_range"),
+        "command:argument:minecraft:item_enchantment": delegate("word"),
+        "command:argument:minecraft:item_predicate": ItemParser(
+            resource_location_parser=delegate("resource_location_or_tag"),
+        ),
+        "command:argument:minecraft:item_slot": delegate("word"),
+        "command:argument:minecraft:item_stack": ItemParser(
+            resource_location_parser=delegate("resource_location"),
+        ),
+        "command:argument:minecraft:message": parse_message,
+        "command:argument:minecraft:mob_effect": delegate("resource_location"),
+        "command:argument:minecraft:nbt_compound_tag": delegate("nbt_compound"),
+        "command:argument:minecraft:nbt_path": delegate("nbt_path"),
+        "command:argument:minecraft:nbt_tag": delegate("nbt"),
+        "command:argument:minecraft:objective": delegate("objective"),
+        "command:argument:minecraft:objective_criteria": delegate("resource_location"),
+        "command:argument:minecraft:operation": ValueConstraint(
+            parser=delegate("literal"),
+            values=[
                 "+=",
                 "-=",
                 "*=",
@@ -260,35 +295,35 @@ def get_default_parsers() -> Dict[str, Parser]:
                 ">",
                 "><",
             ],
-            r"\S+",
         ),
         # TODO: "minecraft:particle"
-        "minecraft:resource_location": ResourceLocationParser(allow_tag=False),
-        "minecraft:rotation": Vector2Parser[float](
-            coordinate_parser=CoordinateParser[float](
-                type=float,
-                name="angle",
-                min=-180.0,
-                max=180.0,
-                allow_local=False,
-            )
+        "command:argument:minecraft:resource_location": delegate("resource_location"),
+        "command:argument:minecraft:rotation": Vector2Parser(
+            coordinate_parser=RestrictCoordinateConstraint(
+                parser=delegate("coordinate"),
+                disallow=["local"],
+            ),
         ),
-        "minecraft:score_holder": parse_score_holder,
-        "minecraft:scoreboard_slot": StringParser(type="word"),
-        "minecraft:swizzle": parse_swizzle,
-        "minecraft:team": parse_team,
-        "minecraft:time": TimeParser(),
-        "minecraft:uuid": parse_uuid,
-        "minecraft:vec2": Vector2Parser(
-            coordinate_parser=CoordinateParser[float](type=float),
+        "command:argument:minecraft:score_holder": ScoreHolderParser(
+            entity_parser=EntityParser(
+                selector_parser=SelectorAmountConstraint(delegate("selector")),
+            ),
         ),
-        "minecraft:vec3": Vector3Parser(
-            coordinate_parser=CoordinateParser[float](type=float),
+        "command:argument:minecraft:scoreboard_slot": delegate("word"),
+        "command:argument:minecraft:swizzle": delegate("swizzle"),
+        "command:argument:minecraft:team": delegate("team"),
+        "command:argument:minecraft:time": delegate("time"),
+        "command:argument:minecraft:uuid": delegate("uuid"),
+        "command:argument:minecraft:vec2": Vector2Parser(
+            coordinate_parser=delegate("coordinate"),
+        ),
+        "command:argument:minecraft:vec3": Vector3Parser(
+            coordinate_parser=delegate("coordinate"),
         ),
     }
 
 
-def get_stream_spec(stream: TokenStream) -> CommandSpecification:
+def get_stream_spec(stream: TokenStream) -> CommandSpec:
     """Return the command specification associated with the token stream."""
     return stream.data["spec"]
 
@@ -327,14 +362,16 @@ def delegate(parser: str, stream: Optional[TokenStream] = None) -> Any:
 
 
 @dataclass
-class QuotedStringHandler:
-    """Class responsible for removing quotes and interpreting escape sequences."""
+class QuoteHelper:
+    """Helper for removing quotes and interpreting escape sequences."""
 
     escape_regex: "re.Pattern[str]" = field(default_factory=lambda: re.compile(r"\\."))
     escape_sequences: Dict[str, str] = field(default_factory=dict)
 
     def unquote_string(self, token: Token) -> str:
         """Remove quotes and substitute escaped characters."""
+        if not token.value.startswith(('"', "'")):
+            return token.value
         try:
             return self.escape_regex.sub(
                 lambda match: self.handle_substitution(token, match),
@@ -342,14 +379,9 @@ class QuotedStringHandler:
             )
         except InvalidEscapeSequence as exc:
             location = token.location.with_horizontal_offset(exc.index + 1)
-            raise (
-                InvalidSyntax(
-                    f"Invalid escape sequence {exc.characters!r}."
-                ).set_location(
-                    location,
-                    location.with_horizontal_offset(len(exc.characters)),
-                )
-            )
+            end_location = location.with_horizontal_offset(len(exc.characters))
+            exc = InvalidSyntax(f"Invalid escape sequence {exc.characters!r}.")
+            raise set_location(exc, location, end_location)
 
     def handle_substitution(self, token: Token, match: "re.Match[str]") -> str:
         """Handle escaped character sequence."""
@@ -370,12 +402,8 @@ def parse_root(stream: TokenStream) -> AstRoot:
         start = stream.peek()
 
         if not start:
-            return AstRoot(
-                filename=None,
-                commands=AstChildren(),
-                location=SourceLocation(0, 1, 1),
-                end_location=SourceLocation(0, 1, 1),
-            )
+            node = AstRoot(filename=None, commands=AstChildren())
+            return set_location(node, SourceLocation(0, 1, 1))
 
         commands: List[AstCommand] = []
 
@@ -385,12 +413,8 @@ def parse_root(stream: TokenStream) -> AstRoot:
             if stream.peek():
                 commands.append(delegate("command", stream))
 
-        return AstRoot(
-            filename=None,
-            commands=AstChildren(commands),
-            location=start.location,
-            end_location=stream.current.end_location,
-        )
+        node = AstRoot(filename=None, commands=AstChildren(commands))
+        return set_location(node, start, stream.current)
 
 
 def parse_command(stream: TokenStream) -> AstCommand:
@@ -413,7 +437,7 @@ def parse_command(stream: TokenStream) -> AstCommand:
                     end_location = token.end_location
 
                 elif child.type == "argument":
-                    node = delegate("argument", stream)
+                    node = delegate("command:argument", stream)
                     arguments.append(node)
                     end_location = node.end_location
 
@@ -435,12 +459,8 @@ def parse_command(stream: TokenStream) -> AstCommand:
                 scope += ("subcommand",)
                 break
 
-    return AstCommand(
-        identifier=":".join(scope),
-        arguments=AstChildren(arguments),
-        location=location,
-        end_location=end_location,
-    )
+    node = AstCommand(identifier=":".join(scope), arguments=AstChildren(arguments))
+    return set_location(node, location, end_location)
 
 
 def parse_argument(stream: TokenStream) -> AstNode:
@@ -451,7 +471,7 @@ def parse_argument(stream: TokenStream) -> AstNode:
 
     if tree and tree.parser:
         with stream.provide(properties=tree.properties or {}):
-            return delegate(tree.parser, stream)
+            return delegate(f"command:argument:{tree.parser}", stream)
 
     raise ValueError(f"Missing argument parser in command tree {scope}.")
 
@@ -460,71 +480,121 @@ def parse_bool(stream: TokenStream) -> AstValue[bool]:
     """Parse bool."""
     with stream.syntax(literal=r"\w+"):
         token = stream.expect_any(("literal", "true"), ("literal", "false"))
-
-    return AstValue[bool](
-        value=token.value == "true",
-        location=token.location,
-        end_location=token.end_location,
-    )
+    node = AstValue[bool](value=token.value == "true")
+    return set_location(node, token)
 
 
 @dataclass
-class NumericParser(Generic[NumericType]):
+class NumericParser:
     """Parser for numeric values."""
 
-    type: Type[NumericType]
-    name: str
-    pattern: str
-    min: Optional[NumericType] = None
-    max: Optional[NumericType] = None
+    name: str = "number"
+    pattern: str = NUMBER_PATTERN
 
-    def __call__(self, stream: TokenStream) -> AstValue[NumericType]:
-        properties = get_stream_properties(stream)
-
+    def __call__(self, stream: TokenStream) -> Any:
         with stream.syntax(**{self.name: self.pattern}):
-            token = stream.expect(self.name)
+            stream.expect(self.name)
+        return self.create_node(stream)
 
-        node = self.create_node(stream)
+    def create_node(self, stream: TokenStream) -> Any:
+        """Create the ast node."""
+        token = stream.current
+        node = AstValue[float](
+            value=float(token.value) if "." in token.value else int(token.value),
+        )
+        return set_location(node, token)
 
-        minimum = properties.get("min", self.min)
-        maximum = properties.get("max", self.max)
 
-        if minimum is not None and node.value < minimum:
-            raise token.emit_error(
-                InvalidSyntax(f"Expected value to be at least {minimum}.")
-            )
-        if maximum is not None and node.value > maximum:
-            raise token.emit_error(
-                InvalidSyntax(f"Expected value to be at most {maximum}.")
-            )
+@dataclass
+class CoordinateParser(NumericParser):
+    """Parser for coordinates."""
+
+    name: str = "coordinate"
+    pattern: str = r"[~^]?" + NUMBER_PATTERN + r"|[~^]"
+
+    def create_node(self, stream: TokenStream) -> Any:
+        token = stream.current
+        value = token.value
+
+        if token.value.startswith("~"):
+            coordinate_type = "relative"
+            value = value[1:]
+        elif token.value.startswith("^"):
+            coordinate_type = "local"
+            value = value[1:]
+        else:
+            coordinate_type = "absolute"
+
+        if not value:
+            value = "0"
+
+        value = float(value) if "." in value else int(value)
+
+        node = AstCoordinate(type=coordinate_type, value=value)
+        return set_location(node, token)
+
+
+@dataclass
+class IntegerConstraint:
+    """Constraint that disallows decimal numeric values."""
+
+    parser: Parser
+
+    def __call__(self, stream: TokenStream) -> Any:
+        node: AstValue[Any] = self.parser(stream)
+
+        if not isinstance(node.value, int):
+            raise node.emit_error(InvalidSyntax("Expected integer value."))
 
         return node
 
-    def create_node(self, stream: TokenStream) -> AstValue[NumericType]:
-        """Create the ast node."""
-        token = stream.current
-        value = self.type(token.value)
 
-        return AstValue[NumericType](
-            value=value,
-            location=token.location,
-            end_location=token.end_location,
-        )
+@dataclass
+class MinMaxConstraint:
+    """Constraint that checks that the value conforms to the min and max properties."""
+
+    parser: Parser
+
+    def __call__(self, stream: TokenStream) -> Any:
+        properties = get_stream_properties(stream)
+        node: AstValue[float] = self.parser(stream)
+
+        if "min" in properties and node.value < properties["min"]:
+            exc = InvalidSyntax(f"Expected value to be at least {properties['min']}.")
+            raise node.emit_error(exc)
+        if "max" in properties and node.value > properties["max"]:
+            exc = InvalidSyntax(f"Expected value to be at most {properties['max']}.")
+            raise node.emit_error(exc)
+
+        return node
+
+
+@dataclass
+class RestrictCoordinateConstraint:
+    """Constraint that disallows certain types of coordinates."""
+
+    parser: Parser
+    disallow: List[Literal["absolute", "relative", "local"]]
+
+    def __call__(self, stream: TokenStream) -> Any:
+        node: AstCoordinate = self.parser(stream)
+
+        if node.type in self.disallow:
+            exc = InvalidSyntax(f"Specifying {node.type} coordinates not allowed.")
+            raise node.emit_error(exc)
+
+        return node
 
 
 @dataclass
 class StringParser:
     """Parser for string values."""
 
-    type: Optional[str] = None
-    quoted_string_handler: QuotedStringHandler = field(
-        default_factory=QuotedStringHandler
-    )
+    type: Literal["word", "phrase", "greedy"]
+    quote_helper: QuoteHelper = field(default_factory=QuoteHelper)
 
     def __call__(self, stream: TokenStream) -> AstValue[str]:
-        string_type = self.type or get_stream_properties(stream)["type"]
-
-        if string_type == "greedy":
+        if self.type == "greedy":
             with stream.intercept("whitespace"):
                 while stream.get("whitespace"):
                     continue
@@ -535,109 +605,61 @@ class StringParser:
                 word=r"[0-9A-Za-z_\.\+\-]+",
                 quoted_string=r'"(?:\\.|[^\\\n])*?"' "|" r"'(?:\\.|[^\\\n])*?'",
             ):
-                if string_type == "word":
+                if self.type == "word":
                     token = stream.expect("word")
-                elif string_type == "phrase":
-                    token = stream.expect_any("word", "quoted_string")
                 else:
-                    raise ValueError(f"Invalid string type {string_type!r}.")
+                    token = stream.expect_any("word", "quoted_string")
 
-        return AstValue[str](
-            value=(
-                self.quoted_string_handler.unquote_string(token)
-                if token.match("quoted_string")
-                else token.value
-            ),
-            location=token.location,
-            end_location=token.end_location,
-        )
+        node = AstValue[str](value=self.quote_helper.unquote_string(token))
+        return set_location(node, token)
 
 
-@dataclass
-class CoordinateParser(NumericParser[NumericType]):
-    """Parser for coordinates."""
+def parse_string_argument(stream: TokenStream) -> AstValue[str]:
+    """Parse string argument."""
+    properties = get_stream_properties(stream)
+    string_type = properties["type"]
 
-    name: str = "coordinate"
-    pattern: str = r"[~^]?" + FLOAT_PATTERN + r"|[~^]"
-    allow_absolute: bool = True
-    allow_relative: bool = True
-    allow_local: bool = True
+    if string_type not in ["word", "phrase", "greedy"]:
+        raise ValueError(f"Invalid string type {string_type!r}.")
 
-    def create_node(self, stream: TokenStream) -> AstCoordinate[NumericType]:  # type: ignore
-        token = stream.current
-
-        if issubclass(self.type, int) and "." in token.value:
-            raise token.emit_error(InvalidSyntax(f"Decimal {self.name} not allowed."))
-
-        value = token.value
-
-        if token.value.startswith("~"):
-            if not self.allow_relative:
-                raise token.emit_error(
-                    InvalidSyntax(f"Relative {self.name} not allowed.")
-                )
-            prefix = "relative"
-            value = value[1:]
-        elif token.value.startswith("^"):
-            if not self.allow_local:
-                raise token.emit_error(InvalidSyntax(f"Local {self.name} not allowed."))
-            prefix = "local"
-            value = value[1:]
-        else:
-            prefix = "absolute"
-
-        return AstCoordinate[NumericType](
-            prefix=prefix,
-            value=self.type(value or "0"),
-            location=token.location,
-            end_location=token.end_location,
-        )
+    return delegate(string_type, stream)
 
 
 @dataclass
-class Vector2Parser(Generic[NumericType]):
+class Vector2Parser:
     """Parser for vector2."""
 
     coordinate_parser: Parser
 
-    def __call__(self, stream: TokenStream) -> AstVector2[NumericType]:
+    def __call__(self, stream: TokenStream) -> AstVector2:
         x = self.coordinate_parser(stream)
         y = self.coordinate_parser(stream)
 
-        return AstVector2[NumericType](
-            x=x,
-            y=y,
-            location=x.location,
-            end_location=y.end_location,
-        )
+        node = AstVector2(x=x, y=y)
+        return set_location(node, x, y)
 
 
 @dataclass
-class Vector3Parser(Generic[NumericType]):
+class Vector3Parser:
     """Parser for vector3."""
 
     coordinate_parser: Parser
 
-    def __call__(self, stream: TokenStream) -> AstVector3[NumericType]:
+    def __call__(self, stream: TokenStream) -> AstVector3:
         x = self.coordinate_parser(stream)
         y = self.coordinate_parser(stream)
         z = self.coordinate_parser(stream)
 
-        return AstVector3[NumericType](
-            x=x,
-            y=y,
-            z=z,
-            location=x.location,
-            end_location=z.end_location,
-        )
+        node = AstVector3(x=x, y=y, z=z)
+        return set_location(node, x, z)
 
 
 @dataclass
 class JsonParser:
     """Parser for json values."""
 
-    quoted_string_handler: QuotedStringHandler = field(
-        default_factory=lambda: QuotedStringHandler(
+    quote_helper: QuoteHelper = field(
+        default_factory=lambda: QuoteHelper(
             escape_sequences={
                 r"\\": "\\",
                 r"\f": "\f",
@@ -653,7 +675,7 @@ class JsonParser:
             curly=r"\{|\}",
             bracket=r"\[|\]",
             string=r'"(?:\\.|[^\\\n])*?"',
-            number=r"-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?",
+            number=r"-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?\b",
             colon=r":",
             comma=r",",
             literal=r"\w+",
@@ -672,50 +694,38 @@ class JsonParser:
                 entries: List[AstJsonObjectEntry] = []
 
                 for key in stream.collect("string"):
-                    stream.expect("colon")
-                    value = self(stream)
-                    entries.append(
-                        AstJsonObjectEntry(
-                            key=AstValue[str](
-                                value=self.quoted_string_handler.unquote_string(key),
-                                location=key.location,
-                                end_location=key.end_location,
-                            ),
-                            value=value,
-                            location=key.location,
-                            end_location=value.end_location,
-                        )
+                    key_node = AstValue[str](
+                        value=self.quote_helper.unquote_string(key),
                     )
+                    key_node = set_location(key_node, key)
+
+                    stream.expect("colon")
+
+                    value_node = self(stream)
+
+                    entry_node = AstJsonObjectEntry(key=key_node, value=value_node)
+                    entries.append(set_location(entry_node, key_node, value_node))
 
                     if not stream.get("comma"):
                         break
 
                 close_curly = stream.expect(("curly", "}"))
 
-                return AstJsonObject(
-                    entries=AstChildren(entries),
-                    location=curly.location,
-                    end_location=close_curly.end_location,
-                )
+                node = AstJsonObject(entries=AstChildren(entries))
+                return set_location(node, curly, close_curly)
 
             elif bracket:
                 elements: List[AstJson] = []
 
-                close_bracket = stream.get(("bracket", "]"))
-
-                if not close_bracket:
+                for _ in stream.peek_until(("bracket", "]")):
                     elements.append(self(stream))
 
-                    for _ in stream.collect("comma"):
-                        elements.append(self(stream))
+                    if not stream.get("comma"):
+                        stream.expect(("bracket", "]"))
+                        break
 
-                    close_bracket = stream.expect(("bracket", "]"))
-
-                return AstJsonArray(
-                    elements=AstChildren(elements),
-                    location=bracket.location,
-                    end_location=close_bracket.end_location,
-                )
+                node = AstJsonArray(elements=AstChildren(elements))
+                return set_location(node, bracket, stream.current)
 
             if null:
                 value = None
@@ -724,15 +734,12 @@ class JsonParser:
             elif false:
                 value = False
             elif string:
-                value = self.quoted_string_handler.unquote_string(string)
+                value = self.quote_helper.unquote_string(string)
             elif number:
                 value = float(number.value)
 
-            return AstJsonValue(
-                value=value,  # type: ignore
-                location=stream.current.location,
-                end_location=stream.current.end_location,
-            )
+            node = AstJsonValue(value=value)  # type: ignore
+            return set_location(node, stream.current)
 
 
 @dataclass
@@ -756,8 +763,8 @@ class NbtParser:
         }
     )
 
-    quoted_string_handler: QuotedStringHandler = field(
-        default_factory=lambda: QuotedStringHandler(
+    quote_helper: QuoteHelper = field(
+        default_factory=lambda: QuoteHelper(
             escape_sequences={
                 r"\\": "\\",
             }
@@ -769,7 +776,7 @@ class NbtParser:
             curly=r"\{|\}",
             bracket=r"\[|\]",
             quoted_string=r'"(?:\\.|[^\\\n])*?"' "|" r"'(?:\\.|[^\\\n])*?'",
-            number=r"[+-]?(?:[0-9]*?\.[0-9]+|[0-9]+\.[0-9]*?|[1-9][0-9]*|0)([eE][+-]?[0-9]+)?[bslfdBSLFD]?(?![a-zA-Z0-9._+-])",
+            number=r"[+-]?(?:[0-9]*?\.[0-9]+|[0-9]+\.[0-9]*?|[1-9][0-9]*|0)(?:[eE][+-]?[0-9]+)?[bslfdBSLFD]?\b",
             string=r"[a-zA-Z0-9._+-]+",
             colon=r":",
             comma=r",",
@@ -786,35 +793,25 @@ class NbtParser:
                 entries: List[AstNbtCompoundEntry] = []
 
                 for key in stream.collect_any("number", "string", "quoted_string"):
-                    stream.expect("colon")
-                    value = self(stream)
-                    entries.append(
-                        AstNbtCompoundEntry(
-                            key=AstValue[str](
-                                value=(
-                                    self.quoted_string_handler.unquote_string(key)
-                                    if key.match("quoted_string")
-                                    else key.value
-                                ),
-                                location=key.location,
-                                end_location=key.end_location,
-                            ),
-                            value=value,
-                            location=key.location,
-                            end_location=value.end_location,
-                        )
+                    key_node = AstValue[str](
+                        value=self.quote_helper.unquote_string(key),
                     )
+                    key_node = set_location(key_node, key)
+
+                    stream.expect("colon")
+
+                    value_node = self(stream)
+
+                    entry_node = AstNbtCompoundEntry(key=key_node, value=value_node)
+                    entries.append(set_location(entry_node, key_node, value_node))
 
                     if not stream.get("comma"):
                         break
 
                 close_curly = stream.expect(("curly", "}"))
 
-                return AstNbtCompound(
-                    entries=AstChildren(entries),
-                    location=curly.location,
-                    end_location=close_curly.end_location,
-                )
+                node = AstNbtCompound(entries=AstChildren(entries))
+                return set_location(node, curly, close_curly)
 
             elif bracket:
                 elements: List[AstNbt] = []
@@ -826,25 +823,8 @@ class NbtParser:
                         stream.expect(("bracket", "]"))
                         break
 
-                for element in elements[1:]:
-                    node_type = type(elements[0])
-                    if (
-                        type(element) != node_type
-                        or isinstance(element, AstNbtValue)
-                        and type(element.get_value()) != type(elements[0].get_value())
-                    ):
-                        raise InvalidSyntax(
-                            "All the elements should have the same type."
-                        ).set_location(
-                            location=elements[0].location,
-                            end_location=elements[-1].end_location,
-                        )
-
-                return AstNbtList(
-                    elements=AstChildren(elements),
-                    location=bracket.location,
-                    end_location=stream.current.end_location,
-                )
+                node = AstNbtList(elements=AstChildren(elements))
+                return set_location(node, bracket, stream.current)
 
             if number:
                 suffix = number.value[-1].lower()
@@ -870,40 +850,47 @@ class NbtParser:
                     value = String(string.value)  # type: ignore
 
             elif quoted_string:
-                value = String(self.quoted_string_handler.unquote_string(quoted_string))  # type: ignore
+                value = String(self.quote_helper.unquote_string(quoted_string))  # type: ignore
 
-            return AstNbtValue(
-                value=value,  # type: ignore
-                location=stream.current.location,
-                end_location=stream.current.end_location,
-            )
+            # TODO: Arrays
+
+            node = AstNbtValue(value=value)  # type: ignore
+            return set_location(node, stream.current)
 
 
-def parse_compound_tag(stream: TokenStream) -> AstNbtCompound:
-    """Parse compound tag."""
-    node = delegate("nbt", stream)
+@dataclass
+class NbtCompoundConstraint:
+    """Constraint that only allows nbt compound tags."""
 
-    if isinstance(node, AstNbtCompound):
+    parser: Parser
+
+    def __call__(self, stream: TokenStream) -> Any:
+        node = self.parser(stream)
+
+        if not isinstance(node, AstNbtCompound):
+            raise node.emit_error(InvalidSyntax("Expected nbt compound."))
+
         return node
 
-    raise InvalidSyntax("Expected nbt compound tag.").set_location(
-        location=node.location,
-        end_location=node.end_location,
-    )
 
+@dataclass
+class AdjacentConstraint:
+    """Constraint that ensures that there are no whitespace separators."""
 
-def parse_adjacent_nbt(stream: TokenStream) -> Optional[AstNbtCompound]:
-    """Parse adjacent nbt."""
-    with stream.syntax(curly=r"\{|\}"), stream.intercept("whitespace"):
-        found_curly = hint.match(("curly", "{")) if (hint := stream.peek()) else False
-    return parse_compound_tag(stream) if found_curly else None
+    parser: Parser
+    hint: str
+
+    def __call__(self, stream: TokenStream) -> Any:
+        with stream.syntax(hint=self.hint), stream.intercept("whitespace"):
+            token = stream.peek()
+            if not token or not token.match("hint"):
+                return None
+        return self.parser(stream)
 
 
 @dataclass
 class ResourceLocationParser:
     """Parser for resource locations."""
-
-    allow_tag: bool = True
 
     def __call__(self, stream: TokenStream) -> AstResourceLocation:
         with stream.syntax(resource_location=r"#?(?:[0-9a-z_\-\.]+:)?[0-9a-z_./-]+"):
@@ -912,44 +899,53 @@ class ResourceLocationParser:
             location = token.location
 
             if is_tag := value.startswith("#"):
-                if not self.allow_tag:
-                    raise token.emit_error(
-                        InvalidSyntax(f"Reference to tag {token.value!r} not allowed.")
-                    )
                 value = value[1:]
                 location = location.with_horizontal_offset(1)
 
             namespace, _, path = value.rpartition(":")
 
             if namespace:
-                namespace = AstValue[str](
-                    value=namespace,
-                    location=location,
-                    end_location=location.with_horizontal_offset(len(namespace)),
+                namespace_node = AstValue[str](value=namespace)
+                namespace_node = set_location(
+                    namespace_node,
+                    location,
+                    location.with_horizontal_offset(len(namespace)),
                 )
-                location = namespace.end_location.with_horizontal_offset(1)
+                location = namespace_node.end_location.with_horizontal_offset(1)
             else:
-                namespace = None
+                namespace_node = None
 
-            return AstResourceLocation(
+            path_node = AstValue[str](value=path)
+            path_node = set_location(path_node, location, token)
+
+            node = AstResourceLocation(
                 is_tag=is_tag,
-                namespace=namespace,
-                path=AstValue[str](
-                    value=path, location=location, end_location=token.end_location
-                ),
-                location=token.location,
-                end_location=token.end_location,
+                namespace=namespace_node,
+                path=path_node,
             )
+            return set_location(node, token)
+
+
+@dataclass
+class NoTagConstraint:
+    """Constraint that disallows resource locations refering to tags."""
+
+    parser: Parser
+
+    def __call__(self, stream: TokenStream) -> Any:
+        node: AstResourceLocation = self.parser(stream)
+
+        if node.is_tag:
+            raise node.emit_error(InvalidSyntax("Specifying a tag is not allowed."))
+
+        return node
 
 
 @dataclass
 class BlockParser:
     """Parser for minecraft blocks."""
 
-    resource_location_parser: Parser = field(default_factory=ResourceLocationParser)
-
-    allow_block_states: bool = True
-    allow_data_tags: bool = True
+    resource_location_parser: Parser
 
     def __call__(self, stream: TokenStream) -> AstBlock:
         identifier = self.resource_location_parser(stream)
@@ -969,26 +965,19 @@ class BlockParser:
 
             commit()
 
-            for name in stream.collect("state"):
-                stream.expect("equal")
-                value = stream.expect("state")
+            for key in stream.collect("state"):
+                key_node = AstValue[str](value=key.value)
+                key_node = set_location(key_node, key)
 
-                block_states.append(
-                    AstBlockState(
-                        key=AstValue[str](
-                            value=name.value,
-                            location=name.location,
-                            end_location=name.end_location,
-                        ),
-                        value=AstValue[str](
-                            value=value.value,
-                            location=value.location,
-                            end_location=value.end_location,
-                        ),
-                        location=name.location,
-                        end_location=value.end_location,
-                    )
-                )
+                stream.expect("equal")
+
+                value = stream.expect("state")
+                value_node = AstValue[str](value=value.value)
+                value_node = set_location(value_node, value)
+
+                entry_node = AstBlockState(key=key_node, value=value_node)
+                entry_node = set_location(entry_node, key_node, value_node)
+                block_states.append(entry_node)
 
                 if not stream.get("comma"):
                     break
@@ -996,91 +985,101 @@ class BlockParser:
             close_bracket = stream.expect(("bracket", "]"))
             end_location = close_bracket.end_location
 
-        data_tags = parse_adjacent_nbt(stream)
+        data_tags = delegate("adjacent_nbt_compound", stream)
 
-        if block_states and not self.allow_block_states:
-            raise InvalidSyntax("Block states not allowed.").set_location(
-                location=block_states[0].location,
-                end_location=block_states[-1].end_location,
-            )
-
-        if data_tags is not None and not self.allow_data_tags:
-            raise InvalidSyntax("Data tags not allowed.").set_location(
-                location=data_tags.location,
-                end_location=data_tags.end_location,
-            )
-
-        return AstBlock(
+        node = AstBlock(
             identifier=identifier,
             block_states=AstChildren(block_states),
             data_tags=data_tags,
-            location=location,
-            end_location=(
-                data_tags.end_location if data_tags is not None else end_location
-            ),
         )
+        return set_location(node, location, data_tags if data_tags else end_location)
 
 
 @dataclass
 class ItemParser:
     """Parser for minecraft items."""
 
-    resource_location_parser: Parser = field(default_factory=ResourceLocationParser)
-
-    allow_data_tags: bool = True
+    resource_location_parser: Parser
 
     def __call__(self, stream: TokenStream) -> AstItem:
         identifier = self.resource_location_parser(stream)
         location = identifier.location
         end_location = identifier.end_location
 
-        data_tags = parse_adjacent_nbt(stream)
+        data_tags = delegate("adjacent_nbt_compound", stream)
 
-        if data_tags is not None and not self.allow_data_tags:
-            raise InvalidSyntax("Data tags not allowed.").set_location(
-                location=data_tags.location,
-                end_location=data_tags.end_location,
-            )
-
-        return AstItem(
-            identifier=identifier,
-            data_tags=data_tags,
-            location=location,
-            end_location=(
-                data_tags.end_location if data_tags is not None else end_location
-            ),
-        )
+        node = AstItem(identifier=identifier, data_tags=data_tags)
+        return set_location(node, location, data_tags if data_tags else end_location)
 
 
 @dataclass
-class LiteralStringParser:
-    """Parser for literal strings."""
+class NoBlockStatesConstraint:
+    """Constraint that disallows block states."""
 
-    values: List[str]
-    pattern: str = r"\w+"
+    parser: Parser
+
+    def __call__(self, stream: TokenStream) -> Any:
+        node: AstBlock = self.parser(stream)
+
+        if node.block_states:
+            raise node.emit_error(InvalidSyntax("Specifying block states not allowed."))
+
+        return node
+
+
+@dataclass
+class NoDataTagsConstraint:
+    """Constraint that disallows data tags."""
+
+    parser: Parser
+
+    def __call__(self, stream: TokenStream) -> Any:
+        node: AstBlock = self.parser(stream)
+
+        if node.data_tags:
+            raise node.emit_error(InvalidSyntax("Specifying data tags not allowed."))
+
+        return node
+
+
+@dataclass
+class ValueParser:
+    """Parser for simple string values."""
+
+    name: str
+    pattern: str = r"\S+"
 
     def __call__(self, stream: TokenStream) -> AstValue[str]:
-        with stream.syntax(literal=self.pattern):
-            patterns = [("literal", value) for value in self.values]
-            token = stream.expect_any(*patterns)
-
-        return AstValue[str](
-            value=token.value,
-            location=token.location,
-            end_location=token.end_location,
-        )
+        with stream.syntax(**{self.name: self.pattern}):
+            token = stream.expect(self.name)
+        node = AstValue[str](value=token.value)
+        return set_location(node, token)
 
 
 @dataclass
-class RangeParser(Generic[NumericType]):
+class ValueConstraint:
+    """Constraint that only allows a set of predefined values."""
+
+    parser: Parser
+    values: List[Any]
+
+    def __call__(self, stream: TokenStream) -> Any:
+        node: AstValue[str] = self.parser(stream)
+
+        if node.value not in self.values:
+            raise node.emit_error(InvalidSyntax(f"Unexpected value {node.value!r}."))
+
+        return node
+
+
+@dataclass
+class RangeParser:
     """Parser for ranges."""
 
-    type: Type[NumericType]
-    pattern: str = (
-        fr"\.\.{FLOAT_PATTERN}|{FLOAT_PATTERN}\.\.(?:{FLOAT_PATTERN})?|{FLOAT_PATTERN}"
-    )
+    type: Type[Any]
+    pattern: str = fr"\.\.{NUMBER_PATTERN}|{NUMBER_PATTERN}\.\.(?:{NUMBER_PATTERN})?|{NUMBER_PATTERN}"
 
-    def __call__(self, stream: TokenStream) -> AstRange[NumericType]:
+    def __call__(self, stream: TokenStream) -> AstRange:
         with stream.syntax(range=self.pattern):
             token = stream.expect("range")
             minimum, separator, maximum = token.value.partition("..")
@@ -1088,90 +1087,52 @@ class RangeParser(Generic[NumericType]):
             if not separator:
                 maximum = minimum
 
-            if issubclass(self.type, int) and "." in minimum:
-                raise token.emit_error(InvalidSyntax(f"Decimal minimum not allowed."))
-            if issubclass(self.type, int) and "." in maximum:
-                raise token.emit_error(InvalidSyntax(f"Decimal maximum not allowed."))
+            if issubclass(self.type, int) and ("." in minimum or "." in maximum):
+                raise token.emit_error(InvalidSyntax("Expected integer range."))
 
-            return AstRange[NumericType](
+            node = AstRange(
                 min=self.type(minimum) if minimum else None,
                 max=self.type(maximum) if maximum else None,
-                location=token.location,
-                end_location=token.end_location,
             )
+            return set_location(node, token)
 
 
-def parse_objective(stream: TokenStream) -> AstValue[str]:
-    """Parse objective."""
-    with stream.syntax(objective=r"[a-zA-Z0-9_.+-]+|\*"):
-        token = stream.expect("objective")
+@dataclass
+class LengthConstraint:
+    """Constraint that only allows up to a limited number of characters."""
 
-        if len(token.value) > 16:
-            raise token.emit_error(
-                InvalidSyntax("Objective name must be limited to 16 characters.")
-            )
+    parser: Parser
+    limit: int
 
-        return AstValue[str](
-            value=token.value,
-            location=token.location,
-            end_location=token.end_location,
-        )
+    def __call__(self, stream: TokenStream) -> Any:
+        node: AstValue[str] = self.parser(stream)
 
+        if len(node.value) > self.limit:
+            exc = InvalidSyntax(f"Expected up to {self.limit} characters.")
+            raise node.emit_error(exc)
 
-def parse_player_name(stream: TokenStream) -> AstValue[str]:
-    """Parse player name."""
-    with stream.syntax(name=r"[a-zA-Z0-9_.+-]+"):
-        token = stream.expect("name")
-
-        if len(token.value) > 16:
-            raise token.emit_error(
-                InvalidSyntax("Player name must be limited to 16 characters.")
-            )
-
-        return AstValue[str](
-            value=token.value,
-            location=token.location,
-            end_location=token.end_location,
-        )
+        return node
 
 
 def parse_swizzle(stream: TokenStream) -> AstValue[str]:
     """Parse swizzle."""
-    with stream.syntax(literal=r"\w+"):
-        token = stream.expect("literal")
+    node = delegate("literal", stream)
 
-    if not 1 <= len(token.value) <= 3 or len(set(token.value)) < len(token.value):
-        raise token.emit_error(InvalidSyntax(f"Invalid swizzle {token.value!r}."))
+    if not 1 <= len(node.value) <= 3 or len(set(node.value)) < len(node.value):
+        raise node.emit_error(InvalidSyntax(f"Invalid swizzle {node.value!r}."))
 
-    return AstValue[str](
-        value=token.value,
-        location=token.location,
-        end_location=token.end_location,
-    )
-
-
-def parse_team(stream: TokenStream) -> AstValue[str]:
-    """Parse team."""
-    with stream.syntax(team=r"[a-zA-Z0-9_.+-]+"):
-        token = stream.expect("team")
-
-        return AstValue[str](
-            value=token.value,
-            location=token.location,
-            end_location=token.end_location,
-        )
+    return node
 
 
 @dataclass
-class TimeParser(NumericParser[float]):
+class TimeParser(NumericParser):
     """Parser for time."""
 
     type: Type[float] = float
     name: str = "time"
-    pattern: str = FLOAT_PATTERN + r"[dst]?"
+    pattern: str = NUMBER_PATTERN + r"[dst]?"
 
-    def create_node(self, stream: TokenStream) -> AstTime:  # type: ignore
-        """Create the ast node."""
+    def create_node(self, stream: TokenStream) -> Any:
         token = stream.current
         value = token.value
 
@@ -1181,107 +1142,96 @@ class TimeParser(NumericParser[float]):
         else:
             suffix = None
 
-        return AstTime(
-            value=self.type(value),
-            suffix=suffix,  # type: ignore
-            location=token.location,
-            end_location=token.end_location,
-        )
+        node = AstTime(value=self.type(value), suffix=suffix)  # type: ignore
+        return set_location(node, token)
 
 
 def parse_uuid(stream: TokenStream) -> AstValue[UUID]:
     """Parse uuid."""
     with stream.syntax(uuid="-".join([r"[a-fA-F0-9]+"] * 5)):
         token = stream.expect("uuid")
-
-        return AstValue[UUID](
-            value=UUID(token.value),
-            location=token.location,
-            end_location=token.end_location,
-        )
+    node = AstValue[UUID](value=UUID(token.value))
+    return set_location(node, token)
 
 
 @dataclass
 class SelectorParser:
     """Parser for selectors."""
 
-    amount: str = "multiple"
-
     def __call__(self, stream: TokenStream) -> AstSelector:
-        properties = get_stream_properties(stream)
-
         with stream.syntax(
             selector=r"@[praes]\[?",
             bracket=r"\[|\]",
-            argument=r"[a-z_]+",
-            equal=r"=",
             comma=r",",
-            exclamation=r"!",
         ):
             token = stream.expect("selector")
             variable = token.value[1]
             location = token.location
             end_location = token.end_location
 
-            is_single = variable in "prs"
-
             arguments: List[AstSelectorArgument] = []
 
             if token.value.endswith("["):
-                for key in stream.collect("argument"):
-                    stream.expect("equal")
-
-                    inverted = stream.get("exclamation") is not None
-
-                    try:
-                        value = delegate(f"selector:argument:{key.value}", stream)
-                    except UnrecognizedParser as exc:
-                        if not exc.parser.startswith("selector:argument:"):
-                            raise
-                        raise key.emit_error(
-                            InvalidSyntax(f"Invalid selector argument {key.value!r}.")
-                        ) from exc
-
-                    arguments.append(
-                        AstSelectorArgument(
-                            inverted=inverted,
-                            key=AstValue[str](
-                                value=key.value,
-                                location=key.location,
-                                end_location=key.end_location,
-                            ),
-                            value=value,
-                            location=key.location,
-                            end_location=value.end_location,
-                        )
-                    )
-
-                    if key.value == "limit":
-                        is_single = value.value == 1
-
+                for _ in stream.peek_until(("bracket", "]")):
+                    arguments.append(delegate("selector:argument", stream))
                     if not stream.get("comma"):
+                        stream.expect(("bracket", "]"))
                         break
 
-                close_bracket = stream.expect(("bracket", "]"))
-                end_location = close_bracket.end_location
+                end_location = stream.current.end_location
 
-        amount = properties.get("amount", self.amount)
-
-        if amount not in ["single", "multiple"]:
-            raise ValueError(f"Invalid selector amount {amount!r}.")
-
-        if amount == "single" and not is_single:
-            raise InvalidSyntax(f"Multiple entities not allowed.").set_location(
-                location=location,
-                end_location=end_location,
-            )
-
-        return AstSelector(
+        node = AstSelector(
             variable=variable,  # type: ignore
             arguments=AstChildren(arguments),
-            location=location,
-            end_location=end_location,
         )
+        return set_location(node, location, end_location)
+
+
+@dataclass
+class SelectorArgumentParser:
+    """Parser for selector arguments."""
+
+    def __call__(self, stream: TokenStream) -> Any:
+        with stream.syntax(
+            argument=r"[a-z_]+",
+            equal=r"=",
+            exclamation=r"!",
+        ):
+            key = stream.expect("argument")
+            key_node = AstValue[str](value=key.value)
+            key_node = set_location(key_node, key)
+
+            stream.expect("equal")
+
+            inverted = stream.get("exclamation") is not None
+
+            try:
+                value_node = delegate(f"selector:argument:{key.value}", stream)
+            except UnrecognizedParser as exc:
+                if not exc.parser.startswith("selector:argument:"):
+                    raise
+                syntax_exc = InvalidSyntax(f"Invalid selector argument {key.value!r}.")
+                raise key_node.emit_error(syntax_exc) from exc
+
+        node = AstSelectorArgument(inverted=inverted, key=key_node, value=value_node)
+        return set_location(node, key_node, value_node)
+
+
+@dataclass
+class SelectorArgumentInvertConstraint:
+    """Constraint that only allows inverting a specific set of arguments."""
+
+    parser: Parser
+    allow_invert: List[str]
+
+    def __call__(self, stream: TokenStream) -> Any:
+        node: AstSelectorArgument = self.parser(stream)
+
+        if node.inverted and node.key.value not in self.allow_invert:
+            exc = InvalidSyntax(f"Can not invert argument {node.key.value!r}.")
+            raise node.emit_error(exc)
+
+        return node
 
 
 def parse_selector_scores(stream: TokenStream) -> AstSelectorScores:
@@ -1296,33 +1246,24 @@ def parse_selector_scores(stream: TokenStream) -> AstSelectorScores:
 
         scores: List[AstSelectorScoreMatch] = []
 
-        for objective in stream.collect("objective"):
-            stream.expect("equal")
-            value = delegate("minecraft:integer_range", stream)
+        for key in stream.collect("objective"):
+            key_node = AstValue[str](value=key.value)
+            key_node = set_location(key_node, key)
 
-            scores.append(
-                AstSelectorScoreMatch(
-                    objective=AstValue[str](
-                        value=objective.value,
-                        location=objective.location,
-                        end_location=objective.end_location,
-                    ),
-                    value=value,
-                    location=objective.location,
-                    end_location=value.end_location,
-                )
-            )
+            stream.expect("equal")
+
+            value_node = delegate("minecraft:integer_range", stream)
+
+            match_node = AstSelectorScoreMatch(key=key_node, value=value_node)
+            scores.append(set_location(match_node, key_node, value_node))
 
             if not stream.get("comma"):
                 break
 
         close_curly = stream.expect(("curly", "}"))
 
-        return AstSelectorScores(
-            scores=AstChildren(scores),
-            location=curly.location,
-            end_location=close_curly.end_location,
-        )
+        node = AstSelectorScores(scores=AstChildren(scores))
+        return set_location(node, curly, close_curly)
 
 
 def parse_selector_advancements(stream: TokenStream) -> AstSelectorAdvancements:
@@ -1333,55 +1274,156 @@ def parse_selector_advancements(stream: TokenStream) -> AstSelectorAdvancements:
         advancements: List[AstSelectorAdvancementMatch] = []
 
         for _ in stream.peek_until(("curly", "}")):
-            name = delegate("minecraft:resource_location", stream)
+            key_node = delegate("minecraft:resource_location", stream)
             stream.expect("equal")
-            value = delegate("brigadier:bool", stream)
+            value_node = delegate("brigadier:bool", stream)
 
-            advancements.append(
-                AstSelectorAdvancementMatch(
-                    name=name,
-                    value=value,
-                    location=name.location,
-                    end_location=value.end_location,
-                )
-            )
+            match_node = AstSelectorAdvancementMatch(key=key_node, value=value_node)
+            advancements.append(set_location(match_node, key_node, value_node))
 
             if not stream.get("comma"):
                 stream.expect(("curly", "}"))
                 break
 
-        return AstSelectorAdvancements(
-            advancements=AstChildren(advancements),
-            location=curly.location,
-            end_location=stream.current.end_location,
-        )
+        node = AstSelectorAdvancements(advancements=AstChildren(advancements))
+        return set_location(node, curly, stream.current)
 
 
-def parse_entity(stream: TokenStream) -> Any:
-    """Parse entity."""
-    hint = stream.peek()
+@dataclass
+class SelectorPlayerConstraint:
+    """Constraint that disallows non player-type entities."""
 
-    if hint:
-        if hint.value.startswith("@"):
-            return delegate("selector", stream)
+    parser: Parser
 
-        if hint.value.count("-") == 4:
-            with stream.alternative():
-                return delegate("minecraft:uuid", stream)
+    def __call__(self, stream: TokenStream) -> Any:
+        node: AstSelector = self.parser(stream)
 
-    return parse_player_name(stream)
+        is_player = node.variable in "pras"
+
+        for argument in node.arguments:
+            if argument.key.value in ["gamemode", "level"]:
+                is_player = True
+            if (
+                argument.key.value == "type"
+                and not argument.inverted
+                and argument.value
+                in [
+                    AstResourceLocation(
+                        is_tag=False,
+                        namespace=AstValue[str](value="minecraft"),
+                        path=AstValue[str](value="player"),
+                    ),
+                    AstResourceLocation(
+                        is_tag=False,
+                        namespace=None,
+                        path=AstValue[str](value="player"),
+                    ),
+                ]
+            ):
+                is_player = True
+
+        if not is_player:
+            exc = InvalidSyntax("Expected player-type entity selector.")
+            raise node.emit_error(exc)
+
+        return node
 
 
-def parse_score_holder(stream: TokenStream) -> Any:
-    """Parse score holder."""
-    with stream.syntax(wildcard=r"\*"):
-        if token := stream.get("wildcard"):
-            return AstValue[str](
-                value=token.value,
-                location=token.location,
-                end_location=token.end_location,
-            )
-    return delegate("minecraft:entity", stream)
+@dataclass
+class SelectorTypeConstraint:
+    """Constraint that only allows selectors that match the type property."""
+
+    parser: Parser
+
+    def __call__(self, stream: TokenStream) -> Any:
+        properties = get_stream_properties(stream)
+        selector_type = properties["type"]
+
+        if selector_type not in ["players", "entities"]:
+            raise ValueError(f"Invalid selector type {selector_type}.")
+
+        if selector_type == "entities":
+            return self.parser(stream)
+
+        return SelectorPlayerConstraint(self.parser)(stream)
+
+
+@dataclass
+class SelectorSingleConstraint:
+    """Constraint that disallows selectors that target more than one entity."""
+
+    parser: Parser
+
+    def __call__(self, stream: TokenStream) -> Any:
+        node: AstSelector = self.parser(stream)
+
+        is_single = node.variable in "prs"
+
+        for arg in node.arguments:
+            if arg.key.value == "limit" and arg.value == AstValue[int](value=1):
+                is_single = True
+
+        if not is_single:
+            exc = InvalidSyntax("Expected entity selector targeting a single entity.")
+            raise node.emit_error(exc)
+
+        return node
+
+
+@dataclass
+class SelectorAmountConstraint:
+    """Constraint that only allows selectors that match the amount property."""
+
+    parser: Parser
+
+    def __call__(self, stream: TokenStream) -> Any:
+        properties = get_stream_properties(stream)
+
+        amount = properties["amount"]
+
+        if amount not in ["single", "multiple"]:
+            raise ValueError(f"Invalid selector amount {amount}.")
+
+        if amount == "multiple":
+            return self.parser(stream)
+
+        return SelectorSingleConstraint(self.parser)(stream)
+
+
+@dataclass
+class EntityParser:
+    """Parser for entities."""
+
+    selector_parser: Parser
+
+    def __call__(self, stream: TokenStream) -> Any:
+        """Parse entity."""
+        with stream.syntax(literal=r"\S+"):
+            hint = stream.peek()
+
+        if hint:
+            if hint.value.startswith("@"):
+                return self.selector_parser(stream)
+
+            if hint.value.count("-") == 4:
+                with stream.alternative():
+                    return delegate("uuid", stream)
+
+        return delegate("player_name", stream)
+
+
+@dataclass
+class ScoreHolderParser:
+    """Parser for score holder."""
+
+    entity_parser: Parser
+
+    def __call__(self, stream: TokenStream) -> Any:
+        with stream.syntax(wildcard=r"\*"):
+            if token := stream.get("wildcard"):
+                node = AstValue[str](value=token.value)
+                return set_location(node, token)
+        return self.entity_parser(stream)
 
 
 def parse_message(stream: TokenStream) -> AstMessage:
@@ -1390,36 +1432,29 @@ def parse_message(stream: TokenStream) -> AstMessage:
         while stream.get("whitespace"):
             continue
 
-    with stream.syntax(selector=r"@[praes]"):
-        sentence: List[Any] = []
+    with stream.syntax(selector=r"@[praes]", literal=r"\S+"):
+        words: List[Any] = []
 
         for selector, literal in stream.collect("selector", "literal"):
             if selector:
                 stream.index -= 1
-                sentence.append(delegate("selector", stream))
+                words.append(delegate("selector", stream))
             elif literal:
-                sentence.append(
-                    AstValue[str](
-                        value=literal.value,
-                        location=literal.location,
-                        end_location=literal.end_location,
-                    )
-                )
+                word_node = AstValue[str](value=literal.value)
+                word_node = set_location(word_node, literal)
+                words.append(word_node)
 
-    if not sentence:
+    if not words:
         raise stream.emit_error(InvalidSyntax("Empty message not allowed."))
 
-    return AstMessage(
-        sentence=AstChildren(sentence),
-        location=sentence[0].location,
-        end_location=sentence[-1].end_location,
-    )
+    node = AstMessage(words=AstChildren(words))
+    return set_location(node, words[0], words[-1])
 
 
 @dataclass
 class NbtPathParser:
-    quoted_string_handler: QuotedStringHandler = field(
-        default_factory=lambda: QuotedStringHandler(
+    quote_helper: QuoteHelper = field(
+        default_factory=lambda: QuoteHelper(
             escape_sequences={
                 r"\\": "\\",
             }
@@ -1427,7 +1462,7 @@ class NbtPathParser:
     )
 
     def __call__(self, stream: TokenStream) -> AstNbtPath:
-        nodes: List[Any] = []
+        components: List[Any] = []
 
         with stream.syntax(
             dot=r"\.",
@@ -1436,62 +1471,48 @@ class NbtPathParser:
             quoted_string=r'"(?:\\.|[^\\\n])*?"' "|" r"'(?:\\.|[^\\\n])*?'",
             string=r"[a-zA-Z0-9_+-]+",
         ):
-            nodes.extend(self.parse_modifiers(stream))
+            components.extend(self.parse_modifiers(stream))
 
-            while not nodes or stream.get("dot"):
+            while not components or stream.get("dot"):
                 quoted_string, string = stream.expect("quoted_string", "string")
 
                 if quoted_string:
-                    nodes.append(
-                        AstValue[str](
-                            value=self.quoted_string_handler.unquote_string(
-                                quoted_string
-                            ),
-                            location=quoted_string.location,
-                            end_location=quoted_string.end_location,
-                        )
+                    component_node = AstValue[str](
+                        value=self.quote_helper.unquote_string(quoted_string),
                     )
+                    components.append(set_location(component_node, quoted_string))
                 elif string:
-                    nodes.append(
-                        AstValue[str](
-                            value=string.value,
-                            location=string.location,
-                            end_location=string.end_location,
-                        )
-                    )
+                    component_node = AstValue[str](value=string.value)
+                    components.append(set_location(component_node, string))
 
-                nodes.extend(self.parse_modifiers(stream))
+                components.extend(self.parse_modifiers(stream))
 
-        if not nodes:
+        if not components:
             raise stream.emit_error(InvalidSyntax("Empty nbt path not allowed."))
 
-        return AstNbtPath(
-            nodes=AstChildren(nodes),
-            location=nodes[0].location,
-            end_location=nodes[-1].end_location,
+        node = AstNbtPath(
+            components=AstChildren(components),
         )
+        return set_location(node, components[0], components[-1])
 
     def parse_modifiers(self, stream: TokenStream) -> Iterator[Any]:
         """Parse named tag modifiers."""
         hint = stream.peek()
 
         if hint and hint.match(("curly", "{")):
-            yield delegate("minecraft:nbt_compound_tag", stream)
+            yield delegate("nbt_compound", stream)
             return
 
         while bracket := stream.get(("bracket", "[")):
-            match = None
+            index = None
 
             hint = stream.peek()
             if hint and hint.match(("curly", "{")):
-                match = delegate("minecraft:nbt_compound_tag", stream)
+                index = delegate("nbt_compound", stream)
             elif hint and not hint.match(("bracket", "]")):
-                match = delegate("brigadier:integer", stream)
+                index = delegate("integer", stream)
 
             close_bracket = stream.expect(("bracket", "]"))
 
-            yield AstNbtPathSubscript(
-                match=match,
-                location=bracket.location,
-                end_location=close_bracket.end_location,
-            )
+            subscript_node = AstNbtPathSubscript(index=index)
+            yield set_location(subscript_node, bracket, close_bracket)

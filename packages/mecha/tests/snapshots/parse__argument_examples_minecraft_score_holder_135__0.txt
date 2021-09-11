@@ -1,6 +1,6 @@
 minecraft:score_holder
 ---
-{}
+{'amount': 'multiple'}
 ---
 @e
 ---

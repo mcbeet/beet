@@ -67,7 +67,7 @@
         <class 'mecha.ast.AstValue'>
           location: SourceLocation(pos=157, lineno=5, colno=47)
           end_location: SourceLocation(pos=158, lineno=5, colno=48)
-          value: 5.0
+          value: 5
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=167, lineno=7, colno=1)
       end_location: SourceLocation(pos=172, lineno=7, colno=6)
@@ -202,7 +202,7 @@
         <class 'mecha.ast.AstNbtPath'>
           location: SourceLocation(pos=324, lineno=12, colno=20)
           end_location: SourceLocation(pos=343, lineno=12, colno=39)
-          nodes:
+          components:
             <class 'mecha.ast.AstValue'>
               location: SourceLocation(pos=324, lineno=12, colno=20)
               end_location: SourceLocation(pos=343, lineno=12, colno=39)
@@ -283,7 +283,7 @@
         <class 'mecha.ast.AstNbtPath'>
           location: SourceLocation(pos=412, lineno=13, colno=69)
           end_location: SourceLocation(pos=423, lineno=13, colno=80)
-          nodes:
+          components:
             <class 'mecha.ast.AstValue'>
               location: SourceLocation(pos=412, lineno=13, colno=69)
               end_location: SourceLocation(pos=423, lineno=13, colno=80)
@@ -353,7 +353,7 @@
         <class 'mecha.ast.AstNbtPath'>
           location: SourceLocation(pos=487, lineno=14, colno=51)
           end_location: SourceLocation(pos=493, lineno=14, colno=57)
-          nodes:
+          components:
             <class 'mecha.ast.AstValue'>
               location: SourceLocation(pos=487, lineno=14, colno=51)
               end_location: SourceLocation(pos=490, lineno=14, colno=54)
@@ -361,7 +361,7 @@
             <class 'mecha.ast.AstNbtPathSubscript'>
               location: SourceLocation(pos=490, lineno=14, colno=54)
               end_location: SourceLocation(pos=493, lineno=14, colno=57)
-              match:
+              index:
                 <class 'mecha.ast.AstValue'>
                   location: SourceLocation(pos=491, lineno=14, colno=55)
                   end_location: SourceLocation(pos=492, lineno=14, colno=56)
@@ -380,7 +380,7 @@
         <class 'mecha.ast.AstNbtPath'>
           location: SourceLocation(pos=513, lineno=15, colno=20)
           end_location: SourceLocation(pos=537, lineno=15, colno=44)
-          nodes:
+          components:
             <class 'mecha.ast.AstValue'>
               location: SourceLocation(pos=513, lineno=15, colno=20)
               end_location: SourceLocation(pos=522, lineno=15, colno=29)
@@ -388,7 +388,7 @@
             <class 'mecha.ast.AstNbtPathSubscript'>
               location: SourceLocation(pos=522, lineno=15, colno=29)
               end_location: SourceLocation(pos=534, lineno=15, colno=41)
-              match:
+              index:
                 <class 'mecha.ast.AstNbtCompound'>
                   location: SourceLocation(pos=523, lineno=15, colno=30)
                   end_location: SourceLocation(pos=533, lineno=15, colno=40)
@@ -433,7 +433,7 @@
                 <class 'mecha.ast.AstValue'>
                   location: SourceLocation(pos=562, lineno=16, colno=25)
                   end_location: SourceLocation(pos=563, lineno=16, colno=26)
-                  value: 0.0
+                  value: 0
             <class 'mecha.ast.AstSelectorArgument'>
               location: SourceLocation(pos=564, lineno=16, colno=27)
               end_location: SourceLocation(pos=568, lineno=16, colno=31)
@@ -447,7 +447,7 @@
                 <class 'mecha.ast.AstValue'>
                   location: SourceLocation(pos=566, lineno=16, colno=29)
                   end_location: SourceLocation(pos=568, lineno=16, colno=31)
-                  value: 64.0
+                  value: 64
             <class 'mecha.ast.AstSelectorArgument'>
               location: SourceLocation(pos=569, lineno=16, colno=32)
               end_location: SourceLocation(pos=572, lineno=16, colno=35)
@@ -461,7 +461,7 @@
                 <class 'mecha.ast.AstValue'>
                   location: SourceLocation(pos=571, lineno=16, colno=34)
                   end_location: SourceLocation(pos=572, lineno=16, colno=35)
-                  value: 0.0
+                  value: 0
             <class 'mecha.ast.AstSelectorArgument'>
               location: SourceLocation(pos=573, lineno=16, colno=36)
               end_location: SourceLocation(pos=585, lineno=16, colno=48)
@@ -499,7 +499,7 @@
         <class 'mecha.ast.AstNbtPath'>
           location: SourceLocation(pos=595, lineno=16, colno=58)
           end_location: SourceLocation(pos=635, lineno=16, colno=98)
-          nodes:
+          components:
             <class 'mecha.ast.AstValue'>
               location: SourceLocation(pos=595, lineno=16, colno=58)
               end_location: SourceLocation(pos=605, lineno=16, colno=68)
@@ -507,7 +507,7 @@
             <class 'mecha.ast.AstNbtPathSubscript'>
               location: SourceLocation(pos=605, lineno=16, colno=68)
               end_location: SourceLocation(pos=630, lineno=16, colno=93)
-              match:
+              index:
                 <class 'mecha.ast.AstNbtCompound'>
                   location: SourceLocation(pos=606, lineno=16, colno=69)
                   end_location: SourceLocation(pos=629, lineno=16, colno=92)
@@ -545,24 +545,24 @@
             <class 'mecha.ast.AstCoordinate'>
               location: SourceLocation(pos=667, lineno=17, colno=19)
               end_location: SourceLocation(pos=668, lineno=17, colno=20)
-              value: 1.0
-              prefix: 'absolute'
+              type: 'absolute'
+              value: 1
           y:
             <class 'mecha.ast.AstCoordinate'>
               location: SourceLocation(pos=669, lineno=17, colno=21)
               end_location: SourceLocation(pos=671, lineno=17, colno=23)
-              value: 64.0
-              prefix: 'absolute'
+              type: 'absolute'
+              value: 64
           z:
             <class 'mecha.ast.AstCoordinate'>
               location: SourceLocation(pos=672, lineno=17, colno=24)
               end_location: SourceLocation(pos=673, lineno=17, colno=25)
-              value: 1.0
-              prefix: 'absolute'
+              type: 'absolute'
+              value: 1
         <class 'mecha.ast.AstNbtPath'>
           location: SourceLocation(pos=674, lineno=17, colno=26)
           end_location: SourceLocation(pos=685, lineno=17, colno=37)
-          nodes:
+          components:
             <class 'mecha.ast.AstValue'>
               location: SourceLocation(pos=674, lineno=17, colno=26)
               end_location: SourceLocation(pos=679, lineno=17, colno=31)
@@ -570,7 +570,7 @@
             <class 'mecha.ast.AstNbtPathSubscript'>
               location: SourceLocation(pos=679, lineno=17, colno=31)
               end_location: SourceLocation(pos=682, lineno=17, colno=34)
-              match:
+              index:
                 <class 'mecha.ast.AstValue'>
                   location: SourceLocation(pos=680, lineno=17, colno=32)
                   end_location: SourceLocation(pos=681, lineno=17, colno=33)
@@ -727,7 +727,7 @@
         <class 'mecha.ast.AstNbtPath'>
           location: SourceLocation(pos=863, lineno=19, colno=57)
           end_location: SourceLocation(pos=881, lineno=19, colno=75)
-          nodes:
+          components:
             <class 'mecha.ast.AstValue'>
               location: SourceLocation(pos=863, lineno=19, colno=57)
               end_location: SourceLocation(pos=878, lineno=19, colno=72)
@@ -735,7 +735,7 @@
             <class 'mecha.ast.AstNbtPathSubscript'>
               location: SourceLocation(pos=878, lineno=19, colno=72)
               end_location: SourceLocation(pos=881, lineno=19, colno=75)
-              match:
+              index:
                 <class 'mecha.ast.AstValue'>
                   location: SourceLocation(pos=879, lineno=19, colno=73)
                   end_location: SourceLocation(pos=880, lineno=19, colno=74)
@@ -963,20 +963,20 @@
             <class 'mecha.ast.AstCoordinate'>
               location: SourceLocation(pos=1241, lineno=34, colno=6)
               end_location: SourceLocation(pos=1243, lineno=34, colno=8)
-              value: 52.0
-              prefix: 'absolute'
+              type: 'absolute'
+              value: 52
           y:
             <class 'mecha.ast.AstCoordinate'>
               location: SourceLocation(pos=1244, lineno=34, colno=9)
               end_location: SourceLocation(pos=1246, lineno=34, colno=11)
-              value: 63.0
-              prefix: 'absolute'
+              type: 'absolute'
+              value: 63
           z:
             <class 'mecha.ast.AstCoordinate'>
               location: SourceLocation(pos=1247, lineno=34, colno=12)
               end_location: SourceLocation(pos=1252, lineno=34, colno=17)
-              value: -1516.0
-              prefix: 'absolute'
+              type: 'absolute'
+              value: -1516
         <class 'mecha.ast.AstVector3'>
           location: SourceLocation(pos=1253, lineno=34, colno=18)
           end_location: SourceLocation(pos=1264, lineno=34, colno=29)
@@ -984,20 +984,20 @@
             <class 'mecha.ast.AstCoordinate'>
               location: SourceLocation(pos=1253, lineno=34, colno=18)
               end_location: SourceLocation(pos=1255, lineno=34, colno=20)
-              value: 33.0
-              prefix: 'absolute'
+              type: 'absolute'
+              value: 33
           y:
             <class 'mecha.ast.AstCoordinate'>
               location: SourceLocation(pos=1256, lineno=34, colno=21)
               end_location: SourceLocation(pos=1258, lineno=34, colno=23)
-              value: 73.0
-              prefix: 'absolute'
+              type: 'absolute'
+              value: 73
           z:
             <class 'mecha.ast.AstCoordinate'>
               location: SourceLocation(pos=1259, lineno=34, colno=24)
               end_location: SourceLocation(pos=1264, lineno=34, colno=29)
-              value: -1536.0
-              prefix: 'absolute'
+              type: 'absolute'
+              value: -1536
         <class 'mecha.ast.AstBlock'>
           location: SourceLocation(pos=1265, lineno=34, colno=30)
           end_location: SourceLocation(pos=1285, lineno=34, colno=50)
@@ -1052,20 +1052,20 @@
             <class 'mecha.ast.AstCoordinate'>
               location: SourceLocation(pos=1334, lineno=35, colno=6)
               end_location: SourceLocation(pos=1337, lineno=35, colno=9)
-              value: -3.0
-              prefix: 'relative'
+              type: 'relative'
+              value: -3
           y:
             <class 'mecha.ast.AstCoordinate'>
               location: SourceLocation(pos=1338, lineno=35, colno=10)
               end_location: SourceLocation(pos=1341, lineno=35, colno=13)
-              value: -3.0
-              prefix: 'relative'
+              type: 'relative'
+              value: -3
           z:
             <class 'mecha.ast.AstCoordinate'>
               location: SourceLocation(pos=1342, lineno=35, colno=14)
               end_location: SourceLocation(pos=1345, lineno=35, colno=17)
-              value: -3.0
-              prefix: 'relative'
+              type: 'relative'
+              value: -3
         <class 'mecha.ast.AstVector3'>
           location: SourceLocation(pos=1346, lineno=35, colno=18)
           end_location: SourceLocation(pos=1355, lineno=35, colno=27)
@@ -1073,20 +1073,20 @@
             <class 'mecha.ast.AstCoordinate'>
               location: SourceLocation(pos=1346, lineno=35, colno=18)
               end_location: SourceLocation(pos=1348, lineno=35, colno=20)
-              value: 3.0
-              prefix: 'relative'
+              type: 'relative'
+              value: 3
           y:
             <class 'mecha.ast.AstCoordinate'>
               location: SourceLocation(pos=1349, lineno=35, colno=21)
               end_location: SourceLocation(pos=1352, lineno=35, colno=24)
-              value: -1.0
-              prefix: 'relative'
+              type: 'relative'
+              value: -1
           z:
             <class 'mecha.ast.AstCoordinate'>
               location: SourceLocation(pos=1353, lineno=35, colno=25)
               end_location: SourceLocation(pos=1355, lineno=35, colno=27)
-              value: 3.0
-              prefix: 'relative'
+              type: 'relative'
+              value: 3
         <class 'mecha.ast.AstBlock'>
           location: SourceLocation(pos=1356, lineno=35, colno=28)
           end_location: SourceLocation(pos=1361, lineno=35, colno=33)
@@ -1116,20 +1116,20 @@
             <class 'mecha.ast.AstCoordinate'>
               location: SourceLocation(pos=1367, lineno=36, colno=6)
               end_location: SourceLocation(pos=1370, lineno=36, colno=9)
-              value: -3.0
-              prefix: 'relative'
+              type: 'relative'
+              value: -3
           y:
             <class 'mecha.ast.AstCoordinate'>
               location: SourceLocation(pos=1371, lineno=36, colno=10)
               end_location: SourceLocation(pos=1372, lineno=36, colno=11)
-              value: 0.0
-              prefix: 'relative'
+              type: 'relative'
+              value: 0
           z:
             <class 'mecha.ast.AstCoordinate'>
               location: SourceLocation(pos=1373, lineno=36, colno=12)
               end_location: SourceLocation(pos=1376, lineno=36, colno=15)
-              value: -4.0
-              prefix: 'relative'
+              type: 'relative'
+              value: -4
         <class 'mecha.ast.AstVector3'>
           location: SourceLocation(pos=1377, lineno=36, colno=16)
           end_location: SourceLocation(pos=1385, lineno=36, colno=24)
@@ -1137,20 +1137,20 @@
             <class 'mecha.ast.AstCoordinate'>
               location: SourceLocation(pos=1377, lineno=36, colno=16)
               end_location: SourceLocation(pos=1379, lineno=36, colno=18)
-              value: 3.0
-              prefix: 'relative'
+              type: 'relative'
+              value: 3
           y:
             <class 'mecha.ast.AstCoordinate'>
               location: SourceLocation(pos=1380, lineno=36, colno=19)
               end_location: SourceLocation(pos=1382, lineno=36, colno=21)
-              value: 4.0
-              prefix: 'relative'
+              type: 'relative'
+              value: 4
           z:
             <class 'mecha.ast.AstCoordinate'>
               location: SourceLocation(pos=1383, lineno=36, colno=22)
               end_location: SourceLocation(pos=1385, lineno=36, colno=24)
-              value: 4.0
-              prefix: 'relative'
+              type: 'relative'
+              value: 4
         <class 'mecha.ast.AstBlock'>
           location: SourceLocation(pos=1386, lineno=36, colno=25)
           end_location: SourceLocation(pos=1401, lineno=36, colno=40)
@@ -1184,20 +1184,20 @@
             <class 'mecha.ast.AstCoordinate'>
               location: SourceLocation(pos=1414, lineno=37, colno=6)
               end_location: SourceLocation(pos=1418, lineno=37, colno=10)
-              value: -15.0
-              prefix: 'relative'
+              type: 'relative'
+              value: -15
           y:
             <class 'mecha.ast.AstCoordinate'>
               location: SourceLocation(pos=1419, lineno=37, colno=11)
               end_location: SourceLocation(pos=1423, lineno=37, colno=15)
-              value: -15.0
-              prefix: 'relative'
+              type: 'relative'
+              value: -15
           z:
             <class 'mecha.ast.AstCoordinate'>
               location: SourceLocation(pos=1424, lineno=37, colno=16)
               end_location: SourceLocation(pos=1428, lineno=37, colno=20)
-              value: -15.0
-              prefix: 'relative'
+              type: 'relative'
+              value: -15
         <class 'mecha.ast.AstVector3'>
           location: SourceLocation(pos=1429, lineno=37, colno=21)
           end_location: SourceLocation(pos=1440, lineno=37, colno=32)
@@ -1205,20 +1205,20 @@
             <class 'mecha.ast.AstCoordinate'>
               location: SourceLocation(pos=1429, lineno=37, colno=21)
               end_location: SourceLocation(pos=1432, lineno=37, colno=24)
-              value: 15.0
-              prefix: 'relative'
+              type: 'relative'
+              value: 15
           y:
             <class 'mecha.ast.AstCoordinate'>
               location: SourceLocation(pos=1433, lineno=37, colno=25)
               end_location: SourceLocation(pos=1436, lineno=37, colno=28)
-              value: 15.0
-              prefix: 'relative'
+              type: 'relative'
+              value: 15
           z:
             <class 'mecha.ast.AstCoordinate'>
               location: SourceLocation(pos=1437, lineno=37, colno=29)
               end_location: SourceLocation(pos=1440, lineno=37, colno=32)
-              value: 15.0
-              prefix: 'relative'
+              type: 'relative'
+              value: 15
         <class 'mecha.ast.AstBlock'>
           location: SourceLocation(pos=1441, lineno=37, colno=33)
           end_location: SourceLocation(pos=1446, lineno=37, colno=38)
@@ -1248,20 +1248,20 @@
             <class 'mecha.ast.AstCoordinate'>
               location: SourceLocation(pos=1452, lineno=38, colno=6)
               end_location: SourceLocation(pos=1455, lineno=38, colno=9)
-              value: -1.0
-              prefix: 'relative'
+              type: 'relative'
+              value: -1
           y:
             <class 'mecha.ast.AstCoordinate'>
               location: SourceLocation(pos=1456, lineno=38, colno=10)
               end_location: SourceLocation(pos=1457, lineno=38, colno=11)
-              value: 0.0
-              prefix: 'relative'
+              type: 'relative'
+              value: 0
           z:
             <class 'mecha.ast.AstCoordinate'>
               location: SourceLocation(pos=1458, lineno=38, colno=12)
               end_location: SourceLocation(pos=1459, lineno=38, colno=13)
-              value: 0.0
-              prefix: 'relative'
+              type: 'relative'
+              value: 0
         <class 'mecha.ast.AstVector3'>
           location: SourceLocation(pos=1460, lineno=38, colno=14)
           end_location: SourceLocation(pos=1466, lineno=38, colno=20)
@@ -1269,20 +1269,20 @@
             <class 'mecha.ast.AstCoordinate'>
               location: SourceLocation(pos=1460, lineno=38, colno=14)
               end_location: SourceLocation(pos=1462, lineno=38, colno=16)
-              value: 1.0
-              prefix: 'relative'
+              type: 'relative'
+              value: 1
           y:
             <class 'mecha.ast.AstCoordinate'>
               location: SourceLocation(pos=1463, lineno=38, colno=17)
               end_location: SourceLocation(pos=1464, lineno=38, colno=18)
-              value: 0.0
-              prefix: 'relative'
+              type: 'relative'
+              value: 0
           z:
             <class 'mecha.ast.AstCoordinate'>
               location: SourceLocation(pos=1465, lineno=38, colno=19)
               end_location: SourceLocation(pos=1466, lineno=38, colno=20)
-              value: 0.0
-              prefix: 'relative'
+              type: 'relative'
+              value: 0
         <class 'mecha.ast.AstBlock'>
           location: SourceLocation(pos=1467, lineno=38, colno=21)
           end_location: SourceLocation(pos=1531, lineno=38, colno=85)
@@ -1822,20 +1822,20 @@
             <class 'mecha.ast.AstCoordinate'>
               location: SourceLocation(pos=2295, lineno=60, colno=20)
               end_location: SourceLocation(pos=2296, lineno=60, colno=21)
-              value: 0.0
-              prefix: 'relative'
+              type: 'relative'
+              value: 0
           y:
             <class 'mecha.ast.AstCoordinate'>
               location: SourceLocation(pos=2297, lineno=60, colno=22)
               end_location: SourceLocation(pos=2299, lineno=60, colno=24)
-              value: 2.0
-              prefix: 'relative'
+              type: 'relative'
+              value: 2
           z:
             <class 'mecha.ast.AstCoordinate'>
               location: SourceLocation(pos=2300, lineno=60, colno=25)
               end_location: SourceLocation(pos=2301, lineno=60, colno=26)
-              value: 0.0
-              prefix: 'relative'
+              type: 'relative'
+              value: 0
         <class 'mecha.ast.AstValue'>
           location: SourceLocation(pos=2302, lineno=60, colno=27)
           end_location: SourceLocation(pos=2314, lineno=60, colno=39)
@@ -2166,7 +2166,7 @@
         <class 'mecha.ast.AstMessage'>
           location: SourceLocation(pos=2710, lineno=74, colno=8)
           end_location: SourceLocation(pos=2712, lineno=74, colno=10)
-          sentence:
+          words:
             <class 'mecha.ast.AstValue'>
               location: SourceLocation(pos=2710, lineno=74, colno=8)
               end_location: SourceLocation(pos=2712, lineno=74, colno=10)
@@ -2183,20 +2183,20 @@
             <class 'mecha.ast.AstCoordinate'>
               location: SourceLocation(pos=2733, lineno=76, colno=10)
               end_location: SourceLocation(pos=2734, lineno=76, colno=11)
-              value: 0.0
-              prefix: 'relative'
+              type: 'relative'
+              value: 0
           y:
             <class 'mecha.ast.AstCoordinate'>
               location: SourceLocation(pos=2735, lineno=76, colno=12)
               end_location: SourceLocation(pos=2736, lineno=76, colno=13)
-              value: 0.0
-              prefix: 'relative'
+              type: 'relative'
+              value: 0
           z:
             <class 'mecha.ast.AstCoordinate'>
               location: SourceLocation(pos=2737, lineno=76, colno=14)
               end_location: SourceLocation(pos=2738, lineno=76, colno=15)
-              value: 0.0
-              prefix: 'relative'
+              type: 'relative'
+              value: 0
         <class 'mecha.ast.AstBlock'>
           location: SourceLocation(pos=2739, lineno=76, colno=16)
           end_location: SourceLocation(pos=2757, lineno=76, colno=34)
@@ -2238,20 +2238,20 @@
             <class 'mecha.ast.AstCoordinate'>
               location: SourceLocation(pos=2767, lineno=77, colno=10)
               end_location: SourceLocation(pos=2768, lineno=77, colno=11)
-              value: 0.0
-              prefix: 'relative'
+              type: 'relative'
+              value: 0
           y:
             <class 'mecha.ast.AstCoordinate'>
               location: SourceLocation(pos=2769, lineno=77, colno=12)
               end_location: SourceLocation(pos=2770, lineno=77, colno=13)
-              value: 0.0
-              prefix: 'relative'
+              type: 'relative'
+              value: 0
           z:
             <class 'mecha.ast.AstCoordinate'>
               location: SourceLocation(pos=2771, lineno=77, colno=14)
               end_location: SourceLocation(pos=2774, lineno=77, colno=17)
-              value: -1.0
-              prefix: 'relative'
+              type: 'relative'
+              value: -1
         <class 'mecha.ast.AstBlock'>
           location: SourceLocation(pos=2775, lineno=77, colno=18)
           end_location: SourceLocation(pos=2831, lineno=77, colno=74)
@@ -2311,20 +2311,20 @@
             <class 'mecha.ast.AstCoordinate'>
               location: SourceLocation(pos=2841, lineno=78, colno=10)
               end_location: SourceLocation(pos=2842, lineno=78, colno=11)
-              value: 0.0
-              prefix: 'relative'
+              type: 'relative'
+              value: 0
           y:
             <class 'mecha.ast.AstCoordinate'>
               location: SourceLocation(pos=2843, lineno=78, colno=12)
               end_location: SourceLocation(pos=2845, lineno=78, colno=14)
-              value: 2.0
-              prefix: 'relative'
+              type: 'relative'
+              value: 2
           z:
             <class 'mecha.ast.AstCoordinate'>
               location: SourceLocation(pos=2846, lineno=78, colno=15)
               end_location: SourceLocation(pos=2847, lineno=78, colno=16)
-              value: 0.0
-              prefix: 'relative'
+              type: 'relative'
+              value: 0
         <class 'mecha.ast.AstBlock'>
           location: SourceLocation(pos=2848, lineno=78, colno=17)
           end_location: SourceLocation(pos=2869, lineno=78, colno=38)
@@ -2366,22 +2366,22 @@
             <class 'mecha.ast.AstCoordinate'>
               location: SourceLocation(pos=2900, lineno=80, colno=15)
               end_location: SourceLocation(pos=2901, lineno=80, colno=16)
-              value: 0.0
-              prefix: 'absolute'
+              type: 'absolute'
+              value: 0
           y:
             <class 'mecha.ast.AstCoordinate'>
               location: SourceLocation(pos=2902, lineno=80, colno=17)
               end_location: SourceLocation(pos=2903, lineno=80, colno=18)
-              value: 0.0
-              prefix: 'absolute'
+              type: 'absolute'
+              value: 0
         <class 'mecha.ast.AstValue'>
           location: SourceLocation(pos=2904, lineno=80, colno=19)
           end_location: SourceLocation(pos=2907, lineno=80, colno=22)
-          value: 200.0
+          value: 200
         <class 'mecha.ast.AstValue'>
           location: SourceLocation(pos=2908, lineno=80, colno=23)
           end_location: SourceLocation(pos=2911, lineno=80, colno=26)
-          value: 500.0
+          value: 500
         <class 'mecha.ast.AstValue'>
           location: SourceLocation(pos=2912, lineno=80, colno=27)
           end_location: SourceLocation(pos=2916, lineno=80, colno=31)
@@ -2414,20 +2414,20 @@
             <class 'mecha.ast.AstCoordinate'>
               location: SourceLocation(pos=2951, lineno=82, colno=23)
               end_location: SourceLocation(pos=2955, lineno=82, colno=27)
-              value: -10.0
-              prefix: 'relative'
+              type: 'relative'
+              value: -10
           y:
             <class 'mecha.ast.AstCoordinate'>
               location: SourceLocation(pos=2956, lineno=82, colno=28)
               end_location: SourceLocation(pos=2957, lineno=82, colno=29)
-              value: 0.0
-              prefix: 'relative'
+              type: 'relative'
+              value: 0
           z:
             <class 'mecha.ast.AstCoordinate'>
               location: SourceLocation(pos=2958, lineno=82, colno=30)
               end_location: SourceLocation(pos=2959, lineno=82, colno=31)
-              value: 0.0
-              prefix: 'relative'
+              type: 'relative'
+              value: 0
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=2960, lineno=83, colno=1)
       end_location: SourceLocation(pos=3036, lineno=83, colno=77)
@@ -2450,20 +2450,20 @@
             <class 'mecha.ast.AstCoordinate'>
               location: SourceLocation(pos=2975, lineno=83, colno=16)
               end_location: SourceLocation(pos=2976, lineno=83, colno=17)
-              value: 0.0
-              prefix: 'relative'
+              type: 'relative'
+              value: 0
           y:
             <class 'mecha.ast.AstCoordinate'>
               location: SourceLocation(pos=2977, lineno=83, colno=18)
               end_location: SourceLocation(pos=2978, lineno=83, colno=19)
-              value: 0.0
-              prefix: 'relative'
+              type: 'relative'
+              value: 0
           z:
             <class 'mecha.ast.AstCoordinate'>
               location: SourceLocation(pos=2979, lineno=83, colno=20)
               end_location: SourceLocation(pos=2980, lineno=83, colno=21)
-              value: 0.0
-              prefix: 'relative'
+              type: 'relative'
+              value: 0
         <class 'mecha.ast.AstNbtCompound'>
           location: SourceLocation(pos=2981, lineno=83, colno=22)
           end_location: SourceLocation(pos=3036, lineno=83, colno=77)
@@ -2516,20 +2516,20 @@
             <class 'mecha.ast.AstCoordinate'>
               location: SourceLocation(pos=3051, lineno=84, colno=15)
               end_location: SourceLocation(pos=3052, lineno=84, colno=16)
-              value: 0.0
-              prefix: 'relative'
+              type: 'relative'
+              value: 0
           y:
             <class 'mecha.ast.AstCoordinate'>
               location: SourceLocation(pos=3053, lineno=84, colno=17)
               end_location: SourceLocation(pos=3054, lineno=84, colno=18)
-              value: 0.0
-              prefix: 'relative'
+              type: 'relative'
+              value: 0
           z:
             <class 'mecha.ast.AstCoordinate'>
               location: SourceLocation(pos=3055, lineno=84, colno=19)
               end_location: SourceLocation(pos=3056, lineno=84, colno=20)
-              value: 0.0
-              prefix: 'relative'
+              type: 'relative'
+              value: 0
         <class 'mecha.ast.AstNbtCompound'>
           location: SourceLocation(pos=3057, lineno=84, colno=21)
           end_location: SourceLocation(pos=3146, lineno=84, colno=110)
@@ -2629,20 +2629,20 @@
             <class 'mecha.ast.AstCoordinate'>
               location: SourceLocation(pos=3163, lineno=85, colno=17)
               end_location: SourceLocation(pos=3164, lineno=85, colno=18)
-              value: 0.0
-              prefix: 'relative'
+              type: 'relative'
+              value: 0
           y:
             <class 'mecha.ast.AstCoordinate'>
               location: SourceLocation(pos=3165, lineno=85, colno=19)
               end_location: SourceLocation(pos=3166, lineno=85, colno=20)
-              value: 0.0
-              prefix: 'relative'
+              type: 'relative'
+              value: 0
           z:
             <class 'mecha.ast.AstCoordinate'>
               location: SourceLocation(pos=3167, lineno=85, colno=21)
               end_location: SourceLocation(pos=3168, lineno=85, colno=22)
-              value: 0.0
-              prefix: 'relative'
+              type: 'relative'
+              value: 0
         <class 'mecha.ast.AstNbtCompound'>
           location: SourceLocation(pos=3169, lineno=85, colno=23)
           end_location: SourceLocation(pos=3272, lineno=85, colno=126)
@@ -2806,20 +2806,20 @@
             <class 'mecha.ast.AstCoordinate'>
               location: SourceLocation(pos=3323, lineno=89, colno=10)
               end_location: SourceLocation(pos=3326, lineno=89, colno=13)
-              value: 100.0
-              prefix: 'absolute'
+              type: 'absolute'
+              value: 100
           y:
             <class 'mecha.ast.AstCoordinate'>
               location: SourceLocation(pos=3327, lineno=89, colno=14)
               end_location: SourceLocation(pos=3329, lineno=89, colno=16)
-              value: 3.0
-              prefix: 'relative'
+              type: 'relative'
+              value: 3
           z:
             <class 'mecha.ast.AstCoordinate'>
               location: SourceLocation(pos=3330, lineno=89, colno=17)
               end_location: SourceLocation(pos=3333, lineno=89, colno=20)
-              value: 100.0
-              prefix: 'absolute'
+              type: 'absolute'
+              value: 100
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=3344, lineno=91, colno=1)
       end_location: SourceLocation(pos=3372, lineno=91, colno=29)

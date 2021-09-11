@@ -41,7 +41,7 @@ def test_argument_examples(
     properties: JsonDict,
     value: str,
 ):
-    if argument_parser not in mc.spec.parsers:
+    if f"command:argument:{argument_parser}" not in mc.spec.parsers:
         pytest.skip()
 
     stream = mc.create_token_stream(value)
@@ -52,6 +52,6 @@ def test_argument_examples(
                 argument_parser,
                 str(properties),
                 value,
-                delegate(argument_parser, stream).dump(),
+                delegate(f"command:argument:{argument_parser}", stream).dump(),
             ]
         )

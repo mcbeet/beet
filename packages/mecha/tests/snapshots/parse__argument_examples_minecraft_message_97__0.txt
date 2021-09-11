@@ -7,7 +7,7 @@ Hello @p :)
 <class 'mecha.ast.AstMessage'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=11, lineno=1, colno=12)
-  sentence:
+  words:
     <class 'mecha.ast.AstValue'>
       location: SourceLocation(pos=0, lineno=1, colno=1)
       end_location: SourceLocation(pos=5, lineno=1, colno=6)
