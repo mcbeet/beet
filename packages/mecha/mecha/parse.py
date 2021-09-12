@@ -1118,7 +1118,8 @@ def parse_swizzle(stream: TokenStream) -> AstValue[str]:
     """Parse swizzle."""
     node = delegate("literal", stream)
 
-    if not 1 <= len(node.value) <= 3 or len(set(node.value)) < len(node.value):
+    normalized = set(node.value[:3]) & {"x", "y", "z"}
+    if not normalized or len(node.value) != len(normalized):
         raise node.emit_error(InvalidSyntax(f"Invalid swizzle {node.value!r}."))
 
     return node
