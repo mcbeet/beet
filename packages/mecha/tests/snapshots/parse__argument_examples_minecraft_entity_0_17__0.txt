@@ -1,0 +1,26 @@
+minecraft:entity 0 17
+---
+{'type': 'entities', 'amount': 'multiple'}
+---
+@a[ nbt = {} , ]
+---
+<class 'mecha.ast.AstSelector'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=16, lineno=1, colno=17)
+  variable: 'a'
+  arguments:
+    <class 'mecha.ast.AstSelectorArgument'>
+      location: SourceLocation(pos=4, lineno=1, colno=5)
+      end_location: SourceLocation(pos=12, lineno=1, colno=13)
+      inverted: False
+      key:
+        <class 'mecha.ast.AstValue'>
+          location: SourceLocation(pos=4, lineno=1, colno=5)
+          end_location: SourceLocation(pos=7, lineno=1, colno=8)
+          value: 'nbt'
+      value:
+        <class 'mecha.ast.AstNbtCompound'>
+          location: SourceLocation(pos=10, lineno=1, colno=11)
+          end_location: SourceLocation(pos=12, lineno=1, colno=13)
+          entries:
+            <empty>

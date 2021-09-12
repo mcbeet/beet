@@ -25,6 +25,8 @@ __all__ = [
     "AstTime",
     "AstSelectorScoreMatch",
     "AstSelectorScores",
+    "AstSelectorAdvancementPredicateMatch",
+    "AstSelectorAdvancementMatch",
     "AstSelectorArgument",
     "AstSelector",
     "AstMessage",
@@ -310,11 +312,21 @@ class AstSelectorScores(AstNode):
 
 
 @dataclass(frozen=True)
+class AstSelectorAdvancementPredicateMatch(AstNode):
+    """Ast selector advancement predicate match node."""
+
+    key: AstValue[str] = required_field()
+    value: AstValue[bool] = required_field()
+
+
+@dataclass(frozen=True)
 class AstSelectorAdvancementMatch(AstNode):
     """Ast selector advancement match node."""
 
     key: AstResourceLocation = required_field()
-    value: AstValue[bool] = required_field()
+    value: Union[
+        AstValue[bool], AstChildren[AstSelectorAdvancementPredicateMatch]
+    ] = required_field()
 
 
 @dataclass(frozen=True)

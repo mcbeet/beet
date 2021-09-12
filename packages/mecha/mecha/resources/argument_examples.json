@@ -168,7 +168,21 @@
         "0123",
         "@e",
         "@e[type=foo]",
-        "dd12be42-52a9-4a91-a8a1-11c01849e498"
+        "dd12be42-52a9-4a91-a8a1-11c01849e498",
+        "@a[ ]",
+        "@a[ advancements = { minecraft:foo = true , minecraft:bar = { qux = true , } , } , ]",
+        "@a[ advancements = { } , advancements = { } , ]",
+        "@a[ distance = ..1 , ]",
+        "@a[ distance = ..-1 , distance = 1..0 , ]",
+        "@a[ gamemode = ! creative , gamemode = ! adventure , ]",
+        "@a[ limit = 1 , ]",
+        "@s[ limit = 0 , limit = 0 , ]",
+        "@a[ level = 1.. , ]",
+        "@a[ level = -1 , level = -1 , ]",
+        "@a[ name = ! \"SPGoding\" , \"name\" = ! Misode ,]",
+        "@a[ name = \"SPGoding\" , \"name\" = Misode ,]",
+        "@a[ nbt = {} , ]",
+        "@a[ predicate = spgoding:foo , predicate = ! spgoding:bar , ]"
       ]
     },
     {
@@ -178,7 +192,11 @@
     {
       "invalid": true,
       "properties": { "type": "players", "amount": "multiple" },
-      "examples": ["@e", "@e[type=foo]"]
+      "examples": [
+        "@e",
+        "@e[type=foo]",
+        "@a[ gamemode = creative , gamemode = unknown , ]"
+      ]
     },
     {
       "properties": { "type": "entities", "amount": "single" },
@@ -372,7 +390,26 @@
   "minecraft:score_holder": [
     {
       "properties": { "amount": "multiple" },
-      "examples": ["Player", "0123", "*", "@e"]
+      "examples": [
+        "Player",
+        "0123",
+        "*",
+        "@e",
+        "@a[ scores = { foo = 1.. , } , ]",
+        "@a[ scores = { } , scores = { } , ]",
+        "@a[ sort = arbitrary , ]",
+        "@a[ tag = foo , tag = ! bar , ]",
+        "@a[ team = ! foo , team = ! bar , ]",
+        "@a[ team = foo , team = bar , ]",
+        "@e[ type = ! skeleton , type = ! zombie , ]",
+        "@e[ type = skeleton , type = zombie , ]",
+        "@e[ type = player ]",
+        "@a[ type = zombie ]",
+        "@a[ x = 0.0 , y = 0.0 , z = 0.0 , dx = 0.0 , dy = 0.0 , dz = 0.0 , ]",
+        "@a[ x = 0.0 , x = 0.0 , dz = 0.0, dz = 0.0 , ]",
+        "@a[ x_rotation = 179.9..-179.9 ,  y_rotation = 179.9..-179.9 , ]",
+        "@a[ x_rotation = 179.9..-179.9 ,  x_rotation = 179.9..-179.9 , ]"
+      ]
     },
     {
       "properties": { "amount": "single" },
@@ -384,7 +421,10 @@
       "examples": [
         "@a",
         "@e[type=minecraft:marker, sort=wat, limit=1]",
-        "@e[tag=foo, sort=nearest]"
+        "@e[tag=foo, sort=nearest]",
+        "@a[ = 1 , ]",
+        "@s[ sort = arbitrary , sort = unknown , ]",
+        "@a[ unknown = 1 , ]"
       ]
     }
   ],

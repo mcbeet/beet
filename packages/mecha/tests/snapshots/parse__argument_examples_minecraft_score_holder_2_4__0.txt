@@ -1,0 +1,10 @@
+minecraft:score_holder 2 4
+---
+{'amount': 'single'}
+---
+@s[ sort = arbitrary , sort = unknown , ]
+---
+InvalidSyntax: Unexpected value 'unknown'.
+
+location = SourceLocation(pos=30, lineno=1, colno=31)
+end_location = SourceLocation(pos=37, lineno=1, colno=38)

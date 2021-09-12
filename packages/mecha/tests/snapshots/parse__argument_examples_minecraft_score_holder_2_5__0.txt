@@ -1,0 +1,10 @@
+minecraft:score_holder 2 5
+---
+{'amount': 'single'}
+---
+@a[ unknown = 1 , ]
+---
+InvalidSyntax: Invalid selector argument 'unknown'.
+
+location = SourceLocation(pos=4, lineno=1, colno=5)
+end_location = SourceLocation(pos=11, lineno=1, colno=12)

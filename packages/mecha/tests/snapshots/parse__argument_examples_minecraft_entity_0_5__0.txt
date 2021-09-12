@@ -1,0 +1,12 @@
+minecraft:entity 0 5
+---
+{'type': 'entities', 'amount': 'multiple'}
+---
+@a[ ]
+---
+<class 'mecha.ast.AstSelector'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=5, lineno=1, colno=6)
+  variable: 'a'
+  arguments:
+    <empty>

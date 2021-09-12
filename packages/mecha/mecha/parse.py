@@ -88,6 +88,7 @@ from .ast import (
     AstRoot,
     AstSelector,
     AstSelectorAdvancementMatch,
+    AstSelectorAdvancementPredicateMatch,
     AstSelectorAdvancements,
     AstSelectorArgument,
     AstSelectorScoreMatch,
@@ -1194,24 +1195,22 @@ class SelectorArgumentParser:
 
     def __call__(self, stream: TokenStream) -> Any:
         with stream.syntax(
-            argument=r"[a-z_]+",
             equal=r"=",
             exclamation=r"!",
         ):
-            key = stream.expect("argument")
-            key_node = AstValue[str](value=key.value)
-            key_node = set_location(key_node, key)
+            key_node = delegate("phrase", stream)
+            argument = key_node.value
 
             stream.expect("equal")
 
             inverted = stream.get("exclamation") is not None
 
             try:
-                value_node = delegate(f"selector:argument:{key.value}", stream)
+                value_node = delegate(f"selector:argument:{argument}", stream)
             except UnrecognizedParser as exc:
                 if not exc.parser.startswith("selector:argument:"):
                     raise
-                syntax_exc = InvalidSyntax(f"Invalid selector argument {key.value!r}.")
+                syntax_exc = InvalidSyntax(f"Invalid selector argument {argument!r}.")
                 raise key_node.emit_error(syntax_exc) from exc
 
         node = AstSelectorArgument(inverted=inverted, key=key_node, value=value_node)
@@ -1253,7 +1252,7 @@ def parse_selector_scores(stream: TokenStream) -> AstSelectorScores:
 
             stream.expect("equal")
 
-            value_node = delegate("minecraft:integer_range", stream)
+            value_node = delegate("integer_range", stream)
 
             match_node = AstSelectorScoreMatch(key=key_node, value=value_node)
             scores.append(set_location(match_node, key_node, value_node))
@@ -1275,9 +1274,30 @@ def parse_selector_advancements(stream: TokenStream) -> AstSelectorAdvancements:
         advancements: List[AstSelectorAdvancementMatch] = []
 
         for _ in stream.peek_until(("curly", "}")):
-            key_node = delegate("minecraft:resource_location", stream)
+            key_node = delegate("resource_location", stream)
             stream.expect("equal")
-            value_node = delegate("brigadier:bool", stream)
+
+            if stream.get("curly"):
+                predicates: List[AstSelectorAdvancementPredicateMatch] = []
+
+                for _ in stream.peek_until(("curly", "}")):
+                    pkey = delegate("word", stream)
+                    stream.expect("equal")
+                    pvalue = delegate("bool", stream)
+
+                    predicate_node = AstSelectorAdvancementPredicateMatch(
+                        key=pkey,
+                        value=pvalue,
+                    )
+                    predicates.append(set_location(predicate_node, pkey, pvalue))
+
+                    if not stream.get("comma"):
+                        stream.expect(("curly", "}"))
+                        break
+
+                value_node = AstChildren(predicates)
+            else:
+                value_node = delegate("bool", stream)
 
             match_node = AstSelectorAdvancementMatch(key=key_node, value=value_node)
             advancements.append(set_location(match_node, key_node, value_node))

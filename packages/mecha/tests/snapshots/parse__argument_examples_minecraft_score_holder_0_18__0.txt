@@ -1,0 +1,41 @@
+minecraft:score_holder 0 18
+---
+{'amount': 'multiple'}
+---
+@a[ x_rotation = 179.9..-179.9 ,  x_rotation = 179.9..-179.9 , ]
+---
+<class 'mecha.ast.AstSelector'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=64, lineno=1, colno=65)
+  variable: 'a'
+  arguments:
+    <class 'mecha.ast.AstSelectorArgument'>
+      location: SourceLocation(pos=4, lineno=1, colno=5)
+      end_location: SourceLocation(pos=30, lineno=1, colno=31)
+      inverted: False
+      key:
+        <class 'mecha.ast.AstValue'>
+          location: SourceLocation(pos=4, lineno=1, colno=5)
+          end_location: SourceLocation(pos=14, lineno=1, colno=15)
+          value: 'x_rotation'
+      value:
+        <class 'mecha.ast.AstRange'>
+          location: SourceLocation(pos=17, lineno=1, colno=18)
+          end_location: SourceLocation(pos=30, lineno=1, colno=31)
+          min: 179.9
+          max: -179.9
+    <class 'mecha.ast.AstSelectorArgument'>
+      location: SourceLocation(pos=34, lineno=1, colno=35)
+      end_location: SourceLocation(pos=60, lineno=1, colno=61)
+      inverted: False
+      key:
+        <class 'mecha.ast.AstValue'>
+          location: SourceLocation(pos=34, lineno=1, colno=35)
+          end_location: SourceLocation(pos=44, lineno=1, colno=45)
+          value: 'x_rotation'
+      value:
+        <class 'mecha.ast.AstRange'>
+          location: SourceLocation(pos=47, lineno=1, colno=48)
+          end_location: SourceLocation(pos=60, lineno=1, colno=61)
+          min: 179.9
+          max: -179.9

@@ -1,0 +1,10 @@
+minecraft:entity 2 2
+---
+{'type': 'players', 'amount': 'multiple'}
+---
+@a[ gamemode = creative , gamemode = unknown , ]
+---
+InvalidSyntax: Unexpected value 'unknown'.
+
+location = SourceLocation(pos=37, lineno=1, colno=38)
+end_location = SourceLocation(pos=44, lineno=1, colno=45)

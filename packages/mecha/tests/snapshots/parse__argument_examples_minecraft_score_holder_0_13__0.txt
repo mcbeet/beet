@@ -1,0 +1,31 @@
+minecraft:score_holder 0 13
+---
+{'amount': 'multiple'}
+---
+@a[ type = zombie ]
+---
+<class 'mecha.ast.AstSelector'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=19, lineno=1, colno=20)
+  variable: 'a'
+  arguments:
+    <class 'mecha.ast.AstSelectorArgument'>
+      location: SourceLocation(pos=4, lineno=1, colno=5)
+      end_location: SourceLocation(pos=17, lineno=1, colno=18)
+      inverted: False
+      key:
+        <class 'mecha.ast.AstValue'>
+          location: SourceLocation(pos=4, lineno=1, colno=5)
+          end_location: SourceLocation(pos=8, lineno=1, colno=9)
+          value: 'type'
+      value:
+        <class 'mecha.ast.AstResourceLocation'>
+          location: SourceLocation(pos=11, lineno=1, colno=12)
+          end_location: SourceLocation(pos=17, lineno=1, colno=18)
+          is_tag: False
+          namespace: None
+          path:
+            <class 'mecha.ast.AstValue'>
+              location: SourceLocation(pos=11, lineno=1, colno=12)
+              end_location: SourceLocation(pos=17, lineno=1, colno=18)
+              value: 'zombie'
