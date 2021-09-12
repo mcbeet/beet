@@ -1,0 +1,10 @@
+minecraft:nbt_tag 1 9
+---
+{}
+---
+{hello,world}
+---
+UnexpectedToken: Expected colon but got comma ','
+
+location = SourceLocation(pos=6, lineno=1, colno=7)
+end_location = SourceLocation(pos=6, lineno=1, colno=7)

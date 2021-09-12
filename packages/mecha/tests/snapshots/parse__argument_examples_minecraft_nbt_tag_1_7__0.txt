@@ -1,0 +1,10 @@
+minecraft:nbt_tag 1 7
+---
+{}
+---
+[I;5l,4l,3]
+---
+InvalidSyntax: Expected all elements to be integers.
+
+location = SourceLocation(pos=3, lineno=1, colno=4)
+end_location = SourceLocation(pos=5, lineno=1, colno=6)

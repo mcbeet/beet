@@ -17,6 +17,9 @@ __all__ = [
     "AstNbtList",
     "AstNbtCompoundEntry",
     "AstNbtCompound",
+    "AstNbtByteArray",
+    "AstNbtIntArray",
+    "AstNbtLongArray",
     "AstResourceLocation",
     "AstBlockState",
     "AstBlock",
@@ -49,8 +52,9 @@ from typing import Any, Generic, Iterator, Literal, Optional, Tuple, TypeVar, Un
 from beet.core.utils import extra_field, required_field
 
 # pyright: reportMissingTypeStubs=false
-from nbtlib import Compound
+from nbtlib import ByteArray, Compound, IntArray
 from nbtlib import List as ListTag
+from nbtlib import LongArray
 from tokenstream import UNKNOWN_LOCATION, SourceLocation, set_location
 
 T = TypeVar("T")
@@ -221,7 +225,7 @@ class AstNbtList(AstNbt):
     elements: AstChildren[AstNbt] = required_field()
 
     def evaluate(self) -> Any:
-        return ListTag([element.evaluate() for element in self.elements])  # type: ignore
+        return ListTag([element.evaluate() for element in self.elements])
 
 
 @dataclass(frozen=True)
@@ -239,9 +243,39 @@ class AstNbtCompound(AstNbt):
     entries: AstChildren[AstNbtCompoundEntry] = required_field()
 
     def evaluate(self) -> Any:
-        return Compound(  # type: ignore
+        return Compound(
             {entry.key.value: entry.value.evaluate() for entry in self.entries},
         )
+
+
+@dataclass(frozen=True)
+class AstNbtByteArray(AstNbt):
+    """Ast nbt byte array node."""
+
+    elements: AstChildren[AstNbt] = required_field()
+
+    def evaluate(self) -> Any:
+        return ByteArray([element.evaluate() for element in self.elements])
+
+
+@dataclass(frozen=True)
+class AstNbtIntArray(AstNbt):
+    """Ast nbt int array node."""
+
+    elements: AstChildren[AstNbt] = required_field()
+
+    def evaluate(self) -> Any:
+        return IntArray([element.evaluate() for element in self.elements])
+
+
+@dataclass(frozen=True)
+class AstNbtLongArray(AstNbt):
+    """Ast nbt long array node."""
+
+    elements: AstChildren[AstNbt] = required_field()
+
+    def evaluate(self) -> Any:
+        return LongArray([element.evaluate() for element in self.elements])
 
 
 @dataclass(frozen=True)

@@ -1,0 +1,14 @@
+minecraft:nbt_tag 0 6
+---
+{}
+---
+[B; 1b]
+---
+<class 'mecha.ast.AstNbtByteArray'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=7, lineno=1, colno=8)
+  elements:
+    <class 'mecha.ast.AstNbtValue'>
+      location: SourceLocation(pos=4, lineno=1, colno=5)
+      end_location: SourceLocation(pos=6, lineno=1, colno=7)
+      value: Byte(1)

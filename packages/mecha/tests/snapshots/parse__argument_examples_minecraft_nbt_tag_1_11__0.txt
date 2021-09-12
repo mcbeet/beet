@@ -1,0 +1,10 @@
+minecraft:nbt_tag 1 11
+---
+{}
+---
+{\": no}
+---
+UnexpectedToken: Expected curly '}' but got literal '\\":'
+
+location = SourceLocation(pos=1, lineno=1, colno=2)
+end_location = SourceLocation(pos=1, lineno=1, colno=2)

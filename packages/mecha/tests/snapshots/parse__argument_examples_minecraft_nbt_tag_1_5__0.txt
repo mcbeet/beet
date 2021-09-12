@@ -1,0 +1,10 @@
+minecraft:nbt_tag 1 5
+---
+{}
+---
+[[],[],1b]
+---
+InvalidSyntax: Expected all elements to have the same type.
+
+location = SourceLocation(pos=7, lineno=1, colno=8)
+end_location = SourceLocation(pos=9, lineno=1, colno=10)

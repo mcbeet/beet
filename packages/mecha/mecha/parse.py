@@ -83,9 +83,12 @@ from .ast import (
     AstJsonValue,
     AstMessage,
     AstNbt,
+    AstNbtByteArray,
     AstNbtCompound,
     AstNbtCompoundEntry,
+    AstNbtIntArray,
     AstNbtList,
+    AstNbtLongArray,
     AstNbtPath,
     AstNbtPathSubscript,
     AstNbtValue,
@@ -825,7 +828,7 @@ class NbtParser:
     """Parser for nbt tags."""
 
     number_suffixes: Dict[str, Type[Any]] = field(
-        default_factory=lambda: {  # type: ignore
+        default_factory=lambda: {
             "b": Byte,
             "s": Short,
             "l": Long,
@@ -835,7 +838,7 @@ class NbtParser:
     )
 
     literal_aliases: Dict[str, Any] = field(
-        default_factory=lambda: {  # type: ignore
+        default_factory=lambda: {
             "true": Byte(1),
             "false": Byte(0),
         }
@@ -851,6 +854,7 @@ class NbtParser:
 
     def __call__(self, stream: TokenStream) -> AstNbt:
         with stream.syntax(
+            array=r"\[[BIL];",
             curly=r"\{|\}",
             bracket=r"\[|\]",
             quoted_string=r'"(?:\\.|[^\\\n])*?"' "|" r"'(?:\\.|[^\\\n])*?'",
@@ -859,9 +863,10 @@ class NbtParser:
             colon=r":",
             comma=r",",
         ):
-            curly, bracket, number, string, quoted_string = stream.expect(
+            curly, bracket, array, number, string, quoted_string = stream.expect(
                 ("curly", "{"),
                 ("bracket", "["),
+                "array",
                 "number",
                 "string",
                 "quoted_string",
@@ -891,7 +896,7 @@ class NbtParser:
                 node = AstNbtCompound(entries=AstChildren(entries))
                 return set_location(node, curly, close_curly)
 
-            elif bracket:
+            elif bracket or array:
                 elements: List[AstNbt] = []
 
                 for _ in stream.peek_until(("bracket", "]")):
@@ -901,8 +906,42 @@ class NbtParser:
                         stream.expect(("bracket", "]"))
                         break
 
-                node = AstNbtList(elements=AstChildren(elements))
-                return set_location(node, bracket, stream.current)
+                if array:
+                    if array.value[1] == "B":
+                        node = AstNbtByteArray(elements=AstChildren(elements))
+                        element_type = Byte
+                        msg = "Expected all elements to be bytes."
+                    elif array.value[1] == "I":
+                        node = AstNbtIntArray(elements=AstChildren(elements))
+                        element_type = Int
+                        msg = "Expected all elements to be integers."
+                    else:
+                        node = AstNbtLongArray(elements=AstChildren(elements))
+                        element_type = Long
+                        msg = "Expected all elements to be long integers."
+                else:
+                    node = AstNbtList(elements=AstChildren(elements))
+                    if node.elements:
+                        if isinstance(elements[0], AstNbtValue):
+                            element_type = type(elements[0].value)
+                        else:
+                            element_type = type(elements[0])
+                    else:
+                        element_type = None
+                    msg = "Expected all elements to have the same type."
+
+                node = set_location(node, bracket or array, stream.current)
+
+                if element_type:
+                    for element in node.elements:
+                        if (
+                            type(element.value) is not element_type
+                            if isinstance(element, AstNbtValue)
+                            else type(element) is not element_type
+                        ):
+                            raise element.emit_error(InvalidSyntax(msg))
+
+                return node
 
             if number:
                 suffix = number.value[-1].lower()
@@ -911,13 +950,13 @@ class NbtParser:
                     if suffix in self.number_suffixes:
                         value = self.number_suffixes[suffix](number.value[:-1])
                     else:
-                        value = (  # type: ignore
+                        value = (
                             Double(number.value)
                             if "." in number.value
                             else Int(number.value)
                         )
                 except (OutOfRange, ValueError):
-                    value = String(number.value)  # type: ignore
+                    value = String(number.value)
 
             elif string:
                 alias = string.value.lower()
@@ -925,12 +964,10 @@ class NbtParser:
                 if alias in self.literal_aliases:
                     value = self.literal_aliases[alias]
                 else:
-                    value = String(string.value)  # type: ignore
+                    value = String(string.value)
 
             elif quoted_string:
-                value = String(self.quote_helper.unquote_string(quoted_string))  # type: ignore
-
-            # TODO: Arrays
+                value = String(self.quote_helper.unquote_string(quoted_string))
 
             node = AstNbtValue(value=value)  # type: ignore
             return set_location(node, stream.current)
