@@ -1,0 +1,10 @@
+minecraft:score_holder 2 2
+---
+{'amount': 'single'}
+---
+@e[tag=foo, sort=nearest]
+---
+InvalidSyntax: Expected entity selector targeting a single entity.
+
+location = SourceLocation(pos=0, lineno=1, colno=1)
+end_location = SourceLocation(pos=25, lineno=1, colno=26)

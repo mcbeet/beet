@@ -1,0 +1,10 @@
+minecraft:resource_location 1 0
+---
+{}
+---
+#thing
+---
+InvalidSyntax: Specifying a tag is not allowed.
+
+location = SourceLocation(pos=0, lineno=1, colno=1)
+end_location = SourceLocation(pos=6, lineno=1, colno=7)

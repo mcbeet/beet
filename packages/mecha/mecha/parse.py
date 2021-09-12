@@ -1304,11 +1304,8 @@ class SelectorPlayerConstraint:
         for argument in node.arguments:
             if argument.key.value in ["gamemode", "level"]:
                 is_player = True
-            if (
-                argument.key.value == "type"
-                and not argument.inverted
-                and argument.value
-                in [
+            if argument.key.value == "type":
+                is_player = not argument.inverted and argument.value in [
                     AstResourceLocation(
                         namespace=AstValue[str](value="minecraft"),
                         path=AstValue[str](value="player"),
@@ -1317,8 +1314,6 @@ class SelectorPlayerConstraint:
                         path=AstValue[str](value="player"),
                     ),
                 ]
-            ):
-                is_player = True
 
         if not is_player:
             exc = InvalidSyntax("Expected player-type entity selector.")
@@ -1358,8 +1353,8 @@ class SelectorSingleConstraint:
         is_single = node.variable in "prs"
 
         for arg in node.arguments:
-            if arg.key.value == "limit" and arg.value == AstValue[int](value=1):
-                is_single = True
+            if arg.key.value == "limit":
+                is_single = arg.value == AstValue[int](value=1)
 
         if not is_single:
             exc = InvalidSyntax("Expected entity selector targeting a single entity.")

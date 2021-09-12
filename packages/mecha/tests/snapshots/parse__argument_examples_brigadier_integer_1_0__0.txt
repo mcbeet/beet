@@ -1,0 +1,10 @@
+brigadier:integer 1 0
+---
+{'min': 7, 'max': 15}
+---
+yolo
+---
+UnexpectedToken: Expected number but got literal 'yolo'
+
+location = SourceLocation(pos=0, lineno=1, colno=1)
+end_location = SourceLocation(pos=0, lineno=1, colno=1)

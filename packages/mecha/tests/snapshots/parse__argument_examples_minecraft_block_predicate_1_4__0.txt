@@ -1,0 +1,10 @@
+minecraft:block_predicate 1 4
+---
+{}
+---
+#stone[thing=hello]{
+---
+UnexpectedEOF: Expected curly '}' but reached end of file
+
+location = SourceLocation(pos=20, lineno=1, colno=21)
+end_location = SourceLocation(pos=20, lineno=1, colno=21)

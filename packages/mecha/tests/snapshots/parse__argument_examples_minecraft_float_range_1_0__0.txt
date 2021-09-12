@@ -1,0 +1,10 @@
+minecraft:float_range 1 0
+---
+{}
+---
+..
+---
+UnexpectedToken: Expected range but got literal '..'
+
+location = SourceLocation(pos=0, lineno=1, colno=1)
+end_location = SourceLocation(pos=0, lineno=1, colno=1)

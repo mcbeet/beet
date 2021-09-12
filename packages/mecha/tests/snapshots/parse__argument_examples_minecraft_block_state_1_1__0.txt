@@ -1,0 +1,10 @@
+minecraft:block_state 1 1
+---
+{}
+---
+#stone[foo=bar,
+---
+InvalidSyntax: Specifying a tag is not allowed.
+
+location = SourceLocation(pos=0, lineno=1, colno=1)
+end_location = SourceLocation(pos=6, lineno=1, colno=7)

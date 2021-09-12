@@ -1,0 +1,47 @@
+minecraft:message 0 4
+---
+{}
+---
+foo @a[tag=a, tag=b]
+---
+<class 'mecha.ast.AstMessage'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=20, lineno=1, colno=21)
+  words:
+    <class 'mecha.ast.AstValue'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=3, lineno=1, colno=4)
+      value: 'foo'
+    <class 'mecha.ast.AstSelector'>
+      location: SourceLocation(pos=4, lineno=1, colno=5)
+      end_location: SourceLocation(pos=20, lineno=1, colno=21)
+      variable: 'a'
+      arguments:
+        <class 'mecha.ast.AstSelectorArgument'>
+          location: SourceLocation(pos=7, lineno=1, colno=8)
+          end_location: SourceLocation(pos=12, lineno=1, colno=13)
+          inverted: False
+          key:
+            <class 'mecha.ast.AstValue'>
+              location: SourceLocation(pos=7, lineno=1, colno=8)
+              end_location: SourceLocation(pos=10, lineno=1, colno=11)
+              value: 'tag'
+          value:
+            <class 'mecha.ast.AstValue'>
+              location: SourceLocation(pos=11, lineno=1, colno=12)
+              end_location: SourceLocation(pos=12, lineno=1, colno=13)
+              value: 'a'
+        <class 'mecha.ast.AstSelectorArgument'>
+          location: SourceLocation(pos=14, lineno=1, colno=15)
+          end_location: SourceLocation(pos=19, lineno=1, colno=20)
+          inverted: False
+          key:
+            <class 'mecha.ast.AstValue'>
+              location: SourceLocation(pos=14, lineno=1, colno=15)
+              end_location: SourceLocation(pos=17, lineno=1, colno=18)
+              value: 'tag'
+          value:
+            <class 'mecha.ast.AstValue'>
+              location: SourceLocation(pos=18, lineno=1, colno=19)
+              end_location: SourceLocation(pos=19, lineno=1, colno=20)
+              value: 'b'

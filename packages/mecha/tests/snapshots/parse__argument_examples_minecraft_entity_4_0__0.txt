@@ -1,0 +1,10 @@
+minecraft:entity 4 0
+---
+{'type': 'entities', 'amount': 'single'}
+---
+@r[limit=7]
+---
+InvalidSyntax: Expected entity selector targeting a single entity.
+
+location = SourceLocation(pos=0, lineno=1, colno=1)
+end_location = SourceLocation(pos=11, lineno=1, colno=12)

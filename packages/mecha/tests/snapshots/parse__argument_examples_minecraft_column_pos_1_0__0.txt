@@ -1,0 +1,10 @@
+minecraft:column_pos 1 0
+---
+{}
+---
+7
+---
+UnexpectedEOF: Expected coordinate but reached end of file
+
+location = SourceLocation(pos=1, lineno=1, colno=2)
+end_location = SourceLocation(pos=1, lineno=1, colno=2)

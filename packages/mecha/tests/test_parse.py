@@ -26,12 +26,12 @@ def test_command_examples(snapshot: SnapshotFixture, mc: Mecha):
 
 
 @pytest.mark.parametrize(
-    "test_name, properties, is_error, value",
+    "test_name, properties, invalid, value",
     params := [
         (
             f"{argument_parser} {i} {j}",
             suite.get("properties", {}),
-            suite.get("is_error", False),
+            suite.get("invalid", False),
             value,
         )
         for argument_parser, suites in get_argument_examples().items()
@@ -45,7 +45,7 @@ def test_argument_examples(
     mc: Mecha,
     test_name: str,
     properties: JsonDict,
-    is_error: bool,
+    invalid: bool,
     value: str,
 ):
     argument_parser = f"command:argument:{test_name.partition(' ')[0]}"
@@ -55,7 +55,7 @@ def test_argument_examples(
     stream = mc.create_token_stream(value)
 
     with stream.syntax(literal=r"\S+"), stream.provide(properties=properties):
-        if is_error:
+        if invalid:
             with pytest.raises(InvalidSyntax) as exc_info:
                 delegate(argument_parser, stream)
             assert snapshot() == "\n---\n".join(
@@ -63,7 +63,7 @@ def test_argument_examples(
                     test_name,
                     str(properties),
                     value,
-                    str(exc_info.value),
+                    f"{exc_info.type.__name__}: {exc_info.value}\n\nlocation = {exc_info.value.location}\nend_location = {exc_info.value.end_location}",
                 ]
             )
         else:

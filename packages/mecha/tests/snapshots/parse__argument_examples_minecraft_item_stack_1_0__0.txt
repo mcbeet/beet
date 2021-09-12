@@ -1,0 +1,10 @@
+minecraft:item_stack 1 0
+---
+{}
+---
+#minecraft:stone
+---
+InvalidSyntax: Specifying a tag is not allowed.
+
+location = SourceLocation(pos=0, lineno=1, colno=1)
+end_location = SourceLocation(pos=16, lineno=1, colno=17)

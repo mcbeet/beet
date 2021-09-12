@@ -1,0 +1,15 @@
+minecraft:nbt_path 0 6
+---
+{}
+---
+{}
+---
+<class 'mecha.ast.AstNbtPath'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=2, lineno=1, colno=3)
+  components:
+    <class 'mecha.ast.AstNbtCompound'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=2, lineno=1, colno=3)
+      entries:
+        <empty>

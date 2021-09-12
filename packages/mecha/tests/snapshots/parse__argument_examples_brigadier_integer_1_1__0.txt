@@ -1,0 +1,10 @@
+brigadier:integer 1 1
+---
+{'min': 7, 'max': 15}
+---
+-3
+---
+InvalidSyntax: Expected value to be at least 7.
+
+location = SourceLocation(pos=0, lineno=1, colno=1)
+end_location = SourceLocation(pos=2, lineno=1, colno=3)

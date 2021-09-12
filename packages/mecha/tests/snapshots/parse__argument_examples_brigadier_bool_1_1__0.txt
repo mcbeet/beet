@@ -1,0 +1,10 @@
+brigadier:bool 1 1
+---
+{}
+---
+thing
+---
+UnexpectedToken: Expected literal 'true' or literal 'false' but got literal 'thing'
+
+location = SourceLocation(pos=0, lineno=1, colno=1)
+end_location = SourceLocation(pos=0, lineno=1, colno=1)

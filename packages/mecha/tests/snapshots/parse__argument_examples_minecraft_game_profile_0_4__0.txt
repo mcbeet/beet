@@ -1,0 +1,35 @@
+minecraft:game_profile 0 4
+---
+{}
+---
+@e[type=minecraft:player]
+---
+<class 'mecha.ast.AstSelector'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=25, lineno=1, colno=26)
+  variable: 'e'
+  arguments:
+    <class 'mecha.ast.AstSelectorArgument'>
+      location: SourceLocation(pos=3, lineno=1, colno=4)
+      end_location: SourceLocation(pos=24, lineno=1, colno=25)
+      inverted: False
+      key:
+        <class 'mecha.ast.AstValue'>
+          location: SourceLocation(pos=3, lineno=1, colno=4)
+          end_location: SourceLocation(pos=7, lineno=1, colno=8)
+          value: 'type'
+      value:
+        <class 'mecha.ast.AstResourceLocation'>
+          location: SourceLocation(pos=8, lineno=1, colno=9)
+          end_location: SourceLocation(pos=24, lineno=1, colno=25)
+          is_tag: False
+          namespace:
+            <class 'mecha.ast.AstValue'>
+              location: SourceLocation(pos=8, lineno=1, colno=9)
+              end_location: SourceLocation(pos=17, lineno=1, colno=18)
+              value: 'minecraft'
+          path:
+            <class 'mecha.ast.AstValue'>
+              location: SourceLocation(pos=18, lineno=1, colno=19)
+              end_location: SourceLocation(pos=24, lineno=1, colno=25)
+              value: 'player'

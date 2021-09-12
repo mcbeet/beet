@@ -1,0 +1,10 @@
+minecraft:nbt_compound_tag 1 0
+---
+{}
+---
+[{foo:bar}]
+---
+InvalidSyntax: Expected nbt compound.
+
+location = SourceLocation(pos=0, lineno=1, colno=1)
+end_location = SourceLocation(pos=11, lineno=1, colno=12)
