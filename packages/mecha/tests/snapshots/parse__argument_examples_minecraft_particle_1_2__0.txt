@@ -1,0 +1,10 @@
+minecraft:particle 1 2
+---
+{}
+---
+block minecraft:grass_block[snowy=]
+---
+UnexpectedToken: Expected state but got bracket ']'
+
+location = SourceLocation(pos=34, lineno=1, colno=35)
+end_location = SourceLocation(pos=34, lineno=1, colno=35)

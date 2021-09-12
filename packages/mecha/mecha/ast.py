@@ -32,6 +32,14 @@ __all__ = [
     "AstMessage",
     "AstNbtPathSubscript",
     "AstNbtPath",
+    "AstParticleParameters",
+    "AstDustParticleParameters",
+    "AstDustColorTransitionParticleParameters",
+    "AstBlockParticleParameters",
+    "AstFallingDustParticleParameters",
+    "AstItemParticleParameters",
+    "AstVibrationParticleParameters",
+    "AstParticle",
 ]
 
 
@@ -244,6 +252,12 @@ class AstResourceLocation(AstNode):
     namespace: Optional[AstValue[str]] = None
     path: AstValue[str] = required_field()
 
+    def get_canonical_value(self) -> str:
+        """Return the canonical value of the resource location as a string."""
+        prefix = "#" if self.is_tag else ""
+        namespace = f"{self.namespace.value}:" if self.namespace else "minecraft:"
+        return prefix + namespace + self.path.value
+
 
 @dataclass(frozen=True)
 class AstBlockState(AstNode):
@@ -374,3 +388,73 @@ class AstNbtPath(AstNode):
     components: AstChildren[
         Union[AstValue[str], AstNbtCompound, AstNbtPathSubscript]
     ] = required_field()
+
+
+@dataclass(frozen=True)
+class AstParticleParameters(AstNode):
+    """Base ast node for particle parameters."""
+
+
+@dataclass(frozen=True)
+class AstDustParticleParameters(AstParticleParameters):
+    """Ast dust particle parameters node."""
+
+    red: AstValue[Union[int, float]] = required_field()
+    green: AstValue[Union[int, float]] = required_field()
+    blue: AstValue[Union[int, float]] = required_field()
+    size: AstValue[Union[int, float]] = required_field()
+
+
+@dataclass(frozen=True)
+class AstDustColorTransitionParticleParameters(AstParticleParameters):
+    """Ast dust color transition particle parameters node."""
+
+    red: AstValue[Union[int, float]] = required_field()
+    green: AstValue[Union[int, float]] = required_field()
+    blue: AstValue[Union[int, float]] = required_field()
+    size: AstValue[Union[int, float]] = required_field()
+    end_red: AstValue[Union[int, float]] = required_field()
+    end_green: AstValue[Union[int, float]] = required_field()
+    end_blue: AstValue[Union[int, float]] = required_field()
+
+
+@dataclass(frozen=True)
+class AstBlockParticleParameters(AstParticleParameters):
+    """Ast block particle parameters node."""
+
+    block: AstBlock = required_field()
+
+
+@dataclass(frozen=True)
+class AstFallingDustParticleParameters(AstParticleParameters):
+    """Ast falling dust particle parameters node."""
+
+    block: AstBlock = required_field()
+
+
+@dataclass(frozen=True)
+class AstItemParticleParameters(AstParticleParameters):
+    """Ast item particle parameters node."""
+
+    item: AstItem = required_field()
+
+
+@dataclass(frozen=True)
+class AstVibrationParticleParameters(AstParticleParameters):
+    """Ast vibration particle parameters node."""
+
+    x1: AstValue[Union[int, float]] = required_field()
+    y1: AstValue[Union[int, float]] = required_field()
+    z1: AstValue[Union[int, float]] = required_field()
+    x2: AstValue[Union[int, float]] = required_field()
+    y2: AstValue[Union[int, float]] = required_field()
+    z2: AstValue[Union[int, float]] = required_field()
+    duration: AstValue[int] = required_field()
+
+
+@dataclass(frozen=True)
+class AstParticle(AstNode):
+    """Ast particle node."""
+
+    name: AstResourceLocation = required_field()
+    parameters: Optional[AstParticleParameters] = None

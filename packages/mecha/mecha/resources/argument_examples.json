@@ -366,7 +366,29 @@
   ],
   "minecraft:particle": [
     {
-      "examples": ["foo", "foo:bar", "particle with options"]
+      "examples": [
+        "foo",
+        "foo:bar",
+        "dust 1.0 0.5 0.5 1.0",
+        "minecraft:dust_color_transition 1.0 0.0 0.0 1.0 0.0 0.0 1.0",
+        "block minecraft:grass_block[snowy=true]",
+        "falling_dust minecraft:grass_block[snowy=true]{hello: world}",
+        "item minecraft:apple",
+        "item minecraft:apple{foo: bar}",
+        "vibration 0.0 64.0 0.0 5.0 64.0 0.0 200"
+      ]
+    },
+    {
+      "invalid": true,
+      "examples": [
+        "dust 1.0 0.5 0.5",
+        "minecraft:dust_color_transition 1.0 0.0 0.0 hello",
+        "block minecraft:grass_block[snowy=]",
+        "falling_dust grass_block[snowy=true]{hello: world wat}",
+        "item minecraft:apple{",
+        "vibration 0.0 64.0 0.0 5.0 thing",
+        "vibration 0.0 64.0"
+      ]
     }
   ],
   "minecraft:resource_location": [

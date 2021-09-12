@@ -48,6 +48,8 @@ __all__ = [
     "ScoreHolderParser",
     "parse_message",
     "NbtPathParser",
+    "parse_particle",
+    "AggregateParser",
     "NUMBER_PATTERN",
 ]
 
@@ -64,11 +66,16 @@ from tokenstream import InvalidSyntax, SourceLocation, Token, TokenStream, set_l
 
 from .ast import (
     AstBlock,
+    AstBlockParticleParameters,
     AstBlockState,
     AstChildren,
     AstCommand,
     AstCoordinate,
+    AstDustColorTransitionParticleParameters,
+    AstDustParticleParameters,
+    AstFallingDustParticleParameters,
     AstItem,
+    AstItemParticleParameters,
     AstJson,
     AstJsonArray,
     AstJsonObject,
@@ -83,6 +90,7 @@ from .ast import (
     AstNbtPathSubscript,
     AstNbtValue,
     AstNode,
+    AstParticle,
     AstRange,
     AstResourceLocation,
     AstRoot,
@@ -97,6 +105,7 @@ from .ast import (
     AstValue,
     AstVector2,
     AstVector3,
+    AstVibrationParticleParameters,
 )
 from .error import InvalidEscapeSequence, UnrecognizedParser
 from .spec import CommandSpec, Parser
@@ -146,6 +155,67 @@ def get_default_parsers() -> Dict[str, Parser]:
         ),
         "swizzle": parse_swizzle,
         "team": ValueParser("team", r"[a-zA-Z0-9_.+-]+"),
+        ################################################################################
+        # Particle
+        ################################################################################
+        "particle": parse_particle,
+        "particle:minecraft:dust": AggregateParser(
+            type=AstDustParticleParameters,
+            fields={
+                "red": delegate("numeric"),
+                "green": delegate("numeric"),
+                "blue": delegate("numeric"),
+                "size": delegate("numeric"),
+            },
+        ),
+        "particle:minecraft:dust_color_transition": AggregateParser(
+            type=AstDustColorTransitionParticleParameters,
+            fields={
+                "red": delegate("numeric"),
+                "green": delegate("numeric"),
+                "blue": delegate("numeric"),
+                "size": delegate("numeric"),
+                "end_red": delegate("numeric"),
+                "end_green": delegate("numeric"),
+                "end_blue": delegate("numeric"),
+            },
+        ),
+        "particle:minecraft:block": AggregateParser(
+            type=AstBlockParticleParameters,
+            fields={
+                "block": BlockParser(
+                    resource_location_parser=delegate("resource_location"),
+                )
+            },
+        ),
+        "particle:minecraft:falling_dust": AggregateParser(
+            type=AstFallingDustParticleParameters,
+            fields={
+                "block": BlockParser(
+                    resource_location_parser=delegate("resource_location"),
+                )
+            },
+        ),
+        "particle:minecraft:item": AggregateParser(
+            type=AstItemParticleParameters,
+            fields={
+                "item": ItemParser(
+                    resource_location_parser=delegate("resource_location"),
+                )
+            },
+        ),
+        "particle:minecraft:vibration": AggregateParser(
+            type=AstVibrationParticleParameters,
+            fields={
+                "x1": delegate("numeric"),
+                "y1": delegate("numeric"),
+                "z1": delegate("numeric"),
+                "x2": delegate("numeric"),
+                "y2": delegate("numeric"),
+                "z2": delegate("numeric"),
+                "duration": delegate("integer"),
+            },
+        ),
         ################################################################################
         # Selector
         ################################################################################
@@ -297,7 +367,7 @@ def get_default_parsers() -> Dict[str, Parser]:
                 "><",
             ],
         ),
-        # TODO: "minecraft:particle"
+        "command:argument:minecraft:particle": delegate("particle"),
         "command:argument:minecraft:resource_location": delegate("resource_location"),
         "command:argument:minecraft:rotation": Vector2Parser(
             coordinate_parser=RestrictCoordinateConstraint(
@@ -431,6 +501,8 @@ def parse_command(stream: TokenStream) -> AstCommand:
         end_location = location
 
     while tree and tree.children:
+        newline = None
+
         for (name, child), alternative in stream.choose(*tree.children.items()):
             with alternative, stream.provide(scope=scope + (name,)):
                 if child.type == "literal":
@@ -442,10 +514,15 @@ def parse_command(stream: TokenStream) -> AstCommand:
                     arguments.append(node)
                     end_location = node.end_location
 
+                if not child.redirect and not child.children:
+                    newline = stream.expect("newline")
+                elif child.executable:
+                    newline = stream.get("newline")
+
                 scope = stream.data["scope"]
                 tree = child
 
-        if tree.executable and stream.get("newline"):
+        if newline:
             break
 
         target = spec.tree.get(tree.redirect)
@@ -1325,15 +1402,11 @@ class SelectorPlayerConstraint:
             if argument.key.value in ["gamemode", "level"]:
                 is_player = True
             if argument.key.value == "type":
-                is_player = not argument.inverted and argument.value in [
-                    AstResourceLocation(
-                        namespace=AstValue[str](value="minecraft"),
-                        path=AstValue[str](value="player"),
-                    ),
-                    AstResourceLocation(
-                        path=AstValue[str](value="player"),
-                    ),
-                ]
+                is_player = (
+                    not argument.inverted
+                    and isinstance(entity_type := argument.value, AstResourceLocation)
+                    and entity_type.get_canonical_value() == "minecraft:player"
+                )
 
         if not is_player:
             exc = InvalidSyntax("Expected player-type entity selector.")
@@ -1529,3 +1602,31 @@ class NbtPathParser:
 
             subscript_node = AstNbtPathSubscript(index=index)
             yield set_location(subscript_node, bracket, close_bracket)
+
+
+def parse_particle(stream: TokenStream) -> AstParticle:
+    """Parse particle."""
+    name: AstResourceLocation = delegate("resource_location", stream)
+    parameters = None
+
+    try:
+        parameters = delegate(f"particle:{name.get_canonical_value()}", stream)
+    except UnrecognizedParser as exc:
+        if not exc.parser.startswith("particle:"):
+            raise
+
+    node = AstParticle(name=name, parameters=parameters)
+    return set_location(node, name, parameters if parameters else name)
+
+
+@dataclass
+class AggregateParser:
+    """Parser that creates a node by parsing the given fields one after the other."""
+
+    type: Type[AstNode]
+    fields: Dict[str, Parser]
+
+    def __call__(self, stream: TokenStream) -> Any:
+        values = [(name, parser(stream)) for name, parser in self.fields.items()]
+        node = self.type(**dict(values))
+        return set_location(node, values[0][1], values[-1][1])
