@@ -1,0 +1,10 @@
+brigadier:string 1 1
+---
+{'type': 'phrase'}
+---
+word
+---
+<class 'mecha.ast.AstValue'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=4, lineno=1, colno=5)
+  value: 'word'

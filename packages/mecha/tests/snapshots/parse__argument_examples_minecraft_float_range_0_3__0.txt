@@ -1,0 +1,11 @@
+minecraft:float_range 0 3
+---
+{}
+---
+-100.76..
+---
+<class 'mecha.ast.AstRange'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=9, lineno=1, colno=10)
+  min: -100.76
+  max: None

@@ -1,0 +1,16 @@
+minecraft:message 0 2
+---
+{}
+---
+@e
+---
+<class 'mecha.ast.AstMessage'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=2, lineno=1, colno=3)
+  words:
+    <class 'mecha.ast.AstSelector'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=2, lineno=1, colno=3)
+      variable: 'e'
+      arguments:
+        <empty>

@@ -1,0 +1,27 @@
+minecraft:block_pos 0 3
+---
+{}
+---
+^1 ^ ^-5
+---
+<class 'mecha.ast.AstVector3'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=8, lineno=1, colno=9)
+  x:
+    <class 'mecha.ast.AstCoordinate'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=2, lineno=1, colno=3)
+      type: 'local'
+      value: 1
+  y:
+    <class 'mecha.ast.AstCoordinate'>
+      location: SourceLocation(pos=3, lineno=1, colno=4)
+      end_location: SourceLocation(pos=4, lineno=1, colno=5)
+      type: 'local'
+      value: 0
+  z:
+    <class 'mecha.ast.AstCoordinate'>
+      location: SourceLocation(pos=5, lineno=1, colno=6)
+      end_location: SourceLocation(pos=8, lineno=1, colno=9)
+      type: 'local'
+      value: -5

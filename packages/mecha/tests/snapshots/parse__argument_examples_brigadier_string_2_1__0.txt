@@ -1,0 +1,10 @@
+brigadier:string 2 1
+---
+{'type': 'greedy'}
+---
+words with spaces
+---
+<class 'mecha.ast.AstValue'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=17, lineno=1, colno=18)
+  value: 'words with spaces'

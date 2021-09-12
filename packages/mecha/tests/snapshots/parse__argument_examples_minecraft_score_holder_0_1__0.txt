@@ -1,0 +1,10 @@
+minecraft:score_holder 0 1
+---
+{'amount': 'multiple'}
+---
+0123
+---
+<class 'mecha.ast.AstValue'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=4, lineno=1, colno=5)
+  value: '0123'

@@ -1,0 +1,11 @@
+minecraft:int_range 0 0
+---
+{}
+---
+0..5
+---
+<class 'mecha.ast.AstRange'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=4, lineno=1, colno=5)
+  min: 0
+  max: 5

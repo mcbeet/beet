@@ -1,0 +1,23 @@
+minecraft:block_predicate 0 0
+---
+{}
+---
+stone
+---
+<class 'mecha.ast.AstBlock'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=5, lineno=1, colno=6)
+  identifier:
+    <class 'mecha.ast.AstResourceLocation'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=5, lineno=1, colno=6)
+      is_tag: False
+      namespace: None
+      path:
+        <class 'mecha.ast.AstValue'>
+          location: SourceLocation(pos=0, lineno=1, colno=1)
+          end_location: SourceLocation(pos=5, lineno=1, colno=6)
+          value: 'stone'
+  block_states:
+    <empty>
+  data_tags: None

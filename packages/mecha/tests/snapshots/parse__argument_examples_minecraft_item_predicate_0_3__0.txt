@@ -1,0 +1,38 @@
+minecraft:item_predicate 0 3
+---
+{}
+---
+#stick{foo:bar}
+---
+<class 'mecha.ast.AstItem'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=15, lineno=1, colno=16)
+  identifier:
+    <class 'mecha.ast.AstResourceLocation'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=6, lineno=1, colno=7)
+      is_tag: True
+      namespace: None
+      path:
+        <class 'mecha.ast.AstValue'>
+          location: SourceLocation(pos=1, lineno=1, colno=2)
+          end_location: SourceLocation(pos=6, lineno=1, colno=7)
+          value: 'stick'
+  data_tags:
+    <class 'mecha.ast.AstNbtCompound'>
+      location: SourceLocation(pos=6, lineno=1, colno=7)
+      end_location: SourceLocation(pos=15, lineno=1, colno=16)
+      entries:
+        <class 'mecha.ast.AstNbtCompoundEntry'>
+          location: SourceLocation(pos=7, lineno=1, colno=8)
+          end_location: SourceLocation(pos=14, lineno=1, colno=15)
+          key:
+            <class 'mecha.ast.AstValue'>
+              location: SourceLocation(pos=7, lineno=1, colno=8)
+              end_location: SourceLocation(pos=10, lineno=1, colno=11)
+              value: 'foo'
+          value:
+            <class 'mecha.ast.AstNbtValue'>
+              location: SourceLocation(pos=11, lineno=1, colno=12)
+              end_location: SourceLocation(pos=14, lineno=1, colno=15)
+              value: String('bar')

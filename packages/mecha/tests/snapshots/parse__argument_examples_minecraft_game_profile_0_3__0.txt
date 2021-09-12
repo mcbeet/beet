@@ -1,0 +1,12 @@
+minecraft:game_profile 0 3
+---
+{}
+---
+@p
+---
+<class 'mecha.ast.AstSelector'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=2, lineno=1, colno=3)
+  variable: 'p'
+  arguments:
+    <empty>

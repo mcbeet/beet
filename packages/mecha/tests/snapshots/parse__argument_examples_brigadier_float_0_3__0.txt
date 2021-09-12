@@ -1,0 +1,10 @@
+brigadier:float 0 3
+---
+{}
+---
+-1
+---
+<class 'mecha.ast.AstValue'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=2, lineno=1, colno=3)
+  value: -1

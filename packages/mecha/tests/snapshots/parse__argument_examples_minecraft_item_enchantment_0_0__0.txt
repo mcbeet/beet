@@ -1,0 +1,10 @@
+minecraft:item_enchantment 0 0
+---
+{}
+---
+unbreaking
+---
+<class 'mecha.ast.AstValue'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=10, lineno=1, colno=11)
+  value: 'unbreaking'
