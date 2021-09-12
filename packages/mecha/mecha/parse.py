@@ -1310,13 +1310,10 @@ class SelectorPlayerConstraint:
                 and argument.value
                 in [
                     AstResourceLocation(
-                        is_tag=False,
                         namespace=AstValue[str](value="minecraft"),
                         path=AstValue[str](value="player"),
                     ),
                     AstResourceLocation(
-                        is_tag=False,
-                        namespace=None,
                         path=AstValue[str](value="player"),
                     ),
                 ]
