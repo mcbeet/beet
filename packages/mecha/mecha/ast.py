@@ -225,7 +225,7 @@ class AstNbtList(AstNbt):
     elements: AstChildren[AstNbt] = required_field()
 
     def evaluate(self) -> Any:
-        return ListTag([element.evaluate() for element in self.elements])
+        return ListTag([element.evaluate() for element in self.elements])  # type: ignore
 
 
 @dataclass(frozen=True)
@@ -243,7 +243,7 @@ class AstNbtCompound(AstNbt):
     entries: AstChildren[AstNbtCompoundEntry] = required_field()
 
     def evaluate(self) -> Any:
-        return Compound(
+        return Compound(  # type: ignore
             {entry.key.value: entry.value.evaluate() for entry in self.entries},
         )
 
@@ -255,7 +255,7 @@ class AstNbtByteArray(AstNbt):
     elements: AstChildren[AstNbt] = required_field()
 
     def evaluate(self) -> Any:
-        return ByteArray([element.evaluate() for element in self.elements])
+        return ByteArray([element.evaluate() for element in self.elements])  # type: ignore
 
 
 @dataclass(frozen=True)
@@ -265,7 +265,7 @@ class AstNbtIntArray(AstNbt):
     elements: AstChildren[AstNbt] = required_field()
 
     def evaluate(self) -> Any:
-        return IntArray([element.evaluate() for element in self.elements])
+        return IntArray([element.evaluate() for element in self.elements])  # type: ignore
 
 
 @dataclass(frozen=True)
@@ -275,7 +275,7 @@ class AstNbtLongArray(AstNbt):
     elements: AstChildren[AstNbt] = required_field()
 
     def evaluate(self) -> Any:
-        return LongArray([element.evaluate() for element in self.elements])
+        return LongArray([element.evaluate() for element in self.elements])  # type: ignore
 
 
 @dataclass(frozen=True)

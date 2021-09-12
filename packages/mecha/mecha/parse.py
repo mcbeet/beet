@@ -828,7 +828,7 @@ class NbtParser:
     """Parser for nbt tags."""
 
     number_suffixes: Dict[str, Type[Any]] = field(
-        default_factory=lambda: {
+        default_factory=lambda: {  # type: ignore
             "b": Byte,
             "s": Short,
             "l": Long,
@@ -838,7 +838,7 @@ class NbtParser:
     )
 
     literal_aliases: Dict[str, Any] = field(
-        default_factory=lambda: {
+        default_factory=lambda: {  # type: ignore
             "true": Byte(1),
             "false": Byte(0),
         }
@@ -909,15 +909,15 @@ class NbtParser:
                 if array:
                     if array.value[1] == "B":
                         node = AstNbtByteArray(elements=AstChildren(elements))
-                        element_type = Byte
+                        element_type = Byte  # type: ignore
                         msg = "Expected all elements to be bytes."
                     elif array.value[1] == "I":
                         node = AstNbtIntArray(elements=AstChildren(elements))
-                        element_type = Int
+                        element_type = Int  # type: ignore
                         msg = "Expected all elements to be integers."
                     else:
                         node = AstNbtLongArray(elements=AstChildren(elements))
-                        element_type = Long
+                        element_type = Long  # type: ignore
                         msg = "Expected all elements to be long integers."
                 else:
                     node = AstNbtList(elements=AstChildren(elements))
@@ -950,13 +950,13 @@ class NbtParser:
                     if suffix in self.number_suffixes:
                         value = self.number_suffixes[suffix](number.value[:-1])
                     else:
-                        value = (
+                        value = (  # type: ignore
                             Double(number.value)
                             if "." in number.value
                             else Int(number.value)
                         )
                 except (OutOfRange, ValueError):
-                    value = String(number.value)
+                    value = String(number.value)  # type: ignore
 
             elif string:
                 alias = string.value.lower()
@@ -964,10 +964,10 @@ class NbtParser:
                 if alias in self.literal_aliases:
                     value = self.literal_aliases[alias]
                 else:
-                    value = String(string.value)
+                    value = String(string.value)  # type: ignore
 
             elif quoted_string:
-                value = String(self.quote_helper.unquote_string(quoted_string))
+                value = String(self.quote_helper.unquote_string(quoted_string))  # type: ignore
 
             node = AstNbtValue(value=value)  # type: ignore
             return set_location(node, stream.current)
