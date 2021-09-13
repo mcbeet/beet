@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.41.2 (2021-09-13)
+### Fix
+* Make file instances hashable based on their runtime ids ([`c696466`](https://github.com/mcbeet/beet/commit/c696466df9308c6625a8532ca390a82ad94af3e5))
+
 ## v0.41.1 (2021-09-11)
 ### Fix
 * Provide the required_field utility ([`f5cbf9c`](https://github.com/mcbeet/beet/commit/f5cbf9c0fb22f47f6d14001b50c72bf839752c68))
