@@ -53,7 +53,7 @@ TextFileContent = Union[ValueType, str, None]
 BinaryFileContent = Union[ValueType, bytes, None]
 
 
-@dataclass
+@dataclass(eq=False)
 class File(Generic[ValueType, SerializeType]):
     """Base file class."""
 
@@ -142,6 +142,9 @@ class File(Generic[ValueType, SerializeType]):
             or self.ensure_serialized() == other.ensure_serialized()
             or self.ensure_deserialized() == other.ensure_deserialized()
         )
+
+    def __hash__(self) -> int:
+        return id(self)
 
     @classmethod
     def default(cls) -> ValueType:
