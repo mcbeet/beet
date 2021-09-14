@@ -472,7 +472,7 @@ class QuoteHelper:
 
 def parse_root(stream: TokenStream) -> AstRoot:
     """Parse root."""
-    with stream.syntax(comment=r"#.+$", literal=r"\S+"), stream.intercept("newline"):
+    with stream.syntax(comment=r"#.+$"), stream.intercept("newline"):
         start = stream.peek()
 
         if not start:
@@ -504,7 +504,7 @@ def parse_command(stream: TokenStream) -> AstCommand:
         end_location = location
 
     while tree and tree.children:
-        newline = None
+        should_break = False
 
         for (name, child), alternative in stream.choose(*tree.children.items()):
             with alternative, stream.provide(scope=scope + (name,)):
@@ -517,15 +517,17 @@ def parse_command(stream: TokenStream) -> AstCommand:
                     arguments.append(node)
                     end_location = node.end_location
 
-                if not child.redirect and not child.children:
-                    newline = stream.expect("newline")
-                elif child.executable:
-                    newline = stream.get("newline")
+                with stream.intercept("eof"):
+                    if not child.redirect and not child.children:
+                        stream.expect("newline", "eof")
+                        should_break = True
+                    elif child.executable and stream.get("newline", "eof"):
+                        should_break = True
 
                 scope = stream.data["scope"]
                 tree = child
 
-        if newline:
+        if should_break:
             break
 
         target = spec.tree.get(tree.redirect)

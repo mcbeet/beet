@@ -2,7 +2,7 @@ import pytest
 from beet import Function
 from beet.core.utils import JsonDict
 from pytest_insta import SnapshotFixture
-from tokenstream import InvalidSyntax
+from tokenstream import InvalidSyntax, TokenStream
 
 from mecha import Mecha, delegate, get_argument_examples, get_command_examples
 
@@ -52,9 +52,9 @@ def test_argument_examples(
     if argument_parser not in mc.spec.parsers:
         pytest.skip()
 
-    stream = mc.create_token_stream(value)
+    stream = TokenStream(value)
 
-    with stream.syntax(literal=r"\S+"), stream.provide(properties=properties):
+    with mc.prepare_token_stream(stream), stream.provide(properties=properties):
         if invalid:
             with pytest.raises(InvalidSyntax) as exc_info:
                 delegate(argument_parser, stream)

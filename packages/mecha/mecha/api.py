@@ -3,8 +3,9 @@ __all__ = [
 ]
 
 
+from contextlib import contextmanager
 from dataclasses import InitVar, dataclass, replace
-from typing import Any, List, Optional, Union
+from typing import Any, Iterator, List, Optional, Union
 
 from beet import Context, Function, TextFileBase
 from beet.core.utils import extra_field
@@ -25,11 +26,11 @@ class Mecha:
         default_factory=lambda: CommandSpec(parsers=get_default_parsers())
     )
 
-    def create_token_stream(self, text: str) -> TokenStream:
-        """Instantiate a token stream for parsing the given input."""
-        stream = TokenStream(text)
-        stream.data["spec"] = self.spec
-        return stream
+    @contextmanager
+    def prepare_token_stream(self, stream: TokenStream) -> Iterator[TokenStream]:
+        """Prepare the token stream for parsing."""
+        with stream.provide(spec=self.spec), stream.syntax(literal=r"\S+"):
+            yield stream
 
     def parse_function(
         self,
@@ -43,18 +44,10 @@ class Mecha:
         if not filename and function.source_path:
             filename = str(function.source_path)
 
-        ast = delegate("root", self.create_token_stream(function.text + "\n"))
-        return replace(ast, filename=filename)
+        with self.prepare_token_stream(TokenStream(function.text)) as stream:
+            return replace(delegate("root", stream), filename=filename)
 
-    def parse_command(self, command: str) -> AstCommand:
+    def parse_command(self, text: str) -> AstCommand:
         """Parse a single command from a string and return the ast."""
-        ast = self.parse_function(command)
-
-        if len(ast.commands) != 1:
-            raise ValueError(
-                "Expected a single command but more than one command were provided."
-                if ast.commands
-                else "Expected a single command but no command were provided.",
-            )
-
-        return ast.commands[0]
+        with self.prepare_token_stream(TokenStream(text)) as stream:
+            return delegate("command", stream)

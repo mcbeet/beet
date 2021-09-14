@@ -1,6 +1,6 @@
 <class 'mecha.ast.AstRoot'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
-  end_location: SourceLocation(pos=5877, lineno=146, colno=1)
+  end_location: SourceLocation(pos=5876, lineno=145, colno=1)
   filename: None
   commands:
     <class 'mecha.ast.AstCommand'>
