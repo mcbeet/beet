@@ -4,7 +4,7 @@ minecraft:block_state 1 0
 ---
 {}
 ---
-UnexpectedToken: Expected resource_location but got literal '{}'
+UnexpectedToken: Expected resource_location but got literal '{}'.
 
 location = SourceLocation(pos=0, lineno=1, colno=1)
 end_location = SourceLocation(pos=0, lineno=1, colno=1)

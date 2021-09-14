@@ -4,7 +4,7 @@ minecraft:block_state 1 6
 ---
 stone[thing=hello]{what:is:that}
 ---
-UnexpectedToken: Expected curly '}' but got colon ':'
+UnexpectedToken: Expected curly '}' but got colon ':'.
 
 location = SourceLocation(pos=26, lineno=1, colno=27)
 end_location = SourceLocation(pos=26, lineno=1, colno=27)

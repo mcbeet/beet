@@ -4,7 +4,7 @@ minecraft:block_pos 1 2
 ---
 17
 ---
-UnexpectedEOF: Expected coordinate but reached end of file
+UnexpectedEOF: Expected coordinate but reached end of file.
 
 location = SourceLocation(pos=2, lineno=1, colno=3)
 end_location = SourceLocation(pos=2, lineno=1, colno=3)

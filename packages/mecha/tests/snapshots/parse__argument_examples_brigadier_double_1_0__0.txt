@@ -4,7 +4,7 @@ brigadier:double 1 0
 ---
 ayy
 ---
-UnexpectedToken: Expected number but got literal 'ayy'
+UnexpectedToken: Expected number but got literal 'ayy'.
 
 location = SourceLocation(pos=0, lineno=1, colno=1)
 end_location = SourceLocation(pos=0, lineno=1, colno=1)

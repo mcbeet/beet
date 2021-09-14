@@ -4,7 +4,7 @@ minecraft:block_pos 1 1
 ---
 wat
 ---
-UnexpectedToken: Expected coordinate but got literal 'wat'
+UnexpectedToken: Expected coordinate but got literal 'wat'.
 
 location = SourceLocation(pos=0, lineno=1, colno=1)
 end_location = SourceLocation(pos=0, lineno=1, colno=1)

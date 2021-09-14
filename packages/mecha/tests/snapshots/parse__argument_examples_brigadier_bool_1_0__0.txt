@@ -4,7 +4,7 @@ brigadier:bool 1 0
 ---
 blob
 ---
-UnexpectedToken: Expected literal 'true' or literal 'false' but got literal 'blob'
+UnexpectedToken: Expected literal 'true' or literal 'false' but got literal 'blob'.
 
 location = SourceLocation(pos=0, lineno=1, colno=1)
 end_location = SourceLocation(pos=0, lineno=1, colno=1)

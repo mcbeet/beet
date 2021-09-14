@@ -4,7 +4,7 @@ minecraft:message 1 0
 ---
 Hello @p[team=winner :)
 ---
-UnexpectedToken: Expected bracket ']' but got literal ':)'
+UnexpectedToken: Expected bracket ']' but got literal ':)'.
 
 location = SourceLocation(pos=20, lineno=1, colno=21)
 end_location = SourceLocation(pos=20, lineno=1, colno=21)

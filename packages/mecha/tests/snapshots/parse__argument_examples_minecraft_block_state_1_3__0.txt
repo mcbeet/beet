@@ -4,7 +4,7 @@ minecraft:block_state 1 3
 ---
 stone[
 ---
-UnexpectedEOF: Expected bracket ']' but reached end of file
+UnexpectedEOF: Expected bracket ']' but reached end of file.
 
 location = SourceLocation(pos=6, lineno=1, colno=7)
 end_location = SourceLocation(pos=6, lineno=1, colno=7)

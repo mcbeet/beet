@@ -4,7 +4,7 @@ minecraft:component 1 1
 ---
 {"hey": ]}
 ---
-UnexpectedToken: Expected curly '{', bracket '[', string, number, literal 'null', literal 'true' or literal 'false' but got bracket ']'
+UnexpectedToken: Expected curly '{', bracket '[', string, number, literal 'null', literal 'true' or literal 'false' but got bracket ']'.
 
 location = SourceLocation(pos=7, lineno=1, colno=8)
 end_location = SourceLocation(pos=7, lineno=1, colno=8)

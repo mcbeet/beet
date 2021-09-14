@@ -4,7 +4,7 @@ minecraft:block_predicate 1 1
 ---
 #stone[foo=bar,
 ---
-UnexpectedEOF: Expected bracket ']' but reached end of file
+UnexpectedEOF: Expected bracket ']' but reached end of file.
 
 location = SourceLocation(pos=15, lineno=1, colno=16)
 end_location = SourceLocation(pos=15, lineno=1, colno=16)

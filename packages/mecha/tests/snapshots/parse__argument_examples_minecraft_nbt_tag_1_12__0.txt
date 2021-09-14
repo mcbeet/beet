@@ -4,7 +4,7 @@ minecraft:nbt_tag 1 12
 ---
 {foo: [1,2}
 ---
-UnexpectedToken: Expected bracket ']' but got curly '}'
+UnexpectedToken: Expected bracket ']' but got curly '}'.
 
 location = SourceLocation(pos=10, lineno=1, colno=11)
 end_location = SourceLocation(pos=10, lineno=1, colno=11)

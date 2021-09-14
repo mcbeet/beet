@@ -4,7 +4,7 @@ minecraft:particle 1 5
 ---
 vibration 0.0 64.0 0.0 5.0 thing
 ---
-UnexpectedToken: Expected number but got literal 'thing'
+UnexpectedToken: Expected number but got literal 'thing'.
 
 location = SourceLocation(pos=26, lineno=1, colno=27)
 end_location = SourceLocation(pos=26, lineno=1, colno=27)

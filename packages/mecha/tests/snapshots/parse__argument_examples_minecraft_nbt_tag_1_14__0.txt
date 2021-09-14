@@ -4,7 +4,7 @@ minecraft:nbt_tag 1 14
 ---
 [{,{}]
 ---
-UnexpectedToken: Expected curly '}' but got comma ','
+UnexpectedToken: Expected curly '}' but got comma ','.
 
 location = SourceLocation(pos=2, lineno=1, colno=3)
 end_location = SourceLocation(pos=2, lineno=1, colno=3)
