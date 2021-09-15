@@ -4,6 +4,7 @@ __all__ = [
     "get_stream_scope",
     "get_stream_properties",
     "delegate",
+    "string_to_number",
     "QuoteHelper",
     "parse_root",
     "parse_command",
@@ -31,6 +32,7 @@ __all__ = [
     "ValueParser",
     "ValueConstraint",
     "RangeParser",
+    "IntegerRangeConstraint",
     "LengthConstraint",
     "parse_swizzle",
     "TimeParser",
@@ -57,7 +59,18 @@ __all__ = [
 import re
 from dataclasses import dataclass, field
 from functools import partial
-from typing import Any, Dict, Iterator, List, Literal, Optional, Tuple, Type, overload
+from typing import (
+    Any,
+    Dict,
+    Iterator,
+    List,
+    Literal,
+    Optional,
+    Tuple,
+    Type,
+    Union,
+    overload,
+)
 from uuid import UUID
 
 # pyright: reportMissingTypeStubs=false
@@ -143,8 +156,8 @@ def get_default_parsers() -> Dict[str, Parser]:
             hint=r"\{",
         ),
         "nbt_path": NbtPathParser(),
-        "range": RangeParser(type=float),
-        "integer_range": RangeParser(type=int),
+        "range": RangeParser(),
+        "integer_range": IntegerRangeConstraint(delegate("range")),
         "resource_location_or_tag": ResourceLocationParser(),
         "resource_location": NoTagConstraint(delegate("resource_location_or_tag")),
         "uuid": parse_uuid,
@@ -412,6 +425,12 @@ def get_stream_properties(stream: TokenStream) -> Dict[str, Any]:
     return stream.data.get("properties", {})
 
 
+def get_stream_command_indentation(stream: TokenStream) -> int:
+    """Return the indentation level associated with the current command."""
+    # TODO: To support nested functions in the future there should be a way to reset this
+    return stream.data.get("command_indentation", stream.indentation[-1])
+
+
 @overload
 def delegate(parser: str) -> Parser:
     ...
@@ -433,6 +452,11 @@ def delegate(parser: str, stream: Optional[TokenStream] = None) -> Any:
         raise UnrecognizedParser(parser)
 
     return spec.parsers[parser](stream)
+
+
+def string_to_number(string: str) -> Union[int, float]:
+    """Helper for converting numbers to string and keeping their original type."""
+    return float(string) if "." in string else int(string)
 
 
 @dataclass
@@ -481,11 +505,13 @@ def parse_root(stream: TokenStream) -> AstRoot:
 
         commands: List[AstCommand] = []
 
-        for _ in stream.peek_until():
-            while stream.get("newline", "comment"):
-                continue
-            if stream.peek():
-                commands.append(delegate("command", stream))
+        # TODO: This causes the parser to not error on inline comments in non-multiline mode
+        with stream.ignore("comment"):
+            for _ in stream.peek_until():
+                while stream.get("newline"):
+                    continue
+                if stream.peek():
+                    commands.append(delegate("command", stream))
 
         node = AstRoot(filename=None, commands=AstChildren(commands))
         return set_location(node, start, stream.current)
@@ -503,31 +529,57 @@ def parse_command(stream: TokenStream) -> AstCommand:
         location = stream.expect().location
         end_location = location
 
-    while tree and tree.children:
-        should_break = False
+    level = get_stream_command_indentation(stream)
+    is_complete = False
 
+    while tree and tree.children:
         for (name, child), alternative in stream.choose(*tree.children.items()):
             with alternative, stream.provide(scope=scope + (name,)):
+                literal = None
+                argument = None
+
                 if child.type == "literal":
-                    token = stream.expect(("literal", name))
-                    end_location = token.end_location
-
+                    literal = stream.expect(("literal", name))
                 elif child.type == "argument":
-                    node = delegate("command:argument", stream)
-                    arguments.append(node)
-                    end_location = node.end_location
+                    argument = delegate("command:argument", stream)
 
-                with stream.intercept("eof"):
-                    if not child.redirect and not child.children:
+                if not child.redirect and not child.children:
+                    with stream.intercept("eof"):
                         stream.expect("newline", "eof")
-                        should_break = True
-                    elif child.executable and stream.get("newline", "eof"):
-                        should_break = True
+                    is_complete = True
+
+                if literal:
+                    end_location = literal.end_location
+                elif argument:
+                    arguments.append(argument)
+                    end_location = argument.end_location
 
                 scope = stream.data["scope"]
                 tree = child
 
-        if should_break:
+        if is_complete:
+            break
+
+        # TODO: find a way to extract this in a function to be able to use it in MessageParser
+        if spec.multiline:
+            with stream.checkpoint() as commit:
+                if list(stream.collect("newline")):
+                    with stream.intercept("whitespace", "eof"):
+                        whitespace = stream.get("whitespace")
+                        eof = stream.get("eof")
+                    if (
+                        whitespace
+                        and level < len(whitespace.value.expandtabs())
+                        and not eof
+                    ):
+                        commit()
+                    elif tree.executable:
+                        commit()
+                        break
+        elif tree.executable and stream.get("newline"):
+            break
+
+        if tree.executable and not stream.peek():
             break
 
         target = spec.tree.get(tree.redirect)
@@ -535,7 +587,7 @@ def parse_command(stream: TokenStream) -> AstCommand:
 
         if tree.subcommand or recursive:
             subcommand_scope = tree.redirect if tree.redirect is not None else scope
-            with stream.provide(scope=subcommand_scope):
+            with stream.provide(scope=subcommand_scope, command_indentation=level):
                 node = delegate("command", stream)
                 arguments.append(node)
                 end_location = node.end_location
@@ -575,6 +627,7 @@ class NumericParser:
     pattern: str = NUMBER_PATTERN
 
     def __call__(self, stream: TokenStream) -> Any:
+        # TODO: Doesn't work on the beginning of a line in multiline mode?
         with stream.syntax(**{self.name: self.pattern}):
             stream.expect(self.name)
         return self.create_node(stream)
@@ -582,9 +635,7 @@ class NumericParser:
     def create_node(self, stream: TokenStream) -> Any:
         """Create the ast node."""
         token = stream.current
-        node = AstValue[float](
-            value=float(token.value) if "." in token.value else int(token.value),
-        )
+        node = AstValue[float](value=string_to_number(token.value))
         return set_location(node, token)
 
 
@@ -611,9 +662,7 @@ class CoordinateParser(NumericParser):
         if not value:
             value = "0"
 
-        value = float(value) if "." in value else int(value)
-
-        node = AstCoordinate(type=coordinate_type, value=value)
+        node = AstCoordinate(type=coordinate_type, value=string_to_number(value))
         return set_location(node, token)
 
 
@@ -1010,7 +1059,10 @@ class ResourceLocationParser:
     """Parser for resource locations."""
 
     def __call__(self, stream: TokenStream) -> AstResourceLocation:
-        with stream.syntax(resource_location=r"#?(?:[0-9a-z_\-\.]+:)?[0-9a-z_./-]+"):
+        with stream.syntax(
+            resource_location=r"#?(?:[0-9a-z_\-\.]+:)?[0-9a-z_./-]+",
+            comment=None,
+        ):
             token = stream.expect("resource_location")
             value = token.value
             location = token.location
@@ -1193,7 +1245,6 @@ class ValueConstraint:
 class RangeParser:
     """Parser for ranges."""
 
-    type: Type[Any]
     pattern: str = fr"\.\.{NUMBER_PATTERN}|{NUMBER_PATTERN}\.\.(?:{NUMBER_PATTERN})?|{NUMBER_PATTERN}"
 
     def __call__(self, stream: TokenStream) -> AstRange:
@@ -1204,14 +1255,26 @@ class RangeParser:
             if not separator:
                 maximum = minimum
 
-            if issubclass(self.type, int) and ("." in minimum or "." in maximum):
-                raise token.emit_error(InvalidSyntax("Expected integer range."))
-
             node = AstRange(
-                min=self.type(minimum) if minimum else None,
-                max=self.type(maximum) if maximum else None,
+                min=string_to_number(minimum) if minimum else None,
+                max=string_to_number(maximum) if maximum else None,
             )
             return set_location(node, token)
+
+
+@dataclass
+class IntegerRangeConstraint:
+    """Constraint that disallows decimal ranges."""
+
+    parser: Parser
+
+    def __call__(self, stream: TokenStream) -> Any:
+        node: AstRange = self.parser(stream)
+
+        if isinstance(node.min, float) or isinstance(node.max, float):
+            raise node.emit_error(InvalidSyntax("Expected integer range."))
+
+        return node
 
 
 @dataclass
@@ -1246,7 +1309,6 @@ def parse_swizzle(stream: TokenStream) -> AstValue[str]:
 class TimeParser(NumericParser):
     """Parser for time."""
 
-    type: Type[float] = float
     name: str = "time"
     pattern: str = NUMBER_PATTERN + r"[dst]?"
 
@@ -1255,12 +1317,17 @@ class TimeParser(NumericParser):
         value = token.value
 
         if value.endswith(("d", "s", "t")):
-            suffix = value[-1]
+            if value[-1] == "d":
+                unit = "day"
+            elif value[-1] == "s":
+                unit = "second"
+            else:
+                unit = "tick"
             value = value[:-1]
         else:
-            suffix = None
+            unit = "tick"
 
-        node = AstTime(value=self.type(value), suffix=suffix)  # type: ignore
+        node = AstTime(value=string_to_number(value), unit=unit)
         return set_location(node, token)
 
 

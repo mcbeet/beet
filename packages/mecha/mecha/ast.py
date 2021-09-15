@@ -69,6 +69,16 @@ class AstNode:
     end_location: SourceLocation = extra_field(default=UNKNOWN_LOCATION)
 
     def __iter__(self) -> Iterator["AstNode"]:
+        for f in fields(self):
+            attribute = getattr(self, f.name)
+
+            if isinstance(attribute, AstChildren):
+                yield from attribute
+
+            if isinstance(attribute, AstNode):
+                yield attribute
+
+    def walk(self) -> Iterator["AstNode"]:
         yield self
 
         for f in fields(self):
@@ -76,10 +86,11 @@ class AstNode:
 
             if isinstance(attribute, AstChildren):
                 for child in attribute:  # type: ignore
-                    yield from child
+                    if isinstance(child, AstNode):
+                        yield from child.walk()
 
             elif isinstance(attribute, AstNode):
-                yield from attribute
+                yield from attribute.walk()
 
     def dump(self, prefix: str = "") -> str:
         """Return a pretty-printed representation of the ast."""
@@ -341,7 +352,7 @@ class AstTime(AstNode):
     """Ast time node."""
 
     value: Union[int, float] = required_field()
-    suffix: Literal[None, "d", "s", "t"] = None
+    unit: Literal["day", "second", "tick"] = "tick"
 
 
 @dataclass(frozen=True)

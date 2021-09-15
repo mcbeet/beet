@@ -26,6 +26,8 @@ class Parser(Protocol):
 class CommandSpec:
     """Class responsible for managing the command specification."""
 
+    multiline: bool = False
+
     tree: CommandTree = extra_field(
         default_factory=lambda: CommandTree.load_from(version="1_17")
     )

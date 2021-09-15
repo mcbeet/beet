@@ -1,5 +1,6 @@
 __all__ = [
     "Mecha",
+    "MechaOptions",
 ]
 
 
@@ -9,11 +10,19 @@ from typing import Any, Iterator, List, Optional, Union
 
 from beet import Context, Function, TextFileBase
 from beet.core.utils import extra_field
+from pydantic import BaseModel
 from tokenstream import TokenStream
 
 from .ast import AstCommand, AstRoot
 from .parse import delegate, get_default_parsers
+from .serialize import Serializer
 from .spec import CommandSpec
+
+
+class MechaOptions(BaseModel):
+    """Mecha options."""
+
+    multiline: bool = False
 
 
 @dataclass
@@ -26,11 +35,21 @@ class Mecha:
         default_factory=lambda: CommandSpec(parsers=get_default_parsers())
     )
 
+    serialize: Serializer = extra_field(init=False)
+
+    def __post_init__(self, ctx: Optional[Context]):
+        if ctx:
+            opts = ctx.validate("mecha", MechaOptions)
+            self.spec.multiline = opts.multiline
+
+        self.serialize = Serializer(self.spec)
+
     @contextmanager
     def prepare_token_stream(self, stream: TokenStream) -> Iterator[TokenStream]:
         """Prepare the token stream for parsing."""
-        with stream.provide(spec=self.spec), stream.syntax(literal=r"\S+"):
-            yield stream
+        with stream.provide(spec=self.spec), stream.reset_syntax(literal=r"\S+"):
+            with stream.indent(skip=["comment"]), stream.ignore("indent", "dedent"):
+                yield stream
 
     def parse_function(
         self,

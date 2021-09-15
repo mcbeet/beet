@@ -23,4 +23,4 @@ minecraft:entity 0 8
           location: SourceLocation(pos=15, lineno=1, colno=16)
           end_location: SourceLocation(pos=18, lineno=1, colno=19)
           min: None
-          max: 1.0
+          max: 1

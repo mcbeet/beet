@@ -1,24 +1,9 @@
 import pytest
-from beet import Function
 from beet.core.utils import JsonDict
 from pytest_insta import SnapshotFixture
 from tokenstream import InvalidSyntax, TokenStream
 
 from mecha import Mecha, delegate, get_argument_examples, get_command_examples
-
-
-def test_basic1(snapshot: SnapshotFixture, mc: Mecha):
-    assert snapshot() == mc.parse_command("gamerule fallDamage false").dump()
-
-
-def test_basic2(snapshot: SnapshotFixture, mc: Mecha):
-    function = Function(
-        [
-            "gamerule doMobLoot false",
-            "gamerule doDaylightCycle false",
-        ]
-    )
-    assert snapshot() == mc.parse_function(function).dump()
 
 
 def test_command_examples(snapshot: SnapshotFixture, mc: Mecha):

@@ -251,7 +251,7 @@
                   location: SourceLocation(pos=385, lineno=13, colno=42)
                   end_location: SourceLocation(pos=389, lineno=13, colno=46)
                   min: None
-                  max: 10.0
+                  max: 10
             <class 'mecha.ast.AstSelectorArgument'>
               location: SourceLocation(pos=390, lineno=13, colno=47)
               end_location: SourceLocation(pos=397, lineno=13, colno=54)
@@ -1461,12 +1461,6 @@
                               variable: 's'
                               arguments:
                                 <empty>
-                            <class 'mecha.ast.AstSelector'>
-                              location: SourceLocation(pos=1590, lineno=40, colno=42)
-                              end_location: SourceLocation(pos=1592, lineno=40, colno=44)
-                              variable: 's'
-                              arguments:
-                                <empty>
                             <class 'mecha.ast.AstVector3'>
                               location: SourceLocation(pos=1593, lineno=40, colno=45)
                               end_location: SourceLocation(pos=1599, lineno=40, colno=51)
@@ -1551,12 +1545,6 @@
                           end_location: SourceLocation(pos=1654, lineno=41, colno=55)
                           identifier: 'tp:targets:location:rotation'
                           arguments:
-                            <class 'mecha.ast.AstSelector'>
-                              location: SourceLocation(pos=1641, lineno=41, colno=42)
-                              end_location: SourceLocation(pos=1643, lineno=41, colno=44)
-                              variable: 's'
-                              arguments:
-                                <empty>
                             <class 'mecha.ast.AstSelector'>
                               location: SourceLocation(pos=1641, lineno=41, colno=42)
                               end_location: SourceLocation(pos=1643, lineno=41, colno=44)
@@ -1670,12 +1658,6 @@
                           end_location: SourceLocation(pos=1727, lineno=42, colno=73)
                           identifier: 'tp:targets:location'
                           arguments:
-                            <class 'mecha.ast.AstSelector'>
-                              location: SourceLocation(pos=1718, lineno=42, colno=64)
-                              end_location: SourceLocation(pos=1720, lineno=42, colno=66)
-                              variable: 's'
-                              arguments:
-                                <empty>
                             <class 'mecha.ast.AstSelector'>
                               location: SourceLocation(pos=1718, lineno=42, colno=64)
                               end_location: SourceLocation(pos=1720, lineno=42, colno=66)
@@ -2025,12 +2007,6 @@
                               variable: 's'
                               arguments:
                                 <empty>
-                            <class 'mecha.ast.AstSelector'>
-                              location: SourceLocation(pos=2017, lineno=48, colno=54)
-                              end_location: SourceLocation(pos=2019, lineno=48, colno=56)
-                              variable: 's'
-                              arguments:
-                                <empty>
                             <class 'mecha.ast.AstVector3'>
                               location: SourceLocation(pos=2020, lineno=48, colno=57)
                               end_location: SourceLocation(pos=2026, lineno=48, colno=63)
@@ -2119,12 +2095,6 @@
                           end_location: SourceLocation(pos=2100, lineno=49, colno=74)
                           identifier: 'tp:targets:location'
                           arguments:
-                            <class 'mecha.ast.AstSelector'>
-                              location: SourceLocation(pos=2091, lineno=49, colno=65)
-                              end_location: SourceLocation(pos=2093, lineno=49, colno=67)
-                              variable: 's'
-                              arguments:
-                                <empty>
                             <class 'mecha.ast.AstSelector'>
                               location: SourceLocation(pos=2091, lineno=49, colno=65)
                               end_location: SourceLocation(pos=2093, lineno=49, colno=67)
@@ -2369,12 +2339,6 @@
                           variable: 's'
                           arguments:
                             <empty>
-                        <class 'mecha.ast.AstSelector'>
-                          location: SourceLocation(pos=2293, lineno=52, colno=109)
-                          end_location: SourceLocation(pos=2295, lineno=52, colno=111)
-                          variable: 's'
-                          arguments:
-                            <empty>
                         <class 'mecha.ast.AstVector3'>
                           location: SourceLocation(pos=2296, lineno=52, colno=112)
                           end_location: SourceLocation(pos=2302, lineno=52, colno=118)
@@ -2571,7 +2535,7 @@
                                   location: SourceLocation(pos=2453, lineno=54, colno=91)
                                   end_location: SourceLocation(pos=2456, lineno=54, colno=94)
                                   min: None
-                                  max: 5.0
+                                  max: 5
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=2458, lineno=55, colno=1)
       end_location: SourceLocation(pos=2528, lineno=55, colno=71)
@@ -2799,7 +2763,7 @@
                           location: SourceLocation(pos=2637, lineno=57, colno=39)
                           end_location: SourceLocation(pos=2640, lineno=57, colno=42)
                           min: None
-                          max: 3.0
+                          max: 3
                 <class 'mecha.ast.AstCommand'>
                   location: SourceLocation(pos=2642, lineno=57, colno=44)
                   end_location: SourceLocation(pos=2695, lineno=57, colno=97)
@@ -2882,12 +2846,6 @@
                       end_location: SourceLocation(pos=2743, lineno=58, colno=48)
                       identifier: 'teleport:targets:location:rotation'
                       arguments:
-                        <class 'mecha.ast.AstSelector'>
-                          location: SourceLocation(pos=2729, lineno=58, colno=34)
-                          end_location: SourceLocation(pos=2731, lineno=58, colno=36)
-                          variable: 's'
-                          arguments:
-                            <empty>
                         <class 'mecha.ast.AstSelector'>
                           location: SourceLocation(pos=2729, lineno=58, colno=34)
                           end_location: SourceLocation(pos=2731, lineno=58, colno=36)
@@ -4173,7 +4131,7 @@
                   location: SourceLocation(pos=4273, lineno=98, colno=18)
                   end_location: SourceLocation(pos=4277, lineno=98, colno=22)
                   min: None
-                  max: 10.0
+                  max: 10
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=4279, lineno=99, colno=1)
       end_location: SourceLocation(pos=4300, lineno=99, colno=22)
@@ -4228,7 +4186,7 @@
                   location: SourceLocation(pos=4318, lineno=100, colno=18)
                   end_location: SourceLocation(pos=4322, lineno=100, colno=22)
                   min: None
-                  max: 10.0
+                  max: 10
             <class 'mecha.ast.AstSelectorArgument'>
               location: SourceLocation(pos=4323, lineno=100, colno=23)
               end_location: SourceLocation(pos=4335, lineno=100, colno=35)
@@ -5575,8 +5533,8 @@
         <class 'mecha.ast.AstTime'>
           location: SourceLocation(pos=5665, lineno=136, colno=10)
           end_location: SourceLocation(pos=5670, lineno=136, colno=15)
-          value: 1000.0
-          suffix: 't'
+          value: 1000
+          unit: 'tick'
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=5671, lineno=137, colno=1)
       end_location: SourceLocation(pos=5683, lineno=137, colno=13)
@@ -5591,8 +5549,8 @@
         <class 'mecha.ast.AstTime'>
           location: SourceLocation(pos=5693, lineno=138, colno=10)
           end_location: SourceLocation(pos=5699, lineno=138, colno=16)
-          value: 24000.0
-          suffix: 't'
+          value: 24000
+          unit: 'tick'
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=5708, lineno=140, colno=1)
       end_location: SourceLocation(pos=5785, lineno=140, colno=78)

@@ -1,9 +1,0 @@
-<class 'mecha.ast.AstCommand'>
-  location: SourceLocation(pos=0, lineno=1, colno=1)
-  end_location: SourceLocation(pos=25, lineno=1, colno=26)
-  identifier: 'gamerule:fallDamage:value'
-  arguments:
-    <class 'mecha.ast.AstValue'>
-      location: SourceLocation(pos=20, lineno=1, colno=21)
-      end_location: SourceLocation(pos=25, lineno=1, colno=26)
-      value: False
