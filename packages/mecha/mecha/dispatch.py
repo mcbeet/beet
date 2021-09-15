@@ -186,16 +186,17 @@ class Visitor(Dispatcher):
             result = (child for child in node)
 
         if isinstance(result, Generator):
-            for child in result:
-                self.invoke(child, *args, **kwargs)
+            try:
+                child = next(result)
+            except StopIteration as exc:
+                return exc.value
 
-            # TODO: Find why this doesn't work
-            # child = next(result)
-            # while True:
-            #     try:
-            #         child = result.send(self.invoke(child, *args, **kwargs))
-            #     except StopIteration as exc:
-            #         return exc.value
+            while True:
+                feedback = self.invoke(child, *args, **kwargs)
+                try:
+                    child = result.send(feedback)
+                except StopIteration as exc:
+                    return exc.value
 
         return result
 

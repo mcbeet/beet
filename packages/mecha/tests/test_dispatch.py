@@ -1,13 +1,16 @@
-from typing import List, Type
+from typing import Generator, List, Type
 
 from mecha import AstNumber, Mecha, Visitor, rule
 from mecha.ast import (
     AstCommand,
     AstCoordinate,
     AstDustParticleParameters,
+    AstLiteral,
+    AstMessage,
     AstNode,
     AstParticle,
     AstResourceLocation,
+    AstRoot,
     AstVector3,
 )
 
@@ -50,8 +53,6 @@ def test_visitor_extend(mc: Mecha):
     visitor.extend(rule(AstNumber)(numbers.append), Foo())
     visitor.invoke(ast)
 
-    print(visitor.rules)
-
     assert nodes == [
         AstCommand,
         AstParticle,
@@ -65,3 +66,38 @@ def test_visitor_extend(mc: Mecha):
 
     assert numbers == [AstNumber(value=1), AstNumber(value=0.5), AstNumber(value=1)]
     assert sevens == [AstNumber(value=7)]
+
+
+def test_visitor_result(mc: Mecha):
+    ast = mc.parse_function("say hello\nsay world\n")
+
+    class Foo(Visitor):
+        @rule(AstRoot)
+        def root(self, node: AstRoot) -> Generator[AstNode, str, List[str]]:
+            commands: List[str] = []
+
+            for command in node.commands:
+                value = yield command
+                commands.append(value)
+
+            return commands
+
+        @rule(AstCommand)
+        def command(self, node: AstCommand) -> Generator[AstNode, str, str]:
+            arguments: List[str] = []
+
+            for argument in node.arguments:
+                value = yield argument
+                arguments.append(repr(value))
+
+            return f"{node.identifier}(" + ", ".join(arguments) + ")"
+
+        @rule(AstMessage)
+        def message(self, node: AstMessage) -> str:
+            return "".join(
+                fragment.value
+                for fragment in node.fragments
+                if isinstance(fragment, AstLiteral)
+            )
+
+    assert Foo().invoke(ast) == ["say:message('hello')", "say:message('world')"]
