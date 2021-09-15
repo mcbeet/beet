@@ -4,7 +4,7 @@ brigadier:string 1 0
 ---
 "quoted phrase"
 ---
-quoted phrase
+"quoted phrase"
 ---
 <class 'mecha.ast.AstString'>
   location: SourceLocation(pos=0, lineno=1, colno=1)

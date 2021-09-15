@@ -13,7 +13,7 @@ from tokenstream import InvalidSyntax, Token, set_location
 from .error import InvalidEscapeSequence
 
 ESCAPE_REGEX = re.compile(r"\\.")
-AVOID_QUOTES_REGEX = re.compile(r"[0-9A-Za-z_\.\+\-]+")
+AVOID_QUOTES_REGEX = re.compile(r"^[0-9A-Za-z_\.\+\-]+$")
 
 
 def string_to_number(string: str) -> Union[int, float]:
