@@ -15,11 +15,7 @@ foo{bar: "baz"}
       end_location: SourceLocation(pos=3, lineno=1, colno=4)
       is_tag: False
       namespace: None
-      path:
-        <class 'mecha.ast.AstValue'>
-          location: SourceLocation(pos=0, lineno=1, colno=1)
-          end_location: SourceLocation(pos=3, lineno=1, colno=4)
-          value: 'foo'
+      path: 'foo'
   block_states:
     <empty>
   data_tags:
@@ -31,7 +27,7 @@ foo{bar: "baz"}
           location: SourceLocation(pos=4, lineno=1, colno=5)
           end_location: SourceLocation(pos=11, lineno=1, colno=12)
           key:
-            <class 'mecha.ast.AstValue'>
+            <class 'mecha.ast.AstNbtCompoundKey'>
               location: SourceLocation(pos=4, lineno=1, colno=5)
               end_location: SourceLocation(pos=7, lineno=1, colno=8)
               value: 'bar'

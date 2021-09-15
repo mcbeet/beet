@@ -15,9 +15,5 @@ minecraft:item_predicate 0 2
       end_location: SourceLocation(pos=6, lineno=1, colno=7)
       is_tag: True
       namespace: None
-      path:
-        <class 'mecha.ast.AstValue'>
-          location: SourceLocation(pos=1, lineno=1, colno=2)
-          end_location: SourceLocation(pos=6, lineno=1, colno=7)
-          value: 'stick'
+      path: 'stick'
   data_tags: None

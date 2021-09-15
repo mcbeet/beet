@@ -3,18 +3,24 @@ __all__ = [
     "AstChildren",
     "AstRoot",
     "AstCommand",
-    "AstValue",
+    "AstLiteral",
+    "AstString",
+    "AstBool",
+    "AstNumber",
+    "AstUUID",
     "AstCoordinate",
     "AstVector2",
     "AstVector3",
     "AstJson",
     "AstJsonValue",
     "AstJsonArray",
+    "AstJsonObjectKey",
     "AstJsonObjectEntry",
     "AstJsonObject",
     "AstNbt",
     "AstNbtValue",
     "AstNbtList",
+    "AstNbtCompoundKey",
     "AstNbtCompoundEntry",
     "AstNbtCompound",
     "AstNbtByteArray",
@@ -47,7 +53,8 @@ __all__ = [
 
 
 from dataclasses import dataclass, fields
-from typing import Any, Generic, Iterator, Literal, Optional, Tuple, TypeVar, Union
+from typing import Any, Iterator, Literal, Optional, Tuple, TypeVar, Union
+from uuid import UUID
 
 from beet.core.utils import extra_field, required_field
 
@@ -132,10 +139,38 @@ class AstCommand(AstNode):
 
 
 @dataclass(frozen=True)
-class AstValue(AstNode, Generic[T]):
-    """Value ast node"""
+class AstLiteral(AstNode):
+    """Ast literal node."""
 
-    value: T = required_field()
+    value: str = required_field()
+
+
+@dataclass(frozen=True)
+class AstString(AstNode):
+    """Ast string node."""
+
+    value: str = required_field()
+
+
+@dataclass(frozen=True)
+class AstBool(AstNode):
+    """Ast bool node."""
+
+    value: bool = required_field()
+
+
+@dataclass(frozen=True)
+class AstNumber(AstNode):
+    """Ast number node."""
+
+    value: Union[int, float] = required_field()
+
+
+@dataclass(frozen=True)
+class AstUUID(AstNode):
+    """Ast uuid node."""
+
+    value: UUID = required_field()
 
 
 @dataclass(frozen=True)
@@ -193,10 +228,17 @@ class AstJsonArray(AstJson):
 
 
 @dataclass(frozen=True)
+class AstJsonObjectKey(AstNode):
+    """Ast json object key node."""
+
+    value: str = required_field()
+
+
+@dataclass(frozen=True)
 class AstJsonObjectEntry(AstNode):
     """Ast json object entry node."""
 
-    key: AstValue[str] = required_field()
+    key: AstJsonObjectKey = required_field()
     value: AstJson = required_field()
 
 
@@ -240,10 +282,17 @@ class AstNbtList(AstNbt):
 
 
 @dataclass(frozen=True)
+class AstNbtCompoundKey(AstNode):
+    """Ast nbt compound key node."""
+
+    value: str = required_field()
+
+
+@dataclass(frozen=True)
 class AstNbtCompoundEntry(AstNode):
     """Ast nbt compound entry node."""
 
-    key: AstValue[str] = required_field()
+    key: AstNbtCompoundKey = required_field()
     value: AstNbt = required_field()
 
 
@@ -294,22 +343,22 @@ class AstResourceLocation(AstNode):
     """Ast resource location node."""
 
     is_tag: bool = False
-    namespace: Optional[AstValue[str]] = None
-    path: AstValue[str] = required_field()
+    namespace: Optional[str] = None
+    path: str = required_field()
 
     def get_canonical_value(self) -> str:
         """Return the canonical value of the resource location as a string."""
         prefix = "#" if self.is_tag else ""
-        namespace = f"{self.namespace.value}:" if self.namespace else "minecraft:"
-        return prefix + namespace + self.path.value
+        namespace = f"{self.namespace}:" if self.namespace else "minecraft:"
+        return prefix + namespace + self.path
 
 
 @dataclass(frozen=True)
 class AstBlockState(AstNode):
     """Ast block state node."""
 
-    key: AstValue[str] = required_field()
-    value: AstValue[str] = required_field()
+    key: AstString = required_field()
+    value: AstString = required_field()
 
 
 @dataclass(frozen=True)
@@ -359,7 +408,7 @@ class AstTime(AstNode):
 class AstSelectorScoreMatch(AstNode):
     """Ast selector score match node."""
 
-    key: AstValue[str] = required_field()
+    key: AstLiteral = required_field()
     value: AstRange = required_field()
 
 
@@ -374,8 +423,8 @@ class AstSelectorScores(AstNode):
 class AstSelectorAdvancementPredicateMatch(AstNode):
     """Ast selector advancement predicate match node."""
 
-    key: AstValue[str] = required_field()
-    value: AstValue[bool] = required_field()
+    key: AstLiteral = required_field()
+    value: AstBool = required_field()
 
 
 @dataclass(frozen=True)
@@ -384,7 +433,7 @@ class AstSelectorAdvancementMatch(AstNode):
 
     key: AstResourceLocation = required_field()
     value: Union[
-        AstValue[bool], AstChildren[AstSelectorAdvancementPredicateMatch]
+        AstBool, AstChildren[AstSelectorAdvancementPredicateMatch]
     ] = required_field()
 
 
@@ -400,7 +449,7 @@ class AstSelectorArgument(AstNode):
     """Ast selector argument node."""
 
     inverted: bool = False
-    key: AstValue[str] = required_field()
+    key: AstString = required_field()
     value: AstNode = required_field()
 
 
@@ -416,14 +465,14 @@ class AstSelector(AstNode):
 class AstMessage(AstNode):
     """Ast message node."""
 
-    words: AstChildren[Union[AstValue[str], AstSelector]] = required_field()
+    fragments: AstChildren[Union[AstLiteral, AstSelector]] = required_field()
 
 
 @dataclass(frozen=True)
 class AstNbtPathSubscript(AstNode):
     """Ast nbt path subscript node."""
 
-    index: Union[None, AstValue[int], AstNbtCompound] = None
+    index: Union[None, AstNumber, AstNbtCompound] = None
 
 
 @dataclass(frozen=True)
@@ -431,7 +480,7 @@ class AstNbtPath(AstNode):
     """Ast nbt path node."""
 
     components: AstChildren[
-        Union[AstValue[str], AstNbtCompound, AstNbtPathSubscript]
+        Union[AstString, AstNbtCompound, AstNbtPathSubscript]
     ] = required_field()
 
 
@@ -444,23 +493,23 @@ class AstParticleParameters(AstNode):
 class AstDustParticleParameters(AstParticleParameters):
     """Ast dust particle parameters node."""
 
-    red: AstValue[Union[int, float]] = required_field()
-    green: AstValue[Union[int, float]] = required_field()
-    blue: AstValue[Union[int, float]] = required_field()
-    size: AstValue[Union[int, float]] = required_field()
+    red: AstNumber = required_field()
+    green: AstNumber = required_field()
+    blue: AstNumber = required_field()
+    size: AstNumber = required_field()
 
 
 @dataclass(frozen=True)
 class AstDustColorTransitionParticleParameters(AstParticleParameters):
     """Ast dust color transition particle parameters node."""
 
-    red: AstValue[Union[int, float]] = required_field()
-    green: AstValue[Union[int, float]] = required_field()
-    blue: AstValue[Union[int, float]] = required_field()
-    size: AstValue[Union[int, float]] = required_field()
-    end_red: AstValue[Union[int, float]] = required_field()
-    end_green: AstValue[Union[int, float]] = required_field()
-    end_blue: AstValue[Union[int, float]] = required_field()
+    red: AstNumber = required_field()
+    green: AstNumber = required_field()
+    blue: AstNumber = required_field()
+    size: AstNumber = required_field()
+    end_red: AstNumber = required_field()
+    end_green: AstNumber = required_field()
+    end_blue: AstNumber = required_field()
 
 
 @dataclass(frozen=True)
@@ -488,13 +537,13 @@ class AstItemParticleParameters(AstParticleParameters):
 class AstVibrationParticleParameters(AstParticleParameters):
     """Ast vibration particle parameters node."""
 
-    x1: AstValue[Union[int, float]] = required_field()
-    y1: AstValue[Union[int, float]] = required_field()
-    z1: AstValue[Union[int, float]] = required_field()
-    x2: AstValue[Union[int, float]] = required_field()
-    y2: AstValue[Union[int, float]] = required_field()
-    z2: AstValue[Union[int, float]] = required_field()
-    duration: AstValue[int] = required_field()
+    x1: AstNumber = required_field()
+    y1: AstNumber = required_field()
+    z1: AstNumber = required_field()
+    x2: AstNumber = required_field()
+    y2: AstNumber = required_field()
+    z2: AstNumber = required_field()
+    duration: AstNumber = required_field()
 
 
 @dataclass(frozen=True)

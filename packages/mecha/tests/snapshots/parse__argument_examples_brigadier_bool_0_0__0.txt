@@ -6,7 +6,7 @@ true
 ---
 true
 ---
-<class 'mecha.ast.AstValue'>
+<class 'mecha.ast.AstBool'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=4, lineno=1, colno=5)
   value: True

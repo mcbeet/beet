@@ -78,6 +78,7 @@ def rule(*args: Any, **kwargs: Any) -> Any:
     return decorator
 
 
+# TODO: Use dataclass?
 class Dispatcher:
     """Ast node dispatcher."""
 

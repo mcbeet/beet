@@ -15,11 +15,7 @@ minecraft:item_predicate 0 3
       end_location: SourceLocation(pos=6, lineno=1, colno=7)
       is_tag: True
       namespace: None
-      path:
-        <class 'mecha.ast.AstValue'>
-          location: SourceLocation(pos=1, lineno=1, colno=2)
-          end_location: SourceLocation(pos=6, lineno=1, colno=7)
-          value: 'stick'
+      path: 'stick'
   data_tags:
     <class 'mecha.ast.AstNbtCompound'>
       location: SourceLocation(pos=6, lineno=1, colno=7)
@@ -29,7 +25,7 @@ minecraft:item_predicate 0 3
           location: SourceLocation(pos=7, lineno=1, colno=8)
           end_location: SourceLocation(pos=14, lineno=1, colno=15)
           key:
-            <class 'mecha.ast.AstValue'>
+            <class 'mecha.ast.AstNbtCompoundKey'>
               location: SourceLocation(pos=7, lineno=1, colno=8)
               end_location: SourceLocation(pos=10, lineno=1, colno=11)
               value: 'foo'

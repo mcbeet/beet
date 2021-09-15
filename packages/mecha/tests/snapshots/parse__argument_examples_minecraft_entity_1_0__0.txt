@@ -16,7 +16,7 @@ minecraft:entity 1 0
       end_location: SourceLocation(pos=13, lineno=1, colno=14)
       inverted: False
       key:
-        <class 'mecha.ast.AstValue'>
+        <class 'mecha.ast.AstString'>
           location: SourceLocation(pos=3, lineno=1, colno=4)
           end_location: SourceLocation(pos=8, lineno=1, colno=9)
           value: 'level'

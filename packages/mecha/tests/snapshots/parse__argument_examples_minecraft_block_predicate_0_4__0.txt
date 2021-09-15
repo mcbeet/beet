@@ -15,22 +15,18 @@ minecraft:block_predicate 0 4
       end_location: SourceLocation(pos=6, lineno=1, colno=7)
       is_tag: True
       namespace: None
-      path:
-        <class 'mecha.ast.AstValue'>
-          location: SourceLocation(pos=1, lineno=1, colno=2)
-          end_location: SourceLocation(pos=6, lineno=1, colno=7)
-          value: 'stone'
+      path: 'stone'
   block_states:
     <class 'mecha.ast.AstBlockState'>
       location: SourceLocation(pos=7, lineno=1, colno=8)
       end_location: SourceLocation(pos=14, lineno=1, colno=15)
       key:
-        <class 'mecha.ast.AstValue'>
+        <class 'mecha.ast.AstString'>
           location: SourceLocation(pos=7, lineno=1, colno=8)
           end_location: SourceLocation(pos=10, lineno=1, colno=11)
           value: 'foo'
       value:
-        <class 'mecha.ast.AstValue'>
+        <class 'mecha.ast.AstString'>
           location: SourceLocation(pos=11, lineno=1, colno=12)
           end_location: SourceLocation(pos=14, lineno=1, colno=15)
           value: 'bar'
@@ -43,7 +39,7 @@ minecraft:block_predicate 0 4
           location: SourceLocation(pos=16, lineno=1, colno=17)
           end_location: SourceLocation(pos=23, lineno=1, colno=24)
           key:
-            <class 'mecha.ast.AstValue'>
+            <class 'mecha.ast.AstNbtCompoundKey'>
               location: SourceLocation(pos=16, lineno=1, colno=17)
               end_location: SourceLocation(pos=19, lineno=1, colno=20)
               value: 'baz'

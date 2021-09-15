@@ -6,7 +6,7 @@ brigadier:integer 0 0
 ---
 0
 ---
-<class 'mecha.ast.AstValue'>
+<class 'mecha.ast.AstNumber'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=1, lineno=1, colno=2)
   value: 0

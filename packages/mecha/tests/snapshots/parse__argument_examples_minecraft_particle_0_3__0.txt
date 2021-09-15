@@ -14,52 +14,44 @@ minecraft:dust_color_transition 1.0 0.0 0.0 1.0 0.0 0.0 1.0
       location: SourceLocation(pos=0, lineno=1, colno=1)
       end_location: SourceLocation(pos=31, lineno=1, colno=32)
       is_tag: False
-      namespace:
-        <class 'mecha.ast.AstValue'>
-          location: SourceLocation(pos=0, lineno=1, colno=1)
-          end_location: SourceLocation(pos=9, lineno=1, colno=10)
-          value: 'minecraft'
-      path:
-        <class 'mecha.ast.AstValue'>
-          location: SourceLocation(pos=10, lineno=1, colno=11)
-          end_location: SourceLocation(pos=31, lineno=1, colno=32)
-          value: 'dust_color_transition'
+      namespace: 'minecraft'
+      path: 'dust_color_transition'
   parameters:
     <class 'mecha.ast.AstDustColorTransitionParticleParameters'>
       location: SourceLocation(pos=32, lineno=1, colno=33)
       end_location: SourceLocation(pos=59, lineno=1, colno=60)
       red:
-        <class 'mecha.ast.AstValue'>
+        <class 'mecha.ast.AstNumber'>
           location: SourceLocation(pos=32, lineno=1, colno=33)
           end_location: SourceLocation(pos=35, lineno=1, colno=36)
           value: 1.0
       green:
-        <class 'mecha.ast.AstValue'>
+        <class 'mecha.ast.AstNumber'>
           location: SourceLocation(pos=36, lineno=1, colno=37)
           end_location: SourceLocation(pos=39, lineno=1, colno=40)
           value: 0.0
       blue:
-        <class 'mecha.ast.AstValue'>
+        <class 'mecha.ast.AstNumber'>
           location: SourceLocation(pos=40, lineno=1, colno=41)
           end_location: SourceLocation(pos=43, lineno=1, colno=44)
           value: 0.0
       size:
-        <class 'mecha.ast.AstValue'>
+        <class 'mecha.ast.AstNumber'>
           location: SourceLocation(pos=44, lineno=1, colno=45)
           end_location: SourceLocation(pos=47, lineno=1, colno=48)
           value: 1.0
       end_red:
-        <class 'mecha.ast.AstValue'>
+        <class 'mecha.ast.AstNumber'>
           location: SourceLocation(pos=48, lineno=1, colno=49)
           end_location: SourceLocation(pos=51, lineno=1, colno=52)
           value: 0.0
       end_green:
-        <class 'mecha.ast.AstValue'>
+        <class 'mecha.ast.AstNumber'>
           location: SourceLocation(pos=52, lineno=1, colno=53)
           end_location: SourceLocation(pos=55, lineno=1, colno=56)
           value: 0.0
       end_blue:
-        <class 'mecha.ast.AstValue'>
+        <class 'mecha.ast.AstNumber'>
           location: SourceLocation(pos=56, lineno=1, colno=57)
           end_location: SourceLocation(pos=59, lineno=1, colno=60)
           value: 1.0

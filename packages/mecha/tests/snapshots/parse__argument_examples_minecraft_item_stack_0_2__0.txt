@@ -15,11 +15,7 @@ stick{foo: "bar"}
       end_location: SourceLocation(pos=5, lineno=1, colno=6)
       is_tag: False
       namespace: None
-      path:
-        <class 'mecha.ast.AstValue'>
-          location: SourceLocation(pos=0, lineno=1, colno=1)
-          end_location: SourceLocation(pos=5, lineno=1, colno=6)
-          value: 'stick'
+      path: 'stick'
   data_tags:
     <class 'mecha.ast.AstNbtCompound'>
       location: SourceLocation(pos=5, lineno=1, colno=6)
@@ -29,7 +25,7 @@ stick{foo: "bar"}
           location: SourceLocation(pos=6, lineno=1, colno=7)
           end_location: SourceLocation(pos=13, lineno=1, colno=14)
           key:
-            <class 'mecha.ast.AstValue'>
+            <class 'mecha.ast.AstNbtCompoundKey'>
               location: SourceLocation(pos=6, lineno=1, colno=7)
               end_location: SourceLocation(pos=9, lineno=1, colno=10)
               value: 'foo'

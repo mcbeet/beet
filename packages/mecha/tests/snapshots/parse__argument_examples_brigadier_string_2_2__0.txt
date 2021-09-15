@@ -4,9 +4,9 @@ brigadier:string 2 2
 ---
 "and symbols"
 ---
-and symbols
+"and symbols"
 ---
-<class 'mecha.ast.AstValue'>
+<class 'mecha.ast.AstLiteral'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=13, lineno=1, colno=14)
-  value: 'and symbols'
+  value: '"and symbols"'

@@ -29,8 +29,8 @@ __all__ = [
     "ItemParser",
     "NoBlockStatesConstraint",
     "NoDataTagsConstraint",
-    "ValueParser",
-    "ValueConstraint",
+    "LiteralParser",
+    "LiteralConstraint",
     "RangeParser",
     "IntegerRangeConstraint",
     "LengthConstraint",
@@ -56,31 +56,20 @@ __all__ = [
 ]
 
 
-import re
 from dataclasses import dataclass, field
 from functools import partial
-from typing import (
-    Any,
-    Dict,
-    Iterator,
-    List,
-    Literal,
-    Optional,
-    Tuple,
-    Type,
-    Union,
-    overload,
-)
+from typing import Any, Dict, Iterator, List, Literal, Optional, Tuple, Type, overload
 from uuid import UUID
 
 # pyright: reportMissingTypeStubs=false
 from nbtlib import Byte, Double, Float, Int, Long, OutOfRange, Short, String
-from tokenstream import InvalidSyntax, SourceLocation, Token, TokenStream, set_location
+from tokenstream import InvalidSyntax, SourceLocation, TokenStream, set_location
 
 from .ast import (
     AstBlock,
     AstBlockParticleParameters,
     AstBlockState,
+    AstBool,
     AstChildren,
     AstCommand,
     AstCoordinate,
@@ -93,12 +82,15 @@ from .ast import (
     AstJsonArray,
     AstJsonObject,
     AstJsonObjectEntry,
+    AstJsonObjectKey,
     AstJsonValue,
+    AstLiteral,
     AstMessage,
     AstNbt,
     AstNbtByteArray,
     AstNbtCompound,
     AstNbtCompoundEntry,
+    AstNbtCompoundKey,
     AstNbtIntArray,
     AstNbtList,
     AstNbtLongArray,
@@ -106,6 +98,7 @@ from .ast import (
     AstNbtPathSubscript,
     AstNbtValue,
     AstNode,
+    AstNumber,
     AstParticle,
     AstRange,
     AstResourceLocation,
@@ -117,14 +110,16 @@ from .ast import (
     AstSelectorArgument,
     AstSelectorScoreMatch,
     AstSelectorScores,
+    AstString,
     AstTime,
-    AstValue,
+    AstUUID,
     AstVector2,
     AstVector3,
     AstVibrationParticleParameters,
 )
-from .error import InvalidEscapeSequence, UnrecognizedParser
+from .error import UnrecognizedParser
 from .spec import CommandSpec, Parser
+from .utils import QuoteHelper, string_to_number
 
 NUMBER_PATTERN: str = r"-?(?:\d+\.?\d*|\.\d+)"
 
@@ -138,7 +133,7 @@ def get_default_parsers() -> Dict[str, Parser]:
         ################################################################################
         # Primitives
         ################################################################################
-        "literal": ValueParser(name="literal"),
+        "literal": LiteralParser(name="literal"),
         "bool": parse_bool,
         "numeric": NumericParser(),
         "integer": IntegerConstraint(delegate("numeric")),
@@ -162,15 +157,15 @@ def get_default_parsers() -> Dict[str, Parser]:
         "resource_location": NoTagConstraint(delegate("resource_location_or_tag")),
         "uuid": parse_uuid,
         "objective": LengthConstraint(
-            parser=ValueParser("objective", r"[a-zA-Z0-9_.+-]+|\*"),
+            parser=LiteralParser("objective", r"[a-zA-Z0-9_.+-]+|\*"),
             limit=16,
         ),
         "player_name": LengthConstraint(
-            parser=ValueParser("player_name", r"[a-zA-Z0-9_.+-]+"),
+            parser=LiteralParser("player_name", r"[a-zA-Z0-9_.+-]+"),
             limit=16,
         ),
         "swizzle": parse_swizzle,
-        "team": ValueParser("team", r"[a-zA-Z0-9_.+-]+"),
+        "team": LiteralParser("team", r"[a-zA-Z0-9_.+-]+"),
         ################################################################################
         # Particle
         ################################################################################
@@ -259,7 +254,7 @@ def get_default_parsers() -> Dict[str, Parser]:
         "selector:argument:tag": delegate("word"),
         "selector:argument:team": delegate("word"),
         "selector:argument:limit": delegate("integer"),
-        "selector:argument:sort": ValueConstraint(
+        "selector:argument:sort": LiteralConstraint(
             parser=delegate("word"),
             values=[
                 "nearest",
@@ -269,7 +264,7 @@ def get_default_parsers() -> Dict[str, Parser]:
             ],
         ),
         "selector:argument:level": delegate("integer_range"),
-        "selector:argument:gamemode": ValueConstraint(
+        "selector:argument:gamemode": LiteralConstraint(
             parser=delegate("word"),
             values=[
                 "adventure",
@@ -308,7 +303,7 @@ def get_default_parsers() -> Dict[str, Parser]:
         "command:argument:minecraft:block_state": BlockParser(
             resource_location_parser=delegate("resource_location"),
         ),
-        "command:argument:minecraft:color": ValueConstraint(
+        "command:argument:minecraft:color": LiteralConstraint(
             parser=delegate("word"),
             values=[
                 "reset",
@@ -343,7 +338,7 @@ def get_default_parsers() -> Dict[str, Parser]:
                 SelectorAmountConstraint(delegate("selector"))
             ),
         ),
-        "command:argument:minecraft:entity_anchor": ValueConstraint(
+        "command:argument:minecraft:entity_anchor": LiteralConstraint(
             parser=delegate("word"),
             values=["eyes", "feet"],
         ),
@@ -369,7 +364,7 @@ def get_default_parsers() -> Dict[str, Parser]:
         "command:argument:minecraft:nbt_tag": delegate("nbt"),
         "command:argument:minecraft:objective": delegate("objective"),
         "command:argument:minecraft:objective_criteria": delegate("resource_location"),
-        "command:argument:minecraft:operation": ValueConstraint(
+        "command:argument:minecraft:operation": LiteralConstraint(
             parser=delegate("literal"),
             values=[
                 "+=",
@@ -452,46 +447,6 @@ def delegate(parser: str, stream: Optional[TokenStream] = None) -> Any:
         raise UnrecognizedParser(parser)
 
     return spec.parsers[parser](stream)
-
-
-def string_to_number(string: str) -> Union[int, float]:
-    """Helper for converting numbers to string and keeping their original type."""
-    return float(string) if "." in string else int(string)
-
-
-@dataclass
-class QuoteHelper:
-    """Helper for removing quotes and interpreting escape sequences."""
-
-    escape_regex: "re.Pattern[str]" = field(default_factory=lambda: re.compile(r"\\."))
-    escape_sequences: Dict[str, str] = field(default_factory=dict)
-
-    def unquote_string(self, token: Token) -> str:
-        """Remove quotes and substitute escaped characters."""
-        if not token.value.startswith(('"', "'")):
-            return token.value
-        try:
-            return self.escape_regex.sub(
-                lambda match: self.handle_substitution(token, match),
-                token.value[1:-1],
-            )
-        except InvalidEscapeSequence as exc:
-            location = token.location.with_horizontal_offset(exc.index + 1)
-            end_location = location.with_horizontal_offset(len(exc.characters))
-            exc = InvalidSyntax(f"Invalid escape sequence {exc.characters!r}.")
-            raise set_location(exc, location, end_location)
-
-    def handle_substitution(self, token: Token, match: "re.Match[str]") -> str:
-        """Handle escaped character sequence."""
-        characters = match[0]
-
-        if characters == "\\" + token.value[0]:
-            return token.value[0]
-
-        try:
-            return self.escape_sequences[characters]
-        except KeyError:
-            raise InvalidEscapeSequence(characters, match.pos) from None
 
 
 def parse_root(stream: TokenStream) -> AstRoot:
@@ -611,11 +566,11 @@ def parse_argument(stream: TokenStream) -> AstNode:
     raise ValueError(f"Missing argument parser in command tree {scope}.")
 
 
-def parse_bool(stream: TokenStream) -> AstValue[bool]:
+def parse_bool(stream: TokenStream) -> AstBool:
     """Parse bool."""
     with stream.syntax(literal=r"\w+"):
         token = stream.expect_any(("literal", "true"), ("literal", "false"))
-    node = AstValue[bool](value=token.value == "true")
+    node = AstBool(value=token.value == "true")
     return set_location(node, token)
 
 
@@ -635,7 +590,7 @@ class NumericParser:
     def create_node(self, stream: TokenStream) -> Any:
         """Create the ast node."""
         token = stream.current
-        node = AstValue[float](value=string_to_number(token.value))
+        node = AstNumber(value=string_to_number(token.value))
         return set_location(node, token)
 
 
@@ -673,7 +628,7 @@ class IntegerConstraint:
     parser: Parser
 
     def __call__(self, stream: TokenStream) -> Any:
-        node: AstValue[Any] = self.parser(stream)
+        node: AstNumber = self.parser(stream)
 
         if not isinstance(node.value, int):
             raise node.emit_error(InvalidSyntax("Expected integer value."))
@@ -689,7 +644,7 @@ class MinMaxConstraint:
 
     def __call__(self, stream: TokenStream) -> Any:
         properties = get_stream_properties(stream)
-        node: AstValue[float] = self.parser(stream)
+        node: AstNumber = self.parser(stream)
 
         if "min" in properties and node.value < properties["min"]:
             exc = InvalidSyntax(f"Expected value to be at least {properties['min']}.")
@@ -725,13 +680,14 @@ class StringParser:
     type: Literal["word", "phrase", "greedy"]
     quote_helper: QuoteHelper = field(default_factory=QuoteHelper)
 
-    def __call__(self, stream: TokenStream) -> AstValue[str]:
+    def __call__(self, stream: TokenStream) -> Any:
         if self.type == "greedy":
             with stream.intercept("whitespace"):
                 while stream.get("whitespace"):
                     continue
             with stream.syntax(line=r".+"):
                 token = stream.expect("line")
+            node = AstLiteral(value=token.value)
         else:
             with stream.syntax(
                 word=r"[0-9A-Za-z_\.\+\-]+",
@@ -739,14 +695,14 @@ class StringParser:
             ):
                 if self.type == "word":
                     token = stream.expect("word")
+                    node = AstLiteral(value=token.value)
                 else:
                     token = stream.expect_any("word", "quoted_string")
-
-        node = AstValue[str](value=self.quote_helper.unquote_string(token))
+                    node = AstString(value=self.quote_helper.unquote_string(token))
         return set_location(node, token)
 
 
-def parse_string_argument(stream: TokenStream) -> AstValue[str]:
+def parse_string_argument(stream: TokenStream) -> Any:
     """Parse string argument."""
     properties = get_stream_properties(stream)
     string_type = properties["type"]
@@ -826,7 +782,7 @@ class JsonParser:
                 entries: List[AstJsonObjectEntry] = []
 
                 for key in stream.collect("string"):
-                    key_node = AstValue[str](
+                    key_node = AstJsonObjectKey(
                         value=self.quote_helper.unquote_string(key),
                     )
                     key_node = set_location(key_node, key)
@@ -927,7 +883,7 @@ class NbtParser:
                 entries: List[AstNbtCompoundEntry] = []
 
                 for key in stream.collect_any("number", "string", "quoted_string"):
-                    key_node = AstValue[str](
+                    key_node = AstNbtCompoundKey(
                         value=self.quote_helper.unquote_string(key),
                     )
                     key_node = set_location(key_node, key)
@@ -1073,25 +1029,10 @@ class ResourceLocationParser:
 
             namespace, _, path = value.rpartition(":")
 
-            if namespace:
-                namespace_node = AstValue[str](value=namespace)
-                namespace_node = set_location(
-                    namespace_node,
-                    location,
-                    location.with_horizontal_offset(len(namespace)),
-                )
-                location = namespace_node.end_location.with_horizontal_offset(1)
-            else:
-                namespace_node = None
+            if not namespace:
+                namespace = None
 
-            path_node = AstValue[str](value=path)
-            path_node = set_location(path_node, location, token)
-
-            node = AstResourceLocation(
-                is_tag=is_tag,
-                namespace=namespace_node,
-                path=path_node,
-            )
+            node = AstResourceLocation(is_tag=is_tag, namespace=namespace, path=path)
             return set_location(node, token)
 
 
@@ -1123,7 +1064,6 @@ class BlockParser:
 
         with stream.syntax(
             bracket=r"\[|\]",
-            state=r"[a-z0-9_]+",
             equal=r"=",
             comma=r",",
         ), stream.checkpoint() as commit:
@@ -1134,25 +1074,20 @@ class BlockParser:
 
             commit()
 
-            for key in stream.collect("state"):
-                key_node = AstValue[str](value=key.value)
-                key_node = set_location(key_node, key)
-
+            for _ in stream.peek_until(("bracket", "]")):
+                key_node = delegate("phrase", stream)
                 stream.expect("equal")
-
-                value = stream.expect("state")
-                value_node = AstValue[str](value=value.value)
-                value_node = set_location(value_node, value)
+                value_node = delegate("phrase", stream)
 
                 entry_node = AstBlockState(key=key_node, value=value_node)
                 entry_node = set_location(entry_node, key_node, value_node)
                 block_states.append(entry_node)
 
                 if not stream.get("comma"):
+                    stream.expect(("bracket", "]"))
                     break
 
-            close_bracket = stream.expect(("bracket", "]"))
-            end_location = close_bracket.end_location
+            end_location = stream.current.end_location
 
         data_tags = delegate("adjacent_nbt_compound", stream)
 
@@ -1212,28 +1147,28 @@ class NoDataTagsConstraint:
 
 
 @dataclass
-class ValueParser:
-    """Parser for simple string values."""
+class LiteralParser:
+    """Parser for simple literal values."""
 
     name: str
     pattern: str = r"\S+"
 
-    def __call__(self, stream: TokenStream) -> AstValue[str]:
+    def __call__(self, stream: TokenStream) -> AstLiteral:
         with stream.syntax(**{self.name: self.pattern}):
             token = stream.expect(self.name)
-        node = AstValue[str](value=token.value)
+        node = AstLiteral(value=token.value)
         return set_location(node, token)
 
 
 @dataclass
-class ValueConstraint:
+class LiteralConstraint:
     """Constraint that only allows a set of predefined values."""
 
     parser: Parser
     values: List[Any]
 
     def __call__(self, stream: TokenStream) -> Any:
-        node: AstValue[str] = self.parser(stream)
+        node: AstLiteral = self.parser(stream)
 
         if node.value not in self.values:
             raise node.emit_error(InvalidSyntax(f"Unexpected value {node.value!r}."))
@@ -1285,7 +1220,7 @@ class LengthConstraint:
     limit: int
 
     def __call__(self, stream: TokenStream) -> Any:
-        node: AstValue[str] = self.parser(stream)
+        node: AstLiteral = self.parser(stream)
 
         if len(node.value) > self.limit:
             exc = InvalidSyntax(f"Expected up to {self.limit} characters.")
@@ -1294,7 +1229,7 @@ class LengthConstraint:
         return node
 
 
-def parse_swizzle(stream: TokenStream) -> AstValue[str]:
+def parse_swizzle(stream: TokenStream) -> AstLiteral:
     """Parse swizzle."""
     node = delegate("literal", stream)
 
@@ -1331,11 +1266,11 @@ class TimeParser(NumericParser):
         return set_location(node, token)
 
 
-def parse_uuid(stream: TokenStream) -> AstValue[UUID]:
+def parse_uuid(stream: TokenStream) -> AstUUID:
     """Parse uuid."""
     with stream.syntax(uuid="-".join([r"[a-fA-F0-9]+"] * 5)):
         token = stream.expect("uuid")
-    node = AstValue[UUID](value=UUID(token.value))
+    node = AstUUID(value=UUID(token.value))
     return set_location(node, token)
 
 
@@ -1430,7 +1365,7 @@ def parse_selector_scores(stream: TokenStream) -> AstSelectorScores:
         scores: List[AstSelectorScoreMatch] = []
 
         for key in stream.collect("objective"):
-            key_node = AstValue[str](value=key.value)
+            key_node = AstLiteral(value=key.value)
             key_node = set_location(key_node, key)
 
             stream.expect("equal")
@@ -1553,7 +1488,7 @@ class SelectorSingleConstraint:
 
         for arg in node.arguments:
             if arg.key.value == "limit":
-                is_single = arg.value == AstValue[int](value=1)
+                is_single = arg.value == AstNumber(value=1)
 
         if not is_single:
             exc = InvalidSyntax("Expected entity selector targeting a single entity.")
@@ -1613,34 +1548,44 @@ class ScoreHolderParser:
     def __call__(self, stream: TokenStream) -> Any:
         with stream.syntax(wildcard=r"\*"):
             if token := stream.get("wildcard"):
-                node = AstValue[str](value=token.value)
+                node = AstLiteral(value=token.value)
                 return set_location(node, token)
         return self.entity_parser(stream)
 
 
 def parse_message(stream: TokenStream) -> AstMessage:
     """Parse message."""
+    # TODO: Find a way to handle multiline
     with stream.intercept("whitespace"):
         while stream.get("whitespace"):
             continue
 
-    with stream.syntax(selector=r"@[praes]", literal=r"\S+"):
-        words: List[Any] = []
+        with stream.syntax(selector=r"@[praes]", literal=r"\S+"):
+            fragments: List[Any] = []
 
-        for selector, literal in stream.collect("selector", "literal"):
-            if selector:
-                stream.index -= 1
-                words.append(delegate("selector", stream))
-            elif literal:
-                word_node = AstValue[str](value=literal.value)
-                word_node = set_location(word_node, literal)
-                words.append(word_node)
+            for selector, literal, whitespace in stream.collect(
+                "selector",
+                "literal",
+                "whitespace",
+            ):
+                if selector:
+                    stream.index -= 1
+                    with stream.ignore("whitespace"):
+                        fragments.append(delegate("selector", stream))
+                elif literal:
+                    literal_node = AstLiteral(value=literal.value)
+                    literal_node = set_location(literal_node, literal)
+                    fragments.append(literal_node)
+                elif whitespace:
+                    whitespace_node = AstLiteral(value=whitespace.value)
+                    whitespace_node = set_location(whitespace_node, literal)
+                    fragments.append(whitespace_node)
 
-    if not words:
+    if not fragments:
         raise stream.emit_error(InvalidSyntax("Empty message not allowed."))
 
-    node = AstMessage(words=AstChildren(words))
-    return set_location(node, words[0], words[-1])
+    node = AstMessage(fragments=AstChildren(fragments))
+    return set_location(node, fragments[0], fragments[-1])
 
 
 @dataclass
@@ -1669,12 +1614,12 @@ class NbtPathParser:
                 quoted_string, string = stream.expect("quoted_string", "string")
 
                 if quoted_string:
-                    component_node = AstValue[str](
+                    component_node = AstString(
                         value=self.quote_helper.unquote_string(quoted_string),
                     )
                     components.append(set_location(component_node, quoted_string))
                 elif string:
-                    component_node = AstValue[str](value=string.value)
+                    component_node = AstString(value=string.value)
                     components.append(set_location(component_node, string))
 
                 components.extend(self.parse_modifiers(stream))

@@ -14,7 +14,7 @@ minecraft:component 0 2
       location: SourceLocation(pos=1, lineno=1, colno=2)
       end_location: SourceLocation(pos=21, lineno=1, colno=22)
       key:
-        <class 'mecha.ast.AstValue'>
+        <class 'mecha.ast.AstJsonObjectKey'>
           location: SourceLocation(pos=1, lineno=1, colno=2)
           end_location: SourceLocation(pos=7, lineno=1, colno=8)
           value: 'text'

@@ -15,11 +15,7 @@ minecraft:block_predicate 0 3
       end_location: SourceLocation(pos=6, lineno=1, colno=7)
       is_tag: True
       namespace: None
-      path:
-        <class 'mecha.ast.AstValue'>
-          location: SourceLocation(pos=1, lineno=1, colno=2)
-          end_location: SourceLocation(pos=6, lineno=1, colno=7)
-          value: 'stone'
+      path: 'stone'
   block_states:
     <empty>
   data_tags: None

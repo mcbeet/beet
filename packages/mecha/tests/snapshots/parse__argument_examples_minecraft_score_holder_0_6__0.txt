@@ -16,12 +16,12 @@ minecraft:score_holder 0 6
       end_location: SourceLocation(pos=20, lineno=1, colno=21)
       inverted: False
       key:
-        <class 'mecha.ast.AstValue'>
+        <class 'mecha.ast.AstString'>
           location: SourceLocation(pos=4, lineno=1, colno=5)
           end_location: SourceLocation(pos=8, lineno=1, colno=9)
           value: 'sort'
       value:
-        <class 'mecha.ast.AstValue'>
+        <class 'mecha.ast.AstLiteral'>
           location: SourceLocation(pos=11, lineno=1, colno=12)
           end_location: SourceLocation(pos=20, lineno=1, colno=21)
           value: 'arbitrary'

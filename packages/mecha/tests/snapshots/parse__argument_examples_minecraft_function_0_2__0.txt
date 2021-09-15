@@ -11,8 +11,4 @@ minecraft:function 0 2
   end_location: SourceLocation(pos=4, lineno=1, colno=5)
   is_tag: True
   namespace: None
-  path:
-    <class 'mecha.ast.AstValue'>
-      location: SourceLocation(pos=1, lineno=1, colno=2)
-      end_location: SourceLocation(pos=4, lineno=1, colno=5)
-      value: 'foo'
+  path: 'foo'

@@ -9,16 +9,19 @@ from typing import Any, Iterable, Iterator, List
 from .ast import (
     AstBlock,
     AstBlockState,
+    AstBool,
     AstChildren,
     AstCommand,
     AstCoordinate,
     AstItem,
     AstJson,
+    AstLiteral,
     AstMessage,
     AstNbt,
     AstNbtPath,
     AstNbtPathSubscript,
     AstNode,
+    AstNumber,
     AstParticle,
     AstParticleParameters,
     AstRange,
@@ -31,21 +34,33 @@ from .ast import (
     AstSelectorArgument,
     AstSelectorScoreMatch,
     AstSelectorScores,
+    AstString,
     AstTime,
-    AstValue,
+    AstUUID,
     AstVector2,
     AstVector3,
 )
 from .dispatch import Visitor, rule
 from .spec import CommandSpec
+from .utils import QuoteHelper
 
 
 class Serializer(Visitor):
     spec: CommandSpec
+    quote_helper: QuoteHelper
 
     def __init__(self, spec: CommandSpec):
         super().__init__()
         self.spec = spec
+        self.quote_helper = QuoteHelper(
+            escape_sequences={
+                r"\\": "\\",
+                r"\f": "\f",
+                r"\n": "\n",
+                r"\r": "\r",
+                r"\t": "\t",
+            }
+        )
 
     def __call__(self, node: AstNode) -> str:
         result: List[str] = []
@@ -95,12 +110,25 @@ class Serializer(Visitor):
                 yield node.arguments[argument_index]
                 argument_index += 1
 
-    @rule(AstValue)
-    def value(self, node: AstValue[Any], result: List[str]):
-        value = str(node.value)
-        if isinstance(node.value, bool):
-            value = value.lower()
-        result.append(value)
+    @rule(AstLiteral)
+    def literal(self, node: AstLiteral, result: List[str]):
+        result.append(node.value)
+
+    @rule(AstString)
+    def string(self, node: AstString, result: List[str]):
+        result.append(self.quote_helper.quote_string(node.value))
+
+    @rule(AstBool)
+    def bool(self, node: AstBool, result: List[str]):
+        result.append(str(node.value).lower())
+
+    @rule(AstNumber)
+    def number(self, node: AstNumber, result: List[str]):
+        result.append(str(node.value))
+
+    @rule(AstUUID)
+    def uuid(self, node: AstUUID, result: List[str]):
+        result.append(str(node.value))
 
     @rule(AstCoordinate)
     def coordinate(self, node: AstCoordinate, result: List[str]):
@@ -141,9 +169,8 @@ class Serializer(Visitor):
         if node.is_tag:
             result.append("#")
         if node.namespace:
-            yield node.namespace
-            result.append(":")
-        yield node.path
+            result.append(f"{node.namespace}:")
+        result.append(node.path)
 
     @rule(AstBlockState)
     def block_state(self, node: AstBlockState, result: List[str]):
@@ -226,11 +253,7 @@ class Serializer(Visitor):
 
     @rule(AstMessage)
     def message(self, node: AstMessage, result: List[str]):
-        sep = ""
-        for word in node.words:
-            result.append(sep)
-            sep = " "
-            yield word
+        yield from node.fragments
 
     @rule(AstNbtPathSubscript)
     def nbt_path_subscript(self, node: AstNbtPathSubscript, result: List[str]):
@@ -243,7 +266,7 @@ class Serializer(Visitor):
     def nbt_path(self, node: AstNbtPath, result: List[str]):
         sep = ""
         for component in node.components:
-            if isinstance(component, AstValue):
+            if isinstance(component, AstString):
                 result.append(sep)
             sep = "."
             yield component

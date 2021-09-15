@@ -4,9 +4,9 @@ brigadier:string 1 2
 ---
 ""
 ---
-
+""
 ---
-<class 'mecha.ast.AstValue'>
+<class 'mecha.ast.AstString'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=2, lineno=1, colno=3)
   value: ''

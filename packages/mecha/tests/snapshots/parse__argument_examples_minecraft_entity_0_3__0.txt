@@ -16,7 +16,7 @@ minecraft:entity 0 3
       end_location: SourceLocation(pos=11, lineno=1, colno=12)
       inverted: False
       key:
-        <class 'mecha.ast.AstValue'>
+        <class 'mecha.ast.AstString'>
           location: SourceLocation(pos=3, lineno=1, colno=4)
           end_location: SourceLocation(pos=7, lineno=1, colno=8)
           value: 'type'
@@ -26,8 +26,4 @@ minecraft:entity 0 3
           end_location: SourceLocation(pos=11, lineno=1, colno=12)
           is_tag: False
           namespace: None
-          path:
-            <class 'mecha.ast.AstValue'>
-              location: SourceLocation(pos=8, lineno=1, colno=9)
-              end_location: SourceLocation(pos=11, lineno=1, colno=12)
-              value: 'foo'
+          path: 'foo'

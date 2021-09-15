@@ -6,7 +6,7 @@ words with spaces
 ---
 words with spaces
 ---
-<class 'mecha.ast.AstValue'>
+<class 'mecha.ast.AstLiteral'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=17, lineno=1, colno=18)
   value: 'words with spaces'

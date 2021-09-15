@@ -14,14 +14,6 @@ minecraft:stick
       location: SourceLocation(pos=0, lineno=1, colno=1)
       end_location: SourceLocation(pos=15, lineno=1, colno=16)
       is_tag: False
-      namespace:
-        <class 'mecha.ast.AstValue'>
-          location: SourceLocation(pos=0, lineno=1, colno=1)
-          end_location: SourceLocation(pos=9, lineno=1, colno=10)
-          value: 'minecraft'
-      path:
-        <class 'mecha.ast.AstValue'>
-          location: SourceLocation(pos=10, lineno=1, colno=11)
-          end_location: SourceLocation(pos=15, lineno=1, colno=16)
-          value: 'stick'
+      namespace: 'minecraft'
+      path: 'stick'
   data_tags: None

@@ -6,7 +6,7 @@ word_with_underscores
 ---
 word_with_underscores
 ---
-<class 'mecha.ast.AstValue'>
+<class 'mecha.ast.AstLiteral'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=21, lineno=1, colno=22)
   value: 'word_with_underscores'
