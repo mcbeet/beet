@@ -457,7 +457,7 @@ def delegate(parser: str, stream: Optional[TokenStream] = None) -> Any:
 
 def parse_root(stream: TokenStream) -> AstRoot:
     """Parse root."""
-    with stream.syntax(comment=r"#.+$"), stream.intercept("newline"):
+    with stream.intercept("newline"):
         start = stream.peek()
 
         if not start:
@@ -1023,10 +1023,7 @@ class ResourceLocationParser:
     """Parser for resource locations."""
 
     def __call__(self, stream: TokenStream) -> AstResourceLocation:
-        with stream.syntax(
-            resource_location=r"#?(?:[0-9a-z_\-\.]+:)?[0-9a-z_./-]+",
-            comment=None,
-        ):
+        with stream.syntax(resource_location=r"#?(?:[0-9a-z_\-\.]+:)?[0-9a-z_./-]+"):
             token = stream.expect("resource_location")
             value = token.value
             location = token.location

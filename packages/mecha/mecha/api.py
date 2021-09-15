@@ -30,6 +30,7 @@ class Mecha:
     """Class exposing the command api."""
 
     ctx: InitVar[Optional[Context]] = None
+    multiline: InitVar[bool] = False
 
     spec: CommandSpec = extra_field(
         default_factory=lambda: CommandSpec(parsers=get_default_parsers())
@@ -37,17 +38,22 @@ class Mecha:
 
     serialize: Serializer = extra_field(init=False)
 
-    def __post_init__(self, ctx: Optional[Context]):
+    def __post_init__(self, ctx: Optional[Context], multiline: bool):
         if ctx:
             opts = ctx.validate("mecha", MechaOptions)
             self.spec.multiline = opts.multiline
+        else:
+            self.spec.multiline = multiline
 
         self.serialize = Serializer(self.spec)
 
     @contextmanager
     def prepare_token_stream(self, stream: TokenStream) -> Iterator[TokenStream]:
         """Prepare the token stream for parsing."""
-        with stream.provide(spec=self.spec), stream.reset_syntax(literal=r"\S+"):
+        with stream.provide(spec=self.spec), stream.reset_syntax(
+            comment=r"#.+$",
+            literal=r"\S+",
+        ):
             with stream.indent(skip=["comment"]), stream.ignore("indent", "dedent"):
                 yield stream
 
