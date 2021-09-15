@@ -4,6 +4,8 @@ minecraft:mob_effect 0 1
 ---
 effect
 ---
+effect
+---
 <class 'mecha.ast.AstResourceLocation'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=6, lineno=1, colno=7)

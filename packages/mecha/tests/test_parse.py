@@ -52,11 +52,7 @@ def test_argument_examples(
                 ]
             )
         else:
+            ast = delegate(argument_parser, stream)
             assert snapshot() == "\n---\n".join(
-                [
-                    test_name,
-                    str(properties),
-                    value,
-                    delegate(argument_parser, stream).dump(),
-                ]
+                [test_name, str(properties), value, mc.serialize(ast), ast.dump()]
             )

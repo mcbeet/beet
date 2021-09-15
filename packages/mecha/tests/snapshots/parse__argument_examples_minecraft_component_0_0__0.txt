@@ -4,6 +4,8 @@ minecraft:component 0 0
 ---
 "hello world"
 ---
+"hello world"
+---
 <class 'mecha.ast.AstJsonValue'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=13, lineno=1, colno=14)

@@ -4,6 +4,8 @@ minecraft:block_state 0 2
 ---
 stone[foo=bar]
 ---
+stone[foo=bar]
+---
 <class 'mecha.ast.AstBlock'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=14, lineno=1, colno=15)

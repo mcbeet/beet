@@ -4,6 +4,8 @@ minecraft:particle 0 2
 ---
 dust 1.0 0.5 0.5 1.0
 ---
+dust 1.0 0.5 0.5 1.0
+---
 <class 'mecha.ast.AstParticle'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=20, lineno=1, colno=21)

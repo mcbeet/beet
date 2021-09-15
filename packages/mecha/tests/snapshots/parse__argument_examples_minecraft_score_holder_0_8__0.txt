@@ -4,6 +4,8 @@ minecraft:score_holder 0 8
 ---
 @a[ team = ! foo , team = ! bar , ]
 ---
+@a[team=!foo, team=!bar]
+---
 <class 'mecha.ast.AstSelector'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=35, lineno=1, colno=36)

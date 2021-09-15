@@ -4,6 +4,8 @@ minecraft:resource_location 0 2
 ---
 012
 ---
+012
+---
 <class 'mecha.ast.AstResourceLocation'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=3, lineno=1, colno=4)

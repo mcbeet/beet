@@ -4,6 +4,8 @@ minecraft:entity 0 18
 ---
 @a[ predicate = spgoding:foo , predicate = ! spgoding:bar , ]
 ---
+@a[predicate=spgoding:foo, predicate=!spgoding:bar]
+---
 <class 'mecha.ast.AstSelector'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=61, lineno=1, colno=62)

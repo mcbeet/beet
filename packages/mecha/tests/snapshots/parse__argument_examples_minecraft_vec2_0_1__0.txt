@@ -4,6 +4,8 @@ minecraft:vec2 0 1
 ---
 ~ ~
 ---
+~ ~
+---
 <class 'mecha.ast.AstVector2'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=3, lineno=1, colno=4)

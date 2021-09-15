@@ -4,6 +4,8 @@ minecraft:rotation 0 2
 ---
 ~-5 ~5
 ---
+~-5 ~5
+---
 <class 'mecha.ast.AstVector2'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=6, lineno=1, colno=7)

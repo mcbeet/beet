@@ -4,6 +4,8 @@ minecraft:score_holder 0 10
 ---
 @e[ type = ! skeleton , type = ! zombie , ]
 ---
+@e[type=!skeleton, type=!zombie]
+---
 <class 'mecha.ast.AstSelector'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=43, lineno=1, colno=44)

@@ -4,6 +4,8 @@ minecraft:entity 0 6
 ---
 @a[ advancements = { minecraft:foo = true , minecraft:bar = { qux = true , } , } , ]
 ---
+@a[advancements={minecraft:foo=true, minecraft:bar={qux=true}}]
+---
 <class 'mecha.ast.AstSelector'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=84, lineno=1, colno=85)

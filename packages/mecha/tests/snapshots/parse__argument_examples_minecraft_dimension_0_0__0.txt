@@ -4,6 +4,8 @@ minecraft:dimension 0 0
 ---
 minecraft:overworld
 ---
+minecraft:overworld
+---
 <class 'mecha.ast.AstResourceLocation'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=19, lineno=1, colno=20)

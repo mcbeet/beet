@@ -4,6 +4,8 @@ minecraft:score_holder 0 4
 ---
 @a[ scores = { foo = 1.. , } , ]
 ---
+@a[scores={foo=1..}]
+---
 <class 'mecha.ast.AstSelector'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=32, lineno=1, colno=33)

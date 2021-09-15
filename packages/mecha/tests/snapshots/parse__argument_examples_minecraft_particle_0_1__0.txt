@@ -4,6 +4,8 @@ minecraft:particle 0 1
 ---
 foo:bar
 ---
+foo:bar
+---
 <class 'mecha.ast.AstParticle'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=7, lineno=1, colno=8)

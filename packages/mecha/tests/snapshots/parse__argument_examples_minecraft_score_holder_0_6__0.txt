@@ -4,6 +4,8 @@ minecraft:score_holder 0 6
 ---
 @a[ sort = arbitrary , ]
 ---
+@a[sort=arbitrary]
+---
 <class 'mecha.ast.AstSelector'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=24, lineno=1, colno=25)

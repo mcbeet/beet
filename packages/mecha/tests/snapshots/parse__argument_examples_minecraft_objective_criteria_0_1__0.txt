@@ -4,6 +4,8 @@ minecraft:objective_criteria 0 1
 ---
 foo.bar.baz
 ---
+foo.bar.baz
+---
 <class 'mecha.ast.AstResourceLocation'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=11, lineno=1, colno=12)

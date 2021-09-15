@@ -4,6 +4,8 @@ minecraft:game_profile 0 4
 ---
 @e[type=minecraft:player]
 ---
+@e[type=minecraft:player]
+---
 <class 'mecha.ast.AstSelector'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=25, lineno=1, colno=26)

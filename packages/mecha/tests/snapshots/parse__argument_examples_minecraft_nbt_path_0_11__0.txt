@@ -4,6 +4,8 @@ minecraft:nbt_path 0 11
 ---
 foo.bar[0]."A [crazy name]!".baz
 ---
+foo.bar[0].A [crazy name]!.baz
+---
 <class 'mecha.ast.AstNbtPath'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=32, lineno=1, colno=33)

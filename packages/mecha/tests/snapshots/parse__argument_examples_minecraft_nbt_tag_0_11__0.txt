@@ -4,6 +4,8 @@ minecraft:nbt_tag 0 11
 ---
 [[],[[[[[[[[[[],[[[[5,1]],[]]]]]]]]]]],[[[[]]]]]]
 ---
+[[], [[[[[[[[[[], [[[[5, 1]], []]]]]]]]]]], [[[[]]]]]]
+---
 <class 'mecha.ast.AstNbtList'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=49, lineno=1, colno=50)

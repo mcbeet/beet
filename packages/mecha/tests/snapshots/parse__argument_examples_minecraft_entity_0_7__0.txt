@@ -4,6 +4,8 @@ minecraft:entity 0 7
 ---
 @a[ advancements = { } , advancements = { } , ]
 ---
+@a[advancements={}, advancements={}]
+---
 <class 'mecha.ast.AstSelector'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=47, lineno=1, colno=48)

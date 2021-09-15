@@ -4,6 +4,8 @@ minecraft:component 0 2
 ---
 {"text":"hello world"}
 ---
+{"text": "hello world"}
+---
 <class 'mecha.ast.AstJsonObject'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=22, lineno=1, colno=23)

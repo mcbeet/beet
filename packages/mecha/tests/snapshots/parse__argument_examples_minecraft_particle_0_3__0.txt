@@ -4,6 +4,8 @@ minecraft:particle 0 3
 ---
 minecraft:dust_color_transition 1.0 0.0 0.0 1.0 0.0 0.0 1.0
 ---
+minecraft:dust_color_transition 1.0 0.0 0.0 1.0 0.0 0.0 1.0
+---
 <class 'mecha.ast.AstParticle'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=59, lineno=1, colno=60)

@@ -4,6 +4,8 @@ minecraft:entity 0 12
 ---
 @s[ limit = 0 , limit = 0 , ]
 ---
+@s[limit=0, limit=0]
+---
 <class 'mecha.ast.AstSelector'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=29, lineno=1, colno=30)

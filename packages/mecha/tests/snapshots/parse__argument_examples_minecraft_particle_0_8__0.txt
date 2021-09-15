@@ -4,6 +4,8 @@ minecraft:particle 0 8
 ---
 vibration 0.0 64.0 0.0 5.0 64.0 0.0 200
 ---
+vibration 0.0 64.0 0.0 5.0 64.0 0.0 200
+---
 <class 'mecha.ast.AstParticle'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=39, lineno=1, colno=40)

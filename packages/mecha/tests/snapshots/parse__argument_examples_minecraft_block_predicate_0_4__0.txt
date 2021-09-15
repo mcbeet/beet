@@ -4,6 +4,8 @@ minecraft:block_predicate 0 4
 ---
 #stone[foo=bar]{baz:nbt}
 ---
+#stone[foo=bar]{baz: "nbt"}
+---
 <class 'mecha.ast.AstBlock'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=24, lineno=1, colno=25)

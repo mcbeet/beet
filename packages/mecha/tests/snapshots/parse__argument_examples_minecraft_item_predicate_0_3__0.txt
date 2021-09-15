@@ -4,6 +4,8 @@ minecraft:item_predicate 0 3
 ---
 #stick{foo:bar}
 ---
+#stick{foo: "bar"}
+---
 <class 'mecha.ast.AstItem'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=15, lineno=1, colno=16)

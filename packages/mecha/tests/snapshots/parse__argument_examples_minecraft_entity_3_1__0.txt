@@ -4,6 +4,8 @@ minecraft:entity 3 1
 ---
 @s[type=player]
 ---
+@s[type=player]
+---
 <class 'mecha.ast.AstSelector'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=15, lineno=1, colno=16)

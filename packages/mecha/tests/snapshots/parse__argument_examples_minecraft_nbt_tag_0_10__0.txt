@@ -4,6 +4,8 @@ minecraft:nbt_tag 0 10
 ---
 [[], [1], [foo]]
 ---
+[[], [1], ["foo"]]
+---
 <class 'mecha.ast.AstNbtList'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=16, lineno=1, colno=17)

@@ -4,6 +4,8 @@ minecraft:score_holder 0 12
 ---
 @e[ type = player ]
 ---
+@e[type=player]
+---
 <class 'mecha.ast.AstSelector'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=19, lineno=1, colno=20)

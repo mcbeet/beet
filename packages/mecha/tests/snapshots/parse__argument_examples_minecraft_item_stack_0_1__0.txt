@@ -4,6 +4,8 @@ minecraft:item_stack 0 1
 ---
 minecraft:stick
 ---
+minecraft:stick
+---
 <class 'mecha.ast.AstItem'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=15, lineno=1, colno=16)

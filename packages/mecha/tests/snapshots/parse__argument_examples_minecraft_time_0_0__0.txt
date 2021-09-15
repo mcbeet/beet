@@ -4,6 +4,8 @@ minecraft:time 0 0
 ---
 0d
 ---
+0d
+---
 <class 'mecha.ast.AstTime'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=2, lineno=1, colno=3)

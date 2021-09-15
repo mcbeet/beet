@@ -4,6 +4,8 @@ brigadier:bool 0 1
 ---
 false
 ---
+false
+---
 <class 'mecha.ast.AstValue'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=5, lineno=1, colno=6)

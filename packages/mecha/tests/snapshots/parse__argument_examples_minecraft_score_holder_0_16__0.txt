@@ -4,6 +4,8 @@ minecraft:score_holder 0 16
 ---
 @a[ x_rotation = 179.9..-179.9 ,  y_rotation = 179.9..-179.9 , ]
 ---
+@a[x_rotation=179.9..-179.9, y_rotation=179.9..-179.9]
+---
 <class 'mecha.ast.AstSelector'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=64, lineno=1, colno=65)

@@ -4,6 +4,8 @@ minecraft:vec3 0 4
 ---
 0.1 -0.5 .9
 ---
+0.1 -0.5 0.9
+---
 <class 'mecha.ast.AstVector3'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=11, lineno=1, colno=12)

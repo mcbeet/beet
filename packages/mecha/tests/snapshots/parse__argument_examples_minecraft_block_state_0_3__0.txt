@@ -4,6 +4,8 @@ minecraft:block_state 0 3
 ---
 foo{bar:baz}
 ---
+foo{bar: "baz"}
+---
 <class 'mecha.ast.AstBlock'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=12, lineno=1, colno=13)

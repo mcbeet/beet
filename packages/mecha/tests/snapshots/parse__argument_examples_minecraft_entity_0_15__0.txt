@@ -4,6 +4,8 @@ minecraft:entity 0 15
 ---
 @a[ name = ! "SPGoding" , "name" = ! Misode ,]
 ---
+@a[name=!SPGoding, name=!Misode]
+---
 <class 'mecha.ast.AstSelector'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=46, lineno=1, colno=47)

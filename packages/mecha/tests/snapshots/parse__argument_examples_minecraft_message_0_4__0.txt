@@ -4,6 +4,8 @@ minecraft:message 0 4
 ---
 foo @a[tag=a, tag=b]
 ---
+foo @a[tag=a, tag=b]
+---
 <class 'mecha.ast.AstMessage'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=20, lineno=1, colno=21)
