@@ -63,7 +63,13 @@ from uuid import UUID
 
 # pyright: reportMissingTypeStubs=false
 from nbtlib import Byte, Double, Float, Int, Long, OutOfRange, Short, String
-from tokenstream import InvalidSyntax, SourceLocation, TokenStream, set_location
+from tokenstream import (
+    InvalidSyntax,
+    SourceLocation,
+    TokenStream,
+    UnexpectedEOF,
+    set_location,
+)
 
 from .ast import (
     AstBlock,
@@ -499,9 +505,11 @@ def parse_command(stream: TokenStream) -> AstCommand:
                     argument = delegate("command:argument", stream)
 
                 if not child.redirect and not child.children:
-                    with stream.intercept("eof"):
-                        stream.expect("newline", "eof")
-                    is_complete = True
+                    try:
+                        stream.expect("newline")
+                        is_complete = True
+                    except UnexpectedEOF:
+                        is_complete = True
 
                 if literal:
                     end_location = literal.end_location
