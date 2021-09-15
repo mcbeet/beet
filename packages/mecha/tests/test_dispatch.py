@@ -16,7 +16,10 @@ def test_visitor(mc: Mecha):
     ast = mc.parse_function("particle dust 1.0 0.5 0.5 1.0 7 7 7")
 
     numbers: List[AstNode] = []
-    Visitor([rule(AstNumber)(numbers.append)]).invoke(ast)
+
+    visitor = Visitor()
+    visitor.add_rule(rule(AstNumber)(numbers.append))
+    visitor.invoke(ast)
 
     assert numbers == [
         AstNumber(value=1),

@@ -27,6 +27,8 @@ from typing import (
     overload,
 )
 
+from beet.core.utils import extra_field
+
 from .ast import AstChildren, AstNode
 
 
@@ -79,7 +81,7 @@ def rule(*args: Any, **kwargs: Any) -> Any:
     return decorator
 
 
-# TODO: Use dataclass?
+@dataclass
 class Dispatcher:
     """Ast node dispatcher."""
 
@@ -89,14 +91,11 @@ class Dispatcher:
             FrozenSet[Tuple[str, Any]],
             List[Tuple[int, Callable[..., Any]]],
         ],
-    ]
+    ] = extra_field(init=False, default_factory=dict)
 
-    count: int
+    count: int = extra_field(init=False, default=0)
 
-    def __init__(self, rules: Iterable[Callable[..., Any]] = ()):
-        self.rules = {}
-        self.count = 0
-
+    def __post_init__(self):
         for name in dir(self):
             if isinstance(rule := getattr(self, name), Rule):
                 callback = partial(rule.callback, self)
@@ -107,8 +106,6 @@ class Dispatcher:
                     current = current.next
 
                 self.add_rule(rule)
-
-        self.extend(rules)
 
     def add_rule(self, rule: Callable[..., Any]):
         """Add rule."""
