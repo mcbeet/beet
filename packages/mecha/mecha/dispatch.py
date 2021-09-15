@@ -9,6 +9,7 @@ __all__ = [
 
 from dataclasses import dataclass, fields, replace
 from functools import partial
+from heapq import heappop, heappush
 from typing import (
     Any,
     Callable,
@@ -82,10 +83,19 @@ def rule(*args: Any, **kwargs: Any) -> Any:
 class Dispatcher:
     """Ast node dispatcher."""
 
-    rules: Dict[Type[Any], Dict[FrozenSet[Tuple[str, Any]], List[Callable[..., Any]]]]
+    rules: Dict[
+        Type[Any],
+        Dict[
+            FrozenSet[Tuple[str, Any]],
+            List[Tuple[int, Callable[..., Any]]],
+        ],
+    ]
+
+    count: int
 
     def __init__(self, rules: Iterable[Callable[..., Any]] = ()):
         self.rules = {}
+        self.count = 0
 
         for name in dir(self):
             if isinstance(rule := getattr(self, name), Rule):
@@ -102,13 +112,13 @@ class Dispatcher:
 
     def add_rule(self, rule: Callable[..., Any]):
         """Add rule."""
-        # TODO: Add rule priority that increases as rules are added
         if not isinstance(rule, Rule):
             rule = Rule(rule)
 
         for match_type in rule.match_types or [AstNode]:
             l = self.rules.setdefault(match_type, {}).setdefault(rule.match_fields, [])
-            l.append(rule.callback)
+            l.append((self.count, rule.callback))
+            self.count += 1
 
         if rule.next:
             self.add_rule(rule.next)
@@ -120,10 +130,15 @@ class Dispatcher:
         """Extend the dispatcher."""
         for arg in args:
             if isinstance(arg, Dispatcher):
+                offset = self.count
                 for key, value in arg.rules.items():
                     current = self.rules.setdefault(key, {})
                     for match_fields, callbacks in value.items():
-                        current.setdefault(match_fields, []).extend(callbacks)
+                        l = current.setdefault(match_fields, [])
+                        for priority, callback in callbacks:
+                            priority += offset
+                            l.append((priority, callback))
+                            self.count = max(self.count, priority) + 1
             elif callable(arg):
                 self.add_rule(arg)
             else:
@@ -132,10 +147,9 @@ class Dispatcher:
 
     def dispatch(self, node: AstNode) -> Iterator[Callable[..., Any]]:
         """Dispatch rules."""
-        # TODO: Sort rules by priority
-        dispatched: Set[Callable[..., Any]] = set()
+        priority_queue: List[Tuple[int, int, Callable[..., Any]]] = []
 
-        for node_type in type(node).mro():
+        for i, node_type in enumerate(type(node).mro()):
             if value := self.rules.get(node_type):
                 for match_fields, callbacks in value.items():
                     if all(
@@ -144,10 +158,17 @@ class Dispatcher:
                         else hasattr(node, name) and getattr(node, name) == value
                         for name, value in match_fields
                     ):
-                        for callback in callbacks:
-                            if callback not in dispatched:
-                                dispatched.add(callback)
-                                yield callback
+                        for priority, callback in callbacks:
+                            heappush(priority_queue, (i, -priority, callback))
+
+        dispatched: Set[Callable[..., Any]] = set()
+
+        while priority_queue:
+            _, _, callback = heappop(priority_queue)
+
+            if callback not in dispatched:
+                dispatched.add(callback)
+                yield callback
 
     def invoke(self, node: AstNode, *args: Any, **kwargs: Any) -> Any:
         """Invoke rules on the given ast node."""
@@ -162,16 +183,12 @@ class Visitor(Dispatcher):
     def invoke(self, node: AstNode, *args: Any, **kwargs: Any) -> Any:
         rules = list(self.dispatch(node))
 
-        # TODO: If no rules use default implementation that joins all child nodes with space
-        # TODO: If more than one rule, just use the first one with the highest priority
-        if not rules:
-            raise ValueError(f"No matching rule for visiting {type(node)} node.")
-        if len(rules) > 1:
-            raise ValueError(
-                f"Matched {len(rules)} conflicting rules for visiting {type(node)} node."
-            )
+        if rules:
+            result = rules[0](node, *args, **kwargs)
+        else:
+            result = (child for child in node)
 
-        if isinstance(result := rules[0](node, *args, **kwargs), Generator):
+        if isinstance(result, Generator):
             for child in result:
                 self.invoke(child, *args, **kwargs)
 

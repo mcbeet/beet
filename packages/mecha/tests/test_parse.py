@@ -7,7 +7,9 @@ from mecha import Mecha, delegate, get_argument_examples, get_command_examples
 
 
 def test_command_examples(snapshot: SnapshotFixture, mc: Mecha):
-    assert snapshot() == mc.parse_function(get_command_examples()).dump()
+    ast = mc.parse_function(get_command_examples())
+    assert snapshot() == ast.dump()
+    assert snapshot() == mc.serialize(ast)
 
 
 @pytest.mark.parametrize(
