@@ -9,33 +9,45 @@
 
 > A powerful Minecraft command library.
 
+```python
+from mecha import Mecha
+
+mc = Mecha(multiline=True)
+
+function = """
+    execute
+        as @a                        # For each "player",
+        at @s                        # start at their feet.
+        anchored eyes                # Looking through their eyes,
+        facing 0 0 0                 # face perfectly at the target
+        anchored feet                # (go back to the feet)
+        positioned ^ ^ ^1            # and move one block forward.
+        rotated as @s                # Face the direction the player
+                                     # is actually facing,
+        positioned ^ ^ ^-1           # and move one block back.
+        if entity @s[distance=..0.6] # Check if we're close to the
+                                     # player's feet.
+        run
+            say I'm facing the target!
+"""
+
+ast = mc.parse_function(function)
+print(mc.serialize(ast))  # execute as @a at @s anchored eyes facing ...
+```
+
 ## Introduction
 
-This package provides a versatile API for generating Minecraft commands in Python. It uses the [`beet`](https://github.com/vberlier/beet) library to generate functions and integrates natively with the `beet` pipeline.
+This package provides everything you need for working with Minecraft commands in Python, whether you're looking to process commands or build abstractions on top.
 
-```python
-from beet import Context
-from mecha import Mecha
+### Features
 
-def my_plugin(ctx: Context):
-    mc = ctx.inject(Mecha)
-
-    with mc.function("foo"):
-        mc.say("hello")
-```
-
-You can directly create handles from data pack instances. The library can be used on its own without being part of a `beet` pipeline.
-
-```python
-from beet import DataPack
-from mecha import Mecha
-
-with DataPack(path="demo") as data:
-    mc = Mecha(data)
-
-    with mc.function("foo"):
-        mc.say("hello")
-```
+- Extensible, version-agnostic `mcfunction` parser
+- Clean abstract syntax tree with source location
+- Command config resolver that flattens all the valid prototypes
+- Powerful rule dispatcher for processing specific ast nodes
+- Composable visitors and reducers
+- _(soon)_ Integrate compiler passes into your [`beet`](https://github.com/vberlier/beet) pipeline
+- _(soon)_ Expressive command API for writing commands in Python
 
 ## Installation
 
