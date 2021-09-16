@@ -22,9 +22,8 @@ __all__ = [
     "Vector2Parser",
     "Vector3Parser",
     "JsonParser",
-    "JsonObjectConstraint",
+    "TypeConstraint",
     "NbtParser",
-    "NbtCompoundConstraint",
     "AdjacentConstraint",
     "ResourceLocationParser",
     "NoTagConstraint",
@@ -61,7 +60,18 @@ __all__ = [
 
 from dataclasses import dataclass, field
 from functools import partial
-from typing import Any, Dict, Iterator, List, Literal, Optional, Tuple, Type, overload
+from typing import (
+    Any,
+    Dict,
+    Iterator,
+    List,
+    Literal,
+    Optional,
+    Tuple,
+    Type,
+    Union,
+    overload,
+)
 from uuid import UUID
 
 # pyright: reportMissingTypeStubs=false
@@ -144,9 +154,17 @@ def get_default_parsers() -> Dict[str, Parser]:
         "phrase": StringParser(type="phrase"),
         "greedy": StringParser(type="greedy"),
         "json": JsonParser(),
-        "json_object": JsonObjectConstraint(delegate('json')),
+        "json_object": TypeConstraint(
+            parser=delegate("json"),
+            type=AstJsonObject,
+            message="Expected json object.",
+        ),
         "nbt": NbtParser(),
-        "nbt_compound": NbtCompoundConstraint(delegate("nbt")),
+        "nbt_compound": TypeConstraint(
+            parser=delegate("nbt"),
+            type=AstNbtCompound,
+            message="Expected nbt compound.",
+        ),
         "adjacent_nbt_compound": AdjacentConstraint(
             parser=delegate("nbt_compound"),
             hint=r"\{",
@@ -845,16 +863,18 @@ class JsonParser:
 
 
 @dataclass
-class JsonObjectConstraint:
-    """Constraint that only allows json objects."""
+class TypeConstraint:
+    """Constraint that only allows specific instances."""
 
     parser: Parser
+    type: Union[Type[Any], Tuple[Type[Any], ...]]
+    message: str
 
     def __call__(self, stream: TokenStream) -> Any:
         node = self.parser(stream)
 
-        if not isinstance(node, AstJsonObject):
-            raise node.emit_error(InvalidSyntax("Expected json object."))
+        if not isinstance(node, self.type):
+            raise node.emit_error(InvalidSyntax(self.message))
 
         return node
 
@@ -1007,21 +1027,6 @@ class NbtParser:
 
             node = AstNbtValue(value=value)  # type: ignore
             return set_location(node, stream.current)
-
-
-@dataclass
-class NbtCompoundConstraint:
-    """Constraint that only allows nbt compound tags."""
-
-    parser: Parser
-
-    def __call__(self, stream: TokenStream) -> Any:
-        node = self.parser(stream)
-
-        if not isinstance(node, AstNbtCompound):
-            raise node.emit_error(InvalidSyntax("Expected nbt compound."))
-
-        return node
 
 
 @dataclass
