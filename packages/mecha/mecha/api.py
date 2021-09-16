@@ -61,7 +61,7 @@ class Mecha:
             spec=self.spec,
             multiline=self.spec.multiline if multiline is None else multiline,
         ):
-            with stream.reset_syntax(comment=r"#.+$", literal=r"\S+"):
+            with stream.reset_syntax(comment=r"#.*$", literal=r"\S+"):
                 with stream.indent(skip=["comment"]), stream.ignore("indent", "dedent"):
                     with stream.intercept("newline", "eof"):
                         yield stream
