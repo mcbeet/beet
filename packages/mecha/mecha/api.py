@@ -10,7 +10,7 @@ from typing import Any, Iterator, Optional, Type, TypeVar, Union, overload
 
 from beet import Context, TextFileBase
 from beet.core.file import TextFile
-from beet.core.utils import extra_field
+from beet.core.utils import JsonDict, extra_field
 from pydantic import BaseModel
 from tokenstream import TokenStream
 
@@ -74,6 +74,7 @@ class Mecha:
         filename: Optional[str] = None,
         resource_location: Optional[str] = None,
         multiline: Optional[bool] = None,
+        provide: Optional[JsonDict] = None,
     ) -> AstRoot:
         ...
 
@@ -98,6 +99,7 @@ class Mecha:
         filename: Optional[str] = None,
         resource_location: Optional[str] = None,
         multiline: Optional[bool] = None,
+        provide: Optional[JsonDict] = None,
     ) -> Any:
         ...
 
@@ -110,6 +112,7 @@ class Mecha:
         filename: Optional[str] = None,
         resource_location: Optional[str] = None,
         multiline: Optional[bool] = None,
+        provide: Optional[JsonDict] = None,
     ) -> Any:
         """Parse the given source into an AST."""
         if using:
@@ -131,4 +134,5 @@ class Mecha:
 
         stream = TokenStream(source.text)
         with self.prepare_token_stream(stream, multiline=multiline):
-            return delegate(parser, stream)
+            with stream.provide(**provide or {}):
+                return delegate(parser, stream)

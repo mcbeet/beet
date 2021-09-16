@@ -1,6 +1,7 @@
 __all__ = [
     "get_argument_examples",
     "get_command_examples",
+    "get_multiline_command_examples",
 ]
 
 
@@ -17,3 +18,9 @@ def get_argument_examples() -> JsonDict:
 
 def get_command_examples() -> Function:
     return Function(read_text("mecha.resources", "command_examples.mcfunction"))
+
+
+def get_multiline_command_examples() -> Function:
+    return Function(
+        read_text("mecha.resources", "multiline_command_examples.mcfunction")
+    )

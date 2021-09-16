@@ -1,13 +1,24 @@
 import pytest
 from beet.core.utils import JsonDict
 from pytest_insta import SnapshotFixture
-from tokenstream import InvalidSyntax, TokenStream
+from tokenstream import InvalidSyntax
 
-from mecha import Mecha, delegate, get_argument_examples, get_command_examples
+from mecha import (
+    Mecha,
+    get_argument_examples,
+    get_command_examples,
+    get_multiline_command_examples,
+)
 
 
 def test_command_examples(snapshot: SnapshotFixture, mc: Mecha):
     ast = mc.parse(get_command_examples())
+    assert snapshot() == ast.dump()
+    assert snapshot() == mc.serialize(ast)
+
+
+def test_multiline_command_examples(snapshot: SnapshotFixture, mc: Mecha):
+    ast = mc.parse(get_multiline_command_examples(), multiline=True)
     assert snapshot() == ast.dump()
     assert snapshot() == mc.serialize(ast)
 
@@ -39,28 +50,25 @@ def test_argument_examples(
     if argument_parser not in mc.spec.parsers:
         pytest.skip()
 
-    stream = TokenStream(value)
-
-    with mc.prepare_token_stream(stream), stream.provide(properties=properties):
-        if invalid:
-            with pytest.raises(InvalidSyntax) as exc_info:
-                delegate(argument_parser, stream)
-            assert snapshot() == "\n---\n".join(
-                [
-                    test_name,
-                    str(properties),
-                    value,
-                    f"{exc_info.type.__name__}: {exc_info.value}\n\nlocation = {exc_info.value.location}\nend_location = {exc_info.value.end_location}",
-                ]
-            )
-        else:
-            ast = delegate(argument_parser, stream)
-            assert snapshot() == "\n---\n".join(
-                [test_name, str(properties), value, mc.serialize(ast), ast.dump()]
-            )
+    if invalid:
+        with pytest.raises(InvalidSyntax) as exc_info:
+            mc.parse(value, using=argument_parser, provide={"properties": properties})
+        assert snapshot() == "\n---\n".join(
+            [
+                test_name,
+                str(properties),
+                value,
+                f"{exc_info.type.__name__}: {exc_info.value}\n\nlocation = {exc_info.value.location}\nend_location = {exc_info.value.end_location}",
+            ]
+        )
+    else:
+        ast = mc.parse(value, using=argument_parser, provide={"properties": properties})
+        assert snapshot() == "\n---\n".join(
+            [test_name, str(properties), value, mc.serialize(ast), ast.dump()]
+        )
 
 
-def test_multiline(snapshot: SnapshotFixture, mc_multiline: Mecha):
+def test_multiline(snapshot: SnapshotFixture, mc: Mecha):
     function = """
         execute
             as @a                        # For each "player",
@@ -78,7 +86,7 @@ def test_multiline(snapshot: SnapshotFixture, mc_multiline: Mecha):
                 say I'm facing the target!
     """
 
-    ast = mc_multiline.parse(function)
+    ast = mc.parse(function, multiline=True)
 
     assert snapshot() == ast.dump()
-    assert snapshot() == mc_multiline.serialize(ast)
+    assert snapshot() == mc.serialize(ast)
