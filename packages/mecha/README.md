@@ -12,7 +12,7 @@
 ```python
 from mecha import Mecha
 
-mc = Mecha(multiline=True)
+mc = Mecha()
 
 function = """
     execute
@@ -31,7 +31,7 @@ function = """
             say I'm facing the target!
 """
 
-ast = mc.parse_function(function)
+ast = mc.parse(function, multiline=True)
 print(mc.serialize(ast))  # execute as @a at @s anchored eyes facing ...
 ```
 
@@ -41,12 +41,12 @@ This package provides everything you need for working with Minecraft commands in
 
 ### Features
 
-- Extensible, version-agnostic `mcfunction` parser
+- Extensible and version-agnostic `mcfunction` parser
 - Clean abstract syntax tree with source location
 - Command config resolver that flattens all the valid prototypes
 - Powerful rule dispatcher for processing specific ast nodes
 - Composable visitors and reducers
-- _(soon)_ Integrate compiler passes into your [`beet`](https://github.com/vberlier/beet) pipeline
+- _(soon)_ Execute arbitrary compilation passes in your [`beet`](https://github.com/vberlier/beet) pipeline
 - _(soon)_ Expressive command API for writing commands in Python
 
 ## Installation
