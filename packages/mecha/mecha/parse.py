@@ -3,11 +3,13 @@ __all__ = [
     "get_stream_spec",
     "get_stream_scope",
     "get_stream_properties",
+    "get_stream_multiline",
+    "get_stream_command_indentation",
     "delegate",
     "string_to_number",
     "QuoteHelper",
     "parse_root",
-    "parse_command",
+    "CommandParser",
     "parse_argument",
     "parse_bool",
     "NumericParser",
@@ -20,6 +22,7 @@ __all__ = [
     "Vector2Parser",
     "Vector3Parser",
     "JsonParser",
+    "JsonObjectConstraint",
     "NbtParser",
     "NbtCompoundConstraint",
     "AdjacentConstraint",
@@ -63,13 +66,7 @@ from uuid import UUID
 
 # pyright: reportMissingTypeStubs=false
 from nbtlib import Byte, Double, Float, Int, Long, OutOfRange, Short, String
-from tokenstream import (
-    InvalidSyntax,
-    SourceLocation,
-    TokenStream,
-    UnexpectedEOF,
-    set_location,
-)
+from tokenstream import InvalidSyntax, SourceLocation, TokenStream, set_location
 
 from .ast import (
     AstBlock,
@@ -130,9 +127,6 @@ from .utils import QuoteHelper, string_to_number
 NUMBER_PATTERN: str = r"-?(?:\d+\.?\d*|\.\d+)"
 
 
-# TODO: Handle the extended syntax by default and validate vanilla compatibility in a separate pass
-
-
 def get_default_parsers() -> Dict[str, Parser]:
     """Return the default parsers."""
     return {
@@ -150,6 +144,7 @@ def get_default_parsers() -> Dict[str, Parser]:
         "phrase": StringParser(type="phrase"),
         "greedy": StringParser(type="greedy"),
         "json": JsonParser(),
+        "json_object": JsonObjectConstraint(delegate('json')),
         "nbt": NbtParser(),
         "nbt_compound": NbtCompoundConstraint(delegate("nbt")),
         "adjacent_nbt_compound": AdjacentConstraint(
@@ -290,7 +285,7 @@ def get_default_parsers() -> Dict[str, Parser]:
         # Command
         ################################################################################
         "root": parse_root,
-        "command": parse_command,
+        "command": CommandParser(),
         "command:argument": parse_argument,
         "command:argument:brigadier:bool": delegate("bool"),
         "command:argument:brigadier:double": MinMaxConstraint(delegate("numeric")),
@@ -426,9 +421,13 @@ def get_stream_properties(stream: TokenStream) -> Dict[str, Any]:
     return stream.data.get("properties", {})
 
 
+def get_stream_multiline(stream: TokenStream) -> bool:
+    """Return whether the token stream is currently parsing in multiline mode."""
+    return stream.data.get("multiline", False)
+
+
 def get_stream_command_indentation(stream: TokenStream) -> int:
     """Return the indentation level associated with the current command."""
-    # TODO: To support nested functions in the future there should be a way to reset this
     return stream.data.get("command_indentation", stream.indentation[-1])
 
 
@@ -457,108 +456,115 @@ def delegate(parser: str, stream: Optional[TokenStream] = None) -> Any:
 
 def parse_root(stream: TokenStream) -> AstRoot:
     """Parse root."""
-    with stream.intercept("newline"):
-        start = stream.peek()
+    start = stream.peek()
 
-        if not start:
-            node = AstRoot(filename=None, commands=AstChildren())
-            return set_location(node, SourceLocation(0, 1, 1))
+    if not start:
+        node = AstRoot(commands=AstChildren())
+        return set_location(node, SourceLocation(0, 1, 1))
 
-        commands: List[AstCommand] = []
+    commands: List[AstCommand] = []
 
-        # TODO: This causes the parser to not error on inline comments in non-multiline mode
-        with stream.ignore("comment"):
-            for _ in stream.peek_until():
-                while stream.get("newline"):
-                    continue
-                if stream.peek():
-                    commands.append(delegate("command", stream))
+    with stream.ignore("comment"):
+        for _ in stream.peek_until():
+            if stream.get("newline"):
+                continue
+            if stream.get("eof"):
+                break
+            commands.append(delegate("command", stream))
 
-        node = AstRoot(filename=None, commands=AstChildren(commands))
-        return set_location(node, start, stream.current)
+    node = AstRoot(commands=AstChildren(commands))
+    return set_location(node, start, stream.current)
 
 
-def parse_command(stream: TokenStream) -> AstCommand:
-    """Parse command."""
-    spec = get_stream_spec(stream)
-    scope = get_stream_scope(stream)
-    tree = spec.tree.get(scope)
+@dataclass
+class CommandParser:
+    """Parser for commands."""
 
-    arguments: List[AstNode] = []
+    def __call__(self, stream: TokenStream) -> AstCommand:
+        """Parse command."""
+        spec = get_stream_spec(stream)
+        scope = get_stream_scope(stream)
+        multiline = get_stream_multiline(stream)
 
-    with stream.checkpoint():
-        location = stream.expect().location
-        end_location = location
+        tree = spec.tree.get(scope)
+        arguments: List[AstNode] = []
 
-    level = get_stream_command_indentation(stream)
-    is_complete = False
+        with stream.checkpoint():
+            location = stream.expect().location
+            end_location = location
 
-    while tree and tree.children:
-        for (name, child), alternative in stream.choose(*tree.children.items()):
-            with alternative, stream.provide(scope=scope + (name,)):
-                literal = None
-                argument = None
+        level = get_stream_command_indentation(stream)
+        is_complete = False
 
-                if child.type == "literal":
-                    literal = stream.expect(("literal", name))
-                elif child.type == "argument":
-                    argument = delegate("command:argument", stream)
+        while tree and tree.children:
+            # if (
+            #     (literal := stream.get("literal"))
+            #     and (child := tree.children.get(literal.value))
+            #     and child.type == "literal"
+            # ):
+            #     pass
+            for (name, child), alternative in stream.choose(*tree.children.items()):
+                with alternative, stream.provide(scope=scope + (name,)):
+                    literal = None
+                    argument = None
 
-                if not child.redirect and not child.children:
-                    try:
-                        stream.expect("newline")
+                    if child.type == "literal":
+                        literal = stream.expect(("literal", name))
+                    elif child.type == "argument":
+                        argument = delegate("command:argument", stream)
+
+                    if not child.redirect and not child.children:
+                        stream.expect("newline", "eof")
                         is_complete = True
-                    except UnexpectedEOF:
-                        is_complete = True
 
-                if literal:
-                    end_location = literal.end_location
-                elif argument:
-                    arguments.append(argument)
-                    end_location = argument.end_location
+                    if literal:
+                        end_location = literal.end_location
+                    elif argument:
+                        arguments.append(argument)
+                        end_location = argument.end_location
 
-                scope = stream.data["scope"]
-                tree = child
+                    scope = stream.data["scope"]
+                    tree = child
 
-        if is_complete:
-            break
-
-        # TODO: find a way to extract this in a function to be able to use it in MessageParser
-        if spec.multiline:
-            with stream.checkpoint() as commit:
-                if list(stream.collect("newline")):
-                    with stream.intercept("whitespace", "eof"):
-                        whitespace = stream.get("whitespace")
-                        eof = stream.get("eof")
-                    if (
-                        whitespace
-                        and level < len(whitespace.value.expandtabs())
-                        and not eof
-                    ):
-                        commit()
-                    elif tree.executable:
-                        commit()
-                        break
-        elif tree.executable and stream.get("newline"):
-            break
-
-        if tree.executable and not stream.peek():
-            break
-
-        target = spec.tree.get(tree.redirect)
-        recursive = target and target.subcommand
-
-        if tree.subcommand or recursive:
-            subcommand_scope = tree.redirect if tree.redirect is not None else scope
-            with stream.provide(scope=subcommand_scope, command_indentation=level):
-                node = delegate("command", stream)
-                arguments.append(node)
-                end_location = node.end_location
-                scope += ("subcommand",)
+            if is_complete:
                 break
 
-    node = AstCommand(identifier=":".join(scope), arguments=AstChildren(arguments))
-    return set_location(node, location, end_location)
+            # TODO: find a way to extract this in a function to be able to use it in MessageParser
+            if multiline:
+                with stream.checkpoint() as commit:
+                    if list(stream.collect("newline")):
+                        with stream.intercept("whitespace"):
+                            whitespace = stream.get("whitespace")
+                            eof = stream.get("eof")
+                        if (
+                            whitespace
+                            and level < len(whitespace.value.expandtabs())
+                            and not eof
+                        ):
+                            commit()
+                        elif tree.executable:
+                            commit()
+                            break
+            elif tree.executable and stream.get("newline", "eof"):
+                break
+
+            if tree.executable and not stream.peek():
+                break
+
+            target = spec.tree.get(tree.redirect)
+            recursive = target and target.subcommand
+
+            if tree.subcommand or recursive:
+                subcommand_scope = tree.redirect if tree.redirect is not None else scope
+                with stream.provide(scope=subcommand_scope, command_indentation=level):
+                    node = delegate("command", stream)
+                    arguments.append(node)
+                    end_location = node.end_location
+                    scope += ("subcommand",)
+                    break
+
+        node = AstCommand(identifier=":".join(scope), arguments=AstChildren(arguments))
+        return set_location(node, location, end_location)
 
 
 def parse_argument(stream: TokenStream) -> AstNode:
@@ -836,6 +842,21 @@ class JsonParser:
 
             node = AstJsonValue(value=value)  # type: ignore
             return set_location(node, stream.current)
+
+
+@dataclass
+class JsonObjectConstraint:
+    """Constraint that only allows json objects."""
+
+    parser: Parser
+
+    def __call__(self, stream: TokenStream) -> Any:
+        node = self.parser(stream)
+
+        if not isinstance(node, AstJsonObject):
+            raise node.emit_error(InvalidSyntax("Expected json object."))
+
+        return node
 
 
 @dataclass

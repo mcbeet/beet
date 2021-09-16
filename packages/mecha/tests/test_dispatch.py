@@ -16,7 +16,7 @@ from mecha.ast import (
 
 
 def test_visitor(mc: Mecha):
-    ast = mc.parse_function("particle dust 1.0 0.5 0.5 1.0 7 7 7")
+    ast = mc.parse("particle dust 1.0 0.5 0.5 1.0 7 7 7")
 
     numbers: List[AstNode] = []
 
@@ -33,7 +33,7 @@ def test_visitor(mc: Mecha):
 
 
 def test_visitor_extend(mc: Mecha):
-    ast = mc.parse_command("particle dust 1.0 0.5 7 1.0 7 7 7")
+    ast = mc.parse("particle dust 1.0 0.5 7 1.0 7 7 7", type=AstCommand)
 
     nodes: List[Type[AstNode]] = []
     numbers: List[AstNumber] = []
@@ -69,7 +69,7 @@ def test_visitor_extend(mc: Mecha):
 
 
 def test_visitor_result(mc: Mecha):
-    ast = mc.parse_function("say hello\nsay world\n")
+    ast = mc.parse("say hello\nsay world\n")
 
     class Foo(Visitor):
         @rule(AstRoot)

@@ -4,7 +4,7 @@ minecraft:block_predicate 1 3
 ---
 #stone[foo
 ---
-UnexpectedEOF: Expected equal but reached end of file.
+UnexpectedToken: Expected equal but got eof.
 
 location = SourceLocation(pos=10, lineno=1, colno=11)
 end_location = SourceLocation(pos=10, lineno=1, colno=11)

@@ -53,7 +53,7 @@ __all__ = [
 
 
 from dataclasses import dataclass, fields
-from typing import Any, Iterator, Literal, Optional, Tuple, TypeVar, Union
+from typing import Any, ClassVar, Iterator, Literal, Optional, Tuple, TypeVar, Union
 from uuid import UUID
 
 from beet.core.utils import extra_field, required_field
@@ -74,6 +74,8 @@ class AstNode:
 
     location: SourceLocation = extra_field(default=UNKNOWN_LOCATION)
     end_location: SourceLocation = extra_field(default=UNKNOWN_LOCATION)
+
+    parser: ClassVar[Optional[str]] = None
 
     def __iter__(self) -> Iterator["AstNode"]:
         for f in fields(self):
@@ -126,8 +128,9 @@ class AstChildren(Tuple[AstNodeType, ...]):
 class AstRoot(AstNode):
     """Root ast node"""
 
-    filename: Optional[str] = None
     commands: AstChildren["AstCommand"] = required_field()
+
+    parser = "root"
 
 
 @dataclass(frozen=True)
@@ -137,12 +140,16 @@ class AstCommand(AstNode):
     identifier: str = required_field()
     arguments: AstChildren[AstNode] = required_field()
 
+    parser = "command"
+
 
 @dataclass(frozen=True)
 class AstLiteral(AstNode):
     """Ast literal node."""
 
     value: str = required_field()
+
+    parser = "literal"
 
 
 @dataclass(frozen=True)
@@ -151,12 +158,16 @@ class AstString(AstNode):
 
     value: str = required_field()
 
+    parser = "phrase"
+
 
 @dataclass(frozen=True)
 class AstBool(AstNode):
     """Ast bool node."""
 
     value: bool = required_field()
+
+    parser = "bool"
 
 
 @dataclass(frozen=True)
@@ -165,12 +176,16 @@ class AstNumber(AstNode):
 
     value: Union[int, float] = required_field()
 
+    parser = "numeric"
+
 
 @dataclass(frozen=True)
 class AstUUID(AstNode):
     """Ast uuid node."""
 
     value: UUID = required_field()
+
+    parser = "uuid"
 
 
 @dataclass(frozen=True)
@@ -179,6 +194,8 @@ class AstCoordinate(AstNode):
 
     type: Literal["absolute", "relative", "local"] = "absolute"
     value: Union[int, float] = required_field()
+
+    parser = "coordinate"
 
 
 @dataclass(frozen=True)
@@ -202,6 +219,8 @@ class AstVector3(AstNode):
 class AstJson(AstNode):
     """Base ast node for json."""
 
+    parser = "json"
+
     def evaluate(self) -> Any:
         """Return the json value."""
         raise NotImplementedError()
@@ -213,6 +232,8 @@ class AstJsonValue(AstJson):
 
     value: Any = required_field()
 
+    parser = None
+
     def evaluate(self) -> Any:
         return self.value
 
@@ -222,6 +243,8 @@ class AstJsonArray(AstJson):
     """Ast json array node."""
 
     elements: AstChildren[AstJson] = required_field()
+
+    parser = None
 
     def evaluate(self) -> Any:
         return [element.evaluate() for element in self.elements]
@@ -248,6 +271,8 @@ class AstJsonObject(AstJson):
 
     entries: AstChildren[AstJsonObjectEntry] = required_field()
 
+    parser = "json"
+
     def evaluate(self) -> Any:
         return {entry.key.value: entry.value.evaluate() for entry in self.entries}
 
@@ -255,6 +280,8 @@ class AstJsonObject(AstJson):
 @dataclass(frozen=True)
 class AstNbt(AstNode):
     """Base ast node for nbt."""
+
+    parser = "nbt"
 
     def evaluate(self) -> Any:
         """Return the nbt value."""
@@ -267,6 +294,8 @@ class AstNbtValue(AstNbt):
 
     value: Any = required_field()
 
+    parser = None
+
     def evaluate(self) -> Any:
         return self.value
 
@@ -276,6 +305,8 @@ class AstNbtList(AstNbt):
     """Ast nbt list node."""
 
     elements: AstChildren[AstNbt] = required_field()
+
+    parser = None
 
     def evaluate(self) -> Any:
         return ListTag([element.evaluate() for element in self.elements])  # type: ignore
@@ -302,6 +333,8 @@ class AstNbtCompound(AstNbt):
 
     entries: AstChildren[AstNbtCompoundEntry] = required_field()
 
+    parser = "nbt_compound"
+
     def evaluate(self) -> Any:
         return Compound(  # type: ignore
             {entry.key.value: entry.value.evaluate() for entry in self.entries},
@@ -314,6 +347,8 @@ class AstNbtByteArray(AstNbt):
 
     elements: AstChildren[AstNbt] = required_field()
 
+    parser = None
+
     def evaluate(self) -> Any:
         return ByteArray([element.evaluate() for element in self.elements])  # type: ignore
 
@@ -324,6 +359,8 @@ class AstNbtIntArray(AstNbt):
 
     elements: AstChildren[AstNbt] = required_field()
 
+    parser = None
+
     def evaluate(self) -> Any:
         return IntArray([element.evaluate() for element in self.elements])  # type: ignore
 
@@ -333,6 +370,8 @@ class AstNbtLongArray(AstNbt):
     """Ast nbt long array node."""
 
     elements: AstChildren[AstNbt] = required_field()
+
+    parser = None
 
     def evaluate(self) -> Any:
         return LongArray([element.evaluate() for element in self.elements])  # type: ignore
@@ -345,6 +384,8 @@ class AstResourceLocation(AstNode):
     is_tag: bool = False
     namespace: Optional[str] = None
     path: str = required_field()
+
+    parser = "resource_location_or_tag"
 
     def get_canonical_value(self) -> str:
         """Return the canonical value of the resource location as a string."""
@@ -395,6 +436,8 @@ class AstRange(AstNode):
         """Return the exact value."""
         return self.min  # type: ignore
 
+    parser = "range"
+
 
 @dataclass(frozen=True)
 class AstTime(AstNode):
@@ -402,6 +445,8 @@ class AstTime(AstNode):
 
     value: Union[int, float] = required_field()
     unit: Literal["day", "second", "tick"] = "tick"
+
+    parser = "time"
 
 
 @dataclass(frozen=True)
@@ -460,6 +505,8 @@ class AstSelector(AstNode):
     variable: Literal["p", "r", "a", "e", "s"] = required_field()
     arguments: AstChildren[AstSelectorArgument] = AstChildren()
 
+    parser = "selector"
+
 
 @dataclass(frozen=True)
 class AstMessage(AstNode):
@@ -482,6 +529,8 @@ class AstNbtPath(AstNode):
     components: AstChildren[
         Union[AstString, AstNbtCompound, AstNbtPathSubscript]
     ] = required_field()
+
+    parser = "nbt_path"
 
 
 @dataclass(frozen=True)
@@ -552,3 +601,5 @@ class AstParticle(AstNode):
 
     name: AstResourceLocation = required_field()
     parameters: Optional[AstParticleParameters] = None
+
+    parser = "particle"

@@ -4,7 +4,7 @@ minecraft:block_state 1 5
 ---
 stone[thing=hello]{
 ---
-UnexpectedEOF: Expected curly '}' but reached end of file.
+UnexpectedToken: Expected curly '}' but got eof.
 
 location = SourceLocation(pos=19, lineno=1, colno=20)
 end_location = SourceLocation(pos=19, lineno=1, colno=20)

@@ -7,7 +7,7 @@ from mecha import Mecha, delegate, get_argument_examples, get_command_examples
 
 
 def test_command_examples(snapshot: SnapshotFixture, mc: Mecha):
-    ast = mc.parse_function(get_command_examples())
+    ast = mc.parse(get_command_examples())
     assert snapshot() == ast.dump()
     assert snapshot() == mc.serialize(ast)
 
@@ -78,7 +78,7 @@ def test_multiline(snapshot: SnapshotFixture, mc_multiline: Mecha):
                 say I'm facing the target!
     """
 
-    ast = mc_multiline.parse_function(function)
+    ast = mc_multiline.parse(function)
 
     assert snapshot() == ast.dump()
     assert snapshot() == mc_multiline.serialize(ast)

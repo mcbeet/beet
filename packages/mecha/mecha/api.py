@@ -5,18 +5,21 @@ __all__ = [
 
 
 from contextlib import contextmanager
-from dataclasses import InitVar, dataclass, replace
-from typing import Any, Iterator, List, Optional, Union
+from dataclasses import InitVar, dataclass
+from typing import Any, Iterator, Optional, Type, TypeVar, Union, overload
 
-from beet import Context, Function, TextFileBase
+from beet import Context, TextFileBase
+from beet.core.file import TextFile
 from beet.core.utils import extra_field
 from pydantic import BaseModel
 from tokenstream import TokenStream
 
-from .ast import AstCommand, AstRoot
+from .ast import AstNode, AstRoot
 from .parse import delegate, get_default_parsers
 from .serialize import Serializer
 from .spec import CommandSpec
+
+AstNodeType = TypeVar("AstNodeType", bound=AstNode)
 
 
 class MechaOptions(BaseModel):
@@ -48,31 +51,68 @@ class Mecha:
         self.serialize = Serializer(self.spec)
 
     @contextmanager
-    def prepare_token_stream(self, stream: TokenStream) -> Iterator[TokenStream]:
-        """Prepare the token stream for parsing."""
-        with stream.provide(spec=self.spec), stream.reset_syntax(
-            comment=r"#.+$",
-            literal=r"\S+",
-        ):
-            with stream.indent(skip=["comment"]), stream.ignore("indent", "dedent"):
-                yield stream
-
-    def parse_function(
+    def prepare_token_stream(
         self,
-        function: Union[TextFileBase[Any], str, List[str]],
+        stream: TokenStream,
+        multiline: Optional[bool] = None,
+    ) -> Iterator[TokenStream]:
+        """Prepare the token stream for parsing."""
+        with stream.reset(*stream.data), stream.provide(
+            spec=self.spec,
+            multiline=self.spec.multiline if multiline is None else multiline,
+        ):
+            with stream.reset_syntax(comment=r"#.+$", literal=r"\S+"):
+                with stream.indent(skip=["comment"]), stream.ignore("indent", "dedent"):
+                    with stream.intercept("newline", "eof"):
+                        yield stream
+
+    @overload
+    def parse(
+        self,
+        source: Union[TextFileBase[Any], str],
+        *,
         filename: Optional[str] = None,
+        resource_location: Optional[str] = None,
+        multiline: Optional[bool] = None,
     ) -> AstRoot:
-        """Parse a function and return the ast."""
-        if isinstance(function, (str, list)):
-            function = Function(function)
+        ...
 
-        if not filename and function.source_path:
-            filename = str(function.source_path)
+    @overload
+    def parse(
+        self,
+        source: Union[TextFileBase[Any], str],
+        *,
+        type: Type[AstNodeType],
+        filename: Optional[str] = None,
+        resource_location: Optional[str] = None,
+        multiline: Optional[bool] = None,
+    ) -> AstNodeType:
+        ...
 
-        with self.prepare_token_stream(TokenStream(function.text)) as stream:
-            return replace(delegate("root", stream), filename=filename)
+    def parse(
+        self,
+        source: Union[TextFileBase[Any], str],
+        *,
+        type: Optional[Type[AstNode]] = None,
+        filename: Optional[str] = None,
+        resource_location: Optional[str] = None,
+        multiline: Optional[bool] = None,
+    ) -> Any:
+        """Parse the given source into an AST."""
+        if not type:
+            type = AstRoot
 
-    def parse_command(self, text: str) -> AstCommand:
-        """Parse a single command from a string and return the ast."""
-        with self.prepare_token_stream(TokenStream(text)) as stream:
-            return delegate("command", stream)
+        if not type.parser:
+            raise TypeError(f"No parser directly associated with {type}.")
+
+        if isinstance(source, str):
+            source = TextFile(source)
+
+        if not filename and source.source_path:
+            filename = str(source.source_path)
+
+        # TODO: Wrap errors in a clean FormattedPipelineException
+
+        stream = TokenStream(source.text)
+        with self.prepare_token_stream(stream, multiline=multiline):
+            return delegate(type.parser, stream)

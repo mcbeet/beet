@@ -4,7 +4,7 @@ minecraft:particle 1 6
 ---
 vibration 0.0 64.0
 ---
-UnexpectedEOF: Expected number but reached end of file.
+UnexpectedToken: Expected number but got eof.
 
 location = SourceLocation(pos=18, lineno=1, colno=19)
 end_location = SourceLocation(pos=18, lineno=1, colno=19)
