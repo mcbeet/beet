@@ -89,21 +89,37 @@ class Mecha:
     ) -> AstNodeType:
         ...
 
+    @overload
+    def parse(
+        self,
+        source: Union[TextFileBase[Any], str],
+        *,
+        using: str,
+        filename: Optional[str] = None,
+        resource_location: Optional[str] = None,
+        multiline: Optional[bool] = None,
+    ) -> Any:
+        ...
+
     def parse(
         self,
         source: Union[TextFileBase[Any], str],
         *,
         type: Optional[Type[AstNode]] = None,
+        using: Optional[str] = None,
         filename: Optional[str] = None,
         resource_location: Optional[str] = None,
         multiline: Optional[bool] = None,
     ) -> Any:
         """Parse the given source into an AST."""
-        if not type:
-            type = AstRoot
-
-        if not type.parser:
-            raise TypeError(f"No parser directly associated with {type}.")
+        if using:
+            parser = using
+        else:
+            if not type:
+                type = AstRoot
+            if not type.parser:
+                raise TypeError(f"No parser directly associated with {type}.")
+            parser = type.parser
 
         if isinstance(source, str):
             source = TextFile(source)
@@ -115,4 +131,4 @@ class Mecha:
 
         stream = TokenStream(source.text)
         with self.prepare_token_stream(stream, multiline=multiline):
-            return delegate(type.parser, stream)
+            return delegate(parser, stream)
