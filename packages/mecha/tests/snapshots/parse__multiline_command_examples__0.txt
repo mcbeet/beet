@@ -1,5 +1,179 @@
 <class 'mecha.ast.AstRoot'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
-  end_location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=288, lineno=17, colno=1)
   commands:
-    <empty>
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=287, lineno=16, colno=10)
+      identifier: 'execute:subcommand'
+      arguments:
+        <class 'mecha.ast.AstCommand'>
+          location: SourceLocation(pos=12, lineno=2, colno=5)
+          end_location: SourceLocation(pos=287, lineno=16, colno=10)
+          identifier: 'execute:as:targets:subcommand'
+          arguments:
+            <class 'mecha.ast.AstSelector'>
+              location: SourceLocation(pos=15, lineno=2, colno=8)
+              end_location: SourceLocation(pos=17, lineno=2, colno=10)
+              variable: 'a'
+              arguments:
+                <empty>
+            <class 'mecha.ast.AstCommand'>
+              location: SourceLocation(pos=22, lineno=3, colno=5)
+              end_location: SourceLocation(pos=287, lineno=16, colno=10)
+              identifier: 'execute:at:targets:subcommand'
+              arguments:
+                <class 'mecha.ast.AstSelector'>
+                  location: SourceLocation(pos=25, lineno=3, colno=8)
+                  end_location: SourceLocation(pos=27, lineno=3, colno=10)
+                  variable: 's'
+                  arguments:
+                    <empty>
+                <class 'mecha.ast.AstCommand'>
+                  location: SourceLocation(pos=32, lineno=4, colno=5)
+                  end_location: SourceLocation(pos=287, lineno=16, colno=10)
+                  identifier: 'execute:align:axes:subcommand'
+                  arguments:
+                    <class 'mecha.ast.AstLiteral'>
+                      location: SourceLocation(pos=38, lineno=4, colno=11)
+                      end_location: SourceLocation(pos=41, lineno=4, colno=14)
+                      value: 'xyz'
+                    <class 'mecha.ast.AstCommand'>
+                      location: SourceLocation(pos=46, lineno=5, colno=5)
+                      end_location: SourceLocation(pos=287, lineno=16, colno=10)
+                      identifier: 'execute:if:block:pos:block:subcommand'
+                      arguments:
+                        <class 'mecha.ast.AstVector3'>
+                          location: SourceLocation(pos=55, lineno=5, colno=14)
+                          end_location: SourceLocation(pos=60, lineno=5, colno=19)
+                          x:
+                            <class 'mecha.ast.AstCoordinate'>
+                              location: SourceLocation(pos=55, lineno=5, colno=14)
+                              end_location: SourceLocation(pos=56, lineno=5, colno=15)
+                              type: 'relative'
+                              value: 0
+                          y:
+                            <class 'mecha.ast.AstCoordinate'>
+                              location: SourceLocation(pos=57, lineno=5, colno=16)
+                              end_location: SourceLocation(pos=58, lineno=5, colno=17)
+                              type: 'relative'
+                              value: 0
+                          z:
+                            <class 'mecha.ast.AstCoordinate'>
+                              location: SourceLocation(pos=59, lineno=5, colno=18)
+                              end_location: SourceLocation(pos=60, lineno=5, colno=19)
+                              type: 'relative'
+                              value: 0
+                        <class 'mecha.ast.AstBlock'>
+                          location: SourceLocation(pos=61, lineno=5, colno=20)
+                          end_location: SourceLocation(pos=91, lineno=7, colno=6)
+                          identifier:
+                            <class 'mecha.ast.AstResourceLocation'>
+                              location: SourceLocation(pos=61, lineno=5, colno=20)
+                              end_location: SourceLocation(pos=66, lineno=5, colno=25)
+                              is_tag: True
+                              namespace: None
+                              path: 'wool'
+                          block_states:
+                            <class 'mecha.ast.AstBlockState'>
+                              location: SourceLocation(pos=76, lineno=6, colno=9)
+                              end_location: SourceLocation(pos=85, lineno=6, colno=18)
+                              key:
+                                <class 'mecha.ast.AstString'>
+                                  location: SourceLocation(pos=76, lineno=6, colno=9)
+                                  end_location: SourceLocation(pos=79, lineno=6, colno=12)
+                                  value: 'foo'
+                              value:
+                                <class 'mecha.ast.AstString'>
+                                  location: SourceLocation(pos=82, lineno=6, colno=15)
+                                  end_location: SourceLocation(pos=85, lineno=6, colno=18)
+                                  value: 'bar'
+                          data_tags: None
+                        <class 'mecha.ast.AstCommand'>
+                          location: SourceLocation(pos=96, lineno=8, colno=5)
+                          end_location: SourceLocation(pos=287, lineno=16, colno=10)
+                          identifier: 'execute:run:subcommand'
+                          arguments:
+                            <class 'mecha.ast.AstCommand'>
+                              location: SourceLocation(pos=108, lineno=9, colno=9)
+                              end_location: SourceLocation(pos=287, lineno=16, colno=10)
+                              identifier: 'summon:entity:pos:nbt'
+                              arguments:
+                                <class 'mecha.ast.AstResourceLocation'>
+                                  location: SourceLocation(pos=115, lineno=9, colno=16)
+                                  end_location: SourceLocation(pos=126, lineno=9, colno=27)
+                                  is_tag: False
+                                  namespace: None
+                                  path: 'armor_stand'
+                                <class 'mecha.ast.AstVector3'>
+                                  location: SourceLocation(pos=127, lineno=9, colno=28)
+                                  end_location: SourceLocation(pos=132, lineno=9, colno=33)
+                                  x:
+                                    <class 'mecha.ast.AstCoordinate'>
+                                      location: SourceLocation(pos=127, lineno=9, colno=28)
+                                      end_location: SourceLocation(pos=128, lineno=9, colno=29)
+                                      type: 'relative'
+                                      value: 0
+                                  y:
+                                    <class 'mecha.ast.AstCoordinate'>
+                                      location: SourceLocation(pos=129, lineno=9, colno=30)
+                                      end_location: SourceLocation(pos=130, lineno=9, colno=31)
+                                      type: 'relative'
+                                      value: 0
+                                  z:
+                                    <class 'mecha.ast.AstCoordinate'>
+                                      location: SourceLocation(pos=131, lineno=9, colno=32)
+                                      end_location: SourceLocation(pos=132, lineno=9, colno=33)
+                                      type: 'relative'
+                                      value: 0
+                                <class 'mecha.ast.AstNbtCompound'>
+                                  location: SourceLocation(pos=133, lineno=9, colno=34)
+                                  end_location: SourceLocation(pos=287, lineno=16, colno=10)
+                                  entries:
+                                    <class 'mecha.ast.AstNbtCompoundEntry'>
+                                      location: SourceLocation(pos=147, lineno=10, colno=13)
+                                      end_location: SourceLocation(pos=226, lineno=13, colno=14)
+                                      key:
+                                        <class 'mecha.ast.AstNbtCompoundKey'>
+                                          location: SourceLocation(pos=147, lineno=10, colno=13)
+                                          end_location: SourceLocation(pos=151, lineno=10, colno=17)
+                                          value: 'Tags'
+                                      value:
+                                        <class 'mecha.ast.AstNbtList'>
+                                          location: SourceLocation(pos=153, lineno=10, colno=19)
+                                          end_location: SourceLocation(pos=226, lineno=13, colno=14)
+                                          elements:
+                                            <class 'mecha.ast.AstNbtValue'>
+                                              location: SourceLocation(pos=171, lineno=11, colno=17)
+                                              end_location: SourceLocation(pos=189, lineno=11, colno=35)
+                                              value: String('position_history')
+                                            <class 'mecha.ast.AstNbtValue'>
+                                              location: SourceLocation(pos=207, lineno=12, colno=17)
+                                              end_location: SourceLocation(pos=212, lineno=12, colno=22)
+                                              value: String('new')
+                                    <class 'mecha.ast.AstNbtCompoundEntry'>
+                                      location: SourceLocation(pos=240, lineno=14, colno=13)
+                                      end_location: SourceLocation(pos=253, lineno=14, colno=26)
+                                      key:
+                                        <class 'mecha.ast.AstNbtCompoundKey'>
+                                          location: SourceLocation(pos=240, lineno=14, colno=13)
+                                          end_location: SourceLocation(pos=249, lineno=14, colno=22)
+                                          value: 'Invisible'
+                                      value:
+                                        <class 'mecha.ast.AstNbtValue'>
+                                          location: SourceLocation(pos=251, lineno=14, colno=24)
+                                          end_location: SourceLocation(pos=253, lineno=14, colno=26)
+                                          value: Byte(1)
+                                    <class 'mecha.ast.AstNbtCompoundEntry'>
+                                      location: SourceLocation(pos=267, lineno=15, colno=13)
+                                      end_location: SourceLocation(pos=277, lineno=15, colno=23)
+                                      key:
+                                        <class 'mecha.ast.AstNbtCompoundKey'>
+                                          location: SourceLocation(pos=267, lineno=15, colno=13)
+                                          end_location: SourceLocation(pos=273, lineno=15, colno=19)
+                                          value: 'Marker'
+                                      value:
+                                        <class 'mecha.ast.AstNbtValue'>
+                                          location: SourceLocation(pos=275, lineno=15, colno=21)
+                                          end_location: SourceLocation(pos=277, lineno=15, colno=23)
+                                          value: Byte(1)

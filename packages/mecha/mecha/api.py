@@ -8,8 +8,7 @@ from contextlib import contextmanager
 from dataclasses import InitVar, dataclass
 from typing import Any, Iterator, Optional, Type, TypeVar, Union, overload
 
-from beet import Context, TextFileBase
-from beet.core.file import TextFile
+from beet import Context, TextFile, TextFileBase
 from beet.core.utils import JsonDict, extra_field
 from pydantic import BaseModel
 from tokenstream import TokenStream

@@ -592,7 +592,10 @@ def parse_argument(stream: TokenStream) -> AstNode:
     tree = spec.tree.get(scope)
 
     if tree and tree.parser:
-        with stream.provide(properties=tree.properties or {}):
+        with stream.provide(properties=tree.properties or {}), stream.ignore(
+            "newline",
+            "comment",
+        ):
             return delegate(f"command:argument:{tree.parser}", stream)
 
     raise ValueError(f"Missing argument parser in command tree {scope}.")
@@ -1049,6 +1052,23 @@ class ResourceLocationParser:
     """Parser for resource locations."""
 
     def __call__(self, stream: TokenStream) -> AstResourceLocation:
+        multiline = get_stream_multiline(stream)
+
+        if multiline and stream.index:
+            with stream.checkpoint() as commit:
+                last_comment = None
+
+                while stream.index >= 0 and stream.current.match(
+                    "whitespace", "newline", "comment", "indent", "dedent"
+                ):
+                    if stream.current.match("comment"):
+                        last_comment = stream.current
+                    stream.index -= 1
+
+                if last_comment:
+                    print("found", last_comment)
+                    commit()
+
         with stream.syntax(resource_location=r"#?(?:[0-9a-z_\-\.]+:)?[0-9a-z_./-]+"):
             token = stream.expect("resource_location")
             value = token.value
@@ -1587,7 +1607,7 @@ class ScoreHolderParser:
 def parse_message(stream: TokenStream) -> AstMessage:
     """Parse message."""
     # TODO: Find a way to handle multiline
-    with stream.intercept("whitespace"):
+    with stream.intercept("whitespace", "newline"):
         while stream.get("whitespace"):
             continue
 
