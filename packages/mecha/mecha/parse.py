@@ -537,7 +537,8 @@ def parse_command(stream: TokenStream) -> AstCommand:
 
             if child := tree.get_literal(literal.value):
                 if not child.children:
-                    stream.expect("newline", "eof")
+                    if stream.peek():
+                        stream.expect("newline", "eof")
                     reached_terminal = True
 
                 end_location = literal.end_location
@@ -558,7 +559,8 @@ def parse_command(stream: TokenStream) -> AstCommand:
                         argument = delegate("command:argument", stream)
 
                     if not child.children:
-                        stream.expect("newline", "eof")
+                        if stream.peek():
+                            stream.expect("newline", "eof")
                         reached_terminal = True
 
                     if literal:
@@ -574,7 +576,7 @@ def parse_command(stream: TokenStream) -> AstCommand:
             break
 
         if not consume_line_continuation(stream):
-            if tree.executable and stream.get("newline", "eof"):
+            if tree.executable and (not stream.peek() or stream.get("newline", "eof")):
                 break
 
         target = spec.tree.get(tree.redirect)
@@ -1074,7 +1076,6 @@ class ResourceLocationParser:
                     stream.index -= 1
 
                 if last_comment:
-                    print("found", last_comment)
                     commit()
 
         with stream.syntax(resource_location=r"#?(?:[0-9a-z_\-\.]+:)?[0-9a-z_./-]+"):
@@ -1614,34 +1615,43 @@ class ScoreHolderParser:
 
 def parse_message(stream: TokenStream) -> AstMessage:
     """Parse message."""
-    # TODO: Find a way to handle multiline
-    with stream.intercept("whitespace", "newline"):
-        while stream.get("whitespace"):
-            continue
+    multiline = get_stream_multiline(stream)
 
-        with stream.syntax(selector=r"@[praes]", literal=r"\S+"):
-            fragments: List[Any] = []
+    with stream.intercept("whitespace"):
+        stream.get("whitespace")
 
-            for selector, literal, whitespace in stream.collect(
-                "selector",
-                "literal",
-                "whitespace",
-            ):
-                if selector:
-                    stream.index -= 1
-                    with stream.ignore("whitespace"):
+    with stream.intercept("newline"), stream.syntax(
+        selector=r"@[praes]",
+        text=r"[^\n@]+",
+    ):
+        fragments: List[Any] = []
+
+        while True:
+            selector, text = stream.expect("selector", "text")
+
+            if selector:
+                stream.index -= 1
+                with stream.ignore("newline") if multiline else nullcontext():
+                    with stream.syntax(text=None):
                         fragments.append(delegate("selector", stream))
-                elif literal:
-                    literal_node = AstLiteral(value=literal.value)
-                    literal_node = set_location(literal_node, literal)
-                    fragments.append(literal_node)
-                elif whitespace:
-                    whitespace_node = AstLiteral(value=whitespace.value)
-                    whitespace_node = set_location(whitespace_node, literal)
-                    fragments.append(whitespace_node)
+            elif text:
+                text_node = AstLiteral(value=text.value)
+                text_node = set_location(text_node, text)
+                fragments.append(text_node)
 
-    if not fragments:
-        raise stream.emit_error(InvalidSyntax("Empty message not allowed."))
+            with stream.syntax(text=None):
+                if consume_line_continuation(stream):
+                    whitespace_node = AstLiteral(value=" ")
+                    whitespace_node = set_location(
+                        whitespace_node,
+                        stream.current.end_location.with_horizontal_offset(-1),
+                        stream.current.end_location,
+                    )
+                    fragments.append(whitespace_node)
+                else:
+                    with stream.checkpoint():
+                        if stream.get("newline", "eof"):
+                            break
 
     node = AstMessage(fragments=AstChildren(fragments))
     return set_location(node, fragments[0], fragments[-1])

@@ -12,12 +12,8 @@ foo @a[tag=a, tag=b]
   fragments:
     <class 'mecha.ast.AstLiteral'>
       location: SourceLocation(pos=0, lineno=1, colno=1)
-      end_location: SourceLocation(pos=3, lineno=1, colno=4)
-      value: 'foo'
-    <class 'mecha.ast.AstLiteral'>
-      location: SourceLocation(pos=-1, lineno=0, colno=0)
-      end_location: SourceLocation(pos=-1, lineno=0, colno=0)
-      value: ' '
+      end_location: SourceLocation(pos=4, lineno=1, colno=5)
+      value: 'foo '
     <class 'mecha.ast.AstSelector'>
       location: SourceLocation(pos=4, lineno=1, colno=5)
       end_location: SourceLocation(pos=20, lineno=1, colno=21)

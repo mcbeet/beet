@@ -90,3 +90,19 @@ def test_multiline(snapshot: SnapshotFixture, mc: Mecha):
 
     assert snapshot() == ast.dump()
     assert snapshot() == mc.serialize(ast)
+
+
+def test_say(snapshot: SnapshotFixture, mc: Mecha):
+    function = """
+        say hello @s world
+            say thing
+    """
+
+    ast = mc.parse(function)
+    ast_multiline = mc.parse(function, multiline=True)
+
+    assert snapshot() == ast.dump()
+    assert snapshot() == ast_multiline.dump()
+
+    assert snapshot() == mc.serialize(ast)
+    assert snapshot() == mc.serialize(ast_multiline)

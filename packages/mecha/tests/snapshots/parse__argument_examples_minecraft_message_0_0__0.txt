@@ -12,13 +12,5 @@ Hello world!
   fragments:
     <class 'mecha.ast.AstLiteral'>
       location: SourceLocation(pos=0, lineno=1, colno=1)
-      end_location: SourceLocation(pos=5, lineno=1, colno=6)
-      value: 'Hello'
-    <class 'mecha.ast.AstLiteral'>
-      location: SourceLocation(pos=-1, lineno=0, colno=0)
-      end_location: SourceLocation(pos=-1, lineno=0, colno=0)
-      value: ' '
-    <class 'mecha.ast.AstLiteral'>
-      location: SourceLocation(pos=6, lineno=1, colno=7)
       end_location: SourceLocation(pos=12, lineno=1, colno=13)
-      value: 'world!'
+      value: 'Hello world!'

@@ -12,12 +12,8 @@ Hello @p :)
   fragments:
     <class 'mecha.ast.AstLiteral'>
       location: SourceLocation(pos=0, lineno=1, colno=1)
-      end_location: SourceLocation(pos=5, lineno=1, colno=6)
-      value: 'Hello'
-    <class 'mecha.ast.AstLiteral'>
-      location: SourceLocation(pos=-1, lineno=0, colno=0)
-      end_location: SourceLocation(pos=-1, lineno=0, colno=0)
-      value: ' '
+      end_location: SourceLocation(pos=6, lineno=1, colno=7)
+      value: 'Hello '
     <class 'mecha.ast.AstSelector'>
       location: SourceLocation(pos=6, lineno=1, colno=7)
       end_location: SourceLocation(pos=8, lineno=1, colno=9)
@@ -25,10 +21,6 @@ Hello @p :)
       arguments:
         <empty>
     <class 'mecha.ast.AstLiteral'>
-      location: SourceLocation(pos=-1, lineno=0, colno=0)
-      end_location: SourceLocation(pos=-1, lineno=0, colno=0)
-      value: ' '
-    <class 'mecha.ast.AstLiteral'>
-      location: SourceLocation(pos=9, lineno=1, colno=10)
+      location: SourceLocation(pos=8, lineno=1, colno=9)
       end_location: SourceLocation(pos=11, lineno=1, colno=12)
-      value: ':)'
+      value: ' :)'

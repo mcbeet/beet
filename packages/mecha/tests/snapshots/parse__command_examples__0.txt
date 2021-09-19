@@ -2461,32 +2461,8 @@
                               fragments:
                                 <class 'mecha.ast.AstLiteral'>
                                   location: SourceLocation(pos=2507, lineno=55, colno=50)
-                                  end_location: SourceLocation(pos=2510, lineno=55, colno=53)
-                                  value: '"My'
-                                <class 'mecha.ast.AstLiteral'>
-                                  location: SourceLocation(pos=-1, lineno=0, colno=0)
-                                  end_location: SourceLocation(pos=-1, lineno=0, colno=0)
-                                  value: ' '
-                                <class 'mecha.ast.AstLiteral'>
-                                  location: SourceLocation(pos=2511, lineno=55, colno=54)
-                                  end_location: SourceLocation(pos=2515, lineno=55, colno=58)
-                                  value: 'feet'
-                                <class 'mecha.ast.AstLiteral'>
-                                  location: SourceLocation(pos=-1, lineno=0, colno=0)
-                                  end_location: SourceLocation(pos=-1, lineno=0, colno=0)
-                                  value: ' '
-                                <class 'mecha.ast.AstLiteral'>
-                                  location: SourceLocation(pos=2516, lineno=55, colno=59)
-                                  end_location: SourceLocation(pos=2519, lineno=55, colno=62)
-                                  value: 'are'
-                                <class 'mecha.ast.AstLiteral'>
-                                  location: SourceLocation(pos=-1, lineno=0, colno=0)
-                                  end_location: SourceLocation(pos=-1, lineno=0, colno=0)
-                                  value: ' '
-                                <class 'mecha.ast.AstLiteral'>
-                                  location: SourceLocation(pos=2520, lineno=55, colno=63)
                                   end_location: SourceLocation(pos=2528, lineno=55, colno=71)
-                                  value: 'soaked!"'
+                                  value: '"My feet are soaked!"'
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=2529, lineno=56, colno=1)
       end_location: SourceLocation(pos=2598, lineno=56, colno=70)
@@ -2544,24 +2520,8 @@
                           fragments:
                             <class 'mecha.ast.AstLiteral'>
                               location: SourceLocation(pos=2582, lineno=56, colno=54)
-                              end_location: SourceLocation(pos=2588, lineno=56, colno=60)
-                              value: '"Score'
-                            <class 'mecha.ast.AstLiteral'>
-                              location: SourceLocation(pos=-1, lineno=0, colno=0)
-                              end_location: SourceLocation(pos=-1, lineno=0, colno=0)
-                              value: ' '
-                            <class 'mecha.ast.AstLiteral'>
-                              location: SourceLocation(pos=2589, lineno=56, colno=61)
-                              end_location: SourceLocation(pos=2591, lineno=56, colno=63)
-                              value: 'is'
-                            <class 'mecha.ast.AstLiteral'>
-                              location: SourceLocation(pos=-1, lineno=0, colno=0)
-                              end_location: SourceLocation(pos=-1, lineno=0, colno=0)
-                              value: ' '
-                            <class 'mecha.ast.AstLiteral'>
-                              location: SourceLocation(pos=2592, lineno=56, colno=64)
                               end_location: SourceLocation(pos=2598, lineno=56, colno=70)
-                              value: 'reset"'
+                              value: '"Score is reset"'
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=2599, lineno=57, colno=1)
       end_location: SourceLocation(pos=2695, lineno=57, colno=97)

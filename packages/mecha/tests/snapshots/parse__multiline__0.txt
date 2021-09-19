@@ -1,6 +1,6 @@
 <class 'mecha.ast.AstRoot'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
-  end_location: SourceLocation(pos=818, lineno=16, colno=5)
+  end_location: SourceLocation(pos=813, lineno=15, colno=43)
   commands:
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=9, lineno=2, colno=9)
@@ -177,29 +177,5 @@
                                                       fragments:
                                                         <class 'mecha.ast.AstLiteral'>
                                                           location: SourceLocation(pos=791, lineno=15, colno=21)
-                                                          end_location: SourceLocation(pos=794, lineno=15, colno=24)
-                                                          value: "I'm"
-                                                        <class 'mecha.ast.AstLiteral'>
-                                                          location: SourceLocation(pos=-1, lineno=0, colno=0)
-                                                          end_location: SourceLocation(pos=-1, lineno=0, colno=0)
-                                                          value: ' '
-                                                        <class 'mecha.ast.AstLiteral'>
-                                                          location: SourceLocation(pos=795, lineno=15, colno=25)
-                                                          end_location: SourceLocation(pos=801, lineno=15, colno=31)
-                                                          value: 'facing'
-                                                        <class 'mecha.ast.AstLiteral'>
-                                                          location: SourceLocation(pos=-1, lineno=0, colno=0)
-                                                          end_location: SourceLocation(pos=-1, lineno=0, colno=0)
-                                                          value: ' '
-                                                        <class 'mecha.ast.AstLiteral'>
-                                                          location: SourceLocation(pos=802, lineno=15, colno=32)
-                                                          end_location: SourceLocation(pos=805, lineno=15, colno=35)
-                                                          value: 'the'
-                                                        <class 'mecha.ast.AstLiteral'>
-                                                          location: SourceLocation(pos=-1, lineno=0, colno=0)
-                                                          end_location: SourceLocation(pos=-1, lineno=0, colno=0)
-                                                          value: ' '
-                                                        <class 'mecha.ast.AstLiteral'>
-                                                          location: SourceLocation(pos=806, lineno=15, colno=36)
                                                           end_location: SourceLocation(pos=813, lineno=15, colno=43)
-                                                          value: 'target!'
+                                                          value: "I'm facing the target!"
