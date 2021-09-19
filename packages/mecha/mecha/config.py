@@ -5,7 +5,7 @@ __all__ = [
 
 from importlib.resources import read_text
 from pathlib import Path
-from typing import Dict, List, Literal, Optional, Tuple, Union
+from typing import Dict, Iterator, List, Literal, Optional, Tuple, Union
 
 from beet.core.utils import FileSystemPath, JsonDict
 from pydantic import BaseModel
@@ -55,6 +55,36 @@ class CommandTree(BaseModel):
                     if not node:
                         return None
         return node
+
+    def get_literal(self, name: str) -> Optional["CommandTree"]:
+        """Retrieve a literal child by name."""
+        if self.children:
+            if child := self.children.get(name):
+                if child.type == "literal":
+                    return child
+        return None
+
+    def get_argument(self, name: str) -> Optional["CommandTree"]:
+        """Retrieve an argument child by name."""
+        if self.children:
+            if child := self.children.get(name):
+                if child.type == "argument":
+                    return child
+        return None
+
+    def get_all_literals(self) -> Iterator[Tuple[str, "CommandTree"]]:
+        """Retrieve all the literal children."""
+        if self.children:
+            for name, child in self.children.items():
+                if child.type == "literal":
+                    yield name, child
+
+    def get_all_arguments(self) -> Iterator[Tuple[str, "CommandTree"]]:
+        """Retrieve all the argument children."""
+        if self.children:
+            for name, child in self.children.items():
+                if child.type == "argument":
+                    yield name, child
 
     def extend(self, other: "CommandTree") -> "CommandTree":
         """Merge nodes from another command tree."""

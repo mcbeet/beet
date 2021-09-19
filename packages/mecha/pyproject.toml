@@ -24,7 +24,7 @@ include = ["mecha/py.typed"]
 [tool.poetry.dependencies]
 python = "^3.8"
 beet = ">=0.41.2"
-tokenstream = "^1.1.0"
+tokenstream = "^1.2.0"
 lectern = ">=0.16.0"
 
 [tool.poetry.dev-dependencies]

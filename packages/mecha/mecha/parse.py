@@ -4,12 +4,11 @@ __all__ = [
     "get_stream_scope",
     "get_stream_properties",
     "get_stream_multiline",
-    "get_stream_command_indentation",
+    "get_stream_line_indentation",
     "delegate",
-    "string_to_number",
-    "QuoteHelper",
+    "consume_line_continuation",
     "parse_root",
-    "CommandParser",
+    "parse_command",
     "parse_argument",
     "parse_bool",
     "NumericParser",
@@ -58,6 +57,7 @@ __all__ = [
 ]
 
 
+from contextlib import nullcontext
 from dataclasses import dataclass, field
 from functools import partial
 from typing import (
@@ -303,7 +303,7 @@ def get_default_parsers() -> Dict[str, Parser]:
         # Command
         ################################################################################
         "root": parse_root,
-        "command": CommandParser(),
+        "command": parse_command,
         "command:argument": parse_argument,
         "command:argument:brigadier:bool": delegate("bool"),
         "command:argument:brigadier:double": MinMaxConstraint(delegate("numeric")),
@@ -444,9 +444,9 @@ def get_stream_multiline(stream: TokenStream) -> bool:
     return stream.data.get("multiline", False)
 
 
-def get_stream_command_indentation(stream: TokenStream) -> int:
-    """Return the indentation level associated with the current command."""
-    return stream.data.get("command_indentation", stream.indentation[-1])
+def get_stream_line_indentation(stream: TokenStream) -> int:
+    """Return the indentation level associated with the current line."""
+    return stream.data.get("line_indentation", stream.indentation[-1])
 
 
 @overload
@@ -472,6 +472,28 @@ def delegate(parser: str, stream: Optional[TokenStream] = None) -> Any:
     return spec.parsers[parser](stream)
 
 
+def consume_line_continuation(stream: TokenStream) -> bool:
+    """Consume newlines and leading whitespace if there's a line continuation."""
+    level = get_stream_line_indentation(stream)
+    multiline = get_stream_multiline(stream)
+
+    if not multiline:
+        return False
+
+    with stream.checkpoint() as commit:
+        if list(stream.collect("newline")):
+            with stream.intercept("whitespace"):
+                if (
+                    (whitespace := stream.get("whitespace"))
+                    and not stream.get("eof")
+                    and level < len(whitespace.value.expandtabs())
+                ):
+                    commit()
+                    return True
+
+    return False
+
+
 def parse_root(stream: TokenStream) -> AstRoot:
     """Parse root."""
     start = stream.peek()
@@ -494,33 +516,37 @@ def parse_root(stream: TokenStream) -> AstRoot:
     return set_location(node, start, stream.current)
 
 
-@dataclass
-class CommandParser:
-    """Parser for commands."""
+def parse_command(stream: TokenStream) -> AstCommand:
+    """Parse command."""
+    spec = get_stream_spec(stream)
+    scope = get_stream_scope(stream)
+    level = get_stream_line_indentation(stream)
 
-    def __call__(self, stream: TokenStream) -> AstCommand:
-        """Parse command."""
-        spec = get_stream_spec(stream)
-        scope = get_stream_scope(stream)
-        multiline = get_stream_multiline(stream)
+    tree = spec.tree.get(scope)
 
-        tree = spec.tree.get(scope)
-        arguments: List[AstNode] = []
+    arguments: List[AstNode] = []
+    reached_terminal = False
 
-        with stream.checkpoint():
-            location = stream.expect().location
-            end_location = location
+    with stream.checkpoint():
+        location = stream.expect().location
+        end_location = location
 
-        level = get_stream_command_indentation(stream)
-        is_complete = False
+    while tree and tree.children:
+        with stream.checkpoint() as commit:
+            literal = stream.expect("literal")
 
-        while tree and tree.children:
-            # if (
-            #     (literal := stream.get("literal"))
-            #     and (child := tree.children.get(literal.value))
-            #     and child.type == "literal"
-            # ):
-            #     pass
+            if child := tree.get_literal(literal.value):
+                if not child.children:
+                    stream.expect("newline", "eof")
+                    reached_terminal = True
+
+                end_location = literal.end_location
+                scope = scope + (literal.value,)
+                tree = child
+
+                commit()
+
+        if commit.rollback:
             for (name, child), alternative in stream.choose(*tree.children.items()):
                 with alternative, stream.provide(scope=scope + (name,)):
                     literal = None
@@ -531,9 +557,9 @@ class CommandParser:
                     elif child.type == "argument":
                         argument = delegate("command:argument", stream)
 
-                    if not child.redirect and not child.children:
+                    if not child.children:
                         stream.expect("newline", "eof")
-                        is_complete = True
+                        reached_terminal = True
 
                     if literal:
                         end_location = literal.end_location
@@ -544,59 +570,41 @@ class CommandParser:
                     scope = stream.data["scope"]
                     tree = child
 
-            if is_complete:
+        if reached_terminal:
+            break
+
+        if not consume_line_continuation(stream):
+            if tree.executable and stream.get("newline", "eof"):
                 break
 
-            # TODO: find a way to extract this in a function to be able to use it in MessageParser
-            if multiline:
-                with stream.checkpoint() as commit:
-                    if list(stream.collect("newline")):
-                        with stream.intercept("whitespace"):
-                            whitespace = stream.get("whitespace")
-                            eof = stream.get("eof")
-                        if (
-                            whitespace
-                            and level < len(whitespace.value.expandtabs())
-                            and not eof
-                        ):
-                            commit()
-                        elif tree.executable:
-                            commit()
-                            break
-            elif tree.executable and stream.get("newline", "eof"):
+        target = spec.tree.get(tree.redirect)
+        recursive = target and target.subcommand
+
+        if tree.subcommand or recursive:
+            subcommand_scope = tree.redirect if tree.redirect is not None else scope
+            with stream.provide(scope=subcommand_scope, line_indentation=level):
+                node = delegate("command", stream)
+                arguments.append(node)
+                end_location = node.end_location
+                scope += ("subcommand",)
                 break
 
-            if tree.executable and not stream.peek():
-                break
-
-            target = spec.tree.get(tree.redirect)
-            recursive = target and target.subcommand
-
-            if tree.subcommand or recursive:
-                subcommand_scope = tree.redirect if tree.redirect is not None else scope
-                with stream.provide(scope=subcommand_scope, command_indentation=level):
-                    node = delegate("command", stream)
-                    arguments.append(node)
-                    end_location = node.end_location
-                    scope += ("subcommand",)
-                    break
-
-        node = AstCommand(identifier=":".join(scope), arguments=AstChildren(arguments))
-        return set_location(node, location, end_location)
+    node = AstCommand(identifier=":".join(scope), arguments=AstChildren(arguments))
+    return set_location(node, location, end_location)
 
 
 def parse_argument(stream: TokenStream) -> AstNode:
     """Parse argument."""
     spec = get_stream_spec(stream)
     scope = get_stream_scope(stream)
+    multiline = get_stream_multiline(stream)
+
     tree = spec.tree.get(scope)
 
     if tree and tree.parser:
-        with stream.provide(properties=tree.properties or {}), stream.ignore(
-            "newline",
-            "comment",
-        ):
-            return delegate(f"command:argument:{tree.parser}", stream)
+        with stream.provide(properties=tree.properties or {}):
+            with stream.ignore("newline") if multiline else nullcontext():
+                return delegate(f"command:argument:{tree.parser}", stream)
 
     raise ValueError(f"Missing argument parser in command tree {scope}.")
 
@@ -1678,9 +1686,7 @@ class NbtPathParser:
         if not components:
             raise stream.emit_error(InvalidSyntax("Empty nbt path not allowed."))
 
-        node = AstNbtPath(
-            components=AstChildren(components),
-        )
+        node = AstNbtPath(components=AstChildren(components))
         return set_location(node, components[0], components[-1])
 
     def parse_modifiers(self, stream: TokenStream) -> Iterator[Any]:
