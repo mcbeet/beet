@@ -21,3 +21,9 @@ execute if block 0 0 0 #wool #this is a comment
 execute if block 0 0 0
     wool #this is a comment
 execute if block 0 0 0 wool #this is a comment
+
+execute if block
+    ~
+        ^
+            -0
+        #wool

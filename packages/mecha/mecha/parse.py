@@ -627,7 +627,6 @@ class NumericParser:
     pattern: str = NUMBER_PATTERN
 
     def __call__(self, stream: TokenStream) -> Any:
-        # TODO: Doesn't work on the beginning of a line in multiline mode?
         with stream.syntax(**{self.name: self.pattern}):
             stream.expect(self.name)
         return self.create_node(stream)

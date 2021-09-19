@@ -3,3 +3,4 @@ execute if block 0 0 0 #wool
 execute if block 0 0 0 #wool
 execute if block 0 0 0 wool
 execute if block 0 0 0 wool
+execute if block ~ ^ 0 #wool
