@@ -4,3 +4,9 @@ execute if block 0 0 0 #wool
 execute if block 0 0 0 wool
 execute if block 0 0 0 wool
 execute if block ~ ^ 0 #wool
+tellraw @s {"text": "Hover me!", "hoverEvent": {"action": "show_text", "value": "Hi!"}}
+execute as @a at @s if block ~ ~-1 ~ #wool run give @s stone{display: {Name: '[{"text": "Hello", "bold": true}]', Lore: ['[{ "text": "Something else here" }]']}}
+execute if block ~ ~ ~ #namespace:tag if entity @s[tag=foo]
+tellraw @a {"text": "Hello # there"}
+tellraw @a {"text": "Hello\" # \"there"}
+tellraw @s ["foo"]
