@@ -1,6 +1,6 @@
 <class 'mecha.ast.AstRoot'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
-  end_location: SourceLocation(pos=288, lineno=17, colno=1)
+  end_location: SourceLocation(pos=487, lineno=24, colno=1)
   commands:
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=0, lineno=1, colno=1)
@@ -177,3 +177,179 @@
                                           location: SourceLocation(pos=275, lineno=15, colno=21)
                                           end_location: SourceLocation(pos=277, lineno=15, colno=23)
                                           value: Byte(1)
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=289, lineno=18, colno=1)
+      end_location: SourceLocation(pos=321, lineno=19, colno=10)
+      identifier: 'execute:subcommand'
+      arguments:
+        <class 'mecha.ast.AstCommand'>
+          location: SourceLocation(pos=297, lineno=18, colno=9)
+          end_location: SourceLocation(pos=321, lineno=19, colno=10)
+          identifier: 'execute:if:block:pos:block'
+          arguments:
+            <class 'mecha.ast.AstVector3'>
+              location: SourceLocation(pos=306, lineno=18, colno=18)
+              end_location: SourceLocation(pos=311, lineno=18, colno=23)
+              x:
+                <class 'mecha.ast.AstCoordinate'>
+                  location: SourceLocation(pos=306, lineno=18, colno=18)
+                  end_location: SourceLocation(pos=307, lineno=18, colno=19)
+                  type: 'absolute'
+                  value: 0
+              y:
+                <class 'mecha.ast.AstCoordinate'>
+                  location: SourceLocation(pos=308, lineno=18, colno=20)
+                  end_location: SourceLocation(pos=309, lineno=18, colno=21)
+                  type: 'absolute'
+                  value: 0
+              z:
+                <class 'mecha.ast.AstCoordinate'>
+                  location: SourceLocation(pos=310, lineno=18, colno=22)
+                  end_location: SourceLocation(pos=311, lineno=18, colno=23)
+                  type: 'absolute'
+                  value: 0
+            <class 'mecha.ast.AstBlock'>
+              location: SourceLocation(pos=316, lineno=19, colno=5)
+              end_location: SourceLocation(pos=321, lineno=19, colno=10)
+              identifier:
+                <class 'mecha.ast.AstResourceLocation'>
+                  location: SourceLocation(pos=316, lineno=19, colno=5)
+                  end_location: SourceLocation(pos=321, lineno=19, colno=10)
+                  is_tag: True
+                  namespace: None
+                  path: 'wool'
+              block_states:
+                <empty>
+              data_tags: None
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=341, lineno=20, colno=1)
+      end_location: SourceLocation(pos=369, lineno=20, colno=29)
+      identifier: 'execute:subcommand'
+      arguments:
+        <class 'mecha.ast.AstCommand'>
+          location: SourceLocation(pos=349, lineno=20, colno=9)
+          end_location: SourceLocation(pos=369, lineno=20, colno=29)
+          identifier: 'execute:if:block:pos:block'
+          arguments:
+            <class 'mecha.ast.AstVector3'>
+              location: SourceLocation(pos=358, lineno=20, colno=18)
+              end_location: SourceLocation(pos=363, lineno=20, colno=23)
+              x:
+                <class 'mecha.ast.AstCoordinate'>
+                  location: SourceLocation(pos=358, lineno=20, colno=18)
+                  end_location: SourceLocation(pos=359, lineno=20, colno=19)
+                  type: 'absolute'
+                  value: 0
+              y:
+                <class 'mecha.ast.AstCoordinate'>
+                  location: SourceLocation(pos=360, lineno=20, colno=20)
+                  end_location: SourceLocation(pos=361, lineno=20, colno=21)
+                  type: 'absolute'
+                  value: 0
+              z:
+                <class 'mecha.ast.AstCoordinate'>
+                  location: SourceLocation(pos=362, lineno=20, colno=22)
+                  end_location: SourceLocation(pos=363, lineno=20, colno=23)
+                  type: 'absolute'
+                  value: 0
+            <class 'mecha.ast.AstBlock'>
+              location: SourceLocation(pos=364, lineno=20, colno=24)
+              end_location: SourceLocation(pos=369, lineno=20, colno=29)
+              identifier:
+                <class 'mecha.ast.AstResourceLocation'>
+                  location: SourceLocation(pos=364, lineno=20, colno=24)
+                  end_location: SourceLocation(pos=369, lineno=20, colno=29)
+                  is_tag: True
+                  namespace: None
+                  path: 'wool'
+              block_states:
+                <empty>
+              data_tags: None
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=389, lineno=21, colno=1)
+      end_location: SourceLocation(pos=420, lineno=22, colno=9)
+      identifier: 'execute:subcommand'
+      arguments:
+        <class 'mecha.ast.AstCommand'>
+          location: SourceLocation(pos=397, lineno=21, colno=9)
+          end_location: SourceLocation(pos=420, lineno=22, colno=9)
+          identifier: 'execute:if:block:pos:block'
+          arguments:
+            <class 'mecha.ast.AstVector3'>
+              location: SourceLocation(pos=406, lineno=21, colno=18)
+              end_location: SourceLocation(pos=411, lineno=21, colno=23)
+              x:
+                <class 'mecha.ast.AstCoordinate'>
+                  location: SourceLocation(pos=406, lineno=21, colno=18)
+                  end_location: SourceLocation(pos=407, lineno=21, colno=19)
+                  type: 'absolute'
+                  value: 0
+              y:
+                <class 'mecha.ast.AstCoordinate'>
+                  location: SourceLocation(pos=408, lineno=21, colno=20)
+                  end_location: SourceLocation(pos=409, lineno=21, colno=21)
+                  type: 'absolute'
+                  value: 0
+              z:
+                <class 'mecha.ast.AstCoordinate'>
+                  location: SourceLocation(pos=410, lineno=21, colno=22)
+                  end_location: SourceLocation(pos=411, lineno=21, colno=23)
+                  type: 'absolute'
+                  value: 0
+            <class 'mecha.ast.AstBlock'>
+              location: SourceLocation(pos=416, lineno=22, colno=5)
+              end_location: SourceLocation(pos=420, lineno=22, colno=9)
+              identifier:
+                <class 'mecha.ast.AstResourceLocation'>
+                  location: SourceLocation(pos=416, lineno=22, colno=5)
+                  end_location: SourceLocation(pos=420, lineno=22, colno=9)
+                  is_tag: False
+                  namespace: None
+                  path: 'wool'
+              block_states:
+                <empty>
+              data_tags: None
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=440, lineno=23, colno=1)
+      end_location: SourceLocation(pos=467, lineno=23, colno=28)
+      identifier: 'execute:subcommand'
+      arguments:
+        <class 'mecha.ast.AstCommand'>
+          location: SourceLocation(pos=448, lineno=23, colno=9)
+          end_location: SourceLocation(pos=467, lineno=23, colno=28)
+          identifier: 'execute:if:block:pos:block'
+          arguments:
+            <class 'mecha.ast.AstVector3'>
+              location: SourceLocation(pos=457, lineno=23, colno=18)
+              end_location: SourceLocation(pos=462, lineno=23, colno=23)
+              x:
+                <class 'mecha.ast.AstCoordinate'>
+                  location: SourceLocation(pos=457, lineno=23, colno=18)
+                  end_location: SourceLocation(pos=458, lineno=23, colno=19)
+                  type: 'absolute'
+                  value: 0
+              y:
+                <class 'mecha.ast.AstCoordinate'>
+                  location: SourceLocation(pos=459, lineno=23, colno=20)
+                  end_location: SourceLocation(pos=460, lineno=23, colno=21)
+                  type: 'absolute'
+                  value: 0
+              z:
+                <class 'mecha.ast.AstCoordinate'>
+                  location: SourceLocation(pos=461, lineno=23, colno=22)
+                  end_location: SourceLocation(pos=462, lineno=23, colno=23)
+                  type: 'absolute'
+                  value: 0
+            <class 'mecha.ast.AstBlock'>
+              location: SourceLocation(pos=463, lineno=23, colno=24)
+              end_location: SourceLocation(pos=467, lineno=23, colno=28)
+              identifier:
+                <class 'mecha.ast.AstResourceLocation'>
+                  location: SourceLocation(pos=463, lineno=23, colno=24)
+                  end_location: SourceLocation(pos=467, lineno=23, colno=28)
+                  is_tag: False
+                  namespace: None
+                  path: 'wool'
+              block_states:
+                <empty>
+              data_tags: None

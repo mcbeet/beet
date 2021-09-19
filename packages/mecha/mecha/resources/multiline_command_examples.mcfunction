@@ -14,3 +14,10 @@ execute
             Invisible: 1b,
             Marker: 1b
         }
+
+execute if block 0 0 0
+    #wool #this is a comment
+execute if block 0 0 0 #wool #this is a comment
+execute if block 0 0 0
+    wool #this is a comment
+execute if block 0 0 0 wool #this is a comment

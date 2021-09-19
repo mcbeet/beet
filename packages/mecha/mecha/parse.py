@@ -1064,12 +1064,18 @@ class ResourceLocationParser:
     def __call__(self, stream: TokenStream) -> AstResourceLocation:
         multiline = get_stream_multiline(stream)
 
-        if multiline and stream.index:
+        # This is kind of a hack. There's no way to easily differentiate
+        # tags from inline comments since they both begin with "#".
+        if multiline:
             with stream.checkpoint() as commit:
                 last_comment = None
 
                 while stream.index >= 0 and stream.current.match(
-                    "whitespace", "newline", "comment", "indent", "dedent"
+                    "whitespace",
+                    "newline",
+                    "comment",
+                    "indent",
+                    "dedent",
                 ):
                     if stream.current.match("comment"):
                         last_comment = stream.current
@@ -1077,6 +1083,8 @@ class ResourceLocationParser:
 
                 if last_comment:
                     commit()
+
+            stream.generator = stream.generate_tokens()
 
         with stream.syntax(resource_location=r"#?(?:[0-9a-z_\-\.]+:)?[0-9a-z_./-]+"):
             token = stream.expect("resource_location")
