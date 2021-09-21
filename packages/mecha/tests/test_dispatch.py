@@ -1,17 +1,20 @@
 from typing import Generator, List, Type
 
-from mecha import AstNumber, Mecha, Visitor, rule
-from mecha.ast import (
+from mecha import (
     AstCommand,
     AstCoordinate,
     AstDustParticleParameters,
     AstLiteral,
     AstMessage,
     AstNode,
+    AstNumber,
     AstParticle,
     AstResourceLocation,
     AstRoot,
     AstVector3,
+    Mecha,
+    Visitor,
+    rule,
 )
 
 

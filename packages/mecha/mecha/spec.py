@@ -10,8 +10,7 @@ from typing import Any, Dict, Protocol, Tuple
 from beet.core.utils import extra_field
 from tokenstream import TokenStream
 
-from mecha.config import CommandTree
-
+from .config import CommandTree
 from .prototype import CommandArgument, CommandPrototype, CommandSignature
 
 
