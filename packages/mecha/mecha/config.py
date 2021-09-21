@@ -7,7 +7,7 @@ from importlib.resources import read_text
 from pathlib import Path
 from typing import Dict, Iterator, List, Literal, Optional, Tuple, Union
 
-from beet.core.utils import FileSystemPath, JsonDict
+from beet.core.utils import FileSystemPath, JsonDict, normalize_string
 from pydantic import BaseModel
 
 
@@ -34,6 +34,7 @@ class CommandTree(BaseModel):
         if filename:
             sources.append(Path(filename).read_text())
         if version:
+            version = normalize_string(version)
             sources.append(read_text("mecha.resources", f"{version}.json"))
 
         tree = cls.parse_raw(sources[0])
