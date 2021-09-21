@@ -5,9 +5,9 @@ __all__ = [
 
 
 from dataclasses import dataclass
-from typing import Any, Dict, Protocol, Tuple
+from typing import Any, Dict, Protocol, Tuple, Union
 
-from beet.core.utils import extra_field
+from beet.core.utils import JsonDict, extra_field
 from tokenstream import TokenStream
 
 from .config import CommandTree
@@ -37,8 +37,10 @@ class CommandSpec:
     def __post_init__(self):
         self.update()
 
-    def add_commands(self, tree: CommandTree):
+    def add_commands(self, tree: Union[CommandTree, JsonDict]):
         """Extend the command tree and regenerate prototypes."""
+        if not isinstance(tree, CommandTree):
+            tree = CommandTree(**tree)
         self.tree.extend(tree)
         self.update()
 
