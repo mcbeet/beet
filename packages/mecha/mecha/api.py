@@ -14,6 +14,7 @@ from pydantic import BaseModel
 from tokenstream import TokenStream
 
 from .ast import AstNode, AstRoot
+from .dispatch import Dispatcher, MutatingReducer, Reducer
 from .parse import delegate, get_default_parsers
 from .serialize import Serializer
 from .spec import CommandSpec
@@ -38,7 +39,10 @@ class Mecha:
         default_factory=lambda: CommandSpec(parsers=get_default_parsers())
     )
 
-    serialize: Serializer = extra_field(init=False)
+    normalize: Dispatcher[AstNode] = extra_field(init=False)
+    transform: Dispatcher[AstNode] = extra_field(init=False)
+    check: Dispatcher[AstNode] = extra_field(init=False)
+    serialize: Dispatcher[str] = extra_field(init=False)
 
     def __post_init__(self, ctx: Optional[Context], multiline: bool):
         if ctx:
@@ -47,6 +51,9 @@ class Mecha:
         else:
             self.spec.multiline = multiline
 
+        self.normalize = MutatingReducer()
+        self.transform = MutatingReducer()
+        self.check = Reducer()
         self.serialize = Serializer(self.spec)
 
     @contextmanager

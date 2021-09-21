@@ -1,7 +1,8 @@
 __all__ = [
+    "Dispatcher",
     "Visitor",
     "Reducer",
-    "Dispatcher",
+    "MutatingReducer",
     "Rule",
     "rule",
 ]
@@ -16,6 +17,7 @@ from typing import (
     Dict,
     FrozenSet,
     Generator,
+    Generic,
     Iterable,
     Iterator,
     List,
@@ -23,6 +25,7 @@ from typing import (
     Set,
     Tuple,
     Type,
+    TypeVar,
     Union,
     overload,
 )
@@ -30,6 +33,8 @@ from typing import (
 from beet.core.utils import extra_field
 
 from .ast import AstChildren, AstNode
+
+T = TypeVar("T")
 
 
 @dataclass
@@ -82,8 +87,8 @@ def rule(*args: Any, **kwargs: Any) -> Any:
 
 
 @dataclass
-class Dispatcher:
-    """Ast node dispatcher."""
+class Dispatcher(Generic[T]):
+    """Ast dispatcher."""
 
     rules: Dict[
         Type[Any],
@@ -122,7 +127,11 @@ class Dispatcher:
 
     def extend(
         self,
-        *args: Union["Dispatcher", Callable[..., Any], Iterable[Callable[..., Any]]],
+        *args: Union[
+            "Dispatcher[Any]",
+            Callable[..., Any],
+            Iterable[Callable[..., Any]],
+        ],
     ):
         """Extend the dispatcher."""
         for arg in args:
@@ -173,9 +182,12 @@ class Dispatcher:
             rule(node, *args, **kwargs)
         return node
 
+    def __call__(self, node: AstNode) -> T:
+        return self.invoke(node)
 
-class Visitor(Dispatcher):
-    """Ast node visitor."""
+
+class Visitor(Dispatcher[Any]):
+    """Ast visitor."""
 
     def invoke(self, node: AstNode, *args: Any, **kwargs: Any) -> Any:
         rules = list(self.dispatch(node))
@@ -201,8 +213,21 @@ class Visitor(Dispatcher):
         return result
 
 
-class Reducer(Dispatcher):
-    """Ast node reducer."""
+class Reducer(Dispatcher[Any]):
+    """Ast reducer."""
+
+    def invoke(self, node: AstNode, *args: Any, **kwargs: Any) -> Any:
+        for child in node:
+            self.invoke(child, *args, **kwargs)
+
+        for rule in self.dispatch(node):
+            rule(node, *args, **kwargs)
+
+        return node
+
+
+class MutatingReducer(Dispatcher[Any]):
+    """Mutating ast reducer."""
 
     def invoke(self, node: AstNode, *args: Any, **kwargs: Any) -> Any:
         to_replace: Dict[str, Union[AstNode, AstChildren[AstNode]]] = {}
