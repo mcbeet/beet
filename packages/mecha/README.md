@@ -1,8 +1,8 @@
-<img align="right" src="https://raw.githubusercontent.com/vberlier/mecha/main/logo.png" alt="logo" width="76">
+<img align="right" src="https://raw.githubusercontent.com/mcbeet/mecha/main/logo.png" alt="logo" width="76">
 
 # Mecha
 
-[![GitHub Actions](https://github.com/vberlier/mecha/workflows/CI/badge.svg)](https://github.com/vberlier/mecha/actions)
+[![GitHub Actions](https://github.com/mcbeet/mecha/workflows/CI/badge.svg)](https://github.com/mcbeet/mecha/actions)
 [![PyPI](https://img.shields.io/pypi/v/mecha.svg)](https://pypi.org/project/mecha/)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/mecha.svg)](https://pypi.org/project/mecha/)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
@@ -46,7 +46,7 @@ This package provides everything you need for working with Minecraft commands in
 - Command config resolver that flattens all the valid prototypes
 - Powerful rule dispatcher for processing specific ast nodes
 - Composable visitors and reducers
-- _(soon)_ Execute arbitrary compilation passes in your [`beet`](https://github.com/vberlier/beet) pipeline
+- _(soon)_ Execute arbitrary compilation passes in your [`beet`](https://github.com/mcbeet/beet) pipeline
 - _(soon)_ Expressive command API for writing commands in Python
 
 ## Installation
@@ -88,4 +88,4 @@ $ poetry run black --check mecha tests
 
 ---
 
-License - [MIT](https://github.com/vberlier/mecha/blob/main/LICENSE)
+License - [MIT](https://github.com/mcbeet/mecha/blob/main/LICENSE)
