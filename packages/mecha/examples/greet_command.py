@@ -71,4 +71,5 @@ ast = transform(ast)
 print(ast.dump())
 print(mc.serialize(ast))
 
-print(ast == mc.parse("say Hello @a[tag=!registered]"))
+print(ast == mc.parse("say Hello @a[tag=!registered]"))  # True
+print(mc.parse("execute if score #init temp = #wat temp run greet @a[tag=hi]").dump())

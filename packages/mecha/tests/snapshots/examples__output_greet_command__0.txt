@@ -1,0 +1,129 @@
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=47, lineno=5, colno=1)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=5, lineno=2, colno=5)
+      end_location: SourceLocation(pos=46, lineno=4, colno=6)
+      identifier: 'greet:entity'
+      arguments:
+        <class 'mecha.ast.AstSelector'>
+          location: SourceLocation(pos=11, lineno=2, colno=11)
+          end_location: SourceLocation(pos=46, lineno=4, colno=6)
+          variable: 'a'
+          arguments:
+            <class 'mecha.ast.AstSelectorArgument'>
+              location: SourceLocation(pos=23, lineno=3, colno=9)
+              end_location: SourceLocation(pos=40, lineno=3, colno=26)
+              inverted: True
+              key:
+                <class 'mecha.ast.AstString'>
+                  location: SourceLocation(pos=23, lineno=3, colno=9)
+                  end_location: SourceLocation(pos=26, lineno=3, colno=12)
+                  value: 'tag'
+              value:
+                <class 'mecha.ast.AstLiteral'>
+                  location: SourceLocation(pos=30, lineno=3, colno=16)
+                  end_location: SourceLocation(pos=40, lineno=3, colno=26)
+                  value: 'registered'
+greet @a[tag=!registered]
+
+replacing ['commands']
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=47, lineno=5, colno=1)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=5, lineno=2, colno=5)
+      end_location: SourceLocation(pos=46, lineno=4, colno=6)
+      identifier: 'say:message'
+      arguments:
+        <class 'mecha.ast.AstMessage'>
+          location: SourceLocation(pos=-1, lineno=0, colno=0)
+          end_location: SourceLocation(pos=-1, lineno=0, colno=0)
+          fragments:
+            <class 'mecha.ast.AstLiteral'>
+              location: SourceLocation(pos=-1, lineno=0, colno=0)
+              end_location: SourceLocation(pos=-1, lineno=0, colno=0)
+              value: 'Hello '
+            <class 'mecha.ast.AstSelector'>
+              location: SourceLocation(pos=11, lineno=2, colno=11)
+              end_location: SourceLocation(pos=46, lineno=4, colno=6)
+              variable: 'a'
+              arguments:
+                <class 'mecha.ast.AstSelectorArgument'>
+                  location: SourceLocation(pos=23, lineno=3, colno=9)
+                  end_location: SourceLocation(pos=40, lineno=3, colno=26)
+                  inverted: True
+                  key:
+                    <class 'mecha.ast.AstString'>
+                      location: SourceLocation(pos=23, lineno=3, colno=9)
+                      end_location: SourceLocation(pos=26, lineno=3, colno=12)
+                      value: 'tag'
+                  value:
+                    <class 'mecha.ast.AstLiteral'>
+                      location: SourceLocation(pos=30, lineno=3, colno=16)
+                      end_location: SourceLocation(pos=40, lineno=3, colno=26)
+                      value: 'registered'
+say Hello @a[tag=!registered]
+
+True
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=60, lineno=1, colno=61)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=60, lineno=1, colno=61)
+      identifier: 'execute:subcommand'
+      arguments:
+        <class 'mecha.ast.AstCommand'>
+          location: SourceLocation(pos=8, lineno=1, colno=9)
+          end_location: SourceLocation(pos=60, lineno=1, colno=61)
+          identifier: 'execute:if:score:target:targetObjective:=:source:sourceObjective:subcommand'
+          arguments:
+            <class 'mecha.ast.AstLiteral'>
+              location: SourceLocation(pos=17, lineno=1, colno=18)
+              end_location: SourceLocation(pos=22, lineno=1, colno=23)
+              value: '#init'
+            <class 'mecha.ast.AstLiteral'>
+              location: SourceLocation(pos=23, lineno=1, colno=24)
+              end_location: SourceLocation(pos=27, lineno=1, colno=28)
+              value: 'temp'
+            <class 'mecha.ast.AstLiteral'>
+              location: SourceLocation(pos=30, lineno=1, colno=31)
+              end_location: SourceLocation(pos=34, lineno=1, colno=35)
+              value: '#wat'
+            <class 'mecha.ast.AstLiteral'>
+              location: SourceLocation(pos=35, lineno=1, colno=36)
+              end_location: SourceLocation(pos=39, lineno=1, colno=40)
+              value: 'temp'
+            <class 'mecha.ast.AstCommand'>
+              location: SourceLocation(pos=40, lineno=1, colno=41)
+              end_location: SourceLocation(pos=60, lineno=1, colno=61)
+              identifier: 'execute:run:subcommand'
+              arguments:
+                <class 'mecha.ast.AstCommand'>
+                  location: SourceLocation(pos=44, lineno=1, colno=45)
+                  end_location: SourceLocation(pos=60, lineno=1, colno=61)
+                  identifier: 'greet:entity'
+                  arguments:
+                    <class 'mecha.ast.AstSelector'>
+                      location: SourceLocation(pos=50, lineno=1, colno=51)
+                      end_location: SourceLocation(pos=60, lineno=1, colno=61)
+                      variable: 'a'
+                      arguments:
+                        <class 'mecha.ast.AstSelectorArgument'>
+                          location: SourceLocation(pos=53, lineno=1, colno=54)
+                          end_location: SourceLocation(pos=59, lineno=1, colno=60)
+                          inverted: False
+                          key:
+                            <class 'mecha.ast.AstString'>
+                              location: SourceLocation(pos=53, lineno=1, colno=54)
+                              end_location: SourceLocation(pos=56, lineno=1, colno=57)
+                              value: 'tag'
+                          value:
+                            <class 'mecha.ast.AstLiteral'>
+                              location: SourceLocation(pos=57, lineno=1, colno=58)
+                              end_location: SourceLocation(pos=59, lineno=1, colno=60)
+                              value: 'hi'
