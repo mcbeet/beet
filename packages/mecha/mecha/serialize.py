@@ -22,8 +22,6 @@ from .ast import (
     AstNbtPathSubscript,
     AstNode,
     AstNumber,
-    AstParticle,
-    AstParticleParameters,
     AstRange,
     AstResourceLocation,
     AstRoot,
@@ -37,8 +35,6 @@ from .ast import (
     AstString,
     AstTime,
     AstUUID,
-    AstVector2,
-    AstVector3,
 )
 from .dispatch import Visitor, rule
 from .spec import CommandSpec
@@ -87,6 +83,14 @@ class Serializer(Visitor):
         yield node.key
         result.append(sep)
         yield node.value
+
+    @rule(AstNode)
+    def fallback(self, node: AstNode, result: List[str]):
+        sep = ""
+        for child in node:
+            result.append(sep)
+            sep = " "
+            yield child
 
     @rule(AstRoot)
     def root(self, node: AstRoot, result: List[str], *args: Any):
@@ -141,20 +145,6 @@ class Serializer(Visitor):
             if node.value == 0:
                 return
         result.append(str(node.value))
-
-    @rule(AstVector2)
-    def vector2(self, node: AstVector2, result: List[str]):
-        yield node.x
-        result.append(" ")
-        yield node.y
-
-    @rule(AstVector3)
-    def vector3(self, node: AstVector3, result: List[str]):
-        yield node.x
-        result.append(" ")
-        yield node.y
-        result.append(" ")
-        yield node.z
 
     @rule(AstJson)
     def json(self, node: AstJson, result: List[str]):
@@ -270,18 +260,3 @@ class Serializer(Visitor):
                 result.append(sep)
             sep = "."
             yield component
-
-    @rule(AstParticleParameters)
-    def particle_parameters(self, node: AstParticleParameters, result: List[str]):
-        sep = ""
-        for param in node:
-            result.append(sep)
-            sep = " "
-            yield param
-
-    @rule(AstParticle)
-    def particle(self, node: AstParticle, result: List[str]):
-        yield node.name
-        if node.parameters:
-            result.append(" ")
-            yield node.parameters
