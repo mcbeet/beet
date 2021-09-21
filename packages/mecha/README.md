@@ -42,12 +42,19 @@ This package provides everything you need for working with Minecraft commands in
 ### Features
 
 - Extensible and version-agnostic `mcfunction` parser
-- Clean abstract syntax tree with source location
-- Command config resolver that flattens all the valid prototypes
+- Clean, immutable and hashable abstract syntax tree with source location
+- Command config resolver that flattens and enumerates all the valid command prototypes
 - Powerful rule dispatcher for processing specific ast nodes
-- Composable visitors and reducers
+- Composable ast visitors and reducers
 - _(soon)_ Execute arbitrary compilation passes in your [`beet`](https://github.com/mcbeet/beet) pipeline
 - _(soon)_ Expressive command API for writing commands in Python
+
+## Credits
+
+- [A few test cases are adapted from `SPYGlass` (github)](https://github.com/SPYGlassMC/SPYGlass)
+- [Multiline example by `AjaxGb` (MCC discord)](https://discord.com/channels/154777837382008833/157097006500806656/539318174466703361)
+- [Multiline syntax derived from the `hangman` plugin](https://github.com/mcbeet/beet/blob/main/beet/contrib/hangman.py)
+- [Partially inspired by `Trident`](https://energyxxer.com/trident/)
 
 ## Installation
 
