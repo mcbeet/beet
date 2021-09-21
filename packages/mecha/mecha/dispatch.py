@@ -55,6 +55,14 @@ class Rule:
     def __call__(self, *args: Any, **kwargs: Any) -> Any:
         return self.callback(*args, **kwargs)
 
+    def bake(self, *args: Any, **kwargs: Any) -> "Rule":
+        """Bake arguments."""
+        return replace(
+            self,
+            callback=partial(self.callback, *args, **kwargs),
+            next=self.next.bake(*args, **kwargs) if self.next else None,
+        )
+
 
 @overload
 def rule(func: Callable[..., Any]) -> Rule:
@@ -103,14 +111,7 @@ class Dispatcher(Generic[T]):
     def __post_init__(self):
         for name in dir(self):
             if isinstance(rule := getattr(self, name), Rule):
-                callback = partial(rule.callback, self)
-
-                current = rule
-                while current:
-                    current.callback = callback
-                    current = current.next
-
-                self.add_rule(rule)
+                self.add_rule(rule.bake(self))
 
     def add_rule(self, rule: Callable[..., Any]):
         """Add rule."""
