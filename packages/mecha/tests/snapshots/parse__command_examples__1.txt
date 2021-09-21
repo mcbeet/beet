@@ -51,6 +51,7 @@ execute as @p at @s run teleport @s ~ ~ ~ ~10 ~
 execute in minecraft:the_nether run teleport ~ ~ ~
 execute as @a in minecraft:the_end run teleport 84 57 79
 execute as Alice in minecraft:overworld run teleport 251 64 -160
+execute store result score #temp global run data get storage global foo
 experience query Steve levels
 fill 52 63 -1516 33 73 -1536 minecraft:gold_block replace minecraft:orange_glazed_terracotta
 fill ~-3 ~-3 ~-3 ~3 ~-1 ~3 water

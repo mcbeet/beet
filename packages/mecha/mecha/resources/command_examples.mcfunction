@@ -59,6 +59,7 @@ execute as @p at @s run teleport @s ~ ~ ~ ~10 ~
 execute in minecraft:the_nether run teleport ~ ~ ~
 execute as @a in minecraft:the_end run teleport 84 57 79
 execute as Alice in minecraft:overworld run teleport 251 64 -160
+execute store result score #temp global run data get storage global foo
 # experience
 experience query Steve levels
 # fill

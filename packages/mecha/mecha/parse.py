@@ -1110,27 +1110,24 @@ class CommentDisambiguation:
     parser: Parser
 
     def __call__(self, stream: TokenStream) -> Any:
-        multiline = get_stream_multiline(stream)
+        with stream.checkpoint() as commit:
+            last_comment = None
 
-        if multiline:
-            with stream.checkpoint() as commit:
-                last_comment = None
+            while stream.index >= 0 and stream.current.match(
+                "whitespace",
+                "newline",
+                "comment",
+                "indent",
+                "dedent",
+            ):
+                if stream.current.match("comment"):
+                    last_comment = stream.current
+                stream.index -= 1
 
-                while stream.index >= 0 and stream.current.match(
-                    "whitespace",
-                    "newline",
-                    "comment",
-                    "indent",
-                    "dedent",
-                ):
-                    if stream.current.match("comment"):
-                        last_comment = stream.current
-                    stream.index -= 1
+            if last_comment:
+                commit()
 
-                if last_comment:
-                    commit()
-
-            stream.generator = stream.generate_tokens()
+        stream.generator = stream.generate_tokens()
 
         return self.parser(stream)
 
