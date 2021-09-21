@@ -51,7 +51,7 @@ This package provides everything you need for working with Minecraft commands in
 
 ## Credits
 
-- [A few test cases are adapted from `SPYGlass` (github)](https://github.com/SPYGlassMC/SPYGlass)
+- [A few test cases are adapted from `SPYGlass`](https://github.com/SPYGlassMC/SPYGlass)
 - [Multiline example by `AjaxGb` (MCC discord)](https://discord.com/channels/154777837382008833/157097006500806656/539318174466703361)
 - [Multiline syntax derived from the `hangman` plugin](https://github.com/mcbeet/beet/blob/main/beet/contrib/hangman.py)
 - [Partially inspired by `Trident`](https://energyxxer.com/trident/)
