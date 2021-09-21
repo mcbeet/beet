@@ -66,3 +66,40 @@ tellraw @a  # here
     }
 
 tellraw @s ["foo"]  # thing
+
+say
+    foo
+    bar
+    hello
+ wat
+    welp
+
+say
+    this
+    is a
+    # some comment
+    continuation
+
+gamerule
+    doDaylightCycle
+ false
+
+gamerule
+            doMobLoot
+            false
+                gamerule
+                        doDaylightCycle
+                    false
+    execute as foo run
+        gamemode
+            survival
+
+            @s[tag=bar]
+
+            say hello
+        execute in
+            the_end
+            run
+            say foo
+    gamerule doDaylightCycle
+                         false

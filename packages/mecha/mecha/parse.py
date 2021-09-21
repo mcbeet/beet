@@ -549,7 +549,10 @@ def parse_command(stream: TokenStream) -> AstCommand:
 
         if commit.rollback:
             for (name, child), alternative in stream.choose(*tree.children.items()):
-                with alternative, stream.provide(scope=scope + (name,)):
+                with alternative, stream.provide(
+                    scope=scope + (name,),
+                    line_indentation=level,
+                ):
                     literal = None
                     argument = None
 
@@ -575,9 +578,12 @@ def parse_command(stream: TokenStream) -> AstCommand:
         if reached_terminal:
             break
 
-        if not consume_line_continuation(stream):
-            if tree.executable and (not stream.peek() or stream.get("newline", "eof")):
-                break
+        with stream.provide(line_indentation=level):
+            if not consume_line_continuation(stream):
+                if tree.executable and (
+                    not stream.peek() or stream.get("newline", "eof")
+                ):
+                    break
 
         target = spec.tree.get(tree.redirect)
         recursive = target and target.subcommand

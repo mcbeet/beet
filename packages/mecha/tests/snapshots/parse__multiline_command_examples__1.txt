@@ -10,3 +10,12 @@ execute if block ~ ~ ~ #namespace:tag if entity @s[tag=foo]
 tellraw @a {"text": "Hello # there"}
 tellraw @a {"text": "Hello\" # \"there"}
 tellraw @s ["foo"]
+say foo bar hello wat welp
+say this is a continuation
+gamerule doDaylightCycle false
+gamerule doMobLoot false
+gamerule doDaylightCycle false
+execute as foo run gamemode survival @s[tag=bar]
+say hello
+execute in the_end run say foo
+gamerule doDaylightCycle false
