@@ -2,6 +2,11 @@
 
 <!--next-version-placeholder-->
 
+## v0.3.6 (2021-09-21)
+### Fix
+* Proper rule baking ([`38e03fb`](https://github.com/mcbeet/mecha/commit/38e03fbd963237293671b2f5d0d47aed4ef1cf48))
+* Also disambiguate when not in multiline mode ([`ee8e747`](https://github.com/mcbeet/mecha/commit/ee8e747ccd1c0724607b180259635c1b9c639453))
+
 ## v0.3.5 (2021-09-21)
 ### Fix
 * Allow # and $ at the beginning of fake player names ([`4b7fc56`](https://github.com/mcbeet/mecha/commit/4b7fc56b5e6d7462aee2acda5de9754d0b821f47))
