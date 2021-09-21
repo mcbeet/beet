@@ -1,6 +1,6 @@
 <class 'mecha.ast.AstRoot'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
-  end_location: SourceLocation(pos=1790, lineno=106, colno=1)
+  end_location: SourceLocation(pos=1869, lineno=109, colno=1)
   commands:
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=0, lineno=1, colno=1)
@@ -947,3 +947,37 @@
           location: SourceLocation(pos=1784, lineno=105, colno=26)
           end_location: SourceLocation(pos=1789, lineno=105, colno=31)
           value: False
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=1791, lineno=107, colno=1)
+      end_location: SourceLocation(pos=1829, lineno=107, colno=39)
+      identifier: 'scoreboard:players:set:targets:objective:score'
+      arguments:
+        <class 'mecha.ast.AstLiteral'>
+          location: SourceLocation(pos=1814, lineno=107, colno=24)
+          end_location: SourceLocation(pos=1820, lineno=107, colno=30)
+          value: '#index'
+        <class 'mecha.ast.AstLiteral'>
+          location: SourceLocation(pos=1821, lineno=107, colno=31)
+          end_location: SourceLocation(pos=1827, lineno=107, colno=37)
+          value: 'global'
+        <class 'mecha.ast.AstNumber'>
+          location: SourceLocation(pos=1828, lineno=107, colno=38)
+          end_location: SourceLocation(pos=1829, lineno=107, colno=39)
+          value: 3
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=1830, lineno=108, colno=1)
+      end_location: SourceLocation(pos=1868, lineno=108, colno=39)
+      identifier: 'scoreboard:players:set:targets:objective:score'
+      arguments:
+        <class 'mecha.ast.AstLiteral'>
+          location: SourceLocation(pos=1853, lineno=108, colno=24)
+          end_location: SourceLocation(pos=1859, lineno=108, colno=30)
+          value: '$index'
+        <class 'mecha.ast.AstLiteral'>
+          location: SourceLocation(pos=1860, lineno=108, colno=31)
+          end_location: SourceLocation(pos=1866, lineno=108, colno=37)
+          value: 'global'
+        <class 'mecha.ast.AstNumber'>
+          location: SourceLocation(pos=1867, lineno=108, colno=38)
+          end_location: SourceLocation(pos=1868, lineno=108, colno=39)
+          value: 3

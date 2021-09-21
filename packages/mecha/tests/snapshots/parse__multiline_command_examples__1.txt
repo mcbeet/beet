@@ -19,3 +19,5 @@ execute as foo run gamemode survival @s[tag=bar]
 say hello
 execute in the_end run say foo
 gamerule doDaylightCycle false
+scoreboard players set #index global 3
+scoreboard players set $index global 3

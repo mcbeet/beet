@@ -35,6 +35,7 @@ __all__ = [
     "RangeParser",
     "IntegerRangeConstraint",
     "LengthConstraint",
+    "CommentDisambiguation",
     "parse_swizzle",
     "TimeParser",
     "parse_uuid",
@@ -172,7 +173,7 @@ def get_default_parsers() -> Dict[str, Parser]:
         "nbt_path": NbtPathParser(),
         "range": RangeParser(),
         "integer_range": IntegerRangeConstraint(delegate("range")),
-        "resource_location_or_tag": ResourceLocationParser(),
+        "resource_location_or_tag": CommentDisambiguation(ResourceLocationParser()),
         "resource_location": NoTagConstraint(delegate("resource_location_or_tag")),
         "uuid": parse_uuid,
         "objective": LengthConstraint(
@@ -180,7 +181,9 @@ def get_default_parsers() -> Dict[str, Parser]:
             limit=16,
         ),
         "player_name": LengthConstraint(
-            parser=LiteralParser("player_name", r"[a-zA-Z0-9_.+-]+"),
+            parser=CommentDisambiguation(
+                LiteralParser("player_name", r"[#\$a-zA-Z0-9_.+-][a-zA-Z0-9_.+-]*"),
+            ),
             limit=16,
         ),
         "swizzle": parse_swizzle,
@@ -1067,30 +1070,6 @@ class ResourceLocationParser:
     """Parser for resource locations."""
 
     def __call__(self, stream: TokenStream) -> AstResourceLocation:
-        multiline = get_stream_multiline(stream)
-
-        # This is kind of a hack. There's no way to easily differentiate
-        # tags from inline comments since they both begin with "#".
-        if multiline:
-            with stream.checkpoint() as commit:
-                last_comment = None
-
-                while stream.index >= 0 and stream.current.match(
-                    "whitespace",
-                    "newline",
-                    "comment",
-                    "indent",
-                    "dedent",
-                ):
-                    if stream.current.match("comment"):
-                        last_comment = stream.current
-                    stream.index -= 1
-
-                if last_comment:
-                    commit()
-
-            stream.generator = stream.generate_tokens()
-
         with stream.syntax(resource_location=r"#?(?:[0-9a-z_\-\.]+:)?[0-9a-z_./-]+"):
             token = stream.expect("resource_location")
             value = token.value
@@ -1122,6 +1101,38 @@ class NoTagConstraint:
             raise node.emit_error(InvalidSyntax("Specifying a tag is not allowed."))
 
         return node
+
+
+@dataclass
+class CommentDisambiguation:
+    """Reset the stream to the last non-comment token."""
+
+    parser: Parser
+
+    def __call__(self, stream: TokenStream) -> Any:
+        multiline = get_stream_multiline(stream)
+
+        if multiline:
+            with stream.checkpoint() as commit:
+                last_comment = None
+
+                while stream.index >= 0 and stream.current.match(
+                    "whitespace",
+                    "newline",
+                    "comment",
+                    "indent",
+                    "dedent",
+                ):
+                    if stream.current.match("comment"):
+                        last_comment = stream.current
+                    stream.index -= 1
+
+                if last_comment:
+                    commit()
+
+            stream.generator = stream.generate_tokens()
+
+        return self.parser(stream)
 
 
 @dataclass

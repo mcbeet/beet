@@ -103,3 +103,6 @@ gamerule
             say foo
     gamerule doDaylightCycle
                          false
+
+scoreboard players set #index global 3
+scoreboard players set $index global 3
