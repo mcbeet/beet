@@ -25,7 +25,6 @@ include = ["mecha/py.typed"]
 python = "^3.8"
 beet = ">=0.41.2"
 tokenstream = "^1.2.0"
-lectern = ">=0.16.0"
 
 [tool.poetry.dev-dependencies]
 black = "^21.9b0"
@@ -33,7 +32,6 @@ isort = "^5.9.3"
 pytest = "^6.2.5"
 pytest-insta = "^0.1.10"
 python-semantic-release = "7.19.1"
-lectern = ">=0.15.3"
 
 [tool.black]
 target-version = ["py38"]
