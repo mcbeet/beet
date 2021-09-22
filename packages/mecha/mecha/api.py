@@ -14,6 +14,7 @@ from pydantic import BaseModel
 from tokenstream import TokenStream
 
 from .ast import AstNode, AstRoot
+from .config import CommandTree
 from .dispatch import Dispatcher, MutatingReducer, Reducer
 from .parse import delegate, get_default_parsers
 from .serialize import Serializer
@@ -25,6 +26,7 @@ AstNodeType = TypeVar("AstNodeType", bound=AstNode)
 class MechaOptions(BaseModel):
     """Mecha options."""
 
+    version: str = "1.17"
     multiline: bool = False
 
 
@@ -33,23 +35,28 @@ class Mecha:
     """Class exposing the command api."""
 
     ctx: InitVar[Optional[Context]] = None
+    version: InitVar[str] = "1.17"
     multiline: InitVar[bool] = False
 
-    spec: CommandSpec = extra_field(
-        default_factory=lambda: CommandSpec(parsers=get_default_parsers())
-    )
+    spec: CommandSpec = extra_field(default=None)
 
     normalize: Dispatcher[AstNode] = extra_field(init=False)
     transform: Dispatcher[AstNode] = extra_field(init=False)
     check: Dispatcher[AstNode] = extra_field(init=False)
     serialize: Dispatcher[str] = extra_field(init=False)
 
-    def __post_init__(self, ctx: Optional[Context], multiline: bool):
+    def __post_init__(self, ctx: Optional[Context], version: str, multiline: bool):
         if ctx:
             opts = ctx.validate("mecha", MechaOptions)
-            self.spec.multiline = opts.multiline
-        else:
-            self.spec.multiline = multiline
+            version = opts.version
+            multiline = opts.multiline
+
+        if not self.spec:
+            self.spec = CommandSpec(
+                multiline=multiline,
+                tree=CommandTree.load_from(version=version),
+                parsers=get_default_parsers(),
+            )
 
         self.normalize = MutatingReducer()
         self.transform = MutatingReducer()
