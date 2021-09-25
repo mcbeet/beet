@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.41.4 (2021-09-25)
+### Fix
+* Allow key normalization for core containers ([`cdd273a`](https://github.com/mcbeet/beet/commit/cdd273a242f326d8b7caf47ecc715e69c1d4a85e))
+
 ## v0.41.3 (2021-09-25)
 ### Fix
 * Handle multiline logs ([`f68e4a6`](https://github.com/mcbeet/beet/commit/f68e4a6c26fbafda14952afe7a3a1f0f9089a128))
