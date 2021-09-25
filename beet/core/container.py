@@ -125,6 +125,8 @@ class Container(MutableMapping[K, V]):
         self._wrapped = {}
 
     def __getitem__(self, key: K) -> V:
+        key = self.normalize_key(key)
+
         try:
             return self._wrapped[key]
         except KeyError:
@@ -135,6 +137,8 @@ class Container(MutableMapping[K, V]):
         return value
 
     def __setitem__(self, key: K, value: V):
+        key = self.normalize_key(key)
+
         should_delete = False
 
         try:
@@ -148,6 +152,7 @@ class Container(MutableMapping[K, V]):
             del self[key]
 
     def __delitem__(self, key: K):
+        key = self.normalize_key(key)
         del self._wrapped[key]
 
     def __iter__(self) -> Iterator[K]:
@@ -155,6 +160,10 @@ class Container(MutableMapping[K, V]):
 
     def __len__(self) -> int:
         return len(self._wrapped)
+
+    def normalize_key(self, key: K) -> K:
+        """Normalize the key before accessing an item."""
+        return key
 
     def process(self, key: K, value: V) -> V:
         """Process the value before inserting it."""
