@@ -65,7 +65,7 @@ class YamlPackLoader:
     data: DataPack = field(default_factory=DataPack)
 
     def __post_init__(self, ctx: Optional[Context]):
-        logger.warning("Deprecated in favor of beet.contrib.auto_yaml")
+        logger.warning("Deprecated in favor of beet.contrib.auto_yaml.")
         if ctx:
             self.assets = ctx.assets
             self.data = ctx.data

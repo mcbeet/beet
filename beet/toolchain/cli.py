@@ -17,7 +17,7 @@ __all__ = [
 import logging
 from contextlib import contextmanager
 from importlib.metadata import entry_points
-from typing import Any, Callable, Iterator, List, Optional
+from typing import Any, Callable, Iterator, List, Mapping, Optional
 
 import click
 from click.decorators import pass_context
@@ -120,11 +120,20 @@ class LogHandler(logging.Handler):
     def emit(self, record: logging.LogRecord):
         LogHandler.has_output = True
         level = self.abbreviations.get(record.levelname, record.levelname)
-        echo(
-            click.style(f"{level:<7}|", **self.style[record.levelname])
-            + " "
-            + self.format(record)
-        )
+        style = self.style[record.levelname]
+
+        line_prefix = click.style(f"       |", **style)
+
+        leading_line, *lines = self.format(record).splitlines()
+        echo(click.style(f"{level:<7}|", **style) + " " + leading_line)
+
+        if isinstance(record.args, Mapping):
+            if annotate := record.args.get("annotate"):
+                annotate = click.style(str(annotate), fg="green")
+                echo(f"{line_prefix} {annotate}")
+
+        for line in lines:
+            echo(line_prefix + " " * bool(line) + line)
 
 
 class BeetHelpColorsMixin:

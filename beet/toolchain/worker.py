@@ -275,7 +275,7 @@ class WorkerPoolHandle:
         if active_func := self.active_workers.get(ident := format_obj(func)):
             if active_func is not func:
                 if ident not in self.reload_skipped:
-                    logger.warning(f"Skipping worker reload {ident}")
+                    logger.warning(f"Skipping worker reload {ident}.")
                     self.reload_skipped.add(ident)
                 func = active_func
 
