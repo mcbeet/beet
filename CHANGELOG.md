@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.41.3 (2021-09-25)
+### Fix
+* Handle multiline logs ([`f68e4a6`](https://github.com/mcbeet/beet/commit/f68e4a6c26fbafda14952afe7a3a1f0f9089a128))
+
 ## v0.41.2 (2021-09-13)
 ### Fix
 * Make file instances hashable based on their runtime ids ([`c696466`](https://github.com/mcbeet/beet/commit/c696466df9308c6625a8532ca390a82ad94af3e5))
