@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.41.5 (2021-09-26)
+### Fix
+* Insert newline between logs and final error ([`ed52132`](https://github.com/mcbeet/beet/commit/ed5213229dc4346aaf622a440b547a5c2e89f7d1))
+
 ## v0.41.4 (2021-09-25)
 ### Fix
 * Allow key normalization for core containers ([`cdd273a`](https://github.com/mcbeet/beet/commit/cdd273a242f326d8b7caf47ecc715e69c1d4a85e))
