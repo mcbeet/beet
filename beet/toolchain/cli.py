@@ -114,26 +114,32 @@ class LogHandler(logging.Handler):
 
     def __init__(self):
         super().__init__()
-        self.setFormatter(
-            logging.Formatter(
-                click.style("%(name)s", bold=True, fg="black") + "  %(message)s"
-            )
-        )
+        self.setFormatter(logging.Formatter("%(message)s"))
 
     def emit(self, record: logging.LogRecord):
         LogHandler.has_output = True
         level = self.abbreviations.get(record.levelname, record.levelname)
         style = self.style[record.levelname]
+        args: Mapping[str, Any] = (
+            record.args if isinstance(record.args, Mapping) else {}
+        )
 
         line_prefix = click.style(f"       |", **style)
 
         leading_line, *lines = self.format(record).splitlines()
+        if record.levelname in ["ERROR", "CRITICAL"]:
+            leading_line = click.style(leading_line, **style)
+
+        leading_line = (
+            click.style(args.get("prefix", record.name), bold=True, fg="black")
+            + "  "
+            + leading_line
+        )
+
         echo(click.style(f"{level:<7}|", **style) + " " + leading_line)
 
-        if isinstance(record.args, Mapping):
-            if annotate := record.args.get("annotate"):
-                annotate = click.style(str(annotate), fg="green")
-                echo(f"{line_prefix} {annotate}")
+        if annotate := args.get("annotate"):
+            lines.insert(0, click.style(str(annotate), fg="cyan"))
 
         for line in lines:
             echo(line_prefix + " " * bool(line) + line)
