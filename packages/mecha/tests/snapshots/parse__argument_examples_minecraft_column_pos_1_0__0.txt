@@ -4,7 +4,6 @@ minecraft:column_pos 1 0
 ---
 7
 ---
-UnexpectedToken: Expected coordinate but got eof.
+Reported 1 error.
 
-location = SourceLocation(pos=1, lineno=1, colno=2)
-end_location = SourceLocation(pos=1, lineno=1, colno=2)
+line 1, column 2: Expected coordinate but got eof.

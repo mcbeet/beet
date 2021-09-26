@@ -4,7 +4,6 @@ minecraft:entity 4 1
 ---
 @a[tag=!foo]
 ---
-InvalidSyntax: Expected entity selector targeting a single entity.
+Reported 1 error.
 
-location = SourceLocation(pos=0, lineno=1, colno=1)
-end_location = SourceLocation(pos=12, lineno=1, colno=13)
+line 1, column 1: Expected entity selector targeting a single entity.

@@ -4,7 +4,6 @@ minecraft:nbt_tag 1 16
 ---
 '\"'
 ---
-InvalidSyntax: Invalid escape sequence '\\"'.
+Reported 1 error.
 
-location = SourceLocation(pos=1, lineno=1, colno=2)
-end_location = SourceLocation(pos=3, lineno=1, colno=4)
+line 1, column 2: Invalid escape sequence '\\"'.

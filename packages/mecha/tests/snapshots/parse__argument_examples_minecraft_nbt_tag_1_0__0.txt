@@ -4,7 +4,6 @@ minecraft:nbt_tag 1 0
 ---
 "\"
 ---
-UnexpectedToken: Expected curly '{', bracket '[', array, number, string or quoted_string but got literal '"\\"'.
+Reported 1 error.
 
-location = SourceLocation(pos=0, lineno=1, colno=1)
-end_location = SourceLocation(pos=0, lineno=1, colno=1)
+line 1, column 1: Expected curly '{', bracket '[', array, number, string or quoted_string but got literal '"\\"'.

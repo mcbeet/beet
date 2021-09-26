@@ -4,7 +4,6 @@ minecraft:nbt_tag 1 4
 ---
 [a,1]
 ---
-InvalidSyntax: Expected all elements to have the same type.
+Reported 1 error.
 
-location = SourceLocation(pos=3, lineno=1, colno=4)
-end_location = SourceLocation(pos=4, lineno=1, colno=5)
+line 1, column 4: Expected all elements to have the same type.

@@ -1,9 +1,9 @@
 import pytest
 from beet.core.utils import JsonDict
 from pytest_insta import SnapshotFixture
-from tokenstream import InvalidSyntax
 
 from mecha import (
+    DiagnosticError,
     Mecha,
     get_argument_examples,
     get_command_examples,
@@ -51,14 +51,14 @@ def test_argument_examples(
         pytest.skip()
 
     if invalid:
-        with pytest.raises(InvalidSyntax) as exc_info:
+        with pytest.raises(DiagnosticError) as exc_info:
             mc.parse(value, using=argument_parser, provide={"properties": properties})
         assert snapshot() == "\n---\n".join(
             [
                 test_name,
                 str(properties),
                 value,
-                f"{exc_info.type.__name__}: {exc_info.value}\n\nlocation = {exc_info.value.location}\nend_location = {exc_info.value.end_location}",
+                exc_info.value.message,
             ]
         )
     else:

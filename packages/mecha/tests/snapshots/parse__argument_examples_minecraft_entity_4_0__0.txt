@@ -4,7 +4,6 @@ minecraft:entity 4 0
 ---
 @r[limit=7]
 ---
-InvalidSyntax: Expected entity selector targeting a single entity.
+Reported 1 error.
 
-location = SourceLocation(pos=0, lineno=1, colno=1)
-end_location = SourceLocation(pos=11, lineno=1, colno=12)
+line 1, column 1: Expected entity selector targeting a single entity.

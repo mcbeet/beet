@@ -4,7 +4,6 @@ minecraft:float_range 1 1
 ---
 wat
 ---
-UnexpectedToken: Expected range but got literal 'wat'.
+Reported 1 error.
 
-location = SourceLocation(pos=0, lineno=1, colno=1)
-end_location = SourceLocation(pos=0, lineno=1, colno=1)
+line 1, column 1: Expected range but got literal 'wat'.

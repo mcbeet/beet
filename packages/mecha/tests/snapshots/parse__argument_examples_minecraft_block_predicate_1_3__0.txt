@@ -4,7 +4,6 @@ minecraft:block_predicate 1 3
 ---
 #stone[foo
 ---
-UnexpectedToken: Expected equal but got eof.
+Reported 1 error.
 
-location = SourceLocation(pos=10, lineno=1, colno=11)
-end_location = SourceLocation(pos=10, lineno=1, colno=11)
+line 1, column 11: Expected equal but got eof.

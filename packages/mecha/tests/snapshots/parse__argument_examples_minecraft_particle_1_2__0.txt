@@ -4,7 +4,6 @@ minecraft:particle 1 2
 ---
 block minecraft:grass_block[snowy=]
 ---
-UnexpectedToken: Expected word or quoted_string but got bracket ']'.
+Reported 1 error.
 
-location = SourceLocation(pos=34, lineno=1, colno=35)
-end_location = SourceLocation(pos=34, lineno=1, colno=35)
+line 1, column 35: Expected word or quoted_string but got bracket ']'.

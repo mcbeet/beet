@@ -4,7 +4,6 @@ minecraft:rotation 1 0
 ---
 -5 ^5
 ---
-InvalidSyntax: Specifying local coordinates not allowed.
+Reported 1 error.
 
-location = SourceLocation(pos=3, lineno=1, colno=4)
-end_location = SourceLocation(pos=5, lineno=1, colno=6)
+line 1, column 4: Specifying local coordinates not allowed.

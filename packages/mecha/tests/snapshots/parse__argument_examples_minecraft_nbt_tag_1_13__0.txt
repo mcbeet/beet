@@ -4,7 +4,6 @@ minecraft:nbt_tag 1 13
 ---
 {error: [test]]}
 ---
-UnexpectedToken: Expected curly '}' but got bracket ']'.
+Reported 1 error.
 
-location = SourceLocation(pos=14, lineno=1, colno=15)
-end_location = SourceLocation(pos=14, lineno=1, colno=15)
+line 1, column 15: Expected curly '}' but got bracket ']'.

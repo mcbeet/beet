@@ -4,7 +4,6 @@ minecraft:particle 1 4
 ---
 item minecraft:apple{
 ---
-UnexpectedToken: Expected curly '}' but got eof.
+Reported 1 error.
 
-location = SourceLocation(pos=21, lineno=1, colno=22)
-end_location = SourceLocation(pos=21, lineno=1, colno=22)
+line 1, column 22: Expected curly '}' but got eof.

@@ -4,7 +4,6 @@ minecraft:block_predicate 1 2
 ---
 #stone[
 ---
-UnexpectedEOF: Expected word or quoted_string but reached end of file.
+Reported 1 error.
 
-location = SourceLocation(pos=7, lineno=1, colno=8)
-end_location = SourceLocation(pos=7, lineno=1, colno=8)
+line 1, column 8: Expected word or quoted_string but reached end of file.

@@ -4,7 +4,6 @@ minecraft:score_holder 2 4
 ---
 @s[ sort = arbitrary , sort = unknown , ]
 ---
-InvalidSyntax: Unexpected value 'unknown'.
+Reported 1 error.
 
-location = SourceLocation(pos=30, lineno=1, colno=31)
-end_location = SourceLocation(pos=37, lineno=1, colno=38)
+line 1, column 31: Unexpected value 'unknown'.

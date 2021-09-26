@@ -4,7 +4,6 @@ minecraft:dimension 1 0
 ---
 #minecraft:overworld
 ---
-InvalidSyntax: Specifying a tag is not allowed.
+Reported 1 error.
 
-location = SourceLocation(pos=0, lineno=1, colno=1)
-end_location = SourceLocation(pos=20, lineno=1, colno=21)
+line 1, column 1: Specifying a tag is not allowed.

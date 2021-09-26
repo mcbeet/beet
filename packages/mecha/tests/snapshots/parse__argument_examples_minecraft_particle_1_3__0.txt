@@ -4,7 +4,6 @@ minecraft:particle 1 3
 ---
 falling_dust grass_block[snowy=true]{hello: world wat}
 ---
-UnexpectedToken: Expected curly '}' but got string 'wat'.
+Reported 1 error.
 
-location = SourceLocation(pos=49, lineno=1, colno=50)
-end_location = SourceLocation(pos=49, lineno=1, colno=50)
+line 1, column 50: Expected curly '}' but got string 'wat'.

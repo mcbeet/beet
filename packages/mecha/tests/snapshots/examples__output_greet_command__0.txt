@@ -28,7 +28,6 @@
                   value: 'registered'
 greet @a[tag=!registered]
 
-replacing ['commands']
 <class 'mecha.ast.AstRoot'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=47, lineno=5, colno=1)

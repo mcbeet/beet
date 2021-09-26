@@ -4,7 +4,6 @@ minecraft:score_holder 2 1
 ---
 @e[type=minecraft:marker, sort=wat, limit=1]
 ---
-InvalidSyntax: Unexpected value 'wat'.
+Reported 1 error.
 
-location = SourceLocation(pos=31, lineno=1, colno=32)
-end_location = SourceLocation(pos=34, lineno=1, colno=35)
+line 1, column 32: Unexpected value 'wat'.

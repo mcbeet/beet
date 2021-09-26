@@ -4,7 +4,6 @@ minecraft:swizzle 1 2
 ---
 xx
 ---
-InvalidSyntax: Invalid swizzle 'xx'.
+Reported 1 error.
 
-location = SourceLocation(pos=0, lineno=1, colno=1)
-end_location = SourceLocation(pos=2, lineno=1, colno=3)
+line 1, column 1: Invalid swizzle 'xx'.

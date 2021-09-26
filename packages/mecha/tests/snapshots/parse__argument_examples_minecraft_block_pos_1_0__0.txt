@@ -4,7 +4,6 @@ minecraft:block_pos 1 0
 ---
 ^-3
 ---
-UnexpectedToken: Expected coordinate but got eof.
+Reported 1 error.
 
-location = SourceLocation(pos=3, lineno=1, colno=4)
-end_location = SourceLocation(pos=3, lineno=1, colno=4)
+line 1, column 4: Expected coordinate but got eof.

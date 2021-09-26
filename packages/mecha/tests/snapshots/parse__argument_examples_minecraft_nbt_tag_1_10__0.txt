@@ -4,7 +4,6 @@ minecraft:nbt_tag 1 10
 ---
 {with space: 5}
 ---
-UnexpectedToken: Expected colon but got string 'space'.
+Reported 1 error.
 
-location = SourceLocation(pos=5, lineno=1, colno=6)
-end_location = SourceLocation(pos=5, lineno=1, colno=6)
+line 1, column 6: Expected colon but got string 'space'.

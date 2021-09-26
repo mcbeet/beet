@@ -4,7 +4,6 @@ minecraft:entity 2 2
 ---
 @a[ gamemode = creative , gamemode = unknown , ]
 ---
-InvalidSyntax: Unexpected value 'unknown'.
+Reported 1 error.
 
-location = SourceLocation(pos=37, lineno=1, colno=38)
-end_location = SourceLocation(pos=44, lineno=1, colno=45)
+line 1, column 38: Unexpected value 'unknown'.

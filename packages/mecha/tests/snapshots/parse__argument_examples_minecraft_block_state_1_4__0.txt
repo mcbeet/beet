@@ -4,7 +4,6 @@ minecraft:block_state 1 4
 ---
 stone[foo
 ---
-UnexpectedToken: Expected equal but got eof.
+Reported 1 error.
 
-location = SourceLocation(pos=9, lineno=1, colno=10)
-end_location = SourceLocation(pos=9, lineno=1, colno=10)
+line 1, column 10: Expected equal but got eof.

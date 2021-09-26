@@ -4,7 +4,6 @@ minecraft:particle 1 1
 ---
 minecraft:dust_color_transition 1.0 0.0 0.0 hello
 ---
-UnexpectedToken: Expected number but got literal 'hello'.
+Reported 1 error.
 
-location = SourceLocation(pos=43, lineno=1, colno=44)
-end_location = SourceLocation(pos=43, lineno=1, colno=44)
+line 1, column 44: Expected number but got literal 'hello'.

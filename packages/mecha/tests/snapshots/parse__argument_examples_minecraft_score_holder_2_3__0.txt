@@ -4,7 +4,6 @@ minecraft:score_holder 2 3
 ---
 @a[ = 1 , ]
 ---
-UnexpectedToken: Expected word or quoted_string but got equal '='.
+Reported 1 error.
 
-location = SourceLocation(pos=3, lineno=1, colno=4)
-end_location = SourceLocation(pos=3, lineno=1, colno=4)
+line 1, column 4: Expected word or quoted_string but got equal '='.

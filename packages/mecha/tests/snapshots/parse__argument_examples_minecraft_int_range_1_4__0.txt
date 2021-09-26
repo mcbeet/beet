@@ -4,7 +4,6 @@ minecraft:int_range 1 4
 ---
 ..100.4
 ---
-InvalidSyntax: Expected integer range.
+Reported 1 error.
 
-location = SourceLocation(pos=0, lineno=1, colno=1)
-end_location = SourceLocation(pos=7, lineno=1, colno=8)
+line 1, column 1: Expected integer range.

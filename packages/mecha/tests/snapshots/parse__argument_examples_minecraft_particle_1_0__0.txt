@@ -4,7 +4,6 @@ minecraft:particle 1 0
 ---
 dust 1.0 0.5 0.5
 ---
-UnexpectedToken: Expected number but got eof.
+Reported 1 error.
 
-location = SourceLocation(pos=16, lineno=1, colno=17)
-end_location = SourceLocation(pos=16, lineno=1, colno=17)
+line 1, column 17: Expected number but got eof.

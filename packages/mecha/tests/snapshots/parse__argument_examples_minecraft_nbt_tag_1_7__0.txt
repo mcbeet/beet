@@ -4,7 +4,6 @@ minecraft:nbt_tag 1 7
 ---
 [I;5l,4l,3]
 ---
-InvalidSyntax: Expected all elements to be integers.
+Reported 1 error.
 
-location = SourceLocation(pos=3, lineno=1, colno=4)
-end_location = SourceLocation(pos=5, lineno=1, colno=6)
+line 1, column 4: Expected all elements to be integers.
