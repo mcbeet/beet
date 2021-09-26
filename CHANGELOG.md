@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.41.6 (2021-09-26)
+### Fix
+* Make it possible to log with a custom prefix ([`8577f9b`](https://github.com/mcbeet/beet/commit/8577f9b40048c0871b3d8d24c6c97b5de16f002f))
+
 ## v0.41.5 (2021-09-26)
 ### Fix
 * Insert newline between logs and final error ([`ed52132`](https://github.com/mcbeet/beet/commit/ed5213229dc4346aaf622a440b547a5c2e89f7d1))
