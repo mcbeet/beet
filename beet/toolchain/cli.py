@@ -74,6 +74,9 @@ def error_handler(should_exit: bool = False, format_padding: int = 0) -> Iterato
     else:
         return
 
+    if LogHandler.has_output:
+        echo()
+
     echo(format_error(message, exception, format_padding), nl=False)
 
     if should_exit:
