@@ -4,7 +4,7 @@ __all__ = [
 
 
 from beet import Context
-from tokenstream.location import set_location
+from tokenstream import set_location
 
 from mecha import (
     AstCommand,
