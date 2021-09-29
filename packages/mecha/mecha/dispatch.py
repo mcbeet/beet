@@ -180,6 +180,11 @@ class Dispatcher(Generic[T]):
                 for rule in arg:
                     self.add_rule(rule)
 
+    def reset(self):
+        """Remove all rules."""
+        self.rules.clear()
+        self.count = 0
+
     def dispatch(
         self,
         node: AstNode,
