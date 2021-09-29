@@ -29,6 +29,7 @@ from tokenstream.location import set_location
 
 from .ast import AstNode, AstRoot
 from .config import CommandTree
+from .database import CompilationDatabase, CompilationUnit
 from .diagnostic import Diagnostic, DiagnosticCollection, DiagnosticError
 from .dispatch import Dispatcher, MutatingReducer, Reducer
 from .parse import delegate, get_default_parsers
@@ -59,16 +60,20 @@ class Mecha:
 
     spec: CommandSpec = extra_field(default=None)
 
-    lint: Dispatcher[AstNode] = extra_field(init=False)
-    normalize: Dispatcher[AstNode] = extra_field(init=False)
-    transform: Dispatcher[AstNode] = extra_field(init=False)
-    optimize: Dispatcher[AstNode] = extra_field(init=False)
-    check: Dispatcher[AstNode] = extra_field(init=False)
+    lint: Dispatcher[AstRoot] = extra_field(init=False)
+    normalize: Dispatcher[AstRoot] = extra_field(init=False)
+    transform: Dispatcher[AstRoot] = extra_field(init=False)
+    optimize: Dispatcher[AstRoot] = extra_field(init=False)
+    check: Dispatcher[AstRoot] = extra_field(init=False)
 
-    steps: List[Dispatcher[AstNode]] = extra_field(default_factory=list)
+    steps: List[Dispatcher[AstRoot]] = extra_field(default_factory=list)
 
     serialize: Dispatcher[str] = extra_field(init=False)
-    diagnostics: DiagnosticCollection = extra_field(init=False)
+
+    database: CompilationDatabase = extra_field(default_factory=CompilationDatabase)
+    diagnostics: DiagnosticCollection = extra_field(
+        default_factory=DiagnosticCollection
+    )
 
     def __post_init__(self, ctx: Optional[Context], version: str, multiline: bool):
         if ctx:
@@ -107,7 +112,6 @@ class Mecha:
             )
 
         self.serialize = Serializer(self.spec)
-        self.diagnostics = DiagnosticCollection()
 
     @contextmanager
     def prepare_token_stream(
@@ -230,7 +234,7 @@ class Mecha:
     @overload
     def compile(
         self,
-        source: Union[List[str], str, AstNode],
+        source: Union[List[str], str, AstRoot],
         *,
         filename: Optional[FileSystemPath] = None,
         resource_location: Optional[str] = None,
@@ -241,62 +245,89 @@ class Mecha:
 
     def compile(
         self,
-        source: Union[DataPack, TextFileBase[Any], List[str], str, AstNode],
+        source: Union[DataPack, TextFileBase[Any], List[str], str, AstRoot],
         *,
         filename: Optional[FileSystemPath] = None,
         resource_location: Optional[str] = None,
         multiline: Optional[bool] = None,
         report: Optional[DiagnosticCollection] = None,
     ) -> Union[DataPack, TextFileBase[Any]]:
-        if not filename and isinstance(source, TextFileBase) and source.source_path:
-            filename = os.path.relpath(source.source_path, self.directory)
-
-        diagnostics = DiagnosticCollection(
-            hint=resource_location,
-            filename=str(filename) if filename else None,
-        )
+        """Apply all compilation steps."""
+        functions: List[TextFileBase[Any]] = []
 
         if isinstance(source, DataPack):
             result = source
-
-            for path, function in list(source.functions.items()):
-                self.compile(
-                    function,
-                    resource_location=path,
-                    multiline=multiline,
-                    report=diagnostics,
+            for key, value in source.functions.items():
+                functions.append(value)
+                self.database[value] = CompilationUnit(
+                    resource_location=key,
+                    filename=(
+                        os.path.relpath(value.source_path, self.directory)
+                        if value.source_path
+                        else None
+                    ),
                 )
-
         else:
             if isinstance(source, (list, str)):
                 source = Function(source)
+
             if isinstance(source, TextFileBase):
                 result = source
+                if not filename and source.source_path:
+                    filename = os.path.relpath(source.source_path, self.directory)
             else:
                 result = Function()
 
-            ast = None
+            functions.append(result)
+            self.database[result] = CompilationUnit(
+                ast=source if isinstance(source, AstRoot) else None,
+                resource_location=resource_location,
+                filename=str(filename) if filename else None,
+            )
 
-            if isinstance(source, AstNode):
-                ast = source
-            else:
-                try:
-                    ast = self.parse(
-                        source,
-                        filename=filename,
-                        resource_location=resource_location,
-                        multiline=multiline,
-                    )
-                except DiagnosticError as exc:
-                    diagnostics.extend(exc.diagnostics)
+        for function in functions:
+            compilation_unit = self.database[function]
 
-            if ast:
-                for compiler_pass in self.steps:
-                    with compiler_pass.use_diagnostics(diagnostics):
-                        ast = compiler_pass(ast)
+            if compilation_unit.ast:
+                continue
 
-                with self.serialize.use_diagnostics(diagnostics):
-                    result.text = self.serialize(ast)
+            try:
+                compilation_unit.source = function.text
+                compilation_unit.ast = self.parse(
+                    function,
+                    filename=compilation_unit.filename,
+                    resource_location=compilation_unit.resource_location,
+                    multiline=multiline,
+                )
+            except DiagnosticError as exc:
+                compilation_unit.diagnostics.extend(exc.diagnostics)
+
+        for compilation_step in self.steps:
+            for function in functions:
+                compilation_unit = self.database[function]
+
+                if not compilation_unit.ast:
+                    continue
+
+                with compilation_step.use_diagnostics(compilation_unit.diagnostics):
+                    compilation_unit.ast = compilation_step(compilation_unit.ast)
+
+        for function in functions:
+            compilation_unit = self.database[function]
+
+            if not compilation_unit.ast:
+                continue
+
+            with self.serialize.use_diagnostics(compilation_unit.diagnostics):
+                function.text = self.serialize(compilation_unit.ast)
+
+        diagnostics = DiagnosticCollection(
+            [
+                exc
+                for function in functions
+                for exc in self.database[function].diagnostics.exceptions
+            ]
+        )
 
         if report:
             report.extend(diagnostics)
