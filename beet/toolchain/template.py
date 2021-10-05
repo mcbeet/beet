@@ -20,7 +20,7 @@ from jinja2 import (
 )
 from jinja2.ext import DebugExtension, ExprStmtExtension, LoopControlExtension
 from jinja2.runtime import Context as JinjaContext
-from jinja2.runtime import missing as jinja_missing
+from jinja2.utils import missing as jinja_missing
 
 from beet.core.file import TextFileBase
 from beet.core.utils import FileSystemPath, JsonDict
