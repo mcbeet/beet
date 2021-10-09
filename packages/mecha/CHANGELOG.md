@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.5.7 (2021-10-09)
+### Fix
+* Add logging for ast cache ([`c1bd76b`](https://github.com/mcbeet/mecha/commit/c1bd76beaa3262ec9b17d95267a050aa7aa16b1f))
+
 ## v0.5.6 (2021-10-09)
 ### Fix
 * Fast path to avoid traversing ast when there are no rules ([`72322af`](https://github.com/mcbeet/mecha/commit/72322af610b725ec28cd6322cb8a5220beb1b7ae))
