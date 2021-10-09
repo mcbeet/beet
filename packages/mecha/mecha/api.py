@@ -5,6 +5,7 @@ __all__ = [
 
 
 import os
+import pickle
 from contextlib import contextmanager
 from dataclasses import InitVar, dataclass
 from pathlib import Path
@@ -21,7 +22,7 @@ from typing import (
     overload,
 )
 
-from beet import Context, DataPack, Function, TextFileBase
+from beet import Cache, Context, DataPack, Function, TextFileBase
 from beet.core.utils import FileSystemPath, JsonDict, extra_field
 from pydantic import BaseModel
 from tokenstream import InvalidSyntax, TokenStream
@@ -58,6 +59,7 @@ class Mecha:
     multiline: InitVar[bool] = False
 
     directory: Path = extra_field(init=False)
+    cache: Optional[Cache] = extra_field(default=None)
 
     spec: CommandSpec = extra_field(default=None)
 
@@ -94,6 +96,9 @@ class Mecha:
             self.transform = MutatingReducer(levels=opts.rules)
             self.optimize = MutatingReducer(levels=opts.rules)
             self.check = Reducer(levels=opts.rules)
+
+            if not self.cache:
+                self.cache = ctx.cache["mecha"]
 
         else:
             self.directory = Path.cwd()
@@ -200,12 +205,24 @@ class Mecha:
         if not filename and source.source_path:
             filename = os.path.relpath(source.source_path, self.directory)
 
+        cache_miss = None
+
+        if self.cache and filename:
+            if self.cache.has_changed(self.directory / filename):
+                cache_miss = self.cache.get_path(f"{filename}-ast")
+            else:
+                try:
+                    with self.cache.get_path(f"{filename}-ast").open("rb") as f:
+                        return pickle.load(f)
+                except FileNotFoundError:
+                    pass
+
         stream = TokenStream(source.text)
 
         try:
             with self.prepare_token_stream(stream, multiline=multiline):
                 with stream.provide(**provide or {}):
-                    return delegate(parser, stream)
+                    ast = delegate(parser, stream)
         except InvalidSyntax as exc:
             d = Diagnostic(
                 level="error",
@@ -214,6 +231,11 @@ class Mecha:
                 filename=str(filename) if filename else None,
             )
             raise DiagnosticError(DiagnosticCollection([set_location(d, exc)])) from exc
+        else:
+            if self.cache and filename and cache_miss:
+                with cache_miss.open("wb") as f:
+                    pickle.dump(ast, f)
+            return ast
 
     @overload
     def compile(
