@@ -32,7 +32,7 @@ from .config import CommandTree
 from .database import CompilationDatabase, CompilationUnit
 from .diagnostic import Diagnostic, DiagnosticCollection, DiagnosticError
 from .dispatch import Dispatcher, MutatingReducer, Reducer
-from .parse import delegate, get_default_parsers
+from .parse import delegate, get_parsers
 from .serialize import Serializer
 from .spec import CommandSpec
 
@@ -108,7 +108,7 @@ class Mecha:
             self.spec = CommandSpec(
                 multiline=multiline,
                 tree=CommandTree.load_from(version=version),
-                parsers=get_default_parsers(),
+                parsers=get_parsers(version),
             )
 
         self.serialize = Serializer(self.spec)

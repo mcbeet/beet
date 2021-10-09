@@ -106,3 +106,23 @@ def test_say(snapshot: SnapshotFixture, mc: Mecha):
 
     assert snapshot() == mc.serialize(ast)
     assert snapshot() == mc.serialize(ast_multiline)
+
+
+def test_player_name(mc: Mecha):
+    with pytest.raises(DiagnosticError) as exc_info:
+        mc.parse("scoreboard players set some_really_long_name_right_here foo 42")
+    assert (
+        exc_info.value.message
+        == "Reported 1 error.\n\nline 1, column 24: Expected up to 16 characters."
+    )
+
+
+def test_player_name_no_length_restriction(mc_1_18: Mecha):
+    assert (
+        mc_1_18.serialize(
+            mc_1_18.parse(
+                "scoreboard players set some_really_long_name_right_here foo 42"
+            )
+        )
+        == "scoreboard players set some_really_long_name_right_here foo 42\n"
+    )

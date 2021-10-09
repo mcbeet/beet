@@ -1,13 +1,15 @@
 __all__ = [
     "QuoteHelper",
     "string_to_number",
+    "split_version",
 ]
 
 
 import re
 from dataclasses import dataclass, field
-from typing import Dict, Union
+from typing import Dict, Tuple, Union
 
+from beet.core.utils import normalize_string
 from tokenstream import InvalidSyntax, Token, set_location
 
 from .error import InvalidEscapeSequence
@@ -19,6 +21,15 @@ AVOID_QUOTES_REGEX = re.compile(r"^[0-9A-Za-z_\.\+\-]+$")
 def string_to_number(string: str) -> Union[int, float]:
     """Helper for converting numbers to string and keeping their original type."""
     return float(string) if "." in string else int(string)
+
+
+def split_version(
+    version: Union[str, Tuple[Union[str, int], ...]],
+) -> Tuple[int, ...]:
+    """Break version number into a tuple of integers."""
+    if isinstance(version, str):
+        version = tuple(normalize_string(version).split("_"))
+    return tuple(map(int, version))
 
 
 @dataclass

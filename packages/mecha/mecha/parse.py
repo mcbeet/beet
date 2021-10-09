@@ -1,5 +1,6 @@
 __all__ = [
     "get_default_parsers",
+    "get_parsers",
     "get_stream_spec",
     "get_stream_scope",
     "get_stream_properties",
@@ -133,7 +134,7 @@ from .ast import (
 )
 from .error import UnrecognizedParser
 from .spec import CommandSpec, Parser
-from .utils import QuoteHelper, string_to_number
+from .utils import QuoteHelper, split_version, string_to_number
 
 NUMBER_PATTERN: str = r"-?(?:\d+\.?\d*|\.\d+)"
 
@@ -176,15 +177,9 @@ def get_default_parsers() -> Dict[str, Parser]:
         "resource_location_or_tag": CommentDisambiguation(ResourceLocationParser()),
         "resource_location": NoTagConstraint(delegate("resource_location_or_tag")),
         "uuid": parse_uuid,
-        "objective": LengthConstraint(
-            parser=LiteralParser("objective", r"[a-zA-Z0-9_.+-]+|\*"),
-            limit=16,
-        ),
-        "player_name": LengthConstraint(
-            parser=CommentDisambiguation(
-                LiteralParser("player_name", r"[#\$%a-zA-Z0-9_.+-][a-zA-Z0-9_.+-]*"),
-            ),
-            limit=16,
+        "objective": LiteralParser("objective", r"[a-zA-Z0-9_.+-]+|\*"),
+        "player_name": CommentDisambiguation(
+            LiteralParser("player_name", r"[#\$%a-zA-Z0-9_.+-][a-zA-Z0-9_.+-]*"),
         ),
         "swizzle": parse_swizzle,
         "team": LiteralParser("team", r"[a-zA-Z0-9_.+-]+"),
@@ -425,6 +420,21 @@ def get_default_parsers() -> Dict[str, Parser]:
             coordinate_parser=delegate("coordinate"),
         ),
     }
+
+
+def get_parsers(
+    version: Union[str, Tuple[Union[str, int], ...]] = "1.17",
+) -> Dict[str, Parser]:
+    """Return parsers for a specific version."""
+    version = split_version(version)
+
+    parsers = get_default_parsers()
+
+    if version < (1, 18):
+        parsers["objective"] = LengthConstraint(parsers["objective"], 16)
+        parsers["player_name"] = LengthConstraint(parsers["player_name"], 16)
+
+    return parsers
 
 
 def get_stream_spec(stream: TokenStream) -> CommandSpec:
