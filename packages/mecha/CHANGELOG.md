@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.5.5 (2021-10-09)
+### Fix
+* Handle more version formats in config ([`117bda1`](https://github.com/mcbeet/mecha/commit/117bda1f3a9c0617e7279f59777a7808c37e7fd4))
+
 ## v0.5.4 (2021-10-09)
 ### Fix
 * Remove unnecessary args in serializer ([`cf041d6`](https://github.com/mcbeet/mecha/commit/cf041d6412cb63e79f8af5d89ec05c22f077576b))
