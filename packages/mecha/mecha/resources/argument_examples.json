@@ -206,6 +206,10 @@
       "invalid": true,
       "properties": { "type": "entities", "amount": "single" },
       "examples": ["@r[limit=7]", "@a[tag=!foo]"]
+    },
+    {
+      "properties": { "type": "players", "amount": "single" },
+      "examples": ["#foo", "$foo", "%foo"]
     }
   ],
   "minecraft:entity_anchor": [

@@ -182,7 +182,7 @@ def get_default_parsers() -> Dict[str, Parser]:
         ),
         "player_name": LengthConstraint(
             parser=CommentDisambiguation(
-                LiteralParser("player_name", r"[#\$a-zA-Z0-9_.+-][a-zA-Z0-9_.+-]*"),
+                LiteralParser("player_name", r"[#\$%a-zA-Z0-9_.+-][a-zA-Z0-9_.+-]*"),
             ),
             limit=16,
         ),

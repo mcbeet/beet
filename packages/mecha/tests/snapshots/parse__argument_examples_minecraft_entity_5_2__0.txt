@@ -1,0 +1,12 @@
+minecraft:entity 5 2
+---
+{'type': 'players', 'amount': 'single'}
+---
+%foo
+---
+%foo
+---
+<class 'mecha.ast.AstLiteral'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=4, lineno=1, colno=5)
+  value: '%foo'
