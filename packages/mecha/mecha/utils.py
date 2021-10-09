@@ -1,6 +1,7 @@
 __all__ = [
     "QuoteHelper",
     "string_to_number",
+    "VersionNumber",
     "split_version",
 ]
 
@@ -18,15 +19,18 @@ ESCAPE_REGEX = re.compile(r"\\.")
 AVOID_QUOTES_REGEX = re.compile(r"^[0-9A-Za-z_\.\+\-]+$")
 
 
+VersionNumber = Union[str, int, float, Tuple[Union[str, int], ...]]
+
+
 def string_to_number(string: str) -> Union[int, float]:
     """Helper for converting numbers to string and keeping their original type."""
     return float(string) if "." in string else int(string)
 
 
-def split_version(
-    version: Union[str, Tuple[Union[str, int], ...]],
-) -> Tuple[int, ...]:
+def split_version(version: VersionNumber) -> Tuple[int, ...]:
     """Break version number into a tuple of integers."""
+    if isinstance(version, (int, float)):
+        version = str(version)
     if isinstance(version, str):
         version = tuple(normalize_string(version).split("_"))
     return tuple(map(int, version))

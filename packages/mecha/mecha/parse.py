@@ -134,7 +134,7 @@ from .ast import (
 )
 from .error import UnrecognizedParser
 from .spec import CommandSpec, Parser
-from .utils import QuoteHelper, split_version, string_to_number
+from .utils import QuoteHelper, VersionNumber, split_version, string_to_number
 
 NUMBER_PATTERN: str = r"-?(?:\d+\.?\d*|\.\d+)"
 
@@ -422,9 +422,7 @@ def get_default_parsers() -> Dict[str, Parser]:
     }
 
 
-def get_parsers(
-    version: Union[str, Tuple[Union[str, int], ...]] = "1.17",
-) -> Dict[str, Parser]:
+def get_parsers(version: VersionNumber = "1.17") -> Dict[str, Parser]:
     """Return parsers for a specific version."""
     version = split_version(version)
 

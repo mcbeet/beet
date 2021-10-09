@@ -35,6 +35,7 @@ from .dispatch import Dispatcher, MutatingReducer, Reducer
 from .parse import delegate, get_parsers
 from .serialize import Serializer
 from .spec import CommandSpec
+from .utils import VersionNumber
 
 AstNodeType = TypeVar("AstNodeType", bound=AstNode)
 TextFileType = TypeVar("TextFileType", bound=TextFileBase[Any])
@@ -43,7 +44,7 @@ TextFileType = TypeVar("TextFileType", bound=TextFileBase[Any])
 class MechaOptions(BaseModel):
     """Mecha options."""
 
-    version: str = "1.17"
+    version: VersionNumber = "1.17"
     multiline: bool = False
     rules: Dict[str, Literal["ignore", "info", "warn", "error"]] = {}
 
@@ -53,7 +54,7 @@ class Mecha:
     """Class exposing the command api."""
 
     ctx: InitVar[Optional[Context]] = None
-    version: InitVar[str] = "1.17"
+    version: InitVar[VersionNumber] = "1.17"
     multiline: InitVar[bool] = False
 
     directory: Path = extra_field(init=False)
@@ -75,7 +76,12 @@ class Mecha:
         default_factory=DiagnosticCollection
     )
 
-    def __post_init__(self, ctx: Optional[Context], version: str, multiline: bool):
+    def __post_init__(
+        self,
+        ctx: Optional[Context],
+        version: VersionNumber,
+        multiline: bool,
+    ):
         if ctx:
             opts = ctx.validate("mecha", MechaOptions)
             version = opts.version
