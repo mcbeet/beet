@@ -1351,7 +1351,8 @@ def parse_uuid(stream: TokenStream) -> AstUUID:
     """Parse uuid."""
     with stream.syntax(uuid="-".join([r"[a-fA-F0-9]+"] * 5)):
         token = stream.expect("uuid")
-    node = AstUUID(value=UUID(token.value))
+    a, b, c, d, e = token.value.split("-")
+    node = AstUUID(value=UUID(f"{a:>08}-{b:>04}-{c:>04}-{d:>04}-{e:>012}"))
     return set_location(node, token)
 
 
