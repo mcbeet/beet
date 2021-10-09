@@ -4,6 +4,7 @@ __all__ = [
 ]
 
 
+import logging
 import os
 import pickle
 from contextlib import contextmanager
@@ -40,6 +41,9 @@ from .utils import VersionNumber
 
 AstNodeType = TypeVar("AstNodeType", bound=AstNode)
 TextFileType = TypeVar("TextFileType", bound=TextFileBase[Any])
+
+
+logger = logging.getLogger("mecha")
 
 
 class MechaOptions(BaseModel):
@@ -208,14 +212,18 @@ class Mecha:
         cache_miss = None
 
         if self.cache and filename:
-            if self.cache.has_changed(self.directory / filename):
-                cache_miss = self.cache.get_path(f"{filename}-ast")
-            else:
+            ast_path = self.cache.get_path(f"{filename}-ast")
+
+            if not self.cache.has_changed(self.directory / filename):
                 try:
-                    with self.cache.get_path(f"{filename}-ast").open("rb") as f:
+                    with ast_path.open("rb") as f:
+                        logger.debug("Using cached ast for file %r.", filename)
                         return pickle.load(f)
                 except FileNotFoundError:
                     pass
+
+            logger.debug("Updating ast for file %r.", filename)
+            cache_miss = ast_path
 
         stream = TokenStream(source.text)
 
