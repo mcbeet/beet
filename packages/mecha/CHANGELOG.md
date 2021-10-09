@@ -2,6 +2,11 @@
 
 <!--next-version-placeholder-->
 
+## v0.5.6 (2021-10-09)
+### Fix
+* Fast path to avoid traversing ast when there are no rules ([`72322af`](https://github.com/mcbeet/mecha/commit/72322af610b725ec28cd6322cb8a5220beb1b7ae))
+* Add ast cache ([`7ae025a`](https://github.com/mcbeet/mecha/commit/7ae025a635196d9abc0780ab5b8a3d8923a64c35))
+
 ## v0.5.5 (2021-10-09)
 ### Fix
 * Handle more version formats in config ([`117bda1`](https://github.com/mcbeet/mecha/commit/117bda1f3a9c0617e7279f59777a7808c37e7fd4))
