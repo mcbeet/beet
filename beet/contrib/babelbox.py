@@ -79,7 +79,8 @@ def load_languages(
                 if value := row[code]:
                     languages[code].data[identifier] = value
                 else:
-                    msg = f"Locale {code!r} has no translation for {identifier!r}."
-                    logger.warning(msg)
+                    logger.warning(
+                        "Locale %r has no translation for %r.", code, identifier
+                    )
 
         return languages

@@ -73,7 +73,7 @@ class Cache:
         path = self.get_path(url)
 
         if not path.is_file():
-            logger.debug(f"Downloading {url}.")
+            logger.debug("Downloading %s.", url)
             with urlopen(url) as f:
                 path.write_bytes(f.read())
 
@@ -151,7 +151,7 @@ class Cache:
             return
 
         if self.expire and self.expire <= datetime.now():
-            logger.debug(f"Cache {self.directory.name} expired.")
+            logger.debug("Cache %s expired.", self.directory.name)
             self.clear()
         else:
             self.directory.mkdir(parents=True, exist_ok=True)
