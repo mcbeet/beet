@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.41.7 (2021-10-09)
+### Fix
+* Use percent formatting with logger ([`c3d5d72`](https://github.com/mcbeet/beet/commit/c3d5d72da1a9675783369b732b6c1464467f66c0))
+* Switch to debug level for logging downloads and cache expiration ([`d3ff227`](https://github.com/mcbeet/beet/commit/d3ff22788d65e8aec076dae8f0c788aa39b41ebd))
+* Add missing annotation for DictReader ([`9cf24c9`](https://github.com/mcbeet/beet/commit/9cf24c96d5600d1cc4cbbaef567b6e80d22d3912))
+
 ## v0.41.6 (2021-09-26)
 ### Fix
 * Make it possible to log with a custom prefix ([`8577f9b`](https://github.com/mcbeet/beet/commit/8577f9b40048c0871b3d8d24c6c97b5de16f002f))
