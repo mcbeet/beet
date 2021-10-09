@@ -2,6 +2,11 @@
 
 <!--next-version-placeholder-->
 
+## v0.5.2 (2021-10-09)
+### Fix
+* Don't log messages directly to avoid wrong percent formatting ([`abe1f99`](https://github.com/mcbeet/mecha/commit/abe1f99f8fc0765c10dcdee8d35bba29cdfac39d))
+* Handle percent sign in player names ([`276cac5`](https://github.com/mcbeet/mecha/commit/276cac5131542e018a0b19dcd44cbe5b5c15f9fc))
+
 ## v0.5.1 (2021-10-09)
 ### Fix
 * Update tokenstream to handle windows line endings ([`6d780dd`](https://github.com/mcbeet/mecha/commit/6d780dd11deb98b3fd9d44124439a051eba6275c))
