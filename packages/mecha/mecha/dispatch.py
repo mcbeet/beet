@@ -251,6 +251,8 @@ class Dispatcher(Generic[T]):
                 self.diagnostics.add(diagnostic.with_defaults(rule=name))
 
     def __call__(self, node: AstNode) -> T:
+        if not self.count:
+            return node  # type: ignore
         return self.invoke(node)
 
 
