@@ -93,7 +93,7 @@ class Serializer(Visitor):
             yield child
 
     @rule(AstRoot)
-    def root(self, node: AstRoot, result: List[str], *args: Any):
+    def root(self, node: AstRoot, result: List[str]):
         for command in node.commands:
             yield command
             result.append("\n")
