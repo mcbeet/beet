@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.5.8 (2021-10-10)
+### Fix
+* Make it possible to omit functions from compilation with match option ([`aabddf6`](https://github.com/mcbeet/mecha/commit/aabddf6200e1fd6449f96f916316afadbc37a795))
+
 ## v0.5.7 (2021-10-09)
 ### Fix
 * Add logging for ast cache ([`c1bd76b`](https://github.com/mcbeet/mecha/commit/c1bd76beaa3262ec9b17d95267a050aa7aa16b1f))
