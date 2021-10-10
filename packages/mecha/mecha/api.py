@@ -51,6 +51,7 @@ class MechaOptions(BaseModel):
 
     version: VersionNumber = "1.17"
     multiline: bool = False
+    match: Optional[List[str]] = None
     rules: Dict[str, Literal["ignore", "info", "warn", "error"]] = {}
 
 
@@ -61,6 +62,7 @@ class Mecha:
     ctx: InitVar[Optional[Context]] = None
     version: InitVar[VersionNumber] = "1.17"
     multiline: InitVar[bool] = False
+    match: Optional[List[str]] = None
 
     directory: Path = extra_field(init=False)
     cache: Optional[Cache] = extra_field(default=None)
@@ -92,6 +94,9 @@ class Mecha:
             opts = ctx.validate("mecha", MechaOptions)
             version = opts.version
             multiline = opts.multiline
+
+            if opts.match is not None:
+                self.match = opts.match
 
             self.directory = ctx.directory
 
@@ -250,6 +255,7 @@ class Mecha:
         self,
         source: DataPack,
         *,
+        match: Optional[List[str]] = None,
         multiline: Optional[bool] = None,
         report: Optional[DiagnosticCollection] = None,
     ) -> DataPack:
@@ -283,6 +289,7 @@ class Mecha:
         self,
         source: Union[DataPack, TextFileBase[Any], List[str], str, AstRoot],
         *,
+        match: Optional[List[str]] = None,
         filename: Optional[FileSystemPath] = None,
         resource_location: Optional[str] = None,
         multiline: Optional[bool] = None,
@@ -293,7 +300,12 @@ class Mecha:
 
         if isinstance(source, DataPack):
             result = source
-            for key, value in source.functions.items():
+
+            if match is None:
+                match = self.match
+
+            for key in source.functions.match(*match or ["*"]):
+                value = source.functions[key]
                 functions.append(value)
                 self.database[value] = CompilationUnit(
                     resource_location=key,
