@@ -308,7 +308,7 @@ python-versions = "*"
 
 [[package]]
 name = "furo"
-version = "2021.9.22"
+version = "2021.10.9"
 description = "A clean customisable Sphinx documentation theme."
 category = "dev"
 optional = false
@@ -1935,7 +1935,7 @@ image = ["Pillow"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "47465fd9a9e325e67df160c84408d7ab60879f465028c7208b3d1ecd08090dbd"
+content-hash = "6d995d119745f18fd44dcee3b04c2bca196082ce85b6e01ef55bc485193df6d9"
 
 [metadata.files]
 alabaster = [
@@ -2130,8 +2130,8 @@ fnvhash = [
     {file = "fnvhash-0.1.0.tar.gz", hash = "sha256:3e82d505054f9f3987b2b5b649f7e7b6f48349f6af8a1b8e4d66779699c85a8e"},
 ]
 furo = [
-    {file = "furo-2021.9.22-py3-none-any.whl", hash = "sha256:2b3dff2a993c3f0b4bcc804c042b10b959ff56c51557fd642f6b65d0e9e5be60"},
-    {file = "furo-2021.9.22.tar.gz", hash = "sha256:ef8f65e9c5f219b21aad75c99a2094d03b16430aef1f57686ce19e3f24f954af"},
+    {file = "furo-2021.10.9-py3-none-any.whl", hash = "sha256:8da4448836e72db59033cd8d70dbdae96b0523c4424d806216febd38253870e8"},
+    {file = "furo-2021.10.9.tar.gz", hash = "sha256:2baa42a22ede3e6e95c6182ab364bac2ec15b79bc7f9ca7fb09fd9aec4b3540c"},
 ]
 gitdb = [
     {file = "gitdb-4.0.7-py3-none-any.whl", hash = "sha256:6c4cc71933456991da20917998acbe6cf4fb41eeaab7d6d67fbc05ecd4c865b0"},
