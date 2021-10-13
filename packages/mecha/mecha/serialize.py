@@ -185,10 +185,10 @@ class Serializer(Visitor):
         if node.exact:
             result.append(str(node.value))
         else:
-            if node.min:
+            if node.min is not None:
                 result.append(str(node.min))
             result.append("..")
-            if node.max:
+            if node.max is not None:
                 result.append(str(node.max))
 
     @rule(AstTime)

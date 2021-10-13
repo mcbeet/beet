@@ -4,7 +4,7 @@ minecraft:entity 0 9
 ---
 @a[ distance = ..-1 , distance = 1..0 , ]
 ---
-@a[distance=..-1, distance=1..]
+@a[distance=..-1, distance=1..0]
 ---
 <class 'mecha.ast.AstSelector'>
   location: SourceLocation(pos=0, lineno=1, colno=1)

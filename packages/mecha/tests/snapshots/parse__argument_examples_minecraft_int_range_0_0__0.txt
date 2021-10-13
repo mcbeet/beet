@@ -4,7 +4,7 @@ minecraft:int_range 0 0
 ---
 0..5
 ---
-..5
+0..5
 ---
 <class 'mecha.ast.AstRange'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
