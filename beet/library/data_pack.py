@@ -214,6 +214,12 @@ class FunctionTag(TagFile):
     scope = ("tags", "functions")
 
 
+class GameEventsTag(TagFile):
+    """Class representing a game event tag."""
+
+    scope = ("tags", "game_events")
+
+
 class ItemTag(TagFile):
     """Class representing an item tag."""
 
