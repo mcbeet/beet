@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.5.9 (2021-10-13)
+### Fix
+* Properly check range boundaries when serializing ([`5230024`](https://github.com/mcbeet/mecha/commit/52300241ed11ac0671cf258d7f5438164cf6f678))
+
 ## v0.5.8 (2021-10-10)
 ### Fix
 * Make it possible to omit functions from compilation with match option ([`aabddf6`](https://github.com/mcbeet/mecha/commit/aabddf6200e1fd6449f96f916316afadbc37a795))
