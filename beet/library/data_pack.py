@@ -12,6 +12,7 @@ __all__ = [
     "EntityTypeTag",
     "FluidTag",
     "FunctionTag",
+    "GameEventTag",
     "ItemTag",
     "DimensionType",
     "Dimension",
@@ -214,6 +215,12 @@ class FunctionTag(TagFile):
     scope = ("tags", "functions")
 
 
+class GameEventTag(TagFile):
+    """Class representing a game event tag."""
+
+    scope = ("tags", "game_events")
+
+
 class ItemTag(TagFile):
     """Class representing an item tag."""
 
@@ -313,6 +320,7 @@ class DataPackNamespace(Namespace):
     entity_type_tags:              NamespacePin[EntityTypeTag]              = NamespacePin(EntityTypeTag)
     fluid_tags:                    NamespacePin[FluidTag]                   = NamespacePin(FluidTag)
     function_tags:                 NamespacePin[FunctionTag]                = NamespacePin(FunctionTag)
+    game_event_tags:               NamespacePin[GameEventTag]               = NamespacePin(GameEventTag)
     item_tags:                     NamespacePin[ItemTag]                    = NamespacePin(ItemTag)
     dimension_types:               NamespacePin[DimensionType]              = NamespacePin(DimensionType)
     dimensions:                    NamespacePin[Dimension]                  = NamespacePin(Dimension)
@@ -345,6 +353,7 @@ class DataPack(Pack[DataPackNamespace]):
     entity_type_tags:              NamespaceProxyDescriptor[EntityTypeTag]              = NamespaceProxyDescriptor(EntityTypeTag)
     fluid_tags:                    NamespaceProxyDescriptor[FluidTag]                   = NamespaceProxyDescriptor(FluidTag)
     function_tags:                 NamespaceProxyDescriptor[FunctionTag]                = NamespaceProxyDescriptor(FunctionTag)
+    game_event_tags:               NamespaceProxyDescriptor[GameEventTag]               = NamespaceProxyDescriptor(GameEventTag)
     item_tags:                     NamespaceProxyDescriptor[ItemTag]                    = NamespaceProxyDescriptor(ItemTag)
     dimension_types:               NamespaceProxyDescriptor[DimensionType]              = NamespaceProxyDescriptor(DimensionType)
     dimensions:                    NamespaceProxyDescriptor[Dimension]                  = NamespaceProxyDescriptor(Dimension)
