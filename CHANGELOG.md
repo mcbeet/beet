@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.41.8 (2021-10-14)
+### Fix
+* Add GameEventTag ([`ab6ba24`](https://github.com/mcbeet/beet/commit/ab6ba2405dfdddc45a0ad7a6fe9dd761bd08b3f0))
+
 ## v0.41.7 (2021-10-09)
 ### Fix
 * Use percent formatting with logger ([`c3d5d72`](https://github.com/mcbeet/beet/commit/c3d5d72da1a9675783369b732b6c1464467f66c0))
