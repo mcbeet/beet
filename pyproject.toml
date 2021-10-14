@@ -32,7 +32,7 @@ Jinja2 = "^3.0.1"
 fnvhash = "^0.1.0"
 base58 = "^2.1.0"
 toml = "^0.10.2"
-PyYAML = "^5.4.1"
+PyYAML = ">=5.4.1,<7.0.0"
 Pillow = {version = "*", optional = true}
 colorama = {version = "*", markers = 'sys_platform == "win32"'}
 
