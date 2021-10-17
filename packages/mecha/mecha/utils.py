@@ -1,5 +1,6 @@
 __all__ = [
     "QuoteHelper",
+    "QuoteHelperWithUnicode",
     "string_to_number",
     "VersionNumber",
     "split_version",
@@ -16,6 +17,7 @@ from tokenstream import InvalidSyntax, Token, set_location
 from .error import InvalidEscapeSequence
 
 ESCAPE_REGEX = re.compile(r"\\.")
+UNICODE_ESCAPE_REGEX = re.compile(r"\\(?:u([0-9a-fA-F]{4})|.)")
 AVOID_QUOTES_REGEX = re.compile(r"^[0-9A-Za-z_\.\+\-]+$")
 
 
@@ -83,3 +85,15 @@ class QuoteHelper:
         for match, seq in self.escape_characters.items():
             value = value.replace(match, seq)
         return quote + value.replace(quote, "\\" + quote) + quote
+
+
+@dataclass
+class QuoteHelperWithUnicode(QuoteHelper):
+    """Quote helper that handles unicode escape sequences."""
+
+    escape_regex: "re.Pattern[str]" = UNICODE_ESCAPE_REGEX
+
+    def handle_substitution(self, token: Token, match: "re.Match[str]") -> str:
+        if unicode_hex := match[1]:
+            return chr(int(unicode_hex, 16))
+        return super().handle_substitution(token, match)

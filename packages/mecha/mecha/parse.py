@@ -134,7 +134,13 @@ from .ast import (
 )
 from .error import UnrecognizedParser
 from .spec import CommandSpec, Parser
-from .utils import QuoteHelper, VersionNumber, split_version, string_to_number
+from .utils import (
+    QuoteHelper,
+    QuoteHelperWithUnicode,
+    VersionNumber,
+    split_version,
+    string_to_number,
+)
 
 NUMBER_PATTERN: str = r"-?(?:\d+\.?\d*|\.\d+)"
 
@@ -808,7 +814,7 @@ class JsonParser:
     """Parser for json values."""
 
     quote_helper: QuoteHelper = field(
-        default_factory=lambda: QuoteHelper(
+        default_factory=lambda: QuoteHelperWithUnicode(
             escape_sequences={
                 r"\\": "\\",
                 r"\f": "\f",
@@ -885,7 +891,7 @@ class JsonParser:
             elif string:
                 value = self.quote_helper.unquote_string(string)
             elif number:
-                value = float(number.value)
+                value = string_to_number(number.value)
 
             node = AstJsonValue(value=value)  # type: ignore
             return set_location(node, stream.current)
