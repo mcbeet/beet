@@ -143,3 +143,5 @@ title @a title {"text":"Chapter I","bold":true}
 # weather
 weather clear 1200
 weather rain
+# other
+scoreboard players operation #sie_1_flags_delta integer = #sie_1_flags integer

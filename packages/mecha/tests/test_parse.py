@@ -110,10 +110,12 @@ def test_say(snapshot: SnapshotFixture, mc: Mecha):
 
 def test_player_name(mc: Mecha):
     with pytest.raises(DiagnosticError) as exc_info:
-        mc.parse("scoreboard players set some_really_long_name_right_here foo 42")
+        mc.parse(
+            "scoreboard players set some_really_long_name_right_here_but_its_actually_even_longer foo 42"
+        )
     assert (
         exc_info.value.message
-        == "Reported 1 error.\n\nline 1, column 24: Expected up to 16 characters."
+        == "Reported 1 error.\n\nline 1, column 24: Expected up to 40 characters."
     )
 
 

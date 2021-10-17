@@ -1,6 +1,6 @@
 <class 'mecha.ast.AstRoot'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
-  end_location: SourceLocation(pos=1869, lineno=109, colno=1)
+  end_location: SourceLocation(pos=1948, lineno=110, colno=1)
   commands:
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=0, lineno=1, colno=1)
@@ -981,3 +981,28 @@
           location: SourceLocation(pos=1867, lineno=108, colno=38)
           end_location: SourceLocation(pos=1868, lineno=108, colno=39)
           value: 3
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=1869, lineno=109, colno=1)
+      end_location: SourceLocation(pos=1947, lineno=109, colno=79)
+      identifier: 'scoreboard:players:operation:targets:targetObjective:operation:source:sourceObjective'
+      arguments:
+        <class 'mecha.ast.AstLiteral'>
+          location: SourceLocation(pos=1898, lineno=109, colno=30)
+          end_location: SourceLocation(pos=1916, lineno=109, colno=48)
+          value: '#sie_1_flags_delta'
+        <class 'mecha.ast.AstLiteral'>
+          location: SourceLocation(pos=1917, lineno=109, colno=49)
+          end_location: SourceLocation(pos=1924, lineno=109, colno=56)
+          value: 'integer'
+        <class 'mecha.ast.AstLiteral'>
+          location: SourceLocation(pos=1925, lineno=109, colno=57)
+          end_location: SourceLocation(pos=1926, lineno=109, colno=58)
+          value: '='
+        <class 'mecha.ast.AstLiteral'>
+          location: SourceLocation(pos=1927, lineno=109, colno=59)
+          end_location: SourceLocation(pos=1939, lineno=109, colno=71)
+          value: '#sie_1_flags'
+        <class 'mecha.ast.AstLiteral'>
+          location: SourceLocation(pos=1940, lineno=109, colno=72)
+          end_location: SourceLocation(pos=1947, lineno=109, colno=79)
+          value: 'integer'

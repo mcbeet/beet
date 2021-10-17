@@ -436,7 +436,7 @@ def get_parsers(version: VersionNumber = "1.17") -> Dict[str, Parser]:
 
     if version < (1, 18):
         parsers["objective"] = LengthConstraint(parsers["objective"], 16)
-        parsers["player_name"] = LengthConstraint(parsers["player_name"], 16)
+        parsers["player_name"] = LengthConstraint(parsers["player_name"], 40)
 
     return parsers
 

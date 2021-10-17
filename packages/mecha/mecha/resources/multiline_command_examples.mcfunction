@@ -106,3 +106,4 @@ gamerule
 
 scoreboard players set #index global 3
 scoreboard players set $index global 3
+scoreboard players operation #sie_1_flags_delta integer = #sie_1_flags integer

@@ -1,6 +1,6 @@
 <class 'mecha.ast.AstRoot'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
-  end_location: SourceLocation(pos=5948, lineno=146, colno=1)
+  end_location: SourceLocation(pos=6035, lineno=148, colno=1)
   commands:
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=14, lineno=2, colno=1)
@@ -5298,3 +5298,28 @@
       identifier: 'weather:rain'
       arguments:
         <empty>
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=5956, lineno=147, colno=1)
+      end_location: SourceLocation(pos=6034, lineno=147, colno=79)
+      identifier: 'scoreboard:players:operation:targets:targetObjective:operation:source:sourceObjective'
+      arguments:
+        <class 'mecha.ast.AstLiteral'>
+          location: SourceLocation(pos=5985, lineno=147, colno=30)
+          end_location: SourceLocation(pos=6003, lineno=147, colno=48)
+          value: '#sie_1_flags_delta'
+        <class 'mecha.ast.AstLiteral'>
+          location: SourceLocation(pos=6004, lineno=147, colno=49)
+          end_location: SourceLocation(pos=6011, lineno=147, colno=56)
+          value: 'integer'
+        <class 'mecha.ast.AstLiteral'>
+          location: SourceLocation(pos=6012, lineno=147, colno=57)
+          end_location: SourceLocation(pos=6013, lineno=147, colno=58)
+          value: '='
+        <class 'mecha.ast.AstLiteral'>
+          location: SourceLocation(pos=6014, lineno=147, colno=59)
+          end_location: SourceLocation(pos=6026, lineno=147, colno=71)
+          value: '#sie_1_flags'
+        <class 'mecha.ast.AstLiteral'>
+          location: SourceLocation(pos=6027, lineno=147, colno=72)
+          end_location: SourceLocation(pos=6034, lineno=147, colno=79)
+          value: 'integer'
