@@ -1,6 +1,6 @@
 <class 'mecha.ast.AstRoot'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
-  end_location: SourceLocation(pos=6035, lineno=148, colno=1)
+  end_location: SourceLocation(pos=6067, lineno=149, colno=1)
   commands:
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=14, lineno=2, colno=1)
@@ -5323,3 +5323,20 @@
           location: SourceLocation(pos=6027, lineno=147, colno=72)
           end_location: SourceLocation(pos=6034, lineno=147, colno=79)
           value: 'integer'
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=6035, lineno=148, colno=1)
+      end_location: SourceLocation(pos=6066, lineno=148, colno=32)
+      identifier: 'scoreboard:players:set:targets:objective:score'
+      arguments:
+        <class 'mecha.ast.AstLiteral'>
+          location: SourceLocation(pos=6058, lineno=148, colno=24)
+          end_location: SourceLocation(pos=6059, lineno=148, colno=25)
+          value: '✔'
+        <class 'mecha.ast.AstLiteral'>
+          location: SourceLocation(pos=6060, lineno=148, colno=26)
+          end_location: SourceLocation(pos=6063, lineno=148, colno=29)
+          value: 'foo'
+        <class 'mecha.ast.AstNumber'>
+          location: SourceLocation(pos=6064, lineno=148, colno=30)
+          end_location: SourceLocation(pos=6066, lineno=148, colno=32)
+          value: 42

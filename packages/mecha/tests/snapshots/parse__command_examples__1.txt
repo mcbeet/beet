@@ -117,3 +117,4 @@ title @a title {"text": "Chapter I", "bold": true}
 weather clear 1200
 weather rain
 scoreboard players operation #sie_1_flags_delta integer = #sie_1_flags integer
+scoreboard players set ✔ foo 42

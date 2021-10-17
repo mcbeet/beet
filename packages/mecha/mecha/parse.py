@@ -184,9 +184,7 @@ def get_default_parsers() -> Dict[str, Parser]:
         "resource_location": NoTagConstraint(delegate("resource_location_or_tag")),
         "uuid": parse_uuid,
         "objective": LiteralParser("objective", r"[a-zA-Z0-9_.+-]+|\*"),
-        "player_name": CommentDisambiguation(
-            LiteralParser("player_name", r"[#\$%a-zA-Z0-9_.+-][a-zA-Z0-9_.+-]*"),
-        ),
+        "player_name": CommentDisambiguation(delegate("literal")),
         "swizzle": parse_swizzle,
         "team": LiteralParser("team", r"[a-zA-Z0-9_.+-]+"),
         ################################################################################
