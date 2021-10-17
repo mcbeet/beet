@@ -471,7 +471,11 @@
         "@a[ x = 0.0 , y = 0.0 , z = 0.0 , dx = 0.0 , dy = 0.0 , dz = 0.0 , ]",
         "@a[ x = 0.0 , x = 0.0 , dz = 0.0, dz = 0.0 , ]",
         "@a[ x_rotation = 179.9..-179.9 ,  y_rotation = 179.9..-179.9 , ]",
-        "@a[ x_rotation = 179.9..-179.9 ,  x_rotation = 179.9..-179.9 , ]"
+        "@a[ x_rotation = 179.9..-179.9 ,  x_rotation = 179.9..-179.9 , ]",
+        "@a[team=]",
+        "@a[team=!]",
+        "@a[tag=]",
+        "@a[tag=!]"
       ]
     },
     {
@@ -487,7 +491,8 @@
         "@e[tag=foo, sort=nearest]",
         "@a[ = 1 , ]",
         "@s[ sort = arbitrary , sort = unknown , ]",
-        "@a[ unknown = 1 , ]"
+        "@a[ unknown = 1 , ]",
+        "@a[name=]"
       ]
     }
   ],

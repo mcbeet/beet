@@ -495,7 +495,7 @@ class AstSelectorArgument(AstNode):
 
     inverted: bool = False
     key: AstString = required_field()
-    value: AstNode = required_field()
+    value: Optional[AstNode] = required_field()
 
 
 @dataclass(frozen=True)

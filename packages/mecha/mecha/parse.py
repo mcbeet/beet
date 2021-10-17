@@ -43,6 +43,7 @@ __all__ = [
     "SelectorParser",
     "SelectorArgumentParser",
     "SelectorArgumentInvertConstraint",
+    "SelectorArgumentNoValueConstraint",
     "parse_selector_scores",
     "parse_selector_advancements",
     "SelectorPlayerConstraint",
@@ -253,7 +254,10 @@ def get_default_parsers() -> Dict[str, Parser]:
         ################################################################################
         "selector": SelectorParser(),
         "selector:argument": SelectorArgumentInvertConstraint(
-            SelectorArgumentParser(),
+            SelectorArgumentNoValueConstraint(
+                SelectorArgumentParser(),
+                allow_no_value=["tag", "team"],
+            ),
             allow_invert=[
                 "tag",
                 "team",
@@ -1417,13 +1421,20 @@ class SelectorArgumentParser:
 
             inverted = stream.get("exclamation") is not None
 
-            try:
-                value_node = delegate(f"selector:argument:{argument}", stream)
-            except UnrecognizedParser as exc:
-                if not exc.parser.startswith("selector:argument:"):
-                    raise
-                syntax_exc = InvalidSyntax(f"Invalid selector argument {argument!r}.")
-                raise key_node.emit_error(syntax_exc) from exc
+            hint = stream.peek()
+
+            if hint and hint.match("comma", ("bracket", "]")):
+                value_node = None
+            else:
+                try:
+                    value_node = delegate(f"selector:argument:{argument}", stream)
+                except UnrecognizedParser as exc:
+                    if not exc.parser.startswith("selector:argument:"):
+                        raise
+                    syntax_exc = InvalidSyntax(
+                        f"Invalid selector argument {argument!r}."
+                    )
+                    raise key_node.emit_error(syntax_exc) from exc
 
         node = AstSelectorArgument(inverted=inverted, key=key_node, value=value_node)
         return set_location(node, key_node, value_node)
@@ -1441,6 +1452,23 @@ class SelectorArgumentInvertConstraint:
 
         if node.inverted and node.key.value not in self.allow_invert:
             exc = InvalidSyntax(f"Can not invert argument {node.key.value!r}.")
+            raise node.emit_error(exc)
+
+        return node
+
+
+@dataclass
+class SelectorArgumentNoValueConstraint:
+    """Constraint that only allows a specific set of arguments to have no associated value."""
+
+    parser: Parser
+    allow_no_value: List[str]
+
+    def __call__(self, stream: TokenStream) -> Any:
+        node: AstSelectorArgument = self.parser(stream)
+
+        if not node.value and node.key.value not in self.allow_no_value:
+            exc = InvalidSyntax(f"Argument {node.key.value!r} must have a value.")
             raise node.emit_error(exc)
 
         return node

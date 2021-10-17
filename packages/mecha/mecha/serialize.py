@@ -232,7 +232,8 @@ class Serializer(Visitor):
         result.append("=")
         if node.inverted:
             result.append("!")
-        yield node.value
+        if node.value:
+            yield node.value
 
     @rule(AstSelector)
     def selector(self, node: AstSelector, result: List[str]):
