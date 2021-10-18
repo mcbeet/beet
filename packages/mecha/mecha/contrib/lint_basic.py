@@ -80,9 +80,6 @@ class BasicLinter(Reducer):
                         message=f"{name.capitalize()} argument should go before {bad_arg_name}.",
                     )
 
-                    bad_arg_message = f"Specifying the {bad_arg_name} argument before {name} leads to unnecessary processing."
-                    d.labels[bad_arg] = bad_arg_message
-
                     diagnostics.add(set_location(d, arg))
 
                 for conflict_index in range(index):

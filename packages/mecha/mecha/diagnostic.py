@@ -1,33 +1,16 @@
 __all__ = [
     "Diagnostic",
     "DiagnosticCollection",
-    "DiagnosticLabelContainer",
     "DiagnosticError",
 ]
 
 
 from dataclasses import dataclass, field, replace
 from types import TracebackType
-from typing import Any, Iterator, List, Literal, Optional, Type
+from typing import Iterator, List, Literal, Optional, Type
 
-from beet import Container, FormattedPipelineException
+from beet import FormattedPipelineException
 from tokenstream import UNKNOWN_LOCATION, SourceLocation
-
-
-class DiagnosticLabelContainer(Container[Any, str]):
-    """Container for diagnostic labels."""
-
-    def normalize_key(self, key: Any) -> Any:
-        if isinstance(key, SourceLocation):
-            return key, key
-
-        location = getattr(key, "location", None)
-        end_location = getattr(key, "end_location", None)
-
-        if location and end_location:
-            return location, end_location
-
-        return key
 
 
 @dataclass
@@ -42,7 +25,6 @@ class Diagnostic(Exception):
     filename: Optional[str] = None
     location: SourceLocation = UNKNOWN_LOCATION
     end_location: SourceLocation = UNKNOWN_LOCATION
-    labels: DiagnosticLabelContainer = field(default_factory=DiagnosticLabelContainer)
 
     def __str__(self) -> str:
         return self.format_message()
