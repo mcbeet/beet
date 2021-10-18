@@ -17,7 +17,7 @@ __all__ = [
 import logging
 from contextlib import contextmanager
 from importlib.metadata import entry_points
-from typing import Any, Callable, Iterator, List, Mapping, Optional
+from typing import Any, Callable, Iterator, List, Optional
 
 import click
 from click.decorators import pass_context
@@ -120,9 +120,6 @@ class LogHandler(logging.Handler):
         LogHandler.has_output = True
         level = self.abbreviations.get(record.levelname, record.levelname)
         style = self.style[record.levelname]
-        args: Mapping[str, Any] = (
-            record.args if isinstance(record.args, Mapping) else {}
-        )
 
         line_prefix = click.style(f"       |", **style)
 
@@ -131,14 +128,14 @@ class LogHandler(logging.Handler):
             leading_line = click.style(leading_line, **style)
 
         leading_line = (
-            click.style(args.get("prefix", record.name), bold=True, fg="black")
+            click.style(getattr(record, "prefix", record.name), bold=True, fg="black")
             + "  "
             + leading_line
         )
 
         echo(click.style(f"{level:<7}|", **style) + " " + leading_line)
 
-        if annotate := args.get("annotate"):
+        if annotate := getattr(record, "annotate", None):
             lines.insert(0, click.style(str(annotate), fg="cyan"))
 
         for line in lines:
