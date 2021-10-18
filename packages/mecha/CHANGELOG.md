@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.5.11 (2021-10-18)
+### Fix
+* Provide "annotate" through extra logging argument ([`e88ad04`](https://github.com/mcbeet/mecha/commit/e88ad0437f0623cc77fee6cfff12c1451fd41dcc))
+
 ## v0.5.10 (2021-10-17)
 ### Fix
 * Handle tag and team selector argument without value ([`1ba966c`](https://github.com/mcbeet/mecha/commit/1ba966c62cb9e8077785a888ede64f6b4986b175))
