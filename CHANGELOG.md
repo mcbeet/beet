@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.41.9 (2021-10-18)
+### Fix
+* Use "extra" logging parameter instead of hijacking args ([`5cca927`](https://github.com/mcbeet/beet/commit/5cca92774ce61215662b9e99772a29b1400cffa2))
+
 ## v0.41.8 (2021-10-14)
 ### Fix
 * Add GameEventTag ([`ab6ba24`](https://github.com/mcbeet/beet/commit/ab6ba2405dfdddc45a0ad7a6fe9dd761bd08b3f0))
