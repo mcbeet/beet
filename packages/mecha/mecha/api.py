@@ -377,7 +377,10 @@ class Mecha:
         diagnostics = DiagnosticCollection(
             [
                 exc
-                for function in self.database.session
+                for function in sorted(
+                    self.database.session,
+                    key=lambda f: self.database[f].resource_location or "<unknown>",
+                )
                 for exc in self.database[function].diagnostics.exceptions
             ]
         )
