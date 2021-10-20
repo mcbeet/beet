@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.41.10 (2021-10-20)
+### Fix
+* Log timings ([`b01c9ab`](https://github.com/mcbeet/beet/commit/b01c9ab3c82fd01f29cce364b92b2615fd4e83cf))
+
 ## v0.41.9 (2021-10-18)
 ### Fix
 * Use "extra" logging parameter instead of hijacking args ([`5cca927`](https://github.com/mcbeet/beet/commit/5cca92774ce61215662b9e99772a29b1400cffa2))
