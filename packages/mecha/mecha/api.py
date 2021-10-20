@@ -32,7 +32,12 @@ from tokenstream.location import set_location
 from .ast import AstNode, AstRoot
 from .config import CommandTree
 from .database import CompilationDatabase, CompilationUnit
-from .diagnostic import Diagnostic, DiagnosticCollection, DiagnosticError
+from .diagnostic import (
+    Diagnostic,
+    DiagnosticCollection,
+    DiagnosticError,
+    DiagnosticErrorSummary,
+)
 from .dispatch import Dispatcher, MutatingReducer, Reducer
 from .parse import delegate, get_parsers
 from .serialize import Serializer
@@ -108,6 +113,8 @@ class Mecha:
 
             if not self.cache:
                 self.cache = ctx.cache["mecha"]
+
+            ctx.require(self.finalize)
 
         else:
             self.directory = Path.cwd()
@@ -385,3 +392,27 @@ class Mecha:
                 raise DiagnosticError(DiagnosticCollection(errors))
 
         return result
+
+    def finalize(self, ctx: Context):
+        """Plugin that logs diagnostics and raises an exception if there are errors."""
+        yield
+
+        for diagnostic in self.diagnostics.exceptions:
+            message = diagnostic.format_message()
+
+            if diagnostic.file:
+                if source := self.database[diagnostic.file].source:
+                    if code := diagnostic.format_code(source):
+                        message += f"\n{code}"
+
+            extra = {"annotate": diagnostic.format_location()}
+
+            if diagnostic.level == "error":
+                logger.error("%s", message, extra=extra)
+            elif diagnostic.level == "warn":
+                logger.warn("%s", message, extra=extra)
+            elif diagnostic.level == "info":
+                logger.info("%s", message, extra=extra)
+
+        if errors := list(self.diagnostics.get_all_errors()):
+            raise DiagnosticErrorSummary(DiagnosticCollection(errors))
