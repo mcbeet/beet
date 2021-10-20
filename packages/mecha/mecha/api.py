@@ -304,7 +304,7 @@ class Mecha:
         report: Optional[DiagnosticCollection] = None,
     ) -> Union[DataPack, TextFileBase[Any]]:
         """Apply all compilation steps."""
-        functions: List[TextFileBase[Any]] = []
+        self.database.setup_compilation()
 
         if isinstance(source, DataPack):
             result = source
@@ -314,7 +314,6 @@ class Mecha:
 
             for key in source.functions.match(*match or ["*"]):
                 value = source.functions[key]
-                functions.append(value)
                 self.database[value] = CompilationUnit(
                     resource_location=key,
                     filename=(
@@ -323,6 +322,7 @@ class Mecha:
                         else None
                     ),
                 )
+                self.database.enqueue(value)
         else:
             if isinstance(source, (list, str)):
                 source = Function(source)
@@ -334,53 +334,50 @@ class Mecha:
             else:
                 result = Function()
 
-            functions.append(result)
             self.database[result] = CompilationUnit(
                 ast=source if isinstance(source, AstRoot) else None,
                 resource_location=resource_location,
                 filename=str(filename) if filename else None,
             )
+            self.database.enqueue(result)
 
-        for function in functions:
+        while not self.database.done:
+            step, function = self.database.dequeue()
             compilation_unit = self.database[function]
 
-            if compilation_unit.ast:
-                continue
+            if step < 0:
+                if compilation_unit.ast:
+                    self.database.enqueue(function, 0)
+                    continue
+                try:
+                    compilation_unit.source = function.text
+                    compilation_unit.ast = self.parse(
+                        function,
+                        filename=compilation_unit.filename,
+                        resource_location=compilation_unit.resource_location,
+                        multiline=multiline,
+                    )
+                    self.database.enqueue(function, 0)
+                except DiagnosticError as exc:
+                    compilation_unit.diagnostics.extend(exc.diagnostics)
 
-            try:
-                compilation_unit.source = function.text
-                compilation_unit.ast = self.parse(
-                    function,
-                    filename=compilation_unit.filename,
-                    resource_location=compilation_unit.resource_location,
-                    multiline=multiline,
-                )
-            except DiagnosticError as exc:
-                compilation_unit.diagnostics.extend(exc.diagnostics)
-
-        for compilation_step in self.steps:
-            for function in functions:
-                compilation_unit = self.database[function]
-
+            elif step < len(self.steps):
                 if not compilation_unit.ast:
                     continue
+                with self.steps[step].use_diagnostics(compilation_unit.diagnostics):
+                    compilation_unit.ast = self.steps[step](compilation_unit.ast)
+                    self.database.enqueue(function, step + 1)
 
-                with compilation_step.use_diagnostics(compilation_unit.diagnostics):
-                    compilation_unit.ast = compilation_step(compilation_unit.ast)
-
-        for function in functions:
-            compilation_unit = self.database[function]
-
-            if not compilation_unit.ast:
-                continue
-
-            with self.serialize.use_diagnostics(compilation_unit.diagnostics):
-                function.text = self.serialize(compilation_unit.ast)
+            else:
+                if not compilation_unit.ast:
+                    continue
+                with self.serialize.use_diagnostics(compilation_unit.diagnostics):
+                    function.text = self.serialize(compilation_unit.ast)
 
         diagnostics = DiagnosticCollection(
             [
                 exc
-                for function in functions
+                for function in self.database.session
                 for exc in self.database[function].diagnostics.exceptions
             ]
         )

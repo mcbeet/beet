@@ -58,7 +58,7 @@ def test_argument_examples(
                 test_name,
                 str(properties),
                 value,
-                exc_info.value.message,
+                str(exc_info.value),
             ]
         )
     else:
@@ -114,7 +114,7 @@ def test_player_name(mc: Mecha):
             "scoreboard players set some_really_long_name_right_here_but_its_actually_even_longer foo 42"
         )
     assert (
-        exc_info.value.message
+        str(exc_info.value)
         == "Reported 1 error.\n\nline 1, column 24: Expected up to 40 characters."
     )
 

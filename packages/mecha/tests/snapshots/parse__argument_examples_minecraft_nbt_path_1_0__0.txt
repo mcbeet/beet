@@ -6,4 +6,4 @@ minecraft:nbt_path 1 0
 ---
 Reported 1 error.
 
-line 1, column 9: Expected curly '}' but got string 'foo'.
+line 1, column 10: Expected curly '}' but got string 'foo'.

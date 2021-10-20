@@ -6,4 +6,4 @@ vibration 0.0 64.0 0.0 5.0 thing
 ---
 Reported 1 error.
 
-line 1, column 27: Expected number but got literal 'thing'.
+line 1, column 28: Expected number but got literal 'thing'.

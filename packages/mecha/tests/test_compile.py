@@ -21,6 +21,7 @@ from mecha import (
 
 @rule(AstCommand, identifier="say:message")
 def convert_say_to_tellraw(node: AstCommand):
+    print(node)
     if isinstance(message := node.arguments[0], AstMessage):
         return replace(
             node,
@@ -42,6 +43,7 @@ def convert_say_to_tellraw(node: AstCommand):
 
 @pytest.fixture
 def dummy_transform(mc: Mecha):
+    print("plz")
     mc.transform.extend(convert_say_to_tellraw)
     yield
     mc.transform.reset()

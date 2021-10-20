@@ -5,7 +5,8 @@ __all__ = [
 
 
 from dataclasses import dataclass
-from typing import Any, Dict, Optional
+from heapq import heappop, heappush
+from typing import Any, Dict, List, Optional, Set, Tuple
 
 from beet import Container, TextFileBase
 from beet.core.utils import extra_field
@@ -36,10 +37,14 @@ class CompilationDatabase(Container[TextFileBase[Any], CompilationUnit]):
     """Compilation database."""
 
     index: Dict[str, TextFileBase[Any]]
+    queue: List[Tuple[int, str, TextFileBase[Any]]]
+    session: Set[TextFileBase[Any]]
 
     def __init__(self):
         super().__init__()
         self.index = {}
+        self.queue = []
+        self.session = set()
 
     def process(
         self,
@@ -57,3 +62,29 @@ class CompilationDatabase(Container[TextFileBase[Any], CompilationUnit]):
             if index:
                 del self.index[index]
         super().__delitem__(key)
+
+    def setup_compilation(self):
+        """Setup database for compilation."""
+        self.queue.clear()
+        self.session.clear()
+
+    @property
+    def done(self):
+        """Return whether the internal queue is empty."""
+        return not self.queue
+
+    @property
+    def current(self) -> TextFileBase[Any]:
+        """Return the file currently being processed."""
+        _, _, key = self.queue[0]
+        return key
+
+    def enqueue(self, key: TextFileBase[Any], step: int = -1):
+        """Enqueue a file and schedule it to be processed with the given step."""
+        heappush(self.queue, (step, self[key].resource_location or "<unknown>", key))
+        self.session.add(key)
+
+    def dequeue(self) -> Tuple[int, TextFileBase[Any]]:
+        """Dequeue the next file that needs to be processed."""
+        step, _, key = heappop(self.queue)
+        return step, key
