@@ -13,7 +13,7 @@ from pathlib import Path
 from typing import ClassVar, Iterable, Iterator, List, Optional, Sequence
 
 from beet.contrib.render import render
-from beet.core.utils import FileSystemPath, intersperse, normalize_string
+from beet.core.utils import FileSystemPath, intersperse, log_time, normalize_string
 from beet.core.watch import DirectoryWatcher, FileChanges
 
 from .config import PackConfig, ProjectConfig, load_config, locate_config
@@ -121,9 +121,10 @@ class Project:
         """Build the project."""
         ctx = ProjectBuilder(self).build()
 
-        for link_key, pack in zip(["resource_pack", "data_pack"], ctx.packs):
-            if pack and (link_dir := ctx.cache["link"].json.get(link_key)):
-                pack.save(link_dir, overwrite=True)
+        with log_time("Linking took %(time).2fs."):
+            for link_key, pack in zip(["resource_pack", "data_pack"], ctx.packs):
+                if pack and (link_dir := ctx.cache["link"].json.get(link_key)):
+                    pack.save(link_dir, overwrite=True)
 
     def watch(self, interval: float = 0.6) -> Iterator[FileChanges]:
         """Watch the project."""
@@ -275,9 +276,10 @@ class ProjectBuilder:
     def autosave(self, ctx: Context):
         """Plugin that outputs the data pack and the resource pack at the end of the build."""
         yield
-        for pack in ctx.packs:
-            if pack and ctx.output_directory:
-                pack.save(ctx.output_directory, overwrite=True)
+        with log_time("Output took %(time).2fs."):
+            for pack in ctx.packs:
+                if pack and ctx.output_directory:
+                    pack.save(ctx.output_directory, overwrite=True)
 
     def bootstrap(self, ctx: Context):
         """Plugin that handles the project configuration."""
@@ -303,7 +305,8 @@ class ProjectBuilder:
             )
         )
 
-        yield
+        with log_time("Pipeline took %(time).2fs."):
+            yield
 
         description_parts = [
             ctx.project_description if isinstance(ctx.project_description, str) else "",

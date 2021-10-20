@@ -8,11 +8,15 @@ __all__ = [
     "required_field",
     "intersperse",
     "normalize_string",
+    "log_time",
 ]
 
 
 import json
+import logging
 import re
+import time
+from contextlib import contextmanager
 from dataclasses import field
 from pathlib import PurePath
 from typing import Any, Dict, Iterable, Iterator, List, TypeVar, Union
@@ -62,3 +66,15 @@ NORMALIZE_REGEX = re.compile(r"[^a-z0-9]+")
 
 def normalize_string(string: str) -> str:
     return NORMALIZE_REGEX.sub("_", string.lower()).strip("_")
+
+
+time_logger = logging.getLogger("time")
+
+
+@contextmanager
+def log_time(message: str, *args: Any) -> Iterator[None]:
+    start = time.time()
+    try:
+        yield
+    finally:
+        time_logger.debug(message, *args, {"time": time.time() - start})
