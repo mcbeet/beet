@@ -1,6 +1,7 @@
 __all__ = [
     "QuoteHelper",
     "QuoteHelperWithUnicode",
+    "InvalidEscapeSequence",
     "string_to_number",
     "VersionNumber",
     "split_version",
@@ -15,7 +16,7 @@ from typing import Dict, Tuple, Union
 from beet.core.utils import normalize_string
 from tokenstream import InvalidSyntax, SourceLocation, Token, set_location
 
-from .error import InvalidEscapeSequence
+from .error import MechaError
 
 ESCAPE_REGEX = re.compile(r"\\.")
 UNICODE_ESCAPE_REGEX = re.compile(r"\\(?:u([0-9a-fA-F]{4})|.)")
@@ -37,6 +38,18 @@ def split_version(version: VersionNumber) -> Tuple[int, ...]:
     if isinstance(version, str):
         version = tuple(normalize_string(version).split("_"))
     return tuple(map(int, version))
+
+
+class InvalidEscapeSequence(MechaError):
+    """Raised when a QuotedStringHandler encounters an invalid escape sequence."""
+
+    characters: str
+    index: int
+
+    def __init__(self, characters: str, index: int):
+        super().__init__(characters, index)
+        self.characters = characters
+        self.index = index
 
 
 @dataclass

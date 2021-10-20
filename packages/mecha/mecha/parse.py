@@ -6,6 +6,7 @@ __all__ = [
     "get_stream_properties",
     "get_stream_multiline",
     "get_stream_line_indentation",
+    "UnrecognizedParser",
     "delegate",
     "consume_line_continuation",
     "parse_root",
@@ -133,7 +134,7 @@ from .ast import (
     AstVector3,
     AstVibrationParticleParameters,
 )
-from .error import UnrecognizedParser
+from .error import MechaError
 from .spec import CommandSpec, Parser
 from .utils import (
     QuoteHelper,
@@ -466,6 +467,16 @@ def get_stream_multiline(stream: TokenStream) -> bool:
 def get_stream_line_indentation(stream: TokenStream) -> int:
     """Return the indentation level associated with the current line."""
     return stream.data.get("line_indentation", stream.indentation[-1])
+
+
+class UnrecognizedParser(MechaError):
+    """Raised when delegating to an unrecognized parser."""
+
+    parser: str
+
+    def __init__(self, parser: str):
+        super().__init__(parser)
+        self.parser = parser
 
 
 @overload
