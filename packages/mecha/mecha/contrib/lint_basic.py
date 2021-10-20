@@ -29,15 +29,21 @@ class BasicLinter(Reducer):
     def execute_run(self, node: AstCommand):
         if isinstance(clause := node.arguments[0], AstCommand):
             if clause.identifier == "execute:run:subcommand":
-                d = Diagnostic("warn", "Redundant `execute run` clause.")
-                raise set_location(d, node, clause.arguments[0].location)
+                raise set_location(
+                    Diagnostic("warn", "Redundant `execute run` clause."),
+                    node,
+                    clause.arguments[0].location.with_horizontal_offset(-1),
+                )
 
     @rule(AstCommand, identifier="execute:run:subcommand")
     def run_execute(self, node: AstCommand):
         if isinstance(clause := node.arguments[0], AstCommand):
             if clause.identifier == "execute:subcommand":
-                d = Diagnostic("warn", "Redundant `run execute` clause.")
-                raise set_location(d, node, clause.arguments[0].location)
+                raise set_location(
+                    Diagnostic("warn", "Redundant `run execute` clause."),
+                    node,
+                    clause.arguments[0].location.with_horizontal_offset(-1),
+                )
 
     @rule(AstSelector)
     def selector_argument_order(self, node: AstSelector):

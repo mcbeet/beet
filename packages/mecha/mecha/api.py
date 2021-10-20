@@ -242,6 +242,7 @@ class Mecha:
                 message=str(exc),
                 hint=resource_location,
                 filename=str(filename) if filename else None,
+                file=source,
             )
             raise DiagnosticError(DiagnosticCollection([set_location(d, exc)])) from exc
         else:

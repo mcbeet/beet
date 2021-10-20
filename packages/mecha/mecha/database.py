@@ -49,6 +49,7 @@ class CompilationDatabase(Container[TextFileBase[Any], CompilationUnit]):
         for index in [value.filename, value.resource_location]:
             if index:
                 self.index[index] = key
+        value.diagnostics.file = key
         return value
 
     def __delitem__(self, key: TextFileBase[Any]):

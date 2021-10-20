@@ -2,19 +2,23 @@ __all__ = [
     "Diagnostic",
     "DiagnosticCollection",
     "DiagnosticError",
+    "DiagnosticErrorSummary",
 ]
 
 
 from dataclasses import dataclass, field, replace
 from types import TracebackType
-from typing import Iterator, List, Literal, Optional, Type
+from typing import Any, Iterator, List, Literal, Optional, Type
 
-from beet import FormattedPipelineException
+from beet import FormattedPipelineException, TextFileBase
 from tokenstream import UNKNOWN_LOCATION, SourceLocation
+
+from .error import MechaError
+from .utils import underline_code
 
 
 @dataclass
-class Diagnostic(Exception):
+class Diagnostic(MechaError):
     """Exception that can be raised to report messages."""
 
     level: Literal["info", "warn", "error"]
@@ -23,6 +27,7 @@ class Diagnostic(Exception):
     rule: Optional[str] = None
     hint: Optional[str] = None
     filename: Optional[str] = None
+    file: Optional[TextFileBase[Any]] = None
     location: SourceLocation = UNKNOWN_LOCATION
     end_location: SourceLocation = UNKNOWN_LOCATION
 
@@ -50,14 +55,24 @@ class Diagnostic(Exception):
             location = self.hint
         else:
             location = ""
-
         return location
+
+    def format_code(self, code: str) -> Optional[str]:
+        """Return the formatted code."""
+        if self.location.unknown:
+            return None
+        return underline_code(
+            code,
+            self.location,
+            self.location if self.end_location.unknown else self.end_location,
+        )
 
     def with_defaults(
         self,
         rule: Optional[str] = None,
         hint: Optional[str] = None,
         filename: Optional[str] = None,
+        file: Optional[TextFileBase[Any]] = None,
     ) -> "Diagnostic":
         """Set default values for unspecified attributes."""
         return replace(
@@ -65,11 +80,12 @@ class Diagnostic(Exception):
             rule=self.rule or rule,
             hint=self.hint or hint,
             filename=self.filename or filename,
+            file=self.file or file,
         )
 
 
 @dataclass
-class DiagnosticCollection(Exception):
+class DiagnosticCollection(MechaError):
     """Exception that can be raised to group multiple diagnostics."""
 
     exceptions: List[Diagnostic] = field(default_factory=list)
@@ -77,10 +93,16 @@ class DiagnosticCollection(Exception):
     rule: Optional[str] = None
     hint: Optional[str] = None
     filename: Optional[str] = None
+    file: Optional[TextFileBase[Any]] = None
 
     def add(self, exc: Diagnostic) -> Diagnostic:
         """Add diagnostic."""
-        exc = exc.with_defaults(rule=self.rule, hint=self.hint, filename=self.filename)
+        exc = exc.with_defaults(
+            rule=self.rule,
+            hint=self.hint,
+            filename=self.filename,
+            file=self.file,
+        )
         self.exceptions.append(exc)
         return exc
 
@@ -117,22 +139,28 @@ class DiagnosticCollection(Exception):
         return f"Reported {len(self.exceptions)} {term}."
 
 
-class DiagnosticError(FormattedPipelineException):
-    """Wrap a collection of error diagnostics to abort the build."""
+class DiagnosticError(MechaError):
+    """Raised with a collection of error diagnostics."""
 
     diagnostics: DiagnosticCollection
 
-    def __init__(self, diagnostics: DiagnosticCollection, show_details: bool = True):
+    def __init__(self, diagnostics: DiagnosticCollection):
         super().__init__(diagnostics)
         self.diagnostics = diagnostics
 
-        if show_details:
-            details = "\n".join(
-                f"{diagnostic.format_location()}: {diagnostic.format_message()}"
-                for diagnostic in diagnostics.exceptions
-            )
-            self.message = f"{diagnostics}\n\n{details}"
-        else:
-            self.message = str(diagnostics)
+    def __str__(self) -> str:
+        details = "\n".join(
+            f"{diagnostic.format_location()}: {diagnostic.format_message()}"
+            for diagnostic in self.diagnostics.exceptions
+        )
+        return f"{self.diagnostics}\n\n{details}"
 
-        self.format_cause = True
+
+class DiagnosticErrorSummary(FormattedPipelineException):
+    """Raised for showing a summary of how many errors occurred."""
+
+    diagnostics: DiagnosticCollection
+
+    def __init__(self, diagnostics: DiagnosticCollection):
+        super().__init__(diagnostics)
+        self.message = str(diagnostics)
