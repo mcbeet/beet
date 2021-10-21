@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.42.1 (2021-10-21)
+### Fix
+* Show source preview in dbg ([`51b2625`](https://github.com/mcbeet/beet/commit/51b2625ae6ca27bd9dc3009a9447bd0f01b1d421))
+
 ## v0.42.0 (2021-10-21)
 ### Feature
 * Add beet.contrib.dbg ([`a908790`](https://github.com/mcbeet/beet/commit/a908790c53555433c7b14c74a6c409962fc3b23d))
