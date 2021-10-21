@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.41.11 (2021-10-21)
+### Fix
+* Add discord link ([`7fd0887`](https://github.com/mcbeet/beet/commit/7fd0887da00ded7c37f9dbe643462ad05deb37a2))
+
 ## v0.41.10 (2021-10-20)
 ### Fix
 * Log timings ([`b01c9ab`](https://github.com/mcbeet/beet/commit/b01c9ab3c82fd01f29cce364b92b2615fd4e83cf))

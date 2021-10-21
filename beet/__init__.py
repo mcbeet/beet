@@ -15,4 +15,4 @@ from .toolchain.template import *
 from .toolchain.tree import *
 from .toolchain.worker import *
 
-__version__ = "0.41.10"
+__version__ = "0.41.11"
