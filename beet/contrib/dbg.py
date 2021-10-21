@@ -11,6 +11,7 @@ __all__ = [
 import json
 from dataclasses import dataclass, field
 from functools import cached_property
+from itertools import cycle
 from typing import Any, List
 
 from jinja2.nodes import Node, Output, TemplateData
@@ -22,15 +23,18 @@ from beet.core.utils import JsonDict, TextComponent
 
 class DbgOptions(BaseModel):
     command: str = "tellraw @a {payload}"
+    preview_line_length: int = 45
+    preview_padding: int = 2
     payload: List[TextComponent] = [
         {
             "text": "",
             "hoverEvent": {
                 "action": "show_text",
                 "contents": [
+                    "",
                     {"text": "Type: {{ mode | title }}\n", "color": "gray"},
-                    {"text": "Path: {{ render_path }}\n", "color": "gray"},
-                    {"text": "Lineno: {{ lineno }}", "color": "gray"},
+                    {"text": "Path: {{ render_path }}\n\n", "color": "gray"},
+                    "{{ preview }}",
                 ],
             },
         },
@@ -66,13 +70,56 @@ class DbgRenderer:
     def opts(self) -> DbgOptions:
         return self.ctx.validate("dbg", DbgOptions)
 
+    def render_preview(self, path: str, lineno: int) -> TextComponent:
+        """Render the preview as a text component."""
+        function = self.ctx.data.functions[path]
+        lines = function.text.splitlines()
+
+        color = cycle(["#dddddd", "gray"])
+
+        preview_start = max(lineno - 1 - self.opts.preview_padding, 0)
+        preview = lines[preview_start : lineno + self.opts.preview_padding]
+
+        truncated_lines = [
+            line
+            if len(line) < self.opts.preview_line_length
+            else line[: self.opts.preview_line_length] + "..."
+            for line in preview
+        ]
+
+        numbers = [
+            str(i + 1) for i in range(preview_start, preview_start + len(preview))
+        ]
+        number_width = max(len(n) for n in numbers)
+
+        preview_lines = [
+            {
+                "text": "",
+                "extra": [
+                    {
+                        "text": n.rjust(number_width),
+                        "color": "red" if n == str(lineno) else "dark_red",
+                    },
+                    {"text": " |  ", "color": "dark_gray"},
+                    {"text": f"{line}\n", "color": next(color)},
+                ],
+            }
+            for n, line in zip(numbers, truncated_lines)
+        ]
+
+        return {"text": "", "extra": preview_lines}
+
     def render(self, mode: str, name: str, target: str, lineno: int) -> str:
         """Return the json text as a string."""
+        path = self.ctx.meta["render_path"]
+        preview = json.dumps(self.render_preview(path, lineno))
+
         kwargs = {
             "mode": mode,
             "name": name,
             "target": target,
             "lineno": lineno,
+            "preview": '",' + preview + ',"',
         }
 
         accessor = self.ctx.template.render_json(self.accessors[mode], **kwargs)
@@ -118,4 +165,4 @@ class DbgExtension(JinjaExtension):
         renderer = self.ctx.inject(DbgRenderer)
         payload = renderer.render(mode, name, target, lineno)
 
-        return renderer.opts.command.format(payload=payload)
+        return renderer.opts.command.format(payload=payload) + "\n"
