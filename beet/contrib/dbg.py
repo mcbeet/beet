@@ -1,4 +1,4 @@
-"""Plugin that installs a Jinja extension for easily logging things in commands."""
+"""Plugin that installs a Jinja extension for easily logging things."""
 
 
 __all__ = [
@@ -68,7 +68,7 @@ def get_padding(pixels: int) -> TextComponent:
 
 @dataclass
 class DbgRenderer:
-    """Class responsible for formatting the json text of a dbg statement."""
+    """Class responsible for rendering dbg statements."""
 
     ctx: Context
 
@@ -118,9 +118,8 @@ class DbgRenderer:
 
         return {"text": "", "extra": output}
 
-    def render(self, mode: str, name: str, target: str, lineno: int) -> str:
-        """Return the json text as a string."""
-        path = self.ctx.meta["render_path"]
+    def render(self, mode: str, name: str, target: str, path: str, lineno: int) -> str:
+        """Return the formatted command."""
         preview = json.dumps(self.render_preview(path, lineno))
 
         kwargs = {
@@ -133,15 +132,17 @@ class DbgRenderer:
 
         accessor = self.ctx.template.render_json(self.accessors[mode], **kwargs)
 
-        return self.ctx.template.render_string(
+        payload = self.ctx.template.render_string(
             json.dumps(self.opts.payload),
             accessor='",' + json.dumps(accessor) + ',"',
             **kwargs,
         )
 
+        return self.opts.command.format(payload=payload) + "\n"
+
 
 class DbgExtension(JinjaExtension):
-    """A Jinja extension for easily logging things in commands."""
+    """A Jinja extension for easily logging things."""
 
     tags = {"dbg"}
 
@@ -172,6 +173,4 @@ class DbgExtension(JinjaExtension):
             raise TypeError("Debug statements can only be used inside functions.")
 
         renderer = self.ctx.inject(DbgRenderer)
-        payload = renderer.render(mode, name, target, lineno)
-
-        return renderer.opts.command.format(payload=payload) + "\n"
+        return renderer.render(mode, name, target, self.ctx.meta["render_path"], lineno)
