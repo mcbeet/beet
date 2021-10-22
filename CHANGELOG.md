@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.43.1 (2021-10-22)
+### Fix
+* Dbg display name for objectives generated with `generate_objective()` ([`f8669c5`](https://github.com/mcbeet/beet/commit/f8669c595cb4f6c6165648ec54426e234409d7e8))
+
 ## v0.43.0 (2021-10-22)
 ### Feature
 * Add draft class ([`d501db1`](https://github.com/mcbeet/beet/commit/d501db1689d7d2df8a25a2d239e65e935f9bfb11))
