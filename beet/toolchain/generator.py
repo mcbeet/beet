@@ -1,5 +1,6 @@
 __all__ = [
     "Generator",
+    "Draft",
 ]
 
 
@@ -47,30 +48,47 @@ class Generator:
         default_factory=lambda: defaultdict(int)  # type: ignore
     )
 
-    assets: ResourcePack = field(init=False)
-    data: DataPack = field(init=False)
-
-    def __post_init__(self):
-        self.assets = self.ctx.assets
-        self.data = self.ctx.data
+    assets: ResourcePack = field(default_factory=ResourcePack)
+    data: DataPack = field(default_factory=DataPack)
+    parent_assets: ResourcePack = field(default_factory=ResourcePack)
+    parent_data: DataPack = field(default_factory=DataPack)
 
     def __getitem__(self: GeneratorType, key: Any) -> GeneratorType:
         return self.__class__(
             ctx=self.ctx,
             scope=self.scope + (key,),
             registry=self.registry,
+            assets=self.assets,
+            data=self.data,
+            parent_assets=self.parent_assets,
+            parent_data=self.parent_data,
         )
 
     @contextmanager
     def push(self) -> Iterator[None]:
-        """Temporarily push the current scope into the root context generator."""
+        """Temporarily push the current state into the root context generator."""
         root = self.ctx.generate
-        previous = root.scope
+
+        previous_scope = root.scope
+        previous_assets = root.assets
+        previous_data = root.data
+        previous_parent_assets = root.parent_assets
+        previous_parent_data = root.parent_data
+
         root.scope = self.scope
+        root.assets = self.assets
+        root.data = self.data
+        root.parent_assets = self.parent_assets
+        root.parent_data = self.parent_data
+
         try:
             yield
         finally:
-            root.scope = previous
+            root.scope = previous_scope
+            root.assets = previous_assets
+            root.data = previous_data
+            root.parent_assets = previous_parent_assets
+            root.parent_data = previous_parent_data
 
     def get_prefix(self, separator: str = ".") -> str:
         """Join the serializable parts of the scope into a key prefix."""
@@ -270,20 +288,59 @@ class Generator:
         for node in generate_tree(root, items, key):
             yield node, self.data.functions.setdefault(node.parent, Function())
 
-    def draft(self: GeneratorType) -> GeneratorType:
-        """Return a generator that works on an intermediate resource pack and data pack."""
-        draft = self.__class__(
+    def draft(self) -> "Draft":
+        """Return a new draft."""
+        return Draft(
             ctx=self.ctx,
             scope=self.scope,
             registry=self.registry,
+            assets=ResourcePack(),
+            data=DataPack(),
+            parent_assets=self.assets,
+            parent_data=self.data,
         )
-        draft.assets = ResourcePack()
-        draft.data = DataPack()
-        return draft
+
+
+class Draft(Generator):
+    """Generator that works on an intermediate resource pack and data pack."""
 
     def apply(self):
         """Merge the working resource pack and data pack into the context."""
-        if self.assets is not self.ctx.assets:
-            self.ctx.assets.merge(self.assets)
-        if self.data is not self.ctx.data:
-            self.ctx.data.merge(self.data)
+        if self.assets is not self.parent_assets:
+            self.parent_assets.merge(self.assets)
+        if self.data is not self.parent_data:
+            self.parent_data.merge(self.data)
+
+    def cache(
+        self,
+        name: str,
+        key: str,
+        zipped: bool = False,
+        apply: bool = False,
+    ) -> Iterator["Draft"]:
+        """Try to load the draft from the cache or yield once to let the body of the loop generate it."""
+        cache = self.ctx.cache[name]
+
+        suffix = ".zip" if zipped else ""
+        cached_resource_pack = cache.directory / f"draft_resource_pack{suffix}"
+        cached_data_pack = cache.directory / f"draft_data_pack{suffix}"
+
+        key = f"{key} {zipped=}"
+
+        if cache.json.get("draft_key") == key:
+            self.assets.load(cached_resource_pack)
+            self.data.load(cached_data_pack)
+            if apply:
+                self.apply()
+            return
+
+        yield self
+
+        if self.assets:
+            self.assets.save(path=cached_resource_pack, overwrite=True)
+        if self.data:
+            self.data.save(path=cached_data_pack, overwrite=True)
+
+        cache.json["draft_key"] = key
+        if apply:
+            self.apply()
