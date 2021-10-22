@@ -10,11 +10,14 @@ import shutil
 from datetime import datetime, timedelta
 from pathlib import Path
 from textwrap import indent
-from typing import Any, ClassVar, Iterator, Optional
+from typing import Any, ClassVar, Iterator, Optional, Type, TypeVar
 from urllib.request import urlopen
 
 from .container import Container, MatchMixin
 from .utils import FileSystemPath, JsonDict, dump_json, normalize_string
+
+CacheType = TypeVar("CacheType", bound="Cache")
+
 
 logger = logging.getLogger(__name__)
 
@@ -188,26 +191,29 @@ class Cache:
                 yield from self._format_directory(entry, prefix + indent)
 
 
-class MultiCache(MatchMixin, Container[str, Cache]):
+class MultiCache(MatchMixin, Container[str, CacheType]):
     """A container of lazily instantiated named caches."""
 
     path: Path
     default_cache: str
     gitignore: bool
+    cache_type: Type[CacheType]
 
     def __init__(
         self,
         directory: FileSystemPath,
         default_cache: str = "default",
         gitignore: bool = True,
+        cache_type: Type[CacheType] = Cache,
     ):
         super().__init__()
         self.path = Path(directory).resolve()
         self.default_cache = default_cache
         self.gitignore = gitignore
+        self.cache_type = cache_type
 
-    def missing(self, key: str) -> Cache:
-        cache = Cache(self.path / key)
+    def missing(self, key: str) -> CacheType:
+        cache = self.cache_type(self.path / key)
         self[key] = cache
         return cache
 
@@ -223,7 +229,7 @@ class MultiCache(MatchMixin, Container[str, Cache]):
     def json(self) -> JsonDict:
         return self[self.default_cache].json
 
-    def __enter__(self) -> "MultiCache":
+    def __enter__(self) -> "MultiCache[CacheType]":
         return self
 
     def __exit__(self, *_):
@@ -234,7 +240,7 @@ class MultiCache(MatchMixin, Container[str, Cache]):
         if not self.path.is_dir():
             return
         for directory in self.path.iterdir():
-            if (directory / Cache.index_file).is_file():
+            if (directory / self.cache_type.index_file).is_file():
                 assert self[directory.name]
 
     def clear(self):

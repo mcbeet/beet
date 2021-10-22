@@ -28,13 +28,14 @@ from typing import (
     Protocol,
     Set,
     Tuple,
+    Type,
     TypeVar,
     overload,
 )
 
 from pydantic import ValidationError
 
-from beet.core.cache import MultiCache
+from beet.core.cache import Cache, MultiCache
 from beet.core.container import Container
 from beet.core.utils import FileSystemPath, JsonDict, TextComponent, extra_field
 from beet.library.data_pack import DataPack
@@ -110,7 +111,11 @@ class ContextContainer(Container[Callable[["Context"], Any], Any]):
         return key(self.ctx)
 
 
-class ProjectCache(MultiCache):
+class ExtendedCache(Cache):
+    """Cache that implements additional operations for working on the beet context."""
+
+
+class ProjectCache(MultiCache[ExtendedCache]):
     """The project cache.
 
     The `generated` attribute is a MultiCache instance that's
@@ -118,7 +123,7 @@ class ProjectCache(MultiCache):
     cache that usually lives in the ignored `.beet_cache` directory.
     """
 
-    generated: MultiCache
+    generated: MultiCache[ExtendedCache]
 
     def __init__(
         self,
@@ -126,9 +131,15 @@ class ProjectCache(MultiCache):
         generated_directory: FileSystemPath,
         default_cache: str = "default",
         gitignore: bool = True,
+        cache_type: Type[ExtendedCache] = ExtendedCache,
     ):
-        super().__init__(directory, default_cache, gitignore)
-        self.generated = MultiCache(generated_directory, default_cache, gitignore=False)
+        super().__init__(directory, default_cache, gitignore, cache_type=ExtendedCache)
+        self.generated = MultiCache(
+            generated_directory,
+            default_cache,
+            gitignore=False,
+            cache_type=cache_type,
+        )
 
     def flush(self):
         super().flush()
