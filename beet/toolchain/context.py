@@ -162,6 +162,7 @@ class Context:
     cache: ProjectCache
     worker: WorkerPoolHandle
     template: TemplateManager
+    generate: Generator = field(init=False)
 
     assets: ResourcePack = field(default_factory=ResourcePack)
     data: DataPack = field(default_factory=DataPack)
@@ -174,6 +175,8 @@ class Context:
     def __post_init__(self, whitelist: Optional[List[str]]):
         self._container = ContextContainer(self)
         self._path_entry = str(self.directory.resolve())
+
+        self.generate = self.inject(Generator)
 
         self.inject(Pipeline).whitelist = whitelist
         self.template.bind(self)
@@ -267,10 +270,6 @@ class Context:
     @property
     def packs(self) -> Tuple[ResourcePack, DataPack]:
         return self.assets, self.data
-
-    @property
-    def generate(self) -> Generator:
-        return self.inject(Generator)
 
     def require(self, spec: PluginSpec):
         """Execute the specified plugin."""
