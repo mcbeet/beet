@@ -44,9 +44,9 @@ class DbgOptions(BaseModel):
         },
         {"text": "[{{ project_id }}]: ", "color": "gray"},
         {
-            "text": "{{ target }} for {{ name }} = ",
+            "text": "",
             "color": "gold",
-            "extra": ["{{ accessor }}"],
+            "extra": ["{{ display_name or target }} for {{ name }} = {{ accessor }}"],
         },
     ]
 
@@ -120,6 +120,7 @@ class DbgRenderer:
 
     def render(self, mode: str, name: str, target: str, path: str, lineno: int) -> str:
         """Return the formatted command."""
+
         preview = json.dumps(self.render_preview(path, lineno))
 
         kwargs = {
@@ -130,11 +131,17 @@ class DbgRenderer:
             "preview": '",' + preview + ',"',
         }
 
+        if mode == "score":
+            if scoreboard_data := self.ctx.meta.get("generate_scoreboard"):
+                if entry := scoreboard_data.get(target):
+                    if display_name := entry.partition(" ")[-1]:
+                        kwargs["display_name"] = '",' + display_name + ',"'
+
         accessor = self.ctx.template.render_json(self.accessors[mode], **kwargs)
+        kwargs["accessor"] = '",' + json.dumps(accessor) + ',"'
 
         payload = self.ctx.template.render_string(
             json.dumps(self.opts.payload),
-            accessor='",' + json.dumps(accessor) + ',"',
             **kwargs,
         )
 
