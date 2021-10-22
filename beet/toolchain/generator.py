@@ -23,7 +23,8 @@ from typing import (
 from beet.core.file import TextFileBase
 from beet.core.utils import TextComponent
 from beet.library.base import NamespaceFile
-from beet.library.data_pack import Function
+from beet.library.data_pack import DataPack, Function
+from beet.library.resource_pack import ResourcePack
 
 from .tree import TreeNode, generate_tree
 from .utils import LazyFormat, stable_hash
@@ -45,6 +46,13 @@ class Generator:
     registry: DefaultDict[Tuple[Any, ...], int] = field(
         default_factory=lambda: defaultdict(int)  # type: ignore
     )
+
+    assets: ResourcePack = field(init=False)
+    data: DataPack = field(init=False)
+
+    def __post_init__(self):
+        self.assets = self.ctx.assets
+        self.data = self.ctx.data
 
     def __getitem__(self: GeneratorType, key: Any) -> GeneratorType:
         return self.__class__(
@@ -166,9 +174,9 @@ class Generator:
         )
 
         pack = (
-            self.ctx.data
-            if file_type in self.ctx.data.namespace_type.field_map
-            else self.ctx.assets
+            self.data
+            if file_type in self.data.namespace_type.field_map
+            else self.assets
         )
 
         pack[key] = file_instance
@@ -260,4 +268,22 @@ class Generator:
         root = self[Function].path(fmt, hash) if fmt else self[Function].path(hash=hash)
 
         for node in generate_tree(root, items, key):
-            yield node, self.ctx.data.functions.setdefault(node.parent, Function())
+            yield node, self.data.functions.setdefault(node.parent, Function())
+
+    def draft(self: GeneratorType) -> GeneratorType:
+        """Return a generator that works on an intermediate resource pack and data pack."""
+        draft = self.__class__(
+            ctx=self.ctx,
+            scope=self.scope,
+            registry=self.registry,
+        )
+        draft.assets = ResourcePack()
+        draft.data = DataPack()
+        return draft
+
+    def apply(self):
+        """Merge the working resource pack and data pack into the context."""
+        if self.assets is not self.ctx.assets:
+            self.ctx.assets.merge(self.assets)
+        if self.data is not self.ctx.data:
+            self.ctx.data.merge(self.data)
