@@ -5,6 +5,7 @@ __all__ = [
     "DbgOptions",
     "DbgRenderer",
     "DbgExtension",
+    "get_padding",
 ]
 
 
@@ -23,8 +24,11 @@ from beet.core.utils import JsonDict, TextComponent
 
 class DbgOptions(BaseModel):
     command: str = "tellraw @a {payload}"
-    preview_line_length: int = 45
+
+    preview_digit_width: int = 6
+    preview_line_limit: int = 45
     preview_padding: int = 2
+
     payload: List[TextComponent] = [
         {
             "text": "",
@@ -32,23 +36,34 @@ class DbgOptions(BaseModel):
                 "action": "show_text",
                 "contents": [
                     "",
-                    {"text": "Type: {{ mode | title }}\n", "color": "gray"},
-                    {"text": "Path: {{ render_path }}\n\n", "color": "gray"},
+                    {"text": "{{ render_path }} ", "color": "aqua"},
+                    {"text": "({{ mode }})\n\n", "color": "dark_aqua"},
                     "{{ preview }}",
                 ],
             },
         },
         {"text": "[{{ project_id }}]: ", "color": "gray"},
         {
-            "text": "< {{ name }} ",
+            "text": "{{ target }} for {{ name }} = ",
             "color": "gold",
-            "extra": ["{{ accessor }}", " >"],
+            "extra": ["{{ accessor }}"],
         },
     ]
 
 
 def beet_default(ctx: Context):
     ctx.template.env.add_extension(DbgExtension)
+
+
+def get_padding(pixels: int) -> TextComponent:
+    """Generate a sequence of bold and normal spaces matching the given number of pixels."""
+    if pixels < 12 and pixels not in [4, 5, 8, 9, 10]:
+        raise ValueError(f"Invalid number of pixels {pixels}.")
+
+    regular, bold = divmod(pixels, 4)
+    regular -= bold
+
+    return [{"text": " " * regular}, {"text": " " * bold, "bold": True}]
 
 
 @dataclass
@@ -75,39 +90,33 @@ class DbgRenderer:
         function = self.ctx.data.functions[path]
         lines = function.text.splitlines()
 
-        color = cycle(["#dddddd", "gray"])
-
         preview_start = max(lineno - 1 - self.opts.preview_padding, 0)
         preview = lines[preview_start : lineno + self.opts.preview_padding]
-
-        truncated_lines = [
-            line
-            if len(line) < self.opts.preview_line_length
-            else line[: self.opts.preview_line_length] + "..."
-            for line in preview
-        ]
 
         numbers = [
             str(i + 1) for i in range(preview_start, preview_start + len(preview))
         ]
         number_width = max(len(n) for n in numbers)
 
-        preview_lines = [
-            {
-                "text": "",
-                "extra": [
-                    {
-                        "text": n.rjust(number_width),
-                        "color": "red" if n == str(lineno) else "dark_red",
-                    },
-                    {"text": " |  ", "color": "dark_gray"},
-                    {"text": f"{line}\n", "color": next(color)},
-                ],
-            }
-            for n, line in zip(numbers, truncated_lines)
-        ]
+        output: List[TextComponent] = [""]
 
-        return {"text": "", "extra": preview_lines}
+        for number, line, color in zip(numbers, preview, cycle(["#dddddd", "gray"])):
+            if len(line) > self.opts.preview_line_limit:
+                line = line[: self.opts.preview_line_limit - 4] + "..."
+
+            padding = number_width - len(number)
+            output.extend(get_padding(padding * self.opts.preview_digit_width + 4))
+            output.append(
+                {
+                    "text": number,
+                    "color": "red" if int(number) == lineno else "dark_red",
+                }
+            )
+
+            output.append({"text": " |  ", "color": "dark_gray"})
+            output.append({"text": f"{line}\n", "color": color})
+
+        return {"text": "", "extra": output}
 
     def render(self, mode: str, name: str, target: str, lineno: int) -> str:
         """Return the json text as a string."""
