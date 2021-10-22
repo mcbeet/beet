@@ -111,11 +111,7 @@ class ContextContainer(Container[Callable[["Context"], Any], Any]):
         return key(self.ctx)
 
 
-class ExtendedCache(Cache):
-    """Cache that implements additional operations for working on the beet context."""
-
-
-class ProjectCache(MultiCache[ExtendedCache]):
+class ProjectCache(MultiCache[Cache]):
     """The project cache.
 
     The `generated` attribute is a MultiCache instance that's
@@ -123,7 +119,7 @@ class ProjectCache(MultiCache[ExtendedCache]):
     cache that usually lives in the ignored `.beet_cache` directory.
     """
 
-    generated: MultiCache[ExtendedCache]
+    generated: MultiCache[Cache]
 
     def __init__(
         self,
@@ -131,9 +127,9 @@ class ProjectCache(MultiCache[ExtendedCache]):
         generated_directory: FileSystemPath,
         default_cache: str = "default",
         gitignore: bool = True,
-        cache_type: Type[ExtendedCache] = ExtendedCache,
+        cache_type: Type[Cache] = Cache,
     ):
-        super().__init__(directory, default_cache, gitignore, cache_type=ExtendedCache)
+        super().__init__(directory, default_cache, gitignore, cache_type=Cache)
         self.generated = MultiCache(
             generated_directory,
             default_cache,
