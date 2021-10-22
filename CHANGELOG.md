@@ -2,6 +2,11 @@
 
 <!--next-version-placeholder-->
 
+## v0.43.0 (2021-10-22)
+### Feature
+* Add draft class ([`d501db1`](https://github.com/mcbeet/beet/commit/d501db1689d7d2df8a25a2d239e65e935f9bfb11))
+* Add generator draft ([`1e341c5`](https://github.com/mcbeet/beet/commit/1e341c511fd9eb6bb5f6242e9d52202141ba12d2))
+
 ## v0.42.2 (2021-10-22)
 ### Fix
 * Align line numbers and tweak dbg formatting ([`715ee23`](https://github.com/mcbeet/beet/commit/715ee2366b65e458da400903b36bfd567a8b20d1))
