@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.42.2 (2021-10-22)
+### Fix
+* Align line numbers and tweak dbg formatting ([`715ee23`](https://github.com/mcbeet/beet/commit/715ee2366b65e458da400903b36bfd567a8b20d1))
+
 ## v0.42.1 (2021-10-21)
 ### Fix
 * Show source preview in dbg ([`51b2625`](https://github.com/mcbeet/beet/commit/51b2625ae6ca27bd9dc3009a9447bd0f01b1d421))
