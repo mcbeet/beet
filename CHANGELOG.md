@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.43.2 (2021-10-23)
+### Fix
+* Tweak log_time, draft API, cache formatting, and add Pack.configure ([`2dca46d`](https://github.com/mcbeet/beet/commit/2dca46d759ea7b315a5dfa81ad7100d426ff56fa))
+
 ## v0.43.1 (2021-10-22)
 ### Fix
 * Dbg display name for objectives generated with `generate_objective()` ([`f8669c5`](https://github.com/mcbeet/beet/commit/f8669c595cb4f6c6165648ec54426e234409d7e8))
