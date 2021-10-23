@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.16.1 (2021-10-23)
+### Fix
+* Update lockfile and add discord badge ([`3a76ee5`](https://github.com/mcbeet/lectern/commit/3a76ee57d1f125359b74d20d673bfa3dc862742c))
+
 ## v0.16.0 (2021-09-08)
 ### Feature
 * Add lectern.contrib.plugin ([`17e1c78`](https://github.com/mcbeet/lectern/commit/17e1c7830d73035b561388aece25d85a542057f8))
