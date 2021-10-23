@@ -121,7 +121,7 @@ class Project:
         """Build the project."""
         ctx = ProjectBuilder(self).build()
 
-        with log_time("Linking took %(time).2fs."):
+        with log_time("Link project."):
             for link_key, pack in zip(["resource_pack", "data_pack"], ctx.packs):
                 if pack and (link_dir := ctx.cache["link"].json.get(link_key)):
                     pack.save(link_dir, overwrite=True)
@@ -276,7 +276,7 @@ class ProjectBuilder:
     def autosave(self, ctx: Context):
         """Plugin that outputs the data pack and the resource pack at the end of the build."""
         yield
-        with log_time("Output took %(time).2fs."):
+        with log_time("Output files."):
             for pack in ctx.packs:
                 if pack and ctx.output_directory:
                     pack.save(ctx.output_directory, overwrite=True)
@@ -305,7 +305,7 @@ class ProjectBuilder:
             )
         )
 
-        with log_time("Pipeline took %(time).2fs."):
+        with log_time("Run pipeline."):
             yield
 
         description_parts = [

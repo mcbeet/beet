@@ -175,8 +175,6 @@ class Context:
         self.generate = self.inject(Generator)
         self.generate.assets = self.assets
         self.generate.data = self.data
-        self.generate.parent_assets = self.assets
-        self.generate.parent_data = self.data
 
         self.inject(Pipeline).whitelist = whitelist
         self.template.bind(self)

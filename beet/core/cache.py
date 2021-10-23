@@ -14,12 +14,12 @@ from typing import Any, ClassVar, Iterator, Optional, Type, TypeVar
 from urllib.request import urlopen
 
 from .container import Container, MatchMixin
-from .utils import FileSystemPath, JsonDict, dump_json, normalize_string
+from .utils import FileSystemPath, JsonDict, dump_json, log_time, normalize_string
 
 CacheType = TypeVar("CacheType", bound="Cache")
 
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("cache")
 
 
 class Cache:
@@ -76,8 +76,7 @@ class Cache:
         path = self.get_path(url)
 
         if not path.is_file():
-            logger.debug("Downloading %s.", url)
-            with urlopen(url) as f:
+            with log_time("Download %r.", url), urlopen(url) as f:
                 path.write_bytes(f.read())
 
         return path
@@ -154,7 +153,7 @@ class Cache:
             return
 
         if self.expire and self.expire <= datetime.now():
-            logger.debug("Cache %s expired.", self.directory.name)
+            logger.debug("Cache %r expired.", self.directory.name)
             self.clear()
         else:
             self.directory.mkdir(parents=True, exist_ok=True)
@@ -180,8 +179,18 @@ class Cache:
         directory: Optional[FileSystemPath] = None,
         prefix: str = "",
     ) -> Iterator[str]:
+        max_entries = 8
+        crop_entries = 5
+
         entries = list(sorted(Path(directory or self.directory).iterdir()))
-        indents = ["├─"] * (len(entries) - 1) + ["└─"]
+
+        count = len(entries)
+        if count > max_entries:
+            del entries[crop_entries:]
+
+        indents = ["├─"] * len(entries)
+        if count <= max_entries:
+            indents[-1] = "└─"
 
         for indent, entry in zip(indents, entries):
             yield f"{prefix}{indent} {entry.name}"
@@ -189,6 +198,9 @@ class Cache:
             if entry.is_dir():
                 indent = "│  " if indent == "├─" else "   "
                 yield from self._format_directory(entry, prefix + indent)
+
+        if count > max_entries:
+            yield f"{prefix}└─ ... ({count - crop_entries} more entries)"
 
 
 class MultiCache(MatchMixin, Container[str, CacheType]):

@@ -662,6 +662,31 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
 
         self.load(path or zipfile)
 
+    def configure(
+        self: PackType,
+        other: Optional[PackType] = None,
+        *,
+        extend_extra: Optional[Mapping[str, Type[PackFile]]] = None,
+        extend_namespace: Iterable[Type[NamespaceFile]] = (),
+        extend_namespace_extra: Optional[Mapping[str, Type[PackFile]]] = None,
+        merge_policy: Optional[MergePolicy] = None,
+    ) -> PackType:
+        """Helper for updating or copying configuration from another pack."""
+        if other:
+            self.extend_extra.update(other.extend_extra or {})
+            self.extend_namespace.extend(other.extend_namespace)
+            self.extend_namespace_extra.update(other.extend_namespace_extra or {})
+            self.merge_policy.extend(other.merge_policy)
+
+        self.extend_extra.update(extend_extra or {})
+        self.extend_namespace.extend(extend_namespace)
+        self.extend_namespace_extra.update(extend_namespace_extra or {})
+
+        if merge_policy:
+            self.merge_policy.extend(merge_policy)
+
+        return self
+
     @overload
     def __getitem__(self, key: str) -> NamespaceType:
         ...

@@ -1,13 +1,14 @@
 __all__ = [
     "Generator",
     "Draft",
+    "DraftCacheSignal",
 ]
 
 
 import json
 from collections import defaultdict
-from contextlib import contextmanager
-from dataclasses import dataclass, field
+from contextlib import ExitStack, contextmanager
+from dataclasses import dataclass, field, replace
 from typing import (
     TYPE_CHECKING,
     Any,
@@ -22,7 +23,7 @@ from typing import (
 )
 
 from beet.core.file import TextFileBase
-from beet.core.utils import TextComponent
+from beet.core.utils import TextComponent, log_time, required_field
 from beet.library.base import NamespaceFile
 from beet.library.data_pack import DataPack, Function
 from beet.library.resource_pack import ResourcePack
@@ -50,19 +51,9 @@ class Generator:
 
     assets: ResourcePack = field(default_factory=ResourcePack)
     data: DataPack = field(default_factory=DataPack)
-    parent_assets: ResourcePack = field(default_factory=ResourcePack)
-    parent_data: DataPack = field(default_factory=DataPack)
 
     def __getitem__(self: GeneratorType, key: Any) -> GeneratorType:
-        return self.__class__(
-            ctx=self.ctx,
-            scope=self.scope + (key,),
-            registry=self.registry,
-            assets=self.assets,
-            data=self.data,
-            parent_assets=self.parent_assets,
-            parent_data=self.parent_data,
-        )
+        return replace(self, scope=self.scope + (key,))
 
     @contextmanager
     def push(self) -> Iterator[None]:
@@ -72,14 +63,10 @@ class Generator:
         previous_scope = root.scope
         previous_assets = root.assets
         previous_data = root.data
-        previous_parent_assets = root.parent_assets
-        previous_parent_data = root.parent_data
 
         root.scope = self.scope
         root.assets = self.assets
         root.data = self.data
-        root.parent_assets = self.parent_assets
-        root.parent_data = self.parent_data
 
         try:
             yield
@@ -87,8 +74,6 @@ class Generator:
             root.scope = previous_scope
             root.assets = previous_assets
             root.data = previous_data
-            root.parent_assets = previous_parent_assets
-            root.parent_data = previous_parent_data
 
     def get_prefix(self, separator: str = ".") -> str:
         """Join the serializable parts of the scope into a key prefix."""
@@ -288,27 +273,41 @@ class Generator:
         for node in generate_tree(root, items, key):
             yield node, self.data.functions.setdefault(node.parent, Function())
 
-    def draft(self) -> "Draft":
-        """Return a new draft."""
-        return Draft(
-            ctx=self.ctx,
-            scope=self.scope,
-            registry=self.registry,
-            assets=ResourcePack(),
-            data=DataPack(),
-            parent_assets=self.assets,
-            parent_data=self.data,
-        )
+    @contextmanager
+    def draft(self) -> Iterator["Draft"]:
+        """Work on an intermediate draft."""
+        with ExitStack() as exit_stack:
+            try:
+                yield Draft(
+                    ctx=self.ctx,
+                    scope=self.scope,
+                    registry=self.registry,
+                    assets=ResourcePack().configure(self.assets),
+                    data=DataPack().configure(self.data),
+                    parent_assets=self.assets,
+                    parent_data=self.data,
+                    exit_stack=exit_stack,
+                )
+            except DraftCacheSignal:
+                pass
 
 
+class DraftCacheSignal(Exception):
+    """Raised when the draft is cached."""
+
+
+@dataclass
 class Draft(Generator):
     """Generator that works on an intermediate resource pack and data pack."""
 
-    def apply(self):
-        """Merge the working resource pack and data pack into the context."""
-        if self.assets is not self.parent_assets:
+    parent_assets: ResourcePack = required_field()
+    parent_data: DataPack = required_field()
+    exit_stack: ExitStack = required_field()
+
+    def __post_init__(self):
+        @self.exit_stack.callback
+        def _():
             self.parent_assets.merge(self.assets)
-        if self.data is not self.parent_data:
             self.parent_data.merge(self.data)
 
     def cache(
@@ -316,10 +315,9 @@ class Draft(Generator):
         name: str,
         key: str,
         zipped: bool = False,
-        apply: bool = False,
-    ) -> Iterator["Draft"]:
-        """Try to load the draft from the cache or yield once to let the body of the loop generate it."""
-        cache = self.ctx.cache[name]
+    ):
+        """Skip the rest of the code if the draft is cached."""
+        cache = self.ctx.cache[f"draft_{name}"]
 
         suffix = ".zip" if zipped else ""
         cached_resource_pack = cache.directory / f"draft_resource_pack{suffix}"
@@ -328,19 +326,18 @@ class Draft(Generator):
         key = f"{key} {zipped=}"
 
         if cache.json.get("draft_key") == key:
-            self.assets.load(cached_resource_pack)
-            self.data.load(cached_data_pack)
-            if apply:
-                self.apply()
-            return
+            with log_time("Load draft %r from cache.", name):
+                self.assets.load(cached_resource_pack)
+                self.data.load(cached_data_pack)
+            raise DraftCacheSignal()
 
-        yield self
+        @self.exit_stack.callback
+        @log_time("Update cache for draft %r.", name)
+        def _():
+            if self.assets:
+                self.assets.save(path=cached_resource_pack, overwrite=True)
+            if self.data:
+                self.data.save(path=cached_data_pack, overwrite=True)
+            cache.json["draft_key"] = key
 
-        if self.assets:
-            self.assets.save(path=cached_resource_pack, overwrite=True)
-        if self.data:
-            self.data.save(path=cached_data_pack, overwrite=True)
-
-        cache.json["draft_key"] = key
-        if apply:
-            self.apply()
+        self.exit_stack.enter_context(log_time("Generate draft %r.", name))

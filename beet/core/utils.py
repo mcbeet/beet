@@ -72,9 +72,10 @@ time_logger = logging.getLogger("time")
 
 
 @contextmanager
-def log_time(message: str, *args: Any) -> Iterator[None]:
+def log_time(message: str, *args: Any, **kwargs: Any) -> Iterator[None]:
     start = time.time()
     try:
         yield
     finally:
-        time_logger.debug(message, *args, {"time": time.time() - start})
+        message = f"{message} (took {time.time() - start:.2f}s)"
+        time_logger.debug(message, *args, **kwargs)
