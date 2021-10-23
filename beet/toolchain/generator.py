@@ -276,20 +276,26 @@ class Generator:
     @contextmanager
     def draft(self) -> Iterator["Draft"]:
         """Work on an intermediate draft."""
+        assets = ResourcePack().configure(self.assets)
+        data = DataPack().configure(self.data)
+
         with ExitStack() as exit_stack:
+            draft = Draft(
+                ctx=self.ctx,
+                scope=self.scope,
+                registry=self.registry,
+                assets=assets,
+                data=data,
+                exit_stack=exit_stack,
+            )
+
             try:
-                yield Draft(
-                    ctx=self.ctx,
-                    scope=self.scope,
-                    registry=self.registry,
-                    assets=ResourcePack().configure(self.assets),
-                    data=DataPack().configure(self.data),
-                    parent_assets=self.assets,
-                    parent_data=self.data,
-                    exit_stack=exit_stack,
-                )
+                yield draft
             except DraftCacheSignal:
                 pass
+
+        self.assets.merge(assets)
+        self.data.merge(data)
 
 
 class DraftCacheSignal(Exception):
@@ -300,15 +306,7 @@ class DraftCacheSignal(Exception):
 class Draft(Generator):
     """Generator that works on an intermediate resource pack and data pack."""
 
-    parent_assets: ResourcePack = required_field()
-    parent_data: DataPack = required_field()
     exit_stack: ExitStack = required_field()
-
-    def __post_init__(self):
-        @self.exit_stack.callback
-        def _():
-            self.parent_assets.merge(self.assets)
-            self.parent_data.merge(self.data)
 
     def cache(
         self,
