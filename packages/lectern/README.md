@@ -6,6 +6,7 @@
 [![PyPI](https://img.shields.io/pypi/v/lectern.svg)](https://pypi.org/project/lectern/)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/lectern.svg)](https://pypi.org/project/lectern/)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
+[![Discord](https://img.shields.io/discord/900530660677156924?color=7289DA&label=discord&logo=discord&logoColor=fff)](https://discord.gg/98MdSGMm8j)
 
 > Literate Minecraft data packs and resource packs.
 
