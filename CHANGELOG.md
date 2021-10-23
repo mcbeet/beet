@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.43.3 (2021-10-23)
+### Fix
+* Tweak draft again ([`dfc3524`](https://github.com/mcbeet/beet/commit/dfc35247c08bb6fe52b4c3c480e9fcb937892c43))
+
 ## v0.43.2 (2021-10-23)
 ### Fix
 * Tweak log_time, draft API, cache formatting, and add Pack.configure ([`2dca46d`](https://github.com/mcbeet/beet/commit/2dca46d759ea7b315a5dfa81ad7100d426ff56fa))
