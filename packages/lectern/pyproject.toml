@@ -30,7 +30,7 @@ markdown-it-py = "^1.1.0"
 click = "^8.0.1"
 
 [tool.poetry.dev-dependencies]
-black = "^21.8b0"
+black = "^21.10b0"
 rope = "^0.20.1"
 pytest = "^6.2.5"
 isort = "^5.9.3"
