@@ -57,7 +57,7 @@ image = ["pillow"]
 
 [[package]]
 name = "black"
-version = "21.9b0"
+version = "21.10b0"
 description = "The uncompromising code formatter."
 category = "dev"
 optional = false
@@ -77,9 +77,9 @@ typing-extensions = [
 
 [package.extras]
 colorama = ["colorama (>=0.4.3)"]
-d = ["aiohttp (>=3.6.0)", "aiohttp-cors (>=0.4.0)"]
+d = ["aiohttp (>=3.7.4)"]
 jupyter = ["ipython (>=7.8.0)", "tokenize-rt (>=3.2.0)"]
-python2 = ["typed-ast (>=1.4.2)"]
+python2 = ["typed-ast (>=1.4.3)"]
 uvloop = ["uvloop (>=0.15.2)"]
 
 [[package]]
@@ -796,7 +796,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=1.2.3)", "pytest-flake8", "pyt
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "44718840da3f9463f62e8f00f19e668b81dfd714e091bfcece5e1b39155217a7"
+content-hash = "e3ad6d068916d84e1891d91f7c26b615d78b99600256a36d0f449ed3a4c5a3c0"
 
 [metadata.files]
 atomicwrites = [
@@ -816,8 +816,8 @@ beet = [
     {file = "beet-0.43.3.tar.gz", hash = "sha256:7cd8238aa4aada077bd61964a30fe913fee9dc70cd67557bb8a1f6fad66f42eb"},
 ]
 black = [
-    {file = "black-21.9b0-py3-none-any.whl", hash = "sha256:380f1b5da05e5a1429225676655dddb96f5ae8c75bdf91e53d798871b902a115"},
-    {file = "black-21.9b0.tar.gz", hash = "sha256:7de4cfc7eb6b710de325712d40125689101d21d25283eed7e9998722cf10eb91"},
+    {file = "black-21.10b0-py3-none-any.whl", hash = "sha256:6eb7448da9143ee65b856a5f3676b7dda98ad9abe0f87fce8c59291f15e82a5b"},
+    {file = "black-21.10b0.tar.gz", hash = "sha256:a9952229092e325fe5f3dae56d81f639b23f7131eb840781947e4b2886030f33"},
 ]
 bleach = [
     {file = "bleach-3.3.0-py2.py3-none-any.whl", hash = "sha256:6123ddc1052673e52bab52cdc955bcb57a015264a1c57d37bea2f6b817af0125"},
