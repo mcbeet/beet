@@ -27,7 +27,7 @@ beet = ">=0.41.9"
 tokenstream = "^1.2.3"
 
 [tool.poetry.dev-dependencies]
-black = "^21.9b0"
+black = "^21.10b0"
 rope = "^0.20.1"
 pytest = "^6.2.5"
 isort = "^5.10.0"
