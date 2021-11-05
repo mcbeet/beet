@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.44.1 (2021-11-05)
+### Fix
+* Missing return type for resolve_scope_map() ([`1968f50`](https://github.com/mcbeet/beet/commit/1968f504a14c2332421583973dfeb71305ece401))
+
 ## v0.44.0 (2021-11-05)
 ### Feature
 * Add beet.contrib.messages ([`d623640`](https://github.com/mcbeet/beet/commit/d623640ee5e711a9aecefa44889301f30db36f30))
