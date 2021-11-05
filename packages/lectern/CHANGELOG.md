@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.17.0 (2021-11-05)
+### Feature
+* Add dynamic directive resolvers ([`b2b6d21`](https://github.com/mcbeet/lectern/commit/b2b6d21207bb0645799f5b26413de10d49ed64f0))
+
 ## v0.16.1 (2021-10-23)
 ### Fix
 * Update lockfile and add discord badge ([`3a76ee5`](https://github.com/mcbeet/lectern/commit/3a76ee57d1f125359b74d20d673bfa3dc862742c))
