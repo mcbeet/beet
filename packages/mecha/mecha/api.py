@@ -244,6 +244,8 @@ class Mecha:
                 with stream.provide(**provide or {}):
                     ast = delegate(parser, stream)
         except InvalidSyntax as exc:
+            if self.cache and filename and cache_miss:
+                self.cache.invalidate_changes(self.directory / filename)
             d = Diagnostic(
                 level="error",
                 message=str(exc),
