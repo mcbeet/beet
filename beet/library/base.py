@@ -394,8 +394,14 @@ class Namespace(
         other: Mapping[T, MergeableType],
     ) -> bool:
         super().merge(other)  # type: ignore
+
         if isinstance(self, Namespace) and isinstance(other, Namespace):
             self.extra.merge(other.extra)
+
+        empty_containers = [key for key, value in self.items() if not value]  # type: ignore
+        for container in empty_containers:
+            del self[container]  # type: ignore
+
         return True
 
     @property
@@ -746,8 +752,14 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
         self: MutableMapping[T, MergeableType], other: Mapping[T, MergeableType]
     ) -> bool:
         super().merge(other)  # type: ignore
+
         if isinstance(self, Pack) and isinstance(other, Pack):
             self.extra.merge(other.extra)  # type: ignore
+
+        empty_namespaces = [key for key, value in self.items() if not value]  # type: ignore
+        for namespace in empty_namespaces:
+            del self[namespace]  # type: ignore
+
         return True
 
     @property
