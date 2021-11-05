@@ -100,19 +100,12 @@ class Cache:
 
         return changed
 
-    def discard(self, *filenames: Optional[FileSystemPath]):
-        """Remove the given files from the cache and forget their last modification time."""
+    def invalidate_changes(self, *filenames: Optional[FileSystemPath]):
+        """Reset the modification time of the given files."""
         mtime = self.index.setdefault("mtime", {})
-
         for filename in filenames:
-            if not filename:
-                continue
-
-            path = Path(filename)
-            key = str(path)
-
-            path.unlink(missing_ok=True)
-            mtime.pop(key, None)
+            if filename:
+                mtime.pop(str(Path(filename)), None)
 
     @property
     def expire(self) -> Optional[datetime]:
