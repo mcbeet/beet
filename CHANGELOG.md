@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.44.2 (2021-11-05)
+### Fix
+* Cleanup empty containers and namespaces after merge ([`43b7d08`](https://github.com/mcbeet/beet/commit/43b7d086b5347c80a189ec6f9234cb73f50625ab))
+
 ## v0.44.1 (2021-11-05)
 ### Fix
 * Missing return type for resolve_scope_map() ([`1968f50`](https://github.com/mcbeet/beet/commit/1968f504a14c2332421583973dfeb71305ece401))
