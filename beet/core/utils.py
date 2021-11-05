@@ -8,6 +8,7 @@ __all__ = [
     "required_field",
     "intersperse",
     "normalize_string",
+    "snake_case",
     "log_time",
 ]
 
@@ -66,6 +67,13 @@ NORMALIZE_REGEX = re.compile(r"[^a-z0-9]+")
 
 def normalize_string(string: str) -> str:
     return NORMALIZE_REGEX.sub("_", string.lower()).strip("_")
+
+
+CAMEL_REGEX = re.compile(r"((?<=[a-z0-9])[A-Z]|(?!^)[A-Z](?=[a-z]))")
+
+
+def snake_case(string: str) -> str:
+    return CAMEL_REGEX.sub(r"_\1", string).lower()
 
 
 time_logger = logging.getLogger("time")
