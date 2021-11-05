@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.17.1 (2021-11-05)
+### Fix
+* Update list of supported resources ([`fbbbbdc`](https://github.com/mcbeet/lectern/commit/fbbbbdc6a3c96fe0e496e01a8732eadb7ea67485))
+
 ## v0.17.0 (2021-11-05)
 ### Feature
 * Add dynamic directive resolvers ([`b2b6d21`](https://github.com/mcbeet/lectern/commit/b2b6d21207bb0645799f5b26413de10d49ed64f0))
