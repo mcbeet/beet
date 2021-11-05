@@ -802,7 +802,9 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
             extra_info.update(self.extend_extra)
         return extra_info
 
-    def resolve_scope_map(self):
+    def resolve_scope_map(
+        self,
+    ) -> Dict[Tuple[Tuple[str, ...], str], Type[NamespaceFile]]:
         scope_map = dict(self.namespace_type.scope_map)
         for file_type in self.extend_namespace:
             scope_map[file_type.scope, file_type.extension] = file_type
