@@ -92,11 +92,11 @@ class PluginWithOptions(Protocol[OptionsType]):
 
 class ConfigurablePlugin(Protocol):
     @overload
-    def __call__(self, **kwds: Any) -> "ConfigurablePlugin":  # type: ignore
+    def __call__(self, ctx: "Context", /) -> Any:
         ...
 
     @overload
-    def __call__(self, ctx: "Context", /) -> Any:
+    def __call__(self, **kwds: Any) -> "ConfigurablePlugin":
         ...
 
 
