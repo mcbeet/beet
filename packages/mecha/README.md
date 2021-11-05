@@ -47,7 +47,7 @@ This package provides everything you need for working with Minecraft commands in
 - Command config resolver that flattens and enumerates all the valid command prototypes
 - Powerful rule dispatcher for processing specific ast nodes
 - Composable ast visitors and reducers
-- _(soon)_ Execute arbitrary compilation passes in your [`beet`](https://github.com/mcbeet/beet) pipeline
+- Execute arbitrary compilation passes in your [`beet`](https://github.com/mcbeet/beet) pipeline
 - _(soon)_ Expressive command API for writing commands in Python
 
 ## Credits
