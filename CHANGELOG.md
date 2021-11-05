@@ -2,6 +2,14 @@
 
 <!--next-version-placeholder-->
 
+## v0.44.0 (2021-11-05)
+### Feature
+* Add beet.contrib.messages ([`d623640`](https://github.com/mcbeet/beet/commit/d623640ee5e711a9aecefa44889301f30db36f30))
+
+### Fix
+* Add snake_case utility ([`8009226`](https://github.com/mcbeet/beet/commit/8009226dc9437b57529c2efcc14696fe1c34c145))
+* Rename GlyphSizes and true_type_fonts ([`718b36b`](https://github.com/mcbeet/beet/commit/718b36b152faa68bfa46ab4debb83e47e13c7bc3))
+
 ## v0.43.3 (2021-10-23)
 ### Fix
 * Tweak draft again ([`dfc3524`](https://github.com/mcbeet/beet/commit/dfc35247c08bb6fe52b4c3c480e9fcb937892c43))
