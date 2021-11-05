@@ -1,0 +1,6 @@
+require:
+  - beet.contrib.messages
+data_pack:
+  load: [src]
+  render:
+    functions: ["*"]

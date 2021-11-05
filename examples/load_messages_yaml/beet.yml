@@ -1,0 +1,7 @@
+require:
+  - beet.contrib.messages
+  - beet.contrib.auto_yaml
+data_pack:
+  load: [src]
+  render:
+    functions: ["*"]

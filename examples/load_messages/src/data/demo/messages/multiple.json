@@ -1,0 +1,7 @@
+{
+  "foo": [{ "text": "this is a message" }],
+  "bar": [
+    { "text": "this is another message" },
+    { "text": "potato", "color": "yellow" }
+  ]
+}
