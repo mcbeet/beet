@@ -100,6 +100,20 @@ class Cache:
 
         return changed
 
+    def discard(self, *filenames: Optional[FileSystemPath]):
+        """Remove the given files from the cache and forget their last modification time."""
+        mtime = self.index.setdefault("mtime", {})
+
+        for filename in filenames:
+            if not filename:
+                continue
+
+            path = Path(filename)
+            key = str(path)
+
+            path.unlink(missing_ok=True)
+            mtime.pop(key, None)
+
     @property
     def expire(self) -> Optional[datetime]:
         expire = self.index["expire"]
