@@ -28,7 +28,7 @@ from urllib.parse import urlparse
 
 from beet import Cache, DataPack, ResourcePack
 from beet.core.utils import FileSystemPath
-from markdown_it import MarkdownIt
+from markdown_it.main import MarkdownIt
 from markdown_it.token import Token
 
 from .directive import Directive
