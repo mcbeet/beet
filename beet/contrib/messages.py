@@ -3,7 +3,7 @@
 
 __all__ = [
     "Message",
-    "MsgFilter",
+    "MessageManager",
 ]
 
 
@@ -13,6 +13,7 @@ from dataclasses import dataclass
 from typing import Optional
 
 from beet import Context, JsonFile, NamespaceFile
+from beet.core.utils import TextComponent
 
 PATH_REGEX = re.compile(r"\w+")
 
@@ -25,21 +26,22 @@ class Message(JsonFile, NamespaceFile):
 
 
 def beet_default(ctx: Context):
-    ctx.data.extend_namespace.append(Message)
-    ctx.template.env.filters["msg"] = MsgFilter(ctx)  # type: ignore
-
-    yield
-
-    ctx.data[Message].clear()
+    messages = ctx.inject(MessageManager)
+    ctx.template.env.filters["msg"] = messages.get_as_string  # type: ignore
 
 
 @dataclass
-class MsgFilter:
-    """Jinja filter for including data pack messages."""
+class MessageManager:
+    """Service for managing json messages."""
 
     ctx: Context
 
-    def __call__(self, name: str, path: Optional[str] = None) -> str:
+    def __post_init__(self):
+        self.ctx.require(self.cleanup)
+        self.ctx.data.extend_namespace.append(Message)
+
+    def get(self, name: str, path: Optional[str] = None) -> TextComponent:
+        """Retrieve a message."""
         message = self.ctx.data[Message][name].data
 
         if path:
@@ -48,4 +50,13 @@ class MsgFilter:
                     key = int(key)
                 message = message[key]  # type: ignore
 
-        return json.dumps(message)
+        return message
+
+    def get_as_string(self, name: str, path: Optional[str] = None) -> str:
+        """Retrieve a message and serialize it."""
+        return json.dumps(self.get(name, path))
+
+    def cleanup(self, ctx: Context):
+        """Plugin that removes all messages at the end of the build."""
+        yield
+        ctx.data[Message].clear()
