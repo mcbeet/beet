@@ -1457,7 +1457,7 @@ idna2008 = ["idna"]
 
 [[package]]
 name = "rope"
-version = "0.20.1"
+version = "0.21.0"
 description = "a python refactoring library..."
 category = "dev"
 optional = false
@@ -1935,7 +1935,7 @@ image = ["Pillow"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "7dd2490890275113ac4c946b8225840ea9128e631bb883c32f9721d24d39a811"
+content-hash = "061790f858e3fe9fde18d46a0d1a2aa55832be748626e0bef9276338726699a5"
 
 [metadata.files]
 alabaster = [
@@ -2810,7 +2810,7 @@ rfc3986 = [
     {file = "rfc3986-1.5.0.tar.gz", hash = "sha256:270aaf10d87d0d4e095063c65bf3ddbc6ee3d0b226328ce21e036f946e421835"},
 ]
 rope = [
-    {file = "rope-0.20.1.tar.gz", hash = "sha256:505a2f6b4ac7b18e0429be179f4d8712243a194da5c866b0731f9d91ce7590bb"},
+    {file = "rope-0.21.0.tar.gz", hash = "sha256:366789e069a267296889b2ee7631f9278173b5e7d468f2ea08abe26069a52aef"},
 ]
 secretstorage = [
     {file = "SecretStorage-3.3.1-py3-none-any.whl", hash = "sha256:422d82c36172d88d6a0ed5afdec956514b189ddbfb72fefab0c8a1cee4eaf71f"},
