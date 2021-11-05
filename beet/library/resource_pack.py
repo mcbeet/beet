@@ -5,7 +5,7 @@ __all__ = [
     "Model",
     "Language",
     "Font",
-    "GlyphSizeFile",
+    "GlyphSizes",
     "TrueTypeFont",
     "ShaderPost",
     "Shader",
@@ -84,7 +84,7 @@ class Font(JsonFile, NamespaceFile):
         return True
 
 
-class GlyphSizeFile(BinaryFile, NamespaceFile):
+class GlyphSizes(BinaryFile, NamespaceFile):
     """Class representing a legacy unicode glyph size file."""
 
     scope = ("font",)
@@ -254,8 +254,8 @@ class ResourcePackNamespace(Namespace):
     models:           NamespacePin[Model]          = NamespacePin(Model)
     languages:        NamespacePin[Language]       = NamespacePin(Language)
     fonts:            NamespacePin[Font]           = NamespacePin(Font)
-    glyph_sizes:      NamespacePin[GlyphSizeFile]  = NamespacePin(GlyphSizeFile)
-    truetype_fonts:   NamespacePin[TrueTypeFont]   = NamespacePin(TrueTypeFont)
+    glyph_sizes:      NamespacePin[GlyphSizes]     = NamespacePin(GlyphSizes)
+    true_type_fonts:  NamespacePin[TrueTypeFont]   = NamespacePin(TrueTypeFont)
     shader_posts:     NamespacePin[ShaderPost]     = NamespacePin(ShaderPost)
     shaders:          NamespacePin[Shader]         = NamespacePin(Shader)
     fragment_shaders: NamespacePin[FragmentShader] = NamespacePin(FragmentShader)
@@ -288,8 +288,8 @@ class ResourcePack(Pack[ResourcePackNamespace]):
     models:           NamespaceProxyDescriptor[Model]          = NamespaceProxyDescriptor(Model)
     languages:        NamespaceProxyDescriptor[Language]       = NamespaceProxyDescriptor(Language)
     fonts:            NamespaceProxyDescriptor[Font]           = NamespaceProxyDescriptor(Font)
-    glyph_sizes:      NamespaceProxyDescriptor[GlyphSizeFile]  = NamespaceProxyDescriptor(GlyphSizeFile)
-    truetype_fonts:   NamespaceProxyDescriptor[TrueTypeFont]   = NamespaceProxyDescriptor(TrueTypeFont)
+    glyph_sizes:      NamespaceProxyDescriptor[GlyphSizes]     = NamespaceProxyDescriptor(GlyphSizes)
+    true_type_fonts:  NamespaceProxyDescriptor[TrueTypeFont]   = NamespaceProxyDescriptor(TrueTypeFont)
     shader_posts:     NamespaceProxyDescriptor[ShaderPost]     = NamespaceProxyDescriptor(ShaderPost)
     shaders:          NamespaceProxyDescriptor[Shader]         = NamespaceProxyDescriptor(Shader)
     fragment_shaders: NamespaceProxyDescriptor[FragmentShader] = NamespaceProxyDescriptor(FragmentShader)
