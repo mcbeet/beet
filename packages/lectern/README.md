@@ -129,23 +129,26 @@ Here is a reference of all the supported resources:
 | `@loot_table`                   | `@language`        |
 | `@predicate`                    | `@font`            |
 | `@recipe`                       | `@glyph_sizes`     |
-| `@structure`                    | `@truetype_font`   |
+| `@structure`                    | `@true_type_font`  |
 | `@block_tag`                    | `@shader_post`     |
 | `@entity_type_tag`              | `@shader`          |
 | `@fluid_tag`                    | `@fragment_shader` |
 | `@function_tag`                 | `@vertex_shader`   |
-| `@item_tag`                     | `@glsl_shader`     |
-| `@dimension_type`               | `@text`            |
-| `@dimension`                    | `@texture_mcmeta`  |
-| `@biome`                        | `@texture`         |
-| `@configured_carver`            | `@sound`           |
-| `@configured_feature`           | `@particle`        |
+| `@game_event_tag`               | `@glsl_shader`     |
+| `@item_tag`                     | `@text`            |
+| `@dimension_type`               | `@texture_mcmeta`  |
+| `@dimension`                    | `@texture`         |
+| `@biome`                        | `@sound`           |
+| `@configured_carver`            | `@particle`        |
+| `@configured_feature`           |                    |
 | `@configured_structure_feature` |                    |
 | `@configured_surface_builder`   |                    |
 | `@noise_settings`               |                    |
 | `@processor_list`               |                    |
 | `@template_pool`                |                    |
 | `@item_modifier`                |                    |
+
+> Note that these directives are resolved automatically. If you're working with pack extensions your custom namespaced resources will have their own directives as well.
 
 There are also two built-in directives that can be used to include files using a path relative to the root of the data pack or the resource pack.
 
