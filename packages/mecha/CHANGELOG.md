@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.7.1 (2021-11-05)
+### Fix
+* Typo when using set_location ([`2d16d63`](https://github.com/mcbeet/mecha/commit/2d16d6327ce63e67214843fe84b277c6118f0aa5))
+
 ## v0.7.0 (2021-11-05)
 ### Feature
 * Add mecha.contrib.messages ([`99b62de`](https://github.com/mcbeet/mecha/commit/99b62de825a17552489d7b379c79be8b6adf0f34))
