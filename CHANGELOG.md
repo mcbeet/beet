@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.44.5 (2021-11-05)
+### Fix
+* Turn discard into invalidate_changes ([`9c38d86`](https://github.com/mcbeet/beet/commit/9c38d86c8e6fa9c9cc886edd117fc441790bd8f7))
+
 ## v0.44.4 (2021-11-05)
 ### Fix
 * Add helper to easily remove files from the cache ([`9f6dca0`](https://github.com/mcbeet/beet/commit/9f6dca053515ca421f59a917013c0b98147ccb0d))
