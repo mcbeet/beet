@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.44.4 (2021-11-05)
+### Fix
+* Add helper to easily remove files from the cache ([`9f6dca0`](https://github.com/mcbeet/beet/commit/9f6dca053515ca421f59a917013c0b98147ccb0d))
+
 ## v0.44.3 (2021-11-05)
 ### Fix
 * Put message retrieval logic into MessageManager ([`0f187f2`](https://github.com/mcbeet/beet/commit/0f187f23d0a76d1f0b73697c706cf36d7453c5a4))
