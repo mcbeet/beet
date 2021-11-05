@@ -32,6 +32,20 @@
           "load": ["isolated/plugin_test.md"]
         }
       }
+    },
+    {
+      "require": ["beet.contrib.messages"],
+      "pipeline": ["lectern", "beet.contrib.render"],
+      "meta": {
+        "lectern": {
+          "load": ["isolated/message_test.md"]
+        },
+        "render": {
+          "data_pack": {
+            "functions": ["*"]
+          }
+        }
+      }
     }
   ],
   "meta": {

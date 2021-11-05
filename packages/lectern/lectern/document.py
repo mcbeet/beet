@@ -5,22 +5,12 @@ __all__ = [
 
 from dataclasses import InitVar, dataclass, field
 from pathlib import Path
-from typing import (
-    Any,
-    Dict,
-    List,
-    Literal,
-    MutableMapping,
-    Optional,
-    Tuple,
-    Union,
-    overload,
-)
+from typing import Any, Dict, List, Literal, Optional, Tuple, Union, overload
 
 from beet import Cache, Context, DataPack, File, ResourcePack
 from beet.core.utils import FileSystemPath, extra_field
 
-from .directive import AnyDirective, get_builtin_directives
+from .directive import DirectiveRegistry
 from .extract import FragmentLoader, MarkdownExtractor, TextExtractor
 from .serialize import ExternalFilesManager, MarkdownSerializer, TextSerializer
 
@@ -40,9 +30,7 @@ class Document:
     data: DataPack = field(default_factory=DataPack)
 
     loaders: List[FragmentLoader] = extra_field(default_factory=list)
-    directives: MutableMapping[str, AnyDirective] = extra_field(
-        default_factory=get_builtin_directives
-    )
+    directives: DirectiveRegistry = extra_field(default_factory=DirectiveRegistry)
 
     text_extractor: TextExtractor = extra_field(default_factory=TextExtractor)
     markdown_extractor: MarkdownExtractor = extra_field(
@@ -68,9 +56,14 @@ class Document:
             self.data = ctx.data
             if cache is None:
                 cache = ctx.cache["lectern"]
+
         if cache:
             self.text_extractor.cache = cache
             self.markdown_extractor.cache = cache
+
+        self.directives.assets = self.assets
+        self.directives.data = self.data
+
         if path:
             self.load(path)
         if text:
@@ -90,7 +83,7 @@ class Document:
         """Extract pack fragments from plain text."""
         assets, data = self.text_extractor.extract(
             source=source,
-            directives=self.directives,
+            directives=self.directives.resolve(),
             loaders=self.loaders,
         )
         self.assets.merge(assets)
@@ -104,7 +97,7 @@ class Document:
         """Extract pack fragments from markdown."""
         assets, data = self.markdown_extractor.extract(
             source=source,
-            directives=self.directives,
+            directives=self.directives.resolve(),
             loaders=self.loaders,
             external_files=external_files,
         )
@@ -113,7 +106,11 @@ class Document:
 
     def get_text(self) -> str:
         """Turn the data pack and the resource pack into text."""
-        return self.text_serializer.serialize(self.assets, self.data)
+        return self.text_serializer.serialize(
+            assets=self.assets,
+            data=self.data,
+            mapping=self.directives.resolve().get_serialization_mapping(),
+        )
 
     @overload
     def get_markdown(
@@ -140,6 +137,7 @@ class Document:
         content = self.markdown_serializer.serialize(
             assets=self.assets,
             data=self.data,
+            mapping=self.directives.resolve().get_serialization_mapping(),
             external_files=external_files,
             external_prefix=prefix,
         )

@@ -13,8 +13,8 @@ import yaml
 from beet import Context, JsonFile
 
 from lectern import (
-    AnyDirective,
     DataPackDirective,
+    Directive,
     Document,
     Fragment,
     NamespacedResourceDirective,
@@ -27,7 +27,7 @@ def beet_default(ctx: Context):
     document.loaders.append(handle_yaml)
 
 
-def handle_yaml(fragment: Fragment, directives: Mapping[str, AnyDirective]) -> Fragment:
+def handle_yaml(fragment: Fragment, directives: Mapping[str, Directive]) -> Fragment:
     """Loader that converts yaml to json."""
     directive = directives[fragment.directive]
     is_yaml = False

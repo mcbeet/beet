@@ -3,7 +3,6 @@ __all__ = [
     "MarkdownSerializer",
     "ExternalFilesManager",
     "SerializedFile",
-    "NAMESPACED_RESOURCE_DIRECTIVES",
     "EXTENSION_HIGHLIGHTING",
 ]
 
@@ -15,19 +14,11 @@ from itertools import chain
 from mimetypes import guess_type
 from pathlib import Path
 from textwrap import indent
-from typing import Any, Dict, Iterable, Iterator, Optional, Union
+from typing import Any, Dict, Iterable, Iterator, Mapping, Optional, Type, Union
 from urllib.parse import urlparse
 
 from beet import DataPack, File, NamespaceFile, ResourcePack, TextFileBase
 from beet.core.utils import normalize_string
-
-from .directive import NamespacedResourceDirective, get_builtin_directives
-
-NAMESPACED_RESOURCE_DIRECTIVES = {
-    directive.file_type: directive_name
-    for directive_name, directive in get_builtin_directives().items()
-    if isinstance(directive, NamespacedResourceDirective)
-}
 
 EXTENSION_HIGHLIGHTING = {
     ".mcfunction": "mcfunction",
@@ -132,19 +123,35 @@ class SerializedFile:
 class TextSerializer:
     """Document serializer that outputs plain text."""
 
-    escaped_regex: "re.Pattern[str]"
+    escaped_regex: Optional["re.Pattern[str]"]
 
     def __init__(self):
-        names = "|".join(
-            [*NAMESPACED_RESOURCE_DIRECTIVES.values(), "resource_pack", "data_pack"]
-        )
-        self.escaped_regex = re.compile(fr"^(@+(?:{names})\b.*)$", flags=re.MULTILINE)
+        self.escaped_regex = None
 
-    def serialize(self, assets: ResourcePack, data: DataPack) -> str:
+    def get_escaped_regex(
+        self, mapping: Mapping[Type[NamespaceFile], str]
+    ) -> "re.Pattern[str]":
+        """Create and return the escaped regex for the specified serialization mapping."""
+        names = "|".join([*mapping.values(), "resource_pack", "data_pack"])
+        pattern = fr"^(@+(?:{names})\b.*)$"
+
+        if self.escaped_regex is None or self.escaped_regex.pattern != pattern:
+            self.escaped_regex = re.compile(pattern, flags=re.MULTILINE)
+
+        return self.escaped_regex
+
+    def serialize(
+        self,
+        assets: ResourcePack,
+        data: DataPack,
+        mapping: Mapping[Type[NamespaceFile], str],
+    ) -> str:
         """Return the serialized representation."""
+        escaped_regex = self.get_escaped_regex(mapping)
+
         return "\n".join(
             (
-                f"@{directive_name} {argument}\n{self.escape_fragment(content)}"
+                f"@{directive_name} {argument}\n{self.escape_fragment(content, escaped_regex)}"
                 if isinstance(content := file_instance.ensure_serialized(), str)
                 else f"@{directive_name}(base64) {argument}\n"
                 + b64encode(content).decode()
@@ -171,9 +178,17 @@ class TextSerializer:
                 ),
                 (
                     (
-                        NAMESPACED_RESOURCE_DIRECTIVES[file_type],
-                        f"{name}:{path}",
-                        file_instance,
+                        (
+                            mapping[file_type],
+                            f"{name}:{path}",
+                            file_instance,
+                        )
+                        if file_type in mapping
+                        else (
+                            extra_directive,
+                            f"{namespace.directory}/{name}/{'/'.join(file_type.scope)}/{path}{file_type.extension}",
+                            file_instance,
+                        )
                     )
                     for name, namespace in pack.items()
                     for file_type, container in namespace.items()
@@ -182,11 +197,11 @@ class TextSerializer:
             )
         )
 
-    def escape_fragment(self, content: str) -> str:
+    def escape_fragment(self, content: str, escaped_regex: "re.Pattern[str]") -> str:
         """Escape embedded directives."""
         return "".join(
             s.replace("@", "@@", 1) if i % 2 else s
-            for i, s in enumerate(self.escaped_regex.split(content))
+            for i, s in enumerate(escaped_regex.split(content))
         )
 
 
@@ -197,6 +212,7 @@ class MarkdownSerializer:
         self,
         assets: ResourcePack,
         data: DataPack,
+        mapping: Mapping[Type[NamespaceFile], str],
         external_files: Optional[Dict[str, File[Any, Any]]] = None,
         external_prefix: str = "",
     ) -> str:
@@ -213,6 +229,7 @@ class MarkdownSerializer:
                     title,
                     directive,
                     pack,
+                    mapping,
                     external_files,
                     external_prefix,
                 )
@@ -225,6 +242,7 @@ class MarkdownSerializer:
         title: str,
         pack_directive: str,
         pack: Union[DataPack, ResourcePack],
+        mapping: Mapping[Type[NamespaceFile], str],
         external_files: Optional[Dict[str, File[Any, Any]]] = None,
         external_prefix: str = "",
     ) -> Iterator[str]:
@@ -257,19 +275,27 @@ class MarkdownSerializer:
                 )
 
             for file_type, container in namespace.items():
-                directive_name = NAMESPACED_RESOURCE_DIRECTIVES[file_type]
-
                 for path, file_instance in container.items():
-                    yield from self.format_serialized_file(
-                        self.serialize_file_instance(
-                            directive_name,
-                            f"{name}:{path}",
-                            file_instance,
-                            external_files,
-                            external_prefix,
+                    if file_type in mapping:
+                        yield from self.format_serialized_file(
+                            self.serialize_file_instance(
+                                mapping[file_type],
+                                f"{name}:{path}",
+                                file_instance,
+                                external_files,
+                                external_prefix,
+                            )
                         )
-                    )
-
+                    else:
+                        yield from self.format_serialized_file(
+                            self.serialize_file_instance(
+                                pack_directive,
+                                f"{namespace.directory}/{name}/{'/'.join(file_type.scope)}/{path}{file_type.extension}",
+                                file_instance,
+                                external_files,
+                                external_prefix,
+                            )
+                        )
         yield ""
 
     def format_serialized_file(self, chunks: Iterable[str]) -> Iterator[str]:

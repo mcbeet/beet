@@ -10,7 +10,7 @@ from typing import Any, Dict, Mapping, Optional
 from beet import BinaryFile, Cache, File
 from beet.core.utils import FileSystemPath
 
-from .directive import Directive, get_builtin_directives
+from .directive import Directive, DirectiveRegistry
 from .extract import MarkdownExtractor
 from .fragment import Fragment
 from .serialize import ExternalFilesManager, SerializedFile
@@ -37,7 +37,7 @@ class MarkdownPrefetcher:
     ):
         """Prefetch urls in the specified document."""
         if directives is None:
-            directives = get_builtin_directives()
+            directives = DirectiveRegistry().resolve()
 
         path = Path(path).resolve()
         output = Path(output).resolve()

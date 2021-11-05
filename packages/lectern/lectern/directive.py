@@ -1,74 +1,23 @@
 __all__ = [
     "Directive",
-    "AnyDirective",
+    "DirectiveRegistry",
     "NamespacedResourceDirective",
     "DataPackDirective",
     "ResourcePackDirective",
     "BundleFragmentMixin",
     "SkipDirective",
-    "get_builtin_directives",
 ]
 
 
 import io
 from dataclasses import dataclass
-from typing import Any, Dict, Protocol, Type, Union
+from typing import Any, Callable, Dict, List, Optional, Protocol, Type
 from zipfile import ZipFile
 
-from beet import DataPack, ResourcePack
-from beet.library.base import NamespaceFile
-from beet.library.data_pack import (
-    Advancement,
-    Biome,
-    BlockTag,
-    ConfiguredCarver,
-    ConfiguredFeature,
-    ConfiguredStructureFeature,
-    ConfiguredSurfaceBuilder,
-    Dimension,
-    DimensionType,
-    EntityTypeTag,
-    FluidTag,
-    Function,
-    FunctionTag,
-    ItemModifier,
-    ItemTag,
-    LootTable,
-    NoiseSettings,
-    Predicate,
-    ProcessorList,
-    Recipe,
-    Structure,
-    TemplatePool,
-)
-from beet.library.resource_pack import (
-    Blockstate,
-    Font,
-    FragmentShader,
-    GlslShader,
-    GlyphSizeFile,
-    Language,
-    Model,
-    Particle,
-    Shader,
-    ShaderPost,
-    Sound,
-    Text,
-    Texture,
-    TextureMcmeta,
-    TrueTypeFont,
-    VertexShader,
-)
+from beet import Container, DataPack, NamespaceFile, ResourcePack
+from beet.core.utils import snake_case
 
 from .fragment import Fragment
-
-AnyDirective = Union[
-    "Directive",
-    "NamespacedResourceDirective",
-    "DataPackDirective",
-    "ResourcePackDirective",
-    "SkipDirective",
-]
 
 
 class Directive(Protocol):
@@ -76,6 +25,53 @@ class Directive(Protocol):
 
     def __call__(self, fragment: Fragment, assets: ResourcePack, data: DataPack):
         ...
+
+
+class DirectiveRegistry(Container[str, Directive]):
+    """Registry for directives."""
+
+    resolvers: List[Callable[["DirectiveRegistry"], Any]]
+    assets: ResourcePack
+    data: DataPack
+
+    def __init__(
+        self,
+        assets: Optional[ResourcePack] = None,
+        data: Optional[DataPack] = None,
+    ):
+        super().__init__()
+        self.resolvers = []
+        self.assets = assets or ResourcePack()
+        self.data = data or DataPack()
+
+        self["data_pack"] = DataPackDirective()
+        self["resource_pack"] = ResourcePackDirective()
+        self["skip"] = SkipDirective()
+
+        @self.add_resolver
+        def _(self: DirectiveRegistry):
+            for pack in [self.assets, self.data]:
+                for file_type in pack.resolve_scope_map().values():
+                    name = snake_case(file_type.__name__)
+                    self[name] = NamespacedResourceDirective(file_type)
+
+    def resolve(self) -> "DirectiveRegistry":
+        """Resolve all directives in the registry."""
+        for callback in self.resolvers:
+            callback(self)
+        return self
+
+    def add_resolver(self, resolver: Callable[["DirectiveRegistry"], Any]):
+        """Add directive resolver."""
+        self.resolvers.append(resolver)
+
+    def get_serialization_mapping(self) -> Dict[Type[NamespaceFile], str]:
+        """Return the serialization mapping."""
+        return {
+            directive.file_type: directive_name
+            for directive_name, directive in self.items()
+            if isinstance(directive, NamespacedResourceDirective)
+        }
 
 
 @dataclass
@@ -141,55 +137,3 @@ class SkipDirective:
 
     def __call__(self, fragment: Fragment, assets: ResourcePack, data: DataPack):
         fragment.expect()
-
-
-def get_builtin_directives() -> Dict[str, AnyDirective]:
-    """Return the built-in directives."""
-    return {
-        # fmt: off
-        "advancement":                  NamespacedResourceDirective(Advancement),
-        "function":                     NamespacedResourceDirective(Function),
-        "loot_table":                   NamespacedResourceDirective(LootTable),
-        "predicate":                    NamespacedResourceDirective(Predicate),
-        "recipe":                       NamespacedResourceDirective(Recipe),
-        "structure":                    NamespacedResourceDirective(Structure),
-        "block_tag":                    NamespacedResourceDirective(BlockTag),
-        "entity_type_tag":              NamespacedResourceDirective(EntityTypeTag),
-        "fluid_tag":                    NamespacedResourceDirective(FluidTag),
-        "function_tag":                 NamespacedResourceDirective(FunctionTag),
-        "item_tag":                     NamespacedResourceDirective(ItemTag),
-        "dimension_type":               NamespacedResourceDirective(DimensionType),
-        "dimension":                    NamespacedResourceDirective(Dimension),
-        "biome":                        NamespacedResourceDirective(Biome),
-        "configured_carver":            NamespacedResourceDirective(ConfiguredCarver),
-        "configured_feature":           NamespacedResourceDirective(ConfiguredFeature),
-        "configured_structure_feature": NamespacedResourceDirective(ConfiguredStructureFeature),
-        "configured_surface_builder":   NamespacedResourceDirective(ConfiguredSurfaceBuilder),
-        "noise_settings":               NamespacedResourceDirective(NoiseSettings),
-        "processor_list":               NamespacedResourceDirective(ProcessorList),
-        "template_pool":                NamespacedResourceDirective(TemplatePool),
-        "item_modifier":                NamespacedResourceDirective(ItemModifier),
-
-        "blockstate":      NamespacedResourceDirective(Blockstate),
-        "model":           NamespacedResourceDirective(Model),
-        "language":        NamespacedResourceDirective(Language),
-        "font":            NamespacedResourceDirective(Font),
-        "glyph_sizes":     NamespacedResourceDirective(GlyphSizeFile),
-        "truetype_font":   NamespacedResourceDirective(TrueTypeFont),
-        "shader_post":     NamespacedResourceDirective(ShaderPost),
-        "shader":          NamespacedResourceDirective(Shader),
-        "fragment_shader": NamespacedResourceDirective(FragmentShader),
-        "vertex_shader":   NamespacedResourceDirective(VertexShader),
-        "glsl_shader":     NamespacedResourceDirective(GlslShader),
-        "text":            NamespacedResourceDirective(Text),
-        "texture_mcmeta":  NamespacedResourceDirective(TextureMcmeta),
-        "texture":         NamespacedResourceDirective(Texture),
-        "sound":           NamespacedResourceDirective(Sound),
-        "particle":        NamespacedResourceDirective(Particle),
-
-        "data_pack":     DataPackDirective(),
-        "resource_pack": ResourcePackDirective(),
-
-        "skip": SkipDirective(),
-        # fmt: on
-    }

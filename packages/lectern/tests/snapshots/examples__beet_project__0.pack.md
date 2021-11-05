@@ -477,6 +477,16 @@
 
   </details>
 
+- `@function isolated:message_demo`
+
+  <details>
+
+  ```mcfunction
+  tellraw @a ["", {"text": "hello", "color": "red"}]
+  ```
+
+  </details>
+
 ## Resource pack
 
 - `@resource_pack pack.mcmeta`

@@ -1,6 +1,6 @@
 import pytest
 
-from lectern import Fragment, TextExtractor, get_builtin_directives
+from lectern import DirectiveRegistry, Fragment, TextExtractor
 
 
 @pytest.mark.parametrize(
@@ -24,6 +24,6 @@ from lectern import Fragment, TextExtractor, get_builtin_directives
 )
 def test_parse(source: str, fragment: Fragment):
     parsed_fragment = next(
-        TextExtractor().parse_fragments(source, get_builtin_directives())
+        TextExtractor().parse_fragments(source, DirectiveRegistry().resolve())
     )
     assert fragment == parsed_fragment

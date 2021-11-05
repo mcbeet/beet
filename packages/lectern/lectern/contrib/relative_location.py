@@ -11,7 +11,7 @@ from typing import Mapping
 
 from beet import Context
 
-from lectern import AnyDirective, Document, Fragment, NamespacedResourceDirective
+from lectern import Directive, Document, Fragment, NamespacedResourceDirective
 
 
 def beet_default(ctx: Context):
@@ -28,7 +28,7 @@ class RelativeNamespacedResourceLoader:
     def __call__(
         self,
         fragment: Fragment,
-        directives: Mapping[str, AnyDirective],
+        directives: Mapping[str, Directive],
     ) -> Fragment:
         if isinstance(directives[fragment.directive], NamespacedResourceDirective):
             name = fragment.expect("name")
