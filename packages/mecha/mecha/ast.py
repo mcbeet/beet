@@ -53,7 +53,18 @@ __all__ = [
 
 
 from dataclasses import dataclass, fields
-from typing import Any, ClassVar, Iterator, Literal, Optional, Tuple, TypeVar, Union
+from typing import (
+    Any,
+    ClassVar,
+    Iterator,
+    Literal,
+    Mapping,
+    Optional,
+    Sequence,
+    Tuple,
+    TypeVar,
+    Union,
+)
 from uuid import UUID
 
 from beet.core.utils import extra_field, required_field
@@ -224,6 +235,28 @@ class AstJson(AstNode):
     def evaluate(self) -> Any:
         """Return the json value."""
         raise NotImplementedError()
+
+    @classmethod
+    def from_value(cls, value: Any) -> "AstJson":
+        """Create json ast nodes representing the specified json value."""
+        if value is None or isinstance(value, (bool, str, int, float)):
+            return AstJsonValue(value=value)
+        elif isinstance(value, Mapping):
+            object: Mapping[str, Any] = value
+            return AstJsonObject(
+                entries=AstChildren(
+                    AstJsonObjectEntry(
+                        key=AstJsonObjectKey(value=k),
+                        value=cls.from_value(v),
+                    )
+                    for k, v in object.items()
+                )
+            )
+        elif isinstance(value, Sequence):
+            array: Sequence[Any] = value
+            return AstJsonArray(elements=AstChildren(cls.from_value(e) for e in array))
+        else:
+            raise ValueError(f"Invalid json value of type {type(value)!r}.")
 
 
 @dataclass(frozen=True)
