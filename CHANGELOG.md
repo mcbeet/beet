@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.44.3 (2021-11-05)
+### Fix
+* Put message retrieval logic into MessageManager ([`0f187f2`](https://github.com/mcbeet/beet/commit/0f187f23d0a76d1f0b73697c706cf36d7453c5a4))
+
 ## v0.44.2 (2021-11-05)
 ### Fix
 * Cleanup empty containers and namespaces after merge ([`43b7d08`](https://github.com/mcbeet/beet/commit/43b7d086b5347c80a189ec6f9234cb73f50625ab))
