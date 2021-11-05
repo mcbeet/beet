@@ -216,7 +216,7 @@ class Dispatcher(Generic[T]):
     def invoke(self, node: AstNode, *args: Any, **kwargs: Any) -> Any:
         """Invoke rules on the given ast node."""
         for name, rule in self.dispatch(node):
-            with self.use_rule(name):
+            with self.use_rule(node, name):
                 rule(node, *args, **kwargs)
         return node
 
@@ -232,7 +232,7 @@ class Dispatcher(Generic[T]):
             self.diagnostics = previous_diagnostics
 
     @contextmanager
-    def use_rule(self, name: Optional[str] = None) -> Iterator[None]:
+    def use_rule(self, node: AstNode, name: Optional[str] = None) -> Iterator[None]:
         """Handle rule diagnostics."""
         override_level = self.levels.get(name or "")
         if override_level == "ignore":
@@ -243,12 +243,24 @@ class Dispatcher(Generic[T]):
         except Diagnostic as diagnostic:
             if override_level:
                 diagnostic.level = override_level
-            self.diagnostics.add(diagnostic.with_defaults(rule=name))
+            self.diagnostics.add(
+                diagnostic.with_defaults(
+                    rule=name,
+                    location=node.location,
+                    end_location=node.end_location,
+                )
+            )
         except DiagnosticCollection as diagnostic:
             for diagnostic in diagnostic.exceptions:
                 if override_level:
                     diagnostic.level = override_level
-                self.diagnostics.add(diagnostic.with_defaults(rule=name))
+                self.diagnostics.add(
+                    diagnostic.with_defaults(
+                        rule=name,
+                        location=node.location,
+                        end_location=node.end_location,
+                    )
+                )
 
     def __call__(self, node: AstNode) -> T:
         if not self.count:
@@ -269,22 +281,22 @@ class Visitor(Dispatcher[Any]):
 
         result = None
 
-        with self.use_rule(name):
+        with self.use_rule(node, name):
             result = rule(node, *args, **kwargs) if rule else (child for child in node)
 
-            if isinstance(result, Generator):
+        if isinstance(result, Generator):
+            try:
+                with self.use_rule(node, name):
+                    child = next(result)
+            except StopIteration as exc:
+                return exc.value
+
+            while True:
+                feedback = self.invoke(child, *args, **kwargs)
                 try:
-                    with self.use_rule(name):
-                        child = next(result)
+                    child = result.send(feedback)
                 except StopIteration as exc:
                     return exc.value
-
-                while True:
-                    feedback = self.invoke(child, *args, **kwargs)
-                    try:
-                        child = result.send(feedback)
-                    except StopIteration as exc:
-                        return exc.value
 
         return result
 
@@ -319,7 +331,7 @@ class MutatingReducer(Dispatcher[Any]):
             node = replace(node, **to_replace)
 
         for name, rule in self.dispatch(node):
-            with self.use_rule(name):
+            with self.use_rule(node, name):
                 node = rule(node, *args, **kwargs)
 
         return node

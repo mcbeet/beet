@@ -73,14 +73,21 @@ class Diagnostic(MechaError):
         hint: Optional[str] = None,
         filename: Optional[str] = None,
         file: Optional[TextFileBase[Any]] = None,
+        location: SourceLocation = UNKNOWN_LOCATION,
+        end_location: SourceLocation = UNKNOWN_LOCATION,
     ) -> "Diagnostic":
         """Set default values for unspecified attributes."""
+        if not self.location.unknown:
+            location = self.location
+            end_location = self.end_location
         return replace(
             self,
             rule=self.rule or rule,
             hint=self.hint or hint,
             filename=self.filename or filename,
             file=self.file or file,
+            location=location,
+            end_location=end_location,
         )
 
 
