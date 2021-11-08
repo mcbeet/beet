@@ -7,6 +7,7 @@ __all__ = [
 ]
 
 
+from glob import glob
 from typing import List
 
 from pydantic import BaseModel
@@ -28,5 +29,5 @@ def load(ctx: Context, opts: LoadOptions):
     """Plugin that loads data packs and resource packs."""
     for config, pack in zip([opts.resource_pack, opts.data_pack], ctx.packs):
         for pattern in config:
-            for path in ctx.directory.glob(pattern):
+            for path in glob(str(ctx.directory / pattern)):
                 pack.load(path)
