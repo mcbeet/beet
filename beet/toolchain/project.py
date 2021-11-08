@@ -7,11 +7,11 @@ __all__ = [
 
 from copy import deepcopy
 from dataclasses import dataclass
-from glob import glob
 from importlib.metadata import entry_points
 from pathlib import Path
 from typing import ClassVar, Iterable, Iterator, List, Optional, Sequence
 
+from beet.contrib.load import load
 from beet.contrib.render import render
 from beet.core.utils import FileSystemPath, intersperse, log_time, normalize_string
 from beet.core.watch import DirectoryWatcher, FileChanges
@@ -293,10 +293,12 @@ class ProjectBuilder:
         pack_configs = [self.config.resource_pack, self.config.data_pack]
         pack_suffixes = ["_resource_pack", "_data_pack"]
 
-        for config, pack in zip(pack_configs, ctx.packs):
-            for pattern in config.load:
-                for path in glob(pattern):
-                    pack.load(path)
+        ctx.require(
+            load(
+                resource_pack=self.config.resource_pack.load,
+                data_pack=self.config.data_pack.load,
+            )
+        )
 
         ctx.require(
             render(
