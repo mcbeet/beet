@@ -343,8 +343,7 @@ class Mecha:
             )
             self.database.enqueue(result)
 
-        while not self.database.done:
-            step, function = self.database.dequeue()
+        for step, function in self.database.process_queue():
             compilation_unit = self.database[function]
 
             if step < 0:
