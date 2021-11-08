@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.44.6 (2021-11-08)
+### Fix
+* Make it possible to load packs manually ([`81fee16`](https://github.com/mcbeet/beet/commit/81fee160f9dfbba6d43463c260cbcffba04baca3))
+
 ## v0.44.5 (2021-11-05)
 ### Fix
 * Turn discard into invalidate_changes ([`9c38d86`](https://github.com/mcbeet/beet/commit/9c38d86c8e6fa9c9cc886edd117fc441790bd8f7))
