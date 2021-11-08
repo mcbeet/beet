@@ -2,6 +2,11 @@
 
 <!--next-version-placeholder-->
 
+## v0.44.7 (2021-11-08)
+### Fix
+* Use beet.contrib.load to handle the load option ([`c23e4ad`](https://github.com/mcbeet/beet/commit/c23e4ad0ed10e3480255dc7fc4a6e7a0f1c826b3))
+* Make beet.contrib.load work with absolute paths ([`4971c40`](https://github.com/mcbeet/beet/commit/4971c40259e5c67ece20d82c47566f2fe6ce7af3))
+
 ## v0.44.6 (2021-11-08)
 ### Fix
 * Make it possible to load packs manually ([`81fee16`](https://github.com/mcbeet/beet/commit/81fee160f9dfbba6d43463c260cbcffba04baca3))
