@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.8.2 (2021-11-08)
+### Fix
+* Prevent error when the location is outside the view ([`96c8005`](https://github.com/mcbeet/mecha/commit/96c800527a6b02ba14a47be74976979c9e534294))
+
 ## v0.8.1 (2021-11-08)
 ### Fix
 * Database.current is now properly updated ([`e74cd13`](https://github.com/mcbeet/mecha/commit/e74cd13b013df43911a463c5a0c7a457e193f672))
