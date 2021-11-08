@@ -141,7 +141,8 @@ def underline_code(
     gutter = [f"{l + view_start_line} |" for l in range(len(view))]
 
     for line in reversed(range(lineno, end_lineno + 1)):
-        code = view[line - view_start_line]
+        index = line - view_start_line
+        code = view[index] if index < len(view) else ""
         start = colno if line == lineno else 1
         stop = end_colno if line == end_lineno else len(code) + 1
 
@@ -153,8 +154,8 @@ def underline_code(
 
         if start < stop:
             underline = " " * (start - 1) + "^" * (stop - start)
-            view.insert(line - view_start_line + 1, underline)
-            gutter.insert(line - view_start_line + 1, ":")
+            view.insert(index + 1, underline)
+            gutter.insert(index + 1, ":")
 
     gutter_size = max(max(len(g) for g in gutter), 8)
     return "\n".join(f"{g.rjust(gutter_size)}  {text}" for g, text in zip(gutter, view))
