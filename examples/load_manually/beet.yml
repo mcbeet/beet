@@ -1,0 +1,5 @@
+pipeline:
+  - beet.contrib.load
+meta:
+  load:
+    data_pack: [src]
