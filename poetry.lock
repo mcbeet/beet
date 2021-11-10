@@ -947,7 +947,7 @@ webpdf = ["pyppeteer (==0.2.6)"]
 
 [[package]]
 name = "nbdime"
-version = "3.1.0"
+version = "3.1.1"
 description = "Diff and merge of Jupyter Notebooks"
 category = "dev"
 optional = false
@@ -2408,8 +2408,8 @@ nbconvert = [
     {file = "nbconvert-6.2.0.tar.gz", hash = "sha256:16ceecd0afaa8fd26c245fa32e2c52066c02f13aa73387fffafd84750baea863"},
 ]
 nbdime = [
-    {file = "nbdime-3.1.0-py2.py3-none-any.whl", hash = "sha256:f341097d50c5459901a2be2eed221e1f936144741d96544372981051a3bec157"},
-    {file = "nbdime-3.1.0.tar.gz", hash = "sha256:12dc4390b355b26d07ac8d11d50efbcb54bae0ad5842b817131babd2f4567963"},
+    {file = "nbdime-3.1.1-py2.py3-none-any.whl", hash = "sha256:ea4ddf919e3035800ef8bd5552b814522207cb154ca7512565e4539a54c74dbf"},
+    {file = "nbdime-3.1.1.tar.gz", hash = "sha256:67767320e971374f701a175aa59abd3a554723039d39fae908e72d16330d648b"},
 ]
 nbformat = [
     {file = "nbformat-5.1.3-py3-none-any.whl", hash = "sha256:eb8447edd7127d043361bc17f2f5a807626bc8e878c7709a1c647abda28a9171"},
