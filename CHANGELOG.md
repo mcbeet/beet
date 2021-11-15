@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.44.8 (2021-11-15)
+### Fix
+* Support multiple plugins in a single require call ([`4251abc`](https://github.com/mcbeet/beet/commit/4251abc6e6b8e5effb4dea6b0d3519c49549fb8e))
+
 ## v0.44.7 (2021-11-08)
 ### Fix
 * Use beet.contrib.load to handle the load option ([`c23e4ad`](https://github.com/mcbeet/beet/commit/c23e4ad0ed10e3480255dc7fc4a6e7a0f1c826b3))
