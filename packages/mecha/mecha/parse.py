@@ -57,6 +57,7 @@ __all__ = [
     "NbtPathParser",
     "parse_particle",
     "AggregateParser",
+    "SingleLineConstraint",
     "NUMBER_PATTERN",
 ]
 
@@ -1821,3 +1822,14 @@ class AggregateParser:
         values = [(name, parser(stream)) for name, parser in self.fields.items()]
         node = self.type(**dict(values))
         return set_location(node, values[0][1], values[-1][1])
+
+
+@dataclass
+class SingleLineConstraint:
+    """Constraint that prevents parsing across multiple lines."""
+
+    parser: Parser
+
+    def __call__(self, stream: TokenStream) -> Any:
+        with stream.intercept("newline"):
+            return self.parser(stream)
