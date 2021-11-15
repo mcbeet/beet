@@ -109,16 +109,17 @@ class GenericPipeline(Generic[T]):
     plugins: Set[GenericPlugin[T]] = field(default_factory=set)
     tasks: List[Task[T]] = field(default_factory=list)
 
-    def require(self, spec: GenericPluginSpec[T]):
+    def require(self, *args: GenericPluginSpec[T]):
         """Execute the specified plugin."""
-        plugin = self.resolve(spec)
-        if plugin in self.plugins:
-            return
+        for spec in args:
+            plugin = self.resolve(spec)
+            if plugin in self.plugins:
+                return
 
-        self.plugins.add(plugin)
+            self.plugins.add(plugin)
 
-        if remaining_work := Task(plugin).advance(self.ctx):
-            self.tasks.append(remaining_work)
+            if remaining_work := Task(plugin).advance(self.ctx):
+                self.tasks.append(remaining_work)
 
     def resolve(self, spec: GenericPluginSpec[T]) -> GenericPlugin[T]:
         """Return the imported plugin if the argument is a dotted path."""
