@@ -2,6 +2,15 @@
 
 <!--next-version-placeholder-->
 
+## v0.9.0 (2021-11-16)
+### Feature
+* Add mecha.contrib.annotate_diagnostics ([`2084667`](https://github.com/mcbeet/mecha/commit/208466709f0b2e1fc1c7a48738152d761681fb55))
+* Add readonly option and setup examples ([`bdb7b1d`](https://github.com/mcbeet/mecha/commit/bdb7b1db66907e1d5eb85a6653e02f9dfd0bdea7))
+
+### Fix
+* Report diagnostics with logger.warning instead of logger.warn ([`155d01c`](https://github.com/mcbeet/mecha/commit/155d01cd5215894d16a49137d92c4da8c2482696))
+* Add SingleLineConstraint ([`f649b4a`](https://github.com/mcbeet/mecha/commit/f649b4a7bc1cf74725724c22c1fb5ad7767ce03b))
+
 ## v0.8.2 (2021-11-08)
 ### Fix
 * Prevent error when the location is outside the view ([`96c8005`](https://github.com/mcbeet/mecha/commit/96c800527a6b02ba14a47be74976979c9e534294))
