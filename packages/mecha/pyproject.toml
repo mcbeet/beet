@@ -33,7 +33,7 @@ pytest = "^6.2.5"
 isort = "^5.10.0"
 python-semantic-release = "^7.19.2"
 pytest-insta = "^0.1.10"
-lectern = "^0.17.1"
+lectern = "^0.18.0"
 
 [tool.black]
 target-version = ["py38"]
