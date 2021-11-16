@@ -47,6 +47,7 @@ class CompilationDatabase(Container[TextFileBase[Any], CompilationUnit]):
         self.queue = []
         self.session = set()
         self.current = TextFile()
+        self[self.current] = CompilationUnit()
 
     def process(
         self,

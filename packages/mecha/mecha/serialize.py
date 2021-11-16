@@ -4,7 +4,11 @@ __all__ = [
 
 
 import json
-from typing import Any, Iterable, Iterator, List
+import re
+from dataclasses import dataclass, field
+from typing import Any, Iterable, Iterator, List, Optional
+
+from beet.core.utils import required_field
 
 from .ast import (
     AstBlock,
@@ -36,19 +40,24 @@ from .ast import (
     AstTime,
     AstUUID,
 )
+from .database import CompilationDatabase
 from .dispatch import Visitor, rule
 from .spec import CommandSpec
 from .utils import QuoteHelper
 
+REGEX_COMMENTS = re.compile(r"^(?:(\s*#.*)|.+)", re.MULTILINE)
 
+
+@dataclass
 class Serializer(Visitor):
-    spec: CommandSpec
-    quote_helper: QuoteHelper
+    spec: CommandSpec = required_field()
+    database: CompilationDatabase = field(default_factory=CompilationDatabase)
 
-    def __init__(self, spec: CommandSpec):
-        super().__init__()
-        self.spec = spec
-        self.quote_helper = QuoteHelper(
+    keep_comments: bool = False
+
+    regex_comments: "re.Pattern[str]" = field(default=REGEX_COMMENTS)
+    quote_helper: QuoteHelper = field(
+        default_factory=lambda: QuoteHelper(
             escape_sequences={
                 r"\\": "\\",
                 r"\f": "\f",
@@ -57,10 +66,20 @@ class Serializer(Visitor):
                 r"\t": "\t",
             }
         )
+    )
 
-    def __call__(self, node: AstNode) -> str:
+    def __call__(self, node: AstNode, keep_comments: Optional[bool] = None) -> str:
         result: List[str] = []
-        self.invoke(node, result)
+
+        if keep_comments is not None:
+            self.keep_comments, keep_comments = keep_comments, self.keep_comments
+
+        try:
+            self.invoke(node, result)
+        finally:
+            if keep_comments is not None:
+                self.keep_comments = keep_comments
+
         return "".join(result)
 
     def collection(
@@ -94,9 +113,25 @@ class Serializer(Visitor):
 
     @rule(AstRoot)
     def root(self, node: AstRoot, result: List[str]):
+        pos = 0
+        source = self.keep_comments and self.database[self.database.current].source
+
         for command in node.commands:
+            if source and not command.location.unknown:
+                if pos > -1:
+                    if fill := source[pos : command.location.pos]:
+                        result.append(self.regex_comments.sub(r"\1", fill))
+                try:
+                    pos = source.index("\n", command.location.pos) + 1
+                except ValueError:
+                    pos = -1
+
             yield command
             result.append("\n")
+
+        if source and pos > -1:
+            if fill := source[pos:]:
+                result.append(self.regex_comments.sub(r"\1", fill))
 
     @rule(AstCommand)
     def command(self, node: AstCommand, result: List[str]):
