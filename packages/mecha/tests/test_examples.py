@@ -9,4 +9,4 @@ from pytest_insta import SnapshotFixture
 @pytest.mark.parametrize("directory", os.listdir("examples"))
 def test_build(snapshot: SnapshotFixture, directory: str):
     with run_beet(directory=f"examples/{directory}") as ctx:
-        assert snapshot("pack.txt") == ctx.inject(Document)
+        assert snapshot("pack.md") == ctx.inject(Document)
