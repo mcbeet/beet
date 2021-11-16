@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.18.0 (2021-11-16)
+### Feature
+* Add flat markdown ([`45c5cf5`](https://github.com/mcbeet/lectern/commit/45c5cf5d7c949e824936ce43fce346c06b4af8ad))
+
 ## v0.17.1 (2021-11-05)
 ### Fix
 * Update list of supported resources ([`fbbbbdc`](https://github.com/mcbeet/lectern/commit/fbbbbdc6a3c96fe0e496e01a8732eadb7ea67485))
