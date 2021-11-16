@@ -19,7 +19,7 @@
 
 ### demo
 
-- `@function(strip_final_newline) demo:foo`
+- `@function demo:foo`
 
   <details>
 

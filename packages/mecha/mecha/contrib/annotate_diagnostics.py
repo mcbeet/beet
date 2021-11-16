@@ -41,4 +41,4 @@ def beet_default(ctx: Context):
 
         result += lines[i:]
 
-        function.text = "\n".join(result)
+        function.text = "\n".join(result) + "\n"
