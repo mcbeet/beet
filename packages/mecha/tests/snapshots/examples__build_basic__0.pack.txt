@@ -1,0 +1,11 @@
+@data_pack pack.mcmeta
+{
+  "pack": {
+    "pack_format": 7,
+    "description": ""
+  }
+}
+
+@function demo:foo
+say hello
+say world

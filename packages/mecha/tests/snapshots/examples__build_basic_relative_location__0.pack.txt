@@ -1,0 +1,17 @@
+@data_pack pack.mcmeta
+{
+  "pack": {
+    "pack_format": 7,
+    "description": ""
+  }
+}
+
+@function demo:bar
+say hello
+
+@function demo:folder/wat
+function demo:bar
+
+@function demo:foo
+function demo:folder/wat
+function demo:bar

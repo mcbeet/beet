@@ -1,0 +1,10 @@
+@data_pack pack.mcmeta
+{
+  "pack": {
+    "pack_format": 7,
+    "description": ""
+  }
+}
+
+@function demo:foo
+tellraw @a {"text": "hello", "color": "red"}

@@ -56,6 +56,7 @@ class MechaOptions(BaseModel):
 
     version: VersionNumber = "1.17"
     multiline: bool = False
+    readonly: Optional[bool] = None
     match: Optional[List[str]] = None
     rules: Dict[str, Literal["ignore", "info", "warn", "error"]] = {}
 
@@ -67,6 +68,7 @@ class Mecha:
     ctx: InitVar[Optional[Context]] = None
     version: InitVar[VersionNumber] = "1.17"
     multiline: InitVar[bool] = False
+    readonly: bool = False
     match: Optional[List[str]] = None
 
     directory: Path = extra_field(init=False)
@@ -100,6 +102,8 @@ class Mecha:
             version = opts.version
             multiline = opts.multiline
 
+            if opts.readonly is not None:
+                self.readonly = opts.readonly
             if opts.match is not None:
                 self.match = opts.match
 
@@ -267,6 +271,7 @@ class Mecha:
         *,
         match: Optional[List[str]] = None,
         multiline: Optional[bool] = None,
+        readonly: Optional[bool] = None,
         report: Optional[DiagnosticCollection] = None,
     ) -> DataPack:
         ...
@@ -279,6 +284,7 @@ class Mecha:
         filename: Optional[FileSystemPath] = None,
         resource_location: Optional[str] = None,
         multiline: Optional[bool] = None,
+        readonly: Optional[bool] = None,
         report: Optional[DiagnosticCollection] = None,
     ) -> TextFileType:
         ...
@@ -291,6 +297,7 @@ class Mecha:
         filename: Optional[FileSystemPath] = None,
         resource_location: Optional[str] = None,
         multiline: Optional[bool] = None,
+        readonly: Optional[bool] = None,
         report: Optional[DiagnosticCollection] = None,
     ) -> Function:
         ...
@@ -303,10 +310,14 @@ class Mecha:
         filename: Optional[FileSystemPath] = None,
         resource_location: Optional[str] = None,
         multiline: Optional[bool] = None,
+        readonly: Optional[bool] = None,
         report: Optional[DiagnosticCollection] = None,
     ) -> Union[DataPack, TextFileBase[Any]]:
         """Apply all compilation steps."""
         self.database.setup_compilation()
+
+        if readonly is None:
+            readonly = self.readonly
 
         if isinstance(source, DataPack):
             result = source
@@ -369,7 +380,7 @@ class Mecha:
                     compilation_unit.ast = self.steps[step](compilation_unit.ast)
                     self.database.enqueue(function, step + 1)
 
-            else:
+            elif not readonly:
                 if not compilation_unit.ast:
                     continue
                 with self.serialize.use_diagnostics(compilation_unit.diagnostics):

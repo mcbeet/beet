@@ -1,21 +1,12 @@
-import sys
-from importlib import import_module
-from pathlib import Path
+import os
 
 import pytest
+from beet import run_beet
+from lectern import Document
 from pytest_insta import SnapshotFixture
 
-EXAMPLES_DIRECTORY = Path(__file__).parent.parent / "examples"
-sys.path.append(str(EXAMPLES_DIRECTORY))
 
-
-@pytest.mark.parametrize(
-    "module_name", [p.stem for p in EXAMPLES_DIRECTORY.glob("*.py")]
-)
-def test_output(
-    snapshot: SnapshotFixture,
-    capsys: pytest.CaptureFixture[str],
-    module_name: str,
-):
-    import_module(module_name)
-    assert snapshot() == capsys.readouterr().out
+@pytest.mark.parametrize("directory", os.listdir("examples"))
+def test_build(snapshot: SnapshotFixture, directory: str):
+    with run_beet(directory=f"examples/{directory}") as ctx:
+        assert snapshot("pack.txt") == ctx.inject(Document)

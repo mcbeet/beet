@@ -1,0 +1,6 @@
+require:
+  - mecha.contrib.relative_location
+data_pack:
+  load: [src]
+pipeline:
+  - mecha
