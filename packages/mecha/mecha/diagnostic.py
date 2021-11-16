@@ -117,6 +117,10 @@ class DiagnosticCollection(MechaError):
         """Combine diagnostics from another collection."""
         self.exceptions.extend(other.exceptions)
 
+    def clear(self):
+        """Clear all the diagnostics."""
+        self.exceptions.clear()
+
     def get_all_errors(self) -> Iterator[Diagnostic]:
         """Yield all the diagnostics with a severity level of "error"."""
         for exc in self.exceptions:

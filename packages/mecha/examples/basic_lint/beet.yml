@@ -1,0 +1,11 @@
+require:
+  - mecha.contrib.lint_basic
+data_pack:
+  load: [src]
+pipeline:
+  - mecha
+  - mecha.contrib.annotate_diagnostics
+  - mecha.contrib.clear_diagnostics
+meta:
+  mecha:
+    readonly: true
