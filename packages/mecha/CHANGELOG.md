@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.10.0 (2021-11-16)
+### Feature
+* Add mecha.contrib.implicit_execute ([`835660f`](https://github.com/mcbeet/mecha/commit/835660f92fcfa9473211c84b2ed754096afb23a8))
+
 ## v0.9.2 (2021-11-16)
 ### Fix
 * Tweak styling for diagnostic annotations ([`f4e3fde`](https://github.com/mcbeet/mecha/commit/f4e3fdeeb34d3564d39698336e8d66cc321d8fd3))
