@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.9.1 (2021-11-16)
+### Fix
+* Forgot final newline in mecha.contrib.annotate_diagnostics ([`b665a94`](https://github.com/mcbeet/mecha/commit/b665a948c80cb4296721a6b7d55011106c057e9c))
+
 ## v0.9.0 (2021-11-16)
 ### Feature
 * Add mecha.contrib.annotate_diagnostics ([`2084667`](https://github.com/mcbeet/mecha/commit/208466709f0b2e1fc1c7a48738152d761681fb55))
