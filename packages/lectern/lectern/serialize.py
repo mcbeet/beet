@@ -9,6 +9,7 @@ __all__ = [
 import os
 import re
 from base64 import b64encode
+from contextlib import contextmanager
 from dataclasses import dataclass, field
 from itertools import chain
 from mimetypes import guess_type
@@ -208,6 +209,22 @@ class TextSerializer:
 class MarkdownSerializer:
     """Document serializer that outputs markdown and emits associated files."""
 
+    flat: bool
+
+    def __init__(self, flat: bool = False):
+        self.flat = flat
+
+    @contextmanager
+    def use_flat_format(self, flat: bool = True):
+        """Context manager for using the flat markdown format."""
+        previous = self.flat
+        self.flat = flat
+
+        try:
+            yield
+        finally:
+            self.flat = previous
+
     def serialize(
         self,
         assets: ResourcePack,
@@ -300,8 +317,9 @@ class MarkdownSerializer:
 
     def format_serialized_file(self, chunks: Iterable[str]) -> Iterator[str]:
         """Format the markdown chunks for serializing file instances."""
-        chunks = [indent(chunk, "  ") for chunk in chunks]
-        chunks[0] = "\n-" + chunks[0][1:]
+        if not self.flat:
+            chunks = [indent(chunk, "  ") for chunk in chunks]
+            chunks[0] = "\n-" + chunks[0][1:]
         yield from chunks
 
     def serialize_file_instance(
@@ -323,10 +341,12 @@ class MarkdownSerializer:
                 content += "\n"
 
             yield f"`@{directive} {argument}`"
-            yield "\n<details>"
+            if not self.flat:
+                yield "\n<details>"
             yield "\n```" + EXTENSION_HIGHLIGHTING.get(serialized_file.extension, "")
             yield content + "```"
-            yield "\n</details>"
+            if not self.flat:
+                yield "\n</details>"
 
             return
 
@@ -334,8 +354,10 @@ class MarkdownSerializer:
 
         if serialized_file.content_type.startswith("image/"):
             yield f"`@{directive} {argument}`"
-            yield "\n<details>"
+            if not self.flat:
+                yield "\n<details>"
             yield f"\n![{directive}{serialized_file.extension}]({target})"
-            yield "\n</details>"
+            if not self.flat:
+                yield "\n</details>"
         else:
             yield f"[`@{directive} {argument}`]({target})"

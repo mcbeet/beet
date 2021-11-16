@@ -367,6 +367,7 @@ Options:
   -r, --resource-pack <path>   Extract resource pack.
   -e, --external-files <path>  Emit external files.
   -p, --prefetch-urls <path>   Prefetch markdown links.
+  -f, --flat                   Use the flat markdown format.
   -v, --version                Show the version and exit.
   -h, --help                   Show this message and exit.
 ```

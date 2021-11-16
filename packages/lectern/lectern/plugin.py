@@ -16,6 +16,7 @@ from .document import Document
 class LecternOptions(BaseModel):
     load: List[str] = []
     snapshot: Optional[str] = None
+    snapshot_flat: bool = False
     external_files: Optional[str] = None
     scripts: List[List[str]] = []
 
@@ -45,7 +46,8 @@ def lectern(ctx: Context, opts: LecternOptions):
     yield
 
     if opts.snapshot:
-        document.save(
-            ctx.directory / opts.snapshot,
-            ctx.directory / opts.external_files if opts.external_files else None,
-        )
+        with document.markdown_serializer.use_flat_format(opts.snapshot_flat):
+            document.save(
+                ctx.directory / opts.snapshot,
+                ctx.directory / opts.external_files if opts.external_files else None,
+            )

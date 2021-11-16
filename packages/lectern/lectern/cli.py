@@ -47,6 +47,12 @@ def echo(*args: Any, **kwargs: Any):
     metavar="<path>",
     help="Prefetch markdown links.",
 )
+@click.option(
+    "-f",
+    "--flat",
+    is_flag=True,
+    help="Use the flat markdown format.",
+)
 @click.version_option(
     __version__,
     "-v",
@@ -61,6 +67,7 @@ def lectern(
     resource_pack: Optional[str],
     external_files: Optional[str],
     prefetch_urls: Optional[str],
+    flat: bool,
 ):
     """Literate Minecraft data packs and resource packs."""
     config: Any
@@ -97,7 +104,11 @@ def lectern(
             "resource_pack": {"load": packs},
             "pipeline": ["lectern"],
             "meta": {
-                "lectern": {"snapshot": dest, "external_files": external_files},
+                "lectern": {
+                    "snapshot": dest,
+                    "snapshot_flat": flat,
+                    "external_files": external_files,
+                },
             },
         }
 
