@@ -21,6 +21,8 @@ def beet_default(ctx: Context):
         shorthands = {literal for literal, _ in execute.get_all_literals()}
         shorthands.discard("run")
 
+        commands, shorthands = commands - shorthands, shorthands - commands
+
         mc.spec.add_commands(
             {
                 "type": "root",
