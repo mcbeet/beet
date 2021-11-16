@@ -1,0 +1,6 @@
+require:
+  - mecha.contrib.implicit_execute
+data_pack:
+  load: [src]
+pipeline:
+  - mecha
