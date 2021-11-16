@@ -15,7 +15,7 @@ def beet_default(ctx: Context):
     annotations: Dict[TextFileBase[Any], List[Tuple[int, int, List[str]]]] = {}
 
     for diagnostic in mc.diagnostics.exceptions:
-        message = f"{diagnostic.level:<7}{diagnostic.format_message()}\n{diagnostic.format_location()}"
+        message = f"{diagnostic.level.upper():<7}{diagnostic.format_message()}\n{diagnostic.format_location()}"
 
         if diagnostic.file and not diagnostic.location.unknown:
             if source := mc.database[diagnostic.file].source:
@@ -23,6 +23,7 @@ def beet_default(ctx: Context):
                     message += f"\n{code}"
 
             comments = [f"# {line}" for line in message.splitlines()]
+            comments[0] = "#>" + comments[0][2:]
             rendered = annotations.setdefault(diagnostic.file, [])
             line_index = diagnostic.location.lineno - 1
 
