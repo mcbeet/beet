@@ -422,7 +422,7 @@ class Mecha:
             if diagnostic.level == "error":
                 logger.error("%s", message, extra=extra)
             elif diagnostic.level == "warn":
-                logger.warn("%s", message, extra=extra)
+                logger.warning("%s", message, extra=extra)
             elif diagnostic.level == "info":
                 logger.info("%s", message, extra=extra)
 
