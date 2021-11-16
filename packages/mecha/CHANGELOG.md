@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.11.0 (2021-11-16)
+### Feature
+* Add keep_comments option ([`efda05a`](https://github.com/mcbeet/mecha/commit/efda05a72e361429cad309fedce477580212bb90))
+
 ## v0.10.0 (2021-11-16)
 ### Feature
 * Add mecha.contrib.implicit_execute ([`835660f`](https://github.com/mcbeet/mecha/commit/835660f92fcfa9473211c84b2ed754096afb23a8))
