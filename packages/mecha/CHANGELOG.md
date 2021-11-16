@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.9.2 (2021-11-16)
+### Fix
+* Tweak styling for diagnostic annotations ([`f4e3fde`](https://github.com/mcbeet/mecha/commit/f4e3fdeeb34d3564d39698336e8d66cc321d8fd3))
+
 ## v0.9.1 (2021-11-16)
 ### Fix
 * Forgot final newline in mecha.contrib.annotate_diagnostics ([`b665a94`](https://github.com/mcbeet/mecha/commit/b665a948c80cb4296721a6b7d55011106c057e9c))
