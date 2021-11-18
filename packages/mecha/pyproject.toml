@@ -35,6 +35,9 @@ python-semantic-release = "^7.19.2"
 pytest-insta = "^0.1.10"
 lectern = "^0.18.0"
 
+[tool.poetry.plugins.beet]
+commands = "mecha.commands"
+
 [tool.black]
 target-version = ["py38"]
 include = '\.pyi?$'
