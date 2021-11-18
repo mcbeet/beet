@@ -39,6 +39,7 @@ class CompilationDatabase(Container[TextFileBase[Any], CompilationUnit]):
     index: Dict[str, TextFileBase[Any]]
     queue: List[Tuple[int, str, TextFileBase[Any]]]
     session: Set[TextFileBase[Any]]
+    step: int
     current: TextFileBase[Any]
 
     def __init__(self):
@@ -46,6 +47,7 @@ class CompilationDatabase(Container[TextFileBase[Any], CompilationUnit]):
         self.index = {}
         self.queue = []
         self.session = set()
+        self.step = -1
         self.current = TextFile()
         self[self.current] = CompilationUnit()
 
@@ -84,5 +86,5 @@ class CompilationDatabase(Container[TextFileBase[Any], CompilationUnit]):
     def process_queue(self) -> Iterator[Tuple[int, TextFileBase[Any]]]:
         """Yield database entries from the queue."""
         while self.queue:
-            step, self.current = self.dequeue()
-            yield step, self.current
+            self.step, self.current = self.dequeue()
+            yield self.step, self.current
