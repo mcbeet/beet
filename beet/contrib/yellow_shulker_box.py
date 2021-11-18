@@ -50,6 +50,7 @@ def beet_default(ctx: Context):
                 },
                 {
                     "function": "minecraft:set_contents",
+                    "type": "minecraft:shulker_box",
                     "entries": [
                         {
                             "type": "minecraft:dynamic",
