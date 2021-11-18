@@ -420,6 +420,14 @@ class AstResourceLocation(AstNode):
 
     parser = "resource_location_or_tag"
 
+    @classmethod
+    def from_value(cls, value: str) -> "AstResourceLocation":
+        """Create a resource location node representing the given value."""
+        if is_tag := value.startswith("#"):
+            value = value[1:]
+        namespace, _, path = value.rpartition(":")
+        return cls(is_tag=is_tag, namespace=namespace or None, path=path)
+
     def get_canonical_value(self) -> str:
         """Return the canonical value of the resource location as a string."""
         prefix = "#" if self.is_tag else ""
