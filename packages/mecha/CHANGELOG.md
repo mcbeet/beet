@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.12.2 (2021-11-18)
+### Fix
+* Quick fix for messages spanning over multiple lines accidentally ([`d065c8b`](https://github.com/mcbeet/mecha/commit/d065c8b42bf6ac22ae76735d3095eff7ec76b6a9))
+
 ## v0.12.1 (2021-11-18)
 ### Fix
 * Remove error message and automatically activate multiline when using nesting ([`8594bf0`](https://github.com/mcbeet/mecha/commit/8594bf02a306a6622c25d3fd584c299b0d08fe17))
