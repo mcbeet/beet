@@ -2,6 +2,15 @@
 
 <!--next-version-placeholder-->
 
+## v0.12.0 (2021-11-18)
+### Feature
+* Add mecha.contrib.nesting ([`94594da`](https://github.com/mcbeet/mecha/commit/94594da2f5602ff6048768464137c8da89e00e27))
+* Add cli command for dumping mecha ast ([`f0cb044`](https://github.com/mcbeet/mecha/commit/f0cb044a40594225aea49a566387b6f0d67b8391))
+
+### Fix
+* Keep track of the current step in the database ([`c5a7737`](https://github.com/mcbeet/mecha/commit/c5a77374d4439e362cd480a1fe29e3bfb18f8ef3))
+* Make it possible to create resource location nodes from strings ([`6644606`](https://github.com/mcbeet/mecha/commit/6644606269e4b4674e363bbb3bc3c108c6642fbf))
+
 ## v0.11.1 (2021-11-16)
 ### Fix
 * Handle possible conflicts between execute shorthands and commands ([`c10f8cb`](https://github.com/mcbeet/mecha/commit/c10f8cbed99a7a4357d3d7f7b184d19e366a89eb))
