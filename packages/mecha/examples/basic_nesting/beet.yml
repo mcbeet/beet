@@ -4,6 +4,3 @@ data_pack:
   load: [src]
 pipeline:
   - mecha
-meta:
-  mecha:
-    multiline: true

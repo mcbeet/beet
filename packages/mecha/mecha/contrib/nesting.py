@@ -12,7 +12,7 @@ __all__ = [
 from dataclasses import dataclass, replace
 from typing import Any, List, Set, cast
 
-from beet import Context, ErrorMessage, Function
+from beet import Context, Function
 from beet.core.utils import required_field
 from tokenstream import TokenStream, set_location
 
@@ -67,9 +67,7 @@ class AstNestedExecute(AstNode):
 def beet_default(ctx: Context):
     mc = ctx.inject(Mecha)
 
-    if not mc.spec.multiline:
-        raise ErrorMessage(f"Plugin {__name__!r} requires multiline mode.")
-
+    mc.spec.multiline = True
     mc.spec.add_commands(COMMAND_TREE)
 
     mc.spec.parsers["nested_root"] = parse_nested_root
