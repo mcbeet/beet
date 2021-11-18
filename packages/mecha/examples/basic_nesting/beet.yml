@@ -1,6 +1,4 @@
 require:
-  - mecha.contrib.relative_location
-  - mecha.contrib.implicit_execute
   - mecha.contrib.nesting
 data_pack:
   load: [src]
