@@ -62,7 +62,7 @@ class MessageReferenceParser:
         if not token:
             return self.component_parser(stream)
 
-        with stream.syntax(path=r"\w+(?:\[\d+\]|\.\w+)*"):
+        with stream.syntax(path=r"\w+(?:\[\d+\]|\.\w+)*"), stream.intercept("newline"):
             name = delegate("resource_location", stream)
             path = stream.get("path")
 
