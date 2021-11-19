@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.12.3 (2021-11-19)
+### Fix
+* Refactor multiline argument handling and make block and item parsers more modular ([`0badf8c`](https://github.com/mcbeet/mecha/commit/0badf8ccc75176c19128dc4922e80347fc0924c6))
+
 ## v0.12.2 (2021-11-18)
 ### Fix
 * Quick fix for messages spanning over multiple lines accidentally ([`d065c8b`](https://github.com/mcbeet/mecha/commit/d065c8b42bf6ac22ae76735d3095eff7ec76b6a9))
