@@ -117,12 +117,13 @@ class Serializer(Visitor):
         source = self.keep_comments and self.database[self.database.current].source
 
         for command in node.commands:
-            if source and not command.location.unknown:
+            if source:
+                end_pos = max(command.location.pos, pos + 1)
                 if pos > -1:
-                    if fill := source[pos : command.location.pos]:
+                    if fill := source[pos:end_pos]:
                         result.append(self.regex_comments.sub(r"\1", fill))
                 try:
-                    pos = source.index("\n", command.location.pos) + 1
+                    pos = source.index("\n", end_pos) + 1
                 except ValueError:
                     pos = -1
 
