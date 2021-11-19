@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.44.9 (2021-11-19)
+### Fix
+* Update `yellow_shulker_box` for 1.18 ([#173](https://github.com/mcbeet/beet/issues/173)) ([`9c0d56c`](https://github.com/mcbeet/beet/commit/9c0d56c0764541329183024c9d5d17c093f5f6ad))
+
 ## v0.44.8 (2021-11-15)
 ### Fix
 * Support multiple plugins in a single require call ([`4251abc`](https://github.com/mcbeet/beet/commit/4251abc6e6b8e5effb4dea6b0d3519c49549fb8e))
