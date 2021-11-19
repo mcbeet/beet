@@ -12,6 +12,7 @@ __all__ = [
     "parse_root",
     "parse_command",
     "parse_argument",
+    "MultilineParser",
     "parse_bool",
     "NumericParser",
     "CoordinateParser",
@@ -29,6 +30,7 @@ __all__ = [
     "ResourceLocationParser",
     "NoTagConstraint",
     "BlockParser",
+    "parse_block_states",
     "ItemParser",
     "NoBlockStatesConstraint",
     "NoDataTagsConstraint",
@@ -164,13 +166,13 @@ def get_default_parsers() -> Dict[str, Parser]:
         "word": StringParser(type="word"),
         "phrase": StringParser(type="phrase"),
         "greedy": StringParser(type="greedy"),
-        "json": JsonParser(),
+        "json": MultilineParser(JsonParser()),
         "json_object": TypeConstraint(
             parser=delegate("json"),
             type=AstJsonObject,
             message="Expected json object.",
         ),
-        "nbt": NbtParser(),
+        "nbt": MultilineParser(NbtParser()),
         "nbt_compound": TypeConstraint(
             parser=delegate("nbt"),
             type=AstNbtCompound,
@@ -190,6 +192,26 @@ def get_default_parsers() -> Dict[str, Parser]:
         "player_name": CommentDisambiguation(delegate("literal")),
         "swizzle": parse_swizzle,
         "team": LiteralParser("team", r"[a-zA-Z0-9_.+-]+"),
+        "block_predicate": BlockParser(
+            resource_location_parser=delegate("resource_location_or_tag"),
+            block_states_parser=AdjacentConstraint(
+                parser=MultilineParser(parse_block_states),
+                hint=r"\[",
+            ),
+        ),
+        "block_state": BlockParser(
+            resource_location_parser=delegate("resource_location"),
+            block_states_parser=AdjacentConstraint(
+                parser=MultilineParser(parse_block_states),
+                hint=r"\[",
+            ),
+        ),
+        "item_predicate": ItemParser(
+            resource_location_parser=delegate("resource_location_or_tag"),
+        ),
+        "item_stack": ItemParser(
+            resource_location_parser=delegate("resource_location"),
+        ),
         ################################################################################
         # Particle
         ################################################################################
@@ -217,27 +239,15 @@ def get_default_parsers() -> Dict[str, Parser]:
         ),
         "particle:minecraft:block": AggregateParser(
             type=AstBlockParticleParameters,
-            fields={
-                "block": BlockParser(
-                    resource_location_parser=delegate("resource_location"),
-                )
-            },
+            fields={"block": delegate("block_state")},
         ),
         "particle:minecraft:falling_dust": AggregateParser(
             type=AstFallingDustParticleParameters,
-            fields={
-                "block": BlockParser(
-                    resource_location_parser=delegate("resource_location"),
-                )
-            },
+            fields={"block": delegate("block_state")},
         ),
         "particle:minecraft:item": AggregateParser(
             type=AstItemParticleParameters,
-            fields={
-                "item": ItemParser(
-                    resource_location_parser=delegate("resource_location"),
-                )
-            },
+            fields={"item": delegate("item_stack")},
         ),
         "particle:minecraft:vibration": AggregateParser(
             type=AstVibrationParticleParameters,
@@ -254,7 +264,7 @@ def get_default_parsers() -> Dict[str, Parser]:
         ################################################################################
         # Selector
         ################################################################################
-        "selector": SelectorParser(),
+        "selector": MultilineParser(SelectorParser()),
         "selector:argument": SelectorArgumentInvertConstraint(
             SelectorArgumentNoValueConstraint(
                 SelectorArgumentParser(),
@@ -324,12 +334,8 @@ def get_default_parsers() -> Dict[str, Parser]:
             disallow=["local"],
         ),
         "command:argument:minecraft:block_pos": Vector3Parser(delegate("coordinate")),
-        "command:argument:minecraft:block_predicate": BlockParser(
-            resource_location_parser=delegate("resource_location_or_tag"),
-        ),
-        "command:argument:minecraft:block_state": BlockParser(
-            resource_location_parser=delegate("resource_location"),
-        ),
+        "command:argument:minecraft:block_predicate": delegate("block_predicate"),
+        "command:argument:minecraft:block_state": delegate("block_state"),
         "command:argument:minecraft:color": LiteralConstraint(
             parser=delegate("word"),
             values=[
@@ -377,13 +383,9 @@ def get_default_parsers() -> Dict[str, Parser]:
         ),
         "command:argument:minecraft:int_range": delegate("integer_range"),
         "command:argument:minecraft:item_enchantment": delegate("word"),
-        "command:argument:minecraft:item_predicate": ItemParser(
-            resource_location_parser=delegate("resource_location_or_tag"),
-        ),
+        "command:argument:minecraft:item_predicate": delegate("item_predicate"),
         "command:argument:minecraft:item_slot": delegate("word"),
-        "command:argument:minecraft:item_stack": ItemParser(
-            resource_location_parser=delegate("resource_location"),
-        ),
+        "command:argument:minecraft:item_stack": delegate("item_stack"),
         "command:argument:minecraft:message": parse_message,
         "command:argument:minecraft:mob_effect": delegate("resource_location"),
         "command:argument:minecraft:nbt_compound_tag": delegate("nbt_compound"),
@@ -636,16 +638,31 @@ def parse_argument(stream: TokenStream) -> AstNode:
     """Parse argument."""
     spec = get_stream_spec(stream)
     scope = get_stream_scope(stream)
-    multiline = get_stream_multiline(stream)
 
     tree = spec.tree.get(scope)
 
     if tree and tree.parser:
         with stream.provide(properties=tree.properties or {}):
-            with stream.ignore("newline") if multiline else nullcontext():
-                return delegate(f"command:argument:{tree.parser}", stream)
+            return delegate(f"command:argument:{tree.parser}", stream)
 
     raise ValueError(f"Missing argument parser in command tree {scope}.")
+
+
+@dataclass
+class MultilineParser:
+    """Allow a parser to span over multiple lines."""
+
+    parser: Parser
+
+    def __call__(self, stream: TokenStream) -> Any:
+        with stream.checkpoint(), stream.intercept("newline"):
+            newline = stream.get("newline")
+
+        if not newline and get_stream_multiline(stream):
+            with stream.ignore("newline"):
+                return self.parser(stream)
+
+        return self.parser(stream)
 
 
 def parse_bool(stream: TokenStream) -> AstBool:
@@ -1138,6 +1155,9 @@ class CommentDisambiguation:
     parser: Parser
 
     def __call__(self, stream: TokenStream) -> Any:
+        with stream.intercept("comment"):
+            consume_line_continuation(stream)
+
         with stream.checkpoint() as commit:
             last_comment = None
 
@@ -1165,47 +1185,54 @@ class BlockParser:
     """Parser for minecraft blocks."""
 
     resource_location_parser: Parser
+    block_states_parser: Parser
 
     def __call__(self, stream: TokenStream) -> AstBlock:
         identifier = self.resource_location_parser(stream)
+
         location = identifier.location
         end_location = identifier.end_location
 
-        with stream.syntax(
-            bracket=r"\[|\]",
-            equal=r"=",
-            comma=r",",
-        ), stream.checkpoint() as commit:
-            block_states: List[AstBlockState] = []
-
-            with stream.intercept("whitespace"):
-                stream.expect(("bracket", "["))
-
-            commit()
-
-            for _ in stream.peek_until(("bracket", "]")):
-                key_node = delegate("phrase", stream)
-                stream.expect("equal")
-                value_node = delegate("phrase", stream)
-
-                entry_node = AstBlockState(key=key_node, value=value_node)
-                entry_node = set_location(entry_node, key_node, value_node)
-                block_states.append(entry_node)
-
-                if not stream.get("comma"):
-                    stream.expect(("bracket", "]"))
-                    break
-
+        if block_states := self.block_states_parser(stream):
             end_location = stream.current.end_location
+        else:
+            block_states = AstChildren()
 
         data_tags = delegate("adjacent_nbt_compound", stream)
 
         node = AstBlock(
             identifier=identifier,
-            block_states=AstChildren(block_states),
+            block_states=block_states,
             data_tags=data_tags,
         )
         return set_location(node, location, data_tags if data_tags else end_location)
+
+
+def parse_block_states(stream: TokenStream) -> AstChildren[AstBlockState]:
+    """Parser for minecraft block state."""
+    block_states: List[AstBlockState] = []
+
+    with stream.syntax(
+        bracket=r"\[|\]",
+        equal=r"=",
+        comma=r",",
+    ):
+        stream.expect(("bracket", "["))
+
+        for _ in stream.peek_until(("bracket", "]")):
+            key_node = delegate("phrase", stream)
+            stream.expect("equal")
+            value_node = delegate("phrase", stream)
+
+            entry_node = AstBlockState(key=key_node, value=value_node)
+            entry_node = set_location(entry_node, key_node, value_node)
+            block_states.append(entry_node)
+
+            if not stream.get("comma"):
+                stream.expect(("bracket", "]"))
+                break
+
+    return AstChildren(block_states)
 
 
 @dataclass

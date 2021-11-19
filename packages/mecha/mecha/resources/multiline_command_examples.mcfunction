@@ -23,9 +23,7 @@ execute if block 0 0 0
 execute if block 0 0 0 wool #this is a comment
 
 execute if block
-    ~
-        ^
-            -0
+    ~ 1 -0
         #wool
 
 tellraw @s {
