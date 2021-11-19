@@ -2,6 +2,11 @@
 
 <!--next-version-placeholder-->
 
+## v0.12.4 (2021-11-19)
+### Fix
+* Improve keep comments behavior for commands with unknown locations ([`bdaccbb`](https://github.com/mcbeet/mecha/commit/bdaccbbeab53b91eb92aa0c6ea70db9511b7092c))
+* Handle execute expand in mecha.contrib.nesting ([`6d57f56`](https://github.com/mcbeet/mecha/commit/6d57f560b2edf779c2dada47ca696dc3c8be2a8a))
+
 ## v0.12.3 (2021-11-19)
 ### Fix
 * Refactor multiline argument handling and make block and item parsers more modular ([`0badf8c`](https://github.com/mcbeet/mecha/commit/0badf8ccc75176c19128dc4922e80347fc0924c6))
