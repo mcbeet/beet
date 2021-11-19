@@ -21,6 +21,8 @@ execute as @a at @s run function demo:thing4
 execute as @a at @s run function demo:thing5
 execute as @a at @s run function demo:foo/nested_execute_0
 execute as @a at @s run function demo:foo/nested_execute_1
+execute as @a at @s run say hello
+execute as @a at @s run say world
 ```
 `@function demo:thing2`
 

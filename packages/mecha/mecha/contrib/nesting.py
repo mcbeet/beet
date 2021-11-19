@@ -36,6 +36,21 @@ from mecha import (
 COMMAND_TREE = {
     "type": "root",
     "children": {
+        "execute": {
+            "type": "literal",
+            "children": {
+                "expand": {
+                    "type": "literal",
+                    "children": {
+                        "commands": {
+                            "type": "argument",
+                            "parser": "mecha:nested_root",
+                            "executable": True,
+                        }
+                    },
+                },
+            },
+        },
         "function": {
             "type": "literal",
             "children": {
@@ -206,3 +221,42 @@ class NestedCommandsTransformer(MutatingReducer):
             identifier="execute:run:subcommand",
             arguments=AstChildren([cast(AstNode, function_call)]),
         )
+
+    @rule(AstRoot)
+    def execute_expand(self, node: AstRoot):
+        commands: List[AstCommand] = []
+
+        for command in node.commands:
+            args = command.arguments
+            stack: List[AstCommand] = [command]
+
+            expand = None
+
+            while args and isinstance(subcommand := args[-1], AstCommand):
+                if subcommand.identifier == "execute:expand:commands":
+                    expand = subcommand
+                    break
+                stack.append(subcommand)
+                args = subcommand.arguments
+
+            if expand:
+                for nested_command in cast(AstRoot, expand.arguments[0]).commands:
+                    expansion = AstCommand(
+                        identifier="execute:run:subcommand",
+                        arguments=AstChildren([cast(AstNode, nested_command)]),
+                    )
+                    expansion = set_location(expansion, nested_command)
+
+                    for prefix in reversed(stack):
+                        args = AstChildren([*prefix.arguments[:-1], expansion])
+                        expansion = replace(prefix, arguments=args)
+
+                    commands.append(expansion)
+
+            else:
+                commands.append(command)
+
+        if len(commands) > len(node.commands):
+            return replace(node, commands=AstChildren(commands))
+
+        return node
