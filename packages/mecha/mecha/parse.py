@@ -580,7 +580,7 @@ def parse_command(stream: TokenStream) -> AstCommand:
 
                 commit()
 
-        if commit.rollback:
+        if commit.rollback and tree.children:
             for (name, child), alternative in stream.choose(*tree.children.items()):
                 with alternative, stream.provide(
                     scope=scope + (name,),
