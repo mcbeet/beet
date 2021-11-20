@@ -2,6 +2,13 @@
 
 <!--next-version-placeholder-->
 
+## v0.13.0 (2021-11-20)
+### Feature
+* Add cli entrypoint ([`6f291f3`](https://github.com/mcbeet/mecha/commit/6f291f301149e8ab72feb91671209106b022cb54))
+
+### Fix
+* Better error message when the minecraft version is invalid ([`bd35f9d`](https://github.com/mcbeet/mecha/commit/bd35f9d9e41b9782d90966cb6953a5ba145b007c))
+
 ## v0.12.4 (2021-11-19)
 ### Fix
 * Improve keep comments behavior for commands with unknown locations ([`bdaccbb`](https://github.com/mcbeet/mecha/commit/bdaccbbeab53b91eb92aa0c6ea70db9511b7092c))
