@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.44.10 (2021-11-20)
+### Fix
+* Remove fnvhash dependency ([`a298a1b`](https://github.com/mcbeet/beet/commit/a298a1bd534e3b55c8ebfd8f0fed61011e70b0b1))
+
 ## v0.44.9 (2021-11-19)
 ### Fix
 * Update `yellow_shulker_box` for 1.18 ([#173](https://github.com/mcbeet/beet/issues/173)) ([`9c0d56c`](https://github.com/mcbeet/beet/commit/9c0d56c0764541329183024c9d5d17c093f5f6ad))
