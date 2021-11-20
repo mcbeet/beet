@@ -2,13 +2,11 @@ minecraft:objective_criteria 0 2
 ---
 {}
 ---
-minecraft:foo
+minecraft.mined:stone
 ---
-minecraft:foo
+minecraft.mined:stone
 ---
-<class 'mecha.ast.AstResourceLocation'>
+<class 'mecha.ast.AstLiteral'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
-  end_location: SourceLocation(pos=13, lineno=1, colno=14)
-  is_tag: False
-  namespace: 'minecraft'
-  path: 'foo'
+  end_location: SourceLocation(pos=21, lineno=1, colno=22)
+  value: 'minecraft.mined:stone'

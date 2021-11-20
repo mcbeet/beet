@@ -428,6 +428,12 @@ class AstResourceLocation(AstNode):
         namespace, _, path = value.rpartition(":")
         return cls(is_tag=is_tag, namespace=namespace or None, path=path)
 
+    def get_value(self) -> str:
+        """Return the value of the resource location as a string."""
+        prefix = "#" if self.is_tag else ""
+        namespace = f"{self.namespace}:" if self.namespace else ""
+        return prefix + namespace + self.path
+
     def get_canonical_value(self) -> str:
         """Return the canonical value of the resource location as a string."""
         prefix = "#" if self.is_tag else ""

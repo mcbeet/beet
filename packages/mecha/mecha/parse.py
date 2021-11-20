@@ -392,7 +392,7 @@ def get_default_parsers() -> Dict[str, Parser]:
         "command:argument:minecraft:nbt_path": delegate("nbt_path"),
         "command:argument:minecraft:nbt_tag": delegate("nbt"),
         "command:argument:minecraft:objective": delegate("objective"),
-        "command:argument:minecraft:objective_criteria": delegate("resource_location"),
+        "command:argument:minecraft:objective_criteria": delegate("literal"),
         "command:argument:minecraft:operation": LiteralConstraint(
             parser=delegate("literal"),
             values=[
@@ -1143,7 +1143,9 @@ class NoTagConstraint:
         node: AstResourceLocation = self.parser(stream)
 
         if node.is_tag:
-            raise node.emit_error(InvalidSyntax("Specifying a tag is not allowed."))
+            raise node.emit_error(
+                InvalidSyntax(f"Specifying a tag is not allowed {node.get_value()!r}.")
+            )
 
         return node
 

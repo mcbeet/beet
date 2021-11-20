@@ -1,0 +1,12 @@
+minecraft:objective_criteria 0 6
+---
+{}
+---
+playerKillCount
+---
+playerKillCount
+---
+<class 'mecha.ast.AstLiteral'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=15, lineno=1, colno=16)
+  value: 'playerKillCount'

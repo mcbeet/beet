@@ -393,7 +393,16 @@
   ],
   "minecraft:objective_criteria": [
     {
-      "examples": ["foo", "foo.bar.baz", "minecraft:foo"]
+      "examples": [
+        "minecraft.mined:minecraft.stone",
+        "mined:minecraft.stone",
+        "minecraft.mined:stone",
+        "mined:stone",
+        "dummy",
+        "deathCount",
+        "playerKillCount",
+        "teamkill.aqua"
+      ]
     }
   ],
   "minecraft:operation": [

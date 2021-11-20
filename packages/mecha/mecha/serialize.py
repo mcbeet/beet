@@ -192,11 +192,7 @@ class Serializer(Visitor):
 
     @rule(AstResourceLocation)
     def resource_location(self, node: AstResourceLocation, result: List[str]):
-        if node.is_tag:
-            result.append("#")
-        if node.namespace:
-            result.append(f"{node.namespace}:")
-        result.append(node.path)
+        result.append(node.get_value())
 
     @rule(AstBlockState)
     def block_state(self, node: AstBlockState, result: List[str]):

@@ -6,4 +6,4 @@ minecraft:resource_location 1 0
 ---
 Reported 1 error.
 
-line 1, column 1: Specifying a tag is not allowed.
+line 1, column 1: Specifying a tag is not allowed '#thing'.
