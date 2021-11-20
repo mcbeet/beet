@@ -7,6 +7,7 @@ from importlib.resources import read_text
 from pathlib import Path
 from typing import Dict, Iterator, List, Literal, Optional, Tuple, Union
 
+from beet import ErrorMessage
 from beet.core.utils import FileSystemPath, JsonDict
 from pydantic import BaseModel
 
@@ -36,8 +37,11 @@ class CommandTree(BaseModel):
         if filename:
             sources.append(Path(filename).read_text())
         if version is not None:
-            version = "_".join(map(str, split_version(version)))
-            sources.append(read_text("mecha.resources", f"{version}.json"))
+            version_name = "_".join(map(str, split_version(version)))
+            try:
+                sources.append(read_text("mecha.resources", f"{version_name}.json"))
+            except FileNotFoundError as exc:
+                raise ErrorMessage(f"Invalid minecraft version {version!r}.") from exc
 
         tree = cls.parse_raw(sources[0])
 
