@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.13.2 (2021-11-20)
+### Fix
+* Update README ([`3557cb6`](https://github.com/mcbeet/mecha/commit/3557cb670d2c5e87441e03c12ba1d495603f5b8d))
+
 ## v0.13.1 (2021-11-20)
 ### Fix
 * Add info about the command-line entrypoint on the README ([`750ec5e`](https://github.com/mcbeet/mecha/commit/750ec5e8b340a6fe6c75122ea664a373351bdfd3))
