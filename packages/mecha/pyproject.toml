@@ -34,6 +34,9 @@ python-semantic-release = "^7.19.2"
 pytest-insta = "^0.1.10"
 lectern = "^0.18.0"
 
+[tool.poetry.scripts]
+mecha = "mecha.cli:main"
+
 [tool.poetry.plugins.beet]
 commands = "mecha.commands"
 
