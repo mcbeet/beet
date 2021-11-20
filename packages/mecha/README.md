@@ -47,6 +47,7 @@ This package provides everything you need for working with Minecraft commands in
 - Command config resolver that flattens and enumerates all the valid command prototypes
 - Powerful rule dispatcher for processing specific ast nodes
 - Composable ast visitors and reducers
+- Comes with useful syntactic extensions like nesting and implicit execute
 - Execute arbitrary compilation passes in your [`beet`](https://github.com/mcbeet/beet) pipeline
 - _(soon)_ Expressive command API for writing commands in Python
 
@@ -80,7 +81,7 @@ Options:
   -h, --help               Show this message and exit.
 ```
 
-You can use the command-line utility to check data packs and function files for errors. The command arguments can be zipped and unzipped data packs, individual function files, and if you specify a directory that's not a data pack it will recursively grab all the `.mcfunction` files in the directory. You can use the --minecraft option to select between versions `1.16`, `1.17`, and `1.18`.
+You can use the command-line utility to check data packs and function files for errors. The command arguments can be zipped and unzipped data packs, individual function files, and if you specify a directory that's not a data pack it will recursively grab all the `.mcfunction` files in the directory. You can use the `--minecraft` option to select between versions `1.16`, `1.17`, and `1.18`.
 
 ```bash
 $ mecha path/to/my_data_pack
@@ -94,6 +95,27 @@ ERROR  | mecha  Expected curly '}' but got bracket ']'.
 
 Error: Reported 1 error.
 ```
+
+## Github action
+
+You can use `mecha` to check your data packs and function files for errors without having to install anything using the [`mcbeet/check-commands`](https://github.com/mcbeet/check-commands) github action.
+
+```yml
+# .github/workflows/check-commands.yml
+name: Check commands
+on: [push]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: mcbeet/check-commands@v1
+        with:
+          source: .
+```
+
+This allows you to make sure that your commands don't contain any error when you push to your repository. For more details check out the [action README](https://github.com/mcbeet/check-commands#usage).
 
 ## Contributing
 
