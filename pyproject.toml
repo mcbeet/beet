@@ -59,6 +59,11 @@ commands = "beet.toolchain.commands"
 [tool.poetry.plugins.pytest11]
 beet = "beet.pytest_plugin"
 
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "tests beet --ignore beet/__main__.py --doctest-modules"
+doctest_optionflags = "NORMALIZE_WHITESPACE IGNORE_EXCEPTION_DETAIL ELLIPSIS"
+
 [tool.black]
 target-version = ["py38"]
 include = '\.pyi?$'
