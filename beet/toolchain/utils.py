@@ -21,9 +21,12 @@ from traceback import format_exception
 from typing import Any, Callable, List, Literal, Optional
 
 from base58 import b58encode
-from fnvhash import fnv1a_32, fnv1a_64
 from pydantic import ValidationError
 
+FNV_32_INIT = 0x811C9DC5
+FNV_64_INIT = 0xCBF29CE484222325
+FNV_32_PRIME = 0x01000193
+FNV_64_PRIME = 0x100000001B3
 HASH_ALPHABET = b"123456789abcdefghijkmnopqrstuvwxyz"
 
 
@@ -35,13 +38,24 @@ class LazyFormat:
         return self.func().__format__(format_spec)
 
 
+def fnva(data: bytes, hval_init: int, fnv_prime: int, fnv_size: int):
+    hval = hval_init
+    for byte in data:
+        hval = hval ^ byte
+        hval = (hval * fnv_prime) % fnv_size
+    return hval
+
+
 def stable_int_hash(value: Any, size: Literal[32, 64] = 64) -> int:
     if callable(value):
         value = value()
     if not isinstance(value, bytes):
         value = str(value).encode()
-    hasher = fnv1a_32 if size == 32 else fnv1a_64
-    return hasher(value)
+
+    if size == 32:
+        return fnva(value, FNV_32_INIT, FNV_32_PRIME, 2 ** size)
+    else:
+        return fnva(value, FNV_64_INIT, FNV_64_PRIME, 2 ** size)
 
 
 def stable_hash(value: Any, short: bool = False) -> str:

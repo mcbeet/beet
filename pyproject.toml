@@ -29,12 +29,12 @@ pydantic = "^1.8.2"
 click = "^8.0.1"
 click-help-colors = "^0.9.1"
 Jinja2 = "^3.0.1"
-fnvhash = "^0.1.0"
 base58 = "^2.1.0"
 toml = "^0.10.2"
 PyYAML = ">=5.4.1,<7.0.0"
 Pillow = {version = "*", optional = true}
 colorama = {version = "*", markers = 'sys_platform == "win32"'}
+mudkip = "^0.4.14"
 
 [tool.poetry.extras]
 image = ["Pillow"]
@@ -101,10 +101,25 @@ preset = "furo"
 html_title = "Beet documentation"
 html_logo = "assets/logo.png"
 html_favicon = "assets/favicon.png"
+templates_path = ["templates"]
+html_static_path = ["static"]
+html_additional_pages = { index = "home.html" }
+html_css_files = ["tweaks.css"]
 suppress_warnings = ["myst.header"]
 
 [tool.mudkip.override.html_theme_options]
 sidebar_hide_name = true
+
+[tool.mudkip.override.html_theme_options.light_css_variables]
+color-brand-primary = "#b31e2e"
+color-brand-content = "#b31e2e"
+
+[tool.mudkip.override.html_theme_options.dark_css_variables]
+color-brand-primary = "#b31e2e"
+color-brand-content = "#b31e2e"
+color-background-primary = "#13161e"
+color-background-secondary = "#0f1116"
+color-background-border = "#222834"
 
 [build-system]
 requires = ["poetry>=0.12"]
