@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.13.3 (2021-11-20)
+### Fix
+* Don't use resource_location for parsing objective criteria ([`d8b72e1`](https://github.com/mcbeet/mecha/commit/d8b72e1392f6df64f42d7615c124b40197307eda))
+
 ## v0.13.2 (2021-11-20)
 ### Fix
 * Update README ([`3557cb6`](https://github.com/mcbeet/mecha/commit/3557cb670d2c5e87441e03c12ba1d495603f5b8d))
