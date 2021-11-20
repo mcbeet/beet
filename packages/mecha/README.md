@@ -65,6 +65,36 @@ The package can be installed with `pip`.
 $ pip install mecha
 ```
 
+## Command-line utility
+
+```bash
+$ mecha --help
+Usage: mecha [OPTIONS] [SOURCE]...
+
+  Validate data packs and .mcfunction files.
+
+Options:
+  -m, --minecraft VERSION  Minecraft version.
+  -l, --log LEVEL          Configure output verbosity.
+  -v, --version            Show the version and exit.
+  -h, --help               Show this message and exit.
+```
+
+You can use the command-line utility to check data packs and function files for errors. The command arguments can be zipped and unzipped data packs, individual function files, and if you specify a directory that's not a data pack it will recursively grab all the `.mcfunction` files in the directory. You can use the --minecraft option to select between versions `1.16`, `1.17`, and `1.18`.
+
+```bash
+$ mecha path/to/my_data_pack
+Validating with mecha v0.13.0
+
+ERROR  | mecha  Expected curly '}' but got bracket ']'.
+       | path/to/my_data_pack/data/demo/functions/foo.mcfunction:5:34
+       |      4 |
+       |      5 |  say hello @a[scores={foo=1, bar=2]
+       |        :                                   ^
+
+Error: Reported 1 error.
+```
+
 ## Contributing
 
 Contributions are welcome. Make sure to first open an issue discussing the problem or the new feature before creating a pull request. The project uses [`poetry`](https://python-poetry.org/).
