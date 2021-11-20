@@ -40,6 +40,11 @@ mecha = "mecha.cli:main"
 [tool.poetry.plugins.beet]
 commands = "mecha.commands"
 
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "tests mecha --ignore mecha/__main__.py --doctest-modules"
+doctest_optionflags = "NORMALIZE_WHITESPACE IGNORE_EXCEPTION_DETAIL ELLIPSIS"
+
 [tool.black]
 target-version = ["py38"]
 include = '\.pyi?$'
