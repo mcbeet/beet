@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.44.11 (2021-11-21)
+### Fix
+* Accidentally added mudkip to main dependencies oops ([`b96f83f`](https://github.com/mcbeet/beet/commit/b96f83f76f8ab3972e7ea2717ecf9c6c344d0928))
+
 ## v0.44.10 (2021-11-20)
 ### Fix
 * Remove fnvhash dependency ([`a298a1b`](https://github.com/mcbeet/beet/commit/a298a1bd534e3b55c8ebfd8f0fed61011e70b0b1))
