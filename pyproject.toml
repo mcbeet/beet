@@ -34,7 +34,6 @@ toml = "^0.10.2"
 PyYAML = ">=5.4.1,<7.0.0"
 Pillow = {version = "*", optional = true}
 colorama = {version = "*", markers = 'sys_platform == "win32"'}
-mudkip = "^0.4.14"
 
 [tool.poetry.extras]
 image = ["Pillow"]
@@ -47,7 +46,7 @@ pytest-minecraft = "^0.1.1"
 isort = "^5.10.1"
 pytest-insta = "^0.1.10"
 python-semantic-release = "^7.19.2"
-mudkip = "^0.4.10"
+mudkip = "^0.4.14"
 furo = "^2021.10.9"
 
 [tool.poetry.scripts]
