@@ -343,7 +343,7 @@ class JsonFileBase(TextFileBase[ValueType]):
 
     data: FileDeserialize[ValueType] = FileDeserialize()
 
-    model: ClassVar[Optional[Type[ValueType]]] = None
+    model: ClassVar[Optional[Type[Any]]] = None
 
     @classmethod
     def to_str(cls, content: ValueType) -> str:
@@ -382,7 +382,7 @@ class YamlFileBase(TextFileBase[ValueType]):
 
     data: FileDeserialize[ValueType] = FileDeserialize()
 
-    model: ClassVar[Optional[Type[ValueType]]] = None
+    model: ClassVar[Optional[Type[Any]]] = None
 
     @classmethod
     def to_str(cls, content: ValueType) -> str:

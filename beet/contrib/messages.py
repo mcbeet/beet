@@ -10,7 +10,7 @@ __all__ = [
 import json
 import re
 from dataclasses import dataclass
-from typing import Optional
+from typing import Any, Optional, cast
 
 from beet import Context, JsonFile, NamespaceFile
 from beet.core.utils import TextComponent
@@ -42,13 +42,13 @@ class MessageManager:
 
     def get(self, name: str, path: Optional[str] = None) -> TextComponent:
         """Retrieve a message."""
-        message = self.ctx.data[Message][name].data
+        message: Any = self.ctx.data[Message][name].data
 
         if path:
             for key in PATH_REGEX.findall(path):
                 if isinstance(message, list):
                     key = int(key)
-                message = message[key]  # type: ignore
+                message = cast(Any, message[key])
 
         return message
 

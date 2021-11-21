@@ -619,7 +619,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
 
     merge_policy: MergePolicy
 
-    namespace_type: ClassVar[Type[NamespaceType]]
+    namespace_type: ClassVar[Type[Namespace]]
     default_name: ClassVar[str]
     latest_pack_format: ClassVar[int]
 
@@ -746,7 +746,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
         return value
 
     def missing(self, key: str) -> NamespaceType:
-        return self.namespace_type()
+        return self.namespace_type()  # type: ignore
 
     def merge(
         self: MutableMapping[T, MergeableType], other: Mapping[T, MergeableType]
