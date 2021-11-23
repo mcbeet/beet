@@ -98,7 +98,7 @@ preset = "furo"
 
 [tool.mudkip.override]
 html_title = "Beet documentation"
-html_logo = "assets/logo.png"
+html_logo = "assets/beet_logo.png"
 html_favicon = "assets/favicon.png"
 suppress_warnings = ["myst.header"]
 
