@@ -98,12 +98,26 @@ preset = "furo"
 
 [tool.mudkip.override]
 html_title = "Beet documentation"
-html_logo = "assets/logo.png"
+html_logo = "assets/beet_logo.png"
 html_favicon = "assets/favicon.png"
+templates_path = ["templates"]
+html_static_path = ["static"]
+html_additional_pages = { index = "home.html" }
+html_css_files = ["tweaks.css"]
 suppress_warnings = ["myst.header"]
 
 [tool.mudkip.override.html_theme_options]
 sidebar_hide_name = true
+
+[tool.mudkip.override.html_theme_options.light_css_variables]
+color-brand-primary = "#aa103a"
+color-brand-content = "#aa103a"
+
+[tool.mudkip.override.html_theme_options.dark_css_variables]
+color-brand-primary = "#bf2a53"
+color-brand-content = "#bf2a53"
+color-background-primary = "#16161a"
+color-background-secondary = "#16161a"
 
 [build-system]
 requires = ["poetry>=0.12"]

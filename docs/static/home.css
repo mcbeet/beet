@@ -1,0 +1,33 @@
+.hero {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 67vh;
+  display: flex;
+  justify-content: center;
+}
+
+.hero-menu {
+  display: none;
+  padding: 1.5rem 0;
+}
+
+.hero + section {
+  margin-top: 67vh;
+}
+
+@media (min-width: 67em) {
+  .sidebar-drawer {
+    display: none;
+  }
+  .main {
+    justify-content: center;
+  }
+  .hero-menu {
+    display: flex;
+  }
+  .content-icon-container {
+    z-index: 1;
+  }
+}

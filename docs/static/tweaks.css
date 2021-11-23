@@ -1,0 +1,5 @@
+@media (min-width: 67em) {
+  .sidebar-sticky {
+    padding-top: 20px;
+  }
+}

@@ -1,0 +1,232 @@
+{% extends "page.html" %}
+
+<!-- prettier-ignore -->
+{% block regular_styles %}
+<!-- prettier-ignore -->
+{{ super() }}
+<!-- <link rel="stylesheet" href="_static/home.css" /> -->
+<style>
+  @font-face {
+    font-family: Mojangles;
+    src: url("_static/Mojangles.ttf");
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  .hero {
+    height: 50vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+  }
+
+  .hero-menu {
+    display: none;
+    flex-direction: row;
+    justify-content: start;
+    align-items: center;
+    height: 3em;
+    padding-top: 1.5rem;
+  }
+  .hero-menu ul {
+    display: flex;
+    width: 100%;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  .hero-menu a {
+    color: var(--color-foreground-primary);
+    text-decoration: none;
+  }
+  .hero-menu li {
+    margin: 0 1.5em 0 0;
+    padding: 0;
+  }
+  .hero-menu li:last-child {
+    display: flex;
+    justify-content: end;
+    flex-grow: 1;
+  }
+  .hero-menu svg {
+    opacity: 0.8;
+    color: var(--color-foreground-primary);
+  }
+
+  .hero-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: start;
+  }
+  .hero-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: -1;
+    opacity: 0.6;
+    overflow: hidden;
+    background-size: 100% 100%, 330px 330px, 30px 30px;
+    background-image: linear-gradient(
+        to bottom,
+        rgba(66, 172, 154, 0.308),
+        transparent
+      ),
+      linear-gradient(
+        45deg,
+        transparent 40%,
+        var(--color-background-primary) 40%
+      ),
+      radial-gradient(circle, rgba(86, 189, 172, 0.788) 3px, transparent 2px);
+    box-shadow: #474054 0 10px 100px -20px;
+  }
+  .hero-background svg {
+    position: relative;
+    transform: rotate(45deg);
+  }
+
+  .hero-left,
+  .hero-right {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .hero-logo {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    background: center no-repeat url("_static/beet_logo_large.png");
+    background-size: cover;
+  }
+
+  .hero-content h2 {
+    line-height: 1.2em;
+    margin: 0;
+    font-size: 26px;
+    font-weight: bold;
+    color: var(--color-foreground-primary);
+    opacity: 0.9;
+    text-align: center;
+  }
+  .hero-content h1 {
+    line-height: 1.2em;
+    margin: 0 0 0.5em 0;
+    font-size: 48px;
+    font-family: Mojangles;
+    font-weight: normal;
+    color: #fc1a53;
+  }
+
+  .home-editor {
+    width: 300px;
+    height: 200px;
+    background: center no-repeat url("_static/editor.png");
+    background-size: contain;
+  }
+
+  @media (min-width: 67em) {
+    .hero {
+      height: 67vh;
+    }
+    .sidebar-drawer {
+      display: none;
+    }
+    .hero-menu {
+      display: flex;
+    }
+    .content-icon-container {
+      position: relative;
+      top: 0.8em;
+    }
+    .hero-content {
+      flex-direction: row;
+      justify-content: center;
+    }
+    .hero-background {
+      height: 75vh;
+    }
+    .hero-logo {
+      transform: scale(2.6) translateX(100px);
+    }
+    .hero-left,
+    .hero-right {
+      align-items: start;
+    }
+    .hero-content h2 {
+      text-align: left;
+      font-size: 36px;
+    }
+    .hero-content h1 {
+      font-size: 64px;
+    }
+
+    .main {
+      justify-content: center;
+    }
+  }
+</style>
+{% endblock %}
+
+<!-- prettier-ignore -->
+{% block content %}
+<div class="hero">
+  <div class="hero-menu">
+    <ul>
+      <li><a href="#" class="reference internal">Guides</a></li>
+      <li><a href="#" class="reference internal">Docs</a></li>
+      <li><a href="#" class="reference internal">Changelog</a></li>
+      <li>
+        <a href="#" class="reference internal">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+            aria-hidden="true"
+            role="img"
+            class="iconify iconify--carbon"
+            width="24"
+            height="24"
+            preserveAspectRatio="xMidYMid meet"
+            viewBox="0 0 32 32"
+          >
+            <path
+              d="M16 2a14 14 0 0 0-4.43 27.28c.7.13 1-.3 1-.67v-2.38c-3.89.84-4.71-1.88-4.71-1.88a3.71 3.71 0 0 0-1.62-2.05c-1.27-.86.1-.85.1-.85a2.94 2.94 0 0 1 2.14 1.45a3 3 0 0 0 4.08 1.16a2.93 2.93 0 0 1 .88-1.87c-3.1-.36-6.37-1.56-6.37-6.92a5.4 5.4 0 0 1 1.44-3.76a5 5 0 0 1 .14-3.7s1.17-.38 3.85 1.43a13.3 13.3 0 0 1 7 0c2.67-1.81 3.84-1.43 3.84-1.43a5 5 0 0 1 .14 3.7a5.4 5.4 0 0 1 1.44 3.76c0 5.38-3.27 6.56-6.39 6.91a3.33 3.33 0 0 1 .95 2.59v3.84c0 .46.25.81 1 .67A14 14 0 0 0 16 2z"
+              fill-rule="evenodd"
+              fill="currentColor"
+            ></path>
+          </svg>
+        </a>
+      </li>
+    </ul>
+  </div>
+  <div class="hero-content">
+    <div class="hero-background">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 -0.5 5 5"
+        width="1200"
+        height="1200"
+        shape-rendering="crispEdges"
+      >
+        <path stroke="#77888877" d="M3 0h2M1 1h1M3 1h2M0 2h4M2 3h1M1 4h3" />
+      </svg>
+    </div>
+    <div class="hero-left">
+      <h1>beet</h1>
+      <h2>The Minecraft pack development kit</h2>
+    </div>
+
+    <div class="hero-right">
+      <div class="hero-logo"></div>
+    </div>
+  </div>
+</div>
+<section></section>
+{{ body }} {% endblock %}

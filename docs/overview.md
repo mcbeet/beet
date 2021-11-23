@@ -807,3 +807,9 @@ class Internationalization:
 Services are instantiated when they're injected for the first time with the context object as argument. The `set()` method adds translated messages to the language files stored in the `languages` attribute. When the `Internationalization` service is created, the constructor requires its `add_translations` method as a plugin. The plugin uses the `yield` statement to wait for all the plugins using the `Internationalization` service to be done and then merges the generated language files.
 
 In general, service injection makes it possible to package context operations into proper abstractions. With the `inject()` method we refactored the awkward `add_greeting_translations` plugin into a decoupled, strongly-typed `Internationalization` service with an explicit API.
+
+### Scoped generator API
+
+### Subpipelines
+
+The pipeline is responsible for feeding the same `Context` object to all the plugins. Isolated subpipelines
