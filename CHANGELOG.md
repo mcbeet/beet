@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.44.12 (2021-11-23)
+### Fix
+* Rename link to logo ([`f8eaaae`](https://github.com/mcbeet/beet/commit/f8eaaae016faf108256c6cdbb1c60fe735e374d8))
+
 ## v0.44.11 (2021-11-21)
 ### Fix
 * Accidentally added mudkip to main dependencies oops ([`b96f83f`](https://github.com/mcbeet/beet/commit/b96f83f76f8ab3972e7ea2717ecf9c6c344d0928))
