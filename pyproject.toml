@@ -41,7 +41,7 @@ image = ["Pillow"]
 [tool.poetry.dev-dependencies]
 black = "^21.10b0"
 pytest = "^6.2.5"
-rope = "^0.20.1"
+rope = "^0.22.0"
 pytest-minecraft = "^0.1.1"
 isort = "^5.10.1"
 pytest-insta = "^0.1.10"
