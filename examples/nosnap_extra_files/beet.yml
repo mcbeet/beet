@@ -1,0 +1,8 @@
+output: out
+require:
+  - beet.contrib.extra_files
+data_pack:
+  load: [src]
+meta:
+  extra_files:
+    data_pack: [README.md, module.json]

@@ -1,0 +1,12 @@
+output: out
+data_pack:
+  load: [src]
+pipeline:
+  - beet.contrib.copy_files
+meta:
+  copy_files:
+    data_pack:
+      info.txt: additional_file.txt
+      stuff:
+        - "*.json"
+        - additional_file.txt
