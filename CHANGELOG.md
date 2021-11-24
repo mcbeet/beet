@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.45.0 (2021-11-24)
+### Feature
+* Add beet.contrib.copy_files and beet.contrib.extra_files ([`85b4cee`](https://github.com/mcbeet/beet/commit/85b4ceebe6c46c9f41f8b17288bd324d34becea8))
+
 ## v0.44.12 (2021-11-23)
 ### Fix
 * Rename link to logo ([`f8eaaae`](https://github.com/mcbeet/beet/commit/f8eaaae016faf108256c6cdbb1c60fe735e374d8))
