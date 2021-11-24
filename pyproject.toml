@@ -100,6 +100,7 @@ html_title = "Beet documentation"
 html_logo = "assets/beet_logo.png"
 html_favicon = "assets/favicon.png"
 suppress_warnings = ["myst.header"]
+linkcheck_ignore = ['https://github\.com/mcbeet/beet/commit/.+']
 
 [tool.mudkip.override.html_theme_options]
 sidebar_hide_name = true
