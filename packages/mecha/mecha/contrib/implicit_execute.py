@@ -1,6 +1,11 @@
 """Plugin that handles implicit execute commands."""
 
 
+__all__ = [
+    "ImplicitExecuteNormalizer",
+]
+
+
 from dataclasses import dataclass, replace
 from typing import Set, cast
 
