@@ -1,0 +1,7 @@
+{
+  "pack": {
+    "pack_format": 7,
+    "description": "This is library foo"
+  },
+  "custom_data": 123
+}
