@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.45.2 (2021-11-26)
+### Fix
+* Load files by trying all the possible extensions ([`c437220`](https://github.com/mcbeet/beet/commit/c43722067df063ea6e53cbff41e3db897f64ce4b))
+
 ## v0.45.1 (2021-11-26)
 ### Fix
 * Forgot to update require method on context to accept multiple plugins ([`2b0aae8`](https://github.com/mcbeet/beet/commit/2b0aae8c033d72c68bab527e1d2fd7a83902265a))
