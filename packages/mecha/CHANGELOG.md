@@ -2,6 +2,18 @@
 
 <!--next-version-placeholder-->
 
+## v0.14.0 (2021-11-26)
+### Feature
+* Start working on scripting ([`d9ba6d3`](https://github.com/mcbeet/mecha/commit/d9ba6d3b4d18bc5e5cbe6a76391646c6f0736758))
+* Export annotate_diagnostics utility ([`8ac1026`](https://github.com/mcbeet/mecha/commit/8ac1026ec7b6dde5f49057e20cfd7c2cdd4ef8cb))
+* Add standalone ResetSyntaxParser ([`602a975`](https://github.com/mcbeet/mecha/commit/602a9758e35ee702d6fa7aaa44ee13fa1f3faaed))
+
+### Fix
+* Continuations are no longer allowed for nested execute ([`59a8e74`](https://github.com/mcbeet/mecha/commit/59a8e74c3416c58327827820bd99c39417cb13ad))
+* Don't keep using the same rules when the node changes in mutating reducer ([`89d92f6`](https://github.com/mcbeet/mecha/commit/89d92f6e50e802873dda7a5960819b95fa74ef5f))
+* Use start() instead of pos when reporting invalid escape sequence position ([`e9cc97b`](https://github.com/mcbeet/mecha/commit/e9cc97bd90b551e6163d83316c423daa7aec3cfc))
+* Forgot to explicitly export ImplicitExecuteNormalizer ([`4c5298a`](https://github.com/mcbeet/mecha/commit/4c5298afcb1a4a50b5a3674be38d637e503fc4f8))
+
 ## v0.13.3 (2021-11-20)
 ### Fix
 * Don't use resource_location for parsing objective criteria ([`d8b72e1`](https://github.com/mcbeet/mecha/commit/d8b72e1392f6df64f42d7615c124b40197307eda))
