@@ -36,6 +36,8 @@ execute as @a at @s run say 2
 execute as @a at @s if score @s tmp matches 1 run say 1
 execute as @a at @s if score @s tmp matches 1 run say 2
 execute if data storage imp:temp iter.words.remaining[] run function demo:nesting/loop
+execute if score @s tmp matches 0 run function demo:nesting/nested_execute_2
+execute if score @s tmp matches 0 at @e[type=pig] unless entity @e[type=sheep] run setblock ~ ~ ~ dirt
 ```
 `@function demo:nesting/nested_execute_0`
 
@@ -59,4 +61,10 @@ say this is a test
 ```mcfunction
 say wow
 execute if data storage imp:temp iter.words.remaining[] run function demo:nesting/loop
+```
+`@function demo:nesting/nested_execute_2`
+
+```mcfunction
+execute at @e[type=pig] run setblock ~ ~ ~ stone
+execute at @e[type=sheep] run setblock ~ ~ ~ dirt
 ```

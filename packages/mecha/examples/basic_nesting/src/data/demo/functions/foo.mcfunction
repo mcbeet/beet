@@ -32,11 +32,11 @@ execute as @a at @s
     setblock ~ ~-2 ~ stone
 
 execute
-    as @a
-    at @s
-        setblock ~ ~ ~ stone_pressure_plate
-        setblock ~ ~-1 ~ tnt
-        setblock ~ ~-2 ~ stone
+    execute as @a
+        execute at @s
+            setblock ~ ~ ~ stone_pressure_plate
+            setblock ~ ~-1 ~ tnt
+            setblock ~ ~-2 ~ stone
 
 execute as @a at @s expand
     say hello
