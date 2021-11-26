@@ -1,0 +1,33 @@
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=25, lineno=2, colno=1)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=23, lineno=1, colno=24)
+      identifier: 'statement'
+      arguments:
+        <class 'mecha.contrib.scripting.ast.AstExpressionBinary'>
+          location: SourceLocation(pos=0, lineno=1, colno=1)
+          end_location: SourceLocation(pos=23, lineno=1, colno=24)
+          operator: 'and'
+          left:
+            <class 'mecha.contrib.scripting.ast.AstValue'>
+              location: SourceLocation(pos=0, lineno=1, colno=1)
+              end_location: SourceLocation(pos=4, lineno=1, colno=5)
+              value: True
+          right:
+            <class 'mecha.contrib.scripting.ast.AstExpressionBinary'>
+              location: SourceLocation(pos=10, lineno=1, colno=11)
+              end_location: SourceLocation(pos=23, lineno=1, colno=24)
+              operator: 'or'
+              left:
+                <class 'mecha.contrib.scripting.ast.AstValue'>
+                  location: SourceLocation(pos=10, lineno=1, colno=11)
+                  end_location: SourceLocation(pos=15, lineno=1, colno=16)
+                  value: False
+              right:
+                <class 'mecha.contrib.scripting.ast.AstValue'>
+                  location: SourceLocation(pos=19, lineno=1, colno=20)
+                  end_location: SourceLocation(pos=23, lineno=1, colno=24)
+                  value: True

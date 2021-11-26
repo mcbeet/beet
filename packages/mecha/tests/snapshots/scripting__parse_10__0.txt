@@ -1,0 +1,38 @@
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=13, lineno=2, colno=1)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=12, lineno=1, colno=13)
+      identifier: 'statement'
+      arguments:
+        <class 'mecha.contrib.scripting.ast.AstExpressionBinary'>
+          location: SourceLocation(pos=0, lineno=1, colno=1)
+          end_location: SourceLocation(pos=12, lineno=1, colno=13)
+          operator: '+'
+          left:
+            <class 'mecha.contrib.scripting.ast.AstValue'>
+              location: SourceLocation(pos=0, lineno=1, colno=1)
+              end_location: SourceLocation(pos=1, lineno=1, colno=2)
+              value: 2
+          right:
+            <class 'mecha.contrib.scripting.ast.AstExpressionBinary'>
+              location: SourceLocation(pos=4, lineno=1, colno=5)
+              end_location: SourceLocation(pos=12, lineno=1, colno=13)
+              operator: '*'
+              left:
+                <class 'mecha.contrib.scripting.ast.AstExpressionUnary'>
+                  location: SourceLocation(pos=4, lineno=1, colno=5)
+                  end_location: SourceLocation(pos=7, lineno=1, colno=8)
+                  operator: '-'
+                  value:
+                    <class 'mecha.contrib.scripting.ast.AstValue'>
+                      location: SourceLocation(pos=5, lineno=1, colno=6)
+                      end_location: SourceLocation(pos=7, lineno=1, colno=8)
+                      value: 54
+              right:
+                <class 'mecha.contrib.scripting.ast.AstValue'>
+                  location: SourceLocation(pos=10, lineno=1, colno=11)
+                  end_location: SourceLocation(pos=12, lineno=1, colno=13)
+                  value: 10

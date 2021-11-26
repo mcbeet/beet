@@ -1,0 +1,5 @@
+#>ERROR  Expected newline or eof but got literal '"hey"'.
+# line 1, column 7
+#      1 |  "hey" "hey"
+#        :        ^^^^^
+"hey" "hey"

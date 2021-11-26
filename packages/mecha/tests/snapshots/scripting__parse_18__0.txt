@@ -1,0 +1,5 @@
+#>ERROR  Expected newline or eof but got literal '§§§'.
+# line 1, column 4
+#      1 |  64 §§§
+#        :     ^^^
+64 §§§

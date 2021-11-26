@@ -1,0 +1,4 @@
+#>ERROR  Expected literal 'block', literal 'score', literal 'blocks', literal 'entity', literal 'predicate' or literal 'data' but got newline '\n'.
+# line 1, column 3
+#      1 |  if
+if

@@ -1,0 +1,5 @@
+#>ERROR  Expected brace '(', true, false, none, identifier, string or number but got invalid '%3'.
+# line 1, column 6
+#      1 |  17 % %3
+#        :       ^^
+17 % %3
