@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.45.1 (2021-11-26)
+### Fix
+* Forgot to update require method on context to accept multiple plugins ([`2b0aae8`](https://github.com/mcbeet/beet/commit/2b0aae8c033d72c68bab527e1d2fd7a83902265a))
+
 ## v0.45.0 (2021-11-24)
 ### Feature
 * Add beet.contrib.copy_files and beet.contrib.extra_files ([`85b4cee`](https://github.com/mcbeet/beet/commit/85b4ceebe6c46c9f41f8b17288bd324d34becea8))
