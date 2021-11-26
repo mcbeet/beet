@@ -2,6 +2,7 @@ __all__ = [
     "QuoteHelper",
     "QuoteHelperWithUnicode",
     "InvalidEscapeSequence",
+    "normalize_whitespace",
     "string_to_number",
     "VersionNumber",
     "split_version",
@@ -22,8 +23,15 @@ ESCAPE_REGEX = re.compile(r"\\.")
 UNICODE_ESCAPE_REGEX = re.compile(r"\\(?:u([0-9a-fA-F]{4})|.)")
 AVOID_QUOTES_REGEX = re.compile(r"^[0-9A-Za-z_\.\+\-]+$")
 
+WHITESPACE_REGEX = re.compile(r"\s+")
+
 
 VersionNumber = Union[str, int, float, Tuple[Union[str, int], ...]]
+
+
+def normalize_whitespace(op: str) -> str:
+    """Replace whitespace with underscores."""
+    return WHITESPACE_REGEX.sub("_", op).strip("_")
 
 
 def string_to_number(string: str) -> Union[int, float]:
@@ -77,7 +85,7 @@ class QuoteHelper:
         except InvalidEscapeSequence as exc:
             location = token.location.with_horizontal_offset(exc.index + 1)
             end_location = location.with_horizontal_offset(len(exc.characters))
-            exc = InvalidSyntax(f"Invalid escape sequence {exc.characters!r}.")
+            exc = InvalidSyntax(f"Invalid escape sequence {exc.characters}.")
             raise set_location(exc, location, end_location)
 
     def handle_substitution(self, token: Token, match: "re.Match[str]") -> str:
@@ -90,7 +98,7 @@ class QuoteHelper:
         try:
             return self.escape_sequences[characters]
         except KeyError:
-            raise InvalidEscapeSequence(characters, match.pos) from None
+            raise InvalidEscapeSequence(characters, match.start()) from None
 
     def quote_string(self, value: str, quote: str = '"') -> str:
         """Wrap the string in quotes if it can't be represented unquoted."""
