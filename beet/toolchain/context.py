@@ -269,9 +269,9 @@ class Context:
     def packs(self) -> Tuple[ResourcePack, DataPack]:
         return self.assets, self.data
 
-    def require(self, spec: PluginSpec):
+    def require(self, *args: PluginSpec):
         """Execute the specified plugin."""
-        self.inject(Pipeline).require(spec)
+        self.inject(Pipeline).require(*args)
 
 
 @overload
