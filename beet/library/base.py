@@ -62,7 +62,7 @@ from beet.core.container import (
 from beet.core.file import File, FileOrigin, JsonFile, PngFile
 from beet.core.utils import FileSystemPath, JsonDict, TextComponent
 
-from .utils import list_files
+from .utils import list_extensions, list_files
 
 T = TypeVar("T")
 PackFileType = TypeVar("PackFileType", bound="PackFile")
@@ -495,21 +495,25 @@ class Namespace(
                 name, namespace = namespace_dir, cls()
 
             assert name and namespace is not None
-            extension = "".join(filename.suffixes)
+            extensions = list_extensions(filename)
 
             if file_type := extra_info.get(path := "/".join(scope + [extra_name])):
                 namespace.extra[path] = file_type.load(pack, filename)
                 continue
 
             while path := tuple(scope):
-                if file_type := scope_map.get((path, extension)):
-                    key = "/".join(
-                        filename.relative_to(Path(directory, name, *path)).parts
-                    )[: -len(extension)]
+                for extension in extensions:
+                    if file_type := scope_map.get((path, extension)):
+                        key = "/".join(
+                            filename.relative_to(Path(directory, name, *path)).parts
+                        )[: -len(extension)]
 
-                    namespace[file_type][key] = file_type.load(pack, filename)
-                    break
-                scope.pop()
+                        namespace[file_type][key] = file_type.load(pack, filename)
+                        break
+                else:
+                    scope.pop()
+                    continue
+                break
 
         if name and namespace:
             yield name, namespace
