@@ -330,8 +330,18 @@ class MutatingReducer(Dispatcher[Any]):
         if to_replace:
             node = replace(node, **to_replace)
 
-        for name, rule in self.dispatch(node):
-            with self.use_rule(node, name):
-                node = rule(node, *args, **kwargs)
+        exhausted = False
+
+        while not exhausted:
+            exhausted = True
+
+            for name, rule in self.dispatch(node):
+                with self.use_rule(node, name):
+                    result = rule(node, *args, **kwargs)
+
+                if result is not node:
+                    exhausted = False
+                    node = result
+                    break
 
         return node
