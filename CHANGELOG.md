@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.45.3 (2021-11-27)
+### Fix
+* Make it possible to not copy the output to the linked world ([`ce10eca`](https://github.com/mcbeet/beet/commit/ce10eca1279de496c4267998f045776feb7aa088))
+
 ## v0.45.2 (2021-11-26)
 ### Fix
 * Load files by trying all the possible extensions ([`c437220`](https://github.com/mcbeet/beet/commit/c43722067df063ea6e53cbff41e3db897f64ce4b))
