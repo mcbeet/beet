@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.15.1 (2021-11-27)
+### Fix
+* Iterate over indices instead of arguments values ([`0f6d0ae`](https://github.com/mcbeet/mecha/commit/0f6d0aebfb659f3a8d9e3ce01ba48d72ff5ea833))
+
 ## v0.15.0 (2021-11-27)
 ### Feature
 * Parse assignment target, for loop, break, continue ([`ef25788`](https://github.com/mcbeet/mecha/commit/ef25788227576bcf35b7b8cc369653d6609efae3))
