@@ -2,6 +2,13 @@
 
 <!--next-version-placeholder-->
 
+## v0.15.0 (2021-11-27)
+### Feature
+* Parse assignment target, for loop, break, continue ([`ef25788`](https://github.com/mcbeet/mecha/commit/ef25788227576bcf35b7b8cc369653d6609efae3))
+
+### Fix
+* Allow json-flavored keywords ([`fff9f13`](https://github.com/mcbeet/mecha/commit/fff9f13dafad6ec85bd335e59c15be7dee450ebe))
+
 ## v0.14.0 (2021-11-26)
 ### Feature
 * Start working on scripting ([`d9ba6d3`](https://github.com/mcbeet/mecha/commit/d9ba6d3b4d18bc5e5cbe6a76391646c6f0736758))
