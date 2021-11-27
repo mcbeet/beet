@@ -1,0 +1,5 @@
+#>ERROR  Expected assignment but got invalid '+= "hey"'.
+# line 1, column 5
+#      1 |  foo += "hey"
+#        :      ^^^^^^^^
+foo += "hey"

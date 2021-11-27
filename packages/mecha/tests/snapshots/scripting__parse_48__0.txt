@@ -1,5 +1,5 @@
 1 * 2
-#>ERROR  Expected literal 'advancement', literal 'attribute', literal 'execute', literal 'bossbar', literal 'clear', literal 'clone' or 90 other tokens but got literal '*'.
+#>ERROR  Expected literal 'advancement', literal 'attribute', literal 'execute', literal 'bossbar', literal 'clear', literal 'clone' or 95 other tokens but got literal '*'.
 # line 2, column 1
 #      1 |  1 * 2
 #      2 |  * 3

@@ -1,0 +1,5 @@
+#>ERROR  Identifier 'the' is not defined.
+# line 1, column 7
+#      1 |  wat = the = "f"
+#        :        ^^^
+wat = the = "f"

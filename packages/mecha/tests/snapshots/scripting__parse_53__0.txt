@@ -1,6 +1,6 @@
 <class 'mecha.ast.AstRoot'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
-  end_location: SourceLocation(pos=12, lineno=3, colno=1)
+  end_location: SourceLocation(pos=18, lineno=3, colno=1)
   commands:
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=0, lineno=1, colno=1)
@@ -23,10 +23,20 @@
               value: 1
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=8, lineno=2, colno=1)
-      end_location: SourceLocation(pos=11, lineno=2, colno=4)
+      end_location: SourceLocation(pos=17, lineno=2, colno=10)
       identifier: 'statement'
       arguments:
-        <class 'mecha.contrib.scripting.ast.AstIdentifier'>
+        <class 'mecha.contrib.scripting.ast.AstAssignment'>
           location: SourceLocation(pos=8, lineno=2, colno=1)
-          end_location: SourceLocation(pos=11, lineno=2, colno=4)
-          value: 'foo'
+          end_location: SourceLocation(pos=17, lineno=2, colno=10)
+          operator: '='
+          target:
+            <class 'mecha.contrib.scripting.ast.AstAssignmentTargetIdentifier'>
+              location: SourceLocation(pos=8, lineno=2, colno=1)
+              end_location: SourceLocation(pos=11, lineno=2, colno=4)
+              value: 'foo'
+          value:
+            <class 'mecha.contrib.scripting.ast.AstIdentifier'>
+              location: SourceLocation(pos=14, lineno=2, colno=7)
+              end_location: SourceLocation(pos=17, lineno=2, colno=10)
+              value: 'foo'

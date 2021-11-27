@@ -75,6 +75,41 @@ COMMAND_TREE = {
                 }
             },
         },
+        "for": {
+            "type": "literal",
+            "children": {
+                "target": {
+                    "type": "argument",
+                    "parser": "mecha:scripting:assignment_target",
+                    "children": {
+                        "in": {
+                            "type": "literal",
+                            "children": {
+                                "iterable": {
+                                    "type": "argument",
+                                    "parser": "mecha:scripting:expression",
+                                    "children": {
+                                        "body": {
+                                            "type": "argument",
+                                            "parser": "mecha:nested_root",
+                                            "executable": True,
+                                        }
+                                    },
+                                }
+                            },
+                        }
+                    },
+                }
+            },
+        },
+        "break": {
+            "type": "literal",
+            "executable": True,
+        },
+        "continue": {
+            "type": "literal",
+            "executable": True,
+        },
     },
 }
 

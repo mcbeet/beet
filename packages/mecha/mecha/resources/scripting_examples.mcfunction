@@ -137,3 +137,45 @@ foo = (
 * 3
 ###
 true | false | null
+###
+foo = 1
+foo == 1
+###
+for c in "abc"
+    say something
+###
+foo = foo
+###
+foo = 1
+foo = foo
+###
+for foo in foo
+    foo = foo
+###
+for foo in "foo"
+    foo = foo
+###
+foo += "hey"
+###
+foo = ""
+foo += "hey"
+###
+wat = the = "f"
+###
+break
+###
+continue
+###
+if true
+    break
+###
+for i in ""
+    say hello
+    continue
+###
+while false
+    break
+###
+for i in "abc"
+    if i == "b"
+        break

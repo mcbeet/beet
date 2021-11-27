@@ -1,9 +1,13 @@
 __all__ = [
     "get_scripting_parsers",
     "get_stream_identifiers",
+    "get_stream_pending_identifiers",
     "UndefinedIdentifier",
     "parse_statement",
+    "AssignmentTargetParser",
     "IfElseConstraint",
+    "BreakContinueConstraint",
+    "FlushPendingIdentifiersParser",
     "BinaryParser",
     "UnaryParser",
     "AtomParser",
@@ -12,11 +16,11 @@ __all__ = [
 
 from dataclasses import dataclass, field
 from difflib import get_close_matches
-from typing import Any, Dict, List, Set
+from typing import Any, Dict, Iterable, List, Set, Tuple
 
 from tokenstream import InvalidSyntax, Token, TokenStream, UnexpectedToken, set_location
 
-from mecha import AstRoot, Parser, ResetSyntaxParser, delegate
+from mecha import AstRoot, Parser, ResetSyntaxParser, delegate, get_stream_scope
 from mecha.utils import (
     QuoteHelper,
     QuoteHelperWithUnicode,
@@ -26,6 +30,8 @@ from mecha.utils import (
 
 from .ast import (
     AstAssignment,
+    AstAssignmentTarget,
+    AstAssignmentTargetIdentifier,
     AstExpressionBinary,
     AstExpressionUnary,
     AstIdentifier,
@@ -37,10 +43,45 @@ IDENTIFIER_PATTERN: str = r"[a-zA-Z_][a-zA-Z0-9_]*"
 
 def get_scripting_parsers(parsers: Dict[str, Parser]) -> Dict[str, Parser]:
     """Return the scripting parsers."""
-    parsers = {
-        "root": IfElseConstraint(parsers["root"]),
-        "nested_root": IfElseConstraint(parsers["nested_root"]),
+    return {
+        ################################################################################
+        # Command
+        ################################################################################
+        "root": FlushPendingIdentifiersParser(
+            BreakContinueConstraint(
+                parser=IfElseConstraint(parsers["root"]),
+                allowed_scopes={
+                    ("while", "condition", "body"),
+                    ("for", "target", "in", "iterable", "body"),
+                },
+            )
+        ),
+        "nested_root": FlushPendingIdentifiersParser(
+            BreakContinueConstraint(
+                parser=IfElseConstraint(parsers["nested_root"]),
+                allowed_scopes={
+                    ("while", "condition", "body"),
+                    ("for", "target", "in", "iterable", "body"),
+                },
+            )
+        ),
+        "command:argument:mecha:scripting:statement": ResetSyntaxParser(
+            delegate("scripting:statement")
+        ),
+        "command:argument:mecha:scripting:assignment_target": ResetSyntaxParser(
+            delegate("scripting:assignment_target")
+        ),
+        "command:argument:mecha:scripting:expression": ResetSyntaxParser(
+            delegate("scripting:expression")
+        ),
+        ################################################################################
+        # Scripting
+        ################################################################################
         "scripting:statement": parse_statement,
+        "scripting:assignment_target": AssignmentTargetParser(
+            allow_undefined_identifiers=True
+        ),
+        "scripting:augmented_assignment_target": AssignmentTargetParser(),
         "scripting:expression": delegate("scripting:disjunction"),
         "scripting:disjunction": BinaryParser(
             operators=[r"\bor\b"],
@@ -106,25 +147,25 @@ def get_scripting_parsers(parsers: Dict[str, Parser]) -> Dict[str, Parser]:
         "scripting:atom": AtomParser(),
     }
 
-    for arg in ["scripting:statement", "scripting:expression"]:
-        parsers[f"command:argument:mecha:{arg}"] = ResetSyntaxParser(delegate(arg))
-
-    return parsers
-
 
 def get_stream_identifiers(stream: TokenStream) -> Set[str]:
     """Return the set of accessible identifiers currently associated with the token stream."""
     return stream.data.setdefault("identifiers", set())
 
 
+def get_stream_pending_identifiers(stream: TokenStream) -> Set[str]:
+    """Return the set of pending identifiers currently associated with the token stream."""
+    return stream.data.setdefault("pending_identifiers", set())
+
+
 class UndefinedIdentifier(UnexpectedToken):
     """Raised when an identifier is not defined."""
 
-    identifiers: Set[str]
+    identifiers: Tuple[str, ...]
 
-    def __init__(self, token: Token, identifiers: Set[str]):
+    def __init__(self, token: Token, identifiers: Iterable[str]):
         super().__init__(token)
-        self.identifiers = identifiers
+        self.identifiers = tuple(identifiers)
 
     def __str__(self) -> str:
         msg = f"Identifier {self.token.value!r} is not defined."
@@ -146,28 +187,62 @@ class UndefinedIdentifier(UnexpectedToken):
 def parse_statement(stream: TokenStream) -> Any:
     """Parse statement."""
     identifiers = get_stream_identifiers(stream)
+    pending_identifiers = get_stream_pending_identifiers(stream)
 
-    with stream.syntax(
-        equal=r"=",
-        identifier=IDENTIFIER_PATTERN,
+    for parser, alternative in stream.choose(
+        "scripting:augmented_assignment_target",
+        "scripting:assignment_target",
+        "scripting:expression",
     ):
-        with stream.checkpoint() as commit:
+        with alternative:
+            pending_identifiers.clear()
+            node = delegate(parser, stream)
+
+            if isinstance(node, AstAssignmentTarget):
+                pattern = r"=(?!=)"
+
+                if (
+                    parser == "scripting:augmented_assignment_target"
+                    and not node.multiple
+                ):
+                    pattern += r"|\+=|-=|\*=|//=|/=|%=|&=|\|=|\^=|<<=|>>=|\*\*="
+
+                with stream.syntax(assignment=pattern):
+                    op = stream.expect("assignment")
+
+                expression = delegate("scripting:expression", stream)
+
+                identifiers |= pending_identifiers
+                pending_identifiers.clear()
+
+                node = AstAssignment(operator=op.value, target=node, value=expression)
+                node = set_location(node, node.target, node.value)
+
+            return node
+
+
+@dataclass
+class AssignmentTargetParser:
+    """Parser for assignment targets."""
+
+    allow_undefined_identifiers: bool = False
+
+    def __call__(self, stream: TokenStream) -> AstAssignmentTarget:
+        identifiers = get_stream_identifiers(stream)
+        pending_identifiers = get_stream_pending_identifiers(stream)
+
+        with stream.syntax(identifier=IDENTIFIER_PATTERN):
             token = stream.expect("identifier")
-            stream.expect("equal")
-            commit()
 
-            identifier = set_location(AstIdentifier(value=token.value), token)
-            expression = delegate("scripting:expression", stream)
+            if self.allow_undefined_identifiers:
+                pending_identifiers.add(token.value)
+            elif token.value not in identifiers:
+                exc = UndefinedIdentifier(token, identifiers)
+                raise set_location(exc, token)
 
-            identifiers.add(identifier.value)
+            node = set_location(AstAssignmentTargetIdentifier(value=token.value), token)
 
-            node = AstAssignment(left=identifier, right=expression)
-            node = set_location(node, identifier, expression)
-
-    if commit.rollback:
-        node = delegate("scripting:expression", stream)
-
-    return node
+        return node
 
 
 @dataclass
@@ -191,6 +266,47 @@ class IfElseConstraint:
             previous = command.identifier
 
         return node
+
+
+@dataclass
+class BreakContinueConstraint:
+    """Constraint that makes sure that break and continue statements only occur in loops."""
+
+    parser: Parser
+    allowed_scopes: Set[Tuple[str, ...]]
+
+    def __call__(self, stream: TokenStream) -> AstRoot:
+        scope = get_stream_scope(stream)
+        loop = stream.data.get("loop") or scope in self.allowed_scopes
+
+        with stream.provide(loop=loop):
+            node: AstRoot = self.parser(stream)
+
+        if not loop:
+            for command in node.commands:
+                if command.identifier in ["break", "continue"]:
+                    exc = InvalidSyntax(
+                        f"Can only use {command.identifier!r} in loops."
+                    )
+                    raise set_location(exc, command)
+
+        return node
+
+
+@dataclass
+class FlushPendingIdentifiersParser:
+    """Parser that flushes pending identifiers."""
+
+    parser: Parser
+
+    def __call__(self, stream: TokenStream) -> Any:
+        identifiers = get_stream_identifiers(stream)
+        pending_identifiers = get_stream_pending_identifiers(stream)
+
+        identifiers |= pending_identifiers
+        pending_identifiers.clear()
+
+        return self.parser(stream)
 
 
 @dataclass
@@ -288,11 +404,7 @@ class AtomParser:
                 return inner
 
             if identifier:
-                if (
-                    stream.data.get("check_identifiers", True)
-                    and identifier.value not in identifiers
-                ):
-                    stream.index -= 1
+                if identifier.value not in identifiers:
                     exc = UndefinedIdentifier(identifier, identifiers)
                     raise set_location(exc, identifier)
                 return set_location(AstIdentifier(value=identifier.value), identifier)

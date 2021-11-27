@@ -10,12 +10,13 @@
         <class 'mecha.contrib.scripting.ast.AstAssignment'>
           location: SourceLocation(pos=0, lineno=1, colno=1)
           end_location: SourceLocation(pos=29, lineno=3, colno=12)
-          left:
-            <class 'mecha.contrib.scripting.ast.AstIdentifier'>
+          operator: '='
+          target:
+            <class 'mecha.contrib.scripting.ast.AstAssignmentTargetIdentifier'>
               location: SourceLocation(pos=0, lineno=1, colno=1)
               end_location: SourceLocation(pos=3, lineno=1, colno=4)
               value: 'foo'
-          right:
+          value:
             <class 'mecha.contrib.scripting.ast.AstExpressionBinary'>
               location: SourceLocation(pos=12, lineno=2, colno=5)
               end_location: SourceLocation(pos=29, lineno=3, colno=12)

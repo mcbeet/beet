@@ -4,12 +4,14 @@ __all__ = [
     "AstExpressionUnary",
     "AstValue",
     "AstIdentifier",
+    "AstAssignmentTarget",
+    "AstAssignmentTargetIdentifier",
     "AstAssignment",
 ]
 
 
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, ClassVar
 
 from beet.core.utils import required_field
 
@@ -53,8 +55,23 @@ class AstIdentifier(AstExpression):
 
 
 @dataclass(frozen=True)
+class AstAssignmentTarget(AstNode):
+    """Base node for assignment targets."""
+
+    multiple: ClassVar[bool] = False
+
+
+@dataclass(frozen=True)
+class AstAssignmentTargetIdentifier(AstAssignmentTarget):
+    """Ast assignment target identifier node."""
+
+    value: str = required_field()
+
+
+@dataclass(frozen=True)
 class AstAssignment(AstNode):
     """Ast assignment node."""
 
-    left: AstIdentifier = required_field()
-    right: AstExpression = required_field()
+    operator: str = required_field()
+    target: AstAssignmentTarget = required_field()
+    value: AstExpression = required_field()
