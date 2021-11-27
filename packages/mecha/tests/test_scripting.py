@@ -33,7 +33,7 @@ def test_parse(snapshot: SnapshotFixture, mc_scripting: Mecha, source: Function)
         diagnostics = exc.diagnostics
 
     if ast:
-        assert snapshot() == ast.dump() + "\n"
+        assert snapshot() == f"{source.text}---\n{ast.dump()}\n"
     elif diagnostics:
         database = CompilationDatabase()
         database[source] = CompilationUnit(source=source.text)

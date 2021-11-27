@@ -1,3 +1,5 @@
+False or True and "hello" or not "foo" == "bar" or 1 != 2 and 1 < 2 and 2 <= 3 and 5 > 4 and 6 >= 5 and 1 in 1 and 2 not in 2 and 3 is 3 and 3 is not 3
+---
 <class 'mecha.ast.AstRoot'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=152, lineno=2, colno=1)

@@ -1,3 +1,7 @@
+for i in "abc"
+    if i == "b"
+        break
+---
 <class 'mecha.ast.AstRoot'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=45, lineno=4, colno=1)

@@ -1,3 +1,5 @@
+'something \t\f\n\\\'here'
+---
 <class 'mecha.ast.AstRoot'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=27, lineno=2, colno=1)

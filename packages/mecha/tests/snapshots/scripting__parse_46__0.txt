@@ -1,3 +1,9 @@
+if score @s tmp matches 42
+    count = 42
+    while count > 0
+        say hello
+        count = count - 1
+---
 <class 'mecha.ast.AstRoot'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=106, lineno=6, colno=1)
