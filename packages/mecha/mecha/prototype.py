@@ -27,11 +27,11 @@ class CommandPrototype(NamedTuple):
     def get_argument(self, arg: Union[str, int]) -> CommandArgument:
         """Return the argument corresponding to the given name or index."""
         if isinstance(arg, str):
-            for i in self.arguments:
-                if self.get_argument(i).name == arg:
-                    arg = i
-                    break
+            for i in range(len(self.arguments)):
+                argument = self.get_argument(i)
+                if argument.name == arg:
+                    return argument
             else:
-                arg = len(self.signature)
+                raise ValueError(f"No argument {arg!r}.")
 
         return self.signature[self.arguments[arg]]  # type: ignore
