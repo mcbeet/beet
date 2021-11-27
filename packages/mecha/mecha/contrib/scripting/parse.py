@@ -264,18 +264,18 @@ class AtomParser:
 
         with stream.syntax(
             brace=r"\(|\)",
-            true=r"\bTrue\b",
-            false=r"\bFalse\b",
-            none=r"\bNone\b",
+            true=r"\b[tT]rue\b",
+            false=r"\b[fF]alse\b",
+            null=r"\b(?:null|None)\b",
             identifier=IDENTIFIER_PATTERN,
             string=r'"(?:\\.|[^\\\n])*?"' "|" r"'(?:\\.|[^\\\n])*?'",
             number=r"(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?\b",
         ):
-            brace, true, false, none, identifier, string, number = stream.expect(
+            brace, true, false, null, identifier, string, number = stream.expect(
                 ("brace", "("),
                 "true",
                 "false",
-                "none",
+                "null",
                 "identifier",
                 "string",
                 "number",
@@ -301,7 +301,7 @@ class AtomParser:
                 value = True
             elif false:
                 value = False
-            elif none:
+            elif null:
                 value = None
             elif string:
                 value = self.quote_helper.unquote_string(string)

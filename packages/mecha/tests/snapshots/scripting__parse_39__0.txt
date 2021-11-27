@@ -1,4 +1,4 @@
-#>ERROR  Expected brace '(', true, false, none, identifier, string or number but got newline '\n'.
+#>ERROR  Expected brace '(', true, false, null, identifier, string or number but got newline '\n'.
 # line 1, column 12
 #      1 |  if True and
 if True and
