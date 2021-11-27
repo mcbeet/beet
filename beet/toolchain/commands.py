@@ -17,13 +17,19 @@ pass_project = click.make_pass_decorator(Project)  # type: ignore
     metavar="TARGET",
     help="Link the project before building.",
 )
-def build(project: Project, link: Optional[str]):
+@click.option(
+    "-n",
+    "--no-link",
+    is_flag=True,
+    help="Don't copy the output to the linked Minecraft world.",
+)
+def build(project: Project, link: Optional[str], no_link: bool):
     """Build the current project."""
     text = "Linking and building project..." if link else "Building project..."
     with message_fence(text):
         if link:
             echo("\n".join(project.link(target=link)))
-        project.build()
+        project.build(link=not no_link)
 
 
 @beet.command()
@@ -35,13 +41,19 @@ def build(project: Project, link: Optional[str]):
     help="Link the project before watching.",
 )
 @click.option(
+    "-n",
+    "--no-link",
+    is_flag=True,
+    help="Don't copy the output to the linked Minecraft world.",
+)
+@click.option(
     "-i",
     "--interval",
     metavar="SECONDS",
     default=0.6,
     help="Configure the polling interval.",
 )
-def watch(project: Project, link: Optional[str], interval: float):
+def watch(project: Project, link: Optional[str], no_link: bool, interval: float):
     """Watch the project directory and build on file changes."""
     text = "Linking and watching project..." if link else "Watching project..."
     with message_fence(text):
@@ -62,7 +74,7 @@ def watch(project: Project, link: Optional[str], interval: float):
             echo(f"{change_time} {text}")
 
             with error_handler(format_padding=1):
-                project.build()
+                project.build(link=not no_link)
 
 
 @beet.command()

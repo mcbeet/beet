@@ -117,14 +117,15 @@ class Project:
         self.resolved_config = None
         self.resolved_cache = None
 
-    def build(self):
+    def build(self, link: bool = False):
         """Build the project."""
         ctx = ProjectBuilder(self).build()
 
-        with log_time("Link project."):
-            for link_key, pack in zip(["resource_pack", "data_pack"], ctx.packs):
-                if pack and (link_dir := ctx.cache["link"].json.get(link_key)):
-                    pack.save(link_dir, overwrite=True)
+        if link and any(ctx.packs):
+            with log_time("Link project."):
+                for link_key, pack in zip(["resource_pack", "data_pack"], ctx.packs):
+                    if pack and (link_dir := ctx.cache["link"].json.get(link_key)):
+                        pack.save(link_dir, overwrite=True)
 
     def watch(self, interval: float = 0.6) -> Iterator[FileChanges]:
         """Watch the project."""
@@ -276,10 +277,11 @@ class ProjectBuilder:
     def autosave(self, ctx: Context):
         """Plugin that outputs the data pack and the resource pack at the end of the build."""
         yield
-        with log_time("Output files."):
-            for pack in ctx.packs:
-                if pack and ctx.output_directory:
-                    pack.save(ctx.output_directory, overwrite=True)
+        if ctx.output_directory and any(ctx.packs):
+            with log_time("Output files."):
+                for pack in ctx.packs:
+                    if pack:
+                        pack.save(ctx.output_directory, overwrite=True)
 
     def bootstrap(self, ctx: Context):
         """Plugin that handles the project configuration."""
