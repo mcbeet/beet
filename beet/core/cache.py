@@ -7,10 +7,11 @@ __all__ = [
 import json
 import logging
 import shutil
+from contextlib import contextmanager
 from datetime import datetime, timedelta
 from pathlib import Path
 from textwrap import indent
-from typing import Any, ClassVar, Iterator, List, Optional, Type, TypeVar
+from typing import Any, ClassVar, Iterator, List, Optional, Set, Type, TypeVar
 from urllib.request import urlopen
 
 from .container import Container, MatchMixin
@@ -165,6 +166,26 @@ class Cache:
         else:
             self.directory.mkdir(parents=True, exist_ok=True)
             self.index_path.write_text(dump_json(self.index))
+
+    @contextmanager
+    def override(self, **data: Any):
+        """Temporarily update the json data."""
+        to_restore: JsonDict = {}
+        to_remove: Set[str] = set()
+
+        for key, value in data.items():
+            if key in self.json:
+                to_restore[key] = self.json[key]
+            else:
+                to_remove.add(key)
+            self.json[key] = value
+
+        try:
+            yield self
+        finally:
+            for key in to_remove:
+                del self.json[key]
+            self.json.update(to_restore)
 
     def __repr__(self) -> str:
         return f"{self.__class__.__name__}({str(self.directory)!r})"
