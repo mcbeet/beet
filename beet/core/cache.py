@@ -291,15 +291,8 @@ class MultiCache(MatchMixin, Container[str, CacheType]):
 
     def flush(self):
         """Flush the modifications to the filesystem."""
-        deleted: List[str] = []
-
-        for name, cache in self.items():
+        for cache in self.values():
             cache.flush()
-            if cache.deleted:
-                deleted.append(name)
-
-        for name in deleted:
-            del self[name]
 
         if (
             self.gitignore
