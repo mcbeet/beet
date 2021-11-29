@@ -2,6 +2,16 @@
 
 <!--next-version-placeholder-->
 
+## v0.46.0 (2021-11-29)
+### Feature
+* Extract autosave and linking strategy into their own plugins ([`f82a8d5`](https://github.com/mcbeet/beet/commit/f82a8d5f7b353a2c8fc549bb829ea33cd652c203))
+
+### Fix
+* Make pydantic work with PurePath ([`7f44324`](https://github.com/mcbeet/beet/commit/7f44324fe09c0aa02fc29c8f477db942fedd113c))
+* Forgot deleted caches get immediately reset so no need to remove them from the multicache ([`a4cd64c`](https://github.com/mcbeet/beet/commit/a4cd64cbfdbb59f0e36af71252d63fa79a287237))
+* Add cache override ([`071a64a`](https://github.com/mcbeet/beet/commit/071a64a762781e20f08e73e07476172f29cf785a))
+* Remove deleted caches from multicache ([`b64603c`](https://github.com/mcbeet/beet/commit/b64603c726d1a0417637c8cc64cac25ab88d6175))
+
 ## v0.45.3 (2021-11-27)
 ### Fix
 * Make it possible to not copy the output to the linked world ([`ce10eca`](https://github.com/mcbeet/beet/commit/ce10eca1279de496c4267998f045776feb7aa088))
