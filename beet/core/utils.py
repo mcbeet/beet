@@ -22,6 +22,9 @@ from dataclasses import field
 from pathlib import PurePath
 from typing import Any, Dict, Iterable, Iterator, List, TypeVar, Union
 
+from pydantic import PydanticTypeError
+from pydantic.validators import _VALIDATORS
+
 T = TypeVar("T")
 
 
@@ -87,3 +90,19 @@ def log_time(message: str, *args: Any, **kwargs: Any) -> Iterator[None]:
     finally:
         message = f"{message} (took {time.time() - start:.2f}s)"
         time_logger.debug(message, *args, **kwargs)
+
+
+class PurePathError(PydanticTypeError):
+    msg_template = "value is not a pure path"
+
+
+def pure_path_validator(v: Any) -> PurePath:
+    if isinstance(v, PurePath):
+        return v
+    try:
+        return PurePath(v)
+    except TypeError:
+        raise PurePathError()
+
+
+_VALIDATORS.append((PurePath, [pure_path_validator]))
