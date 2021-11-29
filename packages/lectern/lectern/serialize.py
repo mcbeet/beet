@@ -317,7 +317,9 @@ class MarkdownSerializer:
 
     def format_serialized_file(self, chunks: Iterable[str]) -> Iterator[str]:
         """Format the markdown chunks for serializing file instances."""
-        if not self.flat:
+        if self.flat:
+            yield ""
+        else:
             chunks = [indent(chunk, "  ") for chunk in chunks]
             chunks[0] = "\n-" + chunks[0][1:]
         yield from chunks
