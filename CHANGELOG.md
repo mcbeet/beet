@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.47.0 (2021-11-29)
+### Feature
+* Add beet.contrib.livereload and --reload option ([`3d56260`](https://github.com/mcbeet/beet/commit/3d5626005f739c5affd5f4d80a863f7cda61c530))
+
 ## v0.46.0 (2021-11-29)
 ### Feature
 * Extract autosave and linking strategy into their own plugins ([`f82a8d5`](https://github.com/mcbeet/beet/commit/f82a8d5f7b353a2c8fc549bb829ea33cd652c203))
