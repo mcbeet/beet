@@ -35,6 +35,12 @@ def build(project: Project, link: Optional[str], no_link: bool):
 @beet.command()
 @pass_project
 @click.option(
+    "-r",
+    "--reload",
+    is_flag=True,
+    help="Enable live data pack reloading.",
+)
+@click.option(
     "-l",
     "--link",
     metavar="TARGET",
@@ -53,7 +59,13 @@ def build(project: Project, link: Optional[str], no_link: bool):
     default=0.6,
     help="Configure the polling interval.",
 )
-def watch(project: Project, link: Optional[str], no_link: bool, interval: float):
+def watch(
+    project: Project,
+    reload: bool,
+    link: Optional[str],
+    no_link: bool,
+    interval: float,
+):
     """Watch the project directory and build on file changes."""
     text = "Linking and watching project..." if link else "Watching project..."
     with message_fence(text):
@@ -72,6 +84,9 @@ def watch(project: Project, link: Optional[str], no_link: bool, interval: float)
             now = time.strftime("%H:%M:%S")
             change_time = click.style(now, fg="green", bold=True)
             echo(f"{change_time} {text}")
+
+            if reload:
+                project.config.pipeline.append("beet.contrib.livereload")
 
             with error_handler(format_padding=1):
                 project.build(no_link)
