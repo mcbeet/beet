@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.18.1 (2021-11-29)
+### Fix
+* Missing blank line in flat format ([`db3c1fc`](https://github.com/mcbeet/lectern/commit/db3c1fcfb9f252cf037ea22c706d6a254d4b0ad3))
+
 ## v0.18.0 (2021-11-16)
 ### Feature
 * Add flat markdown ([`45c5cf5`](https://github.com/mcbeet/lectern/commit/45c5cf5d7c949e824936ce43fce346c06b4af8ad))
