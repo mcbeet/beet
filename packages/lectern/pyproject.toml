@@ -25,16 +25,15 @@ include = ["lectern/py.typed"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
-beet = ">=0.44.2"
+beet = ">=0.45.3"
 markdown-it-py = "^1.1.0"
 click = "^8.0.1"
 
 [tool.poetry.dev-dependencies]
-black = "^21.11b0"
-rope = "^0.20.1"
+black = "^21.11b1"
 pytest = "^6.2.5"
-isort = "^5.9.3"
-python-semantic-release = "^7.19.2"
+isort = "^5.10.1"
+python-semantic-release = "^7.22.0"
 pytest-insta = "^0.1.10"
 
 [tool.poetry.scripts]
