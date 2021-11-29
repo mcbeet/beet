@@ -10,20 +10,22 @@ __all__ = [
     "normalize_string",
     "snake_case",
     "log_time",
+    "remove_path",
 ]
 
 
 import json
 import logging
 import re
+import shutil
 import time
 from contextlib import contextmanager
 from dataclasses import field
-from pathlib import PurePath
+from pathlib import Path, PurePath
 from typing import Any, Dict, Iterable, Iterator, List, TypeVar, Union
 
 from pydantic import PydanticTypeError
-from pydantic.validators import _VALIDATORS
+from pydantic.validators import _VALIDATORS  # type: ignore
 
 T = TypeVar("T")
 
@@ -90,6 +92,14 @@ def log_time(message: str, *args: Any, **kwargs: Any) -> Iterator[None]:
     finally:
         message = f"{message} (took {time.time() - start:.2f}s)"
         time_logger.debug(message, *args, **kwargs)
+
+
+def remove_path(*paths: FileSystemPath):
+    for path in map(Path, paths):
+        if path.is_dir():
+            shutil.rmtree(path)
+        else:
+            path.unlink(missing_ok=True)
 
 
 class PurePathError(PydanticTypeError):

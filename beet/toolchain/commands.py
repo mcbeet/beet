@@ -29,7 +29,7 @@ def build(project: Project, link: Optional[str], no_link: bool):
     with message_fence(text):
         if link:
             echo("\n".join(project.link(target=link)))
-        project.build(link=not no_link)
+        project.build(no_link)
 
 
 @beet.command()
@@ -74,7 +74,7 @@ def watch(project: Project, link: Optional[str], no_link: bool, interval: float)
             echo(f"{change_time} {text}")
 
             with error_handler(format_padding=1):
-                project.build(link=not no_link)
+                project.build(no_link)
 
 
 @beet.command()

@@ -11,9 +11,18 @@ from importlib.metadata import entry_points
 from pathlib import Path
 from typing import ClassVar, Iterable, Iterator, List, Optional, Sequence
 
+from beet.contrib.autosave import Autosave
+from beet.contrib.link import link
 from beet.contrib.load import load
+from beet.contrib.output import output
 from beet.contrib.render import render
-from beet.core.utils import FileSystemPath, intersperse, log_time, normalize_string
+from beet.core.utils import (
+    FileSystemPath,
+    intersperse,
+    log_time,
+    normalize_string,
+    remove_path,
+)
 from beet.core.watch import DirectoryWatcher, FileChanges
 
 from .config import PackConfig, ProjectConfig, load_config, locate_config
@@ -117,15 +126,16 @@ class Project:
         self.resolved_config = None
         self.resolved_cache = None
 
-    def build(self, link: bool = False):
+    def build(self, no_link: bool = False) -> Context:
         """Build the project."""
-        ctx = ProjectBuilder(self).build()
+        autosave = self.config.meta.setdefault("autosave", {})
 
-        if link and any(ctx.packs):
-            with log_time("Link project."):
-                for link_key, pack in zip(["resource_pack", "data_pack"], ctx.packs):
-                    if pack and (link_dir := ctx.cache["link"].json.get(link_key)):
-                        pack.save(link_dir, overwrite=True)
+        if no_link:
+            autosave["link"] = False
+        else:
+            autosave.setdefault("link", True)
+
+        return ProjectBuilder(self).build()
 
     def watch(self, interval: float = 0.6) -> Iterator[FileChanges]:
         """Watch the project."""
@@ -210,6 +220,7 @@ class Project:
     def clear_link(self):
         """Remove the linked resource pack directory and data pack directory."""
         with self.cache:
+            remove_path(*self.cache["link"].json.get("dirty", []))
             del self.cache["link"]
 
 
@@ -274,18 +285,11 @@ class ProjectBuilder:
 
         return ctx
 
-    def autosave(self, ctx: Context):
-        """Plugin that outputs the data pack and the resource pack at the end of the build."""
-        yield
-        if ctx.output_directory and any(ctx.packs):
-            with log_time("Output files."):
-                for pack in ctx.packs:
-                    if pack:
-                        pack.save(ctx.output_directory, overwrite=True)
-
     def bootstrap(self, ctx: Context):
         """Plugin that handles the project configuration."""
-        ctx.require(self.autosave)
+        autosave = ctx.inject(Autosave)
+        autosave.add_output(output(directory=ctx.output_directory))
+        autosave.add_link(link(**ctx.cache["link"].json))
 
         plugins = (self.autoload or []) + self.config.require
 
