@@ -11,7 +11,7 @@ from contextlib import contextmanager
 from datetime import datetime, timedelta
 from pathlib import Path
 from textwrap import indent
-from typing import Any, ClassVar, Iterator, List, Optional, Set, Type, TypeVar
+from typing import Any, ClassVar, Iterator, Optional, Set, Type, TypeVar
 from urllib.request import urlopen
 
 from .container import Container, MatchMixin
