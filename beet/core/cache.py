@@ -10,7 +10,7 @@ import shutil
 from datetime import datetime, timedelta
 from pathlib import Path
 from textwrap import indent
-from typing import Any, ClassVar, Iterator, Optional, Type, TypeVar
+from typing import Any, ClassVar, Iterator, List, Optional, Type, TypeVar
 from urllib.request import urlopen
 
 from .container import Container, MatchMixin
@@ -270,8 +270,16 @@ class MultiCache(MatchMixin, Container[str, CacheType]):
 
     def flush(self):
         """Flush the modifications to the filesystem."""
-        for cache in self.values():
+        deleted: List[str] = []
+
+        for name, cache in self.items():
             cache.flush()
+            if cache.deleted:
+                deleted.append(name)
+
+        for name in deleted:
+            del self[name]
+
         if (
             self.gitignore
             and self.path.is_dir()
