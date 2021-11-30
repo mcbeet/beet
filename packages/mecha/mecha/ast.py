@@ -134,6 +134,9 @@ class AstNode:
 class AstChildren(Tuple[AstNodeType, ...]):
     """Specialized tuple subclass for holding multiple child ast nodes."""
 
+    def __repr__(self) -> str:
+        return f"AstChildren({super().__repr__()})"
+
 
 @dataclass(frozen=True)
 class AstRoot(AstNode):
