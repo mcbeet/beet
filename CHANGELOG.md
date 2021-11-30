@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.48.0 (2021-11-30)
+### Feature
+* Add LinkManager and refactor a bunch of things ([`b76063f`](https://github.com/mcbeet/beet/commit/b76063f89fffbd89a4f1319b24e75b6feafc4d57))
+
 ## v0.47.0 (2021-11-29)
 ### Feature
 * Add beet.contrib.livereload and --reload option ([`3d56260`](https://github.com/mcbeet/beet/commit/3d5626005f739c5affd5f4d80a863f7cda61c530))
