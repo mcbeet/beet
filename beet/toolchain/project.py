@@ -1,5 +1,4 @@
 __all__ = [
-    "ErrorMessage",
     "Project",
     "ProjectBuilder",
 ]
@@ -12,33 +11,17 @@ from pathlib import Path
 from typing import ClassVar, Iterable, Iterator, List, Optional, Sequence
 
 from beet.contrib.autosave import Autosave
-from beet.contrib.link import link
+from beet.contrib.link import LinkManager
 from beet.contrib.load import load
 from beet.contrib.output import output
 from beet.contrib.render import render
-from beet.core.utils import (
-    FileSystemPath,
-    intersperse,
-    log_time,
-    normalize_string,
-    remove_path,
-)
+from beet.core.utils import FileSystemPath, intersperse, log_time, normalize_string
 from beet.core.watch import DirectoryWatcher, FileChanges
 
 from .config import PackConfig, ProjectConfig, load_config, locate_config
-from .context import Context, ProjectCache
-from .pipeline import FormattedPipelineException
+from .context import Context, ErrorMessage, ProjectCache
 from .template import TemplateManager
-from .utils import locate_minecraft
 from .worker import WorkerPool
-
-
-class ErrorMessage(FormattedPipelineException):
-    """Exception used to display nice error messages when something goes wrong."""
-
-    def __init__(self, message: str):
-        super().__init__(message)
-        self.message = message
 
 
 @dataclass
@@ -170,58 +153,24 @@ class Project:
                 del self.cache[key]
             return keys
 
-    def link(self, target: Optional[FileSystemPath] = None) -> Iterable[str]:
+    def link(
+        self,
+        world: Optional[FileSystemPath] = None,
+        minecraft: Optional[FileSystemPath] = None,
+        data_pack: Optional[FileSystemPath] = None,
+        resource_pack: Optional[FileSystemPath] = None,
+    ) -> Iterable[str]:
         """Associate a linked resource pack directory and data pack directory to the project."""
-        minecraft = locate_minecraft()
-        target_path = Path(target).resolve() if target else minecraft
-
-        if not target_path:
-            raise ErrorMessage("Couldn't locate the Minecraft folder.")
-
-        resource_pack_path: Optional[Path] = None
-        data_pack_path: Optional[Path] = None
-
-        if (
-            not target_path.is_dir()
-            and target
-            and Path(target).parts == (target,)
-            and not (
-                minecraft and (target_path := minecraft / "saves" / target).is_dir()
-            )
-        ):
-            raise ErrorMessage(
-                f"Couldn't find {str(target)!r} in the Minecraft save folder."
-            )
-
-        if (target_path / "level.dat").is_file():
-            data_pack_path = target_path / "datapacks"
-            target_path = target_path.parent.parent
-        if (resource_packs := target_path / "resourcepacks").is_dir():
-            resource_pack_path = resource_packs
-
-        if not (resource_pack_path or data_pack_path):
-            raise ErrorMessage("Couldn't establish any link with the specified target.")
-
         with self.cache:
-            self.cache["link"].json.update(
-                resource_pack=str(resource_pack_path) if resource_pack_path else None,
-                data_pack=str(data_pack_path) if data_pack_path else None,
-            )
-
-        return [
-            f"{title}:\n  │  destination = {pack_dir}\n"
-            for title, pack_dir in [
-                ("Resource pack", resource_pack_path),
-                ("Data pack", data_pack_path),
-            ]
-            if pack_dir
-        ]
+            link_manager = LinkManager(self.cache)
+            link_manager.setup_link(world, minecraft, data_pack, resource_pack)
+            return [link_manager.summary()]
 
     def clear_link(self):
         """Remove the linked resource pack directory and data pack directory."""
         with self.cache:
-            remove_path(*self.cache["link"].json.get("dirty", []))
-            del self.cache["link"]
+            link_manager = LinkManager(self.cache)
+            link_manager.clear_link()
 
 
 class ProjectBuilder:
@@ -289,7 +238,7 @@ class ProjectBuilder:
         """Plugin that handles the project configuration."""
         autosave = ctx.inject(Autosave)
         autosave.add_output(output(directory=ctx.output_directory))
-        autosave.add_link(link(**ctx.cache["link"].json))
+        autosave.add_link(ctx.inject(LinkManager).autosave_handler)
 
         plugins = (self.autoload or []) + self.config.require
 

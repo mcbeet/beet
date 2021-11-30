@@ -14,7 +14,7 @@ pass_project = click.make_pass_decorator(Project)  # type: ignore
 @click.option(
     "-l",
     "--link",
-    metavar="TARGET",
+    metavar="WORLD",
     help="Link the project before building.",
 )
 @click.option(
@@ -28,7 +28,7 @@ def build(project: Project, link: Optional[str], no_link: bool):
     text = "Linking and building project..." if link else "Building project..."
     with message_fence(text):
         if link:
-            echo("\n".join(project.link(target=link)))
+            echo("\n".join(project.link(world=link)))
         project.build(no_link)
 
 
@@ -43,7 +43,7 @@ def build(project: Project, link: Optional[str], no_link: bool):
 @click.option(
     "-l",
     "--link",
-    metavar="TARGET",
+    metavar="WORLD",
     help="Link the project before watching.",
 )
 @click.option(
@@ -70,7 +70,7 @@ def watch(
     text = "Linking and watching project..." if link else "Watching project..."
     with message_fence(text):
         if link:
-            echo("\n".join(project.link(target=link)))
+            echo("\n".join(project.link(world=link)))
 
         for changes in project.watch(interval):
             filename, action = next(iter(changes.items()))
@@ -127,18 +127,40 @@ def cache(project: Project, patterns: Sequence[str], clear: bool):
 
 @beet.command()
 @pass_project
-@click.argument("target", required=False)
+@click.argument("world", required=False)
+@click.option(
+    "--minecraft",
+    metavar="DIRECTORY",
+    help="Path to the .minecraft directory.",
+)
+@click.option(
+    "--data-pack",
+    metavar="DIRECTORY",
+    help="Path to the data packs directory.",
+)
+@click.option(
+    "--resource-pack",
+    metavar="DIRECTORY",
+    help="Path to the resource packs directory.",
+)
 @click.option(
     "-c",
     "--clear",
     is_flag=True,
     help="Clear the link.",
 )
-def link(project: Project, target: Optional[str], clear: bool):
+def link(
+    project: Project,
+    world: Optional[str],
+    minecraft: Optional[str],
+    data_pack: Optional[str],
+    resource_pack: Optional[str],
+    clear: bool,
+):
     """Link the generated resource pack and data pack to Minecraft."""
     if clear:
         with message_fence("Clearing project link..."):
             project.clear_link()
     else:
         with message_fence("Linking project..."):
-            echo("\n".join(project.link(target)))
+            echo("\n".join(project.link(world, minecraft, data_pack, resource_pack)))

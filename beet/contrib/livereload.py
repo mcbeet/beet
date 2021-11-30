@@ -16,10 +16,11 @@ import re
 import time
 from pathlib import Path
 from threading import Event, Thread
-from typing import Any, Callable, Optional, overload
+from typing import Any, Callable, Optional, Tuple, overload
 
 from beet import Connection, Context, DataPack, Function
 from beet.contrib.autosave import Autosave
+from beet.contrib.link import LinkManager
 from beet.core.utils import FileSystemPath, remove_path
 
 logger = logging.getLogger("livereload")
@@ -34,18 +35,16 @@ def beet_default(ctx: Context):
 
 
 def livereload(ctx: Context):
-    link_cache = ctx.cache["link"]
-
-    link_directory = link_cache.json.get("data_pack")
-    if not link_directory or not ctx.data:
+    link_manager = ctx.inject(LinkManager)
+    if not link_manager.data_pack or not ctx.data:
         return
 
     data = create_livereload_data_pack()
-    livereload_path = data.save(link_directory)
-    link_cache.json.setdefault("dirty", []).append(str(livereload_path))
+    livereload_path = data.save(link_manager.data_pack)
+    link_manager.dirty.append(str(livereload_path))
 
     with ctx.worker(livereload_server) as channel:
-        channel.send(livereload_path)
+        channel.send((link_manager.minecraft, livereload_path))
 
 
 def create_livereload_data_pack() -> DataPack:
@@ -84,20 +83,28 @@ def create_livereload_data_pack() -> DataPack:
     return data
 
 
-def livereload_server(connection: Connection[Path, None]):
+def livereload_server(connection: Connection[Tuple[Optional[str], Path], None]):
+    minecraft_path = None
     livereload_path = None
 
     with LogWatcher() as log_watcher:
         for client in connection:
-            for path in client:
-                if path == livereload_path:
+            for message in client:
+                if message == (minecraft_path, livereload_path):
                     continue
 
-                livereload_path = path
-                log_file_path = path.parent.parent.parent.parent / "logs" / "latest.log"
+                minecraft_path, livereload_path = message
+
+                if not minecraft_path:
+                    logger.warning(
+                        "Not linked to any Minecraft installation. Reloading disabled."
+                    )
+                    continue
+
+                log_file_path = Path(minecraft_path) / "logs" / "latest.log"
 
                 if not log_file_path.is_file():
-                    logger.warning("Couldn't monitor game log. Reloading disabled.")
+                    logger.warning("Couldn't find game log. Reloading disabled.")
                     continue
 
                 @log_watcher.tail(log_file_path)

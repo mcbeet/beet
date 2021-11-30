@@ -9,6 +9,8 @@ __all__ = [
     "intersperse",
     "normalize_string",
     "snake_case",
+    "get_import_string",
+    "import_from_string",
     "log_time",
     "remove_path",
 ]
@@ -21,8 +23,9 @@ import shutil
 import time
 from contextlib import contextmanager
 from dataclasses import field
+from importlib import import_module
 from pathlib import Path, PurePath
-from typing import Any, Dict, Iterable, Iterator, List, TypeVar, Union
+from typing import Any, Dict, Iterable, Iterator, List, Optional, TypeVar, Union
 
 from pydantic import PydanticTypeError
 from pydantic.validators import _VALIDATORS  # type: ignore
@@ -79,6 +82,33 @@ CAMEL_REGEX = re.compile(r"((?<=[a-z0-9])[A-Z]|(?!^)[A-Z](?=[a-z]))")
 
 def snake_case(string: str) -> str:
     return CAMEL_REGEX.sub(r"_\1", string).lower()
+
+
+def get_import_string(obj: Any) -> str:
+    return f"{obj.__module__}.{obj.__qualname__}"
+
+
+def import_from_string(
+    dotted_path: str,
+    default_member: Optional[str] = None,
+    whitelist: Optional[List[str]] = None,
+) -> Any:
+    if whitelist is not None and dotted_path not in whitelist:
+        raise ModuleNotFoundError(f"No module named {dotted_path!r}")
+    try:
+        module = import_module(dotted_path)
+    except ImportError:
+        if "." not in dotted_path:
+            raise
+
+        dotted_path, _, default_member = dotted_path.rpartition(".")
+
+        try:
+            module = import_module(dotted_path)
+        except Exception as exc:
+            raise exc from None
+
+    return getattr(module, default_member) if default_member else module
 
 
 time_logger = logging.getLogger("time")

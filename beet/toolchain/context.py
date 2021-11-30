@@ -9,6 +9,7 @@ __all__ = [
     "ProjectCache",
     "Context",
     "ContextContainer",
+    "ErrorMessage",
     "InvalidOptions",
     "configurable",
 ]
@@ -37,7 +38,13 @@ from pydantic import ValidationError
 
 from beet.core.cache import Cache, MultiCache
 from beet.core.container import Container
-from beet.core.utils import FileSystemPath, JsonDict, TextComponent, extra_field
+from beet.core.utils import (
+    FileSystemPath,
+    JsonDict,
+    TextComponent,
+    extra_field,
+    import_from_string,
+)
 from beet.library.data_pack import DataPack
 from beet.library.resource_pack import ResourcePack
 
@@ -51,7 +58,7 @@ from .pipeline import (
 )
 from .template import TemplateManager
 from .tree import generate_tree
-from .utils import format_validation_error, import_from_string
+from .utils import format_validation_error
 from .worker import WorkerPoolHandle
 
 T = TypeVar("T")
@@ -61,6 +68,14 @@ Plugin = GenericPlugin["Context"]
 PluginSpec = GenericPluginSpec["Context"]
 ServiceFactory = Callable[["Context"], T]
 Validator = Callable[..., T]
+
+
+class ErrorMessage(FormattedPipelineException):
+    """Exception used to display nice error messages when something goes wrong."""
+
+    def __init__(self, message: str):
+        super().__init__(message)
+        self.message = message
 
 
 class InvalidOptions(FormattedPipelineException):

@@ -1,6 +1,7 @@
 __all__ = [
     "MultiCache",
     "Cache",
+    "CachePin",
 ]
 
 
@@ -14,9 +15,18 @@ from textwrap import indent
 from typing import Any, ClassVar, Iterator, Optional, Set, Type, TypeVar
 from urllib.request import urlopen
 
-from .container import Container, MatchMixin
-from .utils import FileSystemPath, JsonDict, dump_json, log_time, normalize_string
+from .container import Container, MatchMixin, Pin
+from .utils import (
+    FileSystemPath,
+    JsonDict,
+    dump_json,
+    get_import_string,
+    import_from_string,
+    log_time,
+    normalize_string,
+)
 
+T = TypeVar("T")
 CacheType = TypeVar("CacheType", bound="Cache")
 
 
@@ -51,6 +61,13 @@ class Cache:
             "expire": None,
             "json": {},
         }
+
+    def add_finalizer(self, obj: Any):
+        """Register the given handler as finalizer."""
+        finalizers = self.index.setdefault("finalizers", [])
+        dotted_path = obj if isinstance(obj, str) else get_import_string(obj)
+        if dotted_path not in finalizers:
+            finalizers.append(dotted_path)
 
     @property
     def json(self) -> JsonDict:
@@ -144,6 +161,8 @@ class Cache:
     def delete(self):
         """Delete the entire cache."""
         if not self.deleted:
+            for finalizer in self.index.get("finalizers", []):
+                import_from_string(finalizer)(self)
             if self.directory.is_dir():
                 shutil.rmtree(self.directory)
             self.index = self.get_initial_index()
@@ -229,6 +248,13 @@ class Cache:
 
         if count > max_entries:
             yield f"{prefix}└─ ... ({count - crop_entries} more entries)"
+
+
+class CachePin(Pin[str, T]):
+    """Descriptor that makes cache data accessible through attribute lookup."""
+
+    def forward(self, obj: Any) -> JsonDict:
+        return obj.cache.json
 
 
 class MultiCache(MatchMixin, Container[str, CacheType]):

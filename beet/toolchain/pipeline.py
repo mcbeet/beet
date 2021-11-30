@@ -25,7 +25,9 @@ from typing import (
     cast,
 )
 
-from .utils import format_obj, import_from_string
+from beet.core.utils import import_from_string
+
+from .utils import format_obj
 
 T = TypeVar("T")
 ContextType = TypeVar("ContextType", contravariant=True)
