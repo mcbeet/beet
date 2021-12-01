@@ -32,7 +32,7 @@ pytest = "^6.2.5"
 isort = "^5.10.1"
 python-semantic-release = "^7.23.0"
 pytest-insta = "^0.1.10"
-lectern = "^0.18.0"
+lectern = ">=0.18.1"
 
 [tool.poetry.scripts]
 mecha = "mecha.cli:main"

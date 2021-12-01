@@ -324,14 +324,14 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytes
 
 [[package]]
 name = "lectern"
-version = "0.18.0"
+version = "0.18.1"
 description = "Literate Minecraft data packs and resource packs."
 category = "dev"
 optional = false
 python-versions = ">=3.8,<4.0"
 
 [package.dependencies]
-beet = ">=0.44.2"
+beet = ">=0.45.3"
 click = ">=8.0.1,<9.0.0"
 markdown-it-py = ">=1.1.0,<2.0.0"
 
@@ -808,7 +808,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=1.2.3)", "pytest-flake8", "pyt
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "52d0d5a8c1c8c70b67fbbfbf790215ca094dd429798c22419b15c7b9b8036c21"
+content-hash = "d8fd159c4ad7be1add35eb49f368a3b71884e002d7759761f6787e604437503e"
 
 [metadata.files]
 atomicwrites = [
@@ -975,8 +975,8 @@ keyring = [
     {file = "keyring-23.0.1.tar.gz", hash = "sha256:045703609dd3fccfcdb27da201684278823b72af515aedec1a8515719a038cb8"},
 ]
 lectern = [
-    {file = "lectern-0.18.0-py3-none-any.whl", hash = "sha256:b33ca5c017077bee1de583f24a43502da6666b80cb83beacd45e7963fb3b4c2d"},
-    {file = "lectern-0.18.0.tar.gz", hash = "sha256:5c3fa58e8fe93699ea8abd151f9823863146493bdc4163dfb4c859c06128f7d2"},
+    {file = "lectern-0.18.1-py3-none-any.whl", hash = "sha256:a6b6b19cfb3d54893f0ea085e8f582004f6191f1a6878ed1970ba272cedd8044"},
+    {file = "lectern-0.18.1.tar.gz", hash = "sha256:2ccb479b7300fe9b40c1f292409170168627962896887b16e810c4fe33f3e2fa"},
 ]
 markdown-it-py = [
     {file = "markdown-it-py-1.1.0.tar.gz", hash = "sha256:36be6bb3ad987bfdb839f5ba78ddf094552ca38ccbd784ae4f74a4e1419fc6e3"},

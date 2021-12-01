@@ -1,6 +1,7 @@
 # Lectern snapshot
 
 ## Data pack
+
 `@data_pack pack.mcmeta`
 
 ```json
@@ -13,6 +14,7 @@
 ```
 
 ### demo
+
 `@function demo:foo`
 
 ```mcfunction
