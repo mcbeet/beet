@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.17.0 (2021-12-01)
+### Feature
+* Parse lists and dicts ([`5b1776b`](https://github.com/mcbeet/mecha/commit/5b1776be44c63392060e56f47a03082dcf201871))
+
 ## v0.16.0 (2021-12-01)
 ### Feature
 * Parse interpolated arguments ([`1e364ff`](https://github.com/mcbeet/mecha/commit/1e364ffa65e757378a42fc82ec3774eb0275e7ff))
