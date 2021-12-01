@@ -20,25 +20,33 @@ from typing import Any, Dict, Iterable, List, Set, Tuple
 
 from tokenstream import InvalidSyntax, Token, TokenStream, UnexpectedToken, set_location
 
-from mecha import AstRoot, Parser, ResetSyntaxParser, delegate, get_stream_scope
-from mecha.utils import (
-    QuoteHelper,
-    QuoteHelperWithUnicode,
-    normalize_whitespace,
-    string_to_number,
+from mecha import (
+    AstChildren,
+    AstRoot,
+    Parser,
+    ResetSyntaxParser,
+    delegate,
+    get_stream_scope,
 )
+from mecha.utils import QuoteHelper, normalize_whitespace, string_to_number
 
 from .ast import (
     AstAssignment,
     AstAssignmentTarget,
     AstAssignmentTargetIdentifier,
+    AstCall,
+    AstExpression,
     AstExpressionBinary,
     AstExpressionUnary,
     AstIdentifier,
+    AstLookup,
     AstValue,
 )
+from .utils import ScriptingQuoteHelper
 
 IDENTIFIER_PATTERN: str = r"[a-zA-Z_][a-zA-Z0-9_]*"
+STRING_PATTERN: str = r'"(?:\\.|[^\\\n])*?"' "|" r"'(?:\\.|[^\\\n])*?'"
+NUMBER_PATTERN: str = r"(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?\b"
 
 
 def get_scripting_parsers(parsers: Dict[str, Parser]) -> Dict[str, Parser]:
@@ -143,7 +151,7 @@ def get_scripting_parsers(parsers: Dict[str, Parser]) -> Dict[str, Parser]:
             parser=delegate("scripting:primary"),
             right_associative=True,
         ),
-        "scripting:primary": delegate("scripting:atom"),
+        "scripting:primary": PrimaryParser(),
         "scripting:atom": AtomParser(),
     }
 
@@ -360,20 +368,70 @@ class UnaryParser:
 
 
 @dataclass
+class PrimaryParser:
+    """Parser for primary expressions."""
+
+    quote_helper: QuoteHelper = field(default_factory=ScriptingQuoteHelper)
+
+    def __call__(self, stream: TokenStream) -> Any:
+        node = delegate("scripting:atom", stream)
+
+        with stream.syntax(
+            dot=r"\.",
+            comma=r",",
+            brace=r"\(|\)",
+            bracket=r"\[|\]",
+            identifier=IDENTIFIER_PATTERN,
+            string=STRING_PATTERN,
+            number=r"(?:0|[1-9][0-9]*)",
+        ):
+            while token := stream.get("dot", ("brace", "("), ("bracket", "[")):
+                arguments: List[AstExpression] = []
+
+                if token.match("dot"):
+                    identifier, string, number = stream.expect(
+                        "identifier",
+                        "string",
+                        "number",
+                    )
+
+                    if identifier:
+                        value = identifier.value
+                    elif string:
+                        value = self.quote_helper.unquote_string(string)
+                    elif number:
+                        value = int(number.value)
+
+                    arguments.append(
+                        set_location(AstValue(value=value), stream.current)
+                    )
+
+                else:
+                    close = ("brace", ")") if token.match("brace") else ("bracket", "]")
+
+                    with stream.ignore("newline"):
+                        for _ in stream.peek_until(close):
+                            arguments.append(delegate("scripting:expression", stream))
+
+                            if not stream.get("comma"):
+                                stream.expect(close)
+                                break
+
+                if token.match("brace"):
+                    node = AstCall(value=node, arguments=AstChildren(arguments))
+                else:
+                    node = AstLookup(value=node, arguments=AstChildren(arguments))
+
+                node = set_location(node, node.value, stream.current)
+
+        return node
+
+
+@dataclass
 class AtomParser:
     """Parser for atoms."""
 
-    quote_helper: QuoteHelper = field(
-        default_factory=lambda: QuoteHelperWithUnicode(
-            escape_sequences={
-                r"\\": "\\",
-                r"\f": "\f",
-                r"\n": "\n",
-                r"\r": "\r",
-                r"\t": "\t",
-            }
-        )
-    )
+    quote_helper: QuoteHelper = field(default_factory=ScriptingQuoteHelper)
 
     def __call__(self, stream: TokenStream) -> Any:
         identifiers = get_stream_identifiers(stream)
@@ -384,8 +442,8 @@ class AtomParser:
             false=r"\b[fF]alse\b",
             null=r"\b(?:null|None)\b",
             identifier=IDENTIFIER_PATTERN,
-            string=r'"(?:\\.|[^\\\n])*?"' "|" r"'(?:\\.|[^\\\n])*?'",
-            number=r"(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?\b",
+            string=STRING_PATTERN,
+            number=NUMBER_PATTERN,
         ):
             brace, true, false, null, identifier, string, number = stream.expect(
                 ("brace", "("),

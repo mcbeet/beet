@@ -4,6 +4,8 @@ __all__ = [
     "AstExpressionUnary",
     "AstValue",
     "AstIdentifier",
+    "AstLookup",
+    "AstCall",
     "AstAssignmentTarget",
     "AstAssignmentTargetIdentifier",
     "AstAssignment",
@@ -15,7 +17,7 @@ from typing import Any, ClassVar
 
 from beet.core.utils import required_field
 
-from mecha import AstNode
+from mecha import AstChildren, AstNode
 
 
 @dataclass(frozen=True)
@@ -52,6 +54,22 @@ class AstIdentifier(AstExpression):
     """Ast identifier node."""
 
     value: str = required_field()
+
+
+@dataclass(frozen=True)
+class AstLookup(AstExpression):
+    """Ast lookup node."""
+
+    value: AstExpression = required_field()
+    arguments: AstChildren[AstExpression] = required_field()
+
+
+@dataclass(frozen=True)
+class AstCall(AstExpression):
+    """Ast call node."""
+
+    value: AstExpression = required_field()
+    arguments: AstChildren[AstExpression] = required_field()
 
 
 @dataclass(frozen=True)

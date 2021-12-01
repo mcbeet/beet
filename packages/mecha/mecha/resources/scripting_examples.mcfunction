@@ -179,3 +179,17 @@ while false
 for i in "abc"
     if i == "b"
         break
+###
+"foo".bar
+###
+"foo".bar.baz
+###
+"foo".bar()[0]
+###
+"foo".bar()[0]."hello".99."with space"("thing" * 7)
+###
+"foo"(
+    1,
+    2,
+    3,
+)

@@ -1,0 +1,85 @@
+"foo".bar()[0]."hello".99."with space"("thing" * 7)
+---
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=52, lineno=2, colno=1)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=51, lineno=1, colno=52)
+      identifier: 'statement'
+      arguments:
+        <class 'mecha.contrib.scripting.ast.AstCall'>
+          location: SourceLocation(pos=0, lineno=1, colno=1)
+          end_location: SourceLocation(pos=51, lineno=1, colno=52)
+          value:
+            <class 'mecha.contrib.scripting.ast.AstLookup'>
+              location: SourceLocation(pos=0, lineno=1, colno=1)
+              end_location: SourceLocation(pos=38, lineno=1, colno=39)
+              value:
+                <class 'mecha.contrib.scripting.ast.AstLookup'>
+                  location: SourceLocation(pos=0, lineno=1, colno=1)
+                  end_location: SourceLocation(pos=25, lineno=1, colno=26)
+                  value:
+                    <class 'mecha.contrib.scripting.ast.AstLookup'>
+                      location: SourceLocation(pos=0, lineno=1, colno=1)
+                      end_location: SourceLocation(pos=22, lineno=1, colno=23)
+                      value:
+                        <class 'mecha.contrib.scripting.ast.AstLookup'>
+                          location: SourceLocation(pos=0, lineno=1, colno=1)
+                          end_location: SourceLocation(pos=14, lineno=1, colno=15)
+                          value:
+                            <class 'mecha.contrib.scripting.ast.AstCall'>
+                              location: SourceLocation(pos=0, lineno=1, colno=1)
+                              end_location: SourceLocation(pos=11, lineno=1, colno=12)
+                              value:
+                                <class 'mecha.contrib.scripting.ast.AstLookup'>
+                                  location: SourceLocation(pos=0, lineno=1, colno=1)
+                                  end_location: SourceLocation(pos=9, lineno=1, colno=10)
+                                  value:
+                                    <class 'mecha.contrib.scripting.ast.AstValue'>
+                                      location: SourceLocation(pos=0, lineno=1, colno=1)
+                                      end_location: SourceLocation(pos=5, lineno=1, colno=6)
+                                      value: 'foo'
+                                  arguments:
+                                    <class 'mecha.contrib.scripting.ast.AstValue'>
+                                      location: SourceLocation(pos=6, lineno=1, colno=7)
+                                      end_location: SourceLocation(pos=9, lineno=1, colno=10)
+                                      value: 'bar'
+                              arguments:
+                                <empty>
+                          arguments:
+                            <class 'mecha.contrib.scripting.ast.AstValue'>
+                              location: SourceLocation(pos=12, lineno=1, colno=13)
+                              end_location: SourceLocation(pos=13, lineno=1, colno=14)
+                              value: 0
+                      arguments:
+                        <class 'mecha.contrib.scripting.ast.AstValue'>
+                          location: SourceLocation(pos=15, lineno=1, colno=16)
+                          end_location: SourceLocation(pos=22, lineno=1, colno=23)
+                          value: 'hello'
+                  arguments:
+                    <class 'mecha.contrib.scripting.ast.AstValue'>
+                      location: SourceLocation(pos=23, lineno=1, colno=24)
+                      end_location: SourceLocation(pos=25, lineno=1, colno=26)
+                      value: 99
+              arguments:
+                <class 'mecha.contrib.scripting.ast.AstValue'>
+                  location: SourceLocation(pos=26, lineno=1, colno=27)
+                  end_location: SourceLocation(pos=38, lineno=1, colno=39)
+                  value: 'with space'
+          arguments:
+            <class 'mecha.contrib.scripting.ast.AstExpressionBinary'>
+              location: SourceLocation(pos=39, lineno=1, colno=40)
+              end_location: SourceLocation(pos=50, lineno=1, colno=51)
+              operator: '*'
+              left:
+                <class 'mecha.contrib.scripting.ast.AstValue'>
+                  location: SourceLocation(pos=39, lineno=1, colno=40)
+                  end_location: SourceLocation(pos=46, lineno=1, colno=47)
+                  value: 'thing'
+              right:
+                <class 'mecha.contrib.scripting.ast.AstValue'>
+                  location: SourceLocation(pos=49, lineno=1, colno=50)
+                  end_location: SourceLocation(pos=50, lineno=1, colno=51)
+                  value: 7
