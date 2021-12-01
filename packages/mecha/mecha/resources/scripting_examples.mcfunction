@@ -300,3 +300,56 @@ f("thing")
 def f(x)
     tellraw @a xx
 f("thing")
+###
+{
+    foo: "bar"
+}
+###
+foo = "hello"
+{
+    foo: "bar"
+}
+###
+foo = "hello"
+{
+    "foo": foo
+}
+###
+foo = "hello"
+{
+    foo * 3: 42,
+    16 + 3: [],
+}
+###
+predicate = {
+  "condition": "minecraft:entity_scores",
+  "entity": "this",
+  "scores": {
+    "score1": {
+      "min": {
+        "type": "minecraft:score",
+        "target": "this",
+        "score": "score2",
+        "scale": 1
+      }
+    }
+  }
+}
+###
+predicate = {
+  condition: "minecraft:entity_scores",
+  entity: "this",
+  scores: {
+    score1: {
+      min: {
+        type: "minecraft:score",
+        target: "this",
+        score: "score2",
+        scale: 1
+      }
+    }
+  }
+}
+###
+def f()
+    return {f(): f(), other: [{}, {}, "wat"]}

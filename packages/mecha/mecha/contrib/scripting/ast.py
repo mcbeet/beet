@@ -4,6 +4,9 @@ __all__ = [
     "AstExpressionUnary",
     "AstValue",
     "AstIdentifier",
+    "AstList",
+    "AstDictItem",
+    "AstDict",
     "AstAttribute",
     "AstLookup",
     "AstCall",
@@ -59,6 +62,28 @@ class AstIdentifier(AstExpression):
     """Ast identifier node."""
 
     value: str = required_field()
+
+
+@dataclass(frozen=True)
+class AstList(AstExpression):
+    """Ast list node."""
+
+    items: AstChildren[AstExpression] = required_field()
+
+
+@dataclass(frozen=True)
+class AstDictItem(AstNode):
+    """Ast dict item node."""
+
+    key: AstExpression = required_field()
+    value: AstExpression = required_field()
+
+
+@dataclass(frozen=True)
+class AstDict(AstExpression):
+    """Ast dict node."""
+
+    items: AstChildren[AstDictItem] = required_field()
 
 
 @dataclass(frozen=True)

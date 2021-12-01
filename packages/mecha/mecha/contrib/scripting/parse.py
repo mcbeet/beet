@@ -45,6 +45,8 @@ from .ast import (
     AstAssignmentTargetIdentifier,
     AstAttribute,
     AstCall,
+    AstDict,
+    AstDictItem,
     AstExpression,
     AstExpressionBinary,
     AstExpressionUnary,
@@ -52,6 +54,7 @@ from .ast import (
     AstFunctionSignature,
     AstFunctionSignatureArgument,
     AstIdentifier,
+    AstList,
     AstLookup,
     AstValue,
 )
@@ -620,6 +623,10 @@ class AtomParser:
 
         with stream.syntax(
             brace=r"\(|\)",
+            curly=r"\{|\}",
+            bracket=r"\[|\]",
+            colon=r":",
+            comma=r",",
             true=r"\b[tT]rue\b",
             false=r"\b[fF]alse\b",
             null=r"\b(?:null|None)\b",
@@ -627,8 +634,20 @@ class AtomParser:
             string=STRING_PATTERN,
             number=NUMBER_PATTERN,
         ):
-            brace, true, false, null, identifier, string, number = stream.expect(
+            (
+                brace,
+                curly,
+                bracket,
+                true,
+                false,
+                null,
+                identifier,
+                string,
+                number,
+            ) = stream.expect(
                 ("brace", "("),
+                ("curly", "{"),
+                ("bracket", "["),
                 "true",
                 "false",
                 "null",
@@ -642,6 +661,53 @@ class AtomParser:
                     inner = delegate("scripting:expression", stream)
                     stream.expect(("brace", ")"))
                 return inner
+
+            if curly:
+                items: List[AstDictItem] = []
+
+                with stream.ignore("newline"):
+                    for _ in stream.peek_until(("curly", "}")):
+                        with stream.checkpoint() as commit:
+                            identifier = stream.expect("identifier")
+                            stream.expect("colon")
+                            commit()
+
+                            if identifier.value in identifiers:
+                                key = AstIdentifier(value=identifier.value)
+                            else:
+                                key = AstValue(value=identifier.value)
+
+                            key = set_location(key, identifier)
+
+                        if commit.rollback:
+                            key = delegate("scripting:expression", stream)
+                            stream.expect("colon")
+
+                        value = delegate("scripting:expression", stream)
+
+                        item = AstDictItem(key=key, value=value)
+                        items.append(set_location(item, key, value))
+
+                        if not stream.get("comma"):
+                            stream.expect(("curly", "}"))
+                            break
+
+                node = AstDict(items=AstChildren(items))
+                return set_location(node, curly, stream.current)
+
+            if bracket:
+                elements: List[AstExpression] = []
+
+                with stream.ignore("newline"):
+                    for _ in stream.peek_until(("bracket", "]")):
+                        elements.append(delegate("scripting:expression", stream))
+
+                        if not stream.get("comma"):
+                            stream.expect(("bracket", "]"))
+                            break
+
+                node = AstList(items=AstChildren(elements))
+                return set_location(node, bracket, stream.current)
 
             if identifier:
                 if identifier.value not in identifiers:
