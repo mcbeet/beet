@@ -4,6 +4,7 @@ __all__ = [
     "get_stream_pending_identifiers",
     "UndefinedIdentifier",
     "create_scripting_root_parser",
+    "InterpolatedArgumentParser",
     "parse_statement",
     "AssignmentTargetParser",
     "IfElseConstraint",
@@ -34,6 +35,7 @@ from mecha import (
     consume_line_continuation,
     delegate,
     get_stream_scope,
+    get_stream_spec,
 )
 from mecha.utils import QuoteHelper, normalize_whitespace, string_to_number
 
@@ -68,6 +70,7 @@ def get_scripting_parsers(parsers: Dict[str, Parser]) -> Dict[str, Parser]:
         ################################################################################
         "root": create_scripting_root_parser(parsers["root"]),
         "nested_root": create_scripting_root_parser(parsers["nested_root"]),
+        "command:argument": InterpolatedArgumentParser(parsers["command:argument"]),
         "command:argument:mecha:scripting:statement": delegate("scripting:statement"),
         "command:argument:mecha:scripting:assignment_target": delegate(
             "scripting:assignment_target"
@@ -89,6 +92,7 @@ def get_scripting_parsers(parsers: Dict[str, Parser]) -> Dict[str, Parser]:
         "scripting:augmented_assignment_target": AssignmentTargetParser(),
         "scripting:function_signature": parse_function_signature,
         "scripting:function_root": parse_function_root,
+        "scripting:interpolated_command_argument": delegate("scripting:primary"),
         "scripting:expression": delegate("scripting:disjunction"),
         "scripting:disjunction": BinaryParser(
             operators=[r"\bor\b"],
@@ -206,6 +210,33 @@ def create_scripting_root_parser(parser: Parser):
             )
         )
     )
+
+
+@dataclass
+class InterpolatedArgumentParser:
+    """Parser for interpolated command arguments."""
+
+    parser: Parser
+
+    def __call__(self, stream: TokenStream) -> Any:
+        spec = get_stream_spec(stream)
+        scope = get_stream_scope(stream)
+
+        tree = spec.tree.get(scope)
+
+        if (
+            tree
+            and tree.parser
+            and tree.parser.startswith(("mecha:scripting", "mecha:nested_root"))
+        ):
+            return self.parser(stream)
+
+        for parser, alternative in stream.choose(
+            delegate("scripting:interpolated_command_argument"),
+            self.parser,
+        ):
+            with alternative:
+                return parser(stream)
 
 
 def parse_statement(stream: TokenStream) -> Any:

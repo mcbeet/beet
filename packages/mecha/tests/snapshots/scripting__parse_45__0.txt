@@ -21,11 +21,10 @@ if score @s tmp matches 0
           location: SourceLocation(pos=12, lineno=1, colno=13)
           end_location: SourceLocation(pos=15, lineno=1, colno=16)
           value: 'tmp'
-        <class 'mecha.ast.AstRange'>
+        <class 'mecha.contrib.scripting.ast.AstValue'>
           location: SourceLocation(pos=24, lineno=1, colno=25)
           end_location: SourceLocation(pos=25, lineno=1, colno=26)
-          min: 0
-          max: 0
+          value: 0
         <class 'mecha.contrib.nesting.AstNestedExecute'>
           location: SourceLocation(pos=30, lineno=2, colno=5)
           end_location: SourceLocation(pos=58, lineno=3, colno=18)

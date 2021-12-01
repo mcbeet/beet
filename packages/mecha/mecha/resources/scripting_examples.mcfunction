@@ -292,3 +292,11 @@ def f()
 def f()
     foo = 0
 f(foo)
+###
+def f(x)
+    tellraw @a x
+f("thing")
+###
+def f(x)
+    tellraw @a xx
+f("thing")
