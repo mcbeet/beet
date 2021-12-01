@@ -2,6 +2,17 @@
 
 <!--next-version-placeholder-->
 
+## v0.16.0 (2021-12-01)
+### Feature
+* Parse interpolated arguments ([`1e364ff`](https://github.com/mcbeet/mecha/commit/1e364ffa65e757378a42fc82ec3774eb0275e7ff))
+* Parse functions ([`717b450`](https://github.com/mcbeet/mecha/commit/717b45041091c3462105525d488ded48318cfd8b))
+* Make it possible to swap the cache backend ([`2870424`](https://github.com/mcbeet/mecha/commit/2870424013d1f046b99bf101d9f006b99a6e103b))
+* Parse primary expressions ([`1c9033c`](https://github.com/mcbeet/mecha/commit/1c9033c119e20986209fa17730db68ff580345af))
+
+### Fix
+* Redefine comments and literals in ResetSyntaxParser ([`3b7ed25`](https://github.com/mcbeet/mecha/commit/3b7ed25ca309c1410a8846ece0bb4229099ca078))
+* Add custom repr for AstChildren ([`1371be9`](https://github.com/mcbeet/mecha/commit/1371be9b73f6e8849a7b3752b3f5417ced6618f3))
+
 ## v0.15.1 (2021-11-27)
 ### Fix
 * Iterate over indices instead of arguments values ([`0f6d0ae`](https://github.com/mcbeet/mecha/commit/0f6d0aebfb659f3a8d9e3ce01ba48d72ff5ea833))
