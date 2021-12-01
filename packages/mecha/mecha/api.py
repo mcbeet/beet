@@ -1,6 +1,7 @@
 __all__ = [
     "Mecha",
     "MechaOptions",
+    "CacheBackend",
 ]
 
 
@@ -9,6 +10,7 @@ import os
 import pickle
 from contextlib import contextmanager
 from dataclasses import InitVar, dataclass
+from io import BufferedReader, BufferedWriter
 from pathlib import Path
 from typing import (
     Any,
@@ -17,6 +19,7 @@ from typing import (
     List,
     Literal,
     Optional,
+    Protocol,
     Type,
     TypeVar,
     Union,
@@ -51,6 +54,16 @@ TextFileType = TypeVar("TextFileType", bound=TextFileBase[Any])
 logger = logging.getLogger("mecha")
 
 
+class CacheBackend(Protocol):
+    """Protocol for the cache backend."""
+
+    def load(self, f: BufferedReader) -> Any:
+        ...
+
+    def dump(self, obj: Any, f: BufferedWriter):
+        ...
+
+
 class MechaOptions(BaseModel):
     """Mecha options."""
 
@@ -75,6 +88,7 @@ class Mecha:
 
     directory: Path = extra_field(init=False)
     cache: Optional[Cache] = extra_field(default=None)
+    cache_backend: CacheBackend = extra_field(default=pickle)
 
     spec: CommandSpec = extra_field(default=None)
 
@@ -241,12 +255,12 @@ class Mecha:
             if not self.cache.has_changed(self.directory / filename):
                 try:
                     with ast_path.open("rb") as f:
-                        logger.debug("Using cached ast for file %r.", filename)
-                        return pickle.load(f)
-                except FileNotFoundError:
+                        ast = self.cache_backend.load(f)
+                        logger.debug("Load cached ast for file %r.", filename)
+                        return ast
+                except Exception:
                     pass
 
-            logger.debug("Updating ast for file %r.", filename)
             cache_miss = ast_path
 
         stream = TokenStream(source.text)
@@ -268,8 +282,12 @@ class Mecha:
             raise DiagnosticError(DiagnosticCollection([set_location(d, exc)])) from exc
         else:
             if self.cache and filename and cache_miss:
-                with cache_miss.open("wb") as f:
-                    pickle.dump(ast, f)
+                try:
+                    with cache_miss.open("wb") as f:
+                        self.cache_backend.dump(ast, f)
+                        logger.debug("Update cached ast for file %r.", filename)
+                except Exception:
+                    pass
             return ast
 
     @overload
