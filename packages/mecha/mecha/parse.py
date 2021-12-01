@@ -60,7 +60,6 @@ __all__ = [
     "parse_particle",
     "AggregateParser",
     "SingleLineConstraint",
-    "ResetSyntaxParser",
     "NUMBER_PATTERN",
 ]
 
@@ -1862,15 +1861,4 @@ class SingleLineConstraint:
 
     def __call__(self, stream: TokenStream) -> Any:
         with stream.intercept("newline"):
-            return self.parser(stream)
-
-
-@dataclass
-class ResetSyntaxParser:
-    """Parser that resets the syntax rules before delegating to a subparser."""
-
-    parser: Parser
-
-    def __call__(self, stream: TokenStream) -> Any:
-        with stream.reset_syntax(comment=r"#.*$", literal=r"\S+"):
             return self.parser(stream)

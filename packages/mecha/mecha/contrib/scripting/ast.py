@@ -4,18 +4,23 @@ __all__ = [
     "AstExpressionUnary",
     "AstValue",
     "AstIdentifier",
+    "AstAttribute",
     "AstLookup",
     "AstCall",
     "AstAssignmentTarget",
     "AstAssignmentTargetIdentifier",
     "AstAssignment",
+    "AstFunctionSignature",
+    "AstFunctionSignatureArgument",
+    "AstFunctionRoot",
 ]
 
 
 from dataclasses import dataclass
-from typing import Any, ClassVar
+from typing import Any, ClassVar, Optional
 
 from beet.core.utils import required_field
+from tokenstream import TokenStream
 
 from mecha import AstChildren, AstNode
 
@@ -57,6 +62,14 @@ class AstIdentifier(AstExpression):
 
 
 @dataclass(frozen=True)
+class AstAttribute(AstExpression):
+    """Ast attribute node."""
+
+    name: str = required_field()
+    value: AstExpression = required_field()
+
+
+@dataclass(frozen=True)
 class AstLookup(AstExpression):
     """Ast lookup node."""
 
@@ -93,3 +106,26 @@ class AstAssignment(AstNode):
     operator: str = required_field()
     target: AstAssignmentTarget = required_field()
     value: AstExpression = required_field()
+
+
+@dataclass(frozen=True)
+class AstFunctionSignatureArgument(AstNode):
+    """Ast function signature argument node."""
+
+    name: str = required_field()
+    default: Optional[AstExpression] = None
+
+
+@dataclass(frozen=True)
+class AstFunctionSignature(AstNode):
+    """Ast function signature node."""
+
+    name: str = required_field()
+    arguments: AstChildren[AstFunctionSignatureArgument] = required_field()
+
+
+@dataclass(frozen=True)
+class AstFunctionRoot(AstNode):
+    """Ast function root node."""
+
+    stream: TokenStream = required_field()

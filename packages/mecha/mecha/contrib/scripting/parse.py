@@ -3,28 +3,35 @@ __all__ = [
     "get_stream_identifiers",
     "get_stream_pending_identifiers",
     "UndefinedIdentifier",
+    "create_scripting_root_parser",
     "parse_statement",
     "AssignmentTargetParser",
     "IfElseConstraint",
     "BreakContinueConstraint",
     "FlushPendingIdentifiersParser",
+    "parse_function_signature",
+    "parse_function_root",
+    "FunctionRootBacktracker",
+    "ReturnConstraint",
     "BinaryParser",
     "UnaryParser",
     "AtomParser",
 ]
 
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from difflib import get_close_matches
 from typing import Any, Dict, Iterable, List, Set, Tuple
 
+from beet.core.utils import required_field
 from tokenstream import InvalidSyntax, Token, TokenStream, UnexpectedToken, set_location
 
 from mecha import (
     AstChildren,
+    AstCommand,
     AstRoot,
     Parser,
-    ResetSyntaxParser,
+    consume_line_continuation,
     delegate,
     get_stream_scope,
 )
@@ -34,10 +41,14 @@ from .ast import (
     AstAssignment,
     AstAssignmentTarget,
     AstAssignmentTargetIdentifier,
+    AstAttribute,
     AstCall,
     AstExpression,
     AstExpressionBinary,
     AstExpressionUnary,
+    AstFunctionRoot,
+    AstFunctionSignature,
+    AstFunctionSignatureArgument,
     AstIdentifier,
     AstLookup,
     AstValue,
@@ -55,32 +66,18 @@ def get_scripting_parsers(parsers: Dict[str, Parser]) -> Dict[str, Parser]:
         ################################################################################
         # Command
         ################################################################################
-        "root": FlushPendingIdentifiersParser(
-            BreakContinueConstraint(
-                parser=IfElseConstraint(parsers["root"]),
-                allowed_scopes={
-                    ("while", "condition", "body"),
-                    ("for", "target", "in", "iterable", "body"),
-                },
-            )
+        "root": create_scripting_root_parser(parsers["root"]),
+        "nested_root": create_scripting_root_parser(parsers["nested_root"]),
+        "command:argument:mecha:scripting:statement": delegate("scripting:statement"),
+        "command:argument:mecha:scripting:assignment_target": delegate(
+            "scripting:assignment_target"
         ),
-        "nested_root": FlushPendingIdentifiersParser(
-            BreakContinueConstraint(
-                parser=IfElseConstraint(parsers["nested_root"]),
-                allowed_scopes={
-                    ("while", "condition", "body"),
-                    ("for", "target", "in", "iterable", "body"),
-                },
-            )
+        "command:argument:mecha:scripting:expression": delegate("scripting:expression"),
+        "command:argument:mecha:scripting:function_signature": delegate(
+            "scripting:function_signature"
         ),
-        "command:argument:mecha:scripting:statement": ResetSyntaxParser(
-            delegate("scripting:statement")
-        ),
-        "command:argument:mecha:scripting:assignment_target": ResetSyntaxParser(
-            delegate("scripting:assignment_target")
-        ),
-        "command:argument:mecha:scripting:expression": ResetSyntaxParser(
-            delegate("scripting:expression")
+        "command:argument:mecha:scripting:function_root": delegate(
+            "scripting:function_root"
         ),
         ################################################################################
         # Scripting
@@ -90,6 +87,8 @@ def get_scripting_parsers(parsers: Dict[str, Parser]) -> Dict[str, Parser]:
             allow_undefined_identifiers=True
         ),
         "scripting:augmented_assignment_target": AssignmentTargetParser(),
+        "scripting:function_signature": parse_function_signature,
+        "scripting:function_root": parse_function_root,
         "scripting:expression": delegate("scripting:disjunction"),
         "scripting:disjunction": BinaryParser(
             operators=[r"\bor\b"],
@@ -190,6 +189,23 @@ class UndefinedIdentifier(UnexpectedToken):
             msg += f" Did you mean {suggestion}?"
 
         return msg
+
+
+def create_scripting_root_parser(parser: Parser):
+    """Return parser for the root node when using scripting."""
+    return FunctionRootBacktracker(
+        FlushPendingIdentifiersParser(
+            ReturnConstraint(
+                BreakContinueConstraint(
+                    parser=IfElseConstraint(parser),
+                    allowed_scopes={
+                        ("while", "condition", "body"),
+                        ("for", "target", "in", "iterable", "body"),
+                    },
+                )
+            )
+        )
+    )
 
 
 def parse_statement(stream: TokenStream) -> Any:
@@ -317,6 +333,138 @@ class FlushPendingIdentifiersParser:
         return self.parser(stream)
 
 
+def parse_function_signature(stream: TokenStream) -> AstFunctionSignature:
+    """Parse function signature."""
+    identifiers = get_stream_identifiers(stream)
+    pending_identifiers = get_stream_pending_identifiers(stream)
+    scoped_identifiers = set(identifiers)
+
+    arguments: List[AstFunctionSignatureArgument] = []
+
+    with stream.syntax(
+        comma=r",",
+        equal=r"=(?!=)",
+        brace=r"\(|\)",
+        identifier=IDENTIFIER_PATTERN,
+    ):
+        identifier = stream.expect("identifier")
+        stream.expect(("brace", "("))
+
+        scoped_identifiers.add(identifier.value)
+
+        with stream.ignore("newline"):
+            for _ in stream.peek_until(("brace", ")")):
+                name = stream.expect("identifier")
+
+                default = None
+                if stream.get("equal"):
+                    with stream.provide(
+                        identifiers=scoped_identifiers | {arg.name for arg in arguments}
+                    ):
+                        default = delegate("scripting:expression", stream)
+
+                argument = AstFunctionSignatureArgument(
+                    name=name.value,
+                    default=default,
+                )
+                arguments.append(set_location(argument, name, stream.current))
+
+                if not stream.get("comma"):
+                    stream.expect(("brace", ")"))
+                    break
+
+    identifiers.add(identifier.value)
+    pending_identifiers |= {arg.name for arg in arguments}
+
+    node = AstFunctionSignature(name=identifier.value, arguments=AstChildren(arguments))
+    return set_location(node, identifier, stream.current)
+
+
+def parse_function_root(stream: TokenStream) -> AstFunctionRoot:
+    """Parse function root."""
+    identifiers = get_stream_identifiers(stream)
+    pending_identifiers = get_stream_pending_identifiers(stream)
+
+    stream_copy = stream.copy()
+
+    with stream.syntax(statement=r"[^\s#].*"):
+        token = stream.expect("statement")
+        while consume_line_continuation(stream):
+            stream.expect("statement")
+
+    stream_copy.data["identifiers"] = identifiers | pending_identifiers
+    stream_copy.data["pending_identifiers"] = set()
+
+    pending_identifiers.clear()
+
+    node = AstFunctionRoot(stream=stream_copy)
+    return set_location(node, token, stream.current)
+
+
+@dataclass
+class FunctionRootBacktracker:
+    """Parser for backtracking over function root nodes."""
+
+    parser: Parser = required_field()
+
+    def __call__(self, stream: TokenStream) -> AstRoot:
+        should_replace = False
+        commands: List[AstCommand] = []
+
+        node: AstRoot = self.parser(stream)
+
+        identifiers = get_stream_identifiers(stream)
+
+        for command in node.commands:
+            if command.identifier == "def:function:body":
+                if isinstance(function_root := command.arguments[-1], AstFunctionRoot):
+                    should_replace = True
+
+                    function_stream = function_root.stream
+                    function_stream.data["identifiers"] |= identifiers
+                    function_stream.data.update(
+                        properties={"check_nesting": False},
+                        function=True,
+                    )
+
+                    command = replace(
+                        command,
+                        arguments=AstChildren(
+                            [
+                                *command.arguments[:-1],
+                                delegate("nested_root", function_root.stream),
+                            ]
+                        ),
+                    )
+
+            commands.append(command)
+
+        if should_replace:
+            return replace(node, commands=AstChildren(commands))
+
+        return node
+
+
+@dataclass
+class ReturnConstraint:
+    """Constraint that makes sure that return statements only occur in functions."""
+
+    parser: Parser
+
+    def __call__(self, stream: TokenStream) -> AstRoot:
+        node: AstRoot = self.parser(stream)
+
+        if stream.data.get("function"):
+            return node
+
+        for command in node.commands:
+            if command.identifier in ["return", "return:value"]:
+                exc = InvalidSyntax("Can only use 'return' in functions.")
+                raise set_location(exc, command)
+
+        return node
+
+
 @dataclass
 class BinaryParser:
     """Parser for binary expressions."""
@@ -396,8 +544,11 @@ class PrimaryParser:
                     )
 
                     if identifier:
-                        value = identifier.value
-                    elif string:
+                        node = AstAttribute(value=node, name=identifier.value)
+                        node = set_location(node, node, identifier)
+                        continue
+
+                    if string:
                         value = self.quote_helper.unquote_string(string)
                     elif number:
                         value = int(number.value)

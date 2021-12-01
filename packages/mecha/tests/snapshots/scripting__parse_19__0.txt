@@ -1,4 +1,4 @@
-#>ERROR  Expected brace '(', true, false, null, identifier, string or number but got invalid '%3'.
+#>ERROR  Expected brace '(', true, false, null, identifier, string or number but got literal '%3'.
 # line 1, column 6
 #      1 |  17 % %3
 #        :       ^^

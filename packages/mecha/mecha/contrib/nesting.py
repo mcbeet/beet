@@ -29,6 +29,7 @@ from mecha import (
     Parser,
     consume_line_continuation,
     delegate,
+    get_stream_properties,
     get_stream_scope,
     rule,
 )
@@ -94,8 +95,11 @@ def beet_default(ctx: Context):
 
 def parse_nested_root(stream: TokenStream) -> AstRoot:
     """Parse nested root."""
-    with stream.intercept("indent"):
-        stream.expect("indent")
+    properties = get_stream_properties(stream)
+
+    if properties.get("check_nesting", True):
+        with stream.intercept("indent"):
+            stream.expect("indent")
 
     level, command_level = stream.indentation[-2:]
 

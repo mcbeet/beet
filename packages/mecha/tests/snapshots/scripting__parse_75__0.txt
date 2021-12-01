@@ -1,0 +1,7 @@
+#>ERROR  Expected statement but got newline '\n'.
+# line 1, column 8
+#      1 |  def f()
+#      2 |  say yolo
+#        :  ^
+def f()
+say yolo

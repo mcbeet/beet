@@ -1,0 +1,10 @@
+def f(a, b)
+    def g(c)
+        a + b
+    c
+#>ERROR  Expected assignment but got literal '()'.
+# line 5, column 2
+#      4 |      c
+#      5 |  g()
+#        :   ^^
+g()

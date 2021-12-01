@@ -17,6 +17,33 @@ COMMAND_TREE = {
             "parser": "mecha:scripting:statement",
             "executable": True,
         },
+        "def": {
+            "type": "literal",
+            "children": {
+                "function": {
+                    "type": "argument",
+                    "parser": "mecha:scripting:function_signature",
+                    "children": {
+                        "body": {
+                            "type": "argument",
+                            "parser": "mecha:scripting:function_root",
+                            "executable": True,
+                        }
+                    },
+                }
+            },
+        },
+        "return": {
+            "type": "literal",
+            "executable": True,
+            "children": {
+                "value": {
+                    "type": "argument",
+                    "parser": "mecha:scripting:expression",
+                    "executable": True,
+                }
+            },
+        },
         "if": {
             "type": "literal",
             "children": {

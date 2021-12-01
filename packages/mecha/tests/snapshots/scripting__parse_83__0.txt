@@ -1,0 +1,11 @@
+def foo()
+    bar() + thing
+def bar()
+#>ERROR  Identifier 'thin' is not defined. Did you mean 'thing'?
+# line 4, column 13
+#      3 |  def bar()
+#      4 |      foo() + thin
+#        :              ^^^^
+#      5 |  thing = bar()
+    foo() + thin
+thing = bar()

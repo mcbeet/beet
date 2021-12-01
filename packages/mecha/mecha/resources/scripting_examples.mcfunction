@@ -193,3 +193,102 @@ for i in "abc"
     2,
     3,
 )
+###
+def foo()
+    say hello
+foo()
+###
+def foo()
+    def bar()
+        foo()
+    bar()
+###
+def foo(
+    a=1,
+    b=a,
+    c=a + b,
+)
+    say hello
+###
+def f
+###
+def f()
+###
+def f()
+say yolo
+###
+def f(a=a)
+    say wat
+###
+def f(a, b=a)
+    b += a
+    say wat
+###
+def f(a, b)
+    def g(c)
+        a + b
+    c
+g()
+###
+def f(a, b)
+    def g(c)
+        a + b
+    f(c)
+###
+def foo(something)
+    def wat()
+        say
+            yo
+            wat
+            is
+            dat
+# this is a comment
+        x = "hello"
+        for i in somehng
+            x += i * 3
+
+        say wow
+    wat()
+###
+def foo(something)
+    def wat()
+        say
+            yo
+            wat
+            is
+            dat
+# this is a comment
+        x = "hello"
+        for i in something
+            x += i * 3
+
+        say wow
+    wat()
+###
+def foo()
+    thing += bar()
+def bar()
+    thing += foo()
+thing = bar()
+###
+def foo()
+    bar() + thing
+def bar()
+    foo() + thin
+thing = bar()
+###
+def foo()
+    return
+###
+return "hello"
+###
+return foo
+###
+def f()
+    def g()
+        return foo
+    foo = 0
+###
+def f()
+    foo = 0
+f(foo)
