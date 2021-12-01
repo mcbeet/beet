@@ -1872,5 +1872,5 @@ class ResetSyntaxParser:
     parser: Parser
 
     def __call__(self, stream: TokenStream) -> Any:
-        with stream.reset_syntax():
+        with stream.reset_syntax(comment=r"#.*$", literal=r"\S+"):
             return self.parser(stream)
