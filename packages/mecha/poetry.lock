@@ -540,7 +540,7 @@ yaml = ["PyYaml (>=5.2)"]
 
 [[package]]
 name = "python-semantic-release"
-version = "7.22.0"
+version = "7.23.0"
 description = "Automatic Semantic Versioning for Python projects"
 category = "dev"
 optional = false
@@ -694,7 +694,7 @@ python-versions = ">=3.5"
 
 [[package]]
 name = "tokenstream"
-version = "1.2.6"
+version = "1.2.7"
 description = "A versatile token stream for handwritten parsers"
 category = "main"
 optional = false
@@ -808,7 +808,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=1.2.3)", "pytest-flake8", "pyt
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "5cc5bdf9dcc9aae8d1ba0e5b1e20eb5b8e950d662e18d0cd8d84fe8f73e82d0e"
+content-hash = "7cdb19a6e5ebad758272d5d076375bf8b507c4bf06ff03a4913fec5cb25a823a"
 
 [metadata.files]
 atomicwrites = [
@@ -1160,8 +1160,8 @@ python-gitlab = [
     {file = "python_gitlab-2.7.1-py3-none-any.whl", hash = "sha256:b1dbb66f53ad7cf33fbdce8e9e7e6a09b18c75a9c506b099af1f6f9191542cfb"},
 ]
 python-semantic-release = [
-    {file = "python-semantic-release-7.22.0.tar.gz", hash = "sha256:d43bf40d7dacc1dd64b9f9016d495a617aae193968336d50e5d12f39a51486e4"},
-    {file = "python_semantic_release-7.22.0-py3-none-any.whl", hash = "sha256:8eccd599bb4efb5dc1a5a9ed5f89c6ba65be5e77aa2367ccf3d7da50ed84a944"},
+    {file = "python-semantic-release-7.23.0.tar.gz", hash = "sha256:48c33bf671dafa1257e7d955543856eb98486a3f976f586053556ae180d725da"},
+    {file = "python_semantic_release-7.23.0-py3-none-any.whl", hash = "sha256:5bf7fcdb28e5e9888c9a15a1168afe53302116a6874d818580d4c58db60283ab"},
 ]
 pywin32-ctypes = [
     {file = "pywin32-ctypes-0.2.0.tar.gz", hash = "sha256:24ffc3b341d457d48e8922352130cf2644024a4ff09762a2261fd34c36ee5942"},
@@ -1278,8 +1278,8 @@ smmap = [
     {file = "smmap-4.0.0.tar.gz", hash = "sha256:7e65386bd122d45405ddf795637b7f7d2b532e7e401d46bbe3fb49b9986d5182"},
 ]
 tokenstream = [
-    {file = "tokenstream-1.2.6-py3-none-any.whl", hash = "sha256:a103cfa6434f856a45d24ab205867ba587304bc201b73cace996bcbde2002e98"},
-    {file = "tokenstream-1.2.6.tar.gz", hash = "sha256:24dbed519a8bdeb66f800d6b88101a15a6d2cd64c354e0308caf6f2ff5e2e258"},
+    {file = "tokenstream-1.2.7-py3-none-any.whl", hash = "sha256:6aae8f38e305b5493e686faf3ab43f53b281821a9cde99b4d7b4cf815c08cc39"},
+    {file = "tokenstream-1.2.7.tar.gz", hash = "sha256:2070c5163c26f0a595ea7a870472bb6ac4df3523bceafc42ed16dbb94304cd53"},
 ]
 toml = [
     {file = "toml-0.10.2-py2.py3-none-any.whl", hash = "sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b"},
