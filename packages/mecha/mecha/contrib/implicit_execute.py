@@ -2,21 +2,22 @@
 
 
 __all__ = [
-    "ImplicitExecuteNormalizer",
+    "ImplicitExecuteParser",
 ]
 
 
 from dataclasses import dataclass, replace
-from typing import Set, cast
+from typing import Any, Set, cast
 
 from beet import Context
-from beet.core.utils import required_field
-from tokenstream import set_location
+from tokenstream import TokenStream, set_location
 
-from mecha import AstChildren, AstCommand, AstNode, Mecha, MutatingReducer, rule
+from mecha import AstChildren, AstCommand, AstNode, Mecha, Parser
 
 
 def beet_default(ctx: Context):
+    ctx.require("mecha.contrib.nesting")
+
     mc = ctx.inject(Mecha)
 
     if execute := mc.spec.tree.get("execute"):
@@ -47,39 +48,47 @@ def beet_default(ctx: Context):
             }
         )
 
-        mc.normalize.extend(
-            ImplicitExecuteNormalizer(
-                commands=commands,
-                shorthands=shorthands,
-            )
+        mc.spec.parsers["command"] = ImplicitExecuteParser(
+            commands={
+                name
+                for name in mc.spec.prototypes
+                if (s := name.split(":", 2)[:2])
+                and s[0] == "execute"
+                and s[1] in commands
+            },
+            shorthands={
+                name
+                for name in mc.spec.prototypes
+                if name.partition(":")[0] in shorthands
+            },
+            parser=mc.spec.parsers["command"],
         )
 
 
 @dataclass
-class ImplicitExecuteNormalizer(MutatingReducer):
-    """Normalizer that replaces implicit execute shorthands with the full command."""
+class ImplicitExecuteParser:
+    """Parser that replaces implicit execute shorthands with the full command."""
 
-    commands: Set[str] = required_field()
-    shorthands: Set[str] = required_field()
+    commands: Set[str]
+    shorthands: Set[str]
+    parser: Parser
 
-    @rule(AstCommand)
-    def implicit_execute(self, node: AstCommand) -> AstCommand:
-        prefix, _, identifier = node.identifier.partition(":")
+    def __call__(self, stream: TokenStream) -> Any:
+        if isinstance(node := self.parser(stream), AstCommand):
+            if node.identifier in self.commands:
+                subcommand = replace(node, identifier=node.identifier[8:])
+                run = AstCommand(
+                    identifier="execute:run:subcommand",
+                    arguments=AstChildren([cast(AstNode, subcommand)]),
+                )
+                return set_location(run, node)
 
-        if prefix == "execute" and identifier.partition(":")[0] in self.commands:
-            subcommand = replace(node, identifier=identifier)
-            run = AstCommand(
-                identifier="execute:run:subcommand",
-                arguments=AstChildren([cast(AstNode, subcommand)]),
-            )
-            return set_location(run, node)
-
-        elif prefix in self.shorthands:
-            subcommand = replace(node, identifier=f"execute:{node.identifier}")
-            execute = AstCommand(
-                identifier="execute:subcommand",
-                arguments=AstChildren([cast(AstNode, subcommand)]),
-            )
-            return set_location(execute, node)
+            elif node.identifier in self.shorthands:
+                subcommand = replace(node, identifier=f"execute:{node.identifier}")
+                execute = AstCommand(
+                    identifier="execute:subcommand",
+                    arguments=AstChildren([cast(AstNode, subcommand)]),
+                )
+                return set_location(execute, node)
 
         return node

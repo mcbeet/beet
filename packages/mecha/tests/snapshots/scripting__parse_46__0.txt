@@ -11,111 +11,116 @@ if score @s tmp matches 42
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=0, lineno=1, colno=1)
       end_location: SourceLocation(pos=105, lineno=5, colno=26)
-      identifier: 'if:score:target:targetObjective:matches:range:subcommand'
+      identifier: 'execute:subcommand'
       arguments:
-        <class 'mecha.ast.AstSelector'>
-          location: SourceLocation(pos=9, lineno=1, colno=10)
-          end_location: SourceLocation(pos=11, lineno=1, colno=12)
-          variable: 's'
-          arguments:
-            <empty>
-        <class 'mecha.ast.AstLiteral'>
-          location: SourceLocation(pos=12, lineno=1, colno=13)
-          end_location: SourceLocation(pos=15, lineno=1, colno=16)
-          value: 'tmp'
-        <class 'mecha.contrib.scripting.ast.AstValue'>
-          location: SourceLocation(pos=24, lineno=1, colno=25)
-          end_location: SourceLocation(pos=26, lineno=1, colno=27)
-          value: 42
-        <class 'mecha.contrib.nesting.AstNestedExecute'>
-          location: SourceLocation(pos=31, lineno=2, colno=5)
+        <class 'mecha.ast.AstCommand'>
+          location: SourceLocation(pos=0, lineno=1, colno=1)
           end_location: SourceLocation(pos=105, lineno=5, colno=26)
-          root:
-            <class 'mecha.ast.AstRoot'>
+          identifier: 'execute:if:score:target:targetObjective:matches:range:subcommand'
+          arguments:
+            <class 'mecha.ast.AstSelector'>
+              location: SourceLocation(pos=9, lineno=1, colno=10)
+              end_location: SourceLocation(pos=11, lineno=1, colno=12)
+              variable: 's'
+              arguments:
+                <empty>
+            <class 'mecha.ast.AstLiteral'>
+              location: SourceLocation(pos=12, lineno=1, colno=13)
+              end_location: SourceLocation(pos=15, lineno=1, colno=16)
+              value: 'tmp'
+            <class 'mecha.contrib.scripting.ast.AstValue'>
+              location: SourceLocation(pos=24, lineno=1, colno=25)
+              end_location: SourceLocation(pos=26, lineno=1, colno=27)
+              value: 42
+            <class 'mecha.contrib.nesting.AstNestedExecute'>
               location: SourceLocation(pos=31, lineno=2, colno=5)
               end_location: SourceLocation(pos=105, lineno=5, colno=26)
-              commands:
-                <class 'mecha.ast.AstCommand'>
+              root:
+                <class 'mecha.ast.AstRoot'>
                   location: SourceLocation(pos=31, lineno=2, colno=5)
-                  end_location: SourceLocation(pos=41, lineno=2, colno=15)
-                  identifier: 'statement'
-                  arguments:
-                    <class 'mecha.contrib.scripting.ast.AstAssignment'>
+                  end_location: SourceLocation(pos=105, lineno=5, colno=26)
+                  commands:
+                    <class 'mecha.ast.AstCommand'>
                       location: SourceLocation(pos=31, lineno=2, colno=5)
                       end_location: SourceLocation(pos=41, lineno=2, colno=15)
-                      operator: '='
-                      target:
-                        <class 'mecha.contrib.scripting.ast.AstAssignmentTargetIdentifier'>
+                      identifier: 'statement'
+                      arguments:
+                        <class 'mecha.contrib.scripting.ast.AstAssignment'>
                           location: SourceLocation(pos=31, lineno=2, colno=5)
-                          end_location: SourceLocation(pos=36, lineno=2, colno=10)
-                          value: 'count'
-                      value:
-                        <class 'mecha.contrib.scripting.ast.AstValue'>
-                          location: SourceLocation(pos=39, lineno=2, colno=13)
                           end_location: SourceLocation(pos=41, lineno=2, colno=15)
-                          value: 42
-                <class 'mecha.ast.AstCommand'>
-                  location: SourceLocation(pos=46, lineno=3, colno=5)
-                  end_location: SourceLocation(pos=105, lineno=5, colno=26)
-                  identifier: 'while:condition:body'
-                  arguments:
-                    <class 'mecha.contrib.scripting.ast.AstExpressionBinary'>
-                      location: SourceLocation(pos=52, lineno=3, colno=11)
-                      end_location: SourceLocation(pos=61, lineno=3, colno=20)
-                      operator: '>'
-                      left:
-                        <class 'mecha.contrib.scripting.ast.AstIdentifier'>
-                          location: SourceLocation(pos=52, lineno=3, colno=11)
-                          end_location: SourceLocation(pos=57, lineno=3, colno=16)
-                          value: 'count'
-                      right:
-                        <class 'mecha.contrib.scripting.ast.AstValue'>
-                          location: SourceLocation(pos=60, lineno=3, colno=19)
-                          end_location: SourceLocation(pos=61, lineno=3, colno=20)
-                          value: 0
-                    <class 'mecha.ast.AstRoot'>
-                      location: SourceLocation(pos=70, lineno=4, colno=9)
+                          operator: '='
+                          target:
+                            <class 'mecha.contrib.scripting.ast.AstAssignmentTargetIdentifier'>
+                              location: SourceLocation(pos=31, lineno=2, colno=5)
+                              end_location: SourceLocation(pos=36, lineno=2, colno=10)
+                              value: 'count'
+                          value:
+                            <class 'mecha.contrib.scripting.ast.AstValue'>
+                              location: SourceLocation(pos=39, lineno=2, colno=13)
+                              end_location: SourceLocation(pos=41, lineno=2, colno=15)
+                              value: 42
+                    <class 'mecha.ast.AstCommand'>
+                      location: SourceLocation(pos=46, lineno=3, colno=5)
                       end_location: SourceLocation(pos=105, lineno=5, colno=26)
-                      commands:
-                        <class 'mecha.ast.AstCommand'>
+                      identifier: 'while:condition:body'
+                      arguments:
+                        <class 'mecha.contrib.scripting.ast.AstExpressionBinary'>
+                          location: SourceLocation(pos=52, lineno=3, colno=11)
+                          end_location: SourceLocation(pos=61, lineno=3, colno=20)
+                          operator: '>'
+                          left:
+                            <class 'mecha.contrib.scripting.ast.AstIdentifier'>
+                              location: SourceLocation(pos=52, lineno=3, colno=11)
+                              end_location: SourceLocation(pos=57, lineno=3, colno=16)
+                              value: 'count'
+                          right:
+                            <class 'mecha.contrib.scripting.ast.AstValue'>
+                              location: SourceLocation(pos=60, lineno=3, colno=19)
+                              end_location: SourceLocation(pos=61, lineno=3, colno=20)
+                              value: 0
+                        <class 'mecha.ast.AstRoot'>
                           location: SourceLocation(pos=70, lineno=4, colno=9)
-                          end_location: SourceLocation(pos=79, lineno=4, colno=18)
-                          identifier: 'say:message'
-                          arguments:
-                            <class 'mecha.ast.AstMessage'>
-                              location: SourceLocation(pos=74, lineno=4, colno=13)
+                          end_location: SourceLocation(pos=105, lineno=5, colno=26)
+                          commands:
+                            <class 'mecha.ast.AstCommand'>
+                              location: SourceLocation(pos=70, lineno=4, colno=9)
                               end_location: SourceLocation(pos=79, lineno=4, colno=18)
-                              fragments:
-                                <class 'mecha.ast.AstLiteral'>
+                              identifier: 'say:message'
+                              arguments:
+                                <class 'mecha.ast.AstMessage'>
                                   location: SourceLocation(pos=74, lineno=4, colno=13)
                                   end_location: SourceLocation(pos=79, lineno=4, colno=18)
-                                  value: 'hello'
-                        <class 'mecha.ast.AstCommand'>
-                          location: SourceLocation(pos=88, lineno=5, colno=9)
-                          end_location: SourceLocation(pos=105, lineno=5, colno=26)
-                          identifier: 'statement'
-                          arguments:
-                            <class 'mecha.contrib.scripting.ast.AstAssignment'>
+                                  fragments:
+                                    <class 'mecha.ast.AstLiteral'>
+                                      location: SourceLocation(pos=74, lineno=4, colno=13)
+                                      end_location: SourceLocation(pos=79, lineno=4, colno=18)
+                                      value: 'hello'
+                            <class 'mecha.ast.AstCommand'>
                               location: SourceLocation(pos=88, lineno=5, colno=9)
                               end_location: SourceLocation(pos=105, lineno=5, colno=26)
-                              operator: '='
-                              target:
-                                <class 'mecha.contrib.scripting.ast.AstAssignmentTargetIdentifier'>
+                              identifier: 'statement'
+                              arguments:
+                                <class 'mecha.contrib.scripting.ast.AstAssignment'>
                                   location: SourceLocation(pos=88, lineno=5, colno=9)
-                                  end_location: SourceLocation(pos=93, lineno=5, colno=14)
-                                  value: 'count'
-                              value:
-                                <class 'mecha.contrib.scripting.ast.AstExpressionBinary'>
-                                  location: SourceLocation(pos=96, lineno=5, colno=17)
                                   end_location: SourceLocation(pos=105, lineno=5, colno=26)
-                                  operator: '-'
-                                  left:
-                                    <class 'mecha.contrib.scripting.ast.AstIdentifier'>
-                                      location: SourceLocation(pos=96, lineno=5, colno=17)
-                                      end_location: SourceLocation(pos=101, lineno=5, colno=22)
+                                  operator: '='
+                                  target:
+                                    <class 'mecha.contrib.scripting.ast.AstAssignmentTargetIdentifier'>
+                                      location: SourceLocation(pos=88, lineno=5, colno=9)
+                                      end_location: SourceLocation(pos=93, lineno=5, colno=14)
                                       value: 'count'
-                                  right:
-                                    <class 'mecha.contrib.scripting.ast.AstValue'>
-                                      location: SourceLocation(pos=104, lineno=5, colno=25)
+                                  value:
+                                    <class 'mecha.contrib.scripting.ast.AstExpressionBinary'>
+                                      location: SourceLocation(pos=96, lineno=5, colno=17)
                                       end_location: SourceLocation(pos=105, lineno=5, colno=26)
-                                      value: 1
+                                      operator: '-'
+                                      left:
+                                        <class 'mecha.contrib.scripting.ast.AstIdentifier'>
+                                          location: SourceLocation(pos=96, lineno=5, colno=17)
+                                          end_location: SourceLocation(pos=101, lineno=5, colno=22)
+                                          value: 'count'
+                                      right:
+                                        <class 'mecha.contrib.scripting.ast.AstValue'>
+                                          location: SourceLocation(pos=104, lineno=5, colno=25)
+                                          end_location: SourceLocation(pos=105, lineno=5, colno=26)
+                                          value: 1

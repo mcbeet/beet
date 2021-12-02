@@ -2,7 +2,7 @@
 
 
 __all__ = [
-    "RelativeResourceLocationNormalizer",
+    "RelativeResourceLocationParser",
 ]
 
 
@@ -10,37 +10,38 @@ from dataclasses import dataclass, replace
 from pathlib import PurePosixPath
 
 from beet import Context
-from beet.core.utils import required_field
+from tokenstream import InvalidSyntax, TokenStream, set_location
 
-from mecha import (
-    AstResourceLocation,
-    CompilationDatabase,
-    Diagnostic,
-    Mecha,
-    MutatingReducer,
-    rule,
-)
+from mecha import AstResourceLocation, CompilationDatabase, Mecha, Parser
 
 
 def beet_default(ctx: Context):
     mc = ctx.inject(Mecha)
-    mc.normalize.extend(RelativeResourceLocationNormalizer(database=mc.database))
+    mc.spec.parsers["resource_location_or_tag"] = RelativeResourceLocationParser(
+        database=mc.database,
+        parser=mc.spec.parsers["resource_location_or_tag"],
+    )
 
 
 @dataclass
-class RelativeResourceLocationNormalizer(MutatingReducer):
-    """Normalizer that resolves relative resource locations."""
+class RelativeResourceLocationParser:
+    """Parser that resolves relative resource locations."""
 
-    database: CompilationDatabase = required_field()
+    database: CompilationDatabase
+    parser: Parser
 
-    @rule(AstResourceLocation)
-    def relative_resource_location(self, node: AstResourceLocation):
+    def __call__(self, stream: TokenStream) -> AstResourceLocation:
+        node: AstResourceLocation = self.parser(stream)
+
         if node.namespace is None and node.path.startswith(("./", "../")):
             current_file = self.database.current
             path = self.database[current_file].resource_location
 
             if not path:
-                raise Diagnostic("error", "Can't resolve relative resource location.")
+                exc = InvalidSyntax(
+                    f"Can't resolve relative resource location {node.path!r}."
+                )
+                raise set_location(exc, node)
 
             namespace, _, current_path = path.partition(":")
 

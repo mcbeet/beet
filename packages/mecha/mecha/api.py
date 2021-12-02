@@ -93,7 +93,6 @@ class Mecha:
     spec: CommandSpec = extra_field(default=None)
 
     lint: Dispatcher[AstRoot] = extra_field(init=False)
-    normalize: Dispatcher[AstRoot] = extra_field(init=False)
     transform: Dispatcher[AstRoot] = extra_field(init=False)
     optimize: Dispatcher[AstRoot] = extra_field(init=False)
     check: Dispatcher[AstRoot] = extra_field(init=False)
@@ -128,7 +127,6 @@ class Mecha:
             self.directory = ctx.directory
 
             self.lint = Reducer(levels=opts.rules)
-            self.normalize = MutatingReducer(levels=opts.rules)
             self.transform = MutatingReducer(levels=opts.rules)
             self.optimize = MutatingReducer(levels=opts.rules)
             self.check = Reducer(levels=opts.rules)
@@ -142,13 +140,11 @@ class Mecha:
             self.directory = Path.cwd()
 
             self.lint = Reducer()
-            self.normalize = MutatingReducer()
             self.transform = MutatingReducer()
             self.optimize = MutatingReducer()
             self.check = Reducer()
 
         self.steps.append(self.lint)
-        self.steps.append(self.normalize)
         self.steps.append(self.transform)
         self.steps.append(self.optimize)
         self.steps.append(self.check)

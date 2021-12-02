@@ -4,6 +4,7 @@ __all__ = [
     "get_stream_pending_identifiers",
     "UndefinedIdentifier",
     "create_scripting_root_parser",
+    "ExecuteIfConditionConstraint",
     "InterpolatedArgumentParser",
     "parse_statement",
     "AssignmentTargetParser",
@@ -73,6 +74,7 @@ def get_scripting_parsers(parsers: Dict[str, Parser]) -> Dict[str, Parser]:
         ################################################################################
         "root": create_scripting_root_parser(parsers["root"]),
         "nested_root": create_scripting_root_parser(parsers["nested_root"]),
+        "command": ExecuteIfConditionConstraint(parsers["command"]),
         "command:argument": InterpolatedArgumentParser(parsers["command:argument"]),
         "command:argument:mecha:scripting:statement": delegate("scripting:statement"),
         "command:argument:mecha:scripting:assignment_target": delegate(
@@ -213,6 +215,21 @@ def create_scripting_root_parser(parser: Parser):
             )
         )
     )
+
+
+@dataclass
+class ExecuteIfConditionConstraint:
+    """Constraint that prevents inlining if conditions as execute subcommands."""
+
+    parser: Parser
+
+    def __call__(self, stream: TokenStream) -> Any:
+        if isinstance(node := self.parser(stream), AstCommand):
+            if node.identifier == "execute:if:condition:body":
+                exc = InvalidSyntax("Can't inline conditions as execute subcommands.")
+                raise set_location(exc, node)
+
+        return node
 
 
 @dataclass

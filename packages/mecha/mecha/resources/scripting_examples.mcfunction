@@ -353,3 +353,9 @@ predicate = {
 ###
 def f()
     return {f(): f(), other: [{}, {}, "wat"]}
+###
+at @s if "foo" == "bar"
+    say yolo
+###
+at @s for i in "foo"
+    say yolo
