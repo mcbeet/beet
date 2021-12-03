@@ -1,9 +1,10 @@
 import os
-import pickle
 
 import click
 from beet import ErrorMessage, Project
 from beet.toolchain.cli import beet, echo
+
+from mecha import AstCacheBackend
 
 pass_project = click.make_pass_decorator(Project)  # type: ignore
 
@@ -18,6 +19,6 @@ def ast(project: Project, filename: str):
 
     try:
         with ast_path.open("rb") as f:
-            echo(pickle.load(f).dump())
+            echo(AstCacheBackend().load(f).dump())
     except FileNotFoundError as exc:
         raise ErrorMessage(f"No cached ast for {filename!r}.") from exc

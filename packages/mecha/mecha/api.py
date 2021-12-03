@@ -1,13 +1,14 @@
 __all__ = [
     "Mecha",
     "MechaOptions",
-    "CacheBackend",
+    "AstCacheBackend",
 ]
 
 
 import logging
 import os
 import pickle
+import sys
 from contextlib import contextmanager
 from dataclasses import InitVar, dataclass
 from io import BufferedReader, BufferedWriter
@@ -19,7 +20,6 @@ from typing import (
     List,
     Literal,
     Optional,
-    Protocol,
     Type,
     TypeVar,
     Union,
@@ -31,6 +31,8 @@ from beet.core.utils import FileSystemPath, JsonDict, extra_field
 from pydantic import BaseModel
 from tokenstream import InvalidSyntax, TokenStream
 from tokenstream.location import set_location
+
+from mecha import __version__
 
 from .ast import AstNode, AstRoot
 from .config import CommandTree
@@ -54,14 +56,29 @@ TextFileType = TypeVar("TextFileType", bound=TextFileBase[Any])
 logger = logging.getLogger("mecha")
 
 
-class CacheBackend(Protocol):
-    """Protocol for the cache backend."""
+class AstCacheBackend:
+    """Backend for the ast cache."""
 
-    def load(self, f: BufferedReader) -> Any:
-        ...
+    def load_data(self, f: BufferedReader) -> JsonDict:
+        """Load the pickled data."""
+        data = pickle.load(f)
+        if data["mecha"] != __version__ or data["python"] != sys.version:
+            raise ValueError("Version mismatch.")
+        return data
 
-    def dump(self, obj: Any, f: BufferedWriter):
-        ...
+    def dump_data(self, data: JsonDict, f: BufferedWriter):
+        """Dump the pickled data."""
+        data["mecha"] = __version__
+        data["python"] = sys.version
+        pickle.dump(data, f)
+
+    def load(self, f: BufferedReader) -> AstRoot:
+        """Load the ast."""
+        return self.load_data(f)["ast"]
+
+    def dump(self, node: AstRoot, f: BufferedWriter):
+        """Dump the ast."""
+        self.dump_data({"ast": node}, f)
 
 
 class MechaOptions(BaseModel):
@@ -88,7 +105,7 @@ class Mecha:
 
     directory: Path = extra_field(init=False)
     cache: Optional[Cache] = extra_field(default=None)
-    cache_backend: CacheBackend = extra_field(default=pickle)
+    cache_backend: AstCacheBackend = extra_field(default=pickle)
 
     spec: CommandSpec = extra_field(default=None)
 
