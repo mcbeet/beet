@@ -190,7 +190,9 @@ class Dispatcher(Generic[T]):
         node: AstNode,
     ) -> Iterator[Tuple[Optional[str], Callable[..., Any]]]:
         """Dispatch rules."""
-        priority_queue: List[Tuple[int, int, Optional[str], Callable[..., Any]]] = []
+        priority_queue: List[
+            Tuple[int, int, int, Optional[str], Callable[..., Any]]
+        ] = []
 
         for i, node_type in enumerate(type(node).mro()):
             if value := self.rules.get(node_type):
@@ -202,12 +204,15 @@ class Dispatcher(Generic[T]):
                         for name, value in match_fields
                     ):
                         for priority, name, callback in callbacks:
-                            heappush(priority_queue, (i, -priority, name, callback))
+                            heappush(
+                                priority_queue,
+                                (i, -len(match_fields), -priority, name, callback),
+                            )
 
         dispatched: Set[Callable[..., Any]] = set()
 
         while priority_queue:
-            _, _, name, callback = heappop(priority_queue)
+            _, _, _, name, callback = heappop(priority_queue)
 
             if callback not in dispatched:
                 dispatched.add(callback)
