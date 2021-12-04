@@ -2,6 +2,16 @@
 
 <!--next-version-placeholder-->
 
+## v0.18.0 (2021-12-04)
+### Feature
+* Interpolation now works on most nodes instead of command arguments specifically ([`288f836`](https://github.com/mcbeet/mecha/commit/288f836fff0c447bb743d89b46b1dfc06d53b7f8))
+* Add codegen ([`0d4409f`](https://github.com/mcbeet/mecha/commit/0d4409ffa271f8968f16a84a4be20063e920c0de))
+
+### Fix
+* Invalidate ast cache on version bumps ([`0cd634c`](https://github.com/mcbeet/mecha/commit/0cd634c5deffe0bbbe1efa4f1498364b28a6f266))
+* Forgot to take into account number of matched fields when sorting rules ([`d13fa3c`](https://github.com/mcbeet/mecha/commit/d13fa3c06a42d6cfe28b8e775ba3af4e77093cff))
+* Convert normalizers to parsers and get rid of normalize step ([`2c44606`](https://github.com/mcbeet/mecha/commit/2c44606e146d1d27a6061cf056fb931a08a51147))
+
 ## v0.17.0 (2021-12-01)
 ### Feature
 * Parse lists and dicts ([`5b1776b`](https://github.com/mcbeet/mecha/commit/5b1776be44c63392060e56f47a03082dcf201871))
