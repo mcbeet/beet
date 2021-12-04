@@ -60,6 +60,7 @@ __all__ = [
     "parse_particle",
     "AggregateParser",
     "SingleLineConstraint",
+    "AlternativeParser",
     "NUMBER_PATTERN",
 ]
 
@@ -1862,3 +1863,16 @@ class SingleLineConstraint:
     def __call__(self, stream: TokenStream) -> Any:
         with stream.intercept("newline"):
             return self.parser(stream)
+
+
+
+@dataclass
+class AlternativeParser:
+    """Parser that tries the given alternatives in order."""
+
+    parsers: List[Parser]
+
+    def __call__(self, stream: TokenStream) -> Any:
+        for parser, alternative in stream.choose(*self.parsers):
+            with alternative:
+                return parser(stream)

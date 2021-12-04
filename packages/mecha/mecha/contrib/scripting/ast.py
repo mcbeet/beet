@@ -16,11 +16,12 @@ __all__ = [
     "AstFunctionSignature",
     "AstFunctionSignatureArgument",
     "AstFunctionRoot",
+    "AstCommandInterpolation",
 ]
 
 
 from dataclasses import dataclass
-from typing import Any, ClassVar, Optional
+from typing import Any, ClassVar, Optional, Tuple
 
 from beet.core.utils import required_field
 from tokenstream import TokenStream
@@ -154,3 +155,11 @@ class AstFunctionRoot(AstNode):
     """Ast function root node."""
 
     stream: TokenStream = required_field()
+
+
+@dataclass(frozen=True)
+class AstCommandInterpolation(AstNode):
+    """Ast command interpolation node."""
+
+    scope: Tuple[str, ...] = required_field()
+    value: AstExpression = required_field()

@@ -1,0 +1,92 @@
+_mecha_helper_missing = _mecha_runtime.helpers['missing']
+_mecha_helper_children = _mecha_runtime.helpers['children']
+_mecha_helper_replace = _mecha_runtime.helpers['replace']
+with _mecha_runtime.scope() as _mecha_var0:
+    def f(a, b=_mecha_helper_missing):
+        if b is _mecha_helper_missing:
+            b = a
+        b += a
+        _mecha_runtime.commands.append(_mecha_refs[0])
+_mecha_var1 = _mecha_helper_replace(_mecha_refs[1], commands=_mecha_helper_children(_mecha_var0))
+---
+output = _mecha_var1
+---
+_mecha_refs[0]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=29, lineno=3, colno=5)
+  end_location: SourceLocation(pos=36, lineno=3, colno=12)
+  identifier: 'say:message'
+  arguments:
+    <class 'mecha.ast.AstMessage'>
+      location: SourceLocation(pos=33, lineno=3, colno=9)
+      end_location: SourceLocation(pos=36, lineno=3, colno=12)
+      fragments:
+        <class 'mecha.ast.AstLiteral'>
+          location: SourceLocation(pos=33, lineno=3, colno=9)
+          end_location: SourceLocation(pos=36, lineno=3, colno=12)
+          value: 'wat'
+_mecha_refs[1]
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=36, lineno=3, colno=12)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=36, lineno=3, colno=12)
+      identifier: 'def:function:body'
+      arguments:
+        <class 'mecha.contrib.scripting.ast.AstFunctionSignature'>
+          location: SourceLocation(pos=4, lineno=1, colno=5)
+          end_location: SourceLocation(pos=13, lineno=1, colno=14)
+          name: 'f'
+          arguments:
+            <class 'mecha.contrib.scripting.ast.AstFunctionSignatureArgument'>
+              location: SourceLocation(pos=6, lineno=1, colno=7)
+              end_location: SourceLocation(pos=7, lineno=1, colno=8)
+              name: 'a'
+              default: None
+            <class 'mecha.contrib.scripting.ast.AstFunctionSignatureArgument'>
+              location: SourceLocation(pos=9, lineno=1, colno=10)
+              end_location: SourceLocation(pos=12, lineno=1, colno=13)
+              name: 'b'
+              default:
+                <class 'mecha.contrib.scripting.ast.AstIdentifier'>
+                  location: SourceLocation(pos=11, lineno=1, colno=12)
+                  end_location: SourceLocation(pos=12, lineno=1, colno=13)
+                  value: 'a'
+        <class 'mecha.ast.AstRoot'>
+          location: SourceLocation(pos=18, lineno=2, colno=5)
+          end_location: SourceLocation(pos=36, lineno=3, colno=12)
+          commands:
+            <class 'mecha.ast.AstCommand'>
+              location: SourceLocation(pos=18, lineno=2, colno=5)
+              end_location: SourceLocation(pos=24, lineno=2, colno=11)
+              identifier: 'statement'
+              arguments:
+                <class 'mecha.contrib.scripting.ast.AstAssignment'>
+                  location: SourceLocation(pos=18, lineno=2, colno=5)
+                  end_location: SourceLocation(pos=24, lineno=2, colno=11)
+                  operator: '+='
+                  target:
+                    <class 'mecha.contrib.scripting.ast.AstAssignmentTargetIdentifier'>
+                      location: SourceLocation(pos=18, lineno=2, colno=5)
+                      end_location: SourceLocation(pos=19, lineno=2, colno=6)
+                      value: 'b'
+                  value:
+                    <class 'mecha.contrib.scripting.ast.AstIdentifier'>
+                      location: SourceLocation(pos=23, lineno=2, colno=10)
+                      end_location: SourceLocation(pos=24, lineno=2, colno=11)
+                      value: 'a'
+            <class 'mecha.ast.AstCommand'>
+              location: SourceLocation(pos=29, lineno=3, colno=5)
+              end_location: SourceLocation(pos=36, lineno=3, colno=12)
+              identifier: 'say:message'
+              arguments:
+                <class 'mecha.ast.AstMessage'>
+                  location: SourceLocation(pos=33, lineno=3, colno=9)
+                  end_location: SourceLocation(pos=36, lineno=3, colno=12)
+                  fragments:
+                    <class 'mecha.ast.AstLiteral'>
+                      location: SourceLocation(pos=33, lineno=3, colno=9)
+                      end_location: SourceLocation(pos=36, lineno=3, colno=12)
+                      value: 'wat'

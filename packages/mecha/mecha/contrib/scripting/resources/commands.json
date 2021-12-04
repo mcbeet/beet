@@ -1,0 +1,130 @@
+{
+  "type": "root",
+  "children": {
+    "statement": {
+      "type": "argument",
+      "parser": "mecha:scripting:statement",
+      "executable": true
+    },
+    "def": {
+      "type": "literal",
+      "children": {
+        "function": {
+          "type": "argument",
+          "parser": "mecha:scripting:function_signature",
+          "children": {
+            "body": {
+              "type": "argument",
+              "parser": "mecha:scripting:function_root",
+              "executable": true
+            }
+          }
+        }
+      }
+    },
+    "return": {
+      "type": "literal",
+      "executable": true,
+      "children": {
+        "value": {
+          "type": "argument",
+          "parser": "mecha:scripting:expression",
+          "executable": true
+        }
+      }
+    },
+    "if": {
+      "type": "literal",
+      "children": {
+        "condition": {
+          "type": "argument",
+          "parser": "mecha:scripting:expression",
+          "children": {
+            "body": {
+              "type": "argument",
+              "parser": "mecha:nested_root",
+              "executable": true
+            }
+          }
+        }
+      }
+    },
+    "elif": {
+      "type": "literal",
+      "children": {
+        "condition": {
+          "type": "argument",
+          "parser": "mecha:scripting:expression",
+          "children": {
+            "body": {
+              "type": "argument",
+              "parser": "mecha:nested_root",
+              "executable": true
+            }
+          }
+        }
+      }
+    },
+    "else": {
+      "type": "literal",
+      "children": {
+        "body": {
+          "type": "argument",
+          "parser": "mecha:nested_root",
+          "executable": true
+        }
+      }
+    },
+    "while": {
+      "type": "literal",
+      "children": {
+        "condition": {
+          "type": "argument",
+          "parser": "mecha:scripting:expression",
+          "children": {
+            "body": {
+              "type": "argument",
+              "parser": "mecha:nested_root",
+              "executable": true
+            }
+          }
+        }
+      }
+    },
+    "for": {
+      "type": "literal",
+      "children": {
+        "target": {
+          "type": "argument",
+          "parser": "mecha:scripting:assignment_target",
+          "children": {
+            "in": {
+              "type": "literal",
+              "children": {
+                "iterable": {
+                  "type": "argument",
+                  "parser": "mecha:scripting:expression",
+                  "children": {
+                    "body": {
+                      "type": "argument",
+                      "parser": "mecha:nested_root",
+                      "executable": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "break": {
+      "type": "literal",
+      "executable": true
+    },
+    "continue": {
+      "type": "literal",
+      "executable": true
+    }
+  }
+}

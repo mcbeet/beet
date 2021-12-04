@@ -359,3 +359,11 @@ at @s if "foo" == "bar"
 ###
 at @s for i in "foo"
     say yolo
+###
+say hello
+###
+def wat()
+    say hello
+###
+a = ''
+tellraw @p a

@@ -1,0 +1,74 @@
+_mecha_helper_children = _mecha_runtime.helpers['children']
+_mecha_helper_replace = _mecha_runtime.helpers['replace']
+with _mecha_runtime.scope() as _mecha_var0:
+    def f():
+        def g():
+            return foo
+        foo = 0
+_mecha_var1 = _mecha_helper_replace(_mecha_refs[0], commands=_mecha_helper_children(_mecha_var0))
+---
+output = _mecha_var1
+---
+_mecha_refs[0]
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=50, lineno=4, colno=12)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=50, lineno=4, colno=12)
+      identifier: 'def:function:body'
+      arguments:
+        <class 'mecha.contrib.scripting.ast.AstFunctionSignature'>
+          location: SourceLocation(pos=4, lineno=1, colno=5)
+          end_location: SourceLocation(pos=7, lineno=1, colno=8)
+          name: 'f'
+          arguments:
+            <empty>
+        <class 'mecha.ast.AstRoot'>
+          location: SourceLocation(pos=12, lineno=2, colno=5)
+          end_location: SourceLocation(pos=50, lineno=4, colno=12)
+          commands:
+            <class 'mecha.ast.AstCommand'>
+              location: SourceLocation(pos=12, lineno=2, colno=5)
+              end_location: SourceLocation(pos=38, lineno=3, colno=19)
+              identifier: 'def:function:body'
+              arguments:
+                <class 'mecha.contrib.scripting.ast.AstFunctionSignature'>
+                  location: SourceLocation(pos=16, lineno=2, colno=9)
+                  end_location: SourceLocation(pos=19, lineno=2, colno=12)
+                  name: 'g'
+                  arguments:
+                    <empty>
+                <class 'mecha.ast.AstRoot'>
+                  location: SourceLocation(pos=28, lineno=3, colno=9)
+                  end_location: SourceLocation(pos=38, lineno=3, colno=19)
+                  commands:
+                    <class 'mecha.ast.AstCommand'>
+                      location: SourceLocation(pos=28, lineno=3, colno=9)
+                      end_location: SourceLocation(pos=38, lineno=3, colno=19)
+                      identifier: 'return:value'
+                      arguments:
+                        <class 'mecha.contrib.scripting.ast.AstIdentifier'>
+                          location: SourceLocation(pos=35, lineno=3, colno=16)
+                          end_location: SourceLocation(pos=38, lineno=3, colno=19)
+                          value: 'foo'
+            <class 'mecha.ast.AstCommand'>
+              location: SourceLocation(pos=43, lineno=4, colno=5)
+              end_location: SourceLocation(pos=50, lineno=4, colno=12)
+              identifier: 'statement'
+              arguments:
+                <class 'mecha.contrib.scripting.ast.AstAssignment'>
+                  location: SourceLocation(pos=43, lineno=4, colno=5)
+                  end_location: SourceLocation(pos=50, lineno=4, colno=12)
+                  operator: '='
+                  target:
+                    <class 'mecha.contrib.scripting.ast.AstAssignmentTargetIdentifier'>
+                      location: SourceLocation(pos=43, lineno=4, colno=5)
+                      end_location: SourceLocation(pos=46, lineno=4, colno=8)
+                      value: 'foo'
+                  value:
+                    <class 'mecha.contrib.scripting.ast.AstValue'>
+                      location: SourceLocation(pos=49, lineno=4, colno=11)
+                      end_location: SourceLocation(pos=50, lineno=4, colno=12)
+                      value: 0

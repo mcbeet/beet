@@ -17,7 +17,8 @@ __all__ = [
     "ReturnConstraint",
     "BinaryParser",
     "UnaryParser",
-    "AtomParser",
+    "PrimaryParser",
+    "LiteralParser",
 ]
 
 
@@ -29,6 +30,7 @@ from beet.core.utils import required_field
 from tokenstream import InvalidSyntax, Token, TokenStream, UnexpectedToken, set_location
 
 from mecha import (
+    AlternativeParser,
     AstChildren,
     AstCommand,
     AstRoot,
@@ -46,6 +48,7 @@ from .ast import (
     AstAssignmentTargetIdentifier,
     AstAttribute,
     AstCall,
+    AstCommandInterpolation,
     AstDict,
     AstDictItem,
     AstExpression,
@@ -61,6 +64,9 @@ from .ast import (
 )
 from .utils import ScriptingQuoteHelper
 
+TRUE_PATTERN: str = r"\b[tT]rue\b"
+FALSE_PATTERN: str = r"\b[fF]alse\b"
+NULL_PATTERN: str = r"\b(?:null|None)\b"
 IDENTIFIER_PATTERN: str = r"[a-zA-Z_][a-zA-Z0-9_]*"
 STRING_PATTERN: str = r'"(?:\\.|[^\\\n])*?"' "|" r"'(?:\\.|[^\\\n])*?'"
 NUMBER_PATTERN: str = r"(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?\b"
@@ -97,7 +103,8 @@ def get_scripting_parsers(parsers: Dict[str, Parser]) -> Dict[str, Parser]:
         "scripting:augmented_assignment_target": AssignmentTargetParser(),
         "scripting:function_signature": parse_function_signature,
         "scripting:function_root": parse_function_root,
-        "scripting:interpolated_command_argument": delegate("scripting:primary"),
+        "scripting:interpolation": PrimaryParser(delegate("scripting:identifier")),
+        "scripting:identifier": parse_identifier,
         "scripting:expression": delegate("scripting:disjunction"),
         "scripting:disjunction": BinaryParser(
             operators=[r"\bor\b"],
@@ -159,8 +166,14 @@ def get_scripting_parsers(parsers: Dict[str, Parser]) -> Dict[str, Parser]:
             parser=delegate("scripting:primary"),
             right_associative=True,
         ),
-        "scripting:primary": PrimaryParser(),
-        "scripting:atom": AtomParser(),
+        "scripting:primary": PrimaryParser(delegate("scripting:atom")),
+        "scripting:atom": AlternativeParser(
+            [
+                delegate("scripting:identifier"),
+                delegate("scripting:literal"),
+            ]
+        ),
+        "scripting:literal": LiteralParser(),
     }
 
 
@@ -251,12 +264,15 @@ class InterpolatedArgumentParser:
         ):
             return self.parser(stream)
 
-        for parser, alternative in stream.choose(
-            delegate("scripting:interpolated_command_argument"),
-            self.parser,
-        ):
+        for parser, alternative in stream.choose("interpolation", "argument"):
             with alternative:
-                return parser(stream)
+                if parser == "interpolation":
+                    node = delegate("scripting:interpolation", stream)
+                    return set_location(
+                        AstCommandInterpolation(scope=scope, value=node), node
+                    )
+                elif parser == "argument":
+                    return self.parser(stream)
 
 
 def parse_statement(stream: TokenStream) -> Any:
@@ -452,6 +468,25 @@ def parse_function_root(stream: TokenStream) -> AstFunctionRoot:
     return set_location(node, token, stream.current)
 
 
+def parse_identifier(stream: TokenStream) -> AstIdentifier:
+    """Parse identifier."""
+    identifiers = get_stream_identifiers(stream)
+
+    with stream.syntax(
+        true=TRUE_PATTERN,
+        false=FALSE_PATTERN,
+        null=NULL_PATTERN,
+        identifier=IDENTIFIER_PATTERN,
+    ):
+        token = stream.expect("identifier")
+
+    if token.value not in identifiers:
+        exc = UndefinedIdentifier(token, identifiers)
+        raise set_location(exc, token)
+
+    return set_location(AstIdentifier(value=token.value), token)
+
+
 @dataclass
 class FunctionRootBacktracker:
     """Parser for backtracking over function root nodes."""
@@ -570,10 +605,17 @@ class UnaryParser:
 class PrimaryParser:
     """Parser for primary expressions."""
 
+    parser: Parser
     quote_helper: QuoteHelper = field(default_factory=ScriptingQuoteHelper)
 
     def __call__(self, stream: TokenStream) -> Any:
-        node = delegate("scripting:atom", stream)
+        with stream.syntax(brace=r"\(|\)"):
+            if stream.get(("brace", "(")):
+                with stream.ignore("newline"):
+                    node = delegate("scripting:expression", stream)
+                    stream.expect(("brace", ")"))
+            else:
+                node = self.parser(stream)
 
         with stream.syntax(
             dot=r"\.",
@@ -630,8 +672,8 @@ class PrimaryParser:
 
 
 @dataclass
-class AtomParser:
-    """Parser for atoms."""
+class LiteralParser:
+    """Parser for literals."""
 
     quote_helper: QuoteHelper = field(default_factory=ScriptingQuoteHelper)
 
@@ -639,45 +681,26 @@ class AtomParser:
         identifiers = get_stream_identifiers(stream)
 
         with stream.syntax(
-            brace=r"\(|\)",
             curly=r"\{|\}",
             bracket=r"\[|\]",
             colon=r":",
             comma=r",",
-            true=r"\b[tT]rue\b",
-            false=r"\b[fF]alse\b",
-            null=r"\b(?:null|None)\b",
+            true=TRUE_PATTERN,
+            false=FALSE_PATTERN,
+            null=NULL_PATTERN,
             identifier=IDENTIFIER_PATTERN,
             string=STRING_PATTERN,
             number=NUMBER_PATTERN,
         ):
-            (
-                brace,
-                curly,
-                bracket,
-                true,
-                false,
-                null,
-                identifier,
-                string,
-                number,
-            ) = stream.expect(
-                ("brace", "("),
+            curly, bracket, true, false, null, string, number = stream.expect(
                 ("curly", "{"),
                 ("bracket", "["),
                 "true",
                 "false",
                 "null",
-                "identifier",
                 "string",
                 "number",
             )
-
-            if brace:
-                with stream.ignore("newline"):
-                    inner = delegate("scripting:expression", stream)
-                    stream.expect(("brace", ")"))
-                return inner
 
             if curly:
                 items: List[AstDictItem] = []
@@ -725,12 +748,6 @@ class AtomParser:
 
                 node = AstList(items=AstChildren(elements))
                 return set_location(node, bracket, stream.current)
-
-            if identifier:
-                if identifier.value not in identifiers:
-                    exc = UndefinedIdentifier(identifier, identifiers)
-                    raise set_location(exc, identifier)
-                return set_location(AstIdentifier(value=identifier.value), identifier)
 
             if true:
                 value = True
