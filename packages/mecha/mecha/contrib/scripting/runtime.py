@@ -83,7 +83,7 @@ class Runtime:
         self.commands = []
         self.helpers = get_scripting_helpers()
 
-        mc.cache_backend = ModuleCacheBackend(self)
+        mc.cache_backend = ModuleCacheBackend(runtime=self)
 
     def get_module(
         self,
@@ -153,7 +153,7 @@ class Runtime:
 class ModuleCacheBackend(AstCacheBackend):
     """Cache backend that also restores the generated modules."""
 
-    runtime: Runtime
+    runtime: Runtime = required_field()
 
     def load(self, f: BufferedReader) -> AstRoot:
         data = self.load_data(f)

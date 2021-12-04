@@ -27,12 +27,10 @@ from typing import (
 )
 
 from beet import Cache, Context, DataPack, Function, TextFileBase
-from beet.core.utils import FileSystemPath, JsonDict, extra_field
+from beet.core.utils import FileSystemPath, JsonDict, extra_field, import_from_string
 from pydantic import BaseModel
 from tokenstream import InvalidSyntax, TokenStream
 from tokenstream.location import set_location
-
-from mecha import __version__
 
 from .ast import AstNode, AstRoot
 from .config import CommandTree
@@ -56,19 +54,22 @@ TextFileType = TypeVar("TextFileType", bound=TextFileBase[Any])
 logger = logging.getLogger("mecha")
 
 
+@dataclass
 class AstCacheBackend:
     """Backend for the ast cache."""
+
+    version: str = import_from_string("mecha.__version__")
 
     def load_data(self, f: BufferedReader) -> JsonDict:
         """Load the pickled data."""
         data = pickle.load(f)
-        if data["mecha"] != __version__ or data["python"] != sys.version:
+        if data["mecha"] != self.version or data["python"] != sys.version:
             raise ValueError("Version mismatch.")
         return data
 
     def dump_data(self, data: JsonDict, f: BufferedWriter):
         """Dump the pickled data."""
-        data["mecha"] = __version__
+        data["mecha"] = self.version
         data["python"] = sys.version
         pickle.dump(data, f)
 
