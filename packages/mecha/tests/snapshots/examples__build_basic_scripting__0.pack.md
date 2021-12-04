@@ -37,6 +37,7 @@ say AAA
 say BBB
 say CCC
 say just once
+execute as @a at @s if block ~ ~-1 ~ #wool run give @s stone{display: {Name: '{"text": "Hello", "bold": true}'}}
 ```
 
 `@function demo:foo/nested_execute_0`

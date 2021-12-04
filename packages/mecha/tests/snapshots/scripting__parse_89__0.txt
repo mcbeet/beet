@@ -36,10 +36,10 @@ f("thing")
                   variable: 'a'
                   arguments:
                     <empty>
-                <class 'mecha.contrib.scripting.ast.AstCommandInterpolation'>
+                <class 'mecha.contrib.scripting.ast.AstInterpolation'>
                   location: SourceLocation(pos=24, lineno=2, colno=16)
                   end_location: SourceLocation(pos=25, lineno=2, colno=17)
-                  scope: ('tellraw', 'targets', 'message')
+                  converter: 'json'
                   value:
                     <class 'mecha.contrib.scripting.ast.AstIdentifier'>
                       location: SourceLocation(pos=24, lineno=2, colno=16)

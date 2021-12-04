@@ -5,7 +5,7 @@ __all__ = [
     "UndefinedIdentifier",
     "create_scripting_root_parser",
     "ExecuteIfConditionConstraint",
-    "InterpolatedArgumentParser",
+    "InterpolationParser",
     "parse_statement",
     "AssignmentTargetParser",
     "IfElseConstraint",
@@ -38,7 +38,6 @@ from mecha import (
     consume_line_continuation,
     delegate,
     get_stream_scope,
-    get_stream_spec,
 )
 from mecha.utils import QuoteHelper, normalize_whitespace, string_to_number
 
@@ -48,7 +47,6 @@ from .ast import (
     AstAssignmentTargetIdentifier,
     AstAttribute,
     AstCall,
-    AstCommandInterpolation,
     AstDict,
     AstDictItem,
     AstExpression,
@@ -58,6 +56,7 @@ from .ast import (
     AstFunctionSignature,
     AstFunctionSignatureArgument,
     AstIdentifier,
+    AstInterpolation,
     AstList,
     AstLookup,
     AstValue,
@@ -81,7 +80,6 @@ def get_scripting_parsers(parsers: Dict[str, Parser]) -> Dict[str, Parser]:
         "root": create_scripting_root_parser(parsers["root"]),
         "nested_root": create_scripting_root_parser(parsers["nested_root"]),
         "command": ExecuteIfConditionConstraint(parsers["command"]),
-        "command:argument": InterpolatedArgumentParser(parsers["command:argument"]),
         "command:argument:mecha:scripting:statement": delegate("scripting:statement"),
         "command:argument:mecha:scripting:assignment_target": delegate(
             "scripting:assignment_target"
@@ -174,6 +172,28 @@ def get_scripting_parsers(parsers: Dict[str, Parser]) -> Dict[str, Parser]:
             ]
         ),
         "scripting:literal": LiteralParser(),
+        ################################################################################
+        # Interpolation
+        ################################################################################
+        "literal": InterpolationParser("literal", parsers["literal"]),
+        "bool": InterpolationParser("bool", parsers["bool"]),
+        "numeric": InterpolationParser("numeric", parsers["numeric"]),
+        "time": InterpolationParser("time", parsers["time"]),
+        "word": InterpolationParser("literal", parsers["word"]),
+        "phrase": InterpolationParser("string", parsers["phrase"]),
+        "greedy": InterpolationParser("literal", parsers["greedy"]),
+        "json": InterpolationParser("json", parsers["json"]),
+        "nbt": InterpolationParser("nbt", parsers["nbt"]),
+        "range": InterpolationParser("range", parsers["range"]),
+        "resource_location_or_tag": InterpolationParser(
+            "resource_location", parsers["resource_location_or_tag"]
+        ),
+        "objective": InterpolationParser("literal", parsers["objective"]),
+        "swizzle": InterpolationParser("literal", parsers["swizzle"]),
+        "team": InterpolationParser("literal", parsers["team"]),
+        "command:argument:minecraft:message": InterpolationParser(
+            "message", parsers["command:argument:minecraft:message"]
+        ),
     }
 
 
@@ -246,31 +266,19 @@ class ExecuteIfConditionConstraint:
 
 
 @dataclass
-class InterpolatedArgumentParser:
-    """Parser for interpolated command arguments."""
+class InterpolationParser:
+    """Parser for interpolation."""
 
+    converter: str
     parser: Parser
 
     def __call__(self, stream: TokenStream) -> Any:
-        spec = get_stream_spec(stream)
-        scope = get_stream_scope(stream)
-
-        tree = spec.tree.get(scope)
-
-        if (
-            tree
-            and tree.parser
-            and tree.parser.startswith(("mecha:scripting", "mecha:nested_root"))
-        ):
-            return self.parser(stream)
-
         for parser, alternative in stream.choose("interpolation", "argument"):
             with alternative:
                 if parser == "interpolation":
                     node = delegate("scripting:interpolation", stream)
-                    return set_location(
-                        AstCommandInterpolation(scope=scope, value=node), node
-                    )
+                    node = AstInterpolation(converter=self.converter, value=node)
+                    return set_location(node, node.value)
                 elif parser == "argument":
                     return self.parser(stream)
 

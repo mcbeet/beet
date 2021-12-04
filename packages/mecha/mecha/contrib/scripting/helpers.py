@@ -3,11 +3,9 @@ __all__ = [
 ]
 
 
-import re
 from dataclasses import replace
 from typing import Any, Dict, Union, cast
 
-from beet.core.utils import JsonDict
 from tokenstream import set_location
 
 from mecha import (
@@ -15,13 +13,15 @@ from mecha import (
     AstChildren,
     AstJson,
     AstLiteral,
-    AstNode,
+    AstMessage,
     AstNumber,
+    AstResourceLocation,
+    AstSelector,
     AstString,
+    AstTime,
 )
-from mecha.ast import AstMessage, AstSelector
-
-WORD_REGEX = re.compile(r"[0-9A-Za-z_\.\+\-]+")
+from mecha.ast import AstNbt, AstRange
+from mecha.utils import string_to_number
 
 
 def get_scripting_helpers() -> Dict[str, Any]:
@@ -32,14 +32,16 @@ def get_scripting_helpers() -> Dict[str, Any]:
         "children": AstChildren,
         "set_location": set_location,
         "get_attribute": get_attribute,
-        "convert:brigadier:bool": convert_bool,
-        "convert:brigadier:double": convert_float,
-        "convert:brigadier:float": convert_float,
-        "convert:brigadier:integer": convert_int,
-        "convert:brigadier:long": convert_int,
-        "convert:brigadier:string": convert_string,
-        "convert:minecraft:component": convert_json,
-        "convert:minecraft:message": convert_message,
+        "convert_literal": convert_literal,
+        "convert_bool": convert_bool,
+        "convert_numeric": convert_numeric,
+        "convert_time": convert_time,
+        "convert_string": convert_string,
+        "convert_json": convert_json,
+        "convert_nbt": convert_nbt,
+        "convert_range": convert_range,
+        "convert_resource_location": convert_resource_location,
+        "convert_message": convert_message,
     }
 
 
@@ -51,39 +53,45 @@ def get_attribute(obj: Any, attr: str):
     return obj[attr]
 
 
-def convert_bool(obj: Any, properties: JsonDict) -> AstBool:
+def convert_literal(obj: Any) -> AstLiteral:
+    return AstLiteral(value=str(obj))
+
+
+def convert_bool(obj: Any) -> AstBool:
     return AstBool(value=bool(obj))
 
 
-def convert_float(obj: Any, properties: JsonDict) -> AstNumber:
-    return AstNumber(value=float(obj))
+def convert_numeric(obj: Any) -> AstNumber:
+    if isinstance(obj, str):
+        obj = string_to_number(obj)
+    return AstNumber(value=obj)
 
 
-def convert_int(obj: Any, properties: JsonDict) -> AstNumber:
-    return AstNumber(value=int(obj))
+def convert_time(obj: Any) -> AstTime:
+    return AstTime.from_value(obj)
 
 
-def convert_string(obj: Any, properties: JsonDict) -> AstNode:
-    value = str(obj)
-    string_type = properties["type"]
-
-    if string_type == "greedy":
-        return AstLiteral(value=value)
-    elif string_type == "word":
-        if WORD_REGEX.match(value):
-            return AstLiteral(value=value)
-        raise ValueError("Invalid word {value!r}.")
-    elif string_type == "phrase":
-        return AstString(value=value)
-
-    raise ValueError(f"Invalid string type {string_type!r}.")
+def convert_string(obj: Any) -> AstString:
+    return AstString(value=str(obj))
 
 
-def convert_json(obj: Any, properties: JsonDict) -> AstJson:
+def convert_json(obj: Any) -> AstJson:
     return AstJson.from_value(obj)
 
 
-def convert_message(obj: Any, properties: JsonDict) -> AstMessage:
+def convert_nbt(obj: Any) -> AstNbt:
+    return AstNbt.from_value(obj)
+
+
+def convert_range(obj: Any) -> AstRange:
+    return AstRange.from_value(obj)
+
+
+def convert_resource_location(obj: Any) -> AstResourceLocation:
+    return AstResourceLocation.from_value(str(obj))
+
+
+def convert_message(obj: Any) -> AstMessage:
     fragments = AstChildren([AstLiteral(value=str(obj))])
     return AstMessage(
         fragments=cast(AstChildren[Union[AstLiteral, AstSelector]], fragments)

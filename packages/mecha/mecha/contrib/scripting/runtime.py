@@ -74,7 +74,7 @@ class Runtime:
 
         self.directory = mc.directory
         self.database = mc.database
-        self.codegen = Codegen(spec=mc.spec)
+        self.codegen = Codegen()
 
         self.evaluate = Evaluator(runtime=self)
         mc.steps.insert(0, self.evaluate)

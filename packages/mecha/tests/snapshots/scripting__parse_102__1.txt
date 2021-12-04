@@ -1,19 +1,19 @@
-_mecha_helper_convert_minecraft_component = _mecha_runtime.helpers['convert:minecraft:component']
+_mecha_helper_convert_json = _mecha_runtime.helpers['convert_json']
 _mecha_helper_set_location = _mecha_runtime.helpers['set_location']
 _mecha_helper_children = _mecha_runtime.helpers['children']
 _mecha_helper_replace = _mecha_runtime.helpers['replace']
 with _mecha_runtime.scope() as _mecha_var0:
     a = ''
-    _mecha_runtime.commands.append(_mecha_helper_replace(_mecha_refs[2], arguments=_mecha_helper_children([_mecha_refs[1], _mecha_helper_set_location(_mecha_helper_convert_minecraft_component(a, {}), _mecha_refs[0])])))
+    _mecha_runtime.commands.append(_mecha_helper_replace(_mecha_refs[2], arguments=_mecha_helper_children([_mecha_refs[1], _mecha_helper_set_location(_mecha_helper_convert_json(a), _mecha_refs[0])])))
 _mecha_var1 = _mecha_helper_replace(_mecha_refs[3], commands=_mecha_helper_children(_mecha_var0))
 ---
 output = _mecha_var1
 ---
 _mecha_refs[0]
-<class 'mecha.contrib.scripting.ast.AstCommandInterpolation'>
+<class 'mecha.contrib.scripting.ast.AstInterpolation'>
   location: SourceLocation(pos=18, lineno=2, colno=12)
   end_location: SourceLocation(pos=19, lineno=2, colno=13)
-  scope: ('tellraw', 'targets', 'message')
+  converter: 'json'
   value:
     <class 'mecha.contrib.scripting.ast.AstIdentifier'>
       location: SourceLocation(pos=18, lineno=2, colno=12)
@@ -38,10 +38,10 @@ _mecha_refs[2]
       variable: 'p'
       arguments:
         <empty>
-    <class 'mecha.contrib.scripting.ast.AstCommandInterpolation'>
+    <class 'mecha.contrib.scripting.ast.AstInterpolation'>
       location: SourceLocation(pos=18, lineno=2, colno=12)
       end_location: SourceLocation(pos=19, lineno=2, colno=13)
-      scope: ('tellraw', 'targets', 'message')
+      converter: 'json'
       value:
         <class 'mecha.contrib.scripting.ast.AstIdentifier'>
           location: SourceLocation(pos=18, lineno=2, colno=12)
@@ -82,10 +82,10 @@ _mecha_refs[3]
           variable: 'p'
           arguments:
             <empty>
-        <class 'mecha.contrib.scripting.ast.AstCommandInterpolation'>
+        <class 'mecha.contrib.scripting.ast.AstInterpolation'>
           location: SourceLocation(pos=18, lineno=2, colno=12)
           end_location: SourceLocation(pos=19, lineno=2, colno=13)
-          scope: ('tellraw', 'targets', 'message')
+          converter: 'json'
           value:
             <class 'mecha.contrib.scripting.ast.AstIdentifier'>
               location: SourceLocation(pos=18, lineno=2, colno=12)

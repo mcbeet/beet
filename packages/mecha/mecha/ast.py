@@ -70,10 +70,12 @@ from uuid import UUID
 from beet.core.utils import extra_field, required_field
 
 # pyright: reportMissingTypeStubs=false
-from nbtlib import ByteArray, Compound, IntArray
+from nbtlib import Byte, ByteArray, Compound, Double, Int, IntArray
 from nbtlib import List as ListTag
-from nbtlib import LongArray
+from nbtlib import LongArray, String
 from tokenstream import UNKNOWN_LOCATION, SourceLocation, set_location
+
+from .utils import string_to_number
 
 T = TypeVar("T")
 AstNodeType = TypeVar("AstNodeType", bound="AstNode")
@@ -245,11 +247,11 @@ class AstJson(AstNode):
         if value is None or isinstance(value, (bool, str, int, float)):
             return AstJsonValue(value=value)
         elif isinstance(value, Mapping):
-            object: Mapping[str, Any] = value
+            object: Mapping[Any, Any] = value
             return AstJsonObject(
                 entries=AstChildren(
                     AstJsonObjectEntry(
-                        key=AstJsonObjectKey(value=k),
+                        key=AstJsonObjectKey(value=str(k)),
                         value=cls.from_value(v),
                     )
                     for k, v in object.items()
@@ -322,6 +324,34 @@ class AstNbt(AstNode):
     def evaluate(self) -> Any:
         """Return the nbt value."""
         raise NotImplementedError()
+
+    @classmethod
+    def from_value(cls, value: Any) -> "AstNbt":
+        """Create nbt ast nodes representing the specified value."""
+        if isinstance(value, bool):
+            return AstNbtValue(value=Byte(1 if value else 0))
+        elif isinstance(value, int):
+            return AstNbtValue(value=Int(value))
+        elif isinstance(value, float):
+            return AstNbtValue(value=Double(value))
+        elif isinstance(value, str):
+            return AstNbtValue(value=String(value))
+        elif isinstance(value, Mapping):
+            compound: Mapping[Any, Any] = value
+            return AstNbtCompound(
+                entries=AstChildren(
+                    AstNbtCompoundEntry(
+                        key=AstNbtCompoundKey(value=str(k)),
+                        value=cls.from_value(v),
+                    )
+                    for k, v in compound.items()
+                )
+            )
+        elif isinstance(value, Sequence):
+            lst: Sequence[Any] = value
+            return AstNbtList(elements=AstChildren(cls.from_value(e) for e in lst))
+        else:
+            raise ValueError(f"Invalid nbt value of type {type(value)!r}.")
 
 
 @dataclass(frozen=True)
@@ -476,6 +506,8 @@ class AstRange(AstNode):
     min: Optional[Union[int, float]] = required_field()
     max: Optional[Union[int, float]] = required_field()
 
+    parser = "range"
+
     @property
     def exact(self) -> bool:
         """Wether the range is an exact match."""
@@ -486,7 +518,21 @@ class AstRange(AstNode):
         """Return the exact value."""
         return self.min  # type: ignore
 
-    parser = "range"
+    @classmethod
+    def from_value(cls, value: Union[str, int, float]) -> "AstRange":
+        """Create a range node from a given value."""
+        if isinstance(value, (int, float)):
+            return AstRange(min=value, max=value)
+
+        minimum, separator, maximum = value.partition("..")
+
+        if not separator:
+            maximum = minimum
+
+        return AstRange(
+            min=string_to_number(minimum) if minimum else None,
+            max=string_to_number(maximum) if maximum else None,
+        )
 
 
 @dataclass(frozen=True)
@@ -497,6 +543,24 @@ class AstTime(AstNode):
     unit: Literal["day", "second", "tick"] = "tick"
 
     parser = "time"
+
+    @classmethod
+    def from_value(cls, value: Union[str, int, float]) -> "AstTime":
+        """Create a time node from a given value."""
+        unit = "tick"
+
+        if isinstance(value, str):
+            if value.endswith(("d", "s", "t")):
+                if value[-1] == "d":
+                    unit = "day"
+                elif value[-1] == "s":
+                    unit = "second"
+                else:
+                    unit = "tick"
+                value = value[:-1]
+            value = string_to_number(value)
+
+        return cls(value=value, unit=unit)
 
 
 @dataclass(frozen=True)

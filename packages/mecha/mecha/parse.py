@@ -888,7 +888,7 @@ class JsonParser:
 
                     stream.expect("colon")
 
-                    value_node = self(stream)
+                    value_node = delegate("json", stream)
 
                     entry_node = AstJsonObjectEntry(key=key_node, value=value_node)
                     entries.append(set_location(entry_node, key_node, value_node))
@@ -905,7 +905,7 @@ class JsonParser:
                 elements: List[AstJson] = []
 
                 for _ in stream.peek_until(("bracket", "]")):
-                    elements.append(self(stream))
+                    elements.append(delegate("json", stream))
 
                     if not stream.get("comma"):
                         stream.expect(("bracket", "]"))
@@ -1006,7 +1006,7 @@ class NbtParser:
 
                     stream.expect("colon")
 
-                    value_node = self(stream)
+                    value_node = delegate("nbt", stream)
 
                     entry_node = AstNbtCompoundEntry(key=key_node, value=value_node)
                     entries.append(set_location(entry_node, key_node, value_node))
@@ -1023,7 +1023,7 @@ class NbtParser:
                 elements: List[AstNbt] = []
 
                 for _ in stream.peek_until(("bracket", "]")):
-                    elements.append(self(stream))
+                    elements.append(delegate("nbt", stream))
 
                     if not stream.get("comma"):
                         stream.expect(("bracket", "]"))
@@ -1324,16 +1324,7 @@ class RangeParser:
     def __call__(self, stream: TokenStream) -> AstRange:
         with stream.syntax(range=self.pattern):
             token = stream.expect("range")
-            minimum, separator, maximum = token.value.partition("..")
-
-            if not separator:
-                maximum = minimum
-
-            node = AstRange(
-                min=string_to_number(minimum) if minimum else None,
-                max=string_to_number(maximum) if maximum else None,
-            )
-            return set_location(node, token)
+            return set_location(AstRange.from_value(token.value), token)
 
 
 @dataclass
@@ -1387,22 +1378,7 @@ class TimeParser(NumericParser):
     pattern: str = NUMBER_PATTERN + r"[dst]?"
 
     def create_node(self, stream: TokenStream) -> Any:
-        token = stream.current
-        value = token.value
-
-        if value.endswith(("d", "s", "t")):
-            if value[-1] == "d":
-                unit = "day"
-            elif value[-1] == "s":
-                unit = "second"
-            else:
-                unit = "tick"
-            value = value[:-1]
-        else:
-            unit = "tick"
-
-        node = AstTime(value=string_to_number(value), unit=unit)
-        return set_location(node, token)
+        return set_location(AstTime.from_value(stream.current.value), stream.current)
 
 
 def parse_uuid(stream: TokenStream) -> AstUUID:
@@ -1863,7 +1839,6 @@ class SingleLineConstraint:
     def __call__(self, stream: TokenStream) -> Any:
         with stream.intercept("newline"):
             return self.parser(stream)
-
 
 
 @dataclass

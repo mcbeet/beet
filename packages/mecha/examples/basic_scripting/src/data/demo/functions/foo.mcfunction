@@ -69,3 +69,10 @@ while True
         break
     say just once
     should_break = True
+
+something = '{"text": "Hello", "bold": true}'
+as @a at @s if block ~ ~-1 ~ #wool give @s stone{
+    display: {
+        Name: something
+    }
+}

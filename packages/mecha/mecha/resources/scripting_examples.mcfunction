@@ -367,3 +367,13 @@ def wat()
 ###
 a = ''
 tellraw @p a
+###
+foo = '[{"text": "Hello", "bold": true}]'
+as @a at @s if block ~ ~-1 ~ #wool give @s stone{
+    display: {
+        Name: foo,
+        Lore: [
+            '[{ "text": "Something else here" }]',
+        ]
+    }
+}

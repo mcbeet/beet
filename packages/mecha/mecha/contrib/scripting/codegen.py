@@ -27,21 +27,21 @@ from typing import (
     overload,
 )
 
-from beet.core.utils import normalize_string, required_field
+from beet.core.utils import normalize_string
 
-from mecha import AstChildren, AstCommand, AstNode, AstRoot, CommandSpec, Visitor, rule
+from mecha import AstChildren, AstCommand, AstNode, AstRoot, Visitor, rule
 
 from .ast import (
     AstAssignment,
     AstAssignmentTargetIdentifier,
     AstAttribute,
     AstCall,
-    AstCommandInterpolation,
     AstDict,
     AstExpressionBinary,
     AstExpressionUnary,
     AstFunctionSignature,
     AstIdentifier,
+    AstInterpolation,
     AstList,
     AstLookup,
     AstValue,
@@ -282,11 +282,8 @@ def visit_body(
         acc.statement(f"_mecha_runtime.commands.extend({acc.make_ref(node)}.commands)")
 
 
-@dataclass
 class Codegen(Visitor):
     """Code generator."""
-
-    spec: CommandSpec = required_field()
 
     def __call__(self, node: AstRoot) -> Tuple[Optional[str], Optional[str], List[Any]]:  # type: ignore
         acc = Accumulator()
@@ -452,22 +449,18 @@ class Codegen(Visitor):
         acc.statement("continue")
         return []
 
-    @rule(AstCommandInterpolation)
-    def command_interpolation(
+    @rule(AstInterpolation)
+    def interpolation(
         self,
-        node: AstCommandInterpolation,
+        node: AstInterpolation,
         acc: Accumulator,
     ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
-        tree = self.spec.tree.get(node.scope)
-        if not tree:
-            raise ValueError("Missing entry for command argument {scope!r}.")
-
         result = yield from visit_single(node.value, required=True)
 
         return [
             acc.helper(
                 "set_location",
-                acc.helper(f"convert:{tree.parser}", result, tree.properties or {}),
+                acc.helper(f"convert_{node.converter}", result),
                 acc.make_ref(node),
             )
         ]
