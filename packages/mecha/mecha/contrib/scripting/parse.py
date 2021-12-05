@@ -646,7 +646,7 @@ class PrimaryParser:
 
                     if identifier:
                         node = AstAttribute(value=node, name=identifier.value)
-                        node = set_location(node, node, identifier)
+                        node = set_location(node, node.value, identifier)
                         continue
 
                     if string:
