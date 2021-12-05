@@ -80,6 +80,10 @@ item replace entity @a inventory.22 from entity @s inventory.22
 item replace entity @a inventory.23 from entity @s inventory.23
 item replace entity @a inventory.24 from entity @s inventory.24
 item replace entity @a inventory.25 from entity @s inventory.25
+say 1
+say 2
+say 3
+say [1, 2, 3, 1, 2, 3]
 ```
 
 `@function demo:foo/nested_execute_0`

@@ -33,6 +33,27 @@
         }
       }
     },
+    "yield": {
+      "type": "literal",
+      "executable": true,
+      "children": {
+        "from": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "parser": "mecha:scripting:expression",
+              "executable": true
+            }
+          }
+        },
+        "value": {
+          "type": "argument",
+          "parser": "mecha:scripting:expression",
+          "executable": true
+        }
+      }
+    },
     "if": {
       "type": "literal",
       "children": {

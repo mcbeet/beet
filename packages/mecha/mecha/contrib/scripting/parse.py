@@ -15,6 +15,7 @@ __all__ = [
     "parse_function_root",
     "FunctionRootBacktracker",
     "ReturnConstraint",
+    "YieldConstraint",
     "BinaryParser",
     "UnaryParser",
     "PrimaryParser",
@@ -240,12 +241,14 @@ def create_scripting_root_parser(parser: Parser):
     return FunctionRootBacktracker(
         FlushPendingIdentifiersParser(
             ReturnConstraint(
-                BreakContinueConstraint(
-                    parser=IfElseConstraint(parser),
-                    allowed_scopes={
-                        ("while", "condition", "body"),
-                        ("for", "target", "in", "iterable", "body"),
-                    },
+                YieldConstraint(
+                    BreakContinueConstraint(
+                        parser=IfElseConstraint(parser),
+                        allowed_scopes={
+                            ("while", "condition", "body"),
+                            ("for", "target", "in", "iterable", "body"),
+                        },
+                    )
                 )
             )
         )
@@ -556,6 +559,25 @@ class ReturnConstraint:
         for command in node.commands:
             if command.identifier in ["return", "return:value"]:
                 exc = InvalidSyntax("Can only use 'return' in functions.")
+                raise set_location(exc, command)
+
+        return node
+
+
+@dataclass
+class YieldConstraint:
+    """Constraint that makes sure that yield statements only occur in functions."""
+
+    parser: Parser
+
+    def __call__(self, stream: TokenStream) -> AstRoot:
+        node: AstRoot = self.parser(stream)
+
+        if stream.data.get("function"):
+            return node
+        for command in node.commands:
+            if command.identifier in ["yield", "yield:value", "yield:from:value"]:
+                exc = InvalidSyntax("Can only use 'yield' in functions.")
                 raise set_location(exc, command)
 
         return node

@@ -390,6 +390,21 @@ class Codegen(Visitor):
         acc.statement(statement)
         return []
 
+    @rule(AstCommand, identifier="yield")
+    @rule(AstCommand, identifier="yield:value")
+    @rule(AstCommand, identifier="yield:from:value")
+    def yield_statement(
+        self,
+        node: AstCommand,
+        acc: Accumulator,
+    ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
+        statement = "yield from" if node.identifier == "yield:from:value" else "yield"
+        if node.arguments:
+            value = yield from visit_single(node.arguments[0], required=True)
+            statement += f" {value}"
+        acc.statement(statement)
+        return []
+
     @rule(AstCommand, identifier="if:condition:body")
     def if_statement(
         self,

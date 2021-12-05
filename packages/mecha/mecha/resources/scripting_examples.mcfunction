@@ -408,3 +408,16 @@ yo = f'thing \e'
 ###
 x = 8
 if score @s tmp matches (x, None) say wat
+###
+def f()
+    yield 1
+    yield 2
+    yield 3
+for i in f()
+    say i
+###
+if True
+    yield
+###
+def f()
+    yield

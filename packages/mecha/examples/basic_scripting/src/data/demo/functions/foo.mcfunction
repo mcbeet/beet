@@ -96,3 +96,17 @@ def copy_items(type, count)
 
 copy_items('hotbar', 9)
 copy_items('inventory', 26)
+
+def f()
+    yield 1
+    yield 2
+    yield 3
+
+for i in f()
+    say i
+
+def wow(ok)
+    yield from ok()
+    yield from ok()
+
+say list(wow(f))
