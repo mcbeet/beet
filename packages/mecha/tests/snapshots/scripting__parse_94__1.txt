@@ -1,8 +1,19 @@
+_mecha_lineno = [1, 1, 1, 1, 1, 1, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 4]
 _mecha_helper_children = _mecha_runtime.helpers['children']
 _mecha_helper_replace = _mecha_runtime.helpers['replace']
 with _mecha_runtime.scope() as _mecha_var0:
     foo = 'hello'
-    {(foo * 3): 42, (16 + 3): []}
+    (
+#2
+{(
+#3
+(
+#3
+foo) * 3): 42, (
+#4
+16 + 3): (
+#4
+[])})
 _mecha_var1 = _mecha_helper_replace(_mecha_refs[0], commands=_mecha_helper_children(_mecha_var0))
 ---
 output = _mecha_var1

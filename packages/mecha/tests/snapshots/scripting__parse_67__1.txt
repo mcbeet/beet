@@ -1,8 +1,15 @@
+_mecha_lineno = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 _mecha_helper_get_attribute = _mecha_runtime.helpers['get_attribute']
 _mecha_helper_children = _mecha_runtime.helpers['children']
 _mecha_helper_replace = _mecha_runtime.helpers['replace']
 with _mecha_runtime.scope() as _mecha_var0:
-    _mecha_helper_get_attribute('foo', 'bar')()[0]
+    (
+#1
+(
+#1
+(
+#1
+_mecha_helper_get_attribute('foo', 'bar'))())[0])
 _mecha_var1 = _mecha_helper_replace(_mecha_refs[0], commands=_mecha_helper_children(_mecha_var0))
 ---
 output = _mecha_var1
@@ -18,15 +25,15 @@ _mecha_refs[0]
       identifier: 'statement'
       arguments:
         <class 'mecha.contrib.scripting.ast.AstLookup'>
-          location: SourceLocation(pos=-1, lineno=0, colno=0)
+          location: SourceLocation(pos=0, lineno=1, colno=1)
           end_location: SourceLocation(pos=14, lineno=1, colno=15)
           value:
             <class 'mecha.contrib.scripting.ast.AstCall'>
-              location: SourceLocation(pos=-1, lineno=0, colno=0)
+              location: SourceLocation(pos=0, lineno=1, colno=1)
               end_location: SourceLocation(pos=11, lineno=1, colno=12)
               value:
                 <class 'mecha.contrib.scripting.ast.AstAttribute'>
-                  location: SourceLocation(pos=-1, lineno=0, colno=0)
+                  location: SourceLocation(pos=0, lineno=1, colno=1)
                   end_location: SourceLocation(pos=9, lineno=1, colno=10)
                   name: 'bar'
                   value:

@@ -1,9 +1,12 @@
+_mecha_lineno = [1, 1, 1, 1, 1, 1, 1, 3, 3, 3, 3]
 _mecha_helper_children = _mecha_runtime.helpers['children']
 _mecha_helper_replace = _mecha_runtime.helpers['replace']
 with _mecha_runtime.scope() as _mecha_var0:
     def f():
         def g():
-            return foo
+            return (
+#3
+foo)
         foo = 0
 _mecha_var1 = _mecha_helper_replace(_mecha_refs[0], commands=_mecha_helper_children(_mecha_var0))
 ---

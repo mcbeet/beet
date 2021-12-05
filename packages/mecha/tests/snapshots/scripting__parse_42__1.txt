@@ -1,10 +1,15 @@
+_mecha_lineno = [1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 4, 4, 4, 4, 4]
 _mecha_helper_children = _mecha_runtime.helpers['children']
 _mecha_helper_replace = _mecha_runtime.helpers['replace']
 with _mecha_runtime.scope() as _mecha_var1:
     with _mecha_runtime.scope() as _mecha_var0:
-        if ('thing' == 'bar'):
+        if (
+#2
+'thing' == 'bar'):
             _mecha_runtime.commands.extend(_mecha_refs[0].commands)
-        if ('thing' == 'foo'):
+        if (
+#4
+'thing' == 'foo'):
             _mecha_runtime.commands.extend(_mecha_refs[1].commands)
     _mecha_runtime.commands.append(_mecha_helper_replace(_mecha_refs[8], arguments=_mecha_helper_children([_mecha_helper_replace(_mecha_refs[7], arguments=_mecha_helper_children([_mecha_refs[4], _mecha_refs[5], _mecha_refs[6], _mecha_helper_replace(_mecha_refs[3], root=_mecha_helper_replace(_mecha_refs[2], commands=_mecha_helper_children(_mecha_var0)))]))])))
 _mecha_var2 = _mecha_helper_replace(_mecha_refs[9], commands=_mecha_helper_children(_mecha_var1))

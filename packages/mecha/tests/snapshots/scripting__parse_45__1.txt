@@ -1,3 +1,4 @@
+_mecha_lineno = [1, 1, 1, 1, 1, 1, 1, 1, 1]
 _mecha_helper_children = _mecha_runtime.helpers['children']
 _mecha_helper_replace = _mecha_runtime.helpers['replace']
 with _mecha_runtime.scope() as _mecha_var1:

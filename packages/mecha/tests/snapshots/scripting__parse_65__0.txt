@@ -10,7 +10,7 @@
       identifier: 'statement'
       arguments:
         <class 'mecha.contrib.scripting.ast.AstAttribute'>
-          location: SourceLocation(pos=-1, lineno=0, colno=0)
+          location: SourceLocation(pos=0, lineno=1, colno=1)
           end_location: SourceLocation(pos=9, lineno=1, colno=10)
           name: 'bar'
           value:

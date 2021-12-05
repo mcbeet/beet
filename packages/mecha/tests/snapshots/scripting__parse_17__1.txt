@@ -1,7 +1,54 @@
+_mecha_lineno = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 _mecha_helper_children = _mecha_runtime.helpers['children']
 _mecha_helper_replace = _mecha_runtime.helpers['replace']
 with _mecha_runtime.scope() as _mecha_var0:
-    (((False or (True and 'hello')) or (not ('foo' == 'bar'))) or (((((((((1 != 2) and (1 < 2)) and (2 <= 3)) and (5 > 4)) and (6 >= 5)) and (1 in 1)) and (2 not in 2)) and (3 is 3)) and (3 is not 3)))
+    (
+#1
+(
+#1
+(
+#1
+False or (
+#1
+True and 'hello')) or (
+#1
+not (
+#1
+'foo' == 'bar'))) or (
+#1
+(
+#1
+(
+#1
+(
+#1
+(
+#1
+(
+#1
+(
+#1
+(
+#1
+(
+#1
+1 != 2) and (
+#1
+1 < 2)) and (
+#1
+2 <= 3)) and (
+#1
+5 > 4)) and (
+#1
+6 >= 5)) and (
+#1
+1 in 1)) and (
+#1
+2 not in 2)) and (
+#1
+3 is 3)) and (
+#1
+3 is not 3)))
 _mecha_var1 = _mecha_helper_replace(_mecha_refs[0], commands=_mecha_helper_children(_mecha_var0))
 ---
 output = _mecha_var1

@@ -66,7 +66,7 @@ from .utils import ScriptingQuoteHelper
 TRUE_PATTERN: str = r"\b[tT]rue\b"
 FALSE_PATTERN: str = r"\b[fF]alse\b"
 NULL_PATTERN: str = r"\b(?:null|None)\b"
-IDENTIFIER_PATTERN: str = r"[a-zA-Z_][a-zA-Z0-9_]*"
+IDENTIFIER_PATTERN: str = r"(?!_mecha_)[a-zA-Z_][a-zA-Z0-9_]*"
 STRING_PATTERN: str = r'"(?:\\.|[^\\\n])*?"' "|" r"'(?:\\.|[^\\\n])*?'"
 NUMBER_PATTERN: str = r"(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?\b"
 

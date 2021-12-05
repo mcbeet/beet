@@ -15,7 +15,7 @@ from pathlib import Path
 from types import CodeType
 from typing import Any, Dict, Iterator, List, Optional, Union
 
-from beet import Context, TextFileBase
+from beet import Context, PipelineFallthroughException, TextFileBase
 from beet.core.utils import JsonDict, required_field
 
 from mecha import (
@@ -24,6 +24,7 @@ from mecha import (
     AstRoot,
     CommandTree,
     CompilationDatabase,
+    CompilationError,
     Dispatcher,
     Mecha,
     Visitor,
@@ -33,6 +34,7 @@ from mecha import (
 from .codegen import Codegen
 from .helpers import get_scripting_helpers
 from .parse import get_scripting_parsers
+from .utils import rewrite_traceback
 
 
 @dataclass
@@ -43,6 +45,7 @@ class Module:
     code: Optional[CodeType]
     refs: List[Any]
     output: Optional[str]
+    resource_location: Optional[str] = None
     namespace: JsonDict = field(default_factory=dict)
 
 
@@ -98,20 +101,22 @@ class Runtime:
         if module and module.ast is node:
             return module
 
+        compilation_unit = self.database[file_instance]
         source, output, refs = self.codegen(node)
 
         if source and output:
-            if filename := self.database[file_instance].filename:
-                filename = str(self.directory / filename)
-            else:
-                filename = "<mecha>"
+            filename = (
+                str(self.directory / compilation_unit.filename)
+                if compilation_unit.filename
+                else "<mecha>"
+            )
 
             code = compile(source, filename, "exec")
 
         else:
             code = None
 
-        module = Module(node, code, refs, output)
+        module = Module(node, code, refs, output, compilation_unit.resource_location)
         self.modules[file_instance] = module
 
         return module
@@ -125,9 +130,11 @@ class Runtime:
 
         module.namespace["_mecha_runtime"] = self
         module.namespace["_mecha_refs"] = module.refs
+        module.namespace["__name__"] = module.resource_location
         module.namespace["__file__"] = module.code.co_filename
 
-        exec(module.code, module.namespace)
+        with self.error_handler():
+            exec(module.code, module.namespace)
 
         return module.namespace[module.output]
 
@@ -148,6 +155,14 @@ class Runtime:
         finally:
             self.commands = previous_commands
 
+    @contextmanager
+    def error_handler(self):
+        """Handle errors coming from compiled modules."""
+        try:
+            yield
+        except Exception as exc:
+            raise rewrite_traceback(exc) from None
+
 
 @dataclass
 class ModuleCacheBackend(AstCacheBackend):
@@ -164,6 +179,7 @@ class ModuleCacheBackend(AstCacheBackend):
             code=marshal.load(f),
             refs=data["refs"],
             output=data["output"],
+            resource_location=data["resource_location"],
         )
 
         return ast
@@ -176,6 +192,7 @@ class ModuleCacheBackend(AstCacheBackend):
                 "ast": module.ast,
                 "refs": module.refs,
                 "output": module.output,
+                "resource_location": module.resource_location,
             },
             f,
         )
@@ -192,4 +209,13 @@ class Evaluator(Visitor):
     @rule(AstRoot)
     def root(self, node: AstRoot) -> AstRoot:
         module = self.runtime.get_module(node)
-        return self.runtime.get_output(module)
+        try:
+            return self.runtime.get_output(module)
+        except PipelineFallthroughException:
+            raise
+        except Exception as exc:
+            msg = "Top-level statement raised an exception."
+            if module.resource_location:
+                msg += f" ({module.resource_location})"
+            tb = exc.__traceback__.tb_next.tb_next  # type: ignore
+            raise CompilationError(msg) from exc.with_traceback(tb)
