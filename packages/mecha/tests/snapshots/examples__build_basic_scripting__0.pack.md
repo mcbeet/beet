@@ -43,6 +43,8 @@ say (1, 2, 3, 4)
 say ((1, 2, 3, 4),)
 say f-strings 'WORK' too \
 say {{{00000007}\}"}
+execute if score @s tmp matches 8.. run say wat
+execute if score @s tmp matches 8.. run say wat
 ```
 
 `@function demo:foo/nested_execute_0`

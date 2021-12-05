@@ -727,11 +727,9 @@ class IntegerConstraint:
     parser: Parser
 
     def __call__(self, stream: TokenStream) -> Any:
-        node: AstNumber = self.parser(stream)
-
-        if not isinstance(node.value, int):
-            raise node.emit_error(InvalidSyntax("Expected integer value."))
-
+        if isinstance(node := self.parser(stream), AstNumber):
+            if not isinstance(node.value, int):
+                raise node.emit_error(InvalidSyntax("Expected integer value."))
         return node
 
 
@@ -743,14 +741,18 @@ class MinMaxConstraint:
 
     def __call__(self, stream: TokenStream) -> Any:
         properties = get_stream_properties(stream)
-        node: AstNumber = self.parser(stream)
 
-        if "min" in properties and node.value < properties["min"]:
-            exc = InvalidSyntax(f"Expected value to be at least {properties['min']}.")
-            raise node.emit_error(exc)
-        if "max" in properties and node.value > properties["max"]:
-            exc = InvalidSyntax(f"Expected value to be at most {properties['max']}.")
-            raise node.emit_error(exc)
+        if isinstance(node := self.parser(stream), AstNumber):
+            if "min" in properties and node.value < properties["min"]:
+                exc = InvalidSyntax(
+                    f"Expected value to be at least {properties['min']}."
+                )
+                raise node.emit_error(exc)
+            if "max" in properties and node.value > properties["max"]:
+                exc = InvalidSyntax(
+                    f"Expected value to be at most {properties['max']}."
+                )
+                raise node.emit_error(exc)
 
         return node
 
@@ -763,12 +765,10 @@ class RestrictCoordinateConstraint:
     disallow: List[Literal["absolute", "relative", "local"]]
 
     def __call__(self, stream: TokenStream) -> Any:
-        node: AstCoordinate = self.parser(stream)
-
-        if node.type in self.disallow:
-            exc = InvalidSyntax(f"Specifying {node.type} coordinates not allowed.")
-            raise node.emit_error(exc)
-
+        if isinstance(node := self.parser(stream), AstCoordinate):
+            if node.type in self.disallow:
+                exc = InvalidSyntax(f"Specifying {node.type} coordinates not allowed.")
+                raise node.emit_error(exc)
         return node
 
 
@@ -1141,12 +1141,12 @@ class NoTagConstraint:
     parser: Parser
 
     def __call__(self, stream: TokenStream) -> Any:
-        node: AstResourceLocation = self.parser(stream)
-
-        if node.is_tag:
-            raise node.emit_error(
-                InvalidSyntax(f"Specifying a tag is not allowed {node.get_value()!r}.")
-            )
+        if isinstance(node := self.parser(stream), AstResourceLocation):
+            if node.is_tag:
+                exc = InvalidSyntax(
+                    f"Specifying a tag is not allowed {node.get_value()!r}."
+                )
+                raise node.emit_error(exc)
 
         return node
 
@@ -1262,11 +1262,10 @@ class NoBlockStatesConstraint:
     parser: Parser
 
     def __call__(self, stream: TokenStream) -> Any:
-        node: AstBlock = self.parser(stream)
-
-        if node.block_states:
-            raise node.emit_error(InvalidSyntax("Specifying block states not allowed."))
-
+        if isinstance(node := self.parser(stream), AstBlock):
+            if node.block_states:
+                exc = InvalidSyntax("Specifying block states not allowed.")
+                raise node.emit_error(exc)
         return node
 
 
@@ -1277,11 +1276,10 @@ class NoDataTagsConstraint:
     parser: Parser
 
     def __call__(self, stream: TokenStream) -> Any:
-        node: AstBlock = self.parser(stream)
-
-        if node.data_tags:
-            raise node.emit_error(InvalidSyntax("Specifying data tags not allowed."))
-
+        if isinstance(node := self.parser(stream), AstBlock):
+            if node.data_tags:
+                exc = InvalidSyntax("Specifying data tags not allowed.")
+                raise node.emit_error(exc)
         return node
 
 
@@ -1307,11 +1305,10 @@ class LiteralConstraint:
     values: List[Any]
 
     def __call__(self, stream: TokenStream) -> Any:
-        node: AstLiteral = self.parser(stream)
-
-        if node.value not in self.values:
-            raise node.emit_error(InvalidSyntax(f"Unexpected value {node.value!r}."))
-
+        if isinstance(node := self.parser(stream), AstLiteral):
+            if node.value not in self.values:
+                exc = InvalidSyntax(f"Unexpected value {node.value!r}.")
+                raise node.emit_error(exc)
         return node
 
 
@@ -1334,11 +1331,9 @@ class IntegerRangeConstraint:
     parser: Parser
 
     def __call__(self, stream: TokenStream) -> Any:
-        node: AstRange = self.parser(stream)
-
-        if isinstance(node.min, float) or isinstance(node.max, float):
-            raise node.emit_error(InvalidSyntax("Expected integer range."))
-
+        if isinstance(node := self.parser(stream), AstRange):
+            if isinstance(node.min, float) or isinstance(node.max, float):
+                raise node.emit_error(InvalidSyntax("Expected integer range."))
         return node
 
 
@@ -1350,12 +1345,10 @@ class LengthConstraint:
     limit: int
 
     def __call__(self, stream: TokenStream) -> Any:
-        node: AstLiteral = self.parser(stream)
-
-        if len(node.value) > self.limit:
-            exc = InvalidSyntax(f"Expected up to {self.limit} characters.")
-            raise node.emit_error(exc)
-
+        if isinstance(node := self.parser(stream), AstLiteral):
+            if len(node.value) > self.limit:
+                exc = InvalidSyntax(f"Expected up to {self.limit} characters.")
+                raise node.emit_error(exc)
         return node
 
 
@@ -1466,12 +1459,10 @@ class SelectorArgumentInvertConstraint:
     allow_invert: List[str]
 
     def __call__(self, stream: TokenStream) -> Any:
-        node: AstSelectorArgument = self.parser(stream)
-
-        if node.inverted and node.key.value not in self.allow_invert:
-            exc = InvalidSyntax(f"Can not invert argument {node.key.value!r}.")
-            raise node.emit_error(exc)
-
+        if isinstance(node := self.parser(stream), AstSelectorArgument):
+            if node.inverted and node.key.value not in self.allow_invert:
+                exc = InvalidSyntax(f"Can not invert argument {node.key.value!r}.")
+                raise node.emit_error(exc)
         return node
 
 
@@ -1483,12 +1474,10 @@ class SelectorArgumentNoValueConstraint:
     allow_no_value: List[str]
 
     def __call__(self, stream: TokenStream) -> Any:
-        node: AstSelectorArgument = self.parser(stream)
-
-        if not node.value and node.key.value not in self.allow_no_value:
-            exc = InvalidSyntax(f"Argument {node.key.value!r} must have a value.")
-            raise node.emit_error(exc)
-
+        if isinstance(node := self.parser(stream), AstSelectorArgument):
+            if not node.value and node.key.value not in self.allow_no_value:
+                exc = InvalidSyntax(f"Argument {node.key.value!r} must have a value.")
+                raise node.emit_error(exc)
         return node
 
 
@@ -1575,7 +1564,10 @@ class SelectorPlayerConstraint:
     parser: Parser
 
     def __call__(self, stream: TokenStream) -> Any:
-        node: AstSelector = self.parser(stream)
+        node = self.parser(stream)
+
+        if not isinstance(node, AstSelector):
+            return node
 
         is_player = node.variable in "pras"
 
@@ -1622,7 +1614,10 @@ class SelectorSingleConstraint:
     parser: Parser
 
     def __call__(self, stream: TokenStream) -> Any:
-        node: AstSelector = self.parser(stream)
+        node = self.parser(stream)
+
+        if not isinstance(node, AstSelector):
+            return node
 
         is_single = node.variable in "prs"
 

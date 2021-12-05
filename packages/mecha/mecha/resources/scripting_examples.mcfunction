@@ -405,3 +405,6 @@ yo = f"\\"
 yo = f"}"
 ###
 yo = f'thing \e'
+###
+x = 8
+if score @s tmp matches (x, None) say wat

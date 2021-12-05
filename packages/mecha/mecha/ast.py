@@ -519,10 +519,25 @@ class AstRange(AstNode):
         return self.min  # type: ignore
 
     @classmethod
-    def from_value(cls, value: Union[str, int, float]) -> "AstRange":
+    def from_value(
+        cls,
+        value: Union[
+            str,
+            int,
+            float,
+            Tuple[Union[int, float, str], Union[int, float, str]],
+        ],
+    ) -> "AstRange":
         """Create a range node from a given value."""
         if isinstance(value, (int, float)):
             return AstRange(min=value, max=value)
+
+        if isinstance(value, tuple):
+            min, max = value
+            return AstRange(
+                min=string_to_number(min) if isinstance(min, str) else min,
+                max=string_to_number(max) if isinstance(max, str) else max,
+            )
 
         minimum, separator, maximum = value.partition("..")
 

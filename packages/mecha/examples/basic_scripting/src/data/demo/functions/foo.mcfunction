@@ -84,3 +84,7 @@ say (with_tuples,)
 a = f'\\'
 say f"f-strings {"work".upper()!r} too {a}"
 say f"{{{f"{{{f"{{{7:08}}}\\"}}}\""}}}"
+
+x = 8
+if score @s tmp matches (x, None) say wat
+if score @s tmp matches f"{x}.." say wat
