@@ -110,3 +110,5 @@ def wow(ok)
     yield from ok()
 
 say list(wow(f))
+
+say ctx.generate.id("hello")

@@ -10,7 +10,7 @@ __all__ = [
 
 from dataclasses import dataclass, field
 from types import CodeType, TracebackType
-from typing import Dict, List, Set, Tuple, TypeVar
+from typing import Dict, List, Set, TypeVar
 
 from mecha.utils import QuoteHelperWithUnicode
 
@@ -25,7 +25,7 @@ def internal(f: T) -> T:
     return f
 
 
-SAFE_BUILTINS: Tuple[str, ...] = (
+SAFE_BUILTINS: Set[str] = {
     "abs",
     "all",
     "any",
@@ -75,7 +75,7 @@ SAFE_BUILTINS: Tuple[str, ...] = (
     "tuple",
     "type",
     "zip",
-)
+}
 
 
 @dataclass

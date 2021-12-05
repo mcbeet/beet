@@ -84,6 +84,7 @@ say 1
 say 2
 say 3
 say [1, 2, 3, 1, 2, 3]
+say basic_scripting.hello
 ```
 
 `@function demo:foo/nested_execute_0`

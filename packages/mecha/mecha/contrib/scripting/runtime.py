@@ -7,7 +7,6 @@ __all__ = [
 ]
 
 
-import builtins
 import marshal
 from contextlib import contextmanager
 from dataclasses import dataclass, field
@@ -92,7 +91,7 @@ class Runtime:
         self.modules = {}
         self.commands = []
         self.helpers = get_scripting_helpers()
-        self.globals = {name: getattr(builtins, name) for name in SAFE_BUILTINS}
+        self.globals = {}
 
         if isinstance(ctx, Context):
             self.globals["ctx"] = ctx
@@ -146,6 +145,7 @@ class Runtime:
         if module.output in module.namespace:
             return module.namespace[module.output]
 
+        module.namespace.update(self.globals)
         module.namespace["_mecha_runtime"] = self
         module.namespace["_mecha_refs"] = module.refs
         module.namespace["__name__"] = module.resource_location
@@ -252,5 +252,5 @@ class GlobalsInjection:
     parser: Parser
 
     def __call__(self, stream: TokenStream) -> Any:
-        with stream.provide(identifiers=set(self.runtime.globals)):
+        with stream.provide(identifiers=set(self.runtime.globals) | SAFE_BUILTINS):
             return self.parser(stream)
