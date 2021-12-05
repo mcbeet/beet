@@ -44,6 +44,7 @@ from .ast import (
     AstInterpolation,
     AstList,
     AstLookup,
+    AstTuple,
     AstValue,
 )
 
@@ -504,6 +505,20 @@ class Codegen(Visitor):
     @rule(AstIdentifier)
     def identifier(self, node: AstIdentifier, acc: Accumulator) -> Optional[List[str]]:
         return [f"({acc.lineno(node)}{node.value})"]
+
+    @rule(AstTuple)
+    def tuple(
+        self,
+        node: AstTuple,
+        acc: Accumulator,
+    ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
+        items: List[str] = []
+
+        for item in node.items:
+            value = yield from visit_single(item, required=True)
+            items.append(f"{value},")
+
+        return [f"({acc.lineno(node)}({''.join(items)}))"]
 
     @rule(AstList)
     def list(

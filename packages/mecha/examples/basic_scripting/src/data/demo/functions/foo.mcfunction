@@ -76,3 +76,8 @@ as @a at @s if block ~ ~-1 ~ #wool give @s stone{
         Name: something
     }
 }
+
+with_tuples = ((((())))) + (1,2,3) + (4,)
+say with_tuples
+say (with_tuples)
+say (with_tuples,)

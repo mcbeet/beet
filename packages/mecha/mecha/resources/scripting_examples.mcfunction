@@ -377,3 +377,5 @@ as @a at @s if block ~ ~-1 ~ #wool give @s stone{
         ]
     }
 }
+###
+thing = (1, 'hey') + () + ("wow",)

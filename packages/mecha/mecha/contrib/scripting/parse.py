@@ -59,6 +59,7 @@ from .ast import (
     AstInterpolation,
     AstList,
     AstLookup,
+    AstTuple,
     AstValue,
 )
 from .utils import ScriptingQuoteHelper
@@ -617,11 +618,25 @@ class PrimaryParser:
     quote_helper: QuoteHelper = field(default_factory=ScriptingQuoteHelper)
 
     def __call__(self, stream: TokenStream) -> Any:
-        with stream.syntax(brace=r"\(|\)"):
-            if stream.get(("brace", "(")):
+        with stream.syntax(brace=r"\(|\)", comma=r","):
+            if token := stream.get(("brace", "(")):
                 with stream.ignore("newline"):
-                    node = delegate("scripting:expression", stream)
-                    stream.expect(("brace", ")"))
+                    comma = None
+                    items: List[AstExpression] = []
+
+                    for _ in stream.peek_until(("brace", ")")):
+                        items.append(delegate("scripting:expression", stream))
+
+                        if not (comma := stream.get("comma")):
+                            stream.expect(("brace", ")"))
+                            break
+
+                    if len(items) == 1 and not comma:
+                        node = items[0]
+                    else:
+                        node = AstTuple(items=AstChildren(items))
+                        node = set_location(node, token, stream.current)
+
             else:
                 node = self.parser(stream)
 
