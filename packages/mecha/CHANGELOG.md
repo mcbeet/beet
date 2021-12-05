@@ -2,6 +2,14 @@
 
 <!--next-version-placeholder-->
 
+## v0.19.0 (2021-12-05)
+### Feature
+* Track line numbers and rewrite tracebacks coming from generated code ([`8582212`](https://github.com/mcbeet/mecha/commit/8582212361aed3fa0c6f6dc575cf9d18725478d1))
+
+### Fix
+* Add exception handling to dispatcher ([`d8e9e95`](https://github.com/mcbeet/mecha/commit/d8e9e9563a6d4576efa815e0e4fb3d8f96eea04e))
+* Typo when tracking attribute source location ([`500441d`](https://github.com/mcbeet/mecha/commit/500441d959ba670ef70936a659089160e7584090))
+
 ## v0.18.0 (2021-12-04)
 ### Feature
 * Interpolation now works on most nodes instead of command arguments specifically ([`288f836`](https://github.com/mcbeet/mecha/commit/288f836fff0c447bb743d89b46b1dfc06d53b7f8))
