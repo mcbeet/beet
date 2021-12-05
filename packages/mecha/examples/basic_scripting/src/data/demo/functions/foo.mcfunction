@@ -112,3 +112,17 @@ def wow(ok)
 say list(wow(f))
 
 say ctx.generate.id("hello")
+
+import math
+say math.cos(math.pi)
+
+import math as m
+say (math is m)
+
+from ./thing import do_stuff
+
+say do_stuff(1, math.pi)
+
+import ./thing as thing
+
+say (thing.do_stuff is do_stuff)

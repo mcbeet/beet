@@ -30,6 +30,7 @@ from typing import (
 from beet.core.utils import normalize_string
 
 from mecha import AstChildren, AstCommand, AstNode, AstRoot, Visitor, rule
+from mecha.ast import AstLiteral, AstResourceLocation
 
 from .ast import (
     AstAssignment,
@@ -481,6 +482,52 @@ class Codegen(Visitor):
         acc: Accumulator,
     ) -> Optional[List[str]]:
         acc.statement("continue")
+        return []
+
+    @rule(AstCommand, identifier="import:module")
+    @rule(AstCommand, identifier="import:module:as:alias")
+    @rule(AstCommand, identifier="from:module:import:subcommand")
+    def import_statement(
+        self,
+        node: AstCommand,
+        acc: Accumulator,
+    ) -> Optional[List[str]]:
+        acc.statement(acc.lineno(node))
+
+        module = cast(AstResourceLocation, node.arguments[0])
+
+        if node.identifier == "from:module:import:subcommand":
+            names: List[str] = []
+            subcommand = cast(AstCommand, node.arguments[1])
+
+            while True:
+                if isinstance(name := subcommand.arguments[0], AstLiteral):
+                    names.append(name.value)
+                if subcommand.identifier == "from:module:import:name:subcommand":
+                    subcommand = cast(AstCommand, subcommand.arguments[1])
+                else:
+                    break
+
+            if module.namespace:
+                acc.statement(
+                    f"{', '.join(names)} = _mecha_runtime.from_module_import({module.get_value()!r}, {', '.join(map(repr, names))})"
+                )
+            else:
+                acc.statement(f"from {module.path} import  {', '.join(names)}")
+
+        elif node.identifier == "import:module:as:alias":
+            alias = cast(AstLiteral, node.arguments[1]).value
+
+            if module.namespace:
+                acc.statement(
+                    f"{alias} = _mecha_runtime.import_module({module.get_value()!r}).namespace"
+                )
+            else:
+                acc.statement(f"import {module.path} as {alias}")
+
+        else:
+            acc.statement(f"import {module.path}")
+
         return []
 
     @rule(AstInterpolation)

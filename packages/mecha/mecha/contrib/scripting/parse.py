@@ -13,6 +13,9 @@ __all__ = [
     "FlushPendingIdentifiersParser",
     "parse_function_signature",
     "parse_function_root",
+    "parse_identifier",
+    "ImportLocationConstraint",
+    "ImportStatementHandler",
     "FunctionRootBacktracker",
     "ReturnConstraint",
     "YieldConstraint",
@@ -23,9 +26,10 @@ __all__ = [
 ]
 
 
+import re
 from dataclasses import dataclass, field, replace
 from difflib import get_close_matches
-from typing import Any, Dict, Iterable, List, Set, Tuple
+from typing import Any, Dict, Iterable, List, Set, Tuple, cast
 
 from beet.core.utils import required_field
 from tokenstream import InvalidSyntax, Token, TokenStream, UnexpectedToken, set_location
@@ -34,12 +38,12 @@ from mecha import (
     AlternativeParser,
     AstChildren,
     AstCommand,
+    AstLiteral,
+    AstResourceLocation,
     AstRoot,
-    Parser,
-    consume_line_continuation,
-    delegate,
-    get_stream_scope,
 )
+from mecha import LiteralParser as BasicLiteralParser
+from mecha import Parser, consume_line_continuation, delegate, get_stream_scope
 from mecha.utils import QuoteHelper, normalize_whitespace, string_to_number
 
 from .ast import (
@@ -73,6 +77,8 @@ IDENTIFIER_PATTERN: str = r"(?!_mecha_)[a-zA-Z_][a-zA-Z0-9_]*"
 STRING_PATTERN: str = r'"(?:\\.|[^\\\n])*?"' "|" r"'(?:\\.|[^\\\n])*?'"
 NUMBER_PATTERN: str = r"(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?\b"
 
+IMPORT_REGEX = re.compile(fr"^{IDENTIFIER_PATTERN}(?:\.{IDENTIFIER_PATTERN})*$")
+
 
 def get_scripting_parsers(parsers: Dict[str, Parser]) -> Dict[str, Parser]:
     """Return the scripting parsers."""
@@ -82,10 +88,16 @@ def get_scripting_parsers(parsers: Dict[str, Parser]) -> Dict[str, Parser]:
         ################################################################################
         "root": create_scripting_root_parser(parsers["root"]),
         "nested_root": create_scripting_root_parser(parsers["nested_root"]),
-        "command": ExecuteIfConditionConstraint(parsers["command"]),
+        "command": ImportStatementHandler(
+            ExecuteIfConditionConstraint(parsers["command"])
+        ),
         "command:argument:mecha:scripting:statement": delegate("scripting:statement"),
         "command:argument:mecha:scripting:assignment_target": delegate(
             "scripting:assignment_target"
+        ),
+        "command:argument:mecha:scripting:import": delegate("scripting:import"),
+        "command:argument:mecha:scripting:import_name": delegate(
+            "scripting:import_name"
         ),
         "command:argument:mecha:scripting:expression": delegate("scripting:expression"),
         "command:argument:mecha:scripting:function_signature": delegate(
@@ -106,6 +118,10 @@ def get_scripting_parsers(parsers: Dict[str, Parser]) -> Dict[str, Parser]:
         "scripting:function_root": parse_function_root,
         "scripting:interpolation": PrimaryParser(delegate("scripting:identifier")),
         "scripting:identifier": parse_identifier,
+        "scripting:import": ImportLocationConstraint(
+            parsers["resource_location_or_tag"]
+        ),
+        "scripting:import_name": BasicLiteralParser("name", IDENTIFIER_PATTERN),
         "scripting:expression": delegate("scripting:disjunction"),
         "scripting:disjunction": BinaryParser(
             operators=[r"\bor\b"],
@@ -498,6 +514,57 @@ def parse_identifier(stream: TokenStream) -> AstIdentifier:
         raise set_location(exc, token)
 
     return set_location(AstIdentifier(value=token.value), token)
+
+
+@dataclass
+class ImportLocationConstraint:
+    """Constraint for import location."""
+
+    parser: Parser
+
+    def __call__(self, stream: TokenStream) -> Any:
+        node: AstResourceLocation = self.parser(stream)
+
+        if node.is_tag or node.namespace is None and not IMPORT_REGEX.match(node.path):
+            exc = InvalidSyntax(f"Invalid module location {node.get_value()!r}.")
+            raise set_location(exc, node)
+
+        return node
+
+
+@dataclass
+class ImportStatementHandler:
+    """Handle import statements."""
+
+    parser: Parser
+
+    def __call__(self, stream: TokenStream) -> Any:
+        identifiers = get_stream_identifiers(stream)
+
+        if isinstance(node := self.parser(stream), AstCommand):
+            if node.identifier == "import:module":
+                if isinstance(module := node.arguments[0], AstResourceLocation):
+                    if module.namespace:
+                        exc = InvalidSyntax(
+                            f"Can't import {module.get_value()!r} without alias."
+                        )
+                        raise set_location(exc, module)
+                    else:
+                        identifiers.add(module.path.partition(".")[0])
+            elif node.identifier == "import:module:as:alias":
+                if isinstance(alias := node.arguments[1], AstLiteral):
+                    identifiers.add(alias.value)
+            elif node.identifier == "from:module:import:subcommand":
+                subcommand = cast(AstCommand, node.arguments[1])
+                while True:
+                    if isinstance(name := subcommand.arguments[0], AstLiteral):
+                        identifiers.add(name.value)
+                    if subcommand.identifier == "from:module:import:name:subcommand":
+                        subcommand = cast(AstCommand, subcommand.arguments[1])
+                    else:
+                        break
+
+        return node
 
 
 @dataclass

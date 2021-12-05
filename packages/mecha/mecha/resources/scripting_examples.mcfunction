@@ -421,3 +421,27 @@ if True
 ###
 def f()
     yield
+###
+import demo:foo
+###
+import ./thing
+###
+import wat/is/that
+###
+from wat/is/that import foo
+###
+import math
+mah.sin(1)
+###
+import math
+math.sin(1)
+###
+import math as m
+m.sin(1)
+###
+from demo:foo import thing
+say thing
+###
+def f()
+    from demo:foo import a b c
+say a

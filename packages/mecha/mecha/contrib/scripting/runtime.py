@@ -51,6 +51,7 @@ class Module:
     resource_location: Optional[str]
     globals: Set[str]
     namespace: JsonDict = field(default_factory=dict)
+    executing: bool = False
 
 
 class Runtime:
@@ -145,14 +146,22 @@ class Runtime:
         if module.output in module.namespace:
             return module.namespace[module.output]
 
+        if module.executing:
+            raise ValueError("Import cycle detected.")
+
         module.namespace.update(self.globals)
         module.namespace["_mecha_runtime"] = self
         module.namespace["_mecha_refs"] = module.refs
         module.namespace["__name__"] = module.resource_location
         module.namespace["__file__"] = module.code.co_filename
 
-        with self.error_handler():
-            exec(module.code, module.namespace)
+        module.executing = True
+
+        try:
+            with self.error_handler():
+                exec(module.code, module.namespace)
+        finally:
+            module.executing = False
 
         return module.namespace[module.output]
 
@@ -180,6 +189,29 @@ class Runtime:
             yield
         except Exception as exc:
             raise rewrite_traceback(exc) from None
+
+    def import_module(self, resource_location: str) -> Module:
+        """Import module."""
+        file_instance = self.database.index[resource_location]
+        compilation_unit = self.database[file_instance]
+
+        if not compilation_unit.ast:
+            raise ValueError(f"Module {resource_location!r} doesn't have an ast yet.")
+
+        module = self.get_module(compilation_unit.ast, file_instance)
+        self.get_output(module)
+
+        return module
+
+    def from_module_import(self, resource_location: str, *args: str) -> Any:
+        """Import a specific name from a module."""
+        module = self.import_module(resource_location)
+        try:
+            values = [module.namespace[name] for name in args]
+        except KeyError as exc:
+            msg = f"Couldn't import {exc} from {resource_location!r}."
+            raise ImportError(msg) from None
+        return values[0] if len(values) == 1 else values
 
 
 @dataclass

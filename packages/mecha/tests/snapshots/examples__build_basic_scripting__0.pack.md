@@ -85,6 +85,16 @@ say 2
 say 3
 say [1, 2, 3, 1, 2, 3]
 say basic_scripting.hello
+say -1.0
+say True
+say 0.0
+say True
+```
+
+`@function(strip_final_newline) demo:thing`
+
+```mcfunction
+
 ```
 
 `@function demo:foo/nested_execute_0`

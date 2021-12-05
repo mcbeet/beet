@@ -1,0 +1,7 @@
+import math
+#>ERROR  Expected assignment but got literal '.sin(1)'.
+# line 2, column 4
+#      1 |  import math
+#      2 |  mah.sin(1)
+#        :     ^^^^^^^
+mah.sin(1)

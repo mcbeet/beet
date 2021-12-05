@@ -1,0 +1,63 @@
+_mecha_lineno = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2]
+_mecha_helper_get_attribute = _mecha_runtime.helpers['get_attribute']
+_mecha_helper_children = _mecha_runtime.helpers['children']
+_mecha_helper_replace = _mecha_runtime.helpers['replace']
+with _mecha_runtime.scope() as _mecha_var0:
+    
+#1
+
+    import math as m
+    (
+#2
+(
+#2
+_mecha_helper_get_attribute((
+#2
+m), 'sin'))(1))
+_mecha_var1 = _mecha_helper_replace(_mecha_refs[0], commands=_mecha_helper_children(_mecha_var0))
+---
+output = _mecha_var1
+---
+_mecha_refs[0]
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=26, lineno=3, colno=1)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=16, lineno=1, colno=17)
+      identifier: 'import:module:as:alias'
+      arguments:
+        <class 'mecha.ast.AstResourceLocation'>
+          location: SourceLocation(pos=7, lineno=1, colno=8)
+          end_location: SourceLocation(pos=11, lineno=1, colno=12)
+          is_tag: False
+          namespace: None
+          path: 'math'
+        <class 'mecha.ast.AstLiteral'>
+          location: SourceLocation(pos=15, lineno=1, colno=16)
+          end_location: SourceLocation(pos=16, lineno=1, colno=17)
+          value: 'm'
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=17, lineno=2, colno=1)
+      end_location: SourceLocation(pos=25, lineno=2, colno=9)
+      identifier: 'statement'
+      arguments:
+        <class 'mecha.contrib.scripting.ast.AstCall'>
+          location: SourceLocation(pos=17, lineno=2, colno=1)
+          end_location: SourceLocation(pos=25, lineno=2, colno=9)
+          value:
+            <class 'mecha.contrib.scripting.ast.AstAttribute'>
+              location: SourceLocation(pos=17, lineno=2, colno=1)
+              end_location: SourceLocation(pos=22, lineno=2, colno=6)
+              name: 'sin'
+              value:
+                <class 'mecha.contrib.scripting.ast.AstIdentifier'>
+                  location: SourceLocation(pos=17, lineno=2, colno=1)
+                  end_location: SourceLocation(pos=18, lineno=2, colno=2)
+                  value: 'm'
+          arguments:
+            <class 'mecha.contrib.scripting.ast.AstValue'>
+              location: SourceLocation(pos=23, lineno=2, colno=7)
+              end_location: SourceLocation(pos=24, lineno=2, colno=8)
+              value: 1

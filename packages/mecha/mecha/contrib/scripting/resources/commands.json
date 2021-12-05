@@ -146,6 +146,50 @@
     "continue": {
       "type": "literal",
       "executable": true
+    },
+    "import": {
+      "type": "literal",
+      "children": {
+        "module": {
+          "type": "argument",
+          "parser": "mecha:scripting:import",
+          "executable": true,
+          "children": {
+            "as": {
+              "type": "literal",
+              "children": {
+                "alias": {
+                  "type": "argument",
+                  "parser": "mecha:scripting:import_name",
+                  "executable": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "from": {
+      "type": "literal",
+      "children": {
+        "module": {
+          "type": "argument",
+          "parser": "mecha:scripting:import",
+          "children": {
+            "import": {
+              "type": "literal",
+              "children": {
+                "name": {
+                  "type": "argument",
+                  "parser": "mecha:scripting:import_name",
+                  "executable": true,
+                  "redirect": ["from", "module", "import"]
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
 }
