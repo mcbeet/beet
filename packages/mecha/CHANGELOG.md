@@ -2,6 +2,17 @@
 
 <!--next-version-placeholder-->
 
+## v0.20.0 (2021-12-05)
+### Feature
+* Add import statements ([`970bd01`](https://github.com/mcbeet/mecha/commit/970bd017d8104ea2c54ebc85c2d2c58ffe735e9f))
+* Inject context object ([`98e6727`](https://github.com/mcbeet/mecha/commit/98e672712819d37f34856a1fa5701157dc0cfbbe))
+* Expose ctx ([`e1714f0`](https://github.com/mcbeet/mecha/commit/e1714f0bdb1fc473e3fecfe28818294bf4692501))
+* Add yield statements ([`410e60a`](https://github.com/mcbeet/mecha/commit/410e60a35266ed5e66ca52a3c4aaa30064d26627))
+* Add globals ([`7d934a2`](https://github.com/mcbeet/mecha/commit/7d934a20f82cad8b97f8126a03cee0a5e086227e))
+* Tweak constraints and make it possible to convert tuples to ranges ([`f130359`](https://github.com/mcbeet/mecha/commit/f130359b5b3768b7dc9d59a46a24d9e808a30497))
+* Add f-strings ([`88b12d2`](https://github.com/mcbeet/mecha/commit/88b12d2cf64296d8cb228d3817d9db8d93f727e2))
+* Add tuples ([`80534e5`](https://github.com/mcbeet/mecha/commit/80534e5af70d2459aef4215b46912ecf5316e716))
+
 ## v0.19.0 (2021-12-05)
 ### Feature
 * Track line numbers and rewrite tracebacks coming from generated code ([`8582212`](https://github.com/mcbeet/mecha/commit/8582212361aed3fa0c6f6dc575cf9d18725478d1))
