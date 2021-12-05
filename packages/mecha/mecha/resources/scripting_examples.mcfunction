@@ -341,8 +341,8 @@ predicate = {
   entity: "this",
   scores: {
     score1: {
-      min: {
-        type: "minecraft:score",
+      "min": {
+        "type": "minecraft:score",
         target: "this",
         score: "score2",
         scale: 1

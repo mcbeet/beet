@@ -4,12 +4,13 @@ __all__ = [
     "fake_traceback",
     "internal",
     "INTERNAL_CODE",
+    "SAFE_BUILTINS",
 ]
 
 
 from dataclasses import dataclass, field
 from types import CodeType, TracebackType
-from typing import Dict, List, Set, TypeVar
+from typing import Dict, List, Set, Tuple, TypeVar
 
 from mecha.utils import QuoteHelperWithUnicode
 
@@ -22,6 +23,59 @@ INTERNAL_CODE: Set[CodeType] = set()
 def internal(f: T) -> T:
     INTERNAL_CODE.add(f.__code__)  # type: ignore
     return f
+
+
+SAFE_BUILTINS: Tuple[str, ...] = (
+    "abs",
+    "all",
+    "any",
+    "ascii",
+    "bin",
+    "bool",
+    "bytearray",
+    "bytes",
+    "callable",
+    "chr",
+    "complex",
+    "dict",
+    "divmod",
+    "enumerate",
+    "filter",
+    "float",
+    "format",
+    "frozenset",
+    "hasattr",
+    "hash",
+    "hex",
+    "id",
+    "int",
+    "isinstance",
+    "issubclass",
+    "iter",
+    "len",
+    "list",
+    "map",
+    "max",
+    "min",
+    "next",
+    "object",
+    "oct",
+    "ord",
+    "pow",
+    "print",
+    "range",
+    "repr",
+    "reversed",
+    "round",
+    "set",
+    "slice",
+    "sorted",
+    "str",
+    "sum",
+    "tuple",
+    "type",
+    "zip",
+)
 
 
 @dataclass

@@ -3,9 +3,11 @@ __all__ = [
     "Module",
     "ModuleCacheBackend",
     "Evaluator",
+    "GlobalsInjection",
 ]
 
 
+import builtins
 import marshal
 from contextlib import contextmanager
 from dataclasses import dataclass, field
@@ -13,10 +15,11 @@ from importlib.resources import read_text
 from io import BufferedReader, BufferedWriter
 from pathlib import Path
 from types import CodeType
-from typing import Any, Dict, Iterator, List, Optional, Union
+from typing import Any, Dict, Iterator, List, Optional, Set, Union
 
 from beet import Context, PipelineFallthroughException, TextFileBase
 from beet.core.utils import JsonDict, required_field
+from tokenstream import TokenStream
 
 from mecha import (
     AstCacheBackend,
@@ -27,6 +30,7 @@ from mecha import (
     CompilationError,
     Dispatcher,
     Mecha,
+    Parser,
     Visitor,
     rule,
 )
@@ -34,7 +38,7 @@ from mecha import (
 from .codegen import Codegen
 from .helpers import get_scripting_helpers
 from .parse import get_scripting_parsers
-from .utils import rewrite_traceback
+from .utils import SAFE_BUILTINS, rewrite_traceback
 
 
 @dataclass
@@ -45,7 +49,8 @@ class Module:
     code: Optional[CodeType]
     refs: List[Any]
     output: Optional[str]
-    resource_location: Optional[str] = None
+    resource_location: Optional[str]
+    globals: Set[str]
     namespace: JsonDict = field(default_factory=dict)
 
 
@@ -59,6 +64,7 @@ class Runtime:
     modules: Dict[TextFileBase[Any], Module]
     commands: List[AstCommand]
     helpers: Dict[str, Any]
+    globals: JsonDict
 
     def __init__(self, ctx: Union[Context, Mecha]):
         if isinstance(ctx, Context):
@@ -74,6 +80,7 @@ class Runtime:
         commands_json = read_text("mecha.contrib.scripting.resources", "commands.json")
         mc.spec.add_commands(CommandTree.parse_raw(commands_json))
         mc.spec.parsers.update(get_scripting_parsers(mc.spec.parsers))
+        mc.spec.parsers["root"] = GlobalsInjection(self, mc.spec.parsers["root"])
 
         self.directory = mc.directory
         self.database = mc.database
@@ -85,6 +92,7 @@ class Runtime:
         self.modules = {}
         self.commands = []
         self.helpers = get_scripting_helpers()
+        self.globals = {name: getattr(builtins, name) for name in SAFE_BUILTINS}
 
         mc.cache_backend = ModuleCacheBackend(runtime=self)
 
@@ -116,7 +124,14 @@ class Runtime:
         else:
             code = None
 
-        module = Module(node, code, refs, output, compilation_unit.resource_location)
+        module = Module(
+            node,
+            code,
+            refs,
+            output,
+            compilation_unit.resource_location,
+            set(self.globals),
+        )
         self.modules[file_instance] = module
 
         return module
@@ -174,12 +189,16 @@ class ModuleCacheBackend(AstCacheBackend):
         data = self.load_data(f)
         ast = data["ast"]
 
+        if data["globals"] != set(self.runtime.globals):
+            raise ValueError("Globals mismatch.")
+
         self.runtime.modules[self.runtime.database.current] = Module(
             ast=ast,
             code=marshal.load(f),
             refs=data["refs"],
             output=data["output"],
             resource_location=data["resource_location"],
+            globals=data["globals"],
         )
 
         return ast
@@ -193,6 +212,7 @@ class ModuleCacheBackend(AstCacheBackend):
                 "refs": module.refs,
                 "output": module.output,
                 "resource_location": module.resource_location,
+                "globals": module.globals,
             },
             f,
         )
@@ -219,3 +239,15 @@ class Evaluator(Visitor):
                 msg += f" ({module.resource_location})"
             tb = exc.__traceback__.tb_next.tb_next  # type: ignore
             raise CompilationError(msg) from exc.with_traceback(tb)
+
+
+@dataclass
+class GlobalsInjection:
+    """Inject global identifiers."""
+
+    runtime: Runtime
+    parser: Parser
+
+    def __call__(self, stream: TokenStream) -> Any:
+        with stream.provide(identifiers=set(self.runtime.globals)):
+            return self.parser(stream)

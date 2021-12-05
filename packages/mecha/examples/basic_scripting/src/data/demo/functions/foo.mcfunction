@@ -88,3 +88,11 @@ say f"{{{f"{{{f"{{{7:08}}}\\"}}}\""}}}"
 x = 8
 if score @s tmp matches (x, None) say wat
 if score @s tmp matches f"{x}.." say wat
+
+
+def copy_items(type, count)
+    for i in range(count)
+        item replace entity @a f"{type}.{i}" from entity @s f"{type}.{i}"
+
+copy_items('hotbar', 9)
+copy_items('inventory', 26)
