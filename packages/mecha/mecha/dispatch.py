@@ -5,6 +5,7 @@ __all__ = [
     "MutatingReducer",
     "Rule",
     "rule",
+    "CompilationError",
 ]
 
 
@@ -32,12 +33,22 @@ from typing import (
     overload,
 )
 
+from beet import FormattedPipelineException, PipelineFallthroughException
 from beet.core.utils import extra_field
 
 from .ast import AstChildren, AstNode
 from .diagnostic import Diagnostic, DiagnosticCollection
 
 T = TypeVar("T")
+
+
+class CompilationError(FormattedPipelineException):
+    """Raised when an error occurs in a rule."""
+
+    def __init__(self, message: str) -> None:
+        super().__init__(message)
+        self.message = message
+        self.format_cause = True
 
 
 @dataclass
@@ -266,6 +277,16 @@ class Dispatcher(Generic[T]):
                         end_location=node.end_location,
                     )
                 )
+        except StopIteration:
+            raise
+        except PipelineFallthroughException:
+            raise
+        except Exception as exc:
+            msg = "Compilation raised an exception."
+            if name:
+                msg += f" ({name})"
+            tb = exc.__traceback__ and exc.__traceback__.tb_next
+            raise CompilationError(msg) from exc.with_traceback(tb)
 
     def __call__(self, node: AstNode) -> T:
         if not self.count:
