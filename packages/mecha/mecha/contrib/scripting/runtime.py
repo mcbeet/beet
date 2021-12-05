@@ -94,6 +94,9 @@ class Runtime:
         self.helpers = get_scripting_helpers()
         self.globals = {name: getattr(builtins, name) for name in SAFE_BUILTINS}
 
+        if isinstance(ctx, Context):
+            self.globals["ctx"] = ctx
+
         mc.cache_backend = ModuleCacheBackend(runtime=self)
 
     def get_module(
