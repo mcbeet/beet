@@ -1,0 +1,52 @@
+_mecha_lineno = [1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2]
+_mecha_helper_children = _mecha_runtime.helpers['children']
+_mecha_helper_replace = _mecha_runtime.helpers['replace']
+with _mecha_runtime.scope() as _mecha_var0:
+    foo = 'world'
+    (
+#2
+'hello {!r}'.format((
+#2
+foo)))
+_mecha_var1 = _mecha_helper_replace(_mecha_refs[0], commands=_mecha_helper_children(_mecha_var0))
+---
+output = _mecha_var1
+---
+_mecha_refs[0]
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=31, lineno=3, colno=1)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=13, lineno=1, colno=14)
+      identifier: 'statement'
+      arguments:
+        <class 'mecha.contrib.scripting.ast.AstAssignment'>
+          location: SourceLocation(pos=0, lineno=1, colno=1)
+          end_location: SourceLocation(pos=13, lineno=1, colno=14)
+          operator: '='
+          target:
+            <class 'mecha.contrib.scripting.ast.AstAssignmentTargetIdentifier'>
+              location: SourceLocation(pos=0, lineno=1, colno=1)
+              end_location: SourceLocation(pos=3, lineno=1, colno=4)
+              value: 'foo'
+          value:
+            <class 'mecha.contrib.scripting.ast.AstValue'>
+              location: SourceLocation(pos=6, lineno=1, colno=7)
+              end_location: SourceLocation(pos=13, lineno=1, colno=14)
+              value: 'world'
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=14, lineno=2, colno=1)
+      end_location: SourceLocation(pos=30, lineno=2, colno=17)
+      identifier: 'statement'
+      arguments:
+        <class 'mecha.contrib.scripting.ast.AstFormatString'>
+          location: SourceLocation(pos=14, lineno=2, colno=1)
+          end_location: SourceLocation(pos=30, lineno=2, colno=17)
+          fmt: 'hello {!r}'
+          values:
+            <class 'mecha.contrib.scripting.ast.AstIdentifier'>
+              location: SourceLocation(pos=23, lineno=2, colno=10)
+              end_location: SourceLocation(pos=26, lineno=2, colno=13)
+              value: 'foo'

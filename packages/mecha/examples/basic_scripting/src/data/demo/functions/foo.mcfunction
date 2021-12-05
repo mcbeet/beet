@@ -81,3 +81,6 @@ with_tuples = ((((())))) + (1,2,3) + (4,)
 say with_tuples
 say (with_tuples)
 say (with_tuples,)
+a = f'\\'
+say f"f-strings {"work".upper()!r} too {a}"
+say f"{{{f"{{{f"{{{7:08}}}\\"}}}\""}}}"

@@ -1,0 +1,42 @@
+_mecha_lineno = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+_mecha_helper_children = _mecha_runtime.helpers['children']
+_mecha_helper_replace = _mecha_runtime.helpers['replace']
+with _mecha_runtime.scope() as _mecha_var0:
+    (
+#1
+'hello {:03}'.format((
+#1
+1 + 1)))
+_mecha_var1 = _mecha_helper_replace(_mecha_refs[0], commands=_mecha_helper_children(_mecha_var0))
+---
+output = _mecha_var1
+---
+_mecha_refs[0]
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=20, lineno=2, colno=1)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=19, lineno=1, colno=20)
+      identifier: 'statement'
+      arguments:
+        <class 'mecha.contrib.scripting.ast.AstFormatString'>
+          location: SourceLocation(pos=0, lineno=1, colno=1)
+          end_location: SourceLocation(pos=19, lineno=1, colno=20)
+          fmt: 'hello {:03}'
+          values:
+            <class 'mecha.contrib.scripting.ast.AstExpressionBinary'>
+              location: SourceLocation(pos=9, lineno=1, colno=10)
+              end_location: SourceLocation(pos=14, lineno=1, colno=15)
+              operator: '+'
+              left:
+                <class 'mecha.contrib.scripting.ast.AstValue'>
+                  location: SourceLocation(pos=9, lineno=1, colno=10)
+                  end_location: SourceLocation(pos=10, lineno=1, colno=11)
+                  value: 1
+              right:
+                <class 'mecha.contrib.scripting.ast.AstValue'>
+                  location: SourceLocation(pos=13, lineno=1, colno=14)
+                  end_location: SourceLocation(pos=14, lineno=1, colno=15)
+                  value: 1

@@ -41,6 +41,8 @@ execute as @a at @s if block ~ ~-1 ~ #wool run give @s stone{display: {Name: '{"
 say (1, 2, 3, 4)
 say (1, 2, 3, 4)
 say ((1, 2, 3, 4),)
+say f-strings 'WORK' too \
+say {{{00000007}\}"}
 ```
 
 `@function demo:foo/nested_execute_0`

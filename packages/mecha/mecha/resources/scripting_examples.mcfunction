@@ -379,3 +379,29 @@ as @a at @s if block ~ ~-1 ~ #wool give @s stone{
 }
 ###
 thing = (1, 'hey') + () + ("wow",)
+###
+f"hello"
+###
+foo = "world"
+f"hello {foo}"
+###
+foo = "world"
+f"hello {foo!r}"
+###
+f"hello {1 + 1}"
+###
+f"hello {1 + 1:03}"
+###
+f'{{}}nope{1}'
+###
+yo = f"{{{f"{{{f"{{{7:08}}}"}}}"}}}"
+###
+yo = f""
+###
+yo = f"\""
+###
+yo = f"\\"
+###
+yo = f"}"
+###
+yo = f'thing \e'

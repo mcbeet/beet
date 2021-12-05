@@ -52,6 +52,7 @@ from .ast import (
     AstExpression,
     AstExpressionBinary,
     AstExpressionUnary,
+    AstFormatString,
     AstFunctionRoot,
     AstFunctionSignature,
     AstFunctionSignatureArgument,
@@ -618,8 +619,10 @@ class PrimaryParser:
     quote_helper: QuoteHelper = field(default_factory=ScriptingQuoteHelper)
 
     def __call__(self, stream: TokenStream) -> Any:
-        with stream.syntax(brace=r"\(|\)", comma=r","):
-            if token := stream.get(("brace", "(")):
+        with stream.syntax(brace=r"\(|\)", comma=r",", format_string=r"f['\"]"):
+            token = stream.get(("brace", "("), "format_string")
+
+            if token and token.match("brace"):
                 with stream.ignore("newline"):
                     comma = None
                     items: List[AstExpression] = []
@@ -636,6 +639,56 @@ class PrimaryParser:
                     else:
                         node = AstTuple(items=AstChildren(items))
                         node = set_location(node, token, stream.current)
+
+            elif token and token.match("format_string"):
+                quote = token.value[-1]
+
+                with stream.syntax(
+                    escape=fr"\\.",
+                    double_brace=r"\{\{|\}\}",
+                    brace=r"\{|\}",
+                    quote=quote,
+                    text=r"[^\\]+?",
+                ):
+                    fmt = quote
+                    values: List[AstExpression] = []
+
+                    for escape, double_brace, brace, text in stream.collect(
+                        "escape",
+                        "double_brace",
+                        ("brace", "{"),
+                        "text",
+                    ):
+                        if escape:
+                            fmt += escape.value
+                        elif double_brace:
+                            fmt += double_brace.value
+                        elif brace:
+                            fmt += "{"
+                            with stream.syntax(text=None):
+                                values.append(delegate("scripting:expression", stream))
+                            with stream.syntax(spec=r"[:!][^\}]+", double_brace=None):
+                                if spec := stream.get("spec"):
+                                    fmt += spec.value
+                                stream.expect(("brace", "}"))
+                            fmt += "}"
+                        elif text:
+                            fmt += text.value
+
+                    end_quote = stream.expect("quote")
+                    fmt += end_quote.value
+
+                    fmt = self.quote_helper.unquote_string(
+                        Token(
+                            "format_string",
+                            fmt,
+                            token.location.with_horizontal_offset(1),
+                            end_quote.end_location,
+                        )
+                    )
+
+                    node = AstFormatString(fmt=fmt, values=AstChildren(values))
+                    node = set_location(node, token, end_quote)
 
             else:
                 node = self.parser(stream)

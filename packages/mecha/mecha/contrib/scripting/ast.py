@@ -4,6 +4,7 @@ __all__ = [
     "AstExpressionUnary",
     "AstValue",
     "AstIdentifier",
+    "AstFormatString",
     "AstTuple",
     "AstList",
     "AstDictItem",
@@ -64,6 +65,14 @@ class AstIdentifier(AstExpression):
     """Ast identifier node."""
 
     value: str = required_field()
+
+
+@dataclass(frozen=True)
+class AstFormatString(AstExpression):
+    """Ast format string node."""
+
+    fmt: str = required_field()
+    values: AstChildren[AstExpression] = required_field()
 
 
 @dataclass(frozen=True)

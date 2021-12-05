@@ -39,6 +39,7 @@ from .ast import (
     AstDict,
     AstExpressionBinary,
     AstExpressionUnary,
+    AstFormatString,
     AstFunctionSignature,
     AstIdentifier,
     AstInterpolation,
@@ -505,6 +506,20 @@ class Codegen(Visitor):
     @rule(AstIdentifier)
     def identifier(self, node: AstIdentifier, acc: Accumulator) -> Optional[List[str]]:
         return [f"({acc.lineno(node)}{node.value})"]
+
+    @rule(AstFormatString)
+    def format_string(
+        self,
+        node: AstFormatString,
+        acc: Accumulator,
+    ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
+        values: List[str] = []
+
+        for value in node.values:
+            result = yield from visit_single(value, required=True)
+            values.append(result)
+
+        return [f"({acc.lineno(node)}{node.fmt!r}.format({', '.join(values)}))"]
 
     @rule(AstTuple)
     def tuple(

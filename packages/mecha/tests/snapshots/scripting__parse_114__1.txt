@@ -1,0 +1,37 @@
+_mecha_lineno = [1, 1, 1, 1, 1, 1, 1, 1]
+_mecha_helper_children = _mecha_runtime.helpers['children']
+_mecha_helper_replace = _mecha_runtime.helpers['replace']
+with _mecha_runtime.scope() as _mecha_var0:
+    yo = (
+#1
+'\\'.format())
+_mecha_var1 = _mecha_helper_replace(_mecha_refs[0], commands=_mecha_helper_children(_mecha_var0))
+---
+output = _mecha_var1
+---
+_mecha_refs[0]
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=11, lineno=2, colno=1)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=10, lineno=1, colno=11)
+      identifier: 'statement'
+      arguments:
+        <class 'mecha.contrib.scripting.ast.AstAssignment'>
+          location: SourceLocation(pos=0, lineno=1, colno=1)
+          end_location: SourceLocation(pos=10, lineno=1, colno=11)
+          operator: '='
+          target:
+            <class 'mecha.contrib.scripting.ast.AstAssignmentTargetIdentifier'>
+              location: SourceLocation(pos=0, lineno=1, colno=1)
+              end_location: SourceLocation(pos=2, lineno=1, colno=3)
+              value: 'yo'
+          value:
+            <class 'mecha.contrib.scripting.ast.AstFormatString'>
+              location: SourceLocation(pos=5, lineno=1, colno=6)
+              end_location: SourceLocation(pos=10, lineno=1, colno=11)
+              fmt: '\\'
+              values:
+                <empty>
