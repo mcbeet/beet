@@ -1,18 +1,13 @@
-_mecha_lineno = [1, 1, 1, 1, 1, 1, 1, 4, 4, 5, 5, 6, 6, 6]
+_mecha_lineno = [1, 6, 7, 8], [1, 4, 5, 6]
 _mecha_helper_children = _mecha_runtime.helpers['children']
 _mecha_helper_replace = _mecha_runtime.helpers['replace']
 with _mecha_runtime.scope() as _mecha_var0:
     predicate = (
-#1
 {'condition': 'minecraft:entity_scores', 'entity': 'this', 'scores': (
-#4
 {'score1': (
-#5
 {'min': (
-#6
 {'type': 'minecraft:score', 'target': 'this', 'score': 'score2', 'scale': 1})})})})
-_mecha_var1 = _mecha_helper_replace(_mecha_refs[0], commands=_mecha_helper_children(_mecha_var0))
----
+_mecha_var1 = _mecha_helper_replace(_mecha_refs[0], commands=_mecha_helper_children(_mecha_var0))---
 output = _mecha_var1
 ---
 _mecha_refs[0]

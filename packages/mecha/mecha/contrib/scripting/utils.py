@@ -8,6 +8,7 @@ __all__ = [
 ]
 
 
+from bisect import bisect
 from dataclasses import dataclass, field
 from types import CodeType, TracebackType
 from typing import Dict, List, Set, TypeVar
@@ -105,8 +106,9 @@ def rewrite_traceback(exc: Exception) -> Exception:
 
         line_numbers = tb.tb_frame.f_globals.get("_mecha_lineno")
 
-        if line_numbers and tb.tb_lineno < len(line_numbers):
-            lineno = line_numbers[tb.tb_lineno]
+        if line_numbers:
+            n1, n2 = line_numbers
+            lineno = n2[bisect(n1, tb.tb_lineno) - 1]
             stack.append(fake_traceback(exc, tb, lineno))
         else:
             stack.append(tb)

@@ -1,16 +1,13 @@
-_mecha_lineno = [1, 1, 1, 1, 1, 1, 1, 4, 4, 4, 4, 4]
+_mecha_lineno = [1, 7], [1, 4]
 _mecha_helper_interpolate_nbt = _mecha_runtime.helpers['interpolate_nbt']
 _mecha_helper_replace = _mecha_runtime.helpers['replace']
 _mecha_helper_children = _mecha_runtime.helpers['children']
 with _mecha_runtime.scope() as _mecha_var0:
     foo = '[{"text": "Hello", "bold": true}]'
     _mecha_runtime.commands.append(_mecha_helper_replace(_mecha_refs[17], arguments=_mecha_helper_children([_mecha_helper_replace(_mecha_refs[16], arguments=_mecha_helper_children([_mecha_refs[15], _mecha_helper_replace(_mecha_refs[14], arguments=_mecha_helper_children([_mecha_refs[13], _mecha_helper_replace(_mecha_refs[12], arguments=_mecha_helper_children([_mecha_refs[10], _mecha_refs[11], _mecha_helper_replace(_mecha_refs[9], arguments=_mecha_helper_children([_mecha_helper_replace(_mecha_refs[8], arguments=_mecha_helper_children([_mecha_refs[7], _mecha_helper_replace(_mecha_refs[6], data_tags=_mecha_helper_replace(_mecha_refs[5], entries=_mecha_helper_children([_mecha_helper_replace(_mecha_refs[4], value=_mecha_helper_replace(_mecha_refs[3], entries=_mecha_helper_children([_mecha_helper_replace(_mecha_refs[1], value=(
-#4
 _mecha_helper_interpolate_nbt((
-#4
 foo), _mecha_refs[0]))), _mecha_refs[2]])))])))]))]))]))]))]))])))
-_mecha_var1 = _mecha_helper_replace(_mecha_refs[18], commands=_mecha_helper_children(_mecha_var0))
----
+_mecha_var1 = _mecha_helper_replace(_mecha_refs[18], commands=_mecha_helper_children(_mecha_var0))---
 output = _mecha_var1
 ---
 _mecha_refs[0]

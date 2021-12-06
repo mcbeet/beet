@@ -68,17 +68,22 @@ class Accumulator:
             for expression, variable in self.header.items()
         )
 
-        source = header + "".join(self.lines)
+        lines: List[str] = ["_mecha_lineno = "]
+        numbers1: List[int] = [1]
+        numbers2: List[int] = [1]
 
-        current_line = 1
-        line_numbers: List[int] = [1]
-
-        for line in source.splitlines():
+        for line in (header + "".join(self.lines)).splitlines():
             if line.startswith("#"):
                 current_line = int(line[1:])
-            line_numbers.append(current_line)
+                if numbers2[-1] != current_line:
+                    numbers1.append(len(lines))
+                    numbers2.append(current_line)
+            else:
+                lines.append(line)
 
-        return f"_mecha_lineno = {line_numbers!r}\n{source}"
+        lines[0] += f"{numbers1}, {numbers2}"
+
+        return "\n".join(lines)
 
     def helper(self, name: str, *args: Any) -> str:
         """Emit helper."""

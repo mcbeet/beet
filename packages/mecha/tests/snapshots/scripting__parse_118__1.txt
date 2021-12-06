@@ -1,4 +1,4 @@
-_mecha_lineno = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 5, 5, 5, 5, 6, 6, 6, 6, 6]
+_mecha_lineno = [1, 10, 13], [1, 5, 6]
 _mecha_helper_children = _mecha_runtime.helpers['children']
 _mecha_helper_interpolate_message = _mecha_runtime.helpers['interpolate_message']
 _mecha_helper_replace = _mecha_runtime.helpers['replace']
@@ -8,17 +8,12 @@ with _mecha_runtime.scope() as _mecha_var0:
         yield 2
         yield 3
     for i in (
-#5
 (
-#5
 f)()):
         _mecha_runtime.commands.append(_mecha_helper_replace(_mecha_refs[1], arguments=_mecha_helper_children([(
-#6
 _mecha_helper_interpolate_message((
-#6
 i), _mecha_refs[0]))])))
-_mecha_var1 = _mecha_helper_replace(_mecha_refs[2], commands=_mecha_helper_children(_mecha_var0))
----
+_mecha_var1 = _mecha_helper_replace(_mecha_refs[2], commands=_mecha_helper_children(_mecha_var0))---
 output = _mecha_var1
 ---
 _mecha_refs[0]

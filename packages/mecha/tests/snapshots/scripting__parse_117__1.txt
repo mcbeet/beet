@@ -1,18 +1,14 @@
-_mecha_lineno = [1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2]
+_mecha_lineno = [1, 7], [1, 2]
 _mecha_helper_interpolate_range = _mecha_runtime.helpers['interpolate_range']
 _mecha_helper_children = _mecha_runtime.helpers['children']
 _mecha_helper_replace = _mecha_runtime.helpers['replace']
 with _mecha_runtime.scope() as _mecha_var0:
     x = 8
     _mecha_runtime.commands.append(_mecha_helper_replace(_mecha_refs[5], arguments=_mecha_helper_children([_mecha_helper_replace(_mecha_refs[4], arguments=_mecha_helper_children([_mecha_refs[1], _mecha_refs[2], (
-#2
 _mecha_helper_interpolate_range((
-#2
 ((
-#2
 x),None,)), _mecha_refs[0])), _mecha_refs[3]]))])))
-_mecha_var1 = _mecha_helper_replace(_mecha_refs[6], commands=_mecha_helper_children(_mecha_var0))
----
+_mecha_var1 = _mecha_helper_replace(_mecha_refs[6], commands=_mecha_helper_children(_mecha_var0))---
 output = _mecha_var1
 ---
 _mecha_refs[0]

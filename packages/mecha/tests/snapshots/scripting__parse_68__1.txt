@@ -1,27 +1,18 @@
-_mecha_lineno = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+_mecha_lineno = [1], [1]
 _mecha_helper_get_attribute = _mecha_runtime.helpers['get_attribute']
 _mecha_helper_children = _mecha_runtime.helpers['children']
 _mecha_helper_replace = _mecha_runtime.helpers['replace']
 with _mecha_runtime.scope() as _mecha_var0:
     (
-#1
 (
-#1
 (
-#1
 (
-#1
 (
-#1
 (
-#1
 (
-#1
 _mecha_helper_get_attribute('foo', 'bar'))())[0])['hello'])[99])['with space'])((
-#1
 'thing' * 7)))
-_mecha_var1 = _mecha_helper_replace(_mecha_refs[0], commands=_mecha_helper_children(_mecha_var0))
----
+_mecha_var1 = _mecha_helper_replace(_mecha_refs[0], commands=_mecha_helper_children(_mecha_var0))---
 output = _mecha_var1
 ---
 _mecha_refs[0]
