@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.20.1 (2021-12-06)
+### Fix
+* Make line mapping more compact ([`4044ce4`](https://github.com/mcbeet/mecha/commit/4044ce4355946f334c14e7b891aa4faf3a77bea1))
+
 ## v0.20.0 (2021-12-05)
 ### Feature
 * Add import statements ([`970bd01`](https://github.com/mcbeet/mecha/commit/970bd017d8104ea2c54ebc85c2d2c58ffe735e9f))
