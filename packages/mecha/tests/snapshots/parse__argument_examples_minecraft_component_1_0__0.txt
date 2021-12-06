@@ -6,4 +6,4 @@ wat
 ---
 Reported 1 error.
 
-line 1, column 1: Expected curly '{', bracket '[', string, number, literal 'null', literal 'true' or literal 'false' but got literal 'wat'.
+line 1, column 1: Expected bracket '[', curly '{', literal 'false', literal 'null', literal 'true', number or string but got literal 'wat'.

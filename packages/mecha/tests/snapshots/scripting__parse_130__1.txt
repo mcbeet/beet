@@ -1,0 +1,595 @@
+_mecha_lineno = [1], [1]
+_mecha_helper_children = _mecha_runtime.helpers['children']
+_mecha_helper_replace = _mecha_runtime.helpers['replace']
+with _mecha_runtime.scope() as _mecha_var1:
+    with _mecha_runtime.scope() as _mecha_var0:
+        if True:
+            _mecha_runtime.commands.extend(_mecha_refs[0].commands)
+        else:
+            _mecha_runtime.commands.extend(_mecha_refs[1].commands)
+    _mecha_runtime.commands.append(_mecha_helper_replace(_mecha_refs[10], arguments=_mecha_helper_children([_mecha_helper_replace(_mecha_refs[9], arguments=_mecha_helper_children([_mecha_refs[6], _mecha_refs[7], _mecha_refs[8], _mecha_helper_replace(_mecha_refs[5], arguments=_mecha_helper_children([_mecha_refs[4], _mecha_helper_replace(_mecha_refs[3], root=_mecha_helper_replace(_mecha_refs[2], commands=_mecha_helper_children(_mecha_var0)))]))]))])))
+_mecha_var2 = _mecha_helper_replace(_mecha_refs[11], commands=_mecha_helper_children(_mecha_var1))---
+output = _mecha_var2
+---
+_mecha_refs[0]
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=70, lineno=3, colno=9)
+  end_location: SourceLocation(pos=76, lineno=3, colno=15)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=70, lineno=3, colno=9)
+      end_location: SourceLocation(pos=76, lineno=3, colno=15)
+      identifier: 'say:message'
+      arguments:
+        <class 'mecha.ast.AstMessage'>
+          location: SourceLocation(pos=74, lineno=3, colno=13)
+          end_location: SourceLocation(pos=76, lineno=3, colno=15)
+          fragments:
+            <class 'mecha.ast.AstLiteral'>
+              location: SourceLocation(pos=74, lineno=3, colno=13)
+              end_location: SourceLocation(pos=76, lineno=3, colno=15)
+              value: '42'
+_mecha_refs[1]
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=94, lineno=5, colno=9)
+  end_location: SourceLocation(pos=100, lineno=5, colno=15)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=94, lineno=5, colno=9)
+      end_location: SourceLocation(pos=100, lineno=5, colno=15)
+      identifier: 'say:message'
+      arguments:
+        <class 'mecha.ast.AstMessage'>
+          location: SourceLocation(pos=98, lineno=5, colno=13)
+          end_location: SourceLocation(pos=100, lineno=5, colno=15)
+          fragments:
+            <class 'mecha.ast.AstLiteral'>
+              location: SourceLocation(pos=98, lineno=5, colno=13)
+              end_location: SourceLocation(pos=100, lineno=5, colno=15)
+              value: 'no'
+_mecha_refs[2]
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=54, lineno=2, colno=5)
+  end_location: SourceLocation(pos=100, lineno=5, colno=15)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=54, lineno=2, colno=5)
+      end_location: SourceLocation(pos=76, lineno=3, colno=15)
+      identifier: 'if:condition:body'
+      arguments:
+        <class 'mecha.contrib.scripting.ast.AstValue'>
+          location: SourceLocation(pos=57, lineno=2, colno=8)
+          end_location: SourceLocation(pos=61, lineno=2, colno=12)
+          value: True
+        <class 'mecha.ast.AstRoot'>
+          location: SourceLocation(pos=70, lineno=3, colno=9)
+          end_location: SourceLocation(pos=76, lineno=3, colno=15)
+          commands:
+            <class 'mecha.ast.AstCommand'>
+              location: SourceLocation(pos=70, lineno=3, colno=9)
+              end_location: SourceLocation(pos=76, lineno=3, colno=15)
+              identifier: 'say:message'
+              arguments:
+                <class 'mecha.ast.AstMessage'>
+                  location: SourceLocation(pos=74, lineno=3, colno=13)
+                  end_location: SourceLocation(pos=76, lineno=3, colno=15)
+                  fragments:
+                    <class 'mecha.ast.AstLiteral'>
+                      location: SourceLocation(pos=74, lineno=3, colno=13)
+                      end_location: SourceLocation(pos=76, lineno=3, colno=15)
+                      value: '42'
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=81, lineno=4, colno=5)
+      end_location: SourceLocation(pos=100, lineno=5, colno=15)
+      identifier: 'else:body'
+      arguments:
+        <class 'mecha.ast.AstRoot'>
+          location: SourceLocation(pos=94, lineno=5, colno=9)
+          end_location: SourceLocation(pos=100, lineno=5, colno=15)
+          commands:
+            <class 'mecha.ast.AstCommand'>
+              location: SourceLocation(pos=94, lineno=5, colno=9)
+              end_location: SourceLocation(pos=100, lineno=5, colno=15)
+              identifier: 'say:message'
+              arguments:
+                <class 'mecha.ast.AstMessage'>
+                  location: SourceLocation(pos=98, lineno=5, colno=13)
+                  end_location: SourceLocation(pos=100, lineno=5, colno=15)
+                  fragments:
+                    <class 'mecha.ast.AstLiteral'>
+                      location: SourceLocation(pos=98, lineno=5, colno=13)
+                      end_location: SourceLocation(pos=100, lineno=5, colno=15)
+                      value: 'no'
+_mecha_refs[3]
+<class 'mecha.contrib.nesting.AstNestedExecute'>
+  location: SourceLocation(pos=54, lineno=2, colno=5)
+  end_location: SourceLocation(pos=100, lineno=5, colno=15)
+  root:
+    <class 'mecha.ast.AstRoot'>
+      location: SourceLocation(pos=54, lineno=2, colno=5)
+      end_location: SourceLocation(pos=100, lineno=5, colno=15)
+      commands:
+        <class 'mecha.ast.AstCommand'>
+          location: SourceLocation(pos=54, lineno=2, colno=5)
+          end_location: SourceLocation(pos=76, lineno=3, colno=15)
+          identifier: 'if:condition:body'
+          arguments:
+            <class 'mecha.contrib.scripting.ast.AstValue'>
+              location: SourceLocation(pos=57, lineno=2, colno=8)
+              end_location: SourceLocation(pos=61, lineno=2, colno=12)
+              value: True
+            <class 'mecha.ast.AstRoot'>
+              location: SourceLocation(pos=70, lineno=3, colno=9)
+              end_location: SourceLocation(pos=76, lineno=3, colno=15)
+              commands:
+                <class 'mecha.ast.AstCommand'>
+                  location: SourceLocation(pos=70, lineno=3, colno=9)
+                  end_location: SourceLocation(pos=76, lineno=3, colno=15)
+                  identifier: 'say:message'
+                  arguments:
+                    <class 'mecha.ast.AstMessage'>
+                      location: SourceLocation(pos=74, lineno=3, colno=13)
+                      end_location: SourceLocation(pos=76, lineno=3, colno=15)
+                      fragments:
+                        <class 'mecha.ast.AstLiteral'>
+                          location: SourceLocation(pos=74, lineno=3, colno=13)
+                          end_location: SourceLocation(pos=76, lineno=3, colno=15)
+                          value: '42'
+        <class 'mecha.ast.AstCommand'>
+          location: SourceLocation(pos=81, lineno=4, colno=5)
+          end_location: SourceLocation(pos=100, lineno=5, colno=15)
+          identifier: 'else:body'
+          arguments:
+            <class 'mecha.ast.AstRoot'>
+              location: SourceLocation(pos=94, lineno=5, colno=9)
+              end_location: SourceLocation(pos=100, lineno=5, colno=15)
+              commands:
+                <class 'mecha.ast.AstCommand'>
+                  location: SourceLocation(pos=94, lineno=5, colno=9)
+                  end_location: SourceLocation(pos=100, lineno=5, colno=15)
+                  identifier: 'say:message'
+                  arguments:
+                    <class 'mecha.ast.AstMessage'>
+                      location: SourceLocation(pos=98, lineno=5, colno=13)
+                      end_location: SourceLocation(pos=100, lineno=5, colno=15)
+                      fragments:
+                        <class 'mecha.ast.AstLiteral'>
+                          location: SourceLocation(pos=98, lineno=5, colno=13)
+                          end_location: SourceLocation(pos=100, lineno=5, colno=15)
+                          value: 'no'
+_mecha_refs[4]
+<class 'mecha.ast.AstSelector'>
+  location: SourceLocation(pos=38, lineno=1, colno=39)
+  end_location: SourceLocation(pos=49, lineno=1, colno=50)
+  variable: 'p'
+  arguments:
+    <class 'mecha.ast.AstSelectorArgument'>
+      location: SourceLocation(pos=41, lineno=1, colno=42)
+      end_location: SourceLocation(pos=48, lineno=1, colno=49)
+      inverted: False
+      key:
+        <class 'mecha.ast.AstString'>
+          location: SourceLocation(pos=41, lineno=1, colno=42)
+          end_location: SourceLocation(pos=44, lineno=1, colno=45)
+          value: 'tag'
+      value:
+        <class 'mecha.ast.AstLiteral'>
+          location: SourceLocation(pos=45, lineno=1, colno=46)
+          end_location: SourceLocation(pos=48, lineno=1, colno=49)
+          value: 'foo'
+_mecha_refs[5]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=28, lineno=1, colno=29)
+  end_location: SourceLocation(pos=100, lineno=5, colno=15)
+  identifier: 'execute:if:entity:entities:subcommand'
+  arguments:
+    <class 'mecha.ast.AstSelector'>
+      location: SourceLocation(pos=38, lineno=1, colno=39)
+      end_location: SourceLocation(pos=49, lineno=1, colno=50)
+      variable: 'p'
+      arguments:
+        <class 'mecha.ast.AstSelectorArgument'>
+          location: SourceLocation(pos=41, lineno=1, colno=42)
+          end_location: SourceLocation(pos=48, lineno=1, colno=49)
+          inverted: False
+          key:
+            <class 'mecha.ast.AstString'>
+              location: SourceLocation(pos=41, lineno=1, colno=42)
+              end_location: SourceLocation(pos=44, lineno=1, colno=45)
+              value: 'tag'
+          value:
+            <class 'mecha.ast.AstLiteral'>
+              location: SourceLocation(pos=45, lineno=1, colno=46)
+              end_location: SourceLocation(pos=48, lineno=1, colno=49)
+              value: 'foo'
+    <class 'mecha.contrib.nesting.AstNestedExecute'>
+      location: SourceLocation(pos=54, lineno=2, colno=5)
+      end_location: SourceLocation(pos=100, lineno=5, colno=15)
+      root:
+        <class 'mecha.ast.AstRoot'>
+          location: SourceLocation(pos=54, lineno=2, colno=5)
+          end_location: SourceLocation(pos=100, lineno=5, colno=15)
+          commands:
+            <class 'mecha.ast.AstCommand'>
+              location: SourceLocation(pos=54, lineno=2, colno=5)
+              end_location: SourceLocation(pos=76, lineno=3, colno=15)
+              identifier: 'if:condition:body'
+              arguments:
+                <class 'mecha.contrib.scripting.ast.AstValue'>
+                  location: SourceLocation(pos=57, lineno=2, colno=8)
+                  end_location: SourceLocation(pos=61, lineno=2, colno=12)
+                  value: True
+                <class 'mecha.ast.AstRoot'>
+                  location: SourceLocation(pos=70, lineno=3, colno=9)
+                  end_location: SourceLocation(pos=76, lineno=3, colno=15)
+                  commands:
+                    <class 'mecha.ast.AstCommand'>
+                      location: SourceLocation(pos=70, lineno=3, colno=9)
+                      end_location: SourceLocation(pos=76, lineno=3, colno=15)
+                      identifier: 'say:message'
+                      arguments:
+                        <class 'mecha.ast.AstMessage'>
+                          location: SourceLocation(pos=74, lineno=3, colno=13)
+                          end_location: SourceLocation(pos=76, lineno=3, colno=15)
+                          fragments:
+                            <class 'mecha.ast.AstLiteral'>
+                              location: SourceLocation(pos=74, lineno=3, colno=13)
+                              end_location: SourceLocation(pos=76, lineno=3, colno=15)
+                              value: '42'
+            <class 'mecha.ast.AstCommand'>
+              location: SourceLocation(pos=81, lineno=4, colno=5)
+              end_location: SourceLocation(pos=100, lineno=5, colno=15)
+              identifier: 'else:body'
+              arguments:
+                <class 'mecha.ast.AstRoot'>
+                  location: SourceLocation(pos=94, lineno=5, colno=9)
+                  end_location: SourceLocation(pos=100, lineno=5, colno=15)
+                  commands:
+                    <class 'mecha.ast.AstCommand'>
+                      location: SourceLocation(pos=94, lineno=5, colno=9)
+                      end_location: SourceLocation(pos=100, lineno=5, colno=15)
+                      identifier: 'say:message'
+                      arguments:
+                        <class 'mecha.ast.AstMessage'>
+                          location: SourceLocation(pos=98, lineno=5, colno=13)
+                          end_location: SourceLocation(pos=100, lineno=5, colno=15)
+                          fragments:
+                            <class 'mecha.ast.AstLiteral'>
+                              location: SourceLocation(pos=98, lineno=5, colno=13)
+                              end_location: SourceLocation(pos=100, lineno=5, colno=15)
+                              value: 'no'
+_mecha_refs[6]
+<class 'mecha.ast.AstSelector'>
+  location: SourceLocation(pos=9, lineno=1, colno=10)
+  end_location: SourceLocation(pos=11, lineno=1, colno=12)
+  variable: 's'
+  arguments:
+    <empty>
+_mecha_refs[7]
+<class 'mecha.ast.AstLiteral'>
+  location: SourceLocation(pos=12, lineno=1, colno=13)
+  end_location: SourceLocation(pos=15, lineno=1, colno=16)
+  value: 'tmp'
+_mecha_refs[8]
+<class 'mecha.ast.AstRange'>
+  location: SourceLocation(pos=24, lineno=1, colno=25)
+  end_location: SourceLocation(pos=27, lineno=1, colno=28)
+  min: 1
+  max: None
+_mecha_refs[9]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=100, lineno=5, colno=15)
+  identifier: 'execute:if:score:target:targetObjective:matches:range:subcommand'
+  arguments:
+    <class 'mecha.ast.AstSelector'>
+      location: SourceLocation(pos=9, lineno=1, colno=10)
+      end_location: SourceLocation(pos=11, lineno=1, colno=12)
+      variable: 's'
+      arguments:
+        <empty>
+    <class 'mecha.ast.AstLiteral'>
+      location: SourceLocation(pos=12, lineno=1, colno=13)
+      end_location: SourceLocation(pos=15, lineno=1, colno=16)
+      value: 'tmp'
+    <class 'mecha.ast.AstRange'>
+      location: SourceLocation(pos=24, lineno=1, colno=25)
+      end_location: SourceLocation(pos=27, lineno=1, colno=28)
+      min: 1
+      max: None
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=28, lineno=1, colno=29)
+      end_location: SourceLocation(pos=100, lineno=5, colno=15)
+      identifier: 'execute:if:entity:entities:subcommand'
+      arguments:
+        <class 'mecha.ast.AstSelector'>
+          location: SourceLocation(pos=38, lineno=1, colno=39)
+          end_location: SourceLocation(pos=49, lineno=1, colno=50)
+          variable: 'p'
+          arguments:
+            <class 'mecha.ast.AstSelectorArgument'>
+              location: SourceLocation(pos=41, lineno=1, colno=42)
+              end_location: SourceLocation(pos=48, lineno=1, colno=49)
+              inverted: False
+              key:
+                <class 'mecha.ast.AstString'>
+                  location: SourceLocation(pos=41, lineno=1, colno=42)
+                  end_location: SourceLocation(pos=44, lineno=1, colno=45)
+                  value: 'tag'
+              value:
+                <class 'mecha.ast.AstLiteral'>
+                  location: SourceLocation(pos=45, lineno=1, colno=46)
+                  end_location: SourceLocation(pos=48, lineno=1, colno=49)
+                  value: 'foo'
+        <class 'mecha.contrib.nesting.AstNestedExecute'>
+          location: SourceLocation(pos=54, lineno=2, colno=5)
+          end_location: SourceLocation(pos=100, lineno=5, colno=15)
+          root:
+            <class 'mecha.ast.AstRoot'>
+              location: SourceLocation(pos=54, lineno=2, colno=5)
+              end_location: SourceLocation(pos=100, lineno=5, colno=15)
+              commands:
+                <class 'mecha.ast.AstCommand'>
+                  location: SourceLocation(pos=54, lineno=2, colno=5)
+                  end_location: SourceLocation(pos=76, lineno=3, colno=15)
+                  identifier: 'if:condition:body'
+                  arguments:
+                    <class 'mecha.contrib.scripting.ast.AstValue'>
+                      location: SourceLocation(pos=57, lineno=2, colno=8)
+                      end_location: SourceLocation(pos=61, lineno=2, colno=12)
+                      value: True
+                    <class 'mecha.ast.AstRoot'>
+                      location: SourceLocation(pos=70, lineno=3, colno=9)
+                      end_location: SourceLocation(pos=76, lineno=3, colno=15)
+                      commands:
+                        <class 'mecha.ast.AstCommand'>
+                          location: SourceLocation(pos=70, lineno=3, colno=9)
+                          end_location: SourceLocation(pos=76, lineno=3, colno=15)
+                          identifier: 'say:message'
+                          arguments:
+                            <class 'mecha.ast.AstMessage'>
+                              location: SourceLocation(pos=74, lineno=3, colno=13)
+                              end_location: SourceLocation(pos=76, lineno=3, colno=15)
+                              fragments:
+                                <class 'mecha.ast.AstLiteral'>
+                                  location: SourceLocation(pos=74, lineno=3, colno=13)
+                                  end_location: SourceLocation(pos=76, lineno=3, colno=15)
+                                  value: '42'
+                <class 'mecha.ast.AstCommand'>
+                  location: SourceLocation(pos=81, lineno=4, colno=5)
+                  end_location: SourceLocation(pos=100, lineno=5, colno=15)
+                  identifier: 'else:body'
+                  arguments:
+                    <class 'mecha.ast.AstRoot'>
+                      location: SourceLocation(pos=94, lineno=5, colno=9)
+                      end_location: SourceLocation(pos=100, lineno=5, colno=15)
+                      commands:
+                        <class 'mecha.ast.AstCommand'>
+                          location: SourceLocation(pos=94, lineno=5, colno=9)
+                          end_location: SourceLocation(pos=100, lineno=5, colno=15)
+                          identifier: 'say:message'
+                          arguments:
+                            <class 'mecha.ast.AstMessage'>
+                              location: SourceLocation(pos=98, lineno=5, colno=13)
+                              end_location: SourceLocation(pos=100, lineno=5, colno=15)
+                              fragments:
+                                <class 'mecha.ast.AstLiteral'>
+                                  location: SourceLocation(pos=98, lineno=5, colno=13)
+                                  end_location: SourceLocation(pos=100, lineno=5, colno=15)
+                                  value: 'no'
+_mecha_refs[10]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=100, lineno=5, colno=15)
+  identifier: 'execute:subcommand'
+  arguments:
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=100, lineno=5, colno=15)
+      identifier: 'execute:if:score:target:targetObjective:matches:range:subcommand'
+      arguments:
+        <class 'mecha.ast.AstSelector'>
+          location: SourceLocation(pos=9, lineno=1, colno=10)
+          end_location: SourceLocation(pos=11, lineno=1, colno=12)
+          variable: 's'
+          arguments:
+            <empty>
+        <class 'mecha.ast.AstLiteral'>
+          location: SourceLocation(pos=12, lineno=1, colno=13)
+          end_location: SourceLocation(pos=15, lineno=1, colno=16)
+          value: 'tmp'
+        <class 'mecha.ast.AstRange'>
+          location: SourceLocation(pos=24, lineno=1, colno=25)
+          end_location: SourceLocation(pos=27, lineno=1, colno=28)
+          min: 1
+          max: None
+        <class 'mecha.ast.AstCommand'>
+          location: SourceLocation(pos=28, lineno=1, colno=29)
+          end_location: SourceLocation(pos=100, lineno=5, colno=15)
+          identifier: 'execute:if:entity:entities:subcommand'
+          arguments:
+            <class 'mecha.ast.AstSelector'>
+              location: SourceLocation(pos=38, lineno=1, colno=39)
+              end_location: SourceLocation(pos=49, lineno=1, colno=50)
+              variable: 'p'
+              arguments:
+                <class 'mecha.ast.AstSelectorArgument'>
+                  location: SourceLocation(pos=41, lineno=1, colno=42)
+                  end_location: SourceLocation(pos=48, lineno=1, colno=49)
+                  inverted: False
+                  key:
+                    <class 'mecha.ast.AstString'>
+                      location: SourceLocation(pos=41, lineno=1, colno=42)
+                      end_location: SourceLocation(pos=44, lineno=1, colno=45)
+                      value: 'tag'
+                  value:
+                    <class 'mecha.ast.AstLiteral'>
+                      location: SourceLocation(pos=45, lineno=1, colno=46)
+                      end_location: SourceLocation(pos=48, lineno=1, colno=49)
+                      value: 'foo'
+            <class 'mecha.contrib.nesting.AstNestedExecute'>
+              location: SourceLocation(pos=54, lineno=2, colno=5)
+              end_location: SourceLocation(pos=100, lineno=5, colno=15)
+              root:
+                <class 'mecha.ast.AstRoot'>
+                  location: SourceLocation(pos=54, lineno=2, colno=5)
+                  end_location: SourceLocation(pos=100, lineno=5, colno=15)
+                  commands:
+                    <class 'mecha.ast.AstCommand'>
+                      location: SourceLocation(pos=54, lineno=2, colno=5)
+                      end_location: SourceLocation(pos=76, lineno=3, colno=15)
+                      identifier: 'if:condition:body'
+                      arguments:
+                        <class 'mecha.contrib.scripting.ast.AstValue'>
+                          location: SourceLocation(pos=57, lineno=2, colno=8)
+                          end_location: SourceLocation(pos=61, lineno=2, colno=12)
+                          value: True
+                        <class 'mecha.ast.AstRoot'>
+                          location: SourceLocation(pos=70, lineno=3, colno=9)
+                          end_location: SourceLocation(pos=76, lineno=3, colno=15)
+                          commands:
+                            <class 'mecha.ast.AstCommand'>
+                              location: SourceLocation(pos=70, lineno=3, colno=9)
+                              end_location: SourceLocation(pos=76, lineno=3, colno=15)
+                              identifier: 'say:message'
+                              arguments:
+                                <class 'mecha.ast.AstMessage'>
+                                  location: SourceLocation(pos=74, lineno=3, colno=13)
+                                  end_location: SourceLocation(pos=76, lineno=3, colno=15)
+                                  fragments:
+                                    <class 'mecha.ast.AstLiteral'>
+                                      location: SourceLocation(pos=74, lineno=3, colno=13)
+                                      end_location: SourceLocation(pos=76, lineno=3, colno=15)
+                                      value: '42'
+                    <class 'mecha.ast.AstCommand'>
+                      location: SourceLocation(pos=81, lineno=4, colno=5)
+                      end_location: SourceLocation(pos=100, lineno=5, colno=15)
+                      identifier: 'else:body'
+                      arguments:
+                        <class 'mecha.ast.AstRoot'>
+                          location: SourceLocation(pos=94, lineno=5, colno=9)
+                          end_location: SourceLocation(pos=100, lineno=5, colno=15)
+                          commands:
+                            <class 'mecha.ast.AstCommand'>
+                              location: SourceLocation(pos=94, lineno=5, colno=9)
+                              end_location: SourceLocation(pos=100, lineno=5, colno=15)
+                              identifier: 'say:message'
+                              arguments:
+                                <class 'mecha.ast.AstMessage'>
+                                  location: SourceLocation(pos=98, lineno=5, colno=13)
+                                  end_location: SourceLocation(pos=100, lineno=5, colno=15)
+                                  fragments:
+                                    <class 'mecha.ast.AstLiteral'>
+                                      location: SourceLocation(pos=98, lineno=5, colno=13)
+                                      end_location: SourceLocation(pos=100, lineno=5, colno=15)
+                                      value: 'no'
+_mecha_refs[11]
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=100, lineno=5, colno=15)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=100, lineno=5, colno=15)
+      identifier: 'execute:subcommand'
+      arguments:
+        <class 'mecha.ast.AstCommand'>
+          location: SourceLocation(pos=0, lineno=1, colno=1)
+          end_location: SourceLocation(pos=100, lineno=5, colno=15)
+          identifier: 'execute:if:score:target:targetObjective:matches:range:subcommand'
+          arguments:
+            <class 'mecha.ast.AstSelector'>
+              location: SourceLocation(pos=9, lineno=1, colno=10)
+              end_location: SourceLocation(pos=11, lineno=1, colno=12)
+              variable: 's'
+              arguments:
+                <empty>
+            <class 'mecha.ast.AstLiteral'>
+              location: SourceLocation(pos=12, lineno=1, colno=13)
+              end_location: SourceLocation(pos=15, lineno=1, colno=16)
+              value: 'tmp'
+            <class 'mecha.ast.AstRange'>
+              location: SourceLocation(pos=24, lineno=1, colno=25)
+              end_location: SourceLocation(pos=27, lineno=1, colno=28)
+              min: 1
+              max: None
+            <class 'mecha.ast.AstCommand'>
+              location: SourceLocation(pos=28, lineno=1, colno=29)
+              end_location: SourceLocation(pos=100, lineno=5, colno=15)
+              identifier: 'execute:if:entity:entities:subcommand'
+              arguments:
+                <class 'mecha.ast.AstSelector'>
+                  location: SourceLocation(pos=38, lineno=1, colno=39)
+                  end_location: SourceLocation(pos=49, lineno=1, colno=50)
+                  variable: 'p'
+                  arguments:
+                    <class 'mecha.ast.AstSelectorArgument'>
+                      location: SourceLocation(pos=41, lineno=1, colno=42)
+                      end_location: SourceLocation(pos=48, lineno=1, colno=49)
+                      inverted: False
+                      key:
+                        <class 'mecha.ast.AstString'>
+                          location: SourceLocation(pos=41, lineno=1, colno=42)
+                          end_location: SourceLocation(pos=44, lineno=1, colno=45)
+                          value: 'tag'
+                      value:
+                        <class 'mecha.ast.AstLiteral'>
+                          location: SourceLocation(pos=45, lineno=1, colno=46)
+                          end_location: SourceLocation(pos=48, lineno=1, colno=49)
+                          value: 'foo'
+                <class 'mecha.contrib.nesting.AstNestedExecute'>
+                  location: SourceLocation(pos=54, lineno=2, colno=5)
+                  end_location: SourceLocation(pos=100, lineno=5, colno=15)
+                  root:
+                    <class 'mecha.ast.AstRoot'>
+                      location: SourceLocation(pos=54, lineno=2, colno=5)
+                      end_location: SourceLocation(pos=100, lineno=5, colno=15)
+                      commands:
+                        <class 'mecha.ast.AstCommand'>
+                          location: SourceLocation(pos=54, lineno=2, colno=5)
+                          end_location: SourceLocation(pos=76, lineno=3, colno=15)
+                          identifier: 'if:condition:body'
+                          arguments:
+                            <class 'mecha.contrib.scripting.ast.AstValue'>
+                              location: SourceLocation(pos=57, lineno=2, colno=8)
+                              end_location: SourceLocation(pos=61, lineno=2, colno=12)
+                              value: True
+                            <class 'mecha.ast.AstRoot'>
+                              location: SourceLocation(pos=70, lineno=3, colno=9)
+                              end_location: SourceLocation(pos=76, lineno=3, colno=15)
+                              commands:
+                                <class 'mecha.ast.AstCommand'>
+                                  location: SourceLocation(pos=70, lineno=3, colno=9)
+                                  end_location: SourceLocation(pos=76, lineno=3, colno=15)
+                                  identifier: 'say:message'
+                                  arguments:
+                                    <class 'mecha.ast.AstMessage'>
+                                      location: SourceLocation(pos=74, lineno=3, colno=13)
+                                      end_location: SourceLocation(pos=76, lineno=3, colno=15)
+                                      fragments:
+                                        <class 'mecha.ast.AstLiteral'>
+                                          location: SourceLocation(pos=74, lineno=3, colno=13)
+                                          end_location: SourceLocation(pos=76, lineno=3, colno=15)
+                                          value: '42'
+                        <class 'mecha.ast.AstCommand'>
+                          location: SourceLocation(pos=81, lineno=4, colno=5)
+                          end_location: SourceLocation(pos=100, lineno=5, colno=15)
+                          identifier: 'else:body'
+                          arguments:
+                            <class 'mecha.ast.AstRoot'>
+                              location: SourceLocation(pos=94, lineno=5, colno=9)
+                              end_location: SourceLocation(pos=100, lineno=5, colno=15)
+                              commands:
+                                <class 'mecha.ast.AstCommand'>
+                                  location: SourceLocation(pos=94, lineno=5, colno=9)
+                                  end_location: SourceLocation(pos=100, lineno=5, colno=15)
+                                  identifier: 'say:message'
+                                  arguments:
+                                    <class 'mecha.ast.AstMessage'>
+                                      location: SourceLocation(pos=98, lineno=5, colno=13)
+                                      end_location: SourceLocation(pos=100, lineno=5, colno=15)
+                                      fragments:
+                                        <class 'mecha.ast.AstLiteral'>
+                                          location: SourceLocation(pos=98, lineno=5, colno=13)
+                                          end_location: SourceLocation(pos=100, lineno=5, colno=15)
+                                          value: 'no'

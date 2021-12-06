@@ -1,4 +1,4 @@
-#>ERROR  Expected newline or eof but got literal '§§§'.
+#>ERROR  Expected eof or newline but got literal '§§§'.
 # line 1, column 4
 #      1 |  64 §§§
 #        :     ^^^

@@ -6,4 +6,4 @@ minecraft:component 1 1
 ---
 Reported 1 error.
 
-line 1, column 9: Expected curly '{', bracket '[', string, number, literal 'null', literal 'true' or literal 'false' but got bracket ']'.
+line 1, column 9: Expected bracket '[', curly '{', literal 'false', literal 'null', literal 'true', number or string but got bracket ']'.

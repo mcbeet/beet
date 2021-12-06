@@ -1,4 +1,4 @@
-#>ERROR  Expected identifier, curly '{', bracket '[', true, false, null, string or number but got newline '\n'.
+#>ERROR  Expected bracket '[', curly '{', false, identifier, null, number, string or true but got newline '\n'.
 # line 1, column 12
 #      1 |  if True and
 if True and

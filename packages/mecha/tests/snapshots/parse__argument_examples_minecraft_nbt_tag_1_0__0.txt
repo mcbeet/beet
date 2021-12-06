@@ -6,4 +6,4 @@ minecraft:nbt_tag 1 0
 ---
 Reported 1 error.
 
-line 1, column 1: Expected curly '{', bracket '[', array, number, string or quoted_string but got literal '"\\"'.
+line 1, column 1: Expected array, bracket '[', curly '{', number, quoted_string or string but got literal '"\\"'.

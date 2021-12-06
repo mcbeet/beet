@@ -582,7 +582,12 @@ def parse_command(stream: TokenStream) -> AstCommand:
                 commit()
 
         if commit.rollback and tree.children:
-            for (name, child), alternative in stream.choose(*tree.children.items()):
+            for (name, child), alternative in stream.choose(
+                *sorted(
+                    tree.children.items(),
+                    key=lambda p: p[1].type != "argument",
+                )
+            ):
                 with alternative, stream.provide(
                     scope=scope + (name,),
                     line_indentation=level,

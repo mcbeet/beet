@@ -6,4 +6,4 @@ minecraft:block_predicate 1 2
 ---
 Reported 1 error.
 
-line 1, column 8: Expected word or quoted_string but reached end of file.
+line 1, column 8: Expected quoted_string or word but reached end of file.

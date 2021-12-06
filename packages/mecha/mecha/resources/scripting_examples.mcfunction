@@ -445,3 +445,11 @@ say thing
 def f()
     from demo:foo import a b c
 say a
+###
+if score @s tmp matches 1.. if entity @p[tag=foo]
+    if True
+        say 42
+    else
+        say no
+###
+setblock = 0
