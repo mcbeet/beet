@@ -136,14 +136,19 @@ class AstNode:
             elif isinstance(attribute, AstNode):
                 yield from attribute.walk()
 
-    def dump(self, prefix: str = "") -> str:
+    def dump(self, prefix: str = "", shallow: bool = False) -> str:
         """Return a pretty-printed representation of the ast."""
         return f"{prefix}{self.__class__}\n" + "\n".join(
             f"{prefix}  {f.name}:"
             + (
-                "\n" + ("\n".join(child.dump(prefix + "    ") for child in attribute) if attribute else prefix + "    <empty>")  # type: ignore
+                "\n" + ("\n".join((f"{prefix}    {type(child)}" if shallow else child.dump(prefix + "    ")) for child in attribute) if attribute else prefix + "    <empty>")  # type: ignore
                 if isinstance(attribute := getattr(self, f.name), AstChildren)
-                else "\n" + attribute.dump(prefix + "    ")
+                else "\n"
+                + (
+                    f"{prefix}    {type(attribute)}"
+                    if shallow
+                    else attribute.dump(prefix + "    ")
+                )
                 if isinstance(attribute, AstNode)
                 else f" {attribute!r}"
             )

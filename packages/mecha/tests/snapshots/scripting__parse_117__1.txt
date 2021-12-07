@@ -18,17 +18,6 @@ _mecha_refs[0]
   converter: 'range'
   value:
     <class 'mecha.contrib.scripting.ast.AstTuple'>
-      location: SourceLocation(pos=30, lineno=2, colno=25)
-      end_location: SourceLocation(pos=39, lineno=2, colno=34)
-      items:
-        <class 'mecha.contrib.scripting.ast.AstIdentifier'>
-          location: SourceLocation(pos=31, lineno=2, colno=26)
-          end_location: SourceLocation(pos=32, lineno=2, colno=27)
-          value: 'x'
-        <class 'mecha.contrib.scripting.ast.AstValue'>
-          location: SourceLocation(pos=34, lineno=2, colno=29)
-          end_location: SourceLocation(pos=38, lineno=2, colno=33)
-          value: None
 _mecha_refs[1]
 <class 'mecha.ast.AstSelector'>
   location: SourceLocation(pos=15, lineno=2, colno=10)
@@ -48,18 +37,6 @@ _mecha_refs[3]
   identifier: 'execute:run:subcommand'
   arguments:
     <class 'mecha.ast.AstCommand'>
-      location: SourceLocation(pos=40, lineno=2, colno=35)
-      end_location: SourceLocation(pos=47, lineno=2, colno=42)
-      identifier: 'say:message'
-      arguments:
-        <class 'mecha.ast.AstMessage'>
-          location: SourceLocation(pos=44, lineno=2, colno=39)
-          end_location: SourceLocation(pos=47, lineno=2, colno=42)
-          fragments:
-            <class 'mecha.ast.AstMessageText'>
-              location: SourceLocation(pos=44, lineno=2, colno=39)
-              end_location: SourceLocation(pos=47, lineno=2, colno=42)
-              value: 'wat'
 _mecha_refs[4]
 <class 'mecha.ast.AstCommand'>
   location: SourceLocation(pos=6, lineno=2, colno=1)
@@ -67,50 +44,9 @@ _mecha_refs[4]
   identifier: 'execute:if:score:target:targetObjective:matches:range:subcommand'
   arguments:
     <class 'mecha.ast.AstSelector'>
-      location: SourceLocation(pos=15, lineno=2, colno=10)
-      end_location: SourceLocation(pos=17, lineno=2, colno=12)
-      variable: 's'
-      arguments:
-        <empty>
     <class 'mecha.ast.AstObjective'>
-      location: SourceLocation(pos=18, lineno=2, colno=13)
-      end_location: SourceLocation(pos=21, lineno=2, colno=16)
-      value: 'tmp'
     <class 'mecha.contrib.scripting.ast.AstInterpolation'>
-      location: SourceLocation(pos=30, lineno=2, colno=25)
-      end_location: SourceLocation(pos=39, lineno=2, colno=34)
-      converter: 'range'
-      value:
-        <class 'mecha.contrib.scripting.ast.AstTuple'>
-          location: SourceLocation(pos=30, lineno=2, colno=25)
-          end_location: SourceLocation(pos=39, lineno=2, colno=34)
-          items:
-            <class 'mecha.contrib.scripting.ast.AstIdentifier'>
-              location: SourceLocation(pos=31, lineno=2, colno=26)
-              end_location: SourceLocation(pos=32, lineno=2, colno=27)
-              value: 'x'
-            <class 'mecha.contrib.scripting.ast.AstValue'>
-              location: SourceLocation(pos=34, lineno=2, colno=29)
-              end_location: SourceLocation(pos=38, lineno=2, colno=33)
-              value: None
     <class 'mecha.ast.AstCommand'>
-      location: SourceLocation(pos=40, lineno=2, colno=35)
-      end_location: SourceLocation(pos=47, lineno=2, colno=42)
-      identifier: 'execute:run:subcommand'
-      arguments:
-        <class 'mecha.ast.AstCommand'>
-          location: SourceLocation(pos=40, lineno=2, colno=35)
-          end_location: SourceLocation(pos=47, lineno=2, colno=42)
-          identifier: 'say:message'
-          arguments:
-            <class 'mecha.ast.AstMessage'>
-              location: SourceLocation(pos=44, lineno=2, colno=39)
-              end_location: SourceLocation(pos=47, lineno=2, colno=42)
-              fragments:
-                <class 'mecha.ast.AstMessageText'>
-                  location: SourceLocation(pos=44, lineno=2, colno=39)
-                  end_location: SourceLocation(pos=47, lineno=2, colno=42)
-                  value: 'wat'
 _mecha_refs[5]
 <class 'mecha.ast.AstCommand'>
   location: SourceLocation(pos=6, lineno=2, colno=1)
@@ -118,131 +54,10 @@ _mecha_refs[5]
   identifier: 'execute:subcommand'
   arguments:
     <class 'mecha.ast.AstCommand'>
-      location: SourceLocation(pos=6, lineno=2, colno=1)
-      end_location: SourceLocation(pos=47, lineno=2, colno=42)
-      identifier: 'execute:if:score:target:targetObjective:matches:range:subcommand'
-      arguments:
-        <class 'mecha.ast.AstSelector'>
-          location: SourceLocation(pos=15, lineno=2, colno=10)
-          end_location: SourceLocation(pos=17, lineno=2, colno=12)
-          variable: 's'
-          arguments:
-            <empty>
-        <class 'mecha.ast.AstObjective'>
-          location: SourceLocation(pos=18, lineno=2, colno=13)
-          end_location: SourceLocation(pos=21, lineno=2, colno=16)
-          value: 'tmp'
-        <class 'mecha.contrib.scripting.ast.AstInterpolation'>
-          location: SourceLocation(pos=30, lineno=2, colno=25)
-          end_location: SourceLocation(pos=39, lineno=2, colno=34)
-          converter: 'range'
-          value:
-            <class 'mecha.contrib.scripting.ast.AstTuple'>
-              location: SourceLocation(pos=30, lineno=2, colno=25)
-              end_location: SourceLocation(pos=39, lineno=2, colno=34)
-              items:
-                <class 'mecha.contrib.scripting.ast.AstIdentifier'>
-                  location: SourceLocation(pos=31, lineno=2, colno=26)
-                  end_location: SourceLocation(pos=32, lineno=2, colno=27)
-                  value: 'x'
-                <class 'mecha.contrib.scripting.ast.AstValue'>
-                  location: SourceLocation(pos=34, lineno=2, colno=29)
-                  end_location: SourceLocation(pos=38, lineno=2, colno=33)
-                  value: None
-        <class 'mecha.ast.AstCommand'>
-          location: SourceLocation(pos=40, lineno=2, colno=35)
-          end_location: SourceLocation(pos=47, lineno=2, colno=42)
-          identifier: 'execute:run:subcommand'
-          arguments:
-            <class 'mecha.ast.AstCommand'>
-              location: SourceLocation(pos=40, lineno=2, colno=35)
-              end_location: SourceLocation(pos=47, lineno=2, colno=42)
-              identifier: 'say:message'
-              arguments:
-                <class 'mecha.ast.AstMessage'>
-                  location: SourceLocation(pos=44, lineno=2, colno=39)
-                  end_location: SourceLocation(pos=47, lineno=2, colno=42)
-                  fragments:
-                    <class 'mecha.ast.AstMessageText'>
-                      location: SourceLocation(pos=44, lineno=2, colno=39)
-                      end_location: SourceLocation(pos=47, lineno=2, colno=42)
-                      value: 'wat'
 _mecha_refs[6]
 <class 'mecha.ast.AstRoot'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=47, lineno=2, colno=42)
   commands:
     <class 'mecha.ast.AstCommand'>
-      location: SourceLocation(pos=0, lineno=1, colno=1)
-      end_location: SourceLocation(pos=5, lineno=1, colno=6)
-      identifier: 'statement'
-      arguments:
-        <class 'mecha.contrib.scripting.ast.AstAssignment'>
-          location: SourceLocation(pos=0, lineno=1, colno=1)
-          end_location: SourceLocation(pos=5, lineno=1, colno=6)
-          operator: '='
-          target:
-            <class 'mecha.contrib.scripting.ast.AstAssignmentTargetIdentifier'>
-              location: SourceLocation(pos=0, lineno=1, colno=1)
-              end_location: SourceLocation(pos=1, lineno=1, colno=2)
-              value: 'x'
-          value:
-            <class 'mecha.contrib.scripting.ast.AstValue'>
-              location: SourceLocation(pos=4, lineno=1, colno=5)
-              end_location: SourceLocation(pos=5, lineno=1, colno=6)
-              value: 8
     <class 'mecha.ast.AstCommand'>
-      location: SourceLocation(pos=6, lineno=2, colno=1)
-      end_location: SourceLocation(pos=47, lineno=2, colno=42)
-      identifier: 'execute:subcommand'
-      arguments:
-        <class 'mecha.ast.AstCommand'>
-          location: SourceLocation(pos=6, lineno=2, colno=1)
-          end_location: SourceLocation(pos=47, lineno=2, colno=42)
-          identifier: 'execute:if:score:target:targetObjective:matches:range:subcommand'
-          arguments:
-            <class 'mecha.ast.AstSelector'>
-              location: SourceLocation(pos=15, lineno=2, colno=10)
-              end_location: SourceLocation(pos=17, lineno=2, colno=12)
-              variable: 's'
-              arguments:
-                <empty>
-            <class 'mecha.ast.AstObjective'>
-              location: SourceLocation(pos=18, lineno=2, colno=13)
-              end_location: SourceLocation(pos=21, lineno=2, colno=16)
-              value: 'tmp'
-            <class 'mecha.contrib.scripting.ast.AstInterpolation'>
-              location: SourceLocation(pos=30, lineno=2, colno=25)
-              end_location: SourceLocation(pos=39, lineno=2, colno=34)
-              converter: 'range'
-              value:
-                <class 'mecha.contrib.scripting.ast.AstTuple'>
-                  location: SourceLocation(pos=30, lineno=2, colno=25)
-                  end_location: SourceLocation(pos=39, lineno=2, colno=34)
-                  items:
-                    <class 'mecha.contrib.scripting.ast.AstIdentifier'>
-                      location: SourceLocation(pos=31, lineno=2, colno=26)
-                      end_location: SourceLocation(pos=32, lineno=2, colno=27)
-                      value: 'x'
-                    <class 'mecha.contrib.scripting.ast.AstValue'>
-                      location: SourceLocation(pos=34, lineno=2, colno=29)
-                      end_location: SourceLocation(pos=38, lineno=2, colno=33)
-                      value: None
-            <class 'mecha.ast.AstCommand'>
-              location: SourceLocation(pos=40, lineno=2, colno=35)
-              end_location: SourceLocation(pos=47, lineno=2, colno=42)
-              identifier: 'execute:run:subcommand'
-              arguments:
-                <class 'mecha.ast.AstCommand'>
-                  location: SourceLocation(pos=40, lineno=2, colno=35)
-                  end_location: SourceLocation(pos=47, lineno=2, colno=42)
-                  identifier: 'say:message'
-                  arguments:
-                    <class 'mecha.ast.AstMessage'>
-                      location: SourceLocation(pos=44, lineno=2, colno=39)
-                      end_location: SourceLocation(pos=47, lineno=2, colno=42)
-                      fragments:
-                        <class 'mecha.ast.AstMessageText'>
-                          location: SourceLocation(pos=44, lineno=2, colno=39)
-                          end_location: SourceLocation(pos=47, lineno=2, colno=42)
-                          value: 'wat'

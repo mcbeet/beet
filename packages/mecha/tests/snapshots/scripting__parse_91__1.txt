@@ -13,24 +13,3 @@ _mecha_refs[0]
   end_location: SourceLocation(pos=19, lineno=4, colno=1)
   commands:
     <class 'mecha.ast.AstCommand'>
-      location: SourceLocation(pos=0, lineno=1, colno=1)
-      end_location: SourceLocation(pos=18, lineno=3, colno=2)
-      identifier: 'statement'
-      arguments:
-        <class 'mecha.contrib.scripting.ast.AstDict'>
-          location: SourceLocation(pos=0, lineno=1, colno=1)
-          end_location: SourceLocation(pos=18, lineno=3, colno=2)
-          items:
-            <class 'mecha.contrib.scripting.ast.AstDictItem'>
-              location: SourceLocation(pos=6, lineno=2, colno=5)
-              end_location: SourceLocation(pos=16, lineno=2, colno=15)
-              key:
-                <class 'mecha.contrib.scripting.ast.AstValue'>
-                  location: SourceLocation(pos=6, lineno=2, colno=5)
-                  end_location: SourceLocation(pos=9, lineno=2, colno=8)
-                  value: 'foo'
-              value:
-                <class 'mecha.contrib.scripting.ast.AstValue'>
-                  location: SourceLocation(pos=11, lineno=2, colno=10)
-                  end_location: SourceLocation(pos=16, lineno=2, colno=15)
-                  value: 'bar'

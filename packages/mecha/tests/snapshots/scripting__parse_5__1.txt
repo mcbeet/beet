@@ -13,21 +13,3 @@ _mecha_refs[0]
   end_location: SourceLocation(pos=6, lineno=2, colno=1)
   commands:
     <class 'mecha.ast.AstCommand'>
-      location: SourceLocation(pos=0, lineno=1, colno=1)
-      end_location: SourceLocation(pos=5, lineno=1, colno=6)
-      identifier: 'statement'
-      arguments:
-        <class 'mecha.contrib.scripting.ast.AstExpressionBinary'>
-          location: SourceLocation(pos=0, lineno=1, colno=1)
-          end_location: SourceLocation(pos=5, lineno=1, colno=6)
-          operator: '+'
-          left:
-            <class 'mecha.contrib.scripting.ast.AstValue'>
-              location: SourceLocation(pos=0, lineno=1, colno=1)
-              end_location: SourceLocation(pos=1, lineno=1, colno=2)
-              value: 1
-          right:
-            <class 'mecha.contrib.scripting.ast.AstValue'>
-              location: SourceLocation(pos=4, lineno=1, colno=5)
-              end_location: SourceLocation(pos=5, lineno=1, colno=6)
-              value: 2
