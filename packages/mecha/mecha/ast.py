@@ -65,6 +65,7 @@ __all__ = [
     "AstFallingDustParticleParameters",
     "AstItemParticleParameters",
     "AstVibrationParticleParameters",
+    "AstBlockMarkerParticleParameters",
     "AstParticle",
 ]
 
@@ -951,6 +952,13 @@ class AstVibrationParticleParameters(AstParticleParameters):
     y2: AstNumber = required_field()
     z2: AstNumber = required_field()
     duration: AstNumber = required_field()
+
+
+@dataclass(frozen=True)
+class AstBlockMarkerParticleParameters(AstParticleParameters):
+    """Ast block marker particle parameters node."""
+
+    block: AstBlock = required_field()
 
 
 @dataclass(frozen=True)

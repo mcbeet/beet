@@ -87,6 +87,7 @@ from tokenstream import InvalidSyntax, SourceLocation, TokenStream, set_location
 from .ast import (
     AstAdvancementPredicate,
     AstBlock,
+    AstBlockMarkerParticleParameters,
     AstBlockParticleParameters,
     AstBlockState,
     AstBool,
@@ -284,6 +285,10 @@ def get_default_parsers() -> Dict[str, Parser]:
                 "z2": delegate("numeric"),
                 "duration": delegate("integer"),
             },
+        ),
+        "particle:minecraft:block_marker": AggregateParser(
+            type=AstBlockMarkerParticleParameters,
+            fields={"block": delegate("block_state")},
         ),
         ################################################################################
         # Selector

@@ -146,3 +146,4 @@ weather rain
 # other
 scoreboard players operation #sie_1_flags_delta integer = #sie_1_flags integer
 scoreboard players set ✔ foo 42
+execute at @e[type=armor_stand, name="ctf", tag=!FlagBearer] run particle block_marker barrier ~ ~.8 ~ 0 0 0 0 1 force
