@@ -34,7 +34,7 @@
                   end_location: SourceLocation(pos=813, lineno=15, colno=43)
                   identifier: 'execute:anchored:anchor:subcommand'
                   arguments:
-                    <class 'mecha.ast.AstLiteral'>
+                    <class 'mecha.ast.AstEntityAnchor'>
                       location: SourceLocation(pos=164, lineno=5, colno=22)
                       end_location: SourceLocation(pos=168, lineno=5, colno=26)
                       value: 'eyes'
@@ -69,7 +69,7 @@
                           end_location: SourceLocation(pos=813, lineno=15, colno=43)
                           identifier: 'execute:anchored:anchor:subcommand'
                           arguments:
-                            <class 'mecha.ast.AstLiteral'>
+                            <class 'mecha.ast.AstEntityAnchor'>
                               location: SourceLocation(pos=307, lineno=7, colno=22)
                               end_location: SourceLocation(pos=311, lineno=7, colno=26)
                               value: 'feet'
@@ -175,7 +175,7 @@
                                                       location: SourceLocation(pos=791, lineno=15, colno=21)
                                                       end_location: SourceLocation(pos=813, lineno=15, colno=43)
                                                       fragments:
-                                                        <class 'mecha.ast.AstLiteral'>
+                                                        <class 'mecha.ast.AstMessageText'>
                                                           location: SourceLocation(pos=791, lineno=15, colno=21)
                                                           end_location: SourceLocation(pos=813, lineno=15, colno=43)
                                                           value: "I'm facing the target!"
