@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.20.3 (2021-12-07)
+### Fix
+* Handle block_marker particles ([`25bc124`](https://github.com/mcbeet/mecha/commit/25bc124ae6c9ab76ecea3204b512327e1d999bd5))
+* Shallow codegen snapshots ([`28d8696`](https://github.com/mcbeet/mecha/commit/28d8696f4946ac3da7dcf64f5644287e5057970a))
+* Use specialized nodes for literals ([`676fc54`](https://github.com/mcbeet/mecha/commit/676fc54ce3328917e50451f30ea85271e803c865))
+
 ## v0.20.2 (2021-12-06)
 ### Fix
 * Small optimization and update tokenstream to get sorted explanations ([`510da71`](https://github.com/mcbeet/mecha/commit/510da716aec9b393733bcb13e186e2c93da23317))
