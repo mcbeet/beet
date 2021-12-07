@@ -10,7 +10,7 @@ Hello @p :)
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=11, lineno=1, colno=12)
   fragments:
-    <class 'mecha.ast.AstLiteral'>
+    <class 'mecha.ast.AstMessageText'>
       location: SourceLocation(pos=0, lineno=1, colno=1)
       end_location: SourceLocation(pos=6, lineno=1, colno=7)
       value: 'Hello '
@@ -20,7 +20,7 @@ Hello @p :)
       variable: 'p'
       arguments:
         <empty>
-    <class 'mecha.ast.AstLiteral'>
+    <class 'mecha.ast.AstMessageText'>
       location: SourceLocation(pos=8, lineno=1, colno=9)
       end_location: SourceLocation(pos=11, lineno=1, colno=12)
       value: ' :)'

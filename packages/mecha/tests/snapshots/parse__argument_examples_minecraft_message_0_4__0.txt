@@ -10,7 +10,7 @@ foo @a[tag=a, tag=b]
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=20, lineno=1, colno=21)
   fragments:
-    <class 'mecha.ast.AstLiteral'>
+    <class 'mecha.ast.AstMessageText'>
       location: SourceLocation(pos=0, lineno=1, colno=1)
       end_location: SourceLocation(pos=4, lineno=1, colno=5)
       value: 'foo '
@@ -29,7 +29,7 @@ foo @a[tag=a, tag=b]
               end_location: SourceLocation(pos=10, lineno=1, colno=11)
               value: 'tag'
           value:
-            <class 'mecha.ast.AstLiteral'>
+            <class 'mecha.ast.AstWord'>
               location: SourceLocation(pos=11, lineno=1, colno=12)
               end_location: SourceLocation(pos=12, lineno=1, colno=13)
               value: 'a'
@@ -43,7 +43,7 @@ foo @a[tag=a, tag=b]
               end_location: SourceLocation(pos=17, lineno=1, colno=18)
               value: 'tag'
           value:
-            <class 'mecha.ast.AstLiteral'>
+            <class 'mecha.ast.AstWord'>
               location: SourceLocation(pos=18, lineno=1, colno=19)
               end_location: SourceLocation(pos=19, lineno=1, colno=20)
               value: 'b'

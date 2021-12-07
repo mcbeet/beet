@@ -6,4 +6,4 @@ wat
 ---
 Reported 1 error.
 
-line 1, column 1: Unexpected value 'wat'.
+line 1, column 1: Expected scoreboard_operation but got literal 'wat'.

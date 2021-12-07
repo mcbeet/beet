@@ -37,7 +37,7 @@ _mecha_refs[1]
   arguments:
     <empty>
 _mecha_refs[2]
-<class 'mecha.ast.AstLiteral'>
+<class 'mecha.ast.AstObjective'>
   location: SourceLocation(pos=18, lineno=2, colno=13)
   end_location: SourceLocation(pos=21, lineno=2, colno=16)
   value: 'tmp'
@@ -56,7 +56,7 @@ _mecha_refs[3]
           location: SourceLocation(pos=44, lineno=2, colno=39)
           end_location: SourceLocation(pos=47, lineno=2, colno=42)
           fragments:
-            <class 'mecha.ast.AstLiteral'>
+            <class 'mecha.ast.AstMessageText'>
               location: SourceLocation(pos=44, lineno=2, colno=39)
               end_location: SourceLocation(pos=47, lineno=2, colno=42)
               value: 'wat'
@@ -72,7 +72,7 @@ _mecha_refs[4]
       variable: 's'
       arguments:
         <empty>
-    <class 'mecha.ast.AstLiteral'>
+    <class 'mecha.ast.AstObjective'>
       location: SourceLocation(pos=18, lineno=2, colno=13)
       end_location: SourceLocation(pos=21, lineno=2, colno=16)
       value: 'tmp'
@@ -107,7 +107,7 @@ _mecha_refs[4]
               location: SourceLocation(pos=44, lineno=2, colno=39)
               end_location: SourceLocation(pos=47, lineno=2, colno=42)
               fragments:
-                <class 'mecha.ast.AstLiteral'>
+                <class 'mecha.ast.AstMessageText'>
                   location: SourceLocation(pos=44, lineno=2, colno=39)
                   end_location: SourceLocation(pos=47, lineno=2, colno=42)
                   value: 'wat'
@@ -128,7 +128,7 @@ _mecha_refs[5]
           variable: 's'
           arguments:
             <empty>
-        <class 'mecha.ast.AstLiteral'>
+        <class 'mecha.ast.AstObjective'>
           location: SourceLocation(pos=18, lineno=2, colno=13)
           end_location: SourceLocation(pos=21, lineno=2, colno=16)
           value: 'tmp'
@@ -163,7 +163,7 @@ _mecha_refs[5]
                   location: SourceLocation(pos=44, lineno=2, colno=39)
                   end_location: SourceLocation(pos=47, lineno=2, colno=42)
                   fragments:
-                    <class 'mecha.ast.AstLiteral'>
+                    <class 'mecha.ast.AstMessageText'>
                       location: SourceLocation(pos=44, lineno=2, colno=39)
                       end_location: SourceLocation(pos=47, lineno=2, colno=42)
                       value: 'wat'
@@ -207,7 +207,7 @@ _mecha_refs[6]
               variable: 's'
               arguments:
                 <empty>
-            <class 'mecha.ast.AstLiteral'>
+            <class 'mecha.ast.AstObjective'>
               location: SourceLocation(pos=18, lineno=2, colno=13)
               end_location: SourceLocation(pos=21, lineno=2, colno=16)
               value: 'tmp'
@@ -242,7 +242,7 @@ _mecha_refs[6]
                       location: SourceLocation(pos=44, lineno=2, colno=39)
                       end_location: SourceLocation(pos=47, lineno=2, colno=42)
                       fragments:
-                        <class 'mecha.ast.AstLiteral'>
+                        <class 'mecha.ast.AstMessageText'>
                           location: SourceLocation(pos=44, lineno=2, colno=39)
                           end_location: SourceLocation(pos=47, lineno=2, colno=42)
                           value: 'wat'

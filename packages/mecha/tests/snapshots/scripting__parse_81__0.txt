@@ -60,31 +60,31 @@ def foo(something)
                           location: SourceLocation(pos=57, lineno=4, colno=13)
                           end_location: SourceLocation(pos=106, lineno=7, colno=16)
                           fragments:
-                            <class 'mecha.ast.AstLiteral'>
+                            <class 'mecha.ast.AstMessageText'>
                               location: SourceLocation(pos=57, lineno=4, colno=13)
                               end_location: SourceLocation(pos=59, lineno=4, colno=15)
                               value: 'yo'
-                            <class 'mecha.ast.AstLiteral'>
+                            <class 'mecha.ast.AstMessageText'>
                               location: SourceLocation(pos=71, lineno=5, colno=12)
                               end_location: SourceLocation(pos=72, lineno=5, colno=13)
                               value: ' '
-                            <class 'mecha.ast.AstLiteral'>
+                            <class 'mecha.ast.AstMessageText'>
                               location: SourceLocation(pos=72, lineno=5, colno=13)
                               end_location: SourceLocation(pos=75, lineno=5, colno=16)
                               value: 'wat'
-                            <class 'mecha.ast.AstLiteral'>
+                            <class 'mecha.ast.AstMessageText'>
                               location: SourceLocation(pos=87, lineno=6, colno=12)
                               end_location: SourceLocation(pos=88, lineno=6, colno=13)
                               value: ' '
-                            <class 'mecha.ast.AstLiteral'>
+                            <class 'mecha.ast.AstMessageText'>
                               location: SourceLocation(pos=88, lineno=6, colno=13)
                               end_location: SourceLocation(pos=90, lineno=6, colno=15)
                               value: 'is'
-                            <class 'mecha.ast.AstLiteral'>
+                            <class 'mecha.ast.AstMessageText'>
                               location: SourceLocation(pos=102, lineno=7, colno=12)
                               end_location: SourceLocation(pos=103, lineno=7, colno=13)
                               value: ' '
-                            <class 'mecha.ast.AstLiteral'>
+                            <class 'mecha.ast.AstMessageText'>
                               location: SourceLocation(pos=103, lineno=7, colno=13)
                               end_location: SourceLocation(pos=106, lineno=7, colno=16)
                               value: 'dat'
@@ -162,7 +162,7 @@ def foo(something)
                           location: SourceLocation(pos=210, lineno=13, colno=13)
                           end_location: SourceLocation(pos=213, lineno=13, colno=16)
                           fragments:
-                            <class 'mecha.ast.AstLiteral'>
+                            <class 'mecha.ast.AstMessageText'>
                               location: SourceLocation(pos=210, lineno=13, colno=13)
                               end_location: SourceLocation(pos=213, lineno=13, colno=16)
                               value: 'wow'

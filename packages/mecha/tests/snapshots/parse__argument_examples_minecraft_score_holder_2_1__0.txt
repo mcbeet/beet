@@ -6,4 +6,4 @@ minecraft:score_holder 2 1
 ---
 Reported 1 error.
 
-line 1, column 32: Unexpected value 'wat'.
+line 1, column 32: Expected sort_order but got literal 'wat,'.

@@ -20,7 +20,7 @@ _mecha_refs[0]
       location: SourceLocation(pos=43, lineno=3, colno=5)
       end_location: SourceLocation(pos=44, lineno=3, colno=6)
       fragments:
-        <class 'mecha.ast.AstLiteral'>
+        <class 'mecha.ast.AstMessageText'>
           location: SourceLocation(pos=43, lineno=3, colno=5)
           end_location: SourceLocation(pos=44, lineno=3, colno=6)
           value: 'a'
@@ -60,7 +60,7 @@ _mecha_refs[1]
                   end_location: SourceLocation(pos=38, lineno=2, colno=31)
                   identifier: 'from:module:import:name:subcommand'
                   arguments:
-                    <class 'mecha.ast.AstLiteral'>
+                    <class 'mecha.contrib.scripting.ast.AstImportedIdentifier'>
                       location: SourceLocation(pos=33, lineno=2, colno=26)
                       end_location: SourceLocation(pos=34, lineno=2, colno=27)
                       value: 'a'
@@ -69,7 +69,7 @@ _mecha_refs[1]
                       end_location: SourceLocation(pos=38, lineno=2, colno=31)
                       identifier: 'from:module:import:name:subcommand'
                       arguments:
-                        <class 'mecha.ast.AstLiteral'>
+                        <class 'mecha.contrib.scripting.ast.AstImportedIdentifier'>
                           location: SourceLocation(pos=35, lineno=2, colno=28)
                           end_location: SourceLocation(pos=36, lineno=2, colno=29)
                           value: 'b'
@@ -78,7 +78,7 @@ _mecha_refs[1]
                           end_location: SourceLocation(pos=38, lineno=2, colno=31)
                           identifier: 'from:module:import:name'
                           arguments:
-                            <class 'mecha.ast.AstLiteral'>
+                            <class 'mecha.contrib.scripting.ast.AstImportedIdentifier'>
                               location: SourceLocation(pos=37, lineno=2, colno=30)
                               end_location: SourceLocation(pos=38, lineno=2, colno=31)
                               value: 'c'
@@ -91,7 +91,7 @@ _mecha_refs[1]
           location: SourceLocation(pos=43, lineno=3, colno=5)
           end_location: SourceLocation(pos=44, lineno=3, colno=6)
           fragments:
-            <class 'mecha.ast.AstLiteral'>
+            <class 'mecha.ast.AstMessageText'>
               location: SourceLocation(pos=43, lineno=3, colno=5)
               end_location: SourceLocation(pos=44, lineno=3, colno=6)
               value: 'a'

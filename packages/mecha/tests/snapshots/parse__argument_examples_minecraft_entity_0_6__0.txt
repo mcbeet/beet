@@ -55,7 +55,7 @@ minecraft:entity 0 6
                   location: SourceLocation(pos=62, lineno=1, colno=63)
                   end_location: SourceLocation(pos=72, lineno=1, colno=73)
                   key:
-                    <class 'mecha.ast.AstLiteral'>
+                    <class 'mecha.ast.AstAdvancementPredicate'>
                       location: SourceLocation(pos=62, lineno=1, colno=63)
                       end_location: SourceLocation(pos=65, lineno=1, colno=66)
                       value: 'qux'

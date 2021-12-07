@@ -5,26 +5,32 @@ __all__ = [
 
 from dataclasses import replace
 from functools import wraps
-from typing import Any, Callable, Dict, Union, cast
+from typing import Any, Callable, Dict
 
 from tokenstream import set_location
 
 from mecha import (
     AstBool,
     AstChildren,
+    AstColor,
+    AstGamemode,
+    AstGreedy,
     AstJson,
-    AstLiteral,
     AstMessage,
     AstNbt,
     AstNode,
     AstNumber,
+    AstObjective,
+    AstObjectiveCriteria,
     AstRange,
     AstResourceLocation,
-    AstSelector,
+    AstSortOrder,
     AstString,
+    AstSwizzle,
+    AstTeam,
     AstTime,
+    AstWord,
 )
-from mecha.utils import string_to_number
 
 from .utils import internal
 
@@ -36,16 +42,24 @@ def get_scripting_helpers() -> Dict[str, Any]:
         "missing": object(),
         "children": AstChildren,
         "get_attribute": get_attribute,
-        "interpolate_literal": converter(interpolate_literal),
-        "interpolate_bool": converter(interpolate_bool),
-        "interpolate_numeric": converter(interpolate_numeric),
-        "interpolate_time": converter(interpolate_time),
-        "interpolate_string": converter(interpolate_string),
-        "interpolate_json": converter(interpolate_json),
-        "interpolate_nbt": converter(interpolate_nbt),
-        "interpolate_range": converter(interpolate_range),
-        "interpolate_resource_location": converter(interpolate_resource_location),
-        "interpolate_message": converter(interpolate_message),
+        "interpolate_bool": converter(AstBool.from_value),
+        "interpolate_numeric": converter(AstNumber.from_value),
+        "interpolate_time": converter(AstTime.from_value),
+        "interpolate_word": converter(AstWord.from_value),
+        "interpolate_phrase": converter(AstString.from_value),
+        "interpolate_greedy": converter(AstGreedy.from_value),
+        "interpolate_json": converter(AstJson.from_value),
+        "interpolate_nbt": converter(AstNbt.from_value),
+        "interpolate_range": converter(AstRange.from_value),
+        "interpolate_resource_location": converter(AstResourceLocation.from_value),
+        "interpolate_objective": converter(AstObjective.from_value),
+        "interpolate_objective_criteria": converter(AstObjectiveCriteria.from_value),
+        "interpolate_swizzle": converter(AstSwizzle.from_value),
+        "interpolate_team": converter(AstTeam.from_value),
+        "interpolate_color": converter(AstColor.from_value),
+        "interpolate_sort_order": converter(AstSortOrder.from_value),
+        "interpolate_gamemode": converter(AstGamemode.from_value),
+        "interpolate_message": converter(AstMessage.from_value),
     }
 
 
@@ -61,54 +75,11 @@ def get_attribute(obj: Any, attr: str):
 
 
 def converter(f: Callable[[Any], AstNode]) -> Callable[[Any, AstNode], AstNode]:
+    internal(f)
+
     @internal
     @wraps(f)
     def wrapper(obj: Any, node: AstNode) -> AstNode:
         return set_location(f(obj), node)
 
     return wrapper
-
-
-def interpolate_literal(obj: Any) -> AstLiteral:
-    return AstLiteral(value=str(obj))
-
-
-def interpolate_bool(obj: Any) -> AstBool:
-    return AstBool(value=bool(obj))
-
-
-def interpolate_numeric(obj: Any) -> AstNumber:
-    if isinstance(obj, str):
-        obj = string_to_number(obj)
-    return AstNumber(value=obj)
-
-
-def interpolate_time(obj: Any) -> AstTime:
-    return AstTime.from_value(obj)
-
-
-def interpolate_string(obj: Any) -> AstString:
-    return AstString(value=str(obj))
-
-
-def interpolate_json(obj: Any) -> AstJson:
-    return AstJson.from_value(obj)
-
-
-def interpolate_nbt(obj: Any) -> AstNbt:
-    return AstNbt.from_value(obj)
-
-
-def interpolate_range(obj: Any) -> AstRange:
-    return AstRange.from_value(obj)
-
-
-def interpolate_resource_location(obj: Any) -> AstResourceLocation:
-    return AstResourceLocation.from_value(str(obj))
-
-
-def interpolate_message(obj: Any) -> AstMessage:
-    fragments = AstChildren([AstLiteral(value=str(obj))])
-    return AstMessage(
-        fragments=cast(AstChildren[Union[AstLiteral, AstSelector]], fragments)
-    )

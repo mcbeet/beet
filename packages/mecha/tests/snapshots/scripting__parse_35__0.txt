@@ -31,7 +31,7 @@ else
                   location: SourceLocation(pos=16, lineno=2, colno=9)
                   end_location: SourceLocation(pos=21, lineno=2, colno=14)
                   fragments:
-                    <class 'mecha.ast.AstLiteral'>
+                    <class 'mecha.ast.AstMessageText'>
                       location: SourceLocation(pos=16, lineno=2, colno=9)
                       end_location: SourceLocation(pos=21, lineno=2, colno=14)
                       value: 'hello'
@@ -67,7 +67,7 @@ else
                   location: SourceLocation(pos=49, lineno=4, colno=9)
                   end_location: SourceLocation(pos=54, lineno=4, colno=14)
                   fragments:
-                    <class 'mecha.ast.AstLiteral'>
+                    <class 'mecha.ast.AstMessageText'>
                       location: SourceLocation(pos=49, lineno=4, colno=9)
                       end_location: SourceLocation(pos=54, lineno=4, colno=14)
                       value: 'hello'
@@ -89,7 +89,7 @@ else
                   location: SourceLocation(pos=68, lineno=6, colno=9)
                   end_location: SourceLocation(pos=73, lineno=6, colno=14)
                   fragments:
-                    <class 'mecha.ast.AstLiteral'>
+                    <class 'mecha.ast.AstMessageText'>
                       location: SourceLocation(pos=68, lineno=6, colno=9)
                       end_location: SourceLocation(pos=73, lineno=6, colno=14)
                       value: 'hello'

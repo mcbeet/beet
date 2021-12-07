@@ -24,7 +24,7 @@ if score @s tmp matches 1.. if entity @p[tag=foo]
               variable: 's'
               arguments:
                 <empty>
-            <class 'mecha.ast.AstLiteral'>
+            <class 'mecha.ast.AstObjective'>
               location: SourceLocation(pos=12, lineno=1, colno=13)
               end_location: SourceLocation(pos=15, lineno=1, colno=16)
               value: 'tmp'
@@ -53,7 +53,7 @@ if score @s tmp matches 1.. if entity @p[tag=foo]
                           end_location: SourceLocation(pos=44, lineno=1, colno=45)
                           value: 'tag'
                       value:
-                        <class 'mecha.ast.AstLiteral'>
+                        <class 'mecha.ast.AstWord'>
                           location: SourceLocation(pos=45, lineno=1, colno=46)
                           end_location: SourceLocation(pos=48, lineno=1, colno=49)
                           value: 'foo'
@@ -87,7 +87,7 @@ if score @s tmp matches 1.. if entity @p[tag=foo]
                                       location: SourceLocation(pos=74, lineno=3, colno=13)
                                       end_location: SourceLocation(pos=76, lineno=3, colno=15)
                                       fragments:
-                                        <class 'mecha.ast.AstLiteral'>
+                                        <class 'mecha.ast.AstMessageText'>
                                           location: SourceLocation(pos=74, lineno=3, colno=13)
                                           end_location: SourceLocation(pos=76, lineno=3, colno=15)
                                           value: '42'
@@ -109,7 +109,7 @@ if score @s tmp matches 1.. if entity @p[tag=foo]
                                       location: SourceLocation(pos=98, lineno=5, colno=13)
                                       end_location: SourceLocation(pos=100, lineno=5, colno=15)
                                       fragments:
-                                        <class 'mecha.ast.AstLiteral'>
+                                        <class 'mecha.ast.AstMessageText'>
                                           location: SourceLocation(pos=98, lineno=5, colno=13)
                                           end_location: SourceLocation(pos=100, lineno=5, colno=15)
                                           value: 'no'

@@ -6,4 +6,4 @@ yzy
 ---
 Reported 1 error.
 
-line 1, column 1: Invalid swizzle 'yzy'.
+line 1, column 1: Expected swizzle but got literal 'yzy'.

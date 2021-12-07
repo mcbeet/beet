@@ -3,6 +3,7 @@
 
 __all__ = [
     "AstMessageReference",
+    "AstMessageReferencePath",
     "MessageReferenceParser",
     "MessageReferenceTransformer",
     "MessageReferenceSerializer",
@@ -19,7 +20,6 @@ from tokenstream import TokenStream, set_location
 
 from mecha import (
     AstJson,
-    AstLiteral,
     AstNode,
     AstResourceLocation,
     Diagnostic,
@@ -33,11 +33,18 @@ from mecha import (
 
 
 @dataclass(frozen=True)
+class AstMessageReferencePath(AstNode):
+    """Ast message reference path node."""
+
+    value: str = required_field()
+
+
+@dataclass(frozen=True)
 class AstMessageReference(AstNode):
     """Ast message reference node."""
 
     name: AstResourceLocation = required_field()
-    path: Optional[AstLiteral] = None
+    path: Optional[AstMessageReferencePath] = None
 
 
 def beet_default(ctx: Context):
@@ -67,7 +74,7 @@ class MessageReferenceParser:
             path = stream.get("path")
 
         if path is not None:
-            path = set_location(AstLiteral(value=path.value), path)
+            path = set_location(AstMessageReferencePath(value=path.value), path)
 
         node = AstMessageReference(name=name, path=path)
         return set_location(node, token, path or name)

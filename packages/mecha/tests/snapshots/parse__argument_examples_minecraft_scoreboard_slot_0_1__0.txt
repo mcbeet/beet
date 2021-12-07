@@ -6,7 +6,7 @@ foo.bar
 ---
 foo.bar
 ---
-<class 'mecha.ast.AstLiteral'>
+<class 'mecha.ast.AstWord'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=7, lineno=1, colno=8)
   value: 'foo.bar'

@@ -4,8 +4,8 @@ from mecha import (
     AstCommand,
     AstCoordinate,
     AstDustParticleParameters,
-    AstLiteral,
     AstMessage,
+    AstMessageText,
     AstNode,
     AstNumber,
     AstParticle,
@@ -100,7 +100,7 @@ def test_visitor_result(mc: Mecha):
             return "".join(
                 fragment.value
                 for fragment in node.fragments
-                if isinstance(fragment, AstLiteral)
+                if isinstance(fragment, AstMessageText)
             )
 
     assert Foo().invoke(ast) == ["say:message('hello')", "say:message('world')"]

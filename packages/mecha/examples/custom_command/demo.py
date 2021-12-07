@@ -6,8 +6,8 @@ from beet import Context
 from mecha import (
     AstChildren,
     AstCommand,
-    AstLiteral,
     AstMessage,
+    AstMessageText,
     AstSelector,
     Mecha,
     MutatingReducer,
@@ -49,7 +49,7 @@ class GreetCommandTransformer(MutatingReducer):
                     AstMessage(
                         fragments=AstChildren(
                             [
-                                AstLiteral(value="Hello "),
+                                AstMessageText(value="Hello "),
                                 cast(AstSelector, node.arguments[0]),
                             ]
                         )

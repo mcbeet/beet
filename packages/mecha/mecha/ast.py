@@ -3,12 +3,28 @@ __all__ = [
     "AstChildren",
     "AstRoot",
     "AstCommand",
-    "AstLiteral",
     "AstString",
     "AstBool",
     "AstNumber",
     "AstUUID",
     "AstCoordinate",
+    "AstLiteral",
+    "AstOption",
+    "AstWord",
+    "AstGreedy",
+    "AstObjective",
+    "AstObjectiveCriteria",
+    "AstScoreboardOperation",
+    "AstTeam",
+    "AstPlayerName",
+    "AstSwizzle",
+    "AstAdvancementPredicate",
+    "AstWildcard",
+    "AstColor",
+    "AstColorReset",
+    "AstSortOrder",
+    "AstGamemode",
+    "AstEntityAnchor",
     "AstVector2",
     "AstVector3",
     "AstJson",
@@ -38,6 +54,7 @@ __all__ = [
     "AstSelectorAdvancementMatch",
     "AstSelectorArgument",
     "AstSelector",
+    "AstMessageText",
     "AstMessage",
     "AstNbtPathSubscript",
     "AstNbtPath",
@@ -52,7 +69,9 @@ __all__ = [
 ]
 
 
+import re
 from dataclasses import dataclass, fields
+from itertools import permutations
 from typing import (
     Any,
     ClassVar,
@@ -62,8 +81,10 @@ from typing import (
     Optional,
     Sequence,
     Tuple,
+    Type,
     TypeVar,
     Union,
+    cast,
 )
 from uuid import UUID
 
@@ -79,6 +100,7 @@ from .utils import string_to_number
 
 T = TypeVar("T")
 AstNodeType = TypeVar("AstNodeType", bound="AstNode")
+AstLiteralType = TypeVar("AstLiteralType", bound="AstLiteral")
 
 
 @dataclass(frozen=True)
@@ -160,21 +182,17 @@ class AstCommand(AstNode):
 
 
 @dataclass(frozen=True)
-class AstLiteral(AstNode):
-    """Ast literal node."""
-
-    value: str = required_field()
-
-    parser = "literal"
-
-
-@dataclass(frozen=True)
 class AstString(AstNode):
     """Ast string node."""
 
     value: str = required_field()
 
     parser = "phrase"
+
+    @classmethod
+    def from_value(cls, value: Any) -> "AstString":
+        """Return a string node from the given value."""
+        return AstString(value=str(value))
 
 
 @dataclass(frozen=True)
@@ -185,6 +203,11 @@ class AstBool(AstNode):
 
     parser = "bool"
 
+    @classmethod
+    def from_value(cls, value: Any) -> "AstBool":
+        """Return a bool node from the given value."""
+        return AstBool(value=bool(value))
+
 
 @dataclass(frozen=True)
 class AstNumber(AstNode):
@@ -193,6 +216,15 @@ class AstNumber(AstNode):
     value: Union[int, float] = required_field()
 
     parser = "numeric"
+
+    @classmethod
+    def from_value(cls, value: Any) -> "AstNumber":
+        """Return a number node from the given value."""
+        if isinstance(value, str):
+            value = string_to_number(value)
+        if isinstance(value, (int, float)):
+            return AstNumber(value=value)
+        raise ValueError("Invalid number {value!r}.")
 
 
 @dataclass(frozen=True)
@@ -229,6 +261,182 @@ class AstVector3(AstNode):
     x: AstCoordinate = required_field()
     y: AstCoordinate = required_field()
     z: AstCoordinate = required_field()
+
+
+@dataclass(frozen=True)
+class AstLiteral(AstNode):
+    """Base ast node for literals."""
+
+    value: str = required_field()
+
+    regex: ClassVar["re.Pattern[str]"] = re.compile(r"[^#:\s]+")
+
+    @classmethod
+    def from_value(cls: Type[AstLiteralType], value: Any) -> AstLiteralType:
+        """Return a literal node from a given value."""
+        value = str(value)
+        match = cls.regex.match(value)
+        if match and match[0] == value:
+            return cls(value=value)
+        raise ValueError(f"Invalid {cls.parser or 'literal'} {value!r}.")
+
+
+@dataclass(frozen=True)
+class AstWord(AstLiteral):
+    """Ast word node."""
+
+    parser = "word"
+    regex = re.compile(r"[0-9A-Za-z_\.\+\-]+")
+
+
+@dataclass(frozen=True)
+class AstOption(AstLiteral):
+    """Base node for options."""
+
+    options: ClassVar[Tuple[str, ...]] = ()
+
+    def __init_subclass__(cls):
+        patterns = [
+            fr"{pattern}\b" if pattern[-1].isalnum() else pattern
+            for option in cls.options
+            if (pattern := re.escape(option))
+        ]
+        cls.regex = re.compile("|".join(patterns))
+
+
+@dataclass(frozen=True)
+class AstGreedy(AstLiteral):
+    """Ast greedy node."""
+
+    parser = "greedy"
+    regex = re.compile(r".+")
+
+
+@dataclass(frozen=True)
+class AstObjective(AstLiteral):
+    """Ast objective node."""
+
+    parser = "objective"
+    regex = re.compile(r"[a-zA-Z0-9_.+-]+")
+
+
+@dataclass(frozen=True)
+class AstObjectiveCriteria(AstLiteral):
+    """Ast objective criteria node."""
+
+    parser = "objective_criteria"
+    regex = re.compile(r"[a-zA-Z0-9_.+-]+(?::[a-zA-Z0-9_.+-]+)?")
+
+
+@dataclass(frozen=True)
+class AstScoreboardOperation(AstOption):
+    """Ast scoreboard operation node."""
+
+    parser = "scoreboard_operation"
+    options = "+=", "-=", "*=", "/=", "%=", "=", "><", "<", ">"
+
+
+@dataclass(frozen=True)
+class AstTeam(AstLiteral):
+    """Ast team node."""
+
+    parser = "team"
+    regex = re.compile(r"[a-zA-Z0-9_.+-]+")
+
+
+@dataclass(frozen=True)
+class AstPlayerName(AstLiteral):
+    """Ast player name node."""
+
+    parser = "player_name"
+    regex = re.compile(r"[^:*\s]+")
+
+
+@dataclass(frozen=True)
+class AstSwizzle(AstOption):
+    """Ast swizzle node."""
+
+    parser = "swizzle"
+    options = (
+        tuple("xyz")
+        + tuple(map("".join, permutations("xyz", 2)))
+        + tuple(map("".join, permutations("xyz", 3)))
+    )
+
+
+@dataclass(frozen=True)
+class AstAdvancementPredicate(AstLiteral):
+    """Ast advancement predicate node."""
+
+    parser = "advancement_predicate"
+    regex = re.compile(r"[0-9A-Za-z_\.\+\-]+")
+
+
+@dataclass(frozen=True)
+class AstWildcard(AstLiteral):
+    """Ast wildcard node."""
+
+    value: str = "*"
+
+    parser = "wildcard"
+    regex = re.compile(r"\*")
+
+
+@dataclass(frozen=True)
+class AstColor(AstOption):
+    """Ast color node."""
+
+    parser = "color"
+    options = (
+        "black",
+        "dark_blue",
+        "dark_green",
+        "dark_aqua",
+        "dark_red",
+        "dark_purple",
+        "gold",
+        "gray",
+        "dark_gray",
+        "blue",
+        "green",
+        "aqua",
+        "red",
+        "light_purple",
+        "yellow",
+        "white",
+    )
+
+
+@dataclass(frozen=True)
+class AstColorReset(AstOption):
+    """Ast color reset node."""
+
+    parser = "color_reset"
+    options = ("reset",)
+
+
+@dataclass(frozen=True)
+class AstSortOrder(AstOption):
+    """Ast sort order node."""
+
+    parser = "sort_order"
+    options = "nearest", "furthest", "random", "arbitrary"
+
+
+@dataclass(frozen=True)
+class AstGamemode(AstOption):
+    """Ast gamemode node."""
+
+    parser = "gamemode"
+    options = "adventure", "creative", "spectator", "survival"
+
+
+@dataclass(frozen=True)
+class AstEntityAnchor(AstOption):
+    """Ast entity anchor node."""
+
+    parser = "entity_anchor"
+    options = "eyes", "feet"
 
 
 @dataclass(frozen=True)
@@ -582,7 +790,7 @@ class AstTime(AstNode):
 class AstSelectorScoreMatch(AstNode):
     """Ast selector score match node."""
 
-    key: AstLiteral = required_field()
+    key: AstObjective = required_field()
     value: AstRange = required_field()
 
 
@@ -597,7 +805,7 @@ class AstSelectorScores(AstNode):
 class AstSelectorAdvancementPredicateMatch(AstNode):
     """Ast selector advancement predicate match node."""
 
-    key: AstLiteral = required_field()
+    key: AstAdvancementPredicate = required_field()
     value: AstBool = required_field()
 
 
@@ -638,10 +846,26 @@ class AstSelector(AstNode):
 
 
 @dataclass(frozen=True)
+class AstMessageText(AstLiteral):
+    """Ast message text node."""
+
+    value: str = required_field()
+    regex = re.compile(r".+")
+
+
+@dataclass(frozen=True)
 class AstMessage(AstNode):
     """Ast message node."""
 
-    fragments: AstChildren[Union[AstLiteral, AstSelector]] = required_field()
+    fragments: AstChildren[Union[AstMessageText, AstSelector]] = required_field()
+
+    @classmethod
+    def from_value(cls, obj: Any) -> "AstMessage":
+        """Return message node from a given value."""
+        fragments = AstChildren([AstMessageText.from_value(obj)])
+        return AstMessage(
+            fragments=cast(AstChildren[Union[AstMessageText, AstSelector]], fragments)
+        )
 
 
 @dataclass(frozen=True)

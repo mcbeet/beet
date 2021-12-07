@@ -6,7 +6,7 @@ mined:minecraft.stone
 ---
 mined:minecraft.stone
 ---
-<class 'mecha.ast.AstLiteral'>
+<class 'mecha.ast.AstObjectiveCriteria'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=21, lineno=1, colno=22)
   value: 'mined:minecraft.stone'

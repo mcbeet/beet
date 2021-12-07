@@ -30,7 +30,7 @@ foo()
                   location: SourceLocation(pos=18, lineno=2, colno=9)
                   end_location: SourceLocation(pos=23, lineno=2, colno=14)
                   fragments:
-                    <class 'mecha.ast.AstLiteral'>
+                    <class 'mecha.ast.AstMessageText'>
                       location: SourceLocation(pos=18, lineno=2, colno=9)
                       end_location: SourceLocation(pos=23, lineno=2, colno=14)
                       value: 'hello'

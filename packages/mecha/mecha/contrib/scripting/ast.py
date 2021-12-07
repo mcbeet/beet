@@ -19,6 +19,7 @@ __all__ = [
     "AstFunctionSignatureArgument",
     "AstFunctionRoot",
     "AstInterpolation",
+    "AstImportedIdentifier",
 ]
 
 
@@ -180,3 +181,10 @@ class AstInterpolation(AstNode):
 
     converter: str = required_field()
     value: AstExpression = required_field()
+
+
+@dataclass(frozen=True)
+class AstImportedIdentifier(AstNode):
+    """Ast imported identifier node."""
+
+    value: str = required_field()

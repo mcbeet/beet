@@ -32,7 +32,7 @@ _mecha_refs[0]
           location: SourceLocation(pos=50, lineno=6, colno=9)
           end_location: SourceLocation(pos=55, lineno=6, colno=14)
           fragments:
-            <class 'mecha.ast.AstLiteral'>
+            <class 'mecha.ast.AstMessageText'>
               location: SourceLocation(pos=50, lineno=6, colno=9)
               end_location: SourceLocation(pos=55, lineno=6, colno=14)
               value: 'hello'
@@ -101,7 +101,7 @@ _mecha_refs[1]
                   location: SourceLocation(pos=50, lineno=6, colno=9)
                   end_location: SourceLocation(pos=55, lineno=6, colno=14)
                   fragments:
-                    <class 'mecha.ast.AstLiteral'>
+                    <class 'mecha.ast.AstMessageText'>
                       location: SourceLocation(pos=50, lineno=6, colno=9)
                       end_location: SourceLocation(pos=55, lineno=6, colno=14)
                       value: 'hello'

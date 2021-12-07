@@ -29,7 +29,7 @@ minecraft:score_holder 0 4
               location: SourceLocation(pos=15, lineno=1, colno=16)
               end_location: SourceLocation(pos=24, lineno=1, colno=25)
               key:
-                <class 'mecha.ast.AstLiteral'>
+                <class 'mecha.ast.AstObjective'>
                   location: SourceLocation(pos=15, lineno=1, colno=16)
                   end_location: SourceLocation(pos=18, lineno=1, colno=19)
                   value: 'foo'

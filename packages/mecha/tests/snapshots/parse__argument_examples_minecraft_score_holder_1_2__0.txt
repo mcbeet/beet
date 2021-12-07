@@ -21,7 +21,7 @@ minecraft:score_holder 1 2
           end_location: SourceLocation(pos=6, lineno=1, colno=7)
           value: 'tag'
       value:
-        <class 'mecha.ast.AstLiteral'>
+        <class 'mecha.ast.AstWord'>
           location: SourceLocation(pos=7, lineno=1, colno=8)
           end_location: SourceLocation(pos=10, lineno=1, colno=11)
           value: 'foo'
@@ -49,7 +49,7 @@ minecraft:score_holder 1 2
           end_location: SourceLocation(pos=25, lineno=1, colno=26)
           value: 'sort'
       value:
-        <class 'mecha.ast.AstLiteral'>
+        <class 'mecha.ast.AstSortOrder'>
           location: SourceLocation(pos=26, lineno=1, colno=27)
           end_location: SourceLocation(pos=33, lineno=1, colno=34)
           value: 'nearest'

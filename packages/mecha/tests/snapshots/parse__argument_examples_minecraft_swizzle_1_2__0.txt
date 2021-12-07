@@ -6,4 +6,4 @@ xx
 ---
 Reported 1 error.
 
-line 1, column 1: Invalid swizzle 'xx'.
+line 1, column 1: Expected swizzle but got literal 'xx'.

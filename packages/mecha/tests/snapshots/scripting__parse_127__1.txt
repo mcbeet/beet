@@ -29,7 +29,7 @@ _mecha_refs[0]
           is_tag: False
           namespace: None
           path: 'math'
-        <class 'mecha.ast.AstLiteral'>
+        <class 'mecha.contrib.scripting.ast.AstImportedIdentifier'>
           location: SourceLocation(pos=15, lineno=1, colno=16)
           end_location: SourceLocation(pos=16, lineno=1, colno=17)
           value: 'm'

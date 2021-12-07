@@ -34,7 +34,7 @@
                   end_location: SourceLocation(pos=287, lineno=16, colno=10)
                   identifier: 'execute:align:axes:subcommand'
                   arguments:
-                    <class 'mecha.ast.AstLiteral'>
+                    <class 'mecha.ast.AstSwizzle'>
                       location: SourceLocation(pos=38, lineno=4, colno=11)
                       end_location: SourceLocation(pos=41, lineno=4, colno=14)
                       value: 'xyz'
@@ -668,7 +668,7 @@
                           end_location: SourceLocation(pos=1082, lineno=55, colno=21)
                           value: 'tag'
                       value:
-                        <class 'mecha.ast.AstLiteral'>
+                        <class 'mecha.ast.AstWord'>
                           location: SourceLocation(pos=1083, lineno=55, colno=22)
                           end_location: SourceLocation(pos=1086, lineno=55, colno=25)
                           value: 'foo'
@@ -756,39 +756,39 @@
           location: SourceLocation(pos=1253, lineno=69, colno=5)
           end_location: SourceLocation(pos=1288, lineno=73, colno=9)
           fragments:
-            <class 'mecha.ast.AstLiteral'>
+            <class 'mecha.ast.AstMessageText'>
               location: SourceLocation(pos=1253, lineno=69, colno=5)
               end_location: SourceLocation(pos=1256, lineno=69, colno=8)
               value: 'foo'
-            <class 'mecha.ast.AstLiteral'>
+            <class 'mecha.ast.AstMessageText'>
               location: SourceLocation(pos=1260, lineno=70, colno=4)
               end_location: SourceLocation(pos=1261, lineno=70, colno=5)
               value: ' '
-            <class 'mecha.ast.AstLiteral'>
+            <class 'mecha.ast.AstMessageText'>
               location: SourceLocation(pos=1261, lineno=70, colno=5)
               end_location: SourceLocation(pos=1264, lineno=70, colno=8)
               value: 'bar'
-            <class 'mecha.ast.AstLiteral'>
+            <class 'mecha.ast.AstMessageText'>
               location: SourceLocation(pos=1268, lineno=71, colno=4)
               end_location: SourceLocation(pos=1269, lineno=71, colno=5)
               value: ' '
-            <class 'mecha.ast.AstLiteral'>
+            <class 'mecha.ast.AstMessageText'>
               location: SourceLocation(pos=1269, lineno=71, colno=5)
               end_location: SourceLocation(pos=1274, lineno=71, colno=10)
               value: 'hello'
-            <class 'mecha.ast.AstLiteral'>
+            <class 'mecha.ast.AstMessageText'>
               location: SourceLocation(pos=1275, lineno=72, colno=1)
               end_location: SourceLocation(pos=1276, lineno=72, colno=2)
               value: ' '
-            <class 'mecha.ast.AstLiteral'>
+            <class 'mecha.ast.AstMessageText'>
               location: SourceLocation(pos=1276, lineno=72, colno=2)
               end_location: SourceLocation(pos=1279, lineno=72, colno=5)
               value: 'wat'
-            <class 'mecha.ast.AstLiteral'>
+            <class 'mecha.ast.AstMessageText'>
               location: SourceLocation(pos=1283, lineno=73, colno=4)
               end_location: SourceLocation(pos=1284, lineno=73, colno=5)
               value: ' '
-            <class 'mecha.ast.AstLiteral'>
+            <class 'mecha.ast.AstMessageText'>
               location: SourceLocation(pos=1284, lineno=73, colno=5)
               end_location: SourceLocation(pos=1288, lineno=73, colno=9)
               value: 'welp'
@@ -801,23 +801,23 @@
           location: SourceLocation(pos=1298, lineno=76, colno=5)
           end_location: SourceLocation(pos=1347, lineno=79, colno=17)
           fragments:
-            <class 'mecha.ast.AstLiteral'>
+            <class 'mecha.ast.AstMessageText'>
               location: SourceLocation(pos=1298, lineno=76, colno=5)
               end_location: SourceLocation(pos=1302, lineno=76, colno=9)
               value: 'this'
-            <class 'mecha.ast.AstLiteral'>
+            <class 'mecha.ast.AstMessageText'>
               location: SourceLocation(pos=1306, lineno=77, colno=4)
               end_location: SourceLocation(pos=1307, lineno=77, colno=5)
               value: ' '
-            <class 'mecha.ast.AstLiteral'>
+            <class 'mecha.ast.AstMessageText'>
               location: SourceLocation(pos=1307, lineno=77, colno=5)
               end_location: SourceLocation(pos=1311, lineno=77, colno=9)
               value: 'is a'
-            <class 'mecha.ast.AstLiteral'>
+            <class 'mecha.ast.AstMessageText'>
               location: SourceLocation(pos=1334, lineno=79, colno=4)
               end_location: SourceLocation(pos=1335, lineno=79, colno=5)
               value: ' '
-            <class 'mecha.ast.AstLiteral'>
+            <class 'mecha.ast.AstMessageText'>
               location: SourceLocation(pos=1335, lineno=79, colno=5)
               end_location: SourceLocation(pos=1347, lineno=79, colno=17)
               value: 'continuation'
@@ -858,7 +858,7 @@
           end_location: SourceLocation(pos=1611, lineno=95, colno=24)
           identifier: 'execute:as:targets:subcommand'
           arguments:
-            <class 'mecha.ast.AstLiteral'>
+            <class 'mecha.ast.AstPlayerName'>
               location: SourceLocation(pos=1541, lineno=91, colno=16)
               end_location: SourceLocation(pos=1544, lineno=91, colno=19)
               value: 'foo'
@@ -887,7 +887,7 @@
                               end_location: SourceLocation(pos=1606, lineno=95, colno=19)
                               value: 'tag'
                           value:
-                            <class 'mecha.ast.AstLiteral'>
+                            <class 'mecha.ast.AstWord'>
                               location: SourceLocation(pos=1607, lineno=95, colno=20)
                               end_location: SourceLocation(pos=1610, lineno=95, colno=23)
                               value: 'bar'
@@ -900,7 +900,7 @@
           location: SourceLocation(pos=1629, lineno=97, colno=17)
           end_location: SourceLocation(pos=1634, lineno=97, colno=22)
           fragments:
-            <class 'mecha.ast.AstLiteral'>
+            <class 'mecha.ast.AstMessageText'>
               location: SourceLocation(pos=1629, lineno=97, colno=17)
               end_location: SourceLocation(pos=1634, lineno=97, colno=22)
               value: 'hello'
@@ -934,7 +934,7 @@
                       location: SourceLocation(pos=1706, lineno=101, colno=17)
                       end_location: SourceLocation(pos=1709, lineno=101, colno=20)
                       fragments:
-                        <class 'mecha.ast.AstLiteral'>
+                        <class 'mecha.ast.AstMessageText'>
                           location: SourceLocation(pos=1706, lineno=101, colno=17)
                           end_location: SourceLocation(pos=1709, lineno=101, colno=20)
                           value: 'foo'
@@ -952,11 +952,11 @@
       end_location: SourceLocation(pos=1809, lineno=105, colno=39)
       identifier: 'scoreboard:players:set:targets:objective:score'
       arguments:
-        <class 'mecha.ast.AstLiteral'>
+        <class 'mecha.ast.AstPlayerName'>
           location: SourceLocation(pos=1794, lineno=105, colno=24)
           end_location: SourceLocation(pos=1800, lineno=105, colno=30)
           value: '#index'
-        <class 'mecha.ast.AstLiteral'>
+        <class 'mecha.ast.AstObjective'>
           location: SourceLocation(pos=1801, lineno=105, colno=31)
           end_location: SourceLocation(pos=1807, lineno=105, colno=37)
           value: 'global'
@@ -969,11 +969,11 @@
       end_location: SourceLocation(pos=1848, lineno=106, colno=39)
       identifier: 'scoreboard:players:set:targets:objective:score'
       arguments:
-        <class 'mecha.ast.AstLiteral'>
+        <class 'mecha.ast.AstPlayerName'>
           location: SourceLocation(pos=1833, lineno=106, colno=24)
           end_location: SourceLocation(pos=1839, lineno=106, colno=30)
           value: '$index'
-        <class 'mecha.ast.AstLiteral'>
+        <class 'mecha.ast.AstObjective'>
           location: SourceLocation(pos=1840, lineno=106, colno=31)
           end_location: SourceLocation(pos=1846, lineno=106, colno=37)
           value: 'global'
@@ -986,23 +986,23 @@
       end_location: SourceLocation(pos=1927, lineno=107, colno=79)
       identifier: 'scoreboard:players:operation:targets:targetObjective:operation:source:sourceObjective'
       arguments:
-        <class 'mecha.ast.AstLiteral'>
+        <class 'mecha.ast.AstPlayerName'>
           location: SourceLocation(pos=1878, lineno=107, colno=30)
           end_location: SourceLocation(pos=1896, lineno=107, colno=48)
           value: '#sie_1_flags_delta'
-        <class 'mecha.ast.AstLiteral'>
+        <class 'mecha.ast.AstObjective'>
           location: SourceLocation(pos=1897, lineno=107, colno=49)
           end_location: SourceLocation(pos=1904, lineno=107, colno=56)
           value: 'integer'
-        <class 'mecha.ast.AstLiteral'>
+        <class 'mecha.ast.AstScoreboardOperation'>
           location: SourceLocation(pos=1905, lineno=107, colno=57)
           end_location: SourceLocation(pos=1906, lineno=107, colno=58)
           value: '='
-        <class 'mecha.ast.AstLiteral'>
+        <class 'mecha.ast.AstPlayerName'>
           location: SourceLocation(pos=1907, lineno=107, colno=59)
           end_location: SourceLocation(pos=1919, lineno=107, colno=71)
           value: '#sie_1_flags'
-        <class 'mecha.ast.AstLiteral'>
+        <class 'mecha.ast.AstObjective'>
           location: SourceLocation(pos=1920, lineno=107, colno=72)
           end_location: SourceLocation(pos=1927, lineno=107, colno=79)
           value: 'integer'

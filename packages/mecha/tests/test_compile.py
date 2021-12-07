@@ -8,8 +8,8 @@ from mecha import (
     AstChildren,
     AstCommand,
     AstJsonValue,
-    AstLiteral,
     AstMessage,
+    AstMessageText,
     AstSelector,
     Diagnostic,
     DiagnosticCollection,
@@ -33,7 +33,7 @@ def convert_say_to_tellraw(node: AstCommand):
                         value="".join(
                             f.value
                             for f in message.fragments
-                            if isinstance(f, AstLiteral)
+                            if isinstance(f, AstMessageText)
                         )
                     ),
                 ],

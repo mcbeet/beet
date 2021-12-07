@@ -6,7 +6,7 @@ Player
 ---
 Player
 ---
-<class 'mecha.ast.AstLiteral'>
+<class 'mecha.ast.AstPlayerName'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=6, lineno=1, colno=7)
   value: 'Player'

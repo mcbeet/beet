@@ -34,13 +34,11 @@ __all__ = [
     "ItemParser",
     "NoBlockStatesConstraint",
     "NoDataTagsConstraint",
-    "LiteralParser",
-    "LiteralConstraint",
+    "BasicLiteralParser",
     "RangeParser",
     "IntegerRangeConstraint",
     "LengthConstraint",
     "CommentDisambiguation",
-    "parse_swizzle",
     "TimeParser",
     "parse_uuid",
     "SelectorParser",
@@ -54,7 +52,7 @@ __all__ = [
     "SelectorSingleConstraint",
     "SelectorAmountConstraint",
     "EntityParser",
-    "ScoreHolderParser",
+    "parse_wildcard",
     "parse_message",
     "NbtPathParser",
     "parse_particle",
@@ -87,16 +85,22 @@ from nbtlib import Byte, Double, Float, Int, Long, OutOfRange, Short, String
 from tokenstream import InvalidSyntax, SourceLocation, TokenStream, set_location
 
 from .ast import (
+    AstAdvancementPredicate,
     AstBlock,
     AstBlockParticleParameters,
     AstBlockState,
     AstBool,
     AstChildren,
+    AstColor,
+    AstColorReset,
     AstCommand,
     AstCoordinate,
     AstDustColorTransitionParticleParameters,
     AstDustParticleParameters,
+    AstEntityAnchor,
     AstFallingDustParticleParameters,
+    AstGamemode,
+    AstGreedy,
     AstItem,
     AstItemParticleParameters,
     AstJson,
@@ -107,6 +111,7 @@ from .ast import (
     AstJsonValue,
     AstLiteral,
     AstMessage,
+    AstMessageText,
     AstNbt,
     AstNbtByteArray,
     AstNbtCompound,
@@ -120,10 +125,14 @@ from .ast import (
     AstNbtValue,
     AstNode,
     AstNumber,
+    AstObjective,
+    AstObjectiveCriteria,
     AstParticle,
+    AstPlayerName,
     AstRange,
     AstResourceLocation,
     AstRoot,
+    AstScoreboardOperation,
     AstSelector,
     AstSelectorAdvancementMatch,
     AstSelectorAdvancementPredicateMatch,
@@ -131,12 +140,17 @@ from .ast import (
     AstSelectorArgument,
     AstSelectorScoreMatch,
     AstSelectorScores,
+    AstSortOrder,
     AstString,
+    AstSwizzle,
+    AstTeam,
     AstTime,
     AstUUID,
     AstVector2,
     AstVector3,
     AstVibrationParticleParameters,
+    AstWildcard,
+    AstWord,
 )
 from .error import MechaError
 from .spec import CommandSpec, Parser
@@ -157,7 +171,6 @@ def get_default_parsers() -> Dict[str, Parser]:
         ################################################################################
         # Primitives
         ################################################################################
-        "literal": LiteralParser(name="literal"),
         "bool": parse_bool,
         "numeric": NumericParser(),
         "integer": IntegerConstraint(delegate("numeric")),
@@ -167,13 +180,13 @@ def get_default_parsers() -> Dict[str, Parser]:
         "word": StringParser(type="word"),
         "phrase": StringParser(type="phrase"),
         "greedy": StringParser(type="greedy"),
-        "json": MultilineParser(JsonParser()),
+        "json": JsonParser(),
         "json_object": TypeConstraint(
             parser=delegate("json"),
             type=AstJsonObject,
             message="Expected json object.",
         ),
-        "nbt": MultilineParser(NbtParser()),
+        "nbt": NbtParser(),
         "nbt_compound": TypeConstraint(
             parser=delegate("nbt"),
             type=AstNbtCompound,
@@ -189,10 +202,19 @@ def get_default_parsers() -> Dict[str, Parser]:
         "resource_location_or_tag": CommentDisambiguation(ResourceLocationParser()),
         "resource_location": NoTagConstraint(delegate("resource_location_or_tag")),
         "uuid": parse_uuid,
-        "objective": LiteralParser("objective", r"[a-zA-Z0-9_.+-]+|\*"),
-        "player_name": CommentDisambiguation(delegate("literal")),
-        "swizzle": parse_swizzle,
-        "team": LiteralParser("team", r"[a-zA-Z0-9_.+-]+"),
+        "objective": BasicLiteralParser(AstObjective),
+        "objective_criteria": BasicLiteralParser(AstObjectiveCriteria),
+        "scoreboard_operation": BasicLiteralParser(AstScoreboardOperation),
+        "player_name": CommentDisambiguation(BasicLiteralParser(AstPlayerName)),
+        "swizzle": BasicLiteralParser(AstSwizzle),
+        "team": BasicLiteralParser(AstTeam),
+        "advancement_predicate": BasicLiteralParser(AstAdvancementPredicate),
+        "wildcard": parse_wildcard,
+        "color": BasicLiteralParser(AstColor),
+        "color_reset": BasicLiteralParser(AstColorReset),
+        "sort_order": BasicLiteralParser(AstSortOrder),
+        "gamemode": BasicLiteralParser(AstGamemode),
+        "entity_anchor": BasicLiteralParser(AstEntityAnchor),
         "block_predicate": BlockParser(
             resource_location_parser=delegate("resource_location_or_tag"),
             block_states_parser=AdjacentConstraint(
@@ -213,6 +235,7 @@ def get_default_parsers() -> Dict[str, Parser]:
         "item_stack": ItemParser(
             resource_location_parser=delegate("resource_location"),
         ),
+        "message": parse_message,
         ################################################################################
         # Particle
         ################################################################################
@@ -290,27 +313,11 @@ def get_default_parsers() -> Dict[str, Parser]:
         "selector:argument:dz": delegate("numeric"),
         "selector:argument:scores": parse_selector_scores,
         "selector:argument:tag": delegate("word"),
-        "selector:argument:team": delegate("word"),
+        "selector:argument:team": delegate("team"),
         "selector:argument:limit": delegate("integer"),
-        "selector:argument:sort": LiteralConstraint(
-            parser=delegate("word"),
-            values=[
-                "nearest",
-                "furthest",
-                "random",
-                "arbitrary",
-            ],
-        ),
+        "selector:argument:sort": delegate("sort_order"),
         "selector:argument:level": delegate("integer_range"),
-        "selector:argument:gamemode": LiteralConstraint(
-            parser=delegate("word"),
-            values=[
-                "adventure",
-                "creative",
-                "spectator",
-                "survival",
-            ],
-        ),
+        "selector:argument:gamemode": delegate("gamemode"),
         "selector:argument:name": delegate("phrase"),
         "selector:argument:x_rotation": delegate("range"),
         "selector:argument:y_rotation": delegate("range"),
@@ -335,29 +342,17 @@ def get_default_parsers() -> Dict[str, Parser]:
             disallow=["local"],
         ),
         "command:argument:minecraft:block_pos": Vector3Parser(delegate("coordinate")),
-        "command:argument:minecraft:block_predicate": delegate("block_predicate"),
-        "command:argument:minecraft:block_state": delegate("block_state"),
-        "command:argument:minecraft:color": LiteralConstraint(
-            parser=delegate("word"),
-            values=[
-                "reset",
-                "black",
-                "dark_blue",
-                "dark_green",
-                "dark_aqua",
-                "dark_red",
-                "dark_purple",
-                "gold",
-                "gray",
-                "dark_gray",
-                "blue",
-                "green",
-                "aqua",
-                "red",
-                "light_purple",
-                "yellow",
-                "white",
-            ],
+        "command:argument:minecraft:block_predicate": MultilineParser(
+            delegate("block_predicate")
+        ),
+        "command:argument:minecraft:block_state": MultilineParser(
+            delegate("block_state")
+        ),
+        "command:argument:minecraft:color": AlternativeParser(
+            [
+                delegate("color"),
+                delegate("color_reset"),
+            ]
         ),
         "command:argument:minecraft:column_pos": Vector2Parser(
             coordinate_parser=RestrictCoordinateConstraint(
@@ -365,17 +360,14 @@ def get_default_parsers() -> Dict[str, Parser]:
                 disallow=["local"],
             ),
         ),
-        "command:argument:minecraft:component": delegate("json"),
+        "command:argument:minecraft:component": MultilineParser(delegate("json")),
         "command:argument:minecraft:dimension": delegate("resource_location"),
         "command:argument:minecraft:entity": EntityParser(
             selector_parser=SelectorTypeConstraint(
                 SelectorAmountConstraint(delegate("selector"))
             ),
         ),
-        "command:argument:minecraft:entity_anchor": LiteralConstraint(
-            parser=delegate("word"),
-            values=["eyes", "feet"],
-        ),
+        "command:argument:minecraft:entity_anchor": delegate("entity_anchor"),
         "command:argument:minecraft:entity_summon": delegate("resource_location"),
         "command:argument:minecraft:float_range": delegate("range"),
         "command:argument:minecraft:function": delegate("resource_location_or_tag"),
@@ -384,30 +376,28 @@ def get_default_parsers() -> Dict[str, Parser]:
         ),
         "command:argument:minecraft:int_range": delegate("integer_range"),
         "command:argument:minecraft:item_enchantment": delegate("word"),
-        "command:argument:minecraft:item_predicate": delegate("item_predicate"),
-        "command:argument:minecraft:item_slot": delegate("word"),
-        "command:argument:minecraft:item_stack": delegate("item_stack"),
-        "command:argument:minecraft:message": parse_message,
-        "command:argument:minecraft:mob_effect": delegate("resource_location"),
-        "command:argument:minecraft:nbt_compound_tag": delegate("nbt_compound"),
-        "command:argument:minecraft:nbt_path": delegate("nbt_path"),
-        "command:argument:minecraft:nbt_tag": delegate("nbt"),
-        "command:argument:minecraft:objective": delegate("objective"),
-        "command:argument:minecraft:objective_criteria": delegate("literal"),
-        "command:argument:minecraft:operation": LiteralConstraint(
-            parser=delegate("literal"),
-            values=[
-                "+=",
-                "-=",
-                "*=",
-                "/=",
-                "%=",
-                "=",
-                "<",
-                ">",
-                "><",
-            ],
+        "command:argument:minecraft:item_predicate": MultilineParser(
+            delegate("item_predicate")
         ),
+        "command:argument:minecraft:item_slot": delegate("word"),
+        "command:argument:minecraft:item_stack": MultilineParser(
+            delegate("item_stack")
+        ),
+        "command:argument:minecraft:message": delegate("message"),
+        "command:argument:minecraft:mob_effect": delegate("resource_location"),
+        "command:argument:minecraft:nbt_compound_tag": MultilineParser(
+            delegate("nbt_compound")
+        ),
+        "command:argument:minecraft:nbt_path": delegate("nbt_path"),
+        "command:argument:minecraft:nbt_tag": MultilineParser(delegate("nbt")),
+        "command:argument:minecraft:objective": AlternativeParser(
+            [
+                delegate("objective"),
+                delegate("wildcard"),
+            ]
+        ),
+        "command:argument:minecraft:objective_criteria": delegate("objective_criteria"),
+        "command:argument:minecraft:operation": delegate("scoreboard_operation"),
         "command:argument:minecraft:particle": delegate("particle"),
         "command:argument:minecraft:resource_location": delegate("resource_location"),
         "command:argument:minecraft:rotation": Vector2Parser(
@@ -416,10 +406,11 @@ def get_default_parsers() -> Dict[str, Parser]:
                 disallow=["local"],
             ),
         ),
-        "command:argument:minecraft:score_holder": ScoreHolderParser(
-            entity_parser=EntityParser(
-                selector_parser=SelectorAmountConstraint(delegate("selector")),
-            ),
+        "command:argument:minecraft:score_holder": AlternativeParser(
+            [
+                EntityParser(SelectorAmountConstraint(delegate("selector"))),
+                delegate("wildcard"),
+            ]
         ),
         "command:argument:minecraft:scoreboard_slot": delegate("word"),
         "command:argument:minecraft:swizzle": delegate("swizzle"),
@@ -732,7 +723,7 @@ class IntegerConstraint:
     parser: Parser
 
     def __call__(self, stream: TokenStream) -> Any:
-        if isinstance(node := self.parser(stream), AstNumber):
+        if isinstance(node := self.parser(stream), (AstNumber, AstCoordinate)):
             if not isinstance(node.value, int):
                 raise node.emit_error(InvalidSyntax("Expected integer value."))
         return node
@@ -789,17 +780,17 @@ class StringParser:
             with stream.intercept("whitespace"):
                 while stream.get("whitespace"):
                     continue
-            with stream.syntax(line=r".+"):
+            with stream.syntax(line=AstGreedy.regex.pattern):
                 token = stream.expect("line")
-            node = AstLiteral(value=token.value)
+            node = AstGreedy(value=token.value)
         else:
             with stream.syntax(
-                word=r"[0-9A-Za-z_\.\+\-]+",
+                word=AstWord.regex.pattern,
                 quoted_string=r'"(?:\\.|[^\\\n])*?"' "|" r"'(?:\\.|[^\\\n])*?'",
             ):
                 if self.type == "word":
                     token = stream.expect("word")
-                    node = AstLiteral(value=token.value)
+                    node = AstWord(value=token.value)
                 else:
                     token = stream.expect_any("word", "quoted_string")
                     node = AstString(value=self.quote_helper.unquote_string(token))
@@ -1289,32 +1280,20 @@ class NoDataTagsConstraint:
 
 
 @dataclass
-class LiteralParser:
+class BasicLiteralParser:
     """Parser for simple literal values."""
 
-    name: str
-    pattern: str = r"\S+"
-
-    def __call__(self, stream: TokenStream) -> AstLiteral:
-        with stream.syntax(**{self.name: self.pattern}):
-            token = stream.expect(self.name)
-        node = AstLiteral(value=token.value)
-        return set_location(node, token)
-
-
-@dataclass
-class LiteralConstraint:
-    """Constraint that only allows a set of predefined values."""
-
-    parser: Parser
-    values: List[Any]
+    type: Type[AstLiteral]
 
     def __call__(self, stream: TokenStream) -> Any:
-        if isinstance(node := self.parser(stream), AstLiteral):
-            if node.value not in self.values:
-                exc = InvalidSyntax(f"Unexpected value {node.value!r}.")
-                raise node.emit_error(exc)
-        return node
+        if not self.type.parser:
+            raise ValueError(
+                f"Literal node type must have an associated parser {self.type!r}."
+            )
+        with stream.syntax(**{self.type.parser: self.type.regex.pattern}):
+            token = stream.expect(self.type.parser)
+        node = self.type(value=token.value)
+        return set_location(node, token)
 
 
 @dataclass
@@ -1355,17 +1334,6 @@ class LengthConstraint:
                 exc = InvalidSyntax(f"Expected up to {self.limit} characters.")
                 raise node.emit_error(exc)
         return node
-
-
-def parse_swizzle(stream: TokenStream) -> AstLiteral:
-    """Parse swizzle."""
-    node = delegate("literal", stream)
-
-    normalized = set(node.value[:3]) & {"x", "y", "z"}
-    if not normalized or len(node.value) != len(normalized):
-        raise node.emit_error(InvalidSyntax(f"Invalid swizzle {node.value!r}."))
-
-    return node
 
 
 @dataclass
@@ -1490,7 +1458,7 @@ def parse_selector_scores(stream: TokenStream) -> AstSelectorScores:
     """Parse selector scores."""
     with stream.syntax(
         curly=r"\{|\}",
-        objective=r"[a-zA-Z0-9_.+-]+",
+        objective=AstObjective.regex.pattern,
         equal=r"=",
         comma=r",",
     ):
@@ -1499,7 +1467,7 @@ def parse_selector_scores(stream: TokenStream) -> AstSelectorScores:
         scores: List[AstSelectorScoreMatch] = []
 
         for key in stream.collect("objective"):
-            key_node = AstLiteral(value=key.value)
+            key_node = AstObjective(value=key.value)
             key_node = set_location(key_node, key)
 
             stream.expect("equal")
@@ -1533,7 +1501,7 @@ def parse_selector_advancements(stream: TokenStream) -> AstSelectorAdvancements:
                 predicates: List[AstSelectorAdvancementPredicateMatch] = []
 
                 for _ in stream.peek_until(("curly", "}")):
-                    pkey = delegate("word", stream)
+                    pkey = delegate("advancement_predicate", stream)
                     stream.expect("equal")
                     pvalue = delegate("bool", stream)
 
@@ -1679,18 +1647,11 @@ class EntityParser:
         return delegate("player_name", stream)
 
 
-@dataclass
-class ScoreHolderParser:
-    """Parser for score holder."""
-
-    entity_parser: Parser
-
-    def __call__(self, stream: TokenStream) -> Any:
-        with stream.syntax(wildcard=r"\*"):
-            if token := stream.get("wildcard"):
-                node = AstLiteral(value=token.value)
-                return set_location(node, token)
-        return self.entity_parser(stream)
+def parse_wildcard(stream: TokenStream) -> AstWildcard:
+    """Parse wildcard."""
+    with stream.syntax(wildcard=r"\*"):
+        token = stream.expect("wildcard")
+        return set_location(AstWildcard(), token)
 
 
 def parse_message(stream: TokenStream) -> AstMessage:
@@ -1715,13 +1676,13 @@ def parse_message(stream: TokenStream) -> AstMessage:
                     with stream.syntax(text=None):
                         fragments.append(delegate("selector", stream))
             elif text:
-                text_node = AstLiteral(value=text.value)
+                text_node = AstMessageText(value=text.value)
                 text_node = set_location(text_node, text)
                 fragments.append(text_node)
 
             with stream.syntax(text=None):
                 if consume_line_continuation(stream):
-                    whitespace_node = AstLiteral(value=" ")
+                    whitespace_node = AstMessageText(value=" ")
                     whitespace_node = set_location(
                         whitespace_node,
                         stream.current.end_location.with_horizontal_offset(-1),

@@ -40,7 +40,7 @@ if score @s tmp matches (x, None) say wat
               variable: 's'
               arguments:
                 <empty>
-            <class 'mecha.ast.AstLiteral'>
+            <class 'mecha.ast.AstObjective'>
               location: SourceLocation(pos=18, lineno=2, colno=13)
               end_location: SourceLocation(pos=21, lineno=2, colno=16)
               value: 'tmp'
@@ -75,7 +75,7 @@ if score @s tmp matches (x, None) say wat
                       location: SourceLocation(pos=44, lineno=2, colno=39)
                       end_location: SourceLocation(pos=47, lineno=2, colno=42)
                       fragments:
-                        <class 'mecha.ast.AstLiteral'>
+                        <class 'mecha.ast.AstMessageText'>
                           location: SourceLocation(pos=44, lineno=2, colno=39)
                           end_location: SourceLocation(pos=47, lineno=2, colno=42)
                           value: 'wat'

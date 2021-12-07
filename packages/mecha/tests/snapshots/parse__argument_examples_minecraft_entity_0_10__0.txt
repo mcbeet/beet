@@ -21,7 +21,7 @@ minecraft:entity 0 10
           end_location: SourceLocation(pos=12, lineno=1, colno=13)
           value: 'gamemode'
       value:
-        <class 'mecha.ast.AstLiteral'>
+        <class 'mecha.ast.AstGamemode'>
           location: SourceLocation(pos=17, lineno=1, colno=18)
           end_location: SourceLocation(pos=25, lineno=1, colno=26)
           value: 'creative'
@@ -35,7 +35,7 @@ minecraft:entity 0 10
           end_location: SourceLocation(pos=36, lineno=1, colno=37)
           value: 'gamemode'
       value:
-        <class 'mecha.ast.AstLiteral'>
+        <class 'mecha.ast.AstGamemode'>
           location: SourceLocation(pos=41, lineno=1, colno=42)
           end_location: SourceLocation(pos=50, lineno=1, colno=51)
           value: 'adventure'

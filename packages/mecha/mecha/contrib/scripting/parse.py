@@ -16,6 +16,7 @@ __all__ = [
     "parse_identifier",
     "ImportLocationConstraint",
     "ImportStatementHandler",
+    "parse_import_name",
     "FunctionRootBacktracker",
     "ReturnConstraint",
     "YieldConstraint",
@@ -38,12 +39,13 @@ from mecha import (
     AlternativeParser,
     AstChildren,
     AstCommand,
-    AstLiteral,
     AstResourceLocation,
     AstRoot,
+    Parser,
+    consume_line_continuation,
+    delegate,
+    get_stream_scope,
 )
-from mecha import LiteralParser as BasicLiteralParser
-from mecha import Parser, consume_line_continuation, delegate, get_stream_scope
 from mecha.utils import QuoteHelper, normalize_whitespace, string_to_number
 
 from .ast import (
@@ -62,6 +64,7 @@ from .ast import (
     AstFunctionSignature,
     AstFunctionSignatureArgument,
     AstIdentifier,
+    AstImportedIdentifier,
     AstInterpolation,
     AstList,
     AstLookup,
@@ -121,7 +124,7 @@ def get_scripting_parsers(parsers: Dict[str, Parser]) -> Dict[str, Parser]:
         "scripting:import": ImportLocationConstraint(
             parsers["resource_location_or_tag"]
         ),
-        "scripting:import_name": BasicLiteralParser("name", IDENTIFIER_PATTERN),
+        "scripting:import_name": parse_import_name,
         "scripting:expression": delegate("scripting:disjunction"),
         "scripting:disjunction": BinaryParser(
             operators=[r"\bor\b"],
@@ -194,25 +197,28 @@ def get_scripting_parsers(parsers: Dict[str, Parser]) -> Dict[str, Parser]:
         ################################################################################
         # Interpolation
         ################################################################################
-        "literal": InterpolationParser("literal", parsers["literal"]),
         "bool": InterpolationParser("bool", parsers["bool"]),
         "numeric": InterpolationParser("numeric", parsers["numeric"]),
         "time": InterpolationParser("time", parsers["time"]),
-        "word": InterpolationParser("literal", parsers["word"]),
-        "phrase": InterpolationParser("string", parsers["phrase"]),
-        "greedy": InterpolationParser("literal", parsers["greedy"]),
+        "word": InterpolationParser("word", parsers["word"]),
+        "phrase": InterpolationParser("phrase", parsers["phrase"]),
+        "greedy": InterpolationParser("greedy", parsers["greedy"]),
         "json": InterpolationParser("json", parsers["json"]),
         "nbt": InterpolationParser("nbt", parsers["nbt"]),
         "range": InterpolationParser("range", parsers["range"]),
         "resource_location_or_tag": InterpolationParser(
             "resource_location", parsers["resource_location_or_tag"]
         ),
-        "objective": InterpolationParser("literal", parsers["objective"]),
-        "swizzle": InterpolationParser("literal", parsers["swizzle"]),
-        "team": InterpolationParser("literal", parsers["team"]),
-        "command:argument:minecraft:message": InterpolationParser(
-            "message", parsers["command:argument:minecraft:message"]
+        "objective": InterpolationParser("objective", parsers["objective"]),
+        "objective_criteria": InterpolationParser(
+            "objective_criteria", parsers["objective_criteria"]
         ),
+        "swizzle": InterpolationParser("swizzle", parsers["swizzle"]),
+        "team": InterpolationParser("team", parsers["team"]),
+        "color": InterpolationParser("color", parsers["color"]),
+        "sort_order": InterpolationParser("sort_order", parsers["sort_order"]),
+        "gamemode": InterpolationParser("gamemode", parsers["gamemode"]),
+        "message": InterpolationParser("message", parsers["message"]),
     }
 
 
@@ -552,12 +558,14 @@ class ImportStatementHandler:
                     else:
                         identifiers.add(module.path.partition(".")[0])
             elif node.identifier == "import:module:as:alias":
-                if isinstance(alias := node.arguments[1], AstLiteral):
+                if isinstance(alias := node.arguments[1], AstImportedIdentifier):
                     identifiers.add(alias.value)
             elif node.identifier == "from:module:import:subcommand":
                 subcommand = cast(AstCommand, node.arguments[1])
                 while True:
-                    if isinstance(name := subcommand.arguments[0], AstLiteral):
+                    if isinstance(
+                        name := subcommand.arguments[0], AstImportedIdentifier
+                    ):
                         identifiers.add(name.value)
                     if subcommand.identifier == "from:module:import:name:subcommand":
                         subcommand = cast(AstCommand, subcommand.arguments[1])
@@ -565,6 +573,13 @@ class ImportStatementHandler:
                         break
 
         return node
+
+
+def parse_import_name(stream: TokenStream) -> AstImportedIdentifier:
+    """Parse import name."""
+    with stream.syntax(name=IDENTIFIER_PATTERN):
+        token = stream.expect("name")
+        return set_location(AstImportedIdentifier(value=token.value), token)
 
 
 @dataclass

@@ -13,7 +13,7 @@ say hello
           location: SourceLocation(pos=4, lineno=1, colno=5)
           end_location: SourceLocation(pos=9, lineno=1, colno=10)
           fragments:
-            <class 'mecha.ast.AstLiteral'>
+            <class 'mecha.ast.AstMessageText'>
               location: SourceLocation(pos=4, lineno=1, colno=5)
               end_location: SourceLocation(pos=9, lineno=1, colno=10)
               value: 'hello'

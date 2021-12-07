@@ -6,7 +6,7 @@ minecraft:objective 0 2
 ---
 012
 ---
-<class 'mecha.ast.AstLiteral'>
+<class 'mecha.ast.AstObjective'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=3, lineno=1, colno=4)
   value: '012'

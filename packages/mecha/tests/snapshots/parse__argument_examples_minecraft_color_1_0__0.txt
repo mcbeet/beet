@@ -6,4 +6,4 @@ creeper
 ---
 Reported 1 error.
 
-line 1, column 1: Unexpected value 'creeper'.
+line 1, column 1: Expected color or color_reset but got literal 'creeper'.

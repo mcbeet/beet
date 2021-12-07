@@ -23,7 +23,7 @@ _mecha_refs[0]
           location: SourceLocation(pos=53, lineno=3, colno=13)
           end_location: SourceLocation(pos=58, lineno=3, colno=18)
           fragments:
-            <class 'mecha.ast.AstLiteral'>
+            <class 'mecha.ast.AstMessageText'>
               location: SourceLocation(pos=53, lineno=3, colno=13)
               end_location: SourceLocation(pos=58, lineno=3, colno=18)
               value: 'hello'
@@ -54,7 +54,7 @@ _mecha_refs[1]
                   location: SourceLocation(pos=53, lineno=3, colno=13)
                   end_location: SourceLocation(pos=58, lineno=3, colno=18)
                   fragments:
-                    <class 'mecha.ast.AstLiteral'>
+                    <class 'mecha.ast.AstMessageText'>
                       location: SourceLocation(pos=53, lineno=3, colno=13)
                       end_location: SourceLocation(pos=58, lineno=3, colno=18)
                       value: 'hello'
@@ -89,7 +89,7 @@ _mecha_refs[2]
                       location: SourceLocation(pos=53, lineno=3, colno=13)
                       end_location: SourceLocation(pos=58, lineno=3, colno=18)
                       fragments:
-                        <class 'mecha.ast.AstLiteral'>
+                        <class 'mecha.ast.AstMessageText'>
                           location: SourceLocation(pos=53, lineno=3, colno=13)
                           end_location: SourceLocation(pos=58, lineno=3, colno=18)
                           value: 'hello'
@@ -101,7 +101,7 @@ _mecha_refs[3]
   arguments:
     <empty>
 _mecha_refs[4]
-<class 'mecha.ast.AstLiteral'>
+<class 'mecha.ast.AstObjective'>
   location: SourceLocation(pos=12, lineno=1, colno=13)
   end_location: SourceLocation(pos=15, lineno=1, colno=16)
   value: 'tmp'
@@ -123,7 +123,7 @@ _mecha_refs[6]
       variable: 's'
       arguments:
         <empty>
-    <class 'mecha.ast.AstLiteral'>
+    <class 'mecha.ast.AstObjective'>
       location: SourceLocation(pos=12, lineno=1, colno=13)
       end_location: SourceLocation(pos=15, lineno=1, colno=16)
       value: 'tmp'
@@ -162,7 +162,7 @@ _mecha_refs[6]
                           location: SourceLocation(pos=53, lineno=3, colno=13)
                           end_location: SourceLocation(pos=58, lineno=3, colno=18)
                           fragments:
-                            <class 'mecha.ast.AstLiteral'>
+                            <class 'mecha.ast.AstMessageText'>
                               location: SourceLocation(pos=53, lineno=3, colno=13)
                               end_location: SourceLocation(pos=58, lineno=3, colno=18)
                               value: 'hello'
@@ -183,7 +183,7 @@ _mecha_refs[7]
           variable: 's'
           arguments:
             <empty>
-        <class 'mecha.ast.AstLiteral'>
+        <class 'mecha.ast.AstObjective'>
           location: SourceLocation(pos=12, lineno=1, colno=13)
           end_location: SourceLocation(pos=15, lineno=1, colno=16)
           value: 'tmp'
@@ -222,7 +222,7 @@ _mecha_refs[7]
                               location: SourceLocation(pos=53, lineno=3, colno=13)
                               end_location: SourceLocation(pos=58, lineno=3, colno=18)
                               fragments:
-                                <class 'mecha.ast.AstLiteral'>
+                                <class 'mecha.ast.AstMessageText'>
                                   location: SourceLocation(pos=53, lineno=3, colno=13)
                                   end_location: SourceLocation(pos=58, lineno=3, colno=18)
                                   value: 'hello'
@@ -247,7 +247,7 @@ _mecha_refs[8]
               variable: 's'
               arguments:
                 <empty>
-            <class 'mecha.ast.AstLiteral'>
+            <class 'mecha.ast.AstObjective'>
               location: SourceLocation(pos=12, lineno=1, colno=13)
               end_location: SourceLocation(pos=15, lineno=1, colno=16)
               value: 'tmp'
@@ -286,7 +286,7 @@ _mecha_refs[8]
                                   location: SourceLocation(pos=53, lineno=3, colno=13)
                                   end_location: SourceLocation(pos=58, lineno=3, colno=18)
                                   fragments:
-                                    <class 'mecha.ast.AstLiteral'>
+                                    <class 'mecha.ast.AstMessageText'>
                                       location: SourceLocation(pos=53, lineno=3, colno=13)
                                       end_location: SourceLocation(pos=58, lineno=3, colno=18)
                                       value: 'hello'

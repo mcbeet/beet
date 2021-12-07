@@ -51,7 +51,7 @@ _mecha_refs[2]
 _mecha_refs[3]
 <class 'mecha.ast.AstRoot'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
-  end_location: SourceLocation(pos=20, lineno=3, colno=1)
+  end_location: SourceLocation(pos=19, lineno=2, colno=13)
   commands:
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=0, lineno=1, colno=1)

@@ -6,7 +6,7 @@ word
 ---
 word
 ---
-<class 'mecha.ast.AstLiteral'>
+<class 'mecha.ast.AstWord'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=4, lineno=1, colno=5)
   value: 'word'

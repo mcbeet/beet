@@ -29,8 +29,15 @@ from typing import (
 
 from beet.core.utils import normalize_string
 
-from mecha import AstChildren, AstCommand, AstNode, AstRoot, Visitor, rule
-from mecha.ast import AstLiteral, AstResourceLocation
+from mecha import (
+    AstChildren,
+    AstCommand,
+    AstNode,
+    AstResourceLocation,
+    AstRoot,
+    Visitor,
+    rule,
+)
 
 from .ast import (
     AstAssignment,
@@ -43,6 +50,7 @@ from .ast import (
     AstFormatString,
     AstFunctionSignature,
     AstIdentifier,
+    AstImportedIdentifier,
     AstInterpolation,
     AstList,
     AstLookup,
@@ -506,7 +514,7 @@ class Codegen(Visitor):
             subcommand = cast(AstCommand, node.arguments[1])
 
             while True:
-                if isinstance(name := subcommand.arguments[0], AstLiteral):
+                if isinstance(name := subcommand.arguments[0], AstImportedIdentifier):
                     names.append(name.value)
                 if subcommand.identifier == "from:module:import:name:subcommand":
                     subcommand = cast(AstCommand, subcommand.arguments[1])
@@ -521,7 +529,7 @@ class Codegen(Visitor):
                 acc.statement(f"from {module.path} import  {', '.join(names)}")
 
         elif node.identifier == "import:module:as:alias":
-            alias = cast(AstLiteral, node.arguments[1]).value
+            alias = cast(AstImportedIdentifier, node.arguments[1]).value
 
             if module.namespace:
                 acc.statement(

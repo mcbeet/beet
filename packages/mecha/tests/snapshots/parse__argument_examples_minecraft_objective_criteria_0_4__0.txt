@@ -6,7 +6,7 @@ dummy
 ---
 dummy
 ---
-<class 'mecha.ast.AstLiteral'>
+<class 'mecha.ast.AstObjectiveCriteria'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=5, lineno=1, colno=6)
   value: 'dummy'
