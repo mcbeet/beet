@@ -44,8 +44,8 @@ except ImportError:
 
 from .utils import FileSystemPath, JsonDict, dump_json, extra_field
 
-ValueType = TypeVar("ValueType")
-SerializeType = TypeVar("SerializeType")
+ValueType = TypeVar("ValueType", bound=Any)
+SerializeType = TypeVar("SerializeType", bound=Any)
 FileType = TypeVar("FileType", bound="File[Any, Any]")
 
 FileOrigin = Union[FileSystemPath, ZipFile]
@@ -347,13 +347,15 @@ class JsonFileBase(TextFileBase[ValueType]):
 
     @classmethod
     def to_str(cls, content: ValueType) -> str:
-        if (
-            cls.model
-            and issubclass(cls.model, BaseModel)
-            and isinstance(content, cls.model)
-        ):
-            content = content.dict()
-        return dump_json(content)
+        return dump_json(
+            content.dict()
+            if (
+                cls.model
+                and issubclass(cls.model, BaseModel)
+                and isinstance(content, cls.model)
+            )
+            else content
+        )
 
     @classmethod
     def from_str(cls, content: str) -> ValueType:
@@ -386,13 +388,15 @@ class YamlFileBase(TextFileBase[ValueType]):
 
     @classmethod
     def to_str(cls, content: ValueType) -> str:
-        if (
-            cls.model
-            and issubclass(cls.model, BaseModel)
-            and isinstance(content, cls.model)
-        ):
-            content = content.dict()
-        return yaml.dump(content)  # type: ignore
+        return yaml.dump(  # type: ignore
+            content.dict()
+            if (
+                cls.model
+                and issubclass(cls.model, BaseModel)
+                and isinstance(content, cls.model)
+            )
+            else content
+        )
 
     @classmethod
     def from_str(cls, content: str) -> ValueType:
