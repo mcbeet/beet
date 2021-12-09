@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.48.1 (2021-12-09)
+### Fix
+* Bump latest pack format to 8 ([`8bbc17e`](https://github.com/mcbeet/beet/commit/8bbc17e39589fcc1e193404c1d5c9bf719300def))
+
 ## v0.48.0 (2021-11-30)
 ### Feature
 * Add LinkManager and refactor a bunch of things ([`b76063f`](https://github.com/mcbeet/beet/commit/b76063f89fffbd89a4f1319b24e75b6feafc4d57))
