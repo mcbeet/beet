@@ -1,0 +1,58 @@
+_mecha_lineno = [1], [1]
+_mecha_helper_children = _mecha_runtime.helpers['children']
+_mecha_helper_replace = _mecha_runtime.helpers['replace']
+with _mecha_runtime.scope() as _mecha_var0:
+    if 1:
+        _mecha_runtime.commands.extend(_mecha_refs[0].commands)
+    else:
+        if 2:
+            _mecha_runtime.commands.extend(_mecha_refs[1].commands)
+        else:
+            if 3:
+                _mecha_runtime.commands.extend(_mecha_refs[2].commands)
+            else:
+                if 4:
+                    _mecha_runtime.commands.extend(_mecha_refs[3].commands)
+    _mecha_runtime.commands.append(_mecha_refs[4])
+_mecha_var1 = _mecha_helper_replace(_mecha_refs[5], commands=_mecha_helper_children(_mecha_var0))---
+output = _mecha_var1
+---
+_mecha_refs[0]
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=9, lineno=2, colno=5)
+  end_location: SourceLocation(pos=14, lineno=2, colno=10)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+_mecha_refs[1]
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=26, lineno=4, colno=5)
+  end_location: SourceLocation(pos=31, lineno=4, colno=10)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+_mecha_refs[2]
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=43, lineno=6, colno=5)
+  end_location: SourceLocation(pos=48, lineno=6, colno=10)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+_mecha_refs[3]
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=60, lineno=8, colno=5)
+  end_location: SourceLocation(pos=65, lineno=8, colno=10)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+_mecha_refs[4]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=66, lineno=9, colno=1)
+  end_location: SourceLocation(pos=74, lineno=9, colno=9)
+  identifier: 'say:message'
+  arguments:
+    <class 'mecha.ast.AstMessage'>
+_mecha_refs[5]
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=74, lineno=9, colno=9)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+    <class 'mecha.ast.AstCommand'>
+    <class 'mecha.ast.AstCommand'>

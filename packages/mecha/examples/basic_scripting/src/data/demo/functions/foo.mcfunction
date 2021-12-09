@@ -126,3 +126,14 @@ say do_stuff(1, math.pi)
 import ./thing as thing
 
 say (thing.do_stuff is do_stuff)
+
+for i in range(6)
+    if i == 1
+        say 1
+    elif i == 2
+        say 2
+    elif i == 3
+        say 3
+    else
+        say other
+    say done

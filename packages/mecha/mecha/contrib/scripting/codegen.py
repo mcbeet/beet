@@ -431,18 +431,6 @@ class Codegen(Visitor):
             yield from visit_body(cast(AstRoot, node.arguments[1]), acc)
         return []
 
-    @rule(AstCommand, identifier="elif:condition:body")
-    def elif_statement(
-        self,
-        node: AstCommand,
-        acc: Accumulator,
-    ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
-        condition = yield from visit_single(node.arguments[0], required=True)
-        acc.statement(f"elif {condition}:")
-        with acc.block():
-            yield from visit_body(cast(AstRoot, node.arguments[1]), acc)
-        return []
-
     @rule(AstCommand, identifier="else:body")
     def else_statement(
         self,

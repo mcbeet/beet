@@ -453,3 +453,45 @@ if score @s tmp matches 1.. if entity @p[tag=foo]
         say no
 ###
 setblock = 0
+###
+if 1
+    say 1
+elif 2
+    say 2
+elif 3
+    say 3
+elif 4
+    say 4
+###
+if 1
+    say 1
+elif 2
+    say 2
+elif 3
+    say 3
+elif 4
+    say 4
+say done
+###
+if 1
+    say 1
+elif 2
+    say 2
+elif 3
+    say 3
+elif 4
+    say 4
+else
+    say other
+###
+if 1
+    say 1
+elif 2
+    say 2
+elif 3
+    say 3
+elif 4
+    say 4
+else
+    say other
+say done

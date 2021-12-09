@@ -8,7 +8,7 @@ __all__ = [
     "InterpolationParser",
     "parse_statement",
     "AssignmentTargetParser",
-    "IfElseConstraint",
+    "IfElseLoweringParser",
     "BreakContinueConstraint",
     "FlushPendingIdentifiersParser",
     "parse_function_signature",
@@ -39,6 +39,7 @@ from mecha import (
     AlternativeParser,
     AstChildren,
     AstCommand,
+    AstNode,
     AstResourceLocation,
     AstRoot,
     Parser,
@@ -265,7 +266,7 @@ def create_scripting_root_parser(parser: Parser):
             ReturnConstraint(
                 YieldConstraint(
                     BreakContinueConstraint(
-                        parser=IfElseConstraint(parser),
+                        parser=IfElseLoweringParser(parser),
                         allowed_scopes={
                             ("while", "condition", "body"),
                             ("for", "target", "in", "iterable", "body"),
@@ -372,24 +373,64 @@ class AssignmentTargetParser:
 
 
 @dataclass
-class IfElseConstraint:
-    """Constraint that makes sure that if statements are properly formed."""
+class IfElseLoweringParser:
+    """Parser that turns elif statements into if statements in an else clause."""
 
     parser: Parser
 
     def __call__(self, stream: TokenStream) -> AstRoot:
         node: AstRoot = self.parser(stream)
 
+        changed = False
+        result: List[AstCommand] = []
+
+        commands = iter(node.commands)
         previous = ""
 
-        for command in node.commands:
+        for command in commands:
             if command.identifier in ["elif:condition:body", "else:body"]:
                 if previous not in ["if:condition:body", "elif:condition:body"]:
                     exc = InvalidSyntax(
                         "Conditional branch must be part of an if statement."
                     )
                     raise set_location(exc, command)
+
+            if command.identifier == "elif:condition:body":
+                changed = True
+                elif_chain = [command]
+
+                for command in commands:
+                    if command.identifier not in ["elif:condition:body", "else:body"]:
+                        break
+                    elif_chain.append(command)
+                else:
+                    command = None
+
+                if elif_chain[-1].identifier == "else:body":
+                    last = [elif_chain.pop()]
+                else:
+                    last = []
+
+                for stmt in reversed(elif_chain):
+                    stmt = replace(stmt, identifier="if:condition:body")
+                    stmt = AstRoot(commands=AstChildren([stmt, *last]))
+                    stmt = set_location(stmt, stmt.commands[0], stmt.commands[-1])
+                    stmt = AstCommand(
+                        identifier="else:body",
+                        arguments=cast(AstChildren[AstNode], AstChildren([stmt])),
+                    )
+                    last = [set_location(stmt, stmt.arguments[0])]
+
+                result.append(last[0])
+
+            if not command:
+                break
+
             previous = command.identifier
+            result.append(command)
+
+        if changed:
+            node = replace(node, commands=AstChildren(result))
 
         return node
 
@@ -827,7 +868,7 @@ class PrimaryParser:
                         value = int(number.value)
 
                     arguments.append(
-                        set_location(AstValue(value=value), stream.current)
+                        set_location(AstValue(value=value), stream.current)  # type: ignore
                     )
 
                 else:

@@ -1,14 +1,15 @@
-_mecha_lineno = [1, 7], [1, 3]
+_mecha_lineno = [1, 8], [1, 3]
 _mecha_helper_children = _mecha_runtime.helpers['children']
 _mecha_helper_replace = _mecha_runtime.helpers['replace']
 with _mecha_runtime.scope() as _mecha_var0:
     if True:
         _mecha_runtime.commands.extend(_mecha_refs[0].commands)
-    elif (
-True or False):
-        _mecha_runtime.commands.extend(_mecha_refs[1].commands)
     else:
-        _mecha_runtime.commands.extend(_mecha_refs[2].commands)
+        if (
+True or False):
+            _mecha_runtime.commands.extend(_mecha_refs[1].commands)
+        else:
+            _mecha_runtime.commands.extend(_mecha_refs[2].commands)
 _mecha_var1 = _mecha_helper_replace(_mecha_refs[3], commands=_mecha_helper_children(_mecha_var0))---
 output = _mecha_var1
 ---
@@ -35,6 +36,5 @@ _mecha_refs[3]
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=73, lineno=6, colno=14)
   commands:
-    <class 'mecha.ast.AstCommand'>
     <class 'mecha.ast.AstCommand'>
     <class 'mecha.ast.AstCommand'>

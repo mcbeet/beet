@@ -89,6 +89,18 @@ say -1.0
 say True
 say 0.0
 say True
+say other
+say done
+say 1
+say done
+say 2
+say done
+say 3
+say done
+say other
+say done
+say other
+say done
 ```
 
 `@function(strip_final_newline) demo:thing`
