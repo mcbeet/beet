@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.48.2 (2021-12-10)
+### Fix
+* Add namespace option for babelbox ([`fb902fe`](https://github.com/mcbeet/beet/commit/fb902fedb4107105ee183a252f9f07c4a4a18c23))
+
 ## v0.48.1 (2021-12-09)
 ### Fix
 * Bump latest pack format to 8 ([`8bbc17e`](https://github.com/mcbeet/beet/commit/8bbc17e39589fcc1e193404c1d5c9bf719300def))
