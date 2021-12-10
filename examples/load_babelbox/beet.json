@@ -16,6 +16,15 @@
           "load": ["translations.csv"]
         }
       }
+    },
+    {
+      "pipeline": ["beet.contrib.babelbox"],
+      "meta": {
+        "babelbox": {
+          "load": ["translations.csv"],
+          "namespace": "demo"
+        }
+      }
     }
   ]
 }

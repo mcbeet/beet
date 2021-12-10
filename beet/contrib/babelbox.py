@@ -30,6 +30,7 @@ logger = logging.getLogger(__name__)
 class BabelboxOptions(BaseModel):
     load: List[str] = []
     dialect: Optional[str] = None
+    namespace: str = "minecraft"
     filename_prefix: bool = False
 
 
@@ -40,11 +41,11 @@ def beet_default(ctx: Context):
 @configurable(validator=BabelboxOptions)
 def babelbox(ctx: Context, opts: BabelboxOptions):
     """Plugin that loads translations from csv files."""
-    minecraft = ctx.assets["minecraft"]
+    namespace = ctx.assets[opts.namespace]
 
     for pattern in opts.load:
         for path in ctx.directory.glob(pattern):
-            minecraft.languages.merge(
+            namespace.languages.merge(
                 load_languages(
                     path=path,
                     dialect=opts.dialect,
