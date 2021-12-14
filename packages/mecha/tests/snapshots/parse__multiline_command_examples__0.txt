@@ -1,6 +1,6 @@
 <class 'mecha.ast.AstRoot'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
-  end_location: SourceLocation(pos=1928, lineno=108, colno=1)
+  end_location: SourceLocation(pos=2007, lineno=109, colno=1)
   commands:
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=0, lineno=1, colno=1)
@@ -1006,3 +1006,54 @@
           location: SourceLocation(pos=1920, lineno=107, colno=72)
           end_location: SourceLocation(pos=1927, lineno=107, colno=79)
           value: 'integer'
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=1928, lineno=108, colno=1)
+      end_location: SourceLocation(pos=2006, lineno=108, colno=79)
+      identifier: 'execute:subcommand'
+      arguments:
+        <class 'mecha.ast.AstCommand'>
+          location: SourceLocation(pos=1936, lineno=108, colno=9)
+          end_location: SourceLocation(pos=2006, lineno=108, colno=79)
+          identifier: 'execute:store:result:score:targets:objective:subcommand'
+          arguments:
+            <class 'mecha.ast.AstSelector'>
+              location: SourceLocation(pos=1955, lineno=108, colno=28)
+              end_location: SourceLocation(pos=1957, lineno=108, colno=30)
+              variable: 's'
+              arguments:
+                <empty>
+            <class 'mecha.ast.AstObjective'>
+              location: SourceLocation(pos=1958, lineno=108, colno=31)
+              end_location: SourceLocation(pos=1970, lineno=108, colno=43)
+              value: 'smithed.data'
+            <class 'mecha.ast.AstCommand'>
+              location: SourceLocation(pos=1971, lineno=108, colno=44)
+              end_location: SourceLocation(pos=2006, lineno=108, colno=79)
+              identifier: 'execute:run:subcommand'
+              arguments:
+                <class 'mecha.ast.AstCommand'>
+                  location: SourceLocation(pos=1975, lineno=108, colno=48)
+                  end_location: SourceLocation(pos=2006, lineno=108, colno=79)
+                  identifier: 'clear:targets:item:maxCount'
+                  arguments:
+                    <class 'mecha.ast.AstSelector'>
+                      location: SourceLocation(pos=1981, lineno=108, colno=54)
+                      end_location: SourceLocation(pos=1983, lineno=108, colno=56)
+                      variable: 's'
+                      arguments:
+                        <empty>
+                    <class 'mecha.ast.AstItem'>
+                      location: SourceLocation(pos=1984, lineno=108, colno=57)
+                      end_location: SourceLocation(pos=2004, lineno=108, colno=77)
+                      identifier:
+                        <class 'mecha.ast.AstResourceLocation'>
+                          location: SourceLocation(pos=1984, lineno=108, colno=57)
+                          end_location: SourceLocation(pos=2004, lineno=108, colno=77)
+                          is_tag: True
+                          namespace: 'smithed'
+                          path: 'crafter/all'
+                      data_tags: None
+                    <class 'mecha.ast.AstNumber'>
+                      location: SourceLocation(pos=2005, lineno=108, colno=78)
+                      end_location: SourceLocation(pos=2006, lineno=108, colno=79)
+                      value: 0

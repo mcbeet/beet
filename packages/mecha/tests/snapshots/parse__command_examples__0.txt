@@ -1,6 +1,6 @@
 <class 'mecha.ast.AstRoot'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
-  end_location: SourceLocation(pos=6186, lineno=150, colno=1)
+  end_location: SourceLocation(pos=6265, lineno=151, colno=1)
   commands:
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=14, lineno=2, colno=1)
@@ -5487,3 +5487,54 @@
                       location: SourceLocation(pos=6178, lineno=149, colno=112)
                       end_location: SourceLocation(pos=6179, lineno=149, colno=113)
                       value: 1
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=6186, lineno=150, colno=1)
+      end_location: SourceLocation(pos=6264, lineno=150, colno=79)
+      identifier: 'execute:subcommand'
+      arguments:
+        <class 'mecha.ast.AstCommand'>
+          location: SourceLocation(pos=6194, lineno=150, colno=9)
+          end_location: SourceLocation(pos=6264, lineno=150, colno=79)
+          identifier: 'execute:store:result:score:targets:objective:subcommand'
+          arguments:
+            <class 'mecha.ast.AstSelector'>
+              location: SourceLocation(pos=6213, lineno=150, colno=28)
+              end_location: SourceLocation(pos=6215, lineno=150, colno=30)
+              variable: 's'
+              arguments:
+                <empty>
+            <class 'mecha.ast.AstObjective'>
+              location: SourceLocation(pos=6216, lineno=150, colno=31)
+              end_location: SourceLocation(pos=6228, lineno=150, colno=43)
+              value: 'smithed.data'
+            <class 'mecha.ast.AstCommand'>
+              location: SourceLocation(pos=6229, lineno=150, colno=44)
+              end_location: SourceLocation(pos=6264, lineno=150, colno=79)
+              identifier: 'execute:run:subcommand'
+              arguments:
+                <class 'mecha.ast.AstCommand'>
+                  location: SourceLocation(pos=6233, lineno=150, colno=48)
+                  end_location: SourceLocation(pos=6264, lineno=150, colno=79)
+                  identifier: 'clear:targets:item:maxCount'
+                  arguments:
+                    <class 'mecha.ast.AstSelector'>
+                      location: SourceLocation(pos=6239, lineno=150, colno=54)
+                      end_location: SourceLocation(pos=6241, lineno=150, colno=56)
+                      variable: 's'
+                      arguments:
+                        <empty>
+                    <class 'mecha.ast.AstItem'>
+                      location: SourceLocation(pos=6242, lineno=150, colno=57)
+                      end_location: SourceLocation(pos=6262, lineno=150, colno=77)
+                      identifier:
+                        <class 'mecha.ast.AstResourceLocation'>
+                          location: SourceLocation(pos=6242, lineno=150, colno=57)
+                          end_location: SourceLocation(pos=6262, lineno=150, colno=77)
+                          is_tag: True
+                          namespace: 'smithed'
+                          path: 'crafter/all'
+                      data_tags: None
+                    <class 'mecha.ast.AstNumber'>
+                      location: SourceLocation(pos=6263, lineno=150, colno=78)
+                      end_location: SourceLocation(pos=6264, lineno=150, colno=79)
+                      value: 0

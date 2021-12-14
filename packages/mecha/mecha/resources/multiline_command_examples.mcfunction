@@ -105,3 +105,4 @@ gamerule
 scoreboard players set #index global 3
 scoreboard players set $index global 3
 scoreboard players operation #sie_1_flags_delta integer = #sie_1_flags integer
+execute store result score @s smithed.data run clear @s #smithed:crafter/all 0

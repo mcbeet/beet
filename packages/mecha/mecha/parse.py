@@ -561,7 +561,7 @@ def parse_command(stream: TokenStream) -> AstCommand:
         location = stream.expect().location
         end_location = location
 
-    while tree and tree.children:
+    while tree:
         with stream.checkpoint() as commit:
             literal = stream.expect("literal")
 
@@ -577,13 +577,14 @@ def parse_command(stream: TokenStream) -> AstCommand:
 
                 commit()
 
-        if commit.rollback and tree.children:
-            for (name, child), alternative in stream.choose(
-                *sorted(
-                    tree.children.items(),
-                    key=lambda p: p[1].type != "argument",
-                )
-            ):
+        if commit.rollback:
+            choices = list((tree.children or {}).items())
+            choices.sort(key=lambda p: p[1].type != "argument")
+
+            if tree.executable:
+                choices.append(("", tree))
+
+            for (name, child), alternative in stream.choose(*choices):
                 with alternative, stream.provide(
                     scope=scope + (name,),
                     line_indentation=level,
@@ -591,7 +592,12 @@ def parse_command(stream: TokenStream) -> AstCommand:
                     literal = None
                     argument = None
 
-                    if child.type == "literal":
+                    if tree is child:
+                        if stream.peek():
+                            stream.expect("newline", "eof")
+                        reached_terminal = True
+                        continue
+                    elif child.type == "literal":
                         literal = stream.expect(("literal", name))
                     elif child.type == "argument":
                         argument = delegate("command:argument", stream)
@@ -614,16 +620,14 @@ def parse_command(stream: TokenStream) -> AstCommand:
             break
 
         with stream.provide(line_indentation=level):
-            if not consume_line_continuation(stream):
-                if tree.executable and (
-                    not stream.peek() or stream.get("newline", "eof")
-                ):
-                    break
+            consume_line_continuation(stream)
 
         target = spec.tree.get(tree.redirect)
         recursive = target and target.subcommand
 
         if tree.subcommand or recursive:
+            if tree.executable and (not stream.peek() or stream.get("newline", "eof")):
+                break
             subcommand_scope = tree.redirect if tree.redirect is not None else scope
             with stream.provide(scope=subcommand_scope, line_indentation=level):
                 node = delegate("command", stream)
