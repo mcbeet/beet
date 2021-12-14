@@ -2,6 +2,13 @@
 
 <!--next-version-placeholder-->
 
+## v0.21.0 (2021-12-14)
+### Feature
+* Lower elif statements ([`c49122f`](https://github.com/mcbeet/mecha/commit/c49122fe4aa37f042d81c66e6572b3206efe62c5))
+
+### Fix
+* Edge-case for optional resource locations ([`a55b3d6`](https://github.com/mcbeet/mecha/commit/a55b3d60a4331eabb92fe1b2f5e6da8d51f08251))
+
 ## v0.20.3 (2021-12-07)
 ### Fix
 * Handle block_marker particles ([`25bc124`](https://github.com/mcbeet/mecha/commit/25bc124ae6c9ab76ecea3204b512327e1d999bd5))
