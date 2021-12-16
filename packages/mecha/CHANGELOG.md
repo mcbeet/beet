@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.22.0 (2021-12-16)
+### Feature
+* Add python colon ([`14fa47b`](https://github.com/mcbeet/mecha/commit/14fa47b9a7a3f2f6eaa88b6927116292f0480b8d))
+
 ## v0.21.0 (2021-12-14)
 ### Feature
 * Lower elif statements ([`c49122f`](https://github.com/mcbeet/mecha/commit/c49122fe4aa37f042d81c66e6572b3206efe62c5))
