@@ -101,6 +101,8 @@ say other
 say done
 say other
 say done
+execute as @a at @s anchored eyes facing 0 0 0 anchored feet positioned ^ ^ ^1 rotated as @s positioned ^ ^ ^-1 if entity @s[distance=..0.6] run function demo:abc
+execute if predicate foo:bar run function demo:xyz
 ```
 
 `@function(strip_final_newline) demo:thing`
@@ -117,4 +119,18 @@ say nesting is automatically enabled
 say implicit execute is automatically enabled
 say relative location is automatically enabled
 say ABCABCABCABCABC
+```
+
+`@function demo:abc`
+
+```mcfunction
+say foo
+say bar
+```
+
+`@function demo:xyz`
+
+```mcfunction
+say foo
+say bar
 ```
