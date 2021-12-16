@@ -134,23 +134,34 @@ class NestedCommandsTransformer(MutatingReducer):
         )
         self.database.enqueue(function, self.database.step + 1)
 
-    @rule(AstCommand, identifier="function:name:commands")
-    def nested_function(self, node: AstCommand):
-        name, root = node.arguments
+    @rule(AstCommand, identifier="execute:run:subcommand")
+    def execute_function(self, node: AstCommand):
+        if (
+            isinstance(command := node.arguments[0], AstCommand)
+            and command.identifier == "function:name:commands"
+        ):
+            name, root = command.arguments
 
-        if isinstance(name, AstResourceLocation) and isinstance(root, AstRoot):
-            path = name.get_canonical_value()
+            if isinstance(name, AstResourceLocation) and isinstance(root, AstRoot):
+                path = name.get_canonical_value()
 
-            if path in self.ctx.data.functions:
-                d = Diagnostic("error", f"Function {path!r} already exists.")
-                raise set_location(d, name)
+                if path in self.ctx.data.functions:
+                    d = Diagnostic("error", f"Function {path!r} already exists.")
+                    raise set_location(d, name)
 
-            self.emit_function(path, root)
+                self.emit_function(path, root)
 
-        return replace(node, identifier="function:name", arguments=AstChildren([name]))
+            command = replace(
+                command,
+                identifier="function:name",
+                arguments=AstChildren([name]),
+            )
+            return replace(node, arguments=AstChildren([command]))
+
+        return node
 
     @rule(AstCommand, identifier="execute:commands")
-    def nested_execute(self, node: AstCommand):
+    def execute_commands(self, node: AstCommand):
         generate = self.ctx.generate["nested_execute"]
         root = cast(AstRoot, node.arguments[0])
 
@@ -181,11 +192,25 @@ class NestedCommandsTransformer(MutatingReducer):
         )
 
     @rule(AstRoot)
-    def execute_expand(self, node: AstRoot):
+    def root(self, node: AstRoot):
         changed = False
         commands: List[AstCommand] = []
 
         for command in node.commands:
+            if command.identifier == "function:name:commands":
+                name, root = command.arguments
+
+                if isinstance(name, AstResourceLocation) and isinstance(root, AstRoot):
+                    path = name.get_canonical_value()
+
+                    if path in self.ctx.data.functions:
+                        d = Diagnostic("error", f"Function {path!r} already exists.")
+                        raise set_location(d, name)
+                    print("emit", path)
+                    self.emit_function(path, root)
+                    changed = True
+                    continue
+
             args = command.arguments
             stack: List[AstCommand] = [command]
 

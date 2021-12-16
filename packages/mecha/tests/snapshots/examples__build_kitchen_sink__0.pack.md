@@ -34,7 +34,6 @@ data modify storage imp:io words set value ["alpha", "beta", "gamma", "delta"]
 ```mcfunction
 execute as @a at @s run function demo:nesting/nested_execute_0
 execute as @a at @s if score @s tmp matches 1 run function demo:nesting/nested_execute_1
-function demo:nesting/foo
 execute as @a at @s run say 1
 execute as @a at @s run say 2
 execute as @a at @s if score @s tmp matches 1 run say 1
@@ -58,12 +57,6 @@ say hello
 say world
 ```
 
-`@function demo:nesting/foo`
-
-```mcfunction
-say this is a test
-```
-
 `@function demo:nesting/loop`
 
 ```mcfunction
@@ -76,4 +69,10 @@ execute if data storage imp:temp iter.words.remaining[] run function demo:nestin
 ```mcfunction
 execute at @e[type=pig] run setblock ~ ~ ~ stone
 execute at @e[type=sheep] run setblock ~ ~ ~ dirt
+```
+
+`@function demo:nesting/foo`
+
+```mcfunction
+say this is a test
 ```

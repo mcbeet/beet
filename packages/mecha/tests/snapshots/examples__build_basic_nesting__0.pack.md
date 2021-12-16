@@ -18,7 +18,6 @@
 `@function demo:foo`
 
 ```mcfunction
-function demo:thing1
 execute as @a at @s run function demo:thing4
 execute as @a at @s run function demo:thing5
 execute as @a at @s run function demo:foo/nested_execute_0
@@ -43,15 +42,6 @@ say this is a test
 
 ```mcfunction
 say this is a test
-```
-
-`@function demo:thing1`
-
-```mcfunction
-say hello
-say world
-function demo:thing2
-function demo:thing3
 ```
 
 `@function demo:thing4`
@@ -91,4 +81,11 @@ setblock ~ ~-2 ~ stone
 ```mcfunction
 say foo
 say bar
+```
+
+`@function demo:thing1`
+
+```mcfunction
+say hello
+say world
 ```
