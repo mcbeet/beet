@@ -2,6 +2,13 @@
 
 <!--next-version-placeholder-->
 
+## v0.23.0 (2021-12-16)
+### Feature
+* Add nesting for schedule command ([`eeb15f6`](https://github.com/mcbeet/mecha/commit/eeb15f6c007f69e8323fabfc768bc30e80d8150c))
+
+### Fix
+* Only call nestde functions behind execute ([`0096cce`](https://github.com/mcbeet/mecha/commit/0096cce671b34cfa5a4774d4ae9e4ce2d92f2dff))
+
 ## v0.22.1 (2021-12-16)
 ### Fix
 * Default to 1.18 ([`4362542`](https://github.com/mcbeet/mecha/commit/4362542f116c9cdab318d248293743025e08027e))
