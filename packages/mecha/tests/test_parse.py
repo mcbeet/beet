@@ -108,9 +108,9 @@ def test_say(snapshot: SnapshotFixture, mc: Mecha):
     assert snapshot() == mc.serialize(ast_multiline)
 
 
-def test_player_name(mc: Mecha):
+def test_player_name(mc_1_17: Mecha):
     with pytest.raises(DiagnosticError) as exc_info:
-        mc.parse(
+        mc_1_17.parse(
             "scoreboard players set some_really_long_name_right_here_but_its_actually_even_longer foo 42"
         )
     assert (
@@ -119,12 +119,10 @@ def test_player_name(mc: Mecha):
     )
 
 
-def test_player_name_no_length_restriction(mc_1_18: Mecha):
+def test_player_name_no_length_restriction(mc: Mecha):
     assert (
-        mc_1_18.serialize(
-            mc_1_18.parse(
-                "scoreboard players set some_really_long_name_right_here foo 42"
-            )
+        mc.serialize(
+            mc.parse("scoreboard players set some_really_long_name_right_here foo 42")
         )
         == "scoreboard players set some_really_long_name_right_here foo 42\n"
     )

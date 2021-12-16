@@ -9,11 +9,11 @@ def mc():
 
 
 @pytest.fixture
-def mc_1_18(mc: Mecha):
+def mc_1_17(mc: Mecha):
     previous_spec = mc.spec
     mc.spec = CommandSpec(
-        tree=CommandTree.load_from(version="1.18"),
-        parsers=get_parsers("1.18"),
+        tree=CommandTree.load_from(version="1.17"),
+        parsers=get_parsers("1.17"),
     )
 
     yield mc

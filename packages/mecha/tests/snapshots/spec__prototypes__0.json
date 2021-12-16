@@ -762,6 +762,8 @@
   "worldborder:get",
   "worldborder:warning:distance:distance",
   "worldborder:warning:time:time",
+  "jfr:start",
+  "jfr:stop",
   "ban-ip:target",
   "ban-ip:target:reason",
   "banlist",

@@ -43,7 +43,7 @@ def validate(ctx: Context):
     "-m",
     "--minecraft",
     metavar="VERSION",
-    default="1.17",
+    default="1.18",
     help="Minecraft version.",
 )
 @click.option(

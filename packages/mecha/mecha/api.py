@@ -85,7 +85,7 @@ class AstCacheBackend:
 class MechaOptions(BaseModel):
     """Mecha options."""
 
-    version: VersionNumber = "1.17"
+    version: VersionNumber = "1.18"
     multiline: bool = False
     keep_comments: bool = False
     readonly: Optional[bool] = None
@@ -98,7 +98,7 @@ class Mecha:
     """Class exposing the command api."""
 
     ctx: InitVar[Optional[Context]] = None
-    version: InitVar[VersionNumber] = "1.17"
+    version: InitVar[VersionNumber] = "1.18"
     multiline: InitVar[bool] = False
     keep_comments: InitVar[bool] = False
     readonly: bool = False

@@ -431,7 +431,7 @@ def get_default_parsers() -> Dict[str, Parser]:
     }
 
 
-def get_parsers(version: VersionNumber = "1.17") -> Dict[str, Parser]:
+def get_parsers(version: VersionNumber = "1.18") -> Dict[str, Parser]:
     """Return parsers for a specific version."""
     version = split_version(version)
 
