@@ -30,6 +30,9 @@ execute as @a run say hello
 execute as @a at @s anchored eyes facing 0 0 0 anchored feet positioned ^ ^ ^1 rotated as @s positioned ^ ^ ^-1 if entity @s[distance=..0.6] run say I'm facing the target!
 execute as @a at @s anchored eyes facing 0 0 0 anchored feet positioned ^ ^ ^1 rotated as @s positioned ^ ^ ^-1 if entity @s[distance=..0.6] run say oh wow
 execute as @a at @s anchored eyes facing 0 0 0 anchored feet positioned ^ ^ ^1 rotated as @s positioned ^ ^ ^-1 if entity @s[distance=..0.6] run say this is duplicated
+schedule function demo:schedule1 42
+execute if score global tmp matches 7 run schedule function demo:schedule2 42 append
+schedule function demo:schedule3 42 replace
 ```
 
 `@function demo:thing2`
@@ -81,6 +84,24 @@ setblock ~ ~-2 ~ stone
 ```mcfunction
 say foo
 say bar
+```
+
+`@function demo:schedule1`
+
+```mcfunction
+say hello1
+```
+
+`@function demo:schedule2`
+
+```mcfunction
+say hello2
+```
+
+`@function demo:schedule3`
+
+```mcfunction
+say hello3
 ```
 
 `@function demo:thing1`

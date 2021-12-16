@@ -92,3 +92,12 @@ execute
     expand:
         say oh wow
         say this is duplicated
+
+schedule function demo:schedule1 42t:
+    say hello1
+
+execute if score global tmp matches 7 run schedule function demo:schedule2 42t append:
+    say hello2
+
+schedule function demo:schedule3 42t replace:
+    say hello3

@@ -52,6 +52,53 @@ COMMAND_TREE = {
                 },
             },
         },
+        "schedule": {
+            "type": "literal",
+            "children": {
+                "function": {
+                    "type": "literal",
+                    "children": {
+                        "function": {
+                            "type": "argument",
+                            "parser": "minecraft:function",
+                            "children": {
+                                "time": {
+                                    "type": "argument",
+                                    "parser": "minecraft:time",
+                                    "children": {
+                                        "append": {
+                                            "type": "literal",
+                                            "children": {
+                                                "commands": {
+                                                    "type": "argument",
+                                                    "parser": "mecha:nested_root",
+                                                    "executable": True,
+                                                },
+                                            },
+                                        },
+                                        "replace": {
+                                            "type": "literal",
+                                            "children": {
+                                                "commands": {
+                                                    "type": "argument",
+                                                    "parser": "mecha:nested_root",
+                                                    "executable": True,
+                                                },
+                                            },
+                                        },
+                                        "commands": {
+                                            "type": "argument",
+                                            "parser": "mecha:nested_root",
+                                            "executable": True,
+                                        },
+                                    },
+                                }
+                            },
+                        }
+                    },
+                },
+            },
+        },
         "function": {
             "type": "literal",
             "children": {
@@ -191,6 +238,30 @@ class NestedCommandsTransformer(MutatingReducer):
             arguments=AstChildren([cast(AstNode, subcommand)]),
         )
 
+    @rule(AstCommand, identifier="schedule:function:function:time:commands")
+    @rule(AstCommand, identifier="schedule:function:function:time:append:commands")
+    @rule(AstCommand, identifier="schedule:function:function:time:replace:commands")
+    def schedule_function(self, node: AstCommand):
+        name = node.arguments[0]
+        root = node.arguments[-1]
+
+        if isinstance(name, AstResourceLocation) and isinstance(root, AstRoot):
+            path = name.get_canonical_value()
+
+            if path in self.ctx.data.functions:
+                d = Diagnostic("error", f"Function {path!r} already exists.")
+                raise set_location(d, name)
+
+            self.emit_function(path, root)
+
+            return replace(
+                node,
+                identifier=node.identifier[:-9],
+                arguments=AstChildren(node.arguments[:-1]),
+            )
+
+        return node
+
     @rule(AstRoot)
     def root(self, node: AstRoot):
         changed = False
@@ -206,7 +277,7 @@ class NestedCommandsTransformer(MutatingReducer):
                     if path in self.ctx.data.functions:
                         d = Diagnostic("error", f"Function {path!r} already exists.")
                         raise set_location(d, name)
-                    print("emit", path)
+
                     self.emit_function(path, root)
                     changed = True
                     continue
