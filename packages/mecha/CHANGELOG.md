@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.22.1 (2021-12-16)
+### Fix
+* Default to 1.18 ([`4362542`](https://github.com/mcbeet/mecha/commit/4362542f116c9cdab318d248293743025e08027e))
+
 ## v0.22.0 (2021-12-16)
 ### Feature
 * Add python colon ([`14fa47b`](https://github.com/mcbeet/mecha/commit/14fa47b9a7a3f2f6eaa88b6927116292f0480b8d))
