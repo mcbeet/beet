@@ -1,5 +1,5 @@
-def f(a, b)
-    def g(c)
+def f(a, b):
+    def g(c):
         a + b
 #>ERROR  Identifier 'c' is not defined.
 # line 4, column 7

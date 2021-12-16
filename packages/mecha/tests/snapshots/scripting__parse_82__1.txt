@@ -19,7 +19,7 @@ output = _mecha_var1
 _mecha_refs[0]
 <class 'mecha.ast.AstRoot'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
-  end_location: SourceLocation(pos=72, lineno=6, colno=1)
+  end_location: SourceLocation(pos=74, lineno=6, colno=1)
   commands:
     <class 'mecha.ast.AstCommand'>
     <class 'mecha.ast.AstCommand'>

@@ -1,16 +1,16 @@
-def foo()
+def foo():
     thing += bar()
-def bar()
+def bar():
     thing += foo()
 thing = bar()
 ---
 <class 'mecha.ast.AstRoot'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
-  end_location: SourceLocation(pos=72, lineno=6, colno=1)
+  end_location: SourceLocation(pos=74, lineno=6, colno=1)
   commands:
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=0, lineno=1, colno=1)
-      end_location: SourceLocation(pos=28, lineno=2, colno=19)
+      end_location: SourceLocation(pos=29, lineno=2, colno=19)
       identifier: 'def:function:body'
       arguments:
         <class 'mecha.contrib.scripting.ast.AstFunctionSignature'>
@@ -20,96 +20,96 @@ thing = bar()
           arguments:
             <empty>
         <class 'mecha.ast.AstRoot'>
-          location: SourceLocation(pos=14, lineno=2, colno=5)
-          end_location: SourceLocation(pos=28, lineno=2, colno=19)
+          location: SourceLocation(pos=15, lineno=2, colno=5)
+          end_location: SourceLocation(pos=29, lineno=2, colno=19)
           commands:
             <class 'mecha.ast.AstCommand'>
-              location: SourceLocation(pos=14, lineno=2, colno=5)
-              end_location: SourceLocation(pos=28, lineno=2, colno=19)
+              location: SourceLocation(pos=15, lineno=2, colno=5)
+              end_location: SourceLocation(pos=29, lineno=2, colno=19)
               identifier: 'statement'
               arguments:
                 <class 'mecha.contrib.scripting.ast.AstAssignment'>
-                  location: SourceLocation(pos=14, lineno=2, colno=5)
-                  end_location: SourceLocation(pos=28, lineno=2, colno=19)
+                  location: SourceLocation(pos=15, lineno=2, colno=5)
+                  end_location: SourceLocation(pos=29, lineno=2, colno=19)
                   operator: '+='
                   target:
                     <class 'mecha.contrib.scripting.ast.AstAssignmentTargetIdentifier'>
-                      location: SourceLocation(pos=14, lineno=2, colno=5)
-                      end_location: SourceLocation(pos=19, lineno=2, colno=10)
+                      location: SourceLocation(pos=15, lineno=2, colno=5)
+                      end_location: SourceLocation(pos=20, lineno=2, colno=10)
                       value: 'thing'
                   value:
                     <class 'mecha.contrib.scripting.ast.AstCall'>
-                      location: SourceLocation(pos=23, lineno=2, colno=14)
-                      end_location: SourceLocation(pos=28, lineno=2, colno=19)
+                      location: SourceLocation(pos=24, lineno=2, colno=14)
+                      end_location: SourceLocation(pos=29, lineno=2, colno=19)
                       value:
                         <class 'mecha.contrib.scripting.ast.AstIdentifier'>
-                          location: SourceLocation(pos=23, lineno=2, colno=14)
-                          end_location: SourceLocation(pos=26, lineno=2, colno=17)
+                          location: SourceLocation(pos=24, lineno=2, colno=14)
+                          end_location: SourceLocation(pos=27, lineno=2, colno=17)
                           value: 'bar'
                       arguments:
                         <empty>
     <class 'mecha.ast.AstCommand'>
-      location: SourceLocation(pos=29, lineno=3, colno=1)
-      end_location: SourceLocation(pos=57, lineno=4, colno=19)
+      location: SourceLocation(pos=30, lineno=3, colno=1)
+      end_location: SourceLocation(pos=59, lineno=4, colno=19)
       identifier: 'def:function:body'
       arguments:
         <class 'mecha.contrib.scripting.ast.AstFunctionSignature'>
-          location: SourceLocation(pos=33, lineno=3, colno=5)
-          end_location: SourceLocation(pos=38, lineno=3, colno=10)
+          location: SourceLocation(pos=34, lineno=3, colno=5)
+          end_location: SourceLocation(pos=39, lineno=3, colno=10)
           name: 'bar'
           arguments:
             <empty>
         <class 'mecha.ast.AstRoot'>
-          location: SourceLocation(pos=43, lineno=4, colno=5)
-          end_location: SourceLocation(pos=57, lineno=4, colno=19)
+          location: SourceLocation(pos=45, lineno=4, colno=5)
+          end_location: SourceLocation(pos=59, lineno=4, colno=19)
           commands:
             <class 'mecha.ast.AstCommand'>
-              location: SourceLocation(pos=43, lineno=4, colno=5)
-              end_location: SourceLocation(pos=57, lineno=4, colno=19)
+              location: SourceLocation(pos=45, lineno=4, colno=5)
+              end_location: SourceLocation(pos=59, lineno=4, colno=19)
               identifier: 'statement'
               arguments:
                 <class 'mecha.contrib.scripting.ast.AstAssignment'>
-                  location: SourceLocation(pos=43, lineno=4, colno=5)
-                  end_location: SourceLocation(pos=57, lineno=4, colno=19)
+                  location: SourceLocation(pos=45, lineno=4, colno=5)
+                  end_location: SourceLocation(pos=59, lineno=4, colno=19)
                   operator: '+='
                   target:
                     <class 'mecha.contrib.scripting.ast.AstAssignmentTargetIdentifier'>
-                      location: SourceLocation(pos=43, lineno=4, colno=5)
-                      end_location: SourceLocation(pos=48, lineno=4, colno=10)
+                      location: SourceLocation(pos=45, lineno=4, colno=5)
+                      end_location: SourceLocation(pos=50, lineno=4, colno=10)
                       value: 'thing'
                   value:
                     <class 'mecha.contrib.scripting.ast.AstCall'>
-                      location: SourceLocation(pos=52, lineno=4, colno=14)
-                      end_location: SourceLocation(pos=57, lineno=4, colno=19)
+                      location: SourceLocation(pos=54, lineno=4, colno=14)
+                      end_location: SourceLocation(pos=59, lineno=4, colno=19)
                       value:
                         <class 'mecha.contrib.scripting.ast.AstIdentifier'>
-                          location: SourceLocation(pos=52, lineno=4, colno=14)
-                          end_location: SourceLocation(pos=55, lineno=4, colno=17)
+                          location: SourceLocation(pos=54, lineno=4, colno=14)
+                          end_location: SourceLocation(pos=57, lineno=4, colno=17)
                           value: 'foo'
                       arguments:
                         <empty>
     <class 'mecha.ast.AstCommand'>
-      location: SourceLocation(pos=58, lineno=5, colno=1)
-      end_location: SourceLocation(pos=71, lineno=5, colno=14)
+      location: SourceLocation(pos=60, lineno=5, colno=1)
+      end_location: SourceLocation(pos=73, lineno=5, colno=14)
       identifier: 'statement'
       arguments:
         <class 'mecha.contrib.scripting.ast.AstAssignment'>
-          location: SourceLocation(pos=58, lineno=5, colno=1)
-          end_location: SourceLocation(pos=71, lineno=5, colno=14)
+          location: SourceLocation(pos=60, lineno=5, colno=1)
+          end_location: SourceLocation(pos=73, lineno=5, colno=14)
           operator: '='
           target:
             <class 'mecha.contrib.scripting.ast.AstAssignmentTargetIdentifier'>
-              location: SourceLocation(pos=58, lineno=5, colno=1)
-              end_location: SourceLocation(pos=63, lineno=5, colno=6)
+              location: SourceLocation(pos=60, lineno=5, colno=1)
+              end_location: SourceLocation(pos=65, lineno=5, colno=6)
               value: 'thing'
           value:
             <class 'mecha.contrib.scripting.ast.AstCall'>
-              location: SourceLocation(pos=66, lineno=5, colno=9)
-              end_location: SourceLocation(pos=71, lineno=5, colno=14)
+              location: SourceLocation(pos=68, lineno=5, colno=9)
+              end_location: SourceLocation(pos=73, lineno=5, colno=14)
               value:
                 <class 'mecha.contrib.scripting.ast.AstIdentifier'>
-                  location: SourceLocation(pos=66, lineno=5, colno=9)
-                  end_location: SourceLocation(pos=69, lineno=5, colno=12)
+                  location: SourceLocation(pos=68, lineno=5, colno=9)
+                  end_location: SourceLocation(pos=71, lineno=5, colno=12)
                   value: 'bar'
               arguments:
                 <empty>

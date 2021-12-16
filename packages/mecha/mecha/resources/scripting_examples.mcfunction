@@ -69,62 +69,62 @@ foo = 1
 "hello" + foo
 ###
 a = 1
-if a == 1
+if a == 1:
     a = 0
 ###
-if True
+if True:
     say hello
-elif True or False
+elif True or False:
     say hello
-else
-    say hello
-###
-if True
-    say hello
-elif True or False
-    say hello
-else "blah"
+else:
     say hello
 ###
-if True
+if True:
+    say hello
+elif True or False:
+    say hello
+else "blah":
+    say hello
+###
+if True:
     say hello
 a = 1
-else
+else:
     say hello
 ###
 if
 ###
 if True and
 ###
-if True
+if True:
 say hello
 ###
-while True
+while True:
     say hello
 ###
-if score @s tmp matches 0
-    if "thing" == "bar"
+if score @s tmp matches 0:
+    if "thing" == "bar":
         say hello
-    if "thing" == "foo"
-        say hello
-###
-if score @s tmp matches 0
-    if "thing" == "foo"
+    if "thing" == "foo":
         say hello
 ###
-if score @s tmp matches 0
-    while True
-        say hello
-    while True
+if score @s tmp matches 0:
+    if "thing" == "foo":
         say hello
 ###
-if score @s tmp matches 0
-    while True
+if score @s tmp matches 0:
+    while True:
+        say hello
+    while True:
         say hello
 ###
-if score @s tmp matches 42
+if score @s tmp matches 0:
+    while True:
+        say hello
+###
+if score @s tmp matches 42:
     count = 42
-    while count > 0
+    while count > 0:
         say hello
         count = count - 1
 ###
@@ -141,7 +141,7 @@ true | false | null
 foo = 1
 foo == 1
 ###
-for c in "abc"
+for c in "abc":
     say something
 ###
 foo = foo
@@ -149,10 +149,10 @@ foo = foo
 foo = 1
 foo = foo
 ###
-for foo in foo
+for foo in foo:
     foo = foo
 ###
-for foo in "foo"
+for foo in "foo":
     foo = foo
 ###
 foo += "hey"
@@ -166,18 +166,18 @@ break
 ###
 continue
 ###
-if true
+if true:
     break
 ###
-for i in ""
+for i in "":
     say hello
     continue
 ###
-while false
+while false:
     break
 ###
-for i in "abc"
-    if i == "b"
+for i in "abc":
+    if i == "b":
         break
 ###
 "foo".bar
@@ -194,12 +194,12 @@ for i in "abc"
     3,
 )
 ###
-def foo()
+def foo():
     say hello
 foo()
 ###
-def foo()
-    def bar()
+def foo():
+    def bar():
         foo()
     bar()
 ###
@@ -207,36 +207,36 @@ def foo(
     a=1,
     b=a,
     c=a + b,
-)
+):
     say hello
 ###
 def f
 ###
 def f()
 ###
-def f()
+def f():
 say yolo
 ###
-def f(a=a)
+def f(a=a):
     say wat
 ###
-def f(a, b=a)
+def f(a, b=a):
     b += a
     say wat
 ###
-def f(a, b)
-    def g(c)
+def f(a, b):
+    def g(c):
         a + b
     c
 g()
 ###
-def f(a, b)
-    def g(c)
+def f(a, b):
+    def g(c):
         a + b
     f(c)
 ###
-def foo(something)
-    def wat()
+def foo(something):
+    def wat():
         say
             yo
             wat
@@ -244,14 +244,14 @@ def foo(something)
             dat
 # this is a comment
         x = "hello"
-        for i in somehng
+        for i in somehng:
             x += i * 3
 
         say wow
     wat()
 ###
-def foo(something)
-    def wat()
+def foo(something):
+    def wat():
         say
             yo
             wat
@@ -259,45 +259,45 @@ def foo(something)
             dat
 # this is a comment
         x = "hello"
-        for i in something
+        for i in something:
             x += i * 3
 
         say wow
     wat()
 ###
-def foo()
+def foo():
     thing += bar()
-def bar()
+def bar():
     thing += foo()
 thing = bar()
 ###
-def foo()
+def foo():
     bar() + thing
-def bar()
+def bar():
     foo() + thin
 thing = bar()
 ###
-def foo()
+def foo():
     return
 ###
 return "hello"
 ###
 return foo
 ###
-def f()
-    def g()
+def f():
+    def g():
         return foo
     foo = 0
 ###
-def f()
+def f():
     foo = 0
 f(foo)
 ###
-def f(x)
+def f(x):
     tellraw @a x
 f("thing")
 ###
-def f(x)
+def f(x):
     tellraw @a xx
 f("thing")
 ###
@@ -351,18 +351,18 @@ predicate = {
   }
 }
 ###
-def f()
+def f():
     return {f(): f(), other: [{}, {}, "wat"]}
 ###
-at @s if "foo" == "bar"
+at @s if "foo" == "bar":
     say yolo
 ###
-at @s for i in "foo"
+at @s for i in "foo":
     say yolo
 ###
 say hello
 ###
-def wat()
+def wat():
     say hello
 ###
 a = ''
@@ -409,17 +409,17 @@ yo = f'thing \e'
 x = 8
 if score @s tmp matches (x, None) say wat
 ###
-def f()
+def f():
     yield 1
     yield 2
     yield 3
-for i in f()
+for i in f():
     say i
 ###
-if True
+if True:
     yield
 ###
-def f()
+def f():
     yield
 ###
 import demo:foo
@@ -442,56 +442,56 @@ m.sin(1)
 from demo:foo import thing
 say thing
 ###
-def f()
+def f():
     from demo:foo import a b c
 say a
 ###
-if score @s tmp matches 1.. if entity @p[tag=foo]
-    if True
+if score @s tmp matches 1.. if entity @p[tag=foo]:
+    if True:
         say 42
-    else
+    else:
         say no
 ###
 setblock = 0
 ###
-if 1
+if 1:
     say 1
-elif 2
+elif 2:
     say 2
-elif 3
+elif 3:
     say 3
-elif 4
+elif 4:
     say 4
 ###
-if 1
+if 1:
     say 1
-elif 2
+elif 2:
     say 2
-elif 3
+elif 3:
     say 3
-elif 4
+elif 4:
     say 4
 say done
 ###
-if 1
+if 1:
     say 1
-elif 2
+elif 2:
     say 2
-elif 3
+elif 3:
     say 3
-elif 4
+elif 4:
     say 4
-else
+else:
     say other
 ###
-if 1
+if 1:
     say 1
-elif 2
+elif 2:
     say 2
-elif 3
+elif 3:
     say 3
-elif 4
+elif 4:
     say 4
-else
+else:
     say other
 say done

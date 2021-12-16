@@ -1,13 +1,13 @@
-def f()
+def f():
     yield
 ---
 <class 'mecha.ast.AstRoot'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
-  end_location: SourceLocation(pos=17, lineno=2, colno=10)
+  end_location: SourceLocation(pos=18, lineno=2, colno=10)
   commands:
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=0, lineno=1, colno=1)
-      end_location: SourceLocation(pos=17, lineno=2, colno=10)
+      end_location: SourceLocation(pos=18, lineno=2, colno=10)
       identifier: 'def:function:body'
       arguments:
         <class 'mecha.contrib.scripting.ast.AstFunctionSignature'>
@@ -17,12 +17,12 @@ def f()
           arguments:
             <empty>
         <class 'mecha.ast.AstRoot'>
-          location: SourceLocation(pos=12, lineno=2, colno=5)
-          end_location: SourceLocation(pos=17, lineno=2, colno=10)
+          location: SourceLocation(pos=13, lineno=2, colno=5)
+          end_location: SourceLocation(pos=18, lineno=2, colno=10)
           commands:
             <class 'mecha.ast.AstCommand'>
-              location: SourceLocation(pos=12, lineno=2, colno=5)
-              end_location: SourceLocation(pos=17, lineno=2, colno=10)
+              location: SourceLocation(pos=13, lineno=2, colno=5)
+              end_location: SourceLocation(pos=18, lineno=2, colno=10)
               identifier: 'yield'
               arguments:
                 <empty>

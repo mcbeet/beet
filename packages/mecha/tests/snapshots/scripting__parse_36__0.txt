@@ -1,12 +1,12 @@
-if True
+if True:
     say hello
-elif True or False
+elif True or False:
     say hello
-#>ERROR  Expected indent but got literal '"blah"'.
+#>ERROR  Expected colon but got literal '"blah"'.
 # line 5, column 6
 #      4 |      say hello
-#      5 |  else "blah"
+#      5 |  else "blah":
 #        :       ^^^^^^
 #      6 |      say hello
-else "blah"
+else "blah":
     say hello

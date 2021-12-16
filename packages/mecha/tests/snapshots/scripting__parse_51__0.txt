@@ -1,13 +1,13 @@
-for c in "abc"
+for c in "abc":
     say something
 ---
 <class 'mecha.ast.AstRoot'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
-  end_location: SourceLocation(pos=32, lineno=2, colno=18)
+  end_location: SourceLocation(pos=33, lineno=2, colno=18)
   commands:
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=0, lineno=1, colno=1)
-      end_location: SourceLocation(pos=32, lineno=2, colno=18)
+      end_location: SourceLocation(pos=33, lineno=2, colno=18)
       identifier: 'for:target:in:iterable:body'
       arguments:
         <class 'mecha.contrib.scripting.ast.AstAssignmentTargetIdentifier'>
@@ -19,19 +19,19 @@ for c in "abc"
           end_location: SourceLocation(pos=14, lineno=1, colno=15)
           value: 'abc'
         <class 'mecha.ast.AstRoot'>
-          location: SourceLocation(pos=19, lineno=2, colno=5)
-          end_location: SourceLocation(pos=32, lineno=2, colno=18)
+          location: SourceLocation(pos=20, lineno=2, colno=5)
+          end_location: SourceLocation(pos=33, lineno=2, colno=18)
           commands:
             <class 'mecha.ast.AstCommand'>
-              location: SourceLocation(pos=19, lineno=2, colno=5)
-              end_location: SourceLocation(pos=32, lineno=2, colno=18)
+              location: SourceLocation(pos=20, lineno=2, colno=5)
+              end_location: SourceLocation(pos=33, lineno=2, colno=18)
               identifier: 'say:message'
               arguments:
                 <class 'mecha.ast.AstMessage'>
-                  location: SourceLocation(pos=23, lineno=2, colno=9)
-                  end_location: SourceLocation(pos=32, lineno=2, colno=18)
+                  location: SourceLocation(pos=24, lineno=2, colno=9)
+                  end_location: SourceLocation(pos=33, lineno=2, colno=18)
                   fragments:
                     <class 'mecha.ast.AstMessageText'>
-                      location: SourceLocation(pos=23, lineno=2, colno=9)
-                      end_location: SourceLocation(pos=32, lineno=2, colno=18)
+                      location: SourceLocation(pos=24, lineno=2, colno=9)
+                      end_location: SourceLocation(pos=33, lineno=2, colno=18)
                       value: 'something'

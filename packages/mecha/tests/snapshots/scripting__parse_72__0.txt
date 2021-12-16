@@ -2,16 +2,16 @@ def foo(
     a=1,
     b=a,
     c=a + b,
-)
+):
     say hello
 ---
 <class 'mecha.ast.AstRoot'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
-  end_location: SourceLocation(pos=55, lineno=6, colno=14)
+  end_location: SourceLocation(pos=56, lineno=6, colno=14)
   commands:
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=0, lineno=1, colno=1)
-      end_location: SourceLocation(pos=55, lineno=6, colno=14)
+      end_location: SourceLocation(pos=56, lineno=6, colno=14)
       identifier: 'def:function:body'
       arguments:
         <class 'mecha.contrib.scripting.ast.AstFunctionSignature'>
@@ -57,19 +57,19 @@ def foo(
                       end_location: SourceLocation(pos=38, lineno=4, colno=12)
                       value: 'b'
         <class 'mecha.ast.AstRoot'>
-          location: SourceLocation(pos=46, lineno=6, colno=5)
-          end_location: SourceLocation(pos=55, lineno=6, colno=14)
+          location: SourceLocation(pos=47, lineno=6, colno=5)
+          end_location: SourceLocation(pos=56, lineno=6, colno=14)
           commands:
             <class 'mecha.ast.AstCommand'>
-              location: SourceLocation(pos=46, lineno=6, colno=5)
-              end_location: SourceLocation(pos=55, lineno=6, colno=14)
+              location: SourceLocation(pos=47, lineno=6, colno=5)
+              end_location: SourceLocation(pos=56, lineno=6, colno=14)
               identifier: 'say:message'
               arguments:
                 <class 'mecha.ast.AstMessage'>
-                  location: SourceLocation(pos=50, lineno=6, colno=9)
-                  end_location: SourceLocation(pos=55, lineno=6, colno=14)
+                  location: SourceLocation(pos=51, lineno=6, colno=9)
+                  end_location: SourceLocation(pos=56, lineno=6, colno=14)
                   fragments:
                     <class 'mecha.ast.AstMessageText'>
-                      location: SourceLocation(pos=50, lineno=6, colno=9)
-                      end_location: SourceLocation(pos=55, lineno=6, colno=14)
+                      location: SourceLocation(pos=51, lineno=6, colno=9)
+                      end_location: SourceLocation(pos=56, lineno=6, colno=14)
                       value: 'hello'

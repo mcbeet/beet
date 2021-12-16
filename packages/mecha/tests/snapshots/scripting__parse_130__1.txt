@@ -7,34 +7,35 @@ with _mecha_runtime.scope() as _mecha_var1:
             _mecha_runtime.commands.extend(_mecha_refs[0].commands)
         else:
             _mecha_runtime.commands.extend(_mecha_refs[1].commands)
-    _mecha_runtime.commands.append(_mecha_helper_replace(_mecha_refs[10], arguments=_mecha_helper_children([_mecha_helper_replace(_mecha_refs[9], arguments=_mecha_helper_children([_mecha_refs[6], _mecha_refs[7], _mecha_refs[8], _mecha_helper_replace(_mecha_refs[5], arguments=_mecha_helper_children([_mecha_refs[4], _mecha_helper_replace(_mecha_refs[3], root=_mecha_helper_replace(_mecha_refs[2], commands=_mecha_helper_children(_mecha_var0)))]))]))])))
+    _mecha_runtime.commands.append(_mecha_helper_replace(_mecha_refs[10], arguments=_mecha_helper_children([_mecha_helper_replace(_mecha_refs[9], arguments=_mecha_helper_children([_mecha_refs[6], _mecha_refs[7], _mecha_refs[8], _mecha_helper_replace(_mecha_refs[5], arguments=_mecha_helper_children([_mecha_refs[4], _mecha_helper_replace(_mecha_refs[3], arguments=_mecha_helper_children([_mecha_helper_replace(_mecha_refs[2], commands=_mecha_helper_children(_mecha_var0))]))]))]))])))
 _mecha_var2 = _mecha_helper_replace(_mecha_refs[11], commands=_mecha_helper_children(_mecha_var1))---
 output = _mecha_var2
 ---
 _mecha_refs[0]
 <class 'mecha.ast.AstRoot'>
-  location: SourceLocation(pos=70, lineno=3, colno=9)
-  end_location: SourceLocation(pos=76, lineno=3, colno=15)
+  location: SourceLocation(pos=72, lineno=3, colno=9)
+  end_location: SourceLocation(pos=78, lineno=3, colno=15)
   commands:
     <class 'mecha.ast.AstCommand'>
 _mecha_refs[1]
 <class 'mecha.ast.AstRoot'>
-  location: SourceLocation(pos=94, lineno=5, colno=9)
-  end_location: SourceLocation(pos=100, lineno=5, colno=15)
+  location: SourceLocation(pos=97, lineno=5, colno=9)
+  end_location: SourceLocation(pos=103, lineno=5, colno=15)
   commands:
     <class 'mecha.ast.AstCommand'>
 _mecha_refs[2]
 <class 'mecha.ast.AstRoot'>
-  location: SourceLocation(pos=54, lineno=2, colno=5)
-  end_location: SourceLocation(pos=100, lineno=5, colno=15)
+  location: SourceLocation(pos=55, lineno=2, colno=5)
+  end_location: SourceLocation(pos=103, lineno=5, colno=15)
   commands:
     <class 'mecha.ast.AstCommand'>
     <class 'mecha.ast.AstCommand'>
 _mecha_refs[3]
-<class 'mecha.contrib.nesting.AstNestedExecute'>
-  location: SourceLocation(pos=54, lineno=2, colno=5)
-  end_location: SourceLocation(pos=100, lineno=5, colno=15)
-  root:
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=55, lineno=2, colno=5)
+  end_location: SourceLocation(pos=103, lineno=5, colno=15)
+  identifier: 'execute:commands'
+  arguments:
     <class 'mecha.ast.AstRoot'>
 _mecha_refs[4]
 <class 'mecha.ast.AstSelector'>
@@ -46,11 +47,11 @@ _mecha_refs[4]
 _mecha_refs[5]
 <class 'mecha.ast.AstCommand'>
   location: SourceLocation(pos=28, lineno=1, colno=29)
-  end_location: SourceLocation(pos=100, lineno=5, colno=15)
+  end_location: SourceLocation(pos=103, lineno=5, colno=15)
   identifier: 'execute:if:entity:entities:subcommand'
   arguments:
     <class 'mecha.ast.AstSelector'>
-    <class 'mecha.contrib.nesting.AstNestedExecute'>
+    <class 'mecha.ast.AstCommand'>
 _mecha_refs[6]
 <class 'mecha.ast.AstSelector'>
   location: SourceLocation(pos=9, lineno=1, colno=10)
@@ -72,7 +73,7 @@ _mecha_refs[8]
 _mecha_refs[9]
 <class 'mecha.ast.AstCommand'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
-  end_location: SourceLocation(pos=100, lineno=5, colno=15)
+  end_location: SourceLocation(pos=103, lineno=5, colno=15)
   identifier: 'execute:if:score:target:targetObjective:matches:range:subcommand'
   arguments:
     <class 'mecha.ast.AstSelector'>
@@ -82,13 +83,13 @@ _mecha_refs[9]
 _mecha_refs[10]
 <class 'mecha.ast.AstCommand'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
-  end_location: SourceLocation(pos=100, lineno=5, colno=15)
+  end_location: SourceLocation(pos=103, lineno=5, colno=15)
   identifier: 'execute:subcommand'
   arguments:
     <class 'mecha.ast.AstCommand'>
 _mecha_refs[11]
 <class 'mecha.ast.AstRoot'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
-  end_location: SourceLocation(pos=100, lineno=5, colno=15)
+  end_location: SourceLocation(pos=103, lineno=5, colno=15)
   commands:
     <class 'mecha.ast.AstCommand'>

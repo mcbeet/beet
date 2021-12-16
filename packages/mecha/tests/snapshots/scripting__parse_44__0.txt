@@ -1,21 +1,21 @@
-if score @s tmp matches 0
-    while True
+if score @s tmp matches 0:
+    while True:
         say hello
-    while True
+    while True:
         say hello
 ---
 <class 'mecha.ast.AstRoot'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
-  end_location: SourceLocation(pos=91, lineno=5, colno=18)
+  end_location: SourceLocation(pos=94, lineno=5, colno=18)
   commands:
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=0, lineno=1, colno=1)
-      end_location: SourceLocation(pos=91, lineno=5, colno=18)
+      end_location: SourceLocation(pos=94, lineno=5, colno=18)
       identifier: 'execute:subcommand'
       arguments:
         <class 'mecha.ast.AstCommand'>
           location: SourceLocation(pos=0, lineno=1, colno=1)
-          end_location: SourceLocation(pos=91, lineno=5, colno=18)
+          end_location: SourceLocation(pos=94, lineno=5, colno=18)
           identifier: 'execute:if:score:target:targetObjective:matches:range:subcommand'
           arguments:
             <class 'mecha.ast.AstSelector'>
@@ -33,63 +33,64 @@ if score @s tmp matches 0
               end_location: SourceLocation(pos=25, lineno=1, colno=26)
               min: 0
               max: 0
-            <class 'mecha.contrib.nesting.AstNestedExecute'>
-              location: SourceLocation(pos=30, lineno=2, colno=5)
-              end_location: SourceLocation(pos=91, lineno=5, colno=18)
-              root:
+            <class 'mecha.ast.AstCommand'>
+              location: SourceLocation(pos=31, lineno=2, colno=5)
+              end_location: SourceLocation(pos=94, lineno=5, colno=18)
+              identifier: 'execute:commands'
+              arguments:
                 <class 'mecha.ast.AstRoot'>
-                  location: SourceLocation(pos=30, lineno=2, colno=5)
-                  end_location: SourceLocation(pos=91, lineno=5, colno=18)
+                  location: SourceLocation(pos=31, lineno=2, colno=5)
+                  end_location: SourceLocation(pos=94, lineno=5, colno=18)
                   commands:
                     <class 'mecha.ast.AstCommand'>
-                      location: SourceLocation(pos=30, lineno=2, colno=5)
-                      end_location: SourceLocation(pos=58, lineno=3, colno=18)
+                      location: SourceLocation(pos=31, lineno=2, colno=5)
+                      end_location: SourceLocation(pos=60, lineno=3, colno=18)
                       identifier: 'while:condition:body'
                       arguments:
                         <class 'mecha.contrib.scripting.ast.AstValue'>
-                          location: SourceLocation(pos=36, lineno=2, colno=11)
-                          end_location: SourceLocation(pos=40, lineno=2, colno=15)
+                          location: SourceLocation(pos=37, lineno=2, colno=11)
+                          end_location: SourceLocation(pos=41, lineno=2, colno=15)
                           value: True
                         <class 'mecha.ast.AstRoot'>
-                          location: SourceLocation(pos=49, lineno=3, colno=9)
-                          end_location: SourceLocation(pos=58, lineno=3, colno=18)
+                          location: SourceLocation(pos=51, lineno=3, colno=9)
+                          end_location: SourceLocation(pos=60, lineno=3, colno=18)
                           commands:
                             <class 'mecha.ast.AstCommand'>
-                              location: SourceLocation(pos=49, lineno=3, colno=9)
-                              end_location: SourceLocation(pos=58, lineno=3, colno=18)
+                              location: SourceLocation(pos=51, lineno=3, colno=9)
+                              end_location: SourceLocation(pos=60, lineno=3, colno=18)
                               identifier: 'say:message'
                               arguments:
                                 <class 'mecha.ast.AstMessage'>
-                                  location: SourceLocation(pos=53, lineno=3, colno=13)
-                                  end_location: SourceLocation(pos=58, lineno=3, colno=18)
+                                  location: SourceLocation(pos=55, lineno=3, colno=13)
+                                  end_location: SourceLocation(pos=60, lineno=3, colno=18)
                                   fragments:
                                     <class 'mecha.ast.AstMessageText'>
-                                      location: SourceLocation(pos=53, lineno=3, colno=13)
-                                      end_location: SourceLocation(pos=58, lineno=3, colno=18)
+                                      location: SourceLocation(pos=55, lineno=3, colno=13)
+                                      end_location: SourceLocation(pos=60, lineno=3, colno=18)
                                       value: 'hello'
                     <class 'mecha.ast.AstCommand'>
-                      location: SourceLocation(pos=63, lineno=4, colno=5)
-                      end_location: SourceLocation(pos=91, lineno=5, colno=18)
+                      location: SourceLocation(pos=65, lineno=4, colno=5)
+                      end_location: SourceLocation(pos=94, lineno=5, colno=18)
                       identifier: 'while:condition:body'
                       arguments:
                         <class 'mecha.contrib.scripting.ast.AstValue'>
-                          location: SourceLocation(pos=69, lineno=4, colno=11)
-                          end_location: SourceLocation(pos=73, lineno=4, colno=15)
+                          location: SourceLocation(pos=71, lineno=4, colno=11)
+                          end_location: SourceLocation(pos=75, lineno=4, colno=15)
                           value: True
                         <class 'mecha.ast.AstRoot'>
-                          location: SourceLocation(pos=82, lineno=5, colno=9)
-                          end_location: SourceLocation(pos=91, lineno=5, colno=18)
+                          location: SourceLocation(pos=85, lineno=5, colno=9)
+                          end_location: SourceLocation(pos=94, lineno=5, colno=18)
                           commands:
                             <class 'mecha.ast.AstCommand'>
-                              location: SourceLocation(pos=82, lineno=5, colno=9)
-                              end_location: SourceLocation(pos=91, lineno=5, colno=18)
+                              location: SourceLocation(pos=85, lineno=5, colno=9)
+                              end_location: SourceLocation(pos=94, lineno=5, colno=18)
                               identifier: 'say:message'
                               arguments:
                                 <class 'mecha.ast.AstMessage'>
-                                  location: SourceLocation(pos=86, lineno=5, colno=13)
-                                  end_location: SourceLocation(pos=91, lineno=5, colno=18)
+                                  location: SourceLocation(pos=89, lineno=5, colno=13)
+                                  end_location: SourceLocation(pos=94, lineno=5, colno=18)
                                   fragments:
                                     <class 'mecha.ast.AstMessageText'>
-                                      location: SourceLocation(pos=86, lineno=5, colno=13)
-                                      end_location: SourceLocation(pos=91, lineno=5, colno=18)
+                                      location: SourceLocation(pos=89, lineno=5, colno=13)
+                                      end_location: SourceLocation(pos=94, lineno=5, colno=18)
                                       value: 'hello'

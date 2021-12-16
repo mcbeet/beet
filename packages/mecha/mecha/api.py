@@ -32,7 +32,7 @@ from pydantic import BaseModel
 from tokenstream import InvalidSyntax, TokenStream
 from tokenstream.location import set_location
 
-from .ast import AstNode, AstRoot
+from .ast import AstLiteral, AstNode, AstRoot
 from .config import CommandTree
 from .database import CompilationDatabase, CompilationUnit
 from .diagnostic import (
@@ -191,7 +191,7 @@ class Mecha:
             spec=self.spec,
             multiline=self.spec.multiline if multiline is None else multiline,
         ):
-            with stream.reset_syntax(comment=r"#.*$", literal=r"\S+"):
+            with stream.reset_syntax(comment=r"#.*$", literal=AstLiteral.regex.pattern):
                 with stream.indent(skip=["comment"]), stream.ignore("indent", "dedent"):
                     with stream.intercept("newline", "eof"):
                         yield stream

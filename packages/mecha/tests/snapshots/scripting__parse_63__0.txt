@@ -1,13 +1,13 @@
-while false
+while false:
     break
 ---
 <class 'mecha.ast.AstRoot'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
-  end_location: SourceLocation(pos=22, lineno=3, colno=1)
+  end_location: SourceLocation(pos=23, lineno=3, colno=1)
   commands:
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=0, lineno=1, colno=1)
-      end_location: SourceLocation(pos=21, lineno=2, colno=10)
+      end_location: SourceLocation(pos=22, lineno=2, colno=10)
       identifier: 'while:condition:body'
       arguments:
         <class 'mecha.contrib.scripting.ast.AstValue'>
@@ -15,12 +15,12 @@ while false
           end_location: SourceLocation(pos=11, lineno=1, colno=12)
           value: False
         <class 'mecha.ast.AstRoot'>
-          location: SourceLocation(pos=16, lineno=2, colno=5)
-          end_location: SourceLocation(pos=21, lineno=2, colno=10)
+          location: SourceLocation(pos=17, lineno=2, colno=5)
+          end_location: SourceLocation(pos=22, lineno=2, colno=10)
           commands:
             <class 'mecha.ast.AstCommand'>
-              location: SourceLocation(pos=16, lineno=2, colno=5)
-              end_location: SourceLocation(pos=21, lineno=2, colno=10)
+              location: SourceLocation(pos=17, lineno=2, colno=5)
+              end_location: SourceLocation(pos=22, lineno=2, colno=10)
               identifier: 'break'
               arguments:
                 <empty>

@@ -1,13 +1,13 @@
-for foo in "foo"
+for foo in "foo":
     foo = foo
 ---
 <class 'mecha.ast.AstRoot'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
-  end_location: SourceLocation(pos=31, lineno=3, colno=1)
+  end_location: SourceLocation(pos=32, lineno=3, colno=1)
   commands:
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=0, lineno=1, colno=1)
-      end_location: SourceLocation(pos=30, lineno=2, colno=14)
+      end_location: SourceLocation(pos=31, lineno=2, colno=14)
       identifier: 'for:target:in:iterable:body'
       arguments:
         <class 'mecha.contrib.scripting.ast.AstAssignmentTargetIdentifier'>
@@ -19,25 +19,25 @@ for foo in "foo"
           end_location: SourceLocation(pos=16, lineno=1, colno=17)
           value: 'foo'
         <class 'mecha.ast.AstRoot'>
-          location: SourceLocation(pos=21, lineno=2, colno=5)
-          end_location: SourceLocation(pos=30, lineno=2, colno=14)
+          location: SourceLocation(pos=22, lineno=2, colno=5)
+          end_location: SourceLocation(pos=31, lineno=2, colno=14)
           commands:
             <class 'mecha.ast.AstCommand'>
-              location: SourceLocation(pos=21, lineno=2, colno=5)
-              end_location: SourceLocation(pos=30, lineno=2, colno=14)
+              location: SourceLocation(pos=22, lineno=2, colno=5)
+              end_location: SourceLocation(pos=31, lineno=2, colno=14)
               identifier: 'statement'
               arguments:
                 <class 'mecha.contrib.scripting.ast.AstAssignment'>
-                  location: SourceLocation(pos=21, lineno=2, colno=5)
-                  end_location: SourceLocation(pos=30, lineno=2, colno=14)
+                  location: SourceLocation(pos=22, lineno=2, colno=5)
+                  end_location: SourceLocation(pos=31, lineno=2, colno=14)
                   operator: '='
                   target:
                     <class 'mecha.contrib.scripting.ast.AstAssignmentTargetIdentifier'>
-                      location: SourceLocation(pos=21, lineno=2, colno=5)
-                      end_location: SourceLocation(pos=24, lineno=2, colno=8)
+                      location: SourceLocation(pos=22, lineno=2, colno=5)
+                      end_location: SourceLocation(pos=25, lineno=2, colno=8)
                       value: 'foo'
                   value:
                     <class 'mecha.contrib.scripting.ast.AstIdentifier'>
-                      location: SourceLocation(pos=27, lineno=2, colno=11)
-                      end_location: SourceLocation(pos=30, lineno=2, colno=14)
+                      location: SourceLocation(pos=28, lineno=2, colno=11)
+                      end_location: SourceLocation(pos=31, lineno=2, colno=14)
                       value: 'foo'

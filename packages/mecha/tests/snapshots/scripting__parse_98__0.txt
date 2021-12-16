@@ -1,8 +1,8 @@
 #>ERROR  Can't inline conditions as execute subcommands.
 # line 1, column 7
-#      1 |  at @s if "foo" == "bar"
-#        :        ^^^^^^^^^^^^^^^^^
+#      1 |  at @s if "foo" == "bar":
+#        :        ^^^^^^^^^^^^^^^^^^
 #      2 |      say yolo
 #        :      ^^^^^^^^
-at @s if "foo" == "bar"
+at @s if "foo" == "bar":
     say yolo

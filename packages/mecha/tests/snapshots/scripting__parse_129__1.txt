@@ -12,15 +12,15 @@ output = _mecha_var1
 ---
 _mecha_refs[0]
 <class 'mecha.ast.AstCommand'>
-  location: SourceLocation(pos=39, lineno=3, colno=1)
-  end_location: SourceLocation(pos=44, lineno=3, colno=6)
+  location: SourceLocation(pos=40, lineno=3, colno=1)
+  end_location: SourceLocation(pos=45, lineno=3, colno=6)
   identifier: 'say:message'
   arguments:
     <class 'mecha.ast.AstMessage'>
 _mecha_refs[1]
 <class 'mecha.ast.AstRoot'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
-  end_location: SourceLocation(pos=44, lineno=3, colno=6)
+  end_location: SourceLocation(pos=45, lineno=3, colno=6)
   commands:
     <class 'mecha.ast.AstCommand'>
     <class 'mecha.ast.AstCommand'>

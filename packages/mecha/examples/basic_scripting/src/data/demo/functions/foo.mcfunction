@@ -1,18 +1,18 @@
 say hello
 say this is a function file augmented with mecha
 
-if score @s tmp matches 1.. as @a
+if score @s tmp matches 1.. as @a:
     for feature in [
         "multiline",
         "nesting",
         "implicit execute",
         "relative location",
-    ]
+    ]:
         say (feature + " is automatically enabled")
     message = "abc" * 5
     say message.upper()
 
-def you_can_make_functions()
+def you_can_make_functions():
     say you_can_make_functions.__name__.replace("_", " ").capitalize()
     tellraw @a [
         "",
@@ -22,8 +22,8 @@ def you_can_make_functions()
 
 say you_can_make_functions()
 
-def fib(n)
-    if n <= 1
+def fib(n):
+    if n <= 1:
         return n
     return fib(n - 1) + fib(n - 2)
 
@@ -38,7 +38,7 @@ def default_params_are_neat(
         "number": number,
         "result": result,
     },
-)
+):
     say Unlike in python default params are evaluated when the function is called
     say number
     say result
@@ -51,9 +51,9 @@ say functions are first-class objects just like in python
 
 my_functions = []
 
-for i in "abc"
-    def functions_in_loop(value)
-        def yo()
+for i in "abc":
+    def functions_in_loop(value):
+        def yo():
             say value.upper()
         return yo
     my_functions.append(functions_in_loop(i * 3))
@@ -64,8 +64,8 @@ my_functions[2]()
 
 should_break = False
 
-while True
-    if should_break
+while True:
+    if should_break:
         break
     say just once
     should_break = True
@@ -90,22 +90,22 @@ if score @s tmp matches (x, None) say wat
 if score @s tmp matches f"{x}.." say wat
 
 
-def copy_items(type, count)
-    for i in range(count)
+def copy_items(type, count):
+    for i in range(count):
         item replace entity @a f"{type}.{i}" from entity @s f"{type}.{i}"
 
 copy_items('hotbar', 9)
 copy_items('inventory', 26)
 
-def f()
+def f():
     yield 1
     yield 2
     yield 3
 
-for i in f()
+for i in f():
     say i
 
-def wow(ok)
+def wow(ok):
     yield from ok()
     yield from ok()
 
@@ -127,13 +127,13 @@ import ./thing as thing
 
 say (thing.do_stuff is do_stuff)
 
-for i in range(6)
-    if i == 1
+for i in range(6):
+    if i == 1:
         say 1
-    elif i == 2
+    elif i == 2:
         say 2
-    elif i == 3
+    elif i == 3:
         say 3
-    else
+    else:
         say other
     say done

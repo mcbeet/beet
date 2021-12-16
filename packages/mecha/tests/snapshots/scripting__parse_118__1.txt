@@ -18,22 +18,22 @@ output = _mecha_var1
 ---
 _mecha_refs[0]
 <class 'mecha.contrib.scripting.ast.AstInterpolation'>
-  location: SourceLocation(pos=65, lineno=6, colno=9)
-  end_location: SourceLocation(pos=66, lineno=6, colno=10)
+  location: SourceLocation(pos=67, lineno=6, colno=9)
+  end_location: SourceLocation(pos=68, lineno=6, colno=10)
   converter: 'message'
   value:
     <class 'mecha.contrib.scripting.ast.AstIdentifier'>
 _mecha_refs[1]
 <class 'mecha.ast.AstCommand'>
-  location: SourceLocation(pos=61, lineno=6, colno=5)
-  end_location: SourceLocation(pos=66, lineno=6, colno=10)
+  location: SourceLocation(pos=63, lineno=6, colno=5)
+  end_location: SourceLocation(pos=68, lineno=6, colno=10)
   identifier: 'say:message'
   arguments:
     <class 'mecha.contrib.scripting.ast.AstInterpolation'>
 _mecha_refs[2]
 <class 'mecha.ast.AstRoot'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
-  end_location: SourceLocation(pos=67, lineno=7, colno=1)
+  end_location: SourceLocation(pos=69, lineno=7, colno=1)
   commands:
     <class 'mecha.ast.AstCommand'>
     <class 'mecha.ast.AstCommand'>

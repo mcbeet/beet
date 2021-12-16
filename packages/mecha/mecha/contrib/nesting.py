@@ -2,15 +2,13 @@
 
 
 __all__ = [
-    "AstNestedExecute",
-    "NestedExecuteParser",
     "NestedCommandsTransformer",
     "parse_nested_root",
 ]
 
 
 from dataclasses import dataclass, replace
-from typing import Any, List, cast
+from typing import List, cast
 
 from beet import Context, Function
 from beet.core.utils import required_field
@@ -26,11 +24,8 @@ from mecha import (
     Diagnostic,
     Mecha,
     MutatingReducer,
-    Parser,
     consume_line_continuation,
     delegate,
-    get_stream_properties,
-    get_stream_scope,
     rule,
 )
 
@@ -49,6 +44,11 @@ COMMAND_TREE = {
                             "executable": True,
                         }
                     },
+                },
+                "commands": {
+                    "type": "argument",
+                    "parser": "mecha:nested_root",
+                    "executable": True,
                 },
             },
         },
@@ -73,13 +73,6 @@ COMMAND_TREE = {
 }
 
 
-@dataclass(frozen=True)
-class AstNestedExecute(AstNode):
-    """Ast nested execute node."""
-
-    root: AstRoot = required_field()
-
-
 def beet_default(ctx: Context):
     mc = ctx.inject(Mecha)
 
@@ -88,18 +81,16 @@ def beet_default(ctx: Context):
 
     mc.spec.parsers["nested_root"] = parse_nested_root
     mc.spec.parsers["command:argument:mecha:nested_root"] = delegate("nested_root")
-    mc.spec.parsers["command"] = NestedExecuteParser(parser=mc.spec.parsers["command"])
 
     mc.transform.extend(NestedCommandsTransformer(ctx=ctx, database=mc.database))
 
 
 def parse_nested_root(stream: TokenStream) -> AstRoot:
     """Parse nested root."""
-    properties = get_stream_properties(stream)
-
-    if properties.get("check_nesting", True):
-        with stream.intercept("indent"):
-            stream.expect("indent")
+    with stream.syntax(colon=r":"), stream.intercept("newline", "indent"):
+        stream.expect("colon")
+        stream.expect("newline")
+        stream.expect("indent")
 
     level, command_level = stream.indentation[-2:]
 
@@ -123,26 +114,6 @@ def parse_nested_root(stream: TokenStream) -> AstRoot:
 
     node = AstRoot(commands=AstChildren(commands))
     return set_location(node, commands[0], commands[-1])
-
-
-@dataclass
-class NestedExecuteParser:
-    """Parser for nested execute."""
-
-    parser: Parser
-
-    def __call__(self, stream: TokenStream) -> Any:
-        scope = get_stream_scope(stream)
-
-        if scope == ("execute",):
-            with stream.checkpoint(), stream.intercept("indent"):
-                indent = stream.get("indent")
-
-            if indent:
-                node = delegate("nested_root", stream)
-                return set_location(AstNestedExecute(root=node), node)
-
-        return self.parser(stream)
 
 
 @dataclass
@@ -178,12 +149,13 @@ class NestedCommandsTransformer(MutatingReducer):
 
         return replace(node, identifier="function:name", arguments=AstChildren([name]))
 
-    @rule(AstNestedExecute)
-    def nested_execute(self, node: AstNestedExecute):
+    @rule(AstCommand, identifier="execute:commands")
+    def nested_execute(self, node: AstCommand):
         generate = self.ctx.generate["nested_execute"]
+        root = cast(AstRoot, node.arguments[0])
 
-        if len(node.root.commands) == 1:
-            subcommand = node.root.commands[0]
+        if len(root.commands) == 1:
+            subcommand = root.commands[0]
 
             if subcommand.identifier == "execute:subcommand":
                 return subcommand.arguments[0]
@@ -194,7 +166,7 @@ class NestedCommandsTransformer(MutatingReducer):
             else:
                 path = generate.path()
 
-            self.emit_function(path, node.root)
+            self.emit_function(path, root)
 
             resource_location = AstResourceLocation.from_value(path)
 
@@ -210,6 +182,7 @@ class NestedCommandsTransformer(MutatingReducer):
 
     @rule(AstRoot)
     def execute_expand(self, node: AstRoot):
+        changed = False
         commands: List[AstCommand] = []
 
         for command in node.commands:
@@ -226,6 +199,7 @@ class NestedCommandsTransformer(MutatingReducer):
                 args = subcommand.arguments
 
             if expand:
+                changed = True
                 for nested_command in cast(AstRoot, expand.arguments[0]).commands:
                     if nested_command.identifier == "execute:subcommand":
                         expansion = cast(AstCommand, nested_command.arguments[0])
@@ -245,7 +219,7 @@ class NestedCommandsTransformer(MutatingReducer):
             else:
                 commands.append(command)
 
-        if len(commands) > len(node.commands):
+        if changed:
             return replace(node, commands=AstChildren(commands))
 
         return node

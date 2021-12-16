@@ -1,13 +1,13 @@
-def foo()
+def foo():
     return
 ---
 <class 'mecha.ast.AstRoot'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
-  end_location: SourceLocation(pos=20, lineno=2, colno=11)
+  end_location: SourceLocation(pos=21, lineno=2, colno=11)
   commands:
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=0, lineno=1, colno=1)
-      end_location: SourceLocation(pos=20, lineno=2, colno=11)
+      end_location: SourceLocation(pos=21, lineno=2, colno=11)
       identifier: 'def:function:body'
       arguments:
         <class 'mecha.contrib.scripting.ast.AstFunctionSignature'>
@@ -17,12 +17,12 @@ def foo()
           arguments:
             <empty>
         <class 'mecha.ast.AstRoot'>
-          location: SourceLocation(pos=14, lineno=2, colno=5)
-          end_location: SourceLocation(pos=20, lineno=2, colno=11)
+          location: SourceLocation(pos=15, lineno=2, colno=5)
+          end_location: SourceLocation(pos=21, lineno=2, colno=11)
           commands:
             <class 'mecha.ast.AstCommand'>
-              location: SourceLocation(pos=14, lineno=2, colno=5)
-              end_location: SourceLocation(pos=20, lineno=2, colno=11)
+              location: SourceLocation(pos=15, lineno=2, colno=5)
+              end_location: SourceLocation(pos=21, lineno=2, colno=11)
               identifier: 'return'
               arguments:
                 <empty>

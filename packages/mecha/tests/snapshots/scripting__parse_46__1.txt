@@ -11,29 +11,30 @@ count) > 0):
             count = (
 (
 count) - 1)
-    _mecha_runtime.commands.append(_mecha_helper_replace(_mecha_refs[7], arguments=_mecha_helper_children([_mecha_helper_replace(_mecha_refs[6], arguments=_mecha_helper_children([_mecha_refs[3], _mecha_refs[4], _mecha_refs[5], _mecha_helper_replace(_mecha_refs[2], root=_mecha_helper_replace(_mecha_refs[1], commands=_mecha_helper_children(_mecha_var0)))]))])))
+    _mecha_runtime.commands.append(_mecha_helper_replace(_mecha_refs[7], arguments=_mecha_helper_children([_mecha_helper_replace(_mecha_refs[6], arguments=_mecha_helper_children([_mecha_refs[3], _mecha_refs[4], _mecha_refs[5], _mecha_helper_replace(_mecha_refs[2], arguments=_mecha_helper_children([_mecha_helper_replace(_mecha_refs[1], commands=_mecha_helper_children(_mecha_var0))]))]))])))
 _mecha_var2 = _mecha_helper_replace(_mecha_refs[8], commands=_mecha_helper_children(_mecha_var1))---
 output = _mecha_var2
 ---
 _mecha_refs[0]
 <class 'mecha.ast.AstCommand'>
-  location: SourceLocation(pos=70, lineno=4, colno=9)
-  end_location: SourceLocation(pos=79, lineno=4, colno=18)
+  location: SourceLocation(pos=72, lineno=4, colno=9)
+  end_location: SourceLocation(pos=81, lineno=4, colno=18)
   identifier: 'say:message'
   arguments:
     <class 'mecha.ast.AstMessage'>
 _mecha_refs[1]
 <class 'mecha.ast.AstRoot'>
-  location: SourceLocation(pos=31, lineno=2, colno=5)
-  end_location: SourceLocation(pos=105, lineno=5, colno=26)
+  location: SourceLocation(pos=32, lineno=2, colno=5)
+  end_location: SourceLocation(pos=107, lineno=5, colno=26)
   commands:
     <class 'mecha.ast.AstCommand'>
     <class 'mecha.ast.AstCommand'>
 _mecha_refs[2]
-<class 'mecha.contrib.nesting.AstNestedExecute'>
-  location: SourceLocation(pos=31, lineno=2, colno=5)
-  end_location: SourceLocation(pos=105, lineno=5, colno=26)
-  root:
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=32, lineno=2, colno=5)
+  end_location: SourceLocation(pos=107, lineno=5, colno=26)
+  identifier: 'execute:commands'
+  arguments:
     <class 'mecha.ast.AstRoot'>
 _mecha_refs[3]
 <class 'mecha.ast.AstSelector'>
@@ -56,23 +57,23 @@ _mecha_refs[5]
 _mecha_refs[6]
 <class 'mecha.ast.AstCommand'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
-  end_location: SourceLocation(pos=105, lineno=5, colno=26)
+  end_location: SourceLocation(pos=107, lineno=5, colno=26)
   identifier: 'execute:if:score:target:targetObjective:matches:range:subcommand'
   arguments:
     <class 'mecha.ast.AstSelector'>
     <class 'mecha.ast.AstObjective'>
     <class 'mecha.ast.AstRange'>
-    <class 'mecha.contrib.nesting.AstNestedExecute'>
+    <class 'mecha.ast.AstCommand'>
 _mecha_refs[7]
 <class 'mecha.ast.AstCommand'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
-  end_location: SourceLocation(pos=105, lineno=5, colno=26)
+  end_location: SourceLocation(pos=107, lineno=5, colno=26)
   identifier: 'execute:subcommand'
   arguments:
     <class 'mecha.ast.AstCommand'>
 _mecha_refs[8]
 <class 'mecha.ast.AstRoot'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
-  end_location: SourceLocation(pos=106, lineno=6, colno=1)
+  end_location: SourceLocation(pos=108, lineno=6, colno=1)
   commands:
     <class 'mecha.ast.AstCommand'>

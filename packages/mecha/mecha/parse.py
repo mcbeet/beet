@@ -557,9 +557,8 @@ def parse_command(stream: TokenStream) -> AstCommand:
     arguments: List[AstNode] = []
     reached_terminal = False
 
-    with stream.checkpoint():
-        location = stream.expect().location
-        end_location = location
+    location = None
+    end_location = None
 
     while tree:
         with stream.checkpoint() as commit:
@@ -571,6 +570,8 @@ def parse_command(stream: TokenStream) -> AstCommand:
                         stream.expect("newline", "eof")
                     reached_terminal = True
 
+                if location is None:
+                    location = literal.location
                 end_location = literal.end_location
                 scope = scope + (literal.value,)
                 tree = child
@@ -597,10 +598,16 @@ def parse_command(stream: TokenStream) -> AstCommand:
                             stream.expect("newline", "eof")
                         reached_terminal = True
                         continue
+
                     elif child.type == "literal":
                         literal = stream.expect(("literal", name))
+                        if location is None:
+                            location = literal.location
+
                     elif child.type == "argument":
                         argument = delegate("command:argument", stream)
+                        if location is None:
+                            location = argument.location
 
                     if not child.children:
                         if stream.peek():
@@ -1642,7 +1649,7 @@ class EntityParser:
 
     def __call__(self, stream: TokenStream) -> Any:
         """Parse entity."""
-        with stream.syntax(literal=r"\S+"):
+        with stream.syntax(literal=AstLiteral.regex.pattern):
             hint = stream.peek()
 
         if hint:

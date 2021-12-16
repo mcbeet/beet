@@ -18,32 +18,32 @@ output = _mecha_var1
 ---
 _mecha_refs[0]
 <class 'mecha.ast.AstRoot'>
-  location: SourceLocation(pos=9, lineno=2, colno=5)
-  end_location: SourceLocation(pos=14, lineno=2, colno=10)
+  location: SourceLocation(pos=10, lineno=2, colno=5)
+  end_location: SourceLocation(pos=15, lineno=2, colno=10)
   commands:
     <class 'mecha.ast.AstCommand'>
 _mecha_refs[1]
 <class 'mecha.ast.AstRoot'>
-  location: SourceLocation(pos=26, lineno=4, colno=5)
-  end_location: SourceLocation(pos=31, lineno=4, colno=10)
+  location: SourceLocation(pos=28, lineno=4, colno=5)
+  end_location: SourceLocation(pos=33, lineno=4, colno=10)
   commands:
     <class 'mecha.ast.AstCommand'>
 _mecha_refs[2]
 <class 'mecha.ast.AstRoot'>
-  location: SourceLocation(pos=43, lineno=6, colno=5)
-  end_location: SourceLocation(pos=48, lineno=6, colno=10)
+  location: SourceLocation(pos=46, lineno=6, colno=5)
+  end_location: SourceLocation(pos=51, lineno=6, colno=10)
   commands:
     <class 'mecha.ast.AstCommand'>
 _mecha_refs[3]
 <class 'mecha.ast.AstRoot'>
-  location: SourceLocation(pos=60, lineno=8, colno=5)
-  end_location: SourceLocation(pos=65, lineno=8, colno=10)
+  location: SourceLocation(pos=64, lineno=8, colno=5)
+  end_location: SourceLocation(pos=69, lineno=8, colno=10)
   commands:
     <class 'mecha.ast.AstCommand'>
 _mecha_refs[4]
 <class 'mecha.ast.AstRoot'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
-  end_location: SourceLocation(pos=65, lineno=8, colno=10)
+  end_location: SourceLocation(pos=69, lineno=8, colno=10)
   commands:
     <class 'mecha.ast.AstCommand'>
     <class 'mecha.ast.AstCommand'>

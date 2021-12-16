@@ -15,22 +15,22 @@ output = _mecha_var1
 ---
 _mecha_refs[0]
 <class 'mecha.contrib.scripting.ast.AstInterpolation'>
-  location: SourceLocation(pos=24, lineno=2, colno=16)
-  end_location: SourceLocation(pos=25, lineno=2, colno=17)
+  location: SourceLocation(pos=25, lineno=2, colno=16)
+  end_location: SourceLocation(pos=26, lineno=2, colno=17)
   converter: 'json'
   value:
     <class 'mecha.contrib.scripting.ast.AstIdentifier'>
 _mecha_refs[1]
 <class 'mecha.ast.AstSelector'>
-  location: SourceLocation(pos=21, lineno=2, colno=13)
-  end_location: SourceLocation(pos=23, lineno=2, colno=15)
+  location: SourceLocation(pos=22, lineno=2, colno=13)
+  end_location: SourceLocation(pos=24, lineno=2, colno=15)
   variable: 'a'
   arguments:
     <empty>
 _mecha_refs[2]
 <class 'mecha.ast.AstCommand'>
-  location: SourceLocation(pos=13, lineno=2, colno=5)
-  end_location: SourceLocation(pos=25, lineno=2, colno=17)
+  location: SourceLocation(pos=14, lineno=2, colno=5)
+  end_location: SourceLocation(pos=26, lineno=2, colno=17)
   identifier: 'tellraw:targets:message'
   arguments:
     <class 'mecha.ast.AstSelector'>
@@ -38,7 +38,7 @@ _mecha_refs[2]
 _mecha_refs[3]
 <class 'mecha.ast.AstRoot'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
-  end_location: SourceLocation(pos=37, lineno=4, colno=1)
+  end_location: SourceLocation(pos=38, lineno=4, colno=1)
   commands:
     <class 'mecha.ast.AstCommand'>
     <class 'mecha.ast.AstCommand'>

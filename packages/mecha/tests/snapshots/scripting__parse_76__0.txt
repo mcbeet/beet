@@ -1,7 +1,7 @@
 #>ERROR  Identifier 'a' is not defined.
 # line 1, column 9
-#      1 |  def f(a=a)
+#      1 |  def f(a=a):
 #        :          ^
 #      2 |      say wat
-def f(a=a)
+def f(a=a):
     say wat

@@ -644,10 +644,7 @@ class FunctionRootBacktracker:
 
                     function_stream = function_root.stream
                     function_stream.data["identifiers"] |= identifiers
-                    function_stream.data.update(
-                        properties={"check_nesting": False},
-                        function=True,
-                    )
+                    function_stream.data["function"] = True
 
                     command = replace(
                         command,
