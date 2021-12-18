@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.25.2 (2021-12-18)
+### Fix
+* Update README ([`3acfe60`](https://github.com/mcbeet/mecha/commit/3acfe601b10614b2ab16dd96f8193e38a9eee1e5))
+
 ## v0.25.1 (2021-12-18)
 ### Fix
 * Sort entity types properly ([`f3847c4`](https://github.com/mcbeet/mecha/commit/f3847c486c5ebe8b7296b0e194fce9359ee9cb50))
