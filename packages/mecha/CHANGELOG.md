@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.24.2 (2021-12-18)
+### Fix
+* Update README ([`2deaeb9`](https://github.com/mcbeet/mecha/commit/2deaeb962cbc8d6a96f48bed4e474b05ed0d1a48))
+
 ## v0.24.1 (2021-12-18)
 ### Fix
 * Move resources in one place ([`d3fdfa7`](https://github.com/mcbeet/mecha/commit/d3fdfa7ea14d94a1ae00e86bcb08d58403f80396))
