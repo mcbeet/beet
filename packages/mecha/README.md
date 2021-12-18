@@ -80,6 +80,7 @@ Options:
   -m, --minecraft VERSION  Minecraft version.
   -l, --log LEVEL          Configure output verbosity.
   -s, --stats              Collect statistics.
+  -j, --json FILENAME      Output json.
   -v, --version            Show the version and exit.
   -h, --help               Show this message and exit.
 ```
@@ -99,7 +100,7 @@ ERROR  | mecha  Expected curly '}' but got bracket ']'.
 Error: Reported 1 error.
 ```
 
-The `--stats` option will output a report that shows how many commands, selectors and scoreboards were used.
+The `--stats` option will output a report that shows how many commands, selectors and scoreboards were used. You can also use the `--json` option to output the raw statistics in a json file.
 
 ```
 INFO   | stats  Analyzed 1 function
