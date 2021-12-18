@@ -35,3 +35,9 @@ class CommandPrototype(NamedTuple):
                 raise ValueError(f"No argument {arg!r}.")
 
         return self.signature[self.arguments[arg]]  # type: ignore
+
+    def usage(self) -> str:
+        """Return a string showing the command usage."""
+        return " ".join(
+            arg if isinstance(arg, str) else f"<{arg.name}>" for arg in self.signature
+        )

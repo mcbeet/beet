@@ -57,6 +57,12 @@ def validate(ctx: Context):
     default="WARNING",
     help="Configure output verbosity.",
 )
+@click.option(
+    "-s",
+    "--stats",
+    is_flag=True,
+    help="Collect statistics.",
+)
 @click.version_option(
     __version__,
     "-v",
@@ -65,13 +71,17 @@ def validate(ctx: Context):
     + click.style(" v%(version)s", fg="green"),
 )
 @error_handler(should_exit=True)
-def mecha(source: Tuple[str, ...], minecraft: str, log: str):
+def mecha(source: Tuple[str, ...], minecraft: str, log: str, stats: bool):
     """Validate data packs and .mcfunction files."""
+    if stats and log != "DEBUG":
+        log = "INFO"
+
     logger = logging.getLogger()
     logger.setLevel(log)
     logger.addHandler(LogHandler())
 
     config = {
+        "require": stats * ["mecha.contrib.statistics"],
         "pipeline": ["mecha.cli.validate"],
         "meta": {
             "source": source,

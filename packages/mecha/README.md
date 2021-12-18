@@ -47,7 +47,9 @@ This package provides everything you need for working with Minecraft commands in
 - Command config resolver that flattens and enumerates all the valid command prototypes
 - Powerful rule dispatcher for processing specific ast nodes
 - Composable ast visitors and reducers
-- Comes with useful syntactic extensions like nesting and implicit execute
+- Comes with useful syntactic extensions like relative locations, nesting and implicit execute
+- Compile-time scripting with a subset of python integrated into command syntax
+- Rich function analyzer for keeping track of command statistics
 - Execute arbitrary compilation passes in your [`beet`](https://github.com/mcbeet/beet) pipeline
 - _(soon)_ Expressive command API for writing commands in Python
 
@@ -77,6 +79,7 @@ Usage: mecha [OPTIONS] [SOURCE]...
 Options:
   -m, --minecraft VERSION  Minecraft version.
   -l, --log LEVEL          Configure output verbosity.
+  -s, --stats              Collect statistics.
   -v, --version            Show the version and exit.
   -h, --help               Show this message and exit.
 ```
@@ -85,7 +88,7 @@ You can use the command-line utility to check data packs and function files for 
 
 ```bash
 $ mecha path/to/my_data_pack
-Validating with mecha v0.13.0
+Validating with mecha vX.X.X
 
 ERROR  | mecha  Expected curly '}' but got bracket ']'.
        | path/to/my_data_pack/data/demo/functions/foo.mcfunction:5:34
@@ -94,6 +97,38 @@ ERROR  | mecha  Expected curly '}' but got bracket ']'.
        |        :                                   ^
 
 Error: Reported 1 error.
+```
+
+The `--stats` option will output a report that shows how many commands, selectors and scoreboards were used.
+
+```
+INFO   | stats  Analyzed 1 function
+       | -------------------------------------------------------------------------------
+       | Total commands (1 behind execute)                                      |      4
+       | -------------------------------------------------------------------------------
+       |        /scoreboard                                                     |      3
+       |                    objectives add <objective> <criteria>               |      1
+       |                    players set <targets> <objective> <score>           |      1
+       |                    players operation <targets> <targetObjective> <o... |      1
+       |        /setblock (1 behind execute)                                    |      1
+       |        /execute                                                        |      1
+       |                 if score <target> <targetObjective> matches <range>... |      1
+       |                 as <targets> <subcommand>                              |      1
+       |                 run <subcommand>                                       |      1
+       | -------------------------------------------------------------------------------
+       | Total selectors                                                        |      3
+       | -------------------------------------------------------------------------------
+       |        @e                                                              |      2
+       |           [tag]                                                        |      2
+       |           [scores]                                                     |      1
+       |        @s                                                              |      1
+       |        @e with missing or inverted type                                |      2
+       | -------------------------------------------------------------------------------
+       | Scoreboard objectives                                                  |      2
+       | -------------------------------------------------------------------------------
+       |        my_consts (dummy)                                               |      3
+       |                  10                                                    |      2
+       |        foo                                                             |      3
 ```
 
 ## Github action
