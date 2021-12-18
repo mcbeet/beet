@@ -8,13 +8,14 @@ __all__ = [
 import logging
 import zipfile
 from pathlib import Path
-from typing import Tuple
+from typing import Optional, TextIO, Tuple
 
 import click
 from beet import Context, DataPack, Function, run_beet
 from beet.toolchain.cli import BeetCommand, LogHandler, error_handler, message_fence
 
 from mecha import __version__
+from mecha.contrib.statistics import Analyzer
 
 from .api import Mecha
 
@@ -63,6 +64,13 @@ def validate(ctx: Context):
     is_flag=True,
     help="Collect statistics.",
 )
+@click.option(
+    "-j",
+    "--json",
+    metavar="FILENAME",
+    type=click.File(mode="w"),
+    help="Output json.",
+)
 @click.version_option(
     __version__,
     "-v",
@@ -71,7 +79,13 @@ def validate(ctx: Context):
     + click.style(" v%(version)s", fg="green"),
 )
 @error_handler(should_exit=True)
-def mecha(source: Tuple[str, ...], minecraft: str, log: str, stats: bool):
+def mecha(
+    source: Tuple[str, ...],
+    minecraft: str,
+    log: str,
+    stats: bool,
+    json: Optional[TextIO],
+):
     """Validate data packs and .mcfunction files."""
     if stats and log != "DEBUG":
         log = "INFO"
@@ -95,8 +109,11 @@ def mecha(source: Tuple[str, ...], minecraft: str, log: str, stats: bool):
 
     with message_fence(f"Validating with mecha v{__version__}"):
         if source:
-            with run_beet(config):
-                pass
+            with run_beet(config) as ctx:
+                if json:
+                    analyzer = ctx.inject(Analyzer)
+                    json.write(analyzer.stats.json(indent=2))
+
         else:
             logger.warning("No path provided.", extra={"prefix": "mecha"})
             logger.warning("Use --help to see usage.", extra={"prefix": "mecha"})
