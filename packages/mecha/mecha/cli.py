@@ -88,6 +88,7 @@ def mecha(source: Tuple[str, ...], minecraft: str, log: str, stats: bool):
             "mecha": {
                 "version": minecraft,
                 "readonly": True,
+                "cache": False,
             },
         },
     }

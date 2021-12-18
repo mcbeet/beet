@@ -91,6 +91,7 @@ class MechaOptions(BaseModel):
     readonly: Optional[bool] = None
     match: Optional[List[str]] = None
     rules: Dict[str, Literal["ignore", "info", "warn", "error"]] = {}
+    cache: bool = True
 
 
 @dataclass
@@ -149,7 +150,7 @@ class Mecha:
             self.optimize = MutatingReducer(levels=opts.rules)
             self.check = Reducer(levels=opts.rules)
 
-            if not self.cache:
+            if not self.cache and opts.cache:
                 self.cache = ctx.cache["mecha"]
 
             ctx.require(self.finalize)
