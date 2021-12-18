@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.24.3 (2021-12-18)
+### Fix
+* Disable ast cache for cli ([`4d44c24`](https://github.com/mcbeet/mecha/commit/4d44c24eebe71654b627ef884ca50d11d4092ae3))
+
 ## v0.24.2 (2021-12-18)
 ### Fix
 * Update README ([`2deaeb9`](https://github.com/mcbeet/mecha/commit/2deaeb962cbc8d6a96f48bed4e474b05ed0d1a48))
