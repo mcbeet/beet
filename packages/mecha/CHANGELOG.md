@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.24.0 (2021-12-18)
+### Feature
+* Add mecha.contrib.statistics and --stats option ([`eaf28a1`](https://github.com/mcbeet/mecha/commit/eaf28a1963de9b0c9331b00aaab8aad45b20dea8))
+
 ## v0.23.0 (2021-12-16)
 ### Feature
 * Add nesting for schedule command ([`eeb15f6`](https://github.com/mcbeet/mecha/commit/eeb15f6c007f69e8323fabfc768bc30e80d8150c))
