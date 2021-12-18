@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.24.1 (2021-12-18)
+### Fix
+* Move resources in one place ([`d3fdfa7`](https://github.com/mcbeet/mecha/commit/d3fdfa7ea14d94a1ae00e86bcb08d58403f80396))
+
 ## v0.24.0 (2021-12-18)
 ### Feature
 * Add mecha.contrib.statistics and --stats option ([`eaf28a1`](https://github.com/mcbeet/mecha/commit/eaf28a1963de9b0c9331b00aaab8aad45b20dea8))
