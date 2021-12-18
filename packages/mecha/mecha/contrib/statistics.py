@@ -227,7 +227,9 @@ class Summary:
     def format_selectors(self) -> Dict[Tuple[str, ...], List[Tuple[str, ...]]]:
         selector_types = [
             (f"   [type={entity_type}]", entity_type_count)
-            for entity_type, entity_type_count in self.stats.selector_entity_type_count.items()
+            for entity_type, entity_type_count in sorted(
+                self.stats.selector_entity_type_count.items(), key=lambda p: -p[1]
+            )
         ]
 
         total_selector_types = sum(self.stats.selector_entity_type_count.values())
@@ -262,9 +264,7 @@ class Summary:
             ]
             + [
                 (entity_type, str(entity_type_count))
-                for entity_type, entity_type_count in sorted(
-                    selector_types, key=lambda p: -p[1]
-                )
+                for entity_type, entity_type_count in selector_types
             ],
         }
 
