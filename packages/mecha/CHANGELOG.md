@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.25.0 (2021-12-18)
+### Feature
+* Add --json option to output stats in json file ([`a74bcf5`](https://github.com/mcbeet/mecha/commit/a74bcf594e30504ab887a46af4a0acf0d9737aa1))
+
 ## v0.24.4 (2021-12-18)
 ### Fix
 * Break out of infinite loop when there's no execute subcommand ([`d432d8c`](https://github.com/mcbeet/mecha/commit/d432d8c5995b51d76f676c09df2f8167bc40a400))
