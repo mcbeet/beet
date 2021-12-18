@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.24.4 (2021-12-18)
+### Fix
+* Break out of infinite loop when there's no execute subcommand ([`d432d8c`](https://github.com/mcbeet/mecha/commit/d432d8c5995b51d76f676c09df2f8167bc40a400))
+
 ## v0.24.3 (2021-12-18)
 ### Fix
 * Disable ast cache for cli ([`4d44c24`](https://github.com/mcbeet/mecha/commit/4d44c24eebe71654b627ef884ca50d11d4092ae3))
