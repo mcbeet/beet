@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.48.3 (2021-12-18)
+### Fix
+* Deprecate hangman ([`24ff3cb`](https://github.com/mcbeet/beet/commit/24ff3cbf055342864afd386e36ea821b590d8ce8))
+
 ## v0.48.2 (2021-12-10)
 ### Fix
 * Add namespace option for babelbox ([`fb902fe`](https://github.com/mcbeet/beet/commit/fb902fedb4107105ee183a252f9f07c4a4a18c23))
