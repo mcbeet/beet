@@ -19,6 +19,7 @@ __all__ = [
 ]
 
 
+import logging
 import re
 from typing import Iterable, Iterator, List, Literal, Optional, Tuple
 
@@ -26,6 +27,9 @@ from pydantic import BaseModel
 
 from beet import Context, Function, configurable
 from beet.toolchain.utils import stable_hash
+
+logger = logging.getLogger(__name__)
+
 
 REGEX_COMMENT = re.compile(r"(\s+#(?:\s+.*)?$)")
 REGEX_QUOTE = re.compile(r"(\"(?:.*?[^\\])?\"|'(?:.*?[^\\])?')")
@@ -56,6 +60,7 @@ def beet_default(ctx: Context):
 @configurable(validator=HangmanOptions)
 def hangman(ctx: Context, opts: HangmanOptions):
     """Plugin that provides indentation-based syntactic extensions for functions."""
+    logger.warning("Deprecated in favor of mecha (https://github.com/mcbeet/mecha).")
 
     for path in ctx.data.functions.match(*opts.match):
         function = ctx.data.functions[path]
