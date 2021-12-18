@@ -99,6 +99,8 @@ class Analyzer(Reducer):
                     self.stats.execute_clause_count[command.identifier] += 1
                 if isinstance(subcommand := command.arguments[-1], AstCommand):
                     command = subcommand
+                else:
+                    break
 
             name = command.identifier.partition(":")[0]
             self.stats.command_count[name][command.identifier] += 1
