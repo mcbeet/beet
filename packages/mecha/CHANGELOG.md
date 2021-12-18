@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.25.1 (2021-12-18)
+### Fix
+* Sort entity types properly ([`f3847c4`](https://github.com/mcbeet/mecha/commit/f3847c486c5ebe8b7296b0e194fce9359ee9cb50))
+
 ## v0.25.0 (2021-12-18)
 ### Feature
 * Add --json option to output stats in json file ([`a74bcf5`](https://github.com/mcbeet/mecha/commit/a74bcf594e30504ab887a46af4a0acf0d9737aa1))
