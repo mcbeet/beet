@@ -1,24 +1,25 @@
 import pytest
+from beet import Function, JsonFile
 from beet.core.utils import JsonDict
 from pytest_insta import SnapshotFixture
 
-from mecha import (
-    DiagnosticError,
-    Mecha,
-    get_argument_examples,
-    get_command_examples,
-    get_multiline_command_examples,
+from mecha import DiagnosticError, Mecha
+
+COMMAND_EXAMPLES = Function(source_path="tests/resources/command_examples.mcfunction")
+MULTILINE_COMMAND_EXAMPLES = Function(
+    source_path="tests/resources/multiline_command_examples.mcfunction"
 )
+ARGUMENT_EXAMPLES = JsonFile(source_path="tests/resources/argument_examples.json")
 
 
 def test_command_examples(snapshot: SnapshotFixture, mc: Mecha):
-    ast = mc.parse(get_command_examples())
+    ast = mc.parse(COMMAND_EXAMPLES)
     assert snapshot() == ast.dump()
     assert snapshot() == mc.serialize(ast)
 
 
 def test_multiline_command_examples(snapshot: SnapshotFixture, mc: Mecha):
-    ast = mc.parse(get_multiline_command_examples(), multiline=True)
+    ast = mc.parse(MULTILINE_COMMAND_EXAMPLES, multiline=True)
     assert snapshot() == ast.dump()
     assert snapshot() == mc.serialize(ast)
 
@@ -32,7 +33,7 @@ def test_multiline_command_examples(snapshot: SnapshotFixture, mc: Mecha):
             suite.get("invalid", False),
             value,
         )
-        for argument_parser, suites in get_argument_examples().items()
+        for argument_parser, suites in ARGUMENT_EXAMPLES.data.items()
         for i, suite in enumerate(suites)
         for j, value in enumerate(suite["examples"])
     ],

@@ -1,0 +1,89 @@
+{
+  "type": "root",
+  "children": {
+    "execute": {
+      "type": "literal",
+      "children": {
+        "expand": {
+          "type": "literal",
+          "children": {
+            "commands": {
+              "type": "argument",
+              "parser": "mecha:nested_root",
+              "executable": true
+            }
+          }
+        },
+        "commands": {
+          "type": "argument",
+          "parser": "mecha:nested_root",
+          "executable": true
+        }
+      }
+    },
+    "schedule": {
+      "type": "literal",
+      "children": {
+        "function": {
+          "type": "literal",
+          "children": {
+            "function": {
+              "type": "argument",
+              "parser": "minecraft:function",
+              "children": {
+                "time": {
+                  "type": "argument",
+                  "parser": "minecraft:time",
+                  "children": {
+                    "append": {
+                      "type": "literal",
+                      "children": {
+                        "commands": {
+                          "type": "argument",
+                          "parser": "mecha:nested_root",
+                          "executable": true
+                        }
+                      }
+                    },
+                    "replace": {
+                      "type": "literal",
+                      "children": {
+                        "commands": {
+                          "type": "argument",
+                          "parser": "mecha:nested_root",
+                          "executable": true
+                        }
+                      }
+                    },
+                    "commands": {
+                      "type": "argument",
+                      "parser": "mecha:nested_root",
+                      "executable": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "function": {
+      "type": "literal",
+      "children": {
+        "name": {
+          "type": "argument",
+          "parser": "minecraft:function",
+          "executable": true,
+          "children": {
+            "commands": {
+              "type": "argument",
+              "parser": "mecha:nested_root",
+              "executable": true
+            }
+          }
+        }
+      }
+    }
+  }
+}

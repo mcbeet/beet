@@ -77,7 +77,7 @@ class Runtime:
         else:
             mc = ctx
 
-        commands_json = read_text("mecha.contrib.scripting.resources", "commands.json")
+        commands_json = read_text("mecha.resources", "scripting.json")
         mc.spec.add_commands(CommandTree.parse_raw(commands_json))
         mc.spec.parsers.update(get_scripting_parsers(mc.spec.parsers))
         mc.spec.parsers["root"] = GlobalsInjection(self, mc.spec.parsers["root"])

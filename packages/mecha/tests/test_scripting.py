@@ -1,17 +1,19 @@
+from pathlib import Path
+
 import pytest
 from beet import Context, Function, run_beet
 from pytest_insta import SnapshotFixture
 
-from mecha import (
-    AstNode,
-    CompilationDatabase,
-    CompilationUnit,
-    DiagnosticError,
-    Mecha,
-    get_scripting_examples,
-)
+from mecha import AstNode, CompilationDatabase, CompilationUnit, DiagnosticError, Mecha
 from mecha.contrib.annotate_diagnostics import annotate_diagnostics
 from mecha.contrib.scripting import Runtime
+
+SCRIPTING_EXAMPLES = [
+    Function(source)
+    for source in Path("tests/resources/scripting_examples.mcfunction")
+    .read_text()
+    .split("###\n")
+]
 
 
 @pytest.fixture(scope="session")
@@ -22,7 +24,7 @@ def ctx_scripting():
 
 @pytest.mark.parametrize(
     "source",
-    params := get_scripting_examples(),
+    params := SCRIPTING_EXAMPLES,
     ids=range(len(params)),
 )
 def test_parse(snapshot: SnapshotFixture, ctx_scripting: Context, source: Function):

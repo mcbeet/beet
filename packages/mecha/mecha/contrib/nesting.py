@@ -8,6 +8,7 @@ __all__ = [
 
 
 from dataclasses import dataclass, replace
+from importlib.resources import read_text
 from typing import List, cast
 
 from beet import Context, Function
@@ -20,6 +21,7 @@ from mecha import (
     AstNode,
     AstResourceLocation,
     AstRoot,
+    CommandTree,
     CompilationDatabase,
     Diagnostic,
     Mecha,
@@ -29,102 +31,14 @@ from mecha import (
     rule,
 )
 
-COMMAND_TREE = {
-    "type": "root",
-    "children": {
-        "execute": {
-            "type": "literal",
-            "children": {
-                "expand": {
-                    "type": "literal",
-                    "children": {
-                        "commands": {
-                            "type": "argument",
-                            "parser": "mecha:nested_root",
-                            "executable": True,
-                        }
-                    },
-                },
-                "commands": {
-                    "type": "argument",
-                    "parser": "mecha:nested_root",
-                    "executable": True,
-                },
-            },
-        },
-        "schedule": {
-            "type": "literal",
-            "children": {
-                "function": {
-                    "type": "literal",
-                    "children": {
-                        "function": {
-                            "type": "argument",
-                            "parser": "minecraft:function",
-                            "children": {
-                                "time": {
-                                    "type": "argument",
-                                    "parser": "minecraft:time",
-                                    "children": {
-                                        "append": {
-                                            "type": "literal",
-                                            "children": {
-                                                "commands": {
-                                                    "type": "argument",
-                                                    "parser": "mecha:nested_root",
-                                                    "executable": True,
-                                                },
-                                            },
-                                        },
-                                        "replace": {
-                                            "type": "literal",
-                                            "children": {
-                                                "commands": {
-                                                    "type": "argument",
-                                                    "parser": "mecha:nested_root",
-                                                    "executable": True,
-                                                },
-                                            },
-                                        },
-                                        "commands": {
-                                            "type": "argument",
-                                            "parser": "mecha:nested_root",
-                                            "executable": True,
-                                        },
-                                    },
-                                }
-                            },
-                        }
-                    },
-                },
-            },
-        },
-        "function": {
-            "type": "literal",
-            "children": {
-                "name": {
-                    "type": "argument",
-                    "parser": "minecraft:function",
-                    "executable": True,
-                    "children": {
-                        "commands": {
-                            "type": "argument",
-                            "parser": "mecha:nested_root",
-                            "executable": True,
-                        }
-                    },
-                }
-            },
-        },
-    },
-}
-
 
 def beet_default(ctx: Context):
     mc = ctx.inject(Mecha)
 
     mc.spec.multiline = True
-    mc.spec.add_commands(COMMAND_TREE)
+
+    commands_json = read_text("mecha.resources", "nesting.json")
+    mc.spec.add_commands(CommandTree.parse_raw(commands_json))
 
     mc.spec.parsers["nested_root"] = parse_nested_root
     mc.spec.parsers["command:argument:mecha:nested_root"] = delegate("nested_root")
