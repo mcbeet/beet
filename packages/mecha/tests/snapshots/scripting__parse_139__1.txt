@@ -1,0 +1,184 @@
+_mecha_lineno = [1, 12, 16, 20, 28, 35], [1, 3, 5, 6, 8, 4]
+_mecha_helper_get_attribute = _mecha_runtime.helpers['get_attribute']
+_mecha_helper_interpolate_resource_location = _mecha_runtime.helpers['interpolate_resource_location']
+_mecha_helper_interpolate_range = _mecha_runtime.helpers['interpolate_range']
+_mecha_helper_children = _mecha_runtime.helpers['children']
+_mecha_helper_replace = _mecha_runtime.helpers['replace']
+_mecha_helper_interpolate_message = _mecha_runtime.helpers['interpolate_message']
+with _mecha_runtime.scope() as _mecha_var1:
+    
+
+    from beet import  generate_tree
+    for node in (
+(
+generate_tree)('demo:foo', 'abcdefghijklmnopqrstuvwxyz0123456789')):
+        with _mecha_runtime.scope() as _mecha_var0:
+            if (
+(
+_mecha_helper_get_attribute((
+node), 'partition'))(5)):
+                _mecha_runtime.commands.append(_mecha_helper_replace(_mecha_refs[8], arguments=_mecha_helper_children([_mecha_helper_replace(_mecha_refs[7], arguments=_mecha_helper_children([_mecha_refs[2], _mecha_refs[3], (
+_mecha_helper_interpolate_range((
+_mecha_helper_get_attribute((
+node), 'range')), _mecha_refs[1])), _mecha_helper_replace(_mecha_refs[6], arguments=_mecha_helper_children([_mecha_helper_replace(_mecha_refs[5], arguments=_mecha_helper_children([(
+_mecha_helper_interpolate_resource_location((
+_mecha_helper_get_attribute((
+node), 'children')), _mecha_refs[4]))]))]))]))])))
+            else:
+                _mecha_runtime.commands.append(_mecha_helper_replace(_mecha_refs[16], arguments=_mecha_helper_children([_mecha_helper_replace(_mecha_refs[15], arguments=_mecha_helper_children([_mecha_refs[10], _mecha_refs[11], (
+_mecha_helper_interpolate_range((
+_mecha_helper_get_attribute((
+node), 'range')), _mecha_refs[9])), _mecha_helper_replace(_mecha_refs[14], arguments=_mecha_helper_children([_mecha_helper_replace(_mecha_refs[13], arguments=_mecha_helper_children([(
+_mecha_helper_interpolate_message((
+_mecha_helper_get_attribute((
+node), 'value')), _mecha_refs[12]))]))]))]))])))
+        _mecha_runtime.commands.append(_mecha_helper_replace(_mecha_refs[18], arguments=_mecha_helper_children([(
+_mecha_helper_interpolate_resource_location((
+_mecha_helper_get_attribute((
+node), 'parent')), _mecha_refs[0])), _mecha_helper_replace(_mecha_refs[17], commands=_mecha_helper_children(_mecha_var0))])))
+_mecha_var2 = _mecha_helper_replace(_mecha_refs[19], commands=_mecha_helper_children(_mecha_var1))---
+output = _mecha_var2
+---
+_mecha_refs[0]
+<class 'mecha.contrib.scripting.ast.AstInterpolation'>
+  location: SourceLocation(pos=124, lineno=4, colno=14)
+  end_location: SourceLocation(pos=135, lineno=4, colno=25)
+  converter: 'resource_location'
+  value:
+    <class 'mecha.contrib.scripting.ast.AstAttribute'>
+_mecha_refs[1]
+<class 'mecha.contrib.scripting.ast.AstInterpolation'>
+  location: SourceLocation(pos=213, lineno=6, colno=40)
+  end_location: SourceLocation(pos=223, lineno=6, colno=50)
+  converter: 'range'
+  value:
+    <class 'mecha.contrib.scripting.ast.AstAttribute'>
+_mecha_refs[2]
+<class 'mecha.ast.AstSelector'>
+  location: SourceLocation(pos=195, lineno=6, colno=22)
+  end_location: SourceLocation(pos=197, lineno=6, colno=24)
+  variable: 's'
+  arguments:
+    <empty>
+_mecha_refs[3]
+<class 'mecha.ast.AstObjective'>
+  location: SourceLocation(pos=198, lineno=6, colno=25)
+  end_location: SourceLocation(pos=204, lineno=6, colno=31)
+  value: 'thingy'
+_mecha_refs[4]
+<class 'mecha.contrib.scripting.ast.AstInterpolation'>
+  location: SourceLocation(pos=233, lineno=6, colno=60)
+  end_location: SourceLocation(pos=246, lineno=6, colno=73)
+  converter: 'resource_location'
+  value:
+    <class 'mecha.contrib.scripting.ast.AstAttribute'>
+_mecha_refs[5]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=224, lineno=6, colno=51)
+  end_location: SourceLocation(pos=246, lineno=6, colno=73)
+  identifier: 'function:name'
+  arguments:
+    <class 'mecha.contrib.scripting.ast.AstInterpolation'>
+_mecha_refs[6]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=224, lineno=6, colno=51)
+  end_location: SourceLocation(pos=246, lineno=6, colno=73)
+  identifier: 'execute:run:subcommand'
+  arguments:
+    <class 'mecha.ast.AstCommand'>
+_mecha_refs[7]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=186, lineno=6, colno=13)
+  end_location: SourceLocation(pos=246, lineno=6, colno=73)
+  identifier: 'execute:if:score:target:targetObjective:matches:range:subcommand'
+  arguments:
+    <class 'mecha.ast.AstSelector'>
+    <class 'mecha.ast.AstObjective'>
+    <class 'mecha.contrib.scripting.ast.AstInterpolation'>
+    <class 'mecha.ast.AstCommand'>
+_mecha_refs[8]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=186, lineno=6, colno=13)
+  end_location: SourceLocation(pos=246, lineno=6, colno=73)
+  identifier: 'execute:subcommand'
+  arguments:
+    <class 'mecha.ast.AstCommand'>
+_mecha_refs[9]
+<class 'mecha.contrib.scripting.ast.AstInterpolation'>
+  location: SourceLocation(pos=300, lineno=8, colno=40)
+  end_location: SourceLocation(pos=310, lineno=8, colno=50)
+  converter: 'range'
+  value:
+    <class 'mecha.contrib.scripting.ast.AstAttribute'>
+_mecha_refs[10]
+<class 'mecha.ast.AstSelector'>
+  location: SourceLocation(pos=282, lineno=8, colno=22)
+  end_location: SourceLocation(pos=284, lineno=8, colno=24)
+  variable: 's'
+  arguments:
+    <empty>
+_mecha_refs[11]
+<class 'mecha.ast.AstObjective'>
+  location: SourceLocation(pos=285, lineno=8, colno=25)
+  end_location: SourceLocation(pos=291, lineno=8, colno=31)
+  value: 'thingy'
+_mecha_refs[12]
+<class 'mecha.contrib.scripting.ast.AstInterpolation'>
+  location: SourceLocation(pos=315, lineno=8, colno=55)
+  end_location: SourceLocation(pos=325, lineno=8, colno=65)
+  converter: 'message'
+  value:
+    <class 'mecha.contrib.scripting.ast.AstAttribute'>
+_mecha_refs[13]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=311, lineno=8, colno=51)
+  end_location: SourceLocation(pos=325, lineno=8, colno=65)
+  identifier: 'say:message'
+  arguments:
+    <class 'mecha.contrib.scripting.ast.AstInterpolation'>
+_mecha_refs[14]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=311, lineno=8, colno=51)
+  end_location: SourceLocation(pos=325, lineno=8, colno=65)
+  identifier: 'execute:run:subcommand'
+  arguments:
+    <class 'mecha.ast.AstCommand'>
+_mecha_refs[15]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=273, lineno=8, colno=13)
+  end_location: SourceLocation(pos=325, lineno=8, colno=65)
+  identifier: 'execute:if:score:target:targetObjective:matches:range:subcommand'
+  arguments:
+    <class 'mecha.ast.AstSelector'>
+    <class 'mecha.ast.AstObjective'>
+    <class 'mecha.contrib.scripting.ast.AstInterpolation'>
+    <class 'mecha.ast.AstCommand'>
+_mecha_refs[16]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=273, lineno=8, colno=13)
+  end_location: SourceLocation(pos=325, lineno=8, colno=65)
+  identifier: 'execute:subcommand'
+  arguments:
+    <class 'mecha.ast.AstCommand'>
+_mecha_refs[17]
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=152, lineno=5, colno=9)
+  end_location: SourceLocation(pos=325, lineno=8, colno=65)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+    <class 'mecha.ast.AstCommand'>
+_mecha_refs[18]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=115, lineno=4, colno=5)
+  end_location: SourceLocation(pos=325, lineno=8, colno=65)
+  identifier: 'function:name:append:commands'
+  arguments:
+    <class 'mecha.contrib.scripting.ast.AstInterpolation'>
+    <class 'mecha.ast.AstRoot'>
+_mecha_refs[19]
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=326, lineno=9, colno=1)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+    <class 'mecha.ast.AstCommand'>

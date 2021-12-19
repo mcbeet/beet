@@ -1,0 +1,238 @@
+from beet import generate_tree
+
+for node in generate_tree("demo:foo", "abcdefghijklmnopqrstuvwxyz0123456789"):
+    function node.parent append:
+        if node.partition(5):
+            if score @s thingy matches node.range function node.children
+        else:
+            if score @s thingy matches node.range say node.value
+---
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=326, lineno=9, colno=1)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=30, lineno=1, colno=31)
+      identifier: 'from:module:import:subcommand'
+      arguments:
+        <class 'mecha.ast.AstResourceLocation'>
+          location: SourceLocation(pos=5, lineno=1, colno=6)
+          end_location: SourceLocation(pos=9, lineno=1, colno=10)
+          is_tag: False
+          namespace: None
+          path: 'beet'
+        <class 'mecha.ast.AstCommand'>
+          location: SourceLocation(pos=17, lineno=1, colno=18)
+          end_location: SourceLocation(pos=30, lineno=1, colno=31)
+          identifier: 'from:module:import:name'
+          arguments:
+            <class 'mecha.contrib.scripting.ast.AstImportedIdentifier'>
+              location: SourceLocation(pos=17, lineno=1, colno=18)
+              end_location: SourceLocation(pos=30, lineno=1, colno=31)
+              value: 'generate_tree'
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=32, lineno=3, colno=1)
+      end_location: SourceLocation(pos=325, lineno=8, colno=65)
+      identifier: 'for:target:in:iterable:body'
+      arguments:
+        <class 'mecha.contrib.scripting.ast.AstAssignmentTargetIdentifier'>
+          location: SourceLocation(pos=36, lineno=3, colno=5)
+          end_location: SourceLocation(pos=40, lineno=3, colno=9)
+          value: 'node'
+        <class 'mecha.contrib.scripting.ast.AstCall'>
+          location: SourceLocation(pos=44, lineno=3, colno=13)
+          end_location: SourceLocation(pos=109, lineno=3, colno=78)
+          value:
+            <class 'mecha.contrib.scripting.ast.AstIdentifier'>
+              location: SourceLocation(pos=44, lineno=3, colno=13)
+              end_location: SourceLocation(pos=57, lineno=3, colno=26)
+              value: 'generate_tree'
+          arguments:
+            <class 'mecha.contrib.scripting.ast.AstValue'>
+              location: SourceLocation(pos=58, lineno=3, colno=27)
+              end_location: SourceLocation(pos=68, lineno=3, colno=37)
+              value: 'demo:foo'
+            <class 'mecha.contrib.scripting.ast.AstValue'>
+              location: SourceLocation(pos=70, lineno=3, colno=39)
+              end_location: SourceLocation(pos=108, lineno=3, colno=77)
+              value: 'abcdefghijklmnopqrstuvwxyz0123456789'
+        <class 'mecha.ast.AstRoot'>
+          location: SourceLocation(pos=115, lineno=4, colno=5)
+          end_location: SourceLocation(pos=325, lineno=8, colno=65)
+          commands:
+            <class 'mecha.ast.AstCommand'>
+              location: SourceLocation(pos=115, lineno=4, colno=5)
+              end_location: SourceLocation(pos=325, lineno=8, colno=65)
+              identifier: 'function:name:append:commands'
+              arguments:
+                <class 'mecha.contrib.scripting.ast.AstInterpolation'>
+                  location: SourceLocation(pos=124, lineno=4, colno=14)
+                  end_location: SourceLocation(pos=135, lineno=4, colno=25)
+                  converter: 'resource_location'
+                  value:
+                    <class 'mecha.contrib.scripting.ast.AstAttribute'>
+                      location: SourceLocation(pos=124, lineno=4, colno=14)
+                      end_location: SourceLocation(pos=135, lineno=4, colno=25)
+                      name: 'parent'
+                      value:
+                        <class 'mecha.contrib.scripting.ast.AstIdentifier'>
+                          location: SourceLocation(pos=124, lineno=4, colno=14)
+                          end_location: SourceLocation(pos=128, lineno=4, colno=18)
+                          value: 'node'
+                <class 'mecha.ast.AstRoot'>
+                  location: SourceLocation(pos=152, lineno=5, colno=9)
+                  end_location: SourceLocation(pos=325, lineno=8, colno=65)
+                  commands:
+                    <class 'mecha.ast.AstCommand'>
+                      location: SourceLocation(pos=152, lineno=5, colno=9)
+                      end_location: SourceLocation(pos=246, lineno=6, colno=73)
+                      identifier: 'if:condition:body'
+                      arguments:
+                        <class 'mecha.contrib.scripting.ast.AstCall'>
+                          location: SourceLocation(pos=155, lineno=5, colno=12)
+                          end_location: SourceLocation(pos=172, lineno=5, colno=29)
+                          value:
+                            <class 'mecha.contrib.scripting.ast.AstAttribute'>
+                              location: SourceLocation(pos=155, lineno=5, colno=12)
+                              end_location: SourceLocation(pos=169, lineno=5, colno=26)
+                              name: 'partition'
+                              value:
+                                <class 'mecha.contrib.scripting.ast.AstIdentifier'>
+                                  location: SourceLocation(pos=155, lineno=5, colno=12)
+                                  end_location: SourceLocation(pos=159, lineno=5, colno=16)
+                                  value: 'node'
+                          arguments:
+                            <class 'mecha.contrib.scripting.ast.AstValue'>
+                              location: SourceLocation(pos=170, lineno=5, colno=27)
+                              end_location: SourceLocation(pos=171, lineno=5, colno=28)
+                              value: 5
+                        <class 'mecha.ast.AstRoot'>
+                          location: SourceLocation(pos=186, lineno=6, colno=13)
+                          end_location: SourceLocation(pos=246, lineno=6, colno=73)
+                          commands:
+                            <class 'mecha.ast.AstCommand'>
+                              location: SourceLocation(pos=186, lineno=6, colno=13)
+                              end_location: SourceLocation(pos=246, lineno=6, colno=73)
+                              identifier: 'execute:subcommand'
+                              arguments:
+                                <class 'mecha.ast.AstCommand'>
+                                  location: SourceLocation(pos=186, lineno=6, colno=13)
+                                  end_location: SourceLocation(pos=246, lineno=6, colno=73)
+                                  identifier: 'execute:if:score:target:targetObjective:matches:range:subcommand'
+                                  arguments:
+                                    <class 'mecha.ast.AstSelector'>
+                                      location: SourceLocation(pos=195, lineno=6, colno=22)
+                                      end_location: SourceLocation(pos=197, lineno=6, colno=24)
+                                      variable: 's'
+                                      arguments:
+                                        <empty>
+                                    <class 'mecha.ast.AstObjective'>
+                                      location: SourceLocation(pos=198, lineno=6, colno=25)
+                                      end_location: SourceLocation(pos=204, lineno=6, colno=31)
+                                      value: 'thingy'
+                                    <class 'mecha.contrib.scripting.ast.AstInterpolation'>
+                                      location: SourceLocation(pos=213, lineno=6, colno=40)
+                                      end_location: SourceLocation(pos=223, lineno=6, colno=50)
+                                      converter: 'range'
+                                      value:
+                                        <class 'mecha.contrib.scripting.ast.AstAttribute'>
+                                          location: SourceLocation(pos=213, lineno=6, colno=40)
+                                          end_location: SourceLocation(pos=223, lineno=6, colno=50)
+                                          name: 'range'
+                                          value:
+                                            <class 'mecha.contrib.scripting.ast.AstIdentifier'>
+                                              location: SourceLocation(pos=213, lineno=6, colno=40)
+                                              end_location: SourceLocation(pos=217, lineno=6, colno=44)
+                                              value: 'node'
+                                    <class 'mecha.ast.AstCommand'>
+                                      location: SourceLocation(pos=224, lineno=6, colno=51)
+                                      end_location: SourceLocation(pos=246, lineno=6, colno=73)
+                                      identifier: 'execute:run:subcommand'
+                                      arguments:
+                                        <class 'mecha.ast.AstCommand'>
+                                          location: SourceLocation(pos=224, lineno=6, colno=51)
+                                          end_location: SourceLocation(pos=246, lineno=6, colno=73)
+                                          identifier: 'function:name'
+                                          arguments:
+                                            <class 'mecha.contrib.scripting.ast.AstInterpolation'>
+                                              location: SourceLocation(pos=233, lineno=6, colno=60)
+                                              end_location: SourceLocation(pos=246, lineno=6, colno=73)
+                                              converter: 'resource_location'
+                                              value:
+                                                <class 'mecha.contrib.scripting.ast.AstAttribute'>
+                                                  location: SourceLocation(pos=233, lineno=6, colno=60)
+                                                  end_location: SourceLocation(pos=246, lineno=6, colno=73)
+                                                  name: 'children'
+                                                  value:
+                                                    <class 'mecha.contrib.scripting.ast.AstIdentifier'>
+                                                      location: SourceLocation(pos=233, lineno=6, colno=60)
+                                                      end_location: SourceLocation(pos=237, lineno=6, colno=64)
+                                                      value: 'node'
+                    <class 'mecha.ast.AstCommand'>
+                      location: SourceLocation(pos=255, lineno=7, colno=9)
+                      end_location: SourceLocation(pos=325, lineno=8, colno=65)
+                      identifier: 'else:body'
+                      arguments:
+                        <class 'mecha.ast.AstRoot'>
+                          location: SourceLocation(pos=273, lineno=8, colno=13)
+                          end_location: SourceLocation(pos=325, lineno=8, colno=65)
+                          commands:
+                            <class 'mecha.ast.AstCommand'>
+                              location: SourceLocation(pos=273, lineno=8, colno=13)
+                              end_location: SourceLocation(pos=325, lineno=8, colno=65)
+                              identifier: 'execute:subcommand'
+                              arguments:
+                                <class 'mecha.ast.AstCommand'>
+                                  location: SourceLocation(pos=273, lineno=8, colno=13)
+                                  end_location: SourceLocation(pos=325, lineno=8, colno=65)
+                                  identifier: 'execute:if:score:target:targetObjective:matches:range:subcommand'
+                                  arguments:
+                                    <class 'mecha.ast.AstSelector'>
+                                      location: SourceLocation(pos=282, lineno=8, colno=22)
+                                      end_location: SourceLocation(pos=284, lineno=8, colno=24)
+                                      variable: 's'
+                                      arguments:
+                                        <empty>
+                                    <class 'mecha.ast.AstObjective'>
+                                      location: SourceLocation(pos=285, lineno=8, colno=25)
+                                      end_location: SourceLocation(pos=291, lineno=8, colno=31)
+                                      value: 'thingy'
+                                    <class 'mecha.contrib.scripting.ast.AstInterpolation'>
+                                      location: SourceLocation(pos=300, lineno=8, colno=40)
+                                      end_location: SourceLocation(pos=310, lineno=8, colno=50)
+                                      converter: 'range'
+                                      value:
+                                        <class 'mecha.contrib.scripting.ast.AstAttribute'>
+                                          location: SourceLocation(pos=300, lineno=8, colno=40)
+                                          end_location: SourceLocation(pos=310, lineno=8, colno=50)
+                                          name: 'range'
+                                          value:
+                                            <class 'mecha.contrib.scripting.ast.AstIdentifier'>
+                                              location: SourceLocation(pos=300, lineno=8, colno=40)
+                                              end_location: SourceLocation(pos=304, lineno=8, colno=44)
+                                              value: 'node'
+                                    <class 'mecha.ast.AstCommand'>
+                                      location: SourceLocation(pos=311, lineno=8, colno=51)
+                                      end_location: SourceLocation(pos=325, lineno=8, colno=65)
+                                      identifier: 'execute:run:subcommand'
+                                      arguments:
+                                        <class 'mecha.ast.AstCommand'>
+                                          location: SourceLocation(pos=311, lineno=8, colno=51)
+                                          end_location: SourceLocation(pos=325, lineno=8, colno=65)
+                                          identifier: 'say:message'
+                                          arguments:
+                                            <class 'mecha.contrib.scripting.ast.AstInterpolation'>
+                                              location: SourceLocation(pos=315, lineno=8, colno=55)
+                                              end_location: SourceLocation(pos=325, lineno=8, colno=65)
+                                              converter: 'message'
+                                              value:
+                                                <class 'mecha.contrib.scripting.ast.AstAttribute'>
+                                                  location: SourceLocation(pos=315, lineno=8, colno=55)
+                                                  end_location: SourceLocation(pos=325, lineno=8, colno=65)
+                                                  name: 'value'
+                                                  value:
+                                                    <class 'mecha.contrib.scripting.ast.AstIdentifier'>
+                                                      location: SourceLocation(pos=315, lineno=8, colno=55)
+                                                      end_location: SourceLocation(pos=319, lineno=8, colno=59)
+                                                      value: 'node'
