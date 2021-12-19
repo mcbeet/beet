@@ -2,6 +2,13 @@
 
 <!--next-version-placeholder-->
 
+## v0.27.0 (2021-12-19)
+### Feature
+* Add mecha.contrib.inline_function_tag ([`7c5f37a`](https://github.com/mcbeet/mecha/commit/7c5f37a5dffbaa4769d29ff8592a73193a69d8a1))
+
+### Fix
+* Refactor statistics json output ([`cd90092`](https://github.com/mcbeet/mecha/commit/cd900922efcf9bf58c5e14d39d9c7412358826f6))
+
 ## v0.26.0 (2021-12-19)
 ### Feature
 * Add append and prepend to nested functions ([`389ed4f`](https://github.com/mcbeet/mecha/commit/389ed4fcd290090e88daedb6af65773d7986528e))
