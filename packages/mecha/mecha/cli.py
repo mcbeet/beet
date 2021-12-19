@@ -6,16 +6,16 @@ __all__ = [
 
 
 import logging
+import os
 import zipfile
 from pathlib import Path
-from typing import Optional, TextIO, Tuple
+from typing import Optional, Tuple
 
 import click
 from beet import Context, DataPack, Function, run_beet
 from beet.toolchain.cli import BeetCommand, LogHandler, error_handler, message_fence
 
 from mecha import __version__
-from mecha.contrib.statistics import Analyzer
 
 from .api import Mecha
 
@@ -68,7 +68,6 @@ def validate(ctx: Context):
     "-j",
     "--json",
     metavar="FILENAME",
-    type=click.File(mode="w"),
     help="Output json.",
 )
 @click.version_option(
@@ -84,7 +83,7 @@ def mecha(
     minecraft: str,
     log: str,
     stats: bool,
-    json: Optional[TextIO],
+    json: Optional[str],
 ):
     """Validate data packs and .mcfunction files."""
     if stats and log != "DEBUG":
@@ -104,16 +103,16 @@ def mecha(
                 "readonly": True,
                 "cache": False,
             },
+            "statistics": {
+                "output": os.path.abspath(json) if json else None,
+            },
         },
     }
 
     with message_fence(f"Validating with mecha v{__version__}"):
         if source:
-            with run_beet(config) as ctx:
-                if json:
-                    analyzer = ctx.inject(Analyzer)
-                    json.write(analyzer.stats.json(indent=2))
-
+            with run_beet(config):
+                pass
         else:
             logger.warning("No path provided.", extra={"prefix": "mecha"})
             logger.warning("Use --help to see usage.", extra={"prefix": "mecha"})

@@ -11,9 +11,10 @@ __all__ = [
 import logging
 from collections import defaultdict
 from dataclasses import dataclass
-from typing import DefaultDict, Dict, Iterator, List, Tuple, Union
+from typing import DefaultDict, Dict, Iterator, List, Optional, Tuple, Union
 
 from beet import Context
+from beet.core.utils import dump_json
 from pydantic import BaseModel
 
 from mecha import (
@@ -56,6 +57,10 @@ class Statistics(BaseModel):
     scoreboard_objectives: Dict[str, str] = {}
 
 
+class StatisticsOptions(BaseModel):
+    output: Optional[str] = None
+
+
 def beet_default(ctx: Context):
     ctx.inject(Analyzer)
 
@@ -81,8 +86,12 @@ class Analyzer(Reducer):
 
     def finalize(self, ctx: Context):
         mc = ctx.inject(Mecha)
+        opts = ctx.validate("statistics", StatisticsOptions)
         yield
         logger.info(str(Summary(mc.spec, self.stats)))
+        if opts.output:
+            output = ctx.directory / opts.output
+            output.write_text(dump_json(self.stats.dict()))
 
     @rule(AstRoot)
     def root(self, node: AstRoot):
