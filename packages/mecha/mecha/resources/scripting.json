@@ -190,6 +190,10 @@
           }
         }
       }
+    },
+    "pass": {
+      "type": "literal",
+      "executable": true
     }
   }
 }

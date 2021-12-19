@@ -515,3 +515,9 @@ say foo
 execute
     as @a
     run say hello
+###
+while True:
+    if "hello":
+        pass
+    else:
+        break

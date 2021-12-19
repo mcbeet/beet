@@ -687,3 +687,12 @@ class Codegen(Visitor):
         acc: Accumulator,
     ) -> Optional[List[str]]:
         return [node.value]
+
+    @rule(AstCommand, identifier="pass")
+    def pass_statement(
+        self,
+        node: AstCommand,
+        acc: Accumulator,
+    ) -> Optional[List[str]]:
+        acc.statement("pass")
+        return []
