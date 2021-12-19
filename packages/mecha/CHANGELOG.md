@@ -2,6 +2,13 @@
 
 <!--next-version-placeholder-->
 
+## v0.26.0 (2021-12-19)
+### Feature
+* Add append and prepend to nested functions ([`389ed4f`](https://github.com/mcbeet/mecha/commit/389ed4fcd290090e88daedb6af65773d7986528e))
+
+### Fix
+* Add pass statement ([`f47a177`](https://github.com/mcbeet/mecha/commit/f47a17773e1172ea7b090a493db6054e858e9ee3))
+
 ## v0.25.2 (2021-12-18)
 ### Fix
 * Update README ([`3acfe60`](https://github.com/mcbeet/mecha/commit/3acfe601b10614b2ab16dd96f8193e38a9eee1e5))
