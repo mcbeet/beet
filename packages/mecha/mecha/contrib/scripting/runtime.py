@@ -70,6 +70,7 @@ class Runtime:
         if isinstance(ctx, Context):
             ctx.require(
                 "mecha.contrib.relative_location",
+                "mecha.contrib.inline_function_tag",
                 "mecha.contrib.nesting",
                 "mecha.contrib.implicit_execute",
             )

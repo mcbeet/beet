@@ -97,20 +97,19 @@ class NestedCommandsTransformer(MutatingReducer):
 
     @rule(AstCommand, identifier="execute:run:subcommand")
     def nesting_execute_function(self, node: AstCommand):
-        if isinstance(
-            command := node.arguments[0], AstCommand
-        ) and command.identifier in [
-            "function:name:commands",
-            "function:name:append:commands",
-            "function:name:prepend:commands",
-        ]:
-            self.handle_function(command)
-            command = replace(
-                command,
-                identifier="function:name",
-                arguments=AstChildren([command.arguments[0]]),
-            )
-            return replace(node, arguments=AstChildren([command]))
+        if isinstance(command := node.arguments[0], AstCommand):
+            if command.identifier in [
+                "function:name:commands",
+                "function:name:append:commands",
+                "function:name:prepend:commands",
+            ]:
+                self.handle_function(command)
+                command = replace(
+                    command,
+                    identifier="function:name",
+                    arguments=AstChildren([command.arguments[0]]),
+                )
+                return replace(node, arguments=AstChildren([command]))
 
         return node
 

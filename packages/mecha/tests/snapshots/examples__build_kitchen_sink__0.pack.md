@@ -15,6 +15,13 @@
 
 ### demo
 
+`@function demo:function_tag`
+
+```mcfunction
+say hello
+execute as @a run function demo:with_tag
+```
+
 `@function demo:implicit_execute`
 
 ```mcfunction
@@ -41,6 +48,24 @@ execute as @a at @s if score @s tmp matches 1 run say 2
 execute if data storage imp:temp iter.words.remaining[] run function demo:nesting/loop
 execute if score @s tmp matches 0 run function demo:nesting/nested_execute_2
 execute if score @s tmp matches 0 at @e[type=pig] unless entity @e[type=sheep] run setblock ~ ~ ~ dirt
+```
+
+`@function demo:with_tag`
+
+```mcfunction
+say world
+```
+
+`@function demo:my_load`
+
+```mcfunction
+say loaded
+```
+
+`@function demo:also_with_tag`
+
+```mcfunction
+say foo
 ```
 
 `@function demo:nesting/nested_execute_0`
@@ -75,4 +100,47 @@ execute at @e[type=sheep] run setblock ~ ~ ~ dirt
 
 ```mcfunction
 say this is a test
+```
+
+`@function_tag demo:abc`
+
+```json
+{
+  "values": [
+    "demo:also_with_tag",
+    "demo:with_tag"
+  ]
+}
+```
+
+`@function_tag demo:xyz`
+
+```json
+{
+  "values": [
+    "demo:with_tag"
+  ]
+}
+```
+
+### minecraft
+
+`@function_tag minecraft:tick`
+
+```json
+{
+  "values": [
+    "demo:function_tag"
+  ]
+}
+```
+
+`@function_tag minecraft:load`
+
+```json
+{
+  "values": [
+    "demo:my_load"
+  ]
+}
 ```
