@@ -96,33 +96,26 @@ class NestedCommandsTransformer(MutatingReducer):
         self.database.enqueue(function, self.database.step + 1)
 
     @rule(AstCommand, identifier="execute:run:subcommand")
-    def execute_function(self, node: AstCommand):
-        if (
-            isinstance(command := node.arguments[0], AstCommand)
-            and command.identifier == "function:name:commands"
-        ):
-            name, root = command.arguments
-
-            if isinstance(name, AstResourceLocation) and isinstance(root, AstRoot):
-                path = name.get_canonical_value()
-
-                if path in self.ctx.data.functions:
-                    d = Diagnostic("error", f"Function {path!r} already exists.")
-                    raise set_location(d, name)
-
-                self.emit_function(path, root)
-
+    def nesting_execute_function(self, node: AstCommand):
+        if isinstance(
+            command := node.arguments[0], AstCommand
+        ) and command.identifier in [
+            "function:name:commands",
+            "function:name:append:commands",
+            "function:name:prepend:commands",
+        ]:
+            self.handle_function(command)
             command = replace(
                 command,
                 identifier="function:name",
-                arguments=AstChildren([name]),
+                arguments=AstChildren([command.arguments[0]]),
             )
             return replace(node, arguments=AstChildren([command]))
 
         return node
 
     @rule(AstCommand, identifier="execute:commands")
-    def execute_commands(self, node: AstCommand):
+    def nesting_execute_commands(self, node: AstCommand):
         generate = self.ctx.generate["nested_execute"]
         root = cast(AstRoot, node.arguments[0])
 
@@ -155,46 +148,34 @@ class NestedCommandsTransformer(MutatingReducer):
     @rule(AstCommand, identifier="schedule:function:function:time:commands")
     @rule(AstCommand, identifier="schedule:function:function:time:append:commands")
     @rule(AstCommand, identifier="schedule:function:function:time:replace:commands")
-    def schedule_function(self, node: AstCommand):
-        name = node.arguments[0]
-        root = node.arguments[-1]
-
-        if isinstance(name, AstResourceLocation) and isinstance(root, AstRoot):
-            path = name.get_canonical_value()
-
-            if path in self.ctx.data.functions:
-                d = Diagnostic("error", f"Function {path!r} already exists.")
-                raise set_location(d, name)
-
-            self.emit_function(path, root)
-
-            return replace(
-                node,
-                identifier=node.identifier[:-9],
-                arguments=AstChildren(node.arguments[:-1]),
+    def nesting_schedule_function(self, node: AstCommand):
+        self.handle_function(
+            AstCommand(
+                identifier="function:name:commands",
+                arguments=AstChildren([node.arguments[0], node.arguments[-1]]),
             )
+        )
 
-        return node
+        return replace(
+            node,
+            identifier=node.identifier[:-9],
+            arguments=AstChildren(node.arguments[:-1]),
+        )
 
     @rule(AstRoot)
-    def root(self, node: AstRoot):
+    def nesting(self, node: AstRoot):
         changed = False
         commands: List[AstCommand] = []
 
         for command in node.commands:
-            if command.identifier == "function:name:commands":
-                name, root = command.arguments
-
-                if isinstance(name, AstResourceLocation) and isinstance(root, AstRoot):
-                    path = name.get_canonical_value()
-
-                    if path in self.ctx.data.functions:
-                        d = Diagnostic("error", f"Function {path!r} already exists.")
-                        raise set_location(d, name)
-
-                    self.emit_function(path, root)
-                    changed = True
-                    continue
+            if command.identifier in [
+                "function:name:commands",
+                "function:name:append:commands",
+                "function:name:prepend:commands",
+            ]:
+                commands.extend(self.handle_function(command, top_level=True))
+                changed = True
+                continue
 
             args = command.arguments
             stack: List[AstCommand] = [command]
@@ -233,3 +214,60 @@ class NestedCommandsTransformer(MutatingReducer):
             return replace(node, commands=AstChildren(commands))
 
         return node
+
+    def handle_function(
+        self,
+        node: AstCommand,
+        top_level: bool = False,
+    ) -> List[AstCommand]:
+        name, root = node.arguments
+
+        if isinstance(name, AstResourceLocation) and isinstance(root, AstRoot):
+            path = name.get_canonical_value()
+
+            if not top_level:
+                if node.identifier == "function:name:append:commands":
+                    d = Diagnostic("error", f"Can't append commands with execute.")
+                    raise set_location(d, name)
+                if node.identifier == "function:name:prepend:commands":
+                    d = Diagnostic("error", f"Can't prepend commands with execute.")
+                    raise set_location(d, name)
+
+            target = self.database.index.get(path)
+
+            if not target:
+                self.emit_function(path, root)
+
+            elif node.identifier == "function:name:commands":
+                d = Diagnostic("error", f"Function {path!r} already exists.")
+                raise set_location(d, name)
+
+            elif target is self.database.current:
+                if node.identifier == "function:name:prepend:commands":
+                    d = Diagnostic(
+                        "error",
+                        f"Can't prepend commands to the current function {path!r}.",
+                    )
+                    raise set_location(d, name)
+
+                return list(root.commands)
+
+            else:
+                compilation_unit = self.database[target]
+
+                if compilation_unit.ast:
+                    compilation_unit.ast = replace(
+                        compilation_unit.ast,
+                        commands=AstChildren(
+                            compilation_unit.ast.commands + root.commands
+                            if node.identifier == "function:name:append:commands"
+                            else root.commands + compilation_unit.ast.commands
+                        ),
+                    )
+                else:
+                    compilation_unit.ast = root
+
+            return []
+
+        else:
+            return [node]

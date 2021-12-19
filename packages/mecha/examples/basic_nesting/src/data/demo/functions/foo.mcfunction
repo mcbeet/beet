@@ -101,3 +101,26 @@ execute if score global tmp matches 7 run schedule function demo:schedule2 42t a
 
 schedule function demo:schedule3 42t replace:
     say hello3
+
+function demo:foo append:
+    say foo1
+function demo:foo append:
+    say foo2
+function demo:foo append:
+    say foo3
+
+function demo:queue append:
+    say queue1
+function demo:queue append:
+    say queue2
+function demo:queue append:
+    say queue3
+
+function demo:stack prepend:
+    say stack1
+function demo:stack prepend:
+    say stack2
+function demo:stack prepend:
+    say stack3
+
+say after

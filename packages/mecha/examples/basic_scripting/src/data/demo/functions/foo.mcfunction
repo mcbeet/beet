@@ -156,3 +156,12 @@ baz = "demo:xyz"
 if predicate foo:bar function baz:
     say foo
     say bar
+
+from beet import generate_tree
+
+for node in generate_tree("demo:foo", "abcdefghijklmnopqrstuvwxyz0123456789"):
+    function node.parent append:
+        if node.partition(5):
+            if score @s thingy matches node.range function node.children
+        else:
+            if score @s thingy matches node.range say node.value

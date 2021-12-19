@@ -33,6 +33,10 @@ execute as @a at @s anchored eyes facing 0 0 0 anchored feet positioned ^ ^ ^1 r
 schedule function demo:schedule1 42
 execute if score global tmp matches 7 run schedule function demo:schedule2 42 append
 schedule function demo:schedule3 42 replace
+say foo1
+say foo2
+say foo3
+say after
 ```
 
 `@function demo:thing2`
@@ -109,4 +113,20 @@ say hello3
 ```mcfunction
 say hello
 say world
+```
+
+`@function demo:queue`
+
+```mcfunction
+say queue1
+say queue2
+say queue3
+```
+
+`@function demo:stack`
+
+```mcfunction
+say stack3
+say stack2
+say stack1
 ```
