@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.27.1 (2021-12-20)
+### Fix
+* Invalid interpolation for keys in selector arguments and block states ([`3e8999f`](https://github.com/mcbeet/mecha/commit/3e8999f67651dd67e67c59ffd9a166b0373288ef))
+
 ## v0.27.0 (2021-12-19)
 ### Feature
 * Add mecha.contrib.inline_function_tag ([`7c5f37a`](https://github.com/mcbeet/mecha/commit/7c5f37a5dffbaa4769d29ff8592a73193a69d8a1))
