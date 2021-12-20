@@ -165,3 +165,5 @@ for node in generate_tree("demo:foo", "abcdefghijklmnopqrstuvwxyz0123456789"):
             if score @s thingy matches node.range function node.children
         else:
             if score @s thingy matches node.range say node.value
+
+data modify entity @e[type=armor_stand,limit=1] NoBasePlate set value 1b

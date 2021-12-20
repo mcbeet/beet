@@ -108,6 +108,7 @@ execute if score @s thingy matches 8..14 run function demo:foo/8_14
 execute if score @s thingy matches 15..21 run function demo:foo/15_21
 execute if score @s thingy matches 22..28 run function demo:foo/22_28
 execute if score @s thingy matches 29..35 run function demo:foo/29_35
+data modify entity @e[type=armor_stand, limit=1] NoBasePlate set value 1b
 ```
 
 `@function(strip_final_newline) demo:thing`

@@ -30,7 +30,7 @@ __all__ = [
     "ResourceLocationParser",
     "NoTagConstraint",
     "BlockParser",
-    "parse_block_states",
+    "BlockStatesParser",
     "ItemParser",
     "NoBlockStatesConstraint",
     "NoDataTagsConstraint",
@@ -219,14 +219,18 @@ def get_default_parsers() -> Dict[str, Parser]:
         "block_predicate": BlockParser(
             resource_location_parser=delegate("resource_location_or_tag"),
             block_states_parser=AdjacentConstraint(
-                parser=MultilineParser(parse_block_states),
+                parser=MultilineParser(
+                    BlockStatesParser(key_parser=StringParser(type="phrase"))
+                ),
                 hint=r"\[",
             ),
         ),
         "block_state": BlockParser(
             resource_location_parser=delegate("resource_location"),
             block_states_parser=AdjacentConstraint(
-                parser=MultilineParser(parse_block_states),
+                parser=MultilineParser(
+                    BlockStatesParser(key_parser=StringParser(type="phrase"))
+                ),
                 hint=r"\[",
             ),
         ),
@@ -296,7 +300,7 @@ def get_default_parsers() -> Dict[str, Parser]:
         "selector": MultilineParser(SelectorParser()),
         "selector:argument": SelectorArgumentInvertConstraint(
             SelectorArgumentNoValueConstraint(
-                SelectorArgumentParser(),
+                SelectorArgumentParser(key_parser=StringParser(type="phrase")),
                 allow_no_value=["tag", "team"],
             ),
             allow_invert=[
@@ -1223,31 +1227,36 @@ class BlockParser:
         return set_location(node, location, data_tags if data_tags else end_location)
 
 
-def parse_block_states(stream: TokenStream) -> AstChildren[AstBlockState]:
+@dataclass
+class BlockStatesParser:
     """Parser for minecraft block state."""
-    block_states: List[AstBlockState] = []
 
-    with stream.syntax(
-        bracket=r"\[|\]",
-        equal=r"=",
-        comma=r",",
-    ):
-        stream.expect(("bracket", "["))
+    key_parser: Parser
 
-        for _ in stream.peek_until(("bracket", "]")):
-            key_node = delegate("phrase", stream)
-            stream.expect("equal")
-            value_node = delegate("phrase", stream)
+    def __call__(self, stream: TokenStream) -> AstChildren[AstBlockState]:
+        block_states: List[AstBlockState] = []
 
-            entry_node = AstBlockState(key=key_node, value=value_node)
-            entry_node = set_location(entry_node, key_node, value_node)
-            block_states.append(entry_node)
+        with stream.syntax(
+            bracket=r"\[|\]",
+            equal=r"=",
+            comma=r",",
+        ):
+            stream.expect(("bracket", "["))
 
-            if not stream.get("comma"):
-                stream.expect(("bracket", "]"))
-                break
+            for _ in stream.peek_until(("bracket", "]")):
+                key_node = self.key_parser(stream)
+                stream.expect("equal")
+                value_node = delegate("phrase", stream)
 
-    return AstChildren(block_states)
+                entry_node = AstBlockState(key=key_node, value=value_node)
+                entry_node = set_location(entry_node, key_node, value_node)
+                block_states.append(entry_node)
+
+                if not stream.get("comma"):
+                    stream.expect(("bracket", "]"))
+                    break
+
+        return AstChildren(block_states)
 
 
 @dataclass
@@ -1409,12 +1418,14 @@ class SelectorParser:
 class SelectorArgumentParser:
     """Parser for selector arguments."""
 
+    key_parser: Parser
+
     def __call__(self, stream: TokenStream) -> Any:
         with stream.syntax(
             equal=r"=",
             exclamation=r"!",
         ):
-            key_node = delegate("phrase", stream)
+            key_node = self.key_parser(stream)
             argument = key_node.value
 
             stream.expect("equal")
