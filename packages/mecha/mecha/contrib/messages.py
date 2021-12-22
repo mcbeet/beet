@@ -6,12 +6,11 @@ __all__ = [
     "AstMessageReferencePath",
     "MessageReferenceParser",
     "MessageReferenceTransformer",
-    "MessageReferenceSerializer",
 ]
 
 
 from dataclasses import dataclass
-from typing import Any, List, Optional
+from typing import Any, Optional
 
 from beet import Context
 from beet.contrib.messages import MessageManager
@@ -26,7 +25,6 @@ from mecha import (
     Mecha,
     MutatingReducer,
     Parser,
-    Visitor,
     delegate,
     rule,
 )
@@ -55,7 +53,6 @@ def beet_default(ctx: Context):
     mc.spec.parsers[component] = MessageReferenceParser(mc.spec.parsers[component])
 
     mc.transform.extend(MessageReferenceTransformer(messages=messages))
-    mc.serialize.extend(MessageReferenceSerializer())
 
 
 @dataclass
@@ -98,15 +95,3 @@ class MessageReferenceTransformer(MutatingReducer):
             raise Diagnostic("error", f"Message not found {path}{name!r}.") from None
 
         return set_location(AstJson.from_value(message), node)
-
-
-class MessageReferenceSerializer(Visitor):
-    """Serializer for message references."""
-
-    @rule(AstMessageReference)
-    def message_reference(self, node: AstMessageReference, result: List[str]):
-        result.append("from ")
-        yield node.name
-        if node.path:
-            result.append(" ")
-            yield node.path

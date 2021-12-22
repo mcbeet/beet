@@ -26,6 +26,8 @@ from .ast import (
     AstNbtPathSubscript,
     AstNode,
     AstNumber,
+    AstParticle,
+    AstParticleParameters,
     AstRange,
     AstResourceLocation,
     AstRoot,
@@ -39,6 +41,8 @@ from .ast import (
     AstString,
     AstTime,
     AstUUID,
+    AstVector2,
+    AstVector3,
 )
 from .database import CompilationDatabase
 from .dispatch import Visitor, rule
@@ -104,7 +108,14 @@ class Serializer(Visitor):
         yield node.value
 
     @rule(AstNode)
-    def fallback(self, node: AstNode, result: List[str]):
+    def unserializable(self, node: AstNode, result: List[str]):
+        raise ValueError(f"Couldn't serialize {type(node)!r} node.")
+
+    @rule(AstVector2)
+    @rule(AstVector3)
+    @rule(AstParticleParameters)
+    @rule(AstParticle)
+    def aggregate(self, node: AstNode, result: List[str]):
         sep = ""
         for child in node:
             result.append(sep)
