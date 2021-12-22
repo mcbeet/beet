@@ -1,7 +1,7 @@
 @resource_pack pack.mcmeta
 {
   "pack": {
-    "pack_format": 7,
+    "pack_format": 8,
     "description": ""
   }
 }
@@ -12,7 +12,7 @@ UklGRsQ0AABXRUJQVlA4WAoAAAAQAAAAKwEAKwEAQUxQSBQCAAABCbdtJDkSZmq8yz/i1XXi34zo/wTE
 @data_pack pack.mcmeta
 {
   "pack": {
-    "pack_format": 7,
+    "pack_format": 8,
     "description": ""
   }
 }
