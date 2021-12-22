@@ -7,7 +7,7 @@ __all__ = [
 from typing import Any, Optional, Tuple
 
 import click
-from beet import run_beet
+from beet import ErrorMessage, run_beet
 from beet.toolchain.cli import error_handler
 
 from lectern import __version__
@@ -53,6 +53,12 @@ def echo(*args: Any, **kwargs: Any):
     is_flag=True,
     help="Use the flat markdown format.",
 )
+@click.option(
+    "-o",
+    "--overwrite",
+    is_flag=True,
+    help="Overwrite the output pack.",
+)
 @click.version_option(
     __version__,
     "-v",
@@ -68,6 +74,7 @@ def lectern(
     external_files: Optional[str],
     prefetch_urls: Optional[str],
     flat: bool,
+    overwrite: bool,
 ):
     """Literate Minecraft data packs and resource packs."""
     config: Any
@@ -113,10 +120,13 @@ def lectern(
         }
 
     with run_beet(config) as beet_ctx:
-        if data_pack:
-            beet_ctx.data.save(path=data_pack, overwrite=True)
-        if resource_pack:
-            beet_ctx.assets.save(path=resource_pack, overwrite=True)
+        try:
+            if data_pack:
+                beet_ctx.data.save(path=data_pack, overwrite=overwrite)
+            if resource_pack:
+                beet_ctx.assets.save(path=resource_pack, overwrite=overwrite)
+        except FileExistsError as exc:
+            raise ErrorMessage(f"{exc} (run again with --overwrite)") from exc
 
 
 def main():

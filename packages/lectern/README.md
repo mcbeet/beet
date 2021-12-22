@@ -368,6 +368,7 @@ Options:
   -e, --external-files <path>  Emit external files.
   -p, --prefetch-urls <path>   Prefetch markdown links.
   -f, --flat                   Use the flat markdown format.
+  -o, --overwrite              Overwrite the output pack.
   -v, --version                Show the version and exit.
   -h, --help                   Show this message and exit.
 ```
@@ -387,6 +388,12 @@ The `-r/--resource-pack` option lets you do exactly the same thing but with reso
 $ lectern demo.md --resource-pack demo_resource_pack
 $ lectern demo.md -r demo_resource_pack
 $ lectern demo.md -d demo_data_pack -r demo_resource_pack
+```
+
+If you want to overwrite an existing data pack or resource pack you need to specify the `-o/--overwrite` option explicitly.
+
+```bash
+$ lectern demo.md --overwrite --data-pack demo_data_pack
 ```
 
 You can also convert a combination of data packs and resource packs into a single markdown file.
