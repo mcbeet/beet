@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.18.2 (2021-12-22)
+### Fix
+* Don't overwrite output pack by default ([`0f9bd42`](https://github.com/mcbeet/lectern/commit/0f9bd42065fd899ed1dbc2c3a9033ea51c06ebdf))
+
 ## v0.18.1 (2021-11-29)
 ### Fix
 * Missing blank line in flat format ([`db3c1fc`](https://github.com/mcbeet/lectern/commit/db3c1fcfb9f252cf037ea22c706d6a254d4b0ad3))
