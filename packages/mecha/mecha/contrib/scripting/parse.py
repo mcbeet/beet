@@ -596,9 +596,20 @@ class ImportStatementHandler:
                             f"Can't import {module.get_value()!r} without alias."
                         )
                         raise set_location(exc, module)
+                    elif module.path == "runtime":
+                        exc = InvalidSyntax(
+                            "Can only import from 'runtime' using 'from runtime import ...'."
+                        )
+                        raise set_location(exc, module)
                     else:
                         identifiers.add(module.path.partition(".")[0])
             elif node.identifier == "import:module:as:alias":
+                if isinstance(module := node.arguments[0], AstResourceLocation):
+                    if module.path == "runtime":
+                        exc = InvalidSyntax(
+                            "Can only import from 'runtime' using 'from runtime import ...'."
+                        )
+                        raise set_location(exc, module)
                 if isinstance(alias := node.arguments[1], AstImportedIdentifier):
                     identifiers.add(alias.value)
             elif node.identifier == "from:module:import:subcommand":

@@ -14,7 +14,7 @@ from importlib.resources import read_text
 from io import BufferedReader, BufferedWriter
 from pathlib import Path
 from types import CodeType
-from typing import Any, Dict, Iterator, List, Optional, Set, Union
+from typing import Any, Callable, Dict, Iterator, List, Optional, Set, Union
 
 from beet import Context, PipelineFallthroughException, TextFileBase
 from beet.core.utils import JsonDict, required_field
@@ -37,7 +37,7 @@ from mecha import (
 from .codegen import Codegen
 from .helpers import get_scripting_helpers
 from .parse import get_scripting_parsers
-from .utils import SAFE_BUILTINS, rewrite_traceback
+from .utils import SAFE_BUILTINS, internal, rewrite_traceback
 
 
 @dataclass
@@ -65,8 +65,11 @@ class Runtime:
     commands: List[AstCommand]
     helpers: Dict[str, Any]
     globals: JsonDict
+    providers: Dict[str, Callable[[], Any]]
 
     def __init__(self, ctx: Union[Context, Mecha]):
+        self.providers = {}
+
         if isinstance(ctx, Context):
             ctx.require(
                 "mecha.contrib.relative_location",
@@ -75,6 +78,7 @@ class Runtime:
                 "mecha.contrib.implicit_execute",
             )
             mc = ctx.inject(Mecha)
+            self.providers["ctx"] = lambda: ctx
         else:
             mc = ctx
 
@@ -95,8 +99,9 @@ class Runtime:
         self.helpers = get_scripting_helpers()
         self.globals = {}
 
-        if isinstance(ctx, Context):
-            self.globals["ctx"] = ctx
+        self.providers["current_path"] = lambda: (
+            self.database[self.database.current].resource_location
+        )
 
         mc.cache_backend = ModuleCacheBackend(runtime=self)
 
@@ -191,6 +196,7 @@ class Runtime:
         except Exception as exc:
             raise rewrite_traceback(exc) from None
 
+    @internal
     def import_module(self, resource_location: str) -> Module:
         """Import module."""
         file_instance = self.database.index[resource_location]
@@ -204,6 +210,7 @@ class Runtime:
 
         return module
 
+    @internal
     def from_module_import(self, resource_location: str, *args: str) -> Any:
         """Import a specific name from a module."""
         module = self.import_module(resource_location)

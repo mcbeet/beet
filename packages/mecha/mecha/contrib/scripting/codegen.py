@@ -510,9 +510,18 @@ class Codegen(Visitor):
                     lineno=node,
                 )
             else:
-                acc.statement(
-                    f"from {module.path} import  {', '.join(names)}", lineno=node
-                )
+                if module.path == "runtime":
+                    rhs = ", ".join(
+                        acc.helper(
+                            "use_provider", "_mecha_runtime.providers", repr(name)
+                        )
+                        for name in names
+                    )
+                    acc.statement(f"{', '.join(names)} = {rhs}", lineno=node)
+                else:
+                    acc.statement(
+                        f"from {module.path} import  {', '.join(names)}", lineno=node
+                    )
 
         elif node.identifier == "import:module:as:alias":
             alias = cast(AstImportedIdentifier, node.arguments[1]).value

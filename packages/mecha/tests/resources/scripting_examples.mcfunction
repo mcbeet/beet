@@ -530,3 +530,10 @@ for node in generate_tree("demo:foo", "abcdefghijklmnopqrstuvwxyz0123456789"):
             if score @s thingy matches node.range function node.children
         else:
             if score @s thingy matches node.range say node.value
+###
+import runtime
+###
+import runtime as rrrrr
+###
+from runtime import ctx, current_path
+print(ctx.directory, current_path)

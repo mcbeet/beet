@@ -1,0 +1,23 @@
+_mecha_lineno = [1, 7], [1, 2]
+_mecha_helper_use_provider = _mecha_runtime.helpers['use_provider']
+_mecha_helper_get_attribute = _mecha_runtime.helpers['get_attribute']
+_mecha_helper_children = _mecha_runtime.helpers['children']
+_mecha_helper_replace = _mecha_runtime.helpers['replace']
+with _mecha_runtime.scope() as _mecha_var3:
+    ctx, current_path = _mecha_helper_use_provider(_mecha_runtime.providers, 'ctx'), _mecha_helper_use_provider(_mecha_runtime.providers, 'current_path')
+    _mecha_var0 = print
+    _mecha_var1 = ctx
+    _mecha_var1 = _mecha_helper_get_attribute(_mecha_var1, 'directory')
+    _mecha_var2 = current_path
+    _mecha_var0 = _mecha_var0(_mecha_var1, _mecha_var2)
+_mecha_var4 = _mecha_helper_replace(_mecha_refs[0], commands=_mecha_helper_children(_mecha_var3))
+---
+output = _mecha_var4
+---
+_mecha_refs[0]
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=73, lineno=3, colno=1)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+    <class 'mecha.ast.AstCommand'>

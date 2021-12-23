@@ -42,6 +42,7 @@ def get_scripting_helpers() -> Dict[str, Any]:
         "missing": object(),
         "children": AstChildren,
         "get_attribute": get_attribute,
+        "use_provider": use_provider,
         "interpolate_bool": converter(AstBool.from_value),
         "interpolate_numeric": converter(AstNumber.from_value),
         "interpolate_time": converter(AstTime.from_value),
@@ -72,6 +73,14 @@ def get_attribute(obj: Any, attr: str):
             return obj[attr]
         except (TypeError, LookupError):
             raise exc from None
+
+
+@internal
+def use_provider(providers: Dict[str, Callable[[], Any]], name: str):
+    try:
+        return providers[name]()
+    except Exception:
+        raise ImportError(f"Couldn't import {name!r} from 'runtime'.") from None
 
 
 def converter(f: Callable[[Any], AstNode]) -> Callable[[Any, AstNode], AstNode]:

@@ -111,6 +111,7 @@ def wow(ok):
 
 say list(wow(f))
 
+from runtime import ctx
 say ctx.generate.id("hello")
 
 import math
@@ -157,9 +158,10 @@ if predicate foo:bar function baz:
     say foo
     say bar
 
+from runtime import current_path
 from beet import generate_tree
 
-for node in generate_tree("demo:foo", "abcdefghijklmnopqrstuvwxyz0123456789"):
+for node in generate_tree(current_path, "abcdefghijklmnopqrstuvwxyz0123456789"):
     function node.parent append:
         if node.partition(5):
             if score @s thingy matches node.range function node.children
