@@ -2,6 +2,11 @@
 
 <!--next-version-placeholder-->
 
+## v0.27.2 (2021-12-23)
+### Fix
+* Proper execution order for interpolation with nested root ([`2bab7b2`](https://github.com/mcbeet/mecha/commit/2bab7b2d1ba06924b2770dc6dd4fed664a10972a))
+* Report unserializable nodes and remove MessageReferenceSerializer ([`137022d`](https://github.com/mcbeet/mecha/commit/137022dff37fef73a8e7ce8cdc90876264e14d23))
+
 ## v0.27.1 (2021-12-20)
 ### Fix
 * Invalid interpolation for keys in selector arguments and block states ([`3e8999f`](https://github.com/mcbeet/mecha/commit/3e8999f67651dd67e67c59ffd9a166b0373288ef))
