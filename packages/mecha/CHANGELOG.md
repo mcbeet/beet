@@ -2,6 +2,13 @@
 
 <!--next-version-placeholder-->
 
+## v0.28.0 (2021-12-23)
+### Feature
+* Provide ctx and current_path through runtime import ([`c62167a`](https://github.com/mcbeet/mecha/commit/c62167aa7f9fa543ea6eeaa5646adf3125bcc923))
+
+### Fix
+* Allow optional separator for imported names ([`e07af65`](https://github.com/mcbeet/mecha/commit/e07af658fd9efdda919ec6c2de412a73fd9be823))
+
 ## v0.27.2 (2021-12-23)
 ### Fix
 * Proper execution order for interpolation with nested root ([`2bab7b2`](https://github.com/mcbeet/mecha/commit/2bab7b2d1ba06924b2770dc6dd4fed664a10972a))
