@@ -618,8 +618,9 @@ class ImportStatementHandler:
 
 def parse_import_name(stream: TokenStream) -> AstImportedIdentifier:
     """Parse import name."""
-    with stream.syntax(name=IDENTIFIER_PATTERN):
+    with stream.syntax(name=IDENTIFIER_PATTERN, comma=r","):
         token = stream.expect("name")
+        stream.get("comma")
         return set_location(AstImportedIdentifier(value=token.value), token)
 
 
