@@ -1,17 +1,18 @@
-_mecha_lineno = [1, 10], [1, 2]
+_mecha_lineno = [1, 9], [1, 2]
 _mecha_helper_missing = _mecha_runtime.helpers['missing']
 _mecha_helper_children = _mecha_runtime.helpers['children']
 _mecha_helper_replace = _mecha_runtime.helpers['replace']
-with _mecha_runtime.scope() as _mecha_var0:
+with _mecha_runtime.scope() as _mecha_var2:
     def f(a, b=_mecha_helper_missing):
         if b is _mecha_helper_missing:
-            b = (
-a)
-        b += (
-a)
+            _mecha_var0 = a
+            b = _mecha_var0
+        _mecha_var1 = a
+        b += _mecha_var1
         _mecha_runtime.commands.append(_mecha_refs[0])
-_mecha_var1 = _mecha_helper_replace(_mecha_refs[1], commands=_mecha_helper_children(_mecha_var0))---
-output = _mecha_var1
+_mecha_var3 = _mecha_helper_replace(_mecha_refs[1], commands=_mecha_helper_children(_mecha_var2))
+---
+output = _mecha_var3
 ---
 _mecha_refs[0]
 <class 'mecha.ast.AstCommand'>

@@ -1,19 +1,23 @@
-_mecha_lineno = [1, 7, 11], [1, 3, 5]
+_mecha_lineno = [1, 6, 7, 12], [1, 2, 3, 5]
 _mecha_helper_children = _mecha_runtime.helpers['children']
 _mecha_helper_replace = _mecha_runtime.helpers['replace']
-with _mecha_runtime.scope() as _mecha_var1:
-    with _mecha_runtime.scope() as _mecha_var0:
-        count = 42
-        while (
-(
-count) > 0):
+with _mecha_runtime.scope() as _mecha_var6:
+    with _mecha_runtime.scope() as _mecha_var5:
+        _mecha_var0 = 42
+        count = _mecha_var0
+        _mecha_var1 = count
+        _mecha_var2 = 0
+        _mecha_var1 = _mecha_var1 > _mecha_var2
+        while _mecha_var1:
             _mecha_runtime.commands.append(_mecha_refs[0])
-            count = (
-(
-count) - 1)
-    _mecha_runtime.commands.append(_mecha_helper_replace(_mecha_refs[7], arguments=_mecha_helper_children([_mecha_helper_replace(_mecha_refs[6], arguments=_mecha_helper_children([_mecha_refs[3], _mecha_refs[4], _mecha_refs[5], _mecha_helper_replace(_mecha_refs[2], arguments=_mecha_helper_children([_mecha_helper_replace(_mecha_refs[1], commands=_mecha_helper_children(_mecha_var0))]))]))])))
-_mecha_var2 = _mecha_helper_replace(_mecha_refs[8], commands=_mecha_helper_children(_mecha_var1))---
-output = _mecha_var2
+            _mecha_var3 = count
+            _mecha_var4 = 1
+            _mecha_var3 = _mecha_var3 - _mecha_var4
+            count = _mecha_var3
+    _mecha_runtime.commands.append(_mecha_helper_replace(_mecha_refs[7], arguments=_mecha_helper_children([_mecha_helper_replace(_mecha_refs[6], arguments=_mecha_helper_children([_mecha_refs[3], _mecha_refs[4], _mecha_refs[5], _mecha_helper_replace(_mecha_refs[2], arguments=_mecha_helper_children([_mecha_helper_replace(_mecha_refs[1], commands=_mecha_helper_children(_mecha_var5))]))]))])))
+_mecha_var7 = _mecha_helper_replace(_mecha_refs[8], commands=_mecha_helper_children(_mecha_var6))
+---
+output = _mecha_var7
 ---
 _mecha_refs[0]
 <class 'mecha.ast.AstCommand'>

@@ -1,22 +1,24 @@
-_mecha_lineno = [1, 9, 11, 15], [1, 10, 11, 14]
+_mecha_lineno = [1, 8, 9, 11, 16], [1, 9, 10, 11, 14]
 _mecha_helper_children = _mecha_runtime.helpers['children']
 _mecha_helper_replace = _mecha_runtime.helpers['replace']
-with _mecha_runtime.scope() as _mecha_var0:
+with _mecha_runtime.scope() as _mecha_var5:
     def foo(something):
         def wat():
             _mecha_runtime.commands.append(_mecha_refs[0])
-            x = 'hello'
-            for i in (
-something):
-                x += (
-(
-i) * 3)
+            _mecha_var0 = 'hello'
+            x = _mecha_var0
+            _mecha_var1 = something
+            for i in _mecha_var1:
+                _mecha_var2 = i
+                _mecha_var3 = 3
+                _mecha_var2 = _mecha_var2 * _mecha_var3
+                x += _mecha_var2
             _mecha_runtime.commands.append(_mecha_refs[1])
-        (
-(
-wat)())
-_mecha_var1 = _mecha_helper_replace(_mecha_refs[2], commands=_mecha_helper_children(_mecha_var0))---
-output = _mecha_var1
+        _mecha_var4 = wat
+        _mecha_var4 = _mecha_var4()
+_mecha_var6 = _mecha_helper_replace(_mecha_refs[2], commands=_mecha_helper_children(_mecha_var5))
+---
+output = _mecha_var6
 ---
 _mecha_refs[0]
 <class 'mecha.ast.AstCommand'>

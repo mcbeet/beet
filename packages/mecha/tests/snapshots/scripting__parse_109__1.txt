@@ -1,12 +1,14 @@
 _mecha_lineno = [1], [1]
 _mecha_helper_children = _mecha_runtime.helpers['children']
 _mecha_helper_replace = _mecha_runtime.helpers['replace']
-with _mecha_runtime.scope() as _mecha_var0:
-    (
-'hello {:03}'.format((
-1 + 1)))
-_mecha_var1 = _mecha_helper_replace(_mecha_refs[0], commands=_mecha_helper_children(_mecha_var0))---
-output = _mecha_var1
+with _mecha_runtime.scope() as _mecha_var3:
+    _mecha_var0 = 1
+    _mecha_var1 = 1
+    _mecha_var0 = _mecha_var0 + _mecha_var1
+    _mecha_var2 = 'hello {:03}'.format(_mecha_var0)
+_mecha_var4 = _mecha_helper_replace(_mecha_refs[0], commands=_mecha_helper_children(_mecha_var3))
+---
+output = _mecha_var4
 ---
 _mecha_refs[0]
 <class 'mecha.ast.AstRoot'>

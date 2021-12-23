@@ -1,16 +1,15 @@
-_mecha_lineno = [1, 9], [1, 2]
+_mecha_lineno = [1, 6], [1, 2]
 _mecha_helper_interpolate_message = _mecha_runtime.helpers['interpolate_message']
 _mecha_helper_children = _mecha_runtime.helpers['children']
 _mecha_helper_replace = _mecha_runtime.helpers['replace']
-with _mecha_runtime.scope() as _mecha_var0:
-    
-
+with _mecha_runtime.scope() as _mecha_var1:
     thing = _mecha_runtime.from_module_import('demo:foo', 'thing')
-    _mecha_runtime.commands.append(_mecha_helper_replace(_mecha_refs[1], arguments=_mecha_helper_children([(
-_mecha_helper_interpolate_message((
-thing), _mecha_refs[0]))])))
-_mecha_var1 = _mecha_helper_replace(_mecha_refs[2], commands=_mecha_helper_children(_mecha_var0))---
-output = _mecha_var1
+    _mecha_var0 = thing
+    _mecha_var0 = _mecha_helper_interpolate_message(_mecha_var0, _mecha_refs[0])
+    _mecha_runtime.commands.append(_mecha_helper_replace(_mecha_refs[1], arguments=_mecha_helper_children([_mecha_var0])))
+_mecha_var2 = _mecha_helper_replace(_mecha_refs[2], commands=_mecha_helper_children(_mecha_var1))
+---
+output = _mecha_var2
 ---
 _mecha_refs[0]
 <class 'mecha.contrib.scripting.ast.AstInterpolation'>

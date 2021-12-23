@@ -2,14 +2,17 @@ _mecha_lineno = [1, 7], [1, 2]
 _mecha_helper_interpolate_range = _mecha_runtime.helpers['interpolate_range']
 _mecha_helper_children = _mecha_runtime.helpers['children']
 _mecha_helper_replace = _mecha_runtime.helpers['replace']
-with _mecha_runtime.scope() as _mecha_var0:
-    x = 8
-    _mecha_runtime.commands.append(_mecha_helper_replace(_mecha_refs[5], arguments=_mecha_helper_children([_mecha_helper_replace(_mecha_refs[4], arguments=_mecha_helper_children([_mecha_refs[1], _mecha_refs[2], (
-_mecha_helper_interpolate_range((
-((
-x),None,)), _mecha_refs[0])), _mecha_refs[3]]))])))
-_mecha_var1 = _mecha_helper_replace(_mecha_refs[6], commands=_mecha_helper_children(_mecha_var0))---
-output = _mecha_var1
+with _mecha_runtime.scope() as _mecha_var4:
+    _mecha_var0 = 8
+    x = _mecha_var0
+    _mecha_var1 = x
+    _mecha_var2 = None
+    _mecha_var3 = (_mecha_var1,_mecha_var2,)
+    _mecha_var3 = _mecha_helper_interpolate_range(_mecha_var3, _mecha_refs[0])
+    _mecha_runtime.commands.append(_mecha_helper_replace(_mecha_refs[5], arguments=_mecha_helper_children([_mecha_helper_replace(_mecha_refs[4], arguments=_mecha_helper_children([_mecha_refs[1], _mecha_refs[2], _mecha_var3, _mecha_refs[3]]))])))
+_mecha_var5 = _mecha_helper_replace(_mecha_refs[6], commands=_mecha_helper_children(_mecha_var4))
+---
+output = _mecha_var5
 ---
 _mecha_refs[0]
 <class 'mecha.contrib.scripting.ast.AstInterpolation'>

@@ -2,18 +2,25 @@ _mecha_lineno = [1], [1]
 _mecha_helper_get_attribute = _mecha_runtime.helpers['get_attribute']
 _mecha_helper_children = _mecha_runtime.helpers['children']
 _mecha_helper_replace = _mecha_runtime.helpers['replace']
-with _mecha_runtime.scope() as _mecha_var0:
-    (
-(
-(
-(
-(
-(
-(
-_mecha_helper_get_attribute('foo', 'bar'))())[0])['hello'])[99])['with space'])((
-'thing' * 7)))
-_mecha_var1 = _mecha_helper_replace(_mecha_refs[0], commands=_mecha_helper_children(_mecha_var0))---
-output = _mecha_var1
+with _mecha_runtime.scope() as _mecha_var7:
+    _mecha_var0 = 'foo'
+    _mecha_var0 = _mecha_helper_get_attribute(_mecha_var0, 'bar')
+    _mecha_var0 = _mecha_var0()
+    _mecha_var1 = 0
+    _mecha_var0 = _mecha_var0[_mecha_var1]
+    _mecha_var2 = 'hello'
+    _mecha_var0 = _mecha_var0[_mecha_var2]
+    _mecha_var3 = 99
+    _mecha_var0 = _mecha_var0[_mecha_var3]
+    _mecha_var4 = 'with space'
+    _mecha_var0 = _mecha_var0[_mecha_var4]
+    _mecha_var5 = 'thing'
+    _mecha_var6 = 7
+    _mecha_var5 = _mecha_var5 * _mecha_var6
+    _mecha_var0 = _mecha_var0(_mecha_var5)
+_mecha_var8 = _mecha_helper_replace(_mecha_refs[0], commands=_mecha_helper_children(_mecha_var7))
+---
+output = _mecha_var8
 ---
 _mecha_refs[0]
 <class 'mecha.ast.AstRoot'>

@@ -81,8 +81,8 @@ class Accumulator:
         numbers2: List[int] = [1]
 
         for line in (header + "".join(self.lines)).splitlines():
-            if line.startswith("#"):
-                current_line = int(line[1:])
+            if line.startswith("!lineno "):
+                current_line = int(line[8:])
                 if numbers2[-1] != current_line:
                     numbers1.append(len(lines))
                     numbers2.append(current_line)
@@ -91,7 +91,7 @@ class Accumulator:
 
         lines[0] += f"{numbers1}, {numbers2}"
 
-        return "\n".join(lines)
+        return "\n".join(lines) + "\n"
 
     def helper(self, name: str, *args: Any) -> str:
         """Emit helper."""
@@ -144,15 +144,13 @@ class Accumulator:
         finally:
             self.indentation = previous_indentation
 
-    def statement(self, code: str):
+    def statement(self, code: str, *, lineno: Any = None):
         """Emit statement."""
+        if isinstance(lineno, AstNode) and not lineno.location.unknown:
+            lineno = lineno.location.lineno
+        if isinstance(lineno, int):
+            self.lines.append(f"!lineno {lineno}\n")
         self.lines.append(f"{self.indentation}{code}\n")
-
-    def lineno(self, node: Optional[AstNode] = None):
-        """Emit line number."""
-        if node and not node.location.unknown:
-            return f"\n#{node.location.lineno}\n"
-        return ""
 
 
 @dataclass
@@ -197,7 +195,8 @@ class RootCommandCollector(CommandCollector):
     def flush(self) -> str:
         commands = self.acc.make_variable()
         self.acc.lines[self.start_index :] = [
-            f"    {line}" for line in self.acc.lines[self.start_index :]
+            line if line.startswith("!") else f"    {line}"
+            for line in self.acc.lines[self.start_index :]
         ]
         self.acc.lines.insert(
             self.start_index,
@@ -359,9 +358,7 @@ class Codegen(Visitor):
         node: AstCommand,
         acc: Accumulator,
     ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
-        value = yield from visit_single(node.arguments[0])
-        if value is not None:
-            acc.statement(value)
+        yield node.arguments[0]
         return []
 
     @rule(AstCommand, identifier="def:function:body")
@@ -493,8 +490,6 @@ class Codegen(Visitor):
         node: AstCommand,
         acc: Accumulator,
     ) -> Optional[List[str]]:
-        acc.statement(acc.lineno(node))
-
         module = cast(AstResourceLocation, node.arguments[0])
 
         if node.identifier == "from:module:import:subcommand":
@@ -511,23 +506,27 @@ class Codegen(Visitor):
 
             if module.namespace:
                 acc.statement(
-                    f"{', '.join(names)} = _mecha_runtime.from_module_import({module.get_value()!r}, {', '.join(map(repr, names))})"
+                    f"{', '.join(names)} = _mecha_runtime.from_module_import({module.get_value()!r}, {', '.join(map(repr, names))})",
+                    lineno=node,
                 )
             else:
-                acc.statement(f"from {module.path} import  {', '.join(names)}")
+                acc.statement(
+                    f"from {module.path} import  {', '.join(names)}", lineno=node
+                )
 
         elif node.identifier == "import:module:as:alias":
             alias = cast(AstImportedIdentifier, node.arguments[1]).value
 
             if module.namespace:
                 acc.statement(
-                    f"{alias} = _mecha_runtime.import_module({module.get_value()!r}).namespace"
+                    f"{alias} = _mecha_runtime.import_module({module.get_value()!r}).namespace",
+                    lineno=node,
                 )
             else:
-                acc.statement(f"import {module.path} as {alias}")
+                acc.statement(f"import {module.path} as {alias}", lineno=node)
 
         else:
-            acc.statement(f"import {module.path}")
+            acc.statement(f"import {module.path}", lineno=node)
 
         return []
 
@@ -538,8 +537,9 @@ class Codegen(Visitor):
         acc: Accumulator,
     ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
         result = yield from visit_single(node.value, required=True)
-        result = acc.helper(f"interpolate_{node.converter}", result, acc.make_ref(node))
-        return [f"({acc.lineno(node)}{result})"]
+        rhs = acc.helper(f"interpolate_{node.converter}", result, acc.make_ref(node))
+        acc.statement(f"{result} = {rhs}", lineno=node)
+        return [result]
 
     @rule(AstExpressionBinary)
     def binary(
@@ -550,7 +550,23 @@ class Codegen(Visitor):
         op = node.operator.replace("_", " ")
         left = yield from visit_single(node.left, required=True)
         right = yield from visit_single(node.right, required=True)
-        return [f"({acc.lineno(node)}{left} {op} {right})"]
+        acc.statement(f"{left} = {left} {op} {right}", lineno=node)
+        return [left]
+
+    @rule(AstExpressionBinary, operator="and")
+    @rule(AstExpressionBinary, operator="or")
+    def binary_logical(
+        self,
+        node: AstExpressionBinary,
+        acc: Accumulator,
+    ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
+        left = yield from visit_single(node.left, required=True)
+        prefix = "not " if node.operator == "or" else ""
+        acc.statement(f"if {prefix}{left}:")
+        with acc.block():
+            right = yield from visit_single(node.right, required=True)
+            acc.statement(f"{left} = {right}")
+        return [left]
 
     @rule(AstExpressionUnary)
     def unary(
@@ -560,15 +576,30 @@ class Codegen(Visitor):
     ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
         op = node.operator.replace("_", " ")
         value = yield from visit_single(node.value, required=True)
-        return [f"({acc.lineno(node)}{op} {value})"]
+        acc.statement(f"{value} = {op} {value}", lineno=node)
+        return [value]
+
+    @rule(AstExpressionUnary, operator="not")
+    def unary_logical(
+        self,
+        node: AstExpressionUnary,
+        acc: Accumulator,
+    ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
+        value = yield from visit_single(node.value, required=True)
+        acc.statement(f"{value} = not {value}", lineno=node)
+        return [value]
 
     @rule(AstValue)
     def value(self, node: AstValue, acc: Accumulator) -> Optional[List[str]]:
-        return [repr(node.value)]
+        result = acc.make_variable()
+        acc.statement(f"{result} = {node.value!r}")
+        return [result]
 
     @rule(AstIdentifier)
     def identifier(self, node: AstIdentifier, acc: Accumulator) -> Optional[List[str]]:
-        return [f"({acc.lineno(node)}{node.value})"]
+        result = acc.make_variable()
+        acc.statement(f"{result} = {node.value}", lineno=node)
+        return [result]
 
     @rule(AstFormatString)
     def format_string(
@@ -582,7 +613,11 @@ class Codegen(Visitor):
             result = yield from visit_single(value, required=True)
             values.append(result)
 
-        return [f"({acc.lineno(node)}{node.fmt!r}.format({', '.join(values)}))"]
+        result = acc.make_variable()
+        acc.statement(
+            f"{result} = {node.fmt!r}.format({', '.join(values)})", lineno=node
+        )
+        return [result]
 
     @rule(AstTuple)
     def tuple(
@@ -596,7 +631,9 @@ class Codegen(Visitor):
             value = yield from visit_single(item, required=True)
             items.append(f"{value},")
 
-        return [f"({acc.lineno(node)}({''.join(items)}))"]
+        result = acc.make_variable()
+        acc.statement(f"{result} = ({''.join(items)})", lineno=node)
+        return [result]
 
     @rule(AstList)
     def list(
@@ -610,7 +647,9 @@ class Codegen(Visitor):
             value = yield from visit_single(item, required=True)
             items.append(value)
 
-        return [f"({acc.lineno(node)}[{', '.join(items)}])"]
+        result = acc.make_variable()
+        acc.statement(f"{result} = [{', '.join(items)}]", lineno=node)
+        return [result]
 
     @rule(AstDict)
     def dict(
@@ -625,7 +664,9 @@ class Codegen(Visitor):
             value = yield from visit_single(item.value, required=True)
             items.append(f"{key}: {value}")
 
-        return [f"({acc.lineno(node)}{{{', '.join(items)}}})"]
+        result = acc.make_variable()
+        acc.statement(f"{result} = {{{', '.join(items)}}}", lineno=node)
+        return [result]
 
     @rule(AstAttribute)
     def attribute(
@@ -634,8 +675,9 @@ class Codegen(Visitor):
         acc: Accumulator,
     ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
         value = yield from visit_single(node.value, required=True)
-        result = acc.helper("get_attribute", value, repr(node.name))
-        return [f"({acc.lineno(node)}{result})"]
+        rhs = acc.helper("get_attribute", value, repr(node.name))
+        acc.statement(f"{value} = {rhs}", lineno=node)
+        return [value]
 
     @rule(AstLookup)
     def lookup(
@@ -643,15 +685,15 @@ class Codegen(Visitor):
         node: AstLookup,
         acc: Accumulator,
     ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
+        result = yield from visit_single(node.value, required=True)
         arguments: List[str] = []
 
         for arg in node.arguments:
             value = yield from visit_single(arg, required=True)
             arguments.append(value)
 
-        value = yield from visit_single(node.value, required=True)
-
-        return [f"({acc.lineno(node)}{value}[{', '.join(arguments)}])"]
+        acc.statement(f"{result} = {result}[{', '.join(arguments)}]", lineno=node)
+        return [result]
 
     @rule(AstCall)
     def call(
@@ -659,15 +701,15 @@ class Codegen(Visitor):
         node: AstCall,
         acc: Accumulator,
     ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
+        result = yield from visit_single(node.value, required=True)
         arguments: List[str] = []
 
         for arg in node.arguments:
             value = yield from visit_single(arg, required=True)
             arguments.append(value)
 
-        value = yield from visit_single(node.value, required=True)
-
-        return [f"({acc.lineno(node)}{value}({', '.join(arguments)}))"]
+        acc.statement(f"{result} = {result}({', '.join(arguments)})", lineno=node)
+        return [result]
 
     @rule(AstAssignment)
     def assignment(
@@ -678,7 +720,8 @@ class Codegen(Visitor):
         op = node.operator
         target = yield from visit_single(node.target, required=True)
         value = yield from visit_single(node.value, required=True)
-        return [f"{target} {op} {value}"]
+        acc.statement(f"{target} {op} {value}", lineno=node)
+        return []
 
     @rule(AstAssignmentTargetIdentifier)
     def assignment_target_identifier(

@@ -1,17 +1,18 @@
-_mecha_lineno = [1, 7, 10], [1, 2, 3]
+_mecha_lineno = [1, 6, 9], [1, 2, 3]
 _mecha_helper_interpolate_json = _mecha_runtime.helpers['interpolate_json']
 _mecha_helper_children = _mecha_runtime.helpers['children']
 _mecha_helper_replace = _mecha_runtime.helpers['replace']
-with _mecha_runtime.scope() as _mecha_var0:
+with _mecha_runtime.scope() as _mecha_var3:
     def f(x):
-        _mecha_runtime.commands.append(_mecha_helper_replace(_mecha_refs[2], arguments=_mecha_helper_children([_mecha_refs[1], (
-_mecha_helper_interpolate_json((
-x), _mecha_refs[0]))])))
-    (
-(
-f)('thing'))
-_mecha_var1 = _mecha_helper_replace(_mecha_refs[3], commands=_mecha_helper_children(_mecha_var0))---
-output = _mecha_var1
+        _mecha_var0 = x
+        _mecha_var0 = _mecha_helper_interpolate_json(_mecha_var0, _mecha_refs[0])
+        _mecha_runtime.commands.append(_mecha_helper_replace(_mecha_refs[2], arguments=_mecha_helper_children([_mecha_refs[1], _mecha_var0])))
+    _mecha_var1 = f
+    _mecha_var2 = 'thing'
+    _mecha_var1 = _mecha_var1(_mecha_var2)
+_mecha_var4 = _mecha_helper_replace(_mecha_refs[3], commands=_mecha_helper_children(_mecha_var3))
+---
+output = _mecha_var4
 ---
 _mecha_refs[0]
 <class 'mecha.contrib.scripting.ast.AstInterpolation'>
