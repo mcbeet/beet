@@ -84,7 +84,7 @@ class Accumulator:
             if line.startswith("!lineno "):
                 current_line = int(line[8:])
                 if numbers2[-1] != current_line:
-                    numbers1.append(len(lines))
+                    numbers1.append(len(lines) + 1)
                     numbers2.append(current_line)
             else:
                 lines.append(line)
