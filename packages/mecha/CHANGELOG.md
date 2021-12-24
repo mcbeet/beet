@@ -2,6 +2,11 @@
 
 <!--next-version-placeholder-->
 
+## v0.28.1 (2021-12-24)
+### Fix
+* Off-by-one line mapping ([`7fcd2da`](https://github.com/mcbeet/mecha/commit/7fcd2dab6b602fd000f7efc5a28a63089145c00c))
+* Import regular python modules through helper ([`6ff1de3`](https://github.com/mcbeet/mecha/commit/6ff1de302c09dba220ae450c7904d8a8f4a5a1ce))
+
 ## v0.28.0 (2021-12-23)
 ### Feature
 * Provide ctx and current_path through runtime import ([`c62167a`](https://github.com/mcbeet/mecha/commit/c62167aa7f9fa543ea6eeaa5646adf3125bcc923))
