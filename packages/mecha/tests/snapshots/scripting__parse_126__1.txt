@@ -1,9 +1,10 @@
-_mecha_lineno = [1, 6], [1, 2]
+_mecha_lineno = [1, 7], [1, 2]
+_mecha_helper_import_module = _mecha_runtime.helpers['import_module']
 _mecha_helper_get_attribute = _mecha_runtime.helpers['get_attribute']
 _mecha_helper_children = _mecha_runtime.helpers['children']
 _mecha_helper_replace = _mecha_runtime.helpers['replace']
 with _mecha_runtime.scope() as _mecha_var2:
-    import math
+    math = _mecha_helper_import_module('math')
     _mecha_var0 = math
     _mecha_var0 = _mecha_helper_get_attribute(_mecha_var0, 'sin')
     _mecha_var1 = 1

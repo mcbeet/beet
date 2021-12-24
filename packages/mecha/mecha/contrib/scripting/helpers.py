@@ -5,6 +5,7 @@ __all__ = [
 
 from dataclasses import replace
 from functools import wraps
+from importlib import import_module
 from typing import Any, Callable, Dict
 
 from tokenstream import set_location
@@ -43,6 +44,7 @@ def get_scripting_helpers() -> Dict[str, Any]:
         "children": AstChildren,
         "get_attribute": get_attribute,
         "use_provider": use_provider,
+        "import_module": python_import_module,
         "interpolate_bool": converter(AstBool.from_value),
         "interpolate_numeric": converter(AstNumber.from_value),
         "interpolate_time": converter(AstTime.from_value),
@@ -81,6 +83,18 @@ def use_provider(providers: Dict[str, Callable[[], Any]], name: str):
         return providers[name]()
     except Exception:
         raise ImportError(f"Couldn't import {name!r} from 'runtime'.") from None
+
+
+@internal
+def python_import_module(name: str):
+    try:
+        return import_module(name)
+    except Exception as exc:
+        tb = exc.__traceback__
+        tb = tb.tb_next.tb_next  # type: ignore
+        while tb and tb.tb_frame.f_code.co_filename.startswith("<frozen importlib"):
+            tb = tb.tb_next
+        raise exc.with_traceback(tb)
 
 
 def converter(f: Callable[[Any], AstNode]) -> Callable[[Any, AstNode], AstNode]:

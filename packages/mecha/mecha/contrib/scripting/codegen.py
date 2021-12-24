@@ -115,6 +115,14 @@ class Accumulator:
         """Emit children helper."""
         return self.helper("children", f"[{', '.join(nodes)}]")
 
+    def get_attribute(self, obj: str, name: str) -> str:
+        """Emit get_attribute helper."""
+        return self.helper("get_attribute", obj, repr(name))
+
+    def import_module(self, name: str) -> str:
+        """Emit import_module helper."""
+        return self.helper("import_module", repr(name))
+
     def make_ref(self, obj: Any) -> str:
         """Register ref."""
         index = len(self.refs)
@@ -519,9 +527,9 @@ class Codegen(Visitor):
                     )
                     acc.statement(f"{', '.join(names)} = {rhs}", lineno=node)
                 else:
-                    acc.statement(
-                        f"from {module.path} import  {', '.join(names)}", lineno=node
-                    )
+                    for name in names:
+                        rhs = acc.get_attribute(acc.import_module(module.path), name)
+                        acc.statement(f"{name} = {rhs}", lineno=node)
 
         elif node.identifier == "import:module:as:alias":
             alias = cast(AstImportedIdentifier, node.arguments[1]).value
@@ -532,10 +540,17 @@ class Codegen(Visitor):
                     lineno=node,
                 )
             else:
-                acc.statement(f"import {module.path} as {alias}", lineno=node)
+                rhs = acc.import_module(module.path)
+                acc.statement(f"{alias} = {rhs}", lineno=node)
 
         else:
-            acc.statement(f"import {module.path}", lineno=node)
+            name = module.path.partition(".")[0]
+            rhs = acc.import_module(module.path)
+            if name == module.path:
+                acc.statement(f"{name} = {rhs}", lineno=node)
+            else:
+                acc.statement(rhs, lineno=node)
+                acc.statement(f"{name} = {acc.import_module(name)}")
 
         return []
 
@@ -684,7 +699,7 @@ class Codegen(Visitor):
         acc: Accumulator,
     ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
         value = yield from visit_single(node.value, required=True)
-        rhs = acc.helper("get_attribute", value, repr(node.name))
+        rhs = acc.get_attribute(value, node.name)
         acc.statement(f"{value} = {rhs}", lineno=node)
         return [value]
 
