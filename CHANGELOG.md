@@ -2,6 +2,13 @@
 
 <!--next-version-placeholder-->
 
+## v0.49.0 (2021-12-25)
+### Feature
+* Automatically figure out the root of the function tree ([`19f21e1`](https://github.com/mcbeet/beet/commit/19f21e10770fa02c2d99c23d43d54443d1e32b08))
+
+### Breaking
+* generate_tree no longer accepts the root argument in templates  ([`19f21e1`](https://github.com/mcbeet/beet/commit/19f21e10770fa02c2d99c23d43d54443d1e32b08))
+
 ## v0.48.5 (2021-12-25)
 ### Fix
 * Only reload modules that weren't already imported ([`7ba93af`](https://github.com/mcbeet/beet/commit/7ba93af5e5485d17d0401b10f25e473618a5158c))
