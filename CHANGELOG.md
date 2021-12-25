@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.48.4 (2021-12-25)
+### Fix
+* Export TreeData ([`68e8d03`](https://github.com/mcbeet/beet/commit/68e8d03d0fb6f25864904769e2077bda876b27e8))
+
 ## v0.48.3 (2021-12-18)
 ### Fix
 * Deprecate hangman ([`24ff3cb`](https://github.com/mcbeet/beet/commit/24ff3cbf055342864afd386e36ea821b590d8ce8))
