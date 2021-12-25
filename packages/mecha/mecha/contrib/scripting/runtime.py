@@ -66,6 +66,7 @@ class Runtime:
     helpers: Dict[str, Any]
     globals: JsonDict
     providers: Dict[str, Callable[[], Any]]
+    builtins: Set[str]
 
     def __init__(self, ctx: Union[Context, Mecha]):
         self.providers = {}
@@ -99,9 +100,11 @@ class Runtime:
         self.helpers = get_scripting_helpers()
         self.globals = {}
 
-        self.providers["current_path"] = lambda: (
-            self.database[self.database.current].resource_location
+        self.providers.update(
+            current_path=lambda: self.database[self.database.current].resource_location,
         )
+
+        self.builtins = set(SAFE_BUILTINS)
 
         mc.cache_backend = ModuleCacheBackend(runtime=self)
 
@@ -292,5 +295,7 @@ class GlobalsInjection:
     parser: Parser
 
     def __call__(self, stream: TokenStream) -> Any:
-        with stream.provide(identifiers=set(self.runtime.globals) | SAFE_BUILTINS):
+        with stream.provide(
+            identifiers=set(self.runtime.globals) | self.runtime.builtins,
+        ):
             return self.parser(stream)

@@ -26,24 +26,21 @@ def internal(f: T) -> T:
     return f
 
 
-SAFE_BUILTINS: Set[str] = {
+SAFE_BUILTINS: List[str] = [
     "abs",
     "all",
     "any",
     "ascii",
     "bin",
     "bool",
-    "bytearray",
     "bytes",
     "callable",
     "chr",
-    "complex",
     "dict",
     "divmod",
     "enumerate",
     "filter",
     "float",
-    "format",
     "frozenset",
     "hasattr",
     "hash",
@@ -76,7 +73,7 @@ SAFE_BUILTINS: Set[str] = {
     "tuple",
     "type",
     "zip",
-}
+]
 
 
 @dataclass
