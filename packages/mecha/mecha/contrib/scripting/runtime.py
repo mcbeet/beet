@@ -16,7 +16,7 @@ from pathlib import Path
 from types import CodeType
 from typing import Any, Callable, Dict, Iterator, List, Optional, Set, Union
 
-from beet import Context, PipelineFallthroughException, TextFileBase
+from beet import Context, PipelineFallthroughException, TextFileBase, generate_tree
 from beet.core.utils import JsonDict, required_field
 from tokenstream import TokenStream
 
@@ -57,10 +57,6 @@ class Module:
 class Runtime:
     """The scripting runtime."""
 
-    directory: Path
-    database: CompilationDatabase
-    codegen: Codegen
-    evaluate: Dispatcher[AstRoot]
     modules: Dict[TextFileBase[Any], Module]
     commands: List[AstCommand]
     helpers: Dict[str, Any]
@@ -68,8 +64,18 @@ class Runtime:
     providers: Dict[str, Callable[[], Any]]
     builtins: Set[str]
 
+    directory: Path
+    database: CompilationDatabase
+    codegen: Codegen
+    evaluate: Dispatcher[AstRoot]
+
     def __init__(self, ctx: Union[Context, Mecha]):
-        self.providers = {}
+        self.modules = {}
+        self.commands = []
+        self.helpers = get_scripting_helpers()
+        self.globals = {}
+        self.providers = {"current_path": lambda: self.current_path}
+        self.builtins = set(SAFE_BUILTINS)
 
         if isinstance(ctx, Context):
             ctx.require(
@@ -78,8 +84,24 @@ class Runtime:
                 "mecha.contrib.nesting",
                 "mecha.contrib.implicit_execute",
             )
-            mc = ctx.inject(Mecha)
+
             self.providers["ctx"] = lambda: ctx
+
+            self.expose("generate_path", ctx.generate.path)
+            self.expose("generate_id", ctx.generate.id)
+            self.expose("generate_hash", ctx.generate.hash)
+            self.expose("generate_objective", ctx.generate.objective)
+            self.expose(
+                "generate_tree",
+                lambda *args, **kwargs: generate_tree(
+                    self.current_path,
+                    *args,
+                    **kwargs,
+                ),
+            )
+
+            mc = ctx.inject(Mecha)
+
         else:
             mc = ctx
 
@@ -95,18 +117,18 @@ class Runtime:
         self.evaluate = Evaluator(runtime=self)
         mc.steps.insert(0, self.evaluate)
 
-        self.modules = {}
-        self.commands = []
-        self.helpers = get_scripting_helpers()
-        self.globals = {}
-
-        self.providers.update(
-            current_path=lambda: self.database[self.database.current].resource_location,
-        )
-
-        self.builtins = set(SAFE_BUILTINS)
-
         mc.cache_backend = ModuleCacheBackend(runtime=self)
+
+    @property
+    def current_path(self) -> str:
+        """Return the current path."""
+        if path := self.database[self.database.current].resource_location:
+            return path
+        raise ValueError("No resource location corresponding to the current module.")
+
+    def expose(self, name: str, function: Callable[..., Any]):
+        """Expose a utility function."""
+        self.globals[name] = lambda *args, **kwargs: function(*args, **kwargs)  # type: ignore
 
     def get_module(
         self,
