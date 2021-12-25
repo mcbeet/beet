@@ -885,7 +885,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
                 )
             }
 
-            self.merge(namespaces)
+            self.merge(namespaces)  # type: ignore
 
         if not self.pack_format:
             self.pack_format = self.latest_pack_format
