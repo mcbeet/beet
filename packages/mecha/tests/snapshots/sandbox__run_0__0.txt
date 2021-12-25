@@ -1,0 +1,5 @@
+import sys
+---
+Traceback (most recent call last):
+  File "<mecha>", line 1, in demo:foo
+mecha.contrib.scripting_sandbox.SecurityError: Access forbidden module 'sys'.

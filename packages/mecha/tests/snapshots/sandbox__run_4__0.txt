@@ -1,0 +1,5 @@
+print(f'foo {str.__name__} bar')
+---
+Traceback (most recent call last):
+  File "<mecha>", line 1, in demo:foo
+mecha.contrib.scripting_sandbox.SecurityError: Access forbidden attribute '__name__' of <class 'type'>.

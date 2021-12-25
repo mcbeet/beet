@@ -1,0 +1,5 @@
+from runtime import ctx
+---
+Traceback (most recent call last):
+  File "<mecha>", line 1, in demo:foo
+mecha.contrib.scripting_sandbox.SecurityError: Access forbidden runtime provider 'ctx'.

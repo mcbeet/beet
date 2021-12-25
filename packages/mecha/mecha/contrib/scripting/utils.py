@@ -33,7 +33,6 @@ SAFE_BUILTINS: List[str] = [
     "ascii",
     "bin",
     "bool",
-    "bytes",
     "callable",
     "chr",
     "dict",
