@@ -198,7 +198,14 @@ class Context:
         self.template.expose("generate_id", self.generate.id)
         self.template.expose("generate_hash", self.generate.hash)
         self.template.expose("generate_objective", self.generate.objective)
-        self.template.expose("generate_tree", generate_tree)
+        self.template.expose(
+            "generate_tree",
+            lambda *args, **kwargs: generate_tree(
+                self.meta["render_path"],
+                *args,
+                **kwargs,
+            ),
+        )
 
         self.template.expose("parse_json", lambda string: json.loads(string))
 

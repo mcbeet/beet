@@ -13,7 +13,7 @@ scoreboard players set @s {{ obj }} 0
 scoreboard players reset @s {{ obj }}
 #!endfunction
 
-#!for node in generate_tree(render_path, "abcdefghijklmnopqrstuvwxyz0123456789")
+#!for node in generate_tree("abcdefghijklmnopqrstuvwxyz0123456789")
     #!function node.parent append
         #!if node.partition(5)
             execute if score @s {{ obj }} matches {{ node.range }} run function {{ node.children }}
