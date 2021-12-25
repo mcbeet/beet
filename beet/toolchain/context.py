@@ -219,6 +219,8 @@ class Context:
     @contextmanager
     def activate(self):
         """Push the context directory to sys.path and handle cleanup to allow module reloading."""
+        already_loaded = set(sys.modules)
+
         not_in_path = self._path_entry not in sys.path
         if not_in_path:
             sys.path.append(self._path_entry)
@@ -233,7 +235,8 @@ class Context:
             imported_modules = [
                 name
                 for name, module in sys.modules.items()
-                if (filename := getattr(module, "__file__", None))
+                if name not in already_loaded
+                and (filename := getattr(module, "__file__", None))
                 and "site-packages" not in filename
                 and filename.startswith(self._path_entry)
             ]
