@@ -1,5 +1,6 @@
 __all__ = [
     "TreeNode",
+    "TreeData",
     "generate_tree",
 ]
 
