@@ -2,6 +2,14 @@
 
 <!--next-version-placeholder-->
 
+## v0.29.0 (2021-12-25)
+### Feature
+* Add scripting sandbox ([`ae343d2`](https://github.com/mcbeet/mecha/commit/ae343d262525880dd63ff4305183d201646cc88a))
+* Expose generate utilities ([`9ef34c6`](https://github.com/mcbeet/mecha/commit/9ef34c6e53f01ba6e1d58bfcdc2d54eea3a12d85))
+
+### Fix
+* Store builtin names on the runtime ([`bc747e0`](https://github.com/mcbeet/mecha/commit/bc747e0cf17d20897c5fb6769750185b5024f6e1))
+
 ## v0.28.1 (2021-12-24)
 ### Fix
 * Off-by-one line mapping ([`7fcd2da`](https://github.com/mcbeet/mecha/commit/7fcd2dab6b602fd000f7efc5a28a63089145c00c))
