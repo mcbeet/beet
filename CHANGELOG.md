@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.48.5 (2021-12-25)
+### Fix
+* Only reload modules that weren't already imported ([`7ba93af`](https://github.com/mcbeet/beet/commit/7ba93af5e5485d17d0401b10f25e473618a5158c))
+
 ## v0.48.4 (2021-12-25)
 ### Fix
 * Export TreeData ([`68e8d03`](https://github.com/mcbeet/beet/commit/68e8d03d0fb6f25864904769e2077bda876b27e8))
