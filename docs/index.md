@@ -15,6 +15,7 @@ You can follow the development of the project, discuss ideas, get help, and hang
 ```{toctree}
 :hidden:
 
+rationale
 overview
 changelog
 ```
