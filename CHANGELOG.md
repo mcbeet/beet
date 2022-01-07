@@ -2,6 +2,13 @@
 
 <!--next-version-placeholder-->
 
+## v0.49.1 (2022-01-07)
+### Fix
+* Ignore unicode errors when reading log file ([`c521b12`](https://github.com/mcbeet/beet/commit/c521b12fd5c584819b719d4dd30e3087f3cfaa8c))
+
+### Documentation
+* Add rationale ([`e79e3d3`](https://github.com/mcbeet/beet/commit/e79e3d37ecdbd9b411ba9a912a3e5b8c6892da0d))
+
 ## v0.49.0 (2021-12-25)
 ### Feature
 * Automatically figure out the root of the function tree ([`19f21e1`](https://github.com/mcbeet/beet/commit/19f21e10770fa02c2d99c23d43d54443d1e32b08))
