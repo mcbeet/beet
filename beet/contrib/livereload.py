@@ -151,7 +151,7 @@ class LogWatcher:
             return decorator
 
     def target(self, path: FileSystemPath, callback: LogCallback):
-        with open(path) as f:
+        with open(path, "r", errors="ignore") as f:
             f.seek(0, 2)
             while not self.event.is_set():
                 lines = f.read().splitlines()
