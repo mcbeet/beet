@@ -2,7 +2,7 @@ from beet import Context, Project, ProjectBuilder, ProjectConfig, WorkerPool
 
 
 def beet_default(ctx: Context):
-    config = ProjectConfig(data_pack={"load": ["src"]}).resolve(ctx.directory)
+    config = ProjectConfig(data_pack={"load": ["src"]}).resolve(ctx.directory)  # type: ignore
     ctx.require(
         ProjectBuilder(
             Project(
