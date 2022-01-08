@@ -2,6 +2,11 @@
 
 <!--next-version-placeholder-->
 
+## v0.50.0 (2022-01-08)
+### Feature
+* Relay full game log ([`c847840`](https://github.com/mcbeet/beet/commit/c8478407a8ef5cf5d6b91598f07e3a65cccd2635))
+* Add config overrides ([`97bf032`](https://github.com/mcbeet/beet/commit/97bf032f39180a3a648726c1025a9306a6f17206))
+
 ## v0.49.2 (2022-01-08)
 ### Fix
 * Display server errors ([`bf5cf30`](https://github.com/mcbeet/beet/commit/bf5cf30335bf529504d5b0879ddcc68049d73b98))
