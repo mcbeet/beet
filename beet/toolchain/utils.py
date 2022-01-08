@@ -6,13 +6,16 @@ __all__ = [
     "format_exc",
     "format_validation_error",
     "ensure_builtins",
+    "eval_option",
+    "apply_option",
 ]
 
 
 import json
+import re
 import struct
 from traceback import format_exception
-from typing import Any, Callable, Literal
+from typing import Any, Callable, Literal, Mapping, Sequence
 
 from base58 import b58encode
 from pydantic import ValidationError
@@ -22,6 +25,9 @@ FNV_64_INIT = 0xCBF29CE484222325
 FNV_32_PRIME = 0x01000193
 FNV_64_PRIME = 0x100000001B3
 HASH_ALPHABET = b"123456789abcdefghijkmnopqrstuvwxyz"
+
+
+OPTION_KEY_REGEX = re.compile(r"(\w+)|(\[\])")
 
 
 class LazyFormat:
@@ -88,3 +94,49 @@ def ensure_builtins(value: Any) -> Any:
         return json.loads(json.dumps(value))
     except Exception:
         raise TypeError(value) from None
+
+
+def eval_option(option: str) -> Any:
+    option = option.strip()
+
+    if option.startswith("{"):
+        return json.loads(option)
+
+    key, sep, value = option.partition("=")
+
+    if sep:
+        try:
+            value = json.loads(value)
+        except json.JSONDecodeError:
+            value = value.strip()
+    else:
+        value = True
+
+    for m in list(OPTION_KEY_REGEX.finditer(key))[::-1]:
+        if m[1]:
+            value = {m[1]: value}
+        else:
+            value = [value]
+
+    return value
+
+
+def apply_option(result: Any, option: Any) -> Any:
+    if isinstance(option, Mapping):
+        for key, value in option.items():  # type: ignore
+            result[key] = apply_option(
+                result.setdefault(
+                    key,
+                    {}
+                    if isinstance(value, Mapping)
+                    else []
+                    if isinstance(value, Sequence) and not isinstance(value, str)
+                    else None,
+                ),
+                value,
+            )
+    elif isinstance(option, Sequence) and not isinstance(option, str):
+        result.extend(option)
+    else:
+        return option
+    return result

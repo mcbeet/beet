@@ -29,6 +29,7 @@ class Project:
     """Class for interacting with a beet project."""
 
     resolved_config: Optional[ProjectConfig] = None
+    config_overrides: Optional[List[str]] = None
     config_directory: Optional[FileSystemPath] = None
     config_path: Optional[FileSystemPath] = None
     config_detect: Iterable[str] = (
@@ -60,10 +61,15 @@ class Project:
         else:
             paths = locate_config(Path.cwd(), *self.config_detect)
 
-        if not paths:
-            raise ErrorMessage("Couldn't locate config file.")
+        if paths:
+            config_path = Path(paths[0]).resolve()
+        else:
+            if self.config_overrides:
+                config_path = None
+            else:
+                raise ErrorMessage("Couldn't locate config file.")
 
-        self.resolved_config = load_config(Path(paths[0]).resolve())
+        self.resolved_config = load_config(config_path, self.config_overrides or [])
         return self.resolved_config
 
     @property

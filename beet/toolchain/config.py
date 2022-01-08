@@ -13,7 +13,7 @@ from contextlib import contextmanager
 from copy import deepcopy
 from itertools import chain
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, Iterable, List, Optional, Union
 
 import toml
 import yaml
@@ -22,7 +22,7 @@ from pydantic import BaseModel, Field, ValidationError
 from beet.core.utils import FileSystemPath, JsonDict, TextComponent
 
 from .pipeline import FormattedPipelineException
-from .utils import format_validation_error
+from .utils import apply_option, eval_option, format_validation_error
 
 
 class InvalidProjectConfig(FormattedPipelineException):
@@ -158,19 +158,23 @@ def locate_config(initial_directory: FileSystemPath, *filenames: str) -> List[Pa
     return results
 
 
-def load_config(filename: FileSystemPath) -> ProjectConfig:
+def load_config(
+    filename: Optional[FileSystemPath] = None, overrides: Iterable[str] = ()
+) -> ProjectConfig:
     """Load the project config at the specified location."""
-    path = Path(filename)
+    path = Path(filename) if filename else None
 
-    with config_error_handler(path):
-        if path.suffix == ".toml":
+    with config_error_handler(path or "<unknown>"):
+        if not path:
+            config: Any = {}
+        elif path.suffix == ".toml":
             config = toml.loads(path.read_text())
         elif path.suffix in [".yml", ".yaml"]:
             config = yaml.safe_load(path.read_text())
         else:
             config = json.loads(path.read_text())
 
-        if path.name == "pyproject.toml":
+        if path and path.name == "pyproject.toml":
             tool = config.get("tool")
             if tool is None or (config := tool.get("beet")) is None:
                 raise InvalidProjectConfig(f"{path}: Missing [tool.beet] section")
@@ -185,7 +189,15 @@ def load_config(filename: FileSystemPath) -> ProjectConfig:
                 if authors := poetry.get("authors"):
                     config.setdefault("author", authors[0])
 
-        return ProjectConfig(**config).resolve(path.parent)
+        for option in overrides:
+            try:
+                config = apply_option(config, eval_option(option))
+            except Exception:
+                raise InvalidProjectConfig(
+                    f"Couldn't apply override {option!r}."
+                ) from None
+
+        return ProjectConfig(**config).resolve(path.parent if path else Path.cwd())
 
 
 @contextmanager

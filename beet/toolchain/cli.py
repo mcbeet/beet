@@ -248,6 +248,13 @@ class MainGroup(BeetGroup):
     help="Use the specified config file.",
 )
 @click.option(
+    "-s",
+    "--set",
+    metavar="OPTION",
+    multiple=True,
+    help="Set config option.",
+)
+@click.option(
     "-l",
     "--log",
     metavar="LEVEL",
@@ -267,6 +274,7 @@ class MainGroup(BeetGroup):
 def beet(
     ctx: click.Context,
     directory: Optional[str],
+    set: List[str],
     log: str,
     config: Optional[str],
 ):
@@ -277,6 +285,8 @@ def beet(
 
     project = ctx.ensure_object(Project)
 
+    if set:
+        project.config_overrides = set
     if config:
         project.config_path = config
     elif directory:
