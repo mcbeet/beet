@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.50.1 (2022-01-08)
+### Fix
+* Use None as sentinel value for output option ([`6a19653`](https://github.com/mcbeet/beet/commit/6a19653fcab23fa941b1cbec57bab150a315dcbc))
+
 ## v0.50.0 (2022-01-08)
 ### Feature
 * Relay full game log ([`c847840`](https://github.com/mcbeet/beet/commit/c8478407a8ef5cf5d6b91598f07e3a65cccd2635))
