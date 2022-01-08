@@ -21,13 +21,14 @@ from typing import Any, Callable, List, Optional, Tuple, overload
 from beet import Connection, Context, DataPack, Function
 from beet.contrib.autosave import Autosave
 from beet.contrib.link import LinkManager
-from beet.core.utils import FileSystemPath, remove_path
+from beet.core.utils import FileSystemPath, JsonDict, remove_path
 
 logger = logging.getLogger("livereload")
+logger.addFilter(lambda r: not r.getMessage().startswith("Ambiguity between arguments"))
 
 
+GAME_LOG_REGEX = re.compile(r"\[(.+?)\] \[.+?/(DEBUG|INFO|WARN|ERROR|FATAL)\]: (.+)")
 LIVERELOAD_REGEX = re.compile(r"\[CHAT\] \[livereload\] (Ready|Reloaded)")
-ERROR_REGEX = re.compile(r"\[Server thread/ERROR\]: (.+)")
 
 
 def beet_default(ctx: Context):
@@ -109,19 +110,12 @@ def livereload_server(connection: Connection[Tuple[Optional[str], Path], None]):
                     continue
 
                 @log_watcher.tail(log_file_path)
-                def _(message: str):
-                    if LIVERELOAD_REGEX.search(message) and livereload_path:
+                def _(args: JsonDict):
+                    if LIVERELOAD_REGEX.match(args["message"]) and livereload_path:
                         remove_path(livereload_path)
-                    elif m := ERROR_REGEX.search(message):
-                        error = m[1]
-                        try:
-                            error += message[message.index("\n") :]
-                        except ValueError:
-                            pass
-                        logger.error(error)
 
 
-LogCallback = Callable[[str], Any]
+LogCallback = Callable[[JsonDict], Any]
 
 
 class LogWatcher:
@@ -167,17 +161,43 @@ class LogWatcher:
             while not self.event.is_set():
                 lines = f.read().splitlines()
 
-                if not lines and queue:
-                    callback("\n".join(queue))
-                    queue = []
+                if queue and not lines:
+                    self.handle_message(queue, callback)
 
                 time.sleep(0.5)
 
                 for line in lines:
-                    if line.startswith("["):
-                        callback("\n".join(queue))
-                        queue = []
+                    if queue and line.startswith("["):
+                        self.handle_message(queue, callback)
                     queue.append(line)
+
+    def handle_message(self, queue: List[str], callback: LogCallback):
+        message, *details = queue
+        queue.clear()
+
+        m = GAME_LOG_REGEX.match(message)
+
+        if not m:
+            return
+
+        fmt = "%(message)s%(details)s"
+        args = {
+            "time": m[1],
+            "level": m[2],
+            "message": m[3],
+            "details": "".join(f"\n{line}" for line in details),
+        }
+
+        if args["level"] == "DEBUG":
+            logger.debug(fmt, args)
+        elif args["level"] == "INFO":
+            logger.info(fmt, args)
+        elif args["level"] == "WARN":
+            logger.warning(fmt, args)
+        elif args["level"] in ["ERROR", "FATAL"]:
+            logger.error(fmt, args)
+
+        callback(args)
 
     def close(self):
         if self.thread:
