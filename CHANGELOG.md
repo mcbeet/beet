@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.49.2 (2022-01-08)
+### Fix
+* Display server errors ([`bf5cf30`](https://github.com/mcbeet/beet/commit/bf5cf30335bf529504d5b0879ddcc68049d73b98))
+
 ## v0.49.1 (2022-01-07)
 ### Fix
 * Ignore unicode errors when reading log file ([`c521b12`](https://github.com/mcbeet/beet/commit/c521b12fd5c584819b719d4dd30e3087f3cfaa8c))
