@@ -6,7 +6,7 @@
   "version": "foo",
   "directory": "tests/config_examples/extend_everything",
   "extend": [],
-  "output": "",
+  "output": null,
   "ignore": [
     "base",
     "thing"

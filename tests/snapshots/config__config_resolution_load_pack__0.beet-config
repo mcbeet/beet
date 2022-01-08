@@ -6,7 +6,7 @@
   "version": "",
   "directory": "tests/config_examples/load_pack",
   "extend": [],
-  "output": "",
+  "output": null,
   "ignore": [],
   "whitelist": null,
   "require": [],

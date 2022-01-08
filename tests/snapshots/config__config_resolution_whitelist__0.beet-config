@@ -6,7 +6,7 @@
   "version": "",
   "directory": "tests/config_examples/whitelist",
   "extend": [],
-  "output": "",
+  "output": null,
   "ignore": [],
   "whitelist": [
     "foo",

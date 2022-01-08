@@ -73,7 +73,7 @@ class ProjectConfig(BaseModel):
 
     directory: str = ""
     extend: List[str] = Field(default_factory=list)
-    output: str = ""
+    output: Optional[str] = None
     ignore: List[str] = Field(default_factory=list)
     whitelist: Optional[List[str]] = None
 
