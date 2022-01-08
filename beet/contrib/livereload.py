@@ -16,7 +16,7 @@ import re
 import time
 from pathlib import Path
 from threading import Event, Thread
-from typing import Any, Callable, Optional, Tuple, overload
+from typing import Any, Callable, List, Optional, Tuple, overload
 
 from beet import Connection, Context, DataPack, Function
 from beet.contrib.autosave import Autosave
@@ -27,6 +27,7 @@ logger = logging.getLogger("livereload")
 
 
 LIVERELOAD_REGEX = re.compile(r"\[CHAT\] \[livereload\] (Ready|Reloaded)")
+ERROR_REGEX = re.compile(r"\[Server thread/ERROR\]: (.+)")
 
 
 def beet_default(ctx: Context):
@@ -108,9 +109,16 @@ def livereload_server(connection: Connection[Tuple[Optional[str], Path], None]):
                     continue
 
                 @log_watcher.tail(log_file_path)
-                def _(line: str):
-                    if LIVERELOAD_REGEX.search(line) and livereload_path:
+                def _(message: str):
+                    if LIVERELOAD_REGEX.search(message) and livereload_path:
                         remove_path(livereload_path)
+                    elif m := ERROR_REGEX.search(message):
+                        error = m[1]
+                        try:
+                            error += message[message.index("\n") :]
+                        except ValueError:
+                            pass
+                        logger.error(error)
 
 
 LogCallback = Callable[[str], Any]
@@ -151,13 +159,25 @@ class LogWatcher:
             return decorator
 
     def target(self, path: FileSystemPath, callback: LogCallback):
+        queue: List[str] = []
+
         with open(path, "r", errors="ignore") as f:
             f.seek(0, 2)
+
             while not self.event.is_set():
                 lines = f.read().splitlines()
+
+                if not lines and queue:
+                    callback("\n".join(queue))
+                    queue = []
+
                 time.sleep(0.5)
+
                 for line in lines:
-                    callback(line)
+                    if line.startswith("["):
+                        callback("\n".join(queue))
+                        queue = []
+                    queue.append(line)
 
     def close(self):
         if self.thread:
