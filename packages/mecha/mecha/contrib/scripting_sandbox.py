@@ -4,7 +4,6 @@
 __all__ = [
     "Sandbox",
     "SandboxedGetAttribute",
-    "SandboxedUseProvider",
     "SandboxedImportModule",
     "SecurityError",
     "public_attrs",
@@ -53,7 +52,6 @@ class Sandbox:
     active: bool
 
     allowed_imports: Set[str]
-    allowed_providers: Set[str]
     allowed_obj_attrs: Dict[Any, Set[str]]
     allowed_type_attrs: Dict[Type[Any], Set[str]]
 
@@ -75,7 +73,6 @@ class Sandbox:
             "copy",
             "random",
         }
-        self.allowed_providers = {"current_path"}
         self.allowed_obj_attrs = {
             dict: {"fromkeys"},
             defaultdict: {"fromkeys"},
@@ -112,14 +109,11 @@ class Sandbox:
         if self.active:
             return
         self.active = True
+        self.runtime.globals["ctx"] = None
         self.runtime.helpers.update(
             get_attribute=SandboxedGetAttribute(
                 sandbox=self,
                 get_attribute=self.runtime.helpers["get_attribute"],
-            ),
-            use_provider=SandboxedUseProvider(
-                sandbox=self,
-                use_provider=self.runtime.helpers["use_provider"],
             ),
             import_module=SandboxedImportModule(
                 sandbox=self,
@@ -153,20 +147,6 @@ class SandboxedGetAttribute:
                     return self.get_attribute(obj, attr)
 
         raise SecurityError(f"Access forbidden attribute {attr!r} of {type(obj)}.")
-
-
-@dataclass
-class SandboxedUseProvider:
-    """Sandboxed use_provider helper."""
-
-    sandbox: Sandbox
-    use_provider: Callable[[Dict[str, Callable[[], Any]], str], Any]
-
-    @internal
-    def __call__(self, providers: Dict[str, Callable[[], Any]], name: str) -> Any:
-        if name in self.sandbox.allowed_providers:
-            return self.use_provider(providers, name)
-        raise SecurityError(f"Access forbidden runtime provider {name!r}.")
 
 
 @dataclass

@@ -85,7 +85,6 @@ from typing import (
     Type,
     TypeVar,
     Union,
-    cast,
 )
 from uuid import UUID
 
@@ -100,7 +99,7 @@ from tokenstream import UNKNOWN_LOCATION, SourceLocation, set_location
 from .utils import string_to_number
 
 T = TypeVar("T")
-AstNodeType = TypeVar("AstNodeType", bound="AstNode")
+AstNodeType = TypeVar("AstNodeType", bound="AstNode", covariant=True)
 AstLiteralType = TypeVar("AstLiteralType", bound="AstLiteral")
 
 
@@ -868,10 +867,7 @@ class AstMessage(AstNode):
     @classmethod
     def from_value(cls, obj: Any) -> "AstMessage":
         """Return message node from a given value."""
-        fragments = AstChildren([AstMessageText.from_value(obj)])
-        return AstMessage(
-            fragments=cast(AstChildren[Union[AstMessageText, AstSelector]], fragments)
-        )
+        return AstMessage(fragments=AstChildren([AstMessageText.from_value(obj)]))
 
 
 @dataclass(frozen=True)

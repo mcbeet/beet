@@ -61,7 +61,6 @@ class Runtime:
     commands: List[AstCommand]
     helpers: Dict[str, Any]
     globals: JsonDict
-    providers: Dict[str, Callable[[], Any]]
     builtins: Set[str]
 
     directory: Path
@@ -73,8 +72,7 @@ class Runtime:
         self.modules = {}
         self.commands = []
         self.helpers = get_scripting_helpers()
-        self.globals = {}
-        self.providers = {"current_path": lambda: self.current_path}
+        self.globals = {"ctx": None}
         self.builtins = set(SAFE_BUILTINS)
 
         if isinstance(ctx, Context):
@@ -85,7 +83,7 @@ class Runtime:
                 "mecha.contrib.implicit_execute",
             )
 
-            self.providers["ctx"] = lambda: ctx
+            self.globals["ctx"] = ctx
 
             self.expose("generate_path", ctx.generate.path)
             self.expose("generate_id", ctx.generate.id)
@@ -96,6 +94,13 @@ class Runtime:
                 lambda *args, **kwargs: generate_tree(
                     self.current_path,
                     *args,
+                    name=(
+                        kwargs.pop("name")
+                        if "name" in kwargs
+                        else ctx.generate["tree"][self.current_path].format(
+                            "tree_{incr}"
+                        )
+                    ),
                     **kwargs,
                 ),
             )
@@ -122,7 +127,7 @@ class Runtime:
     @property
     def current_path(self) -> str:
         """Return the current path."""
-        if path := self.database[self.database.current].resource_location:
+        if path := self.modules[self.database.current].resource_location:
             return path
         raise ValueError("No resource location corresponding to the current module.")
 
@@ -318,6 +323,8 @@ class GlobalsInjection:
 
     def __call__(self, stream: TokenStream) -> Any:
         with stream.provide(
-            identifiers=set(self.runtime.globals) | self.runtime.builtins,
+            identifiers=set(self.runtime.globals)
+            | self.runtime.builtins
+            | {"__name__"},
         ):
             return self.parser(stream)

@@ -316,8 +316,7 @@ def visit_body(
     acc: Accumulator,
 ) -> Generator[AstNode, Optional[List[str]], None]:
     """Emit each individual command in the current scope."""
-    commands = cast(AstChildren[AstNode], node.commands)
-    result = yield from visit_multiple(commands, acc, CommandCollector)
+    result = yield from visit_multiple(node.commands, acc, CommandCollector)
     if result is None:
         acc.statement(f"_mecha_runtime.commands.extend({acc.make_ref(node)}.commands)")
 
@@ -518,18 +517,9 @@ class Codegen(Visitor):
                     lineno=node,
                 )
             else:
-                if module.path == "runtime":
-                    rhs = ", ".join(
-                        acc.helper(
-                            "use_provider", "_mecha_runtime.providers", repr(name)
-                        )
-                        for name in names
-                    )
-                    acc.statement(f"{', '.join(names)} = {rhs}", lineno=node)
-                else:
-                    for name in names:
-                        rhs = acc.get_attribute(acc.import_module(module.path), name)
-                        acc.statement(f"{name} = {rhs}", lineno=node)
+                for name in names:
+                    rhs = acc.get_attribute(acc.import_module(module.path), name)
+                    acc.statement(f"{name} = {rhs}", lineno=node)
 
         elif node.identifier == "import:module:as:alias":
             alias = cast(AstImportedIdentifier, node.arguments[1]).value

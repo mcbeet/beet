@@ -1,5 +1,5 @@
-from runtime import ctx
+say ctx.project_id
 ---
 Traceback (most recent call last):
   File "<mecha>", line 1, in demo:foo
-mecha.contrib.scripting_sandbox.SecurityError: Access forbidden runtime provider 'ctx'.
+AttributeError: 'NoneType' object has no attribute 'project_id'

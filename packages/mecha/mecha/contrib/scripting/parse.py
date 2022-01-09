@@ -39,7 +39,6 @@ from mecha import (
     AlternativeParser,
     AstChildren,
     AstCommand,
-    AstNode,
     AstResourceLocation,
     AstRoot,
     Parser,
@@ -417,7 +416,7 @@ class IfElseLoweringParser:
                     stmt = set_location(stmt, stmt.commands[0], stmt.commands[-1])
                     stmt = AstCommand(
                         identifier="else:body",
-                        arguments=cast(AstChildren[AstNode], AstChildren([stmt])),
+                        arguments=AstChildren([stmt]),
                     )
                     last = [set_location(stmt, stmt.arguments[0])]
 
@@ -596,20 +595,9 @@ class ImportStatementHandler:
                             f"Can't import {module.get_value()!r} without alias."
                         )
                         raise set_location(exc, module)
-                    elif module.path == "runtime":
-                        exc = InvalidSyntax(
-                            "Can only import from 'runtime' using 'from runtime import ...'."
-                        )
-                        raise set_location(exc, module)
                     else:
                         identifiers.add(module.path.partition(".")[0])
             elif node.identifier == "import:module:as:alias":
-                if isinstance(module := node.arguments[0], AstResourceLocation):
-                    if module.path == "runtime":
-                        exc = InvalidSyntax(
-                            "Can only import from 'runtime' using 'from runtime import ...'."
-                        )
-                        raise set_location(exc, module)
                 if isinstance(alias := node.arguments[1], AstImportedIdentifier):
                     identifiers.add(alias.value)
             elif node.identifier == "from:module:import:subcommand":

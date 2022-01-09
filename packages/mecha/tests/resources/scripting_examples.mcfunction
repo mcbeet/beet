@@ -529,9 +529,4 @@ for node in generate_tree("abcdefghijklmnopqrstuvwxyz0123456789"):
         else:
             if score @s thingy matches node.range say node.value
 ###
-import runtime
-###
-import runtime as rrrrr
-###
-from runtime import ctx, current_path
-print(ctx.directory, current_path)
+print(ctx.directory, __name__)

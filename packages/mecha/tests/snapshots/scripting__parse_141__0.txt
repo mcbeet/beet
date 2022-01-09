@@ -1,5 +1,0 @@
-#>ERROR  Can only import from 'runtime' using 'from runtime import ...'.
-# line 1, column 8
-#      1 |  import runtime as rrrrr
-#        :         ^^^^^^^
-import runtime as rrrrr

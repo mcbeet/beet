@@ -111,7 +111,6 @@ def wow(ok):
 
 say list(wow(f))
 
-from runtime import ctx
 say ctx.generate.id("hello")
 
 import math

@@ -8,7 +8,7 @@ def hello():
     return "world"
 say hello.__name__.capitalize()
 ###
-from runtime import ctx
+say ctx.project_id
 ###
 print(f'foo {str.__name__} bar')
 ###
@@ -16,5 +16,4 @@ print(f'foo {str.__name__} bar')
 ###
 foo = "a{x.__class__}b".format_map({"x":42})
 ###
-from runtime import current_path
-say current_path.format()
+say __name__.format()

@@ -1,6 +1,5 @@
-from runtime import current_path
-say current_path.format()
+say __name__.format()
 ---
 Traceback (most recent call last):
-  File "<mecha>", line 2, in demo:foo
+  File "<mecha>", line 1, in demo:foo
 mecha.contrib.scripting_sandbox.SecurityError: Access forbidden attribute 'format' of <class 'str'>.
