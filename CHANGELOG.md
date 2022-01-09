@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.50.2 (2022-01-09)
+### Fix
+* Add tree name argument ([`9a9ff91`](https://github.com/mcbeet/beet/commit/9a9ff91ea83abbbb9dcdeb7cd320ad32d4a267f0))
+
 ## v0.50.1 (2022-01-08)
 ### Fix
 * Use None as sentinel value for output option ([`6a19653`](https://github.com/mcbeet/beet/commit/6a19653fcab23fa941b1cbec57bab150a315dcbc))
