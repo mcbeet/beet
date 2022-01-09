@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.30.0 (2022-01-09)
+### Feature
+* Remove providers, add global ctx again, and tweak generate_tree ([`e03969e`](https://github.com/mcbeet/mecha/commit/e03969efe4d177f7e2ae2b67e4e78f047478ef01))
+
 ## v0.29.0 (2021-12-25)
 ### Feature
 * Add scripting sandbox ([`ae343d2`](https://github.com/mcbeet/mecha/commit/ae343d262525880dd63ff4305183d201646cc88a))
