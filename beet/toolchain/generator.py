@@ -239,6 +239,7 @@ class Generator:
         *,
         key: Optional[Callable[[T], int]] = None,
         hash: Any = None,
+        name: Optional[str] = None,
     ) -> Iterator[Tuple[TreeNode[T], Function]]:
         ...
 
@@ -249,14 +250,16 @@ class Generator:
         *,
         key: Optional[Callable[[T], int]] = None,
         hash: Any = None,
+        name: Optional[str] = None,
     ) -> Iterator[Tuple[TreeNode[T], Function]]:
         ...
 
     def function_tree(
         self,
         *args: Any,
-        key: Any = None,
+        key: Optional[Callable[[Any], int]] = None,
         hash: Any = None,
+        name: Optional[str] = None,
     ) -> Iterator[Tuple[TreeNode[Any], Function]]:
         """Generate a function tree."""
         if len(args) == 2:
@@ -270,7 +273,7 @@ class Generator:
 
         root = self[Function].path(fmt, hash) if fmt else self[Function].path(hash=hash)
 
-        for node in generate_tree(root, items, key):
+        for node in generate_tree(root, items, key, name):
             yield node, self.data.functions.setdefault(node.parent, Function())
 
     @contextmanager

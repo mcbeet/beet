@@ -1,4 +1,4 @@
-#!for node in generate_tree("678ABCTUVabcdefxyz", ord)
+#!for node in generate_tree("678ABCTUVabcdefxyz", key=ord, name=None)
     #!function node.parent append
         #!if node.partition()
             execute if score #index temp matches {{ node.range }} run function {{ node.children }}

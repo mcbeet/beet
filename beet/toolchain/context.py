@@ -203,6 +203,13 @@ class Context:
             lambda *args, **kwargs: generate_tree(
                 self.meta["render_path"],
                 *args,
+                name=(
+                    kwargs.pop("name")
+                    if "name" in kwargs
+                    else self.generate["tree"][self.meta["render_path"]].format(
+                        "tree_{incr}"
+                    )
+                ),
                 **kwargs,
             ),
         )

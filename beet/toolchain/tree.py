@@ -20,6 +20,7 @@ class TreeData(Generic[T]):
     stack: List["TreeNode[T]"]
     items: List[T]
     key: Optional[Callable[[T], int]]
+    name: Optional[str]
 
 
 @dataclass
@@ -108,7 +109,10 @@ class TreeNode(Generic[T]):
     @property
     def children(self) -> str:
         begin, end = self.delimitters
-        return f"{self.data.root}/{begin}_{end}"
+        if self.data.name:
+            return f"{self.data.root}/{self.data.name}/{begin}_{end}"
+        else:
+            return f"{self.data.root}/{begin}_{end}"
 
     @property
     def root(self) -> bool:
@@ -119,9 +123,10 @@ def generate_tree(
     root: str,
     items: Iterable[T],
     key: Optional[Callable[[T], int]] = None,
+    name: Optional[str] = None,
 ) -> Iterator[TreeNode[T]]:
     """Generate a search tree and yield nodes in a depth-first traversal."""
-    data = TreeData(root, [], list(items), key)
+    data = TreeData(root, [], list(items), key, name)
 
     data.stack.append(
         TreeNode(

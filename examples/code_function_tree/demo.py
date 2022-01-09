@@ -11,6 +11,9 @@ def beet_default(ctx: Context):
     for node, function in ctx.generate.function_tree("{hash}", "abcdef", key=ord):
         handle_content(ctx, node, function, 4)
 
+    for node, function in ctx.generate.function_tree("abcdef", name="something"):
+        handle_content(ctx, node, function, 2)
+
 
 def handle_content(ctx: Context, node: TreeNode[str], function: Function, n: int):
     if node.root:
