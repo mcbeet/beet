@@ -2,6 +2,13 @@
 
 <!--next-version-placeholder-->
 
+## v0.31.0 (2022-01-10)
+### Feature
+* Support item and attribute assignment ([`459a2da`](https://github.com/mcbeet/mecha/commit/459a2da008e5886dcf1a82d61b21e31a381ae7bc))
+* Support list and dict unpacking ([`a0267a4`](https://github.com/mcbeet/mecha/commit/a0267a47e3088ed23b93d964f0f51a46fd980ec5))
+* Support keywords and unpacking for function calls ([`fbd5c9b`](https://github.com/mcbeet/mecha/commit/fbd5c9b40075513355a99869339a750d0b83c69f))
+* Interpolate coordinates ([`6f8f009`](https://github.com/mcbeet/mecha/commit/6f8f009e5f6dfa92fb99a326090391b533290cde))
+
 ## v0.30.0 (2022-01-09)
 ### Feature
 * Remove providers, add global ctx again, and tweak generate_tree ([`e03969e`](https://github.com/mcbeet/mecha/commit/e03969efe4d177f7e2ae2b67e4e78f047478ef01))
