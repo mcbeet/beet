@@ -41,7 +41,9 @@ from mecha import (
 
 from .ast import (
     AstAssignment,
+    AstAssignmentTargetAttribute,
     AstAssignmentTargetIdentifier,
+    AstAssignmentTargetItem,
     AstAttribute,
     AstCall,
     AstDict,
@@ -775,6 +777,30 @@ class Codegen(Visitor):
         acc: Accumulator,
     ) -> Optional[List[str]]:
         return [node.value]
+
+    @rule(AstAssignmentTargetAttribute)
+    def assignment_target_attribute(
+        self,
+        node: AstAssignmentTargetAttribute,
+        acc: Accumulator,
+    ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
+        value = yield from visit_single(node.value, required=True)
+        return [f"{value}.{node.name}"]
+
+    @rule(AstAssignmentTargetItem)
+    def assignment_target_item(
+        self,
+        node: AstAssignmentTargetItem,
+        acc: Accumulator,
+    ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
+        result = yield from visit_single(node.value, required=True)
+        arguments: List[str] = []
+
+        for arg in node.arguments:
+            value = yield from visit_single(arg, required=True)
+            arguments.append(value)
+
+        return [f"{result}[{', '.join(arguments)}]"]
 
     @rule(AstCommand, identifier="pass")
     def pass_statement(

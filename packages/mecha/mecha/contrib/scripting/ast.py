@@ -16,6 +16,8 @@ __all__ = [
     "AstCall",
     "AstAssignmentTarget",
     "AstAssignmentTargetIdentifier",
+    "AstAssignmentTargetAttribute",
+    "AstAssignmentTargetItem",
     "AstAssignment",
     "AstFunctionSignature",
     "AstFunctionSignatureArgument",
@@ -161,6 +163,22 @@ class AstAssignmentTargetIdentifier(AstAssignmentTarget):
     """Ast assignment target identifier node."""
 
     value: str = required_field()
+
+
+@dataclass(frozen=True)
+class AstAssignmentTargetAttribute(AstAssignmentTarget):
+    """Ast assignment target attribute node."""
+
+    name: str = required_field()
+    value: AstExpression = required_field()
+
+
+@dataclass(frozen=True)
+class AstAssignmentTargetItem(AstAssignmentTarget):
+    """Ast assignment target item node."""
+
+    value: AstExpression = required_field()
+    arguments: AstChildren[AstExpression] = required_field()
 
 
 @dataclass(frozen=True)

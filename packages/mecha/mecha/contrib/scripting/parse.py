@@ -55,7 +55,9 @@ from mecha.utils import QuoteHelper, normalize_whitespace, string_to_number
 from .ast import (
     AstAssignment,
     AstAssignmentTarget,
+    AstAssignmentTargetAttribute,
     AstAssignmentTargetIdentifier,
+    AstAssignmentTargetItem,
     AstAttribute,
     AstCall,
     AstDict,
@@ -160,27 +162,27 @@ def get_scripting_parsers(parsers: Dict[str, Parser]) -> Dict[str, Parser]:
             parser=delegate("scripting:bitwise_or"),
         ),
         "scripting:bitwise_or": BinaryParser(
-            operators=[r"\|"],
+            operators=[r"\|(?!=)"],
             parser=delegate("scripting:bitwise_xor"),
         ),
         "scripting:bitwise_xor": BinaryParser(
-            operators=[r"\^"],
+            operators=[r"\^(?!=)"],
             parser=delegate("scripting:bitwise_and"),
         ),
         "scripting:bitwise_and": BinaryParser(
-            operators=["&"],
+            operators=[r"&(?!=)"],
             parser=delegate("scripting:shift_expr"),
         ),
         "scripting:shift_expr": BinaryParser(
-            operators=["<<", ">>"],
+            operators=[r"<<(?!=)", r">>(?!=)"],
             parser=delegate("scripting:sum"),
         ),
         "scripting:sum": BinaryParser(
-            operators=[r"\+", "-"],
+            operators=[r"\+(?!=)", r"-(?!=)"],
             parser=delegate("scripting:term"),
         ),
         "scripting:term": BinaryParser(
-            operators=[r"\*", "//", "/", "%"],
+            operators=[r"\*(?!=)", r"//(?!=)", r"/(?!=)", r"%(?!=)"],
             parser=delegate("scripting:factor"),
         ),
         "scripting:factor": UnaryParser(
@@ -188,7 +190,7 @@ def get_scripting_parsers(parsers: Dict[str, Parser]) -> Dict[str, Parser]:
             parser=delegate("scripting:power"),
         ),
         "scripting:power": BinaryParser(
-            operators=[r"\*\*"],
+            operators=[r"\*\*(?!=)"],
             parser=delegate("scripting:primary"),
             right_associative=True,
         ),
@@ -366,15 +368,11 @@ def parse_statement(stream: TokenStream) -> Any:
             pending_identifiers.clear()
             node = delegate(parser, stream)
 
+            pattern = r"=(?!=)|\+=|-=|\*=|//=|/=|%=|&=|\|=|\^=|<<=|>>=|\*\*="
+
             if isinstance(node, AstAssignmentTarget):
-                pattern = r"=(?!=)"
-
-                if (
-                    parser == "scripting:augmented_assignment_target"
-                    and not node.multiple
-                ):
-                    pattern += r"|\+=|-=|\*=|//=|/=|%=|&=|\|=|\^=|<<=|>>=|\*\*="
-
+                if parser == "scripting:assignment_target" or node.multiple:
+                    pattern = r"=(?!=)"
                 with stream.syntax(assignment=pattern):
                     op = stream.expect("assignment")
 
@@ -385,6 +383,40 @@ def parse_statement(stream: TokenStream) -> Any:
 
                 node = AstAssignment(operator=op.value, target=node, value=expression)
                 node = set_location(node, node.target, node.value)
+
+            elif isinstance(node, AstAttribute):
+                with stream.syntax(assignment=pattern):
+                    op = stream.get("assignment")
+
+                if op:
+                    expression = delegate("scripting:expression", stream)
+                    target = AstAssignmentTargetAttribute(
+                        name=node.name,
+                        value=node.value,
+                    )
+                    node = AstAssignment(
+                        operator=op.value,
+                        target=set_location(target, node),
+                        value=expression,
+                    )
+                    node = set_location(node, node.target, node.value)
+
+            elif isinstance(node, AstLookup):
+                with stream.syntax(assignment=pattern):
+                    op = stream.get("assignment")
+
+                if op:
+                    expression = delegate("scripting:expression", stream)
+                    target = AstAssignmentTargetItem(
+                        value=node.value,
+                        arguments=node.arguments,
+                    )
+                    node = AstAssignment(
+                        operator=op.value,
+                        target=set_location(target, node),
+                        value=expression,
+                    )
+                    node = set_location(node, node.target, node.value)
 
             return node
 

@@ -118,6 +118,7 @@ say {'foo': 1, 'bar': 2, 'thing': 42}
 execute if score @s thingy matches 0..3 run function demo:foo/small_tree/0_3
 execute if score @s thingy matches 4..7 run function demo:foo/small_tree/4_7
 say {1: 1, 'a': 'a', 'b': 'thing', 'c': 'c', 2: 2}
+say {1: {2: 'foo'}}
 ```
 
 `@function(strip_final_newline) demo:thing`

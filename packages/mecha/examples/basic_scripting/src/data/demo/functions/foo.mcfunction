@@ -197,3 +197,11 @@ def try_unpacking():
     say c
 
 try_unpacking()
+
+def try_set_item():
+    try_set_item.data = {}
+    try_set_item.data[1] = {}
+    try_set_item.data[1][2] = "foo"
+    say try_set_item.data
+
+try_set_item()

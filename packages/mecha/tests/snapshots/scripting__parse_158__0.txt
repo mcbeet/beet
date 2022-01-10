@@ -1,0 +1,5 @@
+#>ERROR  Expected assignment but got literal '.bar'.
+# line 1, column 4
+#      1 |  foo.bar = 1
+#        :     ^^^^
+foo.bar = 1
