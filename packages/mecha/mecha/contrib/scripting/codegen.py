@@ -45,6 +45,7 @@ from .ast import (
     AstAttribute,
     AstCall,
     AstDict,
+    AstDictItem,
     AstExpressionBinary,
     AstExpressionUnary,
     AstFormatString,
@@ -676,13 +677,22 @@ class Codegen(Visitor):
         items: List[str] = []
 
         for item in node.items:
-            key = yield from visit_single(item.key, required=True)
-            value = yield from visit_single(item.value, required=True)
-            items.append(f"{key}: {value}")
+            value = yield from visit_single(item, required=True)
+            items.append(value)
 
         result = acc.make_variable()
         acc.statement(f"{result} = {{{', '.join(items)}}}", lineno=node)
         return [result]
+
+    @rule(AstDictItem)
+    def dict_item(
+        self,
+        node: AstDictItem,
+        acc: Accumulator,
+    ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
+        key = yield from visit_single(node.key, required=True)
+        value = yield from visit_single(node.value, required=True)
+        return [f"{key}: {value}"]
 
     @rule(AstUnpack)
     def unpack(

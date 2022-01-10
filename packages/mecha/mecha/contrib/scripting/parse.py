@@ -26,6 +26,7 @@ __all__ = [
     "UnpackConstraint",
     "KeywordParser",
     "PrimaryParser",
+    "parse_dict_item",
     "LiteralParser",
 ]
 
@@ -204,6 +205,24 @@ def get_scripting_parsers(parsers: Dict[str, Parser]) -> Dict[str, Parser]:
             [
                 delegate("scripting:identifier"),
                 delegate("scripting:literal"),
+            ]
+        ),
+        "scripting:list_item": AlternativeParser(
+            [
+                UnpackConstraint(
+                    type="list",
+                    parser=UnpackParser(delegate("scripting:expression")),
+                ),
+                delegate("scripting:expression"),
+            ]
+        ),
+        "scripting:dict_item": AlternativeParser(
+            [
+                UnpackConstraint(
+                    type="dict",
+                    parser=UnpackParser(delegate("scripting:expression")),
+                ),
+                parse_dict_item,
             ]
         ),
         "scripting:literal": LiteralParser(),
@@ -804,6 +823,7 @@ class UnpackConstraint:
             if node.type != self.type:
                 exc = InvalidSyntax(f"{node.type.capitalize()} unpacking not allowed.")
                 raise node.emit_error(exc)
+        return node
 
 
 @dataclass
@@ -985,6 +1005,33 @@ class PrimaryParser:
         return node
 
 
+def parse_dict_item(stream: TokenStream) -> Any:
+    """Parse dict item node."""
+    identifiers = get_stream_identifiers(stream)
+
+    with stream.syntax(colon=r":", identifier=IDENTIFIER_PATTERN):
+        with stream.checkpoint() as commit:
+            identifier = stream.expect("identifier")
+            stream.expect("colon")
+            commit()
+
+            if identifier.value in identifiers:
+                key = AstIdentifier(value=identifier.value)
+            else:
+                key = AstValue(value=identifier.value)
+
+            key = set_location(key, identifier)
+
+        if commit.rollback:
+            key = delegate("scripting:expression", stream)
+            stream.expect("colon")
+
+        value = delegate("scripting:expression", stream)
+
+    item = AstDictItem(key=key, value=value)
+    return set_location(item, key, value)
+
+
 @dataclass
 class LiteralParser:
     """Parser for literals."""
@@ -992,17 +1039,13 @@ class LiteralParser:
     quote_helper: QuoteHelper = field(default_factory=ScriptingQuoteHelper)
 
     def __call__(self, stream: TokenStream) -> Any:
-        identifiers = get_stream_identifiers(stream)
-
         with stream.syntax(
             curly=r"\{|\}",
             bracket=r"\[|\]",
-            colon=r":",
             comma=r",",
             true=TRUE_PATTERN,
             false=FALSE_PATTERN,
             null=NULL_PATTERN,
-            identifier=IDENTIFIER_PATTERN,
             string=STRING_PATTERN,
             number=NUMBER_PATTERN,
         ):
@@ -1017,30 +1060,11 @@ class LiteralParser:
             )
 
             if curly:
-                items: List[AstDictItem] = []
+                items: List[Any] = []
 
                 with stream.ignore("newline"):
                     for _ in stream.peek_until(("curly", "}")):
-                        with stream.checkpoint() as commit:
-                            identifier = stream.expect("identifier")
-                            stream.expect("colon")
-                            commit()
-
-                            if identifier.value in identifiers:
-                                key = AstIdentifier(value=identifier.value)
-                            else:
-                                key = AstValue(value=identifier.value)
-
-                            key = set_location(key, identifier)
-
-                        if commit.rollback:
-                            key = delegate("scripting:expression", stream)
-                            stream.expect("colon")
-
-                        value = delegate("scripting:expression", stream)
-
-                        item = AstDictItem(key=key, value=value)
-                        items.append(set_location(item, key, value))
+                        items.append(delegate("scripting:dict_item", stream))
 
                         if not stream.get("comma"):
                             stream.expect(("curly", "}"))
@@ -1050,11 +1074,11 @@ class LiteralParser:
                 return set_location(node, curly, stream.current)
 
             if bracket:
-                elements: List[AstExpression] = []
+                elements: List[Any] = []
 
                 with stream.ignore("newline"):
                     for _ in stream.peek_until(("bracket", "]")):
-                        elements.append(delegate("scripting:expression", stream))
+                        elements.append(delegate("scripting:list_item", stream))
 
                         if not stream.get("comma"):
                             stream.expect(("bracket", "]"))

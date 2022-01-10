@@ -189,3 +189,11 @@ for node in generate_tree(range(8), name="small_tree"):
             if score @s thingy matches node.range function node.children
         else:
             if score @s thingy matches node.range say node.value
+
+def try_unpacking():
+    a = [1, *"abc", 2]
+    b = dict(zip(a, a))
+    c = {**b, "b": "thing"}
+    say c
+
+try_unpacking()
