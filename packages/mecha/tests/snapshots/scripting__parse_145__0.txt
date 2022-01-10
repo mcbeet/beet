@@ -1,0 +1,5 @@
+#>ERROR  Empty lookup not allowed.
+# line 1, column 5
+#      1 |  a = [][]
+#        :      ^^^^
+a = [][]

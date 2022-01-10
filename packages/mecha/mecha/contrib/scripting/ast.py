@@ -9,6 +9,8 @@ __all__ = [
     "AstList",
     "AstDictItem",
     "AstDict",
+    "AstUnpack",
+    "AstKeyword",
     "AstAttribute",
     "AstLookup",
     "AstCall",
@@ -24,7 +26,7 @@ __all__ = [
 
 
 from dataclasses import dataclass
-from typing import Any, ClassVar, Optional
+from typing import Any, ClassVar, Optional, Union
 
 from beet.core.utils import required_field
 from tokenstream import TokenStream
@@ -106,6 +108,22 @@ class AstDict(AstExpression):
 
 
 @dataclass(frozen=True)
+class AstUnpack(AstNode):
+    """Ast unpack node."""
+
+    type: str = required_field()
+    value: AstExpression = required_field()
+
+
+@dataclass(frozen=True)
+class AstKeyword(AstNode):
+    """Ast keyword node."""
+
+    name: str = required_field()
+    value: AstExpression = required_field()
+
+
+@dataclass(frozen=True)
 class AstAttribute(AstExpression):
     """Ast attribute node."""
 
@@ -126,7 +144,9 @@ class AstCall(AstExpression):
     """Ast call node."""
 
     value: AstExpression = required_field()
-    arguments: AstChildren[AstExpression] = required_field()
+    arguments: AstChildren[
+        Union[AstExpression, AstUnpack, AstKeyword]
+    ] = required_field()
 
 
 @dataclass(frozen=True)

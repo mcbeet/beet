@@ -1,8 +1,8 @@
 def f():
     foo = 0
-#>ERROR  Identifier 'foo' is not defined.
-# line 3, column 3
+#>ERROR  Expected equal but got brace ')'.
+# line 3, column 6
 #      2 |      foo = 0
 #      3 |  f(foo)
-#        :    ^^^
+#        :       ^
 f(foo)

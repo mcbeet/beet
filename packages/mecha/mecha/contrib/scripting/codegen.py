@@ -52,9 +52,11 @@ from .ast import (
     AstIdentifier,
     AstImportedIdentifier,
     AstInterpolation,
+    AstKeyword,
     AstList,
     AstLookup,
     AstTuple,
+    AstUnpack,
     AstValue,
 )
 
@@ -681,6 +683,25 @@ class Codegen(Visitor):
         result = acc.make_variable()
         acc.statement(f"{result} = {{{', '.join(items)}}}", lineno=node)
         return [result]
+
+    @rule(AstUnpack)
+    def unpack(
+        self,
+        node: AstUnpack,
+        acc: Accumulator,
+    ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
+        value = yield from visit_single(node.value, required=True)
+        prefix = "**" if node.type == "dict" else "*"
+        return [f"{prefix}{value}"]
+
+    @rule(AstKeyword)
+    def keyword(
+        self,
+        node: AstKeyword,
+        acc: Accumulator,
+    ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
+        value = yield from visit_single(node.value, required=True)
+        return [f"{node.name}={value}"]
 
     @rule(AstAttribute)
     def attribute(

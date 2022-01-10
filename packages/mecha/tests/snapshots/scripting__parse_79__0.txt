@@ -1,9 +1,9 @@
 def f(a, b):
     def g(c):
         a + b
-#>ERROR  Identifier 'c' is not defined.
-# line 4, column 7
+#>ERROR  Expected equal but got brace ')'.
+# line 4, column 8
 #      3 |          a + b
 #      4 |      f(c)
-#        :        ^
+#        :         ^
     f(c)

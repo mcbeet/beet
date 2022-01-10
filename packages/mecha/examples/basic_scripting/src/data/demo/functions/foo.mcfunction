@@ -179,3 +179,13 @@ def try_coordinates():
     if block ("~", "~", "~") #planks say 42
 
 try_coordinates()
+
+keyword_arguments = dict(foo=1, bar=2, **{"thing": 42})
+say keyword_arguments
+
+for node in generate_tree(range(8), name="small_tree"):
+    function node.parent append:
+        if node.partition():
+            if score @s thingy matches node.range function node.children
+        else:
+            if score @s thingy matches node.range say node.value

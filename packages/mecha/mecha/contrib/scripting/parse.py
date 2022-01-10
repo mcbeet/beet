@@ -22,6 +22,9 @@ __all__ = [
     "YieldConstraint",
     "BinaryParser",
     "UnaryParser",
+    "UnpackParser",
+    "UnpackConstraint",
+    "KeywordParser",
     "PrimaryParser",
     "LiteralParser",
 ]
@@ -66,9 +69,11 @@ from .ast import (
     AstIdentifier,
     AstImportedIdentifier,
     AstInterpolation,
+    AstKeyword,
     AstList,
     AstLookup,
     AstTuple,
+    AstUnpack,
     AstValue,
 )
 from .utils import ScriptingQuoteHelper
@@ -185,6 +190,14 @@ def get_scripting_parsers(parsers: Dict[str, Parser]) -> Dict[str, Parser]:
             operators=[r"\*\*"],
             parser=delegate("scripting:primary"),
             right_associative=True,
+        ),
+        "scripting:lookup_argument": delegate("scripting:expression"),
+        "scripting:call_argument": AlternativeParser(
+            [
+                KeywordParser(delegate("scripting:expression")),
+                UnpackParser(delegate("scripting:expression")),
+                delegate("scripting:expression"),
+            ]
         ),
         "scripting:primary": PrimaryParser(delegate("scripting:atom")),
         "scripting:atom": AlternativeParser(
@@ -764,6 +777,53 @@ class UnaryParser:
 
 
 @dataclass
+class UnpackParser:
+    """Parser for unpacking."""
+
+    parser: Parser
+
+    def __call__(self, stream: TokenStream) -> Any:
+        with stream.syntax(prefix=r"\*\*|\*"):
+            prefix = stream.expect("prefix")
+
+        node = self.parser(stream)
+
+        node = AstUnpack(type="dict" if prefix.value == "**" else "list", value=node)
+        return set_location(node, prefix, node.value)
+
+
+@dataclass
+class UnpackConstraint:
+    """Constraint for unpacking."""
+
+    type: str
+    parser: Parser
+
+    def __call__(self, stream: TokenStream) -> Any:
+        if isinstance(node := self.parser(stream), AstUnpack):
+            if node.type != self.type:
+                exc = InvalidSyntax(f"{node.type.capitalize()} unpacking not allowed.")
+                raise node.emit_error(exc)
+
+
+@dataclass
+class KeywordParser:
+    """Parser for keywords."""
+
+    parser: Parser
+
+    def __call__(self, stream: TokenStream) -> Any:
+        with stream.syntax(name=IDENTIFIER_PATTERN, equal=r"=(?!=)"):
+            name = stream.expect("name")
+            stream.expect("equal")
+
+        node = self.parser(stream)
+
+        node = AstKeyword(name=name.value, value=node)
+        return set_location(node, name, node.value)
+
+
+@dataclass
 class PrimaryParser:
     """Parser for primary expressions."""
 
@@ -855,7 +915,7 @@ class PrimaryParser:
             number=r"(?:0|[1-9][0-9]*)",
         ):
             while token := stream.get("dot", ("brace", "("), ("bracket", "[")):
-                arguments: List[AstExpression] = []
+                arguments: List[Any] = []
 
                 if token.match("dot"):
                     identifier, string, number = stream.expect(
@@ -874,16 +934,39 @@ class PrimaryParser:
                     elif number:
                         value = int(number.value)
 
-                    arguments.append(
-                        set_location(AstValue(value=value), stream.current)  # type: ignore
-                    )
+                    arguments.append(set_location(AstValue(value=value), stream.current))  # type: ignore
 
                 else:
-                    close = ("brace", ")") if token.match("brace") else ("bracket", "]")
+                    if token.match("brace"):
+                        close = ("brace", ")")
+                        argument_parser = delegate("scripting:call_argument")
+                    else:
+                        close = ("bracket", "]")
+                        argument_parser = delegate("scripting:lookup_argument")
+
+                    allow_positional = True
 
                     with stream.ignore("newline"):
                         for _ in stream.peek_until(close):
-                            arguments.append(delegate("scripting:expression", stream))
+                            argument = argument_parser(stream)
+
+                            if isinstance(argument, AstKeyword):
+                                allow_positional = False
+                            elif isinstance(argument, AstUnpack):
+                                if argument.type == "dict":
+                                    allow_positional = False
+                                elif not allow_positional:
+                                    exc = InvalidSyntax(
+                                        "List unpacking not allowed after keyword arguments."
+                                    )
+                                    raise argument.emit_error(exc)
+                            elif not allow_positional:
+                                exc = InvalidSyntax(
+                                    "Positional argument not allowed after keyword arguments."
+                                )
+                                raise argument.emit_error(exc)
+
+                            arguments.append(argument)
 
                             if not stream.get("comma"):
                                 stream.expect(close)
@@ -891,6 +974,9 @@ class PrimaryParser:
 
                 if token.match("brace"):
                     node = AstCall(value=node, arguments=AstChildren(arguments))
+                elif not arguments:
+                    exc = InvalidSyntax("Empty lookup not allowed.")
+                    raise set_location(exc, node, stream.current)
                 else:
                     node = AstLookup(value=node, arguments=AstChildren(arguments))
 

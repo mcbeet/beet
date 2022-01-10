@@ -541,3 +541,37 @@ a = 1
 if block ^ f"^{a}" ^ #planks say 42
 ###
 if block ("~", "~", "~") #planks say 42
+###
+a = [][]
+###
+def f():
+    pass
+f(1, 2, thing=3, 4)
+###
+def f():
+    pass
+f(1, 2, **{"thing": 3}, 4)
+###
+def f():
+    pass
+f(1, 2, thing=3, *[4])
+###
+def f():
+    pass
+f(1, 2, **{"thing": 3}, *[4])
+###
+def f():
+    pass
+f(1, 2, thing=3)
+###
+def f():
+    pass
+f(1, 2, **{"thing": 3})
+###
+def f():
+    pass
+f(1, *[4], 2, thing=3)
+###
+def f():
+    pass
+f(1, *[4], 2, **{"thing": 3})

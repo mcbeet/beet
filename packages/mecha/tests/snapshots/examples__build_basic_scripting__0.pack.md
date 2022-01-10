@@ -114,6 +114,9 @@ setblock 1 2 3 stone
 setblock 1 2 3 stone
 execute if block ^ ^1 ^ #planks run say 42
 execute if block ~ ~ ~ #planks run say 42
+say {'foo': 1, 'bar': 2, 'thing': 42}
+execute if score @s thingy matches 0..3 run function demo:foo/small_tree/0_3
+execute if score @s thingy matches 4..7 run function demo:foo/small_tree/4_7
 ```
 
 `@function(strip_final_newline) demo:thing`
@@ -271,4 +274,46 @@ execute if score @s thingy matches 30 run say 4
 ```mcfunction
 execute if score @s thingy matches 31 run say 5
 execute if score @s thingy matches 32 run say 6
+```
+
+`@function demo:foo/small_tree/0_3`
+
+```mcfunction
+execute if score @s thingy matches ..1 run function demo:foo/small_tree/0_1
+execute if score @s thingy matches 2.. run function demo:foo/small_tree/2_3
+```
+
+`@function demo:foo/small_tree/0_1`
+
+```mcfunction
+execute if score @s thingy matches 0 run say 0
+execute if score @s thingy matches 1 run say 1
+```
+
+`@function demo:foo/small_tree/2_3`
+
+```mcfunction
+execute if score @s thingy matches 2 run say 2
+execute if score @s thingy matches 3 run say 3
+```
+
+`@function demo:foo/small_tree/4_7`
+
+```mcfunction
+execute if score @s thingy matches ..5 run function demo:foo/small_tree/4_5
+execute if score @s thingy matches 6.. run function demo:foo/small_tree/6_7
+```
+
+`@function demo:foo/small_tree/4_5`
+
+```mcfunction
+execute if score @s thingy matches 4 run say 4
+execute if score @s thingy matches 5 run say 5
+```
+
+`@function demo:foo/small_tree/6_7`
+
+```mcfunction
+execute if score @s thingy matches 6 run say 6
+execute if score @s thingy matches 7 run say 7
 ```
