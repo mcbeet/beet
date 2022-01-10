@@ -199,6 +199,7 @@ def get_scripting_parsers(parsers: Dict[str, Parser]) -> Dict[str, Parser]:
         ################################################################################
         "bool": InterpolationParser("bool", parsers["bool"]),
         "numeric": InterpolationParser("numeric", parsers["numeric"]),
+        "coordinate": InterpolationParser("coordinate", parsers["coordinate"]),
         "time": InterpolationParser("time", parsers["time"]),
         "word": InterpolationParser("word", parsers["word"]),
         "phrase": InterpolationParser("phrase", parsers["phrase"]),
@@ -219,6 +220,11 @@ def get_scripting_parsers(parsers: Dict[str, Parser]) -> Dict[str, Parser]:
         "sort_order": InterpolationParser("sort_order", parsers["sort_order"]),
         "gamemode": InterpolationParser("gamemode", parsers["gamemode"]),
         "message": InterpolationParser("message", parsers["message"]),
+        "block_pos": InterpolationParser("vec3", parsers["block_pos"], fallback=True),
+        "column_pos": InterpolationParser("vec2", parsers["column_pos"], fallback=True),
+        "rotation": InterpolationParser("vec2", parsers["rotation"], fallback=True),
+        "vec2": InterpolationParser("vec2", parsers["vec2"], fallback=True),
+        "vec3": InterpolationParser("vec3", parsers["vec3"], fallback=True),
     }
 
 
@@ -298,15 +304,19 @@ class InterpolationParser:
 
     converter: str
     parser: Parser
+    fallback: bool = False
 
     def __call__(self, stream: TokenStream) -> Any:
-        for parser, alternative in stream.choose("interpolation", "argument"):
+        order = ["interpolation", "original"]
+        if self.fallback:
+            order.reverse()
+        for parser, alternative in stream.choose(*order):
             with alternative:
                 if parser == "interpolation":
                     node = delegate("scripting:interpolation", stream)
                     node = AstInterpolation(converter=self.converter, value=node)
                     return set_location(node, node.value)
-                elif parser == "argument":
+                elif parser == "original":
                     return self.parser(stream)
 
 

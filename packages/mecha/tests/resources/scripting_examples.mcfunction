@@ -530,3 +530,14 @@ for node in generate_tree("abcdefghijklmnopqrstuvwxyz0123456789"):
             if score @s thingy matches node.range say node.value
 ###
 print(ctx.directory, __name__)
+###
+a = 1
+setblock a 2 3 stone
+###
+a = "1 2 3"
+setblock a stone
+###
+a = 1
+if block ^ f"^{a}" ^ #planks say 42
+###
+if block ("~", "~", "~") #planks say 42

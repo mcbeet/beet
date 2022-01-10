@@ -168,3 +168,14 @@ data modify entity @e[type=armor_stand,limit=1] NoBasePlate set value 1b
 
 from ./thing import call_recursive
 call_recursive()
+
+def try_coordinates():
+    a = 1
+    setblock a 2 3 stone
+    a = "1 2 3"
+    setblock a stone
+    a = 1
+    if block ^ f"^{a}" ^ #planks say 42
+    if block ("~", "~", "~") #planks say 42
+
+try_coordinates()

@@ -110,6 +110,10 @@ execute if score @s thingy matches 22..28 run function demo:foo/tree_0/22_28
 execute if score @s thingy matches 29..35 run function demo:foo/tree_0/29_35
 data modify entity @e[type=armor_stand, limit=1] NoBasePlate set value 1b
 execute if score @s loop_again matches 1 run function demo:foo
+setblock 1 2 3 stone
+setblock 1 2 3 stone
+execute if block ^ ^1 ^ #planks run say 42
+execute if block ~ ~ ~ #planks run say 42
 ```
 
 `@function(strip_final_newline) demo:thing`

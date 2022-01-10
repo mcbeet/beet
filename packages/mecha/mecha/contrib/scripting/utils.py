@@ -13,12 +13,12 @@ from dataclasses import dataclass, field
 from types import CodeType, TracebackType
 from typing import Dict, List, Set, TypeVar
 
-from mecha.utils import QuoteHelperWithUnicode
+from mecha.utils import QuoteHelperWithUnicode, string_to_number
 
 T = TypeVar("T")
 
 
-INTERNAL_CODE: Set[CodeType] = set()
+INTERNAL_CODE: Set[CodeType] = {string_to_number.__code__}
 
 
 def internal(f: T) -> T:

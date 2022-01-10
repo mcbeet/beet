@@ -250,6 +250,22 @@ class AstCoordinate(AstNode):
 
     parser = "coordinate"
 
+    @classmethod
+    def from_value(cls, value: Any) -> "AstCoordinate":
+        """Return a coordinate node from the given value."""
+        type = "absolute"
+        if isinstance(value, str):
+            if value.startswith("~"):
+                type = "relative"
+                value = value[1:]
+            elif value.startswith("^"):
+                type = "local"
+                value = value[1:]
+            value = string_to_number(value) if value else 0
+        if isinstance(value, (int, float)):
+            return AstCoordinate(type=type, value=value)
+        raise ValueError("Invalid coordinate {value!r}.")
+
 
 @dataclass(frozen=True)
 class AstVector2(AstNode):
@@ -257,6 +273,14 @@ class AstVector2(AstNode):
 
     x: AstCoordinate = required_field()
     y: AstCoordinate = required_field()
+
+    @classmethod
+    def from_value(cls, value: Any) -> "AstVector2":
+        """Return a vector 2 node from the given value."""
+        if isinstance(value, str):
+            value = value.split()
+        x, y = map(AstCoordinate.from_value, value)
+        return AstVector2(x=x, y=y)
 
 
 @dataclass(frozen=True)
@@ -266,6 +290,14 @@ class AstVector3(AstNode):
     x: AstCoordinate = required_field()
     y: AstCoordinate = required_field()
     z: AstCoordinate = required_field()
+
+    @classmethod
+    def from_value(cls, value: Any) -> "AstVector3":
+        """Return a vector 3 node from the given value."""
+        if isinstance(value, str):
+            value = value.split()
+        x, y, z = map(AstCoordinate.from_value, value)
+        return AstVector3(x=x, y=y, z=z)
 
 
 @dataclass(frozen=True)

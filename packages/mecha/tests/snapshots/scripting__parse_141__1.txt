@@ -1,0 +1,55 @@
+_mecha_lineno = [1, 8], [1, 2]
+_mecha_helper_interpolate_coordinate = _mecha_runtime.helpers['interpolate_coordinate']
+_mecha_helper_replace = _mecha_runtime.helpers['replace']
+_mecha_helper_children = _mecha_runtime.helpers['children']
+with _mecha_runtime.scope() as _mecha_var2:
+    _mecha_var0 = 1
+    a = _mecha_var0
+    _mecha_var1 = a
+    _mecha_var1 = _mecha_helper_interpolate_coordinate(_mecha_var1, _mecha_refs[0])
+    _mecha_runtime.commands.append(_mecha_helper_replace(_mecha_refs[3], arguments=_mecha_helper_children([_mecha_helper_replace(_mecha_refs[1], x=_mecha_var1), _mecha_refs[2]])))
+_mecha_var3 = _mecha_helper_replace(_mecha_refs[4], commands=_mecha_helper_children(_mecha_var2))
+---
+output = _mecha_var3
+---
+_mecha_refs[0]
+<class 'mecha.contrib.scripting.ast.AstInterpolation'>
+  location: SourceLocation(pos=15, lineno=2, colno=10)
+  end_location: SourceLocation(pos=16, lineno=2, colno=11)
+  converter: 'coordinate'
+  value:
+    <class 'mecha.contrib.scripting.ast.AstIdentifier'>
+_mecha_refs[1]
+<class 'mecha.ast.AstVector3'>
+  location: SourceLocation(pos=15, lineno=2, colno=10)
+  end_location: SourceLocation(pos=20, lineno=2, colno=15)
+  x:
+    <class 'mecha.contrib.scripting.ast.AstInterpolation'>
+  y:
+    <class 'mecha.ast.AstCoordinate'>
+  z:
+    <class 'mecha.ast.AstCoordinate'>
+_mecha_refs[2]
+<class 'mecha.ast.AstBlock'>
+  location: SourceLocation(pos=21, lineno=2, colno=16)
+  end_location: SourceLocation(pos=26, lineno=2, colno=21)
+  identifier:
+    <class 'mecha.ast.AstResourceLocation'>
+  block_states:
+    <empty>
+  data_tags: None
+_mecha_refs[3]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=6, lineno=2, colno=1)
+  end_location: SourceLocation(pos=26, lineno=2, colno=21)
+  identifier: 'setblock:pos:block'
+  arguments:
+    <class 'mecha.ast.AstVector3'>
+    <class 'mecha.ast.AstBlock'>
+_mecha_refs[4]
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=26, lineno=2, colno=21)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+    <class 'mecha.ast.AstCommand'>

@@ -14,6 +14,7 @@ from mecha import (
     AstBool,
     AstChildren,
     AstColor,
+    AstCoordinate,
     AstGamemode,
     AstGreedy,
     AstJson,
@@ -30,6 +31,8 @@ from mecha import (
     AstSwizzle,
     AstTeam,
     AstTime,
+    AstVector2,
+    AstVector3,
     AstWord,
 )
 
@@ -46,6 +49,7 @@ def get_scripting_helpers() -> Dict[str, Any]:
         "import_module": python_import_module,
         "interpolate_bool": converter(AstBool.from_value),
         "interpolate_numeric": converter(AstNumber.from_value),
+        "interpolate_coordinate": converter(AstCoordinate.from_value),
         "interpolate_time": converter(AstTime.from_value),
         "interpolate_word": converter(AstWord.from_value),
         "interpolate_phrase": converter(AstString.from_value),
@@ -62,6 +66,8 @@ def get_scripting_helpers() -> Dict[str, Any]:
         "interpolate_sort_order": converter(AstSortOrder.from_value),
         "interpolate_gamemode": converter(AstGamemode.from_value),
         "interpolate_message": converter(AstMessage.from_value),
+        "interpolate_vec2": converter(AstVector2.from_value),
+        "interpolate_vec3": converter(AstVector3.from_value),
     }
 
 

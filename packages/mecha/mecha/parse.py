@@ -241,6 +241,21 @@ def get_default_parsers() -> Dict[str, Parser]:
             resource_location_parser=delegate("resource_location"),
         ),
         "message": parse_message,
+        "block_pos": Vector3Parser(coordinate_parser=delegate("coordinate")),
+        "column_pos": Vector2Parser(
+            coordinate_parser=RestrictCoordinateConstraint(
+                parser=delegate("integer_coordinate"),
+                disallow=["local"],
+            ),
+        ),
+        "rotation": Vector2Parser(
+            coordinate_parser=RestrictCoordinateConstraint(
+                parser=delegate("coordinate"),
+                disallow=["local"],
+            ),
+        ),
+        "vec2": Vector2Parser(coordinate_parser=delegate("coordinate")),
+        "vec3": Vector3Parser(coordinate_parser=delegate("coordinate")),
         ################################################################################
         # Particle
         ################################################################################
@@ -350,7 +365,7 @@ def get_default_parsers() -> Dict[str, Parser]:
             parser=delegate("coordinate"),
             disallow=["local"],
         ),
-        "command:argument:minecraft:block_pos": Vector3Parser(delegate("coordinate")),
+        "command:argument:minecraft:block_pos": delegate("block_pos"),
         "command:argument:minecraft:block_predicate": MultilineParser(
             delegate("block_predicate")
         ),
@@ -363,12 +378,7 @@ def get_default_parsers() -> Dict[str, Parser]:
                 delegate("color_reset"),
             ]
         ),
-        "command:argument:minecraft:column_pos": Vector2Parser(
-            coordinate_parser=RestrictCoordinateConstraint(
-                parser=delegate("integer_coordinate"),
-                disallow=["local"],
-            ),
-        ),
+        "command:argument:minecraft:column_pos": delegate("column_pos"),
         "command:argument:minecraft:component": MultilineParser(delegate("json")),
         "command:argument:minecraft:dimension": delegate("resource_location"),
         "command:argument:minecraft:entity": EntityParser(
@@ -409,12 +419,7 @@ def get_default_parsers() -> Dict[str, Parser]:
         "command:argument:minecraft:operation": delegate("scoreboard_operation"),
         "command:argument:minecraft:particle": delegate("particle"),
         "command:argument:minecraft:resource_location": delegate("resource_location"),
-        "command:argument:minecraft:rotation": Vector2Parser(
-            coordinate_parser=RestrictCoordinateConstraint(
-                parser=delegate("coordinate"),
-                disallow=["local"],
-            ),
-        ),
+        "command:argument:minecraft:rotation": delegate("rotation"),
         "command:argument:minecraft:score_holder": AlternativeParser(
             [
                 EntityParser(SelectorAmountConstraint(delegate("selector"))),
@@ -426,12 +431,8 @@ def get_default_parsers() -> Dict[str, Parser]:
         "command:argument:minecraft:team": delegate("team"),
         "command:argument:minecraft:time": delegate("time"),
         "command:argument:minecraft:uuid": delegate("uuid"),
-        "command:argument:minecraft:vec2": Vector2Parser(
-            coordinate_parser=delegate("coordinate"),
-        ),
-        "command:argument:minecraft:vec3": Vector3Parser(
-            coordinate_parser=delegate("coordinate"),
-        ),
+        "command:argument:minecraft:vec2": delegate("vec2"),
+        "command:argument:minecraft:vec3": delegate("vec3"),
     }
 
 
