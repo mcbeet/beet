@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.31.1 (2022-01-12)
+### Fix
+* Make it possible to spread nbt paths on multiple lines ([`8c66564`](https://github.com/mcbeet/mecha/commit/8c66564a6190aaf40c84b0cfce438ce128bc76d4))
+
 ## v0.31.0 (2022-01-10)
 ### Feature
 * Support item and attribute assignment ([`459a2da`](https://github.com/mcbeet/mecha/commit/459a2da008e5886dcf1a82d61b21e31a381ae7bc))
