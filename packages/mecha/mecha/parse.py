@@ -407,7 +407,7 @@ def get_default_parsers() -> Dict[str, Parser]:
         "command:argument:minecraft:nbt_compound_tag": MultilineParser(
             delegate("nbt_compound")
         ),
-        "command:argument:minecraft:nbt_path": delegate("nbt_path"),
+        "command:argument:minecraft:nbt_path": MultilineParser(delegate("nbt_path")),
         "command:argument:minecraft:nbt_tag": MultilineParser(delegate("nbt")),
         "command:argument:minecraft:objective": AlternativeParser(
             [

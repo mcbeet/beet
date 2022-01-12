@@ -23,3 +23,8 @@ scoreboard players set #index global 3
 scoreboard players set $index global 3
 scoreboard players operation #sie_1_flags_delta integer = #sie_1_flags integer
 execute store result score @s smithed.data run clear @s #smithed:crafter/all 0
+execute if data storage demo:foo a.b.c run say hello
+execute if data storage demo:foo thing1.thing2.thing3 run say hello
+execute if data storage demo:foo thing1.thing2{foo: 1, bar: [1, 2, 3]}.something_else run say hello
+data modify entity @s Attributes[{Name: "minecraft:generic.movement_speed"}].Modifiers append from storage demo:foo bar
+data modify entity @s Attributes[{Name: "minecraft:generic.movement_speed"}].Modifiers append from storage demo:foo bar
