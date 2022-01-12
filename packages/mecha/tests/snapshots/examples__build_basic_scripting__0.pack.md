@@ -119,6 +119,8 @@ execute if score @s thingy matches 0..3 run function demo:foo/small_tree/0_3
 execute if score @s thingy matches 4..7 run function demo:foo/small_tree/4_7
 say {1: 1, 'a': 'a', 'b': 'thing', 'c': 'c', 2: 2}
 say {1: {2: 'foo'}}
+execute if score @s thingy matches 10..14 run function demo:foo/tree_1/10_14
+execute if score @s thingy matches 15..19 run function demo:foo/tree_1/15_19
 ```
 
 `@function(strip_final_newline) demo:thing`
@@ -318,4 +320,60 @@ execute if score @s thingy matches 5 run say 5
 ```mcfunction
 execute if score @s thingy matches 6 run say 6
 execute if score @s thingy matches 7 run say 7
+```
+
+`@function demo:foo/tree_1/10_14`
+
+```mcfunction
+execute if score @s thingy matches ..12 run function demo:foo/tree_1/10_12
+execute if score @s thingy matches 13.. run function demo:foo/tree_1/13_14
+```
+
+`@function demo:foo/tree_1/10_12`
+
+```mcfunction
+execute if score @s thingy matches ..11 run function demo:foo/tree_1/10_11
+execute if score @s thingy matches 12 run say 12
+```
+
+`@function demo:foo/tree_1/10_11`
+
+```mcfunction
+execute if score @s thingy matches 10 run say 10
+execute if score @s thingy matches 11 run say 11
+```
+
+`@function demo:foo/tree_1/13_14`
+
+```mcfunction
+execute if score @s thingy matches 13 run say 13
+execute if score @s thingy matches 14 run say 14
+```
+
+`@function demo:foo/tree_1/15_19`
+
+```mcfunction
+execute if score @s thingy matches ..17 run function demo:foo/tree_1/15_17
+execute if score @s thingy matches 18.. run function demo:foo/tree_1/18_19
+```
+
+`@function demo:foo/tree_1/15_17`
+
+```mcfunction
+execute if score @s thingy matches ..16 run function demo:foo/tree_1/15_16
+execute if score @s thingy matches 17 run say 17
+```
+
+`@function demo:foo/tree_1/15_16`
+
+```mcfunction
+execute if score @s thingy matches 15 run say 15
+execute if score @s thingy matches 16 run say 16
+```
+
+`@function demo:foo/tree_1/18_19`
+
+```mcfunction
+execute if score @s thingy matches 18 run say 18
+execute if score @s thingy matches 19 run say 19
 ```

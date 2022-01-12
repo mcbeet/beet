@@ -205,3 +205,10 @@ def try_set_item():
     say try_set_item.data
 
 try_set_item()
+
+for node in generate_tree(range(10, 20), key=int):
+    function node.parent append:
+        if node.partition():
+            if score @s thingy matches node.range function node.children
+        else:
+            if score @s thingy matches node.range say node.value
