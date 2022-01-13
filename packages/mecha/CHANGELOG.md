@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.31.2 (2022-01-13)
+### Fix
+* No scientific notation when serializing numbers ([`e923224`](https://github.com/mcbeet/mecha/commit/e923224acc1c308e59dbdc44e2822f4db912a075))
+
 ## v0.31.1 (2022-01-12)
 ### Fix
 * Make it possible to spread nbt paths on multiple lines ([`8c66564`](https://github.com/mcbeet/mecha/commit/8c66564a6190aaf40c84b0cfce438ce128bc76d4))
