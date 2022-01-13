@@ -4,6 +4,7 @@ __all__ = [
     "InvalidEscapeSequence",
     "normalize_whitespace",
     "string_to_number",
+    "number_to_string",
     "VersionNumber",
     "split_version",
     "underline_code",
@@ -37,6 +38,14 @@ def normalize_whitespace(op: str) -> str:
 def string_to_number(string: str) -> Union[int, float]:
     """Helper for converting numbers to string and keeping their original type."""
     return float(string) if "." in string else int(string)
+
+
+def number_to_string(number: Union[int, float]) -> str:
+    """Helper for converting numbers to string and removing scientific notation."""
+    value = str(number)
+    if "e" in value:
+        value = f"{number:.20f}".rstrip("0")
+    return value
 
 
 def split_version(version: VersionNumber) -> Tuple[int, ...]:

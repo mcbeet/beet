@@ -1,6 +1,6 @@
 <class 'mecha.ast.AstRoot'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
-  end_location: SourceLocation(pos=6265, lineno=151, colno=1)
+  end_location: SourceLocation(pos=6331, lineno=152, colno=1)
   commands:
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=14, lineno=2, colno=1)
@@ -5538,3 +5538,49 @@
                       location: SourceLocation(pos=6263, lineno=150, colno=78)
                       end_location: SourceLocation(pos=6264, lineno=150, colno=79)
                       value: 0
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=6265, lineno=151, colno=1)
+      end_location: SourceLocation(pos=6330, lineno=151, colno=66)
+      identifier: 'execute:subcommand'
+      arguments:
+        <class 'mecha.ast.AstCommand'>
+          location: SourceLocation(pos=6273, lineno=151, colno=9)
+          end_location: SourceLocation(pos=6330, lineno=151, colno=66)
+          identifier: 'execute:if:entity:entities:subcommand'
+          arguments:
+            <class 'mecha.ast.AstSelector'>
+              location: SourceLocation(pos=6283, lineno=151, colno=19)
+              end_location: SourceLocation(pos=6308, lineno=151, colno=44)
+              variable: 's'
+              arguments:
+                <class 'mecha.ast.AstSelectorArgument'>
+                  location: SourceLocation(pos=6286, lineno=151, colno=22)
+                  end_location: SourceLocation(pos=6307, lineno=151, colno=43)
+                  inverted: False
+                  key:
+                    <class 'mecha.ast.AstString'>
+                      location: SourceLocation(pos=6286, lineno=151, colno=22)
+                      end_location: SourceLocation(pos=6294, lineno=151, colno=30)
+                      value: 'distance'
+                  value:
+                    <class 'mecha.ast.AstRange'>
+                      location: SourceLocation(pos=6295, lineno=151, colno=31)
+                      end_location: SourceLocation(pos=6307, lineno=151, colno=43)
+                      min: None
+                      max: 1e-08
+            <class 'mecha.ast.AstCommand'>
+              location: SourceLocation(pos=6309, lineno=151, colno=45)
+              end_location: SourceLocation(pos=6330, lineno=151, colno=66)
+              identifier: 'execute:run:subcommand'
+              arguments:
+                <class 'mecha.ast.AstCommand'>
+                  location: SourceLocation(pos=6313, lineno=151, colno=49)
+                  end_location: SourceLocation(pos=6330, lineno=151, colno=66)
+                  identifier: 'function:name'
+                  arguments:
+                    <class 'mecha.ast.AstResourceLocation'>
+                      location: SourceLocation(pos=6322, lineno=151, colno=58)
+                      end_location: SourceLocation(pos=6330, lineno=151, colno=66)
+                      is_tag: False
+                      namespace: 'demo'
+                      path: 'foo'

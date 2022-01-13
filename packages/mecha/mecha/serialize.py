@@ -47,7 +47,7 @@ from .ast import (
 from .database import CompilationDatabase
 from .dispatch import Visitor, rule
 from .spec import CommandSpec
-from .utils import QuoteHelper
+from .utils import QuoteHelper, number_to_string
 
 REGEX_COMMENTS = re.compile(r"^(?:(\s*#.*)|.+)", re.MULTILINE)
 
@@ -175,7 +175,7 @@ class Serializer(Visitor):
 
     @rule(AstNumber)
     def number(self, node: AstNumber, result: List[str]):
-        result.append(str(node.value))
+        result.append(number_to_string(node.value))
 
     @rule(AstUUID)
     def uuid(self, node: AstUUID, result: List[str]):
@@ -191,7 +191,7 @@ class Serializer(Visitor):
             result.append("^")
             if node.value == 0:
                 return
-        result.append(str(node.value))
+        result.append(number_to_string(node.value))
 
     @rule(AstJson)
     def json(self, node: AstJson, result: List[str]):
@@ -226,17 +226,17 @@ class Serializer(Visitor):
     @rule(AstRange)
     def range(self, node: AstRange, result: List[str]):
         if node.exact:
-            result.append(str(node.value))
+            result.append(number_to_string(node.value))
         else:
             if node.min is not None:
-                result.append(str(node.min))
+                result.append(number_to_string(node.min))
             result.append("..")
             if node.max is not None:
-                result.append(str(node.max))
+                result.append(number_to_string(node.max))
 
     @rule(AstTime)
     def time(self, node: AstTime, result: List[str]):
-        result.append(str(node.value))
+        result.append(number_to_string(node.value))
 
         if node.unit == "day":
             result.append("d")
