@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.33.0 (2022-01-14)
+### Feature
+* Add del statements ([`7679582`](https://github.com/mcbeet/mecha/commit/76795820a4e81f5797e6d8dfe757858b25bd46f7))
+
 ## v0.32.1 (2022-01-14)
 ### Fix
 * Properly report empty blocks ([`4fca8a5`](https://github.com/mcbeet/mecha/commit/4fca8a51504f609a371f12be9ba33471fb44799c))
