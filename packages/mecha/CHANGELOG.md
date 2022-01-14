@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.32.0 (2022-01-14)
+### Feature
+* Add slicing ([`e6757fd`](https://github.com/mcbeet/mecha/commit/e6757fd8d73554544bf5343831aa9c4da9f4f6e0))
+
 ## v0.31.4 (2022-01-14)
 ### Fix
 * Make ast options into sets and properly handle item_slot ([`9231bc3`](https://github.com/mcbeet/mecha/commit/9231bc3fb964cb3f5e564fad7ba3014e27a4c0e0))
