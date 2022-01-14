@@ -92,7 +92,7 @@ class Runtime:
             self.expose(
                 "generate_tree",
                 lambda *args, **kwargs: generate_tree(
-                    self.current_path,
+                    kwargs.pop("root") if "root" in kwargs else self.current_path,
                     *args,
                     name=(
                         kwargs.pop("name")
