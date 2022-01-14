@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.33.1 (2022-01-14)
+### Fix
+* Allow specifying tree root using keyword argument ([`4d1e85c`](https://github.com/mcbeet/mecha/commit/4d1e85cd7b0c3b229a82b29ec1979d626b1b2604))
+
 ## v0.33.0 (2022-01-14)
 ### Feature
 * Add del statements ([`7679582`](https://github.com/mcbeet/mecha/commit/76795820a4e81f5797e6d8dfe757858b25bd46f7))
