@@ -201,7 +201,7 @@ class Context:
         self.template.expose(
             "generate_tree",
             lambda *args, **kwargs: generate_tree(
-                self.meta["render_path"],
+                kwargs.pop("root") if "root" in kwargs else self.meta["render_path"],
                 *args,
                 name=(
                     kwargs.pop("name")
