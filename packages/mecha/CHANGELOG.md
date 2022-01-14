@@ -2,6 +2,11 @@
 
 <!--next-version-placeholder-->
 
+## v0.31.4 (2022-01-14)
+### Fix
+* Make ast options into sets and properly handle item_slot ([`9231bc3`](https://github.com/mcbeet/mecha/commit/9231bc3fb964cb3f5e564fad7ba3014e27a4c0e0))
+* Sort ast options ([`56bd955`](https://github.com/mcbeet/mecha/commit/56bd955d602d65caae3af907b45c58843bd6a7cb))
+
 ## v0.31.3 (2022-01-14)
 ### Fix
 * Proper scoreboard_slot handling ([`4740d78`](https://github.com/mcbeet/mecha/commit/4740d780ebd3662a71e39e995e0c50eb77e90dad))
