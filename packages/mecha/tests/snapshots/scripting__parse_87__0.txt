@@ -56,7 +56,7 @@ def f():
                   end_location: SourceLocation(pos=52, lineno=4, colno=12)
                   operator: '='
                   target:
-                    <class 'mecha.contrib.scripting.ast.AstAssignmentTargetIdentifier'>
+                    <class 'mecha.contrib.scripting.ast.AstTargetIdentifier'>
                       location: SourceLocation(pos=45, lineno=4, colno=5)
                       end_location: SourceLocation(pos=48, lineno=4, colno=8)
                       value: 'foo'

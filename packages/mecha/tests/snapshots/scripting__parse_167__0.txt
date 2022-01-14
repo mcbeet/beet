@@ -15,7 +15,7 @@ item replace entity @s weapon.offhand from entity @s weapon.mainhand
           end_location: SourceLocation(pos=16, lineno=1, colno=17)
           operator: '='
           target:
-            <class 'mecha.contrib.scripting.ast.AstAssignmentTargetIdentifier'>
+            <class 'mecha.contrib.scripting.ast.AstTargetIdentifier'>
               location: SourceLocation(pos=0, lineno=1, colno=1)
               end_location: SourceLocation(pos=6, lineno=1, colno=7)
               value: 'weapon'

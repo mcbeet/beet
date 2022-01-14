@@ -238,3 +238,6 @@ say numbers[9:3:-1]
 
 execute at @s if block ~ ~ ~ #minecraft:beds:
     teleport @s ~ ~0.56250 ~
+
+del numbers[3:]
+say numbers

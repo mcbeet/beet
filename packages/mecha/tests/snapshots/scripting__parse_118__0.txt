@@ -56,7 +56,7 @@ for i in f():
       end_location: SourceLocation(pos=68, lineno=6, colno=10)
       identifier: 'for:target:in:iterable:body'
       arguments:
-        <class 'mecha.contrib.scripting.ast.AstAssignmentTargetIdentifier'>
+        <class 'mecha.contrib.scripting.ast.AstTargetIdentifier'>
           location: SourceLocation(pos=49, lineno=5, colno=5)
           end_location: SourceLocation(pos=50, lineno=5, colno=6)
           value: 'i'

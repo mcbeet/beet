@@ -15,7 +15,7 @@ scoreboard objectives setdisplay my_team some_score_name
           end_location: SourceLocation(pos=28, lineno=1, colno=29)
           operator: '='
           target:
-            <class 'mecha.contrib.scripting.ast.AstAssignmentTargetIdentifier'>
+            <class 'mecha.contrib.scripting.ast.AstTargetIdentifier'>
               location: SourceLocation(pos=0, lineno=1, colno=1)
               end_location: SourceLocation(pos=7, lineno=1, colno=8)
               value: 'my_team'

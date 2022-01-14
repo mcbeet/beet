@@ -10,7 +10,7 @@ for foo in "foo":
       end_location: SourceLocation(pos=31, lineno=2, colno=14)
       identifier: 'for:target:in:iterable:body'
       arguments:
-        <class 'mecha.contrib.scripting.ast.AstAssignmentTargetIdentifier'>
+        <class 'mecha.contrib.scripting.ast.AstTargetIdentifier'>
           location: SourceLocation(pos=4, lineno=1, colno=5)
           end_location: SourceLocation(pos=7, lineno=1, colno=8)
           value: 'foo'
@@ -32,7 +32,7 @@ for foo in "foo":
                   end_location: SourceLocation(pos=31, lineno=2, colno=14)
                   operator: '='
                   target:
-                    <class 'mecha.contrib.scripting.ast.AstAssignmentTargetIdentifier'>
+                    <class 'mecha.contrib.scripting.ast.AstTargetIdentifier'>
                       location: SourceLocation(pos=22, lineno=2, colno=5)
                       end_location: SourceLocation(pos=25, lineno=2, colno=8)
                       value: 'foo'

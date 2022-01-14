@@ -15,7 +15,7 @@ scoreboard objectives setdisplay f"sidebar.team.{color}" some_score_name
           end_location: SourceLocation(pos=13, lineno=1, colno=14)
           operator: '='
           target:
-            <class 'mecha.contrib.scripting.ast.AstAssignmentTargetIdentifier'>
+            <class 'mecha.contrib.scripting.ast.AstTargetIdentifier'>
               location: SourceLocation(pos=0, lineno=1, colno=1)
               end_location: SourceLocation(pos=5, lineno=1, colno=6)
               value: 'color'

@@ -17,7 +17,7 @@ foo = "hello"
           end_location: SourceLocation(pos=13, lineno=1, colno=14)
           operator: '='
           target:
-            <class 'mecha.contrib.scripting.ast.AstAssignmentTargetIdentifier'>
+            <class 'mecha.contrib.scripting.ast.AstTargetIdentifier'>
               location: SourceLocation(pos=0, lineno=1, colno=1)
               end_location: SourceLocation(pos=3, lineno=1, colno=4)
               value: 'foo'

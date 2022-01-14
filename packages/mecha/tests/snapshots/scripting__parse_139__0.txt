@@ -14,7 +14,7 @@ for node in generate_tree("abcdefghijklmnopqrstuvwxyz0123456789"):
       end_location: SourceLocation(pos=281, lineno=6, colno=65)
       identifier: 'for:target:in:iterable:body'
       arguments:
-        <class 'mecha.contrib.scripting.ast.AstAssignmentTargetIdentifier'>
+        <class 'mecha.contrib.scripting.ast.AstTargetIdentifier'>
           location: SourceLocation(pos=4, lineno=1, colno=5)
           end_location: SourceLocation(pos=8, lineno=1, colno=9)
           value: 'node'

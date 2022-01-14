@@ -98,7 +98,7 @@ def foo(something):
                           end_location: SourceLocation(pos=148, lineno=9, colno=20)
                           operator: '='
                           target:
-                            <class 'mecha.contrib.scripting.ast.AstAssignmentTargetIdentifier'>
+                            <class 'mecha.contrib.scripting.ast.AstTargetIdentifier'>
                               location: SourceLocation(pos=137, lineno=9, colno=9)
                               end_location: SourceLocation(pos=138, lineno=9, colno=10)
                               value: 'x'
@@ -112,7 +112,7 @@ def foo(something):
                       end_location: SourceLocation(pos=199, lineno=11, colno=23)
                       identifier: 'for:target:in:iterable:body'
                       arguments:
-                        <class 'mecha.contrib.scripting.ast.AstAssignmentTargetIdentifier'>
+                        <class 'mecha.contrib.scripting.ast.AstTargetIdentifier'>
                           location: SourceLocation(pos=161, lineno=10, colno=13)
                           end_location: SourceLocation(pos=162, lineno=10, colno=14)
                           value: 'i'
@@ -134,7 +134,7 @@ def foo(something):
                                   end_location: SourceLocation(pos=199, lineno=11, colno=23)
                                   operator: '+='
                                   target:
-                                    <class 'mecha.contrib.scripting.ast.AstAssignmentTargetIdentifier'>
+                                    <class 'mecha.contrib.scripting.ast.AstTargetIdentifier'>
                                       location: SourceLocation(pos=189, lineno=11, colno=13)
                                       end_location: SourceLocation(pos=190, lineno=11, colno=14)
                                       value: 'x'

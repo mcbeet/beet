@@ -15,7 +15,7 @@ numbers[3:] = []
           end_location: SourceLocation(pos=25, lineno=1, colno=26)
           operator: '='
           target:
-            <class 'mecha.contrib.scripting.ast.AstAssignmentTargetIdentifier'>
+            <class 'mecha.contrib.scripting.ast.AstTargetIdentifier'>
               location: SourceLocation(pos=0, lineno=1, colno=1)
               end_location: SourceLocation(pos=7, lineno=1, colno=8)
               value: 'numbers'
@@ -52,7 +52,7 @@ numbers[3:] = []
           end_location: SourceLocation(pos=42, lineno=2, colno=17)
           operator: '='
           target:
-            <class 'mecha.contrib.scripting.ast.AstAssignmentTargetItem'>
+            <class 'mecha.contrib.scripting.ast.AstTargetItem'>
               location: SourceLocation(pos=26, lineno=2, colno=1)
               end_location: SourceLocation(pos=37, lineno=2, colno=12)
               value:

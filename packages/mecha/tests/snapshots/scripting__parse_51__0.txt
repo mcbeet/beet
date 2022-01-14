@@ -10,7 +10,7 @@ for c in "abc":
       end_location: SourceLocation(pos=33, lineno=2, colno=18)
       identifier: 'for:target:in:iterable:body'
       arguments:
-        <class 'mecha.contrib.scripting.ast.AstAssignmentTargetIdentifier'>
+        <class 'mecha.contrib.scripting.ast.AstTargetIdentifier'>
           location: SourceLocation(pos=4, lineno=1, colno=5)
           end_location: SourceLocation(pos=5, lineno=1, colno=6)
           value: 'c'

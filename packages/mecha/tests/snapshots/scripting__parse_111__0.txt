@@ -14,7 +14,7 @@ yo = f"{{{f"{{{f"{{{7:08}}}"}}}"}}}"
           end_location: SourceLocation(pos=36, lineno=1, colno=37)
           operator: '='
           target:
-            <class 'mecha.contrib.scripting.ast.AstAssignmentTargetIdentifier'>
+            <class 'mecha.contrib.scripting.ast.AstTargetIdentifier'>
               location: SourceLocation(pos=0, lineno=1, colno=1)
               end_location: SourceLocation(pos=2, lineno=1, colno=3)
               value: 'yo'

@@ -15,7 +15,7 @@ d.foo += 1
           end_location: SourceLocation(pos=12, lineno=1, colno=13)
           operator: '='
           target:
-            <class 'mecha.contrib.scripting.ast.AstAssignmentTargetIdentifier'>
+            <class 'mecha.contrib.scripting.ast.AstTargetIdentifier'>
               location: SourceLocation(pos=0, lineno=1, colno=1)
               end_location: SourceLocation(pos=1, lineno=1, colno=2)
               value: 'd'
@@ -47,7 +47,7 @@ d.foo += 1
           end_location: SourceLocation(pos=23, lineno=2, colno=11)
           operator: '+='
           target:
-            <class 'mecha.contrib.scripting.ast.AstAssignmentTargetAttribute'>
+            <class 'mecha.contrib.scripting.ast.AstTargetAttribute'>
               location: SourceLocation(pos=13, lineno=2, colno=1)
               end_location: SourceLocation(pos=18, lineno=2, colno=6)
               name: 'foo'

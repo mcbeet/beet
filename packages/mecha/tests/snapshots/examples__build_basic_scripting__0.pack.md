@@ -138,6 +138,7 @@ say [9, 8, 7, 6, 5, 4, 3, 2, 1, 0]
 say [11, 10, 9, 8, 7, 6, 5, 4]
 say [9, 8, 7, 6, 5, 4]
 execute at @s if block ~ ~ ~ #minecraft:beds run teleport @s ~ ~0.5625 ~
+say [0, 1, 2]
 ```
 
 `@function(strip_final_newline) demo:thing`

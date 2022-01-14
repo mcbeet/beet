@@ -11,7 +11,7 @@ for i in "":
       end_location: SourceLocation(pos=39, lineno=3, colno=13)
       identifier: 'for:target:in:iterable:body'
       arguments:
-        <class 'mecha.contrib.scripting.ast.AstAssignmentTargetIdentifier'>
+        <class 'mecha.contrib.scripting.ast.AstTargetIdentifier'>
           location: SourceLocation(pos=4, lineno=1, colno=5)
           end_location: SourceLocation(pos=5, lineno=1, colno=6)
           value: 'i'

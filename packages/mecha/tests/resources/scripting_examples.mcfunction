@@ -619,3 +619,8 @@ say numbers[3:]
 ###
 numbers = list(range(12))
 numbers[3:] = []
+###
+numbers = list(range(12))
+del numbers[3:]
+###
+del 1 + 1

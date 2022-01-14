@@ -54,6 +54,17 @@
         }
       }
     },
+    "del": {
+      "type": "literal",
+      "executable": true,
+      "children": {
+        "target": {
+          "type": "argument",
+          "parser": "mecha:scripting:del_target",
+          "executable": true
+        }
+      }
+    },
     "if": {
       "type": "literal",
       "children": {

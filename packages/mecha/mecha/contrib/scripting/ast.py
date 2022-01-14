@@ -15,10 +15,10 @@ __all__ = [
     "AstAttribute",
     "AstLookup",
     "AstCall",
-    "AstAssignmentTarget",
-    "AstAssignmentTargetIdentifier",
-    "AstAssignmentTargetAttribute",
-    "AstAssignmentTargetItem",
+    "AstTarget",
+    "AstTargetIdentifier",
+    "AstTargetAttribute",
+    "AstTargetItem",
     "AstAssignment",
     "AstFunctionSignature",
     "AstFunctionSignatureArgument",
@@ -29,7 +29,7 @@ __all__ = [
 
 
 from dataclasses import dataclass
-from typing import Any, ClassVar, Optional, Union
+from typing import Any, Optional, Union
 
 from beet.core.utils import required_field
 from tokenstream import TokenStream
@@ -162,30 +162,28 @@ class AstCall(AstExpression):
 
 
 @dataclass(frozen=True)
-class AstAssignmentTarget(AstNode):
-    """Base node for assignment targets."""
-
-    multiple: ClassVar[bool] = False
+class AstTarget(AstNode):
+    """Base node for targets."""
 
 
 @dataclass(frozen=True)
-class AstAssignmentTargetIdentifier(AstAssignmentTarget):
-    """Ast assignment target identifier node."""
+class AstTargetIdentifier(AstTarget):
+    """Ast target identifier node."""
 
     value: str = required_field()
 
 
 @dataclass(frozen=True)
-class AstAssignmentTargetAttribute(AstAssignmentTarget):
-    """Ast assignment target attribute node."""
+class AstTargetAttribute(AstTarget):
+    """Ast target attribute node."""
 
     name: str = required_field()
     value: AstExpression = required_field()
 
 
 @dataclass(frozen=True)
-class AstAssignmentTargetItem(AstAssignmentTarget):
-    """Ast assignment target item node."""
+class AstTargetItem(AstTarget):
+    """Ast target item node."""
 
     value: AstExpression = required_field()
     arguments: AstChildren[Union[AstExpression, AstSlice]] = required_field()
@@ -196,7 +194,7 @@ class AstAssignment(AstNode):
     """Ast assignment node."""
 
     operator: str = required_field()
-    target: AstAssignmentTarget = required_field()
+    target: AstTarget = required_field()
     value: AstExpression = required_field()
 
 

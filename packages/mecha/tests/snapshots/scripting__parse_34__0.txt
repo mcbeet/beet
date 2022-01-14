@@ -16,7 +16,7 @@ if a == 1:
           end_location: SourceLocation(pos=5, lineno=1, colno=6)
           operator: '='
           target:
-            <class 'mecha.contrib.scripting.ast.AstAssignmentTargetIdentifier'>
+            <class 'mecha.contrib.scripting.ast.AstTargetIdentifier'>
               location: SourceLocation(pos=0, lineno=1, colno=1)
               end_location: SourceLocation(pos=1, lineno=1, colno=2)
               value: 'a'
@@ -58,7 +58,7 @@ if a == 1:
                   end_location: SourceLocation(pos=26, lineno=3, colno=10)
                   operator: '='
                   target:
-                    <class 'mecha.contrib.scripting.ast.AstAssignmentTargetIdentifier'>
+                    <class 'mecha.contrib.scripting.ast.AstTargetIdentifier'>
                       location: SourceLocation(pos=21, lineno=3, colno=5)
                       end_location: SourceLocation(pos=22, lineno=3, colno=6)
                       value: 'a'

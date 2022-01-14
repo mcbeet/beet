@@ -13,6 +13,7 @@ __all__ = [
     "FlushPendingIdentifiersParser",
     "parse_function_signature",
     "parse_function_root",
+    "parse_del_target",
     "parse_identifier",
     "ImportLocationConstraint",
     "ImportStatementHandler",
@@ -55,10 +56,6 @@ from mecha.utils import QuoteHelper, normalize_whitespace, string_to_number
 
 from .ast import (
     AstAssignment,
-    AstAssignmentTarget,
-    AstAssignmentTargetAttribute,
-    AstAssignmentTargetIdentifier,
-    AstAssignmentTargetItem,
     AstAttribute,
     AstCall,
     AstDict,
@@ -77,6 +74,10 @@ from .ast import (
     AstList,
     AstLookup,
     AstSlice,
+    AstTarget,
+    AstTargetAttribute,
+    AstTargetIdentifier,
+    AstTargetItem,
     AstTuple,
     AstUnpack,
     AstValue,
@@ -119,6 +120,7 @@ def get_scripting_parsers(parsers: Dict[str, Parser]) -> Dict[str, Parser]:
         "command:argument:mecha:scripting:function_root": delegate(
             "scripting:function_root"
         ),
+        "command:argument:mecha:scripting:del_target": delegate("scripting:del_target"),
         ################################################################################
         # Scripting
         ################################################################################
@@ -129,6 +131,7 @@ def get_scripting_parsers(parsers: Dict[str, Parser]) -> Dict[str, Parser]:
         "scripting:augmented_assignment_target": AssignmentTargetParser(),
         "scripting:function_signature": parse_function_signature,
         "scripting:function_root": parse_function_root,
+        "scripting:del_target": parse_del_target,
         "scripting:interpolation": PrimaryParser(delegate("scripting:identifier")),
         "scripting:identifier": parse_identifier,
         "scripting:import": ImportLocationConstraint(
@@ -378,8 +381,8 @@ def parse_statement(stream: TokenStream) -> Any:
 
             pattern = r"=(?!=)|\+=|-=|\*=|//=|/=|%=|&=|\|=|\^=|<<=|>>=|\*\*="
 
-            if isinstance(node, AstAssignmentTarget):
-                if parser == "scripting:assignment_target" or node.multiple:
+            if isinstance(node, AstTarget):
+                if parser == "scripting:assignment_target":
                     pattern = r"=(?!=)"
                 with stream.syntax(assignment=pattern):
                     op = stream.expect("assignment")
@@ -398,7 +401,7 @@ def parse_statement(stream: TokenStream) -> Any:
 
                 if op:
                     expression = delegate("scripting:expression", stream)
-                    target = AstAssignmentTargetAttribute(
+                    target = AstTargetAttribute(
                         name=node.name,
                         value=node.value,
                     )
@@ -415,7 +418,7 @@ def parse_statement(stream: TokenStream) -> Any:
 
                 if op:
                     expression = delegate("scripting:expression", stream)
-                    target = AstAssignmentTargetItem(
+                    target = AstTargetItem(
                         value=node.value,
                         arguments=node.arguments,
                     )
@@ -435,7 +438,7 @@ class AssignmentTargetParser:
 
     allow_undefined_identifiers: bool = False
 
-    def __call__(self, stream: TokenStream) -> AstAssignmentTarget:
+    def __call__(self, stream: TokenStream) -> AstTarget:
         identifiers = get_stream_identifiers(stream)
         pending_identifiers = get_stream_pending_identifiers(stream)
 
@@ -448,7 +451,7 @@ class AssignmentTargetParser:
                 exc = UndefinedIdentifier(token, identifiers)
                 raise set_location(exc, token)
 
-            node = set_location(AstAssignmentTargetIdentifier(value=token.value), token)
+            node = set_location(AstTargetIdentifier(value=token.value), token)
 
         return node
 
@@ -623,6 +626,22 @@ def parse_function_root(stream: TokenStream) -> AstFunctionRoot:
 
     node = AstFunctionRoot(stream=stream_copy)
     return set_location(node, token, stream.current)
+
+
+def parse_del_target(stream: TokenStream) -> AstTarget:
+    node = delegate("scripting:expression", stream)
+
+    if isinstance(node, AstIdentifier):
+        return set_location(AstTargetIdentifier(value=node.value), node)
+    elif isinstance(node, AstAttribute):
+        return set_location(AstTargetAttribute(name=node.name, value=node.value), node)
+    elif isinstance(node, AstLookup):
+        return set_location(
+            AstTargetItem(value=node.value, arguments=node.arguments), node
+        )
+
+    exc = InvalidSyntax("Can only delete variables, attributes, or subscripted items.")
+    raise set_location(exc, node)
 
 
 def parse_identifier(stream: TokenStream) -> AstIdentifier:

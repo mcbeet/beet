@@ -33,7 +33,7 @@ thing = bar()
                   end_location: SourceLocation(pos=29, lineno=2, colno=19)
                   operator: '+='
                   target:
-                    <class 'mecha.contrib.scripting.ast.AstAssignmentTargetIdentifier'>
+                    <class 'mecha.contrib.scripting.ast.AstTargetIdentifier'>
                       location: SourceLocation(pos=15, lineno=2, colno=5)
                       end_location: SourceLocation(pos=20, lineno=2, colno=10)
                       value: 'thing'
@@ -73,7 +73,7 @@ thing = bar()
                   end_location: SourceLocation(pos=59, lineno=4, colno=19)
                   operator: '+='
                   target:
-                    <class 'mecha.contrib.scripting.ast.AstAssignmentTargetIdentifier'>
+                    <class 'mecha.contrib.scripting.ast.AstTargetIdentifier'>
                       location: SourceLocation(pos=45, lineno=4, colno=5)
                       end_location: SourceLocation(pos=50, lineno=4, colno=10)
                       value: 'thing'
@@ -98,7 +98,7 @@ thing = bar()
           end_location: SourceLocation(pos=73, lineno=5, colno=14)
           operator: '='
           target:
-            <class 'mecha.contrib.scripting.ast.AstAssignmentTargetIdentifier'>
+            <class 'mecha.contrib.scripting.ast.AstTargetIdentifier'>
               location: SourceLocation(pos=60, lineno=5, colno=1)
               end_location: SourceLocation(pos=65, lineno=5, colno=6)
               value: 'thing'

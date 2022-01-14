@@ -52,7 +52,7 @@ if score @s tmp matches 42:
                           end_location: SourceLocation(pos=42, lineno=2, colno=15)
                           operator: '='
                           target:
-                            <class 'mecha.contrib.scripting.ast.AstAssignmentTargetIdentifier'>
+                            <class 'mecha.contrib.scripting.ast.AstTargetIdentifier'>
                               location: SourceLocation(pos=32, lineno=2, colno=5)
                               end_location: SourceLocation(pos=37, lineno=2, colno=10)
                               value: 'count'
@@ -107,7 +107,7 @@ if score @s tmp matches 42:
                                   end_location: SourceLocation(pos=107, lineno=5, colno=26)
                                   operator: '='
                                   target:
-                                    <class 'mecha.contrib.scripting.ast.AstAssignmentTargetIdentifier'>
+                                    <class 'mecha.contrib.scripting.ast.AstTargetIdentifier'>
                                       location: SourceLocation(pos=90, lineno=5, colno=9)
                                       end_location: SourceLocation(pos=95, lineno=5, colno=14)
                                       value: 'count'

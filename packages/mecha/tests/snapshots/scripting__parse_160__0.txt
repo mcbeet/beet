@@ -30,7 +30,7 @@ def f():
                   end_location: SourceLocation(pos=24, lineno=2, colno=16)
                   operator: '='
                   target:
-                    <class 'mecha.contrib.scripting.ast.AstAssignmentTargetAttribute'>
+                    <class 'mecha.contrib.scripting.ast.AstTargetAttribute'>
                       location: SourceLocation(pos=13, lineno=2, colno=5)
                       end_location: SourceLocation(pos=19, lineno=2, colno=11)
                       name: 'data'

@@ -41,9 +41,6 @@ from mecha import (
 
 from .ast import (
     AstAssignment,
-    AstAssignmentTargetAttribute,
-    AstAssignmentTargetIdentifier,
-    AstAssignmentTargetItem,
     AstAttribute,
     AstCall,
     AstDict,
@@ -59,6 +56,9 @@ from .ast import (
     AstList,
     AstLookup,
     AstSlice,
+    AstTargetAttribute,
+    AstTargetIdentifier,
+    AstTargetItem,
     AstTuple,
     AstUnpack,
     AstValue,
@@ -429,6 +429,16 @@ class Codegen(Visitor):
         acc.statement(statement)
         return []
 
+    @rule(AstCommand, identifier="del:target")
+    def del_statement(
+        self,
+        node: AstCommand,
+        acc: Accumulator,
+    ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
+        target = yield from visit_single(node.arguments[0], required=True)
+        acc.statement(f"del {target}")
+        return []
+
     @rule(AstCommand, identifier="if:condition:body")
     def if_statement(
         self,
@@ -794,27 +804,27 @@ class Codegen(Visitor):
         acc.statement(f"{target} {op} {value}", lineno=node)
         return []
 
-    @rule(AstAssignmentTargetIdentifier)
-    def assignment_target_identifier(
+    @rule(AstTargetIdentifier)
+    def target_identifier(
         self,
-        node: AstAssignmentTargetIdentifier,
+        node: AstTargetIdentifier,
         acc: Accumulator,
     ) -> Optional[List[str]]:
         return [node.value]
 
-    @rule(AstAssignmentTargetAttribute)
-    def assignment_target_attribute(
+    @rule(AstTargetAttribute)
+    def target_attribute(
         self,
-        node: AstAssignmentTargetAttribute,
+        node: AstTargetAttribute,
         acc: Accumulator,
     ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
         value = yield from visit_single(node.value, required=True)
         return [f"{value}.{node.name}"]
 
-    @rule(AstAssignmentTargetItem)
-    def assignment_target_item(
+    @rule(AstTargetItem)
+    def target_item(
         self,
-        node: AstAssignmentTargetItem,
+        node: AstTargetItem,
         acc: Accumulator,
     ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
         result = yield from visit_single(node.value, required=True)
