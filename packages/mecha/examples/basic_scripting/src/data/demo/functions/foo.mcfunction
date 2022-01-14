@@ -241,3 +241,11 @@ execute at @s if block ~ ~ ~ #minecraft:beds:
 
 del numbers[3:]
 say numbers
+
+for loop in loop_info("abcd"):
+    say f"==[{loop.current}]=="
+    say loop.before
+    say loop.after
+    say loop.first
+    say loop.last
+    say loop.cycle("foo", "bar")

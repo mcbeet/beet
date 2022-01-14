@@ -36,6 +36,7 @@ from mecha import (
 
 from .codegen import Codegen
 from .helpers import get_scripting_helpers
+from .loop_info import loop_info
 from .parse import get_scripting_parsers
 from .utils import SAFE_BUILTINS, internal, rewrite_traceback
 
@@ -72,7 +73,7 @@ class Runtime:
         self.modules = {}
         self.commands = []
         self.helpers = get_scripting_helpers()
-        self.globals = {"ctx": None}
+        self.globals = {"ctx": None, "loop_info": loop_info}
         self.builtins = set(SAFE_BUILTINS)
 
         if isinstance(ctx, Context):

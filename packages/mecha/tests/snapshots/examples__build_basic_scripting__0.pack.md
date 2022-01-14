@@ -139,6 +139,30 @@ say [11, 10, 9, 8, 7, 6, 5, 4]
 say [9, 8, 7, 6, 5, 4]
 execute at @s if block ~ ~ ~ #minecraft:beds run teleport @s ~ ~0.5625 ~
 say [0, 1, 2]
+say ==[a]==
+say None
+say b
+say True
+say False
+say foo
+say ==[b]==
+say a
+say c
+say False
+say False
+say bar
+say ==[c]==
+say b
+say d
+say False
+say False
+say foo
+say ==[d]==
+say c
+say None
+say False
+say True
+say bar
 ```
 
 `@function(strip_final_newline) demo:thing`

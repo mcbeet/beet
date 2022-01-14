@@ -25,7 +25,7 @@ from typing import Any, Callable, Dict, Set, Type, Union
 from beet import Context, TreeData, TreeNode
 
 from mecha import MechaError
-from mecha.contrib.scripting import Runtime
+from mecha.contrib.scripting import LoopInfo, Runtime
 from mecha.contrib.scripting.utils import internal
 
 
@@ -100,6 +100,7 @@ class Sandbox:
             set: public_attrs(set),
             TreeNode: public_attrs(TreeNode),
             TreeData: public_attrs(TreeData),
+            LoopInfo: public_attrs(LoopInfo),
             deque: public_attrs(deque),
             defaultdict: public_attrs(defaultdict),
         }
