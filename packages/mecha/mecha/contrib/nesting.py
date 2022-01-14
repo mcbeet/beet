@@ -13,7 +13,7 @@ from typing import List, cast
 
 from beet import Context, Function
 from beet.core.utils import required_field
-from tokenstream import TokenStream, set_location
+from tokenstream import InvalidSyntax, TokenStream, set_location
 
 from mecha import (
     AstChildren,
@@ -48,10 +48,12 @@ def beet_default(ctx: Context):
 
 def parse_nested_root(stream: TokenStream) -> AstRoot:
     """Parse nested root."""
-    with stream.syntax(colon=r":"), stream.intercept("newline", "indent"):
-        stream.expect("colon")
-        stream.expect("newline")
-        stream.expect("indent")
+    with stream.syntax(colon=r":"):
+        colon = stream.expect("colon")
+
+    if not consume_line_continuation(stream):
+        exc = InvalidSyntax("Expected non-empty block.")
+        raise set_location(exc, colon)
 
     level, command_level = stream.indentation[-2:]
 

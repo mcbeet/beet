@@ -235,3 +235,6 @@ say numbers[::-1]
 say numbers[9::-1]
 say numbers[:3:-1]
 say numbers[9:3:-1]
+
+execute at @s if block ~ ~ ~ #minecraft:beds:
+    teleport @s ~ ~0.56250 ~

@@ -1,7 +1,7 @@
-def f():
-#>ERROR  Expected indent but got literal 'say'.
-# line 2, column 1
+#>ERROR  Expected non-empty block.
+# line 1, column 8
 #      1 |  def f():
+#        :         ^
 #      2 |  say yolo
-#        :  ^^^
+def f():
 say yolo
