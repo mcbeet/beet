@@ -104,6 +104,7 @@ from .ast import (
     AstGreedy,
     AstItem,
     AstItemParticleParameters,
+    AstItemSlot,
     AstJson,
     AstJsonArray,
     AstJsonObject,
@@ -239,6 +240,7 @@ def get_default_parsers() -> Dict[str, Parser]:
         "item_predicate": ItemParser(
             resource_location_parser=delegate("resource_location_or_tag"),
         ),
+        "item_slot": BasicLiteralParser(AstItemSlot),
         "item_stack": ItemParser(
             resource_location_parser=delegate("resource_location"),
         ),
@@ -400,7 +402,7 @@ def get_default_parsers() -> Dict[str, Parser]:
         "command:argument:minecraft:item_predicate": MultilineParser(
             delegate("item_predicate")
         ),
-        "command:argument:minecraft:item_slot": delegate("word"),
+        "command:argument:minecraft:item_slot": delegate("item_slot"),
         "command:argument:minecraft:item_stack": MultilineParser(
             delegate("item_stack")
         ),

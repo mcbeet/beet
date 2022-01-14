@@ -1,0 +1,9 @@
+minecraft:item_slot 1 0
+---
+{}
+---
+container.77
+---
+Reported 1 error.
+
+line 1, column 1: Expected item_slot but got literal 'container.77'.

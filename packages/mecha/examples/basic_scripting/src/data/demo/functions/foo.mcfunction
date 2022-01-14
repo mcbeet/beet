@@ -216,3 +216,8 @@ for node in generate_tree(range(10, 20), key=int):
 scoreboard objectives setdisplay list some_score_name
 color = "red"
 scoreboard objectives setdisplay f"sidebar.team.{color}" some_score_name
+
+weapon = {1: "weapon.offhand", 2: "weapon.mainhand"}
+item replace entity @s weapon.offhand from entity @s weapon.mainhand
+my_weapon = weapon
+item replace entity @s my_weapon.1 from entity @s my_weapon.2

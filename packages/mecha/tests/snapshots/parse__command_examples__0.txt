@@ -3716,7 +3716,7 @@
               end_location: SourceLocation(pos=4104, lineno=92, colno=26)
               type: 'relative'
               value: 0
-        <class 'mecha.ast.AstWord'>
+        <class 'mecha.ast.AstItemSlot'>
           location: SourceLocation(pos=4105, lineno=92, colno=27)
           end_location: SourceLocation(pos=4117, lineno=92, colno=39)
           value: 'container.26'
@@ -3746,7 +3746,7 @@
           variable: 'p'
           arguments:
             <empty>
-        <class 'mecha.ast.AstWord'>
+        <class 'mecha.ast.AstItemSlot'>
           location: SourceLocation(pos=4173, lineno=93, colno=24)
           end_location: SourceLocation(pos=4181, lineno=93, colno=32)
           value: 'hotbar.8'
@@ -3776,7 +3776,7 @@
           variable: 's'
           arguments:
             <empty>
-        <class 'mecha.ast.AstWord'>
+        <class 'mecha.ast.AstItemSlot'>
           location: SourceLocation(pos=4237, lineno=94, colno=24)
           end_location: SourceLocation(pos=4251, lineno=94, colno=38)
           value: 'weapon.offhand'
@@ -3786,7 +3786,7 @@
           variable: 's'
           arguments:
             <empty>
-        <class 'mecha.ast.AstWord'>
+        <class 'mecha.ast.AstItemSlot'>
           location: SourceLocation(pos=4267, lineno=94, colno=54)
           end_location: SourceLocation(pos=4282, lineno=94, colno=69)
           value: 'weapon.mainhand'

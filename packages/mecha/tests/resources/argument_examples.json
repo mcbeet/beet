@@ -278,7 +278,11 @@
   ],
   "minecraft:item_slot": [
     {
-      "examples": ["container.5", "12", "weapon"]
+      "examples": ["container.5", "inventory.12", "weapon.mainhand"]
+    },
+    {
+      "invalid": true,
+      "examples": ["container.77", "foo"]
     }
   ],
   "minecraft:item_stack": [

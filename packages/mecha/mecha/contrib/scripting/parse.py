@@ -244,6 +244,9 @@ def get_scripting_parsers(parsers: Dict[str, Parser]) -> Dict[str, Parser]:
         "resource_location_or_tag": InterpolationParser(
             "resource_location", parsers["resource_location_or_tag"]
         ),
+        "item_slot": InterpolationParser(
+            "item_slot", parsers["item_slot"], fallback=True
+        ),
         "objective": InterpolationParser("objective", parsers["objective"]),
         "objective_criteria": InterpolationParser(
             "objective_criteria", parsers["objective_criteria"]

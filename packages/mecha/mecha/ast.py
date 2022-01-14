@@ -47,6 +47,7 @@ __all__ = [
     "AstBlockState",
     "AstBlock",
     "AstItem",
+    "AstItemSlot",
     "AstRange",
     "AstTime",
     "AstSelectorScoreMatch",
@@ -83,6 +84,7 @@ from typing import (
     Mapping,
     Optional,
     Sequence,
+    Set,
     Tuple,
     Type,
     TypeVar,
@@ -352,7 +354,7 @@ class AstWord(AstLiteral):
 class AstOption(AstLiteral):
     """Base node for options."""
 
-    options: ClassVar[Tuple[str, ...]] = ()
+    options: ClassVar[Set[str]] = set()
 
     def __init_subclass__(cls):
         patterns = [
@@ -392,7 +394,7 @@ class AstScoreboardOperation(AstOption):
     """Ast scoreboard operation node."""
 
     parser = "scoreboard_operation"
-    options = "+=", "-=", "*=", "/=", "%=", "=", "><", "<", ">"
+    options = {"+=", "-=", "*=", "/=", "%=", "=", "><", "<", ">"}
 
 
 @dataclass(frozen=True)
@@ -416,11 +418,11 @@ class AstScoreboardSlot(AstOption):
     """Ast scoreboard slot node."""
 
     parser = "scoreboard_slot"
-    options = tuple(f"sidebar.team.{color}" for color in COLORS) + (
+    options = {f"sidebar.team.{color}" for color in COLORS} | {
         "list",
         "sidebar",
         "belowName",
-    )
+    }
 
 
 @dataclass(frozen=True)
@@ -429,9 +431,9 @@ class AstSwizzle(AstOption):
 
     parser = "swizzle"
     options = (
-        tuple("xyz")
-        + tuple(map("".join, permutations("xyz", 2)))
-        + tuple(map("".join, permutations("xyz", 3)))
+        set("xyz")
+        | set(map("".join, permutations("xyz", 2)))
+        | set(map("".join, permutations("xyz", 3)))
     )
 
 
@@ -458,7 +460,7 @@ class AstColor(AstOption):
     """Ast color node."""
 
     parser = "color"
-    options = COLORS
+    options = set(COLORS)
 
 
 @dataclass(frozen=True)
@@ -466,7 +468,7 @@ class AstColorReset(AstOption):
     """Ast color reset node."""
 
     parser = "color_reset"
-    options = ("reset",)
+    options = {"reset"}
 
 
 @dataclass(frozen=True)
@@ -474,7 +476,7 @@ class AstSortOrder(AstOption):
     """Ast sort order node."""
 
     parser = "sort_order"
-    options = "nearest", "furthest", "random", "arbitrary"
+    options = {"nearest", "furthest", "random", "arbitrary"}
 
 
 @dataclass(frozen=True)
@@ -482,7 +484,7 @@ class AstGamemode(AstOption):
     """Ast gamemode node."""
 
     parser = "gamemode"
-    options = "adventure", "creative", "spectator", "survival"
+    options = {"adventure", "creative", "spectator", "survival"}
 
 
 @dataclass(frozen=True)
@@ -490,7 +492,7 @@ class AstEntityAnchor(AstOption):
     """Ast entity anchor node."""
 
     parser = "entity_anchor"
-    options = "eyes", "feet"
+    options = {"eyes", "feet"}
 
 
 @dataclass(frozen=True)
@@ -759,6 +761,30 @@ class AstItem(AstNode):
 
     identifier: AstResourceLocation = required_field()
     data_tags: Optional[AstNbt] = None
+
+
+@dataclass(frozen=True)
+class AstItemSlot(AstOption):
+    """Ast item slot node."""
+
+    parser = "item_slot"
+    options = (
+        {
+            "armor.chest",
+            "armor.feet",
+            "armor.head",
+            "armor.legs",
+            "weapon.mainhand",
+            "weapon.offhand",
+        }
+        | {f"container.{n}" for n in range(54)}
+        | {f"enderchest.{n}" for n in range(27)}
+        | {f"hotbar.{n}" for n in range(9)}
+        | {f"inventory.{n}" for n in range(27)}
+        | {"horse.saddle", "horse.chest", "horse.armor"}
+        | {f"horse.{n}" for n in range(15)}
+        | {f"villager.{n}" for n in range(8)}
+    )
 
 
 @dataclass(frozen=True)

@@ -602,3 +602,14 @@ scoreboard objectives setdisplay list some_score_name
 ###
 color = "red"
 scoreboard objectives setdisplay f"sidebar.team.{color}" some_score_name
+###
+my_team = "sidebar.team.red"
+scoreboard objectives setdisplay my_team some_score_name
+###
+item replace block ~ ~2 ~ container.26 with minecraft:spruce_sapling 4
+###
+weapon = "thing"
+item replace entity @s weapon.offhand from entity @s weapon.mainhand
+###
+my_weapon = {offhand: "weapon.offhand", mainhand: "weapon.mainhand"}
+item replace entity @s my_weapon.offhand from entity @s my_weapon.mainhand
