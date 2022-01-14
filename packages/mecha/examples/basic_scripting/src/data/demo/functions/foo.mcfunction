@@ -221,3 +221,17 @@ weapon = {1: "weapon.offhand", 2: "weapon.mainhand"}
 item replace entity @s weapon.offhand from entity @s weapon.mainhand
 my_weapon = weapon
 item replace entity @s my_weapon.1 from entity @s my_weapon.2
+
+numbers = list(range(12))
+say numbers[:]
+say numbers[3:]
+say numbers[:9]
+say numbers[3:9]
+say numbers[::]
+say numbers[3::]
+say numbers[:9:]
+say numbers[3:9:]
+say numbers[::-1]
+say numbers[9::-1]
+say numbers[:3:-1]
+say numbers[9:3:-1]

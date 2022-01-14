@@ -9,6 +9,7 @@ __all__ = [
     "AstList",
     "AstDictItem",
     "AstDict",
+    "AstSlice",
     "AstUnpack",
     "AstKeyword",
     "AstAttribute",
@@ -110,6 +111,15 @@ class AstDict(AstExpression):
 
 
 @dataclass(frozen=True)
+class AstSlice(AstNode):
+    """Ast slice node."""
+
+    start: Optional[AstExpression] = None
+    stop: Optional[AstExpression] = None
+    step: Optional[AstExpression] = None
+
+
+@dataclass(frozen=True)
 class AstUnpack(AstNode):
     """Ast unpack node."""
 
@@ -138,7 +148,7 @@ class AstLookup(AstExpression):
     """Ast lookup node."""
 
     value: AstExpression = required_field()
-    arguments: AstChildren[AstExpression] = required_field()
+    arguments: AstChildren[Union[AstExpression, AstSlice]] = required_field()
 
 
 @dataclass(frozen=True)
@@ -178,7 +188,7 @@ class AstAssignmentTargetItem(AstAssignmentTarget):
     """Ast assignment target item node."""
 
     value: AstExpression = required_field()
-    arguments: AstChildren[AstExpression] = required_field()
+    arguments: AstChildren[Union[AstExpression, AstSlice]] = required_field()
 
 
 @dataclass(frozen=True)

@@ -58,6 +58,7 @@ from .ast import (
     AstKeyword,
     AstList,
     AstLookup,
+    AstSlice,
     AstTuple,
     AstUnpack,
     AstValue,
@@ -695,6 +696,29 @@ class Codegen(Visitor):
         key = yield from visit_single(node.key, required=True)
         value = yield from visit_single(node.value, required=True)
         return [f"{key}: {value}"]
+
+    @rule(AstSlice)
+    def slice(
+        self,
+        node: AstSlice,
+        acc: Accumulator,
+    ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
+        start = ""
+        stop = ""
+        step = ""
+
+        if node.start:
+            start = yield from visit_single(node.start, required=True)
+        if node.stop:
+            stop = yield from visit_single(node.stop, required=True)
+        if node.step:
+            step = yield from visit_single(node.step, required=True)
+
+        result = f"{start}:{stop}"
+        if step:
+            result += f":{step}"
+
+        return [result]
 
     @rule(AstUnpack)
     def unpack(

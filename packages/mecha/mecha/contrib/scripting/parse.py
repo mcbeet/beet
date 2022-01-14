@@ -25,6 +25,7 @@ __all__ = [
     "UnpackParser",
     "UnpackConstraint",
     "KeywordParser",
+    "LookupParser",
     "PrimaryParser",
     "parse_dict_item",
     "LiteralParser",
@@ -75,6 +76,7 @@ from .ast import (
     AstKeyword,
     AstList,
     AstLookup,
+    AstSlice,
     AstTuple,
     AstUnpack,
     AstValue,
@@ -194,7 +196,7 @@ def get_scripting_parsers(parsers: Dict[str, Parser]) -> Dict[str, Parser]:
             parser=delegate("scripting:primary"),
             right_associative=True,
         ),
-        "scripting:lookup_argument": delegate("scripting:expression"),
+        "scripting:lookup_argument": LookupParser(delegate("scripting:expression")),
         "scripting:call_argument": AlternativeParser(
             [
                 KeywordParser(delegate("scripting:expression")),
@@ -879,6 +881,49 @@ class KeywordParser:
 
         node = AstKeyword(name=name.value, value=node)
         return set_location(node, name, node.value)
+
+
+@dataclass
+class LookupParser:
+    """Parser for lookups."""
+
+    parser: Parser
+
+    def __call__(self, stream: TokenStream) -> Any:
+        start = None
+        stop = None
+        step = None
+
+        with stream.syntax(colon=r":", comma=r",", bracket=r"\]"):
+            colon1 = stream.get("colon")
+
+            if not colon1:
+                start = self.parser(stream)
+                location = start.location
+                colon1 = stream.get("colon")
+            else:
+                location = colon1.location
+
+            if not colon1:
+                return start
+
+            colon2 = stream.get("colon")
+
+            if not colon2:
+                with stream.checkpoint():
+                    sep = stream.get("comma", "bracket")
+                if not sep:
+                    stop = self.parser(stream)
+                    colon2 = stream.get("colon")
+
+            if colon2:
+                with stream.checkpoint():
+                    sep = stream.get("comma", "bracket")
+                if not sep:
+                    step = self.parser(stream)
+
+        node = AstSlice(start=start, stop=stop, step=step)
+        return set_location(node, location, stream.location)
 
 
 @dataclass

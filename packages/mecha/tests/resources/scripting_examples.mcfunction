@@ -613,3 +613,9 @@ item replace entity @s weapon.offhand from entity @s weapon.mainhand
 ###
 my_weapon = {offhand: "weapon.offhand", mainhand: "weapon.mainhand"}
 item replace entity @s my_weapon.offhand from entity @s my_weapon.mainhand
+###
+numbers = list(range(12))
+say numbers[3:]
+###
+numbers = list(range(12))
+numbers[3:] = []
