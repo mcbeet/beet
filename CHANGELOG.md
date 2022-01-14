@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.50.3 (2022-01-14)
+### Fix
+* Allow specifying tree root using keyword argument ([`11c0abf`](https://github.com/mcbeet/beet/commit/11c0abf5c787d914fcf2804eab058f22d886df1e))
+
 ## v0.50.2 (2022-01-09)
 ### Fix
 * Add tree name argument ([`9a9ff91`](https://github.com/mcbeet/beet/commit/9a9ff91ea83abbbb9dcdeb7cd320ad32d4a267f0))
