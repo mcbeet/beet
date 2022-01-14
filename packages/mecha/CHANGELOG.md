@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.31.3 (2022-01-14)
+### Fix
+* Proper scoreboard_slot handling ([`4740d78`](https://github.com/mcbeet/mecha/commit/4740d780ebd3662a71e39e995e0c50eb77e90dad))
+
 ## v0.31.2 (2022-01-13)
 ### Fix
 * No scientific notation when serializing numbers ([`e923224`](https://github.com/mcbeet/mecha/commit/e923224acc1c308e59dbdc44e2822f4db912a075))
