@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.34.0 (2022-01-14)
+### Feature
+* Add loop_info ([`5173835`](https://github.com/mcbeet/mecha/commit/5173835e0667fc0a0a154abd65a401c1beff7eed))
+
 ## v0.33.1 (2022-01-14)
 ### Fix
 * Allow specifying tree root using keyword argument ([`4d1e85c`](https://github.com/mcbeet/mecha/commit/4d1e85cd7b0c3b229a82b29ec1979d626b1b2604))
