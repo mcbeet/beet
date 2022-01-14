@@ -121,6 +121,8 @@ say {1: 1, 'a': 'a', 'b': 'thing', 'c': 'c', 2: 2}
 say {1: {2: 'foo'}}
 execute if score @s thingy matches 10..14 run function demo:foo/tree_1/10_14
 execute if score @s thingy matches 15..19 run function demo:foo/tree_1/15_19
+scoreboard objectives setdisplay list some_score_name
+scoreboard objectives setdisplay sidebar.team.red some_score_name
 ```
 
 `@function(strip_final_newline) demo:thing`

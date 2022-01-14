@@ -212,3 +212,7 @@ for node in generate_tree(range(10, 20), key=int):
             if score @s thingy matches node.range function node.children
         else:
             if score @s thingy matches node.range say node.value
+
+scoreboard objectives setdisplay list some_score_name
+color = "red"
+scoreboard objectives setdisplay f"sidebar.team.{color}" some_score_name

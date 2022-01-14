@@ -17,6 +17,7 @@ __all__ = [
     "AstScoreboardOperation",
     "AstTeam",
     "AstPlayerName",
+    "AstScoreboardSlot",
     "AstSwizzle",
     "AstAdvancementPredicate",
     "AstWildcard",
@@ -67,6 +68,7 @@ __all__ = [
     "AstVibrationParticleParameters",
     "AstBlockMarkerParticleParameters",
     "AstParticle",
+    "COLORS",
 ]
 
 
@@ -101,6 +103,26 @@ from .utils import string_to_number
 T = TypeVar("T")
 AstNodeType = TypeVar("AstNodeType", bound="AstNode", covariant=True)
 AstLiteralType = TypeVar("AstLiteralType", bound="AstLiteral")
+
+
+COLORS: Tuple[str, ...] = (
+    "black",
+    "dark_blue",
+    "dark_green",
+    "dark_aqua",
+    "dark_red",
+    "dark_purple",
+    "gold",
+    "gray",
+    "dark_gray",
+    "blue",
+    "green",
+    "aqua",
+    "red",
+    "light_purple",
+    "yellow",
+    "white",
+)
 
 
 @dataclass(frozen=True)
@@ -390,6 +412,18 @@ class AstPlayerName(AstLiteral):
 
 
 @dataclass(frozen=True)
+class AstScoreboardSlot(AstOption):
+    """Ast scoreboard slot node."""
+
+    parser = "scoreboard_slot"
+    options = tuple(f"sidebar.team.{color}" for color in COLORS) + (
+        "list",
+        "sidebar",
+        "belowName",
+    )
+
+
+@dataclass(frozen=True)
 class AstSwizzle(AstOption):
     """Ast swizzle node."""
 
@@ -424,24 +458,7 @@ class AstColor(AstOption):
     """Ast color node."""
 
     parser = "color"
-    options = (
-        "black",
-        "dark_blue",
-        "dark_green",
-        "dark_aqua",
-        "dark_red",
-        "dark_purple",
-        "gold",
-        "gray",
-        "dark_gray",
-        "blue",
-        "green",
-        "aqua",
-        "red",
-        "light_purple",
-        "yellow",
-        "white",
-    )
+    options = COLORS
 
 
 @dataclass(frozen=True)

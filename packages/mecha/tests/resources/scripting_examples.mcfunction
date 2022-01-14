@@ -597,3 +597,8 @@ d[1][2] = "foo"
 ###
 d = {foo: 1}
 d.foo += 1
+###
+scoreboard objectives setdisplay list some_score_name
+###
+color = "red"
+scoreboard objectives setdisplay f"sidebar.team.{color}" some_score_name

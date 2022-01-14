@@ -2,11 +2,11 @@ minecraft:scoreboard_slot 0 1
 ---
 {}
 ---
-foo.bar
+list
 ---
-foo.bar
+list
 ---
-<class 'mecha.ast.AstWord'>
+<class 'mecha.ast.AstScoreboardSlot'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
-  end_location: SourceLocation(pos=7, lineno=1, colno=8)
-  value: 'foo.bar'
+  end_location: SourceLocation(pos=4, lineno=1, colno=5)
+  value: 'list'

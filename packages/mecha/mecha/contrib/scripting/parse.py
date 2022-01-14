@@ -248,6 +248,9 @@ def get_scripting_parsers(parsers: Dict[str, Parser]) -> Dict[str, Parser]:
         "objective_criteria": InterpolationParser(
             "objective_criteria", parsers["objective_criteria"]
         ),
+        "scoreboard_slot": InterpolationParser(
+            "scoreboard_slot", parsers["scoreboard_slot"], fallback=True
+        ),
         "swizzle": InterpolationParser("swizzle", parsers["swizzle"]),
         "team": InterpolationParser("team", parsers["team"]),
         "color": InterpolationParser("color", parsers["color"]),

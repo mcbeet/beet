@@ -507,7 +507,11 @@
   ],
   "minecraft:scoreboard_slot": [
     {
-      "examples": ["sidebar", "foo.bar"]
+      "examples": ["sidebar", "list", "sidebar.team.red", "belowName"]
+    },
+    {
+      "invalid": true,
+      "examples": ["sidebr", "foo.bar"]
     }
   ],
   "minecraft:swizzle": [
