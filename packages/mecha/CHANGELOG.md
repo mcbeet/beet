@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.32.1 (2022-01-14)
+### Fix
+* Properly report empty blocks ([`4fca8a5`](https://github.com/mcbeet/mecha/commit/4fca8a51504f609a371f12be9ba33471fb44799c))
+
 ## v0.32.0 (2022-01-14)
 ### Feature
 * Add slicing ([`e6757fd`](https://github.com/mcbeet/mecha/commit/e6757fd8d73554544bf5343831aa9c4da9f4f6e0))
