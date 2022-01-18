@@ -186,6 +186,20 @@ class TagFile(JsonFile, NamespaceFile):
             if value not in values:
                 values.insert(0, deepcopy(value))
 
+    def add(self, value: str):
+        """Add an entry."""
+        values = self.data.setdefault("values", [])
+        if value not in values:
+            values.append(value)
+
+    def remove(self, value: str):
+        """Remove an entry."""
+        values = self.data.setdefault("values", [])
+        try:
+            values.remove(value)
+        except ValueError:
+            pass
+
     @classmethod
     def default(cls) -> JsonDict:
         return {"values": []}

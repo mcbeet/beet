@@ -27,7 +27,7 @@ def beet_default(ctx: Context):
         f"{id}:load",
     ]
 
-    ctx.data.function_tags["load:load"].data["values"].append(f"#{id}:load")
+    ctx.data.function_tags.setdefault("load:load", FunctionTag()).add(f"#{id}:load")
     ctx.data[f"{id}:load"] = FunctionTag({"values": load_tag_values})
 
     # Generate and join version checks for all the dependencies.
@@ -72,12 +72,4 @@ def base_data_pack(ctx: Context):
             "scoreboard objectives add load.status dummy",
             "scoreboard players reset * load.status",
         ]
-    )
-
-    ctx.data.function_tags.merge(
-        {
-            "load:pre_load": FunctionTag(),
-            "load:load": FunctionTag(),
-            "load:post_load": FunctionTag(),
-        }
     )
