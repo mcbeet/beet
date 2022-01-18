@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.50.4 (2022-01-18)
+### Fix
+* Don't include empty pre_load, load and post_load tags by default ([`38a3d31`](https://github.com/mcbeet/beet/commit/38a3d316ec7000833e337eb5a9d394af4d1667f8))
+
 ## v0.50.3 (2022-01-14)
 ### Fix
 * Allow specifying tree root using keyword argument ([`11c0abf`](https://github.com/mcbeet/beet/commit/11c0abf5c787d914fcf2804eab058f22d886df1e))
