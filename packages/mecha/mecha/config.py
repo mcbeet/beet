@@ -3,6 +3,7 @@ __all__ = [
 ]
 
 
+import json
 from importlib.resources import read_text
 from pathlib import Path
 from typing import Dict, Iterator, List, Literal, Optional, Tuple, Union
@@ -28,16 +29,20 @@ class CommandTree(BaseModel):
     @classmethod
     def load_from(
         cls,
-        filename: Optional[FileSystemPath] = None,
+        *args: FileSystemPath,
         version: Optional[VersionNumber] = None,
+        unpatched: bool = False,
     ) -> "CommandTree":
         """Load the command tree from a file."""
         sources: List[str] = []
 
-        if filename:
+        for filename in args:
             sources.append(Path(filename).read_text())
-        if version is not None:
-            version_name = "_".join(map(str, split_version(version)))
+
+        version = split_version(version) if version is not None else None
+
+        if version:
+            version_name = "_".join(map(str, version))
             try:
                 sources.append(read_text("mecha.resources", f"{version_name}.json"))
             except FileNotFoundError as exc:
@@ -46,7 +51,12 @@ class CommandTree(BaseModel):
         tree = cls.parse_raw(sources[0])
 
         for source in sources[1:]:
-            tree = tree.extend(cls.parse_raw(source))
+            tree.extend(cls.parse_raw(source))
+
+        if version and not unpatched:
+            for patch in json.loads(read_text("mecha.resources", "patches.json")):
+                if any(split_version(v) == version for v in patch["versions"]):
+                    tree.extend(cls(**patch["config"]))
 
         return tree
 

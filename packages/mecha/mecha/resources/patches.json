@@ -1,0 +1,25 @@
+[
+  {
+    "versions": ["1.16", "1.17", "1.18"],
+    "config": {
+      "type": "root",
+      "children": {
+        "schedule": {
+          "type": "literal",
+          "children": {
+            "clear": {
+              "type": "literal",
+              "children": {
+                "function": {
+                  "type": "argument",
+                  "parser": "minecraft:function",
+                  "executable": true
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+]
