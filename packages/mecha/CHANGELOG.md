@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.34.1 (2022-01-22)
+### Fix
+* Patch schedule clear argument ([`b648e98`](https://github.com/mcbeet/mecha/commit/b648e98b63aa17f036d13ce34c6feb8ca45c606a))
+
 ## v0.34.0 (2022-01-14)
 ### Feature
 * Add loop_info ([`5173835`](https://github.com/mcbeet/mecha/commit/5173835e0667fc0a0a154abd65a401c1beff7eed))
