@@ -61,7 +61,7 @@ def create_namespace_handler(
 
         def bind(self, pack: Any, path: str):
             super().bind(pack, path)
-            pack[path] = file_type(dump_json(self.data))
+            pack[file_type].merge({path: file_type(dump_json(self.data))})
             raise Drop()
 
     return AutoYamlNamespaceHandler
@@ -76,7 +76,7 @@ def create_extra_handler(
     class AutoYamlExtraHandler(YamlFile):
         def bind(self, pack: Any, path: str):
             super().bind(pack, path)
-            pack.extra[filename] = file_type(dump_json(self.data))
+            pack.extra.merge({filename: file_type(dump_json(self.data))})
             raise Drop()
 
     return AutoYamlExtraHandler
@@ -92,7 +92,7 @@ def create_namespace_extra_handler(
         def bind(self, pack: Any, path: str):
             super().bind(pack, path)
             namespace, _, path = path.partition(":")
-            pack[namespace].extra[filename] = file_type(dump_json(self.data))
+            pack[namespace].extra.merge({filename: file_type(dump_json(self.data))})
             raise Drop()
 
     return AutoYamlExtraHandler

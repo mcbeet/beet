@@ -2,6 +2,6 @@ require:
   - demo.installation_message
   - beet.contrib.auto_yaml
 data_pack:
-  load: [src]
+  load: [src, other]
 resource_pack:
   load: [src]
