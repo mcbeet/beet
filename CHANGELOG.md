@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.50.5 (2022-01-22)
+### Fix
+* Merge files from auto_yaml ([`766ab0e`](https://github.com/mcbeet/beet/commit/766ab0e3022e43cf3e06866e6f153e5e4f3357bc))
+
 ## v0.50.4 (2022-01-18)
 ### Fix
 * Don't include empty pre_load, load and post_load tags by default ([`38a3d31`](https://github.com/mcbeet/beet/commit/38a3d316ec7000833e337eb5a9d394af4d1667f8))
