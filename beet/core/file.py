@@ -95,7 +95,7 @@ class File(Generic[ValueType, SerializeType]):
         if self.source_path:
             return self.source_path
         raise ValueError(
-            f"Expected {self.__class__.__name__} object to be initialized with "
+            f"Expected {self.__class__.__name__} object to be initialized with "  # type: ignore
             "a source path."
         )
 

@@ -917,7 +917,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
         if zipped is not None:
             self.zipped = zipped
         suffix = ".zip" if self.zipped else ""
-        factory = partial(ZipFile, mode="w") if self.zipped else nullcontext
+        factory: Any = partial(ZipFile, mode="w") if self.zipped else nullcontext
 
         if not directory:
             directory = self.path or Path.cwd()
