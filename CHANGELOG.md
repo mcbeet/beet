@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.50.6 (2022-01-22)
+### Fix
+* Allow single string value for loading packs ([`6820c64`](https://github.com/mcbeet/beet/commit/6820c64c29d1ebd8a37d1da84c13eb767a3aab43))
+
 ## v0.50.5 (2022-01-22)
 ### Fix
 * Merge files from auto_yaml ([`766ab0e`](https://github.com/mcbeet/beet/commit/766ab0e3022e43cf3e06866e6f153e5e4f3357bc))
