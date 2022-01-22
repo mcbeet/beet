@@ -41,7 +41,7 @@ class PackConfig(BaseModel):
     pack_format: int = 0
     zipped: Optional[bool] = None
 
-    load: List[str] = Field(default_factory=list)
+    load: Union[str, List[str]] = Field(default_factory=list)
     render: Dict[str, List[str]] = Field(default_factory=dict)
 
     class Config:
@@ -54,7 +54,8 @@ class PackConfig(BaseModel):
             description=self.description or other.description,
             pack_format=self.pack_format or other.pack_format,
             zipped=other.zipped if self.zipped is None else self.zipped,
-            load=other.load + self.load,
+            load=([other.load] if isinstance(other.load, str) else other.load)
+            + ([self.load] if isinstance(self.load, str) else self.load),
             render={
                 key: other.render.get(key, []) + self.render.get(key, [])
                 for key in self.render.keys() | other.render.keys()
@@ -102,7 +103,14 @@ class ProjectConfig(BaseModel):
         self.templates = [str(path / template_path) for template_path in self.templates]
 
         for pack_config in [self.data_pack, self.resource_pack]:
-            pack_config.load = [str(path / load_path) for load_path in pack_config.load]
+            pack_config.load = [
+                str(path / load_path)
+                for load_path in (
+                    [pack_config.load]
+                    if isinstance(pack_config.load, str)
+                    else pack_config.load
+                )
+            ]
 
         self.pipeline = [
             item.resolve(path) if isinstance(item, ProjectConfig) else item
