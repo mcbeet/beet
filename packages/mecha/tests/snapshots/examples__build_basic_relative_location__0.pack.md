@@ -32,4 +32,11 @@ function demo:bar
 ```mcfunction
 function demo:folder/wat
 function demo:bar
+schedule function demo:other 1s
+```
+
+`@function demo:other`
+
+```mcfunction
+say delayed
 ```
