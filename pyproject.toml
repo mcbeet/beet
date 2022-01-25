@@ -44,7 +44,7 @@ pytest = "^6.2.5"
 pytest-minecraft = "^0.1.1"
 isort = "^5.10.1"
 pytest-insta = "^0.1.10"
-python-semantic-release = "^7.23.0"
+python-semantic-release = "^7.24.0"
 mudkip = "^0.4.14"
 furo = "^2021.11.23"
 
