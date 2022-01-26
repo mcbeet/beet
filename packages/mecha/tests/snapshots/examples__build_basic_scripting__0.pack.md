@@ -165,6 +165,20 @@ say True
 say bar
 ```
 
+`@function demo:import_a`
+
+```mcfunction
+say demo:import_b
+say demo:import_a
+```
+
+`@function demo:import_b`
+
+```mcfunction
+say demo:import_a
+say demo:import_b
+```
+
 `@function(strip_final_newline) demo:thing`
 
 ```mcfunction

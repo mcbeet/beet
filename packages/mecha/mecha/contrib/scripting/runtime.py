@@ -62,6 +62,7 @@ class Runtime:
     """The scripting runtime."""
 
     modules: Dict[TextFileBase[Any], Module]
+    stack: List[Module]
     commands: List[AstCommand]
     helpers: Dict[str, Any]
     globals: JsonDict
@@ -74,6 +75,7 @@ class Runtime:
 
     def __init__(self, ctx: Union[Context, Mecha]):
         self.modules = {}
+        self.stack = []
         self.commands = []
         self.helpers = get_scripting_helpers()
         self.globals = {"ctx": None, "loop_info": loop_info}
@@ -128,7 +130,9 @@ class Runtime:
 
     def get_path(self) -> str:
         """Return the current path."""
-        if path := self.modules[self.database.current].resource_location:
+        if not self.stack:
+            raise ValueError("No module currently executing.")
+        if path := self.stack[-1].resource_location:
             return path
         raise ValueError("No resource location corresponding to the current module.")
 
@@ -208,6 +212,7 @@ class Runtime:
         module.namespace["__name__"] = module.resource_location
         module.namespace["__file__"] = module.code.co_filename
 
+        self.stack.append(module)
         module.executing = True
 
         try:
@@ -215,6 +220,7 @@ class Runtime:
                 exec(module.code, module.namespace)
         finally:
             module.executing = False
+            self.stack.pop()
 
         return module.namespace[module.output]
 
@@ -251,7 +257,8 @@ class Runtime:
         except KeyError:
             msg = f"Couldn't import {resource_location!r}."
             raise ImportError(msg) from None
-        self.get_output(module)
+        if not module.executing:
+            self.get_output(module)
         return module
 
     @internal
