@@ -2,6 +2,11 @@
 
 <!--next-version-placeholder-->
 
+## v0.34.2 (2022-01-26)
+### Fix
+* Proper import error when the module doesn't exist ([`f1ae4c8`](https://github.com/mcbeet/mecha/commit/f1ae4c8306f9bc9d9547e19af627714accb068bc))
+* Don't use modified ast to import modules ([`96ee329`](https://github.com/mcbeet/mecha/commit/96ee329b1570027853b3544880407b3720ba3fca))
+
 ## v0.34.1 (2022-01-22)
 ### Fix
 * Patch schedule clear argument ([`b648e98`](https://github.com/mcbeet/mecha/commit/b648e98b63aa17f036d13ce34c6feb8ca45c606a))
