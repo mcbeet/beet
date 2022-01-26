@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.34.3 (2022-01-26)
+### Fix
+* Properly track import stack ([`c0de873`](https://github.com/mcbeet/mecha/commit/c0de873d61642d582d0b2e16a98f12c12bc7bd99))
+
 ## v0.34.2 (2022-01-26)
 ### Fix
 * Proper import error when the module doesn't exist ([`f1ae4c8`](https://github.com/mcbeet/mecha/commit/f1ae4c8306f9bc9d9547e19af627714accb068bc))
