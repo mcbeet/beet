@@ -246,7 +246,11 @@ class Runtime:
     @internal
     def import_module(self, resource_location: str) -> Module:
         """Import module."""
-        module = self.get_module(resource_location)
+        try:
+            module = self.get_module(resource_location)
+        except KeyError:
+            msg = f"Couldn't import {resource_location!r}."
+            raise ImportError(msg) from None
         self.get_output(module)
         return module
 
