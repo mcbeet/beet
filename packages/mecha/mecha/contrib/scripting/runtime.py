@@ -7,6 +7,7 @@ __all__ = [
 ]
 
 
+import logging
 import marshal
 from contextlib import contextmanager
 from dataclasses import dataclass, field
@@ -39,6 +40,8 @@ from .helpers import get_scripting_helpers
 from .loop_info import loop_info
 from .parse import get_scripting_parsers
 from .utils import SAFE_BUILTINS, internal, rewrite_traceback
+
+logger = logging.getLogger("mecha")
 
 
 @dataclass
@@ -93,14 +96,12 @@ class Runtime:
             self.expose(
                 "generate_tree",
                 lambda *args, **kwargs: generate_tree(
-                    kwargs.pop("root") if "root" in kwargs else self.current_path,
+                    kwargs.pop("root") if "root" in kwargs else self.get_path(),
                     *args,
                     name=(
                         kwargs.pop("name")
                         if "name" in kwargs
-                        else ctx.generate["tree"][self.current_path].format(
-                            "tree_{incr}"
-                        )
+                        else ctx.generate["tree"][self.get_path()].format("tree_{incr}")
                     ),
                     **kwargs,
                 ),
@@ -125,8 +126,7 @@ class Runtime:
 
         mc.cache_backend = ModuleCacheBackend(runtime=self)
 
-    @property
-    def current_path(self) -> str:
+    def get_path(self) -> str:
         """Return the current path."""
         if path := self.modules[self.database.current].resource_location:
             return path
@@ -138,25 +138,39 @@ class Runtime:
 
     def get_module(
         self,
-        node: AstRoot,
-        file_instance: Optional[TextFileBase[Any]] = None,
+        target: Optional[Union[AstRoot, str]] = None,
+        current: Optional[TextFileBase[Any]] = None,
     ) -> Module:
-        """Return an executable module for the given ast."""
-        if file_instance is None:
-            file_instance = self.database.current
+        """Retrieve an executable module."""
+        if isinstance(target, str):
+            current = self.database.index[target]
+        elif current is None:
+            current = self.database.current
 
-        module = self.modules.get(file_instance)
-        if module and module.ast is node:
-            return module
+        module = self.modules.get(current)
+        compilation_unit = self.database[current]
+        name = compilation_unit.resource_location or "<unknown>"
 
-        compilation_unit = self.database[file_instance]
-        source, output, refs = self.codegen(node)
+        if module:
+            if isinstance(target, AstRoot) and module.ast is not target:
+                logger.debug("Code generation due to ast update for module %s.", name)
+            else:
+                return module
+        else:
+            logger.debug("Code generation for module %s.", name)
+
+        if not isinstance(target, AstRoot):
+            target = compilation_unit.ast
+            if not target:
+                raise ValueError(f"No ast for module {name}.")
+
+        source, output, refs = self.codegen(target)
 
         if source and output:
             filename = (
                 str(self.directory / compilation_unit.filename)
                 if compilation_unit.filename
-                else "<mecha>"
+                else name
             )
 
             code = compile(source, filename, "exec")
@@ -165,14 +179,14 @@ class Runtime:
             code = None
 
         module = Module(
-            node,
+            target,
             code,
             refs,
             output,
             compilation_unit.resource_location,
             set(self.globals),
         )
-        self.modules[file_instance] = module
+        self.modules[current] = module
 
         return module
 
@@ -185,6 +199,8 @@ class Runtime:
 
         if module.executing:
             raise ValueError("Import cycle detected.")
+
+        logger.debug("Evaluate module %s.", module.resource_location or "<unknown>")
 
         module.namespace.update(self.globals)
         module.namespace["_mecha_runtime"] = self
@@ -230,15 +246,8 @@ class Runtime:
     @internal
     def import_module(self, resource_location: str) -> Module:
         """Import module."""
-        file_instance = self.database.index[resource_location]
-        compilation_unit = self.database[file_instance]
-
-        if not compilation_unit.ast:
-            raise ValueError(f"Module {resource_location!r} doesn't have an ast yet.")
-
-        module = self.get_module(compilation_unit.ast, file_instance)
+        module = self.get_module(resource_location)
         self.get_output(module)
-
         return module
 
     @internal

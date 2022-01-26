@@ -1,5 +1,5 @@
 say ctx.project_id
 ---
 Traceback (most recent call last):
-  File "<mecha>", line 1, in demo:foo
+  File "demo:foo", line 1, in demo:foo
 AttributeError: 'NoneType' object has no attribute 'project_id'

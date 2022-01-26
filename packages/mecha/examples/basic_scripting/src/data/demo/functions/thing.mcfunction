@@ -6,4 +6,4 @@ def do_stuff(a, b):
 
 def call_recursive():
     runtime = ctx.inject(Runtime)
-    if score @s loop_again matches 1 function runtime.current_path
+    if score @s loop_again matches 1 function runtime.get_path()

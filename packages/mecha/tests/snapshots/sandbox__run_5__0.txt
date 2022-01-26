@@ -1,5 +1,5 @@
 "a{0.__class__}b".format(42)
 ---
 Traceback (most recent call last):
-  File "<mecha>", line 1, in demo:foo
+  File "demo:foo", line 1, in demo:foo
 mecha.contrib.scripting_sandbox.SecurityError: Access forbidden attribute 'format' of <class 'str'>.
