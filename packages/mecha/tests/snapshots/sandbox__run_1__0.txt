@@ -4,4 +4,4 @@ f.__code__
 ---
 Traceback (most recent call last):
   File "demo:foo", line 3, in demo:foo
-mecha.contrib.scripting_sandbox.SecurityError: Access forbidden attribute '__code__' of <class 'function'>.
+mecha.contrib.bolt_sandbox.SecurityError: Access forbidden attribute '__code__' of <class 'function'>.

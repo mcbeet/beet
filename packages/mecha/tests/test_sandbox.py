@@ -17,7 +17,7 @@ SANDBOX_EXAMPLES = [
 
 @pytest.fixture(scope="session")
 def ctx_sandbox():
-    with run_beet({"require": ["mecha.contrib.scripting_sandbox"]}) as ctx:
+    with run_beet({"require": ["mecha.contrib.bolt_sandbox"]}) as ctx:
         yield ctx
 
 

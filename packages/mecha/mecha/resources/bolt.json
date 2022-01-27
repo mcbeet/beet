@@ -1,0 +1,210 @@
+{
+  "type": "root",
+  "children": {
+    "statement": {
+      "type": "argument",
+      "parser": "bolt:statement",
+      "executable": true
+    },
+    "def": {
+      "type": "literal",
+      "children": {
+        "function": {
+          "type": "argument",
+          "parser": "bolt:function_signature",
+          "children": {
+            "body": {
+              "type": "argument",
+              "parser": "bolt:function_root",
+              "executable": true
+            }
+          }
+        }
+      }
+    },
+    "return": {
+      "type": "literal",
+      "executable": true,
+      "children": {
+        "value": {
+          "type": "argument",
+          "parser": "bolt:expression",
+          "executable": true
+        }
+      }
+    },
+    "yield": {
+      "type": "literal",
+      "executable": true,
+      "children": {
+        "from": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "parser": "bolt:expression",
+              "executable": true
+            }
+          }
+        },
+        "value": {
+          "type": "argument",
+          "parser": "bolt:expression",
+          "executable": true
+        }
+      }
+    },
+    "del": {
+      "type": "literal",
+      "executable": true,
+      "children": {
+        "target": {
+          "type": "argument",
+          "parser": "bolt:del_target",
+          "executable": true
+        }
+      }
+    },
+    "if": {
+      "type": "literal",
+      "children": {
+        "condition": {
+          "type": "argument",
+          "parser": "bolt:expression",
+          "children": {
+            "body": {
+              "type": "argument",
+              "parser": "mecha:nested_root",
+              "executable": true
+            }
+          }
+        }
+      }
+    },
+    "elif": {
+      "type": "literal",
+      "children": {
+        "condition": {
+          "type": "argument",
+          "parser": "bolt:expression",
+          "children": {
+            "body": {
+              "type": "argument",
+              "parser": "mecha:nested_root",
+              "executable": true
+            }
+          }
+        }
+      }
+    },
+    "else": {
+      "type": "literal",
+      "children": {
+        "body": {
+          "type": "argument",
+          "parser": "mecha:nested_root",
+          "executable": true
+        }
+      }
+    },
+    "while": {
+      "type": "literal",
+      "children": {
+        "condition": {
+          "type": "argument",
+          "parser": "bolt:expression",
+          "children": {
+            "body": {
+              "type": "argument",
+              "parser": "mecha:nested_root",
+              "executable": true
+            }
+          }
+        }
+      }
+    },
+    "for": {
+      "type": "literal",
+      "children": {
+        "target": {
+          "type": "argument",
+          "parser": "bolt:assignment_target",
+          "children": {
+            "in": {
+              "type": "literal",
+              "children": {
+                "iterable": {
+                  "type": "argument",
+                  "parser": "bolt:expression",
+                  "children": {
+                    "body": {
+                      "type": "argument",
+                      "parser": "mecha:nested_root",
+                      "executable": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "break": {
+      "type": "literal",
+      "executable": true
+    },
+    "continue": {
+      "type": "literal",
+      "executable": true
+    },
+    "import": {
+      "type": "literal",
+      "children": {
+        "module": {
+          "type": "argument",
+          "parser": "bolt:import",
+          "executable": true,
+          "children": {
+            "as": {
+              "type": "literal",
+              "children": {
+                "alias": {
+                  "type": "argument",
+                  "parser": "bolt:import_name",
+                  "executable": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "from": {
+      "type": "literal",
+      "children": {
+        "module": {
+          "type": "argument",
+          "parser": "bolt:import",
+          "children": {
+            "import": {
+              "type": "literal",
+              "children": {
+                "name": {
+                  "type": "argument",
+                  "parser": "bolt:import_name",
+                  "executable": true,
+                  "redirect": ["from", "module", "import"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "pass": {
+      "type": "literal",
+      "executable": true
+    }
+  }
+}

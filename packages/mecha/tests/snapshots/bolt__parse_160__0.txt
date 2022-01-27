@@ -1,0 +1,47 @@
+def f():
+    f.data = {}
+---
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=24, lineno=2, colno=16)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=24, lineno=2, colno=16)
+      identifier: 'def:function:body'
+      arguments:
+        <class 'mecha.contrib.bolt.ast.AstFunctionSignature'>
+          location: SourceLocation(pos=4, lineno=1, colno=5)
+          end_location: SourceLocation(pos=7, lineno=1, colno=8)
+          name: 'f'
+          arguments:
+            <empty>
+        <class 'mecha.ast.AstRoot'>
+          location: SourceLocation(pos=13, lineno=2, colno=5)
+          end_location: SourceLocation(pos=24, lineno=2, colno=16)
+          commands:
+            <class 'mecha.ast.AstCommand'>
+              location: SourceLocation(pos=13, lineno=2, colno=5)
+              end_location: SourceLocation(pos=24, lineno=2, colno=16)
+              identifier: 'statement'
+              arguments:
+                <class 'mecha.contrib.bolt.ast.AstAssignment'>
+                  location: SourceLocation(pos=13, lineno=2, colno=5)
+                  end_location: SourceLocation(pos=24, lineno=2, colno=16)
+                  operator: '='
+                  target:
+                    <class 'mecha.contrib.bolt.ast.AstTargetAttribute'>
+                      location: SourceLocation(pos=13, lineno=2, colno=5)
+                      end_location: SourceLocation(pos=19, lineno=2, colno=11)
+                      name: 'data'
+                      value:
+                        <class 'mecha.contrib.bolt.ast.AstIdentifier'>
+                          location: SourceLocation(pos=13, lineno=2, colno=5)
+                          end_location: SourceLocation(pos=14, lineno=2, colno=6)
+                          value: 'f'
+                  value:
+                    <class 'mecha.contrib.bolt.ast.AstDict'>
+                      location: SourceLocation(pos=22, lineno=2, colno=14)
+                      end_location: SourceLocation(pos=24, lineno=2, colno=16)
+                      items:
+                        <empty>

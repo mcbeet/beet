@@ -2,4 +2,4 @@ foo = "a{x.__class__}b".format_map({"x":42})
 ---
 Traceback (most recent call last):
   File "demo:foo", line 1, in demo:foo
-mecha.contrib.scripting_sandbox.SecurityError: Access forbidden attribute 'format_map' of <class 'str'>.
+mecha.contrib.bolt_sandbox.SecurityError: Access forbidden attribute 'format_map' of <class 'str'>.

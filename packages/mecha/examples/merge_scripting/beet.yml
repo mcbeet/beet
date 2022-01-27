@@ -1,8 +1,0 @@
-data_pack:
-  load: ["pack_1", "pack_2"]
-require:
-  - mecha.contrib.scripting
-  - mecha.contrib.messages
-  - beet.contrib.auto_yaml
-pipeline:
-  - mecha

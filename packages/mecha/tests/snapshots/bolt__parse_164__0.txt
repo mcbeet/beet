@@ -1,0 +1,49 @@
+color = "red"
+scoreboard objectives setdisplay f"sidebar.team.{color}" some_score_name
+---
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=87, lineno=3, colno=1)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=13, lineno=1, colno=14)
+      identifier: 'statement'
+      arguments:
+        <class 'mecha.contrib.bolt.ast.AstAssignment'>
+          location: SourceLocation(pos=0, lineno=1, colno=1)
+          end_location: SourceLocation(pos=13, lineno=1, colno=14)
+          operator: '='
+          target:
+            <class 'mecha.contrib.bolt.ast.AstTargetIdentifier'>
+              location: SourceLocation(pos=0, lineno=1, colno=1)
+              end_location: SourceLocation(pos=5, lineno=1, colno=6)
+              value: 'color'
+          value:
+            <class 'mecha.contrib.bolt.ast.AstValue'>
+              location: SourceLocation(pos=8, lineno=1, colno=9)
+              end_location: SourceLocation(pos=13, lineno=1, colno=14)
+              value: 'red'
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=14, lineno=2, colno=1)
+      end_location: SourceLocation(pos=86, lineno=2, colno=73)
+      identifier: 'scoreboard:objectives:setdisplay:slot:objective'
+      arguments:
+        <class 'mecha.contrib.bolt.ast.AstInterpolation'>
+          location: SourceLocation(pos=47, lineno=2, colno=34)
+          end_location: SourceLocation(pos=70, lineno=2, colno=57)
+          converter: 'scoreboard_slot'
+          value:
+            <class 'mecha.contrib.bolt.ast.AstFormatString'>
+              location: SourceLocation(pos=47, lineno=2, colno=34)
+              end_location: SourceLocation(pos=70, lineno=2, colno=57)
+              fmt: 'sidebar.team.{}'
+              values:
+                <class 'mecha.contrib.bolt.ast.AstIdentifier'>
+                  location: SourceLocation(pos=63, lineno=2, colno=50)
+                  end_location: SourceLocation(pos=68, lineno=2, colno=55)
+                  value: 'color'
+        <class 'mecha.ast.AstObjective'>
+          location: SourceLocation(pos=71, lineno=2, colno=58)
+          end_location: SourceLocation(pos=86, lineno=2, colno=73)
+          value: 'some_score_name'

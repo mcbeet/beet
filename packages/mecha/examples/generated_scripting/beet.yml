@@ -1,7 +1,0 @@
-require:
-  - mecha.contrib.scripting
-data_pack:
-  load: [src]
-pipeline:
-  - demo
-  - mecha

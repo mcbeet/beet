@@ -1,0 +1,37 @@
+{**{1: 1}}
+---
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=11, lineno=2, colno=1)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=10, lineno=1, colno=11)
+      identifier: 'statement'
+      arguments:
+        <class 'mecha.contrib.bolt.ast.AstDict'>
+          location: SourceLocation(pos=0, lineno=1, colno=1)
+          end_location: SourceLocation(pos=10, lineno=1, colno=11)
+          items:
+            <class 'mecha.contrib.bolt.ast.AstUnpack'>
+              location: SourceLocation(pos=1, lineno=1, colno=2)
+              end_location: SourceLocation(pos=9, lineno=1, colno=10)
+              type: 'dict'
+              value:
+                <class 'mecha.contrib.bolt.ast.AstDict'>
+                  location: SourceLocation(pos=3, lineno=1, colno=4)
+                  end_location: SourceLocation(pos=9, lineno=1, colno=10)
+                  items:
+                    <class 'mecha.contrib.bolt.ast.AstDictItem'>
+                      location: SourceLocation(pos=4, lineno=1, colno=5)
+                      end_location: SourceLocation(pos=8, lineno=1, colno=9)
+                      key:
+                        <class 'mecha.contrib.bolt.ast.AstValue'>
+                          location: SourceLocation(pos=4, lineno=1, colno=5)
+                          end_location: SourceLocation(pos=5, lineno=1, colno=6)
+                          value: 1
+                      value:
+                        <class 'mecha.contrib.bolt.ast.AstValue'>
+                          location: SourceLocation(pos=7, lineno=1, colno=8)
+                          end_location: SourceLocation(pos=8, lineno=1, colno=9)
+                          value: 1

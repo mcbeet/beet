@@ -1,0 +1,83 @@
+def f():
+    return {f(): f(), other: [{}, {}, "wat"]}
+---
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=54, lineno=2, colno=46)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=54, lineno=2, colno=46)
+      identifier: 'def:function:body'
+      arguments:
+        <class 'mecha.contrib.bolt.ast.AstFunctionSignature'>
+          location: SourceLocation(pos=4, lineno=1, colno=5)
+          end_location: SourceLocation(pos=7, lineno=1, colno=8)
+          name: 'f'
+          arguments:
+            <empty>
+        <class 'mecha.ast.AstRoot'>
+          location: SourceLocation(pos=13, lineno=2, colno=5)
+          end_location: SourceLocation(pos=54, lineno=2, colno=46)
+          commands:
+            <class 'mecha.ast.AstCommand'>
+              location: SourceLocation(pos=13, lineno=2, colno=5)
+              end_location: SourceLocation(pos=54, lineno=2, colno=46)
+              identifier: 'return:value'
+              arguments:
+                <class 'mecha.contrib.bolt.ast.AstDict'>
+                  location: SourceLocation(pos=20, lineno=2, colno=12)
+                  end_location: SourceLocation(pos=54, lineno=2, colno=46)
+                  items:
+                    <class 'mecha.contrib.bolt.ast.AstDictItem'>
+                      location: SourceLocation(pos=21, lineno=2, colno=13)
+                      end_location: SourceLocation(pos=29, lineno=2, colno=21)
+                      key:
+                        <class 'mecha.contrib.bolt.ast.AstCall'>
+                          location: SourceLocation(pos=21, lineno=2, colno=13)
+                          end_location: SourceLocation(pos=24, lineno=2, colno=16)
+                          value:
+                            <class 'mecha.contrib.bolt.ast.AstIdentifier'>
+                              location: SourceLocation(pos=21, lineno=2, colno=13)
+                              end_location: SourceLocation(pos=22, lineno=2, colno=14)
+                              value: 'f'
+                          arguments:
+                            <empty>
+                      value:
+                        <class 'mecha.contrib.bolt.ast.AstCall'>
+                          location: SourceLocation(pos=26, lineno=2, colno=18)
+                          end_location: SourceLocation(pos=29, lineno=2, colno=21)
+                          value:
+                            <class 'mecha.contrib.bolt.ast.AstIdentifier'>
+                              location: SourceLocation(pos=26, lineno=2, colno=18)
+                              end_location: SourceLocation(pos=27, lineno=2, colno=19)
+                              value: 'f'
+                          arguments:
+                            <empty>
+                    <class 'mecha.contrib.bolt.ast.AstDictItem'>
+                      location: SourceLocation(pos=31, lineno=2, colno=23)
+                      end_location: SourceLocation(pos=53, lineno=2, colno=45)
+                      key:
+                        <class 'mecha.contrib.bolt.ast.AstValue'>
+                          location: SourceLocation(pos=31, lineno=2, colno=23)
+                          end_location: SourceLocation(pos=36, lineno=2, colno=28)
+                          value: 'other'
+                      value:
+                        <class 'mecha.contrib.bolt.ast.AstList'>
+                          location: SourceLocation(pos=38, lineno=2, colno=30)
+                          end_location: SourceLocation(pos=53, lineno=2, colno=45)
+                          items:
+                            <class 'mecha.contrib.bolt.ast.AstDict'>
+                              location: SourceLocation(pos=39, lineno=2, colno=31)
+                              end_location: SourceLocation(pos=41, lineno=2, colno=33)
+                              items:
+                                <empty>
+                            <class 'mecha.contrib.bolt.ast.AstDict'>
+                              location: SourceLocation(pos=43, lineno=2, colno=35)
+                              end_location: SourceLocation(pos=45, lineno=2, colno=37)
+                              items:
+                                <empty>
+                            <class 'mecha.contrib.bolt.ast.AstValue'>
+                              location: SourceLocation(pos=47, lineno=2, colno=39)
+                              end_location: SourceLocation(pos=52, lineno=2, colno=44)
+                              value: 'wat'

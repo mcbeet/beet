@@ -1,0 +1,6 @@
+require:
+  - mecha.contrib.bolt
+data_pack:
+  load: [src]
+pipeline:
+  - mecha

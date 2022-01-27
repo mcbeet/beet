@@ -1,0 +1,44 @@
+my_team = "sidebar.team.red"
+scoreboard objectives setdisplay my_team some_score_name
+---
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=86, lineno=3, colno=1)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=28, lineno=1, colno=29)
+      identifier: 'statement'
+      arguments:
+        <class 'mecha.contrib.bolt.ast.AstAssignment'>
+          location: SourceLocation(pos=0, lineno=1, colno=1)
+          end_location: SourceLocation(pos=28, lineno=1, colno=29)
+          operator: '='
+          target:
+            <class 'mecha.contrib.bolt.ast.AstTargetIdentifier'>
+              location: SourceLocation(pos=0, lineno=1, colno=1)
+              end_location: SourceLocation(pos=7, lineno=1, colno=8)
+              value: 'my_team'
+          value:
+            <class 'mecha.contrib.bolt.ast.AstValue'>
+              location: SourceLocation(pos=10, lineno=1, colno=11)
+              end_location: SourceLocation(pos=28, lineno=1, colno=29)
+              value: 'sidebar.team.red'
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=29, lineno=2, colno=1)
+      end_location: SourceLocation(pos=85, lineno=2, colno=57)
+      identifier: 'scoreboard:objectives:setdisplay:slot:objective'
+      arguments:
+        <class 'mecha.contrib.bolt.ast.AstInterpolation'>
+          location: SourceLocation(pos=62, lineno=2, colno=34)
+          end_location: SourceLocation(pos=69, lineno=2, colno=41)
+          converter: 'scoreboard_slot'
+          value:
+            <class 'mecha.contrib.bolt.ast.AstIdentifier'>
+              location: SourceLocation(pos=62, lineno=2, colno=34)
+              end_location: SourceLocation(pos=69, lineno=2, colno=41)
+              value: 'my_team'
+        <class 'mecha.ast.AstObjective'>
+          location: SourceLocation(pos=70, lineno=2, colno=42)
+          end_location: SourceLocation(pos=85, lineno=2, colno=57)
+          value: 'some_score_name'

@@ -1,0 +1,35 @@
+1 - (2 + 3)
+---
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=12, lineno=2, colno=1)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=10, lineno=1, colno=11)
+      identifier: 'statement'
+      arguments:
+        <class 'mecha.contrib.bolt.ast.AstExpressionBinary'>
+          location: SourceLocation(pos=0, lineno=1, colno=1)
+          end_location: SourceLocation(pos=10, lineno=1, colno=11)
+          operator: '-'
+          left:
+            <class 'mecha.contrib.bolt.ast.AstValue'>
+              location: SourceLocation(pos=0, lineno=1, colno=1)
+              end_location: SourceLocation(pos=1, lineno=1, colno=2)
+              value: 1
+          right:
+            <class 'mecha.contrib.bolt.ast.AstExpressionBinary'>
+              location: SourceLocation(pos=5, lineno=1, colno=6)
+              end_location: SourceLocation(pos=10, lineno=1, colno=11)
+              operator: '+'
+              left:
+                <class 'mecha.contrib.bolt.ast.AstValue'>
+                  location: SourceLocation(pos=5, lineno=1, colno=6)
+                  end_location: SourceLocation(pos=6, lineno=1, colno=7)
+                  value: 2
+              right:
+                <class 'mecha.contrib.bolt.ast.AstValue'>
+                  location: SourceLocation(pos=9, lineno=1, colno=10)
+                  end_location: SourceLocation(pos=10, lineno=1, colno=11)
+                  value: 3

@@ -1,0 +1,15 @@
+None
+---
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=5, lineno=2, colno=1)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=4, lineno=1, colno=5)
+      identifier: 'statement'
+      arguments:
+        <class 'mecha.contrib.bolt.ast.AstValue'>
+          location: SourceLocation(pos=0, lineno=1, colno=1)
+          end_location: SourceLocation(pos=4, lineno=1, colno=5)
+          value: None

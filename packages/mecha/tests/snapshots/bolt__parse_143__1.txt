@@ -1,0 +1,71 @@
+_mecha_lineno = [1, 8], [1, 2]
+_mecha_helper_interpolate_coordinate = _mecha_runtime.helpers['interpolate_coordinate']
+_mecha_helper_replace = _mecha_runtime.helpers['replace']
+_mecha_helper_children = _mecha_runtime.helpers['children']
+with _mecha_runtime.scope() as _mecha_var3:
+    _mecha_var0 = 1
+    a = _mecha_var0
+    _mecha_var1 = a
+    _mecha_var2 = '^{}'.format(_mecha_var1)
+    _mecha_var2 = _mecha_helper_interpolate_coordinate(_mecha_var2, _mecha_refs[0])
+    _mecha_runtime.commands.append(_mecha_helper_replace(_mecha_refs[5], arguments=_mecha_helper_children([_mecha_helper_replace(_mecha_refs[4], arguments=_mecha_helper_children([_mecha_helper_replace(_mecha_refs[1], y=_mecha_var2), _mecha_refs[2], _mecha_refs[3]]))])))
+_mecha_var4 = _mecha_helper_replace(_mecha_refs[6], commands=_mecha_helper_children(_mecha_var3))
+---
+output = _mecha_var4
+---
+_mecha_refs[0]
+<class 'mecha.contrib.bolt.ast.AstInterpolation'>
+  location: SourceLocation(pos=17, lineno=2, colno=12)
+  end_location: SourceLocation(pos=24, lineno=2, colno=19)
+  converter: 'coordinate'
+  value:
+    <class 'mecha.contrib.bolt.ast.AstFormatString'>
+_mecha_refs[1]
+<class 'mecha.ast.AstVector3'>
+  location: SourceLocation(pos=15, lineno=2, colno=10)
+  end_location: SourceLocation(pos=26, lineno=2, colno=21)
+  x:
+    <class 'mecha.ast.AstCoordinate'>
+  y:
+    <class 'mecha.contrib.bolt.ast.AstInterpolation'>
+  z:
+    <class 'mecha.ast.AstCoordinate'>
+_mecha_refs[2]
+<class 'mecha.ast.AstBlock'>
+  location: SourceLocation(pos=27, lineno=2, colno=22)
+  end_location: SourceLocation(pos=34, lineno=2, colno=29)
+  identifier:
+    <class 'mecha.ast.AstResourceLocation'>
+  block_states:
+    <empty>
+  data_tags: None
+_mecha_refs[3]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=35, lineno=2, colno=30)
+  end_location: SourceLocation(pos=41, lineno=2, colno=36)
+  identifier: 'execute:run:subcommand'
+  arguments:
+    <class 'mecha.ast.AstCommand'>
+_mecha_refs[4]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=6, lineno=2, colno=1)
+  end_location: SourceLocation(pos=41, lineno=2, colno=36)
+  identifier: 'execute:if:block:pos:block:subcommand'
+  arguments:
+    <class 'mecha.ast.AstVector3'>
+    <class 'mecha.ast.AstBlock'>
+    <class 'mecha.ast.AstCommand'>
+_mecha_refs[5]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=6, lineno=2, colno=1)
+  end_location: SourceLocation(pos=41, lineno=2, colno=36)
+  identifier: 'execute:subcommand'
+  arguments:
+    <class 'mecha.ast.AstCommand'>
+_mecha_refs[6]
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=41, lineno=2, colno=36)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+    <class 'mecha.ast.AstCommand'>

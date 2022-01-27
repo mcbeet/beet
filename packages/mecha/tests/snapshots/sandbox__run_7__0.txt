@@ -2,4 +2,4 @@ say __name__.format()
 ---
 Traceback (most recent call last):
   File "demo:foo", line 1, in demo:foo
-mecha.contrib.scripting_sandbox.SecurityError: Access forbidden attribute 'format' of <class 'str'>.
+mecha.contrib.bolt_sandbox.SecurityError: Access forbidden attribute 'format' of <class 'str'>.
