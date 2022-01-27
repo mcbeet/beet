@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.35.0 (2022-01-27)
+### Feature
+* Rename to bolt ([`ecb1944`](https://github.com/mcbeet/mecha/commit/ecb1944f90ff237101a9aa5fba85a972b3311a61))
+
 ## v0.34.4 (2022-01-27)
 ### Fix
 * Get_module() can be called with no arguments to retrieve the executing module ([`f77cf62`](https://github.com/mcbeet/mecha/commit/f77cf62148bbdd712409591975b96978fff15701))
