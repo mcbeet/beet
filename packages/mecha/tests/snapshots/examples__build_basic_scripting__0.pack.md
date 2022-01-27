@@ -170,6 +170,7 @@ say bar
 ```mcfunction
 say demo:import_b
 say demo:import_a
+say 84
 ```
 
 `@function demo:import_b`
@@ -177,6 +178,7 @@ say demo:import_a
 ```mcfunction
 say demo:import_a
 say demo:import_b
+say 14
 ```
 
 `@function(strip_final_newline) demo:thing`

@@ -1,7 +1,18 @@
 from mecha.contrib.scripting import Runtime
+
 runtime = ctx.inject(Runtime)
-def loga():
+
+foo = 42
+
+def callback():
+    return foo
+
+def loga(f):
+    runtime.get_module().namespace["bar"] *= 2
     say __name__
     say runtime.get_path()
+    say f()
+
 from ./import_b import logb
-logb()
+
+logb(callback)

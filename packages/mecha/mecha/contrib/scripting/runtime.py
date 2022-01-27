@@ -146,6 +146,9 @@ class Runtime:
         current: Optional[TextFileBase[Any]] = None,
     ) -> Module:
         """Retrieve an executable module."""
+        if self.stack and not target and not current:
+            return self.stack[-1]
+
         if isinstance(target, str):
             current = self.database.index[target]
         elif current is None:
