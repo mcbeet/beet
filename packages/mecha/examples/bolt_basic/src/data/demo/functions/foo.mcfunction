@@ -249,3 +249,7 @@ for loop in loop_info("abcd"):
     say loop.first
     say loop.last
     say loop.cycle("foo", "bar")
+
+from ./thing import raw
+
+raw(f"say hello{'!' * 5}")

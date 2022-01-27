@@ -163,6 +163,7 @@ say None
 say False
 say True
 say bar
+say hello!!!!!
 ```
 
 `@function demo:import_a`
