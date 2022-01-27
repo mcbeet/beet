@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.34.4 (2022-01-27)
+### Fix
+* Get_module() can be called with no arguments to retrieve the executing module ([`f77cf62`](https://github.com/mcbeet/mecha/commit/f77cf62148bbdd712409591975b96978fff15701))
+
 ## v0.34.3 (2022-01-26)
 ### Fix
 * Properly track import stack ([`c0de873`](https://github.com/mcbeet/mecha/commit/c0de873d61642d582d0b2e16a98f12c12bc7bd99))
