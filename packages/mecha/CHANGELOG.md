@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.35.1 (2022-01-29)
+### Fix
+* Allow weapon alias ([`e867989`](https://github.com/mcbeet/mecha/commit/e86798960a3788d61648010a04119e26e9c52c8a))
+
 ## v0.35.0 (2022-01-27)
 ### Feature
 * Rename to bolt ([`ecb1944`](https://github.com/mcbeet/mecha/commit/ecb1944f90ff237101a9aa5fba85a972b3311a61))
