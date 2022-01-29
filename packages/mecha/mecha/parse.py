@@ -719,7 +719,7 @@ class CoordinateParser(NumericParser):
     """Parser for coordinates."""
 
     name: str = "coordinate"
-    pattern: str = r"[~^]?" + NUMBER_PATTERN + r"|[~^]"
+    pattern: str = fr"(?:[~^]?{NUMBER_PATTERN}|[~^])(?=\s|$)"
 
     def create_node(self, stream: TokenStream) -> Any:
         token = stream.current
