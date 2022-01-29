@@ -121,6 +121,14 @@ class DiagnosticCollection(MechaError):
         """Clear all the diagnostics."""
         self.exceptions.clear()
 
+    @property
+    def error(self) -> bool:
+        """Return true if the diagnostics contain at least one error."""
+        for exc in self.exceptions:
+            if exc.level == "error":
+                return True
+        return False
+
     def get_all_errors(self) -> Iterator[Diagnostic]:
         """Yield all the diagnostics with a severity level of "error"."""
         for exc in self.exceptions:
