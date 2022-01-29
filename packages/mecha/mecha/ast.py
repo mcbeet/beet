@@ -288,7 +288,7 @@ class AstCoordinate(AstNode):
             value = string_to_number(value) if value else 0
         if isinstance(value, (int, float)):
             return AstCoordinate(type=type, value=value)
-        raise ValueError("Invalid coordinate {value!r}.")
+        raise ValueError(f"Invalid coordinate {value!r}.")
 
 
 @dataclass(frozen=True)
