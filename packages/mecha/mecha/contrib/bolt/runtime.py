@@ -4,6 +4,7 @@ __all__ = [
     "ModuleCacheBackend",
     "Evaluator",
     "GlobalsInjection",
+    "UnusableCompilationUnit",
 ]
 
 
@@ -28,8 +29,11 @@ from mecha import (
     CommandTree,
     CompilationDatabase,
     CompilationError,
+    CompilationUnit,
+    DiagnosticCollection,
     Dispatcher,
     Mecha,
+    MechaError,
     Parser,
     Visitor,
     rule,
@@ -42,6 +46,21 @@ from .parse import get_bolt_parsers
 from .utils import SAFE_BUILTINS, internal, rewrite_traceback
 
 logger = logging.getLogger("mecha")
+
+
+class UnusableCompilationUnit(MechaError):
+    """Raised when a compilation unit lacks the necessary information to instantiate a module."""
+
+    message: str
+    compilation_unit: CompilationUnit
+
+    def __init__(self, message: str, compilation_unit: CompilationUnit) -> None:
+        super().__init__(message, compilation_unit)
+        self.message = message
+        self.compilation_unit = compilation_unit
+
+    def __str__(self) -> str:
+        return self.message
 
 
 @dataclass
@@ -164,12 +183,13 @@ class Runtime:
             else:
                 return module
         else:
+            if not isinstance(target, AstRoot):
+                target = compilation_unit.ast
+                if not target:
+                    raise UnusableCompilationUnit(
+                        f"No ast for module {name}.", compilation_unit
+                    )
             logger.debug("Code generation for module %s.", name)
-
-        if not isinstance(target, AstRoot):
-            target = compilation_unit.ast
-            if not target:
-                raise ValueError(f"No ast for module {name}.")
 
         source, output, refs = self.codegen(target)
 
@@ -330,6 +350,10 @@ class Evaluator(Visitor):
             return self.runtime.get_output(module)
         except PipelineFallthroughException:
             raise
+        except UnusableCompilationUnit as exc:
+            if not exc.compilation_unit.diagnostics.error:
+                raise
+            raise DiagnosticCollection()
         except Exception as exc:
             msg = "Top-level statement raised an exception."
             if module.resource_location:
