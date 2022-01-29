@@ -2,6 +2,13 @@
 
 <!--next-version-placeholder-->
 
+## v0.35.2 (2022-01-29)
+### Fix
+* Avoid shadowing diagnostics when they prevent modules from being imported ([`05711ce`](https://github.com/mcbeet/mecha/commit/05711ce451a8233dd69edacc86d727d08383f06e))
+* Typo when formatting invalid coordinate exception ([`bc7a541`](https://github.com/mcbeet/mecha/commit/bc7a541b08c174fce3049c91acbfdb3e92a3ab18))
+* Make it possible to check a DiagnosticCollection for errors ([`358c156`](https://github.com/mcbeet/mecha/commit/358c1562cd5913a5073095931272aaf805ed6c90))
+* Make coordinate parser a bit more strict ([`b859e24`](https://github.com/mcbeet/mecha/commit/b859e246a130d469914fb1d239b8143e94a9ec1b))
+
 ## v0.35.1 (2022-01-29)
 ### Fix
 * Allow weapon alias ([`e867989`](https://github.com/mcbeet/mecha/commit/e86798960a3788d61648010a04119e26e9c52c8a))
