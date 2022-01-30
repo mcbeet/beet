@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.36.0 (2022-01-30)
+### Feature
+* Add `run function` and clean up some leftover casts ([`b0ff25b`](https://github.com/mcbeet/mecha/commit/b0ff25b5fa1aae7407a0a10066c6631fc7e8a951))
+
 ## v0.35.2 (2022-01-29)
 ### Fix
 * Avoid shadowing diagnostics when they prevent modules from being imported ([`05711ce`](https://github.com/mcbeet/mecha/commit/05711ce451a8233dd69edacc86d727d08383f06e))
