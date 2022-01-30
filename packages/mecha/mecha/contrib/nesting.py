@@ -18,7 +18,6 @@ from tokenstream import InvalidSyntax, TokenStream, set_location
 from mecha import (
     AstChildren,
     AstCommand,
-    AstNode,
     AstResourceLocation,
     AstRoot,
     CommandTree,
@@ -138,12 +137,12 @@ class NestedCommandsTransformer(MutatingReducer):
 
             subcommand = AstCommand(
                 identifier="function:name",
-                arguments=AstChildren([cast(AstNode, resource_location)]),
+                arguments=AstChildren([resource_location]),
             )
 
         return AstCommand(
             identifier="execute:run:subcommand",
-            arguments=AstChildren([cast(AstNode, subcommand)]),
+            arguments=AstChildren([subcommand]),
         )
 
     @rule(AstCommand, identifier="schedule:function:function:time:commands")
@@ -177,6 +176,19 @@ class NestedCommandsTransformer(MutatingReducer):
                 commands.extend(self.handle_function(command, top_level=True))
                 changed = True
                 continue
+            elif command.identifier in [
+                "run:function:name:commands",
+                "run:function:name:append:commands",
+                "run:function:name:prepend:commands",
+            ]:
+                command = replace(command, identifier=command.identifier[4:])
+                commands.extend(self.handle_function(command, top_level=True))
+                changed = True
+                command = replace(
+                    command,
+                    identifier="function:name",
+                    arguments=AstChildren([command.arguments[0]]),
+                )
 
             args = command.arguments
             stack: List[AstCommand] = [command]
@@ -198,7 +210,7 @@ class NestedCommandsTransformer(MutatingReducer):
                     else:
                         expansion = AstCommand(
                             identifier="execute:run:subcommand",
-                            arguments=AstChildren([cast(AstNode, nested_command)]),
+                            arguments=AstChildren([nested_command]),
                         )
                         expansion = set_location(expansion, nested_command)
 

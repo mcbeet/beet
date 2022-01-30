@@ -104,6 +104,47 @@
           }
         }
       }
+    },
+    "run": {
+      "type": "literal",
+      "children": {
+        "function": {
+          "type": "literal",
+          "children": {
+            "name": {
+              "type": "argument",
+              "parser": "minecraft:function",
+              "children": {
+                "append": {
+                  "type": "literal",
+                  "children": {
+                    "commands": {
+                      "type": "argument",
+                      "parser": "mecha:nested_root",
+                      "executable": true
+                    }
+                  }
+                },
+                "prepend": {
+                  "type": "literal",
+                  "children": {
+                    "commands": {
+                      "type": "argument",
+                      "parser": "mecha:nested_root",
+                      "executable": true
+                    }
+                  }
+                },
+                "commands": {
+                  "type": "argument",
+                  "parser": "mecha:nested_root",
+                  "executable": true
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
 }

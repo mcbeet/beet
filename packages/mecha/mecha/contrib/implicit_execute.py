@@ -7,12 +7,12 @@ __all__ = [
 
 
 from dataclasses import dataclass, replace
-from typing import Any, Set, cast
+from typing import Any, Set
 
 from beet import Context
 from tokenstream import TokenStream, set_location
 
-from mecha import AstChildren, AstCommand, AstNode, Mecha, Parser
+from mecha import AstChildren, AstCommand, Mecha, Parser
 
 
 def beet_default(ctx: Context):
@@ -22,10 +22,10 @@ def beet_default(ctx: Context):
 
     if execute := mc.spec.tree.get("execute"):
         commands = {literal for literal, _ in mc.spec.tree.get_all_literals()}
-        commands.discard("execute")
+        commands -= {"execute", "run"}
 
         shorthands = {literal for literal, _ in execute.get_all_literals()}
-        shorthands.discard("run")
+        shorthands -= {"execute", "run"}
 
         commands, shorthands = commands - shorthands, shorthands - commands
 
@@ -79,7 +79,7 @@ class ImplicitExecuteParser:
                 subcommand = replace(node, identifier=node.identifier[8:])
                 run = AstCommand(
                     identifier="execute:run:subcommand",
-                    arguments=AstChildren([cast(AstNode, subcommand)]),
+                    arguments=AstChildren([subcommand]),
                 )
                 return set_location(run, node)
 
@@ -87,7 +87,7 @@ class ImplicitExecuteParser:
                 subcommand = replace(node, identifier=f"execute:{node.identifier}")
                 execute = AstCommand(
                     identifier="execute:subcommand",
-                    arguments=AstChildren([cast(AstNode, subcommand)]),
+                    arguments=AstChildren([subcommand]),
                 )
                 return set_location(execute, node)
 

@@ -164,6 +164,9 @@ say False
 say True
 say bar
 say hello!!!!!
+function demo:bbb
+function demo:bbb
+function demo:bbb
 ```
 
 `@function demo:import_a`
@@ -435,4 +438,12 @@ execute if score @s thingy matches 16 run say 16
 ```mcfunction
 execute if score @s thingy matches 18 run say 18
 execute if score @s thingy matches 19 run say 19
+```
+
+`@function demo:bbb`
+
+```mcfunction
+say 0
+say 1
+say 2
 ```

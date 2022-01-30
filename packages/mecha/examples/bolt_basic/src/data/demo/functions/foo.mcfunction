@@ -253,3 +253,10 @@ for loop in loop_info("abcd"):
 from ./thing import raw
 
 raw(f"say hello{'!' * 5}")
+
+run function demo:bbb:
+    say 1
+run function demo:bbb append:
+    say 2
+run function demo:bbb prepend:
+    say 0
