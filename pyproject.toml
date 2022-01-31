@@ -39,7 +39,7 @@ colorama = {version = "*", markers = 'sys_platform == "win32"'}
 image = ["Pillow"]
 
 [tool.poetry.dev-dependencies]
-black = "^21.12b0"
+black = "^22.1"
 pytest = "^6.2.5"
 pytest-minecraft = "^0.1.1"
 isort = "^5.10.1"
