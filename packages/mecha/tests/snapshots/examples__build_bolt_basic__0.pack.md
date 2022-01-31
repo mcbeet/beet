@@ -169,6 +169,20 @@ function demo:bbb
 function demo:bbb
 ```
 
+`@function demo:nbt_path`
+
+```mcfunction
+execute if data storage some:path/to/storage some.foo.path
+execute if data storage some:path/to/storage some.foo.path run say hi
+execute if data storage some:path/to/storage some.foo.path{my: "compound"}
+execute if data storage some:path/to/storage some.foo.path{my: "compound"} run say hi
+execute if data storage some:path/to/storage some.bar.path
+execute if data storage some:path/to/storage some.bar.path run say hi
+execute if data storage some:path/to/storage some.bar.path{my: "compound"}
+execute if data storage some:path/to/storage some.bar.path{my: "compound"} run say hi
+execute if data storage some:path/to/storage some.foo.path{my: "compound"}.stuff[42].beep.bar.boop run say hi
+```
+
 `@function demo:import_a`
 
 ```mcfunction

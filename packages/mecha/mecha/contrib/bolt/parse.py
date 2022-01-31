@@ -235,6 +235,7 @@ def get_bolt_parsers(parsers: Dict[str, Parser]) -> Dict[str, Parser]:
         "greedy": InterpolationParser("greedy", parsers["greedy"]),
         "json": InterpolationParser("json", parsers["json"]),
         "nbt": InterpolationParser("nbt", parsers["nbt"]),
+        "nbt_path": InterpolationParser("nbt_path", parsers["nbt_path"]),
         "range": InterpolationParser("range", parsers["range"]),
         "resource_location_or_tag": InterpolationParser(
             "resource_location", parsers["resource_location_or_tag"]

@@ -80,6 +80,7 @@ from typing import (
     Any,
     ClassVar,
     Iterator,
+    List,
     Literal,
     Mapping,
     Optional,
@@ -95,9 +96,9 @@ from uuid import UUID
 from beet.core.utils import extra_field, required_field
 
 # pyright: reportMissingTypeStubs=false
-from nbtlib import Byte, ByteArray, Compound, Double, Int, IntArray
+from nbtlib import Byte, ByteArray, Compound, CompoundMatch, Double, Int, IntArray
 from nbtlib import List as ListTag
-from nbtlib import LongArray, String
+from nbtlib import ListIndex, LongArray, NamedKey, Path, String
 from tokenstream import UNKNOWN_LOCATION, SourceLocation, set_location
 
 from .utils import string_to_number
@@ -962,6 +963,44 @@ class AstNbtPath(AstNode):
     ] = required_field()
 
     parser = "nbt_path"
+
+    @classmethod
+    def from_value(cls, value: Any) -> "AstNbtPath":
+        """Create nbt path ast nodes representing the specified value."""
+        if isinstance(value, str):
+            components: List[Any] = []
+            path = Path(value)
+
+            for accessor in path:  # type: ignore
+                if isinstance(accessor, NamedKey):
+                    components.append(AstString(value=accessor.key))
+
+                elif isinstance(accessor, ListIndex):
+                    index = (
+                        AstNumber(value=accessor.index)
+                        if isinstance(accessor.index, int)
+                        else None
+                    )
+                    components.append(AstNbtPathSubscript(index=index))
+
+                elif isinstance(accessor, CompoundMatch):
+                    compound: Any = accessor.compound
+                    entries = AstChildren(
+                        AstNbtCompoundEntry(
+                            key=AstNbtCompoundKey(value=str(k)),
+                            value=AstNbt.from_value(v),
+                        )
+                        for k, v in compound.items()
+                    )
+                    components.append(AstNbtCompound(entries=entries))
+
+            if not components:
+                raise ValueError("Empty nbt path not allowed.")
+
+            return AstNbtPath(components=AstChildren(components))
+
+        else:
+            raise ValueError(f"Invalid nbt path value of type {type(value)!r}.")
 
 
 @dataclass(frozen=True)
