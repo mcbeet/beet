@@ -75,13 +75,12 @@ __all__ = [
 
 import re
 from dataclasses import dataclass, fields
-from itertools import permutations
+from itertools import islice, permutations, zip_longest
 from typing import (
     Any,
     ClassVar,
-    Generator,
-    Iterable,
     Iterator,
+    List,
     Literal,
     Mapping,
     Optional,
@@ -970,55 +969,40 @@ class AstNbtPath(AstNode):
     parser = "nbt_path"
 
     @classmethod
-    def components_from_path(
-        cls, path: Path
-    ) -> Generator[Union[AstString, AstNbtCompound, AstNbtPathSubscript], None, None]:
-        def iter_accessors() -> Generator[Tuple[Any, Any], None, None]:
-            accs: Iterable[Any] = iter(path)
-            next_accs: Iterable[Any] = iter(path)
-            next(next_accs, None)
-            for acc in accs:
-                yield acc, next(next_accs, None)
+    def from_value(cls, value: Any) -> "AstNbtPath":
+        """Create nbt path ast nodes representing the specified value."""
+        if isinstance(value, str):
+            value = Path(value)  # type: ignore
+        if not isinstance(value, Path):
+            raise ValueError(f"Invalid nbt path value of type {type(value)!r}.")
 
-        accessors = iter_accessors()
+        accessors = zip_longest(value, islice(value, 1, None))
+        components: List[Union[AstString, AstNbtCompound, AstNbtPathSubscript]] = []
 
         for accessor, next_accessor in accessors:
             if isinstance(accessor, NamedKey):
-                yield AstString(value=accessor.key)
+                components.append(AstString(value=accessor.key))
 
             elif isinstance(accessor, ListIndex):
-                index: Union[None, AstNumber, AstNbtCompound] = (
+                index = (
                     AstNumber(value=accessor.index)
                     if isinstance(accessor.index, int)
                     else None
                 )
 
                 # Special-case for the way nbtlib.Path stores compound subscripts.
-                if (index is None) and isinstance(next_accessor, CompoundMatch):
+                if index is None and isinstance(next_accessor, CompoundMatch):
                     index = AstNbtCompound.from_mapping(next_accessor.compound)
                     next(accessors, None)
 
-                yield AstNbtPathSubscript(index=index)
+                components.append(AstNbtPathSubscript(index=index))
 
             elif isinstance(accessor, CompoundMatch):
-                yield AstNbtCompound.from_mapping(accessor.compound)
+                components.append(AstNbtCompound.from_mapping(accessor.compound))
 
-    @classmethod
-    def from_path(cls, path: Path) -> "AstNbtPath":
-        components = list(cls.components_from_path(path))
         if not components:
             raise ValueError("Empty nbt path not allowed.")
         return AstNbtPath(components=AstChildren(components))
-
-    @classmethod
-    def from_value(cls, value: Any) -> "AstNbtPath":
-        """Create nbt path ast nodes representing the specified value."""
-        if isinstance(value, str):
-            return cls.from_path(Path(value))
-        elif isinstance(value, Path):
-            return cls.from_path(value)
-        else:
-            raise ValueError(f"Invalid nbt path value of type {type(value)!r}.")
 
 
 @dataclass(frozen=True)
