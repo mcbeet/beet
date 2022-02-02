@@ -1009,13 +1009,15 @@ class AstNbtPath(AstNode):
 
                 # Special-case for the way nbtlib.Path stores compound subscripts.
                 if index is None and isinstance(next_accessor, CompoundMatch):
-                    index = AstNbt.from_value(next_accessor.compound)
+                    compound: Mapping[Any, Any] = next_accessor.compound
+                    index = AstNbt.from_value(compound)
                     next(accessors, None)
 
                 components.append(AstNbtPathSubscript(index=index))
 
             elif isinstance(accessor, CompoundMatch):
-                components.append(AstNbt.from_value(accessor.compound))
+                compound: Mapping[Any, Any] = accessor.compound
+                components.append(AstNbt.from_value(compound))
 
         if not components:
             raise ValueError("Empty nbt path not allowed.")
