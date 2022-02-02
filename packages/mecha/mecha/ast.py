@@ -90,6 +90,7 @@ from typing import (
     Type,
     TypeVar,
     Union,
+    overload,
 )
 from uuid import UUID
 
@@ -590,6 +591,26 @@ class AstNbt(AstNode):
         """Return the nbt value."""
         raise NotImplementedError()
 
+    @overload
+    @classmethod
+    def from_value(cls, value: Union[bool, int, float, str]) -> "AstNbtValue":
+        ...
+
+    @overload
+    @classmethod
+    def from_value(cls, value: Mapping[Any, Any]) -> "AstNbtCompound":
+        ...
+
+    @overload
+    @classmethod
+    def from_value(cls, value: Sequence[Any]) -> "AstNbtList":
+        ...
+
+    @overload
+    @classmethod
+    def from_value(cls, value: Any) -> "AstNbt":
+        ...
+
     @classmethod
     def from_value(cls, value: Any) -> "AstNbt":
         """Create nbt ast nodes representing the specified value."""
@@ -603,7 +624,15 @@ class AstNbt(AstNode):
             return AstNbtValue(value=String(value))
         elif isinstance(value, Mapping):
             compound: Mapping[Any, Any] = value
-            return AstNbtCompound.from_mapping(compound)
+            return AstNbtCompound(
+                entries=AstChildren(
+                    AstNbtCompoundEntry(
+                        key=AstNbtCompoundKey(value=str(k)),
+                        value=cls.from_value(v),
+                    )
+                    for k, v in compound.items()
+                )
+            )
         elif isinstance(value, Sequence):
             lst: Sequence[Any] = value
             return AstNbtList(elements=AstChildren(cls.from_value(e) for e in lst))
@@ -657,18 +686,6 @@ class AstNbtCompound(AstNbt):
     entries: AstChildren[AstNbtCompoundEntry] = required_field()
 
     parser = "nbt_compound"
-
-    @classmethod
-    def from_mapping(cls, value: Mapping[Any, Any]) -> "AstNbtCompound":
-        return AstNbtCompound(
-            entries=AstChildren(
-                AstNbtCompoundEntry(
-                    key=AstNbtCompoundKey(value=str(k)),
-                    value=cls.from_value(v),
-                )
-                for k, v in value.items()
-            )
-        )
 
     def evaluate(self) -> Any:
         return Compound(  # type: ignore
@@ -992,13 +1009,13 @@ class AstNbtPath(AstNode):
 
                 # Special-case for the way nbtlib.Path stores compound subscripts.
                 if index is None and isinstance(next_accessor, CompoundMatch):
-                    index = AstNbtCompound.from_mapping(next_accessor.compound)
+                    index = AstNbt.from_value(next_accessor.compound)
                     next(accessors, None)
 
                 components.append(AstNbtPathSubscript(index=index))
 
             elif isinstance(accessor, CompoundMatch):
-                components.append(AstNbtCompound.from_mapping(accessor.compound))
+                components.append(AstNbt.from_value(accessor.compound))
 
         if not components:
             raise ValueError("Empty nbt path not allowed.")
