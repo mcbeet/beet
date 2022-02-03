@@ -290,3 +290,7 @@ mypath4 = "foo.bar"
 if data storage some:path/to/storage mypath4
 
 if data storage some:path/to/storage "some.foo.path"
+
+import nbtlib
+mypath5 = nbtlib.Path().something.cool[3].foo
+if data storage some:path/to/storage mypath5
