@@ -170,7 +170,7 @@
           location: SourceLocation(pos=324, lineno=12, colno=20)
           end_location: SourceLocation(pos=343, lineno=12, colno=39)
           components:
-            <class 'mecha.ast.AstString'>
+            <class 'mecha.ast.AstNbtPathKey'>
               location: SourceLocation(pos=324, lineno=12, colno=20)
               end_location: SourceLocation(pos=343, lineno=12, colno=39)
               value: 'foodSaturationLevel'
@@ -247,7 +247,7 @@
           location: SourceLocation(pos=412, lineno=13, colno=69)
           end_location: SourceLocation(pos=423, lineno=13, colno=80)
           components:
-            <class 'mecha.ast.AstString'>
+            <class 'mecha.ast.AstNbtPathKey'>
               location: SourceLocation(pos=412, lineno=13, colno=69)
               end_location: SourceLocation(pos=423, lineno=13, colno=80)
               value: 'PickupDelay'
@@ -313,7 +313,7 @@
           location: SourceLocation(pos=487, lineno=14, colno=51)
           end_location: SourceLocation(pos=493, lineno=14, colno=57)
           components:
-            <class 'mecha.ast.AstString'>
+            <class 'mecha.ast.AstNbtPathKey'>
               location: SourceLocation(pos=487, lineno=14, colno=51)
               end_location: SourceLocation(pos=490, lineno=14, colno=54)
               value: 'Pos'
@@ -340,7 +340,7 @@
           location: SourceLocation(pos=513, lineno=15, colno=20)
           end_location: SourceLocation(pos=537, lineno=15, colno=44)
           components:
-            <class 'mecha.ast.AstString'>
+            <class 'mecha.ast.AstNbtPathKey'>
               location: SourceLocation(pos=513, lineno=15, colno=20)
               end_location: SourceLocation(pos=522, lineno=15, colno=29)
               value: 'Inventory'
@@ -365,7 +365,7 @@
                           location: SourceLocation(pos=530, lineno=15, colno=37)
                           end_location: SourceLocation(pos=532, lineno=15, colno=39)
                           value: Byte(0)
-            <class 'mecha.ast.AstString'>
+            <class 'mecha.ast.AstNbtPathKey'>
               location: SourceLocation(pos=535, lineno=15, colno=42)
               end_location: SourceLocation(pos=537, lineno=15, colno=44)
               value: 'id'
@@ -455,7 +455,7 @@
           location: SourceLocation(pos=595, lineno=16, colno=58)
           end_location: SourceLocation(pos=635, lineno=16, colno=98)
           components:
-            <class 'mecha.ast.AstString'>
+            <class 'mecha.ast.AstNbtPathKey'>
               location: SourceLocation(pos=595, lineno=16, colno=58)
               end_location: SourceLocation(pos=605, lineno=16, colno=68)
               value: 'Attributes'
@@ -480,7 +480,7 @@
                           location: SourceLocation(pos=613, lineno=16, colno=76)
                           end_location: SourceLocation(pos=628, lineno=16, colno=91)
                           value: String('generic.armor')
-            <class 'mecha.ast.AstString'>
+            <class 'mecha.ast.AstNbtPathKey'>
               location: SourceLocation(pos=631, lineno=16, colno=94)
               end_location: SourceLocation(pos=635, lineno=16, colno=98)
               value: 'Base'
@@ -518,7 +518,7 @@
           location: SourceLocation(pos=674, lineno=17, colno=26)
           end_location: SourceLocation(pos=685, lineno=17, colno=37)
           components:
-            <class 'mecha.ast.AstString'>
+            <class 'mecha.ast.AstNbtPathKey'>
               location: SourceLocation(pos=674, lineno=17, colno=26)
               end_location: SourceLocation(pos=679, lineno=17, colno=31)
               value: 'Items'
@@ -530,7 +530,7 @@
                   location: SourceLocation(pos=680, lineno=17, colno=32)
                   end_location: SourceLocation(pos=681, lineno=17, colno=33)
                   value: 0
-            <class 'mecha.ast.AstString'>
+            <class 'mecha.ast.AstNbtPathKey'>
               location: SourceLocation(pos=683, lineno=17, colno=35)
               end_location: SourceLocation(pos=685, lineno=17, colno=37)
               value: 'id'
@@ -675,7 +675,7 @@
           location: SourceLocation(pos=863, lineno=19, colno=57)
           end_location: SourceLocation(pos=881, lineno=19, colno=75)
           components:
-            <class 'mecha.ast.AstString'>
+            <class 'mecha.ast.AstNbtPathKey'>
               location: SourceLocation(pos=863, lineno=19, colno=57)
               end_location: SourceLocation(pos=878, lineno=19, colno=72)
               value: 'HandDropChances'
@@ -2120,7 +2120,7 @@
                   location: SourceLocation(pos=2217, lineno=52, colno=33)
                   end_location: SourceLocation(pos=2285, lineno=52, colno=101)
                   components:
-                    <class 'mecha.ast.AstString'>
+                    <class 'mecha.ast.AstNbtPathKey'>
                       location: SourceLocation(pos=2217, lineno=52, colno=33)
                       end_location: SourceLocation(pos=2226, lineno=52, colno=42)
                       value: 'Inventory'
@@ -2145,11 +2145,11 @@
                                   location: SourceLocation(pos=2234, lineno=52, colno=50)
                                   end_location: SourceLocation(pos=2236, lineno=52, colno=52)
                                   value: Byte(0)
-                    <class 'mecha.ast.AstString'>
+                    <class 'mecha.ast.AstNbtPathKey'>
                       location: SourceLocation(pos=2239, lineno=52, colno=55)
                       end_location: SourceLocation(pos=2242, lineno=52, colno=58)
                       value: 'tag'
-                    <class 'mecha.ast.AstString'>
+                    <class 'mecha.ast.AstNbtPathKey'>
                       location: SourceLocation(pos=2243, lineno=52, colno=59)
                       end_location: SourceLocation(pos=2255, lineno=52, colno=71)
                       value: 'Enchantments'
@@ -2346,7 +2346,7 @@
                       location: SourceLocation(pos=2417, lineno=54, colno=55)
                       end_location: SourceLocation(pos=2423, lineno=54, colno=61)
                       components:
-                        <class 'mecha.ast.AstString'>
+                        <class 'mecha.ast.AstNbtPathKey'>
                           location: SourceLocation(pos=2417, lineno=54, colno=55)
                           end_location: SourceLocation(pos=2423, lineno=54, colno=61)
                           value: 'Saddle'
@@ -2902,7 +2902,7 @@
                       location: SourceLocation(pos=2985, lineno=62, colno=69)
                       end_location: SourceLocation(pos=2988, lineno=62, colno=72)
                       components:
-                        <class 'mecha.ast.AstString'>
+                        <class 'mecha.ast.AstNbtPathKey'>
                           location: SourceLocation(pos=2985, lineno=62, colno=69)
                           end_location: SourceLocation(pos=2988, lineno=62, colno=72)
                           value: 'foo'

@@ -10,7 +10,7 @@ foo[0]
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=6, lineno=1, colno=7)
   components:
-    <class 'mecha.ast.AstString'>
+    <class 'mecha.ast.AstNbtPathKey'>
       location: SourceLocation(pos=0, lineno=1, colno=1)
       end_location: SourceLocation(pos=3, lineno=1, colno=4)
       value: 'foo'

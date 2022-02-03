@@ -23,6 +23,7 @@ from .ast import (
     AstMessage,
     AstNbt,
     AstNbtPath,
+    AstNbtPathKey,
     AstNbtPathSubscript,
     AstNode,
     AstNumber,
@@ -289,6 +290,13 @@ class Serializer(Visitor):
     def message(self, node: AstMessage, result: List[str]):
         yield from node.fragments
 
+    @rule(AstNbtPathKey)
+    def nbt_path_key(self, node: AstNbtPathKey, result: List[str]):
+        value = self.quote_helper.quote_string(node.value)
+        if "." in value and not value.startswith(('"', "'")):
+            value = f'"{value}"'
+        result.append(value)
+
     @rule(AstNbtPathSubscript)
     def nbt_path_subscript(self, node: AstNbtPathSubscript, result: List[str]):
         result.append("[")
@@ -300,7 +308,7 @@ class Serializer(Visitor):
     def nbt_path(self, node: AstNbtPath, result: List[str]):
         sep = ""
         for component in node.components:
-            if isinstance(component, AstString):
+            if isinstance(component, AstNbtPathKey):
                 result.append(sep)
             sep = "."
             yield component

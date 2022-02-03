@@ -10,11 +10,11 @@ foo.bar[]
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=9, lineno=1, colno=10)
   components:
-    <class 'mecha.ast.AstString'>
+    <class 'mecha.ast.AstNbtPathKey'>
       location: SourceLocation(pos=0, lineno=1, colno=1)
       end_location: SourceLocation(pos=3, lineno=1, colno=4)
       value: 'foo'
-    <class 'mecha.ast.AstString'>
+    <class 'mecha.ast.AstNbtPathKey'>
       location: SourceLocation(pos=4, lineno=1, colno=5)
       end_location: SourceLocation(pos=7, lineno=1, colno=8)
       value: 'bar'

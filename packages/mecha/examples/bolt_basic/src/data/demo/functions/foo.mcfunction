@@ -288,3 +288,5 @@ if data storage some:path/to/storage f'some.{mykey1}.path{{my: "compound"}}.stuf
 
 mypath4 = "foo.bar"
 if data storage some:path/to/storage mypath4
+
+if data storage some:path/to/storage "some.foo.path"

@@ -179,6 +179,7 @@ execute if data storage some:path/to/storage some.bar.path[{my: "subscript"}]
 execute if data storage some:path/to/storage some.bar.path[{my: "subscript"}] run say hi
 execute if data storage some:path/to/storage some.foo.path{my: "compound"}.stuff[42].beep.bar[{my: "subscript"}].boop run say hi
 execute if data storage some:path/to/storage foo.bar
+execute if data storage some:path/to/storage "some.foo.path"
 ```
 
 `@function demo:import_a`

@@ -10,11 +10,11 @@ foo.bar[0]."A [crazy name]!".baz
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=32, lineno=1, colno=33)
   components:
-    <class 'mecha.ast.AstString'>
+    <class 'mecha.ast.AstNbtPathKey'>
       location: SourceLocation(pos=0, lineno=1, colno=1)
       end_location: SourceLocation(pos=3, lineno=1, colno=4)
       value: 'foo'
-    <class 'mecha.ast.AstString'>
+    <class 'mecha.ast.AstNbtPathKey'>
       location: SourceLocation(pos=4, lineno=1, colno=5)
       end_location: SourceLocation(pos=7, lineno=1, colno=8)
       value: 'bar'
@@ -26,11 +26,11 @@ foo.bar[0]."A [crazy name]!".baz
           location: SourceLocation(pos=8, lineno=1, colno=9)
           end_location: SourceLocation(pos=9, lineno=1, colno=10)
           value: 0
-    <class 'mecha.ast.AstString'>
+    <class 'mecha.ast.AstNbtPathKey'>
       location: SourceLocation(pos=11, lineno=1, colno=12)
       end_location: SourceLocation(pos=28, lineno=1, colno=29)
       value: 'A [crazy name]!'
-    <class 'mecha.ast.AstString'>
+    <class 'mecha.ast.AstNbtPathKey'>
       location: SourceLocation(pos=29, lineno=1, colno=30)
       end_location: SourceLocation(pos=32, lineno=1, colno=33)
       value: 'baz'

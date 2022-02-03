@@ -58,6 +58,7 @@ __all__ = [
     "AstSelector",
     "AstMessageText",
     "AstMessage",
+    "AstNbtPathKey",
     "AstNbtPathSubscript",
     "AstNbtPath",
     "AstParticleParameters",
@@ -969,6 +970,13 @@ class AstMessage(AstNode):
 
 
 @dataclass(frozen=True)
+class AstNbtPathKey(AstNode):
+    """Ast nbt path key node."""
+
+    value: str = required_field()
+
+
+@dataclass(frozen=True)
 class AstNbtPathSubscript(AstNode):
     """Ast nbt path subscript node."""
 
@@ -980,7 +988,7 @@ class AstNbtPath(AstNode):
     """Ast nbt path node."""
 
     components: AstChildren[
-        Union[AstString, AstNbtCompound, AstNbtPathSubscript]
+        Union[AstNbtPathKey, AstNbtCompound, AstNbtPathSubscript]
     ] = required_field()
 
     parser = "nbt_path"
@@ -994,11 +1002,11 @@ class AstNbtPath(AstNode):
             raise ValueError(f"Invalid nbt path value of type {type(value)!r}.")
 
         accessors = zip_longest(value, islice(value, 1, None))
-        components: List[Union[AstString, AstNbtCompound, AstNbtPathSubscript]] = []
+        components: List[Union[AstNbtPathKey, AstNbtCompound, AstNbtPathSubscript]] = []
 
         for accessor, next_accessor in accessors:
             if isinstance(accessor, NamedKey):
-                components.append(AstString(value=accessor.key))
+                components.append(AstNbtPathKey(value=accessor.key))
 
             elif isinstance(accessor, ListIndex):
                 index = (

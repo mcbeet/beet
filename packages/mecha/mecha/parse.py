@@ -123,6 +123,7 @@ from .ast import (
     AstNbtList,
     AstNbtLongArray,
     AstNbtPath,
+    AstNbtPathKey,
     AstNbtPathSubscript,
     AstNbtValue,
     AstNode,
@@ -1756,12 +1757,12 @@ class NbtPathParser:
                 quoted_string, string = stream.expect("quoted_string", "string")
 
                 if quoted_string:
-                    component_node = AstString(
+                    component_node = AstNbtPathKey(
                         value=self.quote_helper.unquote_string(quoted_string),
                     )
                     components.append(set_location(component_node, quoted_string))
                 elif string:
-                    component_node = AstString(value=string.value)
+                    component_node = AstNbtPathKey(value=string.value)
                     components.append(set_location(component_node, string))
 
                 components.extend(self.parse_modifiers(stream))

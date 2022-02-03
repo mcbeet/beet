@@ -10,7 +10,7 @@ foo{bar: "baz"}.bar
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=18, lineno=1, colno=19)
   components:
-    <class 'mecha.ast.AstString'>
+    <class 'mecha.ast.AstNbtPathKey'>
       location: SourceLocation(pos=0, lineno=1, colno=1)
       end_location: SourceLocation(pos=3, lineno=1, colno=4)
       value: 'foo'
@@ -31,7 +31,7 @@ foo{bar: "baz"}.bar
               location: SourceLocation(pos=8, lineno=1, colno=9)
               end_location: SourceLocation(pos=13, lineno=1, colno=14)
               value: String('baz')
-    <class 'mecha.ast.AstString'>
+    <class 'mecha.ast.AstNbtPathKey'>
       location: SourceLocation(pos=15, lineno=1, colno=16)
       end_location: SourceLocation(pos=18, lineno=1, colno=19)
       value: 'bar'
