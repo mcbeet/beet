@@ -2,6 +2,13 @@
 
 <!--next-version-placeholder-->
 
+## v0.36.1 (2022-02-03)
+### Fix
+* Use explicit type to avoid weird pyright behaviour ([`f78e53d`](https://github.com/mcbeet/mecha/commit/f78e53d3fd1aaf036700e5e400914d9cc6037fc2))
+* Add static overloads to `AstNbt.from_value` ([`84046dd`](https://github.com/mcbeet/mecha/commit/84046ddfba1a0997c8bf870c86e6f08cbc956a7e))
+* Account for compound subscripts in nbt paths ([`1f702d6`](https://github.com/mcbeet/mecha/commit/1f702d640c74834dacc587f8618c81986e94cda1))
+* Interpolate nbt paths from string values ([`1c28fed`](https://github.com/mcbeet/mecha/commit/1c28fedb2ef46fbec35553bdd43a42dacbfd36fb))
+
 ## v0.36.0 (2022-01-30)
 ### Feature
 * Add `run function` and clean up some leftover casts ([`b0ff25b`](https://github.com/mcbeet/mecha/commit/b0ff25b5fa1aae7407a0a10066c6631fc7e8a951))
