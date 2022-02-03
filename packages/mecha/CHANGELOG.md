@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.36.2 (2022-02-03)
+### Fix
+* Preserve quotes around nbt path keys with dots ([`7609f86`](https://github.com/mcbeet/mecha/commit/7609f86a4820a39cb8ba61ed7da9b98bcdaae0b1))
+
 ## v0.36.1 (2022-02-03)
 ### Fix
 * Use explicit type to avoid weird pyright behaviour ([`f78e53d`](https://github.com/mcbeet/mecha/commit/f78e53d3fd1aaf036700e5e400914d9cc6037fc2))
