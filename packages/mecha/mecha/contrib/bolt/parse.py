@@ -91,7 +91,7 @@ IDENTIFIER_PATTERN: str = r"(?!_mecha_)[a-zA-Z_][a-zA-Z0-9_]*"
 STRING_PATTERN: str = r'"(?:\\.|[^\\\n])*?"' "|" r"'(?:\\.|[^\\\n])*?'"
 NUMBER_PATTERN: str = r"(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?\b"
 
-IMPORT_REGEX = re.compile(fr"^{IDENTIFIER_PATTERN}(?:\.{IDENTIFIER_PATTERN})*$")
+IMPORT_REGEX = re.compile(rf"^{IDENTIFIER_PATTERN}(?:\.{IDENTIFIER_PATTERN})*$")
 
 
 def get_bolt_parsers(parsers: Dict[str, Parser]) -> Dict[str, Parser]:
@@ -969,7 +969,7 @@ class PrimaryParser:
                 quote = token.value[-1]
 
                 with stream.syntax(
-                    escape=fr"\\.",
+                    escape=rf"\\.",
                     double_brace=r"\{\{|\}\}",
                     brace=r"\{|\}",
                     quote=quote,

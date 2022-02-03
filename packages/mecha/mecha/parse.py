@@ -720,7 +720,7 @@ class CoordinateParser(NumericParser):
     """Parser for coordinates."""
 
     name: str = "coordinate"
-    pattern: str = fr"(?:[~^]?{NUMBER_PATTERN}|[~^])(?=\s|$)"
+    pattern: str = rf"(?:[~^]?{NUMBER_PATTERN}|[~^])(?=\s|$)"
 
     def create_node(self, stream: TokenStream) -> Any:
         token = stream.current
@@ -1331,7 +1331,7 @@ class BasicLiteralParser:
 class RangeParser:
     """Parser for ranges."""
 
-    pattern: str = fr"\.\.{NUMBER_PATTERN}|{NUMBER_PATTERN}\.\.(?:{NUMBER_PATTERN})?|{NUMBER_PATTERN}"
+    pattern: str = rf"\.\.{NUMBER_PATTERN}|{NUMBER_PATTERN}\.\.(?:{NUMBER_PATTERN})?|{NUMBER_PATTERN}"
 
     def __call__(self, stream: TokenStream) -> AstRange:
         with stream.syntax(range=self.pattern):

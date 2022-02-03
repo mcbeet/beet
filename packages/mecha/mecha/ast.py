@@ -361,7 +361,7 @@ class AstOption(AstLiteral):
 
     def __init_subclass__(cls):
         patterns = [
-            fr"{pattern}\b" if pattern[-1].isalnum() else pattern
+            rf"{pattern}\b" if pattern[-1].isalnum() else pattern
             for option in sorted(cls.options, key=lambda s: (-len(s), s))
             if (pattern := re.escape(option))
         ]
