@@ -285,3 +285,6 @@ if data storage some:path/to/storage (mypath3) run say hi
 myindex = 42
 
 if data storage some:path/to/storage f'some.{mykey1}.path{{my: "compound"}}.stuff[{myindex}].beep.{mykey2}[{{my: "subscript"}}].boop' run say hi
+
+mypath4 = "foo.bar"
+if data storage some:path/to/storage mypath4
