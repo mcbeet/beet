@@ -626,3 +626,9 @@ del numbers[3:]
 del 1 + 1
 ###
 run function demo:foo
+###
+mykey = "aaa"
+if data storage some:path/to/storage f'some.{mykey}.path{{my: "compound"}}' run say hi
+###
+mypath = 'some.path{my: "compound"}.stuff[42].beep[{my: "subscript"}].boop'
+if data storage some:path/to/storage (mypath) run say hi

@@ -167,11 +167,6 @@ say hello!!!!!
 function demo:bbb
 function demo:bbb
 function demo:bbb
-```
-
-`@function demo:nbt_path`
-
-```mcfunction
 execute if data storage some:path/to/storage some.foo.path
 execute if data storage some:path/to/storage some.foo.path run say hi
 execute if data storage some:path/to/storage some.foo.path{my: "compound"}
