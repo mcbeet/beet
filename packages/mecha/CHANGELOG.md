@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.36.3 (2022-02-06)
+### Fix
+* Support entity interpolation with player names and uuids ([`5d3a0f5`](https://github.com/mcbeet/mecha/commit/5d3a0f5be98a320a286300d59a3b7b25bd8d7147))
+
 ## v0.36.2 (2022-02-03)
 ### Fix
 * Preserve quotes around nbt path keys with dots ([`7609f86`](https://github.com/mcbeet/mecha/commit/7609f86a4820a39cb8ba61ed7da9b98bcdaae0b1))
