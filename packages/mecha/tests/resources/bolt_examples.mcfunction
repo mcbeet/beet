@@ -632,3 +632,6 @@ if data storage some:path/to/storage f'some.{mykey}.path{{my: "compound"}}' run 
 ###
 mypath = 'some.path{my: "compound"}.stuff[42].beep[{my: "subscript"}].boop'
 if data storage some:path/to/storage (mypath) run say hi
+###
+entity_type = "creeper"
+at @e[type=entity_type] summon lightning_bolt

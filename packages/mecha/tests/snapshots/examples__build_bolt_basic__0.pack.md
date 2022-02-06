@@ -184,6 +184,7 @@ execute if data storage some:path/to/storage something.cool[3].foo
 execute if score some_fake_player some_objective matches 0 run say yes
 execute if score 00000000-0000-0000-0000-000000000001 some_objective matches 0 run say yes
 execute if score 12345678-1234-5678-1234-567812345678 some_objective matches 0 run say yes
+execute at @e[type=creeper] run summon lightning_bolt
 ```
 
 `@function demo:import_a`
