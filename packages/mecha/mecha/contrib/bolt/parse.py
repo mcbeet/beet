@@ -261,6 +261,8 @@ def get_bolt_parsers(parsers: Dict[str, Parser]) -> Dict[str, Parser]:
         "rotation": InterpolationParser("vec2", parsers["rotation"], fallback=True),
         "vec2": InterpolationParser("vec2", parsers["vec2"], fallback=True),
         "vec3": InterpolationParser("vec3", parsers["vec3"], fallback=True),
+        "entity": InterpolationParser("entity", parsers["entity"]),
+        "score_holder": InterpolationParser("entity", parsers["score_holder"]),
     }
 
 

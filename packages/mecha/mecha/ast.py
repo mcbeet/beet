@@ -267,6 +267,16 @@ class AstUUID(AstNode):
 
     parser = "uuid"
 
+    @classmethod
+    def from_value(cls, value: Any) -> "AstUUID":
+        """Return a uuid node from the given value."""
+        if isinstance(value, str):
+            a, b, c, d, e = value.split("-")
+            value = UUID(f"{a:>08}-{b:>04}-{c:>04}-{d:>04}-{e:>012}")
+        if isinstance(value, UUID):
+            return AstUUID(value=value)
+        raise ValueError(f"Invalid UUID {value!r}.")
+
 
 @dataclass(frozen=True)
 class AstCoordinate(AstNode):

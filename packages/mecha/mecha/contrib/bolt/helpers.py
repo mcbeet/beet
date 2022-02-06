@@ -3,10 +3,11 @@ __all__ = [
 ]
 
 
-from dataclasses import replace
+from dataclasses import dataclass, replace
 from functools import wraps
 from importlib import import_module
 from typing import Any, Callable, Dict
+from uuid import UUID
 
 from tokenstream import set_location
 
@@ -26,6 +27,7 @@ from mecha import (
     AstNumber,
     AstObjective,
     AstObjectiveCriteria,
+    AstPlayerName,
     AstRange,
     AstResourceLocation,
     AstScoreboardSlot,
@@ -34,6 +36,7 @@ from mecha import (
     AstSwizzle,
     AstTeam,
     AstTime,
+    AstUUID,
     AstVector2,
     AstVector3,
     AstWord,
@@ -74,6 +77,10 @@ def get_bolt_helpers() -> Dict[str, Any]:
         "interpolate_message": converter(AstMessage.from_value),
         "interpolate_vec2": converter(AstVector2.from_value),
         "interpolate_vec3": converter(AstVector3.from_value),
+        "interpolate_entity": EntityConverter(
+            uuid_converter=converter(AstUUID.from_value),
+            player_name_converter=converter(AstPlayerName.from_value),
+        ),
     }
 
 
@@ -109,3 +116,21 @@ def converter(f: Callable[[Any], AstNode]) -> Callable[[Any, AstNode], AstNode]:
         return set_location(f(obj), node)
 
     return wrapper
+
+
+@dataclass
+class EntityConverter:
+    """Converter for entities."""
+
+    uuid_converter: Callable[[Any, AstNode], AstNode]
+    player_name_converter: Callable[[Any, AstNode], AstNode]
+
+    @internal
+    def __call__(self, obj: Any, node: AstNode) -> AstNode:
+        if isinstance(obj, str):
+            if obj.count("-") == 4:
+                return self.uuid_converter(obj, node)
+            return self.player_name_converter(obj, node)
+        if isinstance(obj, UUID):
+            return self.uuid_converter(obj, node)
+        raise ValueError(f"Invalid entity value of type {type(obj)!r}.")

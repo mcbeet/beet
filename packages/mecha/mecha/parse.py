@@ -261,6 +261,17 @@ def get_default_parsers() -> Dict[str, Parser]:
         ),
         "vec2": Vector2Parser(coordinate_parser=delegate("coordinate")),
         "vec3": Vector3Parser(coordinate_parser=delegate("coordinate")),
+        "entity": EntityParser(
+            selector_parser=SelectorTypeConstraint(
+                SelectorAmountConstraint(delegate("selector"))
+            ),
+        ),
+        "score_holder": AlternativeParser(
+            [
+                EntityParser(SelectorAmountConstraint(delegate("selector"))),
+                delegate("wildcard"),
+            ]
+        ),
         ################################################################################
         # Particle
         ################################################################################
@@ -386,11 +397,7 @@ def get_default_parsers() -> Dict[str, Parser]:
         "command:argument:minecraft:column_pos": delegate("column_pos"),
         "command:argument:minecraft:component": MultilineParser(delegate("json")),
         "command:argument:minecraft:dimension": delegate("resource_location"),
-        "command:argument:minecraft:entity": EntityParser(
-            selector_parser=SelectorTypeConstraint(
-                SelectorAmountConstraint(delegate("selector"))
-            ),
-        ),
+        "command:argument:minecraft:entity": delegate("entity"),
         "command:argument:minecraft:entity_anchor": delegate("entity_anchor"),
         "command:argument:minecraft:entity_summon": delegate("resource_location"),
         "command:argument:minecraft:float_range": delegate("range"),
@@ -425,12 +432,7 @@ def get_default_parsers() -> Dict[str, Parser]:
         "command:argument:minecraft:particle": delegate("particle"),
         "command:argument:minecraft:resource_location": delegate("resource_location"),
         "command:argument:minecraft:rotation": delegate("rotation"),
-        "command:argument:minecraft:score_holder": AlternativeParser(
-            [
-                EntityParser(SelectorAmountConstraint(delegate("selector"))),
-                delegate("wildcard"),
-            ]
-        ),
+        "command:argument:minecraft:score_holder": delegate("score_holder"),
         "command:argument:minecraft:scoreboard_slot": delegate("scoreboard_slot"),
         "command:argument:minecraft:swizzle": delegate("swizzle"),
         "command:argument:minecraft:team": delegate("team"),

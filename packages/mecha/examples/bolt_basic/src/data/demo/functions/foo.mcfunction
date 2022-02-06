@@ -294,3 +294,12 @@ if data storage some:path/to/storage "some.foo.path"
 import nbtlib
 mypath5 = nbtlib.Path().something.cool[3].foo
 if data storage some:path/to/storage mypath5
+
+from uuid import UUID
+
+def try_entity_interpolation(x):
+    if score x some_objective matches 0 say yes
+
+try_entity_interpolation("some_fake_player")
+try_entity_interpolation("0-0-0-0-1")
+try_entity_interpolation(UUID("12345678-1234-5678-1234-567812345678"))
