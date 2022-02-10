@@ -53,9 +53,9 @@ def stable_int_hash(value: Any, size: Literal[32, 64] = 64) -> int:
         value = str(value).encode()
 
     if size == 32:
-        return fnva(value, FNV_32_INIT, FNV_32_PRIME, 2 ** size)
+        return fnva(value, FNV_32_INIT, FNV_32_PRIME, 2**size)
     else:
-        return fnva(value, FNV_64_INIT, FNV_64_PRIME, 2 ** size)
+        return fnva(value, FNV_64_INIT, FNV_64_PRIME, 2**size)
 
 
 def stable_hash(value: Any, short: bool = False) -> str:

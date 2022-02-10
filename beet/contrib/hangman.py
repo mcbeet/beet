@@ -95,14 +95,14 @@ def fold_hanging_commands(
                     name = match[3].strip() or stable_hash(nested_commands)
                     key = f"{original_function}/{name}"
                     ctx.data[key] = Function(nested_commands)
-                    current = REGEX_EXECUTE_RUN.sub(fr"\1run function {key}\4", current)
+                    current = REGEX_EXECUTE_RUN.sub(rf"\1run function {key}\4", current)
 
                 elif match[2] == "sequentially":
                     for nested_command in nested_commands:
                         yield REGEX_EXECUTE_RUN.sub(
-                            fr"\1{nested_command[8:]}\4"
+                            rf"\1{nested_command[8:]}\4"
                             if nested_command.startswith("execute")
-                            else fr"\1run {nested_command}\4",
+                            else rf"\1run {nested_command}\4",
                             current,
                         )
                     current = ""
