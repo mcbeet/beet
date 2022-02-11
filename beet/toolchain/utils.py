@@ -13,18 +13,16 @@ __all__ = [
 
 import json
 import re
-import struct
 from traceback import format_exception
-from typing import Any, Callable, Literal, Mapping, Sequence
+from typing import Any, Callable, List, Literal, Mapping, Sequence
 
-from base58 import b58encode
 from pydantic import ValidationError
 
 FNV_32_INIT = 0x811C9DC5
 FNV_64_INIT = 0xCBF29CE484222325
 FNV_32_PRIME = 0x01000193
 FNV_64_PRIME = 0x100000001B3
-HASH_ALPHABET = b"123456789abcdefghijkmnopqrstuvwxyz"
+HASH_ALPHABET = "123456789abcdefghijkmnopqrstuvwxyz"
 
 
 OPTION_KEY_REGEX = re.compile(r"(\w+)|(\[\])")
@@ -60,8 +58,15 @@ def stable_int_hash(value: Any, size: Literal[32, 64] = 64) -> int:
 
 def stable_hash(value: Any, short: bool = False) -> str:
     result = stable_int_hash(value, size=32 if short else 64)
-    fmt = ">I" if short else ">Q"
-    return b58encode(struct.pack(fmt, result), HASH_ALPHABET).decode()
+    return encode_with_alphabet(result, HASH_ALPHABET)
+
+
+def encode_with_alphabet(value: int, alphabet: str) -> str:
+    indices: List[int] = []
+    while value:
+        value, i = divmod(value, len(alphabet))
+        indices.append(i)
+    return "".join(alphabet[i] for i in reversed(indices))
 
 
 def format_exc(exc: BaseException) -> str:
