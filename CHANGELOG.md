@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.50.7 (2022-02-11)
+### Fix
+* Remove base58 dependency ([`f649ff6`](https://github.com/mcbeet/beet/commit/f649ff6dc9c513cde391f2d2396679001fb85d49))
+
 ## v0.50.6 (2022-01-22)
 ### Fix
 * Allow single string value for loading packs ([`6820c64`](https://github.com/mcbeet/beet/commit/6820c64c29d1ebd8a37d1da84c13eb767a3aab43))
