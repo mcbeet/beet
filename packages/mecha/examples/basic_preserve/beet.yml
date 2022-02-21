@@ -5,4 +5,4 @@ pipeline:
 meta:
   mecha:
     multiline: true
-    keep_comments: true
+    formatting: preserve

@@ -43,7 +43,7 @@ from .diagnostic import (
 )
 from .dispatch import Dispatcher, MutatingReducer, Reducer
 from .parse import delegate, get_parsers
-from .serialize import Serializer
+from .serialize import Formatting, Serializer
 from .spec import CommandSpec
 from .utils import VersionNumber
 
@@ -87,7 +87,7 @@ class MechaOptions(BaseModel):
 
     version: VersionNumber = "1.18"
     multiline: bool = False
-    keep_comments: bool = False
+    formatting: Formatting = "dense"
     readonly: Optional[bool] = None
     match: Optional[List[str]] = None
     rules: Dict[str, Literal["ignore", "info", "warn", "error"]] = {}
@@ -101,7 +101,7 @@ class Mecha:
     ctx: InitVar[Optional[Context]] = None
     version: InitVar[VersionNumber] = "1.18"
     multiline: InitVar[bool] = False
-    keep_comments: InitVar[bool] = False
+    formatting: InitVar[Formatting] = "dense"
     readonly: bool = False
     match: Optional[List[str]] = None
 
@@ -130,13 +130,13 @@ class Mecha:
         ctx: Optional[Context],
         version: VersionNumber,
         multiline: bool,
-        keep_comments: bool,
+        formatting: Formatting,
     ):
         if ctx:
             opts = ctx.validate("mecha", MechaOptions)
             version = opts.version
             multiline = opts.multiline
-            keep_comments = opts.keep_comments
+            formatting = opts.formatting
 
             if opts.readonly is not None:
                 self.readonly = opts.readonly
@@ -178,7 +178,7 @@ class Mecha:
         self.serialize = Serializer(
             spec=self.spec,
             database=self.database,
-            keep_comments=keep_comments,
+            formatting=formatting,
         )
 
     @contextmanager
@@ -312,7 +312,7 @@ class Mecha:
         *,
         match: Optional[List[str]] = None,
         multiline: Optional[bool] = None,
-        keep_comments: Optional[bool] = None,
+        formatting: Optional[Formatting] = None,
         readonly: Optional[bool] = None,
         report: Optional[DiagnosticCollection] = None,
     ) -> DataPack:
@@ -326,7 +326,7 @@ class Mecha:
         filename: Optional[FileSystemPath] = None,
         resource_location: Optional[str] = None,
         multiline: Optional[bool] = None,
-        keep_comments: Optional[bool] = None,
+        formatting: Optional[Formatting] = None,
         readonly: Optional[bool] = None,
         report: Optional[DiagnosticCollection] = None,
     ) -> TextFileType:
@@ -340,7 +340,7 @@ class Mecha:
         filename: Optional[FileSystemPath] = None,
         resource_location: Optional[str] = None,
         multiline: Optional[bool] = None,
-        keep_comments: Optional[bool] = None,
+        formatting: Optional[Formatting] = None,
         readonly: Optional[bool] = None,
         report: Optional[DiagnosticCollection] = None,
     ) -> Function:
@@ -354,7 +354,7 @@ class Mecha:
         filename: Optional[FileSystemPath] = None,
         resource_location: Optional[str] = None,
         multiline: Optional[bool] = None,
-        keep_comments: Optional[bool] = None,
+        formatting: Optional[Formatting] = None,
         readonly: Optional[bool] = None,
         report: Optional[DiagnosticCollection] = None,
     ) -> Union[DataPack, TextFileBase[Any]]:
@@ -429,7 +429,7 @@ class Mecha:
                 if not compilation_unit.ast:
                     continue
                 with self.serialize.use_diagnostics(compilation_unit.diagnostics):
-                    function.text = self.serialize(compilation_unit.ast, keep_comments)
+                    function.text = self.serialize(compilation_unit.ast, formatting)
 
         diagnostics = DiagnosticCollection(
             [

@@ -1,12 +1,13 @@
 __all__ = [
     "Serializer",
+    "Formatting",
 ]
 
 
 import json
 import re
 from dataclasses import dataclass, field
-from typing import Any, Iterable, Iterator, List, Optional
+from typing import Any, Iterable, Iterator, List, Literal, Optional
 
 from beet.core.utils import required_field
 
@@ -53,12 +54,15 @@ from .utils import QuoteHelper, number_to_string
 REGEX_COMMENTS = re.compile(r"^(?:(\s*#.*)|.+)", re.MULTILINE)
 
 
+Formatting = Literal["dense", "preserve"]
+
+
 @dataclass
 class Serializer(Visitor):
     spec: CommandSpec = required_field()
     database: CompilationDatabase = field(default_factory=CompilationDatabase)
 
-    keep_comments: bool = False
+    formatting: Formatting = "dense"
 
     regex_comments: "re.Pattern[str]" = field(default=REGEX_COMMENTS)
     quote_helper: QuoteHelper = field(
@@ -73,17 +77,17 @@ class Serializer(Visitor):
         )
     )
 
-    def __call__(self, node: AstNode, keep_comments: Optional[bool] = None) -> str:
+    def __call__(self, node: AstNode, formatting: Optional[Formatting] = None) -> str:
         result: List[str] = []
 
-        if keep_comments is not None:
-            self.keep_comments, keep_comments = keep_comments, self.keep_comments
+        if formatting is not None:
+            self.formatting, formatting = formatting, self.formatting
 
         try:
             self.invoke(node, result)
         finally:
-            if keep_comments is not None:
-                self.keep_comments = keep_comments
+            if formatting is not None:
+                self.formatting = formatting
 
         return "".join(result)
 
@@ -126,7 +130,10 @@ class Serializer(Visitor):
     @rule(AstRoot)
     def root(self, node: AstRoot, result: List[str]):
         pos = 0
-        source = self.keep_comments and self.database[self.database.current].source
+        source = (
+            self.formatting == "preserve"
+            and self.database[self.database.current].source
+        )
 
         for command in node.commands:
             if source:
