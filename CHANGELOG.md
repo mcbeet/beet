@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.50.8 (2022-02-21)
+### Fix
+* Support bleeding edge worldgen ([`841c863`](https://github.com/mcbeet/beet/commit/841c863519be587d9c93651f3933cb3fca638ad7))
+
 ## v0.50.7 (2022-02-11)
 ### Fix
 * Remove base58 dependency ([`f649ff6`](https://github.com/mcbeet/beet/commit/f649ff6dc9c513cde391f2d2396679001fb85d49))
