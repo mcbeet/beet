@@ -14,6 +14,11 @@ __all__ = [
     "FunctionTag",
     "GameEventTag",
     "ItemTag",
+    "BiomeTag",
+    "StructureSetTag",
+    "ConfiguredStructureFeatureTag",
+    "ConfiguredCarverTag",
+    "PlacedFeatureTag",
     "DimensionType",
     "Dimension",
     "Biome",
@@ -24,6 +29,7 @@ __all__ = [
     "NoiseSettings",
     "ProcessorList",
     "TemplatePool",
+    "StructureSet",
     "ItemModifier",
 ]
 
@@ -241,6 +247,36 @@ class ItemTag(TagFile):
     scope = ("tags", "items")
 
 
+class BiomeTag(TagFile):
+    """Class representing a biome tag."""
+
+    scope = ("tags", "worldgen", "biome")
+
+
+class StructureSetTag(TagFile):
+    """Class representing a worldgen structure set tag."""
+
+    scope = ("tags", "worldgen", "structure_set")
+
+
+class ConfiguredStructureFeatureTag(TagFile):
+    """Class representing a worldgen structure feature tag."""
+
+    scope = ("tags", "worldgen", "configured_structure_feature")
+
+
+class ConfiguredCarverTag(TagFile):
+    """Class representing a worldgen carver tag."""
+
+    scope = ("tags", "worldgen", "configured_carver")
+
+
+class PlacedFeatureTag(TagFile):
+    """Class representing a worldgen placed feature tag."""
+
+    scope = ("tags", "worldgen", "placed_feature")
+
+
 class DimensionType(JsonFile, NamespaceFile):
     """Class representing a dimension type."""
 
@@ -308,6 +344,13 @@ class TemplatePool(JsonFile, NamespaceFile):
     """Class representing a worldgen template pool."""
 
     scope = ("worldgen", "template_pool")
+    extension = ".json"
+
+
+class StructureSet(JsonFile, NamespaceFile):
+    """Class representing a worldgen structure set."""
+
+    scope = ("worldgen", "structure_set")
     extension = ".json"
 
 
