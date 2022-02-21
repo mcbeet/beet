@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.50.9 (2022-02-21)
+### Fix
+* Forgot to pin new worldgen files ([`377f899`](https://github.com/mcbeet/beet/commit/377f8999afd75dcd967c03b059a31329e247453f))
+
 ## v0.50.8 (2022-02-21)
 ### Fix
 * Support bleeding edge worldgen ([`841c863`](https://github.com/mcbeet/beet/commit/841c863519be587d9c93651f3933cb3fca638ad7))
