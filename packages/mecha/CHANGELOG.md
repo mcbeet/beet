@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.37.0 (2022-02-21)
+### Feature
+* Introduce proper formatting option ([`af5c090`](https://github.com/mcbeet/mecha/commit/af5c09031b69d076b0629780d51a57d2459d1ef5))
+
 ## v0.36.3 (2022-02-06)
 ### Fix
 * Support entity interpolation with player names and uuids ([`5d3a0f5`](https://github.com/mcbeet/mecha/commit/5d3a0f5be98a320a286300d59a3b7b25bd8d7147))
