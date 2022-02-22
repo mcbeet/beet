@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.50.10 (2022-02-22)
+### Fix
+* Pin structure sets ([`424b03e`](https://github.com/mcbeet/beet/commit/424b03ee0fa52dcb14b17457c01b80c0cb17fcea))
+
 ## v0.50.9 (2022-02-21)
 ### Fix
 * Forgot to pin new worldgen files ([`377f899`](https://github.com/mcbeet/beet/commit/377f8999afd75dcd967c03b059a31329e247453f))
