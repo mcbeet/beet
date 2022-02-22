@@ -394,6 +394,7 @@ class DataPackNamespace(Namespace):
     noise_settings:                    NamespacePin[NoiseSettings]                 = NamespacePin(NoiseSettings)
     processor_lists:                   NamespacePin[ProcessorList]                 = NamespacePin(ProcessorList)
     template_pools:                    NamespacePin[TemplatePool]                  = NamespacePin(TemplatePool)
+    structure_sets:                    NamespacePin[StructureSet]                  = NamespacePin(StructureSet)
     item_modifiers:                    NamespacePin[ItemModifier]                  = NamespacePin(ItemModifier)
     # fmt: on
 
@@ -432,5 +433,6 @@ class DataPack(Pack[DataPackNamespace]):
     noise_settings:                    NamespaceProxyDescriptor[NoiseSettings]                 = NamespaceProxyDescriptor(NoiseSettings)
     processor_lists:                   NamespaceProxyDescriptor[ProcessorList]                 = NamespaceProxyDescriptor(ProcessorList)
     template_pools:                    NamespaceProxyDescriptor[TemplatePool]                  = NamespaceProxyDescriptor(TemplatePool)
+    structure_sets:                    NamespaceProxyDescriptor[StructureSet]                  = NamespaceProxyDescriptor(StructureSet)
     item_modifiers:                    NamespaceProxyDescriptor[ItemModifier]                  = NamespaceProxyDescriptor(ItemModifier)
     # fmt: on
