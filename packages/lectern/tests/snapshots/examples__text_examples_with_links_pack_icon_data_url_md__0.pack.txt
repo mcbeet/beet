@@ -12,7 +12,7 @@ UklGRsQ0AABXRUJQVlA4WAoAAAAQAAAAKwEAKwEAQUxQSBQCAAABCbdtJDkSZmq8yz/i1XXi34zo/wTE
 @data_pack pack.mcmeta
 {
   "pack": {
-    "pack_format": 8,
+    "pack_format": 9,
     "description": ""
   }
 }
