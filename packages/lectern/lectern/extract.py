@@ -61,7 +61,7 @@ class Extractor:
     def generate_escaped_regex(self) -> str:
         """Return a regex that can match escaped fragments."""
         names = "|".join(self.directives)
-        return fr"(@@+(?:{names})\b.*)"
+        return rf"(@@+(?:{names})\b.*)"
 
     def compile_regex(self, regex: str) -> "re.Pattern[str]":
         """Return the compiled pattern for the directive regex."""

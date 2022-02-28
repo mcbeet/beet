@@ -134,7 +134,7 @@ class TextSerializer:
     ) -> "re.Pattern[str]":
         """Create and return the escaped regex for the specified serialization mapping."""
         names = "|".join([*mapping.values(), "resource_pack", "data_pack"])
-        pattern = fr"^(@+(?:{names})\b.*)$"
+        pattern = rf"^(@+(?:{names})\b.*)$"
 
         if self.escaped_regex is None or self.escaped_regex.pattern != pattern:
             self.escaped_regex = re.compile(pattern, flags=re.MULTILINE)
