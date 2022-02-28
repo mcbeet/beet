@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.51.0 (2022-02-28)
+### Feature
+* Bump default data pack format ([`c2d061d`](https://github.com/mcbeet/beet/commit/c2d061db379b717d27eb107ac6763f5dc5dbca7a))
+
 ## v0.50.10 (2022-02-22)
 ### Fix
 * Pin structure sets ([`424b03e`](https://github.com/mcbeet/beet/commit/424b03ee0fa52dcb14b17457c01b80c0cb17fcea))
