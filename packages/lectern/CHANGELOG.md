@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.19.0 (2022-02-28)
+### Feature
+* Update to 1.18.2 ([`d9e9f16`](https://github.com/mcbeet/lectern/commit/d9e9f16c85e716d0e3eb7f98cfac7f801064b06c))
+
 ## v0.18.2 (2021-12-22)
 ### Fix
 * Don't overwrite output pack by default ([`0f9bd42`](https://github.com/mcbeet/lectern/commit/0f9bd42065fd899ed1dbc2c3a9033ea51c06ebdf))
