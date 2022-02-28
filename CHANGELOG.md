@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.51.2 (2022-02-28)
+### Fix
+* Forgot to export DensityFunction ([`8884c59`](https://github.com/mcbeet/beet/commit/8884c59f7f4bd135e9899562dd88a6e4f2692e19))
+
 ## v0.51.1 (2022-02-28)
 ### Fix
 * Add density functions ([`0a668c3`](https://github.com/mcbeet/beet/commit/0a668c31791f6a12c7e9bf4b2c5b80c540b22d55))
