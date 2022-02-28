@@ -431,6 +431,10 @@ def get_default_parsers() -> Dict[str, Parser]:
         "command:argument:minecraft:operation": delegate("scoreboard_operation"),
         "command:argument:minecraft:particle": delegate("particle"),
         "command:argument:minecraft:resource_location": delegate("resource_location"),
+        "command:argument:minecraft:resource": delegate("resource_location"),
+        "command:argument:minecraft:resource_or_tag": delegate(
+            "resource_location_or_tag"
+        ),
         "command:argument:minecraft:rotation": delegate("rotation"),
         "command:argument:minecraft:score_holder": delegate("score_holder"),
         "command:argument:minecraft:scoreboard_slot": delegate("scoreboard_slot"),

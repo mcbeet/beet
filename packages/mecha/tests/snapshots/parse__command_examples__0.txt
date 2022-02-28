@@ -1600,9 +1600,14 @@
                 <class 'mecha.ast.AstCommand'>
                   location: SourceLocation(pos=1751, lineno=43, colno=24)
                   end_location: SourceLocation(pos=1765, lineno=43, colno=38)
-                  identifier: 'locate:endcity'
+                  identifier: 'locate:structure'
                   arguments:
-                    <empty>
+                    <class 'mecha.ast.AstResourceLocation'>
+                      location: SourceLocation(pos=1758, lineno=43, colno=31)
+                      end_location: SourceLocation(pos=1765, lineno=43, colno=38)
+                      is_tag: False
+                      namespace: None
+                      path: 'endcity'
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=1766, lineno=44, colno=1)
       end_location: SourceLocation(pos=1827, lineno=44, colno=62)
@@ -1794,9 +1799,14 @@
                 <class 'mecha.ast.AstCommand'>
                   location: SourceLocation(pos=1949, lineno=47, colno=31)
                   end_location: SourceLocation(pos=1963, lineno=47, colno=45)
-                  identifier: 'locate:village'
+                  identifier: 'locate:structure'
                   arguments:
-                    <empty>
+                    <class 'mecha.ast.AstResourceLocation'>
+                      location: SourceLocation(pos=1956, lineno=47, colno=38)
+                      end_location: SourceLocation(pos=1963, lineno=47, colno=45)
+                      is_tag: False
+                      namespace: None
+                      path: 'village'
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=1964, lineno=48, colno=1)
       end_location: SourceLocation(pos=2026, lineno=48, colno=63)
@@ -3997,9 +4007,14 @@
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=4485, lineno=104, colno=1)
       end_location: SourceLocation(pos=4499, lineno=104, colno=15)
-      identifier: 'locate:mansion'
+      identifier: 'locate:structure'
       arguments:
-        <empty>
+        <class 'mecha.ast.AstResourceLocation'>
+          location: SourceLocation(pos=4492, lineno=104, colno=8)
+          end_location: SourceLocation(pos=4499, lineno=104, colno=15)
+          is_tag: False
+          namespace: None
+          path: 'mansion'
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=4506, lineno=106, colno=1)
       end_location: SourceLocation(pos=4515, lineno=106, colno=10)
