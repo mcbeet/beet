@@ -326,6 +326,13 @@ class ConfiguredSurfaceBuilder(JsonFile, NamespaceFile):
     extension = ".json"
 
 
+class DensityFunction(JsonFile, NamespaceFile):
+    """Class representing a density function."""
+
+    scope = ("worldgen", "density_function")
+    extension = ".json"
+
+
 class NoiseSettings(JsonFile, NamespaceFile):
     """Class representing worldgen noise settings."""
 
@@ -391,6 +398,7 @@ class DataPackNamespace(Namespace):
     configured_features:               NamespacePin[ConfiguredFeature]             = NamespacePin(ConfiguredFeature)
     configured_structure_features:     NamespacePin[ConfiguredStructureFeature]    = NamespacePin(ConfiguredStructureFeature)
     configured_surface_builders:       NamespacePin[ConfiguredSurfaceBuilder]      = NamespacePin(ConfiguredSurfaceBuilder)
+    density_functions:                 NamespacePin[DensityFunction]               = NamespacePin(DensityFunction)
     noise_settings:                    NamespacePin[NoiseSettings]                 = NamespacePin(NoiseSettings)
     processor_lists:                   NamespacePin[ProcessorList]                 = NamespacePin(ProcessorList)
     template_pools:                    NamespacePin[TemplatePool]                  = NamespacePin(TemplatePool)
@@ -430,6 +438,7 @@ class DataPack(Pack[DataPackNamespace]):
     configured_features:               NamespaceProxyDescriptor[ConfiguredFeature]             = NamespaceProxyDescriptor(ConfiguredFeature)
     configured_structure_features:     NamespaceProxyDescriptor[ConfiguredStructureFeature]    = NamespaceProxyDescriptor(ConfiguredStructureFeature)
     configured_surface_builders:       NamespaceProxyDescriptor[ConfiguredSurfaceBuilder]      = NamespaceProxyDescriptor(ConfiguredSurfaceBuilder)
+    density_functions:                 NamespaceProxyDescriptor[DensityFunction]               = NamespaceProxyDescriptor(DensityFunction)
     noise_settings:                    NamespaceProxyDescriptor[NoiseSettings]                 = NamespaceProxyDescriptor(NoiseSettings)
     processor_lists:                   NamespaceProxyDescriptor[ProcessorList]                 = NamespaceProxyDescriptor(ProcessorList)
     template_pools:                    NamespaceProxyDescriptor[TemplatePool]                  = NamespaceProxyDescriptor(TemplatePool)
