@@ -403,7 +403,7 @@ class DataPack(Pack[DataPackNamespace]):
     """Class representing a data pack."""
 
     default_name = "untitled_data_pack"
-    latest_pack_format = 8
+    latest_pack_format = 9
 
     # fmt: off
     advancements:                      NamespaceProxyDescriptor[Advancement]                   = NamespaceProxyDescriptor(Advancement)
