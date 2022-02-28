@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.38.1 (2022-02-28)
+### Fix
+* Update beet ([`fb8d5b7`](https://github.com/mcbeet/mecha/commit/fb8d5b71c08161eea2a36a0f3a687e5fffcd931d))
+
 ## v0.38.0 (2022-02-28)
 ### Feature
 * Update to 1.18.2 ([`b6de764`](https://github.com/mcbeet/mecha/commit/b6de764723c736ec25e766d73dacbfad66c1eb89))
