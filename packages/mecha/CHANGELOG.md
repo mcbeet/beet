@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.38.0 (2022-02-28)
+### Feature
+* Update to 1.18.2 ([`b6de764`](https://github.com/mcbeet/mecha/commit/b6de764723c736ec25e766d73dacbfad66c1eb89))
+
 ## v0.37.0 (2022-02-21)
 ### Feature
 * Introduce proper formatting option ([`af5c090`](https://github.com/mcbeet/mecha/commit/af5c09031b69d076b0629780d51a57d2459d1ef5))
