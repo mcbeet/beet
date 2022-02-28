@@ -26,6 +26,7 @@ __all__ = [
     "ConfiguredFeature",
     "ConfiguredStructureFeature",
     "ConfiguredSurfaceBuilder",
+    "DensityFunction",
     "NoiseSettings",
     "ProcessorList",
     "TemplatePool",
