@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.51.1 (2022-02-28)
+### Fix
+* Add density functions ([`0a668c3`](https://github.com/mcbeet/beet/commit/0a668c31791f6a12c7e9bf4b2c5b80c540b22d55))
+
 ## v0.51.0 (2022-02-28)
 ### Feature
 * Bump default data pack format ([`c2d061d`](https://github.com/mcbeet/beet/commit/c2d061db379b717d27eb107ac6763f5dc5dbca7a))
