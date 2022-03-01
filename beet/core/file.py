@@ -60,13 +60,21 @@ class File(Generic[ValueType, SerializeType]):
     content: Union[ValueType, SerializeType, None] = None
     source_path: Optional[FileSystemPath] = None
 
+    source_start: Optional[int] = extra_field(default=None)
+    source_stop: Optional[int] = extra_field(default=None)
+
     on_bind: Optional[Callable[[Any, Any, str], Any]] = extra_field(default=None)
+
     serializer: Callable[[ValueType], SerializeType] = extra_field(init=False)
     deserializer: Callable[[SerializeType], ValueType] = extra_field(init=False)
+    reader: Callable[[FileSystemPath, int, int], SerializeType] = extra_field(
+        init=False
+    )
 
     def __post_init__(self):
         if self.content is self.source_path is None:
             self.content = self.default()
+        self.reader = self.from_path
 
     def merge(self: FileType, other: FileType) -> bool:
         """Merge the given file or return False to indicate no special handling."""
@@ -81,11 +89,17 @@ class File(Generic[ValueType, SerializeType]):
         """Update the internal content."""
         self.content = content
         self.source_path = None
+        self.source_start = None
+        self.source_stop = None
 
     def get_content(self) -> Union[ValueType, SerializeType]:
         """Return the internal content."""
         return (
-            self.decode(Path(self.ensure_source_path()).read_bytes())
+            self.reader(
+                self.ensure_source_path(),
+                0 if self.source_start is None else self.source_start,
+                -1 if self.source_stop is None else self.source_stop,
+            )
             if self.content is None
             else self.content
         )
@@ -163,13 +177,13 @@ class File(Generic[ValueType, SerializeType]):
         raise NotImplementedError()
 
     @classmethod
-    def decode(cls, raw: bytes) -> SerializeType:
-        """Convert bytes to serialized representation."""
+    def from_path(cls, path: FileSystemPath, start: int, stop: int) -> SerializeType:
+        """Read file content from path."""
         raise NotImplementedError()
 
     @classmethod
-    def encode(cls, raw: SerializeType) -> bytes:
-        """Convert serialized representation to bytes."""
+    def from_zip(cls, origin: ZipFile, name: str) -> SerializeType:
+        """Read file content from zip."""
         raise NotImplementedError()
 
     @classmethod
@@ -187,7 +201,7 @@ class File(Generic[ValueType, SerializeType]):
         """Try to load a file from a zipfile or from the filesystem."""
         if isinstance(origin, ZipFile):
             try:
-                return cls(cls.decode(origin.read(str(path))))
+                return cls(cls.from_zip(origin, str(path)))
             except KeyError:
                 return None
         path = Path(origin, path)
@@ -201,9 +215,11 @@ class File(Generic[ValueType, SerializeType]):
             else:
                 shutil.copyfile(self.ensure_source_path(), str(Path(origin, path)))
         else:
-            raw = self.encode(self.ensure_serialized())
+            raw = self.ensure_serialized()
             if isinstance(origin, ZipFile):
                 origin.writestr(str(path), raw)
+            elif isinstance(raw, str):
+                Path(origin, path).write_text(raw)
             else:
                 Path(origin, path).write_bytes(raw)
 
@@ -253,12 +269,15 @@ class TextFileBase(File[ValueType, str]):
         return self.deserializer(content) if isinstance(content, str) else content
 
     @classmethod
-    def decode(cls, raw: bytes) -> str:
-        return raw.decode()
+    def from_zip(cls, origin: ZipFile, name: str) -> str:
+        return origin.read(name).decode()
 
     @classmethod
-    def encode(cls, raw: str) -> bytes:
-        return raw.encode()
+    def from_path(cls, path: FileSystemPath, start: int, stop: int) -> str:
+        with open(path, "r") as f:
+            if start > 0:
+                f.seek(start)
+            return f.read(stop - start) if stop >= -1 else f.read()
 
     @classmethod
     def to_str(cls, content: ValueType) -> str:
@@ -304,12 +323,15 @@ class BinaryFileBase(File[ValueType, bytes]):
         return self.deserializer(content) if isinstance(content, bytes) else content
 
     @classmethod
-    def decode(cls, raw: bytes) -> bytes:
-        return raw
+    def from_zip(cls, origin: ZipFile, name: str) -> bytes:
+        return origin.read(name)
 
     @classmethod
-    def encode(cls, raw: bytes) -> bytes:
-        return raw
+    def from_path(cls, path: FileSystemPath, start: int, stop: int) -> bytes:
+        with open(path, "rb") as f:
+            if start > 0:
+                f.seek(start)
+            return f.read() if stop == -1 else f.read(stop - start)
 
     @classmethod
     def to_bytes(cls, content: ValueType) -> bytes:
