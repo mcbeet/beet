@@ -57,7 +57,7 @@ BinaryFileContent = Union[ValueType, bytes, None]
 class File(Generic[ValueType, SerializeType]):
     """Base file class."""
 
-    content: Union[ValueType, SerializeType, None] = None
+    _content: Union[ValueType, SerializeType, None] = None
     source_path: Optional[FileSystemPath] = None
 
     source_start: Optional[int] = extra_field(default=None)
@@ -71,10 +71,14 @@ class File(Generic[ValueType, SerializeType]):
         init=False
     )
 
+    original: Optional["File[ValueType, SerializeType]"] = extra_field(default=None)
+
     def __post_init__(self):
-        if self.content is self.source_path is None:
-            self.content = self.default()
+        if self._content is self.source_path is None:
+            self._content = self.default()
         self.reader = self.from_path
+        if not self.original:
+            self.original = self if self.source_path else None
 
     def merge(self: FileType, other: FileType) -> bool:
         """Merge the given file or return False to indicate no special handling."""
@@ -87,10 +91,16 @@ class File(Generic[ValueType, SerializeType]):
 
     def set_content(self, content: Union[ValueType, SerializeType]):
         """Update the internal content."""
-        self.content = content
-        self.source_path = None
-        self.source_start = None
-        self.source_stop = None
+        self._content = content
+        if self.source_path:
+            self.original = self.__class__(
+                source_path=self.source_path,
+                source_start=self.source_start,
+                source_stop=self.source_stop,
+            )
+            self.source_path = None
+            self.source_start = None
+            self.source_stop = None
 
     def get_content(self) -> Union[ValueType, SerializeType]:
         """Return the internal content."""
@@ -100,8 +110,8 @@ class File(Generic[ValueType, SerializeType]):
                 0 if self.source_start is None else self.source_start,
                 -1 if self.source_stop is None else self.source_stop,
             )
-            if self.content is None
-            else self.content
+            if self._content is None
+            else self._content
         )
 
     def ensure_source_path(self) -> FileSystemPath:
@@ -209,7 +219,7 @@ class File(Generic[ValueType, SerializeType]):
 
     def dump(self, origin: FileOrigin, path: FileSystemPath):
         """Write the file to a zipfile or to the filesystem."""
-        if self.content is None:
+        if self._content is None:
             if isinstance(origin, ZipFile):
                 origin.write(self.ensure_source_path(), str(path))
             else:

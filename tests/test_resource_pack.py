@@ -50,7 +50,7 @@ def test_mcmeta_properties():
     pack.description = "Something"
     pack.pack_format = 1
 
-    assert pack.mcmeta.content == {
+    assert pack.mcmeta._content == {  # type: ignore
         "pack": {"description": "Something", "pack_format": 1}
     }
 

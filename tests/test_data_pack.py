@@ -311,29 +311,29 @@ def test_overload_proxy():
 def test_accessors_with_function(tmp_path: Path):
     func1 = Function(["say hello"])
 
-    assert func1.content == ["say hello"]
+    assert func1._content == ["say hello"]  # type: ignore
 
     assert func1.lines == ["say hello"]
-    assert func1.content == func1.lines
+    assert func1._content == func1.lines  # type: ignore
 
     assert func1.text == "say hello\n"
-    assert func1.content == "say hello\n"
+    assert func1._content == "say hello\n"  # type: ignore
 
     filename = tmp_path / "foo.mcfunction"
     filename.write_text("say world")
     func2 = Function(source_path=filename)
 
-    assert func2.content is None
+    assert func2._content is None  # type: ignore
 
     assert func2.text == "say world"
-    assert func2.content == func2.text
+    assert func2._content == func2.text  # type: ignore
     assert func2.source_path is None
 
     assert func2.lines == ["say world"]
-    assert func2.content == func2.lines
+    assert func2._content == func2.lines  # type: ignore
 
     assert func2.text == "say world\n"
-    assert func2.content == func2.text  # type: ignore
+    assert func2._content == func2.text  # type: ignore
 
 
 def test_on_bind():

@@ -17,3 +17,14 @@ def test_binary_range(tmp_path: Path):
     assert BinaryFile(source_path=p1, source_start=1).blob == b"bc"
     assert BinaryFile(source_path=p1, source_stop=2).blob == b"ab"
     assert BinaryFile(source_path=p1, source_start=1, source_stop=2).blob == b"b"
+
+
+def test_original(tmp_path: Path):
+    p1 = tmp_path / "p1"
+    p1.write_text("abc")
+    f = TextFile(source_path=p1, source_start=1)
+    assert f is f.original
+    f.text += "d"
+    assert f.text == "bcd"
+    assert f is not f.original
+    assert f.original and f.original.ensure_serialized() == "bc"
