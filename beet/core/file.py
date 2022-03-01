@@ -233,6 +233,18 @@ class File(Generic[ValueType, SerializeType]):
             else:
                 Path(origin, path).write_bytes(raw)
 
+    def __repr__(self) -> str:
+        content = (
+            repr(self._content)
+            if self._content is not None
+            else f"source_path={self.source_path!r}"
+            + (self.source_start is not None) * f", source_start={self.source_start}"
+            + (self.source_stop is not None) * f", source_stop={self.source_stop}"
+            if self.source_path
+            else ""
+        )
+        return f"{self.__class__.__name__}({content})"
+
 
 class FileSerialize(Generic[SerializeType]):
     """Descriptor that makes sure that content of the file is serialized."""
