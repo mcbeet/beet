@@ -71,14 +71,14 @@ class File(Generic[ValueType, SerializeType]):
         init=False
     )
 
-    original: Optional["File[ValueType, SerializeType]"] = extra_field(default=None)
+    original: "File[ValueType, SerializeType]" = extra_field(default=None)
 
     def __post_init__(self):
         if self._content is self.source_path is None:
             self._content = self.default()
         self.reader = self.from_path
         if not self.original:
-            self.original = self if self.source_path else None
+            self.original = self
 
     def merge(self: FileType, other: FileType) -> bool:
         """Merge the given file or return False to indicate no special handling."""

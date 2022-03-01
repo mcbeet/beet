@@ -27,7 +27,7 @@ def test_original(tmp_path: Path):
     f.text += "d"
     assert f.text == "bcd"
     assert f is not f.original
-    assert f.original and f.original.ensure_serialized() == "bc"
+    assert f.original.ensure_serialized() == "bc"
 
 
 def test_range_equality(tmp_path: Path):
