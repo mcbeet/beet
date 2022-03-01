@@ -2,6 +2,17 @@
 
 <!--next-version-placeholder-->
 
+## v0.52.0 (2022-03-01)
+### Feature
+* Track original file in auto_yaml ([`36af60e`](https://github.com/mcbeet/beet/commit/36af60e625bc816d72358423ac926839abd1c3ec))
+* Make bare file content private and track original file ([`5d8320f`](https://github.com/mcbeet/beet/commit/5d8320ff676e488dd8c699d7a57d5d81365346df))
+* Add source range ([`321b410`](https://github.com/mcbeet/beet/commit/321b410c18f58734b36fb67dbb38b919ef630e99))
+
+### Fix
+* Make original refer to self by default ([`ce448b5`](https://github.com/mcbeet/beet/commit/ce448b56aae3527344fb510fe4f2ccd9d8682236))
+* Take ranges into account in equality check fast path ([`14b7287`](https://github.com/mcbeet/beet/commit/14b728753321eb807687d960d17b91249267a026))
+* Better repr for file instances ([`54c46c4`](https://github.com/mcbeet/beet/commit/54c46c447920c1bf2a17cc3a5f437402915e155e))
+
 ## v0.51.2 (2022-02-28)
 ### Fix
 * Forgot to export DensityFunction ([`8884c59`](https://github.com/mcbeet/beet/commit/8884c59f7f4bd135e9899562dd88a6e4f2692e19))
