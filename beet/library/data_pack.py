@@ -27,7 +27,9 @@ __all__ = [
     "ConfiguredStructureFeature",
     "ConfiguredSurfaceBuilder",
     "DensityFunction",
+    "Noise",
     "NoiseSettings",
+    "PlacedFeature",
     "ProcessorList",
     "TemplatePool",
     "StructureSet",
@@ -334,10 +336,24 @@ class DensityFunction(JsonFile, NamespaceFile):
     extension = ".json"
 
 
+class Noise(JsonFile, NamespaceFile):
+    """Class representing a worldgen noise."""
+
+    scope = ("worldgen", "noise")
+    extension = ".json"
+
+
 class NoiseSettings(JsonFile, NamespaceFile):
     """Class representing worldgen noise settings."""
 
     scope = ("worldgen", "noise_settings")
+    extension = ".json"
+
+
+class PlacedFeature(JsonFile, NamespaceFile):
+    """Class representing a placed feature."""
+
+    scope = ("worldgen", "placed_feature")
     extension = ".json"
 
 
@@ -400,7 +416,9 @@ class DataPackNamespace(Namespace):
     configured_structure_features:     NamespacePin[ConfiguredStructureFeature]    = NamespacePin(ConfiguredStructureFeature)
     configured_surface_builders:       NamespacePin[ConfiguredSurfaceBuilder]      = NamespacePin(ConfiguredSurfaceBuilder)
     density_functions:                 NamespacePin[DensityFunction]               = NamespacePin(DensityFunction)
+    noises:                            NamespacePin[Noise]                         = NamespacePin(Noise)
     noise_settings:                    NamespacePin[NoiseSettings]                 = NamespacePin(NoiseSettings)
+    placed_features:                   NamespacePin[PlacedFeature]                 = NamespacePin(PlacedFeature)
     processor_lists:                   NamespacePin[ProcessorList]                 = NamespacePin(ProcessorList)
     template_pools:                    NamespacePin[TemplatePool]                  = NamespacePin(TemplatePool)
     structure_sets:                    NamespacePin[StructureSet]                  = NamespacePin(StructureSet)
@@ -440,7 +458,9 @@ class DataPack(Pack[DataPackNamespace]):
     configured_structure_features:     NamespaceProxyDescriptor[ConfiguredStructureFeature]    = NamespaceProxyDescriptor(ConfiguredStructureFeature)
     configured_surface_builders:       NamespaceProxyDescriptor[ConfiguredSurfaceBuilder]      = NamespaceProxyDescriptor(ConfiguredSurfaceBuilder)
     density_functions:                 NamespaceProxyDescriptor[DensityFunction]               = NamespaceProxyDescriptor(DensityFunction)
+    noises:                            NamespaceProxyDescriptor[Noise]                         = NamespaceProxyDescriptor(Noise)
     noise_settings:                    NamespaceProxyDescriptor[NoiseSettings]                 = NamespaceProxyDescriptor(NoiseSettings)
+    placed_features:                   NamespaceProxyDescriptor[PlacedFeature]                 = NamespaceProxyDescriptor(PlacedFeature)
     processor_lists:                   NamespaceProxyDescriptor[ProcessorList]                 = NamespaceProxyDescriptor(ProcessorList)
     template_pools:                    NamespaceProxyDescriptor[TemplatePool]                  = NamespaceProxyDescriptor(TemplatePool)
     structure_sets:                    NamespaceProxyDescriptor[StructureSet]                  = NamespaceProxyDescriptor(StructureSet)
