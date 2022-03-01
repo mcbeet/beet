@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.52.1 (2022-03-01)
+### Fix
+* Add missing Noise and PlacedFeature ([`0914e76`](https://github.com/mcbeet/beet/commit/0914e7679ce6e39cb87d746ba87b3cce49befe2e))
+
 ## v0.52.0 (2022-03-01)
 ### Feature
 * Track original file in auto_yaml ([`36af60e`](https://github.com/mcbeet/beet/commit/36af60e625bc816d72358423ac926839abd1c3ec))
