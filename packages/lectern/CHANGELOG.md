@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.19.1 (2022-03-01)
+### Fix
+* Use compatible beet dependency specifier ([`5eb9d1b`](https://github.com/mcbeet/lectern/commit/5eb9d1bc1818e59d832943ae9caa9f4841bb3fe9))
+
 ## v0.19.0 (2022-02-28)
 ### Feature
 * Update to 1.18.2 ([`d9e9f16`](https://github.com/mcbeet/lectern/commit/d9e9f16c85e716d0e3eb7f98cfac7f801064b06c))
