@@ -505,14 +505,14 @@ testing = ["argcomplete", "hypothesis (>=3.56)", "mock", "nose", "requests", "xm
 
 [[package]]
 name = "pytest-insta"
-version = "0.1.10"
+version = "0.1.11"
 description = "A practical snapshot testing plugin for pytest"
 category = "dev"
 optional = false
 python-versions = ">=3.8,<4.0"
 
 [package.dependencies]
-pytest = ">=6.0.2,<7.0.0"
+pytest = ">=6.0.2"
 wrapt = ">=1.12.1,<2.0.0"
 
 [[package]]
@@ -793,7 +793,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=1.2.3)", "pytest-flake8", "pyt
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "d8dc3baa778b9b280dabd07a39c13bab1c02408e8dad5de301fe5659e7136753"
+content-hash = "56cda153f2694958ec52875782920ba66c709bb17af84019b215d21f4117297c"
 
 [metadata.files]
 atomicwrites = [
@@ -1171,8 +1171,8 @@ pytest = [
     {file = "pytest-6.2.5.tar.gz", hash = "sha256:131b36680866a76e6781d13f101efb86cf674ebb9762eb70d3082b6f29889e89"},
 ]
 pytest-insta = [
-    {file = "pytest-insta-0.1.10.tar.gz", hash = "sha256:27670ed8aa63cf34726106586dadadb12137102e22372ec918e64ee524d56f1f"},
-    {file = "pytest_insta-0.1.10-py3-none-any.whl", hash = "sha256:3043c4a668224f473df3de1d60fb356e356687b6931338c42c487abd0c9a19d8"},
+    {file = "pytest-insta-0.1.11.tar.gz", hash = "sha256:cc0f338a8ac215dbf3b690198dc24a1c5987e2bef269f85170d415039cce06e5"},
+    {file = "pytest_insta-0.1.11-py3-none-any.whl", hash = "sha256:c31af45255a8da234a73eff7649e297a053ffa22ba21806457f0fae66fc85f8a"},
 ]
 python-gitlab = [
     {file = "python-gitlab-2.7.1.tar.gz", hash = "sha256:e1f9234a3ee7fbcf9ab1a5cb8b935ae58fdab29af9832ae060bf74d88bac8a7c"},
