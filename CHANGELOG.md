@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.52.2 (2022-03-01)
+### Fix
+* Copy all file attributes when creating original ([`d61ef72`](https://github.com/mcbeet/beet/commit/d61ef729f36f466ce24854d338fdc28b24fbb16b))
+
 ## v0.52.1 (2022-03-01)
 ### Fix
 * Add missing Noise and PlacedFeature ([`0914e76`](https://github.com/mcbeet/beet/commit/0914e7679ce6e39cb87d746ba87b3cce49befe2e))
