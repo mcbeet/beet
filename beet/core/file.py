@@ -20,7 +20,7 @@ __all__ = [
 import io
 import json
 import shutil
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Any, Callable, ClassVar, Generic, Optional, Type, TypeVar, Union
 from zipfile import ZipFile
@@ -91,16 +91,12 @@ class File(Generic[ValueType, SerializeType]):
 
     def set_content(self, content: Union[ValueType, SerializeType]):
         """Update the internal content."""
-        self._content = content
         if self.source_path:
-            self.original = self.__class__(
-                source_path=self.source_path,
-                source_start=self.source_start,
-                source_stop=self.source_stop,
-            )
+            self.original = replace(self, original=None)
             self.source_path = None
             self.source_start = None
             self.source_stop = None
+        self._content = content
 
     def get_content(self) -> Union[ValueType, SerializeType]:
         """Return the internal content."""

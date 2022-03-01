@@ -27,6 +27,7 @@ def test_original(tmp_path: Path):
     f.text += "d"
     assert f.text == "bcd"
     assert f is not f.original
+    assert f.original is f.original.original
     assert f.original.ensure_serialized() == "bc"
 
 
