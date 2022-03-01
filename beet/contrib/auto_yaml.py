@@ -12,7 +12,6 @@ __all__ = [
 from typing import Any, Tuple, Type
 
 from beet import Context, Drop, JsonFileBase, NamespaceFile, Pack, YamlFile
-from beet.core.utils import dump_json
 
 
 def beet_default(ctx: Context):
@@ -49,7 +48,7 @@ def use_auto_yaml(pack: Pack[Any]):
 
 
 def create_namespace_handler(
-    file_type: Type[NamespaceFile],
+    file_type: Type[JsonFileBase[Any]],
     namespace_scope: Tuple[str, ...],
     namespace_extension: str,
 ) -> Type[NamespaceFile]:
@@ -59,9 +58,11 @@ def create_namespace_handler(
         scope = namespace_scope
         extension = namespace_extension
 
+        model = file_type.model
+
         def bind(self, pack: Any, path: str):
             super().bind(pack, path)
-            pack[file_type].merge({path: file_type(dump_json(self.data))})
+            pack[file_type].merge({path: file_type(self.data, original=self.original)})
             raise Drop()
 
     return AutoYamlNamespaceHandler
@@ -74,9 +75,11 @@ def create_extra_handler(
     """Create handler that turns yaml extra files into json."""
 
     class AutoYamlExtraHandler(YamlFile):
+        model = file_type.model
+
         def bind(self, pack: Any, path: str):
             super().bind(pack, path)
-            pack.extra.merge({filename: file_type(dump_json(self.data))})
+            pack.extra.merge({filename: file_type(self.data, original=self.original)})
             raise Drop()
 
     return AutoYamlExtraHandler
@@ -89,10 +92,14 @@ def create_namespace_extra_handler(
     """Create handler that turns yaml namespace extra files into json."""
 
     class AutoYamlExtraHandler(YamlFile):
+        model = file_type.model
+
         def bind(self, pack: Any, path: str):
             super().bind(pack, path)
             namespace, _, path = path.partition(":")
-            pack[namespace].extra.merge({filename: file_type(dump_json(self.data))})
+            pack[namespace].extra.merge(
+                {filename: file_type(self.data, original=self.original)}
+            )
             raise Drop()
 
     return AutoYamlExtraHandler
