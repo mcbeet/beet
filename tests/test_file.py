@@ -28,3 +28,24 @@ def test_original(tmp_path: Path):
     assert f.text == "bcd"
     assert f is not f.original
     assert f.original and f.original.ensure_serialized() == "bc"
+
+
+def test_range_equality(tmp_path: Path):
+    p1 = tmp_path / "p1"
+    p1.write_text("abc")
+
+    assert TextFile(source_path=tmp_path / "p1", source_start=1) == TextFile(
+        source_path=p1, source_start=1
+    )
+    assert TextFile(source_path=p1, source_stop=2) == TextFile(
+        source_path=p1, source_stop=2
+    )
+    assert TextFile(source_path=p1, source_start=1, source_stop=2) == TextFile(
+        source_path=p1, source_start=1, source_stop=2
+    )
+
+    assert TextFile(source_path=p1, source_start=1) != TextFile(source_path=p1)
+    assert TextFile(source_path=p1, source_stop=2) != TextFile(source_path=p1)
+    assert TextFile(source_path=p1, source_start=1, source_stop=2) != TextFile(
+        source_path=p1, source_stop=2
+    )

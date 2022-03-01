@@ -162,7 +162,14 @@ class File(Generic[ValueType, SerializeType]):
             return NotImplemented
 
         return (
-            (self.source_path is not None and self.source_path == other.source_path)
+            (
+                self.source_path is not None
+                and self.source_path == other.source_path
+                and (0 if self.source_start is None else self.source_start)
+                == (0 if other.source_start is None else other.source_start)
+                and (-1 if self.source_stop is None else self.source_stop)
+                == (-1 if other.source_stop is None else other.source_stop)
+            )
             or self.ensure_serialized() == other.ensure_serialized()
             or self.ensure_deserialized() == other.ensure_deserialized()
         )
