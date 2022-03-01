@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.38.2 (2022-03-01)
+### Fix
+* Use compatible beet dependency specifier ([`bdd6b56`](https://github.com/mcbeet/mecha/commit/bdd6b564cb4c892d361fb6c35ceacd8aae9b5102))
+
 ## v0.38.1 (2022-02-28)
 ### Fix
 * Update beet ([`fb8d5b7`](https://github.com/mcbeet/mecha/commit/fb8d5b71c08161eea2a36a0f3a687e5fffcd931d))
