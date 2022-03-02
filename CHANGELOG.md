@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.53.0 (2022-03-02)
+### Feature
+* Data model encoders ([`d78801b`](https://github.com/mcbeet/beet/commit/d78801b5efa054819bff7973b9286095fb1af201))
+
 ## v0.52.2 (2022-03-01)
 ### Fix
 * Copy all file attributes when creating original ([`d61ef72`](https://github.com/mcbeet/beet/commit/d61ef729f36f466ce24854d338fdc28b24fbb16b))
