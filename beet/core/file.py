@@ -9,6 +9,7 @@ __all__ = [
     "BinaryFileBase",
     "BinaryFileContent",
     "BinaryFile",
+    "DataModelBase",
     "JsonFileBase",
     "JsonFile",
     "YamlFileBase",
@@ -53,7 +54,7 @@ TextFileContent = Union[ValueType, str, None]
 BinaryFileContent = Union[ValueType, bytes, None]
 
 
-@dataclass(eq=False)
+@dataclass(eq=False, repr=False)
 class File(Generic[ValueType, SerializeType]):
     """Base file class."""
 
@@ -304,13 +305,11 @@ class TextFileBase(File[ValueType, str]):
                 f.seek(start)
             return f.read(stop - start) if stop >= -1 else f.read()
 
-    @classmethod
-    def to_str(cls, content: ValueType) -> str:
+    def to_str(self, content: ValueType) -> str:
         """Convert content to string."""
         raise NotImplementedError()
 
-    @classmethod
-    def from_str(cls, content: str) -> ValueType:
+    def from_str(self, content: str) -> ValueType:
         """Convert string to content."""
         raise NotImplementedError()
 
@@ -318,12 +317,10 @@ class TextFileBase(File[ValueType, str]):
 class TextFile(TextFileBase[str]):
     """Class representing a text file."""
 
-    @classmethod
-    def to_str(cls, content: str) -> str:
+    def to_str(self, content: str) -> str:
         return content
 
-    @classmethod
-    def from_str(cls, content: str) -> str:
+    def from_str(self, content: str) -> str:
         return content
 
     @classmethod
@@ -358,13 +355,11 @@ class BinaryFileBase(File[ValueType, bytes]):
                 f.seek(start)
             return f.read() if stop == -1 else f.read(stop - start)
 
-    @classmethod
-    def to_bytes(cls, content: ValueType) -> bytes:
+    def to_bytes(self, content: ValueType) -> bytes:
         """Convert content to bytes."""
         raise NotImplementedError()
 
-    @classmethod
-    def from_bytes(cls, content: bytes) -> ValueType:
+    def from_bytes(self, content: bytes) -> ValueType:
         """Convert bytes to content."""
         raise NotImplementedError()
 
@@ -372,12 +367,10 @@ class BinaryFileBase(File[ValueType, bytes]):
 class BinaryFile(BinaryFileBase[bytes]):
     """Class representing a binary file."""
 
-    @classmethod
-    def to_bytes(cls, content: bytes) -> bytes:
+    def to_bytes(self, content: bytes) -> bytes:
         return content
 
-    @classmethod
-    def from_bytes(cls, content: bytes) -> bytes:
+    def from_bytes(self, content: bytes) -> bytes:
         return content
 
     @classmethod
@@ -385,35 +378,46 @@ class BinaryFile(BinaryFileBase[bytes]):
         return b""
 
 
-class JsonFileBase(TextFileBase[ValueType]):
-    """Base class for json files."""
+@dataclass(eq=False, repr=False)
+class DataModelBase(TextFileBase[ValueType]):
+    """Base class for data models."""
 
-    data: FileDeserialize[ValueType] = FileDeserialize()
+    encoder: Callable[[Any], str] = extra_field(init=False)
+    decoder: Callable[[str], Any] = extra_field(init=False)
+
+    data = FileDeserialize()  # type: FileDeserialize[ValueType]
 
     model: ClassVar[Optional[Type[Any]]] = None
 
-    @classmethod
-    def to_str(cls, content: ValueType) -> str:
-        return dump_json(
-            content.dict()
-            if (
-                cls.model
-                and issubclass(cls.model, BaseModel)
-                and isinstance(content, cls.model)
-            )
-            else content
-        )
+    def to_str(self, content: ValueType) -> str:
+        if (
+            self.model
+            and issubclass(self.model, BaseModel)
+            and isinstance(content, self.model)
+        ):
+            content = content.dict()  # type: ignore
+            if self.model.__custom_root_type__:
+                content = content["__root__"]
+        return self.encoder(content)
 
-    @classmethod
-    def from_str(cls, content: str) -> ValueType:
-        value = json.loads(content)
-        if cls.model and issubclass(cls.model, BaseModel):
-            value = cls.model(**value)
+    def from_str(self, content: str) -> ValueType:
+        value = self.decoder(content)
+        if self.model and issubclass(self.model, BaseModel):
+            value = self.model.parse_obj(value)
         return value  # type: ignore
 
     @classmethod
     def default(cls) -> ValueType:
         return cls.model() if cls.model and issubclass(cls.model, BaseModel) else {}  # type: ignore
+
+
+class JsonFileBase(DataModelBase[ValueType]):
+    """Base class for json files."""
+
+    def __post_init__(self):
+        super().__post_init__()
+        self.encoder = dump_json
+        self.decoder = json.loads
 
 
 class JsonFile(JsonFileBase[JsonDict]):
@@ -426,35 +430,13 @@ class JsonFile(JsonFileBase[JsonDict]):
         return {}
 
 
-class YamlFileBase(TextFileBase[ValueType]):
+class YamlFileBase(DataModelBase[ValueType]):
     """Base class for yaml files."""
 
-    data: FileDeserialize[ValueType] = FileDeserialize()
-
-    model: ClassVar[Optional[Type[Any]]] = None
-
-    @classmethod
-    def to_str(cls, content: ValueType) -> str:
-        return yaml.dump(  # type: ignore
-            content.dict()
-            if (
-                cls.model
-                and issubclass(cls.model, BaseModel)
-                and isinstance(content, cls.model)
-            )
-            else content
-        )
-
-    @classmethod
-    def from_str(cls, content: str) -> ValueType:
-        value = yaml.safe_load(content)
-        if cls.model and issubclass(cls.model, BaseModel):
-            value = cls.model(**value)
-        return value  # type: ignore
-
-    @classmethod
-    def default(cls) -> ValueType:
-        return cls.model() if cls.model and issubclass(cls.model, BaseModel) else {}  # type: ignore
+    def __post_init__(self):
+        super().__post_init__()
+        self.encoder = yaml.safe_dump
+        self.decoder = yaml.safe_load
 
 
 class YamlFile(YamlFileBase[JsonDict]):

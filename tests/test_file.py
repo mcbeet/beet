@@ -1,6 +1,12 @@
+import json
 from pathlib import Path
+from typing import List, Literal, Union
 
-from beet import BinaryFile, TextFile
+import pytest
+from pydantic import BaseModel, Field
+from typing_extensions import Annotated
+
+from beet import BinaryFile, JsonFileBase, TextFile
 
 
 def test_text_range(tmp_path: Path):
@@ -50,3 +56,40 @@ def test_range_equality(tmp_path: Path):
     assert TextFile(source_path=p1, source_start=1, source_stop=2) != TextFile(
         source_path=p1, source_stop=2
     )
+
+
+class A(BaseModel):
+    type: Literal["a"]
+    a: int
+
+
+class B(BaseModel):
+    type: Literal["b"]
+    b: str
+
+
+class AB(BaseModel):
+    __root__: Annotated[Union[A, B], Field(discriminator="type")]
+
+
+class ABGroup(BaseModel):
+    __root__: Union[AB, List[AB]]
+
+
+class ABFile(JsonFileBase[ABGroup]):
+
+    model = ABGroup
+
+
+@pytest.mark.parametrize(
+    "data",
+    [
+        '{"type": "a", "a": 42}',
+        '{"type": "b", "b": "foo"}',
+        '[{"type": "a", "a": 42}, {"type": "b", "b": "foo"}]',
+    ],
+)
+def test_model(data: str):
+    ab = ABFile(data)
+    ab.ensure_deserialized()
+    assert json.loads(data) == json.loads(ab.text)

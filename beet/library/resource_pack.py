@@ -147,7 +147,7 @@ class TextureMcmeta(JsonFile, NamespaceFile):
     extension = ".png.mcmeta"
 
 
-@dataclass(eq=False)
+@dataclass(eq=False, repr=False)
 class Texture(PngFile, NamespaceFile):
     """Class representing a texture."""
 
@@ -164,7 +164,7 @@ class Texture(PngFile, NamespaceFile):
             pack.textures_mcmeta[path] = TextureMcmeta(self.mcmeta)
 
 
-@dataclass(eq=False)
+@dataclass(eq=False, repr=False)
 class Sound(BinaryFile, NamespaceFile):
     """Class representing a sound file."""
 

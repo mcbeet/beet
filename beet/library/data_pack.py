@@ -67,7 +67,7 @@ class Advancement(JsonFile, NamespaceFile):
     extension = ".json"
 
 
-@dataclass(eq=False)
+@dataclass(eq=False, repr=False)
 class Function(TextFileBase[List[str]], NamespaceFile):
     """Class representing a function."""
 
@@ -144,7 +144,7 @@ class Recipe(JsonFile, NamespaceFile):
     extension = ".json"
 
 
-@dataclass(eq=False)
+@dataclass(eq=False, repr=False)
 class Structure(BinaryFileBase[StructureFileData], NamespaceFile):
     """Class representing a structure file."""
 

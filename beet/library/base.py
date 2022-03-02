@@ -74,7 +74,6 @@ MergeableType = TypeVar("MergeableType", bound=SupportsMerge)
 PackFile = File[Any, Any]
 
 
-@dataclass(eq=False)
 class NamespaceFile(PackFile):
     """Base class for files that belong in pack namespaces."""
 
