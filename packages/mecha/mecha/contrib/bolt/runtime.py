@@ -105,6 +105,7 @@ class Runtime:
                 "mecha.contrib.relative_location",
                 "mecha.contrib.inline_function_tag",
                 "mecha.contrib.nesting",
+                "mecha.contrib.nested_resources",
                 "mecha.contrib.implicit_execute",
             )
 

@@ -321,7 +321,7 @@ foo = "hello"
     16 + 3: [],
 }
 ###
-predicate = {
+my_predicate = {
   "condition": "minecraft:entity_scores",
   "entity": "this",
   "scores": {
@@ -336,7 +336,7 @@ predicate = {
   }
 }
 ###
-predicate = {
+my_predicate = {
   condition: "minecraft:entity_scores",
   entity: "this",
   scores: {
@@ -637,3 +637,9 @@ entity_type = "creeper"
 at @e[type=entity_type] summon lightning_bolt
 ###
 append function demo:foo
+###
+function_tag
+###
+merge function_tag
+###
+merge function_tag minecraft:tick

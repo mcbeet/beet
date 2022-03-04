@@ -21,7 +21,7 @@ with _mecha_runtime.scope() as _mecha_var19:
     _mecha_var16 = {_mecha_var6: _mecha_var15}
     _mecha_var17 = {_mecha_var5: _mecha_var16}
     _mecha_var18 = {_mecha_var0: _mecha_var1, _mecha_var2: _mecha_var3, _mecha_var4: _mecha_var17}
-    predicate = _mecha_var18
+    my_predicate = _mecha_var18
 _mecha_var20 = _mecha_helper_replace(_mecha_refs[0], commands=_mecha_helper_children(_mecha_var19))
 ---
 output = _mecha_var20
@@ -29,6 +29,6 @@ output = _mecha_var20
 _mecha_refs[0]
 <class 'mecha.ast.AstRoot'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
-  end_location: SourceLocation(pos=234, lineno=15, colno=1)
+  end_location: SourceLocation(pos=237, lineno=15, colno=1)
   commands:
     <class 'mecha.ast.AstCommand'>

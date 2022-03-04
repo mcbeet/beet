@@ -463,3 +463,27 @@ execute if score @s thingy matches 16 run say 16
 execute if score @s thingy matches 18 run say 18
 execute if score @s thingy matches 19 run say 19
 ```
+
+## Resource pack
+
+`@resource_pack pack.mcmeta`
+
+```json
+{
+  "pack": {
+    "pack_format": 8,
+    "description": ""
+  }
+}
+```
+
+### minecraft
+
+`@language minecraft:aaaa`
+
+```json
+{
+  "menu.singleplayer": "AAAA",
+  "something.else": "bonjour"
+}
+```

@@ -1,4 +1,4 @@
-predicate = {
+my_predicate = {
   "condition": "minecraft:entity_scores",
   "entity": "this",
   "scores": {
@@ -15,141 +15,141 @@ predicate = {
 ---
 <class 'mecha.ast.AstRoot'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
-  end_location: SourceLocation(pos=248, lineno=15, colno=1)
+  end_location: SourceLocation(pos=251, lineno=15, colno=1)
   commands:
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=0, lineno=1, colno=1)
-      end_location: SourceLocation(pos=247, lineno=14, colno=2)
+      end_location: SourceLocation(pos=250, lineno=14, colno=2)
       identifier: 'statement'
       arguments:
         <class 'mecha.contrib.bolt.ast.AstAssignment'>
           location: SourceLocation(pos=0, lineno=1, colno=1)
-          end_location: SourceLocation(pos=247, lineno=14, colno=2)
+          end_location: SourceLocation(pos=250, lineno=14, colno=2)
           operator: '='
           target:
             <class 'mecha.contrib.bolt.ast.AstTargetIdentifier'>
               location: SourceLocation(pos=0, lineno=1, colno=1)
-              end_location: SourceLocation(pos=9, lineno=1, colno=10)
-              value: 'predicate'
+              end_location: SourceLocation(pos=12, lineno=1, colno=13)
+              value: 'my_predicate'
           value:
             <class 'mecha.contrib.bolt.ast.AstDict'>
-              location: SourceLocation(pos=12, lineno=1, colno=13)
-              end_location: SourceLocation(pos=247, lineno=14, colno=2)
+              location: SourceLocation(pos=15, lineno=1, colno=16)
+              end_location: SourceLocation(pos=250, lineno=14, colno=2)
               items:
                 <class 'mecha.contrib.bolt.ast.AstDictItem'>
-                  location: SourceLocation(pos=16, lineno=2, colno=3)
-                  end_location: SourceLocation(pos=54, lineno=2, colno=41)
+                  location: SourceLocation(pos=19, lineno=2, colno=3)
+                  end_location: SourceLocation(pos=57, lineno=2, colno=41)
                   key:
                     <class 'mecha.contrib.bolt.ast.AstValue'>
-                      location: SourceLocation(pos=16, lineno=2, colno=3)
-                      end_location: SourceLocation(pos=27, lineno=2, colno=14)
+                      location: SourceLocation(pos=19, lineno=2, colno=3)
+                      end_location: SourceLocation(pos=30, lineno=2, colno=14)
                       value: 'condition'
                   value:
                     <class 'mecha.contrib.bolt.ast.AstValue'>
-                      location: SourceLocation(pos=29, lineno=2, colno=16)
-                      end_location: SourceLocation(pos=54, lineno=2, colno=41)
+                      location: SourceLocation(pos=32, lineno=2, colno=16)
+                      end_location: SourceLocation(pos=57, lineno=2, colno=41)
                       value: 'minecraft:entity_scores'
                 <class 'mecha.contrib.bolt.ast.AstDictItem'>
-                  location: SourceLocation(pos=58, lineno=3, colno=3)
-                  end_location: SourceLocation(pos=74, lineno=3, colno=19)
+                  location: SourceLocation(pos=61, lineno=3, colno=3)
+                  end_location: SourceLocation(pos=77, lineno=3, colno=19)
                   key:
                     <class 'mecha.contrib.bolt.ast.AstValue'>
-                      location: SourceLocation(pos=58, lineno=3, colno=3)
-                      end_location: SourceLocation(pos=66, lineno=3, colno=11)
+                      location: SourceLocation(pos=61, lineno=3, colno=3)
+                      end_location: SourceLocation(pos=69, lineno=3, colno=11)
                       value: 'entity'
                   value:
                     <class 'mecha.contrib.bolt.ast.AstValue'>
-                      location: SourceLocation(pos=68, lineno=3, colno=13)
-                      end_location: SourceLocation(pos=74, lineno=3, colno=19)
+                      location: SourceLocation(pos=71, lineno=3, colno=13)
+                      end_location: SourceLocation(pos=77, lineno=3, colno=19)
                       value: 'this'
                 <class 'mecha.contrib.bolt.ast.AstDictItem'>
-                  location: SourceLocation(pos=78, lineno=4, colno=3)
-                  end_location: SourceLocation(pos=245, lineno=13, colno=4)
+                  location: SourceLocation(pos=81, lineno=4, colno=3)
+                  end_location: SourceLocation(pos=248, lineno=13, colno=4)
                   key:
                     <class 'mecha.contrib.bolt.ast.AstValue'>
-                      location: SourceLocation(pos=78, lineno=4, colno=3)
-                      end_location: SourceLocation(pos=86, lineno=4, colno=11)
+                      location: SourceLocation(pos=81, lineno=4, colno=3)
+                      end_location: SourceLocation(pos=89, lineno=4, colno=11)
                       value: 'scores'
                   value:
                     <class 'mecha.contrib.bolt.ast.AstDict'>
-                      location: SourceLocation(pos=88, lineno=4, colno=13)
-                      end_location: SourceLocation(pos=245, lineno=13, colno=4)
+                      location: SourceLocation(pos=91, lineno=4, colno=13)
+                      end_location: SourceLocation(pos=248, lineno=13, colno=4)
                       items:
                         <class 'mecha.contrib.bolt.ast.AstDictItem'>
-                          location: SourceLocation(pos=94, lineno=5, colno=5)
-                          end_location: SourceLocation(pos=241, lineno=12, colno=6)
+                          location: SourceLocation(pos=97, lineno=5, colno=5)
+                          end_location: SourceLocation(pos=244, lineno=12, colno=6)
                           key:
                             <class 'mecha.contrib.bolt.ast.AstValue'>
-                              location: SourceLocation(pos=94, lineno=5, colno=5)
-                              end_location: SourceLocation(pos=102, lineno=5, colno=13)
+                              location: SourceLocation(pos=97, lineno=5, colno=5)
+                              end_location: SourceLocation(pos=105, lineno=5, colno=13)
                               value: 'score1'
                           value:
                             <class 'mecha.contrib.bolt.ast.AstDict'>
-                              location: SourceLocation(pos=104, lineno=5, colno=15)
-                              end_location: SourceLocation(pos=241, lineno=12, colno=6)
+                              location: SourceLocation(pos=107, lineno=5, colno=15)
+                              end_location: SourceLocation(pos=244, lineno=12, colno=6)
                               items:
                                 <class 'mecha.contrib.bolt.ast.AstDictItem'>
-                                  location: SourceLocation(pos=112, lineno=6, colno=7)
-                                  end_location: SourceLocation(pos=235, lineno=11, colno=8)
+                                  location: SourceLocation(pos=115, lineno=6, colno=7)
+                                  end_location: SourceLocation(pos=238, lineno=11, colno=8)
                                   key:
                                     <class 'mecha.contrib.bolt.ast.AstValue'>
-                                      location: SourceLocation(pos=112, lineno=6, colno=7)
-                                      end_location: SourceLocation(pos=117, lineno=6, colno=12)
+                                      location: SourceLocation(pos=115, lineno=6, colno=7)
+                                      end_location: SourceLocation(pos=120, lineno=6, colno=12)
                                       value: 'min'
                                   value:
                                     <class 'mecha.contrib.bolt.ast.AstDict'>
-                                      location: SourceLocation(pos=119, lineno=6, colno=14)
-                                      end_location: SourceLocation(pos=235, lineno=11, colno=8)
+                                      location: SourceLocation(pos=122, lineno=6, colno=14)
+                                      end_location: SourceLocation(pos=238, lineno=11, colno=8)
                                       items:
                                         <class 'mecha.contrib.bolt.ast.AstDictItem'>
-                                          location: SourceLocation(pos=129, lineno=7, colno=9)
-                                          end_location: SourceLocation(pos=154, lineno=7, colno=34)
+                                          location: SourceLocation(pos=132, lineno=7, colno=9)
+                                          end_location: SourceLocation(pos=157, lineno=7, colno=34)
                                           key:
                                             <class 'mecha.contrib.bolt.ast.AstValue'>
-                                              location: SourceLocation(pos=129, lineno=7, colno=9)
-                                              end_location: SourceLocation(pos=135, lineno=7, colno=15)
+                                              location: SourceLocation(pos=132, lineno=7, colno=9)
+                                              end_location: SourceLocation(pos=138, lineno=7, colno=15)
                                               value: 'type'
                                           value:
                                             <class 'mecha.contrib.bolt.ast.AstValue'>
-                                              location: SourceLocation(pos=137, lineno=7, colno=17)
-                                              end_location: SourceLocation(pos=154, lineno=7, colno=34)
+                                              location: SourceLocation(pos=140, lineno=7, colno=17)
+                                              end_location: SourceLocation(pos=157, lineno=7, colno=34)
                                               value: 'minecraft:score'
                                         <class 'mecha.contrib.bolt.ast.AstDictItem'>
-                                          location: SourceLocation(pos=164, lineno=8, colno=9)
-                                          end_location: SourceLocation(pos=180, lineno=8, colno=25)
+                                          location: SourceLocation(pos=167, lineno=8, colno=9)
+                                          end_location: SourceLocation(pos=183, lineno=8, colno=25)
                                           key:
                                             <class 'mecha.contrib.bolt.ast.AstValue'>
-                                              location: SourceLocation(pos=164, lineno=8, colno=9)
-                                              end_location: SourceLocation(pos=172, lineno=8, colno=17)
+                                              location: SourceLocation(pos=167, lineno=8, colno=9)
+                                              end_location: SourceLocation(pos=175, lineno=8, colno=17)
                                               value: 'target'
                                           value:
                                             <class 'mecha.contrib.bolt.ast.AstValue'>
-                                              location: SourceLocation(pos=174, lineno=8, colno=19)
-                                              end_location: SourceLocation(pos=180, lineno=8, colno=25)
+                                              location: SourceLocation(pos=177, lineno=8, colno=19)
+                                              end_location: SourceLocation(pos=183, lineno=8, colno=25)
                                               value: 'this'
                                         <class 'mecha.contrib.bolt.ast.AstDictItem'>
-                                          location: SourceLocation(pos=190, lineno=9, colno=9)
-                                          end_location: SourceLocation(pos=207, lineno=9, colno=26)
+                                          location: SourceLocation(pos=193, lineno=9, colno=9)
+                                          end_location: SourceLocation(pos=210, lineno=9, colno=26)
                                           key:
                                             <class 'mecha.contrib.bolt.ast.AstValue'>
-                                              location: SourceLocation(pos=190, lineno=9, colno=9)
-                                              end_location: SourceLocation(pos=197, lineno=9, colno=16)
+                                              location: SourceLocation(pos=193, lineno=9, colno=9)
+                                              end_location: SourceLocation(pos=200, lineno=9, colno=16)
                                               value: 'score'
                                           value:
                                             <class 'mecha.contrib.bolt.ast.AstValue'>
-                                              location: SourceLocation(pos=199, lineno=9, colno=18)
-                                              end_location: SourceLocation(pos=207, lineno=9, colno=26)
+                                              location: SourceLocation(pos=202, lineno=9, colno=18)
+                                              end_location: SourceLocation(pos=210, lineno=9, colno=26)
                                               value: 'score2'
                                         <class 'mecha.contrib.bolt.ast.AstDictItem'>
-                                          location: SourceLocation(pos=217, lineno=10, colno=9)
-                                          end_location: SourceLocation(pos=227, lineno=10, colno=19)
+                                          location: SourceLocation(pos=220, lineno=10, colno=9)
+                                          end_location: SourceLocation(pos=230, lineno=10, colno=19)
                                           key:
                                             <class 'mecha.contrib.bolt.ast.AstValue'>
-                                              location: SourceLocation(pos=217, lineno=10, colno=9)
-                                              end_location: SourceLocation(pos=224, lineno=10, colno=16)
+                                              location: SourceLocation(pos=220, lineno=10, colno=9)
+                                              end_location: SourceLocation(pos=227, lineno=10, colno=16)
                                               value: 'scale'
                                           value:
                                             <class 'mecha.contrib.bolt.ast.AstValue'>
-                                              location: SourceLocation(pos=226, lineno=10, colno=18)
-                                              end_location: SourceLocation(pos=227, lineno=10, colno=19)
+                                              location: SourceLocation(pos=229, lineno=10, colno=18)
+                                              end_location: SourceLocation(pos=230, lineno=10, colno=19)
                                               value: 1
