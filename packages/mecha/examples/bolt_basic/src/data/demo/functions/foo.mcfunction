@@ -158,7 +158,7 @@ if predicate foo:bar function baz:
     say bar
 
 for node in generate_tree("abcdefghijklmnopqrstuvwxyz0123456789"):
-    function node.parent append:
+    append function node.parent:
         if node.partition(5):
             if score @s thingy matches node.range function node.children
         else:
@@ -184,7 +184,7 @@ keyword_arguments = dict(foo=1, bar=2, **{"thing": 42})
 say keyword_arguments
 
 for node in generate_tree(range(8), name="small_tree"):
-    function node.parent append:
+    append function node.parent:
         if node.partition():
             if score @s thingy matches node.range function node.children
         else:
@@ -207,7 +207,7 @@ def try_set_item():
 try_set_item()
 
 for node in generate_tree(range(10, 20), key=int):
-    function node.parent append:
+    append function node.parent:
         if node.partition():
             if score @s thingy matches node.range function node.children
         else:
@@ -254,11 +254,11 @@ from ./thing import raw
 
 raw(f"say hello{'!' * 5}")
 
-run function demo:bbb:
+execute function demo:bbb:
     say 1
-run function demo:bbb append:
+append function demo:bbb:
     say 2
-run function demo:bbb prepend:
+prepend function demo:bbb:
     say 0
 
 mykey1 = "foo"

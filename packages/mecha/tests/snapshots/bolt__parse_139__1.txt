@@ -41,8 +41,8 @@ output = _mecha_var11
 ---
 _mecha_refs[0]
 <class 'mecha.contrib.bolt.ast.AstInterpolation'>
-  location: SourceLocation(pos=80, lineno=2, colno=14)
-  end_location: SourceLocation(pos=91, lineno=2, colno=25)
+  location: SourceLocation(pos=87, lineno=2, colno=21)
+  end_location: SourceLocation(pos=98, lineno=2, colno=32)
   converter: 'resource_location'
   value:
     <class 'mecha.contrib.bolt.ast.AstAttribute'>
@@ -171,7 +171,7 @@ _mecha_refs[18]
 <class 'mecha.ast.AstCommand'>
   location: SourceLocation(pos=71, lineno=2, colno=5)
   end_location: SourceLocation(pos=281, lineno=6, colno=65)
-  identifier: 'function:name:append:commands'
+  identifier: 'append:function:name:commands'
   arguments:
     <class 'mecha.contrib.bolt.ast.AstInterpolation'>
     <class 'mecha.ast.AstRoot'>

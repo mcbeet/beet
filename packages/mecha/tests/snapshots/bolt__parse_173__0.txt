@@ -1,4 +1,5 @@
-#>ERROR  Expected colon but reached end of file.
-# line 1, column 22
-#      1 |  run function demo:foo
-run function demo:foo
+#>ERROR  Expected non-empty block.
+# line 1, column 26
+#      1 |  execute function demo:foo:
+#        :                           ^
+execute function demo:foo:

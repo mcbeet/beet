@@ -164,9 +164,7 @@ say False
 say True
 say bar
 say hello!!!!!
-function demo:bbb
-function demo:bbb
-function demo:bbb
+execute run function demo:bbb
 execute if data storage some:path/to/storage some.foo.path
 execute if data storage some:path/to/storage some.foo.path run say hi
 execute if data storage some:path/to/storage some.foo.path{my: "compound"}
@@ -231,6 +229,14 @@ say bar
 ```mcfunction
 say foo
 say bar
+```
+
+`@function demo:bbb`
+
+```mcfunction
+say 0
+say 1
+say 2
 ```
 
 `@function demo:foo/tree_0/0_7`
@@ -456,12 +462,4 @@ execute if score @s thingy matches 16 run say 16
 ```mcfunction
 execute if score @s thingy matches 18 run say 18
 execute if score @s thingy matches 19 run say 19
-```
-
-`@function demo:bbb`
-
-```mcfunction
-say 0
-say 1
-say 2
 ```

@@ -101,8 +101,8 @@ class NestedCommandsTransformer(MutatingReducer):
         if isinstance(command := node.arguments[0], AstCommand):
             if command.identifier in [
                 "function:name:commands",
-                "function:name:append:commands",
-                "function:name:prepend:commands",
+                "append:function:name:commands",
+                "prepend:function:name:commands",
             ]:
                 self.handle_function(command)
                 command = replace(
@@ -170,25 +170,12 @@ class NestedCommandsTransformer(MutatingReducer):
         for command in node.commands:
             if command.identifier in [
                 "function:name:commands",
-                "function:name:append:commands",
-                "function:name:prepend:commands",
+                "append:function:name:commands",
+                "prepend:function:name:commands",
             ]:
                 commands.extend(self.handle_function(command, top_level=True))
                 changed = True
                 continue
-            elif command.identifier in [
-                "run:function:name:commands",
-                "run:function:name:append:commands",
-                "run:function:name:prepend:commands",
-            ]:
-                command = replace(command, identifier=command.identifier[4:])
-                commands.extend(self.handle_function(command, top_level=True))
-                changed = True
-                command = replace(
-                    command,
-                    identifier="function:name",
-                    arguments=AstChildren([command.arguments[0]]),
-                )
 
             args = command.arguments
             stack: List[AstCommand] = [command]
@@ -239,10 +226,10 @@ class NestedCommandsTransformer(MutatingReducer):
             path = name.get_canonical_value()
 
             if not top_level:
-                if node.identifier == "function:name:append:commands":
+                if node.identifier == "append:function:name:commands":
                     d = Diagnostic("error", f"Can't append commands with execute.")
                     raise set_location(d, name)
-                if node.identifier == "function:name:prepend:commands":
+                if node.identifier == "prepend:function:name:commands":
                     d = Diagnostic("error", f"Can't prepend commands with execute.")
                     raise set_location(d, name)
 
@@ -256,7 +243,7 @@ class NestedCommandsTransformer(MutatingReducer):
                 raise set_location(d, name)
 
             elif target is self.database.current:
-                if node.identifier == "function:name:prepend:commands":
+                if node.identifier == "prepend:function:name:commands":
                     d = Diagnostic(
                         "error",
                         f"Can't prepend commands to the current function {path!r}.",
@@ -273,7 +260,7 @@ class NestedCommandsTransformer(MutatingReducer):
                         compilation_unit.ast,
                         commands=AstChildren(
                             compilation_unit.ast.commands + root.commands
-                            if node.identifier == "function:name:append:commands"
+                            if node.identifier == "append:function:name:commands"
                             else root.commands + compilation_unit.ast.commands
                         ),
                     )

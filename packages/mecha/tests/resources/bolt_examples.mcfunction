@@ -523,7 +523,7 @@ while True:
         break
 ###
 for node in generate_tree("abcdefghijklmnopqrstuvwxyz0123456789"):
-    function node.parent append:
+    append function node.parent:
         if node.partition(5):
             if score @s thingy matches node.range function node.children
         else:
@@ -625,7 +625,7 @@ del numbers[3:]
 ###
 del 1 + 1
 ###
-run function demo:foo
+execute function demo:foo:
 ###
 mykey = "aaa"
 if data storage some:path/to/storage f'some.{mykey}.path{{my: "compound"}}' run say hi
@@ -635,3 +635,5 @@ if data storage some:path/to/storage (mypath) run say hi
 ###
 entity_type = "creeper"
 at @e[type=entity_type] summon lightning_bolt
+###
+append function demo:foo

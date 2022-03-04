@@ -6,7 +6,7 @@ as @a function ./with_tag:
     function tag ./abc
     say world
 
-function ./with_tag append:
+append function ./with_tag:
     function tag ./xyz
 
 function ./my_load:
