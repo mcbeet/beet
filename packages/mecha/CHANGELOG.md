@@ -2,6 +2,11 @@
 
 <!--next-version-placeholder-->
 
+## v0.39.0 (2022-03-04)
+### Feature
+* Add mecha.contrib.nested_resources ([`72f3387`](https://github.com/mcbeet/mecha/commit/72f33879495fc23fde7e48b1ec53dba489415190))
+* Change syntax for append/prepend function ([`14a1ad9`](https://github.com/mcbeet/mecha/commit/14a1ad94a67b5850d058af247571fbd1ec5ad932))
+
 ## v0.38.2 (2022-03-01)
 ### Fix
 * Use compatible beet dependency specifier ([`bdd6b56`](https://github.com/mcbeet/mecha/commit/bdd6b564cb4c892d361fb6c35ceacd8aae9b5102))
