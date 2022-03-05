@@ -340,3 +340,6 @@ set_at_origin(minecraft:stone)
 some_name = ./useless/../no_quotes_lol
 function some_name:
     say that's neat
+
+if ./a/b/c == ./x/../a/b/x/../c:
+    say same thing
