@@ -3,14 +3,16 @@
 
 __all__ = [
     "RelativeResourceLocationParser",
+    "resolve_using_database",
 ]
 
 
 from dataclasses import dataclass, replace
 from pathlib import PurePosixPath
+from typing import Tuple
 
 from beet import Context
-from tokenstream import InvalidSyntax, TokenStream, set_location
+from tokenstream import InvalidSyntax, SourceLocation, TokenStream, set_location
 
 from mecha import AstResourceLocation, CompilationDatabase, Mecha, Parser
 
@@ -34,24 +36,41 @@ class RelativeResourceLocationParser:
         node: AstResourceLocation = self.parser(stream)
 
         if node.namespace is None and node.path.startswith(("./", "../")):
-            current_file = self.database.current
-            path = self.database[current_file].resource_location
+            namespace, resolved = resolve_using_database(
+                relative_path=node.path,
+                database=self.database,
+                location=node.location,
+                end_location=node.end_location,
+            )
 
-            if not path:
-                exc = InvalidSyntax(
-                    f"Can't resolve relative resource location {node.path!r}."
-                )
-                raise set_location(exc, node)
-
-            namespace, _, current_path = path.partition(":")
-
-            resolved = PurePosixPath(current_path).parent
-            for name in node.path.split("/"):
-                if name == "..":
-                    resolved = resolved.parent
-                elif name and name != ".":
-                    resolved = resolved / name
-
-            return replace(node, namespace=namespace, path=str(resolved))
+            return replace(node, namespace=namespace, path=resolved)
 
         return node
+
+
+def resolve_using_database(
+    relative_path: str,
+    database: CompilationDatabase,
+    location: SourceLocation,
+    end_location: SourceLocation,
+) -> Tuple[str, str]:
+    """Resolve relative resource location."""
+    current_file = database.current
+    path = database[current_file].resource_location
+
+    if not path:
+        exc = InvalidSyntax(
+            f"Can't resolve relative resource location {relative_path!r}."
+        )
+        raise set_location(exc, location, end_location)
+
+    namespace, _, current_path = path.partition(":")
+
+    resolved = PurePosixPath(current_path).parent
+    for name in relative_path.split("/"):
+        if name == "..":
+            resolved = resolved.parent
+        elif name and name != ".":
+            resolved = resolved / name
+
+    return namespace, str(resolved)

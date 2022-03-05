@@ -137,7 +137,7 @@ class Runtime:
 
         commands_json = read_text("mecha.resources", "bolt.json")
         mc.spec.add_commands(CommandTree.parse_raw(commands_json))
-        mc.spec.parsers.update(get_bolt_parsers(mc.spec.parsers))
+        mc.spec.parsers.update(get_bolt_parsers(mc.spec.parsers, mc.database))
         mc.spec.parsers["root"] = GlobalsInjection(self, mc.spec.parsers["root"])
 
         self.directory = mc.directory

@@ -184,6 +184,7 @@ execute if score 00000000-0000-0000-0000-000000000001 some_objective matches 0 r
 execute if score 12345678-1234-5678-1234-567812345678 some_objective matches 0 run say yes
 execute at @e[type=creeper] run summon lightning_bolt
 data merge storage demo:foo {custom_data1: [0, 1, 2], custom_data2: [0, 1, 2]}
+setblock 0 0 0 minecraft:stone
 ```
 
 `@function demo:import_a`
@@ -463,6 +464,12 @@ execute if score @s thingy matches 16 run say 16
 ```mcfunction
 execute if score @s thingy matches 18 run say 18
 execute if score @s thingy matches 19 run say 19
+```
+
+`@function demo:no_quotes_lol`
+
+```mcfunction
+say that's neat
 ```
 
 ## Resource pack

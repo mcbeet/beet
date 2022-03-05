@@ -47,11 +47,13 @@ from mecha import (
     AstCommand,
     AstResourceLocation,
     AstRoot,
+    CompilationDatabase,
     Parser,
     consume_line_continuation,
     delegate,
     get_stream_scope,
 )
+from mecha.contrib.relative_location import resolve_using_database
 from mecha.utils import QuoteHelper, normalize_whitespace, string_to_number
 
 from .ast import (
@@ -90,11 +92,15 @@ NULL_PATTERN: str = r"\b(?:null|None)\b"
 IDENTIFIER_PATTERN: str = r"(?!_mecha_)[a-zA-Z_][a-zA-Z0-9_]*"
 STRING_PATTERN: str = r'"(?:\\.|[^\\\n])*?"' "|" r"'(?:\\.|[^\\\n])*?'"
 NUMBER_PATTERN: str = r"(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?\b"
+RESOURCE_LOCATION_PATTERN: str = r"(?:\.\./|\./|[0-9a-z_\-\.]+:)[0-9a-z_./-]+"
 
 IMPORT_REGEX = re.compile(rf"^{IDENTIFIER_PATTERN}(?:\.{IDENTIFIER_PATTERN})*$")
 
 
-def get_bolt_parsers(parsers: Dict[str, Parser]) -> Dict[str, Parser]:
+def get_bolt_parsers(
+    parsers: Dict[str, Parser],
+    database: CompilationDatabase,
+) -> Dict[str, Parser]:
     """Return the bolt parsers."""
     return {
         ################################################################################
@@ -222,7 +228,7 @@ def get_bolt_parsers(parsers: Dict[str, Parser]) -> Dict[str, Parser]:
                 parse_dict_item,
             ]
         ),
-        "bolt:literal": LiteralParser(),
+        "bolt:literal": LiteralParser(database),
         ################################################################################
         # Interpolation
         ################################################################################
@@ -906,7 +912,11 @@ class LookupParser:
         stop = None
         step = None
 
-        with stream.syntax(colon=r":", comma=r",", bracket=r"\]"):
+        with stream.provide(bolt_lookup=True), stream.syntax(
+            colon=r":",
+            comma=r",",
+            bracket=r"\]",
+        ):
             colon1 = stream.get("colon")
 
             if not colon1:
@@ -970,7 +980,7 @@ class PrimaryParser:
             elif token and token.match("format_string"):
                 quote = token.value[-1]
 
-                with stream.syntax(
+                with stream.provide(bolt_format_string=True), stream.syntax(
                     escape=rf"\\.",
                     double_brace=r"\{\{|\}\}",
                     brace=r"\{|\}",
@@ -1131,6 +1141,7 @@ def parse_dict_item(stream: TokenStream) -> Any:
 class LiteralParser:
     """Parser for literals."""
 
+    database: CompilationDatabase
     quote_helper: QuoteHelper = field(default_factory=BoltQuoteHelper)
 
     def __call__(self, stream: TokenStream) -> Any:
@@ -1142,15 +1153,22 @@ class LiteralParser:
             false=FALSE_PATTERN,
             null=NULL_PATTERN,
             string=STRING_PATTERN,
+            resource=(
+                None
+                if stream.data.get("bolt_lookup")
+                or stream.data.get("bolt_format_string")
+                else RESOURCE_LOCATION_PATTERN
+            ),
             number=NUMBER_PATTERN,
         ):
-            curly, bracket, true, false, null, string, number = stream.expect(
+            curly, bracket, true, false, null, string, resource, number = stream.expect(
                 ("curly", "{"),
                 ("bracket", "["),
                 "true",
                 "false",
                 "null",
                 "string",
+                "resource",
                 "number",
             )
 
@@ -1190,6 +1208,18 @@ class LiteralParser:
                 value = None
             elif string:
                 value = self.quote_helper.unquote_string(string)
+            elif resource:
+                if resource.value.startswith(("./", "../")):
+                    value = ":".join(
+                        resolve_using_database(
+                            relative_path=resource.value,
+                            database=self.database,
+                            location=resource.location,
+                            end_location=resource.end_location,
+                        )
+                    )
+                else:
+                    value = resource.value
             elif number:
                 value = string_to_number(number.value)
 

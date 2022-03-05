@@ -331,3 +331,12 @@ data merge storage demo:foo:
         -   x
         -   y
         -   z
+
+def set_at_origin(block):
+    setblock 0 0 0 block
+
+set_at_origin(minecraft:stone)
+
+some_name = ./useless/../no_quotes_lol
+function some_name:
+    say that's neat

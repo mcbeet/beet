@@ -643,3 +643,7 @@ function_tag
 merge function_tag
 ###
 merge function_tag minecraft:tick
+###
+demo:foo
+###
+a = demo:foo/bar
