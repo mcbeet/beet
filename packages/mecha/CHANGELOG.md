@@ -2,6 +2,13 @@
 
 <!--next-version-placeholder-->
 
+## v0.40.0 (2022-03-05)
+### Feature
+* Add mecha.contrib.nested_yaml ([`fcc75b7`](https://github.com/mcbeet/mecha/commit/fcc75b790b578c2cf2efabb350ecf96847507f8d))
+
+### Fix
+* Allow coordinates to be followed by colons ([`bcdc8de`](https://github.com/mcbeet/mecha/commit/bcdc8de679aaef1064dc9eb5bd61112d1d972f96))
+
 ## v0.39.0 (2022-03-04)
 ### Feature
 * Add mecha.contrib.nested_resources ([`72f3387`](https://github.com/mcbeet/mecha/commit/72f33879495fc23fde7e48b1ec53dba489415190))

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "mecha"
-version = "0.39.0"
+version = "0.40.0"
 description = "A powerful Minecraft command library"
 authors = ["Valentin Berlier <berlier.v@gmail.com>"]
 license = "MIT"
