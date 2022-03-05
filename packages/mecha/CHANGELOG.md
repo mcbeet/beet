@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.41.0 (2022-03-05)
+### Feature
+* Add resource location literals ([`2143802`](https://github.com/mcbeet/mecha/commit/2143802994ed94d108067d3f92019d65d794c9a4))
+
 ## v0.40.0 (2022-03-05)
 ### Feature
 * Add mecha.contrib.nested_yaml ([`fcc75b7`](https://github.com/mcbeet/mecha/commit/fcc75b790b578c2cf2efabb350ecf96847507f8d))
