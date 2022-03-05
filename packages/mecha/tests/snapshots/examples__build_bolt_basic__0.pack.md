@@ -183,6 +183,7 @@ execute if score some_fake_player some_objective matches 0 run say yes
 execute if score 00000000-0000-0000-0000-000000000001 some_objective matches 0 run say yes
 execute if score 12345678-1234-5678-1234-567812345678 some_objective matches 0 run say yes
 execute at @e[type=creeper] run summon lightning_bolt
+data merge storage demo:foo {custom_data1: [0, 1, 2], custom_data2: [0, 1, 2]}
 ```
 
 `@function demo:import_a`
@@ -484,6 +485,8 @@ execute if score @s thingy matches 19 run say 19
 ```json
 {
   "menu.singleplayer": "AAAA",
-  "something.else": "bonjour"
+  "something.else": "bonjour",
+  "yaml.key1": "BONJOUR",
+  "yaml.key2": "Bonjour"
 }
 ```

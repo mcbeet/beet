@@ -106,6 +106,7 @@ class Runtime:
                 "mecha.contrib.inline_function_tag",
                 "mecha.contrib.nesting",
                 "mecha.contrib.nested_resources",
+                "mecha.contrib.nested_yaml",
                 "mecha.contrib.implicit_execute",
             )
 

@@ -316,3 +316,18 @@ some_translation = "bonjour"
 merge language minecraft:aaaa {
     "something.else": some_translation
 }
+
+merge language minecraft:aaaa:
+    yaml.key1: some_translation.upper()
+    yaml.key2: some_translation.title()
+
+x = 0
+y = 1
+z = 2
+
+data merge storage demo:foo:
+    custom_data1: [x, y, z]
+    custom_data2:
+        -   x
+        -   y
+        -   z
