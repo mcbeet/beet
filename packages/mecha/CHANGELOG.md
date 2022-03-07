@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.41.2 (2022-03-07)
+### Fix
+* Proper syntax error for identifiers clashing with python keywords ([`32ad957`](https://github.com/mcbeet/mecha/commit/32ad9573f8b76c725066595fb6ab3bb9c3d1ca98))
+
 ## v0.41.1 (2022-03-07)
 ### Fix
 * Allow single quoted strings everywhere in nested yaml ([`67ffef0`](https://github.com/mcbeet/mecha/commit/67ffef022227556ae53d84c4a0c2c1ef7f8cd9d7))
