@@ -1,5 +1,4 @@
 __all__ = [
-    "BoltQuoteHelper",
     "rewrite_traceback",
     "fake_traceback",
     "internal",
@@ -9,11 +8,10 @@ __all__ = [
 
 
 from bisect import bisect
-from dataclasses import dataclass, field
 from types import CodeType, TracebackType
-from typing import Dict, List, Set, TypeVar
+from typing import List, Set, TypeVar
 
-from mecha.utils import QuoteHelperWithUnicode, string_to_number
+from mecha.utils import string_to_number
 
 T = TypeVar("T")
 
@@ -73,21 +71,6 @@ SAFE_BUILTINS: List[str] = [
     "type",
     "zip",
 ]
-
-
-@dataclass
-class BoltQuoteHelper(QuoteHelperWithUnicode):
-    """Quote helper used for bolt."""
-
-    escape_sequences: Dict[str, str] = field(
-        default_factory=lambda: {
-            r"\\": "\\",
-            r"\f": "\f",
-            r"\n": "\n",
-            r"\r": "\r",
-            r"\t": "\t",
-        }
-    )
 
 
 def rewrite_traceback(exc: Exception) -> Exception:

@@ -1,6 +1,7 @@
 __all__ = [
     "QuoteHelper",
     "QuoteHelperWithUnicode",
+    "JsonQuoteHelper",
     "InvalidEscapeSequence",
     "normalize_whitespace",
     "string_to_number",
@@ -128,6 +129,21 @@ class QuoteHelperWithUnicode(QuoteHelper):
         if unicode_hex := match[1]:
             return chr(int(unicode_hex, 16))
         return super().handle_substitution(token, match)
+
+
+@dataclass
+class JsonQuoteHelper(QuoteHelperWithUnicode):
+    """Quote helper used for json."""
+
+    escape_sequences: Dict[str, str] = field(
+        default_factory=lambda: {
+            r"\\": "\\",
+            r"\f": "\f",
+            r"\n": "\n",
+            r"\r": "\r",
+            r"\t": "\t",
+        }
+    )
 
 
 def underline_code(

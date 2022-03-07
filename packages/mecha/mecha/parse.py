@@ -159,8 +159,8 @@ from .ast import (
 from .error import MechaError
 from .spec import CommandSpec, Parser
 from .utils import (
+    JsonQuoteHelper,
     QuoteHelper,
-    QuoteHelperWithUnicode,
     VersionNumber,
     split_version,
     string_to_number,
@@ -873,17 +873,7 @@ class Vector3Parser:
 class JsonParser:
     """Parser for json values."""
 
-    quote_helper: QuoteHelper = field(
-        default_factory=lambda: QuoteHelperWithUnicode(
-            escape_sequences={
-                r"\\": "\\",
-                r"\f": "\f",
-                r"\n": "\n",
-                r"\r": "\r",
-                r"\t": "\t",
-            }
-        )
-    )
+    quote_helper: QuoteHelper = field(default_factory=JsonQuoteHelper)
 
     def __call__(self, stream: TokenStream) -> AstJson:
         with stream.syntax(

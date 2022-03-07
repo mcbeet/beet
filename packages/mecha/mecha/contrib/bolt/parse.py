@@ -54,7 +54,12 @@ from mecha import (
     get_stream_scope,
 )
 from mecha.contrib.relative_location import resolve_using_database
-from mecha.utils import QuoteHelper, normalize_whitespace, string_to_number
+from mecha.utils import (
+    JsonQuoteHelper,
+    QuoteHelper,
+    normalize_whitespace,
+    string_to_number,
+)
 
 from .ast import (
     AstAssignment,
@@ -84,7 +89,6 @@ from .ast import (
     AstUnpack,
     AstValue,
 )
-from .utils import BoltQuoteHelper
 
 TRUE_PATTERN: str = r"\b[tT]rue\b"
 FALSE_PATTERN: str = r"\b[fF]alse\b"
@@ -953,7 +957,7 @@ class PrimaryParser:
     """Parser for primary expressions."""
 
     parser: Parser
-    quote_helper: QuoteHelper = field(default_factory=BoltQuoteHelper)
+    quote_helper: QuoteHelper = field(default_factory=JsonQuoteHelper)
 
     def __call__(self, stream: TokenStream) -> Any:
         with stream.syntax(brace=r"\(|\)", comma=r",", format_string=r"f['\"]"):
@@ -1142,7 +1146,7 @@ class LiteralParser:
     """Parser for literals."""
 
     database: CompilationDatabase
-    quote_helper: QuoteHelper = field(default_factory=BoltQuoteHelper)
+    quote_helper: QuoteHelper = field(default_factory=JsonQuoteHelper)
 
     def __call__(self, stream: TokenStream) -> Any:
         with stream.syntax(
