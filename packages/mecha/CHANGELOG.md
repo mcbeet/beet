@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.41.1 (2022-03-07)
+### Fix
+* Allow single quoted strings everywhere in nested yaml ([`67ffef0`](https://github.com/mcbeet/mecha/commit/67ffef022227556ae53d84c4a0c2c1ef7f8cd9d7))
+
 ## v0.41.0 (2022-03-05)
 ### Feature
 * Add resource location literals ([`2143802`](https://github.com/mcbeet/mecha/commit/2143802994ed94d108067d3f92019d65d794c9a4))
