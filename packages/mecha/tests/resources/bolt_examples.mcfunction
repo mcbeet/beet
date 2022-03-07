@@ -647,3 +647,6 @@ merge function_tag minecraft:tick
 demo:foo
 ###
 a = demo:foo/bar
+###
+for class in "abc":
+    scoreboard objectives add class dummy

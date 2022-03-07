@@ -33,6 +33,7 @@ __all__ = [
 ]
 
 
+import keyword
 import re
 from dataclasses import dataclass, field, replace
 from difflib import get_close_matches
@@ -90,10 +91,12 @@ from .ast import (
     AstValue,
 )
 
+KEYWORD_PATTERN: str = "|".join(rf"\b{kw}\b" for kw in keyword.kwlist)
+
 TRUE_PATTERN: str = r"\b[tT]rue\b"
 FALSE_PATTERN: str = r"\b[fF]alse\b"
 NULL_PATTERN: str = r"\b(?:null|None)\b"
-IDENTIFIER_PATTERN: str = r"(?!_mecha_)[a-zA-Z_][a-zA-Z0-9_]*"
+IDENTIFIER_PATTERN: str = rf"(?!_mecha_|{KEYWORD_PATTERN})[a-zA-Z_][a-zA-Z0-9_]*\b"
 STRING_PATTERN: str = r'"(?:\\.|[^\\\n])*?"' "|" r"'(?:\\.|[^\\\n])*?'"
 NUMBER_PATTERN: str = r"(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?\b"
 RESOURCE_LOCATION_PATTERN: str = r"(?:\.\./|\./|[0-9a-z_\-\.]+:)[0-9a-z_./-]+"

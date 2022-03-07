@@ -1,0 +1,7 @@
+#>ERROR  Expected identifier but got literal 'class'.
+# line 1, column 5
+#      1 |  for class in "abc":
+#        :      ^^^^^
+#      2 |      scoreboard objectives add class dummy
+for class in "abc":
+    scoreboard objectives add class dummy
