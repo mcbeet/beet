@@ -186,6 +186,7 @@ execute at @e[type=creeper] run summon lightning_bolt
 data merge storage demo:foo {custom_data1: [0, 1, 2], custom_data2: [0, 1, 2]}
 setblock 0 0 0 minecraft:stone
 say same thing
+tellraw @a {"text": "hello world"}
 ```
 
 `@function demo:import_a`
@@ -471,6 +472,19 @@ execute if score @s thingy matches 19 run say 19
 
 ```mcfunction
 say that's neat
+```
+
+### felix
+
+`@function_tag felix:howdy`
+
+```json
+{
+  "values": [
+    "demo:foo",
+    "demo:foo"
+  ]
+}
 ```
 
 ## Resource pack

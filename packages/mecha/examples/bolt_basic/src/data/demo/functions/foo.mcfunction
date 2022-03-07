@@ -343,3 +343,9 @@ function some_name:
 
 if ./a/b/c == ./x/../a/b/x/../c:
     say same thing
+
+tellraw @a:
+    text: 'hello world'
+
+function_tag felix:howdy:
+    values: ['demo:foo', __name__]

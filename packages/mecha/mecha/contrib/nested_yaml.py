@@ -10,14 +10,19 @@ __all__ = [
     "NbtListCollector",
     "NestedYamlParser",
     "NestedYamlContextProvider",
+    "collect_json_string",
+    "collect_nbt_string",
 ]
 
 
 from contextlib import contextmanager
 from dataclasses import dataclass, field
-from typing import Any, Generic, Iterator, List, TypeVar
+from typing import Any, Callable, Generic, Iterator, List, TypeVar
 
 from beet import Context
+
+# pyright: reportMissingTypeStubs=false
+from nbtlib import String
 from tokenstream import SourceLocation, TokenStream, set_location
 
 from mecha import (
@@ -27,16 +32,19 @@ from mecha import (
     AstJsonObject,
     AstJsonObjectEntry,
     AstJsonObjectKey,
+    AstJsonValue,
     AstNbt,
     AstNbtCompound,
     AstNbtCompoundEntry,
     AstNbtCompoundKey,
     AstNbtList,
+    AstNbtValue,
     Mecha,
     Parser,
     consume_line_continuation,
     delegate,
 )
+from mecha.utils import JsonQuoteHelper, QuoteHelper
 
 EntryType = TypeVar("EntryType")
 ValueType = TypeVar("ValueType")
@@ -52,6 +60,7 @@ def beet_default(ctx: Context):
         original_parser=mc.spec.parsers["json"],
         object_collector=JsonObjectCollector(),
         array_collector=JsonArrayCollector(),
+        string_collector=collect_json_string,
     )
 
     mc.spec.parsers["nbt"] = NestedYamlParser(
@@ -59,6 +68,7 @@ def beet_default(ctx: Context):
         original_parser=mc.spec.parsers["nbt"],
         object_collector=NbtCompoundCollector(),
         array_collector=NbtListCollector(),
+        string_collector=collect_nbt_string,
     )
 
     for argument_name in [
@@ -158,6 +168,15 @@ class JsonArrayCollector(BaseYamlArrayCollector[AstJson]):
         return set_location(node, node.elements[0], node.elements[-1])
 
 
+def collect_json_string(
+    value: str,
+    location: SourceLocation,
+    end_location: SourceLocation,
+) -> AstJson:
+    """Collect yaml string as json node."""
+    return set_location(AstJsonValue(value=value), location, end_location)
+
+
 class NbtCompoundCollector(BaseYamlObjectCollector[AstNbtCompoundEntry, AstNbt]):
     """Collect yaml as nbt compounds."""
 
@@ -189,6 +208,15 @@ class NbtListCollector(BaseYamlArrayCollector[AstNbt]):
         return set_location(node, node.elements[0], node.elements[-1])
 
 
+def collect_nbt_string(
+    value: str,
+    location: SourceLocation,
+    end_location: SourceLocation,
+) -> AstNbt:
+    """Collect yaml string as nbt node."""
+    return set_location(AstNbtValue(value=String(value)), location, end_location)
+
+
 @dataclass
 class NestedYamlParser:
     """Parser for nested yaml."""
@@ -198,6 +226,9 @@ class NestedYamlParser:
 
     object_collector: BaseYamlObjectCollector[Any, Any]
     array_collector: BaseYamlArrayCollector[Any]
+    string_collector: Callable[[str, SourceLocation, SourceLocation], Any]
+
+    quote_helper: QuoteHelper = field(default_factory=JsonQuoteHelper)
 
     def __call__(self, stream: TokenStream) -> Any:
         nested_yaml = stream.data.get("nested_yaml")
@@ -222,8 +253,17 @@ class NestedYamlParser:
             if consume_line_continuation(stream):
                 return self.parse_yaml(stream)
 
-        with stream.ignore("newline"):
-            return self.original_parser(stream)
+        with stream.ignore("newline"), stream.syntax(
+            string=r'"(?:\\.|[^\\\n])*?"' "|" r"'(?:\\.|[^\\\n])*?'",
+        ):
+            if token := stream.get("string"):
+                return self.string_collector(
+                    self.quote_helper.unquote_string(token),
+                    token.location,
+                    token.end_location,
+                )
+            else:
+                return self.original_parser(stream)
 
     def parse_yaml(self, stream: TokenStream) -> Any:
         if dash := stream.get("dash"):
