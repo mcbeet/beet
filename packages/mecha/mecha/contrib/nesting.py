@@ -96,6 +96,13 @@ class NestedCommandsTransformer(MutatingReducer):
         )
         self.database.enqueue(function, self.database.step + 1)
 
+    @rule(AstCommand, identifier="execute:subcommand")
+    def nesting_execute_run(self, node: AstCommand):
+        if isinstance(command := node.arguments[0], AstCommand):
+            if command.identifier == "execute:run:subcommand":
+                return command.arguments[0]
+        return node
+
     @rule(AstCommand, identifier="execute:run:subcommand")
     def nesting_execute_function(self, node: AstCommand):
         if isinstance(command := node.arguments[0], AstCommand):

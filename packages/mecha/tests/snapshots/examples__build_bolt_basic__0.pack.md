@@ -164,7 +164,7 @@ say False
 say True
 say bar
 say hello!!!!!
-execute run function demo:bbb
+function demo:bbb
 execute if data storage some:path/to/storage some.foo.path
 execute if data storage some:path/to/storage some.foo.path run say hi
 execute if data storage some:path/to/storage some.foo.path{my: "compound"}
