@@ -295,6 +295,8 @@ class ProjectBuilder:
                     description=pack.description or description,
                     pack_format=pack.pack_format,
                     zipped=pack.zipped,
+                    compression=pack.compression,
+                    compression_level=pack.compression_level,
                 )
             )
 
@@ -302,6 +304,8 @@ class ProjectBuilder:
             pack.description = ctx.template.render_json(config.description)
             pack.pack_format = config.pack_format
             pack.zipped = bool(config.zipped)
+            pack.compression = config.compression
+            pack.compression_level = config.compression_level
 
     def __call__(self, ctx: Context):
         """The builder instance is itself a plugin used for merging subpipelines."""

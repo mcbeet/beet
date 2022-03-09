@@ -13,7 +13,7 @@ from contextlib import contextmanager
 from copy import deepcopy
 from itertools import chain
 from pathlib import Path
-from typing import Any, Dict, Iterable, List, Optional, Union
+from typing import Any, Dict, Iterable, List, Literal, Optional, Union
 
 import toml
 import yaml
@@ -40,6 +40,8 @@ class PackConfig(BaseModel):
     description: TextComponent = ""
     pack_format: int = 0
     zipped: Optional[bool] = None
+    compression: Optional[Literal["none", "deflate", "bzip2", "lzma"]] = None
+    compression_level: Optional[int] = None
 
     load: Union[str, List[str]] = Field(default_factory=list)
     render: Dict[str, List[str]] = Field(default_factory=dict)
@@ -54,6 +56,14 @@ class PackConfig(BaseModel):
             description=self.description or other.description,
             pack_format=self.pack_format or other.pack_format,
             zipped=other.zipped if self.zipped is None else self.zipped,
+            compression=(
+                other.compression if self.compression is None else self.compression
+            ),
+            compression_level=(
+                other.compression_level
+                if self.compression_level is None
+                else self.compression_level
+            ),
             load=([other.load] if isinstance(other.load, str) else other.load)
             + ([self.load] if isinstance(self.load, str) else self.load),
             render={

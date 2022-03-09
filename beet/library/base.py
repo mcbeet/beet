@@ -16,6 +16,7 @@ __all__ = [
     "NamespaceProxyDescriptor",
     "MergeCallback",
     "MergePolicy",
+    "PACK_COMPRESSION",
 ]
 
 
@@ -48,7 +49,7 @@ from typing import (
     get_origin,
     overload,
 )
-from zipfile import ZipFile
+from zipfile import ZIP_BZIP2, ZIP_DEFLATED, ZIP_LZMA, ZIP_STORED, ZipFile
 
 from beet.core.container import (
     Container,
@@ -72,6 +73,14 @@ PackType = TypeVar("PackType", bound="Pack[Any]")
 MergeableType = TypeVar("MergeableType", bound=SupportsMerge)
 
 PackFile = File[Any, Any]
+
+
+PACK_COMPRESSION: Dict[str, int] = {
+    "none": ZIP_STORED,
+    "deflate": ZIP_DEFLATED,
+    "bzip2": ZIP_BZIP2,
+    "lzma": ZIP_LZMA,
+}
 
 
 class NamespaceFile(PackFile):
@@ -606,6 +615,8 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
     name: Optional[str]
     path: Optional[Path]
     zipped: bool
+    compression: Optional[str]
+    compression_level: Optional[int]
 
     extra: PackExtraContainer["Pack[NamespaceType]"]
     mcmeta: ExtraPin[JsonFile] = ExtraPin(
@@ -635,6 +646,8 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
         path: Optional[FileSystemPath] = None,
         zipfile: Optional[ZipFile] = None,
         zipped: bool = False,
+        compression: Optional[str] = None,
+        compression_level: Optional[int] = None,
         mcmeta: Optional[JsonFile] = None,
         icon: Optional[PngFile] = None,
         description: Optional[str] = None,
@@ -648,6 +661,8 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
         self.name = name
         self.path = None
         self.zipped = zipped
+        self.compression = compression
+        self.compression_level = compression_level
 
         self.extra = PackExtraContainer()
         self.extra.bind(self)
@@ -904,6 +919,8 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
         directory: Optional[FileSystemPath] = None,
         path: Optional[FileSystemPath] = None,
         zipped: Optional[bool] = None,
+        compression: Optional[str] = None,
+        compression_level: Optional[int] = None,
         overwrite: Optional[bool] = False,
     ) -> Path:
         """Save the pack at the specified location."""
@@ -915,8 +932,22 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
 
         if zipped is not None:
             self.zipped = zipped
+        if compression is not None:
+            self.compression = compression
+        if compression_level is not None:
+            self.compression_level = compression_level
+
         suffix = ".zip" if self.zipped else ""
-        factory: Any = partial(ZipFile, mode="w") if self.zipped else nullcontext
+        factory: Any = (
+            partial(
+                ZipFile,
+                mode="w",
+                compression=PACK_COMPRESSION[self.compression or "deflate"],
+                compresslevel=self.compression_level,
+            )
+            if self.zipped
+            else nullcontext
+        )
 
         if not directory:
             directory = self.path or Path.cwd()
