@@ -2,6 +2,14 @@
 
 <!--next-version-placeholder-->
 
+## v0.41.3 (2022-03-09)
+### Fix
+* Strip execute run ([`d1c3206`](https://github.com/mcbeet/mecha/commit/d1c3206838bc5bfa24182d6a051f157114769d9d))
+* Reject player names starting with `@` ([`82ff08e`](https://github.com/mcbeet/mecha/commit/82ff08ee91afc807eefe225731e7934ff71368cd))
+* Allow objective interpolation in selector scores ([`e9646dc`](https://github.com/mcbeet/mecha/commit/e9646dcc64f1e0ea753d9ee4c0f2ad2631a4468e))
+* Proper error message for nested resources behind execute ([`a27f579`](https://github.com/mcbeet/mecha/commit/a27f5796ce8d1177aca73c63487df3312c42c8a2))
+* Nested resource conflicts with the particle command (close #95) ([`9938863`](https://github.com/mcbeet/mecha/commit/993886327b57af560463380787a80dfdd678f682))
+
 ## v0.41.2 (2022-03-07)
 ### Fix
 * Proper syntax error for identifiers clashing with python keywords ([`32ad957`](https://github.com/mcbeet/mecha/commit/32ad9573f8b76c725066595fb6ab3bb9c3d1ca98))
