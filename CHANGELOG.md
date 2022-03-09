@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.54.0 (2022-03-09)
+### Feature
+* Deflate by default and make compression configurable ([`03f487d`](https://github.com/mcbeet/beet/commit/03f487dbc23a7f9f4f502a0aae5cc9cfd6fefcfb))
+
 ## v0.53.0 (2022-03-02)
 ### Feature
 * Data model encoders ([`d78801b`](https://github.com/mcbeet/beet/commit/d78801b5efa054819bff7973b9286095fb1af201))
