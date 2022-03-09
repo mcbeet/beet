@@ -26,7 +26,7 @@ from .utils import (
     normalize_string,
 )
 
-T = TypeVar("T")
+PinType = TypeVar("PinType", covariant=True)
 CacheType = TypeVar("CacheType", bound="Cache")
 
 
@@ -250,7 +250,7 @@ class Cache:
             yield f"{prefix}└─ ... ({count - crop_entries} more entries)"
 
 
-class CachePin(Pin[str, T]):
+class CachePin(Pin[str, PinType]):
     """Descriptor that makes cache data accessible through attribute lookup."""
 
     def forward(self, obj: Any) -> JsonDict:

@@ -37,6 +37,7 @@ from typing import (
     Iterable,
     Iterator,
     List,
+    Literal,
     Mapping,
     MutableMapping,
     Optional,
@@ -66,6 +67,7 @@ from beet.core.utils import FileSystemPath, JsonDict, TextComponent
 from .utils import list_extensions, list_files
 
 T = TypeVar("T")
+PinType = TypeVar("PinType", covariant=True)
 PackFileType = TypeVar("PackFileType", bound="PackFile")
 NamespaceType = TypeVar("NamespaceType", bound="Namespace")
 NamespaceFileType = TypeVar("NamespaceFileType", bound="NamespaceFile")
@@ -167,7 +169,7 @@ class SupportsExtra(Protocol):
     extra: ExtraContainer
 
 
-class ExtraPin(Pin[str, T]):
+class ExtraPin(Pin[str, PinType]):
     """Descriptor that makes a specific file accessible through attribute lookup."""
 
     def forward(self, obj: SupportsExtra) -> ExtraContainer:
@@ -595,14 +597,14 @@ class NamespaceProxyDescriptor(Generic[NamespaceFileType]):
         return NamespaceProxy[NamespaceFileType](obj, self.proxy_key)
 
 
-class McmetaPin(Pin[str, T]):
+class McmetaPin(Pin[str, PinType]):
     """Descriptor that makes it possible to bind pack.mcmeta information to attribute lookup."""
 
     def forward(self, obj: "Pack[Namespace]") -> JsonDict:
         return obj.mcmeta.data
 
 
-class PackPin(McmetaPin[T]):
+class PackPin(McmetaPin[PinType]):
     """Descriptor that makes pack metadata accessible through attribute lookup."""
 
     def forward(self, obj: "Pack[Namespace]") -> JsonDict:
@@ -615,7 +617,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
     name: Optional[str]
     path: Optional[Path]
     zipped: bool
-    compression: Optional[str]
+    compression: Optional[Literal["none", "deflate", "bzip2", "lzma"]]
     compression_level: Optional[int]
 
     extra: PackExtraContainer["Pack[NamespaceType]"]
@@ -646,7 +648,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
         path: Optional[FileSystemPath] = None,
         zipfile: Optional[ZipFile] = None,
         zipped: bool = False,
-        compression: Optional[str] = None,
+        compression: Optional[Literal["none", "deflate", "bzip2", "lzma"]] = None,
         compression_level: Optional[int] = None,
         mcmeta: Optional[JsonFile] = None,
         icon: Optional[PngFile] = None,
@@ -919,7 +921,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
         directory: Optional[FileSystemPath] = None,
         path: Optional[FileSystemPath] = None,
         zipped: Optional[bool] = None,
-        compression: Optional[str] = None,
+        compression: Optional[Literal["none", "deflate", "bzip2", "lzma"]] = None,
         compression_level: Optional[int] = None,
         overwrite: Optional[bool] = False,
     ) -> Path:

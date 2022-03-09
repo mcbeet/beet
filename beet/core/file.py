@@ -385,7 +385,7 @@ class DataModelBase(TextFileBase[ValueType]):
     encoder: Callable[[Any], str] = extra_field(init=False)
     decoder: Callable[[str], Any] = extra_field(init=False)
 
-    data = FileDeserialize()  # type: FileDeserialize[ValueType]
+    data = FileDeserialize[ValueType]()
 
     model: ClassVar[Optional[Type[Any]]] = None
 
@@ -423,7 +423,7 @@ class JsonFileBase(DataModelBase[ValueType]):
 class JsonFile(JsonFileBase[JsonDict]):
     """Class representing a json file."""
 
-    data: FileDeserialize[JsonDict] = FileDeserialize()
+    data = FileDeserialize[JsonDict]()
 
     @classmethod
     def default(cls) -> JsonDict:
@@ -442,7 +442,7 @@ class YamlFileBase(DataModelBase[ValueType]):
 class YamlFile(YamlFileBase[JsonDict]):
     """Class representing a yaml file."""
 
-    data: FileDeserialize[JsonDict] = FileDeserialize()
+    data = FileDeserialize[JsonDict]()
 
     @classmethod
     def default(cls) -> JsonDict:
@@ -452,7 +452,7 @@ class YamlFile(YamlFileBase[JsonDict]):
 class PngFile(BinaryFileBase[Image]):
     """Class representing a png file."""
 
-    image: FileDeserialize[Image] = FileDeserialize()
+    image = FileDeserialize[Image]()
 
     @classmethod
     def to_bytes(cls, content: Image) -> bytes:

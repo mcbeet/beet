@@ -31,7 +31,7 @@ class LinkManager:
     data_pack: CachePin[Optional[str]] = CachePin("data_pack", None)
     resource_pack: CachePin[Optional[str]] = CachePin("resource_pack", None)
 
-    dirty: CachePin[List[str]] = CachePin("dirty", default_factory=list)
+    dirty = CachePin[List[str]]("dirty", default_factory=list)
 
     def __init__(self, arg: Union[Context, MultiCache[Cache], Cache]):
         if isinstance(arg, Context):

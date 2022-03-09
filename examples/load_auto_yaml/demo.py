@@ -13,7 +13,7 @@ class Options(BaseModel):
 class MessageConfig(JsonFileBase[Options]):
     model = Options
 
-    options: FileDeserialize[Options] = FileDeserialize()
+    options = FileDeserialize[Options]()
 
     def bind(self, pack: DataPack, path: str):
         super().bind(pack, path)

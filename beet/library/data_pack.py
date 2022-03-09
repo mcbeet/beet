@@ -78,7 +78,7 @@ class Function(TextFileBase[List[str]], NamespaceFile):
     scope = ("functions",)
     extension = ".mcfunction"
 
-    lines = FileDeserialize()  # type: FileDeserialize[List[str]]
+    lines = FileDeserialize[List[str]]()
 
     def append(self, other: Union["Function", Iterable[str], str]):
         """Append lines from another function."""
@@ -153,7 +153,7 @@ class Structure(BinaryFileBase[StructureFileData], NamespaceFile):
     scope = ("structures",)
     extension = ".nbt"
 
-    data = FileDeserialize()  # type: FileDeserialize[StructureFileData]
+    data = FileDeserialize[StructureFileData]()
 
     @classmethod
     def from_bytes(cls, content: bytes) -> StructureFileData:

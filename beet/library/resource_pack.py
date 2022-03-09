@@ -279,9 +279,7 @@ class ResourcePack(Pack[ResourcePackNamespace]):
     default_name = "untitled_resource_pack"
     latest_pack_format = 8
 
-    language_config: McmetaPin[Dict[str, JsonDict]] = McmetaPin(
-        "language", default_factory=dict
-    )
+    language_config = McmetaPin[Dict[str, JsonDict]]("language", default_factory=dict)
 
     # fmt: off
     blockstates:      NamespaceProxyDescriptor[Blockstate]     = NamespaceProxyDescriptor(Blockstate)
