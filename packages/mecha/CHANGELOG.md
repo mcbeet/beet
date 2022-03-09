@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.41.4 (2022-03-09)
+### Fix
+* Allow basic particle interpolation ([`ac6c10e`](https://github.com/mcbeet/mecha/commit/ac6c10ec9f0bdb83e332074e32a05f898664aea8))
+
 ## v0.41.3 (2022-03-09)
 ### Fix
 * Strip execute run ([`d1c3206`](https://github.com/mcbeet/mecha/commit/d1c3206838bc5bfa24182d6a051f157114769d9d))
