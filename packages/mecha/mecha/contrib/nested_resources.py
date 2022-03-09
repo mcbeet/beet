@@ -150,3 +150,13 @@ class NestedResourcesTransformer(MutatingReducer):
             return replace(node, commands=AstChildren(commands))
 
         return node
+
+    @rule(AstCommand, identifier="execute:run:subcommand")
+    def execute_nested_resource(self, node: AstCommand):
+        if (
+            isinstance(subcommand := node.arguments[0], AstCommand)
+            and subcommand.identifier in self.json_identifiers
+        ):
+            d = Diagnostic("error", "Nested resource not allowed behind execute.")
+            raise set_location(d, subcommand, subcommand.arguments[0])
+        return node
