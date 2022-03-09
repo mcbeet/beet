@@ -1495,10 +1495,8 @@ def parse_selector_scores(stream: TokenStream) -> AstSelectorScores:
 
         scores: List[AstSelectorScoreMatch] = []
 
-        for key in stream.collect("objective"):
-            key_node = AstObjective(value=key.value)
-            key_node = set_location(key_node, key)
-
+        for _ in stream.peek_until(("curly", "}")):
+            key_node = delegate("objective", stream)
             stream.expect("equal")
 
             value_node = delegate("integer_range", stream)
@@ -1507,12 +1505,11 @@ def parse_selector_scores(stream: TokenStream) -> AstSelectorScores:
             scores.append(set_location(match_node, key_node, value_node))
 
             if not stream.get("comma"):
+                stream.expect(("curly", "}"))
                 break
 
-        close_curly = stream.expect(("curly", "}"))
-
         node = AstSelectorScores(scores=AstChildren(scores))
-        return set_location(node, curly, close_curly)
+        return set_location(node, curly, stream.current)
 
 
 def parse_selector_advancements(stream: TokenStream) -> AstSelectorAdvancements:

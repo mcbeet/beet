@@ -366,3 +366,6 @@ particle_file minecraft:end_rod {
     "minecraft:glitter_0"
   ]
 }
+
+for obj in ["foo", "bar"]:
+    as @a[scores={obj=1..}] scoreboard players remove @s obj 1
