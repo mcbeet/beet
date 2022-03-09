@@ -423,7 +423,7 @@ class AstPlayerName(AstLiteral):
     """Ast player name node."""
 
     parser = "player_name"
-    regex = re.compile(r"[^:*\s]+")
+    regex = re.compile(r"(?!@)[^:*\s]+")
 
 
 @dataclass(frozen=True)
