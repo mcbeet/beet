@@ -187,6 +187,9 @@ data merge storage demo:foo {custom_data1: [0, 1, 2], custom_data2: [0, 1, 2]}
 setblock 0 0 0 minecraft:stone
 say same thing
 tellraw @a {"text": "hello world"}
+execute at @s run particle minecraft:dust 0 1 1 0.9 ~ ~1 ~ 0 0 0 0.01 1 force
+execute at @s run particle minecraft:block yellow_concrete ~ ~1.62 ~ 0 0.4 0 0 30 force
+execute at @s run particle minecraft:block minecraft:light_blue_concrete ~ ~1 ~ 0.05 0.1 0.05 0 3
 ```
 
 `@function demo:import_a`
@@ -510,5 +513,22 @@ say that's neat
   "something.else": "bonjour",
   "yaml.key1": "BONJOUR",
   "yaml.key2": "Bonjour"
+}
+```
+
+`@particle minecraft:end_rod`
+
+```json
+{
+  "textures": [
+    "minecraft:glitter_7",
+    "minecraft:glitter_6",
+    "minecraft:glitter_5",
+    "minecraft:glitter_4",
+    "minecraft:glitter_3",
+    "minecraft:glitter_2",
+    "minecraft:glitter_1",
+    "minecraft:glitter_0"
+  ]
 }
 ```

@@ -59,6 +59,11 @@ def beet_default(ctx: Context):
         if issubclass(file_type, DataModelBase)
     }
 
+    # Make sure there's no confusion between nested resources and existing commands.
+    for name, tree in mc.spec.tree.get_all_literals():
+        if name in json_resources and any(tree.get_all_arguments()):
+            json_resources[f"{name}_file"] = json_resources.pop(name)
+
     commands = {name: NESTED_JSON_COMMAND_TREE for name in json_resources}
     merge_commands = {"merge": {"type": "literal", "children": commands}}
     mc.spec.add_commands({"type": "root", "children": {**commands, **merge_commands}})

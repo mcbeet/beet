@@ -349,3 +349,20 @@ tellraw @a:
 
 function_tag felix:howdy:
     values: ['demo:foo', __name__]
+
+execute at @s run particle minecraft:dust 0 1 1 0.9 ~ ~1 ~ 0 0 0 0.01 1 force
+execute at @s run particle minecraft:block yellow_concrete ~ ~1.62 ~ 0 0.4 0 0 30 force
+execute at @s run particle minecraft:block minecraft:light_blue_concrete ~ ~1 ~ 0.05 0.1 0.05 0 3
+
+particle_file minecraft:end_rod {
+  "textures": [
+    "minecraft:glitter_7",
+    "minecraft:glitter_6",
+    "minecraft:glitter_5",
+    "minecraft:glitter_4",
+    "minecraft:glitter_3",
+    "minecraft:glitter_2",
+    "minecraft:glitter_1",
+    "minecraft:glitter_0"
+  ]
+}
