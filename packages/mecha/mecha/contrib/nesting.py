@@ -228,10 +228,10 @@ class NestedCommandsTransformer(MutatingReducer):
             if not top_level:
                 if node.identifier == "append:function:name:commands":
                     d = Diagnostic("error", f"Can't append commands with execute.")
-                    raise set_location(d, name)
+                    raise set_location(d, node, name)
                 if node.identifier == "prepend:function:name:commands":
                     d = Diagnostic("error", f"Can't prepend commands with execute.")
-                    raise set_location(d, name)
+                    raise set_location(d, node, name)
 
             target = self.database.index.get(path)
 
@@ -248,7 +248,7 @@ class NestedCommandsTransformer(MutatingReducer):
                         "error",
                         f"Can't prepend commands to the current function {path!r}.",
                     )
-                    raise set_location(d, name)
+                    raise set_location(d, node, name)
 
                 return list(root.commands)
 
