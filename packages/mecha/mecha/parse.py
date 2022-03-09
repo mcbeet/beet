@@ -1791,14 +1791,14 @@ class NbtPathParser:
 
 def parse_particle(stream: TokenStream) -> AstParticle:
     """Parse particle."""
-    name: AstResourceLocation = delegate("resource_location", stream)
     parameters = None
 
-    try:
-        parameters = delegate(f"particle:{name.get_canonical_value()}", stream)
-    except UnrecognizedParser as exc:
-        if not exc.parser.startswith("particle:"):
-            raise
+    if isinstance(name := delegate("resource_location", stream), AstResourceLocation):
+        try:
+            parameters = delegate(f"particle:{name.get_canonical_value()}", stream)
+        except UnrecognizedParser as exc:
+            if not exc.parser.startswith("particle:"):
+                raise
 
     node = AstParticle(name=name, parameters=parameters)
     return set_location(node, name, parameters if parameters else name)
