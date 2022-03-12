@@ -13,17 +13,13 @@ import json
 from dataclasses import dataclass, field
 from functools import cached_property
 from itertools import cycle
-from typing import Any, List
+from typing import Any, Dict, List, Tuple
 
 from jinja2.nodes import Node, Output, TemplateData
 from pydantic import BaseModel
 
 from beet import Context, JinjaExtension
 from beet.core.utils import JsonDict, TextComponent
-
-ORDERED_LEVELS = ["critical", "error", "warn", "info", "debug"]
-DEFAULT_LEVEL = "info"
-DEFAULT_COLOR = "gray"
 
 
 class DbgOptions(BaseModel):
@@ -32,7 +28,7 @@ class DbgOptions(BaseModel):
     enabled: bool = True
     level: str = "info"
 
-    level_colors: list[tuple[str, str]] = [
+    level_config: List[Tuple[str, str]] = [
         ("critical", "dark_red"),
         ("error", "red"),
         ("warn", "yellow"),
@@ -44,11 +40,11 @@ class DbgOptions(BaseModel):
     preview_line_limit: int = 45
     preview_padding: int = 2
 
-    accessor_format: str = (
+    accessor_format: TextComponent = (
         "{{ display_name or target }} for {{ name }} = {{ accessor }}"
     )
 
-    payload: List[TextComponent] = [
+    payload: TextComponent = [
         {
             "text": "",
             "hoverEvent": {
@@ -105,16 +101,23 @@ class DbgRenderer:
         }
     )
 
+    default_level: str = "info"
+    default_color: str = "gray"
+
     @cached_property
     def opts(self) -> DbgOptions:
         return self.ctx.validate("dbg", DbgOptions)
 
     @cached_property
-    def level_colors(self) -> dict[str, str]:
-        return {level[0]: level[1] for level in self.opts.level_colors}
+    def level_colors(self) -> Dict[str, str]:
+        return dict(self.opts.level_config)
 
-    def check_level(self, level: str) -> bool:
-        return ORDERED_LEVELS.index(level) <= ORDERED_LEVELS.index(self.opts.level)
+    @cached_property
+    def level_ranks(self) -> Dict[str, int]:
+        return {
+            level: len(self.opts.level_config) - i
+            for i, (level, _) in enumerate(self.opts.level_config)
+        }
 
     def render_preview(self, path: str, lineno: int) -> TextComponent:
         """Render the preview as a text component."""
@@ -150,19 +153,30 @@ class DbgRenderer:
         return {"text": "", "extra": output}
 
     def render(
-        self, level: str, mode: str, name: str, target: str, path: str, lineno: int
+        self,
+        level: str,
+        mode: str,
+        name: str,
+        target: str,
+        path: str,
+        lineno: int,
     ) -> str:
         """Return the formatted command."""
+        if not level:
+            level = self.default_level
 
-        level = level if level in ORDERED_LEVELS else DEFAULT_LEVEL
-        if not self.opts.enabled or not self.check_level(level):
+        if not (
+            self.opts.enabled
+            and self.level_ranks.get(level, 0)
+            >= self.level_ranks.get(self.opts.level, 0)
+        ):
             return "\n"
 
         preview = json.dumps(self.render_preview(path, lineno))
 
         kwargs = {
             "level": level,
-            "level_color": self.level_colors.get(level, DEFAULT_COLOR),
+            "level_color": self.level_colors.get(level, self.default_color),
             "mode": mode,
             "name": name,
             "target": target,
@@ -180,20 +194,16 @@ class DbgRenderer:
             accessor = self.ctx.template.render_json(self.accessors[mode], **kwargs)
             kwargs["accessor"] = '",' + json.dumps(accessor) + ',"'
 
-            kwargs["output"] = '",' + self.ctx.template.render_string(
-                json.dumps(self.opts.accessor_format),
-                **kwargs,
-            ) + ',"'
-
-            payload = self.ctx.template.render_string(
-                json.dumps(self.opts.payload),
-                **kwargs,
+            output = self.ctx.template.render_string(
+                json.dumps(self.opts.accessor_format), **kwargs
             )
         else:
-            kwargs["output"] = '",' + json.dumps(name) + ',"'
-            payload = self.ctx.template.render_string(
-                json.dumps(self.opts.payload), **kwargs
-            )
+            output = json.dumps(name)
+
+        kwargs["output"] = '",' + output + ',"'
+        payload = self.ctx.template.render_string(
+            json.dumps(self.opts.payload), **kwargs
+        )
 
         return self.opts.command.format(payload=payload) + "\n"
 
@@ -204,34 +214,35 @@ class DbgExtension(JinjaExtension):
     tags = {"dbg"}
 
     def parse(self, parser: Any) -> Node:
+        renderer = self.ctx.inject(DbgRenderer)
+
         lineno = next(parser.stream).lineno
 
         level = next(parser.stream)
-        if level.test_any(*[f"name:{level}" for level in ORDERED_LEVELS]):
+        if level.test_any(*[f"name:{level}" for level in renderer.level_ranks]):
             mode = next(parser.stream)
         else:
             mode = level
-
-        if not mode.test_any(
-            "name:score", "name:storage", "name:entity", "name:block", "name:print"
-        ):
-            parser.fail(f"Invalid mode {mode.value!r}.", mode.lineno)
+            level = None
 
         name = parser.parse_expression()
-        target = name
-        if not mode.test("name:print"):
+        target = None
+
+        if mode.test_any("name:score", "name:storage", "name:entity", "name:block"):
             parser.stream.expect("comma")
             target = parser.parse_expression()
+        elif not mode.test("name:print"):
+            parser.fail(f"Invalid mode {mode.value!r}.", mode.lineno)
 
         return Output(
             [
                 self.call_method(
                     "_dbg_handler",
                     [
-                        TemplateData(level.value),
+                        TemplateData(level.value if level else ""),
                         TemplateData(mode.value),
                         name,
-                        target,
+                        target if target else TemplateData(""),
                         TemplateData(lineno),
                     ],
                     lineno=lineno,
@@ -241,12 +252,22 @@ class DbgExtension(JinjaExtension):
         )
 
     def _dbg_handler(
-        self, level: str, mode: str, name: str, target: str, lineno: int
+        self,
+        level: str,
+        mode: str,
+        name: str,
+        target: str,
+        lineno: int,
     ) -> str:
         if self.ctx.meta["render_group"] != "functions":
             raise TypeError("Debug statements can only be used inside functions.")
 
         renderer = self.ctx.inject(DbgRenderer)
         return renderer.render(
-            level, mode, name, target, self.ctx.meta["render_path"], lineno
+            level,
+            mode,
+            name,
+            target,
+            self.ctx.meta["render_path"],
+            lineno,
         )
