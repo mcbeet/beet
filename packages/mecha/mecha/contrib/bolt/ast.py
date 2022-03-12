@@ -225,6 +225,7 @@ class AstFunctionRoot(AstNode):
 class AstInterpolation(AstNode):
     """Ast interpolation node."""
 
+    prefix: Optional[str] = None
     converter: str = required_field()
     value: AstExpression = required_field()
 

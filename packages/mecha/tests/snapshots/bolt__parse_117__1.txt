@@ -18,6 +18,7 @@ _mecha_refs[0]
 <class 'mecha.contrib.bolt.ast.AstInterpolation'>
   location: SourceLocation(pos=30, lineno=2, colno=25)
   end_location: SourceLocation(pos=39, lineno=2, colno=34)
+  prefix: None
   converter: 'range'
   value:
     <class 'mecha.contrib.bolt.ast.AstTuple'>

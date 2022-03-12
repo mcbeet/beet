@@ -7,7 +7,7 @@ with _mecha_runtime.scope() as _mecha_var14:
     _mecha_var0 = _mecha_var0 ** _mecha_var1
     _mecha_var0 = - _mecha_var0
     _mecha_var2 = 4
-    _mecha_var2 = ~ _mecha_var2
+    _mecha_var2 = + _mecha_var2
     _mecha_var3 = 5
     _mecha_var2 = _mecha_var2 * _mecha_var3
     _mecha_var4 = 6

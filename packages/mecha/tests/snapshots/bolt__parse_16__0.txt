@@ -1,4 +1,4 @@
--2 ** 3 + ~4 * 5 // 6 / 7 % 9 + 10 - 11 << 12 >> 13 & 14 ^ 15 | 16
+-2 ** 3 + +4 * 5 // 6 / 7 % 9 + 10 - 11 << 12 >> 13 & 14 ^ 15 | 16
 ---
 <class 'mecha.ast.AstRoot'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
@@ -92,7 +92,7 @@
                                                         <class 'mecha.contrib.bolt.ast.AstExpressionUnary'>
                                                           location: SourceLocation(pos=10, lineno=1, colno=11)
                                                           end_location: SourceLocation(pos=12, lineno=1, colno=13)
-                                                          operator: '~'
+                                                          operator: '+'
                                                           value:
                                                             <class 'mecha.contrib.bolt.ast.AstValue'>
                                                               location: SourceLocation(pos=11, lineno=1, colno=12)

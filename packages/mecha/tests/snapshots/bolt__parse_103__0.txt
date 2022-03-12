@@ -153,6 +153,7 @@ as @a at @s if block ~ ~-1 ~ #wool give @s stone{
                                                 <class 'mecha.contrib.bolt.ast.AstInterpolation'>
                                                   location: SourceLocation(pos=121, lineno=4, colno=15)
                                                   end_location: SourceLocation(pos=124, lineno=4, colno=18)
+                                                  prefix: None
                                                   converter: 'nbt'
                                                   value:
                                                     <class 'mecha.contrib.bolt.ast.AstIdentifier'>

@@ -43,6 +43,7 @@ for node in generate_tree("abcdefghijklmnopqrstuvwxyz0123456789"):
                 <class 'mecha.contrib.bolt.ast.AstInterpolation'>
                   location: SourceLocation(pos=87, lineno=2, colno=21)
                   end_location: SourceLocation(pos=98, lineno=2, colno=32)
+                  prefix: None
                   converter: 'resource_location'
                   value:
                     <class 'mecha.contrib.bolt.ast.AstAttribute'>
@@ -108,6 +109,7 @@ for node in generate_tree("abcdefghijklmnopqrstuvwxyz0123456789"):
                                     <class 'mecha.contrib.bolt.ast.AstInterpolation'>
                                       location: SourceLocation(pos=169, lineno=4, colno=40)
                                       end_location: SourceLocation(pos=179, lineno=4, colno=50)
+                                      prefix: None
                                       converter: 'range'
                                       value:
                                         <class 'mecha.contrib.bolt.ast.AstAttribute'>
@@ -132,6 +134,7 @@ for node in generate_tree("abcdefghijklmnopqrstuvwxyz0123456789"):
                                             <class 'mecha.contrib.bolt.ast.AstInterpolation'>
                                               location: SourceLocation(pos=189, lineno=4, colno=60)
                                               end_location: SourceLocation(pos=202, lineno=4, colno=73)
+                                              prefix: None
                                               converter: 'resource_location'
                                               value:
                                                 <class 'mecha.contrib.bolt.ast.AstAttribute'>
@@ -175,6 +178,7 @@ for node in generate_tree("abcdefghijklmnopqrstuvwxyz0123456789"):
                                     <class 'mecha.contrib.bolt.ast.AstInterpolation'>
                                       location: SourceLocation(pos=256, lineno=6, colno=40)
                                       end_location: SourceLocation(pos=266, lineno=6, colno=50)
+                                      prefix: None
                                       converter: 'range'
                                       value:
                                         <class 'mecha.contrib.bolt.ast.AstAttribute'>
@@ -199,6 +203,7 @@ for node in generate_tree("abcdefghijklmnopqrstuvwxyz0123456789"):
                                             <class 'mecha.contrib.bolt.ast.AstInterpolation'>
                                               location: SourceLocation(pos=271, lineno=6, colno=55)
                                               end_location: SourceLocation(pos=281, lineno=6, colno=65)
+                                              prefix: None
                                               converter: 'message'
                                               value:
                                                 <class 'mecha.contrib.bolt.ast.AstAttribute'>

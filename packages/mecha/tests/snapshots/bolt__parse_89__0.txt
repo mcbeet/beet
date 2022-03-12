@@ -39,6 +39,7 @@ f("thing")
                 <class 'mecha.contrib.bolt.ast.AstInterpolation'>
                   location: SourceLocation(pos=25, lineno=2, colno=16)
                   end_location: SourceLocation(pos=26, lineno=2, colno=17)
+                  prefix: None
                   converter: 'json'
                   value:
                     <class 'mecha.contrib.bolt.ast.AstIdentifier'>

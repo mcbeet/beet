@@ -30,7 +30,7 @@
 ###
 16 // 5 % 7
 ###
--2 ** 3 + ~4 * 5 // 6 / 7 % 9 + 10 - 11 << 12 >> 13 & 14 ^ 15 | 16
+-2 ** 3 + +4 * 5 // 6 / 7 % 9 + 10 - 11 << 12 >> 13 & 14 ^ 15 | 16
 ###
 False or True and "hello" or not "foo" == "bar" or 1 != 2 and 1 < 2 and 2 <= 3 and 5 > 4 and 6 >= 5 and 1 in 1 and 2 not in 2 and 3 is 3 and 3 is not 3
 ###

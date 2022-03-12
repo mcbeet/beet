@@ -192,6 +192,15 @@ execute at @s run particle minecraft:block yellow_concrete ~ ~1.62 ~ 0 0.4 0 0 3
 execute at @s run particle minecraft:block minecraft:light_blue_concrete ~ ~1 ~ 0.05 0.1 0.05 0 3
 execute as @a[scores={foo=1..}] run scoreboard players remove @s foo 1
 execute as @a[scores={bar=1..}] run scoreboard players remove @s bar 1
+scoreboard players set @p tmp -8
+tp @s ~12 ~23 ~34
+tp @s ~12 23 ~34
+tp @s 12 23 34
+tp @s ~12 ~23 ~34
+tp @s ^12 ^23 ^34
+tp @s -12 -23 -34
+tp @s ~-12 ~-23 ~-34
+tp @s ^-12 ^-23 ^-34
 ```
 
 `@function demo:import_a`

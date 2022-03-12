@@ -16,6 +16,7 @@ _mecha_refs[0]
 <class 'mecha.contrib.bolt.ast.AstInterpolation'>
   location: SourceLocation(pos=62, lineno=2, colno=34)
   end_location: SourceLocation(pos=69, lineno=2, colno=41)
+  prefix: None
   converter: 'scoreboard_slot'
   value:
     <class 'mecha.contrib.bolt.ast.AstIdentifier'>

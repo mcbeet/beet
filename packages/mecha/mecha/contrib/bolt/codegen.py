@@ -567,7 +567,8 @@ class Codegen(Visitor):
         acc: Accumulator,
     ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
         result = yield from visit_single(node.value, required=True)
-        rhs = acc.helper(f"interpolate_{node.converter}", result, acc.make_ref(node))
+        value = "f" + repr(node.prefix + "{" + result + "}") if node.prefix else result
+        rhs = acc.helper(f"interpolate_{node.converter}", value, acc.make_ref(node))
         acc.statement(f"{result} = {rhs}", lineno=node)
         return [result]
 

@@ -50,6 +50,7 @@ say numbers[3:]
         <class 'mecha.contrib.bolt.ast.AstInterpolation'>
           location: SourceLocation(pos=30, lineno=2, colno=5)
           end_location: SourceLocation(pos=41, lineno=2, colno=16)
+          prefix: None
           converter: 'message'
           value:
             <class 'mecha.contrib.bolt.ast.AstLookup'>

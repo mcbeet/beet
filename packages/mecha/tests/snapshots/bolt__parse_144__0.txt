@@ -17,6 +17,7 @@ if block ("~", "~", "~") #planks say 42
             <class 'mecha.contrib.bolt.ast.AstInterpolation'>
               location: SourceLocation(pos=9, lineno=1, colno=10)
               end_location: SourceLocation(pos=24, lineno=1, colno=25)
+              prefix: None
               converter: 'vec3'
               value:
                 <class 'mecha.contrib.bolt.ast.AstTuple'>

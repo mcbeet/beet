@@ -37,7 +37,7 @@ import keyword
 import re
 from dataclasses import dataclass, field, replace
 from difflib import get_close_matches
-from typing import Any, Dict, Iterable, List, Set, Tuple, cast
+from typing import Any, Dict, Iterable, List, Optional, Set, Tuple, cast
 
 from beet.core.utils import required_field
 from tokenstream import InvalidSyntax, Token, TokenStream, UnexpectedToken, set_location
@@ -194,7 +194,7 @@ def get_bolt_parsers(
             parser=delegate("bolt:factor"),
         ),
         "bolt:factor": UnaryParser(
-            operators=[r"\+", "-", "~"],
+            operators=[r"\+", "-"],
             parser=delegate("bolt:power"),
         ),
         "bolt:power": BinaryParser(
@@ -240,8 +240,12 @@ def get_bolt_parsers(
         # Interpolation
         ################################################################################
         "bool": InterpolationParser("bool", parsers["bool"]),
-        "numeric": InterpolationParser("numeric", parsers["numeric"]),
-        "coordinate": InterpolationParser("coordinate", parsers["coordinate"]),
+        "numeric": InterpolationParser(
+            "numeric", parsers["numeric"], prefix="-", fallback=True
+        ),
+        "coordinate": InterpolationParser(
+            "coordinate", parsers["coordinate"], prefix="[~^]-?|-", fallback=True
+        ),
         "time": InterpolationParser("time", parsers["time"]),
         "word": InterpolationParser("word", parsers["word"]),
         "phrase": InterpolationParser("phrase", parsers["phrase"]),
@@ -355,6 +359,7 @@ class InterpolationParser:
 
     converter: str
     parser: Parser
+    prefix: Optional[str] = None
     fallback: bool = False
 
     def __call__(self, stream: TokenStream) -> Any:
@@ -364,9 +369,15 @@ class InterpolationParser:
         for parser, alternative in stream.choose(*order):
             with alternative:
                 if parser == "interpolation":
+                    with stream.syntax(prefix=self.prefix):
+                        prefix = stream.get("prefix")
                     node = delegate("bolt:interpolation", stream)
-                    node = AstInterpolation(converter=self.converter, value=node)
-                    return set_location(node, node.value)
+                    node = AstInterpolation(
+                        prefix=prefix.value if prefix else None,
+                        converter=self.converter,
+                        value=node,
+                    )
+                    return set_location(node, prefix or node.value, node.value)
                 elif parser == "original":
                     return self.parser(stream)
 

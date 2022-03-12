@@ -52,6 +52,7 @@ at @e[type=entity_type] summon lightning_bolt
                     <class 'mecha.contrib.bolt.ast.AstInterpolation'>
                       location: SourceLocation(pos=35, lineno=2, colno=12)
                       end_location: SourceLocation(pos=46, lineno=2, colno=23)
+                      prefix: None
                       converter: 'resource_location'
                       value:
                         <class 'mecha.contrib.bolt.ast.AstIdentifier'>

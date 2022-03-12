@@ -32,6 +32,7 @@ setblock a stone
         <class 'mecha.contrib.bolt.ast.AstInterpolation'>
           location: SourceLocation(pos=21, lineno=2, colno=10)
           end_location: SourceLocation(pos=22, lineno=2, colno=11)
+          prefix: None
           converter: 'vec3'
           value:
             <class 'mecha.contrib.bolt.ast.AstIdentifier'>

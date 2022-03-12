@@ -369,3 +369,20 @@ particle_file minecraft:end_rod {
 
 for obj in ["foo", "bar"]:
     as @a[scores={obj=1..}] scoreboard players remove @s obj 1
+
+x = 8
+scoreboard players set @p tmp -x
+
+x = 12
+y = 23
+z = 34
+
+tp @s f"~{x} ~{y} ~{z}"
+tp @s f"~{x}" y f"~{z}"
+
+tp @s x y z
+tp @s ~x ~y ~z
+tp @s ^x ^y ^z
+tp @s -x -y -z
+tp @s ~-x ~-y ~-z
+tp @s ^-x ^-y ^-z
