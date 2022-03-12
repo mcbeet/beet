@@ -9,3 +9,7 @@ say Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temp
 #!dbg score "@p", foo
 say 42
 scoreboard players reset @p __foo__
+
+
+#!dbg print "hello world"
+#!dbg critical print "uh oh"
