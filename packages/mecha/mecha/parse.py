@@ -726,7 +726,7 @@ class CoordinateParser(NumericParser):
     """Parser for coordinates."""
 
     name: str = "coordinate"
-    pattern: str = rf"(?:[~^]?{NUMBER_PATTERN}|[~^])(?=\s|:|$)"
+    pattern: str = rf"(?:[~^]?{NUMBER_PATTERN}|[~^])(?!\w|-|\.)"
 
     def create_node(self, stream: TokenStream) -> Any:
         token = stream.current
