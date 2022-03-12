@@ -239,21 +239,21 @@ def get_bolt_parsers(
         ################################################################################
         # Interpolation
         ################################################################################
-        "bool": InterpolationParser("bool", parsers["bool"]),
+        "bool": InterpolationParser("bool", parsers["bool"], fallback=True),
         "numeric": InterpolationParser(
             "numeric", parsers["numeric"], prefix="-", fallback=True
         ),
         "coordinate": InterpolationParser(
             "coordinate", parsers["coordinate"], prefix="[~^]-?|-", fallback=True
         ),
-        "time": InterpolationParser("time", parsers["time"]),
+        "time": InterpolationParser("time", parsers["time"], fallback=True),
         "word": InterpolationParser("word", parsers["word"]),
         "phrase": InterpolationParser("phrase", parsers["phrase"]),
         "greedy": InterpolationParser("greedy", parsers["greedy"]),
         "json": InterpolationParser("json", parsers["json"]),
         "nbt": InterpolationParser("nbt", parsers["nbt"]),
         "nbt_path": InterpolationParser("nbt_path", parsers["nbt_path"]),
-        "range": InterpolationParser("range", parsers["range"]),
+        "range": InterpolationParser("range", parsers["range"], fallback=True),
         "resource_location_or_tag": InterpolationParser(
             "resource_location", parsers["resource_location_or_tag"]
         ),
@@ -267,7 +267,7 @@ def get_bolt_parsers(
         "scoreboard_slot": InterpolationParser(
             "scoreboard_slot", parsers["scoreboard_slot"], fallback=True
         ),
-        "swizzle": InterpolationParser("swizzle", parsers["swizzle"]),
+        "swizzle": InterpolationParser("swizzle", parsers["swizzle"], fallback=True),
         "team": InterpolationParser("team", parsers["team"]),
         "color": InterpolationParser("color", parsers["color"]),
         "sort_order": InterpolationParser("sort_order", parsers["sort_order"]),
