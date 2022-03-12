@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.55.0 (2022-03-12)
+### Feature
+* Add enabled switch and logging levels ([#229](https://github.com/mcbeet/beet/issues/229)) ([`b7b5746`](https://github.com/mcbeet/beet/commit/b7b5746aa676aa74d2d1ccb600ffdc6b4b3db5e7))
+
 ## v0.54.0 (2022-03-09)
 ### Feature
 * Deflate by default and make compression configurable ([`03f487d`](https://github.com/mcbeet/beet/commit/03f487dbc23a7f9f4f502a0aae5cc9cfd6fefcfb))
