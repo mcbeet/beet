@@ -395,3 +395,12 @@ major, minor, patch = "1.2.3".split(".")
 say major
 say minor
 say patch
+
+def check_above(n):
+    if n > 0:
+        if block ~ ~n ~ air:
+            check_above(n - 1)
+    else:
+        say nothing above!
+
+check_above(6)

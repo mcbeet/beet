@@ -211,6 +211,7 @@ say 2 c
 say 1
 say 2
 say 3
+execute if block ~ ~6 ~ air if block ~ ~5 ~ air if block ~ ~4 ~ air if block ~ ~3 ~ air if block ~ ~2 ~ air if block ~ ~1 ~ air run say nothing above!
 ```
 
 `@function demo:import_a`
