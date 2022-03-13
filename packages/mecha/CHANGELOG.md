@@ -2,6 +2,15 @@
 
 <!--next-version-placeholder-->
 
+## v0.42.0 (2022-03-13)
+### Feature
+* Basic assignment unpacking ([`0cce327`](https://github.com/mcbeet/mecha/commit/0cce3276c8168525186e7df853e9fa10d198d9ef))
+* Better coordinate interpolation ([`145a137`](https://github.com/mcbeet/mecha/commit/145a137a9028dc46933d566bf9fccf90a80ffbbf))
+
+### Fix
+* Use fallback for more interpolation types ([`272a571`](https://github.com/mcbeet/mecha/commit/272a5711c0503ecb893a4ccac342a2ad623320e7))
+* Tweak coordinate regex ([`3c100fb`](https://github.com/mcbeet/mecha/commit/3c100fb43032786d3545220630dd6b9fffc8c3f2))
+
 ## v0.41.4 (2022-03-09)
 ### Fix
 * Allow basic particle interpolation ([`ac6c10e`](https://github.com/mcbeet/mecha/commit/ac6c10ec9f0bdb83e332074e32a05f898664aea8))
