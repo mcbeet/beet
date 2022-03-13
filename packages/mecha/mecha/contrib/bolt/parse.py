@@ -84,6 +84,7 @@ from .ast import (
     AstSlice,
     AstTarget,
     AstTargetAttribute,
+    AstTargetUnpack,
     AstTargetIdentifier,
     AstTargetItem,
     AstTuple,
@@ -131,7 +132,8 @@ def get_bolt_parsers(
         ################################################################################
         "bolt:statement": parse_statement,
         "bolt:assignment_target": AssignmentTargetParser(
-            allow_undefined_identifiers=True
+            allow_undefined_identifiers=True,
+            allow_multiple=True,
         ),
         "bolt:augmented_assignment_target": AssignmentTargetParser(),
         "bolt:function_signature": parse_function_signature,
@@ -454,23 +456,36 @@ class AssignmentTargetParser:
     """Parser for assignment targets."""
 
     allow_undefined_identifiers: bool = False
+    allow_multiple: bool = False
 
     def __call__(self, stream: TokenStream) -> AstTarget:
         identifiers = get_stream_identifiers(stream)
         pending_identifiers = get_stream_pending_identifiers(stream)
 
-        with stream.syntax(identifier=IDENTIFIER_PATTERN):
-            token = stream.expect("identifier")
+        nodes: List[AstTarget] = []
 
-            if self.allow_undefined_identifiers:
-                pending_identifiers.add(token.value)
-            elif token.value not in identifiers:
-                exc = UndefinedIdentifier(token, identifiers)
-                raise set_location(exc, token)
+        with stream.syntax(identifier=IDENTIFIER_PATTERN, comma=r","):
+            while True:
+                token = stream.expect("identifier")
 
-            node = set_location(AstTargetIdentifier(value=token.value), token)
+                if self.allow_undefined_identifiers:
+                    pending_identifiers.add(token.value)
+                elif token.value not in identifiers:
+                    exc = UndefinedIdentifier(token, identifiers)
+                    raise set_location(exc, token)
 
-        return node
+                nodes.append(
+                    set_location(AstTargetIdentifier(value=token.value), token)
+                )
+
+                if not self.allow_multiple or not stream.get("comma"):
+                    break
+
+        if len(nodes) == 1:
+            return nodes[0]
+
+        node = AstTargetUnpack(targets=AstChildren(nodes))
+        return set_location(node, nodes[0], nodes[-1])
 
 
 @dataclass

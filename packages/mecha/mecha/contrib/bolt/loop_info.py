@@ -12,6 +12,7 @@ from typing import (
     Iterator,
     List,
     Optional,
+    Tuple,
     TypeVar,
     Union,
     overload,
@@ -23,7 +24,7 @@ T = TypeVar("T")
 U = TypeVar("U")
 
 
-def loop_info(iterable: Iterable[T]) -> Iterator["LoopInfo[T]"]:
+def loop_info(iterable: Iterable[T]) -> "LoopInfo[T]":
     return LoopInfo(iterable, iter(iterable))
 
 
@@ -38,11 +39,11 @@ class LoopInfo(Generic[T]):
     def __iter__(self) -> "LoopInfo[T]":
         return self
 
-    def __next__(self) -> "LoopInfo[T]":
+    def __next__(self) -> Tuple["LoopInfo[T]", T]:
         while self.index + 1 >= len(self.accumulator):
             self.accumulator.append(next(self.iterator))
         self.index += 1
-        return self
+        return self, self.current
 
     @overload
     def peek(self, offset: int) -> Optional[T]:

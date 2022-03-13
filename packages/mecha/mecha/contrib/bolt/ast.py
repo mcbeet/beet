@@ -17,6 +17,7 @@ __all__ = [
     "AstCall",
     "AstTarget",
     "AstTargetIdentifier",
+    "AstTargetUnpack",
     "AstTargetAttribute",
     "AstTargetItem",
     "AstAssignment",
@@ -171,6 +172,13 @@ class AstTargetIdentifier(AstTarget):
     """Ast target identifier node."""
 
     value: str = required_field()
+
+
+@dataclass(frozen=True)
+class AstTargetUnpack(AstTarget):
+    """Ast target unpack node."""
+
+    targets: AstChildren[AstTarget] = required_field()
 
 
 @dataclass(frozen=True)

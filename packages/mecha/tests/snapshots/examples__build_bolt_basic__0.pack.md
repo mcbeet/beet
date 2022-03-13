@@ -140,24 +140,28 @@ say [9, 8, 7, 6, 5, 4]
 execute at @s if block ~ ~ ~ #minecraft:beds run teleport @s ~ ~0.5625 ~
 say [0, 1, 2]
 say ==[a]==
+say True
 say None
 say b
 say True
 say False
 say foo
 say ==[b]==
+say True
 say a
 say c
 say False
 say False
 say bar
 say ==[c]==
+say True
 say b
 say d
 say False
 say False
 say foo
 say ==[d]==
+say True
 say c
 say None
 say False
@@ -201,6 +205,12 @@ tp @s ^12 ^23 ^34
 tp @s -12 -23 -34
 tp @s ~-12 ~-23 ~-34
 tp @s ^-12 ^-23 ^-34
+say 0 a
+say 1 b
+say 2 c
+say 1
+say 2
+say 3
 ```
 
 `@function demo:import_a`

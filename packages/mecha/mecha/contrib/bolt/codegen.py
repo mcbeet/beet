@@ -59,6 +59,7 @@ from .ast import (
     AstTargetAttribute,
     AstTargetIdentifier,
     AstTargetItem,
+    AstTargetUnpack,
     AstTuple,
     AstUnpack,
     AstValue,
@@ -812,6 +813,18 @@ class Codegen(Visitor):
         acc: Accumulator,
     ) -> Optional[List[str]]:
         return [node.value]
+
+    @rule(AstTargetUnpack)
+    def target_destructure(
+        self,
+        node: AstTargetUnpack,
+        acc: Accumulator,
+    ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
+        targets: List[str] = []
+        for target in node.targets:
+            result = yield from visit_single(target, required=True)
+            targets.append(result)
+        return [", ".join(targets)]
 
     @rule(AstTargetAttribute)
     def target_attribute(

@@ -650,3 +650,11 @@ a = demo:foo/bar
 ###
 for class in "abc":
     scoreboard objectives add class dummy
+###
+a = 1
+positioned ~ ~a ~ function demo:foo
+###
+a, b = "ab"
+###
+for i, value in enumerate("abc"):
+    say f"{i}: {value}"

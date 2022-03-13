@@ -242,8 +242,9 @@ execute at @s if block ~ ~ ~ #minecraft:beds:
 del numbers[3:]
 say numbers
 
-for loop in loop_info("abcd"):
+for loop, value in loop_info("abcd"):
     say f"==[{loop.current}]=="
+    say (value == loop.current)
     say loop.before
     say loop.after
     say loop.first
@@ -386,3 +387,11 @@ tp @s ^x ^y ^z
 tp @s -x -y -z
 tp @s ~-x ~-y ~-z
 tp @s ^-x ^-y ^-z
+
+for i, x in enumerate("abc"):
+    say f"{i} {x}"
+
+major, minor, patch = "1.2.3".split(".")
+say major
+say minor
+say patch
