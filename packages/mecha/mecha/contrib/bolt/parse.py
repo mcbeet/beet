@@ -84,9 +84,9 @@ from .ast import (
     AstSlice,
     AstTarget,
     AstTargetAttribute,
-    AstTargetUnpack,
     AstTargetIdentifier,
     AstTargetItem,
+    AstTargetUnpack,
     AstTuple,
     AstUnpack,
     AstValue,
@@ -467,16 +467,16 @@ class AssignmentTargetParser:
         with stream.syntax(identifier=IDENTIFIER_PATTERN, comma=r","):
             while True:
                 token = stream.expect("identifier")
+                rebind = token.value in identifiers
 
                 if self.allow_undefined_identifiers:
                     pending_identifiers.add(token.value)
-                elif token.value not in identifiers:
+                elif not rebind:
                     exc = UndefinedIdentifier(token, identifiers)
                     raise set_location(exc, token)
 
-                nodes.append(
-                    set_location(AstTargetIdentifier(value=token.value), token)
-                )
+                target = AstTargetIdentifier(value=token.value, rebind=rebind)
+                nodes.append(set_location(target, token))
 
                 if not self.allow_multiple or not stream.get("comma"):
                     break

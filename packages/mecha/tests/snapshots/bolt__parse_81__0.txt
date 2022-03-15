@@ -102,6 +102,7 @@ def foo(something):
                               location: SourceLocation(pos=137, lineno=9, colno=9)
                               end_location: SourceLocation(pos=138, lineno=9, colno=10)
                               value: 'x'
+                              rebind: False
                           value:
                             <class 'mecha.contrib.bolt.ast.AstValue'>
                               location: SourceLocation(pos=141, lineno=9, colno=13)
@@ -116,6 +117,7 @@ def foo(something):
                           location: SourceLocation(pos=161, lineno=10, colno=13)
                           end_location: SourceLocation(pos=162, lineno=10, colno=14)
                           value: 'i'
+                          rebind: False
                         <class 'mecha.contrib.bolt.ast.AstIdentifier'>
                           location: SourceLocation(pos=166, lineno=10, colno=18)
                           end_location: SourceLocation(pos=175, lineno=10, colno=27)
@@ -138,6 +140,7 @@ def foo(something):
                                       location: SourceLocation(pos=189, lineno=11, colno=13)
                                       end_location: SourceLocation(pos=190, lineno=11, colno=14)
                                       value: 'x'
+                                      rebind: True
                                   value:
                                     <class 'mecha.contrib.bolt.ast.AstExpressionBinary'>
                                       location: SourceLocation(pos=194, lineno=11, colno=18)

@@ -172,6 +172,7 @@ class AstTargetIdentifier(AstTarget):
     """Ast target identifier node."""
 
     value: str = required_field()
+    rebind: bool = False
 
 
 @dataclass(frozen=True)

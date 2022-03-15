@@ -48,6 +48,7 @@ def f(a, b=a):
                       location: SourceLocation(pos=19, lineno=2, colno=5)
                       end_location: SourceLocation(pos=20, lineno=2, colno=6)
                       value: 'b'
+                      rebind: True
                   value:
                     <class 'mecha.contrib.bolt.ast.AstIdentifier'>
                       location: SourceLocation(pos=24, lineno=2, colno=10)

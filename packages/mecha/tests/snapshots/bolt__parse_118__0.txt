@@ -60,6 +60,7 @@ for i in f():
           location: SourceLocation(pos=49, lineno=5, colno=5)
           end_location: SourceLocation(pos=50, lineno=5, colno=6)
           value: 'i'
+          rebind: False
         <class 'mecha.contrib.bolt.ast.AstCall'>
           location: SourceLocation(pos=54, lineno=5, colno=10)
           end_location: SourceLocation(pos=57, lineno=5, colno=13)

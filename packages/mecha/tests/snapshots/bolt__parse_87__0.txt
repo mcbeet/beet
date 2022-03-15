@@ -60,6 +60,7 @@ def f():
                       location: SourceLocation(pos=45, lineno=4, colno=5)
                       end_location: SourceLocation(pos=48, lineno=4, colno=8)
                       value: 'foo'
+                      rebind: False
                   value:
                     <class 'mecha.contrib.bolt.ast.AstValue'>
                       location: SourceLocation(pos=51, lineno=4, colno=11)

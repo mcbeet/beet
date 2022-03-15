@@ -19,6 +19,7 @@ if data storage some:path/to/storage f'some.{mykey}.path{{my: "compound"}}' run 
               location: SourceLocation(pos=0, lineno=1, colno=1)
               end_location: SourceLocation(pos=5, lineno=1, colno=6)
               value: 'mykey'
+              rebind: False
           value:
             <class 'mecha.contrib.bolt.ast.AstValue'>
               location: SourceLocation(pos=8, lineno=1, colno=9)

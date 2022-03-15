@@ -31,6 +31,7 @@ my_predicate = {
               location: SourceLocation(pos=0, lineno=1, colno=1)
               end_location: SourceLocation(pos=12, lineno=1, colno=13)
               value: 'my_predicate'
+              rebind: False
           value:
             <class 'mecha.contrib.bolt.ast.AstDict'>
               location: SourceLocation(pos=15, lineno=1, colno=16)

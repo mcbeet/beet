@@ -37,6 +37,7 @@ thing = bar()
                       location: SourceLocation(pos=15, lineno=2, colno=5)
                       end_location: SourceLocation(pos=20, lineno=2, colno=10)
                       value: 'thing'
+                      rebind: True
                   value:
                     <class 'mecha.contrib.bolt.ast.AstCall'>
                       location: SourceLocation(pos=24, lineno=2, colno=14)
@@ -77,6 +78,7 @@ thing = bar()
                       location: SourceLocation(pos=45, lineno=4, colno=5)
                       end_location: SourceLocation(pos=50, lineno=4, colno=10)
                       value: 'thing'
+                      rebind: True
                   value:
                     <class 'mecha.contrib.bolt.ast.AstCall'>
                       location: SourceLocation(pos=54, lineno=4, colno=14)
@@ -102,6 +104,7 @@ thing = bar()
               location: SourceLocation(pos=60, lineno=5, colno=1)
               end_location: SourceLocation(pos=65, lineno=5, colno=6)
               value: 'thing'
+              rebind: False
           value:
             <class 'mecha.contrib.bolt.ast.AstCall'>
               location: SourceLocation(pos=68, lineno=5, colno=9)

@@ -19,6 +19,7 @@ item replace entity @s my_weapon.offhand from entity @s my_weapon.mainhand
               location: SourceLocation(pos=0, lineno=1, colno=1)
               end_location: SourceLocation(pos=9, lineno=1, colno=10)
               value: 'my_weapon'
+              rebind: False
           value:
             <class 'mecha.contrib.bolt.ast.AstDict'>
               location: SourceLocation(pos=12, lineno=1, colno=13)
