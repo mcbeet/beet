@@ -1296,7 +1296,7 @@ yaml = ["PyYaml (>=5.2)"]
 
 [[package]]
 name = "python-semantic-release"
-version = "7.26.0"
+version = "7.27.0"
 description = "Automatic Semantic Versioning for Python projects"
 category = "dev"
 optional = false
@@ -1308,7 +1308,7 @@ click-log = ">=0.3,<1"
 dotty-dict = ">=1.3.0,<2"
 gitpython = ">=3.0.8,<4"
 invoke = ">=1.4.1,<2"
-python-gitlab = ">=1.10,<3"
+python-gitlab = ">=2,<4"
 requests = ">=2.25,<3"
 semver = ">=2.10,<3"
 tomlkit = "0.7.0"
@@ -1897,7 +1897,7 @@ image = ["Pillow"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "3e3a9d7926f81332302f1fb91d5b44732992812c786aab8959fbc69db3f5f1fa"
+content-hash = "4a36018030252f00807c6237832db9bec49b8a0da6aa94d49c06e993bb584326"
 
 [metadata.files]
 alabaster = [
@@ -2634,8 +2634,8 @@ python-gitlab = [
     {file = "python_gitlab-2.10.1-py3-none-any.whl", hash = "sha256:581a219759515513ea9399e936ed7137437cfb681f52d2641626685c492c999d"},
 ]
 python-semantic-release = [
-    {file = "python-semantic-release-7.26.0.tar.gz", hash = "sha256:9876885cf16af43d75610b4f46e27d5ad0f699c7d574dcfe0c6b62ab7d43458d"},
-    {file = "python_semantic_release-7.26.0-py3-none-any.whl", hash = "sha256:ddd7e2460c526264148d534658ea35aee265d615fe110cdf4e16abc6ffc22e50"},
+    {file = "python-semantic-release-7.27.0.tar.gz", hash = "sha256:d115360703cc66a757f650f795fc1d8cd7fdf7688cb8645a36a713f5144b01ce"},
+    {file = "python_semantic_release-7.27.0-py3-none-any.whl", hash = "sha256:dd95785719b5c04fc63c29c2e363735d4d622b713b2b99b41bb0c6ded57311de"},
 ]
 pytz = [
     {file = "pytz-2021.3-py2.py3-none-any.whl", hash = "sha256:3672058bc3453457b622aab7a1c3bfd5ab0bdae451512f6cf25f64ed37f5b87c"},
