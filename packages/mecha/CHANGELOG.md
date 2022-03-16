@@ -2,6 +2,11 @@
 
 <!--next-version-placeholder-->
 
+## v0.43.0 (2022-03-16)
+### Feature
+* Add global, nonlocal, and `__rebind__()` magic method ([`9ad7921`](https://github.com/mcbeet/mecha/commit/9ad79214cf2f563b930c7683dbcd4900f4ffbb5b))
+* Track target rebind ([`e4481e2`](https://github.com/mcbeet/mecha/commit/e4481e256abebe192d2d2aee7ee036fbf24479bf))
+
 ## v0.42.0 (2022-03-13)
 ### Feature
 * Basic assignment unpacking ([`0cce327`](https://github.com/mcbeet/mecha/commit/0cce3276c8168525186e7df853e9fa10d198d9ef))
