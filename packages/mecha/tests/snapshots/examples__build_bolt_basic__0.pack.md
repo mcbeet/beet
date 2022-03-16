@@ -212,6 +212,24 @@ say 1
 say 2
 say 3
 execute if block ~ ~6 ~ air if block ~ ~5 ~ air if block ~ ~4 ~ air if block ~ ~3 ~ air if block ~ ~2 ~ air if block ~ ~1 ~ air run say nothing above!
+say 0
+say 1
+say bolt implements a __rebind__(rhs) magic method that gets called when you reassign a value to a variable
+say let's try it out by manually building a class
+scoreboard players set a global 123
+scoreboard players set a global 456
+scoreboard players set b global 789
+scoreboard players operation b global = a global
+scoreboard players operation bolt_basic.tmp.0 global = b global
+scoreboard players add bolt_basic.tmp.0 global 6
+scoreboard players operation bolt_basic.tmp.1 global = bolt_basic.tmp.0 global
+scoreboard players operation bolt_basic.tmp.1 global += a global
+scoreboard players operation a global += bolt_basic.tmp.1 global
+scoreboard players add b global 1
+say you can use nonlocal to create fake classes
+say 1
+say 2
+say 10
 ```
 
 `@function demo:import_a`

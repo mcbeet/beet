@@ -266,8 +266,10 @@ def foo(something):
     wat()
 ###
 def foo():
+    global thing
     thing += bar()
 def bar():
+    global thing
     thing += foo()
 thing = bar()
 ###
@@ -658,3 +660,60 @@ a, b = "ab"
 ###
 for i, value in enumerate("abc"):
     say f"{i}: {value}"
+###
+global x
+###
+x = 1
+global x
+###
+x = 1
+def f():
+    global xx
+###
+def f(x):
+    global x
+###
+x = 1
+def f():
+    global x
+    nonlocal x
+###
+math = 0
+say math
+def wat():
+    global math
+    import math
+wat()
+say math.ceil(0.1)
+###
+def init_global_score(self, name):
+    self.name = name
+
+def rebind_global_score(self, rhs):
+    if isinstance(rhs, GlobalScore):
+        scoreboard players operation self.name global = rhs.name global
+    else:
+        scoreboard players set self.name global rhs
+    return self
+
+GlobalScore = type("GlobalScore", (), {"__init__": init_global_score, "__rebind__": rebind_global_score})
+
+a = GlobalScore("a")
+a = 123
+a = 456
+
+b = GlobalScore("b")
+b = 789
+b = a
+###
+def Counter(x=0):
+    def incr():
+        nonlocal x
+        x += 1
+        return x
+    return {"incr": incr}
+
+counter = Counter()
+say counter.incr()
+say counter.incr()
+say Counter(9).incr()

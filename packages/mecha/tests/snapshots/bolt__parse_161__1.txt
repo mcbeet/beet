@@ -1,19 +1,19 @@
-_mecha_lineno = [1, 7, 11], [1, 2, 3]
+_mecha_lineno = [1, 7, 12], [1, 2, 3]
 _mecha_helper_children = _mecha_runtime.helpers['children']
 _mecha_helper_replace = _mecha_runtime.helpers['replace']
 with _mecha_runtime.scope() as _mecha_var8:
     _mecha_var0 = {}
     d = _mecha_var0
-    _mecha_var1 = d
-    _mecha_var2 = 1
-    _mecha_var3 = {}
-    _mecha_var1[_mecha_var2] = _mecha_var3
-    _mecha_var4 = d
-    _mecha_var5 = 1
-    _mecha_var4 = _mecha_var4[_mecha_var5]
-    _mecha_var6 = 2
-    _mecha_var7 = 'foo'
-    _mecha_var4[_mecha_var6] = _mecha_var7
+    _mecha_var1 = {}
+    _mecha_var2 = d
+    _mecha_var3 = 1
+    _mecha_var2[_mecha_var3] = _mecha_var1
+    _mecha_var4 = 'foo'
+    _mecha_var5 = d
+    _mecha_var6 = 1
+    _mecha_var5 = _mecha_var5[_mecha_var6]
+    _mecha_var7 = 2
+    _mecha_var5[_mecha_var7] = _mecha_var4
 _mecha_var9 = _mecha_helper_replace(_mecha_refs[0], commands=_mecha_helper_children(_mecha_var8))
 ---
 output = _mecha_var9

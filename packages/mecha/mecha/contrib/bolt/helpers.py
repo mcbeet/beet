@@ -4,7 +4,7 @@ __all__ = [
 
 
 from dataclasses import dataclass, replace
-from functools import wraps
+from functools import partial, wraps
 from importlib import import_module
 from typing import Any, Callable, Dict
 from uuid import UUID
@@ -51,6 +51,7 @@ def get_bolt_helpers() -> Dict[str, Any]:
         "replace": replace,
         "missing": object(),
         "children": AstChildren,
+        "get_rebind": get_rebind,
         "get_attribute": get_attribute,
         "import_module": python_import_module,
         "interpolate_bool": converter(AstBool.from_value),
@@ -93,6 +94,13 @@ def get_attribute(obj: Any, attr: str):
             return obj[attr]
         except (TypeError, LookupError):
             raise exc from None
+
+
+@internal
+def get_rebind(obj: Any):
+    if func := getattr(type(obj), "__rebind__", None):
+        return partial(func, obj)
+    return None
 
 
 @internal

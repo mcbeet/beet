@@ -1,4 +1,5 @@
-_mecha_lineno = [1, 9, 10, 12, 17], [1, 9, 10, 11, 14]
+_mecha_lineno = [1, 10, 11, 13, 21], [1, 9, 10, 11, 14]
+_mecha_helper_get_rebind = _mecha_runtime.helpers['get_rebind']
 _mecha_helper_children = _mecha_runtime.helpers['children']
 _mecha_helper_replace = _mecha_runtime.helpers['replace']
 with _mecha_runtime.scope() as _mecha_var5:
@@ -12,7 +13,10 @@ with _mecha_runtime.scope() as _mecha_var5:
                 _mecha_var2 = i
                 _mecha_var3 = 3
                 _mecha_var2 = _mecha_var2 * _mecha_var3
+                _mecha_rebind = _mecha_helper_get_rebind(x)
                 x += _mecha_var2
+                if _mecha_rebind:
+                    x = _mecha_rebind(x)
             _mecha_runtime.commands.append(_mecha_refs[1])
         _mecha_var4 = wat
         _mecha_var4 = _mecha_var4()

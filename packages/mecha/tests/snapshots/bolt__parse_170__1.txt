@@ -8,10 +8,10 @@ with _mecha_runtime.scope() as _mecha_var6:
     _mecha_var1 = _mecha_var1(_mecha_var2)
     _mecha_var0 = _mecha_var0(_mecha_var1)
     numbers = _mecha_var0
-    _mecha_var3 = numbers
-    _mecha_var4 = 3
-    _mecha_var5 = []
-    _mecha_var3[_mecha_var4:] = _mecha_var5
+    _mecha_var3 = []
+    _mecha_var4 = numbers
+    _mecha_var5 = 3
+    _mecha_var4[_mecha_var5:] = _mecha_var3
 _mecha_var7 = _mecha_helper_replace(_mecha_refs[0], commands=_mecha_helper_children(_mecha_var6))
 ---
 output = _mecha_var7

@@ -8,6 +8,7 @@ __all__ = [
     "visit_multiple",
     "visit_generic",
     "visit_body",
+    "visit_binding",
 ]
 
 
@@ -328,6 +329,38 @@ def visit_body(
         acc.statement(f"_mecha_runtime.commands.extend({acc.make_ref(node)}.commands)")
 
 
+def visit_binding(
+    target_node: AstNode,
+    op: str,
+    value: str,
+    acc: Accumulator,
+) -> Generator[AstNode, Optional[List[str]], None]:
+    """Emit variable binding."""
+    targets = yield target_node
+
+    if not targets:
+        return
+
+    if len(targets) > 1 and isinstance(target_node, AstTargetUnpack):
+        nodes = target_node.targets
+        values = [f"_mecha_unpack{i}" for i in range(len(targets))]
+        acc.statement(f"{', '.join(values)} = {value}", lineno=target_node)
+    else:
+        nodes = [target_node]
+        values = [value]
+
+    for node, target, value in zip(nodes, targets, values):
+        if isinstance(node, AstTargetIdentifier) and node.rebind:
+            rebind = acc.helper("get_rebind", target)
+            acc.statement(f"_mecha_rebind = {rebind}", lineno=node)
+            acc.statement(f"{target} {op} {value}")
+            acc.statement(f"if _mecha_rebind:")
+            with acc.block():
+                acc.statement(f"{target} = _mecha_rebind({target})")
+        else:
+            acc.statement(f"{target} {op} {value}", lineno=node)
+
+
 class Codegen(Visitor):
     """Code generator."""
 
@@ -436,8 +469,9 @@ class Codegen(Visitor):
         node: AstCommand,
         acc: Accumulator,
     ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
-        target = yield from visit_single(node.arguments[0], required=True)
-        acc.statement(f"del {target}")
+        targets = yield node.arguments[0]
+        for target in targets or []:
+            acc.statement(f"del {target}")
         return []
 
     @rule(AstCommand, identifier="if:condition:body")
@@ -481,9 +515,9 @@ class Codegen(Visitor):
         node: AstCommand,
         acc: Accumulator,
     ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
-        target = yield from visit_single(node.arguments[0], required=True)
         iterable = yield from visit_single(node.arguments[1], required=True)
-        acc.statement(f"for {target} in {iterable}:")
+        targets = yield node.arguments[0]
+        acc.statement(f"for {', '.join(targets or ['_'])} in {iterable}:")
         with acc.block():
             yield from visit_body(cast(AstRoot, node.arguments[2]), acc)
         return []
@@ -558,6 +592,30 @@ class Codegen(Visitor):
             else:
                 acc.statement(rhs, lineno=node)
                 acc.statement(f"{name} = {acc.import_module(name)}")
+
+        return []
+
+    @rule(AstCommand, identifier="global:subcommand")
+    @rule(AstCommand, identifier="nonlocal:subcommand")
+    def global_nonlocal_statement(
+        self,
+        node: AstCommand,
+        acc: Accumulator,
+    ) -> Optional[List[str]]:
+        storage, _, _ = node.identifier.partition(":")
+
+        names: List[str] = []
+        subcommand = cast(AstCommand, node.arguments[0])
+
+        while True:
+            if isinstance(name := subcommand.arguments[0], AstIdentifier):
+                names.append(name.value)
+            if subcommand.identifier == f"{storage}:name:subcommand":
+                subcommand = cast(AstCommand, subcommand.arguments[1])
+            else:
+                break
+
+        acc.statement(f"{storage} {', '.join(names)}", lineno=node)
 
         return []
 
@@ -800,10 +858,8 @@ class Codegen(Visitor):
         node: AstAssignment,
         acc: Accumulator,
     ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
-        op = node.operator
-        target = yield from visit_single(node.target, required=True)
         value = yield from visit_single(node.value, required=True)
-        acc.statement(f"{target} {op} {value}", lineno=node)
+        yield from visit_binding(node.target, node.operator, value, acc)
         return []
 
     @rule(AstTargetIdentifier)
@@ -824,7 +880,7 @@ class Codegen(Visitor):
         for target in node.targets:
             result = yield from visit_single(target, required=True)
             targets.append(result)
-        return [", ".join(targets)]
+        return targets
 
     @rule(AstTargetAttribute)
     def target_attribute(

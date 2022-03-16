@@ -404,3 +404,70 @@ def check_above(n):
         say nothing above!
 
 check_above(6)
+
+math = 0
+say math
+def wat():
+    global math
+    import math
+wat()
+say math.ceil(0.1)
+
+say bolt implements a __rebind__(rhs) magic method that gets called when you reassign a value to a variable
+say let's try it out by manually building a class
+
+def init_global_score(self, name):
+    self.name = name
+
+def add_global_score(self, rhs):
+    tmp = GlobalScore(generate_id("tmp.{incr}"))
+    scoreboard players operation tmp.name global = self.name global
+    tmp += rhs
+    return tmp
+
+def iadd_global_score(self, rhs):
+    if isinstance(rhs, GlobalScore):
+        scoreboard players operation self.name global += rhs.name global
+    else:
+        scoreboard players add self.name global rhs
+    return self
+
+def rebind_global_score(self, rhs):
+    if self is not rhs:
+        if isinstance(rhs, GlobalScore):
+            scoreboard players operation self.name global = rhs.name global
+        else:
+            scoreboard players set self.name global rhs
+    return self
+
+GlobalScore = type("GlobalScore", (), {
+    "__init__": init_global_score,
+    "__add__": add_global_score,
+    "__iadd__": iadd_global_score,
+    "__rebind__": rebind_global_score,
+})
+
+a = GlobalScore("a")
+a = 123
+a = 456
+
+b = GlobalScore("b")
+b = 789
+b = a
+
+a += b + 6 + a
+b += 1
+
+say you can use nonlocal to create fake classes
+
+def Counter(x=0):
+    def incr():
+        nonlocal x
+        x += 1
+        return x
+    return {"incr": incr}
+
+counter = Counter()
+say counter.incr()
+say counter.incr()
+say Counter(9).incr()

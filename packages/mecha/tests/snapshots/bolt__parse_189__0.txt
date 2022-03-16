@@ -1,0 +1,8 @@
+x = 1
+def f():
+#>ERROR  Identifier 'xx' is not defined. Did you mean 'x'?
+# line 3, column 12
+#      2 |  def f():
+#      3 |      global xx
+#        :             ^^
+    global xx

@@ -202,6 +202,28 @@
         }
       }
     },
+    "global": {
+      "type": "literal",
+      "children": {
+        "name": {
+          "type": "argument",
+          "parser": "bolt:global_name",
+          "executable": true,
+          "redirect": ["global"]
+        }
+      }
+    },
+    "nonlocal": {
+      "type": "literal",
+      "children": {
+        "name": {
+          "type": "argument",
+          "parser": "bolt:nonlocal_name",
+          "executable": true,
+          "redirect": ["nonlocal"]
+        }
+      }
+    },
     "pass": {
       "type": "literal",
       "executable": true

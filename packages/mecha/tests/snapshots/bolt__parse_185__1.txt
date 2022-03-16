@@ -3,7 +3,9 @@ _mecha_helper_children = _mecha_runtime.helpers['children']
 _mecha_helper_replace = _mecha_runtime.helpers['replace']
 with _mecha_runtime.scope() as _mecha_var1:
     _mecha_var0 = 'ab'
-    a, b = _mecha_var0
+    _mecha_unpack0, _mecha_unpack1 = _mecha_var0
+    a = _mecha_unpack0
+    b = _mecha_unpack1
 _mecha_var2 = _mecha_helper_replace(_mecha_refs[0], commands=_mecha_helper_children(_mecha_var1))
 ---
 output = _mecha_var2

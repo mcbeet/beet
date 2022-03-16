@@ -3,9 +3,9 @@ _mecha_helper_children = _mecha_runtime.helpers['children']
 _mecha_helper_replace = _mecha_runtime.helpers['replace']
 with _mecha_runtime.scope() as _mecha_var2:
     def f():
-        _mecha_var0 = f
-        _mecha_var1 = {}
-        _mecha_var0.data = _mecha_var1
+        _mecha_var0 = {}
+        _mecha_var1 = f
+        _mecha_var1.data = _mecha_var0
 _mecha_var3 = _mecha_helper_replace(_mecha_refs[0], commands=_mecha_helper_children(_mecha_var2))
 ---
 output = _mecha_var3

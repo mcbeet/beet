@@ -2,6 +2,8 @@ __all__ = [
     "get_bolt_parsers",
     "get_stream_identifiers",
     "get_stream_pending_identifiers",
+    "get_stream_identifiers_storage",
+    "get_stream_pending_identifiers_storage",
     "UndefinedIdentifier",
     "create_bolt_root_parser",
     "ExecuteIfConditionConstraint",
@@ -18,9 +20,10 @@ __all__ = [
     "ImportLocationConstraint",
     "ImportStatementHandler",
     "parse_import_name",
+    "GlobalNonlocalHandler",
+    "parse_name_list",
     "FunctionRootBacktracker",
-    "ReturnConstraint",
-    "YieldConstraint",
+    "FunctionConstraint",
     "BinaryParser",
     "UnaryParser",
     "UnpackParser",
@@ -117,12 +120,14 @@ def get_bolt_parsers(
         "root": create_bolt_root_parser(parsers["root"]),
         "nested_root": create_bolt_root_parser(parsers["nested_root"]),
         "command": ImportStatementHandler(
-            ExecuteIfConditionConstraint(parsers["command"])
+            GlobalNonlocalHandler(ExecuteIfConditionConstraint(parsers["command"]))
         ),
         "command:argument:bolt:statement": delegate("bolt:statement"),
         "command:argument:bolt:assignment_target": delegate("bolt:assignment_target"),
         "command:argument:bolt:import": delegate("bolt:import"),
         "command:argument:bolt:import_name": delegate("bolt:import_name"),
+        "command:argument:bolt:global_name": delegate("bolt:global_name"),
+        "command:argument:bolt:nonlocal_name": delegate("bolt:nonlocal_name"),
         "command:argument:bolt:expression": delegate("bolt:expression"),
         "command:argument:bolt:function_signature": delegate("bolt:function_signature"),
         "command:argument:bolt:function_root": delegate("bolt:function_root"),
@@ -143,6 +148,8 @@ def get_bolt_parsers(
         "bolt:identifier": parse_identifier,
         "bolt:import": ImportLocationConstraint(parsers["resource_location_or_tag"]),
         "bolt:import_name": parse_import_name,
+        "bolt:global_name": parse_name_list,
+        "bolt:nonlocal_name": parse_name_list,
         "bolt:expression": delegate("bolt:disjunction"),
         "bolt:disjunction": BinaryParser(
             operators=[r"\bor\b"],
@@ -295,6 +302,16 @@ def get_stream_pending_identifiers(stream: TokenStream) -> Set[str]:
     return stream.data.setdefault("pending_identifiers", set())
 
 
+def get_stream_identifiers_storage(stream: TokenStream) -> Dict[str, str]:
+    """Return a dict that associates storage type to identifiers."""
+    return stream.data.setdefault("identifiers_storage", {})
+
+
+def get_stream_pending_identifiers_storage(stream: TokenStream) -> Dict[str, str]:
+    """Return a dict that associates pending storage type to identifiers."""
+    return stream.data.setdefault("pending_identifiers_storage", {})
+
+
 class UndefinedIdentifier(UnexpectedToken):
     """Raised when an identifier is not defined."""
 
@@ -325,16 +342,23 @@ def create_bolt_root_parser(parser: Parser):
     """Return parser for the root node for bolt."""
     return FunctionRootBacktracker(
         FlushPendingIdentifiersParser(
-            ReturnConstraint(
-                YieldConstraint(
-                    BreakContinueConstraint(
-                        parser=IfElseLoweringParser(parser),
-                        allowed_scopes={
-                            ("while", "condition", "body"),
-                            ("for", "target", "in", "iterable", "body"),
-                        },
-                    )
-                )
+            FunctionConstraint(
+                BreakContinueConstraint(
+                    parser=IfElseLoweringParser(parser),
+                    allowed_scopes={
+                        ("while", "condition", "body"),
+                        ("for", "target", "in", "iterable", "body"),
+                    },
+                ),
+                command_identifiers={
+                    "return",
+                    "return:value",
+                    "yield",
+                    "yield:value",
+                    "yield:from:value",
+                    "global:subcommand",
+                    "nonlocal:subcommand",
+                },
             )
         )
     )
@@ -388,6 +412,8 @@ def parse_statement(stream: TokenStream) -> Any:
     """Parse statement."""
     identifiers = get_stream_identifiers(stream)
     pending_identifiers = get_stream_pending_identifiers(stream)
+    identifiers_storage = get_stream_identifiers_storage(stream)
+    pending_identifiers_storage = get_stream_pending_identifiers_storage(stream)
 
     for parser, alternative in stream.choose(
         "bolt:augmented_assignment_target",
@@ -396,6 +422,7 @@ def parse_statement(stream: TokenStream) -> Any:
     ):
         with alternative:
             pending_identifiers.clear()
+            pending_identifiers_storage.clear()
             node = delegate(parser, stream)
 
             pattern = r"=(?!=)|\+=|-=|\*=|//=|/=|%=|&=|\|=|\^=|<<=|>>=|\*\*="
@@ -410,6 +437,8 @@ def parse_statement(stream: TokenStream) -> Any:
 
                 identifiers |= pending_identifiers
                 pending_identifiers.clear()
+                identifiers_storage.update(pending_identifiers_storage)
+                pending_identifiers_storage.clear()
 
                 node = AstAssignment(operator=op.value, target=node, value=expression)
                 node = set_location(node, node.target, node.value)
@@ -461,16 +490,22 @@ class AssignmentTargetParser:
     def __call__(self, stream: TokenStream) -> AstTarget:
         identifiers = get_stream_identifiers(stream)
         pending_identifiers = get_stream_pending_identifiers(stream)
+        identifiers_storage = get_stream_identifiers_storage(stream)
+        pending_identifiers_storage = get_stream_pending_identifiers_storage(stream)
 
         nodes: List[AstTarget] = []
 
         with stream.syntax(identifier=IDENTIFIER_PATTERN, comma=r","):
             while True:
                 token = stream.expect("identifier")
-                rebind = token.value in identifiers
+                rebind = (
+                    token.value in identifiers and token.value in identifiers_storage
+                )
 
                 if self.allow_undefined_identifiers:
                     pending_identifiers.add(token.value)
+                    if token.value not in identifiers_storage:
+                        pending_identifiers_storage[token.value] = "local"
                 elif not rebind:
                     exc = UndefinedIdentifier(token, identifiers)
                     raise set_location(exc, token)
@@ -585,9 +620,13 @@ class FlushPendingIdentifiersParser:
     def __call__(self, stream: TokenStream) -> Any:
         identifiers = get_stream_identifiers(stream)
         pending_identifiers = get_stream_pending_identifiers(stream)
+        identifiers_storage = get_stream_identifiers_storage(stream)
+        pending_identifiers_storage = get_stream_pending_identifiers_storage(stream)
 
         identifiers |= pending_identifiers
         pending_identifiers.clear()
+        identifiers_storage.update(pending_identifiers_storage)
+        pending_identifiers_storage.clear()
 
         return self.parser(stream)
 
@@ -653,6 +692,8 @@ def parse_function_root(stream: TokenStream) -> AstFunctionRoot:
 
     stream_copy.data["identifiers"] = identifiers | pending_identifiers
     stream_copy.data["pending_identifiers"] = set()
+    stream_copy.data["identifiers_storage"] = {}
+    stream_copy.data["pending_identifiers_storage"] = {}
 
     pending_identifiers.clear()
 
@@ -719,6 +760,7 @@ class ImportStatementHandler:
 
     def __call__(self, stream: TokenStream) -> Any:
         identifiers = get_stream_identifiers(stream)
+        identifiers_storage = get_stream_identifiers_storage(stream)
 
         if isinstance(node := self.parser(stream), AstCommand):
             if node.identifier == "import:module":
@@ -733,6 +775,7 @@ class ImportStatementHandler:
             elif node.identifier == "import:module:as:alias":
                 if isinstance(alias := node.arguments[1], AstImportedIdentifier):
                     identifiers.add(alias.value)
+                    identifiers_storage.setdefault(alias.value, "local")
             elif node.identifier == "from:module:import:subcommand":
                 subcommand = cast(AstCommand, node.arguments[1])
                 while True:
@@ -740,6 +783,7 @@ class ImportStatementHandler:
                         name := subcommand.arguments[0], AstImportedIdentifier
                     ):
                         identifiers.add(name.value)
+                        identifiers_storage.setdefault(name.value, "local")
                     if subcommand.identifier == "from:module:import:name:subcommand":
                         subcommand = cast(AstCommand, subcommand.arguments[1])
                     else:
@@ -754,6 +798,41 @@ def parse_import_name(stream: TokenStream) -> AstImportedIdentifier:
         token = stream.expect("name")
         stream.get("comma")
         return set_location(AstImportedIdentifier(value=token.value), token)
+
+
+@dataclass
+class GlobalNonlocalHandler:
+    """Handle global and nonlocal declarations."""
+
+    parser: Parser
+
+    def __call__(self, stream: TokenStream) -> Any:
+        identifiers_storage = get_stream_identifiers_storage(stream)
+
+        if isinstance(node := self.parser(stream), AstCommand):
+            if node.identifier in ["global:subcommand", "nonlocal:subcommand"]:
+                storage, _, _ = node.identifier.partition(":")
+                subcommand = cast(AstCommand, node.arguments[0])
+                while True:
+                    if isinstance(name := subcommand.arguments[0], AstIdentifier):
+                        s = identifiers_storage.setdefault(name.value, storage)
+                        if s != storage:
+                            exc = InvalidSyntax(f"Can't make {s} identifier {storage}.")
+                            raise set_location(exc, name)
+                    if subcommand.identifier == f"{storage}:name:subcommand":
+                        subcommand = cast(AstCommand, subcommand.arguments[1])
+                    else:
+                        break
+
+        return node
+
+
+def parse_name_list(stream: TokenStream) -> AstIdentifier:
+    """Parse name list."""
+    node = delegate("bolt:identifier", stream)
+    with stream.syntax(comma=r","):
+        stream.get("comma")
+    return node
 
 
 @dataclass
@@ -779,6 +858,11 @@ class FunctionRootBacktracker:
                     function_stream.data["identifiers"] |= identifiers
                     function_stream.data["function"] = True
 
+                    if isinstance(s := command.arguments[0], AstFunctionSignature):
+                        function_stream.data["identifiers_storage"].update(
+                            {arg.name: "local" for arg in s.arguments}
+                        )
+
                     command = replace(
                         command,
                         arguments=AstChildren(
@@ -798,40 +882,24 @@ class FunctionRootBacktracker:
 
 
 @dataclass
-class ReturnConstraint:
-    """Constraint that makes sure that return statements only occur in functions."""
+class FunctionConstraint:
+    """Constraint that makes sure that the given statements only occur in functions."""
 
     parser: Parser
+    command_identifiers: Set[str]
 
     def __call__(self, stream: TokenStream) -> AstRoot:
-        node: AstRoot = self.parser(stream)
+        node = self.parser(stream)
 
         if stream.data.get("function"):
             return node
 
-        for command in node.commands:
-            if command.identifier in ["return", "return:value"]:
-                exc = InvalidSyntax("Can only use 'return' in functions.")
-                raise set_location(exc, command)
-
-        return node
-
-
-@dataclass
-class YieldConstraint:
-    """Constraint that makes sure that yield statements only occur in functions."""
-
-    parser: Parser
-
-    def __call__(self, stream: TokenStream) -> AstRoot:
-        node: AstRoot = self.parser(stream)
-
-        if stream.data.get("function"):
-            return node
-        for command in node.commands:
-            if command.identifier in ["yield", "yield:value", "yield:from:value"]:
-                exc = InvalidSyntax("Can only use 'yield' in functions.")
-                raise set_location(exc, command)
+        if isinstance(node, AstRoot):
+            for command in node.commands:
+                if command.identifier in self.command_identifiers:
+                    name, _, _ = command.identifier.partition(":")
+                    exc = InvalidSyntax(f"Can only use {name!r} in functions.")
+                    raise set_location(exc, command)
 
         return node
 

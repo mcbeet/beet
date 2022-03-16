@@ -1,0 +1,7 @@
+x = 1
+#>ERROR  Can't make local identifier global.
+# line 2, column 8
+#      1 |  x = 1
+#      2 |  global x
+#        :         ^
+global x
