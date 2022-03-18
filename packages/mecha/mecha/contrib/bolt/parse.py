@@ -51,6 +51,7 @@ from mecha import (
     AstCommand,
     AstResourceLocation,
     AstRoot,
+    CommentDisambiguation,
     CompilationDatabase,
     Parser,
     consume_line_continuation,
@@ -263,8 +264,10 @@ def get_bolt_parsers(
         "nbt": InterpolationParser("nbt", parsers["nbt"]),
         "nbt_path": InterpolationParser("nbt_path", parsers["nbt_path"]),
         "range": InterpolationParser("range", parsers["range"], fallback=True),
-        "resource_location_or_tag": InterpolationParser(
-            "resource_location", parsers["resource_location_or_tag"]
+        "resource_location_or_tag": CommentDisambiguation(
+            InterpolationParser(
+                "resource_location", parsers["resource_location_or_tag"]
+            )
         ),
         "item_slot": InterpolationParser(
             "item_slot", parsers["item_slot"], fallback=True
@@ -279,16 +282,22 @@ def get_bolt_parsers(
         "swizzle": InterpolationParser("swizzle", parsers["swizzle"], fallback=True),
         "team": InterpolationParser("team", parsers["team"]),
         "color": InterpolationParser("color", parsers["color"]),
-        "sort_order": InterpolationParser("sort_order", parsers["sort_order"]),
-        "gamemode": InterpolationParser("gamemode", parsers["gamemode"]),
+        "sort_order": InterpolationParser(
+            "sort_order", parsers["sort_order"], fallback=True
+        ),
+        "gamemode": InterpolationParser("gamemode", parsers["gamemode"], fallback=True),
         "message": InterpolationParser("message", parsers["message"]),
         "block_pos": InterpolationParser("vec3", parsers["block_pos"], fallback=True),
         "column_pos": InterpolationParser("vec2", parsers["column_pos"], fallback=True),
         "rotation": InterpolationParser("vec2", parsers["rotation"], fallback=True),
         "vec2": InterpolationParser("vec2", parsers["vec2"], fallback=True),
         "vec3": InterpolationParser("vec3", parsers["vec3"], fallback=True),
-        "entity": InterpolationParser("entity", parsers["entity"]),
-        "score_holder": InterpolationParser("entity", parsers["score_holder"]),
+        "entity": CommentDisambiguation(
+            InterpolationParser("entity", parsers["entity"])
+        ),
+        "score_holder": CommentDisambiguation(
+            InterpolationParser("entity", parsers["score_holder"])
+        ),
     }
 
 

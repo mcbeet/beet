@@ -471,3 +471,9 @@ counter = Counter()
 say counter.incr()
 say counter.incr()
 say Counter(9).incr()
+
+def foo(msg):
+    say msg
+
+if score #temp abc matches 1..:
+    foo("foo")

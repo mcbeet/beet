@@ -230,6 +230,7 @@ say you can use nonlocal to create fake classes
 say 1
 say 2
 say 10
+execute if score #temp abc matches 1.. run say foo
 ```
 
 `@function demo:import_a`
