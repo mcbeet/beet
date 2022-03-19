@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.43.1 (2022-03-19)
+### Fix
+* Forgot to insert comment disambiguation for interpolation ([`4042856`](https://github.com/mcbeet/mecha/commit/4042856de1acfc6a3ab49317b211e47c418c8ffc))
+
 ## v0.43.0 (2022-03-16)
 ### Feature
 * Add global, nonlocal, and `__rebind__()` magic method ([`9ad7921`](https://github.com/mcbeet/mecha/commit/9ad79214cf2f563b930c7683dbcd4900f4ffbb5b))
