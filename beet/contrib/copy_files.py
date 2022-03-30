@@ -10,8 +10,9 @@ __all__ = [
 
 
 import mimetypes
+import os
 from pathlib import Path
-from typing import Dict, List, Tuple, Type, Union
+from typing import Dict, Iterator, List, Tuple, Type, Union
 
 from pydantic import BaseModel
 
@@ -45,39 +46,37 @@ def copy_files(ctx: Context, opts: CopyFilesOptions):
         (ctx.assets, resolve_file_mapping(opts.resource_pack, ctx.directory)),
         (ctx.data, resolve_file_mapping(opts.data_pack, ctx.directory)),
     ]:
-        for dst, src in files.items():
-            if len(src) == 1:
-                path, file_type = src[0]
-                pack.extra[dst] = file_type(source_path=path)
-            else:
-                for path, file_type in src:
-                    pack.extra[f"{dst}/{path.name}"] = file_type(source_path=path)
+        for dst, src, file_type in files:
+            pack.extra[dst] = file_type(source_path=src)
 
     if ctx.output_directory:
-        for dst, src in resolve_file_mapping(opts.output, ctx.directory).items():
-            if len(src) == 1:
-                path, file_type = src[0]
-                file_type(source_path=path).dump(ctx.output_directory, dst)
-            else:
-                target_directory = ctx.output_directory / dst
-                target_directory.mkdir(parents=True, exist_ok=True)
-                for path, file_type in src:
-                    file_type(source_path=path).dump(target_directory, path.name)
+        for dst, src, file_type in resolve_file_mapping(opts.output, ctx.directory):
+            target_directory = ctx.output_directory / dst
+            target_directory.parent.mkdir(parents=True, exist_ok=True)
+            file_type(source_path=src).dump(ctx.output_directory, dst)
 
 
 def resolve_file_mapping(
     mapping: Dict[str, Union[str, List[str]]],
     directory: Path,
-) -> Dict[str, List[Tuple[Path, Type[PackFile]]]]:
+) -> Iterator[Tuple[str, Path, Type[PackFile]]]:
     """Expand glob patterns and guess the type of each file."""
-    return {
-        key: [
-            (filename, guess_file_type(filename))
+    for key, value in mapping.items():
+        entries = [
+            entry
             for pattern in ([value] if isinstance(value, str) else value)
-            for filename in directory.glob(pattern)
+            for entry in directory.glob(pattern)
         ]
-        for key, value in mapping.items()
-    }
+        for entry in entries:
+            dst = f"{key}/{entry.name}" if len(entries) > 1 else key
+            if entry.is_dir():
+                for root, _, files in os.walk(entry):
+                    for filename in files:
+                        path = Path(root, filename)
+                        file_dst = f"{dst}/{path.relative_to(entry).as_posix()}"
+                        yield file_dst, path, guess_file_type(path)
+            else:
+                yield dst, entry, guess_file_type(entry)
 
 
 def guess_file_type(filename: FileSystemPath) -> Type[PackFile]:

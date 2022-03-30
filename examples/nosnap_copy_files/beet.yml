@@ -1,6 +1,8 @@
 output: out
 data_pack:
   load: [src]
+resource_pack:
+  load: [src]
 pipeline:
   - beet.contrib.copy_files
 meta:
@@ -10,3 +12,5 @@ meta:
       stuff:
         - "*.json"
         - additional_file.txt
+    resource_pack:
+      assets/demo/optifine: src/assets/demo/optifine
