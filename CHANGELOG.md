@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.55.1 (2022-03-30)
+### Fix
+* Support copying directories ([`c302357`](https://github.com/mcbeet/beet/commit/c3023575f8a2a4b4bebce3c18b0913addd2328b9))
+
 ## v0.55.0 (2022-03-12)
 ### Feature
 * Add enabled switch and logging levels ([#229](https://github.com/mcbeet/beet/issues/229)) ([`b7b5746`](https://github.com/mcbeet/beet/commit/b7b5746aa676aa74d2d1ccb600ffdc6b4b3db5e7))
