@@ -107,7 +107,7 @@ class Mecha:
 
     directory: Path = extra_field(init=False)
     cache: Optional[Cache] = extra_field(default=None)
-    cache_backend: AstCacheBackend = extra_field(default=pickle)
+    cache_backend: AstCacheBackend = extra_field(default_factory=AstCacheBackend)
 
     spec: CommandSpec = extra_field(default=None)
 
