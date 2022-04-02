@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.43.2 (2022-04-02)
+### Fix
+* Forgot to update default cache backend ([`db22e03`](https://github.com/mcbeet/mecha/commit/db22e038996db3665529ac37bef486ba0a95af54))
+
 ## v0.43.1 (2022-03-19)
 ### Fix
 * Forgot to insert comment disambiguation for interpolation ([`4042856`](https://github.com/mcbeet/mecha/commit/4042856de1acfc6a3ab49317b211e47c418c8ffc))
