@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.43.3 (2022-04-02)
+### Fix
+* Use full source path as cache key ([`f2d8944`](https://github.com/mcbeet/mecha/commit/f2d8944f8819c87b9aadfe56bc758ab1d8702e9b))
+
 ## v0.43.2 (2022-04-02)
 ### Fix
 * Forgot to update default cache backend ([`db22e03`](https://github.com/mcbeet/mecha/commit/db22e038996db3665529ac37bef486ba0a95af54))
