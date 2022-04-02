@@ -265,13 +265,13 @@ class Mecha:
         cache_miss = None
 
         if self.cache and filename:
-            ast_path = self.cache.get_path(f"{filename}-ast")
+            ast_path = self.cache.get_path(f"{self.directory / filename}-ast")
 
             if not self.cache.has_changed(self.directory / filename):
                 try:
                     with ast_path.open("rb") as f:
                         ast = self.cache_backend.load(f)
-                        logger.debug("Load cached ast for file %r.", filename)
+                        logger.debug('Load cached ast for file "%s".', filename)
                         return ast
                 except Exception:
                     pass
@@ -300,7 +300,7 @@ class Mecha:
                 try:
                     with cache_miss.open("wb") as f:
                         self.cache_backend.dump(ast, f)
-                        logger.debug("Update cached ast for file %r.", filename)
+                        logger.debug('Update cached ast for file "%s".', filename)
                 except Exception:
                     pass
             return ast
