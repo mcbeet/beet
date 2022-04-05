@@ -43,11 +43,11 @@ class Fragment:
         ...
 
     @overload
-    def expect(self, name1: str) -> str:
+    def expect(self, name1: str, /) -> str:
         ...
 
     @overload
-    def expect(self, name1: str, name2: str, *names: str) -> Sequence[str]:
+    def expect(self, name1: str, name2: str, /, *names: str) -> Sequence[str]:
         ...
 
     def expect(self, *names: str):
@@ -64,7 +64,15 @@ class Fragment:
             return self.arguments[0]
         return self.arguments
 
-    def as_file(self, file_type: Type[FileType] = BinaryFile) -> FileType:
+    @overload
+    def as_file(self) -> BinaryFile:
+        ...
+
+    @overload
+    def as_file(self, file_type: Type[FileType]) -> FileType:
+        ...
+
+    def as_file(self, file_type: Type[File[Any, Any]] = BinaryFile) -> File[Any, Any]:
         """Retrieve the content of the fragment as a file."""
         if self.file:
             return file_type(self.file.ensure_serialized())

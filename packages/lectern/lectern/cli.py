@@ -20,7 +20,7 @@ def echo(*args: Any, **kwargs: Any):
     click.echo(*args, **kwargs)  # type: ignore
 
 
-@click.command(context_settings={"help_option_names": ("-h", "--help")})
+@click.command(context_settings={"help_option_names": ("-h", "--help")})  # type: ignore
 @click.pass_context
 @click.argument("path", nargs=-1)
 @click.option(
