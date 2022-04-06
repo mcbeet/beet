@@ -2,6 +2,14 @@
 
 <!--next-version-placeholder-->
 
+## v0.20.0 (2022-04-06)
+### Feature
+* Add format sniffer and allow regular text format in code blocks ([`85420af`](https://github.com/mcbeet/lectern/commit/85420afe3ef856f570c4583936a606d824cbff2a))
+
+### Fix
+* Update pyright ([`919657c`](https://github.com/mcbeet/lectern/commit/919657cbb6d10ddb80020b1dd581504ac87c3fa6))
+* Update dependencies ([`811b833`](https://github.com/mcbeet/lectern/commit/811b8337d8383a593e314e3cc68a1511386421a4))
+
 ## v0.19.1 (2022-03-01)
 ### Fix
 * Use compatible beet dependency specifier ([`5eb9d1b`](https://github.com/mcbeet/lectern/commit/5eb9d1bc1818e59d832943ae9caa9f4841bb3fe9))
