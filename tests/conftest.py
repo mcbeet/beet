@@ -3,29 +3,8 @@ from pathlib import Path
 
 from pytest_insta import Fmt
 
-from beet import DataPack, ProjectConfig, ResourcePack
+from beet import ProjectConfig
 from beet.core.utils import dump_json
-from beet.library.test_utils import ignore_name
-
-
-class FmtResourcePack(Fmt[ResourcePack]):
-    extension = ".resource_pack"
-
-    def load(self, path: Path) -> ResourcePack:
-        return ignore_name(ResourcePack(path=path))
-
-    def dump(self, path: Path, value: ResourcePack):
-        value.save(path=path, overwrite=True)
-
-
-class FmtDataPack(Fmt[DataPack]):
-    extension = ".data_pack"
-
-    def load(self, path: Path) -> DataPack:
-        return ignore_name(DataPack(path=path))
-
-    def dump(self, path: Path, value: DataPack):
-        value.save(path=path, overwrite=True)
 
 
 class FmtConfig(Fmt[ProjectConfig]):

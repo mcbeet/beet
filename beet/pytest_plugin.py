@@ -1,8 +1,34 @@
+from pathlib import Path
 from pprint import pformat
 
 from _pytest.assertion.util import assertrepr_compare
 
-from beet import Namespace, NamespaceContainer, Pack
+from beet import DataPack, Namespace, NamespaceContainer, Pack, ResourcePack
+from beet.library.test_utils import ignore_name
+
+try:
+    from pytest_insta import Fmt
+except ImportError:
+    pass
+else:
+
+    class FmtResourcePack(Fmt[ResourcePack]):
+        extension = ".resource_pack"
+
+        def load(self, path: Path) -> ResourcePack:
+            return ignore_name(ResourcePack(path=path))
+
+        def dump(self, path: Path, value: ResourcePack):
+            value.save(path=path, overwrite=True)
+
+    class FmtDataPack(Fmt[DataPack]):
+        extension = ".data_pack"
+
+        def load(self, path: Path) -> DataPack:
+            return ignore_name(DataPack(path=path))
+
+        def dump(self, path: Path, value: DataPack):
+            value.save(path=path, overwrite=True)
 
 
 def pytest_assertrepr_compare(config, op, left, right):
