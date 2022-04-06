@@ -220,17 +220,24 @@ class MarkdownParserWithUncheckedLinks(MarkdownIt):
 class MarkdownExtractor(Extractor):
     """Extractor for markdown files."""
 
+    text_extractor: TextExtractor
     embedded_extractor: TextExtractor
     comment_extractor: TextExtractor
     parser: MarkdownIt
     html_comment_regex: "re.Pattern[str]"
+    embedded_sniffer: "re.Pattern[str]"
 
     def __init__(self, cache: Optional[Cache] = None):
         super().__init__(cache)
+        self.text_extractor = TextExtractor(cache)
         self.embedded_extractor = EmbeddedExtractor(cache)
         self.comment_extractor = TextExtractor(cache)
         self.parser = MarkdownParserWithUncheckedLinks()
         self.html_comment_regex = re.compile(r"\s*<!--\s*(.+?)\s*-->\s*")
+        self.embedded_sniffer = re.compile(
+            r"^[ \t]*(?://|#)[ \t]*@[a-z0-9_]{3,}",
+            re.MULTILINE,
+        )
 
     def extract(
         self,
@@ -505,10 +512,12 @@ class MarkdownExtractor(Extractor):
             #
             elif token.type in ["fence", "code_block"]:
                 offset = int(token.type == "fence")
-                for fragment in self.embedded_extractor.parse_fragments(
-                    token.content,
-                    directives,
-                ):
+                extractor = (
+                    self.embedded_extractor
+                    if self.embedded_sniffer.search(token.content)
+                    else self.text_extractor
+                )
+                for fragment in extractor.parse_fragments(token.content, directives):
                     yield replace(
                         fragment,
                         start_line=fragment.start_line + current_line + offset,
@@ -555,7 +564,7 @@ class MarkdownExtractor(Extractor):
                 )
                 for token, token_type in zip(tokens, token_types)
             )
-            and next((token.map[-1] for token in reversed(tokens) if token.map), 1)
+            and next((token.map[-1] for token in reversed(tokens) if token.map), 1)  # type: ignore
         )
 
     def create_link_fragment(

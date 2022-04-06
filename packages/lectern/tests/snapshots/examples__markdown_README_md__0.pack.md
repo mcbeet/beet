@@ -247,3 +247,15 @@
   ```
 
   </details>
+
+### text_in_block
+
+- `@function text_in_block:foo`
+
+  <details>
+
+  ```mcfunction
+  say foo
+  ```
+
+  </details>

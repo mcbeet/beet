@@ -100,6 +100,8 @@ The markdown format lets you present the various elements of your data pack or r
 
 On the other hand if you don't intend to produce literate documents you can use the plain text format to author data packs and resource packs as a single file without having to deal with markdown formatting.
 
+<!-- @skip -->
+
 ```
 @function tutorial:greeting
 say Hello, world!
@@ -114,6 +116,8 @@ Data pack and resource pack fragments are code blocks, links or images annotated
 ```
 
 `lectern` provides directives for including namespaced resources inside data packs and resource packs. These built-in directives all expect a single argument specifying the fully-qualified resource name.
+
+<!-- @skip -->
 
 ```
 @function tutorial:greeting
@@ -152,6 +156,8 @@ Here is a reference of all the supported resources:
 
 There are also two built-in directives that can be used to include files using a path relative to the root of the data pack or the resource pack.
 
+<!-- @skip -->
+
 ```
 @data_pack pack.mcmeta
 @resource_pack pack.png
@@ -161,6 +167,8 @@ There are also two built-in directives that can be used to include files using a
 This is useful for adding files that aren't part of any particular namespace.
 
 Finally, the `@skip` directive is simply ignored and allows you to end a previous fragment in the plain text format.
+
+<!-- @skip -->
 
 ```
 @function tutorial:greeting
@@ -254,6 +262,13 @@ Embedded directives are stripped from the output. You can use multiple directive
     "function": "tutorial:obtained_dead_bush"
   }
 }
+```
+
+It's also possible to use the lectern text format directly inside code blocks.
+
+```mcfunction
+@function text_in_block:foo
+say foo
 ```
 
 ## Link fragments
@@ -476,6 +491,12 @@ If the markdown content refers to local files you can specify the directory from
 document.add_markdown(..., external_files="path/to/directory")
 ```
 
+If you're handling user input and you don't know which document format is being provided you can use the `add` method and `lectern` will detect if the input is markdown or plain text.
+
+```python
+document.add(...)
+```
+
 You can use the `get_text` and `get_markdown` methods to serialize the entire content of the internal data pack and resource pack. By default the `get_markdown` method will produce markdown that embeds binary files as data urls. You can enable `emit_external_files` and optionally provide a path prefix to generate a dictionary of associated files instead.
 
 ```python
@@ -643,6 +664,8 @@ The `lectern.contrib.script` plugin adds a directive that renders a fragment wit
 
 `@script`
 
+<!-- @skip -->
+
 ```
 {% for i in range(10) %}
 @function demo:script_{{ i }}
@@ -651,6 +674,8 @@ say {{ i }}
 ```
 
 Note that using `@script` with the text format requires you to escape the directives in the fragment with an additional `@` symbol.
+
+<!-- @skip -->
 
 ```
 @script
@@ -663,6 +688,8 @@ say {{ i }}
 The `lectern.contrib.define` plugin adds a directive that renders a fragment with Jinja and stores the resulting string as a template global.
 
 `@define(strip_final_newline) math_message`
+
+<!-- @skip -->
 
 ```
 2 + 2 is {{ 2 + 2 }}
@@ -705,6 +732,8 @@ The `scripts` option lets you specify the command-line arguments for your script
 
 The `lectern.contrib.relative_location` plugin uses the `beet` context generator to generate namespaced resources in a default location automatically if you don't specify any namespace.
 
+<!-- @skip -->
+
 ```
 @function foo
 function tutorial:bar
@@ -730,6 +759,8 @@ The plugin works pretty nicely with `beet.contrib.relative_function_path`.
 }
 ```
 
+<!-- @skip -->
+
 ```
 @function foo
 function ./bar
@@ -754,6 +785,8 @@ You can use the `lectern.contrib.yaml_to_json` plugin to author JSON files with 
 }
 ```
 
+<!-- @skip -->
+
 ```
 @function_tag minecraft:tick
 values:
@@ -761,6 +794,8 @@ values:
 ```
 
 The `@data_pack` and `@resource_pack` directives will also convert the fragment to JSON if the file extension matches `.yml` or `.yaml`.
+
+<!-- @skip -->
 
 ```
 @resource_pack assets/minecraft/sounds.yml

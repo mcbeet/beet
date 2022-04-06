@@ -82,10 +82,10 @@ class NamespacedResourceDirective:
 
     def __call__(self, fragment: Fragment, assets: ResourcePack, data: DataPack):
         full_name = fragment.expect("full_name")
-        file_instance: Any = fragment.as_file(self.file_type)  # type: ignore
+        file_instance: Any = fragment.as_file(self.file_type)
 
         pack = assets if self.file_type in assets.namespace_type.field_map else data
-        proxy: Any = pack[self.file_type]  # type: ignore
+        proxy: Any = pack[self.file_type]
 
         if fragment.modifier == "append":
             current_file = proxy.setdefault(full_name, self.file_type(""))

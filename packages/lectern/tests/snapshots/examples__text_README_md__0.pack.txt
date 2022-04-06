@@ -148,3 +148,6 @@ say foo
     }
   ]
 }
+
+@function text_in_block:foo
+say foo

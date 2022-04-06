@@ -3,6 +3,7 @@ __all__ = [
 ]
 
 
+import re
 from dataclasses import InitVar, dataclass, field
 from pathlib import Path
 from typing import Any, Dict, List, Literal, Optional, Tuple, Union, overload
@@ -21,6 +22,7 @@ class Document:
 
     ctx: InitVar[Optional[Context]] = None
     path: InitVar[Optional[FileSystemPath]] = None
+    source: InitVar[Optional[str]] = None
     text: InitVar[Optional[str]] = None
     markdown: InitVar[Optional[str]] = None
     cache: InitVar[Optional[Cache]] = None
@@ -42,10 +44,18 @@ class Document:
         default_factory=MarkdownSerializer
     )
 
+    markdown_sniffer: "re.Pattern[str]" = extra_field(
+        default=re.compile(
+            r"^[ \t]*```|^[ \t]*<!--|^[ \t]*-->|^[ \t]*[*-]?[ \t]*\[?[ \t]*`@[a-z0-9_]{3,}",
+            re.MULTILINE,
+        )
+    )
+
     def __post_init__(
         self,
         ctx: Optional[Context],
         path: Optional[FileSystemPath] = None,
+        source: Optional[str] = None,
         text: Optional[str] = None,
         markdown: Optional[str] = None,
         cache: Optional[Cache] = None,
@@ -66,6 +76,8 @@ class Document:
 
         if path:
             self.load(path)
+        if source:
+            self.add(source)
         if text:
             self.add_text(text)
         if markdown:
@@ -74,10 +86,18 @@ class Document:
     def load(self, path: FileSystemPath):
         """Load and extract fragments from the file at the specified location."""
         path = Path(path).resolve()
-        if path.suffix == ".md":
-            self.add_markdown(path.read_text(), external_files=path.parent)
+        self.add(path.read_text(), external_files=path.parent)
+
+    def add(
+        self,
+        source: str,
+        external_files: Optional[FileSystemPath] = None,
+    ):
+        """Extract pack fragments from source."""
+        if self.markdown_sniffer.search(source):
+            self.add_markdown(source, external_files)
         else:
-            self.add_text(path.read_text())
+            self.add_text(source)
 
     def add_text(self, source: str):
         """Extract pack fragments from plain text."""
