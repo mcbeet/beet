@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.56.0 (2022-04-06)
+### Feature
+* Expose data pack and resource pack snapshot formats ([`a451ce9`](https://github.com/mcbeet/beet/commit/a451ce9f0ccc45d0a9604af5a3a007dd8a4a0f83))
+
 ## v0.55.1 (2022-03-30)
 ### Fix
 * Support copying directories ([`c302357`](https://github.com/mcbeet/beet/commit/c3023575f8a2a4b4bebce3c18b0913addd2328b9))
