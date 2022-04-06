@@ -1,6 +1,0 @@
-def fnv1a_32(data: bytes) -> int:
-    ...
-
-
-def fnv1a_64(data: bytes) -> int:
-    ...

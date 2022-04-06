@@ -233,7 +233,7 @@ class MainGroup(BeetGroup):
         return super().list_commands(ctx)
 
 
-@click.group(cls=MainGroup)
+@click.group(cls=MainGroup)  # type: ignore
 @pass_context
 @click.option(
     "-d",
