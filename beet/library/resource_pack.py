@@ -37,7 +37,6 @@ from .base import (
     ExtraPin,
     McmetaPin,
     Namespace,
-    NamespaceFile,
     NamespacePin,
     NamespaceProxyDescriptor,
     Pack,
@@ -45,21 +44,21 @@ from .base import (
 )
 
 
-class Blockstate(JsonFile, NamespaceFile):
+class Blockstate(JsonFile):
     """Class representing a blockstate."""
 
     scope = ("blockstates",)
     extension = ".json"
 
 
-class Model(JsonFile, NamespaceFile):
+class Model(JsonFile):
     """Class representing a model."""
 
     scope = ("models",)
     extension = ".json"
 
 
-class Language(JsonFile, NamespaceFile):
+class Language(JsonFile):
     """Class representing a language file."""
 
     scope = ("lang",)
@@ -70,7 +69,7 @@ class Language(JsonFile, NamespaceFile):
         return True
 
 
-class Font(JsonFile, NamespaceFile):
+class Font(JsonFile):
     """Class representing a font configuration file."""
 
     scope = ("font",)
@@ -84,63 +83,63 @@ class Font(JsonFile, NamespaceFile):
         return True
 
 
-class GlyphSizes(BinaryFile, NamespaceFile):
+class GlyphSizes(BinaryFile):
     """Class representing a legacy unicode glyph size file."""
 
     scope = ("font",)
     extension = ".bin"
 
 
-class TrueTypeFont(BinaryFile, NamespaceFile):
+class TrueTypeFont(BinaryFile):
     """Class representing a TrueType font."""
 
     scope = ("font",)
     extension = ".ttf"
 
 
-class ShaderPost(JsonFile, NamespaceFile):
+class ShaderPost(JsonFile):
     """Class representing a shader post-processing pipeline."""
 
     scope = ("shaders", "post")
     extension = ".json"
 
 
-class Shader(JsonFile, NamespaceFile):
+class Shader(JsonFile):
     """Class representing a shader."""
 
     scope = ("shaders",)
     extension = ".json"
 
 
-class FragmentShader(TextFile, NamespaceFile):
+class FragmentShader(TextFile):
     """Class representing a fragment shader."""
 
     scope = ("shaders",)
     extension = ".fsh"
 
 
-class VertexShader(TextFile, NamespaceFile):
+class VertexShader(TextFile):
     """Class representing a vertex shader."""
 
     scope = ("shaders",)
     extension = ".vsh"
 
 
-class GlslShader(TextFile, NamespaceFile):
+class GlslShader(TextFile):
     """Class representing a glsl shader."""
 
     scope = ("shaders",)
     extension = ".glsl"
 
 
-class Text(TextFile, NamespaceFile):
+class Text(TextFile):
     """Class representing a text file."""
 
     scope = ("texts",)
     extension = ".txt"
 
 
-class TextureMcmeta(JsonFile, NamespaceFile):
+class TextureMcmeta(JsonFile):
     """Class representing a texture mcmeta."""
 
     scope = ("textures",)
@@ -148,7 +147,7 @@ class TextureMcmeta(JsonFile, NamespaceFile):
 
 
 @dataclass(eq=False, repr=False)
-class Texture(PngFile, NamespaceFile):
+class Texture(PngFile):
     """Class representing a texture."""
 
     content: BinaryFileContent[Image] = None
@@ -165,7 +164,7 @@ class Texture(PngFile, NamespaceFile):
 
 
 @dataclass(eq=False, repr=False)
-class Sound(BinaryFile, NamespaceFile):
+class Sound(BinaryFile):
     """Class representing a sound file."""
 
     event: Optional[str] = extra_field(default=None)
@@ -233,7 +232,7 @@ class SoundConfig(JsonFile):
         return True
 
 
-class Particle(JsonFile, NamespaceFile):
+class Particle(JsonFile):
     """Class representing a particle configuration file."""
 
     scope = ("particles",)

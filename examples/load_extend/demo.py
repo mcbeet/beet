@@ -1,9 +1,9 @@
 from typing import cast
 
-from beet import Context, JsonFile, NamespaceFile, TextFile, YamlFile
+from beet import Context, JsonFile, TextFile, YamlFile
 
 
-class FunctionConfig(YamlFile, NamespaceFile):
+class FunctionConfig(YamlFile):
     scope = ("functions",)
     extension = ".yml"
 

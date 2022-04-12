@@ -236,6 +236,7 @@ class Generator:
         self,
         fmt: str,
         items: Iterable[T],
+        /,
         *,
         key: Optional[Callable[[T], int]] = None,
         hash: Any = None,
@@ -247,6 +248,7 @@ class Generator:
     def function_tree(
         self,
         items: Iterable[T],
+        /,
         *,
         key: Optional[Callable[[T], int]] = None,
         hash: Any = None,

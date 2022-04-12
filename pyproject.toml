@@ -51,6 +51,7 @@ beet = "beet.toolchain.cli:main"
 
 [tool.poetry.plugins.beet]
 commands = "beet.toolchain.commands"
+autoload = "beet.contrib.default"
 
 [tool.poetry.plugins.pytest11]
 beet = "beet.pytest_plugin"

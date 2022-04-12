@@ -54,7 +54,7 @@ def create_namespace_handler(
 ) -> Type[NamespaceFile]:
     """Create handler that turns yaml namespace files into json."""
 
-    class AutoYamlNamespaceHandler(YamlFile, NamespaceFile):
+    class AutoYamlNamespaceHandler(YamlFile):
         scope = namespace_scope
         extension = namespace_extension
 

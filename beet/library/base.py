@@ -85,17 +85,48 @@ PACK_COMPRESSION: Dict[str, int] = {
 }
 
 
-class NamespaceFile(PackFile):
-    """Base class for files that belong in pack namespaces."""
+class NamespaceFile(Protocol):
+    """Protocol for detecting files that belong in pack namespaces."""
 
     scope: ClassVar[Tuple[str, ...]]
     extension: ClassVar[str]
+
+    def bind(self, pack: Any, path: str) -> Any:
+        ...
+
+    def set_content(self, content: Any):
+        ...
+
+    def get_content(self) -> Any:
+        ...
+
+    def ensure_source_path(self) -> FileSystemPath:
+        ...
+
+    def ensure_serialized(
+        self,
+        serializer: Optional[Callable[[Any], Any]] = None,
+    ) -> Any:
+        ...
+
+    def ensure_deserialized(
+        self,
+        deserializer: Optional[Callable[[Any], Any]] = None,
+    ) -> Any:
+        ...
+
+    @classmethod
+    def load(cls: Type[T], origin: FileOrigin, path: FileSystemPath) -> T:
+        ...
+
+    def dump(self, origin: FileOrigin, path: FileSystemPath):
+        ...
 
 
 class MergeCallback(Protocol):
     """Protocol for detecting merge callbacks."""
 
-    def __call__(self, pack: Any, path: str, current: Any, conflict: Any) -> bool:
+    def __call__(self, pack: Any, path: str, current: Any, conflict: Any, /) -> bool:
         ...
 
 
@@ -211,7 +242,7 @@ class NamespaceExtraContainer(ExtraContainer, Generic[NamespaceType]):
 
             return pack.merge_policy.merge_with_rules(
                 pack=pack,
-                current=self,
+                current=self,  # type: ignore
                 other=other,
                 map_rules=lambda key: (
                     f"{name}:{key}",
@@ -247,7 +278,7 @@ class PackExtraContainer(ExtraContainer, Generic[PackType]):
 
             return pack.merge_policy.merge_with_rules(
                 pack=pack,
-                current=self,
+                current=self,  # type: ignore
                 other=other,
                 map_rules=lambda key: (
                     key,
@@ -330,7 +361,8 @@ class NamespacePin(Pin[Type[NamespaceFileType], NamespaceContainer[NamespaceFile
 
 
 class Namespace(
-    MergeMixin, Container[Type[NamespaceFile], NamespaceContainer[NamespaceFile]]
+    MergeMixin,
+    Container[Type[NamespaceFile], NamespaceContainer[NamespaceFile]],
 ):
     """Class representing a namespace."""
 
@@ -354,7 +386,9 @@ class Namespace(
         self.extra = NamespaceExtraContainer()
 
     def process(
-        self, key: Type[NamespaceFile], value: NamespaceContainer[NamespaceFile]
+        self,
+        key: Type[NamespaceFile],
+        value: NamespaceContainer[NamespaceFile],
     ) -> NamespaceContainer[NamespaceFile]:
         value.bind(self, key)
         return value
@@ -371,7 +405,9 @@ class Namespace(
 
     @overload
     def __setitem__(
-        self, key: Type[NamespaceFile], value: NamespaceContainer[NamespaceFile]
+        self,
+        key: Type[NamespaceFile],
+        value: NamespaceContainer[NamespaceFile],
     ):
         ...
 

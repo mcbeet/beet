@@ -18,11 +18,11 @@ from pydantic import BaseModel
 from beet import (
     Context,
     DataPack,
+    ExtraContainer,
     File,
     FileOrigin,
     Pack,
     ResourcePack,
-    SupportsExtra,
     configurable,
 )
 
@@ -118,17 +118,17 @@ class YamlPackLoader:
         for _, yaml_file in extended_pack.list_files():
             yaml_file.ensure_deserialized(yaml.safe_load)
 
-        self.rename_extra_files(extended_pack)
+        self.rename_extra_files(extended_pack.extra)
         for namespace in extended_pack.values():
-            self.rename_extra_files(namespace)
+            self.rename_extra_files(namespace.extra)
 
         destination.merge(extended_pack)
 
-    def rename_extra_files(self, container: SupportsExtra):
+    def rename_extra_files(self, extra: ExtraContainer):
         renamed = {
             path.replace(".yml", ".json").replace(".yaml", ".json"): item
-            for path, item in container.extra.items()
+            for path, item in extra.items()
             if path.endswith((".yml", ".yaml"))
         }
-        container.extra.clear()
-        container.extra.update(renamed)
+        extra.clear()
+        extra.update(renamed)
