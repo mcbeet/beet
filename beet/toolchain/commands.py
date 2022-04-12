@@ -4,7 +4,7 @@ from typing import Optional, Sequence
 import click
 
 from beet import Project
-from beet.toolchain.cli import beet, echo, error_handler, message_fence
+from beet.toolchain.cli import beet, error_handler, message_fence
 
 pass_project = click.make_pass_decorator(Project)  # type: ignore
 
@@ -28,7 +28,7 @@ def build(project: Project, link: Optional[str], no_link: bool):
     text = "Linking and building project..." if link else "Building project..."
     with message_fence(text):
         if link:
-            echo("\n".join(project.link(world=link)))
+            click.echo("\n".join(project.link(world=link)))
         project.build(no_link)
 
 
@@ -70,7 +70,7 @@ def watch(
     text = "Linking and watching project..." if link else "Watching project..."
     with message_fence(text):
         if link:
-            echo("\n".join(project.link(world=link)))
+            click.echo("\n".join(project.link(world=link)))
 
         for changes in project.watch(interval):
             filename, action = next(iter(changes.items()))
@@ -83,7 +83,7 @@ def watch(
 
             now = time.strftime("%H:%M:%S")
             change_time = click.style(now, fg="green", bold=True)
-            echo(f"{change_time} {text}")
+            click.echo(f"{change_time} {text}")
 
             if reload:
                 project.config.pipeline.append("beet.contrib.livereload")
@@ -106,16 +106,16 @@ def cache(project: Project, patterns: Sequence[str], clear: bool):
     if clear:
         with message_fence("Clearing cache..."):
             if cache_names := ", ".join(project.clear_cache(patterns)):
-                echo(f"Cache cleared successfully: {cache_names}.\n")
+                click.echo(f"Cache cleared successfully: {cache_names}.\n")
             else:
-                echo(
+                click.echo(
                     "No matching results.\n"
                     if patterns
                     else "The cache is already cleared.\n"
                 )
     else:
         with message_fence("Inspecting cache..."):
-            echo(
+            click.echo(
                 "\n".join(project.inspect_cache(patterns))
                 or (
                     "No matching results.\n"
@@ -163,4 +163,6 @@ def link(
             project.clear_link()
     else:
         with message_fence("Linking project..."):
-            echo("\n".join(project.link(world, minecraft, data_pack, resource_pack)))
+            click.echo(
+                "\n".join(project.link(world, minecraft, data_pack, resource_pack))
+            )

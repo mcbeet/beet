@@ -9,8 +9,6 @@ __all__ = [
     "format_error",
     "error_handler",
     "message_fence",
-    "echo",
-    "secho",
 ]
 
 
@@ -28,16 +26,6 @@ from beet import __version__
 from .pipeline import FormattedPipelineException
 from .project import Project
 from .utils import format_exc
-
-
-def echo(*args: Any, **kwargs: Any) -> None:
-    """Wrap click.echo."""
-    click.echo(*args, **kwargs)  # type: ignore
-
-
-def secho(*args: Any, **kwargs: Any) -> None:
-    """Wrap click.secho."""
-    click.secho(*args, **kwargs)  # type: ignore
 
 
 def format_error(
@@ -64,7 +52,7 @@ def error_handler(should_exit: bool = False, format_padding: int = 0) -> Iterato
     except FormattedPipelineException as exc:
         message, exception = exc.message, exc.__cause__ if exc.format_cause else None
     except (click.Abort, KeyboardInterrupt):
-        echo()
+        click.echo()
         message = "Aborted."
     except (click.ClickException, click.exceptions.Exit):
         raise
@@ -75,9 +63,9 @@ def error_handler(should_exit: bool = False, format_padding: int = 0) -> Iterato
         return
 
     if LogHandler.has_output:
-        echo()
+        click.echo()
 
-    echo(format_error(message, exception, format_padding), nl=False)
+    click.echo(format_error(message, exception, format_padding), nl=False)
 
     if should_exit:
         raise click.exceptions.Exit(1)
@@ -86,11 +74,11 @@ def error_handler(should_exit: bool = False, format_padding: int = 0) -> Iterato
 @contextmanager
 def message_fence(message: str) -> Iterator[None]:
     """Context manager used to report the begining and the end of a cli operation."""
-    secho(message + "\n", fg="red")
+    click.secho(message + "\n", fg="red")
     yield
     if LogHandler.has_output:
-        echo()
-    secho("Done!", fg="green", bold=True)
+        click.echo()
+    click.secho("Done!", fg="green", bold=True)
     LogHandler.has_output = False
 
 
@@ -133,13 +121,13 @@ class LogHandler(logging.Handler):
             + leading_line
         )
 
-        echo(click.style(f"{level:<7}|", **style) + " " + leading_line)
+        click.echo(click.style(f"{level:<7}|", **style) + " " + leading_line)
 
         if annotate := getattr(record, "annotate", None):
             lines.insert(0, click.style(str(annotate), fg="cyan"))
 
         for line in lines:
-            echo(line_prefix + " " * bool(line) + line)
+            click.echo(line_prefix + " " * bool(line) + line)
 
 
 class BeetHelpColorsMixin:
