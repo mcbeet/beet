@@ -2,6 +2,14 @@
 
 <!--next-version-placeholder-->
 
+## v0.57.0 (2022-04-12)
+### Feature
+* Extract worldgen and turn NamespaceFile into a protocol ([`e9c487c`](https://github.com/mcbeet/beet/commit/e9c487c06393f03efce6426496d1922be4ecf2da))
+
+### Fix
+* No longer rely on pack attributes for render plugin ([`6636094`](https://github.com/mcbeet/beet/commit/6636094655bbfd2a8dfb788df3c4e7131bca90e7))
+* No need to wrap click.echo anymore ([`9f6ea28`](https://github.com/mcbeet/beet/commit/9f6ea28afa4713f3abe4ef18dba66db5d92cc4e1))
+
 ## v0.56.0 (2022-04-06)
 ### Feature
 * Expose data pack and resource pack snapshot formats ([`a451ce9`](https://github.com/mcbeet/beet/commit/a451ce9f0ccc45d0a9604af5a3a007dd8a4a0f83))
