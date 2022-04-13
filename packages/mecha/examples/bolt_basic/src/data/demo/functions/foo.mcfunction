@@ -485,3 +485,22 @@ function_tag tag_name:
         -   "demo:foo"
 
 as @p function #tag_name # this runs the tag
+
+def truth_table():
+    for a in [False, True]:
+        for b in [False, True]:
+            for c in [False, True]:
+                for d in [False, True]:
+                    yield a and b or c and not d
+
+say list(truth_table())
+
+def not_init(self, value):
+    self.value = value
+
+def not_not(self):
+    say self.value
+    return self
+
+NotPrint = type("NotPrint", (), {"__init__": not_init, "__not__": not_not})
+not not not not NotPrint("hello")

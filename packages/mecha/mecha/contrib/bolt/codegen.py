@@ -651,8 +651,12 @@ class Codegen(Visitor):
         acc: Accumulator,
     ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
         left = yield from visit_single(node.left, required=True)
-        prefix = "not " if node.operator == "or" else ""
-        acc.statement(f"if {prefix}{left}:")
+        condition = left
+        if node.operator == "or":
+            condition = acc.make_variable()
+            value = acc.helper("operator_not", left)
+            acc.statement(f"{condition} = {value}")
+        acc.statement(f"if {condition}:")
         with acc.block():
             right = yield from visit_single(node.right, required=True)
             acc.statement(f"{left} = {right}")
@@ -675,9 +679,10 @@ class Codegen(Visitor):
         node: AstExpressionUnary,
         acc: Accumulator,
     ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
-        value = yield from visit_single(node.value, required=True)
-        acc.statement(f"{value} = not {value}", lineno=node)
-        return [value]
+        result = yield from visit_single(node.value, required=True)
+        value = acc.helper("operator_not", result)
+        acc.statement(f"{result} = {value}", lineno=node)
+        return [result]
 
     @rule(AstValue)
     def value(self, node: AstValue, acc: Accumulator) -> Optional[List[str]]:

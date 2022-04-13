@@ -232,6 +232,11 @@ say 2
 say 10
 execute if score #temp abc matches 1.. run say foo
 execute as @p run function #demo:yolo_funcs
+say [False, False, True, False, False, False, True, False, False, False, True, False, True, True, True, True]
+say hello
+say hello
+say hello
+say hello
 ```
 
 `@function demo:import_a`

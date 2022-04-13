@@ -1,68 +1,72 @@
 _mecha_lineno = [1], [1]
+_mecha_helper_operator_not = _mecha_runtime.helpers['operator_not']
 _mecha_helper_children = _mecha_runtime.helpers['children']
 _mecha_helper_replace = _mecha_runtime.helpers['replace']
-with _mecha_runtime.scope() as _mecha_var23:
+with _mecha_runtime.scope() as _mecha_var26:
     _mecha_var0 = False
-    if not _mecha_var0:
-        _mecha_var1 = True
-        if _mecha_var1:
-            _mecha_var2 = 'hello'
-            _mecha_var1 = _mecha_var2
-        _mecha_var0 = _mecha_var1
-    if not _mecha_var0:
-        _mecha_var3 = 'foo'
-        _mecha_var4 = 'bar'
-        _mecha_var3 = _mecha_var3 == _mecha_var4
-        _mecha_var3 = not _mecha_var3
-        _mecha_var0 = _mecha_var3
-    if not _mecha_var0:
-        _mecha_var5 = 1
-        _mecha_var6 = 2
-        _mecha_var5 = _mecha_var5 != _mecha_var6
-        if _mecha_var5:
-            _mecha_var7 = 1
-            _mecha_var8 = 2
-            _mecha_var7 = _mecha_var7 < _mecha_var8
-            _mecha_var5 = _mecha_var7
-        if _mecha_var5:
-            _mecha_var9 = 2
-            _mecha_var10 = 3
-            _mecha_var9 = _mecha_var9 <= _mecha_var10
-            _mecha_var5 = _mecha_var9
-        if _mecha_var5:
-            _mecha_var11 = 5
-            _mecha_var12 = 4
-            _mecha_var11 = _mecha_var11 > _mecha_var12
-            _mecha_var5 = _mecha_var11
-        if _mecha_var5:
-            _mecha_var13 = 6
-            _mecha_var14 = 5
-            _mecha_var13 = _mecha_var13 >= _mecha_var14
-            _mecha_var5 = _mecha_var13
-        if _mecha_var5:
-            _mecha_var15 = 1
-            _mecha_var16 = 1
-            _mecha_var15 = _mecha_var15 in _mecha_var16
-            _mecha_var5 = _mecha_var15
-        if _mecha_var5:
-            _mecha_var17 = 2
-            _mecha_var18 = 2
-            _mecha_var17 = _mecha_var17 not in _mecha_var18
-            _mecha_var5 = _mecha_var17
-        if _mecha_var5:
-            _mecha_var19 = 3
-            _mecha_var20 = 3
-            _mecha_var19 = _mecha_var19 is _mecha_var20
-            _mecha_var5 = _mecha_var19
-        if _mecha_var5:
-            _mecha_var21 = 3
-            _mecha_var22 = 3
-            _mecha_var21 = _mecha_var21 is not _mecha_var22
-            _mecha_var5 = _mecha_var21
+    _mecha_var1 = _mecha_helper_operator_not(_mecha_var0)
+    if _mecha_var1:
+        _mecha_var2 = True
+        if _mecha_var2:
+            _mecha_var3 = 'hello'
+            _mecha_var2 = _mecha_var3
+        _mecha_var0 = _mecha_var2
+    _mecha_var4 = _mecha_helper_operator_not(_mecha_var0)
+    if _mecha_var4:
+        _mecha_var5 = 'foo'
+        _mecha_var6 = 'bar'
+        _mecha_var5 = _mecha_var5 == _mecha_var6
+        _mecha_var5 = _mecha_helper_operator_not(_mecha_var5)
         _mecha_var0 = _mecha_var5
-_mecha_var24 = _mecha_helper_replace(_mecha_refs[0], commands=_mecha_helper_children(_mecha_var23))
+    _mecha_var7 = _mecha_helper_operator_not(_mecha_var0)
+    if _mecha_var7:
+        _mecha_var8 = 1
+        _mecha_var9 = 2
+        _mecha_var8 = _mecha_var8 != _mecha_var9
+        if _mecha_var8:
+            _mecha_var10 = 1
+            _mecha_var11 = 2
+            _mecha_var10 = _mecha_var10 < _mecha_var11
+            _mecha_var8 = _mecha_var10
+        if _mecha_var8:
+            _mecha_var12 = 2
+            _mecha_var13 = 3
+            _mecha_var12 = _mecha_var12 <= _mecha_var13
+            _mecha_var8 = _mecha_var12
+        if _mecha_var8:
+            _mecha_var14 = 5
+            _mecha_var15 = 4
+            _mecha_var14 = _mecha_var14 > _mecha_var15
+            _mecha_var8 = _mecha_var14
+        if _mecha_var8:
+            _mecha_var16 = 6
+            _mecha_var17 = 5
+            _mecha_var16 = _mecha_var16 >= _mecha_var17
+            _mecha_var8 = _mecha_var16
+        if _mecha_var8:
+            _mecha_var18 = 1
+            _mecha_var19 = 1
+            _mecha_var18 = _mecha_var18 in _mecha_var19
+            _mecha_var8 = _mecha_var18
+        if _mecha_var8:
+            _mecha_var20 = 2
+            _mecha_var21 = 2
+            _mecha_var20 = _mecha_var20 not in _mecha_var21
+            _mecha_var8 = _mecha_var20
+        if _mecha_var8:
+            _mecha_var22 = 3
+            _mecha_var23 = 3
+            _mecha_var22 = _mecha_var22 is _mecha_var23
+            _mecha_var8 = _mecha_var22
+        if _mecha_var8:
+            _mecha_var24 = 3
+            _mecha_var25 = 3
+            _mecha_var24 = _mecha_var24 is not _mecha_var25
+            _mecha_var8 = _mecha_var24
+        _mecha_var0 = _mecha_var8
+_mecha_var27 = _mecha_helper_replace(_mecha_refs[0], commands=_mecha_helper_children(_mecha_var26))
 ---
-output = _mecha_var24
+output = _mecha_var27
 ---
 _mecha_refs[0]
 <class 'mecha.ast.AstRoot'>

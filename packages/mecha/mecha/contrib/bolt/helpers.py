@@ -51,6 +51,7 @@ def get_bolt_helpers() -> Dict[str, Any]:
         "replace": replace,
         "missing": object(),
         "children": AstChildren,
+        "operator_not": operator_not,
         "get_rebind": get_rebind,
         "get_attribute": get_attribute,
         "import_module": python_import_module,
@@ -86,6 +87,20 @@ def get_bolt_helpers() -> Dict[str, Any]:
 
 
 @internal
+def operator_not(obj: Any):
+    if func := getattr(type(obj), "__not__", None):
+        return func(obj)
+    return not obj
+
+
+@internal
+def get_rebind(obj: Any):
+    if func := getattr(type(obj), "__rebind__", None):
+        return partial(func, obj)
+    return None
+
+
+@internal
 def get_attribute(obj: Any, attr: str):
     try:
         return getattr(obj, attr)
@@ -94,13 +109,6 @@ def get_attribute(obj: Any, attr: str):
             return obj[attr]
         except (TypeError, LookupError):
             raise exc from None
-
-
-@internal
-def get_rebind(obj: Any):
-    if func := getattr(type(obj), "__rebind__", None):
-        return partial(func, obj)
-    return None
 
 
 @internal

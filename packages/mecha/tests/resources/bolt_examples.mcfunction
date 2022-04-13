@@ -738,3 +738,9 @@ def foo(value):
 ###
 tag_name = foo:bar
 function #tag_name
+###
+for a in [False, True]:
+    for b in [False, True]:
+        for c in [False, True]:
+            for d in [False, True]:
+                print(a and b or c and not d)

@@ -1,0 +1,45 @@
+_mecha_lineno = [1, 12, 16, 20, 22], [1, 2, 3, 4, 5]
+_mecha_helper_operator_not = _mecha_runtime.helpers['operator_not']
+_mecha_helper_children = _mecha_runtime.helpers['children']
+_mecha_helper_replace = _mecha_runtime.helpers['replace']
+with _mecha_runtime.scope() as _mecha_var18:
+    _mecha_var0 = False
+    _mecha_var1 = True
+    _mecha_var2 = [_mecha_var0, _mecha_var1]
+    for a in _mecha_var2:
+        _mecha_var3 = False
+        _mecha_var4 = True
+        _mecha_var5 = [_mecha_var3, _mecha_var4]
+        for b in _mecha_var5:
+            _mecha_var6 = False
+            _mecha_var7 = True
+            _mecha_var8 = [_mecha_var6, _mecha_var7]
+            for c in _mecha_var8:
+                _mecha_var9 = False
+                _mecha_var10 = True
+                _mecha_var11 = [_mecha_var9, _mecha_var10]
+                for d in _mecha_var11:
+                    _mecha_var12 = print
+                    _mecha_var13 = a
+                    if _mecha_var13:
+                        _mecha_var14 = b
+                        _mecha_var13 = _mecha_var14
+                    _mecha_var15 = _mecha_helper_operator_not(_mecha_var13)
+                    if _mecha_var15:
+                        _mecha_var16 = c
+                        if _mecha_var16:
+                            _mecha_var17 = d
+                            _mecha_var17 = _mecha_helper_operator_not(_mecha_var17)
+                            _mecha_var16 = _mecha_var17
+                        _mecha_var13 = _mecha_var16
+                    _mecha_var12 = _mecha_var12(_mecha_var13)
+_mecha_var19 = _mecha_helper_replace(_mecha_refs[0], commands=_mecha_helper_children(_mecha_var18))
+---
+output = _mecha_var19
+---
+_mecha_refs[0]
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=166, lineno=6, colno=1)
+  commands:
+    <class 'mecha.ast.AstCommand'>
