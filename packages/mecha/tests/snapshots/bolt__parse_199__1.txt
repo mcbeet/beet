@@ -1,4 +1,5 @@
-_mecha_lineno = [1, 14, 18, 22, 24], [1, 2, 3, 4, 5]
+_mecha_lineno = [1, 15, 19, 23, 25], [1, 2, 3, 4, 5]
+_mecha_helper_branch = _mecha_runtime.helpers['branch']
 _mecha_helper_operator_not = _mecha_runtime.helpers['operator_not']
 _mecha_helper_operator_in = _mecha_runtime.helpers['operator_in']
 _mecha_helper_operator_not_in = _mecha_runtime.helpers['operator_not_in']
@@ -24,18 +25,21 @@ with _mecha_runtime.scope() as _mecha_var24:
                     _mecha_var12 = print
                     _mecha_var13 = a
                     _mecha_var14 = _mecha_var13
-                    if _mecha_var14:
-                        _mecha_var15 = b
-                        _mecha_var13 = _mecha_var15
+                    with _mecha_helper_branch(_mecha_var14) as _mecha_condition:
+                        if _mecha_condition:
+                            _mecha_var15 = b
+                            _mecha_var13 = _mecha_var15
                     _mecha_var16 = _mecha_helper_operator_not(_mecha_var13)
-                    if _mecha_var16:
-                        _mecha_var17 = c
-                        _mecha_var18 = _mecha_var17
-                        if _mecha_var18:
-                            _mecha_var19 = d
-                            _mecha_var19 = _mecha_helper_operator_not(_mecha_var19)
-                            _mecha_var17 = _mecha_var19
-                        _mecha_var13 = _mecha_var17
+                    with _mecha_helper_branch(_mecha_var16) as _mecha_condition:
+                        if _mecha_condition:
+                            _mecha_var17 = c
+                            _mecha_var18 = _mecha_var17
+                            with _mecha_helper_branch(_mecha_var18) as _mecha_condition:
+                                if _mecha_condition:
+                                    _mecha_var19 = d
+                                    _mecha_var19 = _mecha_helper_operator_not(_mecha_var19)
+                                    _mecha_var17 = _mecha_var19
+                            _mecha_var13 = _mecha_var17
                     _mecha_var20 = True
                     _mecha_var21 = [_mecha_var20]
                     _mecha_var13 = _mecha_helper_operator_in(_mecha_var13, _mecha_var21)

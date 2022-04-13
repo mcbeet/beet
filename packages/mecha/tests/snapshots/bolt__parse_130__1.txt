@@ -1,13 +1,18 @@
 _mecha_lineno = [1], [1]
+_mecha_helper_branch = _mecha_runtime.helpers['branch']
+_mecha_helper_operator_not = _mecha_runtime.helpers['operator_not']
 _mecha_helper_children = _mecha_runtime.helpers['children']
 _mecha_helper_replace = _mecha_runtime.helpers['replace']
 with _mecha_runtime.scope() as _mecha_var2:
     with _mecha_runtime.scope() as _mecha_var1:
         _mecha_var0 = True
-        if _mecha_var0:
-            _mecha_runtime.commands.extend(_mecha_refs[0].commands)
-        else:
-            _mecha_runtime.commands.extend(_mecha_refs[1].commands)
+        with _mecha_helper_branch(_mecha_var0) as _mecha_condition:
+            if _mecha_condition:
+                _mecha_runtime.commands.extend(_mecha_refs[0].commands)
+        _mecha_var0 = _mecha_helper_operator_not(_mecha_var0)
+        with _mecha_helper_branch(_mecha_var0) as _mecha_condition:
+            if _mecha_condition:
+                _mecha_runtime.commands.extend(_mecha_refs[1].commands)
     _mecha_runtime.commands.append(_mecha_helper_replace(_mecha_refs[10], arguments=_mecha_helper_children([_mecha_helper_replace(_mecha_refs[9], arguments=_mecha_helper_children([_mecha_refs[6], _mecha_refs[7], _mecha_refs[8], _mecha_helper_replace(_mecha_refs[5], arguments=_mecha_helper_children([_mecha_refs[4], _mecha_helper_replace(_mecha_refs[3], arguments=_mecha_helper_children([_mecha_helper_replace(_mecha_refs[2], commands=_mecha_helper_children(_mecha_var1))]))]))]))])))
 _mecha_var3 = _mecha_helper_replace(_mecha_refs[11], commands=_mecha_helper_children(_mecha_var2))
 ---

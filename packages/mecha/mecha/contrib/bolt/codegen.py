@@ -77,6 +77,8 @@ class Accumulator:
     counter: int = 0
     header: Dict[str, str] = field(default_factory=dict)
 
+    last_condition: str = "_mecha_error_last_condition"
+
     def get_source(self) -> str:
         """Return the source code."""
         header = "".join(
@@ -171,15 +173,20 @@ class Accumulator:
     @contextmanager
     def if_statement(self, condition: str):
         """Emit if statement."""
-        self.statement(f"if {condition}:")
+        branch = self.helper("branch", condition)
+        self.statement(f"with {branch} as _mecha_condition:")
         with self.block():
-            yield
+            self.statement(f"if _mecha_condition:")
+            with self.block():
+                yield
+        self.last_condition = condition
 
     @contextmanager
     def else_statement(self):
         """Emit else statement."""
-        self.statement(f"else:")
-        with self.block():
+        negated_value = self.helper("operator_not", self.last_condition)
+        self.statement(f"{self.last_condition} = {negated_value}")
+        with self.if_statement(self.last_condition):
             yield
 
 

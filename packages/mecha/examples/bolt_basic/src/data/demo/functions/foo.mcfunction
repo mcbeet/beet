@@ -520,3 +520,25 @@ def thing_equal(self, item):
 Thing = type("Thing", (), {"__within__": thing_within, "__contains__": thing_contains, "__eq__": thing_equal})
 Thing() in [1, 2, 3] in [99]
 "world" in ("hello" in Thing())
+
+from contextlib import contextmanager
+
+def dsl_init(self, score, inverted=False):
+    self.score = score
+    self.inverted = inverted
+
+def dsl_not(self):
+    return DSL(self.score, not self.inverted)
+
+def dsl_branch(self):
+    if score @s self.score matches int(not self.inverted):
+        yield True
+
+DSL = type("DSL", (), {"__init__": dsl_init, "__not__": dsl_not, "__branch__": contextmanager(dsl_branch)})
+
+if DSL("foo"):
+    say yes
+    if DSL("bar"):
+        say with bar
+else:
+    say no

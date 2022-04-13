@@ -243,6 +243,8 @@ say thing == 3
 say thing == 99
 say thing == hello
 say thing == world
+execute if score @s foo matches 1 run function demo:foo/nested_execute_1
+execute if score @s foo matches 0 run say no
 ```
 
 `@function demo:import_a`
@@ -297,6 +299,13 @@ say bar
 say 0
 say 1
 say 2
+```
+
+`@function demo:foo/nested_execute_1`
+
+```mcfunction
+say yes
+execute if score @s bar matches 1 run say with bar
 ```
 
 `@function demo:foo/tree_0/0_7`

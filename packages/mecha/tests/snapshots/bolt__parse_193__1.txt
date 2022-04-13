@@ -1,8 +1,10 @@
-_mecha_lineno = [1, 10, 14, 19, 27, 33, 35, 45, 50, 55, 59, 64, 68], [1, 2, 5, 6, 8, 9, 11, 13, 14, 15, 17, 18, 19]
+_mecha_lineno = [1, 12, 16, 22, 32, 38, 40, 50, 55, 60, 64, 69, 73], [1, 2, 5, 6, 8, 9, 11, 13, 14, 15, 17, 18, 19]
 _mecha_helper_children = _mecha_runtime.helpers['children']
+_mecha_helper_branch = _mecha_runtime.helpers['branch']
 _mecha_helper_get_attribute = _mecha_runtime.helpers['get_attribute']
 _mecha_helper_interpolate_entity = _mecha_runtime.helpers['interpolate_entity']
 _mecha_helper_replace = _mecha_runtime.helpers['replace']
+_mecha_helper_operator_not = _mecha_runtime.helpers['operator_not']
 _mecha_helper_interpolate_numeric = _mecha_runtime.helpers['interpolate_numeric']
 _mecha_helper_get_rebind = _mecha_runtime.helpers['get_rebind']
 with _mecha_runtime.scope() as _mecha_var26:
@@ -15,21 +17,24 @@ with _mecha_runtime.scope() as _mecha_var26:
         _mecha_var3 = rhs
         _mecha_var4 = GlobalScore
         _mecha_var2 = _mecha_var2(_mecha_var3, _mecha_var4)
-        if _mecha_var2:
-            _mecha_var5 = self
-            _mecha_var5 = _mecha_helper_get_attribute(_mecha_var5, 'name')
-            _mecha_var5 = _mecha_helper_interpolate_entity(_mecha_var5, _mecha_refs[0])
-            _mecha_var6 = rhs
-            _mecha_var6 = _mecha_helper_get_attribute(_mecha_var6, 'name')
-            _mecha_var6 = _mecha_helper_interpolate_entity(_mecha_var6, _mecha_refs[1])
-            _mecha_runtime.commands.append(_mecha_helper_replace(_mecha_refs[5], arguments=_mecha_helper_children([_mecha_var5, _mecha_refs[2], _mecha_refs[3], _mecha_var6, _mecha_refs[4]])))
-        else:
-            _mecha_var7 = self
-            _mecha_var7 = _mecha_helper_get_attribute(_mecha_var7, 'name')
-            _mecha_var7 = _mecha_helper_interpolate_entity(_mecha_var7, _mecha_refs[6])
-            _mecha_var8 = rhs
-            _mecha_var8 = _mecha_helper_interpolate_numeric(_mecha_var8, _mecha_refs[7])
-            _mecha_runtime.commands.append(_mecha_helper_replace(_mecha_refs[9], arguments=_mecha_helper_children([_mecha_var7, _mecha_refs[8], _mecha_var8])))
+        with _mecha_helper_branch(_mecha_var2) as _mecha_condition:
+            if _mecha_condition:
+                _mecha_var5 = self
+                _mecha_var5 = _mecha_helper_get_attribute(_mecha_var5, 'name')
+                _mecha_var5 = _mecha_helper_interpolate_entity(_mecha_var5, _mecha_refs[0])
+                _mecha_var6 = rhs
+                _mecha_var6 = _mecha_helper_get_attribute(_mecha_var6, 'name')
+                _mecha_var6 = _mecha_helper_interpolate_entity(_mecha_var6, _mecha_refs[1])
+                _mecha_runtime.commands.append(_mecha_helper_replace(_mecha_refs[5], arguments=_mecha_helper_children([_mecha_var5, _mecha_refs[2], _mecha_refs[3], _mecha_var6, _mecha_refs[4]])))
+        _mecha_var2 = _mecha_helper_operator_not(_mecha_var2)
+        with _mecha_helper_branch(_mecha_var2) as _mecha_condition:
+            if _mecha_condition:
+                _mecha_var7 = self
+                _mecha_var7 = _mecha_helper_get_attribute(_mecha_var7, 'name')
+                _mecha_var7 = _mecha_helper_interpolate_entity(_mecha_var7, _mecha_refs[6])
+                _mecha_var8 = rhs
+                _mecha_var8 = _mecha_helper_interpolate_numeric(_mecha_var8, _mecha_refs[7])
+                _mecha_runtime.commands.append(_mecha_helper_replace(_mecha_refs[9], arguments=_mecha_helper_children([_mecha_var7, _mecha_refs[8], _mecha_var8])))
         _mecha_var9 = self
         return _mecha_var9
     _mecha_var10 = type

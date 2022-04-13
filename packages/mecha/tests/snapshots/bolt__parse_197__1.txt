@@ -1,24 +1,29 @@
-_mecha_lineno = [1, 8, 9, 12, 18, 22], [1, 2, 3, 4, 6, 7]
+_mecha_lineno = [1, 10, 11, 15, 23, 27], [1, 2, 3, 4, 6, 7]
+_mecha_helper_branch = _mecha_runtime.helpers['branch']
 _mecha_helper_get_rebind = _mecha_runtime.helpers['get_rebind']
 _mecha_helper_children = _mecha_runtime.helpers['children']
+_mecha_helper_operator_not = _mecha_runtime.helpers['operator_not']
 _mecha_helper_replace = _mecha_runtime.helpers['replace']
 with _mecha_runtime.scope() as _mecha_var5:
     def foo(value):
         _mecha_var0 = 'init'
         result = _mecha_var0
         _mecha_var1 = value
-        if _mecha_var1:
-            _mecha_var2 = 1
-            _mecha_rebind = _mecha_helper_get_rebind(result)
-            result = _mecha_var2
-            if _mecha_rebind is not None:
-                result = _mecha_rebind(result)
-        else:
-            _mecha_var3 = 0
-            _mecha_rebind = _mecha_helper_get_rebind(result)
-            result = _mecha_var3
-            if _mecha_rebind is not None:
-                result = _mecha_rebind(result)
+        with _mecha_helper_branch(_mecha_var1) as _mecha_condition:
+            if _mecha_condition:
+                _mecha_var2 = 1
+                _mecha_rebind = _mecha_helper_get_rebind(result)
+                result = _mecha_var2
+                if _mecha_rebind is not None:
+                    result = _mecha_rebind(result)
+        _mecha_var1 = _mecha_helper_operator_not(_mecha_var1)
+        with _mecha_helper_branch(_mecha_var1) as _mecha_condition:
+            if _mecha_condition:
+                _mecha_var3 = 0
+                _mecha_rebind = _mecha_helper_get_rebind(result)
+                result = _mecha_var3
+                if _mecha_rebind is not None:
+                    result = _mecha_rebind(result)
         _mecha_var4 = result
         return _mecha_var4
 _mecha_var6 = _mecha_helper_replace(_mecha_refs[0], commands=_mecha_helper_children(_mecha_var5))
