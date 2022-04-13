@@ -1,0 +1,33 @@
+_mecha_lineno = [1, 8, 9, 12, 18, 22], [1, 2, 3, 4, 6, 7]
+_mecha_helper_get_rebind = _mecha_runtime.helpers['get_rebind']
+_mecha_helper_children = _mecha_runtime.helpers['children']
+_mecha_helper_replace = _mecha_runtime.helpers['replace']
+with _mecha_runtime.scope() as _mecha_var5:
+    def foo(value):
+        _mecha_var0 = 'init'
+        result = _mecha_var0
+        _mecha_var1 = value
+        if _mecha_var1:
+            _mecha_var2 = 1
+            _mecha_rebind = _mecha_helper_get_rebind(result)
+            result = _mecha_var2
+            if _mecha_rebind:
+                result = _mecha_rebind(result)
+        else:
+            _mecha_var3 = 0
+            _mecha_rebind = _mecha_helper_get_rebind(result)
+            result = _mecha_var3
+            if _mecha_rebind:
+                result = _mecha_rebind(result)
+        _mecha_var4 = result
+        return _mecha_var4
+_mecha_var6 = _mecha_helper_replace(_mecha_refs[0], commands=_mecha_helper_children(_mecha_var5))
+---
+output = _mecha_var6
+---
+_mecha_refs[0]
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=115, lineno=7, colno=18)
+  commands:
+    <class 'mecha.ast.AstCommand'>

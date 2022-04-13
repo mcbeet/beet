@@ -4,9 +4,11 @@ __all__ = [
     "get_stream_pending_identifiers",
     "get_stream_identifiers_storage",
     "get_stream_pending_identifiers_storage",
+    "get_stream_branch_scope",
     "UndefinedIdentifier",
     "create_bolt_root_parser",
     "ExecuteIfConditionConstraint",
+    "BranchScopeManager",
     "InterpolationParser",
     "parse_statement",
     "AssignmentTargetParser",
@@ -126,6 +128,10 @@ def get_bolt_parsers(
                 GlobalNonlocalHandler(ExecuteIfConditionConstraint(parsers["command"]))
             )
         ),
+        "command:argument:bolt:if_block": delegate("bolt:if_block"),
+        "command:argument:bolt:elif_condition": delegate("bolt:elif_condition"),
+        "command:argument:bolt:elif_block": delegate("bolt:elif_block"),
+        "command:argument:bolt:else_block": delegate("bolt:else_block"),
         "command:argument:bolt:statement": delegate("bolt:statement"),
         "command:argument:bolt:assignment_target": delegate("bolt:assignment_target"),
         "command:argument:bolt:import": delegate("bolt:import"),
@@ -139,6 +145,23 @@ def get_bolt_parsers(
         ################################################################################
         # Bolt
         ################################################################################
+        "bolt:if_block": BranchScopeManager(
+            parser=delegate("nested_root"),
+            update_before=True,
+        ),
+        "bolt:elif_condition": BranchScopeManager(
+            parser=delegate("bolt:expression"),
+            mask=True,
+            update_after=True,
+        ),
+        "bolt:elif_block": BranchScopeManager(
+            parser=delegate("nested_root"),
+            mask=True,
+        ),
+        "bolt:else_block": BranchScopeManager(
+            parser=delegate("nested_root"),
+            mask=True,
+        ),
         "bolt:statement": parse_statement,
         "bolt:assignment_target": AssignmentTargetParser(
             allow_undefined_identifiers=True,
@@ -324,6 +347,11 @@ def get_stream_pending_identifiers_storage(stream: TokenStream) -> Dict[str, str
     return stream.data.setdefault("pending_identifiers_storage", {})
 
 
+def get_stream_branch_scope(stream: TokenStream) -> Set[str]:
+    """Return the identifiers available inside the branch."""
+    return stream.data.setdefault("branch_scope", set())
+
+
 class UndefinedIdentifier(UnexpectedToken):
     """Raised when an identifier is not defined."""
 
@@ -389,6 +417,47 @@ class ExecuteIfConditionConstraint:
                 raise set_location(exc, node)
 
         return node
+
+
+@dataclass
+class BranchScopeManager:
+    """Parser that manages accessible identifiers for conditional branches."""
+
+    parser: Parser
+    mask: bool = False
+    update_before: bool = False
+    update_after: bool = False
+
+    def __call__(self, stream: TokenStream) -> Any:
+        identifiers = get_stream_identifiers(stream)
+        identifiers_storage = get_stream_identifiers_storage(stream)
+        branch_scope = get_stream_branch_scope(stream)
+
+        mask = branch_scope and identifiers - branch_scope
+        mask_storage = {
+            identifier: identifiers_storage[identifier]
+            for identifier in set(identifiers_storage) & mask
+        }
+
+        if self.mask:
+            identifiers -= mask
+            for identifier in mask_storage:
+                del identifiers_storage[identifier]
+
+        if self.update_before:
+            branch_scope = identifiers.copy()
+
+        try:
+            return self.parser(stream)
+        finally:
+            if self.update_after:
+                branch_scope = identifiers.copy()
+
+            if self.mask:
+                identifiers.update(mask)
+                identifiers_storage.update(mask_storage)
+
+            stream.data["branch_scope"] = branch_scope
 
 
 @dataclass
@@ -556,7 +625,7 @@ class IfElseLoweringParser:
                     exc = InvalidSyntax(
                         "Conditional branch must be part of an if statement."
                     )
-                    raise set_location(exc, command)
+                    raise set_location(exc, command, command.arguments[-1].location)
 
             if command.identifier == "elif:condition:body":
                 changed = True
@@ -706,6 +775,7 @@ def parse_function_root(stream: TokenStream) -> AstFunctionRoot:
     stream_copy.data["pending_identifiers"] = set()
     stream_copy.data["identifiers_storage"] = {}
     stream_copy.data["pending_identifiers_storage"] = {}
+    stream_copy.data["branch_scope"] = set()
 
     pending_identifiers.clear()
 

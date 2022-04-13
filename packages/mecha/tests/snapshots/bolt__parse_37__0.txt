@@ -8,6 +8,5 @@ a = 1
 #      4 |  else:
 #        :  ^^^^^
 #      5 |      say hello
-#        :      ^^^^^^^^^
 else:
     say hello

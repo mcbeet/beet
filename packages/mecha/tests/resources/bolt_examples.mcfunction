@@ -720,3 +720,18 @@ say Counter(9).incr()
 ###
 for i in range(3):
     parent[i] = f"param{i}"
+###
+def foo(value):
+    if value:
+        result = 1
+    else:
+        result = 0
+    return result
+###
+def foo(value):
+    result = "init"
+    if value:
+        result = 1
+    else:
+        result = 0
+    return result
