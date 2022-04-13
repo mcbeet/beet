@@ -168,6 +168,20 @@ class Accumulator:
             self.lines.append(f"!lineno {lineno}\n")
         self.lines.append(f"{self.indentation}{code}\n")
 
+    @contextmanager
+    def if_statement(self, condition: str):
+        """Emit if statement."""
+        self.statement(f"if {condition}:")
+        with self.block():
+            yield
+
+    @contextmanager
+    def else_statement(self):
+        """Emit else statement."""
+        self.statement(f"else:")
+        with self.block():
+            yield
+
 
 @dataclass
 class ChildrenCollector:
@@ -481,8 +495,7 @@ class Codegen(Visitor):
         acc: Accumulator,
     ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
         condition = yield from visit_single(node.arguments[0], required=True)
-        acc.statement(f"if {condition}:")
-        with acc.block():
+        with acc.if_statement(condition):
             yield from visit_body(cast(AstRoot, node.arguments[1]), acc)
         return []
 
@@ -492,8 +505,7 @@ class Codegen(Visitor):
         node: AstCommand,
         acc: Accumulator,
     ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
-        acc.statement(f"else:")
-        with acc.block():
+        with acc.else_statement():
             yield from visit_body(cast(AstRoot, node.arguments[0]), acc)
         return []
 
@@ -660,8 +672,7 @@ class Codegen(Visitor):
             condition = acc.make_variable()
             value = acc.helper("operator_not", left)
             acc.statement(f"{condition} = {value}")
-        acc.statement(f"if {condition}:")
-        with acc.block():
+        with acc.if_statement(condition):
             right = yield from visit_single(node.right, required=True)
             acc.statement(f"{left} = {right}")
         return [left]
