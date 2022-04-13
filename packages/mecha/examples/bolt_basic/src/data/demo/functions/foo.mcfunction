@@ -477,3 +477,11 @@ def foo(msg):
 
 if score #temp abc matches 1..:
     foo("foo")
+
+tag_name = ./yolo_funcs
+
+function_tag tag_name:
+    values:
+        -   "demo:foo"
+
+as @p function #tag_name # this runs the tag

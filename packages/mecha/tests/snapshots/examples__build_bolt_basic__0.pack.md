@@ -231,6 +231,7 @@ say 1
 say 2
 say 10
 execute if score #temp abc matches 1.. run say foo
+execute as @p run function #demo:yolo_funcs
 ```
 
 `@function demo:import_a`
@@ -516,6 +517,16 @@ execute if score @s thingy matches 19 run say 19
 
 ```mcfunction
 say that's neat
+```
+
+`@function_tag demo:yolo_funcs`
+
+```json
+{
+  "values": [
+    "demo:foo"
+  ]
+}
 ```
 
 ### felix

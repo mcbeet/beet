@@ -735,3 +735,6 @@ def foo(value):
     else:
         result = 0
     return result
+###
+tag_name = foo:bar
+function #tag_name

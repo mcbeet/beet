@@ -292,7 +292,7 @@ def get_bolt_parsers(
         "range": InterpolationParser("range", parsers["range"], fallback=True),
         "resource_location_or_tag": CommentDisambiguation(
             InterpolationParser(
-                "resource_location", parsers["resource_location_or_tag"]
+                "resource_location", parsers["resource_location_or_tag"], prefix=r"#"
             )
         ),
         "item_slot": InterpolationParser(
