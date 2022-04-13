@@ -237,6 +237,12 @@ say hello
 say hello
 say hello
 say hello
+say thing == 1
+say thing == 2
+say thing == 3
+say thing == 99
+say thing == hello
+say thing == world
 ```
 
 `@function demo:import_a`

@@ -491,7 +491,7 @@ def truth_table():
         for b in [False, True]:
             for c in [False, True]:
                 for d in [False, True]:
-                    yield a and b or c and not d
+                    yield (a and b or c and not d) in [True] not in [False]
 
 say list(truth_table())
 
@@ -504,3 +504,19 @@ def not_not(self):
 
 NotPrint = type("NotPrint", (), {"__init__": not_init, "__not__": not_not})
 not not not not NotPrint("hello")
+
+def thing_within(self, container):
+    for item in container:
+        say (self == item)
+    return self
+
+def thing_contains(self, item):
+    say (self == item)
+    return self
+
+def thing_equal(self, item):
+    return f"thing == {item}"
+
+Thing = type("Thing", (), {"__within__": thing_within, "__contains__": thing_contains, "__eq__": thing_equal})
+Thing() in [1, 2, 3] in [99]
+"world" in ("hello" in Thing())

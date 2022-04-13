@@ -1,5 +1,7 @@
 _mecha_lineno = [1], [1]
 _mecha_helper_operator_not = _mecha_runtime.helpers['operator_not']
+_mecha_helper_operator_in = _mecha_runtime.helpers['operator_in']
+_mecha_helper_operator_not_in = _mecha_runtime.helpers['operator_not_in']
 _mecha_helper_children = _mecha_runtime.helpers['children']
 _mecha_helper_replace = _mecha_runtime.helpers['replace']
 with _mecha_runtime.scope() as _mecha_var26:
@@ -46,12 +48,12 @@ with _mecha_runtime.scope() as _mecha_var26:
         if _mecha_var8:
             _mecha_var18 = 1
             _mecha_var19 = 1
-            _mecha_var18 = _mecha_var18 in _mecha_var19
+            _mecha_var18 = _mecha_helper_operator_in(_mecha_var18, _mecha_var19)
             _mecha_var8 = _mecha_var18
         if _mecha_var8:
             _mecha_var20 = 2
             _mecha_var21 = 2
-            _mecha_var20 = _mecha_var20 not in _mecha_var21
+            _mecha_var20 = _mecha_helper_operator_not_in(_mecha_var20, _mecha_var21)
             _mecha_var8 = _mecha_var20
         if _mecha_var8:
             _mecha_var22 = 3

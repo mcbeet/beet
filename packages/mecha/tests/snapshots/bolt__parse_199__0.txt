@@ -2,15 +2,15 @@ for a in [False, True]:
     for b in [False, True]:
         for c in [False, True]:
             for d in [False, True]:
-                print(a and b or c and not d)
+                print((a and b or c and not d) in [True] not in [False])
 ---
 <class 'mecha.ast.AstRoot'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
-  end_location: SourceLocation(pos=166, lineno=6, colno=1)
+  end_location: SourceLocation(pos=193, lineno=6, colno=1)
   commands:
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=0, lineno=1, colno=1)
-      end_location: SourceLocation(pos=165, lineno=5, colno=46)
+      end_location: SourceLocation(pos=192, lineno=5, colno=73)
       identifier: 'for:target:in:iterable:body'
       arguments:
         <class 'mecha.contrib.bolt.ast.AstTargetIdentifier'>
@@ -32,11 +32,11 @@ for a in [False, True]:
               value: True
         <class 'mecha.ast.AstRoot'>
           location: SourceLocation(pos=28, lineno=2, colno=5)
-          end_location: SourceLocation(pos=165, lineno=5, colno=46)
+          end_location: SourceLocation(pos=192, lineno=5, colno=73)
           commands:
             <class 'mecha.ast.AstCommand'>
               location: SourceLocation(pos=28, lineno=2, colno=5)
-              end_location: SourceLocation(pos=165, lineno=5, colno=46)
+              end_location: SourceLocation(pos=192, lineno=5, colno=73)
               identifier: 'for:target:in:iterable:body'
               arguments:
                 <class 'mecha.contrib.bolt.ast.AstTargetIdentifier'>
@@ -58,11 +58,11 @@ for a in [False, True]:
                       value: True
                 <class 'mecha.ast.AstRoot'>
                   location: SourceLocation(pos=60, lineno=3, colno=9)
-                  end_location: SourceLocation(pos=165, lineno=5, colno=46)
+                  end_location: SourceLocation(pos=192, lineno=5, colno=73)
                   commands:
                     <class 'mecha.ast.AstCommand'>
                       location: SourceLocation(pos=60, lineno=3, colno=9)
-                      end_location: SourceLocation(pos=165, lineno=5, colno=46)
+                      end_location: SourceLocation(pos=192, lineno=5, colno=73)
                       identifier: 'for:target:in:iterable:body'
                       arguments:
                         <class 'mecha.contrib.bolt.ast.AstTargetIdentifier'>
@@ -84,11 +84,11 @@ for a in [False, True]:
                               value: True
                         <class 'mecha.ast.AstRoot'>
                           location: SourceLocation(pos=96, lineno=4, colno=13)
-                          end_location: SourceLocation(pos=165, lineno=5, colno=46)
+                          end_location: SourceLocation(pos=192, lineno=5, colno=73)
                           commands:
                             <class 'mecha.ast.AstCommand'>
                               location: SourceLocation(pos=96, lineno=4, colno=13)
-                              end_location: SourceLocation(pos=165, lineno=5, colno=46)
+                              end_location: SourceLocation(pos=192, lineno=5, colno=73)
                               identifier: 'for:target:in:iterable:body'
                               arguments:
                                 <class 'mecha.contrib.bolt.ast.AstTargetIdentifier'>
@@ -110,16 +110,16 @@ for a in [False, True]:
                                       value: True
                                 <class 'mecha.ast.AstRoot'>
                                   location: SourceLocation(pos=136, lineno=5, colno=17)
-                                  end_location: SourceLocation(pos=165, lineno=5, colno=46)
+                                  end_location: SourceLocation(pos=192, lineno=5, colno=73)
                                   commands:
                                     <class 'mecha.ast.AstCommand'>
                                       location: SourceLocation(pos=136, lineno=5, colno=17)
-                                      end_location: SourceLocation(pos=165, lineno=5, colno=46)
+                                      end_location: SourceLocation(pos=192, lineno=5, colno=73)
                                       identifier: 'statement'
                                       arguments:
                                         <class 'mecha.contrib.bolt.ast.AstCall'>
                                           location: SourceLocation(pos=136, lineno=5, colno=17)
-                                          end_location: SourceLocation(pos=165, lineno=5, colno=46)
+                                          end_location: SourceLocation(pos=192, lineno=5, colno=73)
                                           value:
                                             <class 'mecha.contrib.bolt.ast.AstIdentifier'>
                                               location: SourceLocation(pos=136, lineno=5, colno=17)
@@ -127,41 +127,69 @@ for a in [False, True]:
                                               value: 'print'
                                           arguments:
                                             <class 'mecha.contrib.bolt.ast.AstExpressionBinary'>
-                                              location: SourceLocation(pos=142, lineno=5, colno=23)
-                                              end_location: SourceLocation(pos=164, lineno=5, colno=45)
-                                              operator: 'or'
+                                              location: SourceLocation(pos=143, lineno=5, colno=24)
+                                              end_location: SourceLocation(pos=191, lineno=5, colno=72)
+                                              operator: 'not_in'
                                               left:
                                                 <class 'mecha.contrib.bolt.ast.AstExpressionBinary'>
-                                                  location: SourceLocation(pos=142, lineno=5, colno=23)
-                                                  end_location: SourceLocation(pos=149, lineno=5, colno=30)
-                                                  operator: 'and'
+                                                  location: SourceLocation(pos=143, lineno=5, colno=24)
+                                                  end_location: SourceLocation(pos=176, lineno=5, colno=57)
+                                                  operator: 'in'
                                                   left:
-                                                    <class 'mecha.contrib.bolt.ast.AstIdentifier'>
-                                                      location: SourceLocation(pos=142, lineno=5, colno=23)
-                                                      end_location: SourceLocation(pos=143, lineno=5, colno=24)
-                                                      value: 'a'
+                                                    <class 'mecha.contrib.bolt.ast.AstExpressionBinary'>
+                                                      location: SourceLocation(pos=143, lineno=5, colno=24)
+                                                      end_location: SourceLocation(pos=165, lineno=5, colno=46)
+                                                      operator: 'or'
+                                                      left:
+                                                        <class 'mecha.contrib.bolt.ast.AstExpressionBinary'>
+                                                          location: SourceLocation(pos=143, lineno=5, colno=24)
+                                                          end_location: SourceLocation(pos=150, lineno=5, colno=31)
+                                                          operator: 'and'
+                                                          left:
+                                                            <class 'mecha.contrib.bolt.ast.AstIdentifier'>
+                                                              location: SourceLocation(pos=143, lineno=5, colno=24)
+                                                              end_location: SourceLocation(pos=144, lineno=5, colno=25)
+                                                              value: 'a'
+                                                          right:
+                                                            <class 'mecha.contrib.bolt.ast.AstIdentifier'>
+                                                              location: SourceLocation(pos=149, lineno=5, colno=30)
+                                                              end_location: SourceLocation(pos=150, lineno=5, colno=31)
+                                                              value: 'b'
+                                                      right:
+                                                        <class 'mecha.contrib.bolt.ast.AstExpressionBinary'>
+                                                          location: SourceLocation(pos=154, lineno=5, colno=35)
+                                                          end_location: SourceLocation(pos=165, lineno=5, colno=46)
+                                                          operator: 'and'
+                                                          left:
+                                                            <class 'mecha.contrib.bolt.ast.AstIdentifier'>
+                                                              location: SourceLocation(pos=154, lineno=5, colno=35)
+                                                              end_location: SourceLocation(pos=155, lineno=5, colno=36)
+                                                              value: 'c'
+                                                          right:
+                                                            <class 'mecha.contrib.bolt.ast.AstExpressionUnary'>
+                                                              location: SourceLocation(pos=160, lineno=5, colno=41)
+                                                              end_location: SourceLocation(pos=165, lineno=5, colno=46)
+                                                              operator: 'not'
+                                                              value:
+                                                                <class 'mecha.contrib.bolt.ast.AstIdentifier'>
+                                                                  location: SourceLocation(pos=164, lineno=5, colno=45)
+                                                                  end_location: SourceLocation(pos=165, lineno=5, colno=46)
+                                                                  value: 'd'
                                                   right:
-                                                    <class 'mecha.contrib.bolt.ast.AstIdentifier'>
-                                                      location: SourceLocation(pos=148, lineno=5, colno=29)
-                                                      end_location: SourceLocation(pos=149, lineno=5, colno=30)
-                                                      value: 'b'
+                                                    <class 'mecha.contrib.bolt.ast.AstList'>
+                                                      location: SourceLocation(pos=170, lineno=5, colno=51)
+                                                      end_location: SourceLocation(pos=176, lineno=5, colno=57)
+                                                      items:
+                                                        <class 'mecha.contrib.bolt.ast.AstValue'>
+                                                          location: SourceLocation(pos=171, lineno=5, colno=52)
+                                                          end_location: SourceLocation(pos=175, lineno=5, colno=56)
+                                                          value: True
                                               right:
-                                                <class 'mecha.contrib.bolt.ast.AstExpressionBinary'>
-                                                  location: SourceLocation(pos=153, lineno=5, colno=34)
-                                                  end_location: SourceLocation(pos=164, lineno=5, colno=45)
-                                                  operator: 'and'
-                                                  left:
-                                                    <class 'mecha.contrib.bolt.ast.AstIdentifier'>
-                                                      location: SourceLocation(pos=153, lineno=5, colno=34)
-                                                      end_location: SourceLocation(pos=154, lineno=5, colno=35)
-                                                      value: 'c'
-                                                  right:
-                                                    <class 'mecha.contrib.bolt.ast.AstExpressionUnary'>
-                                                      location: SourceLocation(pos=159, lineno=5, colno=40)
-                                                      end_location: SourceLocation(pos=164, lineno=5, colno=45)
-                                                      operator: 'not'
-                                                      value:
-                                                        <class 'mecha.contrib.bolt.ast.AstIdentifier'>
-                                                          location: SourceLocation(pos=163, lineno=5, colno=44)
-                                                          end_location: SourceLocation(pos=164, lineno=5, colno=45)
-                                                          value: 'd'
+                                                <class 'mecha.contrib.bolt.ast.AstList'>
+                                                  location: SourceLocation(pos=184, lineno=5, colno=65)
+                                                  end_location: SourceLocation(pos=191, lineno=5, colno=72)
+                                                  items:
+                                                    <class 'mecha.contrib.bolt.ast.AstValue'>
+                                                      location: SourceLocation(pos=185, lineno=5, colno=66)
+                                                      end_location: SourceLocation(pos=190, lineno=5, colno=71)
+                                                      value: False

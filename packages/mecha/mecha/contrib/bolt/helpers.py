@@ -52,6 +52,8 @@ def get_bolt_helpers() -> Dict[str, Any]:
         "missing": object(),
         "children": AstChildren,
         "operator_not": operator_not,
+        "operator_in": operator_in,
+        "operator_not_in": operator_not_in,
         "get_rebind": get_rebind,
         "get_attribute": get_attribute,
         "import_module": python_import_module,
@@ -91,6 +93,20 @@ def operator_not(obj: Any):
     if func := getattr(type(obj), "__not__", None):
         return func(obj)
     return not obj
+
+
+@internal
+def operator_in(item: Any, container: Any):
+    if func := getattr(type(item), "__within__", None):
+        return func(item, container)
+    if func := getattr(type(container), "__contains__", None):
+        return func(container, item)
+    return item in container
+
+
+@internal
+def operator_not_in(item: Any, container: Any):
+    return operator_not(operator_in(item, container))
 
 
 @internal

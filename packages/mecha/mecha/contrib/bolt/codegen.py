@@ -637,10 +637,14 @@ class Codegen(Visitor):
         node: AstExpressionBinary,
         acc: Accumulator,
     ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
-        op = node.operator.replace("_", " ")
         left = yield from visit_single(node.left, required=True)
         right = yield from visit_single(node.right, required=True)
-        acc.statement(f"{left} = {left} {op} {right}", lineno=node)
+        if node.operator in ["in", "not_in"]:
+            value = acc.helper(f"operator_{node.operator}", left, right)
+            acc.statement(f"{left} = {value}", lineno=node)
+        else:
+            op = node.operator.replace("_", " ")
+            acc.statement(f"{left} = {left} {op} {right}", lineno=node)
         return [left]
 
     @rule(AstExpressionBinary, operator="and")
@@ -668,20 +672,13 @@ class Codegen(Visitor):
         node: AstExpressionUnary,
         acc: Accumulator,
     ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
-        op = node.operator.replace("_", " ")
-        value = yield from visit_single(node.value, required=True)
-        acc.statement(f"{value} = {op} {value}", lineno=node)
-        return [value]
-
-    @rule(AstExpressionUnary, operator="not")
-    def unary_logical(
-        self,
-        node: AstExpressionUnary,
-        acc: Accumulator,
-    ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
         result = yield from visit_single(node.value, required=True)
-        value = acc.helper("operator_not", result)
-        acc.statement(f"{result} = {value}", lineno=node)
+        if node.operator in ["not"]:
+            value = acc.helper(f"operator_{node.operator}", result)
+            acc.statement(f"{result} = {value}", lineno=node)
+        else:
+            op = node.operator.replace("_", " ")
+            acc.statement(f"{result} = {op} {result}", lineno=node)
         return [result]
 
     @rule(AstValue)
