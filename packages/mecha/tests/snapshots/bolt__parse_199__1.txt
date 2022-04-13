@@ -4,7 +4,7 @@ _mecha_helper_operator_in = _mecha_runtime.helpers['operator_in']
 _mecha_helper_operator_not_in = _mecha_runtime.helpers['operator_not_in']
 _mecha_helper_children = _mecha_runtime.helpers['children']
 _mecha_helper_replace = _mecha_runtime.helpers['replace']
-with _mecha_runtime.scope() as _mecha_var22:
+with _mecha_runtime.scope() as _mecha_var24:
     _mecha_var0 = False
     _mecha_var1 = True
     _mecha_var2 = [_mecha_var0, _mecha_var1]
@@ -23,27 +23,29 @@ with _mecha_runtime.scope() as _mecha_var22:
                 for d in _mecha_var11:
                     _mecha_var12 = print
                     _mecha_var13 = a
-                    if _mecha_var13:
-                        _mecha_var14 = b
-                        _mecha_var13 = _mecha_var14
-                    _mecha_var15 = _mecha_helper_operator_not(_mecha_var13)
-                    if _mecha_var15:
-                        _mecha_var16 = c
-                        if _mecha_var16:
-                            _mecha_var17 = d
-                            _mecha_var17 = _mecha_helper_operator_not(_mecha_var17)
-                            _mecha_var16 = _mecha_var17
-                        _mecha_var13 = _mecha_var16
-                    _mecha_var18 = True
-                    _mecha_var19 = [_mecha_var18]
-                    _mecha_var13 = _mecha_helper_operator_in(_mecha_var13, _mecha_var19)
-                    _mecha_var20 = False
+                    _mecha_var14 = _mecha_var13
+                    if _mecha_var14:
+                        _mecha_var15 = b
+                        _mecha_var13 = _mecha_var15
+                    _mecha_var16 = _mecha_helper_operator_not(_mecha_var13)
+                    if _mecha_var16:
+                        _mecha_var17 = c
+                        _mecha_var18 = _mecha_var17
+                        if _mecha_var18:
+                            _mecha_var19 = d
+                            _mecha_var19 = _mecha_helper_operator_not(_mecha_var19)
+                            _mecha_var17 = _mecha_var19
+                        _mecha_var13 = _mecha_var17
+                    _mecha_var20 = True
                     _mecha_var21 = [_mecha_var20]
-                    _mecha_var13 = _mecha_helper_operator_not_in(_mecha_var13, _mecha_var21)
+                    _mecha_var13 = _mecha_helper_operator_in(_mecha_var13, _mecha_var21)
+                    _mecha_var22 = False
+                    _mecha_var23 = [_mecha_var22]
+                    _mecha_var13 = _mecha_helper_operator_not_in(_mecha_var13, _mecha_var23)
                     _mecha_var12 = _mecha_var12(_mecha_var13)
-_mecha_var23 = _mecha_helper_replace(_mecha_refs[0], commands=_mecha_helper_children(_mecha_var22))
+_mecha_var25 = _mecha_helper_replace(_mecha_refs[0], commands=_mecha_helper_children(_mecha_var24))
 ---
-output = _mecha_var23
+output = _mecha_var25
 ---
 _mecha_refs[0]
 <class 'mecha.ast.AstRoot'>

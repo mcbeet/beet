@@ -667,11 +667,9 @@ class Codegen(Visitor):
         acc: Accumulator,
     ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
         left = yield from visit_single(node.left, required=True)
-        condition = left
-        if node.operator == "or":
-            condition = acc.make_variable()
-            value = acc.helper("operator_not", left)
-            acc.statement(f"{condition} = {value}")
+        condition = acc.make_variable()
+        value = acc.helper("operator_not", left) if node.operator == "or" else left
+        acc.statement(f"{condition} = {value}")
         with acc.if_statement(condition):
             right = yield from visit_single(node.right, required=True)
             acc.statement(f"{left} = {right}")
