@@ -1282,10 +1282,11 @@ class PrimaryParser:
 
                 if token.match("brace"):
                     node = AstCall(value=node, arguments=AstChildren(arguments))
-                elif not arguments:
-                    exc = InvalidSyntax("Empty lookup not allowed.")
-                    raise set_location(exc, node, stream.current)
                 else:
+                    if not arguments:
+                        arguments = [
+                            set_location(AstSlice(), node.end_location, stream.current)
+                        ]
                     node = AstLookup(value=node, arguments=AstChildren(arguments))
 
                 node = set_location(node, node.value, stream.current)
