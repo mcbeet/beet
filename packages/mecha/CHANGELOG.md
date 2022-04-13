@@ -2,6 +2,14 @@
 
 <!--next-version-placeholder-->
 
+## v0.44.0 (2022-04-13)
+### Feature
+* Better errors for undefined identifiers ([`7424ddf`](https://github.com/mcbeet/mecha/commit/7424ddf6748582567ab8841bf1d1f7ea97e40b45))
+
+### Fix
+* Allow `#` prefix when interpolating resource locations ([`3c1b7b5`](https://github.com/mcbeet/mecha/commit/3c1b7b510e721db6bc1c197d63232135392c6acf))
+* Properly handle conditional branch scopes ([`236326b`](https://github.com/mcbeet/mecha/commit/236326b25dfe2d601d64ce1b8aa7c59960f7e5d7))
+
 ## v0.43.3 (2022-04-02)
 ### Fix
 * Use full source path as cache key ([`f2d8944`](https://github.com/mcbeet/mecha/commit/f2d8944f8819c87b9aadfe56bc758ab1d8702e9b))
