@@ -2,7 +2,7 @@ from pathlib import Path
 
 import click
 from beet import ErrorMessage, Project
-from beet.toolchain.cli import beet, echo
+from beet.toolchain.cli import beet
 
 from mecha import AstCacheBackend
 
@@ -19,6 +19,6 @@ def ast(project: Project, filename: str):
 
     try:
         with ast_path.open("rb") as f:
-            echo(AstCacheBackend().load(f).dump())
+            click.echo(AstCacheBackend().load(f).dump())
     except FileNotFoundError as exc:
         raise ErrorMessage(f'No cached ast for "{filename}".') from exc

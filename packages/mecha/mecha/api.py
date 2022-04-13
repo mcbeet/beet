@@ -290,6 +290,7 @@ class Mecha:
             d = Diagnostic(
                 level="error",
                 message=str(exc),
+                notes=exc.notes,
                 hint=resource_location,
                 filename=str(filename) if filename else None,
                 file=source,
@@ -461,6 +462,9 @@ class Mecha:
                 if source := self.database[diagnostic.file].source:
                     if code := diagnostic.format_code(source):
                         message += f"\n{code}"
+
+            if diagnostic.notes:
+                message += f"\n{diagnostic.format_notes()}"
 
             extra = {"annotate": diagnostic.format_location()}
 

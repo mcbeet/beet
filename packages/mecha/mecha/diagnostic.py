@@ -23,6 +23,7 @@ class Diagnostic(MechaError):
 
     level: Literal["info", "warn", "error"]
     message: str
+    notes: List[str] = field(default_factory=list)
 
     rule: Optional[str] = None
     hint: Optional[str] = None
@@ -40,6 +41,10 @@ class Diagnostic(MechaError):
         if self.rule:
             message += f" ({self.rule})"
         return message
+
+    def format_notes(self) -> str:
+        """Return the formatted notes."""
+        return "Notes:\n" + "\n".join(f"  - {note}\n" for note in self.notes)
 
     def format_location(self) -> str:
         """Return the formatted location of the reported message."""

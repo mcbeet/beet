@@ -33,6 +33,7 @@ __all__ = [
     "PrimaryParser",
     "parse_dict_item",
     "LiteralParser",
+    "UndefinedIdentifierErrorHandler",
 ]
 
 
@@ -120,8 +121,10 @@ def get_bolt_parsers(
         ################################################################################
         "root": create_bolt_root_parser(parsers["root"]),
         "nested_root": create_bolt_root_parser(parsers["nested_root"]),
-        "command": ImportStatementHandler(
-            GlobalNonlocalHandler(ExecuteIfConditionConstraint(parsers["command"]))
+        "command": UndefinedIdentifierErrorHandler(
+            ImportStatementHandler(
+                GlobalNonlocalHandler(ExecuteIfConditionConstraint(parsers["command"]))
+            )
         ),
         "command:argument:bolt:statement": delegate("bolt:statement"),
         "command:argument:bolt:assignment_target": delegate("bolt:assignment_target"),
@@ -1335,3 +1338,22 @@ class LiteralParser:
 
             node = AstValue(value=value)  # type: ignore
             return set_location(node, stream.current)
+
+
+@dataclass
+class UndefinedIdentifierErrorHandler:
+    """Parser that provides hints for errors involving undefined identifiers."""
+
+    parser: Parser
+
+    def __call__(self, stream: TokenStream) -> Any:
+        try:
+            return self.parser(stream)
+        except UndefinedIdentifier:
+            raise
+        except InvalidSyntax as exc:
+            for alt in exc.alternatives.get(UndefinedIdentifier, []):
+                if alt.end_location.pos + 1 >= exc.location.pos:  # kind of a cheat
+                    alt.notes.append(str(exc))
+                    raise alt from None
+            raise

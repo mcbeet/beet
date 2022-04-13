@@ -7,10 +7,10 @@ __all__ = [
 
 
 from dataclasses import dataclass, replace
-from typing import Dict, List, Type, cast
+from typing import Dict, List, Type
 
 from beet import Context, DataModelBase, NamespaceFile
-from beet.core.utils import JsonDict, required_field, snake_case
+from beet.core.utils import required_field, snake_case
 from tokenstream import set_location
 
 from mecha import (
@@ -124,13 +124,13 @@ class NestedResourcesTransformer(MutatingReducer):
                             continue
 
                         full_name = name.get_canonical_value()
-                        file_instance = file_type(
-                            cast(JsonDict, value),
+                        file_instance = file_type(  # type: ignore
+                            value,
                             original=self.database.current.original,
                         )
 
                         if command.identifier.startswith("merge:"):
-                            proxy.merge({full_name: file_instance})
+                            proxy.merge({full_name: file_instance})  # type: ignore
                         elif full_name not in proxy:
                             proxy[full_name] = file_instance
                         else:

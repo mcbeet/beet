@@ -34,6 +34,9 @@ def annotate_diagnostics(
                 if code := diagnostic.format_code(source):
                     message += f"\n{code}"
 
+            if diagnostic.notes:
+                message += f"\n{diagnostic.format_notes()}"
+
             comments = [f"# {line}" for line in message.splitlines()]
             comments[0] = "#>" + comments[0][2:]
             rendered = annotations.setdefault(diagnostic.file, [])

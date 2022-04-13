@@ -717,3 +717,6 @@ counter = Counter()
 say counter.incr()
 say counter.incr()
 say Counter(9).incr()
+###
+for i in range(3):
+    parent[i] = f"param{i}"
