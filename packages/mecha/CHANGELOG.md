@@ -2,6 +2,13 @@
 
 <!--next-version-placeholder-->
 
+## v0.45.0 (2022-04-13)
+### Feature
+* Add branch overloading ([`2a7f821`](https://github.com/mcbeet/mecha/commit/2a7f821a39e1e11afdb4f509f4189fd081f5999e))
+* Improve in operator overloading ([`bb706b0`](https://github.com/mcbeet/mecha/commit/bb706b08e8228dfeeb5da01a0d8a198c02f29f98))
+* Add not operator overloading ([`7a6a387`](https://github.com/mcbeet/mecha/commit/7a6a38791154edbb31b40287e7ff5140bd3c1359))
+* Empty lookup now means full slice ([`1567e9d`](https://github.com/mcbeet/mecha/commit/1567e9d8e298136b111569f1e5e04d5d6bd1d767))
+
 ## v0.44.0 (2022-04-13)
 ### Feature
 * Better errors for undefined identifiers ([`7424ddf`](https://github.com/mcbeet/mecha/commit/7424ddf6748582567ab8841bf1d1f7ea97e40b45))
