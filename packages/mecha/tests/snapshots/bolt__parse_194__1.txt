@@ -15,7 +15,7 @@ with _mecha_runtime.scope() as _mecha_var11:
             _mecha_var1 = 1
             _mecha_rebind = _mecha_helper_get_rebind(x)
             x += _mecha_var1
-            if _mecha_rebind:
+            if _mecha_rebind is not None:
                 x = _mecha_rebind(x)
             _mecha_var2 = x
             return _mecha_var2

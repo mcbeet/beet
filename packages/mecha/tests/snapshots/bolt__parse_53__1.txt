@@ -8,7 +8,7 @@ with _mecha_runtime.scope() as _mecha_var2:
     _mecha_var1 = foo
     _mecha_rebind = _mecha_helper_get_rebind(foo)
     foo = _mecha_var1
-    if _mecha_rebind:
+    if _mecha_rebind is not None:
         foo = _mecha_rebind(foo)
 _mecha_var3 = _mecha_helper_replace(_mecha_refs[0], commands=_mecha_helper_children(_mecha_var2))
 ---

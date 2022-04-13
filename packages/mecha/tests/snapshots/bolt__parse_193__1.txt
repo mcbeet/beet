@@ -49,12 +49,12 @@ with _mecha_runtime.scope() as _mecha_var26:
     _mecha_var20 = 123
     _mecha_rebind = _mecha_helper_get_rebind(a)
     a = _mecha_var20
-    if _mecha_rebind:
+    if _mecha_rebind is not None:
         a = _mecha_rebind(a)
     _mecha_var21 = 456
     _mecha_rebind = _mecha_helper_get_rebind(a)
     a = _mecha_var21
-    if _mecha_rebind:
+    if _mecha_rebind is not None:
         a = _mecha_rebind(a)
     _mecha_var22 = GlobalScore
     _mecha_var23 = 'b'
@@ -63,12 +63,12 @@ with _mecha_runtime.scope() as _mecha_var26:
     _mecha_var24 = 789
     _mecha_rebind = _mecha_helper_get_rebind(b)
     b = _mecha_var24
-    if _mecha_rebind:
+    if _mecha_rebind is not None:
         b = _mecha_rebind(b)
     _mecha_var25 = a
     _mecha_rebind = _mecha_helper_get_rebind(b)
     b = _mecha_var25
-    if _mecha_rebind:
+    if _mecha_rebind is not None:
         b = _mecha_rebind(b)
 _mecha_var27 = _mecha_helper_replace(_mecha_refs[10], commands=_mecha_helper_children(_mecha_var26))
 ---

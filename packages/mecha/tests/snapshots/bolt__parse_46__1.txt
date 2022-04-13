@@ -16,7 +16,7 @@ with _mecha_runtime.scope() as _mecha_var6:
             _mecha_var3 = _mecha_var3 - _mecha_var4
             _mecha_rebind = _mecha_helper_get_rebind(count)
             count = _mecha_var3
-            if _mecha_rebind:
+            if _mecha_rebind is not None:
                 count = _mecha_rebind(count)
     _mecha_runtime.commands.append(_mecha_helper_replace(_mecha_refs[7], arguments=_mecha_helper_children([_mecha_helper_replace(_mecha_refs[6], arguments=_mecha_helper_children([_mecha_refs[3], _mecha_refs[4], _mecha_refs[5], _mecha_helper_replace(_mecha_refs[2], arguments=_mecha_helper_children([_mecha_helper_replace(_mecha_refs[1], commands=_mecha_helper_children(_mecha_var5))]))]))])))
 _mecha_var7 = _mecha_helper_replace(_mecha_refs[8], commands=_mecha_helper_children(_mecha_var6))

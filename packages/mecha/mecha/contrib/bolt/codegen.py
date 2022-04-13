@@ -368,7 +368,7 @@ def visit_binding(
             rebind = acc.helper("get_rebind", target)
             acc.statement(f"_mecha_rebind = {rebind}", lineno=node)
             acc.statement(f"{target} {op} {value}")
-            acc.statement(f"if _mecha_rebind:")
+            acc.statement(f"if _mecha_rebind is not None:")
             with acc.block():
                 acc.statement(f"{target} = _mecha_rebind({target})")
         else:
