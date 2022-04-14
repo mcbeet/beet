@@ -549,6 +549,27 @@ say that's neat
 }
 ```
 
+`@predicate demo:check_scores`
+
+```json
+[
+  {
+    "condition": "minecraft:entity_scores",
+    "entity": "this",
+    "scores": {
+      "foo": 1
+    }
+  },
+  {
+    "condition": "minecraft:entity_scores",
+    "entity": "killer_player",
+    "scores": {
+      "bar": 1
+    }
+  }
+]
+```
+
 ### felix
 
 `@function_tag felix:howdy`

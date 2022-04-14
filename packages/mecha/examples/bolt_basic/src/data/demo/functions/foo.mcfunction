@@ -542,3 +542,20 @@ if DSL("foo"):
         say with bar
 else:
     say no
+
+predicate ./check_scores [
+  {
+    "condition": "minecraft:entity_scores",
+    "entity": "this",
+    "scores": {
+      "foo": 1
+    }
+  },
+  {
+    "condition": "minecraft:entity_scores",
+    "entity": "killer_player",
+    "scores": {
+      "bar": 1
+    }
+  }
+]

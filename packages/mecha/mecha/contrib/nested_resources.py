@@ -115,17 +115,9 @@ class NestedResourcesTransformer(MutatingReducer):
                         else:
                             proxy = data[file_type]
 
-                        if not isinstance(value := content.evaluate(), dict):
-                            d = Diagnostic(
-                                level="error",
-                                message=f"Invalid json object of type {type(value)}.",
-                            )
-                            diagnostics.add(set_location(d, content))
-                            continue
-
                         full_name = name.get_canonical_value()
                         file_instance = file_type(  # type: ignore
-                            value,
+                            content.evaluate(),
                             original=self.database.current.original,
                         )
 
