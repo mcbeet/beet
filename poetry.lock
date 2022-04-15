@@ -1371,7 +1371,7 @@ yaml = ["PyYaml (>=5.2)"]
 
 [[package]]
 name = "python-semantic-release"
-version = "7.28.0"
+version = "7.28.1"
 description = "Automatic Semantic Versioning for Python projects"
 category = "dev"
 optional = false
@@ -1982,7 +1982,7 @@ image = ["Pillow"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "7a99c5da02356a678dab29c52d92320cbb84a9f0e3e36248d3226df354d71659"
+content-hash = "4317ba17a3f783737314754186ecb2d0a71da5ea9cecf0f92d70f1e5a4f8e3f0"
 
 [metadata.files]
 alabaster = [
@@ -2744,8 +2744,8 @@ python-gitlab = [
     {file = "python_gitlab-3.3.0-py3-none-any.whl", hash = "sha256:ab1fd4c98a206f22f01f832bc58f24a09952089b7bbf67cdaee6308e7797503f"},
 ]
 python-semantic-release = [
-    {file = "python-semantic-release-7.28.0.tar.gz", hash = "sha256:3f80f6a66d195ddd2e5a43c18d42174ee038d4dd77f959c00ab1df9bb9ccf654"},
-    {file = "python_semantic_release-7.28.0-py3-none-any.whl", hash = "sha256:446fdf4143648b7ef6d791233dcce01b1e46c6aa9fc9fd4b48f8ef5b49580a30"},
+    {file = "python-semantic-release-7.28.1.tar.gz", hash = "sha256:d7f82b3d4c06b304d07689b8a1c7d0d448ff07c2ab81cd810c4f2f900f24c599"},
+    {file = "python_semantic_release-7.28.1-py3-none-any.whl", hash = "sha256:319c3e811d6e10bc3f0e967419eae0e5e9ba1e6745aa2fd94dd24e3995541ca2"},
 ]
 pytz = [
     {file = "pytz-2022.1-py2.py3-none-any.whl", hash = "sha256:e68985985296d9a66a881eb3193b0906246245294a881e7c8afe623866ac6a5c"},
