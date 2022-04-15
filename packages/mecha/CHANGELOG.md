@@ -2,6 +2,11 @@
 
 <!--next-version-placeholder-->
 
+## v0.45.1 (2022-04-15)
+### Fix
+* Better error when mutating free variable ([`09330b8`](https://github.com/mcbeet/mecha/commit/09330b872afbb99c1b14285d271c6d5b9462466d))
+* Remove unnecessary isinstance check since AstJson.evaluate() always returns a json value ([`e31f1ae`](https://github.com/mcbeet/mecha/commit/e31f1aee6508b6c5958f8ea0a321a69c3ad5ab6a))
+
 ## v0.45.0 (2022-04-13)
 ### Feature
 * Add branch overloading ([`2a7f821`](https://github.com/mcbeet/mecha/commit/2a7f821a39e1e11afdb4f509f4189fd081f5999e))
