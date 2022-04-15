@@ -44,7 +44,7 @@ class Diagnostic(MechaError):
 
     def format_notes(self) -> str:
         """Return the formatted notes."""
-        return "Notes:\n" + "\n".join(f"  - {note}\n" for note in self.notes)
+        return "Notes:\n" + "\n".join(f"  - {note}" for note in self.notes)
 
     def format_location(self) -> str:
         """Return the formatted location of the reported message."""

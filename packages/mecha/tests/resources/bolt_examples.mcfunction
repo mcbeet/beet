@@ -744,3 +744,7 @@ for a in [False, True]:
         for c in [False, True]:
             for d in [False, True]:
                 print((a and b or c and not d) in [True] not in [False])
+###
+a = 1
+def f():
+    a += 1

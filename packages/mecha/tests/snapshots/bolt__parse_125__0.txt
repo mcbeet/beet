@@ -1,5 +1,5 @@
 import math
-#>ERROR  Identifier 'mah' is not defined. Did you mean 'math', 'max' or 'map'?
+#>ERROR  Identifier 'mah' is not defined.
 # line 2, column 1
 #      1 |  import math
 #      2 |  mah.sin(1)

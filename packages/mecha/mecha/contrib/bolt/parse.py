@@ -43,10 +43,10 @@ import keyword
 import re
 from dataclasses import dataclass, field, replace
 from difflib import get_close_matches
-from typing import Any, Dict, Iterable, List, Optional, Set, Tuple, cast
+from typing import Any, Dict, List, Optional, Set, Tuple, cast
 
 from beet.core.utils import required_field
-from tokenstream import InvalidSyntax, Token, TokenStream, UnexpectedToken, set_location
+from tokenstream import InvalidSyntax, Token, TokenStream, set_location
 
 from mecha import (
     AlternativeParser,
@@ -352,14 +352,16 @@ def get_stream_branch_scope(stream: TokenStream) -> Set[str]:
     return stream.data.setdefault("branch_scope", set())
 
 
-class UndefinedIdentifier(UnexpectedToken):
+class UndefinedIdentifier(InvalidSyntax):
     """Raised when an identifier is not defined."""
 
-    identifiers: Tuple[str, ...]
+    token: Token
+    identifiers: Set[str]
 
-    def __init__(self, token: Token, identifiers: Iterable[str]):
-        super().__init__(token)
-        self.identifiers = tuple(identifiers)
+    def __init__(self, token: Token, identifiers: Set[str]):
+        super().__init__(token, identifiers)
+        self.token = token
+        self.identifiers = identifiers
 
     def __str__(self) -> str:
         msg = f"Identifier {self.token.value!r} is not defined."
@@ -558,6 +560,11 @@ def parse_statement(stream: TokenStream) -> Any:
                     )
                     node = set_location(node, node.target, node.value)
 
+            # Make sure that the statement is not followed by anything.
+            current_index = stream.index
+            stream.expect("newline", "eof")
+            stream.index = current_index
+
             return node
 
 
@@ -579,16 +586,20 @@ class AssignmentTargetParser:
         with stream.syntax(identifier=IDENTIFIER_PATTERN, comma=r","):
             while True:
                 token = stream.expect("identifier")
-                rebind = (
-                    token.value in identifiers and token.value in identifiers_storage
-                )
+                is_defined = token.value in identifiers
+                with_storage = token.value in identifiers_storage
+                rebind = is_defined and with_storage
 
                 if self.allow_undefined_identifiers:
                     pending_identifiers.add(token.value)
-                    if token.value not in identifiers_storage:
+                    if not with_storage:
                         pending_identifiers_storage[token.value] = "local"
                 elif not rebind:
-                    exc = UndefinedIdentifier(token, identifiers)
+                    exc = UndefinedIdentifier(token, set(identifiers_storage))
+                    if is_defined and not with_storage:
+                        exc.notes.append(
+                            f"Use 'global {token.value}' or 'nonlocal {token.value}' to mutate the variable defined in outer scope."
+                        )
                     raise set_location(exc, token)
 
                 target = AstTargetIdentifier(value=token.value, rebind=rebind)
@@ -812,7 +823,7 @@ def parse_identifier(stream: TokenStream) -> AstIdentifier:
         token = stream.expect("identifier")
 
     if token.value not in identifiers:
-        exc = UndefinedIdentifier(token, identifiers)
+        exc = UndefinedIdentifier(token, set(identifiers))
         raise set_location(exc, token)
 
     return set_location(AstIdentifier(value=token.value), token)
