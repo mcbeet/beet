@@ -559,3 +559,47 @@ predicate ./check_scores [
     }
   }
 ]
+
+def cond_init(self, name=generate_id("tmp{incr}")):
+    self.name = name
+
+def cond_str(self):
+    return self.name
+
+def cond_not(self):
+    result = Cond()
+    result = 1
+    unless score global self matches 0:
+        result = 0
+    return result
+
+def cond_dup(self):
+    result = Cond()
+    result = self
+    return result
+
+def cond_rebind(self, rhs):
+    if isinstance(rhs, Cond):
+        scoreboard players operation global self = global rhs
+    else:
+        scoreboard players set global self rhs
+    return self
+
+def cond_branch(self):
+    unless score global self matches 0:
+        yield True
+
+Cond = type("Cond", (), {
+    "__init__": cond_init,
+    "__str__": cond_str,
+    "__not__": cond_not,
+    "__dup__": cond_dup,
+    "__rebind__": cond_rebind,
+    "__branch__": contextmanager(cond_branch),
+})
+
+is_awesome = Cond("is_awesome")
+is_awesome = Cond("is_cool") and Cond("is_nice")
+
+if is_awesome or Cond("force_awesomeness"):
+    say hello

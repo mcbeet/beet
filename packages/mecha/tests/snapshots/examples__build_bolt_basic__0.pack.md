@@ -245,6 +245,14 @@ say thing == hello
 say thing == world
 execute if score @s foo matches 1 run function demo:foo/nested_execute_1
 execute if score @s foo matches 0 run say no
+scoreboard players operation global bolt_basic.tmp0 = global is_cool
+execute unless score global is_cool matches 0 run scoreboard players operation global bolt_basic.tmp0 = global is_nice
+scoreboard players operation global is_awesome = global bolt_basic.tmp0
+scoreboard players set global bolt_basic.tmp1 1
+execute unless score global is_awesome matches 0 run scoreboard players set global bolt_basic.tmp1 0
+scoreboard players operation global bolt_basic.tmp2 = global is_awesome
+execute unless score global bolt_basic.tmp1 matches 0 run scoreboard players operation global bolt_basic.tmp2 = global force_awesomeness
+execute unless score global bolt_basic.tmp2 matches 0 run say hello
 ```
 
 `@function demo:import_a`

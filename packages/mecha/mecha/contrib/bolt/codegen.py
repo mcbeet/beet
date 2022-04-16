@@ -674,12 +674,34 @@ class Codegen(Visitor):
         acc: Accumulator,
     ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
         left = yield from visit_single(node.left, required=True)
+
         condition = acc.make_variable()
         value = acc.helper("operator_not", left) if node.operator == "or" else left
-        acc.statement(f"{condition} = {value}")
+        acc.statement(f"{condition} = {value}", lineno=node.left)
+
+        dup = acc.make_variable()
+        value = acc.helper("get_dup", left)
+        acc.statement(f"{dup} = {value}")
+        acc.statement(f"if {dup} is not None:")
+        with acc.block():
+            acc.statement(f"{left} = {dup}()")
+
         with acc.if_statement(condition):
             right = yield from visit_single(node.right, required=True)
-            acc.statement(f"{left} = {right}")
+
+            acc.statement(f"if {dup} is not None:")
+            with acc.block():
+                rebind = acc.helper("get_rebind", left)
+                acc.statement(f"_mecha_rebind = {rebind}", lineno=node.right)
+                acc.statement(f"{left} = {right}")
+                acc.statement(f"if _mecha_rebind is not None:")
+                with acc.block():
+                    acc.statement(f"{left} = _mecha_rebind({left})")
+
+            acc.statement("else:")
+            with acc.block():
+                acc.statement(f"{left} = {right}")
+
         return [left]
 
     @rule(AstExpressionUnary)

@@ -56,6 +56,7 @@ def get_bolt_helpers() -> Dict[str, Any]:
         "operator_in": operator_in,
         "operator_not_in": operator_not_in,
         "branch": BranchDriver,
+        "get_dup": get_dup,
         "get_rebind": get_rebind,
         "get_attribute": get_attribute,
         "import_module": python_import_module,
@@ -137,6 +138,13 @@ class BranchDriver:
     ) -> Optional[bool]:
         if self.context_manager is not None:
             return self.context_manager.__exit__(exc_type, exc, traceback)
+
+
+@internal
+def get_dup(obj: Any):
+    if func := getattr(type(obj), "__dup__", None):
+        return partial(func, obj)
+    return None
 
 
 @internal

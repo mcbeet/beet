@@ -1,96 +1,206 @@
 _mecha_lineno = [1], [1]
 _mecha_helper_operator_not = _mecha_runtime.helpers['operator_not']
+_mecha_helper_get_dup = _mecha_runtime.helpers['get_dup']
 _mecha_helper_branch = _mecha_runtime.helpers['branch']
+_mecha_helper_get_rebind = _mecha_runtime.helpers['get_rebind']
 _mecha_helper_operator_in = _mecha_runtime.helpers['operator_in']
 _mecha_helper_operator_not_in = _mecha_runtime.helpers['operator_not_in']
 _mecha_helper_children = _mecha_runtime.helpers['children']
 _mecha_helper_replace = _mecha_runtime.helpers['replace']
-with _mecha_runtime.scope() as _mecha_var35:
+with _mecha_runtime.scope() as _mecha_var47:
     _mecha_var0 = False
     _mecha_var1 = _mecha_helper_operator_not(_mecha_var0)
+    _mecha_var2 = _mecha_helper_get_dup(_mecha_var0)
+    if _mecha_var2 is not None:
+        _mecha_var0 = _mecha_var2()
     with _mecha_helper_branch(_mecha_var1) as _mecha_condition:
         if _mecha_condition:
-            _mecha_var2 = True
-            _mecha_var3 = _mecha_var2
-            with _mecha_helper_branch(_mecha_var3) as _mecha_condition:
+            _mecha_var3 = True
+            _mecha_var4 = _mecha_var3
+            _mecha_var5 = _mecha_helper_get_dup(_mecha_var3)
+            if _mecha_var5 is not None:
+                _mecha_var3 = _mecha_var5()
+            with _mecha_helper_branch(_mecha_var4) as _mecha_condition:
                 if _mecha_condition:
-                    _mecha_var4 = 'hello'
-                    _mecha_var2 = _mecha_var4
-            _mecha_var0 = _mecha_var2
-    _mecha_var5 = _mecha_helper_operator_not(_mecha_var0)
-    with _mecha_helper_branch(_mecha_var5) as _mecha_condition:
+                    _mecha_var6 = 'hello'
+                    if _mecha_var5 is not None:
+                        _mecha_rebind = _mecha_helper_get_rebind(_mecha_var3)
+                        _mecha_var3 = _mecha_var6
+                        if _mecha_rebind is not None:
+                            _mecha_var3 = _mecha_rebind(_mecha_var3)
+                    else:
+                        _mecha_var3 = _mecha_var6
+            if _mecha_var2 is not None:
+                _mecha_rebind = _mecha_helper_get_rebind(_mecha_var0)
+                _mecha_var0 = _mecha_var3
+                if _mecha_rebind is not None:
+                    _mecha_var0 = _mecha_rebind(_mecha_var0)
+            else:
+                _mecha_var0 = _mecha_var3
+    _mecha_var7 = _mecha_helper_operator_not(_mecha_var0)
+    _mecha_var8 = _mecha_helper_get_dup(_mecha_var0)
+    if _mecha_var8 is not None:
+        _mecha_var0 = _mecha_var8()
+    with _mecha_helper_branch(_mecha_var7) as _mecha_condition:
         if _mecha_condition:
-            _mecha_var6 = 'foo'
-            _mecha_var7 = 'bar'
-            _mecha_var6 = _mecha_var6 == _mecha_var7
-            _mecha_var6 = _mecha_helper_operator_not(_mecha_var6)
-            _mecha_var0 = _mecha_var6
-    _mecha_var8 = _mecha_helper_operator_not(_mecha_var0)
-    with _mecha_helper_branch(_mecha_var8) as _mecha_condition:
+            _mecha_var9 = 'foo'
+            _mecha_var10 = 'bar'
+            _mecha_var9 = _mecha_var9 == _mecha_var10
+            _mecha_var9 = _mecha_helper_operator_not(_mecha_var9)
+            if _mecha_var8 is not None:
+                _mecha_rebind = _mecha_helper_get_rebind(_mecha_var0)
+                _mecha_var0 = _mecha_var9
+                if _mecha_rebind is not None:
+                    _mecha_var0 = _mecha_rebind(_mecha_var0)
+            else:
+                _mecha_var0 = _mecha_var9
+    _mecha_var11 = _mecha_helper_operator_not(_mecha_var0)
+    _mecha_var12 = _mecha_helper_get_dup(_mecha_var0)
+    if _mecha_var12 is not None:
+        _mecha_var0 = _mecha_var12()
+    with _mecha_helper_branch(_mecha_var11) as _mecha_condition:
         if _mecha_condition:
-            _mecha_var9 = 1
-            _mecha_var10 = 2
-            _mecha_var9 = _mecha_var9 != _mecha_var10
-            _mecha_var11 = _mecha_var9
-            with _mecha_helper_branch(_mecha_var11) as _mecha_condition:
+            _mecha_var13 = 1
+            _mecha_var14 = 2
+            _mecha_var13 = _mecha_var13 != _mecha_var14
+            _mecha_var15 = _mecha_var13
+            _mecha_var16 = _mecha_helper_get_dup(_mecha_var13)
+            if _mecha_var16 is not None:
+                _mecha_var13 = _mecha_var16()
+            with _mecha_helper_branch(_mecha_var15) as _mecha_condition:
                 if _mecha_condition:
-                    _mecha_var12 = 1
-                    _mecha_var13 = 2
-                    _mecha_var12 = _mecha_var12 < _mecha_var13
-                    _mecha_var9 = _mecha_var12
-            _mecha_var14 = _mecha_var9
-            with _mecha_helper_branch(_mecha_var14) as _mecha_condition:
+                    _mecha_var17 = 1
+                    _mecha_var18 = 2
+                    _mecha_var17 = _mecha_var17 < _mecha_var18
+                    if _mecha_var16 is not None:
+                        _mecha_rebind = _mecha_helper_get_rebind(_mecha_var13)
+                        _mecha_var13 = _mecha_var17
+                        if _mecha_rebind is not None:
+                            _mecha_var13 = _mecha_rebind(_mecha_var13)
+                    else:
+                        _mecha_var13 = _mecha_var17
+            _mecha_var19 = _mecha_var13
+            _mecha_var20 = _mecha_helper_get_dup(_mecha_var13)
+            if _mecha_var20 is not None:
+                _mecha_var13 = _mecha_var20()
+            with _mecha_helper_branch(_mecha_var19) as _mecha_condition:
                 if _mecha_condition:
-                    _mecha_var15 = 2
-                    _mecha_var16 = 3
-                    _mecha_var15 = _mecha_var15 <= _mecha_var16
-                    _mecha_var9 = _mecha_var15
-            _mecha_var17 = _mecha_var9
-            with _mecha_helper_branch(_mecha_var17) as _mecha_condition:
-                if _mecha_condition:
-                    _mecha_var18 = 5
-                    _mecha_var19 = 4
-                    _mecha_var18 = _mecha_var18 > _mecha_var19
-                    _mecha_var9 = _mecha_var18
-            _mecha_var20 = _mecha_var9
-            with _mecha_helper_branch(_mecha_var20) as _mecha_condition:
-                if _mecha_condition:
-                    _mecha_var21 = 6
-                    _mecha_var22 = 5
-                    _mecha_var21 = _mecha_var21 >= _mecha_var22
-                    _mecha_var9 = _mecha_var21
-            _mecha_var23 = _mecha_var9
+                    _mecha_var21 = 2
+                    _mecha_var22 = 3
+                    _mecha_var21 = _mecha_var21 <= _mecha_var22
+                    if _mecha_var20 is not None:
+                        _mecha_rebind = _mecha_helper_get_rebind(_mecha_var13)
+                        _mecha_var13 = _mecha_var21
+                        if _mecha_rebind is not None:
+                            _mecha_var13 = _mecha_rebind(_mecha_var13)
+                    else:
+                        _mecha_var13 = _mecha_var21
+            _mecha_var23 = _mecha_var13
+            _mecha_var24 = _mecha_helper_get_dup(_mecha_var13)
+            if _mecha_var24 is not None:
+                _mecha_var13 = _mecha_var24()
             with _mecha_helper_branch(_mecha_var23) as _mecha_condition:
                 if _mecha_condition:
-                    _mecha_var24 = 1
-                    _mecha_var25 = 1
-                    _mecha_var24 = _mecha_helper_operator_in(_mecha_var24, _mecha_var25)
-                    _mecha_var9 = _mecha_var24
-            _mecha_var26 = _mecha_var9
-            with _mecha_helper_branch(_mecha_var26) as _mecha_condition:
+                    _mecha_var25 = 5
+                    _mecha_var26 = 4
+                    _mecha_var25 = _mecha_var25 > _mecha_var26
+                    if _mecha_var24 is not None:
+                        _mecha_rebind = _mecha_helper_get_rebind(_mecha_var13)
+                        _mecha_var13 = _mecha_var25
+                        if _mecha_rebind is not None:
+                            _mecha_var13 = _mecha_rebind(_mecha_var13)
+                    else:
+                        _mecha_var13 = _mecha_var25
+            _mecha_var27 = _mecha_var13
+            _mecha_var28 = _mecha_helper_get_dup(_mecha_var13)
+            if _mecha_var28 is not None:
+                _mecha_var13 = _mecha_var28()
+            with _mecha_helper_branch(_mecha_var27) as _mecha_condition:
                 if _mecha_condition:
-                    _mecha_var27 = 2
-                    _mecha_var28 = 2
-                    _mecha_var27 = _mecha_helper_operator_not_in(_mecha_var27, _mecha_var28)
-                    _mecha_var9 = _mecha_var27
-            _mecha_var29 = _mecha_var9
-            with _mecha_helper_branch(_mecha_var29) as _mecha_condition:
+                    _mecha_var29 = 6
+                    _mecha_var30 = 5
+                    _mecha_var29 = _mecha_var29 >= _mecha_var30
+                    if _mecha_var28 is not None:
+                        _mecha_rebind = _mecha_helper_get_rebind(_mecha_var13)
+                        _mecha_var13 = _mecha_var29
+                        if _mecha_rebind is not None:
+                            _mecha_var13 = _mecha_rebind(_mecha_var13)
+                    else:
+                        _mecha_var13 = _mecha_var29
+            _mecha_var31 = _mecha_var13
+            _mecha_var32 = _mecha_helper_get_dup(_mecha_var13)
+            if _mecha_var32 is not None:
+                _mecha_var13 = _mecha_var32()
+            with _mecha_helper_branch(_mecha_var31) as _mecha_condition:
                 if _mecha_condition:
-                    _mecha_var30 = 3
-                    _mecha_var31 = 3
-                    _mecha_var30 = _mecha_var30 is _mecha_var31
-                    _mecha_var9 = _mecha_var30
-            _mecha_var32 = _mecha_var9
-            with _mecha_helper_branch(_mecha_var32) as _mecha_condition:
+                    _mecha_var33 = 1
+                    _mecha_var34 = 1
+                    _mecha_var33 = _mecha_helper_operator_in(_mecha_var33, _mecha_var34)
+                    if _mecha_var32 is not None:
+                        _mecha_rebind = _mecha_helper_get_rebind(_mecha_var13)
+                        _mecha_var13 = _mecha_var33
+                        if _mecha_rebind is not None:
+                            _mecha_var13 = _mecha_rebind(_mecha_var13)
+                    else:
+                        _mecha_var13 = _mecha_var33
+            _mecha_var35 = _mecha_var13
+            _mecha_var36 = _mecha_helper_get_dup(_mecha_var13)
+            if _mecha_var36 is not None:
+                _mecha_var13 = _mecha_var36()
+            with _mecha_helper_branch(_mecha_var35) as _mecha_condition:
                 if _mecha_condition:
-                    _mecha_var33 = 3
-                    _mecha_var34 = 3
-                    _mecha_var33 = _mecha_var33 is not _mecha_var34
-                    _mecha_var9 = _mecha_var33
-            _mecha_var0 = _mecha_var9
-_mecha_var36 = _mecha_helper_replace(_mecha_refs[0], commands=_mecha_helper_children(_mecha_var35))
+                    _mecha_var37 = 2
+                    _mecha_var38 = 2
+                    _mecha_var37 = _mecha_helper_operator_not_in(_mecha_var37, _mecha_var38)
+                    if _mecha_var36 is not None:
+                        _mecha_rebind = _mecha_helper_get_rebind(_mecha_var13)
+                        _mecha_var13 = _mecha_var37
+                        if _mecha_rebind is not None:
+                            _mecha_var13 = _mecha_rebind(_mecha_var13)
+                    else:
+                        _mecha_var13 = _mecha_var37
+            _mecha_var39 = _mecha_var13
+            _mecha_var40 = _mecha_helper_get_dup(_mecha_var13)
+            if _mecha_var40 is not None:
+                _mecha_var13 = _mecha_var40()
+            with _mecha_helper_branch(_mecha_var39) as _mecha_condition:
+                if _mecha_condition:
+                    _mecha_var41 = 3
+                    _mecha_var42 = 3
+                    _mecha_var41 = _mecha_var41 is _mecha_var42
+                    if _mecha_var40 is not None:
+                        _mecha_rebind = _mecha_helper_get_rebind(_mecha_var13)
+                        _mecha_var13 = _mecha_var41
+                        if _mecha_rebind is not None:
+                            _mecha_var13 = _mecha_rebind(_mecha_var13)
+                    else:
+                        _mecha_var13 = _mecha_var41
+            _mecha_var43 = _mecha_var13
+            _mecha_var44 = _mecha_helper_get_dup(_mecha_var13)
+            if _mecha_var44 is not None:
+                _mecha_var13 = _mecha_var44()
+            with _mecha_helper_branch(_mecha_var43) as _mecha_condition:
+                if _mecha_condition:
+                    _mecha_var45 = 3
+                    _mecha_var46 = 3
+                    _mecha_var45 = _mecha_var45 is not _mecha_var46
+                    if _mecha_var44 is not None:
+                        _mecha_rebind = _mecha_helper_get_rebind(_mecha_var13)
+                        _mecha_var13 = _mecha_var45
+                        if _mecha_rebind is not None:
+                            _mecha_var13 = _mecha_rebind(_mecha_var13)
+                    else:
+                        _mecha_var13 = _mecha_var45
+            if _mecha_var12 is not None:
+                _mecha_rebind = _mecha_helper_get_rebind(_mecha_var0)
+                _mecha_var0 = _mecha_var13
+                if _mecha_rebind is not None:
+                    _mecha_var0 = _mecha_rebind(_mecha_var0)
+            else:
+                _mecha_var0 = _mecha_var13
+_mecha_var48 = _mecha_helper_replace(_mecha_refs[0], commands=_mecha_helper_children(_mecha_var47))
 ---
-output = _mecha_var36
+output = _mecha_var48
 ---
 _mecha_refs[0]
 <class 'mecha.ast.AstRoot'>
