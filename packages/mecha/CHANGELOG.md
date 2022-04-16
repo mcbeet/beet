@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.46.0 (2022-04-16)
+### Feature
+* Make it possible to overload logical expressions ([`12c6946`](https://github.com/mcbeet/mecha/commit/12c6946bd0e7481941d50f52d4d1fa926ecac638))
+
 ## v0.45.1 (2022-04-15)
 ### Fix
 * Better error when mutating free variable ([`09330b8`](https://github.com/mcbeet/mecha/commit/09330b872afbb99c1b14285d271c6d5b9462466d))
