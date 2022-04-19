@@ -26,7 +26,7 @@ from typing import (
     overload,
 )
 
-from beet import Cache, Context, DataPack, Function, TextFileBase
+from beet import Cache, Context, DataPack, Function, NamespaceFile, TextFileBase
 from beet.core.utils import FileSystemPath, JsonDict, extra_field, import_from_string
 from pydantic import BaseModel
 from tokenstream import InvalidSyntax, TokenStream
@@ -110,6 +110,10 @@ class Mecha:
     cache_backend: AstCacheBackend = extra_field(default_factory=AstCacheBackend)
 
     spec: CommandSpec = extra_field(default=None)
+
+    providers: List[Type[NamespaceFile]] = extra_field(
+        default_factory=lambda: [Function]
+    )
 
     lint: Dispatcher[AstRoot] = extra_field(init=False)
     transform: Dispatcher[AstRoot] = extra_field(init=False)
@@ -371,17 +375,20 @@ class Mecha:
             if match is None:
                 match = self.match
 
-            for key in source.functions.match(*match or ["*"]):
-                value = source.functions[key]
-                self.database[value] = CompilationUnit(
-                    resource_location=key,
-                    filename=(
-                        os.path.relpath(value.source_path, self.directory)
-                        if value.source_path
-                        else None
-                    ),
-                )
-                self.database.enqueue(value)
+            for file_type in self.providers:
+                if not issubclass(file_type, TextFileBase):
+                    continue
+                for key in source[file_type].match(*match or ["*"]):
+                    value = source[file_type][key]
+                    self.database[value] = CompilationUnit(
+                        resource_location=key,
+                        filename=(
+                            os.path.relpath(value.source_path, self.directory)
+                            if value.source_path
+                            else None
+                        ),
+                    )
+                    self.database.enqueue(value)
         else:
             if isinstance(source, (list, str)):
                 source = Function(source)
