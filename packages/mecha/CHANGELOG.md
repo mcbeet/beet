@@ -2,6 +2,11 @@
 
 <!--next-version-placeholder-->
 
+## v0.47.0 (2022-04-19)
+### Feature
+* Add bolt modules in data packs ([`1ad6291`](https://github.com/mcbeet/mecha/commit/1ad6291c3bba002c6e159f74bd57c8c0c614b70d))
+* Introduce customizable source providers ([`909ed80`](https://github.com/mcbeet/mecha/commit/909ed808d36f83e26d2a34257abe159b22b40212))
+
 ## v0.46.0 (2022-04-16)
 ### Feature
 * Make it possible to overload logical expressions ([`12c6946`](https://github.com/mcbeet/mecha/commit/12c6946bd0e7481941d50f52d4d1fa926ecac638))
