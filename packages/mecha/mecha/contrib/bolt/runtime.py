@@ -1,9 +1,12 @@
 __all__ = [
     "Runtime",
     "Module",
+    "CompiledModule",
     "ModuleCacheBackend",
-    "Evaluator",
     "GlobalsInjection",
+    "ModuleRootParser",
+    "Evaluator",
+    "ModuleRootSerializer",
     "UnusableCompilationUnit",
 ]
 
@@ -18,9 +21,15 @@ from pathlib import Path
 from types import CodeType
 from typing import Any, Callable, Dict, Iterator, List, Optional, Set, Union
 
-from beet import Context, PipelineFallthroughException, TextFileBase, generate_tree
+from beet import (
+    Context,
+    PipelineFallthroughException,
+    TextFile,
+    TextFileBase,
+    generate_tree,
+)
 from beet.core.utils import JsonDict, required_field
-from tokenstream import TokenStream
+from tokenstream import TokenStream, set_location
 
 from mecha import (
     AstCacheBackend,
@@ -30,6 +39,7 @@ from mecha import (
     CompilationDatabase,
     CompilationError,
     CompilationUnit,
+    Diagnostic,
     DiagnosticCollection,
     Dispatcher,
     Mecha,
@@ -39,6 +49,7 @@ from mecha import (
     rule,
 )
 
+from .ast import AstModuleRoot
 from .codegen import Codegen
 from .helpers import get_bolt_helpers
 from .loop_info import loop_info
@@ -63,8 +74,15 @@ class UnusableCompilationUnit(MechaError):
         return self.message
 
 
+class Module(TextFile):
+    """Class representing a bolt module."""
+
+    scope = ("modules",)
+    extension = ".bolt"
+
+
 @dataclass
-class Module:
+class CompiledModule:
     """Class holding the state of a compiled module."""
 
     ast: AstRoot
@@ -80,8 +98,8 @@ class Module:
 class Runtime:
     """The bolt runtime."""
 
-    modules: Dict[TextFileBase[Any], Module]
-    stack: List[Module]
+    modules: Dict[TextFileBase[Any], CompiledModule]
+    stack: List[CompiledModule]
     commands: List[AstCommand]
     helpers: Dict[str, Any]
     globals: JsonDict
@@ -108,7 +126,10 @@ class Runtime:
                 "mecha.contrib.nested_resources",
                 "mecha.contrib.nested_yaml",
                 "mecha.contrib.implicit_execute",
+                self.finalize,
             )
+
+            ctx.data.extend_namespace.append(Module)
 
             self.globals["ctx"] = ctx
 
@@ -135,10 +156,17 @@ class Runtime:
         else:
             mc = ctx
 
+        mc.cache_backend = ModuleCacheBackend(runtime=self)
+
         commands_json = read_text("mecha.resources", "bolt.json")
         mc.spec.add_commands(CommandTree.parse_raw(commands_json))
         mc.spec.parsers.update(get_bolt_parsers(mc.spec.parsers, mc.database))
-        mc.spec.parsers["root"] = GlobalsInjection(self, mc.spec.parsers["root"])
+        mc.spec.parsers["root"] = GlobalsInjection(
+            runtime=self,
+            parser=ModuleRootParser(mc.database, mc.spec.parsers["root"]),
+        )
+
+        mc.providers.append(Module)
 
         self.directory = mc.directory
         self.database = mc.database
@@ -147,7 +175,7 @@ class Runtime:
         self.evaluate = Evaluator(runtime=self)
         mc.steps.insert(0, self.evaluate)
 
-        mc.cache_backend = ModuleCacheBackend(runtime=self)
+        mc.serialize.extend(ModuleRootSerializer())
 
     def get_path(self) -> str:
         """Return the current path."""
@@ -165,7 +193,7 @@ class Runtime:
         self,
         target: Optional[Union[AstRoot, str]] = None,
         current: Optional[TextFileBase[Any]] = None,
-    ) -> Module:
+    ) -> CompiledModule:
         """Retrieve an executable module."""
         if self.stack and not target and not current:
             return self.stack[-1]
@@ -207,7 +235,7 @@ class Runtime:
         else:
             code = None
 
-        module = Module(
+        module = CompiledModule(
             target,
             code,
             refs,
@@ -219,7 +247,7 @@ class Runtime:
 
         return module
 
-    def get_output(self, module: Module) -> AstRoot:
+    def get_output(self, module: CompiledModule) -> AstRoot:
         """Run the module and return the output ast."""
         if not module.code or not module.output:
             return module.ast
@@ -275,7 +303,7 @@ class Runtime:
             raise rewrite_traceback(exc) from None
 
     @internal
-    def import_module(self, resource_location: str) -> Module:
+    def import_module(self, resource_location: str) -> CompiledModule:
         """Import module."""
         try:
             module = self.get_module(resource_location)
@@ -297,6 +325,11 @@ class Runtime:
             raise ImportError(msg) from None
         return values[0] if len(values) == 1 else values
 
+    def finalize(self, ctx: Context):
+        """Plugin that removes modules at the end of the build."""
+        yield
+        ctx.data[Module].clear()
+
 
 @dataclass
 class ModuleCacheBackend(AstCacheBackend):
@@ -311,7 +344,7 @@ class ModuleCacheBackend(AstCacheBackend):
         if data["globals"] != set(self.runtime.globals):
             raise ValueError("Globals mismatch.")
 
-        self.runtime.modules[self.runtime.database.current] = Module(
+        self.runtime.modules[self.runtime.database.current] = CompiledModule(
             ast=ast,
             code=marshal.load(f),
             refs=data["refs"],
@@ -340,6 +373,36 @@ class ModuleCacheBackend(AstCacheBackend):
 
 
 @dataclass
+class GlobalsInjection:
+    """Inject global identifiers."""
+
+    runtime: Runtime
+    parser: Parser
+
+    def __call__(self, stream: TokenStream) -> Any:
+        with stream.provide(
+            identifiers=set(self.runtime.globals)
+            | self.runtime.builtins
+            | {"__name__"},
+        ):
+            return self.parser(stream)
+
+
+@dataclass
+class ModuleRootParser:
+    """Parser for module root."""
+
+    database: CompilationDatabase
+    parser: Parser
+
+    def __call__(self, stream: TokenStream) -> Any:
+        node = self.parser(stream)
+        if isinstance(node, AstRoot) and isinstance(self.database.current, Module):
+            node = set_location(AstModuleRoot(commands=node.commands), node)
+        return node
+
+
+@dataclass
 class Evaluator(Visitor):
     """Visitor that evaluates modules."""
 
@@ -364,17 +427,16 @@ class Evaluator(Visitor):
             raise CompilationError(msg) from exc.with_traceback(tb)
 
 
-@dataclass
-class GlobalsInjection:
-    """Inject global identifiers."""
+class ModuleRootSerializer(Visitor):
+    """Serializer for checking that modules don't emit any commands."""
 
-    runtime: Runtime
-    parser: Parser
-
-    def __call__(self, stream: TokenStream) -> Any:
-        with stream.provide(
-            identifiers=set(self.runtime.globals)
-            | self.runtime.builtins
-            | {"__name__"},
-        ):
-            return self.parser(stream)
+    @rule(AstModuleRoot)
+    def module_root(self, node: AstModuleRoot, result: List[str]):
+        if node.commands:
+            command = node.commands[0]
+            name = command.identifier.partition(":")[0]
+            raise set_location(
+                Diagnostic("warn", f"Standalone {name!r} command in module."),
+                command,
+                command.arguments[0] if command.arguments else command,
+            )

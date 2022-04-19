@@ -253,6 +253,7 @@ execute unless score global is_awesome matches 0 run scoreboard players set glob
 scoreboard players operation global bolt_basic.tmp2 = global is_awesome
 execute unless score global bolt_basic.tmp1 matches 0 run scoreboard players operation global bolt_basic.tmp2 = global force_awesomeness
 execute unless score global bolt_basic.tmp2 matches 0 run say hello
+say this is from demo:utils
 ```
 
 `@function demo:import_a`
@@ -275,6 +276,12 @@ say 14
 
 ```mcfunction
 
+```
+
+`@function demo:utils`
+
+```mcfunction
+say this doesn't conflict with the demo:utils module
 ```
 
 `@function demo:foo/nested_execute_0`

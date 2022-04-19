@@ -1,4 +1,5 @@
 __all__ = [
+    "AstModuleRoot",
     "AstExpression",
     "AstExpressionBinary",
     "AstExpressionUnary",
@@ -35,7 +36,12 @@ from typing import Any, Optional, Union
 from beet.core.utils import required_field
 from tokenstream import TokenStream
 
-from mecha import AstChildren, AstNode
+from mecha import AstChildren, AstNode, AstRoot
+
+
+@dataclass(frozen=True)
+class AstModuleRoot(AstRoot):
+    """Module root ast node."""
 
 
 @dataclass(frozen=True)

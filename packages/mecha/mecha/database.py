@@ -37,19 +37,21 @@ class CompilationDatabase(Container[TextFileBase[Any], CompilationUnit]):
     """Compilation database."""
 
     index: Dict[str, TextFileBase[Any]]
-    queue: List[Tuple[int, str, TextFileBase[Any]]]
     session: Set[TextFileBase[Any]]
+    queue: List[Tuple[int, str, int, TextFileBase[Any]]]
     step: int
     current: TextFileBase[Any]
+    count: int
 
     def __init__(self):
         super().__init__()
         self.index = {}
-        self.queue = []
         self.session = set()
+        self.queue = []
         self.step = -1
         self.current = TextFile()
         self[self.current] = CompilationUnit()
+        self.count = 0
 
     def process(
         self,
@@ -70,17 +72,21 @@ class CompilationDatabase(Container[TextFileBase[Any], CompilationUnit]):
 
     def setup_compilation(self):
         """Setup database for compilation."""
-        self.queue.clear()
         self.session.clear()
+        self.queue.clear()
 
     def enqueue(self, key: TextFileBase[Any], step: int = -1):
         """Enqueue a file and schedule it to be processed with the given step."""
-        heappush(self.queue, (step, self[key].resource_location or "<unknown>", key))
         self.session.add(key)
+        self.count += 1
+        heappush(
+            self.queue,
+            (step, self[key].resource_location or "<unknown>", self.count, key),
+        )
 
     def dequeue(self) -> Tuple[int, TextFileBase[Any]]:
         """Dequeue the next file that needs to be processed."""
-        step, _, key = heappop(self.queue)
+        step, _, _, key = heappop(self.queue)
         return step, key
 
     def process_queue(self) -> Iterator[Tuple[int, TextFileBase[Any]]]:

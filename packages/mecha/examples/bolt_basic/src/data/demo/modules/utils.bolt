@@ -1,0 +1,2 @@
+def something():
+    say f"this is from {__name__}"

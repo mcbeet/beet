@@ -603,3 +603,6 @@ is_awesome = Cond("is_cool") and Cond("is_nice")
 
 if is_awesome or Cond("force_awesomeness"):
     say hello
+
+from ./utils import something
+something()
