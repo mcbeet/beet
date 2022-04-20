@@ -13,7 +13,7 @@ from contextlib import contextmanager
 from copy import deepcopy
 from itertools import chain
 from pathlib import Path
-from typing import Any, Dict, Iterable, List, Literal, Optional, Union
+from typing import Any, Dict, Iterable, List, Literal, Optional, Tuple, Union
 
 import toml
 import yaml
@@ -43,7 +43,7 @@ class PackConfig(BaseModel):
     compression: Optional[Literal["none", "deflate", "bzip2", "lzma"]] = None
     compression_level: Optional[int] = None
 
-    load: Union[str, List[str]] = Field(default_factory=list)
+    load: Union[str, List[Union[str, Tuple[str, str]]]] = Field(default_factory=list)
     render: Dict[str, List[str]] = Field(default_factory=dict)
 
     class Config:
@@ -64,8 +64,10 @@ class PackConfig(BaseModel):
                 if self.compression_level is None
                 else self.compression_level
             ),
-            load=([other.load] if isinstance(other.load, str) else other.load)
-            + ([self.load] if isinstance(self.load, str) else self.load),
+            load=[
+                *([other.load] if isinstance(other.load, str) else other.load),
+                *([self.load] if isinstance(self.load, str) else self.load),
+            ],
             render={
                 key: other.render.get(key, []) + self.render.get(key, [])
                 for key in self.render.keys() | other.render.keys()
@@ -114,7 +116,7 @@ class ProjectConfig(BaseModel):
 
         for pack_config in [self.data_pack, self.resource_pack]:
             pack_config.load = [
-                str(path / load_path)
+                load_path if isinstance(load_path, tuple) else str(path / load_path)
                 for load_path in (
                     [pack_config.load]
                     if isinstance(pack_config.load, str)

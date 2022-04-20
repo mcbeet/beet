@@ -1,0 +1,3 @@
+data_pack:
+  load:
+    - ["demo", "data_pack"]

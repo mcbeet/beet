@@ -1,0 +1,46 @@
+{
+  "id": "",
+  "name": "",
+  "description": "",
+  "author": "",
+  "version": "",
+  "directory": "tests/config_examples/load_package",
+  "extend": [],
+  "output": null,
+  "ignore": [],
+  "whitelist": null,
+  "require": [],
+  "templates": [],
+  "data_pack": {
+    "name": "",
+    "description": "",
+    "pack_format": 0,
+    "zipped": null,
+    "compression": null,
+    "compression_level": null,
+    "load": [
+      [
+        "demo",
+        "my_data_pack"
+      ]
+    ],
+    "render": {}
+  },
+  "resource_pack": {
+    "name": "",
+    "description": "",
+    "pack_format": 0,
+    "zipped": null,
+    "compression": null,
+    "compression_level": null,
+    "load": [
+      [
+        "demo",
+        "my_resource_pack"
+      ]
+    ],
+    "render": {}
+  },
+  "pipeline": [],
+  "meta": {}
+}

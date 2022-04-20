@@ -24,8 +24,14 @@ class FmtConfig(Fmt[ProjectConfig]):
         if config.output:
             config.output = str(Path(config.output))
 
-        config.data_pack.load = [str(Path(p)) for p in config.data_pack.load]
-        config.resource_pack.load = [str(Path(p)) for p in config.resource_pack.load]
+        config.data_pack.load = [
+            pattern if isinstance(pattern, tuple) else str(Path(pattern))
+            for pattern in config.data_pack.load
+        ]
+        config.resource_pack.load = [
+            pattern if isinstance(pattern, tuple) else str(Path(pattern))
+            for pattern in config.resource_pack.load
+        ]
         config.templates = [str(Path(p)) for p in config.templates]
 
         for entry in config.pipeline:
