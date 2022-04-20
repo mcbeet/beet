@@ -13,7 +13,7 @@ from pathlib import Path
 
 from pydantic import BaseModel
 
-from beet import Context, LoadEntries, Pipeline, configurable
+from beet import Context, PackageableEntries, Pipeline, configurable
 from beet.core.utils import import_from_string
 from beet.toolchain.pipeline import FormattedPipelineException
 
@@ -28,8 +28,8 @@ class LoadError(FormattedPipelineException):
 
 
 class LoadOptions(BaseModel):
-    resource_pack: LoadEntries = []
-    data_pack: LoadEntries = []
+    resource_pack: PackageableEntries = []
+    data_pack: PackageableEntries = []
 
 
 def beet_default(ctx: Context):

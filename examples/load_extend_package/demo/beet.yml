@@ -1,0 +1,3 @@
+extend:
+  - ["demo", "beet-random.yml"]
+  - ["demo", "beet-common.yml"]

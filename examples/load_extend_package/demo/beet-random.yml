@@ -1,0 +1,4 @@
+pipeline:
+  - extend:
+      - ["demo", "beet-common.yml"]
+  - "demo.rename_minecraft"

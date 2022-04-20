@@ -1,11 +1,13 @@
 __all__ = [
-    "InvalidProjectConfig",
     "ProjectConfig",
     "PackConfig",
-    "LoadEntries",
+    "InvalidProjectConfig",
+    "ConfigExtendError",
+    "PackageableEntries",
     "locate_config",
     "load_config",
     "config_error_handler",
+    "DETECT_CONFIG_FILES",
 ]
 
 
@@ -18,14 +20,23 @@ from typing import Any, Dict, Iterable, List, Literal, Optional, Tuple, Union
 
 import toml
 import yaml
-from pydantic import BaseModel, Field, ValidationError
+from pydantic import BaseModel, ValidationError
 
-from beet.core.utils import FileSystemPath, JsonDict, TextComponent
+from beet.core.utils import FileSystemPath, JsonDict, TextComponent, import_from_string
 
 from .pipeline import FormattedPipelineException
 from .utils import apply_option, eval_option, format_validation_error
 
-LoadEntries = Union[str, List[Union[str, Tuple[str], Tuple[str, str]]]]
+PackageableEntries = Union[str, List[Union[str, Tuple[str], Tuple[str, str]]]]
+
+
+DETECT_CONFIG_FILES: Tuple[str, ...] = (
+    "beet.json",
+    "beet.toml",
+    "beet.yml",
+    "beet.yaml",
+    "pyproject.toml",
+)
 
 
 class InvalidProjectConfig(FormattedPipelineException):
@@ -34,6 +45,14 @@ class InvalidProjectConfig(FormattedPipelineException):
     def __init__(self, *args: Any):
         super().__init__(*args)
         self.message = f"Couldn't load config file.\n\n{self}"
+
+
+class ConfigExtendError(InvalidProjectConfig):
+    """Raised when the extending from another config file fails."""
+
+    def __init__(self, message: str):
+        super().__init__(message)
+        self.format_cause = True
 
 
 class PackConfig(BaseModel):
@@ -46,8 +65,8 @@ class PackConfig(BaseModel):
     compression: Optional[Literal["none", "deflate", "bzip2", "lzma"]] = None
     compression_level: Optional[int] = None
 
-    load: LoadEntries = Field(default_factory=list)
-    render: Dict[str, List[str]] = Field(default_factory=dict)
+    load: PackageableEntries = []
+    render: Dict[str, List[str]] = {}
 
     class Config:
         extra = "forbid"
@@ -88,17 +107,17 @@ class ProjectConfig(BaseModel):
     version: str = ""
 
     directory: str = ""
-    extend: List[str] = Field(default_factory=list)
+    extend: PackageableEntries = []
     output: Optional[str] = None
-    ignore: List[str] = Field(default_factory=list)
+    ignore: List[str] = []
     whitelist: Optional[List[str]] = None
 
-    require: List[str] = Field(default_factory=list)
-    templates: List[str] = Field(default_factory=list)
-    data_pack: PackConfig = Field(default_factory=PackConfig)
-    resource_pack: PackConfig = Field(default_factory=PackConfig)
-    pipeline: List[Union[str, "ProjectConfig"]] = Field(default_factory=list)
-    meta: JsonDict = Field(default_factory=dict)
+    require: List[str] = []
+    templates: List[str] = []
+    data_pack: PackConfig = PackConfig()
+    resource_pack: PackConfig = PackConfig()
+    pipeline: List[Union[str, "ProjectConfig"]] = []
+    meta: JsonDict = {}
 
     class Config:
         extra = "forbid"
@@ -133,7 +152,46 @@ class ProjectConfig(BaseModel):
         ]
 
         while self.extend:
-            self = self.with_defaults(load_config(path / self.extend.pop()))
+            if isinstance(self.extend, str):
+                self.extend = [self.extend]
+
+            if isinstance(config := self.extend.pop(), str):
+                config_path = path / config
+
+            else:
+                try:
+                    package = import_from_string(config[0])
+                except Exception as exc:
+                    msg = (
+                        f'Couldn\'t extend from config "{config[1]}" in package "{config[0]}".'
+                        if len(config) == 2
+                        else f'Couldn\'t extend from default config in package "{config[0]}".'
+                    )
+                    raise ConfigExtendError(msg) from exc
+
+                if filename := getattr(package, "__file__", None):
+                    config_path = Path(filename).parent
+                else:
+                    msg = (
+                        f'Missing "__file__" attribute on package "{config[0]}" for extending from config "{config[1]}".'
+                        if len(config) == 2
+                        else f'Missing "__file__" attribute on package "{config[0]}" for extending from default config.'
+                    )
+                    raise ConfigExtendError(msg)
+
+                if len(config) == 2:
+                    config_path /= config[1]
+                elif paths := [
+                    path
+                    for filename in DETECT_CONFIG_FILES
+                    if (path := Path(config_path, filename)).is_file()
+                ]:
+                    config_path = paths[0].resolve()
+                else:
+                    msg = f'Couldn\'t locate config file in package "{config[0]}" for extending from default config.'
+                    raise ConfigExtendError(msg)
+
+            self = self.with_defaults(load_config(config_path))
 
         return self
 
@@ -196,6 +254,9 @@ def load_config(
             config = yaml.safe_load(path.read_text())
         else:
             config = json.loads(path.read_text())
+
+        if not config:
+            config = {}
 
         if path and path.name == "pyproject.toml":
             tool = config.get("tool")

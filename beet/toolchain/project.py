@@ -18,7 +18,13 @@ from beet.contrib.render import render
 from beet.core.utils import FileSystemPath, intersperse, log_time, normalize_string
 from beet.core.watch import DirectoryWatcher, FileChanges
 
-from .config import PackConfig, ProjectConfig, load_config, locate_config
+from .config import (
+    DETECT_CONFIG_FILES,
+    PackConfig,
+    ProjectConfig,
+    load_config,
+    locate_config,
+)
 from .context import Context, ErrorMessage, ProjectCache
 from .template import TemplateManager
 from .worker import WorkerPool
@@ -32,13 +38,7 @@ class Project:
     config_overrides: Optional[List[str]] = None
     config_directory: Optional[FileSystemPath] = None
     config_path: Optional[FileSystemPath] = None
-    config_detect: Iterable[str] = (
-        "beet.json",
-        "beet.toml",
-        "beet.yml",
-        "beet.yaml",
-        "pyproject.toml",
-    )
+    config_detect: Iterable[str] = DETECT_CONFIG_FILES
 
     resolved_cache: Optional[ProjectCache] = None
     cache_name: str = ".beet_cache"

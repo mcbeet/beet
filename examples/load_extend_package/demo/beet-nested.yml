@@ -1,0 +1,5 @@
+extend:
+  - ["demo"]
+data_pack:
+  load:
+    - ["demo"]
