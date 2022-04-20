@@ -28,9 +28,7 @@ def beet_default(ctx: Context):
 def render(ctx: Context, opts: RenderOptions):
     """Plugin that processes the data pack and the resource pack with Jinja."""
     for groups, pack in zip([opts.resource_pack, opts.data_pack], ctx.packs):
-        file_types = {
-            file_type for namespace in pack.values() for file_type in namespace
-        }
+        file_types = set(pack.resolve_scope_map().values())
 
         group_map = {
             snake_case(file_type.__name__): file_type for file_type in file_types
