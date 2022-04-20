@@ -2,6 +2,7 @@ __all__ = [
     "InvalidProjectConfig",
     "ProjectConfig",
     "PackConfig",
+    "LoadEntries",
     "locate_config",
     "load_config",
     "config_error_handler",
@@ -24,6 +25,8 @@ from beet.core.utils import FileSystemPath, JsonDict, TextComponent
 from .pipeline import FormattedPipelineException
 from .utils import apply_option, eval_option, format_validation_error
 
+LoadEntries = Union[str, List[Union[str, Tuple[str], Tuple[str, str]]]]
+
 
 class InvalidProjectConfig(FormattedPipelineException):
     """Raised when trying to load an invalid project config."""
@@ -43,7 +46,7 @@ class PackConfig(BaseModel):
     compression: Optional[Literal["none", "deflate", "bzip2", "lzma"]] = None
     compression_level: Optional[int] = None
 
-    load: Union[str, List[Union[str, Tuple[str, str]]]] = Field(default_factory=list)
+    load: LoadEntries = Field(default_factory=list)
     render: Dict[str, List[str]] = Field(default_factory=dict)
 
     class Config:
