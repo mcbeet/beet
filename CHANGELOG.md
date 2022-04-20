@@ -2,6 +2,16 @@
 
 <!--next-version-placeholder-->
 
+## v0.58.0 (2022-04-20)
+### Feature
+* Make it possible to extend from config files defined in python packages ([`d66d400`](https://github.com/mcbeet/beet/commit/d66d400b19295575c28cd6d39e699edffdf3b645))
+* Make it possible to load packs from the root of python packages ([`73942a4`](https://github.com/mcbeet/beet/commit/73942a43a4d46d3d0138d3e8c3e9c56a73740dc6))
+* Make it possible to build subprojects from python packages ([`8e54ffb`](https://github.com/mcbeet/beet/commit/8e54ffb0b0feb5430e023e266904b6eba00daa23))
+* Make it possible to load data packs and resource packs from packages ([`910d714`](https://github.com/mcbeet/beet/commit/910d714e3afbd8e07497d94ae2a3f09d304a52f7))
+
+### Fix
+* Use resolve_scope_map() to determine file types for render groups ([`2bd8775`](https://github.com/mcbeet/beet/commit/2bd8775936e6436a45eee64d74514ebfe8adca02))
+
 ## v0.57.0 (2022-04-12)
 ### Feature
 * Extract worldgen and turn NamespaceFile into a protocol ([`e9c487c`](https://github.com/mcbeet/beet/commit/e9c487c06393f03efce6426496d1922be4ecf2da))
