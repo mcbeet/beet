@@ -137,7 +137,7 @@ class TemplateManager:
         """Compile a template from a string."""
         return Template.from_code(
             self.env,
-            self.env.compile(source, filename=filename and str(filename)),
+            self.env.compile(source, filename=str(filename) if filename else None),
             self.env.make_globals(None),
         )
 

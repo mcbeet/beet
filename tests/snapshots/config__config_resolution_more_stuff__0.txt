@@ -18,6 +18,8 @@
     "description": "The description of my data pack",
     "pack_format": 6,
     "zipped": true,
+    "compression": null,
+    "compression_level": null,
     "load": [
       "tests/config_examples/more_stuff/vendor/some_library",
       "tests/config_examples/more_stuff/src/data_pack"
@@ -33,6 +35,8 @@
     "description": "The description of my resource pack",
     "pack_format": 6,
     "zipped": true,
+    "compression": null,
+    "compression_level": null,
     "load": [
       "tests/config_examples/more_stuff/vendor/textures_from_somewhere",
       "tests/config_examples/more_stuff/src/resource_pack"

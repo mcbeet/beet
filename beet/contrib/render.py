@@ -7,17 +7,17 @@ __all__ = [
 ]
 
 
-from typing import Dict, List
+from typing import Dict
 
 from pydantic import BaseModel
 
-from beet import Context, configurable
+from beet import Context, ListOption, configurable
 from beet.core.utils import snake_case
 
 
 class RenderOptions(BaseModel):
-    resource_pack: Dict[str, List[str]] = {}
-    data_pack: Dict[str, List[str]] = {}
+    resource_pack: Dict[str, ListOption[str]] = {}
+    data_pack: Dict[str, ListOption[str]] = {}
 
 
 def beet_default(ctx: Context):
@@ -29,18 +29,18 @@ def render(ctx: Context, opts: RenderOptions):
     """Plugin that processes the data pack and the resource pack with Jinja."""
     for groups, pack in zip([opts.resource_pack, opts.data_pack], ctx.packs):
         file_types = set(pack.resolve_scope_map().values())
-
         group_map = {
             snake_case(file_type.__name__): file_type for file_type in file_types
         }
-        for singular in list(group_map):
-            group_map[f"{singular}s"] = group_map[singular]
 
-        for group, patterns in groups.items():
+        for singular in list(group_map):
+            group_map.setdefault(f"{singular}s", group_map[singular])
+
+        for group, render_options in groups.items():
             try:
                 file_type = group_map[group]
                 proxy = pack[file_type]
-                file_paths = proxy.match(*patterns)
+                file_paths = proxy.match(*render_options.entries())
             except:
                 raise ValueError(f"Invalid render group {group!r}.") from None
             else:

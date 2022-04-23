@@ -18,14 +18,8 @@ from beet.contrib.render import render
 from beet.core.utils import FileSystemPath, intersperse, log_time, normalize_string
 from beet.core.watch import DirectoryWatcher, FileChanges
 
-from .config import (
-    DETECT_CONFIG_FILES,
-    PackConfig,
-    ProjectConfig,
-    load_config,
-    locate_config,
-)
-from .context import Context, ErrorMessage, ProjectCache
+from .config import PackConfig, ProjectConfig, load_config, locate_config
+from .context import Context, ProjectCache
 from .template import TemplateManager
 from .worker import WorkerPool
 
@@ -36,9 +30,7 @@ class Project:
 
     resolved_config: Optional[ProjectConfig] = None
     config_overrides: Optional[List[str]] = None
-    config_directory: Optional[FileSystemPath] = None
     config_path: Optional[FileSystemPath] = None
-    config_detect: Iterable[str] = DETECT_CONFIG_FILES
 
     resolved_cache: Optional[ProjectCache] = None
     cache_name: str = ".beet_cache"
@@ -47,29 +39,13 @@ class Project:
 
     @property
     def config(self) -> ProjectConfig:
-        if self.resolved_config is not None:
-            return self.resolved_config
-
-        if self.config_path:
-            paths = [self.config_path]
-        elif self.config_directory:
-            paths = [
-                path
-                for filename in self.config_detect
-                if (path := Path(self.config_directory, filename)).is_file()
-            ]
-        else:
-            paths = locate_config(Path.cwd(), *self.config_detect)
-
-        if paths:
-            config_path = Path(paths[0]).resolve()
-        else:
-            if self.config_overrides:
-                config_path = None
-            else:
-                raise ErrorMessage("Couldn't locate config file.")
-
-        self.resolved_config = load_config(config_path, self.config_overrides or [])
+        if self.resolved_config is None:
+            self.resolved_config = load_config(
+                self.config_path
+                if self.config_path
+                else locate_config(Path.cwd(), parents=True),
+                self.config_overrides,
+            )
         return self.resolved_config
 
     @property
@@ -83,8 +59,8 @@ class Project:
     @property
     def template_directories(self) -> List[FileSystemPath]:
         return [
-            self.directory / directory
-            for directory in (self.config.templates or ["templates"])
+            self.directory / template_directory
+            for template_directory in self.config.templates.entries() or ["templates"]
         ]
 
     @property

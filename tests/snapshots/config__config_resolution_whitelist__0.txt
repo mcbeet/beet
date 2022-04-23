@@ -4,24 +4,24 @@
   "description": "",
   "author": "",
   "version": "",
-  "directory": "tests/config_examples/load_with_templates",
+  "directory": "tests/config_examples/whitelist",
   "extend": [],
   "output": null,
   "ignore": [],
-  "whitelist": null,
-  "require": [],
-  "templates": [
-    "tests/config_examples/load_with_templates/templates1",
-    "tests/config_examples/load_with_templates/templates2"
+  "whitelist": [
+    "foo",
+    "bar"
   ],
+  "require": [],
+  "templates": [],
   "data_pack": {
     "name": "",
     "description": "",
     "pack_format": 0,
     "zipped": null,
-    "load": [
-      "tests/config_examples/load_with_templates/src/my_data_pack"
-    ],
+    "compression": null,
+    "compression_level": null,
+    "load": [],
     "render": {}
   },
   "resource_pack": {
@@ -29,9 +29,15 @@
     "description": "",
     "pack_format": 0,
     "zipped": null,
+    "compression": null,
+    "compression_level": null,
     "load": [],
     "render": {}
   },
-  "pipeline": [],
+  "pipeline": [
+    "foo",
+    "bar",
+    "not_foo"
+  ],
   "meta": {}
 }

@@ -1,5 +1,3 @@
-extend:
-  - ["demo"]
+extend: "@demo"
 data_pack:
-  load:
-    - ["demo"]
+  load: "@demo"

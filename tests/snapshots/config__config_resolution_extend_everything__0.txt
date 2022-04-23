@@ -28,6 +28,8 @@
     "description": "base",
     "pack_format": 4,
     "zipped": false,
+    "compression": null,
+    "compression_level": null,
     "load": [
       "tests/config_examples/extend_everything/subdir/base",
       "tests/config_examples/extend_everything/thing"
@@ -39,6 +41,8 @@
     "description": "base",
     "pack_format": 88,
     "zipped": true,
+    "compression": null,
+    "compression_level": null,
     "load": [
       "tests/config_examples/extend_everything/subdir/base",
       "tests/config_examples/extend_everything/thing"

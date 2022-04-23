@@ -16,7 +16,6 @@ __all__ = [
 
 
 import json
-import sys
 from contextlib import contextmanager
 from dataclasses import InitVar, dataclass, field
 from functools import partial, wraps
@@ -44,6 +43,7 @@ from beet.core.utils import (
     TextComponent,
     extra_field,
     import_from_string,
+    local_import_path,
 )
 from beet.library.data_pack import DataPack
 from beet.library.resource_pack import ResourcePack
@@ -233,30 +233,8 @@ class Context:
     @contextmanager
     def activate(self):
         """Push the context directory to sys.path and handle cleanup to allow module reloading."""
-        already_loaded = set(sys.modules)
-
-        not_in_path = self._path_entry not in sys.path
-        if not_in_path:
-            sys.path.append(self._path_entry)
-
-        try:
-            with self.cache:
-                yield self.inject(Pipeline)
-        finally:
-            if not_in_path:
-                sys.path.remove(self._path_entry)
-
-            imported_modules = [
-                name
-                for name, module in sys.modules.items()
-                if name not in already_loaded
-                and (filename := getattr(module, "__file__", None))
-                and "site-packages" not in filename
-                and filename.startswith(self._path_entry)
-            ]
-
-            for name in imported_modules:
-                del sys.modules[name]
+        with local_import_path(self._path_entry), self.cache:
+            yield self.inject(Pipeline)
 
     @contextmanager
     def override(self, **meta: Any):

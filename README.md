@@ -86,12 +86,11 @@ Usage: beet [OPTIONS] COMMAND [ARGS]...
   The beet toolchain.
 
 Options:
-  -d, --directory DIRECTORY  Use the specified project directory.
-  -c, --config FILE          Use the specified config file.
-  -s, --set OPTION           Set config option.
-  -l, --log LEVEL            Configure output verbosity.
-  -v, --version              Show the version and exit.
-  -h, --help                 Show this message and exit.
+  -p, --project PATH  Select project.
+  -s, --set OPTION    Set config option.
+  -l, --log LEVEL     Configure output verbosity.
+  -v, --version       Show the version and exit.
+  -h, --help          Show this message and exit.
 
 Commands:
   build  Build the current project.

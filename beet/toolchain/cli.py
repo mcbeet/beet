@@ -224,16 +224,10 @@ class MainGroup(BeetGroup):
 @click.group(cls=MainGroup)  # type: ignore
 @pass_context
 @click.option(
-    "-d",
-    "--directory",
-    type=click.Path(exists=True, file_okay=False),
-    help="Use the specified project directory.",
-)
-@click.option(
-    "-c",
-    "--config",
-    type=click.Path(exists=True, dir_okay=False),
-    help="Use the specified config file.",
+    "-p",
+    "--project",
+    metavar="PATH",
+    help="Select project.",
 )
 @click.option(
     "-s",
@@ -261,24 +255,21 @@ class MainGroup(BeetGroup):
 )
 def beet(
     ctx: click.Context,
-    directory: Optional[str],
+    project: Optional[str],
     set: List[str],
     log: str,
-    config: Optional[str],
 ):
     """The beet toolchain."""
     logger = logging.getLogger()
     logger.setLevel(log)
     logger.addHandler(LogHandler())
 
-    project = ctx.ensure_object(Project)
+    project_obj = ctx.ensure_object(Project)
 
     if set:
-        project.config_overrides = set
-    if config:
-        project.config_path = config
-    elif directory:
-        project.config_directory = directory
+        project_obj.config_overrides = set
+    if project:
+        project_obj.config_path = project
 
     if not ctx.invoked_subcommand:
         if build := beet.get_command(ctx, "build"):

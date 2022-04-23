@@ -16,6 +16,8 @@
     "description": "",
     "pack_format": 0,
     "zipped": null,
+    "compression": null,
+    "compression_level": null,
     "load": [],
     "render": {}
   },
@@ -24,6 +26,8 @@
     "description": "",
     "pack_format": 0,
     "zipped": null,
+    "compression": null,
+    "compression_level": null,
     "load": [],
     "render": {}
   },
@@ -46,6 +50,8 @@
         "description": "",
         "pack_format": 0,
         "zipped": null,
+        "compression": null,
+        "compression_level": null,
         "load": [
           "tests/config_examples/crazy_extend/vendor/lib1",
           "tests/config_examples/crazy_extend/vendor/lib2",
@@ -59,6 +65,8 @@
         "description": "",
         "pack_format": 0,
         "zipped": null,
+        "compression": null,
+        "compression_level": null,
         "load": [
           "tests/config_examples/crazy_extend/thing"
         ],
@@ -85,6 +93,8 @@
         "description": "",
         "pack_format": 0,
         "zipped": null,
+        "compression": null,
+        "compression_level": null,
         "load": [
           "tests/config_examples/crazy_extend/src/data_pack",
           "tests/config_examples/crazy_extend/thing"
@@ -101,6 +111,8 @@
         "description": "",
         "pack_format": 0,
         "zipped": null,
+        "compression": null,
+        "compression_level": null,
         "load": [
           "tests/config_examples/crazy_extend/thing"
         ],
@@ -127,6 +139,8 @@
         "description": "",
         "pack_format": 0,
         "zipped": null,
+        "compression": null,
+        "compression_level": null,
         "load": [
           "tests/config_examples/crazy_extend/src/thing"
         ],
@@ -137,6 +151,8 @@
         "description": "",
         "pack_format": 0,
         "zipped": null,
+        "compression": null,
+        "compression_level": null,
         "load": [
           "tests/config_examples/crazy_extend/src/resource_pack",
           "tests/config_examples/crazy_extend/src/thing"

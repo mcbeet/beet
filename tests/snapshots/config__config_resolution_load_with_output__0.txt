@@ -1,12 +1,12 @@
 {
   "id": "",
-  "name": "my_project",
+  "name": "",
   "description": "",
   "author": "",
   "version": "",
-  "directory": "tests/config_examples/basic",
+  "directory": "tests/config_examples/load_with_output",
   "extend": [],
-  "output": "tests/config_examples/basic/build",
+  "output": "tests/config_examples/load_with_output/releases",
   "ignore": [],
   "whitelist": null,
   "require": [],
@@ -16,20 +16,21 @@
     "description": "",
     "pack_format": 0,
     "zipped": null,
+    "compression": null,
+    "compression_level": null,
     "load": [
-      "tests/config_examples/basic/src"
+      "tests/config_examples/load_with_output/some_library",
+      "tests/config_examples/load_with_output/my_data_pack"
     ],
-    "render": {
-      "functions": [
-        "my_project:*"
-      ]
-    }
+    "render": {}
   },
   "resource_pack": {
     "name": "",
     "description": "",
     "pack_format": 0,
     "zipped": null,
+    "compression": null,
+    "compression_level": null,
     "load": [],
     "render": {}
   },

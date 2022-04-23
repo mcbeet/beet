@@ -1,1 +1,2 @@
-pipeline: ["beet.contrib.yellow_shulker_box"]
+pipeline:
+  - beet.contrib.yellow_shulker_box

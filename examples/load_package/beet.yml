@@ -1,4 +1,4 @@
 data_pack:
   load:
-    - ["demo", "data_pack"]
-    - ["foobar"]
+    - "@demo/data_pack"
+    - "@foobar"

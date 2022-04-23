@@ -82,14 +82,23 @@ def format_obj(obj: Any) -> str:
 def format_validation_error(prefix: str, exc: ValidationError) -> str:
     errors = [
         (
-            prefix + "".join(json.dumps([item]) for item in error["loc"]),
-            error["msg"].capitalize(),
+            prefix
+            + "".join(
+                json.dumps([item]) for item in error["loc"] if item != "__root__"
+            ),
+            error["msg"]
+            if error["msg"][0].isupper()
+            else error["msg"][0].capitalize() + error["msg"][1:],
         )
         for error in exc.errors()
     ]
     width = max(len(loc) for loc, _ in errors) + 1
     return "\n".join(
-        "{loc:<{width}} => {msg}.".format(loc=loc, width=width, msg=msg)
+        "{loc:<{width}} => {msg}".format(
+            loc=loc,
+            width=width,
+            msg=msg + "." * (not msg.endswith(".")),
+        )
         for loc, msg in errors
     )
 
@@ -123,7 +132,7 @@ def eval_option(option: str) -> Any:
         else:
             value = [value]
 
-    return value
+    return value if isinstance(value, dict) else {}
 
 
 def apply_option(result: Any, option: Any) -> Any:

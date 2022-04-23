@@ -20,6 +20,8 @@
     "description": "",
     "pack_format": 0,
     "zipped": null,
+    "compression": null,
+    "compression_level": null,
     "load": [],
     "render": {}
   },
@@ -28,6 +30,8 @@
     "description": "",
     "pack_format": 0,
     "zipped": null,
+    "compression": null,
+    "compression_level": null,
     "load": [],
     "render": {}
   },
@@ -55,6 +59,8 @@
         "description": "",
         "pack_format": 0,
         "zipped": null,
+        "compression": null,
+        "compression_level": null,
         "load": [],
         "render": {}
       },
@@ -63,6 +69,8 @@
         "description": "",
         "pack_format": 0,
         "zipped": null,
+        "compression": null,
+        "compression_level": null,
         "load": [],
         "render": {}
       },
@@ -90,6 +98,8 @@
         "description": "",
         "pack_format": 0,
         "zipped": null,
+        "compression": null,
+        "compression_level": null,
         "load": [],
         "render": {}
       },
@@ -98,6 +108,8 @@
         "description": "",
         "pack_format": 0,
         "zipped": null,
+        "compression": null,
+        "compression_level": null,
         "load": [],
         "render": {}
       },
@@ -127,6 +139,8 @@
         "description": "",
         "pack_format": 0,
         "zipped": null,
+        "compression": null,
+        "compression_level": null,
         "load": [],
         "render": {}
       },
@@ -135,6 +149,8 @@
         "description": "",
         "pack_format": 0,
         "zipped": null,
+        "compression": null,
+        "compression_level": null,
         "load": [],
         "render": {}
       },

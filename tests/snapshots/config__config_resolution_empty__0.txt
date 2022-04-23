@@ -4,7 +4,7 @@
   "description": "",
   "author": "",
   "version": "",
-  "directory": "tests/config_examples/load_pack",
+  "directory": "tests/config_examples/empty",
   "extend": [],
   "output": null,
   "ignore": [],
@@ -16,9 +16,9 @@
     "description": "",
     "pack_format": 0,
     "zipped": null,
-    "load": [
-      "tests/config_examples/load_pack/src/my_data_pack"
-    ],
+    "compression": null,
+    "compression_level": null,
+    "load": [],
     "render": {}
   },
   "resource_pack": {
@@ -26,9 +26,9 @@
     "description": "",
     "pack_format": 0,
     "zipped": null,
-    "load": [
-      "tests/config_examples/load_pack/src/my_resource_pack"
-    ],
+    "compression": null,
+    "compression_level": null,
+    "load": [],
     "render": {}
   },
   "pipeline": [],

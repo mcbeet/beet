@@ -4,9 +4,9 @@
   "description": "",
   "author": "",
   "version": "",
-  "directory": "tests/config_examples/load_with_output",
+  "directory": "tests/config_examples/load_pack",
   "extend": [],
-  "output": "tests/config_examples/load_with_output/releases",
+  "output": null,
   "ignore": [],
   "whitelist": null,
   "require": [],
@@ -16,9 +16,10 @@
     "description": "",
     "pack_format": 0,
     "zipped": null,
+    "compression": null,
+    "compression_level": null,
     "load": [
-      "tests/config_examples/load_with_output/some_library",
-      "tests/config_examples/load_with_output/my_data_pack"
+      "tests/config_examples/load_pack/src/my_data_pack"
     ],
     "render": {}
   },
@@ -27,7 +28,11 @@
     "description": "",
     "pack_format": 0,
     "zipped": null,
-    "load": [],
+    "compression": null,
+    "compression_level": null,
+    "load": [
+      "tests/config_examples/load_pack/src/my_resource_pack"
+    ],
     "render": {}
   },
   "pipeline": [],

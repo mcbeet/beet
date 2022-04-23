@@ -1,12 +1,12 @@
 {
   "id": "",
-  "name": "",
+  "name": "my_project",
   "description": "",
   "author": "",
   "version": "",
-  "directory": "tests/config_examples/load_package",
+  "directory": "tests/config_examples/basic",
   "extend": [],
-  "output": null,
+  "output": "tests/config_examples/basic/build",
   "ignore": [],
   "whitelist": null,
   "require": [],
@@ -19,12 +19,13 @@
     "compression": null,
     "compression_level": null,
     "load": [
-      [
-        "demo",
-        "my_data_pack"
-      ]
+      "tests/config_examples/basic/src"
     ],
-    "render": {}
+    "render": {
+      "functions": [
+        "my_project:*"
+      ]
+    }
   },
   "resource_pack": {
     "name": "",
@@ -33,12 +34,7 @@
     "zipped": null,
     "compression": null,
     "compression_level": null,
-    "load": [
-      [
-        "demo",
-        "my_resource_pack"
-      ]
-    ],
+    "load": [],
     "render": {}
   },
   "pipeline": [],

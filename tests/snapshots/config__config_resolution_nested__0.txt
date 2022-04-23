@@ -16,6 +16,8 @@
     "description": "",
     "pack_format": 0,
     "zipped": null,
+    "compression": null,
+    "compression_level": null,
     "load": [
       "tests/config_examples/nested/hello"
     ],
@@ -26,6 +28,8 @@
     "description": "",
     "pack_format": 0,
     "zipped": null,
+    "compression": null,
+    "compression_level": null,
     "load": [],
     "render": {}
   },
@@ -48,6 +52,8 @@
         "description": "",
         "pack_format": 0,
         "zipped": null,
+        "compression": null,
+        "compression_level": null,
         "load": [
           "tests/config_examples/nested/world"
         ],
@@ -58,6 +64,8 @@
         "description": "",
         "pack_format": 0,
         "zipped": null,
+        "compression": null,
+        "compression_level": null,
         "load": [],
         "render": {}
       },
