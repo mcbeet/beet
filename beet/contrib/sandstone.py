@@ -13,10 +13,11 @@ from typing import Optional
 from pydantic import BaseModel
 
 from beet import Context, configurable
+from beet.core.utils import FileSystemPath
 
 
 class SandstoneOption(BaseModel):
-    path: Optional[str] = None
+    path: Optional[FileSystemPath] = None
 
 
 def beet_default(ctx: Context):

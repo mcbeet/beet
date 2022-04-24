@@ -11,8 +11,9 @@ __all__ = [
 
 import mimetypes
 import os
+from glob import glob
 from pathlib import Path
-from typing import Dict, Iterator, List, Tuple, Type, Union
+from typing import Dict, Iterator, Tuple, Type
 
 from pydantic import BaseModel
 
@@ -20,6 +21,8 @@ from beet import (
     BinaryFile,
     Context,
     JsonFile,
+    ListOption,
+    PackageablePath,
     PackFile,
     PngFile,
     TextFile,
@@ -30,9 +33,9 @@ from beet.core.utils import FileSystemPath
 
 
 class CopyFilesOptions(BaseModel):
-    resource_pack: Dict[str, Union[str, List[str]]] = {}
-    data_pack: Dict[str, Union[str, List[str]]] = {}
-    output: Dict[str, Union[str, List[str]]] = {}
+    resource_pack: Dict[str, ListOption[PackageablePath]] = {}
+    data_pack: Dict[str, ListOption[PackageablePath]] = {}
+    output: Dict[str, ListOption[PackageablePath]] = {}
 
 
 def beet_default(ctx: Context):
@@ -57,15 +60,15 @@ def copy_files(ctx: Context, opts: CopyFilesOptions):
 
 
 def resolve_file_mapping(
-    mapping: Dict[str, Union[str, List[str]]],
+    mapping: Dict[str, ListOption[PackageablePath]],
     directory: Path,
 ) -> Iterator[Tuple[str, Path, Type[PackFile]]]:
     """Expand glob patterns and guess the type of each file."""
     for key, value in mapping.items():
         entries = [
-            entry
-            for pattern in ([value] if isinstance(value, str) else value)
-            for entry in directory.glob(pattern)
+            Path(entry)
+            for pattern in value.entries()
+            for entry in glob(str(directory / pattern))
         ]
         for entry in entries:
             dst = f"{key}/{entry.name}" if len(entries) > 1 else key

@@ -1,16 +1,17 @@
 output: out
 data_pack:
-  load: [src]
+  load: "src"
 resource_pack:
-  load: [src]
+  load: "src"
 pipeline:
   - beet.contrib.copy_files
 meta:
   copy_files:
     data_pack:
-      info.txt: additional_file.txt
+      info.txt: "additional_file.txt"
       stuff:
         - "*.json"
-        - additional_file.txt
+        - "additional_file.txt"
+        - "@beet.contrib/copy_files.py"
     resource_pack:
-      assets/demo/optifine: src/assets/demo/optifine
+      assets/demo/optifine: "src/assets/demo/optifine"

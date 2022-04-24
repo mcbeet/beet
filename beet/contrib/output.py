@@ -7,16 +7,17 @@ __all__ = [
 ]
 
 
-from typing import List, Optional, Union
+from typing import Optional
 
 from pydantic import BaseModel
 
 from beet import Context, configurable
 from beet.core.utils import FileSystemPath, log_time
+from beet.toolchain.config import ListOption
 
 
 class OutputOptions(BaseModel):
-    directory: Optional[Union[FileSystemPath, List[FileSystemPath]]] = None
+    directory: Optional[ListOption[FileSystemPath]] = None
 
 
 def beet_default(ctx: Context):
@@ -26,12 +27,10 @@ def beet_default(ctx: Context):
 @configurable(validator=OutputOptions)
 def output(ctx: Context, opts: OutputOptions):
     """Plugin that outputs the data pack and the resource pack in a local directory."""
-    if not opts.directory:
+    if opts.directory is None:
         return
 
-    paths = opts.directory if isinstance(opts.directory, list) else [opts.directory]
-    paths = [ctx.directory / path for path in paths]
-
+    paths = [ctx.directory / path for path in opts.directory.entries()]
     packs = list(filter(None, ctx.packs))
 
     if paths and packs:

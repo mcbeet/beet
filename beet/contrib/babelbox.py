@@ -14,12 +14,15 @@ __all__ = [
 
 import logging
 from csv import Dialect, DictReader, Sniffer
-from typing import Dict, List, Optional, Type, Union
+from glob import glob
+from pathlib import Path
+from typing import Dict, Optional, Type, Union
 
 from pydantic import BaseModel
 
 from beet import Context, Language, configurable
 from beet.core.utils import FileSystemPath
+from beet.toolchain.config import ListOption, PackageablePath
 
 DialectLike = Union[str, Dialect, Type[Dialect]]
 
@@ -28,7 +31,7 @@ logger = logging.getLogger(__name__)
 
 
 class BabelboxOptions(BaseModel):
-    load: List[str] = []
+    load: ListOption[PackageablePath] = ListOption()
     dialect: Optional[str] = None
     namespace: str = "minecraft"
     filename_prefix: bool = False
@@ -43,13 +46,13 @@ def babelbox(ctx: Context, opts: BabelboxOptions):
     """Plugin that loads translations from csv files."""
     namespace = ctx.assets[opts.namespace]
 
-    for pattern in opts.load:
-        for path in ctx.directory.glob(pattern):
+    for pattern in opts.load.entries():
+        for path in glob(str(ctx.directory / pattern)):
             namespace.languages.merge(
                 load_languages(
                     path=path,
                     dialect=opts.dialect,
-                    prefix=path.stem + "." if opts.filename_prefix else "",
+                    prefix=Path(path).stem + "." if opts.filename_prefix else "",
                 )
             )
 

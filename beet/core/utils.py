@@ -28,7 +28,7 @@ from contextlib import contextmanager
 from dataclasses import field
 from importlib import import_module
 from importlib.util import find_spec
-from pathlib import Path, PurePath
+from pathlib import Path
 from typing import (
     Any,
     Dict,
@@ -55,7 +55,7 @@ class PathLikeFallback(Protocol):
 
 
 JsonDict = Dict[str, Any]
-FileSystemPath = Union[str, PurePath, PathLikeFallback]
+FileSystemPath = Union[str, PathLikeFallback]
 TextComponent = Union[str, List[Any], JsonDict]
 
 
@@ -213,20 +213,10 @@ class PathObjectError(PydanticTypeError):
     msg_template = "value is not a valid path object"
 
 
-def pure_path_validator(v: Any) -> PurePath:
-    if isinstance(v, PurePath):
-        return v
-    try:
-        return PurePath(v)
-    except TypeError:
-        raise PathObjectError()
-
-
 def path_like_fallback_validator(v: Any) -> PathLikeFallback:
     if isinstance(v, PathLikeFallback):
         return v
     raise PathObjectError()
 
 
-_VALIDATORS.append((PurePath, [pure_path_validator]))
 _VALIDATORS.append((PathLikeFallback, [path_like_fallback_validator]))

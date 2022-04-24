@@ -27,9 +27,9 @@ def beet_default(ctx: Context):
 def load(ctx: Context, opts: LoadOptions):
     """Plugin that loads data packs and resource packs."""
     for load_options, pack in zip([opts.resource_pack, opts.data_pack], ctx.packs):
-        for target in load_options.entries():
-            if paths := glob(str(ctx.directory / target)):
+        for pattern in load_options.entries():
+            if paths := glob(str(ctx.directory / pattern)):
                 for path in paths:
                     pack.load(path)
             else:
-                raise ErrorMessage(f'Couldn\'t load "{target}".')
+                raise ErrorMessage(f'Couldn\'t load "{pattern}".')
