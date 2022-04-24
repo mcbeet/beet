@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.59.0 (2022-04-24)
+### Feature
+* Use PackageablePath and ListOption in more places ([`c2ae76d`](https://github.com/mcbeet/beet/commit/c2ae76db4e29c074279a2316fd6b565c8f9fd8ea))
+* Improve config overrides and add tests ([`228f034`](https://github.com/mcbeet/beet/commit/228f034bf98662341ee372f93e99315133251d76))
+* Generalize packageable paths ([`b5ad8f0`](https://github.com/mcbeet/beet/commit/b5ad8f04feb2e3aa46780969a615b653550566e8))
+
 ## v0.58.0 (2022-04-20)
 ### Feature
 * Make it possible to extend from config files defined in python packages ([`d66d400`](https://github.com/mcbeet/beet/commit/d66d400b19295575c28cd6d39e699edffdf3b645))
