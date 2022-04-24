@@ -7,14 +7,16 @@ __all__ = [
     "format_validation_error",
     "ensure_builtins",
     "eval_option",
+    "default_option",
     "apply_option",
 ]
 
 
 import json
 import re
+from copy import copy
 from traceback import format_exception
-from typing import Any, Callable, List, Literal, Mapping, Sequence
+from typing import Any, Callable, List, Literal, Mapping, Sequence, cast
 
 from pydantic import ValidationError
 
@@ -25,7 +27,7 @@ FNV_64_PRIME = 0x100000001B3
 HASH_ALPHABET = "123456789abcdefghijkmnopqrstuvwxyz"
 
 
-OPTION_KEY_REGEX = re.compile(r"(\w+)|(\[\])")
+OPTION_KEY_REGEX = re.compile(r"\s*\[\s*(-?\d+)\s*\]\s*|\s*\[\s*\]\s*|\s*(\w+)\s*")
 
 
 class LazyFormat:
@@ -117,40 +119,78 @@ def eval_option(option: str) -> Any:
         return json.loads(option)
 
     key, sep, value = option.partition("=")
+    matches = list(OPTION_KEY_REGEX.finditer(key))
 
     if sep:
         try:
             value = json.loads(value)
         except json.JSONDecodeError:
             value = value.strip()
-    else:
+    elif matches:
         value = True
+    else:
+        value = cast(Mapping[Any, Any], {})
 
-    for m in list(OPTION_KEY_REGEX.finditer(key))[::-1]:
+    for m in matches[::-1]:
         if m[1]:
-            value = {m[1]: value}
+            value = {int(m[1]): value}
+        elif m[2]:
+            value = {m[2]: value}
         else:
             value = [value]
 
-    return value if isinstance(value, dict) else {}
+    return value
+
+
+def default_option(option: Any) -> Any:
+    if isinstance(option, Mapping):
+        if option and all(isinstance(k, int) for k in option):  # type: ignore
+            return []
+        return {}
+    if isinstance(option, Sequence) and not isinstance(option, str):
+        return []
+    return None
 
 
 def apply_option(result: Any, option: Any) -> Any:
     if isinstance(option, Mapping):
-        for key, value in option.items():  # type: ignore
-            result[key] = apply_option(
-                result.setdefault(
-                    key,
-                    {}
-                    if isinstance(value, Mapping)
-                    else []
-                    if isinstance(value, Sequence) and not isinstance(value, str)
-                    else None,
-                ),
-                value,
-            )
+        default = default_option(option)
+
+        if (
+            isinstance(default, dict)
+            and not isinstance(result, Mapping)
+            or isinstance(default, list)
+            and not (isinstance(result, Sequence) and not isinstance(result, str))
+        ):
+            result = default
+        else:
+            result = copy(result)  # type: ignore
+
+        for key, value in cast(Mapping[Any, Any], option).items():
+            if isinstance(key, int):
+                if key >= len(result):
+                    result.append(apply_option(default_option(value), value))
+                    continue
+                key = (key + len(result)) % len(result)
+
+            try:
+                current = result[key]
+            except LookupError:
+                current = default_option(value)
+
+            result[key] = apply_option(current, value)
+
     elif isinstance(option, Sequence) and not isinstance(option, str):
-        result.extend(option)
+        option = [apply_option(default_option(value), value) for value in option]  # type: ignore
+
+        if isinstance(result, Sequence) and not isinstance(result, str):
+            result = [*result, *option]
+        elif result is not None:
+            result = [result, *option]
+        else:
+            result = [*option]
+
     else:
-        return option
+        result = option
+
     return result
