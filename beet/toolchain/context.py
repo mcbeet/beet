@@ -18,7 +18,7 @@ __all__ = [
 import json
 from contextlib import contextmanager
 from dataclasses import InitVar, dataclass, field
-from functools import partial, wraps
+from functools import partial, update_wrapper, wraps
 from pathlib import Path
 from typing import (
     Any,
@@ -322,7 +322,7 @@ def configurable(
     @wraps(plugin)
     def wrapper(ctx: Optional[Context] = None, /, **kwargs: Any) -> Any:
         if ctx is None:
-            return partial(wrapper, **kwargs)
+            return update_wrapper(partial(wrapper, **kwargs), plugin)
         return plugin(
             ctx,
             ctx.validate(

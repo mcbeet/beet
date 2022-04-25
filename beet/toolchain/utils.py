@@ -77,7 +77,7 @@ def format_exc(exc: BaseException) -> str:
 
 def format_obj(obj: Any) -> str:
     module = getattr(obj, "__module__", None)
-    name = getattr(obj, "__qualname__", None)
+    name = getattr(obj, "__qualname__", getattr(obj, "__name__", None))
     return repr(f"{module}.{name}") if module and name else repr(obj)
 
 
