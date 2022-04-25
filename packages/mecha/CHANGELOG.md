@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.48.0 (2022-04-25)
+### Feature
+* Remove bolt ([`10a47a9`](https://github.com/mcbeet/mecha/commit/10a47a93538fe17ee7d2a38fa18cea32a386c72c))
+
 ## v0.47.0 (2022-04-19)
 ### Feature
 * Add bolt modules in data packs ([`1ad6291`](https://github.com/mcbeet/mecha/commit/1ad6291c3bba002c6e159f74bd57c8c0c614b70d))
