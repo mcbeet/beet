@@ -1,0 +1,23 @@
+_mecha_lineno = [1, 8], [1, 2]
+_mecha_helper_branch = _mecha_runtime.helpers['branch']
+_mecha_helper_children = _mecha_runtime.helpers['children']
+_mecha_helper_replace = _mecha_runtime.helpers['replace']
+with _mecha_runtime.scope() as _mecha_var3:
+    _mecha_var0 = 'abc'
+    for i in _mecha_var0:
+        _mecha_var1 = i
+        _mecha_var2 = 'b'
+        _mecha_var1 = _mecha_var1 == _mecha_var2
+        with _mecha_helper_branch(_mecha_var1) as _mecha_condition:
+            if _mecha_condition:
+                break
+_mecha_var4 = _mecha_helper_replace(_mecha_refs[0], commands=_mecha_helper_children(_mecha_var3))
+---
+output = _mecha_var4
+---
+_mecha_refs[0]
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=47, lineno=4, colno=1)
+  commands:
+    <class 'mecha.ast.AstCommand'>

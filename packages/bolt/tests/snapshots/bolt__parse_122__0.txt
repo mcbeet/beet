@@ -1,0 +1,5 @@
+#>ERROR  Can't resolve relative resource location './thing'.
+# line 1, column 8
+#      1 |  import ./thing
+#        :         ^^^^^^^
+import ./thing

@@ -1,0 +1,186 @@
+def foo(something):
+    def wat():
+        say
+            yo
+            wat
+            is
+            dat
+# this is a comment
+        x = "hello"
+        for i in something:
+            x += i * 3
+
+        say wow
+    wat()
+---
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=226, lineno=14, colno=10)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=226, lineno=14, colno=10)
+      identifier: 'def:function:body'
+      arguments:
+        <class 'bolt.ast.AstFunctionSignature'>
+          location: SourceLocation(pos=4, lineno=1, colno=5)
+          end_location: SourceLocation(pos=18, lineno=1, colno=19)
+          name: 'foo'
+          arguments:
+            <class 'bolt.ast.AstFunctionSignatureArgument'>
+              location: SourceLocation(pos=8, lineno=1, colno=9)
+              end_location: SourceLocation(pos=17, lineno=1, colno=18)
+              name: 'something'
+              default: None
+        <class 'mecha.ast.AstRoot'>
+          location: SourceLocation(pos=24, lineno=2, colno=5)
+          end_location: SourceLocation(pos=226, lineno=14, colno=10)
+          commands:
+            <class 'mecha.ast.AstCommand'>
+              location: SourceLocation(pos=24, lineno=2, colno=5)
+              end_location: SourceLocation(pos=216, lineno=13, colno=16)
+              identifier: 'def:function:body'
+              arguments:
+                <class 'bolt.ast.AstFunctionSignature'>
+                  location: SourceLocation(pos=28, lineno=2, colno=9)
+                  end_location: SourceLocation(pos=33, lineno=2, colno=14)
+                  name: 'wat'
+                  arguments:
+                    <empty>
+                <class 'mecha.ast.AstRoot'>
+                  location: SourceLocation(pos=43, lineno=3, colno=9)
+                  end_location: SourceLocation(pos=216, lineno=13, colno=16)
+                  commands:
+                    <class 'mecha.ast.AstCommand'>
+                      location: SourceLocation(pos=43, lineno=3, colno=9)
+                      end_location: SourceLocation(pos=108, lineno=7, colno=16)
+                      identifier: 'say:message'
+                      arguments:
+                        <class 'mecha.ast.AstMessage'>
+                          location: SourceLocation(pos=59, lineno=4, colno=13)
+                          end_location: SourceLocation(pos=108, lineno=7, colno=16)
+                          fragments:
+                            <class 'mecha.ast.AstMessageText'>
+                              location: SourceLocation(pos=59, lineno=4, colno=13)
+                              end_location: SourceLocation(pos=61, lineno=4, colno=15)
+                              value: 'yo'
+                            <class 'mecha.ast.AstMessageText'>
+                              location: SourceLocation(pos=73, lineno=5, colno=12)
+                              end_location: SourceLocation(pos=74, lineno=5, colno=13)
+                              value: ' '
+                            <class 'mecha.ast.AstMessageText'>
+                              location: SourceLocation(pos=74, lineno=5, colno=13)
+                              end_location: SourceLocation(pos=77, lineno=5, colno=16)
+                              value: 'wat'
+                            <class 'mecha.ast.AstMessageText'>
+                              location: SourceLocation(pos=89, lineno=6, colno=12)
+                              end_location: SourceLocation(pos=90, lineno=6, colno=13)
+                              value: ' '
+                            <class 'mecha.ast.AstMessageText'>
+                              location: SourceLocation(pos=90, lineno=6, colno=13)
+                              end_location: SourceLocation(pos=92, lineno=6, colno=15)
+                              value: 'is'
+                            <class 'mecha.ast.AstMessageText'>
+                              location: SourceLocation(pos=104, lineno=7, colno=12)
+                              end_location: SourceLocation(pos=105, lineno=7, colno=13)
+                              value: ' '
+                            <class 'mecha.ast.AstMessageText'>
+                              location: SourceLocation(pos=105, lineno=7, colno=13)
+                              end_location: SourceLocation(pos=108, lineno=7, colno=16)
+                              value: 'dat'
+                    <class 'mecha.ast.AstCommand'>
+                      location: SourceLocation(pos=137, lineno=9, colno=9)
+                      end_location: SourceLocation(pos=148, lineno=9, colno=20)
+                      identifier: 'statement'
+                      arguments:
+                        <class 'bolt.ast.AstAssignment'>
+                          location: SourceLocation(pos=137, lineno=9, colno=9)
+                          end_location: SourceLocation(pos=148, lineno=9, colno=20)
+                          operator: '='
+                          target:
+                            <class 'bolt.ast.AstTargetIdentifier'>
+                              location: SourceLocation(pos=137, lineno=9, colno=9)
+                              end_location: SourceLocation(pos=138, lineno=9, colno=10)
+                              value: 'x'
+                              rebind: False
+                          value:
+                            <class 'bolt.ast.AstValue'>
+                              location: SourceLocation(pos=141, lineno=9, colno=13)
+                              end_location: SourceLocation(pos=148, lineno=9, colno=20)
+                              value: 'hello'
+                    <class 'mecha.ast.AstCommand'>
+                      location: SourceLocation(pos=157, lineno=10, colno=9)
+                      end_location: SourceLocation(pos=199, lineno=11, colno=23)
+                      identifier: 'for:target:in:iterable:body'
+                      arguments:
+                        <class 'bolt.ast.AstTargetIdentifier'>
+                          location: SourceLocation(pos=161, lineno=10, colno=13)
+                          end_location: SourceLocation(pos=162, lineno=10, colno=14)
+                          value: 'i'
+                          rebind: False
+                        <class 'bolt.ast.AstIdentifier'>
+                          location: SourceLocation(pos=166, lineno=10, colno=18)
+                          end_location: SourceLocation(pos=175, lineno=10, colno=27)
+                          value: 'something'
+                        <class 'mecha.ast.AstRoot'>
+                          location: SourceLocation(pos=189, lineno=11, colno=13)
+                          end_location: SourceLocation(pos=199, lineno=11, colno=23)
+                          commands:
+                            <class 'mecha.ast.AstCommand'>
+                              location: SourceLocation(pos=189, lineno=11, colno=13)
+                              end_location: SourceLocation(pos=199, lineno=11, colno=23)
+                              identifier: 'statement'
+                              arguments:
+                                <class 'bolt.ast.AstAssignment'>
+                                  location: SourceLocation(pos=189, lineno=11, colno=13)
+                                  end_location: SourceLocation(pos=199, lineno=11, colno=23)
+                                  operator: '+='
+                                  target:
+                                    <class 'bolt.ast.AstTargetIdentifier'>
+                                      location: SourceLocation(pos=189, lineno=11, colno=13)
+                                      end_location: SourceLocation(pos=190, lineno=11, colno=14)
+                                      value: 'x'
+                                      rebind: True
+                                  value:
+                                    <class 'bolt.ast.AstExpressionBinary'>
+                                      location: SourceLocation(pos=194, lineno=11, colno=18)
+                                      end_location: SourceLocation(pos=199, lineno=11, colno=23)
+                                      operator: '*'
+                                      left:
+                                        <class 'bolt.ast.AstIdentifier'>
+                                          location: SourceLocation(pos=194, lineno=11, colno=18)
+                                          end_location: SourceLocation(pos=195, lineno=11, colno=19)
+                                          value: 'i'
+                                      right:
+                                        <class 'bolt.ast.AstValue'>
+                                          location: SourceLocation(pos=198, lineno=11, colno=22)
+                                          end_location: SourceLocation(pos=199, lineno=11, colno=23)
+                                          value: 3
+                    <class 'mecha.ast.AstCommand'>
+                      location: SourceLocation(pos=209, lineno=13, colno=9)
+                      end_location: SourceLocation(pos=216, lineno=13, colno=16)
+                      identifier: 'say:message'
+                      arguments:
+                        <class 'mecha.ast.AstMessage'>
+                          location: SourceLocation(pos=213, lineno=13, colno=13)
+                          end_location: SourceLocation(pos=216, lineno=13, colno=16)
+                          fragments:
+                            <class 'mecha.ast.AstMessageText'>
+                              location: SourceLocation(pos=213, lineno=13, colno=13)
+                              end_location: SourceLocation(pos=216, lineno=13, colno=16)
+                              value: 'wow'
+            <class 'mecha.ast.AstCommand'>
+              location: SourceLocation(pos=221, lineno=14, colno=5)
+              end_location: SourceLocation(pos=226, lineno=14, colno=10)
+              identifier: 'statement'
+              arguments:
+                <class 'bolt.ast.AstCall'>
+                  location: SourceLocation(pos=221, lineno=14, colno=5)
+                  end_location: SourceLocation(pos=226, lineno=14, colno=10)
+                  value:
+                    <class 'bolt.ast.AstIdentifier'>
+                      location: SourceLocation(pos=221, lineno=14, colno=5)
+                      end_location: SourceLocation(pos=224, lineno=14, colno=8)
+                      value: 'wat'
+                  arguments:
+                    <empty>

@@ -1,0 +1,423 @@
+def init_global_score(self, name):
+    self.name = name
+
+def rebind_global_score(self, rhs):
+    if isinstance(rhs, GlobalScore):
+        scoreboard players operation self.name global = rhs.name global
+    else:
+        scoreboard players set self.name global rhs
+    return self
+
+GlobalScore = type("GlobalScore", (), {"__init__": init_global_score, "__rebind__": rebind_global_score})
+
+a = GlobalScore("a")
+a = 123
+a = 456
+
+b = GlobalScore("b")
+b = 789
+b = a
+---
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=461, lineno=20, colno=1)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=55, lineno=2, colno=21)
+      identifier: 'def:function:body'
+      arguments:
+        <class 'bolt.ast.AstFunctionSignature'>
+          location: SourceLocation(pos=4, lineno=1, colno=5)
+          end_location: SourceLocation(pos=33, lineno=1, colno=34)
+          name: 'init_global_score'
+          arguments:
+            <class 'bolt.ast.AstFunctionSignatureArgument'>
+              location: SourceLocation(pos=22, lineno=1, colno=23)
+              end_location: SourceLocation(pos=26, lineno=1, colno=27)
+              name: 'self'
+              default: None
+            <class 'bolt.ast.AstFunctionSignatureArgument'>
+              location: SourceLocation(pos=28, lineno=1, colno=29)
+              end_location: SourceLocation(pos=32, lineno=1, colno=33)
+              name: 'name'
+              default: None
+        <class 'mecha.ast.AstRoot'>
+          location: SourceLocation(pos=39, lineno=2, colno=5)
+          end_location: SourceLocation(pos=55, lineno=2, colno=21)
+          commands:
+            <class 'mecha.ast.AstCommand'>
+              location: SourceLocation(pos=39, lineno=2, colno=5)
+              end_location: SourceLocation(pos=55, lineno=2, colno=21)
+              identifier: 'statement'
+              arguments:
+                <class 'bolt.ast.AstAssignment'>
+                  location: SourceLocation(pos=39, lineno=2, colno=5)
+                  end_location: SourceLocation(pos=55, lineno=2, colno=21)
+                  operator: '='
+                  target:
+                    <class 'bolt.ast.AstTargetAttribute'>
+                      location: SourceLocation(pos=39, lineno=2, colno=5)
+                      end_location: SourceLocation(pos=48, lineno=2, colno=14)
+                      name: 'name'
+                      value:
+                        <class 'bolt.ast.AstIdentifier'>
+                          location: SourceLocation(pos=39, lineno=2, colno=5)
+                          end_location: SourceLocation(pos=43, lineno=2, colno=9)
+                          value: 'self'
+                  value:
+                    <class 'bolt.ast.AstIdentifier'>
+                      location: SourceLocation(pos=51, lineno=2, colno=17)
+                      end_location: SourceLocation(pos=55, lineno=2, colno=21)
+                      value: 'name'
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=57, lineno=4, colno=1)
+      end_location: SourceLocation(pos=279, lineno=9, colno=16)
+      identifier: 'def:function:body'
+      arguments:
+        <class 'bolt.ast.AstFunctionSignature'>
+          location: SourceLocation(pos=61, lineno=4, colno=5)
+          end_location: SourceLocation(pos=91, lineno=4, colno=35)
+          name: 'rebind_global_score'
+          arguments:
+            <class 'bolt.ast.AstFunctionSignatureArgument'>
+              location: SourceLocation(pos=81, lineno=4, colno=25)
+              end_location: SourceLocation(pos=85, lineno=4, colno=29)
+              name: 'self'
+              default: None
+            <class 'bolt.ast.AstFunctionSignatureArgument'>
+              location: SourceLocation(pos=87, lineno=4, colno=31)
+              end_location: SourceLocation(pos=90, lineno=4, colno=34)
+              name: 'rhs'
+              default: None
+        <class 'mecha.ast.AstRoot'>
+          location: SourceLocation(pos=97, lineno=5, colno=5)
+          end_location: SourceLocation(pos=279, lineno=9, colno=16)
+          commands:
+            <class 'mecha.ast.AstCommand'>
+              location: SourceLocation(pos=97, lineno=5, colno=5)
+              end_location: SourceLocation(pos=201, lineno=6, colno=72)
+              identifier: 'if:condition:body'
+              arguments:
+                <class 'bolt.ast.AstCall'>
+                  location: SourceLocation(pos=100, lineno=5, colno=8)
+                  end_location: SourceLocation(pos=128, lineno=5, colno=36)
+                  value:
+                    <class 'bolt.ast.AstIdentifier'>
+                      location: SourceLocation(pos=100, lineno=5, colno=8)
+                      end_location: SourceLocation(pos=110, lineno=5, colno=18)
+                      value: 'isinstance'
+                  arguments:
+                    <class 'bolt.ast.AstIdentifier'>
+                      location: SourceLocation(pos=111, lineno=5, colno=19)
+                      end_location: SourceLocation(pos=114, lineno=5, colno=22)
+                      value: 'rhs'
+                    <class 'bolt.ast.AstIdentifier'>
+                      location: SourceLocation(pos=116, lineno=5, colno=24)
+                      end_location: SourceLocation(pos=127, lineno=5, colno=35)
+                      value: 'GlobalScore'
+                <class 'mecha.ast.AstRoot'>
+                  location: SourceLocation(pos=138, lineno=6, colno=9)
+                  end_location: SourceLocation(pos=201, lineno=6, colno=72)
+                  commands:
+                    <class 'mecha.ast.AstCommand'>
+                      location: SourceLocation(pos=138, lineno=6, colno=9)
+                      end_location: SourceLocation(pos=201, lineno=6, colno=72)
+                      identifier: 'scoreboard:players:operation:targets:targetObjective:operation:source:sourceObjective'
+                      arguments:
+                        <class 'bolt.ast.AstInterpolation'>
+                          location: SourceLocation(pos=167, lineno=6, colno=38)
+                          end_location: SourceLocation(pos=176, lineno=6, colno=47)
+                          prefix: None
+                          converter: 'entity'
+                          value:
+                            <class 'bolt.ast.AstAttribute'>
+                              location: SourceLocation(pos=167, lineno=6, colno=38)
+                              end_location: SourceLocation(pos=176, lineno=6, colno=47)
+                              name: 'name'
+                              value:
+                                <class 'bolt.ast.AstIdentifier'>
+                                  location: SourceLocation(pos=167, lineno=6, colno=38)
+                                  end_location: SourceLocation(pos=171, lineno=6, colno=42)
+                                  value: 'self'
+                        <class 'mecha.ast.AstObjective'>
+                          location: SourceLocation(pos=177, lineno=6, colno=48)
+                          end_location: SourceLocation(pos=183, lineno=6, colno=54)
+                          value: 'global'
+                        <class 'mecha.ast.AstScoreboardOperation'>
+                          location: SourceLocation(pos=184, lineno=6, colno=55)
+                          end_location: SourceLocation(pos=185, lineno=6, colno=56)
+                          value: '='
+                        <class 'bolt.ast.AstInterpolation'>
+                          location: SourceLocation(pos=186, lineno=6, colno=57)
+                          end_location: SourceLocation(pos=194, lineno=6, colno=65)
+                          prefix: None
+                          converter: 'entity'
+                          value:
+                            <class 'bolt.ast.AstAttribute'>
+                              location: SourceLocation(pos=186, lineno=6, colno=57)
+                              end_location: SourceLocation(pos=194, lineno=6, colno=65)
+                              name: 'name'
+                              value:
+                                <class 'bolt.ast.AstIdentifier'>
+                                  location: SourceLocation(pos=186, lineno=6, colno=57)
+                                  end_location: SourceLocation(pos=189, lineno=6, colno=60)
+                                  value: 'rhs'
+                        <class 'mecha.ast.AstObjective'>
+                          location: SourceLocation(pos=195, lineno=6, colno=66)
+                          end_location: SourceLocation(pos=201, lineno=6, colno=72)
+                          value: 'global'
+            <class 'mecha.ast.AstCommand'>
+              location: SourceLocation(pos=206, lineno=7, colno=5)
+              end_location: SourceLocation(pos=263, lineno=8, colno=52)
+              identifier: 'else:body'
+              arguments:
+                <class 'mecha.ast.AstRoot'>
+                  location: SourceLocation(pos=220, lineno=8, colno=9)
+                  end_location: SourceLocation(pos=263, lineno=8, colno=52)
+                  commands:
+                    <class 'mecha.ast.AstCommand'>
+                      location: SourceLocation(pos=220, lineno=8, colno=9)
+                      end_location: SourceLocation(pos=263, lineno=8, colno=52)
+                      identifier: 'scoreboard:players:set:targets:objective:score'
+                      arguments:
+                        <class 'bolt.ast.AstInterpolation'>
+                          location: SourceLocation(pos=243, lineno=8, colno=32)
+                          end_location: SourceLocation(pos=252, lineno=8, colno=41)
+                          prefix: None
+                          converter: 'entity'
+                          value:
+                            <class 'bolt.ast.AstAttribute'>
+                              location: SourceLocation(pos=243, lineno=8, colno=32)
+                              end_location: SourceLocation(pos=252, lineno=8, colno=41)
+                              name: 'name'
+                              value:
+                                <class 'bolt.ast.AstIdentifier'>
+                                  location: SourceLocation(pos=243, lineno=8, colno=32)
+                                  end_location: SourceLocation(pos=247, lineno=8, colno=36)
+                                  value: 'self'
+                        <class 'mecha.ast.AstObjective'>
+                          location: SourceLocation(pos=253, lineno=8, colno=42)
+                          end_location: SourceLocation(pos=259, lineno=8, colno=48)
+                          value: 'global'
+                        <class 'bolt.ast.AstInterpolation'>
+                          location: SourceLocation(pos=260, lineno=8, colno=49)
+                          end_location: SourceLocation(pos=263, lineno=8, colno=52)
+                          prefix: None
+                          converter: 'numeric'
+                          value:
+                            <class 'bolt.ast.AstIdentifier'>
+                              location: SourceLocation(pos=260, lineno=8, colno=49)
+                              end_location: SourceLocation(pos=263, lineno=8, colno=52)
+                              value: 'rhs'
+            <class 'mecha.ast.AstCommand'>
+              location: SourceLocation(pos=268, lineno=9, colno=5)
+              end_location: SourceLocation(pos=279, lineno=9, colno=16)
+              identifier: 'return:value'
+              arguments:
+                <class 'bolt.ast.AstIdentifier'>
+                  location: SourceLocation(pos=275, lineno=9, colno=12)
+                  end_location: SourceLocation(pos=279, lineno=9, colno=16)
+                  value: 'self'
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=281, lineno=11, colno=1)
+      end_location: SourceLocation(pos=386, lineno=11, colno=106)
+      identifier: 'statement'
+      arguments:
+        <class 'bolt.ast.AstAssignment'>
+          location: SourceLocation(pos=281, lineno=11, colno=1)
+          end_location: SourceLocation(pos=386, lineno=11, colno=106)
+          operator: '='
+          target:
+            <class 'bolt.ast.AstTargetIdentifier'>
+              location: SourceLocation(pos=281, lineno=11, colno=1)
+              end_location: SourceLocation(pos=292, lineno=11, colno=12)
+              value: 'GlobalScore'
+              rebind: False
+          value:
+            <class 'bolt.ast.AstCall'>
+              location: SourceLocation(pos=295, lineno=11, colno=15)
+              end_location: SourceLocation(pos=386, lineno=11, colno=106)
+              value:
+                <class 'bolt.ast.AstIdentifier'>
+                  location: SourceLocation(pos=295, lineno=11, colno=15)
+                  end_location: SourceLocation(pos=299, lineno=11, colno=19)
+                  value: 'type'
+              arguments:
+                <class 'bolt.ast.AstValue'>
+                  location: SourceLocation(pos=300, lineno=11, colno=20)
+                  end_location: SourceLocation(pos=313, lineno=11, colno=33)
+                  value: 'GlobalScore'
+                <class 'bolt.ast.AstTuple'>
+                  location: SourceLocation(pos=315, lineno=11, colno=35)
+                  end_location: SourceLocation(pos=317, lineno=11, colno=37)
+                  items:
+                    <empty>
+                <class 'bolt.ast.AstDict'>
+                  location: SourceLocation(pos=319, lineno=11, colno=39)
+                  end_location: SourceLocation(pos=385, lineno=11, colno=105)
+                  items:
+                    <class 'bolt.ast.AstDictItem'>
+                      location: SourceLocation(pos=320, lineno=11, colno=40)
+                      end_location: SourceLocation(pos=349, lineno=11, colno=69)
+                      key:
+                        <class 'bolt.ast.AstValue'>
+                          location: SourceLocation(pos=320, lineno=11, colno=40)
+                          end_location: SourceLocation(pos=330, lineno=11, colno=50)
+                          value: '__init__'
+                      value:
+                        <class 'bolt.ast.AstIdentifier'>
+                          location: SourceLocation(pos=332, lineno=11, colno=52)
+                          end_location: SourceLocation(pos=349, lineno=11, colno=69)
+                          value: 'init_global_score'
+                    <class 'bolt.ast.AstDictItem'>
+                      location: SourceLocation(pos=351, lineno=11, colno=71)
+                      end_location: SourceLocation(pos=384, lineno=11, colno=104)
+                      key:
+                        <class 'bolt.ast.AstValue'>
+                          location: SourceLocation(pos=351, lineno=11, colno=71)
+                          end_location: SourceLocation(pos=363, lineno=11, colno=83)
+                          value: '__rebind__'
+                      value:
+                        <class 'bolt.ast.AstIdentifier'>
+                          location: SourceLocation(pos=365, lineno=11, colno=85)
+                          end_location: SourceLocation(pos=384, lineno=11, colno=104)
+                          value: 'rebind_global_score'
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=388, lineno=13, colno=1)
+      end_location: SourceLocation(pos=408, lineno=13, colno=21)
+      identifier: 'statement'
+      arguments:
+        <class 'bolt.ast.AstAssignment'>
+          location: SourceLocation(pos=388, lineno=13, colno=1)
+          end_location: SourceLocation(pos=408, lineno=13, colno=21)
+          operator: '='
+          target:
+            <class 'bolt.ast.AstTargetIdentifier'>
+              location: SourceLocation(pos=388, lineno=13, colno=1)
+              end_location: SourceLocation(pos=389, lineno=13, colno=2)
+              value: 'a'
+              rebind: False
+          value:
+            <class 'bolt.ast.AstCall'>
+              location: SourceLocation(pos=392, lineno=13, colno=5)
+              end_location: SourceLocation(pos=408, lineno=13, colno=21)
+              value:
+                <class 'bolt.ast.AstIdentifier'>
+                  location: SourceLocation(pos=392, lineno=13, colno=5)
+                  end_location: SourceLocation(pos=403, lineno=13, colno=16)
+                  value: 'GlobalScore'
+              arguments:
+                <class 'bolt.ast.AstValue'>
+                  location: SourceLocation(pos=404, lineno=13, colno=17)
+                  end_location: SourceLocation(pos=407, lineno=13, colno=20)
+                  value: 'a'
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=409, lineno=14, colno=1)
+      end_location: SourceLocation(pos=416, lineno=14, colno=8)
+      identifier: 'statement'
+      arguments:
+        <class 'bolt.ast.AstAssignment'>
+          location: SourceLocation(pos=409, lineno=14, colno=1)
+          end_location: SourceLocation(pos=416, lineno=14, colno=8)
+          operator: '='
+          target:
+            <class 'bolt.ast.AstTargetIdentifier'>
+              location: SourceLocation(pos=409, lineno=14, colno=1)
+              end_location: SourceLocation(pos=410, lineno=14, colno=2)
+              value: 'a'
+              rebind: True
+          value:
+            <class 'bolt.ast.AstValue'>
+              location: SourceLocation(pos=413, lineno=14, colno=5)
+              end_location: SourceLocation(pos=416, lineno=14, colno=8)
+              value: 123
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=417, lineno=15, colno=1)
+      end_location: SourceLocation(pos=424, lineno=15, colno=8)
+      identifier: 'statement'
+      arguments:
+        <class 'bolt.ast.AstAssignment'>
+          location: SourceLocation(pos=417, lineno=15, colno=1)
+          end_location: SourceLocation(pos=424, lineno=15, colno=8)
+          operator: '='
+          target:
+            <class 'bolt.ast.AstTargetIdentifier'>
+              location: SourceLocation(pos=417, lineno=15, colno=1)
+              end_location: SourceLocation(pos=418, lineno=15, colno=2)
+              value: 'a'
+              rebind: True
+          value:
+            <class 'bolt.ast.AstValue'>
+              location: SourceLocation(pos=421, lineno=15, colno=5)
+              end_location: SourceLocation(pos=424, lineno=15, colno=8)
+              value: 456
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=426, lineno=17, colno=1)
+      end_location: SourceLocation(pos=446, lineno=17, colno=21)
+      identifier: 'statement'
+      arguments:
+        <class 'bolt.ast.AstAssignment'>
+          location: SourceLocation(pos=426, lineno=17, colno=1)
+          end_location: SourceLocation(pos=446, lineno=17, colno=21)
+          operator: '='
+          target:
+            <class 'bolt.ast.AstTargetIdentifier'>
+              location: SourceLocation(pos=426, lineno=17, colno=1)
+              end_location: SourceLocation(pos=427, lineno=17, colno=2)
+              value: 'b'
+              rebind: False
+          value:
+            <class 'bolt.ast.AstCall'>
+              location: SourceLocation(pos=430, lineno=17, colno=5)
+              end_location: SourceLocation(pos=446, lineno=17, colno=21)
+              value:
+                <class 'bolt.ast.AstIdentifier'>
+                  location: SourceLocation(pos=430, lineno=17, colno=5)
+                  end_location: SourceLocation(pos=441, lineno=17, colno=16)
+                  value: 'GlobalScore'
+              arguments:
+                <class 'bolt.ast.AstValue'>
+                  location: SourceLocation(pos=442, lineno=17, colno=17)
+                  end_location: SourceLocation(pos=445, lineno=17, colno=20)
+                  value: 'b'
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=447, lineno=18, colno=1)
+      end_location: SourceLocation(pos=454, lineno=18, colno=8)
+      identifier: 'statement'
+      arguments:
+        <class 'bolt.ast.AstAssignment'>
+          location: SourceLocation(pos=447, lineno=18, colno=1)
+          end_location: SourceLocation(pos=454, lineno=18, colno=8)
+          operator: '='
+          target:
+            <class 'bolt.ast.AstTargetIdentifier'>
+              location: SourceLocation(pos=447, lineno=18, colno=1)
+              end_location: SourceLocation(pos=448, lineno=18, colno=2)
+              value: 'b'
+              rebind: True
+          value:
+            <class 'bolt.ast.AstValue'>
+              location: SourceLocation(pos=451, lineno=18, colno=5)
+              end_location: SourceLocation(pos=454, lineno=18, colno=8)
+              value: 789
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=455, lineno=19, colno=1)
+      end_location: SourceLocation(pos=460, lineno=19, colno=6)
+      identifier: 'statement'
+      arguments:
+        <class 'bolt.ast.AstAssignment'>
+          location: SourceLocation(pos=455, lineno=19, colno=1)
+          end_location: SourceLocation(pos=460, lineno=19, colno=6)
+          operator: '='
+          target:
+            <class 'bolt.ast.AstTargetIdentifier'>
+              location: SourceLocation(pos=455, lineno=19, colno=1)
+              end_location: SourceLocation(pos=456, lineno=19, colno=2)
+              value: 'b'
+              rebind: True
+          value:
+            <class 'bolt.ast.AstIdentifier'>
+              location: SourceLocation(pos=459, lineno=19, colno=5)
+              end_location: SourceLocation(pos=460, lineno=19, colno=6)
+              value: 'a'

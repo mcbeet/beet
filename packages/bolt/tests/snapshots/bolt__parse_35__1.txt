@@ -1,0 +1,66 @@
+_mecha_lineno = [1, 17], [1, 3]
+_mecha_helper_branch = _mecha_runtime.helpers['branch']
+_mecha_helper_operator_not = _mecha_runtime.helpers['operator_not']
+_mecha_helper_get_dup = _mecha_runtime.helpers['get_dup']
+_mecha_helper_get_rebind = _mecha_runtime.helpers['get_rebind']
+_mecha_helper_children = _mecha_runtime.helpers['children']
+_mecha_helper_replace = _mecha_runtime.helpers['replace']
+with _mecha_runtime.scope() as _mecha_var5:
+    _mecha_var0 = True
+    with _mecha_helper_branch(_mecha_var0) as _mecha_condition:
+        if _mecha_condition:
+            _mecha_runtime.commands.extend(_mecha_refs[0].commands)
+    _mecha_var0 = _mecha_helper_operator_not(_mecha_var0)
+    with _mecha_helper_branch(_mecha_var0) as _mecha_condition:
+        if _mecha_condition:
+            _mecha_var1 = True
+            _mecha_var2 = _mecha_helper_operator_not(_mecha_var1)
+            _mecha_var3 = _mecha_helper_get_dup(_mecha_var1)
+            if _mecha_var3 is not None:
+                _mecha_var1 = _mecha_var3()
+            with _mecha_helper_branch(_mecha_var2) as _mecha_condition:
+                if _mecha_condition:
+                    _mecha_var4 = False
+                    if _mecha_var3 is not None:
+                        _mecha_rebind = _mecha_helper_get_rebind(_mecha_var1)
+                        _mecha_var1 = _mecha_var4
+                        if _mecha_rebind is not None:
+                            _mecha_var1 = _mecha_rebind(_mecha_var1)
+                    else:
+                        _mecha_var1 = _mecha_var4
+            with _mecha_helper_branch(_mecha_var1) as _mecha_condition:
+                if _mecha_condition:
+                    _mecha_runtime.commands.extend(_mecha_refs[1].commands)
+            _mecha_var1 = _mecha_helper_operator_not(_mecha_var1)
+            with _mecha_helper_branch(_mecha_var1) as _mecha_condition:
+                if _mecha_condition:
+                    _mecha_runtime.commands.extend(_mecha_refs[2].commands)
+_mecha_var6 = _mecha_helper_replace(_mecha_refs[3], commands=_mecha_helper_children(_mecha_var5))
+---
+output = _mecha_var6
+---
+_mecha_refs[0]
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=13, lineno=2, colno=5)
+  end_location: SourceLocation(pos=22, lineno=2, colno=14)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+_mecha_refs[1]
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=47, lineno=4, colno=5)
+  end_location: SourceLocation(pos=56, lineno=4, colno=14)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+_mecha_refs[2]
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=67, lineno=6, colno=5)
+  end_location: SourceLocation(pos=76, lineno=6, colno=14)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+_mecha_refs[3]
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=76, lineno=6, colno=14)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+    <class 'mecha.ast.AstCommand'>

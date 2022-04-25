@@ -1,0 +1,58 @@
+[tool.poetry]
+name = "bolt"
+version = "0.1.0"
+description = "Supercharge Minecraft commands with Python"
+authors = ["Valentin Berlier <berlier.v@gmail.com>"]
+license = "MIT"
+
+homepage = "https://github.com/mcbeet/bolt"
+repository = "https://github.com/mcbeet/bolt"
+documentation = "https://github.com/mcbeet/bolt"
+
+readme = "README.md"
+
+keywords = [
+  "beet",
+  "minecraft",
+  "minecraft-commands",
+  "scripting-language",
+  "mcfunction"
+]
+
+include = ["bolt/py.typed"]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+mecha = ">=0.47.0"
+
+[tool.poetry.dev-dependencies]
+pytest = "^7.1.2"
+black = "^22.3.0"
+isort = "^5.10.1"
+python-semantic-release = "^7.28.1"
+pytest-insta = "^0.1.11"
+lectern = ">=0.20.0"
+
+[tool.pytest.ini_options]
+addopts = "tests bolt --doctest-modules"
+doctest_optionflags = "NORMALIZE_WHITESPACE IGNORE_EXCEPTION_DETAIL ELLIPSIS"
+
+[tool.pyright]
+typeCheckingMode = "strict"
+
+[tool.black]
+target-version = ["py38"]
+
+[tool.isort]
+profile = "black"
+
+[tool.semantic_release]
+branch = "main"
+version_variable = ["bolt/__init__.py:__version__"]
+version_toml = "pyproject.toml:tool.poetry.version"
+major_on_zero = false
+build_command = "poetry build"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

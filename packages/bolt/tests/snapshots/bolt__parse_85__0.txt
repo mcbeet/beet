@@ -1,0 +1,5 @@
+#>ERROR  Can only use 'return' in functions.
+# line 1, column 1
+#      1 |  return "hello"
+#        :  ^^^^^^^^^^^^^^
+return "hello"

@@ -1,0 +1,4 @@
+#>ERROR  Expected brace '(' but got newline '\n'.
+# line 1, column 6
+#      1 |  def f
+def f

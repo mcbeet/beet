@@ -1,0 +1,7 @@
+def f():
+    pass
+f.__code__
+---
+Traceback (most recent call last):
+  File "demo:foo", line 3, in demo:foo
+bolt.contrib.sandbox.SecurityError: Access forbidden attribute '__code__' of <class 'function'>.

@@ -1,0 +1,4 @@
+#>ERROR  Expected identifier or resource_location but got newline '\n'.
+# line 1, column 13
+#      1 |  function_tag
+function_tag

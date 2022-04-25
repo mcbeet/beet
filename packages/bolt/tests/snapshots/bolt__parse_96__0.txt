@@ -1,0 +1,156 @@
+my_predicate = {
+  condition: "minecraft:entity_scores",
+  entity: "this",
+  scores: {
+    score1: {
+      "min": {
+        "type": "minecraft:score",
+        target: "this",
+        score: "score2",
+        scale: 1
+      }
+    }
+  }
+}
+---
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=237, lineno=15, colno=1)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=236, lineno=14, colno=2)
+      identifier: 'statement'
+      arguments:
+        <class 'bolt.ast.AstAssignment'>
+          location: SourceLocation(pos=0, lineno=1, colno=1)
+          end_location: SourceLocation(pos=236, lineno=14, colno=2)
+          operator: '='
+          target:
+            <class 'bolt.ast.AstTargetIdentifier'>
+              location: SourceLocation(pos=0, lineno=1, colno=1)
+              end_location: SourceLocation(pos=12, lineno=1, colno=13)
+              value: 'my_predicate'
+              rebind: False
+          value:
+            <class 'bolt.ast.AstDict'>
+              location: SourceLocation(pos=15, lineno=1, colno=16)
+              end_location: SourceLocation(pos=236, lineno=14, colno=2)
+              items:
+                <class 'bolt.ast.AstDictItem'>
+                  location: SourceLocation(pos=19, lineno=2, colno=3)
+                  end_location: SourceLocation(pos=55, lineno=2, colno=39)
+                  key:
+                    <class 'bolt.ast.AstValue'>
+                      location: SourceLocation(pos=19, lineno=2, colno=3)
+                      end_location: SourceLocation(pos=28, lineno=2, colno=12)
+                      value: 'condition'
+                  value:
+                    <class 'bolt.ast.AstValue'>
+                      location: SourceLocation(pos=30, lineno=2, colno=14)
+                      end_location: SourceLocation(pos=55, lineno=2, colno=39)
+                      value: 'minecraft:entity_scores'
+                <class 'bolt.ast.AstDictItem'>
+                  location: SourceLocation(pos=59, lineno=3, colno=3)
+                  end_location: SourceLocation(pos=73, lineno=3, colno=17)
+                  key:
+                    <class 'bolt.ast.AstValue'>
+                      location: SourceLocation(pos=59, lineno=3, colno=3)
+                      end_location: SourceLocation(pos=65, lineno=3, colno=9)
+                      value: 'entity'
+                  value:
+                    <class 'bolt.ast.AstValue'>
+                      location: SourceLocation(pos=67, lineno=3, colno=11)
+                      end_location: SourceLocation(pos=73, lineno=3, colno=17)
+                      value: 'this'
+                <class 'bolt.ast.AstDictItem'>
+                  location: SourceLocation(pos=77, lineno=4, colno=3)
+                  end_location: SourceLocation(pos=234, lineno=13, colno=4)
+                  key:
+                    <class 'bolt.ast.AstValue'>
+                      location: SourceLocation(pos=77, lineno=4, colno=3)
+                      end_location: SourceLocation(pos=83, lineno=4, colno=9)
+                      value: 'scores'
+                  value:
+                    <class 'bolt.ast.AstDict'>
+                      location: SourceLocation(pos=85, lineno=4, colno=11)
+                      end_location: SourceLocation(pos=234, lineno=13, colno=4)
+                      items:
+                        <class 'bolt.ast.AstDictItem'>
+                          location: SourceLocation(pos=91, lineno=5, colno=5)
+                          end_location: SourceLocation(pos=230, lineno=12, colno=6)
+                          key:
+                            <class 'bolt.ast.AstValue'>
+                              location: SourceLocation(pos=91, lineno=5, colno=5)
+                              end_location: SourceLocation(pos=97, lineno=5, colno=11)
+                              value: 'score1'
+                          value:
+                            <class 'bolt.ast.AstDict'>
+                              location: SourceLocation(pos=99, lineno=5, colno=13)
+                              end_location: SourceLocation(pos=230, lineno=12, colno=6)
+                              items:
+                                <class 'bolt.ast.AstDictItem'>
+                                  location: SourceLocation(pos=107, lineno=6, colno=7)
+                                  end_location: SourceLocation(pos=224, lineno=11, colno=8)
+                                  key:
+                                    <class 'bolt.ast.AstValue'>
+                                      location: SourceLocation(pos=107, lineno=6, colno=7)
+                                      end_location: SourceLocation(pos=112, lineno=6, colno=12)
+                                      value: 'min'
+                                  value:
+                                    <class 'bolt.ast.AstDict'>
+                                      location: SourceLocation(pos=114, lineno=6, colno=14)
+                                      end_location: SourceLocation(pos=224, lineno=11, colno=8)
+                                      items:
+                                        <class 'bolt.ast.AstDictItem'>
+                                          location: SourceLocation(pos=124, lineno=7, colno=9)
+                                          end_location: SourceLocation(pos=149, lineno=7, colno=34)
+                                          key:
+                                            <class 'bolt.ast.AstValue'>
+                                              location: SourceLocation(pos=124, lineno=7, colno=9)
+                                              end_location: SourceLocation(pos=130, lineno=7, colno=15)
+                                              value: 'type'
+                                          value:
+                                            <class 'bolt.ast.AstValue'>
+                                              location: SourceLocation(pos=132, lineno=7, colno=17)
+                                              end_location: SourceLocation(pos=149, lineno=7, colno=34)
+                                              value: 'minecraft:score'
+                                        <class 'bolt.ast.AstDictItem'>
+                                          location: SourceLocation(pos=159, lineno=8, colno=9)
+                                          end_location: SourceLocation(pos=173, lineno=8, colno=23)
+                                          key:
+                                            <class 'bolt.ast.AstValue'>
+                                              location: SourceLocation(pos=159, lineno=8, colno=9)
+                                              end_location: SourceLocation(pos=165, lineno=8, colno=15)
+                                              value: 'target'
+                                          value:
+                                            <class 'bolt.ast.AstValue'>
+                                              location: SourceLocation(pos=167, lineno=8, colno=17)
+                                              end_location: SourceLocation(pos=173, lineno=8, colno=23)
+                                              value: 'this'
+                                        <class 'bolt.ast.AstDictItem'>
+                                          location: SourceLocation(pos=183, lineno=9, colno=9)
+                                          end_location: SourceLocation(pos=198, lineno=9, colno=24)
+                                          key:
+                                            <class 'bolt.ast.AstValue'>
+                                              location: SourceLocation(pos=183, lineno=9, colno=9)
+                                              end_location: SourceLocation(pos=188, lineno=9, colno=14)
+                                              value: 'score'
+                                          value:
+                                            <class 'bolt.ast.AstValue'>
+                                              location: SourceLocation(pos=190, lineno=9, colno=16)
+                                              end_location: SourceLocation(pos=198, lineno=9, colno=24)
+                                              value: 'score2'
+                                        <class 'bolt.ast.AstDictItem'>
+                                          location: SourceLocation(pos=208, lineno=10, colno=9)
+                                          end_location: SourceLocation(pos=216, lineno=10, colno=17)
+                                          key:
+                                            <class 'bolt.ast.AstValue'>
+                                              location: SourceLocation(pos=208, lineno=10, colno=9)
+                                              end_location: SourceLocation(pos=213, lineno=10, colno=14)
+                                              value: 'scale'
+                                          value:
+                                            <class 'bolt.ast.AstValue'>
+                                              location: SourceLocation(pos=215, lineno=10, colno=16)
+                                              end_location: SourceLocation(pos=216, lineno=10, colno=17)
+                                              value: 1

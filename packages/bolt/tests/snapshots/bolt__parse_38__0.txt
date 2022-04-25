@@ -1,0 +1,4 @@
+#>ERROR  Expected bracket '[', curly '{', false, identifier, literal 'block', literal 'blocks' or 9 other tokens but reached end of file.
+# line 1, column 3
+#      1 |  if
+if

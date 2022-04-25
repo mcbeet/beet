@@ -1,0 +1,76 @@
+mykey = "aaa"
+if data storage some:path/to/storage f'some.{mykey}.path{{my: "compound"}}' run say hi
+---
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=100, lineno=2, colno=87)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=13, lineno=1, colno=14)
+      identifier: 'statement'
+      arguments:
+        <class 'bolt.ast.AstAssignment'>
+          location: SourceLocation(pos=0, lineno=1, colno=1)
+          end_location: SourceLocation(pos=13, lineno=1, colno=14)
+          operator: '='
+          target:
+            <class 'bolt.ast.AstTargetIdentifier'>
+              location: SourceLocation(pos=0, lineno=1, colno=1)
+              end_location: SourceLocation(pos=5, lineno=1, colno=6)
+              value: 'mykey'
+              rebind: False
+          value:
+            <class 'bolt.ast.AstValue'>
+              location: SourceLocation(pos=8, lineno=1, colno=9)
+              end_location: SourceLocation(pos=13, lineno=1, colno=14)
+              value: 'aaa'
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=14, lineno=2, colno=1)
+      end_location: SourceLocation(pos=100, lineno=2, colno=87)
+      identifier: 'execute:subcommand'
+      arguments:
+        <class 'mecha.ast.AstCommand'>
+          location: SourceLocation(pos=14, lineno=2, colno=1)
+          end_location: SourceLocation(pos=100, lineno=2, colno=87)
+          identifier: 'execute:if:data:storage:source:path:subcommand'
+          arguments:
+            <class 'mecha.ast.AstResourceLocation'>
+              location: SourceLocation(pos=30, lineno=2, colno=17)
+              end_location: SourceLocation(pos=50, lineno=2, colno=37)
+              is_tag: False
+              namespace: 'some'
+              path: 'path/to/storage'
+            <class 'bolt.ast.AstInterpolation'>
+              location: SourceLocation(pos=51, lineno=2, colno=38)
+              end_location: SourceLocation(pos=89, lineno=2, colno=76)
+              prefix: None
+              converter: 'nbt_path'
+              value:
+                <class 'bolt.ast.AstFormatString'>
+                  location: SourceLocation(pos=51, lineno=2, colno=38)
+                  end_location: SourceLocation(pos=89, lineno=2, colno=76)
+                  fmt: 'some.{}.path{{my: "compound"}}'
+                  values:
+                    <class 'bolt.ast.AstIdentifier'>
+                      location: SourceLocation(pos=59, lineno=2, colno=46)
+                      end_location: SourceLocation(pos=64, lineno=2, colno=51)
+                      value: 'mykey'
+            <class 'mecha.ast.AstCommand'>
+              location: SourceLocation(pos=90, lineno=2, colno=77)
+              end_location: SourceLocation(pos=100, lineno=2, colno=87)
+              identifier: 'execute:run:subcommand'
+              arguments:
+                <class 'mecha.ast.AstCommand'>
+                  location: SourceLocation(pos=94, lineno=2, colno=81)
+                  end_location: SourceLocation(pos=100, lineno=2, colno=87)
+                  identifier: 'say:message'
+                  arguments:
+                    <class 'mecha.ast.AstMessage'>
+                      location: SourceLocation(pos=98, lineno=2, colno=85)
+                      end_location: SourceLocation(pos=100, lineno=2, colno=87)
+                      fragments:
+                        <class 'mecha.ast.AstMessageText'>
+                          location: SourceLocation(pos=98, lineno=2, colno=85)
+                          end_location: SourceLocation(pos=100, lineno=2, colno=87)
+                          value: 'hi'

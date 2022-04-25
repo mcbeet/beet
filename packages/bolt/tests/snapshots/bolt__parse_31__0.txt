@@ -1,0 +1,5 @@
+#>ERROR  Identifier 'foo' is not defined.
+# line 1, column 11
+#      1 |  "hello" + foo
+#        :            ^^^
+"hello" + foo

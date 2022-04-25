@@ -1,0 +1,33 @@
+print(ctx.directory, __name__)
+---
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=31, lineno=2, colno=1)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=30, lineno=1, colno=31)
+      identifier: 'statement'
+      arguments:
+        <class 'bolt.ast.AstCall'>
+          location: SourceLocation(pos=0, lineno=1, colno=1)
+          end_location: SourceLocation(pos=30, lineno=1, colno=31)
+          value:
+            <class 'bolt.ast.AstIdentifier'>
+              location: SourceLocation(pos=0, lineno=1, colno=1)
+              end_location: SourceLocation(pos=5, lineno=1, colno=6)
+              value: 'print'
+          arguments:
+            <class 'bolt.ast.AstAttribute'>
+              location: SourceLocation(pos=6, lineno=1, colno=7)
+              end_location: SourceLocation(pos=19, lineno=1, colno=20)
+              name: 'directory'
+              value:
+                <class 'bolt.ast.AstIdentifier'>
+                  location: SourceLocation(pos=6, lineno=1, colno=7)
+                  end_location: SourceLocation(pos=9, lineno=1, colno=10)
+                  value: 'ctx'
+            <class 'bolt.ast.AstIdentifier'>
+              location: SourceLocation(pos=21, lineno=1, colno=22)
+              end_location: SourceLocation(pos=29, lineno=1, colno=30)
+              value: '__name__'

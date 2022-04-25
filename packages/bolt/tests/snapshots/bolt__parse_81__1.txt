@@ -1,0 +1,46 @@
+_mecha_lineno = [1, 10, 11, 13, 21], [1, 9, 10, 11, 14]
+_mecha_helper_get_rebind = _mecha_runtime.helpers['get_rebind']
+_mecha_helper_children = _mecha_runtime.helpers['children']
+_mecha_helper_replace = _mecha_runtime.helpers['replace']
+with _mecha_runtime.scope() as _mecha_var5:
+    def foo(something):
+        def wat():
+            _mecha_runtime.commands.append(_mecha_refs[0])
+            _mecha_var0 = 'hello'
+            x = _mecha_var0
+            _mecha_var1 = something
+            for i in _mecha_var1:
+                _mecha_var2 = i
+                _mecha_var3 = 3
+                _mecha_var2 = _mecha_var2 * _mecha_var3
+                _mecha_rebind = _mecha_helper_get_rebind(x)
+                x += _mecha_var2
+                if _mecha_rebind is not None:
+                    x = _mecha_rebind(x)
+            _mecha_runtime.commands.append(_mecha_refs[1])
+        _mecha_var4 = wat
+        _mecha_var4 = _mecha_var4()
+_mecha_var6 = _mecha_helper_replace(_mecha_refs[2], commands=_mecha_helper_children(_mecha_var5))
+---
+output = _mecha_var6
+---
+_mecha_refs[0]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=43, lineno=3, colno=9)
+  end_location: SourceLocation(pos=108, lineno=7, colno=16)
+  identifier: 'say:message'
+  arguments:
+    <class 'mecha.ast.AstMessage'>
+_mecha_refs[1]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=209, lineno=13, colno=9)
+  end_location: SourceLocation(pos=216, lineno=13, colno=16)
+  identifier: 'say:message'
+  arguments:
+    <class 'mecha.ast.AstMessage'>
+_mecha_refs[2]
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=226, lineno=14, colno=10)
+  commands:
+    <class 'mecha.ast.AstCommand'>

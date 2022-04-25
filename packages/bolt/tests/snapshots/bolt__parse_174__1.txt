@@ -1,0 +1,60 @@
+_mecha_lineno = [1, 8], [1, 2]
+_mecha_helper_interpolate_nbt_path = _mecha_runtime.helpers['interpolate_nbt_path']
+_mecha_helper_children = _mecha_runtime.helpers['children']
+_mecha_helper_replace = _mecha_runtime.helpers['replace']
+with _mecha_runtime.scope() as _mecha_var3:
+    _mecha_var0 = 'aaa'
+    mykey = _mecha_var0
+    _mecha_var1 = mykey
+    _mecha_var2 = 'some.{}.path{{my: "compound"}}'.format(_mecha_var1)
+    _mecha_var2 = _mecha_helper_interpolate_nbt_path(_mecha_var2, _mecha_refs[0])
+    _mecha_runtime.commands.append(_mecha_helper_replace(_mecha_refs[4], arguments=_mecha_helper_children([_mecha_helper_replace(_mecha_refs[3], arguments=_mecha_helper_children([_mecha_refs[1], _mecha_var2, _mecha_refs[2]]))])))
+_mecha_var4 = _mecha_helper_replace(_mecha_refs[5], commands=_mecha_helper_children(_mecha_var3))
+---
+output = _mecha_var4
+---
+_mecha_refs[0]
+<class 'bolt.ast.AstInterpolation'>
+  location: SourceLocation(pos=51, lineno=2, colno=38)
+  end_location: SourceLocation(pos=89, lineno=2, colno=76)
+  prefix: None
+  converter: 'nbt_path'
+  value:
+    <class 'bolt.ast.AstFormatString'>
+_mecha_refs[1]
+<class 'mecha.ast.AstResourceLocation'>
+  location: SourceLocation(pos=30, lineno=2, colno=17)
+  end_location: SourceLocation(pos=50, lineno=2, colno=37)
+  is_tag: False
+  namespace: 'some'
+  path: 'path/to/storage'
+_mecha_refs[2]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=90, lineno=2, colno=77)
+  end_location: SourceLocation(pos=100, lineno=2, colno=87)
+  identifier: 'execute:run:subcommand'
+  arguments:
+    <class 'mecha.ast.AstCommand'>
+_mecha_refs[3]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=14, lineno=2, colno=1)
+  end_location: SourceLocation(pos=100, lineno=2, colno=87)
+  identifier: 'execute:if:data:storage:source:path:subcommand'
+  arguments:
+    <class 'mecha.ast.AstResourceLocation'>
+    <class 'bolt.ast.AstInterpolation'>
+    <class 'mecha.ast.AstCommand'>
+_mecha_refs[4]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=14, lineno=2, colno=1)
+  end_location: SourceLocation(pos=100, lineno=2, colno=87)
+  identifier: 'execute:subcommand'
+  arguments:
+    <class 'mecha.ast.AstCommand'>
+_mecha_refs[5]
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=100, lineno=2, colno=87)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+    <class 'mecha.ast.AstCommand'>

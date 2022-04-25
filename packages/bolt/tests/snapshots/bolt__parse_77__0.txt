@@ -1,0 +1,69 @@
+def f(a, b=a):
+    b += a
+    say wat
+---
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=37, lineno=3, colno=12)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=37, lineno=3, colno=12)
+      identifier: 'def:function:body'
+      arguments:
+        <class 'bolt.ast.AstFunctionSignature'>
+          location: SourceLocation(pos=4, lineno=1, colno=5)
+          end_location: SourceLocation(pos=13, lineno=1, colno=14)
+          name: 'f'
+          arguments:
+            <class 'bolt.ast.AstFunctionSignatureArgument'>
+              location: SourceLocation(pos=6, lineno=1, colno=7)
+              end_location: SourceLocation(pos=7, lineno=1, colno=8)
+              name: 'a'
+              default: None
+            <class 'bolt.ast.AstFunctionSignatureArgument'>
+              location: SourceLocation(pos=9, lineno=1, colno=10)
+              end_location: SourceLocation(pos=12, lineno=1, colno=13)
+              name: 'b'
+              default:
+                <class 'bolt.ast.AstIdentifier'>
+                  location: SourceLocation(pos=11, lineno=1, colno=12)
+                  end_location: SourceLocation(pos=12, lineno=1, colno=13)
+                  value: 'a'
+        <class 'mecha.ast.AstRoot'>
+          location: SourceLocation(pos=19, lineno=2, colno=5)
+          end_location: SourceLocation(pos=37, lineno=3, colno=12)
+          commands:
+            <class 'mecha.ast.AstCommand'>
+              location: SourceLocation(pos=19, lineno=2, colno=5)
+              end_location: SourceLocation(pos=25, lineno=2, colno=11)
+              identifier: 'statement'
+              arguments:
+                <class 'bolt.ast.AstAssignment'>
+                  location: SourceLocation(pos=19, lineno=2, colno=5)
+                  end_location: SourceLocation(pos=25, lineno=2, colno=11)
+                  operator: '+='
+                  target:
+                    <class 'bolt.ast.AstTargetIdentifier'>
+                      location: SourceLocation(pos=19, lineno=2, colno=5)
+                      end_location: SourceLocation(pos=20, lineno=2, colno=6)
+                      value: 'b'
+                      rebind: True
+                  value:
+                    <class 'bolt.ast.AstIdentifier'>
+                      location: SourceLocation(pos=24, lineno=2, colno=10)
+                      end_location: SourceLocation(pos=25, lineno=2, colno=11)
+                      value: 'a'
+            <class 'mecha.ast.AstCommand'>
+              location: SourceLocation(pos=30, lineno=3, colno=5)
+              end_location: SourceLocation(pos=37, lineno=3, colno=12)
+              identifier: 'say:message'
+              arguments:
+                <class 'mecha.ast.AstMessage'>
+                  location: SourceLocation(pos=34, lineno=3, colno=9)
+                  end_location: SourceLocation(pos=37, lineno=3, colno=12)
+                  fragments:
+                    <class 'mecha.ast.AstMessageText'>
+                      location: SourceLocation(pos=34, lineno=3, colno=9)
+                      end_location: SourceLocation(pos=37, lineno=3, colno=12)
+                      value: 'wat'

@@ -1,0 +1,68 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  main:
+    name: Test and release
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Setup poetry cache
+        id: cached-poetry
+        uses: actions/cache@v2
+        with:
+          path: ~/.local
+          key: poetry-${{ runner.os }}
+      - name: Install poetry
+        if: steps.cached-poetry.outputs.cache-hit != 'true'
+        uses: snok/install-poetry@v1
+        with:
+          virtualenvs-in-project: true
+      - name: Setup venv cache
+        id: cached-venv
+        uses: actions/cache@v2
+        with:
+          path: .venv
+          key: venv-${{ runner.os }}-${{ hashFiles('poetry.lock') }}
+      - name: Install dependencies
+        if: steps.cached-venv.outputs.cache-hit != 'true'
+        run: poetry install
+      - name: Setup npm cache
+        id: cached-npm
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: npm-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+      - name: Install Pyright
+        if: steps.cached-npm.outputs.cache-hit != 'true'
+        run: npm install
+      - name: Run tests
+        run: poetry run pytest -v
+      - name: Run type-checking
+        run: npm run check
+      - name: Check formatting
+        run: poetry run black --check bolt tests
+      - name: Release
+        if: |
+          github.repository == 'mcbeet/bolt'
+          && github.event_name == 'push'
+          && github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "action@github.com"
+          poetry run semantic-release publish -v DEBUG -D commit_author="github-actions <action@github.com>"

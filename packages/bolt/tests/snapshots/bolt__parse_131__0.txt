@@ -1,0 +1,5 @@
+#>ERROR  Expected coordinate or identifier but got literal '='.
+# line 1, column 10
+#      1 |  setblock = 0
+#        :           ^
+setblock = 0

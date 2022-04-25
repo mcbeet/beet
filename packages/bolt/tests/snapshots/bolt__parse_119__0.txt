@@ -1,0 +1,7 @@
+if True:
+#>ERROR  Can only use 'yield' in functions.
+# line 2, column 5
+#      1 |  if True:
+#      2 |      yield
+#        :      ^^^^^
+    yield

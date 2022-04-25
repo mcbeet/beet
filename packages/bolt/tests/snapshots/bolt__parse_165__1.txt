@@ -1,0 +1,42 @@
+_mecha_lineno = [1, 8], [1, 2]
+_mecha_helper_interpolate_scoreboard_slot = _mecha_runtime.helpers['interpolate_scoreboard_slot']
+_mecha_helper_children = _mecha_runtime.helpers['children']
+_mecha_helper_replace = _mecha_runtime.helpers['replace']
+with _mecha_runtime.scope() as _mecha_var2:
+    _mecha_var0 = 'sidebar.team.red'
+    my_team = _mecha_var0
+    _mecha_var1 = my_team
+    _mecha_var1 = _mecha_helper_interpolate_scoreboard_slot(_mecha_var1, _mecha_refs[0])
+    _mecha_runtime.commands.append(_mecha_helper_replace(_mecha_refs[2], arguments=_mecha_helper_children([_mecha_var1, _mecha_refs[1]])))
+_mecha_var3 = _mecha_helper_replace(_mecha_refs[3], commands=_mecha_helper_children(_mecha_var2))
+---
+output = _mecha_var3
+---
+_mecha_refs[0]
+<class 'bolt.ast.AstInterpolation'>
+  location: SourceLocation(pos=62, lineno=2, colno=34)
+  end_location: SourceLocation(pos=69, lineno=2, colno=41)
+  prefix: None
+  converter: 'scoreboard_slot'
+  value:
+    <class 'bolt.ast.AstIdentifier'>
+_mecha_refs[1]
+<class 'mecha.ast.AstObjective'>
+  location: SourceLocation(pos=70, lineno=2, colno=42)
+  end_location: SourceLocation(pos=85, lineno=2, colno=57)
+  value: 'some_score_name'
+_mecha_refs[2]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=29, lineno=2, colno=1)
+  end_location: SourceLocation(pos=85, lineno=2, colno=57)
+  identifier: 'scoreboard:objectives:setdisplay:slot:objective'
+  arguments:
+    <class 'bolt.ast.AstInterpolation'>
+    <class 'mecha.ast.AstObjective'>
+_mecha_refs[3]
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=86, lineno=3, colno=1)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+    <class 'mecha.ast.AstCommand'>

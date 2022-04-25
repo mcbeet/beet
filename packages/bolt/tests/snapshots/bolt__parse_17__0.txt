@@ -1,0 +1,240 @@
+False or True and "hello" or not "foo" == "bar" or 1 != 2 and 1 < 2 and 2 <= 3 and 5 > 4 and 6 >= 5 and 1 in 1 and 2 not in 2 and 3 is 3 and 3 is not 3
+---
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=152, lineno=2, colno=1)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=151, lineno=1, colno=152)
+      identifier: 'statement'
+      arguments:
+        <class 'bolt.ast.AstExpressionBinary'>
+          location: SourceLocation(pos=0, lineno=1, colno=1)
+          end_location: SourceLocation(pos=151, lineno=1, colno=152)
+          operator: 'or'
+          left:
+            <class 'bolt.ast.AstExpressionBinary'>
+              location: SourceLocation(pos=0, lineno=1, colno=1)
+              end_location: SourceLocation(pos=47, lineno=1, colno=48)
+              operator: 'or'
+              left:
+                <class 'bolt.ast.AstExpressionBinary'>
+                  location: SourceLocation(pos=0, lineno=1, colno=1)
+                  end_location: SourceLocation(pos=25, lineno=1, colno=26)
+                  operator: 'or'
+                  left:
+                    <class 'bolt.ast.AstValue'>
+                      location: SourceLocation(pos=0, lineno=1, colno=1)
+                      end_location: SourceLocation(pos=5, lineno=1, colno=6)
+                      value: False
+                  right:
+                    <class 'bolt.ast.AstExpressionBinary'>
+                      location: SourceLocation(pos=9, lineno=1, colno=10)
+                      end_location: SourceLocation(pos=25, lineno=1, colno=26)
+                      operator: 'and'
+                      left:
+                        <class 'bolt.ast.AstValue'>
+                          location: SourceLocation(pos=9, lineno=1, colno=10)
+                          end_location: SourceLocation(pos=13, lineno=1, colno=14)
+                          value: True
+                      right:
+                        <class 'bolt.ast.AstValue'>
+                          location: SourceLocation(pos=18, lineno=1, colno=19)
+                          end_location: SourceLocation(pos=25, lineno=1, colno=26)
+                          value: 'hello'
+              right:
+                <class 'bolt.ast.AstExpressionUnary'>
+                  location: SourceLocation(pos=29, lineno=1, colno=30)
+                  end_location: SourceLocation(pos=47, lineno=1, colno=48)
+                  operator: 'not'
+                  value:
+                    <class 'bolt.ast.AstExpressionBinary'>
+                      location: SourceLocation(pos=33, lineno=1, colno=34)
+                      end_location: SourceLocation(pos=47, lineno=1, colno=48)
+                      operator: '=='
+                      left:
+                        <class 'bolt.ast.AstValue'>
+                          location: SourceLocation(pos=33, lineno=1, colno=34)
+                          end_location: SourceLocation(pos=38, lineno=1, colno=39)
+                          value: 'foo'
+                      right:
+                        <class 'bolt.ast.AstValue'>
+                          location: SourceLocation(pos=42, lineno=1, colno=43)
+                          end_location: SourceLocation(pos=47, lineno=1, colno=48)
+                          value: 'bar'
+          right:
+            <class 'bolt.ast.AstExpressionBinary'>
+              location: SourceLocation(pos=51, lineno=1, colno=52)
+              end_location: SourceLocation(pos=151, lineno=1, colno=152)
+              operator: 'and'
+              left:
+                <class 'bolt.ast.AstExpressionBinary'>
+                  location: SourceLocation(pos=51, lineno=1, colno=52)
+                  end_location: SourceLocation(pos=136, lineno=1, colno=137)
+                  operator: 'and'
+                  left:
+                    <class 'bolt.ast.AstExpressionBinary'>
+                      location: SourceLocation(pos=51, lineno=1, colno=52)
+                      end_location: SourceLocation(pos=125, lineno=1, colno=126)
+                      operator: 'and'
+                      left:
+                        <class 'bolt.ast.AstExpressionBinary'>
+                          location: SourceLocation(pos=51, lineno=1, colno=52)
+                          end_location: SourceLocation(pos=110, lineno=1, colno=111)
+                          operator: 'and'
+                          left:
+                            <class 'bolt.ast.AstExpressionBinary'>
+                              location: SourceLocation(pos=51, lineno=1, colno=52)
+                              end_location: SourceLocation(pos=99, lineno=1, colno=100)
+                              operator: 'and'
+                              left:
+                                <class 'bolt.ast.AstExpressionBinary'>
+                                  location: SourceLocation(pos=51, lineno=1, colno=52)
+                                  end_location: SourceLocation(pos=88, lineno=1, colno=89)
+                                  operator: 'and'
+                                  left:
+                                    <class 'bolt.ast.AstExpressionBinary'>
+                                      location: SourceLocation(pos=51, lineno=1, colno=52)
+                                      end_location: SourceLocation(pos=78, lineno=1, colno=79)
+                                      operator: 'and'
+                                      left:
+                                        <class 'bolt.ast.AstExpressionBinary'>
+                                          location: SourceLocation(pos=51, lineno=1, colno=52)
+                                          end_location: SourceLocation(pos=67, lineno=1, colno=68)
+                                          operator: 'and'
+                                          left:
+                                            <class 'bolt.ast.AstExpressionBinary'>
+                                              location: SourceLocation(pos=51, lineno=1, colno=52)
+                                              end_location: SourceLocation(pos=57, lineno=1, colno=58)
+                                              operator: '!='
+                                              left:
+                                                <class 'bolt.ast.AstValue'>
+                                                  location: SourceLocation(pos=51, lineno=1, colno=52)
+                                                  end_location: SourceLocation(pos=52, lineno=1, colno=53)
+                                                  value: 1
+                                              right:
+                                                <class 'bolt.ast.AstValue'>
+                                                  location: SourceLocation(pos=56, lineno=1, colno=57)
+                                                  end_location: SourceLocation(pos=57, lineno=1, colno=58)
+                                                  value: 2
+                                          right:
+                                            <class 'bolt.ast.AstExpressionBinary'>
+                                              location: SourceLocation(pos=62, lineno=1, colno=63)
+                                              end_location: SourceLocation(pos=67, lineno=1, colno=68)
+                                              operator: '<'
+                                              left:
+                                                <class 'bolt.ast.AstValue'>
+                                                  location: SourceLocation(pos=62, lineno=1, colno=63)
+                                                  end_location: SourceLocation(pos=63, lineno=1, colno=64)
+                                                  value: 1
+                                              right:
+                                                <class 'bolt.ast.AstValue'>
+                                                  location: SourceLocation(pos=66, lineno=1, colno=67)
+                                                  end_location: SourceLocation(pos=67, lineno=1, colno=68)
+                                                  value: 2
+                                      right:
+                                        <class 'bolt.ast.AstExpressionBinary'>
+                                          location: SourceLocation(pos=72, lineno=1, colno=73)
+                                          end_location: SourceLocation(pos=78, lineno=1, colno=79)
+                                          operator: '<='
+                                          left:
+                                            <class 'bolt.ast.AstValue'>
+                                              location: SourceLocation(pos=72, lineno=1, colno=73)
+                                              end_location: SourceLocation(pos=73, lineno=1, colno=74)
+                                              value: 2
+                                          right:
+                                            <class 'bolt.ast.AstValue'>
+                                              location: SourceLocation(pos=77, lineno=1, colno=78)
+                                              end_location: SourceLocation(pos=78, lineno=1, colno=79)
+                                              value: 3
+                                  right:
+                                    <class 'bolt.ast.AstExpressionBinary'>
+                                      location: SourceLocation(pos=83, lineno=1, colno=84)
+                                      end_location: SourceLocation(pos=88, lineno=1, colno=89)
+                                      operator: '>'
+                                      left:
+                                        <class 'bolt.ast.AstValue'>
+                                          location: SourceLocation(pos=83, lineno=1, colno=84)
+                                          end_location: SourceLocation(pos=84, lineno=1, colno=85)
+                                          value: 5
+                                      right:
+                                        <class 'bolt.ast.AstValue'>
+                                          location: SourceLocation(pos=87, lineno=1, colno=88)
+                                          end_location: SourceLocation(pos=88, lineno=1, colno=89)
+                                          value: 4
+                              right:
+                                <class 'bolt.ast.AstExpressionBinary'>
+                                  location: SourceLocation(pos=93, lineno=1, colno=94)
+                                  end_location: SourceLocation(pos=99, lineno=1, colno=100)
+                                  operator: '>='
+                                  left:
+                                    <class 'bolt.ast.AstValue'>
+                                      location: SourceLocation(pos=93, lineno=1, colno=94)
+                                      end_location: SourceLocation(pos=94, lineno=1, colno=95)
+                                      value: 6
+                                  right:
+                                    <class 'bolt.ast.AstValue'>
+                                      location: SourceLocation(pos=98, lineno=1, colno=99)
+                                      end_location: SourceLocation(pos=99, lineno=1, colno=100)
+                                      value: 5
+                          right:
+                            <class 'bolt.ast.AstExpressionBinary'>
+                              location: SourceLocation(pos=104, lineno=1, colno=105)
+                              end_location: SourceLocation(pos=110, lineno=1, colno=111)
+                              operator: 'in'
+                              left:
+                                <class 'bolt.ast.AstValue'>
+                                  location: SourceLocation(pos=104, lineno=1, colno=105)
+                                  end_location: SourceLocation(pos=105, lineno=1, colno=106)
+                                  value: 1
+                              right:
+                                <class 'bolt.ast.AstValue'>
+                                  location: SourceLocation(pos=109, lineno=1, colno=110)
+                                  end_location: SourceLocation(pos=110, lineno=1, colno=111)
+                                  value: 1
+                      right:
+                        <class 'bolt.ast.AstExpressionBinary'>
+                          location: SourceLocation(pos=115, lineno=1, colno=116)
+                          end_location: SourceLocation(pos=125, lineno=1, colno=126)
+                          operator: 'not_in'
+                          left:
+                            <class 'bolt.ast.AstValue'>
+                              location: SourceLocation(pos=115, lineno=1, colno=116)
+                              end_location: SourceLocation(pos=116, lineno=1, colno=117)
+                              value: 2
+                          right:
+                            <class 'bolt.ast.AstValue'>
+                              location: SourceLocation(pos=124, lineno=1, colno=125)
+                              end_location: SourceLocation(pos=125, lineno=1, colno=126)
+                              value: 2
+                  right:
+                    <class 'bolt.ast.AstExpressionBinary'>
+                      location: SourceLocation(pos=130, lineno=1, colno=131)
+                      end_location: SourceLocation(pos=136, lineno=1, colno=137)
+                      operator: 'is'
+                      left:
+                        <class 'bolt.ast.AstValue'>
+                          location: SourceLocation(pos=130, lineno=1, colno=131)
+                          end_location: SourceLocation(pos=131, lineno=1, colno=132)
+                          value: 3
+                      right:
+                        <class 'bolt.ast.AstValue'>
+                          location: SourceLocation(pos=135, lineno=1, colno=136)
+                          end_location: SourceLocation(pos=136, lineno=1, colno=137)
+                          value: 3
+              right:
+                <class 'bolt.ast.AstExpressionBinary'>
+                  location: SourceLocation(pos=141, lineno=1, colno=142)
+                  end_location: SourceLocation(pos=151, lineno=1, colno=152)
+                  operator: 'is_not'
+                  left:
+                    <class 'bolt.ast.AstValue'>
+                      location: SourceLocation(pos=141, lineno=1, colno=142)
+                      end_location: SourceLocation(pos=142, lineno=1, colno=143)
+                      value: 3
+                  right:
+                    <class 'bolt.ast.AstValue'>
+                      location: SourceLocation(pos=150, lineno=1, colno=151)
+                      end_location: SourceLocation(pos=151, lineno=1, colno=152)
+                      value: 3

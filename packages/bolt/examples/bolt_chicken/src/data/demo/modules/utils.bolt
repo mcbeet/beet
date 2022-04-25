@@ -1,0 +1,18 @@
+infinite_invisibility = {
+    Id: 14,
+    Duration: 999999,
+    Amplifier: 1,
+    ShowParticles: false,
+}
+
+def summon_chicken_army(n):
+    for i in range(n):
+        summon chicken ~i ~ ~ {
+            Tags: [f"quack{i}"],
+            IsChickenJockey: true,
+            Passengers: [{
+                id: zombie,
+                IsBaby: true,
+                ActiveEffects: [infinite_invisibility]
+            }]
+        }

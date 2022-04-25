@@ -1,0 +1,87 @@
+_mecha_lineno = [1, 8, 9, 14], [1, 2, 3, 5]
+_mecha_helper_get_rebind = _mecha_runtime.helpers['get_rebind']
+_mecha_helper_children = _mecha_runtime.helpers['children']
+_mecha_helper_replace = _mecha_runtime.helpers['replace']
+with _mecha_runtime.scope() as _mecha_var6:
+    with _mecha_runtime.scope() as _mecha_var5:
+        _mecha_var0 = 42
+        count = _mecha_var0
+        _mecha_var1 = count
+        _mecha_var2 = 0
+        _mecha_var1 = _mecha_var1 > _mecha_var2
+        while _mecha_var1:
+            _mecha_runtime.commands.append(_mecha_refs[0])
+            _mecha_var3 = count
+            _mecha_var4 = 1
+            _mecha_var3 = _mecha_var3 - _mecha_var4
+            _mecha_rebind = _mecha_helper_get_rebind(count)
+            count = _mecha_var3
+            if _mecha_rebind is not None:
+                count = _mecha_rebind(count)
+    _mecha_runtime.commands.append(_mecha_helper_replace(_mecha_refs[7], arguments=_mecha_helper_children([_mecha_helper_replace(_mecha_refs[6], arguments=_mecha_helper_children([_mecha_refs[3], _mecha_refs[4], _mecha_refs[5], _mecha_helper_replace(_mecha_refs[2], arguments=_mecha_helper_children([_mecha_helper_replace(_mecha_refs[1], commands=_mecha_helper_children(_mecha_var5))]))]))])))
+_mecha_var7 = _mecha_helper_replace(_mecha_refs[8], commands=_mecha_helper_children(_mecha_var6))
+---
+output = _mecha_var7
+---
+_mecha_refs[0]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=72, lineno=4, colno=9)
+  end_location: SourceLocation(pos=81, lineno=4, colno=18)
+  identifier: 'say:message'
+  arguments:
+    <class 'mecha.ast.AstMessage'>
+_mecha_refs[1]
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=32, lineno=2, colno=5)
+  end_location: SourceLocation(pos=107, lineno=5, colno=26)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+    <class 'mecha.ast.AstCommand'>
+_mecha_refs[2]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=32, lineno=2, colno=5)
+  end_location: SourceLocation(pos=107, lineno=5, colno=26)
+  identifier: 'execute:commands'
+  arguments:
+    <class 'mecha.ast.AstRoot'>
+_mecha_refs[3]
+<class 'mecha.ast.AstSelector'>
+  location: SourceLocation(pos=9, lineno=1, colno=10)
+  end_location: SourceLocation(pos=11, lineno=1, colno=12)
+  variable: 's'
+  arguments:
+    <empty>
+_mecha_refs[4]
+<class 'mecha.ast.AstObjective'>
+  location: SourceLocation(pos=12, lineno=1, colno=13)
+  end_location: SourceLocation(pos=15, lineno=1, colno=16)
+  value: 'tmp'
+_mecha_refs[5]
+<class 'mecha.ast.AstRange'>
+  location: SourceLocation(pos=24, lineno=1, colno=25)
+  end_location: SourceLocation(pos=26, lineno=1, colno=27)
+  min: 42
+  max: 42
+_mecha_refs[6]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=107, lineno=5, colno=26)
+  identifier: 'execute:if:score:target:targetObjective:matches:range:subcommand'
+  arguments:
+    <class 'mecha.ast.AstSelector'>
+    <class 'mecha.ast.AstObjective'>
+    <class 'mecha.ast.AstRange'>
+    <class 'mecha.ast.AstCommand'>
+_mecha_refs[7]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=107, lineno=5, colno=26)
+  identifier: 'execute:subcommand'
+  arguments:
+    <class 'mecha.ast.AstCommand'>
+_mecha_refs[8]
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=108, lineno=6, colno=1)
+  commands:
+    <class 'mecha.ast.AstCommand'>

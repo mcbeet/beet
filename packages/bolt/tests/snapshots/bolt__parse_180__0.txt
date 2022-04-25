@@ -1,0 +1,4 @@
+#>ERROR  Expected bracket '[', curly '{', identifier, literal 'false', literal 'null', literal 'true', number or string but reached end of file.
+# line 1, column 34
+#      1 |  merge function_tag minecraft:tick
+merge function_tag minecraft:tick

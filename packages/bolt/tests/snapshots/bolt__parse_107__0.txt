@@ -1,0 +1,41 @@
+foo = "world"
+f"hello {foo!r}"
+---
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=31, lineno=3, colno=1)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=13, lineno=1, colno=14)
+      identifier: 'statement'
+      arguments:
+        <class 'bolt.ast.AstAssignment'>
+          location: SourceLocation(pos=0, lineno=1, colno=1)
+          end_location: SourceLocation(pos=13, lineno=1, colno=14)
+          operator: '='
+          target:
+            <class 'bolt.ast.AstTargetIdentifier'>
+              location: SourceLocation(pos=0, lineno=1, colno=1)
+              end_location: SourceLocation(pos=3, lineno=1, colno=4)
+              value: 'foo'
+              rebind: False
+          value:
+            <class 'bolt.ast.AstValue'>
+              location: SourceLocation(pos=6, lineno=1, colno=7)
+              end_location: SourceLocation(pos=13, lineno=1, colno=14)
+              value: 'world'
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=14, lineno=2, colno=1)
+      end_location: SourceLocation(pos=30, lineno=2, colno=17)
+      identifier: 'statement'
+      arguments:
+        <class 'bolt.ast.AstFormatString'>
+          location: SourceLocation(pos=14, lineno=2, colno=1)
+          end_location: SourceLocation(pos=30, lineno=2, colno=17)
+          fmt: 'hello {!r}'
+          values:
+            <class 'bolt.ast.AstIdentifier'>
+              location: SourceLocation(pos=23, lineno=2, colno=10)
+              end_location: SourceLocation(pos=26, lineno=2, colno=13)
+              value: 'foo'

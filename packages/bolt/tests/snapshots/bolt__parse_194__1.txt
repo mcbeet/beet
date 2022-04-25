@@ -1,0 +1,104 @@
+_mecha_lineno = [1, 14, 16, 20, 23, 26, 29, 34, 39], [1, 3, 4, 5, 6, 8, 9, 10, 11]
+_mecha_helper_missing = _mecha_runtime.helpers['missing']
+_mecha_helper_get_rebind = _mecha_runtime.helpers['get_rebind']
+_mecha_helper_children = _mecha_runtime.helpers['children']
+_mecha_helper_get_attribute = _mecha_runtime.helpers['get_attribute']
+_mecha_helper_interpolate_message = _mecha_runtime.helpers['interpolate_message']
+_mecha_helper_replace = _mecha_runtime.helpers['replace']
+with _mecha_runtime.scope() as _mecha_var11:
+    def Counter(x=_mecha_helper_missing):
+        if x is _mecha_helper_missing:
+            _mecha_var0 = 0
+            x = _mecha_var0
+        def incr():
+            nonlocal x
+            _mecha_var1 = 1
+            _mecha_rebind = _mecha_helper_get_rebind(x)
+            x += _mecha_var1
+            if _mecha_rebind is not None:
+                x = _mecha_rebind(x)
+            _mecha_var2 = x
+            return _mecha_var2
+        _mecha_var3 = 'incr'
+        _mecha_var4 = incr
+        _mecha_var5 = {_mecha_var3: _mecha_var4}
+        return _mecha_var5
+    _mecha_var6 = Counter
+    _mecha_var6 = _mecha_var6()
+    counter = _mecha_var6
+    _mecha_var7 = counter
+    _mecha_var7 = _mecha_helper_get_attribute(_mecha_var7, 'incr')
+    _mecha_var7 = _mecha_var7()
+    _mecha_var7 = _mecha_helper_interpolate_message(_mecha_var7, _mecha_refs[0])
+    _mecha_runtime.commands.append(_mecha_helper_replace(_mecha_refs[1], arguments=_mecha_helper_children([_mecha_var7])))
+    _mecha_var8 = counter
+    _mecha_var8 = _mecha_helper_get_attribute(_mecha_var8, 'incr')
+    _mecha_var8 = _mecha_var8()
+    _mecha_var8 = _mecha_helper_interpolate_message(_mecha_var8, _mecha_refs[2])
+    _mecha_runtime.commands.append(_mecha_helper_replace(_mecha_refs[3], arguments=_mecha_helper_children([_mecha_var8])))
+    _mecha_var9 = Counter
+    _mecha_var10 = 9
+    _mecha_var9 = _mecha_var9(_mecha_var10)
+    _mecha_var9 = _mecha_helper_get_attribute(_mecha_var9, 'incr')
+    _mecha_var9 = _mecha_var9()
+    _mecha_var9 = _mecha_helper_interpolate_message(_mecha_var9, _mecha_refs[4])
+    _mecha_runtime.commands.append(_mecha_helper_replace(_mecha_refs[5], arguments=_mecha_helper_children([_mecha_var9])))
+_mecha_var12 = _mecha_helper_replace(_mecha_refs[6], commands=_mecha_helper_children(_mecha_var11))
+---
+output = _mecha_var12
+---
+_mecha_refs[0]
+<class 'bolt.ast.AstInterpolation'>
+  location: SourceLocation(pos=136, lineno=9, colno=5)
+  end_location: SourceLocation(pos=150, lineno=9, colno=19)
+  prefix: None
+  converter: 'message'
+  value:
+    <class 'bolt.ast.AstCall'>
+_mecha_refs[1]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=132, lineno=9, colno=1)
+  end_location: SourceLocation(pos=150, lineno=9, colno=19)
+  identifier: 'say:message'
+  arguments:
+    <class 'bolt.ast.AstInterpolation'>
+_mecha_refs[2]
+<class 'bolt.ast.AstInterpolation'>
+  location: SourceLocation(pos=155, lineno=10, colno=5)
+  end_location: SourceLocation(pos=169, lineno=10, colno=19)
+  prefix: None
+  converter: 'message'
+  value:
+    <class 'bolt.ast.AstCall'>
+_mecha_refs[3]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=151, lineno=10, colno=1)
+  end_location: SourceLocation(pos=169, lineno=10, colno=19)
+  identifier: 'say:message'
+  arguments:
+    <class 'bolt.ast.AstInterpolation'>
+_mecha_refs[4]
+<class 'bolt.ast.AstInterpolation'>
+  location: SourceLocation(pos=174, lineno=11, colno=5)
+  end_location: SourceLocation(pos=191, lineno=11, colno=22)
+  prefix: None
+  converter: 'message'
+  value:
+    <class 'bolt.ast.AstCall'>
+_mecha_refs[5]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=170, lineno=11, colno=1)
+  end_location: SourceLocation(pos=191, lineno=11, colno=22)
+  identifier: 'say:message'
+  arguments:
+    <class 'bolt.ast.AstInterpolation'>
+_mecha_refs[6]
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=192, lineno=12, colno=1)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+    <class 'mecha.ast.AstCommand'>
+    <class 'mecha.ast.AstCommand'>
+    <class 'mecha.ast.AstCommand'>
+    <class 'mecha.ast.AstCommand'>

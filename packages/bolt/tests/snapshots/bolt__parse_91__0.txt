@@ -1,0 +1,30 @@
+{
+    foo: "bar"
+}
+---
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=19, lineno=4, colno=1)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=18, lineno=3, colno=2)
+      identifier: 'statement'
+      arguments:
+        <class 'bolt.ast.AstDict'>
+          location: SourceLocation(pos=0, lineno=1, colno=1)
+          end_location: SourceLocation(pos=18, lineno=3, colno=2)
+          items:
+            <class 'bolt.ast.AstDictItem'>
+              location: SourceLocation(pos=6, lineno=2, colno=5)
+              end_location: SourceLocation(pos=16, lineno=2, colno=15)
+              key:
+                <class 'bolt.ast.AstValue'>
+                  location: SourceLocation(pos=6, lineno=2, colno=5)
+                  end_location: SourceLocation(pos=9, lineno=2, colno=8)
+                  value: 'foo'
+              value:
+                <class 'bolt.ast.AstValue'>
+                  location: SourceLocation(pos=11, lineno=2, colno=10)
+                  end_location: SourceLocation(pos=16, lineno=2, colno=15)
+                  value: 'bar'

@@ -1,0 +1,20 @@
+def foo(something):
+    def wat():
+        say
+            yo
+            wat
+            is
+            dat
+# this is a comment
+        x = "hello"
+#>ERROR  Identifier 'somehng' is not defined. Did you mean 'something'?
+# line 10, column 18
+#      9 |          x = "hello"
+#     10 |          for i in somehng:
+#        :                   ^^^^^^^
+#     11 |              x += i * 3
+        for i in somehng:
+            x += i * 3
+
+        say wow
+    wat()

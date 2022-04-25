@@ -1,0 +1,7 @@
+require:
+  - bolt
+data_pack:
+  load: [src]
+pipeline:
+  - demo
+  - mecha

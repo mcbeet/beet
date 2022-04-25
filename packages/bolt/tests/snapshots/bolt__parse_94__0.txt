@@ -1,0 +1,86 @@
+foo = "hello"
+{
+    foo * 3: 42,
+    16 + 3: [],
+}
+---
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=51, lineno=6, colno=1)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=13, lineno=1, colno=14)
+      identifier: 'statement'
+      arguments:
+        <class 'bolt.ast.AstAssignment'>
+          location: SourceLocation(pos=0, lineno=1, colno=1)
+          end_location: SourceLocation(pos=13, lineno=1, colno=14)
+          operator: '='
+          target:
+            <class 'bolt.ast.AstTargetIdentifier'>
+              location: SourceLocation(pos=0, lineno=1, colno=1)
+              end_location: SourceLocation(pos=3, lineno=1, colno=4)
+              value: 'foo'
+              rebind: False
+          value:
+            <class 'bolt.ast.AstValue'>
+              location: SourceLocation(pos=6, lineno=1, colno=7)
+              end_location: SourceLocation(pos=13, lineno=1, colno=14)
+              value: 'hello'
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=14, lineno=2, colno=1)
+      end_location: SourceLocation(pos=50, lineno=5, colno=2)
+      identifier: 'statement'
+      arguments:
+        <class 'bolt.ast.AstDict'>
+          location: SourceLocation(pos=14, lineno=2, colno=1)
+          end_location: SourceLocation(pos=50, lineno=5, colno=2)
+          items:
+            <class 'bolt.ast.AstDictItem'>
+              location: SourceLocation(pos=20, lineno=3, colno=5)
+              end_location: SourceLocation(pos=31, lineno=3, colno=16)
+              key:
+                <class 'bolt.ast.AstExpressionBinary'>
+                  location: SourceLocation(pos=20, lineno=3, colno=5)
+                  end_location: SourceLocation(pos=27, lineno=3, colno=12)
+                  operator: '*'
+                  left:
+                    <class 'bolt.ast.AstIdentifier'>
+                      location: SourceLocation(pos=20, lineno=3, colno=5)
+                      end_location: SourceLocation(pos=23, lineno=3, colno=8)
+                      value: 'foo'
+                  right:
+                    <class 'bolt.ast.AstValue'>
+                      location: SourceLocation(pos=26, lineno=3, colno=11)
+                      end_location: SourceLocation(pos=27, lineno=3, colno=12)
+                      value: 3
+              value:
+                <class 'bolt.ast.AstValue'>
+                  location: SourceLocation(pos=29, lineno=3, colno=14)
+                  end_location: SourceLocation(pos=31, lineno=3, colno=16)
+                  value: 42
+            <class 'bolt.ast.AstDictItem'>
+              location: SourceLocation(pos=37, lineno=4, colno=5)
+              end_location: SourceLocation(pos=47, lineno=4, colno=15)
+              key:
+                <class 'bolt.ast.AstExpressionBinary'>
+                  location: SourceLocation(pos=37, lineno=4, colno=5)
+                  end_location: SourceLocation(pos=43, lineno=4, colno=11)
+                  operator: '+'
+                  left:
+                    <class 'bolt.ast.AstValue'>
+                      location: SourceLocation(pos=37, lineno=4, colno=5)
+                      end_location: SourceLocation(pos=39, lineno=4, colno=7)
+                      value: 16
+                  right:
+                    <class 'bolt.ast.AstValue'>
+                      location: SourceLocation(pos=42, lineno=4, colno=10)
+                      end_location: SourceLocation(pos=43, lineno=4, colno=11)
+                      value: 3
+              value:
+                <class 'bolt.ast.AstList'>
+                  location: SourceLocation(pos=45, lineno=4, colno=13)
+                  end_location: SourceLocation(pos=47, lineno=4, colno=15)
+                  items:
+                    <empty>
