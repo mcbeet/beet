@@ -48,7 +48,7 @@ This package provides everything you need for working with Minecraft commands in
 - Powerful rule dispatcher for processing specific ast nodes
 - Composable ast visitors and reducers
 - Comes with useful syntactic extensions like relative locations, nesting and implicit execute
-- Compile-time scripting with Bolt, a subset of Python integrated into command syntax
+- Compile-time scripting with [Bolt](https://github.com/mcbeet/bolt), a subset of Python integrated into command syntax
 - Rich function analyzer for keeping track of command statistics
 - Execute arbitrary compilation passes in your [`beet`](https://github.com/mcbeet/beet) pipeline
 - _(soon)_ Expressive command API for writing commands in Python

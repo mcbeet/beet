@@ -1,7 +1,0 @@
-def f():
-    pass
-f.__code__
----
-Traceback (most recent call last):
-  File "demo:foo", line 3, in demo:foo
-mecha.contrib.bolt_sandbox.SecurityError: Access forbidden attribute '__code__' of <class 'function'>.

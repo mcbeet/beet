@@ -1,5 +1,0 @@
-#>ERROR  Expected bracket '[', curly '{', false, identifier, null, number or 3 other tokens but got literal '%3'.
-# line 1, column 6
-#      1 |  17 % %3
-#        :       ^^
-17 % %3

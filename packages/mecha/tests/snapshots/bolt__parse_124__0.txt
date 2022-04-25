@@ -1,5 +1,0 @@
-#>ERROR  Invalid module location 'wat/is/that'.
-# line 1, column 6
-#      1 |  from wat/is/that import foo
-#        :       ^^^^^^^^^^^
-from wat/is/that import foo

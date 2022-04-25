@@ -1,5 +1,0 @@
-#>ERROR  Identifier 'foo' is not defined.
-# line 1, column 7
-#      1 |  foo = foo
-#        :        ^^^
-foo = foo

@@ -1,5 +1,0 @@
-#>ERROR  Can't import 'demo:foo' without alias.
-# line 1, column 8
-#      1 |  import demo:foo
-#        :         ^^^^^^^^
-import demo:foo

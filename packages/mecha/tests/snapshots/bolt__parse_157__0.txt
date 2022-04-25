@@ -1,5 +1,0 @@
-#>ERROR  List unpacking not allowed.
-# line 1, column 2
-#      1 |  {*{1: 1}}
-#        :   ^^^^^^^
-{*{1: 1}}

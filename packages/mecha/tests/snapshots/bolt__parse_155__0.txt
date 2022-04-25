@@ -1,5 +1,0 @@
-#>ERROR  Dict unpacking not allowed.
-# line 1, column 2
-#      1 |  [**"abc"]
-#        :   ^^^^^^^
-[**"abc"]

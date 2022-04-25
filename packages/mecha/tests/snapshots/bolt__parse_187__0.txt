@@ -1,5 +1,0 @@
-#>ERROR  Identifier 'x' is not defined.
-# line 1, column 8
-#      1 |  global x
-#        :         ^
-global x

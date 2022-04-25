@@ -1,5 +1,0 @@
-#>ERROR  Identifier 'foo' is not defined.
-# line 1, column 8
-#      1 |  return foo
-#        :         ^^^
-return foo

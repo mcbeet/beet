@@ -1,7 +1,0 @@
-#>ERROR  Expected non-empty block.
-# line 1, column 8
-#      1 |  if True:
-#        :         ^
-#      2 |  say hello
-if True:
-say hello

@@ -1,5 +1,0 @@
-#>ERROR  Invalid escape sequence \".
-# line 1, column 5
-#      1 |  'abc\"'
-#        :      ^^
-'abc\"'

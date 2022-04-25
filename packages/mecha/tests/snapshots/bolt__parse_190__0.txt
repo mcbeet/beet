@@ -1,7 +1,0 @@
-def f(x):
-#>ERROR  Can't make local identifier global.
-# line 2, column 12
-#      1 |  def f(x):
-#      2 |      global x
-#        :             ^
-    global x
