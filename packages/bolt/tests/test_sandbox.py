@@ -2,10 +2,9 @@ from pathlib import Path
 
 import pytest
 from beet import Context, Function, run_beet
-from beet.toolchain.utils import format_exc
-from pytest_insta import SnapshotFixture
-
+from beet.core.utils import format_exc
 from mecha import CompilationError, Mecha
+from pytest_insta import SnapshotFixture
 
 SANDBOX_EXAMPLES = [
     Function(source)

@@ -21,13 +21,7 @@ from pathlib import Path
 from types import CodeType
 from typing import Any, Callable, Dict, Iterator, List, Optional, Set, Union
 
-from beet import (
-    Context,
-    PipelineFallthroughException,
-    TextFile,
-    TextFileBase,
-    generate_tree,
-)
+from beet import BubbleException, Context, TextFile, TextFileBase, generate_tree
 from beet.core.utils import JsonDict, required_field
 from mecha import (
     AstCacheBackend,
@@ -412,7 +406,7 @@ class Evaluator(Visitor):
         module = self.runtime.get_module(node)
         try:
             return self.runtime.get_output(module)
-        except PipelineFallthroughException:
+        except BubbleException:
             raise
         except UnusableCompilationUnit as exc:
             if not exc.compilation_unit.diagnostics.error:

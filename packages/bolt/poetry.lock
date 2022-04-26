@@ -22,7 +22,7 @@ tests_no_zope = ["coverage[toml] (>=5.0.2)", "hypothesis", "pympler", "pytest (>
 
 [[package]]
 name = "beet"
-version = "0.59.0"
+version = "0.60.0"
 description = "The Minecraft pack development kit"
 category = "main"
 optional = false
@@ -314,14 +314,14 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 
 [[package]]
 name = "lectern"
-version = "0.20.0"
+version = "0.20.1"
 description = "Literate Minecraft data packs and resource packs."
 category = "dev"
 optional = false
 python-versions = ">=3.8,<4.0"
 
 [package.dependencies]
-beet = ">=0.55.1"
+beet = ">=0.60.0"
 click = ">=8.1.2,<9.0.0"
 markdown-it-py = ">=1.1"
 
@@ -364,14 +364,14 @@ python-versions = ">=3.7"
 
 [[package]]
 name = "mecha"
-version = "0.48.0"
+version = "0.48.1"
 description = "A powerful Minecraft command library"
 category = "main"
 optional = false
 python-versions = ">=3.8,<4.0"
 
 [package.dependencies]
-beet = ">=0.57.0"
+beet = ">=0.60.0"
 tokenstream = ">=1.4,<2.0"
 
 [[package]]
@@ -825,7 +825,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "09abe0f491a1f36ce752143b46dd4024347a4eb4937127a6f1cbcb2de3bef23d"
+content-hash = "d330df634ba906e0f8bb89ee4ca16a2de3b0a303afbc77a0cbe22a0e74505865"
 
 [metadata.files]
 atomicwrites = [
@@ -837,8 +837,8 @@ attrs = [
     {file = "attrs-21.4.0.tar.gz", hash = "sha256:626ba8234211db98e869df76230a137c4c40a12d72445c45d5f5b716f076e2fd"},
 ]
 beet = [
-    {file = "beet-0.59.0-py3-none-any.whl", hash = "sha256:81a60dd1804d6a6eb03beb4a77e108d93a7fa5ae7da4d2f50158db4da6235304"},
-    {file = "beet-0.59.0.tar.gz", hash = "sha256:c760970157bb8fd61a3f50cbe2424870f0d0e4688ca353db19a821d81a5c0e53"},
+    {file = "beet-0.60.0-py3-none-any.whl", hash = "sha256:bf409343a20c28d0d85a59f37be5944381e6e6d9c7a03bcab6c9e3300e898d21"},
+    {file = "beet-0.60.0.tar.gz", hash = "sha256:7af9e81d576d3ec6ae1ed3c236dd58bb7236e18cffedda455558c253fedebf6d"},
 ]
 black = [
     {file = "black-22.3.0-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:2497f9c2386572e28921fa8bec7be3e51de6801f7459dffd6e62492531c47e09"},
@@ -1015,8 +1015,8 @@ keyring = [
     {file = "keyring-23.5.0.tar.gz", hash = "sha256:9012508e141a80bd1c0b6778d5c610dd9f8c464d75ac6774248500503f972fb9"},
 ]
 lectern = [
-    {file = "lectern-0.20.0-py3-none-any.whl", hash = "sha256:31ae3c5473dbde55b16620b9ca474519103f41497b6bc9523190071b25df60da"},
-    {file = "lectern-0.20.0.tar.gz", hash = "sha256:cde89569ada5d159ee1f5aa7c07c43efd70cf8582d5bea1d6423cd1889f0f09f"},
+    {file = "lectern-0.20.1-py3-none-any.whl", hash = "sha256:bc49ee4baced19aa4402cfb4d494d04af9dc1937e8406d98722e04e02abe7e59"},
+    {file = "lectern-0.20.1.tar.gz", hash = "sha256:ec0d72235fe14ea66ff332262102424476d19c77b383e2785c9f88bd60b53908"},
 ]
 markdown-it-py = [
     {file = "markdown-it-py-2.1.0.tar.gz", hash = "sha256:cf7e59fed14b5ae17c0006eff14a2d9a00ed5f3a846148153899a0224e2c07da"},
@@ -1069,8 +1069,8 @@ mdurl = [
     {file = "mdurl-0.1.1.tar.gz", hash = "sha256:f79c9709944df218a4cdb0fcc0b0c7ead2f44594e3e84dc566606f04ad749c20"},
 ]
 mecha = [
-    {file = "mecha-0.48.0-py3-none-any.whl", hash = "sha256:f6b209e4e17e4adf8a31b02b00ed3fe7d0a72d5ef5ed20b664864ea850eba0e3"},
-    {file = "mecha-0.48.0.tar.gz", hash = "sha256:d971afbc8fed6155c0ed608c1816e3d312ed977a44769657aa8c8e31915c6c50"},
+    {file = "mecha-0.48.1-py3-none-any.whl", hash = "sha256:a22a4f6815ab232fcc896836684d56beb82599babf2b137d83b8106f5a963cab"},
+    {file = "mecha-0.48.1.tar.gz", hash = "sha256:3c2a6a5da4ae2912939e2a590bd7d0a15dccbe3651c7efbf2369f91dbf880a99"},
 ]
 mypy-extensions = [
     {file = "mypy_extensions-0.4.3-py2.py3-none-any.whl", hash = "sha256:090fedd75945a69ae91ce1303b5824f428daf5a028d2f6ab8a299250a846f15d"},
