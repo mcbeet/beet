@@ -570,7 +570,9 @@ class Namespace(
 
     def __repr__(self) -> str:
         args = ", ".join(
-            f"{self.field_map[key]}={value}" for key, value in self.items() if value
+            f"{self.field_map[key]}={value}"
+            for key, value in self.items()
+            if key in self.field_map and value
         )
         return f"{self.__class__.__name__}({args})"
 
@@ -821,7 +823,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
     @property
     def content(self) -> Iterator[Tuple[str, NamespaceFile]]:
         """Iterator that yields all the files stored in the pack."""
-        for file_type in self.namespace_type.field_map:
+        for file_type in self.resolve_scope_map().values():
             yield from NamespaceProxy[NamespaceFile](self, file_type).items()
 
     @overload
