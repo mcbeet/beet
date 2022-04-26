@@ -1,5 +1,9 @@
+__version__ = "0.59.0"
+
+
 from .core.cache import *
 from .core.container import *
+from .core.error import *
 from .core.file import *
 from .core.watch import *
 from .library.base import *
@@ -14,5 +18,3 @@ from .toolchain.project import *
 from .toolchain.template import *
 from .toolchain.tree import *
 from .toolchain.worker import *
-
-__version__ = "0.59.0"

@@ -1,4 +1,7 @@
-require: ["demo.extend_data_pack"]
+require:
+  - demo.extend_data_pack
+  - beet.contrib.auto_yaml
 data_pack:
   load: ["src"]
-pipeline: ["demo.process_functions"]
+pipeline:
+  - demo.process_functions

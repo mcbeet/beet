@@ -37,11 +37,13 @@ from pydantic import ValidationError
 
 from beet.core.cache import Cache, MultiCache
 from beet.core.container import Container
+from beet.core.error import BubbleException, WrappedException
 from beet.core.utils import (
     FileSystemPath,
     JsonDict,
     TextComponent,
     extra_field,
+    format_validation_error,
     import_from_string,
     local_import_path,
 )
@@ -49,16 +51,9 @@ from beet.library.data_pack import DataPack
 from beet.library.resource_pack import ResourcePack
 
 from .generator import Generator
-from .pipeline import (
-    FormattedPipelineException,
-    GenericPipeline,
-    GenericPlugin,
-    GenericPluginSpec,
-    PipelineFallthroughException,
-)
+from .pipeline import GenericPipeline, GenericPlugin, GenericPluginSpec
 from .template import TemplateManager
 from .tree import generate_tree
-from .utils import format_validation_error
 from .worker import WorkerPoolHandle
 
 T = TypeVar("T")
@@ -70,15 +65,20 @@ ServiceFactory = Callable[["Context"], T]
 Validator = Callable[..., T]
 
 
-class ErrorMessage(FormattedPipelineException):
+class ErrorMessage(BubbleException):
     """Exception used to display nice error messages when something goes wrong."""
+
+    message: str
 
     def __init__(self, message: str):
         super().__init__(message)
         self.message = message
 
+    def __str__(self) -> str:
+        return self.message
 
-class InvalidOptions(FormattedPipelineException):
+
+class InvalidOptions(WrappedException):
     """Raised when a validation error occurs."""
 
     key: str
@@ -88,11 +88,12 @@ class InvalidOptions(FormattedPipelineException):
         super().__init__(key, explanation)
         self.key = key
         self.explanation = explanation
-        self.message = f"Invalid options {key!r}."
-        self.format_cause = True
 
-        if explanation:
-            self.message += f"\n\n{explanation}"
+    def __str__(self) -> str:
+        return (
+            f"Invalid options {self.key!r}."
+            + bool(self.explanation) * f"\n\n{self.explanation}"
+        )
 
 
 @dataclass
@@ -267,11 +268,11 @@ class Context:
             options = self.meta.get(key)
         try:
             return validator(**(options or {}))
+        except BubbleException:
+            raise
         except ValidationError as exc:
             explanation = format_validation_error(key, exc)
             raise InvalidOptions(key, explanation) from None
-        except PipelineFallthroughException:
-            raise
         except Exception as exc:
             raise InvalidOptions(key) from exc
 

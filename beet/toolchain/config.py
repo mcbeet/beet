@@ -34,16 +34,17 @@ import yaml
 from pydantic import BaseModel, ValidationError, validator
 from pydantic.generics import GenericModel
 
+from beet.core.error import BubbleException
 from beet.core.utils import (
     FileSystemPath,
     JsonDict,
     TextComponent,
+    format_validation_error,
     local_import_path,
     resolve_packageable_path,
 )
 
-from .pipeline import FormattedPipelineException
-from .utils import apply_option, eval_option, format_validation_error
+from .utils import apply_option, eval_option
 
 DETECT_CONFIG_FILES: Tuple[str, ...] = (
     "beet.json",
@@ -54,12 +55,17 @@ DETECT_CONFIG_FILES: Tuple[str, ...] = (
 )
 
 
-class InvalidProjectConfig(FormattedPipelineException):
+class InvalidProjectConfig(BubbleException):
     """Raised when trying to load an invalid project config."""
 
-    def __init__(self, *args: Any):
-        super().__init__(*args)
-        self.message = f"Couldn't load project config.\n\n{self}"
+    explanation: str
+
+    def __init__(self, explanation: str):
+        super().__init__(explanation)
+        self.explanation = explanation
+
+    def __str__(self) -> str:
+        return f"Couldn't load project config.\n\n{self.explanation}"
 
 
 ItemType = TypeVar("ItemType")

@@ -22,23 +22,27 @@ from jinja2.ext import DebugExtension, ExprStmtExtension, LoopControlExtension
 from jinja2.runtime import Context as JinjaContext
 from jinja2.utils import missing as jinja_missing
 
+from beet.core.error import BubbleException, WrappedException
 from beet.core.file import TextFileBase
 from beet.core.utils import FileSystemPath, JsonDict
 
-from .pipeline import FormattedPipelineException, PipelineFallthroughException
 from .utils import ensure_builtins
 
 T = TypeVar("T")
 TextFileType = TypeVar("TextFileType", bound=TextFileBase[Any])
 
 
-class TemplateError(FormattedPipelineException):
+class TemplateError(WrappedException):
     """Raised when an error occurs during template rendering."""
+
+    message: str
 
     def __init__(self, message: str):
         super().__init__(message)
         self.message = message
-        self.format_cause = True
+
+    def __str__(self) -> str:
+        return self.message
 
 
 class FallbackContext(JinjaContext):
@@ -182,7 +186,7 @@ class TemplateManager:
         """Handle template errors."""
         try:
             yield
-        except PipelineFallthroughException:
+        except BubbleException:
             raise
         except Exception as exc:
             tb = exc.__traceback__

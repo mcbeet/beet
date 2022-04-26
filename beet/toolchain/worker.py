@@ -28,10 +28,8 @@ from typing import (
     Union,
 )
 
-from beet.core.utils import SENTINEL_OBJ, Sentinel
-
-from .pipeline import FormattedPipelineException, PipelineFallthroughException
-from .utils import format_obj
+from beet.core.error import BubbleException, WrappedException
+from beet.core.utils import SENTINEL_OBJ, Sentinel, format_obj
 
 T = TypeVar("T")
 U = TypeVar("U")
@@ -55,13 +53,17 @@ class Worker(Protocol[SendType, RecvType]):
         ...
 
 
-class WorkerError(FormattedPipelineException):
+class WorkerError(WrappedException):
     """Raised when a worker raises an exception."""
+
+    worker: Any
 
     def __init__(self, worker: Any):
         super().__init__(worker)
-        self.message = f"Worker {format_obj(worker)} raised an exception."
-        self.format_cause = True
+        self.worker = worker
+
+    def __str__(self) -> str:
+        return f"Worker {format_obj(self.worker)} raised an exception."
 
 
 @dataclass
@@ -230,7 +232,7 @@ class WorkerThread(Thread, Generic[T, U]):
     def run(self) -> None:
         try:
             self.func(self.connection)
-        except PipelineFallthroughException as exc:
+        except BubbleException as exc:
             self.exc = exc
         except Exception as exc:
             self.exc = WorkerError(self.func)

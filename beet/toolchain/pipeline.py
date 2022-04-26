@@ -3,8 +3,6 @@ __all__ = [
     "Task",
     "GenericPlugin",
     "GenericPluginSpec",
-    "PipelineFallthroughException",
-    "FormattedPipelineException",
     "PluginError",
     "PluginImportError",
 ]
@@ -25,9 +23,8 @@ from typing import (
     cast,
 )
 
-from beet.core.utils import import_from_string
-
-from .utils import format_obj
+from beet.core.error import BubbleException, WrappedException
+from beet.core.utils import format_obj, import_from_string
 
 T = TypeVar("T")
 ContextType = TypeVar("ContextType", contravariant=True)
@@ -43,35 +40,30 @@ class GenericPlugin(Protocol[ContextType]):
 GenericPluginSpec = Union[GenericPlugin[ContextType], str]
 
 
-class PipelineFallthroughException(Exception):
-    """Exceptions inheriting from this class will fall through the pipeline exception handling."""
-
-
-class FormattedPipelineException(PipelineFallthroughException):
-    """Exceptions inheriting from this class can expose a formatted message."""
-
-    def __init__(self, *args: Any):
-        super().__init__(*args)
-        self.message = ""
-        self.format_cause = False
-
-
-class PluginError(FormattedPipelineException):
+class PluginError(WrappedException):
     """Raised when a plugin raises an exception."""
 
+    plugin: Any
+
     def __init__(self, plugin: Any):
         super().__init__(plugin)
-        self.message = f"Plugin {format_obj(plugin)} raised an exception."
-        self.format_cause = True
+        self.plugin = plugin
+
+    def __str__(self) -> str:
+        return f"Plugin {format_obj(self.plugin)} raised an exception."
 
 
-class PluginImportError(FormattedPipelineException):
+class PluginImportError(WrappedException):
     """Raised when a plugin couldn't be imported."""
 
+    plugin: Any
+
     def __init__(self, plugin: Any):
         super().__init__(plugin)
-        self.message = f"Couldn't import plugin {format_obj(plugin)}."
-        self.format_cause = True
+        self.plugin = plugin
+
+    def __str__(self) -> str:
+        return f"Couldn't import plugin {format_obj(self.plugin)}."
 
 
 @dataclass
@@ -91,7 +83,7 @@ class Task(Generic[T]):
                 )
             for _ in self.iterator:
                 return self
-        except PipelineFallthroughException:
+        except BubbleException:
             raise
         except Exception as exc:
             raise PluginError(self.plugin) from exc.with_traceback(
@@ -135,7 +127,7 @@ class GenericPipeline(Generic[T]):
                 if isinstance(spec, str)
                 else spec
             )
-        except PipelineFallthroughException:
+        except BubbleException:
             raise
         except Exception as exc:
             raise PluginImportError(spec) from exc

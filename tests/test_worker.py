@@ -43,7 +43,7 @@ def worker2(connection: Connection[None, float]):
 
 
 def test_error():
-    msg = "Worker 'tests.test_worker.worker2' raised an exception."
+    msg = 'Worker "tests.test_worker.worker2" raised an exception.'
 
     with pytest.raises(WorkerError) as outer:
         with WorkerPool().handle() as handle:
@@ -53,5 +53,5 @@ def test_error():
             with pytest.raises(WorkerError) as inner:
                 next(channel)
 
-            assert inner.value.message == msg
-    assert outer.value.message == msg
+            assert str(inner.value) == msg
+    assert str(outer.value) == msg

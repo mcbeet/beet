@@ -15,6 +15,9 @@ __all__ = [
     "YamlFileBase",
     "YamlFile",
     "PngFile",
+    "SerializationError",
+    "DeserializationError",
+    "InvalidDataModel",
 ]
 
 
@@ -27,7 +30,9 @@ from typing import Any, Callable, ClassVar, Generic, Optional, Type, TypeVar, Un
 from zipfile import ZipFile
 
 import yaml
-from pydantic import BaseModel
+from pydantic import BaseModel, ValidationError
+
+from .error import BubbleException, WrappedException
 
 try:
     from PIL.Image import Image
@@ -43,7 +48,14 @@ except ImportError:
         raise RuntimeError("Please install Pillow to edit images programmatically")
 
 
-from .utils import FileSystemPath, JsonDict, dump_json, extra_field
+from .utils import (
+    FileSystemPath,
+    JsonDict,
+    dump_json,
+    extra_field,
+    format_validation_error,
+    snake_case,
+)
 
 ValueType = TypeVar("ValueType", bound=Any)
 SerializeType = TypeVar("SerializeType", bound=Any)
@@ -278,6 +290,37 @@ class FileDeserialize(Generic[ValueType]):
         obj.set_content(value)
 
 
+class SerializationError(WrappedException):
+    """Raised when serialization fails."""
+
+    file: File[Any, Any]
+
+    def __init__(self, file: File[Any, Any]):
+        super().__init__(file)
+        self.file = file
+
+    def __str__(self) -> str:
+        if self.file.original.source_path:
+            return f'Couldn\'t serialize "{self.file.original.source_path}".'
+        return f"Couldn't serialize file of type {type(self.file)}."
+
+
+class DeserializationError(WrappedException):
+    """Raised when deserialization fails."""
+
+    file: File[Any, Any]
+    message: str
+
+    def __init__(self, file: File[Any, Any]):
+        super().__init__(file)
+        self.file = file
+
+    def __str__(self) -> str:
+        if self.file.original.source_path:
+            return f'Couldn\'t deserialize "{self.file.original.source_path}".'
+        return f"Couldn't deserialize file of type {type(self.file)}."
+
+
 class TextFileBase(File[ValueType, str]):
     """Base class for files that get serialized to strings."""
 
@@ -289,10 +332,20 @@ class TextFileBase(File[ValueType, str]):
         self.deserializer = self.from_str
 
     def serialize(self, content: Union[ValueType, str]) -> str:
-        return content if isinstance(content, str) else self.serializer(content)
+        try:
+            return content if isinstance(content, str) else self.serializer(content)
+        except BubbleException:
+            raise
+        except Exception as exc:
+            raise SerializationError(self) from exc
 
     def deserialize(self, content: Union[ValueType, str]) -> ValueType:
-        return self.deserializer(content) if isinstance(content, str) else content
+        try:
+            return self.deserializer(content) if isinstance(content, str) else content
+        except BubbleException:
+            raise
+        except Exception as exc:
+            raise DeserializationError(self) from exc
 
     @classmethod
     def from_zip(cls, origin: ZipFile, name: str) -> str:
@@ -339,10 +392,20 @@ class BinaryFileBase(File[ValueType, bytes]):
         self.deserializer = self.from_bytes
 
     def serialize(self, content: Union[ValueType, bytes]) -> bytes:
-        return content if isinstance(content, bytes) else self.serializer(content)
+        try:
+            return content if isinstance(content, bytes) else self.serializer(content)
+        except BubbleException:
+            raise
+        except Exception as exc:
+            raise SerializationError(self) from exc
 
     def deserialize(self, content: Union[ValueType, bytes]) -> ValueType:
-        return self.deserializer(content) if isinstance(content, bytes) else content
+        try:
+            return self.deserializer(content) if isinstance(content, bytes) else content
+        except BubbleException:
+            raise
+        except Exception as exc:
+            raise DeserializationError(self) from exc
 
     @classmethod
     def from_zip(cls, origin: ZipFile, name: str) -> bytes:
@@ -378,6 +441,22 @@ class BinaryFile(BinaryFileBase[bytes]):
         return b""
 
 
+class InvalidDataModel(DeserializationError):
+    """Raised when data model deserialization fails."""
+
+    explanation: str
+
+    def __init__(self, file: File[Any, Any], explanation: str):
+        super().__init__(file)
+        self.explanation = explanation
+        self.hide_wrapped_exception = True
+
+    def __str__(self) -> str:
+        if self.file.original.source_path:
+            return f'Validation error for "{self.file.original.source_path}".\n\n{self.explanation}'
+        return f"Validation error for file of type {type(self.file)}.\n\n{self.explanation}"
+
+
 @dataclass(eq=False, repr=False)
 class DataModelBase(TextFileBase[ValueType]):
     """Base class for data models."""
@@ -403,7 +482,11 @@ class DataModelBase(TextFileBase[ValueType]):
     def from_str(self, content: str) -> ValueType:
         value = self.decoder(content)
         if self.model and issubclass(self.model, BaseModel):
-            value = self.model.parse_obj(value)
+            try:
+                value = self.model.parse_obj(value)
+            except ValidationError as exc:
+                message = format_validation_error(snake_case(self.model.__name__), exc)
+                raise InvalidDataModel(self, message) from exc
         return value  # type: ignore
 
     @classmethod

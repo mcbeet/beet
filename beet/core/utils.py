@@ -15,6 +15,9 @@ __all__ = [
     "local_import_path",
     "log_time",
     "remove_path",
+    "format_obj",
+    "format_exc",
+    "format_validation_error",
 ]
 
 
@@ -29,6 +32,7 @@ from dataclasses import field
 from importlib import import_module
 from importlib.util import find_spec
 from pathlib import Path
+from traceback import format_exception
 from typing import (
     Any,
     Dict,
@@ -42,7 +46,7 @@ from typing import (
     runtime_checkable,
 )
 
-from pydantic import PydanticTypeError
+from pydantic import PydanticTypeError, ValidationError
 from pydantic.validators import _VALIDATORS  # type: ignore
 
 T = TypeVar("T")
@@ -207,6 +211,40 @@ def remove_path(*paths: FileSystemPath):
             shutil.rmtree(path)
         else:
             path.unlink(missing_ok=True)
+
+
+def format_exc(exc: BaseException) -> str:
+    return "".join(format_exception(exc.__class__, exc, exc.__traceback__))
+
+
+def format_obj(obj: Any) -> str:
+    module = getattr(obj, "__module__", None)
+    name = getattr(obj, "__qualname__", getattr(obj, "__name__", None))
+    return f'"{module}.{name}"' if module and name else repr(obj)
+
+
+def format_validation_error(prefix: str, exc: ValidationError) -> str:
+    errors = [
+        (
+            prefix
+            + "".join(
+                json.dumps([item]) for item in error["loc"] if item != "__root__"
+            ),
+            error["msg"]
+            if error["msg"][0].isupper()
+            else error["msg"][0].capitalize() + error["msg"][1:],
+        )
+        for error in exc.errors()
+    ]
+    width = max(len(loc) for loc, _ in errors) + 1
+    return "\n".join(
+        "{loc:<{width}} => {msg}".format(
+            loc=loc,
+            width=width,
+            msg=msg + "." * (not msg.endswith(".")),
+        )
+        for loc, msg in errors
+    )
 
 
 class PathObjectError(PydanticTypeError):

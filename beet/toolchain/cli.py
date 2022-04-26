@@ -22,10 +22,10 @@ from click.decorators import pass_context
 from click_help_colors import HelpColorsCommand, HelpColorsGroup
 
 from beet import __version__
+from beet.core.error import BeetException, WrappedException
+from beet.core.utils import format_exc
 
-from .pipeline import FormattedPipelineException
 from .project import Project
-from .utils import format_exc
 
 
 def format_error(
@@ -49,8 +49,12 @@ def error_handler(should_exit: bool = False, format_padding: int = 0) -> Iterato
 
     try:
         yield
-    except FormattedPipelineException as exc:
-        message, exception = exc.message, exc.__cause__ if exc.format_cause else None
+    except WrappedException as exc:
+        message = str(exc)
+        if not exc.hide_wrapped_exception:
+            exception = exc.__cause__
+    except BeetException as exc:
+        message = str(exc)
     except (click.Abort, KeyboardInterrupt):
         click.echo()
         message = "Aborted."

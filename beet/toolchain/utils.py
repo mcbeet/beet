@@ -2,9 +2,6 @@ __all__ = [
     "LazyFormat",
     "stable_int_hash",
     "stable_hash",
-    "format_obj",
-    "format_exc",
-    "format_validation_error",
     "ensure_builtins",
     "eval_option",
     "default_option",
@@ -15,10 +12,7 @@ __all__ = [
 import json
 import re
 from copy import copy
-from traceback import format_exception
 from typing import Any, Callable, List, Literal, Mapping, Sequence, cast
-
-from pydantic import ValidationError
 
 FNV_32_INIT = 0x811C9DC5
 FNV_64_INIT = 0xCBF29CE484222325
@@ -69,40 +63,6 @@ def encode_with_alphabet(value: int, alphabet: str) -> str:
         value, i = divmod(value, len(alphabet))
         indices.append(i)
     return "".join(alphabet[i] for i in reversed(indices))
-
-
-def format_exc(exc: BaseException) -> str:
-    return "".join(format_exception(exc.__class__, exc, exc.__traceback__))
-
-
-def format_obj(obj: Any) -> str:
-    module = getattr(obj, "__module__", None)
-    name = getattr(obj, "__qualname__", getattr(obj, "__name__", None))
-    return repr(f"{module}.{name}") if module and name else repr(obj)
-
-
-def format_validation_error(prefix: str, exc: ValidationError) -> str:
-    errors = [
-        (
-            prefix
-            + "".join(
-                json.dumps([item]) for item in error["loc"] if item != "__root__"
-            ),
-            error["msg"]
-            if error["msg"][0].isupper()
-            else error["msg"][0].capitalize() + error["msg"][1:],
-        )
-        for error in exc.errors()
-    ]
-    width = max(len(loc) for loc, _ in errors) + 1
-    return "\n".join(
-        "{loc:<{width}} => {msg}".format(
-            loc=loc,
-            width=width,
-            msg=msg + "." * (not msg.endswith(".")),
-        )
-        for loc, msg in errors
-    )
 
 
 def ensure_builtins(value: Any) -> Any:

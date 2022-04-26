@@ -2,5 +2,10 @@
   "pack": {
     "pack_format": 9,
     "description": ""
+  },
+  "blueprints": {
+    "demo:hello": {
+      "name": "hey"
+    }
   }
 }
