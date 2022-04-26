@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.20.1 (2022-04-26)
+### Fix
+* Use BubbleException ([`d2ded22`](https://github.com/mcbeet/lectern/commit/d2ded223f3c65d1ebf98daee56d69881e0e83140))
+
 ## v0.20.0 (2022-04-06)
 ### Feature
 * Add format sniffer and allow regular text format in code blocks ([`85420af`](https://github.com/mcbeet/lectern/commit/85420afe3ef856f570c4583936a606d824cbff2a))
