@@ -2,6 +2,13 @@
 
 <!--next-version-placeholder-->
 
+## v0.60.0 (2022-04-26)
+### Feature
+* Refactor beet exceptions ([`65745c3`](https://github.com/mcbeet/beet/commit/65745c3e61bc9e34f783e4f7eeb854ed694bb57b))
+
+### Fix
+* Better names for configurable plugins ([`cfcba0f`](https://github.com/mcbeet/beet/commit/cfcba0f4c0f0b010a8e81b49453e1ac2ce65cb8e))
+
 ## v0.59.0 (2022-04-24)
 ### Feature
 * Use PackageablePath and ListOption in more places ([`c2ae76d`](https://github.com/mcbeet/beet/commit/c2ae76db4e29c074279a2316fd6b565c8f9fd8ea))
