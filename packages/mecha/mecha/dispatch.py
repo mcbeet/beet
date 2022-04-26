@@ -33,7 +33,7 @@ from typing import (
     overload,
 )
 
-from beet import FormattedPipelineException, PipelineFallthroughException
+from beet import BubbleException, WrappedException
 from beet.core.utils import extra_field
 
 from .ast import AstChildren, AstNode
@@ -42,13 +42,17 @@ from .diagnostic import Diagnostic, DiagnosticCollection
 T = TypeVar("T")
 
 
-class CompilationError(FormattedPipelineException):
+class CompilationError(WrappedException):
     """Raised when an error occurs in a rule."""
+
+    message: str
 
     def __init__(self, message: str) -> None:
         super().__init__(message)
         self.message = message
-        self.format_cause = True
+
+    def __str__(self) -> str:
+        return self.message
 
 
 @dataclass
@@ -279,7 +283,7 @@ class Dispatcher(Generic[T]):
                 )
         except StopIteration:
             raise
-        except PipelineFallthroughException:
+        except BubbleException:
             raise
         except Exception as exc:
             msg = "Compilation raised an exception."

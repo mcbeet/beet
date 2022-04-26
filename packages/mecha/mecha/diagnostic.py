@@ -10,7 +10,7 @@ from dataclasses import dataclass, field, replace
 from types import TracebackType
 from typing import Any, Iterator, List, Literal, Optional, Type
 
-from beet import FormattedPipelineException, TextFileBase
+from beet import BubbleException, TextFileBase
 from tokenstream import UNKNOWN_LOCATION, SourceLocation
 
 from .error import MechaError
@@ -180,11 +180,14 @@ class DiagnosticError(MechaError):
         return f"{self.diagnostics}\n\n{details}"
 
 
-class DiagnosticErrorSummary(FormattedPipelineException):
+class DiagnosticErrorSummary(BubbleException):
     """Raised for showing a summary of how many errors occurred."""
 
     diagnostics: DiagnosticCollection
 
     def __init__(self, diagnostics: DiagnosticCollection):
         super().__init__(diagnostics)
-        self.message = str(diagnostics)
+        self.diagnostics = diagnostics
+
+    def __str__(self) -> str:
+        return str(self.diagnostics)

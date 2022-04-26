@@ -23,7 +23,7 @@ include = ["mecha/py.typed"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
-beet = ">=0.57.0"
+beet = ">=0.60.0"
 tokenstream = "^1.4"
 
 [tool.poetry.dev-dependencies]
@@ -32,7 +32,7 @@ pytest = "^7.1.1"
 isort = "^5.10.1"
 python-semantic-release = "^7.28.0"
 pytest-insta = "^0.1.11"
-lectern = ">=0.20.0"
+lectern = ">=0.20.1"
 
 [tool.poetry.scripts]
 mecha = "mecha.cli:main"
