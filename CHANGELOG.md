@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.60.1 (2022-04-26)
+### Fix
+* Only use field_map for namespace repr ([`53f0a88`](https://github.com/mcbeet/beet/commit/53f0a88f55f38bca455f63674a244d9b58efe72a))
+
 ## v0.60.0 (2022-04-26)
 ### Feature
 * Refactor beet exceptions ([`65745c3`](https://github.com/mcbeet/beet/commit/65745c3e61bc9e34f783e4f7eeb854ed694bb57b))
