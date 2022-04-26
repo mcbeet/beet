@@ -22,21 +22,21 @@ tests_no_zope = ["coverage[toml] (>=5.0.2)", "hypothesis", "pympler", "pytest (>
 
 [[package]]
 name = "beet"
-version = "0.55.1"
+version = "0.60.0"
 description = "The Minecraft pack development kit"
 category = "main"
 optional = false
 python-versions = ">=3.8,<4.0"
 
 [package.dependencies]
-click = ">=8.0.1,<9.0.0"
+click = ">=8.1.2,<9.0.0"
 click-help-colors = ">=0.9.1,<0.10.0"
 colorama = {version = "*", markers = "sys_platform == \"win32\""}
-Jinja2 = ">=3.0.1,<4.0.0"
+Jinja2 = ">=3.1.1,<4.0.0"
 nbtlib = ">=1.12.1,<2.0.0"
 pathspec = ">=0.9.0,<0.10.0"
 pydantic = ">=1.9.0,<2.0.0"
-PyYAML = ">=5.4.1,<7.0.0"
+PyYAML = ">=6.0,<7.0"
 toml = ">=0.10.2,<0.11.0"
 
 [package.extras]
@@ -280,11 +280,11 @@ trio = ["trio", "async-generator"]
 
 [[package]]
 name = "jinja2"
-version = "3.0.2"
+version = "3.1.1"
 description = "A very fast and expressive template engine."
 category = "main"
 optional = false
-python-versions = ">=3.6"
+python-versions = ">=3.7"
 
 [package.dependencies]
 MarkupSafe = ">=2.0"
@@ -784,7 +784,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytes
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "f9e9847222939d6396b1afaa430b99a5b7e35d7646a1f84bdd893bb9c635a2db"
+content-hash = "505860403c4b0569e4c48bb491c291eb501f5aeac9c7736e23d7cea47ed185a2"
 
 [metadata.files]
 atomicwrites = [
@@ -796,8 +796,8 @@ attrs = [
     {file = "attrs-21.2.0.tar.gz", hash = "sha256:ef6aaac3ca6cd92904cdd0d83f629a15f18053ec84e6432106f7a4d04ae4f5fb"},
 ]
 beet = [
-    {file = "beet-0.55.1-py3-none-any.whl", hash = "sha256:fc5abcd6f21f05d55e19462c890c981b9cf60eba9c23555c88f041032af8d312"},
-    {file = "beet-0.55.1.tar.gz", hash = "sha256:5ded421ad7200902f903a48258932f5cddcdc7cd7ce93b4abdb0b21f62345681"},
+    {file = "beet-0.60.0-py3-none-any.whl", hash = "sha256:bf409343a20c28d0d85a59f37be5944381e6e6d9c7a03bcab6c9e3300e898d21"},
+    {file = "beet-0.60.0.tar.gz", hash = "sha256:7af9e81d576d3ec6ae1ed3c236dd58bb7236e18cffedda455558c253fedebf6d"},
 ]
 black = [
     {file = "black-22.3.0-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:2497f9c2386572e28921fa8bec7be3e51de6801f7459dffd6e62492531c47e09"},
@@ -967,8 +967,8 @@ jeepney = [
     {file = "jeepney-0.7.1.tar.gz", hash = "sha256:fa9e232dfa0c498bd0b8a3a73b8d8a31978304dcef0515adc859d4e096f96f4f"},
 ]
 jinja2 = [
-    {file = "Jinja2-3.0.2-py3-none-any.whl", hash = "sha256:8569982d3f0889eed11dd620c706d39b60c36d6d25843961f33f77fb6bc6b20c"},
-    {file = "Jinja2-3.0.2.tar.gz", hash = "sha256:827a0e32839ab1600d4eb1c4c33ec5a8edfbc5cb42dafa13b81f182f97784b45"},
+    {file = "Jinja2-3.1.1-py3-none-any.whl", hash = "sha256:539835f51a74a69f41b848a9645dbdc35b4f20a3b601e2d9a7e22947b15ff119"},
+    {file = "Jinja2-3.1.1.tar.gz", hash = "sha256:640bed4bb501cbd17194b3cace1dc2126f5b619cf068a726b98192a0fde74ae9"},
 ]
 keyring = [
     {file = "keyring-23.2.1-py3-none-any.whl", hash = "sha256:bd2145a237ed70c8ce72978b497619ddfcae640b6dcf494402d5143e37755c6e"},

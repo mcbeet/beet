@@ -9,18 +9,25 @@ from dataclasses import dataclass
 from typing import Any, Optional, Sequence, Type, TypeVar, overload
 from urllib.request import urlopen
 
-from beet import BinaryFile, BinaryFileBase, Cache, File, FormattedPipelineException
+from beet import BinaryFile, BinaryFileBase, BubbleException, Cache, File
 from beet.core.utils import FileSystemPath
 
 FileType = TypeVar("FileType", bound=File[Any, Any])
 
 
-class InvalidFragment(FormattedPipelineException):
+class InvalidFragment(BubbleException):
     """Raised when a fragment can not be processed."""
+
+    message: str
+    line: int
 
     def __init__(self, message: str, line: int):
         super().__init__(message, line)
-        self.message = message + f" (line {line + 1})"
+        self.message = message
+        self.line = line
+
+    def __str__(self) -> str:
+        return f"{self.message} (line {self.line + 1})"
 
 
 @dataclass(frozen=True)
