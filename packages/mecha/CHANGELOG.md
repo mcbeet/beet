@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.48.1 (2022-04-26)
+### Fix
+* Use BubbleException and WrappedException ([`31a1009`](https://github.com/mcbeet/mecha/commit/31a100981a4251466cbe4de586266646ddef8239))
+
 ## v0.48.0 (2022-04-25)
 ### Feature
 * Remove bolt ([`10a47a9`](https://github.com/mcbeet/mecha/commit/10a47a93538fe17ee7d2a38fa18cea32a386c72c))
