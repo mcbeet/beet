@@ -79,8 +79,8 @@ class SerializedFile:
             path.name[: -len(self.extension)] if self.extension else path.name
         )
 
-        if not self.extension and isinstance(self.file_instance, NamespaceFile):
-            self.extension = self.file_instance.extension
+        if not self.extension:
+            self.extension = getattr(self.file_instance, "extension", self.extension)
 
         self.content_type = (
             guess_type(f"{self.filename}{self.extension}")[0]
@@ -298,7 +298,7 @@ class MarkdownSerializer:
                             self.serialize_file_instance(
                                 mapping[file_type],
                                 f"{name}:{path}",
-                                file_instance,
+                                file_instance,  # type: ignore
                                 external_files,
                                 external_prefix,
                             )
@@ -308,7 +308,7 @@ class MarkdownSerializer:
                             self.serialize_file_instance(
                                 pack_directive,
                                 f"{namespace.directory}/{name}/{'/'.join(file_type.scope)}/{path}{file_type.extension}",
-                                file_instance,
+                                file_instance,  # type: ignore
                                 external_files,
                                 external_prefix,
                             )
@@ -328,7 +328,7 @@ class MarkdownSerializer:
         self,
         directive: str,
         argument: str,
-        file_instance: Union[File[Any, Any], NamespaceFile],
+        file_instance: File[Any, Any],
         external_files: Optional[Dict[str, File[Any, Any]]] = None,
         external_prefix: str = "",
     ) -> Iterator[str]:

@@ -82,16 +82,16 @@ class NamespacedResourceDirective:
 
     def __call__(self, fragment: Fragment, assets: ResourcePack, data: DataPack):
         full_name = fragment.expect("full_name")
-        file_instance: Any = fragment.as_file(self.file_type)
+        file_instance: Any = fragment.as_file(self.file_type)  # type: ignore
 
         pack = assets if self.file_type in assets.namespace_type.field_map else data
         proxy: Any = pack[self.file_type]
 
         if fragment.modifier == "append":
-            current_file = proxy.setdefault(full_name, self.file_type(""))
+            current_file = proxy.setdefault(full_name, self.file_type(""))  # type: ignore
             current_file.text += file_instance.text
         elif fragment.modifier == "prepend":
-            current_file = proxy.setdefault(full_name, self.file_type(""))
+            current_file = proxy.setdefault(full_name, self.file_type(""))  # type: ignore
             current_file.text = file_instance.text + current_file.text
         elif fragment.modifier == "merge":
             proxy.merge({full_name: file_instance})
