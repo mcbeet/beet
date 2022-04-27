@@ -29,7 +29,7 @@ from typing import (
 )
 
 from beet.core.error import BubbleException, WrappedException
-from beet.core.utils import SENTINEL_OBJ, Sentinel, format_obj
+from beet.core.utils import SENTINEL_OBJ, Sentinel, format_obj, pop_traceback
 
 T = TypeVar("T")
 U = TypeVar("U")
@@ -236,9 +236,7 @@ class WorkerThread(Thread, Generic[T, U]):
             self.exc = exc
         except Exception as exc:
             self.exc = WorkerError(self.func)
-            self.exc.__cause__ = exc.with_traceback(
-                getattr(exc.__traceback__, "tb_next", exc.__traceback__)
-            )
+            self.exc.__cause__ = pop_traceback(exc)
         if (
             self.exc
             and self.connection.current_client

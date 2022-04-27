@@ -2,7 +2,7 @@ from typing import List
 
 import pytest
 
-from beet.toolchain.pipeline import GenericPipeline, PluginImportError
+from beet import GenericPipeline, PluginError, PluginImportError
 
 TestPipeline = GenericPipeline[List[str]]
 
@@ -109,6 +109,64 @@ def test_self_require():
 
     pipeline.run([p1])
     assert pipeline.ctx == ["p1"]
+
+
+def test_error():
+    pipeline = TestPipeline([])
+
+    def p1(ctx: List[str]):
+        ctx.append("p1")
+        yield
+        ctx.append("p1-bis")
+
+    def p2(ctx: List[str]):
+        raise ValueError("nope")
+
+    with pytest.raises(PluginError):
+        pipeline.run([p1, p2])
+    assert pipeline.ctx == ["p1"]
+
+
+def test_error_finally():
+    pipeline = TestPipeline([])
+
+    def p1(ctx: List[str]):
+        ctx.append("p1")
+        try:
+            yield
+        finally:
+            ctx.append("p1-bis")
+
+    def p2(ctx: List[str]):
+        ctx.append("p2")
+        try:
+            yield
+        finally:
+            ctx.append("p2-bis")
+
+    def p3(ctx: List[str]):
+        raise ValueError("nope")
+
+    with pytest.raises(PluginError):
+        pipeline.run([p1, p2, p3])
+    assert pipeline.ctx == ["p1", "p2", "p2-bis", "p1-bis"]
+
+
+def test_error_recover():
+    pipeline = TestPipeline([])
+
+    def p1(ctx: List[str]):
+        ctx.append("p1")
+        try:
+            yield
+        except PluginError as exc:
+            ctx.append(str(exc.__cause__))
+
+    def p2(ctx: List[str]):
+        raise ValueError("nope")
+
+    pipeline.run([p1, p2])
+    assert pipeline.ctx == ["p1", "nope"]
 
 
 def some_plugin(ctx: List[str]):

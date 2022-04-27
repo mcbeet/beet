@@ -19,7 +19,7 @@ from beet.core.utils import FileSystemPath, intersperse, log_time, normalize_str
 from beet.core.watch import DirectoryWatcher, FileChanges
 
 from .config import PackConfig, ProjectConfig, load_config, locate_config
-from .context import Context, ProjectCache
+from .context import Context, PluginSpec, ProjectCache
 from .template import TemplateManager
 from .worker import WorkerPool
 
@@ -197,22 +197,22 @@ class ProjectBuilder:
                 whitelist=self.config.whitelist,
             )
 
-            with ctx.activate() as pipeline:
-                pipeline.require(self.bootstrap)
-                pipeline.run(
-                    (
-                        item
-                        if isinstance(item, str)
-                        else ProjectBuilder(
-                            Project(
-                                resolved_config=item,
-                                resolved_cache=ctx.cache,
-                                resolved_worker_pool=self.project.worker_pool,
-                            )
-                        )
+            plugins: List[PluginSpec] = [self.bootstrap]
+            plugins.extend(
+                item
+                if isinstance(item, str)
+                else ProjectBuilder(
+                    Project(
+                        resolved_config=item,
+                        resolved_cache=ctx.cache,
+                        resolved_worker_pool=self.project.worker_pool,
                     )
-                    for item in self.config.pipeline
                 )
+                for item in self.config.pipeline
+            )
+
+            with ctx.activate() as pipeline:
+                pipeline.run(plugins)
 
         return ctx
 

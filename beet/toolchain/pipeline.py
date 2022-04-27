@@ -11,6 +11,7 @@ __all__ = [
 from dataclasses import dataclass, field
 from typing import (
     Any,
+    Generator,
     Generic,
     Iterable,
     Iterator,
@@ -24,7 +25,7 @@ from typing import (
 )
 
 from beet.core.error import BubbleException, WrappedException
-from beet.core.utils import format_obj, import_from_string
+from beet.core.utils import format_obj, import_from_string, pop_traceback
 
 T = TypeVar("T")
 ContextType = TypeVar("ContextType", contravariant=True)
@@ -73,7 +74,11 @@ class Task(Generic[T]):
     plugin: GenericPlugin[T]
     iterator: Optional[Iterator[Any]] = None
 
-    def advance(self, ctx: T) -> Optional["Task[T]"]:
+    def advance(
+        self,
+        ctx: T,
+        exception: Optional[Exception] = None,
+    ) -> Optional["Task[T]"]:
         """Make progress on the task and return it unless no more work is necessary."""
         try:
             if self.iterator is None:
@@ -81,15 +86,19 @@ class Task(Generic[T]):
                 self.iterator = iter(
                     cast(Iterable[Any], result) if isinstance(result, Iterable) else []
                 )
-            for _ in self.iterator:
-                return self
+            if exception is None:
+                next(self.iterator)
+            elif isinstance(self.iterator, Generator):
+                self.iterator.throw(exception)
+            else:
+                raise exception
+        except StopIteration:
+            return None
         except BubbleException:
             raise
         except Exception as exc:
-            raise PluginError(self.plugin) from exc.with_traceback(
-                getattr(exc.__traceback__, "tb_next", exc.__traceback__)
-            )
-        return None
+            raise PluginError(self.plugin) from pop_traceback(exc)
+        return self
 
 
 @dataclass
@@ -134,8 +143,21 @@ class GenericPipeline(Generic[T]):
 
     def run(self, specs: Iterable[GenericPluginSpec[T]] = ()):
         """Run the specified plugins."""
-        self.require(*specs)
+        try:
+            self.require(*specs)
+        except Exception as exc:
+            exception = exc
+        else:
+            exception = None
 
         while self.tasks:
-            if remaining_work := self.tasks.pop().advance(self.ctx):
-                self.tasks.append(remaining_work)
+            try:
+                if remaining_work := self.tasks.pop().advance(self.ctx, exception):
+                    self.tasks.append(remaining_work)
+            except Exception as exc:
+                exception = exc
+            else:
+                exception = None
+
+        if exception is not None:
+            raise exception

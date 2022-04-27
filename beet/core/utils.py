@@ -18,6 +18,7 @@ __all__ = [
     "format_obj",
     "format_exc",
     "format_validation_error",
+    "pop_traceback",
 ]
 
 
@@ -245,6 +246,16 @@ def format_validation_error(prefix: str, exc: ValidationError) -> str:
         )
         for loc, msg in errors
     )
+
+
+ExceptionType = TypeVar("ExceptionType", bound=BaseException)
+
+
+def pop_traceback(exc: ExceptionType, n: int = 1) -> ExceptionType:
+    tb = exc.__traceback__
+    for _ in range(n):
+        tb = getattr(exc.__traceback__, "tb_next", tb)
+    return exc.with_traceback(tb)
 
 
 class PathObjectError(PydanticTypeError):
