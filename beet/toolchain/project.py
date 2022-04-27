@@ -22,6 +22,7 @@ from beet.core.utils import (
     intersperse,
     log_time,
     normalize_string,
+    temporary_working_directory,
 )
 from beet.core.watch import DirectoryWatcher, FileChanges
 
@@ -98,7 +99,7 @@ class Project:
         self.resolved_config = None
         self.resolved_cache = None
 
-    def build(self, no_link: bool = False) -> Context:
+    def build(self, no_link: bool = False, tmpdir: bool = False) -> Context:
         """Build the project."""
         autosave = self.config.meta.setdefault("autosave", {})
 
@@ -107,13 +108,21 @@ class Project:
         else:
             autosave.setdefault("link", True)
 
-        return ProjectBuilder(self).build()
+        if tmpdir:
+            with temporary_working_directory() as path:
+                self.resolved_cache = ProjectCache(
+                    path / self.cache_name,
+                    self.directory / "generated",
+                )
+                return ProjectBuilder(self).build()
+        else:
+            return ProjectBuilder(self).build()
 
-    def build_report(self) -> JsonDict:
+    def build_report(self, tmpdir: bool = False) -> JsonDict:
         """Build the project and return the json report."""
         json_reporter = self.config.meta.setdefault("json_reporter", {})
         json_reporter["enabled"] = True
-        return self.build(no_link=True).inject(JsonReporter).data
+        return self.build(no_link=True, tmpdir=tmpdir).inject(JsonReporter).data
 
     def watch(self, interval: float = 0.6) -> Iterator[FileChanges]:
         """Watch the project."""

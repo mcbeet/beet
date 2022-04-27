@@ -19,11 +19,13 @@ __all__ = [
     "format_exc",
     "format_validation_error",
     "pop_traceback",
+    "temporary_working_directory",
 ]
 
 
 import json
 import logging
+import os
 import re
 import shutil
 import sys
@@ -33,6 +35,7 @@ from dataclasses import field
 from importlib import import_module
 from importlib.util import find_spec
 from pathlib import Path
+from tempfile import TemporaryDirectory
 from traceback import format_exception
 from typing import (
     Any,
@@ -256,6 +259,17 @@ def pop_traceback(exc: ExceptionType, n: int = 1) -> ExceptionType:
     for _ in range(n):
         tb = getattr(exc.__traceback__, "tb_next", tb)
     return exc.with_traceback(tb)
+
+
+@contextmanager
+def temporary_working_directory(*args: Any, **kwargs: Any) -> Iterator[Path]:
+    with TemporaryDirectory(*args, **kwargs) as dirname:
+        cwd = os.getcwd()
+        os.chdir(dirname)
+        try:
+            yield Path(dirname)
+        finally:
+            os.chdir(cwd)
 
 
 class PathObjectError(PydanticTypeError):

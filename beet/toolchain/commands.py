@@ -25,12 +25,24 @@ pass_project = click.make_pass_decorator(Project)  # type: ignore
     help="Don't copy the output to the linked Minecraft world.",
 )
 @click.option(
+    "-t",
+    "--tmpdir",
+    is_flag=True,
+    help="Build the project in a temporary directory.",
+)
+@click.option(
     "-j",
     "--json",
     is_flag=True,
     help="Output the result of the build as json.",
 )
-def build(project: Project, link: Optional[str], no_link: bool, json: bool):
+def build(
+    project: Project,
+    link: Optional[str],
+    no_link: bool,
+    tmpdir: bool,
+    json: bool,
+):
     """Build the current project."""
     if json:
         if link:
@@ -41,14 +53,14 @@ def build(project: Project, link: Optional[str], no_link: bool, json: bool):
             raise click.BadOptionUsage(
                 "no_link", "The --json option already implies --no-link."
             )
-        click.echo(dump_json(project.build_report()), nl=False)
+        click.echo(dump_json(project.build_report(tmpdir)), nl=False)
 
     else:
         text = "Linking and building project..." if link else "Building project..."
         with message_fence(text):
             if link:
                 click.echo("\n".join(project.link(world=link)))
-            project.build(no_link)
+            project.build(no_link, tmpdir)
 
 
 @beet.command()
