@@ -2,6 +2,11 @@
 
 <!--next-version-placeholder-->
 
+## v0.62.0 (2022-04-27)
+### Feature
+* Add stdin ([`1cb5c35`](https://github.com/mcbeet/beet/commit/1cb5c359463888ccd037e4ca5613386c45fdd66d))
+* Add --tmpdir flag ([`124d1be`](https://github.com/mcbeet/beet/commit/124d1be33cbf8ef7fa4f5bfab083d9a704080f1f))
+
 ## v0.61.0 (2022-04-27)
 ### Feature
 * Add json reporter ([`8e174a0`](https://github.com/mcbeet/beet/commit/8e174a0f4a62034753b24add0cfe5bd4d6d542df))
