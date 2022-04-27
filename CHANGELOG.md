@@ -2,6 +2,14 @@
 
 <!--next-version-placeholder-->
 
+## v0.61.0 (2022-04-27)
+### Feature
+* Add json reporter ([`8e174a0`](https://github.com/mcbeet/beet/commit/8e174a0f4a62034753b24add0cfe5bd4d6d542df))
+* Make it possible for plugins to catch errors ([`c1ad615`](https://github.com/mcbeet/beet/commit/c1ad615361284aeb5ce15250437794dd03ceb212))
+
+### Fix
+* Type return -> continue in require ([`10acca2`](https://github.com/mcbeet/beet/commit/10acca249547504a00850d7ff233ebf0ef9fac7a))
+
 ## v0.60.1 (2022-04-26)
 ### Fix
 * Only use field_map for namespace repr ([`53f0a88`](https://github.com/mcbeet/beet/commit/53f0a88f55f38bca455f63674a244d9b58efe72a))
