@@ -4,6 +4,7 @@ from typing import Optional, Sequence
 import click
 
 from beet import Project
+from beet.core.utils import dump_json
 from beet.toolchain.cli import beet, error_handler, message_fence
 
 pass_project = click.make_pass_decorator(Project)  # type: ignore
@@ -23,13 +24,31 @@ pass_project = click.make_pass_decorator(Project)  # type: ignore
     is_flag=True,
     help="Don't copy the output to the linked Minecraft world.",
 )
-def build(project: Project, link: Optional[str], no_link: bool):
+@click.option(
+    "-j",
+    "--json",
+    is_flag=True,
+    help="Output the result of the build as json.",
+)
+def build(project: Project, link: Optional[str], no_link: bool, json: bool):
     """Build the current project."""
-    text = "Linking and building project..." if link else "Building project..."
-    with message_fence(text):
+    if json:
         if link:
-            click.echo("\n".join(project.link(world=link)))
-        project.build(no_link)
+            raise click.BadOptionUsage(
+                "link", "The --json option should not be used with --link."
+            )
+        if no_link:
+            raise click.BadOptionUsage(
+                "no_link", "The --json option already implies --no-link."
+            )
+        click.echo(dump_json(project.build_report()), nl=False)
+
+    else:
+        text = "Linking and building project..." if link else "Building project..."
+        with message_fence(text):
+            if link:
+                click.echo("\n".join(project.link(world=link)))
+            project.build(no_link)
 
 
 @beet.command()

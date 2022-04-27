@@ -11,11 +11,18 @@ from pathlib import Path
 from typing import ClassVar, Iterable, Iterator, List, Optional, Sequence
 
 from beet.contrib.autosave import Autosave
+from beet.contrib.json_reporter import JsonReporter
 from beet.contrib.link import LinkManager
 from beet.contrib.load import load
 from beet.contrib.output import output
 from beet.contrib.render import render
-from beet.core.utils import FileSystemPath, intersperse, log_time, normalize_string
+from beet.core.utils import (
+    FileSystemPath,
+    JsonDict,
+    intersperse,
+    log_time,
+    normalize_string,
+)
 from beet.core.watch import DirectoryWatcher, FileChanges
 
 from .config import PackConfig, ProjectConfig, load_config, locate_config
@@ -101,6 +108,12 @@ class Project:
             autosave.setdefault("link", True)
 
         return ProjectBuilder(self).build()
+
+    def build_report(self) -> JsonDict:
+        """Build the project and return the json report."""
+        json_reporter = self.config.meta.setdefault("json_reporter", {})
+        json_reporter["enabled"] = True
+        return self.build(no_link=True).inject(JsonReporter).data
 
     def watch(self, interval: float = 0.6) -> Iterator[FileChanges]:
         """Watch the project."""
