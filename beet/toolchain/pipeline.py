@@ -108,7 +108,7 @@ class GenericPipeline(Generic[T]):
         for spec in args:
             plugin = self.resolve(spec)
             if plugin in self.plugins:
-                return
+                continue
 
             self.plugins.add(plugin)
 
@@ -134,8 +134,7 @@ class GenericPipeline(Generic[T]):
 
     def run(self, specs: Iterable[GenericPluginSpec[T]] = ()):
         """Run the specified plugins."""
-        for spec in specs:
-            self.require(spec)
+        self.require(*specs)
 
         while self.tasks:
             if remaining_work := self.tasks.pop().advance(self.ctx):
