@@ -18,7 +18,6 @@ from importlib.metadata import entry_points
 from typing import Any, Callable, Iterator, List, Optional
 
 import click
-from click.decorators import pass_context
 from click_help_colors import HelpColorsCommand, HelpColorsGroup
 
 from beet import __version__
@@ -226,7 +225,7 @@ class MainGroup(BeetGroup):
 
 
 @click.group(cls=MainGroup)  # type: ignore
-@pass_context
+@click.pass_context
 @click.option(
     "-p",
     "--project",
