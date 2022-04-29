@@ -5,9 +5,10 @@ __all__ = [
 
 
 import subprocess
+from glob import glob
 from typing import List, Literal, Optional
 
-from beet import Context, configurable
+from beet import Context, ListOption, PackageablePath, configurable
 from pydantic import BaseModel
 
 from .document import Document
@@ -15,11 +16,11 @@ from .loaders import LinkFragmentLoader
 
 
 class LecternOptions(BaseModel):
-    load: List[str] = []
+    load: ListOption[PackageablePath] = ListOption()
     links: Literal["enable", "ignore", "disable"] = "enable"
     snapshot: Optional[str] = None
     snapshot_flat: bool = False
-    external_files: Optional[str] = None
+    external_files: Optional[PackageablePath] = None
     scripts: List[List[str]] = []
 
 
@@ -33,8 +34,8 @@ def lectern(ctx: Context, opts: LecternOptions):
     document = ctx.inject(Document)
     document.loaders.append(LinkFragmentLoader(status=opts.links))
 
-    for pattern in opts.load:
-        for path in ctx.directory.glob(pattern):
+    for pattern in opts.load.entries():
+        for path in glob(str(ctx.directory / pattern)):
             document.load(path)
 
     for arguments in opts.scripts:
