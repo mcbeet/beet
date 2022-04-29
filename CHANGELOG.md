@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.63.0 (2022-04-29)
+### Feature
+* Add exception filter for json reporter ([`3949e02`](https://github.com/mcbeet/beet/commit/3949e02cc9a38a4c68abdf756fb5d9e5e6336783))
+
 ## v0.62.0 (2022-04-27)
 ### Feature
 * Add stdin ([`1cb5c35`](https://github.com/mcbeet/beet/commit/1cb5c359463888ccd037e4ca5613386c45fdd66d))
