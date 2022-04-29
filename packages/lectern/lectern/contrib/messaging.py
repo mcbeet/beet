@@ -7,13 +7,16 @@ __all__ = [
 ]
 
 
+from typing import Literal
+
 from beet import Context, Function, ListOption, configurable
 from pydantic import BaseModel
 
-from lectern import Document
+from lectern import Document, LinkFragmentLoader
 
 
 class MessagingOptions(BaseModel):
+    links: Literal["enable", "ignore", "disable"] = "enable"
     input: ListOption[str] = ListOption()
 
 
@@ -30,6 +33,7 @@ def messaging(ctx: Context, opts: MessagingOptions):
     form a default function by concatenating all code blocks.
     """
     document = ctx.inject(Document)
+    document.loaders.append(LinkFragmentLoader(status=opts.links))
     document.markdown_extractor.cache = None
 
     for message in opts.input.entries():

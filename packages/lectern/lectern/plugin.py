@@ -5,16 +5,18 @@ __all__ = [
 
 
 import subprocess
-from typing import List, Optional
+from typing import List, Literal, Optional
 
 from beet import Context, configurable
 from pydantic import BaseModel
 
 from .document import Document
+from .loaders import LinkFragmentLoader
 
 
 class LecternOptions(BaseModel):
     load: List[str] = []
+    links: Literal["enable", "ignore", "disable"] = "enable"
     snapshot: Optional[str] = None
     snapshot_flat: bool = False
     external_files: Optional[str] = None
@@ -29,6 +31,7 @@ def beet_default(ctx: Context):
 def lectern(ctx: Context, opts: LecternOptions):
     """Plugin that handles markdown files with lectern."""
     document = ctx.inject(Document)
+    document.loaders.append(LinkFragmentLoader(status=opts.links))
 
     for pattern in opts.load:
         for path in ctx.directory.glob(pattern):
