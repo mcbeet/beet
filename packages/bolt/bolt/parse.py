@@ -312,7 +312,7 @@ def get_bolt_parsers(
             "sort_order", parsers["sort_order"], fallback=True
         ),
         "gamemode": InterpolationParser("gamemode", parsers["gamemode"], fallback=True),
-        "message": InterpolationParser("message", parsers["message"]),
+        "message": InterpolationParser("message", parsers["message"], final=True),
         "block_pos": InterpolationParser("vec3", parsers["block_pos"], fallback=True),
         "column_pos": InterpolationParser("vec2", parsers["column_pos"], fallback=True),
         "rotation": InterpolationParser("vec2", parsers["rotation"], fallback=True),
@@ -470,6 +470,7 @@ class InterpolationParser:
     parser: Parser
     prefix: Optional[str] = None
     fallback: bool = False
+    final: bool = False
 
     def __call__(self, stream: TokenStream) -> Any:
         order = ["interpolation", "original"]
@@ -486,6 +487,10 @@ class InterpolationParser:
                         converter=self.converter,
                         value=node,
                     )
+                    if self.final:
+                        current_index = stream.index
+                        stream.expect("newline", "eof")
+                        stream.index = current_index
                     return set_location(node, prefix or node.value, node.value)
                 elif parser == "original":
                     return self.parser(stream)

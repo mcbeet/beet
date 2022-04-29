@@ -8,3 +8,4 @@ def load_storage(storage_id, filename):
     merge function_tag minecraft:load {"values": [generate_path("load_storage")]}
     append function generate_path("load_storage"):
         data merge storage storage_id json.loads(path.read_text())
+        say json loaded!

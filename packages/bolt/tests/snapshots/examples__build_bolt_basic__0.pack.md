@@ -617,6 +617,7 @@ say that's neat
 
 ```mcfunction
 data merge storage demo:random_data {value: 42}
+say json loaded!
 ```
 
 ## Resource pack
