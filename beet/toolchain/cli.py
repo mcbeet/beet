@@ -65,7 +65,7 @@ def error_handler(should_exit: bool = False, format_padding: int = 0) -> Iterato
     else:
         return
 
-    if LogHandler.has_output:
+    if LogHandler.has_output and not format_padding:
         click.echo()
 
     click.echo(format_error(message, exception, format_padding), nl=False)
