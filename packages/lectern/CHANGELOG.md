@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.21.2 (2022-04-29)
+### Fix
+* Don't do fancy concatenation ([`8d7dd36`](https://github.com/mcbeet/lectern/commit/8d7dd367553524ca061e92edb6c78f9f0fd4ce4c))
+
 ## v0.21.1 (2022-04-29)
 ### Fix
 * Use packageable paths ([`8e42a07`](https://github.com/mcbeet/lectern/commit/8e42a075649db47c6165749e594e331b46c819f6))
