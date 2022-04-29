@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.63.1 (2022-04-29)
+### Fix
+* Tweak error padding in watch mode ([`00688f6`](https://github.com/mcbeet/beet/commit/00688f65c2b9d9920f55451d4888d779e3cea9d4))
+
 ## v0.63.0 (2022-04-29)
 ### Feature
 * Add exception filter for json reporter ([`3949e02`](https://github.com/mcbeet/beet/commit/3949e02cc9a38a4c68abdf756fb5d9e5e6336783))
