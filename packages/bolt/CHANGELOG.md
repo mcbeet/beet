@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.3.0 (2022-04-29)
+### Feature
+* Allow nbt compound interpolation ([`b6f964f`](https://github.com/mcbeet/bolt/commit/b6f964fc16805bedc1d3be94a7d042acf4112551))
+
 ## v0.2.1 (2022-04-26)
 ### Fix
 * Use BubbleException ([`c8ce2fb`](https://github.com/mcbeet/bolt/commit/c8ce2fb478fa35aff0cf768cdb320302cf123378))
