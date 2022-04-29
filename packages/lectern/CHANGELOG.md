@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.21.1 (2022-04-29)
+### Fix
+* Use packageable paths ([`8e42a07`](https://github.com/mcbeet/lectern/commit/8e42a075649db47c6165749e594e331b46c819f6))
+
 ## v0.21.0 (2022-04-29)
 ### Feature
 * Add LinkFragmentLoader ([`9d2980c`](https://github.com/mcbeet/lectern/commit/9d2980cbcb439ce8b5218c75abc6c8299222ab0f))
