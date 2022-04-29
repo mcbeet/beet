@@ -2,6 +2,14 @@
 
 <!--next-version-placeholder-->
 
+## v0.21.0 (2022-04-29)
+### Feature
+* Add LinkFragmentLoader ([`9d2980c`](https://github.com/mcbeet/lectern/commit/9d2980cbcb439ce8b5218c75abc6c8299222ab0f))
+* Add lectern.contrib.messaging ([`e94e460`](https://github.com/mcbeet/lectern/commit/e94e460f882b421b97c4108c583a7a11ecfd2886))
+
+### Fix
+* Return bool to indicate if files were added ([`6ae62bd`](https://github.com/mcbeet/lectern/commit/6ae62bd50917ab8da2d1da86258d3ef3bc183a18))
+
 ## v0.20.1 (2022-04-26)
 ### Fix
 * Use BubbleException ([`d2ded22`](https://github.com/mcbeet/lectern/commit/d2ded223f3c65d1ebf98daee56d69881e0e83140))
