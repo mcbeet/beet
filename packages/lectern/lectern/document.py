@@ -92,14 +92,14 @@ class Document:
         self,
         source: str,
         external_files: Optional[FileSystemPath] = None,
-    ):
+    ) -> bool:
         """Extract pack fragments from source."""
         if self.markdown_sniffer.search(source):
-            self.add_markdown(source, external_files)
+            return self.add_markdown(source, external_files)
         else:
-            self.add_text(source)
+            return self.add_text(source)
 
-    def add_text(self, source: str):
+    def add_text(self, source: str) -> bool:
         """Extract pack fragments from plain text."""
         assets, data = self.text_extractor.extract(
             source=source,
@@ -108,12 +108,13 @@ class Document:
         )
         self.assets.merge(assets)
         self.data.merge(data)
+        return bool(assets or data)
 
     def add_markdown(
         self,
         source: str,
         external_files: Optional[FileSystemPath] = None,
-    ):
+    ) -> bool:
         """Extract pack fragments from markdown."""
         assets, data = self.markdown_extractor.extract(
             source=source,
@@ -123,6 +124,7 @@ class Document:
         )
         self.assets.merge(assets)
         self.data.merge(data)
+        return bool(assets or data)
 
     def get_text(self) -> str:
         """Turn the data pack and the resource pack into text."""
