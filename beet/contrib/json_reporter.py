@@ -19,7 +19,7 @@ import zipfile
 from contextlib import contextmanager, redirect_stdout
 from dataclasses import dataclass, field
 from functools import cached_property
-from typing import Any, List, Union
+from typing import Any, List, Optional, Union
 
 from pydantic import BaseModel
 
@@ -28,17 +28,19 @@ from beet import (
     BinaryFileBase,
     Context,
     DataPack,
+    ListOption,
     PluginSpec,
     ResourcePack,
     TextFileBase,
     WrappedException,
 )
-from beet.core.utils import JsonDict, format_exc
+from beet.core.utils import JsonDict, format_exc, get_import_string
 
 
 class JsonReporterOptions(BaseModel):
     enabled: bool = False
     binary_files: bool = False
+    exception_filter: Optional[ListOption[str]] = None
     handlers: List[str] = [
         "beet.contrib.json_reporter.stdout",
         "beet.contrib.json_reporter.resource_pack_listing",
@@ -101,7 +103,19 @@ class JsonReporter:
             error = self.data.setdefault("error", {})
 
             error["message"] = message
-            error["exception"] = exception and format_exc(exception)
+
+            exc_fullname = get_import_string(type(exception))
+
+            if exception is None:
+                traceback = None
+            elif self.opts.exception_filter is None:
+                traceback = format_exc(exception)
+            elif any(f in exc_fullname for f in self.opts.exception_filter.entries()):
+                traceback = f"{type(exception).__name__}: {exception}\n"
+            else:
+                traceback = f'{type(exception).__name__}: Disable the "exception_filter" option to see the full traceback.\n'
+
+            error["exception"] = traceback
 
         self.ctx.require(*self.handlers)
 
