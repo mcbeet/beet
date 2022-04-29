@@ -35,6 +35,15 @@ SAMPLES = [
     say hello5
     ```
     """,
+    """
+    ```
+    say foo
+    ```
+    something else
+    ```
+    say bar
+    ```
+    """,
 ]
 
 

@@ -43,4 +43,4 @@ def messaging(ctx: Context, opts: MessagingOptions):
                 for token in document.markdown_extractor.parser.parse(message)  # type: ignore
                 if token.type in ["fence", "code_block"]
             ]
-            ctx.generate("{short_hash}", Function("\n###\n".join(code_blocks)))
+            ctx.generate("{short_hash}", Function("\n".join(code_blocks)))
