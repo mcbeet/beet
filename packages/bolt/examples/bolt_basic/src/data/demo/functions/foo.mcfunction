@@ -606,3 +606,7 @@ if is_awesome or Cond("force_awesomeness"):
 
 from ./utils import something
 something()
+
+from ./utils import load_storage
+load_storage(./random_data, "random_data.json")
+if data storage ./random_data {value: 42} say json loaded successfully

@@ -46,8 +46,6 @@ from difflib import get_close_matches
 from typing import Any, Dict, List, Optional, Set, Tuple, cast
 
 from beet.core.utils import required_field
-from tokenstream import InvalidSyntax, Token, TokenStream, set_location
-
 from mecha import (
     AlternativeParser,
     AstChildren,
@@ -68,6 +66,7 @@ from mecha.utils import (
     normalize_whitespace,
     string_to_number,
 )
+from tokenstream import InvalidSyntax, Token, TokenStream, set_location
 
 from .ast import (
     AstAssignment,
@@ -288,6 +287,7 @@ def get_bolt_parsers(
         "greedy": InterpolationParser("greedy", parsers["greedy"]),
         "json": InterpolationParser("json", parsers["json"]),
         "nbt": InterpolationParser("nbt", parsers["nbt"]),
+        "nbt_compound": InterpolationParser("nbt_compound", parsers["nbt_compound"]),
         "nbt_path": InterpolationParser("nbt_path", parsers["nbt_path"]),
         "range": InterpolationParser("range", parsers["range"], fallback=True),
         "resource_location_or_tag": CommentDisambiguation(

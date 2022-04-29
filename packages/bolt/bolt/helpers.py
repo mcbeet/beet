@@ -10,8 +10,6 @@ from types import TracebackType
 from typing import Any, Callable, ContextManager, Dict, Optional, Type
 from uuid import UUID
 
-from tokenstream import set_location
-
 from mecha import (
     AstBool,
     AstChildren,
@@ -23,6 +21,7 @@ from mecha import (
     AstJson,
     AstMessage,
     AstNbt,
+    AstNbtCompound,
     AstNbtPath,
     AstNode,
     AstNumber,
@@ -42,6 +41,7 @@ from mecha import (
     AstVector3,
     AstWord,
 )
+from tokenstream import set_location
 
 from .utils import internal
 
@@ -69,6 +69,7 @@ def get_bolt_helpers() -> Dict[str, Any]:
         "interpolate_greedy": converter(AstGreedy.from_value),
         "interpolate_json": converter(AstJson.from_value),
         "interpolate_nbt": converter(AstNbt.from_value),
+        "interpolate_nbt_compound": NbtCompoundConverter(converter(AstNbt.from_value)),
         "interpolate_nbt_path": converter(AstNbtPath.from_value),
         "interpolate_range": converter(AstRange.from_value),
         "interpolate_resource_location": converter(AstResourceLocation.from_value),
@@ -186,6 +187,19 @@ def converter(f: Callable[[Any], AstNode]) -> Callable[[Any, AstNode], AstNode]:
         return set_location(f(obj), node)
 
     return wrapper
+
+
+@dataclass
+class NbtCompoundConverter:
+    """Converter for nbt compounds."""
+
+    nbt_converter: Callable[[Any, AstNode], AstNode]
+
+    @internal
+    def __call__(self, obj: Any, node: AstNode) -> AstNode:
+        if isinstance(node := self.nbt_converter(obj, node), AstNbtCompound):
+            return node
+        raise ValueError(f"Invalid nbt compound of type {type(obj)!r}.")
 
 
 @dataclass

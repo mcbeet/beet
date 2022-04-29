@@ -254,6 +254,7 @@ scoreboard players operation global bolt_basic.tmp2 = global is_awesome
 execute unless score global bolt_basic.tmp1 matches 0 run scoreboard players operation global bolt_basic.tmp2 = global force_awesomeness
 execute unless score global bolt_basic.tmp2 matches 0 run say hello
 say this is from demo:utils
+execute if data storage demo:random_data {value: 42} run say json loaded successfully
 ```
 
 `@function demo:import_a`
@@ -596,6 +597,26 @@ say that's neat
     "demo:foo"
   ]
 }
+```
+
+### minecraft
+
+`@function_tag minecraft:load`
+
+```json
+{
+  "values": [
+    "bolt_basic:load_storage"
+  ]
+}
+```
+
+### bolt_basic
+
+`@function bolt_basic:load_storage`
+
+```mcfunction
+data merge storage demo:random_data {value: 42}
 ```
 
 ## Resource pack
