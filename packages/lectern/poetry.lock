@@ -477,7 +477,7 @@ python-versions = ">=2.6, !=3.0.*, !=3.1.*, !=3.2.*"
 
 [[package]]
 name = "pytest"
-version = "7.1.1"
+version = "7.1.2"
 description = "pytest: simple powerful testing with Python"
 category = "dev"
 optional = false
@@ -784,7 +784,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytes
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "b41f25dd7c9d80c2acafcfb61a6ef75b5e27f32dd6fccdba53efb831742c98a9"
+content-hash = "0f588d1205350554c271ca06abadf4213be96628d8b673a61feb9622e80f435b"
 
 [metadata.files]
 atomicwrites = [
@@ -1165,8 +1165,8 @@ pyparsing = [
     {file = "pyparsing-2.4.7.tar.gz", hash = "sha256:c203ec8783bf771a155b207279b9bccb8dea02d8f0c9e5f8ead507bc3246ecc1"},
 ]
 pytest = [
-    {file = "pytest-7.1.1-py3-none-any.whl", hash = "sha256:92f723789a8fdd7180b6b06483874feca4c48a5c76968e03bb3e7f806a1869ea"},
-    {file = "pytest-7.1.1.tar.gz", hash = "sha256:841132caef6b1ad17a9afde46dc4f6cfa59a05f9555aae5151f73bdf2820ca63"},
+    {file = "pytest-7.1.2-py3-none-any.whl", hash = "sha256:13d0e3ccfc2b6e26be000cb6568c832ba67ba32e719443bfe725814d3c42433c"},
+    {file = "pytest-7.1.2.tar.gz", hash = "sha256:a06a0425453864a270bc45e71f783330a7428defb4230fb5e6a731fde06ecd45"},
 ]
 pytest-insta = [
     {file = "pytest-insta-0.1.11.tar.gz", hash = "sha256:cc0f338a8ac215dbf3b690198dc24a1c5987e2bef269f85170d415039cce06e5"},
