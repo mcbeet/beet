@@ -296,6 +296,9 @@ import nbtlib
 mypath5 = nbtlib.Path().something.cool[3].foo
 if data storage some:path/to/storage mypath5
 
+foo = nbtlib.Byte(23)
+data merge storage some:path/to/storage {Count: foo}
+
 from uuid import UUID
 
 def try_entity_interpolation(x):

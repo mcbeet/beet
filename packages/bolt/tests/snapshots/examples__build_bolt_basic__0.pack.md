@@ -183,6 +183,7 @@ execute if data storage some:path/to/storage some.foo.path{my: "compound"}.stuff
 execute if data storage some:path/to/storage foo.bar
 execute if data storage some:path/to/storage "some.foo.path"
 execute if data storage some:path/to/storage something.cool[3].foo
+data merge storage some:path/to/storage {Count: 23b}
 execute if score some_fake_player some_objective matches 0 run say yes
 execute if score 00000000-0000-0000-0000-000000000001 some_objective matches 0 run say yes
 execute if score 12345678-1234-5678-1234-567812345678 some_objective matches 0 run say yes
