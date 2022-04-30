@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.3.4 (2022-04-30)
+### Fix
+* Update mecha to handle nbtlib instances properly for interpolation ([`fce1766`](https://github.com/mcbeet/bolt/commit/fce1766807e588d5a7c75b7e4e407926c0bc164d))
+
 ## v0.3.3 (2022-04-30)
 ### Fix
 * Use next_token ([`3fb3aab`](https://github.com/mcbeet/bolt/commit/3fb3aabae017862b89d29c2124d523f2fd0c0e3a))
