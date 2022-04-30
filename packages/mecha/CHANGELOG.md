@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.48.2 (2022-04-30)
+### Fix
+* Handle nbt primitives ([`bf065f4`](https://github.com/mcbeet/mecha/commit/bf065f406776fd386ed68db8fb0ae5ad2e6535f3))
+
 ## v0.48.1 (2022-04-26)
 ### Fix
 * Use BubbleException and WrappedException ([`31a1009`](https://github.com/mcbeet/mecha/commit/31a100981a4251466cbe4de586266646ddef8239))
