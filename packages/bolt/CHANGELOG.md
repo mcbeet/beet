@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.3.3 (2022-04-30)
+### Fix
+* Use next_token ([`3fb3aab`](https://github.com/mcbeet/bolt/commit/3fb3aabae017862b89d29c2124d523f2fd0c0e3a))
+
 ## v0.3.2 (2022-04-30)
 ### Fix
 * Proper check for final expressions ([`57bb1f1`](https://github.com/mcbeet/bolt/commit/57bb1f18b09bc7b9ab04079651668341262a462b))
