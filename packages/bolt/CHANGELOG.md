@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.3.2 (2022-04-30)
+### Fix
+* Proper check for final expressions ([`57bb1f1`](https://github.com/mcbeet/bolt/commit/57bb1f18b09bc7b9ab04079651668341262a462b))
+
 ## v0.3.1 (2022-04-29)
 ### Fix
 * Make message interpolation final ([`b46b165`](https://github.com/mcbeet/bolt/commit/b46b1652ee78a3224911a7a57173c9f3f236244e))
