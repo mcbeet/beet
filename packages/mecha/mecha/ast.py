@@ -100,7 +100,7 @@ from beet.core.utils import extra_field, required_field
 # pyright: reportMissingTypeStubs=false
 from nbtlib import Byte, ByteArray, Compound, CompoundMatch, Double, Int, IntArray
 from nbtlib import List as ListTag
-from nbtlib import ListIndex, LongArray, NamedKey, Path, String
+from nbtlib import ListIndex, LongArray, NamedKey, Numeric, Path, String
 from tokenstream import UNKNOWN_LOCATION, SourceLocation, set_location
 
 from .utils import string_to_number
@@ -625,7 +625,9 @@ class AstNbt(AstNode):
     @classmethod
     def from_value(cls, value: Any) -> "AstNbt":
         """Create nbt ast nodes representing the specified value."""
-        if isinstance(value, bool):
+        if isinstance(value, (Numeric, String)):
+            return AstNbtValue(value=value)
+        elif isinstance(value, bool):
             return AstNbtValue(value=Byte(1 if value else 0))
         elif isinstance(value, int):
             return AstNbtValue(value=Int(value))
@@ -633,6 +635,18 @@ class AstNbt(AstNode):
             return AstNbtValue(value=Double(value))
         elif isinstance(value, str):
             return AstNbtValue(value=String(value))
+        elif isinstance(value, ByteArray):
+            return AstNbtByteArray(
+                elements=AstChildren(cls.from_value(e) for e in value)
+            )
+        elif isinstance(value, IntArray):
+            return AstNbtIntArray(
+                elements=AstChildren(cls.from_value(e) for e in value)
+            )
+        elif isinstance(value, LongArray):
+            return AstNbtLongArray(
+                elements=AstChildren(cls.from_value(e) for e in value)
+            )
         elif isinstance(value, Mapping):
             compound: Mapping[Any, Any] = value
             return AstNbtCompound(
