@@ -473,7 +473,7 @@ def check_final_expression(stream: TokenStream):
     next_token = stream.get()
     if next_token and not next_token.match("newline", "eof"):
         exc = InvalidSyntax("Trailing input following final expression.")
-        raise set_location(exc, stream.current)
+        raise set_location(exc, next_token)
 
     stream.index = current_index
 
