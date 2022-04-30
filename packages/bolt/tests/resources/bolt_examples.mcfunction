@@ -748,3 +748,17 @@ for a in [False, True]:
 a = 1
 def f():
     a += 1
+###
+a = 2
+say a
+###
+a = 2
+say a normal message
+###
+a = 2
+say a
+    normal
+    message
+###
+"hey"
+    "hey"

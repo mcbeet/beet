@@ -9,6 +9,7 @@ __all__ = [
     "create_bolt_root_parser",
     "ExecuteIfConditionConstraint",
     "BranchScopeManager",
+    "check_final_expression",
     "InterpolationParser",
     "parse_statement",
     "AssignmentTargetParser",
@@ -462,6 +463,21 @@ class BranchScopeManager:
             stream.data["branch_scope"] = branch_scope
 
 
+def check_final_expression(stream: TokenStream):
+    current_index = stream.index
+
+    if consume_line_continuation(stream):
+        exc = InvalidSyntax("Invalid indent following final expression.")
+        raise set_location(exc, stream.get())
+
+    next_token = stream.get()
+    if next_token and not next_token.match("newline", "eof"):
+        exc = InvalidSyntax("Trailing input following final expression.")
+        raise set_location(exc, stream.current)
+
+    stream.index = current_index
+
+
 @dataclass
 class InterpolationParser:
     """Parser for interpolation."""
@@ -488,9 +504,7 @@ class InterpolationParser:
                         value=node,
                     )
                     if self.final:
-                        current_index = stream.index
-                        stream.expect("newline", "eof")
-                        stream.index = current_index
+                        check_final_expression(stream)
                     return set_location(node, prefix or node.value, node.value)
                 elif parser == "original":
                     return self.parser(stream)
@@ -566,9 +580,7 @@ def parse_statement(stream: TokenStream) -> Any:
                     node = set_location(node, node.target, node.value)
 
             # Make sure that the statement is not followed by anything.
-            current_index = stream.index
-            stream.expect("newline", "eof")
-            stream.index = current_index
+            check_final_expression(stream)
 
             return node
 

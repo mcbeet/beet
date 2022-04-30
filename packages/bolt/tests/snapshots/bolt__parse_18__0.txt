@@ -1,4 +1,4 @@
-#>ERROR  Expected eof or newline but got literal '§§§'.
+#>ERROR  Trailing input following final expression.
 # line 1, column 4
 #      1 |  64 §§§
 #        :     ^^^

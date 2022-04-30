@@ -2,10 +2,10 @@ from pathlib import Path
 
 import pytest
 from beet import Context, Function, run_beet
-from pytest_insta import SnapshotFixture
-
 from mecha import AstNode, CompilationDatabase, CompilationUnit, DiagnosticError, Mecha
 from mecha.contrib.annotate_diagnostics import annotate_diagnostics
+from pytest_insta import SnapshotFixture
+
 from bolt import Runtime
 
 BOLT_EXAMPLES = [

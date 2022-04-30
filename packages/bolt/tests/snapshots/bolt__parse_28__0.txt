@@ -1,4 +1,4 @@
-#>ERROR  Expected eof or newline but got literal '"hey"'.
+#>ERROR  Trailing input following final expression.
 # line 1, column 7
 #      1 |  "hey" "hey"
 #        :        ^^^^^

@@ -7,5 +7,5 @@ def f():
 #        :      ^
 # Notes:
 #   - Use 'global a' or 'nonlocal a' to mutate the variable defined in outer scope.
-#   - Expected assignment, eof or newline but got literal '+='.
+#   - Expected assignment but got literal '+='.
     a += 1
