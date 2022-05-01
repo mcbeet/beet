@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.4.1 (2022-05-01)
+### Fix
+* Leftover print ([`3731f2c`](https://github.com/mcbeet/bolt/commit/3731f2c071942d0e131f42432bbd165bdf4e602e))
+
 ## v0.4.0 (2022-05-01)
 ### Feature
 * Update beet to allow bolt files outside of the data pack ([`5c0d58c`](https://github.com/mcbeet/bolt/commit/5c0d58c181a053c2c0090d9af8b6eb96b6bc54f8))
