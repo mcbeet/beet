@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.48.3 (2022-05-01)
+### Fix
+* Auto-convert to string for resource location interpolation ([`e5e379a`](https://github.com/mcbeet/mecha/commit/e5e379aa82bd370a4d4417a21bcff9afeb796ef3))
+
 ## v0.48.2 (2022-04-30)
 ### Fix
 * Handle nbt primitives ([`bf065f4`](https://github.com/mcbeet/mecha/commit/bf065f406776fd386ed68db8fb0ae5ad2e6535f3))
