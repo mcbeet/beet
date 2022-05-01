@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.4.0 (2022-05-01)
+### Feature
+* Update beet to allow bolt files outside of the data pack ([`5c0d58c`](https://github.com/mcbeet/bolt/commit/5c0d58c181a053c2c0090d9af8b6eb96b6bc54f8))
+
 ## v0.3.4 (2022-04-30)
 ### Fix
 * Update mecha to handle nbtlib instances properly for interpolation ([`fce1766`](https://github.com/mcbeet/bolt/commit/fce1766807e588d5a7c75b7e4e407926c0bc164d))
