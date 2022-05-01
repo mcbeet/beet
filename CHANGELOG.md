@@ -2,6 +2,11 @@
 
 <!--next-version-placeholder-->
 
+## v0.64.0 (2022-05-01)
+### Feature
+* Handle load mount ([`3d17aa2`](https://github.com/mcbeet/beet/commit/3d17aa24636ee0a5f40fe81340b00c0a99a8b24a))
+* Add pack mount ([`48958f7`](https://github.com/mcbeet/beet/commit/48958f7a595db8a49e8b6bc36c62c9153852c80c))
+
 ## v0.63.1 (2022-04-29)
 ### Fix
 * Tweak error padding in watch mode ([`00688f6`](https://github.com/mcbeet/beet/commit/00688f65c2b9d9920f55451d4888d779e3cea9d4))
