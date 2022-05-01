@@ -1,0 +1,8 @@
+data_pack:
+  load:
+    # mount all .mcfunction files in "src"
+    data/demo/functions: "src"
+    # put gcd.mcfunction and is_prime.mcfunction in "math_util"
+    data/demo/functions/math_util: ["vendor/gcd.mcfunction", "vendor/is_prime.mcfunction"]
+    # add schedule_clock.mcfunction as main.mcfunction
+    data/demo/functions/main.mcfunction: "vendor/schedule_clock.mcfunction"
