@@ -1,0 +1,10 @@
+data_pack:
+  load:
+    data/demo/functions: "src"
+    data/owo/functions/foo.mcfunction: "src/thing.txt"
+    pack.mcmeta: "pack.mcmeta"
+resource_pack:
+  load:
+    assets/minecraft: "src"
+    assets/other/sounds.json: "src/sounds.json"
+    not_in_schema.txt: "pack.mcmeta"

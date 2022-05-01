@@ -1,6 +1,7 @@
 __all__ = [
     "ProjectConfig",
     "PackConfig",
+    "PackLoadOptions",
     "ListOption",
     "PackageablePath",
     "InvalidProjectConfig",
@@ -111,6 +112,33 @@ class PackageablePath(BaseModel):
         return str(self.__root__)
 
 
+class PackLoadOptions(
+    ListOption[Union[PackageablePath, Dict[str, ListOption[PackageablePath]]]]
+):
+    """Options for loading data packs and resource packs."""
+
+    def resolve(self, directory: FileSystemPath) -> "PackLoadOptions":
+        """Resolve load options relative to the given directory."""
+        return PackLoadOptions.parse_obj(
+            [
+                (
+                    {
+                        prefix: ListOption.parse_obj(
+                            [
+                                pattern.resolve(directory)
+                                for pattern in mount_options.entries()
+                            ]
+                        )
+                        for prefix, mount_options in load_entry.items()
+                    }
+                    if isinstance(load_entry, dict)
+                    else load_entry.resolve(directory)
+                )
+                for load_entry in self.entries()
+            ]
+        )
+
+
 class PackConfig(BaseModel):
     """Data pack and resource pack configuration."""
 
@@ -121,7 +149,7 @@ class PackConfig(BaseModel):
     compression: Optional[Literal["none", "deflate", "bzip2", "lzma"]] = None
     compression_level: Optional[int] = None
 
-    load: ListOption[PackageablePath] = ListOption()
+    load: PackLoadOptions = PackLoadOptions()
     render: Dict[str, ListOption[str]] = {}
 
     class Config:
@@ -195,9 +223,7 @@ class ProjectConfig(BaseModel):
         )
 
         for pack_config in [self.data_pack, self.resource_pack]:
-            pack_config.load = ListOption.parse_obj(
-                [load_path.resolve(path) for load_path in pack_config.load.entries()]
-            )
+            pack_config.load = pack_config.load.resolve(path)
 
         self.pipeline = [
             item.resolve(path) if isinstance(item, ProjectConfig) else item

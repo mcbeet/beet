@@ -1,0 +1,6 @@
+data_pack:
+  load:
+    data/demo/functions: "src.zip"
+resource_pack:
+  load:
+    assets/minecraft: "src.zip"
