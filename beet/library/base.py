@@ -507,17 +507,22 @@ class Namespace(
     @classmethod
     def scan(
         cls,
-        pack: FileOrigin,
+        prefix: str,
+        origin: FileOrigin,
         extend_namespace: Iterable[Type[NamespaceFile]] = (),
         extend_namespace_extra: Optional[Mapping[str, Type[PackFile]]] = None,
     ) -> Iterator[Tuple[str, "Namespace"]]:
         """Load namespaces by walking through a zipfile or directory."""
         name, namespace = None, None
-        filenames = (
-            map(PurePosixPath, pack.namelist())
-            if isinstance(pack, ZipFile)
-            else list_files(pack)
-        )
+
+        if isinstance(origin, ZipFile):
+            filenames = map(PurePosixPath, origin.namelist())
+        elif Path(origin).is_file():
+            filenames = [PurePosixPath()]
+        else:
+            filenames = list_files(origin)
+
+        preparts = tuple(filter(None, prefix.split("/")))
 
         extra_info = cls.get_extra_info()
         if extend_namespace_extra:
@@ -529,7 +534,7 @@ class Namespace(
 
         for filename in sorted(filenames):
             try:
-                directory, namespace_dir, *scope, extra_name = filename.parts
+                directory, namespace_dir, *scope, basename = preparts + filename.parts
             except ValueError:
                 continue
 
@@ -541,23 +546,22 @@ class Namespace(
                 name, namespace = namespace_dir, cls()
 
             assert name and namespace is not None
-            extensions = list_extensions(filename)
+            extensions = list_extensions(PurePosixPath(basename))
 
-            if file_type := extra_info.get(path := "/".join(scope + [extra_name])):
-                namespace.extra[path] = file_type.load(pack, filename)
+            if file_type := extra_info.get(path := "/".join(scope + [basename])):
+                namespace.extra[path] = file_type.load(origin, filename)
                 continue
+
+            file_dir: List[str] = []
 
             while path := tuple(scope):
                 for extension in extensions:
                     if file_type := scope_map.get((path, extension)):
-                        key = "/".join(
-                            filename.relative_to(Path(directory, name, *path)).parts
-                        )[: -len(extension)]
-
-                        namespace[file_type][key] = file_type.load(pack, filename)
+                        key = "/".join(file_dir + [basename[: -len(extension)]])
+                        namespace[file_type][key] = file_type.load(origin, filename)
                         break
                 else:
-                    scope.pop()
+                    file_dir.insert(0, scope.pop())
                     continue
                 break
 
@@ -922,29 +926,41 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
                 self.name = self.name[:-4]
 
         if origin:
-            files = {
-                filename: loaded
-                for filename, file_type in self.resolve_extra_info().items()
-                if (loaded := file_type.try_load(origin, filename))
-            }
-
-            self.extra.merge(files)
-
-            namespaces = {
-                name: namespace
-                for name, namespace in self.namespace_type.scan(
-                    origin,
-                    self.extend_namespace,
-                    self.extend_namespace_extra,
-                )
-            }
-
-            self.merge(namespaces)  # type: ignore
+            self.mount("", origin)
 
         if not self.pack_format:
             self.pack_format = self.latest_pack_format
         if not self.description:
             self.description = ""
+
+    def mount(self, prefix: str, origin: FileOrigin):
+        """Mount files from a zipfile or from the filesystem."""
+        files: Dict[str, PackFile] = {}
+
+        for filename, file_type in self.resolve_extra_info().items():
+            if not prefix:
+                if loaded := file_type.try_load(origin, filename):
+                    files[filename] = loaded
+            elif prefix == filename:
+                if loaded := file_type.try_load(origin, ""):
+                    files[filename] = loaded
+            elif filename.startswith(prefix + "/"):
+                if loaded := file_type.try_load(origin, filename[len(prefix) + 1 :]):
+                    files[filename] = loaded
+
+        self.extra.merge(files)
+
+        namespaces = {
+            name: namespace
+            for name, namespace in self.namespace_type.scan(
+                prefix,
+                origin,
+                self.extend_namespace,
+                self.extend_namespace_extra,
+            )
+        }
+
+        self.merge(namespaces)  # type: ignore
 
     def dump(self, origin: FileOrigin):
         """Write the content of the pack to a zipfile or to the filesystem"""

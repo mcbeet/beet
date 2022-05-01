@@ -213,7 +213,11 @@ class File(Generic[ValueType, SerializeType]):
         raise NotImplementedError()
 
     @classmethod
-    def load(cls: Type[FileType], origin: FileOrigin, path: FileSystemPath) -> FileType:
+    def load(
+        cls: Type[FileType],
+        origin: FileOrigin,
+        path: FileSystemPath = "",
+    ) -> FileType:
         """Load a file from a zipfile or from the filesystem."""
         instance = cls.try_load(origin, path)
         if instance is None:
@@ -222,7 +226,9 @@ class File(Generic[ValueType, SerializeType]):
 
     @classmethod
     def try_load(
-        cls: Type[FileType], origin: FileOrigin, path: FileSystemPath
+        cls: Type[FileType],
+        origin: FileOrigin,
+        path: FileSystemPath = "",
     ) -> Optional[FileType]:
         """Try to load a file from a zipfile or from the filesystem."""
         if isinstance(origin, ZipFile):
@@ -537,14 +543,12 @@ class PngFile(BinaryFileBase[Image]):
 
     image = FileDeserialize[Image]()
 
-    @classmethod
-    def to_bytes(cls, content: Image) -> bytes:
+    def to_bytes(self, content: Image) -> bytes:
         dst = io.BytesIO()
         content.save(dst, format="png")
         return dst.getvalue()
 
-    @classmethod
-    def from_bytes(cls, content: bytes) -> Image:
+    def from_bytes(self, content: bytes) -> Image:
         return open_image(io.BytesIO(content))
 
     @classmethod
