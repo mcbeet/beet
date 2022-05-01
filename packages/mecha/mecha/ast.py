@@ -765,8 +765,9 @@ class AstResourceLocation(AstNode):
     parser = "resource_location_or_tag"
 
     @classmethod
-    def from_value(cls, value: str) -> "AstResourceLocation":
+    def from_value(cls, value: Any) -> "AstResourceLocation":
         """Create a resource location node representing the given value."""
+        value = str(value)
         if is_tag := value.startswith("#"):
             value = value[1:]
         namespace, _, path = value.rpartition(":")
