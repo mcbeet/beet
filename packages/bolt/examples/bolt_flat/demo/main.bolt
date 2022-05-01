@@ -1,0 +1,4 @@
+from demo.math import add
+
+function ./foo:
+    say add(2, 3)
