@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.48.4 (2022-05-02)
+### Fix
+* Update tokenstream to fix indentation bug ([`df10dbc`](https://github.com/mcbeet/mecha/commit/df10dbcf1a31a775c8fdc961e43b2063657c5626))
+
 ## v0.48.3 (2022-05-01)
 ### Fix
 * Auto-convert to string for resource location interpolation ([`e5e379a`](https://github.com/mcbeet/mecha/commit/e5e379aa82bd370a4d4417a21bcff9afeb796ef3))
