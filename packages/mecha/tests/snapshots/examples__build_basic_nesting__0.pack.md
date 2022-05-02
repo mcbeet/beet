@@ -39,6 +39,12 @@ say foo3
 say after
 ```
 
+`@function demo:wat`
+
+```mcfunction
+function demo:wat/nested_execute_0
+```
+
 `@function demo:thing2`
 
 ```mcfunction
@@ -129,4 +135,11 @@ say queue3
 say stack3
 say stack2
 say stack1
+```
+
+`@function demo:wat/nested_execute_0`
+
+```mcfunction
+say 1
+say 2
 ```
