@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.4.2 (2022-05-02)
+### Fix
+* Update mecha to fix indent bug ([`006a57a`](https://github.com/mcbeet/bolt/commit/006a57a4ff0f0e99af106e235440c5c7b06f1f71))
+
 ## v0.4.1 (2022-05-01)
 ### Fix
 * Leftover print ([`3731f2c`](https://github.com/mcbeet/bolt/commit/3731f2c071942d0e131f42432bbd165bdf4e602e))
