@@ -314,7 +314,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 
 [[package]]
 name = "lectern"
-version = "0.20.1"
+version = "0.21.2"
 description = "Literate Minecraft data packs and resource packs."
 category = "dev"
 optional = false
@@ -1015,8 +1015,8 @@ keyring = [
     {file = "keyring-23.5.0.tar.gz", hash = "sha256:9012508e141a80bd1c0b6778d5c610dd9f8c464d75ac6774248500503f972fb9"},
 ]
 lectern = [
-    {file = "lectern-0.20.1-py3-none-any.whl", hash = "sha256:bc49ee4baced19aa4402cfb4d494d04af9dc1937e8406d98722e04e02abe7e59"},
-    {file = "lectern-0.20.1.tar.gz", hash = "sha256:ec0d72235fe14ea66ff332262102424476d19c77b383e2785c9f88bd60b53908"},
+    {file = "lectern-0.21.2-py3-none-any.whl", hash = "sha256:ff395bd6ab5fc4851e7f17909f1a7f96f71a8e192529f26ff936ab202361e68d"},
+    {file = "lectern-0.21.2.tar.gz", hash = "sha256:515a0bf602bdf90eca64416b05e79292f9137cb32e5a6ab9a1a9f82fa3ab99f0"},
 ]
 markdown-it-py = [
     {file = "markdown-it-py-2.1.0.tar.gz", hash = "sha256:cf7e59fed14b5ae17c0006eff14a2d9a00ed5f3a846148153899a0224e2c07da"},
