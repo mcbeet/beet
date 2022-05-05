@@ -287,6 +287,7 @@ def get_bolt_parsers(
         "phrase": InterpolationParser("phrase", parsers["phrase"]),
         "greedy": InterpolationParser("greedy", parsers["greedy"]),
         "json": InterpolationParser("json", parsers["json"]),
+        "json_object": InterpolationParser("json_object", parsers["json_object"]),
         "nbt": InterpolationParser("nbt", parsers["nbt"]),
         "nbt_compound": InterpolationParser("nbt_compound", parsers["nbt_compound"]),
         "nbt_path": InterpolationParser("nbt_path", parsers["nbt_path"]),

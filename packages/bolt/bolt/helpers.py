@@ -19,6 +19,7 @@ from mecha import (
     AstGreedy,
     AstItemSlot,
     AstJson,
+    AstJsonObject,
     AstMessage,
     AstNbt,
     AstNbtCompound,
@@ -68,6 +69,7 @@ def get_bolt_helpers() -> Dict[str, Any]:
         "interpolate_phrase": converter(AstString.from_value),
         "interpolate_greedy": converter(AstGreedy.from_value),
         "interpolate_json": converter(AstJson.from_value),
+        "interpolate_json_object": JsonObjectConverter(converter(AstJson.from_value)),
         "interpolate_nbt": converter(AstNbt.from_value),
         "interpolate_nbt_compound": NbtCompoundConverter(converter(AstNbt.from_value)),
         "interpolate_nbt_path": converter(AstNbtPath.from_value),
@@ -187,6 +189,19 @@ def converter(f: Callable[[Any], AstNode]) -> Callable[[Any, AstNode], AstNode]:
         return set_location(f(obj), node)
 
     return wrapper
+
+
+@dataclass
+class JsonObjectConverter:
+    """Converter for json objects."""
+
+    json_converter: Callable[[Any, AstNode], AstNode]
+
+    @internal
+    def __call__(self, obj: Any, node: AstNode) -> AstNode:
+        if isinstance(node := self.json_converter(obj, node), AstJsonObject):
+            return node
+        raise ValueError(f"Invalid json object of type {type(obj)!r}.")
 
 
 @dataclass
