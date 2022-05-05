@@ -155,6 +155,7 @@ as @a at @s if block ~ ~-1 ~ #wool give @s stone{
                                                   location: SourceLocation(pos=121, lineno=4, colno=15)
                                                   end_location: SourceLocation(pos=124, lineno=4, colno=18)
                                                   prefix: None
+                                                  unpack: None
                                                   converter: 'nbt'
                                                   value:
                                                     <class 'bolt.ast.AstIdentifier'>

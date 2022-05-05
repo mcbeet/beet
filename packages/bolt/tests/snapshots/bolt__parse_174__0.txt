@@ -45,6 +45,7 @@ if data storage some:path/to/storage f'some.{mykey}.path{{my: "compound"}}' run 
               location: SourceLocation(pos=51, lineno=2, colno=38)
               end_location: SourceLocation(pos=89, lineno=2, colno=76)
               prefix: None
+              unpack: None
               converter: 'nbt_path'
               value:
                 <class 'bolt.ast.AstFormatString'>

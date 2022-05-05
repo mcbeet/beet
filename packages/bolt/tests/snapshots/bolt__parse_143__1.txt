@@ -18,6 +18,7 @@ _mecha_refs[0]
   location: SourceLocation(pos=17, lineno=2, colno=12)
   end_location: SourceLocation(pos=24, lineno=2, colno=19)
   prefix: None
+  unpack: None
   converter: 'coordinate'
   value:
     <class 'bolt.ast.AstFormatString'>

@@ -39,6 +39,7 @@ say math.ceil(0.1)
           location: SourceLocation(pos=13, lineno=2, colno=5)
           end_location: SourceLocation(pos=17, lineno=2, colno=9)
           prefix: None
+          unpack: None
           converter: 'message'
           value:
             <class 'bolt.ast.AstIdentifier'>
@@ -109,6 +110,7 @@ say math.ceil(0.1)
           location: SourceLocation(pos=71, lineno=7, colno=5)
           end_location: SourceLocation(pos=85, lineno=7, colno=19)
           prefix: None
+          unpack: None
           converter: 'message'
           value:
             <class 'bolt.ast.AstCall'>

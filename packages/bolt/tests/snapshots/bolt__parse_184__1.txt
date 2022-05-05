@@ -17,6 +17,7 @@ _mecha_refs[0]
   location: SourceLocation(pos=19, lineno=2, colno=14)
   end_location: SourceLocation(pos=21, lineno=2, colno=16)
   prefix: '~'
+  unpack: None
   converter: 'coordinate'
   value:
     <class 'bolt.ast.AstIdentifier'>

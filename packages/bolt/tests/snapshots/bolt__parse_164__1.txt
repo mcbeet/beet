@@ -18,6 +18,7 @@ _mecha_refs[0]
   location: SourceLocation(pos=47, lineno=2, colno=34)
   end_location: SourceLocation(pos=70, lineno=2, colno=57)
   prefix: None
+  unpack: None
   converter: 'scoreboard_slot'
   value:
     <class 'bolt.ast.AstFormatString'>

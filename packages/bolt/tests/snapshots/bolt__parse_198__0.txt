@@ -34,6 +34,7 @@ function #tag_name
           location: SourceLocation(pos=28, lineno=2, colno=10)
           end_location: SourceLocation(pos=37, lineno=2, colno=19)
           prefix: '#'
+          unpack: None
           converter: 'resource_location'
           value:
             <class 'bolt.ast.AstIdentifier'>

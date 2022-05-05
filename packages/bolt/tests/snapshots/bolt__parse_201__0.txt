@@ -34,6 +34,7 @@ say a
           location: SourceLocation(pos=10, lineno=2, colno=5)
           end_location: SourceLocation(pos=11, lineno=2, colno=6)
           prefix: None
+          unpack: None
           converter: 'message'
           value:
             <class 'bolt.ast.AstIdentifier'>

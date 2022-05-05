@@ -30,6 +30,7 @@ _mecha_refs[0]
   location: SourceLocation(pos=13, lineno=2, colno=5)
   end_location: SourceLocation(pos=17, lineno=2, colno=9)
   prefix: None
+  unpack: None
   converter: 'message'
   value:
     <class 'bolt.ast.AstIdentifier'>
@@ -45,6 +46,7 @@ _mecha_refs[2]
   location: SourceLocation(pos=71, lineno=7, colno=5)
   end_location: SourceLocation(pos=85, lineno=7, colno=19)
   prefix: None
+  unpack: None
   converter: 'message'
   value:
     <class 'bolt.ast.AstCall'>

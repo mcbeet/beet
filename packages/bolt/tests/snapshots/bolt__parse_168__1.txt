@@ -26,6 +26,7 @@ _mecha_refs[0]
   location: SourceLocation(pos=92, lineno=2, colno=24)
   end_location: SourceLocation(pos=109, lineno=2, colno=41)
   prefix: None
+  unpack: None
   converter: 'item_slot'
   value:
     <class 'bolt.ast.AstAttribute'>
@@ -41,6 +42,7 @@ _mecha_refs[2]
   location: SourceLocation(pos=125, lineno=2, colno=57)
   end_location: SourceLocation(pos=143, lineno=2, colno=75)
   prefix: None
+  unpack: None
   converter: 'item_slot'
   value:
     <class 'bolt.ast.AstAttribute'>

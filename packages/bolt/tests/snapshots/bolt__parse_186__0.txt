@@ -50,6 +50,7 @@ for i, value in enumerate("abc"):
                   location: SourceLocation(pos=42, lineno=2, colno=9)
                   end_location: SourceLocation(pos=57, lineno=2, colno=24)
                   prefix: None
+                  unpack: None
                   converter: 'message'
                   value:
                     <class 'bolt.ast.AstFormatString'>

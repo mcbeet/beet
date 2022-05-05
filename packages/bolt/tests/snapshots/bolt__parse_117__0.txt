@@ -49,6 +49,7 @@ if score @s tmp matches (x, None) say wat
               location: SourceLocation(pos=30, lineno=2, colno=25)
               end_location: SourceLocation(pos=39, lineno=2, colno=34)
               prefix: None
+              unpack: None
               converter: 'range'
               value:
                 <class 'bolt.ast.AstTuple'>

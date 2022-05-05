@@ -17,6 +17,7 @@ _mecha_refs[0]
   location: SourceLocation(pos=21, lineno=2, colno=10)
   end_location: SourceLocation(pos=22, lineno=2, colno=11)
   prefix: None
+  unpack: None
   converter: 'vec3'
   value:
     <class 'bolt.ast.AstIdentifier'>

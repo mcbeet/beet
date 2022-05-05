@@ -38,6 +38,7 @@ setblock a 2 3 stone
               location: SourceLocation(pos=15, lineno=2, colno=10)
               end_location: SourceLocation(pos=16, lineno=2, colno=11)
               prefix: None
+              unpack: None
               converter: 'coordinate'
               value:
                 <class 'bolt.ast.AstIdentifier'>

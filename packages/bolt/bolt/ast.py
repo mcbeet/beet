@@ -34,9 +34,8 @@ from dataclasses import dataclass
 from typing import Any, Optional, Union
 
 from beet.core.utils import required_field
-from tokenstream import TokenStream
-
 from mecha import AstChildren, AstNode, AstRoot
+from tokenstream import TokenStream
 
 
 @dataclass(frozen=True)
@@ -241,6 +240,7 @@ class AstInterpolation(AstNode):
     """Ast interpolation node."""
 
     prefix: Optional[str] = None
+    unpack: Optional[str] = None
     converter: str = required_field()
     value: AstExpression = required_field()
 

@@ -84,6 +84,7 @@ _mecha_refs[0]
   location: SourceLocation(pos=167, lineno=6, colno=38)
   end_location: SourceLocation(pos=176, lineno=6, colno=47)
   prefix: None
+  unpack: None
   converter: 'entity'
   value:
     <class 'bolt.ast.AstAttribute'>
@@ -92,6 +93,7 @@ _mecha_refs[1]
   location: SourceLocation(pos=186, lineno=6, colno=57)
   end_location: SourceLocation(pos=194, lineno=6, colno=65)
   prefix: None
+  unpack: None
   converter: 'entity'
   value:
     <class 'bolt.ast.AstAttribute'>
@@ -126,6 +128,7 @@ _mecha_refs[6]
   location: SourceLocation(pos=243, lineno=8, colno=32)
   end_location: SourceLocation(pos=252, lineno=8, colno=41)
   prefix: None
+  unpack: None
   converter: 'entity'
   value:
     <class 'bolt.ast.AstAttribute'>
@@ -134,6 +137,7 @@ _mecha_refs[7]
   location: SourceLocation(pos=260, lineno=8, colno=49)
   end_location: SourceLocation(pos=263, lineno=8, colno=52)
   prefix: None
+  unpack: None
   converter: 'numeric'
   value:
     <class 'bolt.ast.AstIdentifier'>

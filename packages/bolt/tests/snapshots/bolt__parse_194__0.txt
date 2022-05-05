@@ -152,6 +152,7 @@ say Counter(9).incr()
           location: SourceLocation(pos=136, lineno=9, colno=5)
           end_location: SourceLocation(pos=150, lineno=9, colno=19)
           prefix: None
+          unpack: None
           converter: 'message'
           value:
             <class 'bolt.ast.AstCall'>
@@ -178,6 +179,7 @@ say Counter(9).incr()
           location: SourceLocation(pos=155, lineno=10, colno=5)
           end_location: SourceLocation(pos=169, lineno=10, colno=19)
           prefix: None
+          unpack: None
           converter: 'message'
           value:
             <class 'bolt.ast.AstCall'>
@@ -204,6 +206,7 @@ say Counter(9).incr()
           location: SourceLocation(pos=174, lineno=11, colno=5)
           end_location: SourceLocation(pos=191, lineno=11, colno=22)
           prefix: None
+          unpack: None
           converter: 'message'
           value:
             <class 'bolt.ast.AstCall'>
