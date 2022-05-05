@@ -171,6 +171,9 @@ NUMBER_PATTERN: str = r"-?(?:\d+\.?\d*|\.\d+)"
 
 def get_default_parsers() -> Dict[str, Parser]:
     """Return the default parsers."""
+    json_parser = JsonParser()
+    nbt_parser = NbtParser()
+
     return {
         ################################################################################
         # Primitives
@@ -184,13 +187,17 @@ def get_default_parsers() -> Dict[str, Parser]:
         "word": StringParser(type="word"),
         "phrase": StringParser(type="phrase"),
         "greedy": StringParser(type="greedy"),
-        "json": JsonParser(),
+        "json": json_parser,
+        "json_object_entry": json_parser.parse_object_entry,
+        "json_array_element": delegate("json"),
         "json_object": TypeConstraint(
             parser=delegate("json"),
             type=AstJsonObject,
             message="Expected json object.",
         ),
-        "nbt": NbtParser(),
+        "nbt": nbt_parser,
+        "nbt_compound_entry": nbt_parser.parse_compound_entry,
+        "nbt_list_or_array_element": delegate("nbt"),
         "nbt_compound": TypeConstraint(
             parser=delegate("nbt"),
             type=AstNbtCompound,
@@ -898,32 +905,21 @@ class JsonParser:
             if curly:
                 entries: List[AstJsonObjectEntry] = []
 
-                for key in stream.collect("string"):
-                    key_node = AstJsonObjectKey(
-                        value=self.quote_helper.unquote_string(key),
-                    )
-                    key_node = set_location(key_node, key)
-
-                    stream.expect("colon")
-
-                    value_node = delegate("json", stream)
-
-                    entry_node = AstJsonObjectEntry(key=key_node, value=value_node)
-                    entries.append(set_location(entry_node, key_node, value_node))
+                for _ in stream.peek_until(("curly", "}")):
+                    entries.append(delegate("json_object_entry", stream))
 
                     if not stream.get("comma"):
+                        stream.expect(("curly", "}"))
                         break
 
-                close_curly = stream.expect(("curly", "}"))
-
                 node = AstJsonObject(entries=AstChildren(entries))
-                return set_location(node, curly, close_curly)
+                return set_location(node, curly, stream.current)
 
             elif bracket:
                 elements: List[AstJson] = []
 
                 for _ in stream.peek_until(("bracket", "]")):
-                    elements.append(delegate("json", stream))
+                    elements.append(delegate("json_array_element", stream))
 
                     if not stream.get("comma"):
                         stream.expect(("bracket", "]"))
@@ -945,6 +941,19 @@ class JsonParser:
 
             node = AstJsonValue(value=value)  # type: ignore
             return set_location(node, stream.current)
+
+    def parse_object_entry(self, stream: TokenStream) -> AstJsonObjectEntry:
+        """Parse json object entry."""
+        key = stream.expect("string")
+        key_node = AstJsonObjectKey(value=self.quote_helper.unquote_string(key))
+        key_node = set_location(key_node, key)
+
+        stream.expect("colon")
+
+        value_node = delegate("json", stream)
+
+        entry_node = AstJsonObjectEntry(key=key_node, value=value_node)
+        return set_location(entry_node, key_node, value_node)
 
 
 @dataclass
@@ -1016,32 +1025,21 @@ class NbtParser:
             if curly:
                 entries: List[AstNbtCompoundEntry] = []
 
-                for key in stream.collect_any("number", "string", "quoted_string"):
-                    key_node = AstNbtCompoundKey(
-                        value=self.quote_helper.unquote_string(key),
-                    )
-                    key_node = set_location(key_node, key)
-
-                    stream.expect("colon")
-
-                    value_node = delegate("nbt", stream)
-
-                    entry_node = AstNbtCompoundEntry(key=key_node, value=value_node)
-                    entries.append(set_location(entry_node, key_node, value_node))
+                for _ in stream.peek_until(("curly", "}")):
+                    entries.append(delegate("nbt_compound_entry", stream))
 
                     if not stream.get("comma"):
+                        stream.expect(("curly", "}"))
                         break
 
-                close_curly = stream.expect(("curly", "}"))
-
                 node = AstNbtCompound(entries=AstChildren(entries))
-                return set_location(node, curly, close_curly)
+                return set_location(node, curly, stream.current)
 
             elif bracket or array:
                 elements: List[AstNbt] = []
 
                 for _ in stream.peek_until(("bracket", "]")):
-                    elements.append(delegate("nbt", stream))
+                    elements.append(delegate("nbt_list_or_array_element", stream))
 
                     if not stream.get("comma"):
                         stream.expect(("bracket", "]"))
@@ -1112,6 +1110,19 @@ class NbtParser:
 
             node = AstNbtValue(value=value)  # type: ignore
             return set_location(node, stream.current)
+
+    def parse_compound_entry(self, stream: TokenStream) -> AstNbtCompoundEntry:
+        """Parse nbt compound entry."""
+        key = stream.expect_any("number", "string", "quoted_string")
+        key_node = AstNbtCompoundKey(value=self.quote_helper.unquote_string(key))
+        key_node = set_location(key_node, key)
+
+        stream.expect("colon")
+
+        value_node = delegate("nbt", stream)
+
+        entry_node = AstNbtCompoundEntry(key=key_node, value=value_node)
+        return set_location(entry_node, key_node, value_node)
 
 
 @dataclass

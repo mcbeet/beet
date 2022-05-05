@@ -6,4 +6,4 @@ minecraft:nbt_tag 1 3
 ---
 Reported 1 error.
 
-line 1, column 2: Expected curly '}' but got literal '"\\"'.
+line 1, column 2: Expected number, quoted_string or string but got literal '"\\"'.

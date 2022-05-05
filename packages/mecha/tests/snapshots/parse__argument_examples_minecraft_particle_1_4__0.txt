@@ -6,4 +6,4 @@ item minecraft:apple{
 ---
 Reported 1 error.
 
-line 1, column 22: Expected curly '}' but got eof.
+line 1, column 22: Expected number, quoted_string or string but got eof.

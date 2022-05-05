@@ -6,4 +6,4 @@ stone[thing=hello]{
 ---
 Reported 1 error.
 
-line 1, column 20: Expected curly '}' but got eof.
+line 1, column 20: Expected number, quoted_string or string but got eof.

@@ -6,4 +6,4 @@ minecraft:block_predicate 1 4
 ---
 Reported 1 error.
 
-line 1, column 21: Expected curly '}' but got eof.
+line 1, column 21: Expected number, quoted_string or string but got eof.
