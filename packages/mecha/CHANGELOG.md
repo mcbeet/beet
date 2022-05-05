@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.49.0 (2022-05-05)
+### Feature
+* Make json and nbt parsers more flexible ([`2d1afa1`](https://github.com/mcbeet/mecha/commit/2d1afa173a14f35d2f13130a48959a35222dd931))
+
 ## v0.48.4 (2022-05-02)
 ### Fix
 * Update tokenstream to fix indentation bug ([`df10dbc`](https://github.com/mcbeet/mecha/commit/df10dbcf1a31a775c8fdc961e43b2063657c5626))
