@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.64.1 (2022-05-05)
+### Fix
+* Posix ignore paths ([`cd51cae`](https://github.com/mcbeet/beet/commit/cd51cae72ea37fd6e0906fa8d99a396e1444c8e5))
+
 ## v0.64.0 (2022-05-01)
 ### Feature
 * Handle load mount ([`3d17aa2`](https://github.com/mcbeet/beet/commit/3d17aa24636ee0a5f40fe81340b00c0a99a8b24a))
