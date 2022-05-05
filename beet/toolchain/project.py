@@ -84,7 +84,9 @@ class Project:
     def ignore(self) -> List[str]:
         ignore = list(self.config.ignore)
         if self.output_directory:
-            ignore.append(f"{self.output_directory.relative_to(self.directory)}/")
+            ignore.append(
+                f"{self.output_directory.relative_to(self.directory).as_posix()}/"
+            )
         return ignore
 
     @property
@@ -132,7 +134,7 @@ class Project:
                 interval,
                 ignore_file=".gitignore",
                 ignore_patterns=[
-                    f"{self.cache.path.relative_to(self.directory.resolve())}/",
+                    f"{self.cache.path.relative_to(self.directory.resolve()).as_posix()}/",
                     "__pycache__/",
                     "*.tmp",
                     ".*",
