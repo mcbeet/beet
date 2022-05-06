@@ -24,7 +24,7 @@ include = ["bolt/py.typed"]
 [tool.poetry.dependencies]
 python = "^3.8"
 beet = ">=0.64.0"
-mecha = ">=0.49.0"
+mecha = ">=0.49.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.1.2"
