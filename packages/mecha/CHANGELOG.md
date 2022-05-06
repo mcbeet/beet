@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.49.1 (2022-05-06)
+### Fix
+* Take into account possible syntax extensions when checking nbt list/array homogeneity ([`de12e61`](https://github.com/mcbeet/mecha/commit/de12e617a0401182ccfebe071c6b4930988b9e7f))
+
 ## v0.49.0 (2022-05-05)
 ### Feature
 * Make json and nbt parsers more flexible ([`2d1afa1`](https://github.com/mcbeet/mecha/commit/2d1afa173a14f35d2f13130a48959a35222dd931))
