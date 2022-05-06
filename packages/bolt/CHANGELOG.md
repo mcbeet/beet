@@ -2,6 +2,14 @@
 
 <!--next-version-placeholder-->
 
+## v0.5.0 (2022-05-06)
+### Feature
+* Iterable/mapping unpacking in json/nbt interpolation ([`32acee0`](https://github.com/mcbeet/bolt/commit/32acee0e8bbf2c831fa48c30595b63ed61f1de40))
+* Unpack field for interpolation node ([`b2f6dd7`](https://github.com/mcbeet/bolt/commit/b2f6dd7017afe5c7ebc4c530f152b666c7557ba1))
+
+### Fix
+* Converter for json object ([`825f077`](https://github.com/mcbeet/bolt/commit/825f077e14bafdf719f4f488347714b5761886ac))
+
 ## v0.4.2 (2022-05-02)
 ### Fix
 * Update mecha to fix indent bug ([`006a57a`](https://github.com/mcbeet/bolt/commit/006a57a4ff0f0e99af106e235440c5c7b06f1f71))
