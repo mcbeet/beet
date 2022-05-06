@@ -613,3 +613,12 @@ something()
 from ./utils import load_storage
 load_storage(./random_data, "random_data.json")
 if data storage ./random_data {value: 42} say json loaded successfully
+
+custom_model_data = {CustomModelData: 7}
+give @s bow{**custom_model_data}
+
+stone_can_place_on = ["minecraft:dirt"]
+give @s stone{CanPlaceOn: [*stone_can_place_on, "minecraft:gravel"], **custom_model_data}
+
+red = {"color": "red"}
+tellraw @p ["", {"text": "hey", **red}, *stone_can_place_on, *red.color]

@@ -762,3 +762,13 @@ say a
 ###
 "hey"
     "hey"
+###
+bow_data = {CustomModelData: 7}
+give @s bow{**bow_data}
+###
+custom_model_data = {CustomModelData: 7}
+stone_can_place_on = ["minecraft:dirt"]
+give @s stone{CanPlaceOn: [*stone_can_place_on], **custom_model_data}
+###
+red = {"color": "red"}
+tellraw @p ["", {"text": "hey", **red}, *red.color]

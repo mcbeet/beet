@@ -1,0 +1,126 @@
+custom_model_data = {CustomModelData: 7}
+stone_can_place_on = ["minecraft:dirt"]
+give @s stone{CanPlaceOn: [*stone_can_place_on], **custom_model_data}
+---
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=150, lineno=3, colno=70)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=40, lineno=1, colno=41)
+      identifier: 'statement'
+      arguments:
+        <class 'bolt.ast.AstAssignment'>
+          location: SourceLocation(pos=0, lineno=1, colno=1)
+          end_location: SourceLocation(pos=40, lineno=1, colno=41)
+          operator: '='
+          target:
+            <class 'bolt.ast.AstTargetIdentifier'>
+              location: SourceLocation(pos=0, lineno=1, colno=1)
+              end_location: SourceLocation(pos=17, lineno=1, colno=18)
+              value: 'custom_model_data'
+              rebind: False
+          value:
+            <class 'bolt.ast.AstDict'>
+              location: SourceLocation(pos=20, lineno=1, colno=21)
+              end_location: SourceLocation(pos=40, lineno=1, colno=41)
+              items:
+                <class 'bolt.ast.AstDictItem'>
+                  location: SourceLocation(pos=21, lineno=1, colno=22)
+                  end_location: SourceLocation(pos=39, lineno=1, colno=40)
+                  key:
+                    <class 'bolt.ast.AstValue'>
+                      location: SourceLocation(pos=21, lineno=1, colno=22)
+                      end_location: SourceLocation(pos=36, lineno=1, colno=37)
+                      value: 'CustomModelData'
+                  value:
+                    <class 'bolt.ast.AstValue'>
+                      location: SourceLocation(pos=38, lineno=1, colno=39)
+                      end_location: SourceLocation(pos=39, lineno=1, colno=40)
+                      value: 7
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=41, lineno=2, colno=1)
+      end_location: SourceLocation(pos=80, lineno=2, colno=40)
+      identifier: 'statement'
+      arguments:
+        <class 'bolt.ast.AstAssignment'>
+          location: SourceLocation(pos=41, lineno=2, colno=1)
+          end_location: SourceLocation(pos=80, lineno=2, colno=40)
+          operator: '='
+          target:
+            <class 'bolt.ast.AstTargetIdentifier'>
+              location: SourceLocation(pos=41, lineno=2, colno=1)
+              end_location: SourceLocation(pos=59, lineno=2, colno=19)
+              value: 'stone_can_place_on'
+              rebind: False
+          value:
+            <class 'bolt.ast.AstList'>
+              location: SourceLocation(pos=62, lineno=2, colno=22)
+              end_location: SourceLocation(pos=80, lineno=2, colno=40)
+              items:
+                <class 'bolt.ast.AstValue'>
+                  location: SourceLocation(pos=63, lineno=2, colno=23)
+                  end_location: SourceLocation(pos=79, lineno=2, colno=39)
+                  value: 'minecraft:dirt'
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=81, lineno=3, colno=1)
+      end_location: SourceLocation(pos=150, lineno=3, colno=70)
+      identifier: 'give:targets:item'
+      arguments:
+        <class 'mecha.ast.AstSelector'>
+          location: SourceLocation(pos=86, lineno=3, colno=6)
+          end_location: SourceLocation(pos=88, lineno=3, colno=8)
+          variable: 's'
+          arguments:
+            <empty>
+        <class 'mecha.ast.AstItem'>
+          location: SourceLocation(pos=89, lineno=3, colno=9)
+          end_location: SourceLocation(pos=150, lineno=3, colno=70)
+          identifier:
+            <class 'mecha.ast.AstResourceLocation'>
+              location: SourceLocation(pos=89, lineno=3, colno=9)
+              end_location: SourceLocation(pos=94, lineno=3, colno=14)
+              is_tag: False
+              namespace: None
+              path: 'stone'
+          data_tags:
+            <class 'mecha.ast.AstNbtCompound'>
+              location: SourceLocation(pos=94, lineno=3, colno=14)
+              end_location: SourceLocation(pos=150, lineno=3, colno=70)
+              entries:
+                <class 'mecha.ast.AstNbtCompoundEntry'>
+                  location: SourceLocation(pos=95, lineno=3, colno=15)
+                  end_location: SourceLocation(pos=128, lineno=3, colno=48)
+                  key:
+                    <class 'mecha.ast.AstNbtCompoundKey'>
+                      location: SourceLocation(pos=95, lineno=3, colno=15)
+                      end_location: SourceLocation(pos=105, lineno=3, colno=25)
+                      value: 'CanPlaceOn'
+                  value:
+                    <class 'mecha.ast.AstNbtList'>
+                      location: SourceLocation(pos=107, lineno=3, colno=27)
+                      end_location: SourceLocation(pos=128, lineno=3, colno=48)
+                      elements:
+                        <class 'bolt.ast.AstInterpolation'>
+                          location: SourceLocation(pos=109, lineno=3, colno=29)
+                          end_location: SourceLocation(pos=127, lineno=3, colno=47)
+                          prefix: None
+                          unpack: '*'
+                          converter: 'nbt'
+                          value:
+                            <class 'bolt.ast.AstIdentifier'>
+                              location: SourceLocation(pos=109, lineno=3, colno=29)
+                              end_location: SourceLocation(pos=127, lineno=3, colno=47)
+                              value: 'stone_can_place_on'
+                <class 'bolt.ast.AstInterpolation'>
+                  location: SourceLocation(pos=132, lineno=3, colno=52)
+                  end_location: SourceLocation(pos=149, lineno=3, colno=69)
+                  prefix: None
+                  unpack: '**'
+                  converter: 'nbt'
+                  value:
+                    <class 'bolt.ast.AstIdentifier'>
+                      location: SourceLocation(pos=132, lineno=3, colno=52)
+                      end_location: SourceLocation(pos=149, lineno=3, colno=69)
+                      value: 'custom_model_data'

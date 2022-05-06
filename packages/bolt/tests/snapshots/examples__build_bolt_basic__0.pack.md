@@ -256,6 +256,9 @@ execute unless score global bolt_basic.tmp1 matches 0 run scoreboard players ope
 execute unless score global bolt_basic.tmp2 matches 0 run say hello
 say this is from demo:utils
 execute if data storage demo:random_data {value: 42} run say json loaded successfully
+give @s bow{CustomModelData: 7}
+give @s stone{CanPlaceOn: ["minecraft:dirt", "minecraft:gravel"], CustomModelData: 7}
+tellraw @p ["", {"text": "hey", "color": "red"}, "minecraft:dirt", "r", "e", "d"]
 ```
 
 `@function demo:import_a`

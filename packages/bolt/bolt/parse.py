@@ -287,8 +287,20 @@ def get_bolt_parsers(
         "phrase": InterpolationParser("phrase", parsers["phrase"]),
         "greedy": InterpolationParser("greedy", parsers["greedy"]),
         "json": InterpolationParser("json", parsers["json"]),
+        "json_object_entry": InterpolationParser(
+            "json", parsers["json_object_entry"], unpack=r"\*\*"
+        ),
+        "json_array_element": InterpolationParser(
+            "json", parsers["json_array_element"], unpack=r"\*"
+        ),
         "json_object": InterpolationParser("json_object", parsers["json_object"]),
         "nbt": InterpolationParser("nbt", parsers["nbt"]),
+        "nbt_compound_entry": InterpolationParser(
+            "nbt", parsers["nbt_compound_entry"], unpack=r"\*\*"
+        ),
+        "nbt_list_or_array_element": InterpolationParser(
+            "nbt", parsers["nbt_list_or_array_element"], unpack=r"\*"
+        ),
         "nbt_compound": InterpolationParser("nbt_compound", parsers["nbt_compound"]),
         "nbt_path": InterpolationParser("nbt_path", parsers["nbt_path"]),
         "range": InterpolationParser("range", parsers["range"], fallback=True),
@@ -486,6 +498,7 @@ class InterpolationParser:
     converter: str
     parser: Parser
     prefix: Optional[str] = None
+    unpack: Optional[str] = None
     fallback: bool = False
     final: bool = False
 
@@ -496,11 +509,13 @@ class InterpolationParser:
         for parser, alternative in stream.choose(*order):
             with alternative:
                 if parser == "interpolation":
-                    with stream.syntax(prefix=self.prefix):
+                    with stream.syntax(prefix=self.prefix, unpack=self.unpack):
                         prefix = stream.get("prefix")
+                        unpack = self.unpack is not None and stream.expect("unpack")
                     node = delegate("bolt:interpolation", stream)
                     node = AstInterpolation(
                         prefix=prefix.value if prefix else None,
+                        unpack=unpack.value if unpack else None,
                         converter=self.converter,
                         value=node,
                     )

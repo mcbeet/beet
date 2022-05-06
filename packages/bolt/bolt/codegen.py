@@ -29,7 +29,6 @@ from typing import (
 )
 
 from beet.core.utils import normalize_string
-
 from mecha import (
     AstChildren,
     AstCommand,
@@ -646,8 +645,18 @@ class Codegen(Visitor):
     ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
         result = yield from visit_single(node.value, required=True)
         value = "f" + repr(node.prefix + "{" + result + "}") if node.prefix else result
+
+        if node.unpack == "**":
+            value = f"{{**{value}}}"
+        elif node.unpack == "*":
+            value = f"[*{value}]"
+
         rhs = acc.helper(f"interpolate_{node.converter}", value, acc.make_ref(node))
         acc.statement(f"{result} = {rhs}", lineno=node)
+
+        if node.unpack:
+            result = f"*{result}"
+
         return [result]
 
     @rule(AstExpressionBinary)
