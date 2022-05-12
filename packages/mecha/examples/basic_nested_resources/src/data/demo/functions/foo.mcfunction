@@ -14,3 +14,15 @@ merge function_tag minecraft:tick {
         "demo:bar"
     ]
 }
+
+prepend function_tag minecraft:tick {
+    "values": [
+        "demo:before"
+    ]
+}
+
+append function_tag minecraft:tick {
+    "values": [
+        "demo:after"
+    ]
+}

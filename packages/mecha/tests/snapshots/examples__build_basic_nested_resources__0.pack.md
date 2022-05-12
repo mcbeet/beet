@@ -34,8 +34,10 @@ say world
 ```json
 {
   "values": [
+    "demo:before",
     "demo:foo",
-    "demo:bar"
+    "demo:bar",
+    "demo:after"
   ]
 }
 ```

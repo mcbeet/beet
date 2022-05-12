@@ -9,7 +9,7 @@ __all__ = [
 from dataclasses import dataclass, replace
 from typing import Dict, List, Type
 
-from beet import Context, DataModelBase, NamespaceFile
+from beet import Context, DataModelBase, NamespaceFile, TagFile
 from beet.core.utils import required_field, snake_case
 from tokenstream import set_location
 
@@ -65,8 +65,23 @@ def beet_default(ctx: Context):
             json_resources[f"{name}_file"] = json_resources.pop(name)
 
     commands = {name: NESTED_JSON_COMMAND_TREE for name in json_resources}
-    merge_commands = {"merge": {"type": "literal", "children": commands}}
-    mc.spec.add_commands({"type": "root", "children": {**commands, **merge_commands}})
+    tag_commands = {
+        name: NESTED_JSON_COMMAND_TREE
+        for name, file_type in json_resources.items()
+        if issubclass(file_type, TagFile)
+    }
+
+    mc.spec.add_commands(
+        {
+            "type": "root",
+            "children": {
+                **commands,
+                "merge": {"type": "literal", "children": commands},
+                "append": {"type": "literal", "children": tag_commands},
+                "prepend": {"type": "literal", "children": tag_commands},
+            },
+        }
+    )
 
     mc.spec.parsers["nested_json"] = delegate("json")
     mc.spec.parsers["command:argument:mecha:nested_json"] = MultilineParser(
@@ -79,8 +94,9 @@ def beet_default(ctx: Context):
             database=mc.database,
             json_identifiers={
                 f"{prefix}{name}:name:content": file_type
-                for prefix in ["", "merge:"]
                 for name, file_type in json_resources.items()
+                for prefix in ["", "merge:"]
+                + ["append:", "prepend:"] * issubclass(file_type, TagFile)
             },
         )
     )
@@ -125,6 +141,10 @@ class NestedResourcesTransformer(MutatingReducer):
                             proxy.merge({full_name: file_instance})  # type: ignore
                         elif full_name not in proxy:
                             proxy[full_name] = file_instance
+                        elif command.identifier.startswith("append:"):
+                            proxy[full_name].merge(file_instance)  # type: ignore
+                        elif command.identifier.startswith("prepend:"):
+                            proxy[full_name].prepend(file_instance)  # type: ignore
                         else:
                             d = Diagnostic(
                                 level="error",
