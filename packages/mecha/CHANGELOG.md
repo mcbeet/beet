@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.50.0 (2022-05-12)
+### Feature
+* Allow append/prepend for nested tag resources ([`84b0643`](https://github.com/mcbeet/mecha/commit/84b0643c0631d7d40ede44f4d86a7e74b07322f7))
+
 ## v0.49.1 (2022-05-06)
 ### Fix
 * Take into account possible syntax extensions when checking nbt list/array homogeneity ([`de12e61`](https://github.com/mcbeet/mecha/commit/de12e617a0401182ccfebe071c6b4930988b9e7f))
