@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.50.1 (2022-05-14)
+### Fix
+* Allow colon in player names ([`fefb480`](https://github.com/mcbeet/mecha/commit/fefb480a60586ab5e76cc33426d4d66674a72673))
+
 ## v0.50.0 (2022-05-12)
 ### Feature
 * Allow append/prepend for nested tag resources ([`84b0643`](https://github.com/mcbeet/mecha/commit/84b0643c0631d7d40ede44f4d86a7e74b07322f7))
