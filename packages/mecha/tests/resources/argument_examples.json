@@ -488,7 +488,11 @@
         "@a[team=]",
         "@a[team=!]",
         "@a[tag=]",
-        "@a[tag=!]"
+        "@a[tag=!]",
+        "#bruh",
+        "%foo.bar",
+        "$heey.this-+weird:butok",
+        "#no_flag:start"
       ]
     },
     {

@@ -1,0 +1,12 @@
+minecraft:score_holder 0 24
+---
+{'amount': 'multiple'}
+---
+$heey.this-+weird:butok
+---
+$heey.this-+weird:butok
+---
+<class 'mecha.ast.AstPlayerName'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=23, lineno=1, colno=24)
+  value: '$heey.this-+weird:butok'
