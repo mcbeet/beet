@@ -7,6 +7,7 @@ __all__ = [
 
 
 from dataclasses import dataclass, field, replace
+from textwrap import indent
 from types import TracebackType
 from typing import Any, Iterator, List, Literal, Optional, Type
 
@@ -44,7 +45,9 @@ class Diagnostic(MechaError):
 
     def format_notes(self) -> str:
         """Return the formatted notes."""
-        return "Notes:\n" + "\n".join(f"  - {note}" for note in self.notes)
+        return "Notes:\n" + "\n".join(
+            "  - " + indent(note, "    ")[4:] for note in self.notes
+        )
 
     def format_location(self) -> str:
         """Return the formatted location of the reported message."""
