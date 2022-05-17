@@ -2,6 +2,11 @@
 
 <!--next-version-placeholder-->
 
+## v0.50.2 (2022-05-17)
+### Fix
+* Allow resource redefinition if content matches ([`0e15796`](https://github.com/mcbeet/mecha/commit/0e157966e5c972811ef33e95c68ff779cd03825e))
+* Allow multiline notes ([`80de947`](https://github.com/mcbeet/mecha/commit/80de94784529b1ec726b8483ab63d46a18e3679b))
+
 ## v0.50.1 (2022-05-14)
 ### Fix
 * Allow colon in player names ([`fefb480`](https://github.com/mcbeet/mecha/commit/fefb480a60586ab5e76cc33426d4d66674a72673))
