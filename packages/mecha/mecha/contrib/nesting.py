@@ -246,14 +246,18 @@ class NestedCommandsTransformer(MutatingReducer):
                 self.emit_function(path, root)
 
             elif node.identifier == "function:name:commands":
-                d = Diagnostic("error", f"Function {path!r} already exists.")
-                raise set_location(d, name)
+                if self.database[target].ast != root:
+                    d = Diagnostic(
+                        "error",
+                        f'Redefinition of function "{path}" doesn\'t match existing implementation.',
+                    )
+                    raise set_location(d, name)
 
             elif target is self.database.current:
                 if node.identifier == "prepend:function:name:commands":
                     d = Diagnostic(
                         "error",
-                        f"Can't prepend commands to the current function {path!r}.",
+                        f'Can\'t prepend commands to the current function "{path}".',
                     )
                     raise set_location(d, node, name)
 

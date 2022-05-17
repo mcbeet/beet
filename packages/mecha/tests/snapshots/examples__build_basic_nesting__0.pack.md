@@ -137,6 +137,12 @@ say stack2
 say stack1
 ```
 
+`@function demo:abc`
+
+```mcfunction
+say hello
+```
+
 `@function demo:wat/nested_execute_0`
 
 ```mcfunction

@@ -145,10 +145,13 @@ class NestedResourcesTransformer(MutatingReducer):
                             proxy[full_name].merge(file_instance)  # type: ignore
                         elif command.identifier.startswith("prepend:"):
                             proxy[full_name].prepend(file_instance)  # type: ignore
-                        else:
+                        elif (
+                            proxy[full_name].ensure_deserialized()
+                            != file_instance.ensure_deserialized()
+                        ):
                             d = Diagnostic(
                                 level="error",
-                                message=f"Resource {full_name!r} of type {file_type} already exists.",
+                                message=f'Redefinition of {snake_case(file_type.__name__)} "{full_name}" doesn\'t match existing file.',
                             )
                             diagnostics.add(set_location(d, name))
                             continue

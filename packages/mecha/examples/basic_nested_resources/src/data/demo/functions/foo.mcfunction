@@ -26,3 +26,16 @@ append function_tag minecraft:tick {
         "demo:after"
     ]
 }
+
+
+function_tag demo:abc {
+    "values": [
+        "demo:foo"
+    ]
+}
+
+function_tag demo:abc {
+    "values": [
+        "demo:foo"
+    ]
+}

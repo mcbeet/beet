@@ -27,6 +27,16 @@ say hello
 say world
 ```
 
+`@function_tag demo:abc`
+
+```json
+{
+  "values": [
+    "demo:foo"
+  ]
+}
+```
+
 ### minecraft
 
 `@function_tag minecraft:tick`

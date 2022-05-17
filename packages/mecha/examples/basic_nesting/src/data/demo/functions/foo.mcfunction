@@ -124,3 +124,10 @@ prepend function demo:stack:
     say stack3
 
 say after
+
+
+function demo:abc:
+    say hello
+
+function demo:abc:
+    say hello
