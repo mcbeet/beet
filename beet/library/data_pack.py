@@ -164,6 +164,8 @@ class TagFile(JsonFile):
     def merge(self: TagFileType, other: TagFileType) -> bool:  # type: ignore
         if other.data.get("replace"):
             self.data["replace"] = True
+            self.data["values"] = deepcopy(other.data.get("values", []))
+            return True
 
         values = self.data.setdefault("values", [])
 
@@ -172,10 +174,12 @@ class TagFile(JsonFile):
                 values.append(deepcopy(value))
         return True
 
-    def prepend(self: TagFileType, other: TagFileType) -> bool:  # type: ignore
+    def prepend(self: TagFileType, other: TagFileType):
         """Prepend values from another tag."""
         if other.data.get("replace"):
             self.data["replace"] = True
+            self.data["values"] = deepcopy(other.data.get("values", []))
+            return
 
         values = self.data.setdefault("values", [])
 

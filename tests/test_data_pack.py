@@ -84,6 +84,25 @@ def test_with_tags():
     assert p1 == p2
 
 
+def test_tag_replace():
+    p1 = DataPack()
+    p1["demo:foo"] = Function(["say hello"], tags=["minecraft:load"])
+
+    p2 = DataPack()
+    p2["minecraft:load"] = FunctionTag({"values": ["demo:bar"], "replace": True})
+
+    p1.merge(p2)
+
+    assert p1 == {
+        "demo": {Function: {"foo": Function(["say hello"])}},
+        "minecraft": {
+            FunctionTag: {
+                "load": FunctionTag({"values": ["demo:bar"], "replace": True})
+            }
+        },
+    }
+
+
 def test_context_manager(tmp_path: Path):
     with DataPack(path=tmp_path / "foobar") as p1:
         p1["hello:world"] = Function(["say hello"], tags=["minecraft:load"])
