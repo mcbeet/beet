@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.64.2 (2022-05-19)
+### Fix
+* Properly handle tag replace ([`6575092`](https://github.com/mcbeet/beet/commit/65750922a1e0a368443a17b45610040adf4d6dc0))
+
 ## v0.64.1 (2022-05-05)
 ### Fix
 * Posix ignore paths ([`cd51cae`](https://github.com/mcbeet/beet/commit/cd51cae72ea37fd6e0906fa8d99a396e1444c8e5))
