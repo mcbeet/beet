@@ -2,6 +2,11 @@
 
 <!--next-version-placeholder-->
 
+## v0.66.0 (2022-05-21)
+### Feature
+* Config broadcasting ([`c734c12`](https://github.com/mcbeet/beet/commit/c734c1299ad7a717f4ae915396950d527416a1a1))
+* Update livereload messages, handle pack overwrite and deduplicate dirty paths ([`f4629f1`](https://github.com/mcbeet/beet/commit/f4629f1058d7c2a7330197b228e763db044e30a8))
+
 ## v0.65.1 (2022-05-21)
 ### Fix
 * Error formatting for overwrite ([`7c7cdef`](https://github.com/mcbeet/beet/commit/7c7cdef926e5483be415362309a76a769f2032ee))
