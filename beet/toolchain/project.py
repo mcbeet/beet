@@ -4,11 +4,13 @@ __all__ = [
 ]
 
 
+from contextlib import ExitStack, contextmanager
 from copy import deepcopy
 from dataclasses import dataclass
 from importlib.metadata import entry_points
 from pathlib import Path
-from typing import ClassVar, Iterable, Iterator, List, Optional, Sequence
+from tempfile import TemporaryDirectory
+from typing import Any, ClassVar, Iterable, Iterator, List, Optional, Sequence
 
 from beet.contrib.autosave import Autosave
 from beet.contrib.json_reporter import JsonReporter
@@ -19,10 +21,10 @@ from beet.contrib.render import render
 from beet.core.utils import (
     FileSystemPath,
     JsonDict,
+    change_directory,
     intersperse,
     log_time,
     normalize_string,
-    temporary_working_directory,
 )
 from beet.core.watch import DirectoryWatcher, FileChanges
 
@@ -37,7 +39,7 @@ class Project:
     """Class for interacting with a beet project."""
 
     resolved_config: Optional[ProjectConfig] = None
-    config_overrides: Optional[List[str]] = None
+    config_overrides: Optional[Any] = None
     config_path: Optional[FileSystemPath] = None
 
     resolved_cache: Optional[ProjectCache] = None
@@ -76,7 +78,8 @@ class Project:
         if self.resolved_cache is not None:
             return self.resolved_cache
         self.resolved_cache = ProjectCache(
-            self.directory / self.cache_name, self.directory / "generated"
+            directory=self.directory / self.cache_name,
+            generated_directory=self.directory / "generated",
         )
         return self.resolved_cache
 
@@ -101,30 +104,17 @@ class Project:
         self.resolved_config = None
         self.resolved_cache = None
 
-    def build(self, no_link: bool = False, tmpdir: bool = False) -> Context:
+    def build(self, tmpdir: bool = False):
         """Build the project."""
-        autosave = self.config.meta.setdefault("autosave", {})
-
-        if no_link:
-            autosave["link"] = False
-        else:
-            autosave.setdefault("link", True)
-
-        if tmpdir:
-            with temporary_working_directory() as path:
-                self.resolved_cache = ProjectCache(
-                    path / self.cache_name,
-                    self.directory / "generated",
-                )
-                return ProjectBuilder(self).build()
-        else:
-            return ProjectBuilder(self).build()
+        with ProjectBuilder(self, root=True, tmpdir=tmpdir).build():
+            pass
 
     def build_report(self, tmpdir: bool = False) -> JsonDict:
         """Build the project and return the json report."""
-        json_reporter = self.config.meta.setdefault("json_reporter", {})
-        json_reporter["enabled"] = True
-        return self.build(no_link=True, tmpdir=tmpdir).inject(JsonReporter).data
+        with self.override("meta.json_reporter.enabled = true"):
+            with ProjectBuilder(self, root=True, tmpdir=tmpdir).build() as ctx:
+                json_reporter = ctx.inject(JsonReporter)
+                return json_reporter.data
 
     def watch(self, interval: float = 0.6) -> Iterator[FileChanges]:
         """Watch the project."""
@@ -165,12 +155,12 @@ class Project:
         minecraft: Optional[FileSystemPath] = None,
         data_pack: Optional[FileSystemPath] = None,
         resource_pack: Optional[FileSystemPath] = None,
-    ) -> Iterable[str]:
+    ) -> str:
         """Associate a linked resource pack directory and data pack directory to the project."""
         with self.cache:
             link_manager = LinkManager(self.cache)
             link_manager.setup_link(world, minecraft, data_pack, resource_pack)
-            return [link_manager.summary()]
+            return link_manager.summary()
 
     def clear_link(self):
         """Remove the linked resource pack directory and data pack directory."""
@@ -178,18 +168,37 @@ class Project:
             link_manager = LinkManager(self.cache)
             link_manager.clear_link()
 
+    @contextmanager
+    def override(self, *overrides: Any):
+        """Temporarily update overrides."""
+        previous = self.config_overrides
+        self.config_overrides = [previous, *overrides]
+        try:
+            yield
+        finally:
+            self.config_overrides = previous
+
 
 class ProjectBuilder:
     """Class capable of building a project."""
 
     project: Project
     config: ProjectConfig
+    root: bool
+    tmpdir: bool
 
     autoload: ClassVar[Optional[List[str]]] = None
 
-    def __init__(self, project: Project):
+    def __init__(
+        self,
+        project: Project,
+        root: bool = False,
+        tmpdir: bool = False,
+    ):
         self.project = project
         self.config = self.project.config
+        self.root = root
+        self.tmpdir = tmpdir
 
         if ProjectBuilder.autoload is None:
             ProjectBuilder.autoload = [
@@ -198,25 +207,42 @@ class ProjectBuilder:
                 if ep.name == "autoload"
             ]
 
-    def build(self) -> Context:
+    @contextmanager
+    def build(self) -> Iterator[Context]:
         """Create the context, run the pipeline, and return the context."""
-        name = self.config.name or self.project.directory.stem
+        with ExitStack() as stack:
+            name = self.config.name or self.project.directory.stem
+            meta = deepcopy(self.config.meta)
 
-        with self.project.worker_pool.handle() as worker_pool_handle:
+            if self.tmpdir:
+                tmpdir = Path(stack.enter_context(TemporaryDirectory()))
+                cache = ProjectCache(
+                    directory=tmpdir / self.project.cache_name,
+                    generated_directory=self.project.directory / "generated",
+                )
+            else:
+                tmpdir = None
+                cache = self.project.cache
+
+            if self.root:
+                LinkManager(cache).clean()
+                meta.setdefault("autosave", {}).setdefault("link", True)
+
             ctx = Context(
                 project_id=self.config.id or normalize_string(name),
                 project_name=name,
                 project_description=self.config.description,
                 project_author=self.config.author,
                 project_version=self.config.version,
+                project_root=self.root,
                 directory=self.project.directory,
                 output_directory=self.project.output_directory,
-                meta=deepcopy(self.config.meta),
-                cache=self.project.cache,
-                worker=worker_pool_handle,
+                meta=meta,
+                cache=cache,
+                worker=stack.enter_context(self.project.worker_pool.handle()),
                 template=TemplateManager(
                     templates=self.project.template_directories,
-                    cache_dir=self.project.cache["template"].directory,
+                    cache_dir=cache["template"].directory,
                 ),
                 whitelist=self.config.whitelist,
             )
@@ -235,10 +261,11 @@ class ProjectBuilder:
                 for item in self.config.pipeline
             )
 
-            with ctx.activate() as pipeline:
+            with change_directory(tmpdir):
+                pipeline = stack.enter_context(ctx.activate())
                 pipeline.run(plugins)
 
-        return ctx
+            yield ctx
 
     def bootstrap(self, ctx: Context):
         """Plugin that handles the project configuration."""
@@ -309,10 +336,7 @@ class ProjectBuilder:
 
     def __call__(self, ctx: Context):
         """The builder instance is itself a plugin used for merging subpipelines."""
-        child_ctx = self.build()
-
-        if child_ctx.output_directory:
-            return
-
-        ctx.assets.merge(child_ctx.assets)
-        ctx.data.merge(child_ctx.data)
+        with self.build() as child_ctx:
+            if not child_ctx.output_directory:
+                ctx.assets.merge(child_ctx.assets)
+                ctx.data.merge(child_ctx.data)

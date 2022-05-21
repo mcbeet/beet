@@ -235,15 +235,15 @@ class Cache:
         return f"{self.__class__.__name__}({str(self.directory)!r})"
 
     def __str__(self) -> str:
-        formatted_json = indent(dump_json(self.json), "  │  ")[5:]
-        contents = indent("\n".join(self._format_directory()), "  │    ")
+        formatted_json = indent(dump_json(self.json), "  |  ")[5:]
+        contents = indent("\n".join(self._format_directory()), "  |    ")
 
         return (
             f"Cache {self.index_path.parent.name}:\n"
-            f"  │  timestamp = {datetime.fromisoformat(self.index['timestamp']).ctime()}\n"
-            f"  │  expire = {self.expire and self.expire.ctime()}\n  │  \n"
-            f"  │  directory = {self.directory}\n{contents}\n  │  \n"
-            f"  │  json = {formatted_json}"
+            f"  |  timestamp = {datetime.fromisoformat(self.index['timestamp']).ctime()}\n"
+            f"  |  expire = {self.expire and self.expire.ctime()}\n  |  \n"
+            f"  |  directory = {self.directory}\n{contents}\n  |  \n"
+            f"  |  json = {formatted_json}"
         )
 
     def _format_directory(

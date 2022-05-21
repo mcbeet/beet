@@ -19,12 +19,6 @@ pass_project = click.make_pass_decorator(Project)  # type: ignore
     help="Link the project before building.",
 )
 @click.option(
-    "-n",
-    "--no-link",
-    is_flag=True,
-    help="Don't copy the output to the linked Minecraft world.",
-)
-@click.option(
     "-t",
     "--tmpdir",
     is_flag=True,
@@ -39,28 +33,22 @@ pass_project = click.make_pass_decorator(Project)  # type: ignore
 def build(
     project: Project,
     link: Optional[str],
-    no_link: bool,
     tmpdir: bool,
     json: bool,
 ):
     """Build the current project."""
-    if json:
-        if link:
-            raise click.BadOptionUsage(
-                "link", "The --json option should not be used with --link."
-            )
-        if no_link:
-            raise click.BadOptionUsage(
-                "no_link", "The --json option already implies --no-link."
-            )
-        click.echo(dump_json(project.build_report(tmpdir)), nl=False)
+    if link and (json or tmpdir):
+        msg = "The --link option is forbidden when using --json or --tmpdir."
+        raise click.BadOptionUsage("link", msg)
 
+    if json:
+        click.echo(dump_json(project.build_report(tmpdir=tmpdir)), nl=False)
     else:
         text = "Linking and building project..." if link else "Building project..."
         with message_fence(text):
             if link:
-                click.echo("\n".join(project.link(world=link)))
-            project.build(no_link, tmpdir)
+                click.echo(project.link(world=link))
+            project.build(tmpdir=tmpdir)
 
 
 @beet.command()
@@ -78,12 +66,6 @@ def build(
     help="Link the project before watching.",
 )
 @click.option(
-    "-n",
-    "--no-link",
-    is_flag=True,
-    help="Don't copy the output to the linked Minecraft world.",
-)
-@click.option(
     "-i",
     "--interval",
     metavar="SECONDS",
@@ -94,14 +76,13 @@ def watch(
     project: Project,
     reload: bool,
     link: Optional[str],
-    no_link: bool,
     interval: float,
 ):
     """Watch the project directory and build on file changes."""
     text = "Linking and watching project..." if link else "Watching project..."
     with message_fence(text):
         if link:
-            click.echo("\n".join(project.link(world=link)))
+            click.echo(project.link(world=link))
 
         for changes in project.watch(interval):
             filename, action = next(iter(changes.items()))
@@ -116,11 +97,10 @@ def watch(
             change_time = click.style(now, fg="green", bold=True)
             click.echo(f"{change_time} {text}")
 
-            if reload:
-                project.config.pipeline.append("beet.contrib.livereload")
-
-            with error_handler(format_padding=1):
-                project.build(no_link)
+            with error_handler(format_padding=1), project.override(
+                reload and "require[] = beet.contrib.livereload"
+            ):
+                project.build()
 
 
 @beet.command()
@@ -194,6 +174,4 @@ def link(
             project.clear_link()
     else:
         with message_fence("Linking project..."):
-            click.echo(
-                "\n".join(project.link(world, minecraft, data_pack, resource_pack))
-            )
+            click.echo(project.link(world, minecraft, data_pack, resource_pack))

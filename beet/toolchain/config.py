@@ -17,18 +17,7 @@ from contextlib import contextmanager, nullcontext
 from copy import deepcopy
 from itertools import chain
 from pathlib import Path
-from typing import (
-    Any,
-    Dict,
-    Generic,
-    Iterable,
-    List,
-    Literal,
-    Optional,
-    Tuple,
-    TypeVar,
-    Union,
-)
+from typing import Any, Dict, Generic, List, Literal, Optional, Tuple, TypeVar, Union
 
 import toml
 import yaml
@@ -293,7 +282,7 @@ def locate_config(directory: FileSystemPath, parents: bool = False) -> Optional[
 
 def load_config(
     filename: Optional[FileSystemPath] = None,
-    overrides: Optional[Iterable[str]] = None,
+    overrides: Any = None,
 ) -> ProjectConfig:
     """Load the project config at the specified location."""
     path = Path(filename) if filename else None

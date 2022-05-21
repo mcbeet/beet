@@ -19,7 +19,7 @@ __all__ = [
     "format_exc",
     "format_validation_error",
     "pop_traceback",
-    "temporary_working_directory",
+    "change_directory",
 ]
 
 
@@ -35,7 +35,6 @@ from dataclasses import field
 from importlib import import_module
 from importlib.util import find_spec
 from pathlib import Path
-from tempfile import TemporaryDirectory
 from traceback import format_exception
 from typing import (
     Any,
@@ -262,14 +261,18 @@ def pop_traceback(exc: ExceptionType, n: int = 1) -> ExceptionType:
 
 
 @contextmanager
-def temporary_working_directory(*args: Any, **kwargs: Any) -> Iterator[Path]:
-    with TemporaryDirectory(*args, **kwargs) as dirname:
-        cwd = os.getcwd()
-        os.chdir(dirname)
-        try:
-            yield Path(dirname)
-        finally:
-            os.chdir(cwd)
+def change_directory(directory: Optional[FileSystemPath] = None):
+    if not directory:
+        yield
+        return
+
+    cwd = os.getcwd()
+    os.chdir(str(directory))
+
+    try:
+        yield
+    finally:
+        os.chdir(cwd)
 
 
 class PathObjectError(PydanticTypeError):

@@ -6,10 +6,9 @@ __all__ = [
 ]
 
 
-from contextlib import ExitStack, contextmanager
+from contextlib import contextmanager
 from functools import wraps
 from pathlib import Path
-from tempfile import TemporaryDirectory
 from typing import Iterator, Optional, Union
 
 from jinja2 import Environment
@@ -57,6 +56,7 @@ def sandbox(*specs: PluginSpec) -> Plugin:
             project_description=ctx.project_description,
             project_author=ctx.project_author,
             project_version=ctx.project_version,
+            project_root=False,
             directory=ctx.directory,
             output_directory=None,
             meta={},
@@ -87,25 +87,24 @@ def run_beet(
     if not directory:
         directory = Path.cwd()
 
-    with ExitStack() as stack:
-        project = Project()
+    tmpdir = False
+    project = Project()
 
-        if isinstance(cache, ProjectCache):
-            project.resolved_cache = cache
-        elif not cache:
-            project.resolved_cache = ProjectCache(
-                stack.enter_context(TemporaryDirectory()), Path(directory) / "generated"
-            )
+    if isinstance(cache, ProjectCache):
+        project.resolved_cache = cache
+    elif not cache:
+        tmpdir = True
 
-        if isinstance(config, ProjectConfig):
-            project.resolved_config = config
-        elif isinstance(config, dict):
-            with config_error_handler("(project)"):
-                project.resolved_config = ProjectConfig(**config).resolve(directory)
-        else:
-            project.config_path = config or directory
+    if isinstance(config, ProjectConfig):
+        project.resolved_config = config
+    elif isinstance(config, dict):
+        with config_error_handler("(project)"):
+            project.resolved_config = ProjectConfig(**config).resolve(directory)
+    else:
+        project.config_path = config or directory
 
-        yield ProjectBuilder(project).build()
+    with ProjectBuilder(project, root=True, tmpdir=tmpdir).build() as ctx:
+        yield ctx
 
 
 class JinjaExtension(Extension):

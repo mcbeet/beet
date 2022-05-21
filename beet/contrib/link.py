@@ -12,9 +12,8 @@ import platform
 from pathlib import Path
 from typing import List, Optional, Union
 
-from beet import Cache, CachePin, Context, ErrorMessage, MultiCache
+from beet import Cache, CachePin, Context, ErrorMessage, MultiCache, PackOverwrite
 from beet.core.utils import FileSystemPath, log_time, remove_path
-from beet.library.base import PackOverwrite
 
 logger = logging.getLogger("link")
 
@@ -27,7 +26,6 @@ def link_cache_finalizer(cache: Cache):
 class LinkManager:
     cache: Cache
 
-    enabled = CachePin[bool]("enabled", True)
     dirty = CachePin[List[str]]("dirty", default_factory=list)
 
     world = CachePin[Optional[str]]("world", None)
@@ -50,9 +48,6 @@ class LinkManager:
 
     def autosave_handler(self, ctx: Context):
         """Plugin for linking the generated resource pack and data pack to Minecraft."""
-        if not self.enabled:
-            return
-
         to_link = [
             (Path(directory), pack)
             for directory, pack in zip([self.resource_pack, self.data_pack], ctx.packs)
@@ -170,7 +165,7 @@ class LinkManager:
     def summary(self) -> str:
         """Return a formatted summary."""
         return "\n".join(
-            f"{title}:\n  │  directory = {directory}\n"
+            f"{title}:\n  |  directory = {directory}\n"
             for title, directory in [
                 ("Minecraft installation", self.minecraft),
                 ("World folder", self.world),

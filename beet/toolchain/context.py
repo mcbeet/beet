@@ -165,6 +165,7 @@ class Context:
     project_description: TextComponent
     project_author: str
     project_version: str
+    project_root: bool
 
     directory: Path
     output_directory: Optional[Path]
