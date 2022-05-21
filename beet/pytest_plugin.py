@@ -3,7 +3,7 @@ from pprint import pformat
 
 from _pytest.assertion.util import assertrepr_compare
 
-from beet import DataPack, Namespace, NamespaceContainer, Pack, ResourcePack
+from beet import DataPack, File, Namespace, NamespaceContainer, Pack, ResourcePack
 from beet.library.test_utils import ignore_name
 
 try:
@@ -52,6 +52,14 @@ def pytest_assertrepr_compare(config, op, left, right):
             explanation += generate_explanation(config, left, right, "container")
     elif isinstance(left, NamespaceContainer):
         explanation += generate_explanation(config, left, right, "file")
+    elif isinstance(left, File):
+        if diff := config.hook.pytest_assertrepr_compare(
+            config=config,
+            op="==",
+            left=left.ensure_deserialized(),
+            right=right.ensure_deserialized(),
+        ):
+            return diff[0]
 
     if explanation and (diff := assertrepr_compare(config, op, left, right)):
         return [diff[0]] + explanation
@@ -110,10 +118,15 @@ def generate_explanation(config, left, right, item_name):
         yield ""
         yield f"Drill down into differing {item_name} {k!r}:"
 
-        summary, *explanation = config.hook.pytest_assertrepr_compare(
-            config=config, op="==", left=left[k], right=right[k]
-        )[0]
-
-        yield f"  assert " + summary
-        for line in explanation:
-            yield "  " + line
+        if result := config.hook.pytest_assertrepr_compare(
+            config=config,
+            op="==",
+            left=left[k],
+            right=right[k],
+        ):
+            summary, *explanation = result[0]
+            yield f"  assert " + summary
+            for line in explanation:
+                yield "  " + line
+        else:
+            yield f"  assert {left[k]!r} == {right[k]!r}"
