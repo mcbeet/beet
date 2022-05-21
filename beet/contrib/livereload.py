@@ -18,17 +18,19 @@ from pathlib import Path
 from threading import Event, Thread
 from typing import Any, Callable, List, Optional, Tuple, overload
 
-from beet import Connection, Context, DataPack, Function
+from beet import Connection, Context, DataPack, Function, PackOverwrite
 from beet.contrib.autosave import Autosave
 from beet.contrib.link import LinkManager
 from beet.core.utils import FileSystemPath, JsonDict, remove_path
 
 logger = logging.getLogger("livereload")
-logger.addFilter(lambda r: not r.getMessage().startswith("Ambiguity between arguments"))
+logger.addFilter(
+    lambda r: not r.getMessage().startswith(("Ambiguity between arguments", "[CHAT]"))
+)
 
 
 GAME_LOG_REGEX = re.compile(r"\[(.+?)\] \[.+?/(DEBUG|INFO|WARN|ERROR|FATAL)\]: (.+)")
-LIVERELOAD_REGEX = re.compile(r"\[CHAT\] \[livereload\] (Ready|Reloaded)")
+LIVERELOAD_REGEX = re.compile(r"\[CHAT\] livereload - (Ready|Reloaded)")
 
 
 def beet_default(ctx: Context):
@@ -42,8 +44,15 @@ def livereload(ctx: Context):
         return
 
     data = create_livereload_data_pack()
-    livereload_path = data.save(link_manager.data_pack)
-    link_manager.dirty.append(str(livereload_path))
+
+    try:
+        livereload_path = data.save(link_manager.data_pack)
+    except PackOverwrite as exc:
+        livereload_path = Path(exc.path)
+
+    dirty_path = str(livereload_path)
+    if dirty_path not in link_manager.dirty:
+        link_manager.dirty.append(dirty_path)
 
     with ctx.worker(livereload_server) as channel:
         channel.send((link_manager.minecraft, livereload_path))
@@ -52,10 +61,10 @@ def livereload(ctx: Context):
 def create_livereload_data_pack() -> DataPack:
     data = DataPack("livereload")
 
-    prefix = {"text": "[livereload]", "color": "red"}
-    ready = ["", prefix, " ", {"text": "Ready", "color": "gold"}]
-    changes = ["", prefix, " ", {"text": f"Changes detected", "color": "gold"}]
-    reloaded = ["", prefix, " ", {"text": f"Reloaded", "color": "gold"}]
+    prefix = {"text": "livereload -", "color": "gray"}
+    ready = ["", prefix, " ", {"text": "Ready", "color": "aqua"}]
+    changes = ["", prefix, " ", {"text": f"Changes detected", "color": "aqua"}]
+    reloaded = ["", prefix, " ", {"text": f"Reloaded", "color": "aqua"}]
 
     data["livereload:load"] = Function(
         [
