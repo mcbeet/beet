@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.65.1 (2022-05-21)
+### Fix
+* Error formatting for overwrite ([`7c7cdef`](https://github.com/mcbeet/beet/commit/7c7cdef926e5483be415362309a76a769f2032ee))
+
 ## v0.65.0 (2022-05-21)
 ### Feature
 * Make it possible to link subprojects ([`45c04d0`](https://github.com/mcbeet/beet/commit/45c04d0e3ee9c331cef9d96ab8d2e0d66bf1eebd))
