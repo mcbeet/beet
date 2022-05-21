@@ -1,0 +1,6 @@
+from ./foo import a
+from ./bar import b
+
+function ./thing:
+  say a()
+  say b()
