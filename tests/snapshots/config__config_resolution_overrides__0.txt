@@ -5,6 +5,7 @@
   "author": "",
   "version": "",
   "directory": "tests/config_examples/overrides",
+  "broadcast": [],
   "extend": [],
   "output": "tests/config_examples/overrides/out",
   "ignore": [],

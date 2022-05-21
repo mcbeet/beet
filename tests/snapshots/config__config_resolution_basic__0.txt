@@ -5,6 +5,7 @@
   "author": "",
   "version": "",
   "directory": "tests/config_examples/basic",
+  "broadcast": [],
   "extend": [],
   "output": "tests/config_examples/basic/build",
   "ignore": [],

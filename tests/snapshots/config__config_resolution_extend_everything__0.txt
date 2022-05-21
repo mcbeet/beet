@@ -5,6 +5,7 @@
   "author": "foo",
   "version": "foo",
   "directory": "tests/config_examples/extend_everything",
+  "broadcast": [],
   "extend": [],
   "output": null,
   "ignore": [

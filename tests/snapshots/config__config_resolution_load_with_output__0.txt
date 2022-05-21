@@ -5,6 +5,7 @@
   "author": "",
   "version": "",
   "directory": "tests/config_examples/load_with_output",
+  "broadcast": [],
   "extend": [],
   "output": "tests/config_examples/load_with_output/releases",
   "ignore": [],

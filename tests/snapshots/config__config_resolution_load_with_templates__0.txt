@@ -5,6 +5,7 @@
   "author": "",
   "version": "",
   "directory": "tests/config_examples/load_with_templates",
+  "broadcast": [],
   "extend": [],
   "output": null,
   "ignore": [],

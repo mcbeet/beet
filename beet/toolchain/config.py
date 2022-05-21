@@ -15,6 +15,7 @@ __all__ = [
 import json
 from contextlib import contextmanager, nullcontext
 from copy import deepcopy
+from glob import glob
 from itertools import chain
 from pathlib import Path
 from typing import Any, Dict, Generic, List, Literal, Optional, Tuple, TypeVar, Union
@@ -180,6 +181,7 @@ class ProjectConfig(BaseModel):
     version: str = ""
 
     directory: FileSystemPath = ""
+    broadcast: ListOption[FileSystemPath] = ListOption()
     extend: ListOption[PackageablePath] = ListOption()
     output: Optional[FileSystemPath] = None
     ignore: List[str] = []
@@ -216,6 +218,24 @@ class ProjectConfig(BaseModel):
             path /= self.directory
 
         self.directory = path
+
+        if broadcast := self.broadcast.entries():
+            parent = ProjectConfig(meta={"autosave": {"link": False}})
+
+            for broadcast_entry in broadcast:
+                if dirs := glob(str(path / broadcast_entry)):
+                    for dirname in dirs:
+                        config = self.copy(
+                            update={"directory": dirname, "broadcast": ListOption()},
+                            deep=True,
+                        )
+                        config.meta.setdefault("autosave", {}).setdefault("link", True)
+                        parent.pipeline.append(config)
+                else:
+                    msg = f'Couldn\'t broadcast "{broadcast_entry}".'
+                    raise InvalidProjectConfig(msg)
+
+            return parent.resolve(directory)
 
         if self.output:
             self.output = path / self.output

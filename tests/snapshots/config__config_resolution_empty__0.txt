@@ -5,6 +5,7 @@
   "author": "",
   "version": "",
   "directory": "tests/config_examples/empty",
+  "broadcast": [],
   "extend": [],
   "output": null,
   "ignore": [],
