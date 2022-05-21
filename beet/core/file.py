@@ -179,6 +179,7 @@ class File(Generic[ValueType, SerializeType]):
                 and (-1 if self.source_stop is None else self.source_stop)
                 == (-1 if other.source_stop is None else other.source_stop)
             )
+            or self.get_content() == other.get_content()
             or self.ensure_serialized() == other.ensure_serialized()
             or self.ensure_deserialized() == other.ensure_deserialized()
         )
