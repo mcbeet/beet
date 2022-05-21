@@ -3,7 +3,7 @@ from typing import cast
 from pydantic import BaseModel
 
 from beet import Context, JsonFile, TextFile, YamlFile
-from beet.core.file import JsonFileBase
+from beet.core.file import FileDeserialize, JsonFileBase
 
 
 class FunctionConfig(YamlFile):
@@ -20,6 +20,8 @@ class Blueprint(JsonFileBase[BlueprintOptions]):
 
     scope = ("blueprints",)
     extension = ".json"
+
+    data = FileDeserialize()  # type: FileDeserialize[BlueprintOptions]
 
 
 def extend_data_pack(ctx: Context):

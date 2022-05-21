@@ -86,7 +86,7 @@ def required_field(**kwargs: Any) -> Any:
     return field(**kwargs, default_factory=_raise_required_field)
 
 
-def _raise_required_field():
+def _raise_required_field() -> Any:
     raise ValueError("Field required.")
 
 

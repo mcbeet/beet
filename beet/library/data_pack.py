@@ -59,7 +59,7 @@ class Function(TextFileBase[List[str]]):
     scope = ("functions",)
     extension = ".mcfunction"
 
-    lines = FileDeserialize[List[str]]()
+    lines = FileDeserialize()  # type: FileDeserialize[List[str]]
 
     def append(self, other: Union["Function", Iterable[str], str]):
         """Append lines from another function."""
@@ -85,12 +85,10 @@ class Function(TextFileBase[List[str]]):
     def default(cls) -> List[str]:
         return []
 
-    @classmethod
-    def to_str(cls, content: List[str]) -> str:
+    def to_str(self, content: List[str]) -> str:
         return "\n".join(content) + "\n"
 
-    @classmethod
-    def from_str(cls, content: str) -> List[str]:
+    def from_str(self, content: str) -> List[str]:
         return content.splitlines()
 
     def bind(self, pack: "DataPack", path: str):
@@ -141,15 +139,13 @@ class Structure(BinaryFileBase[StructureFileData]):
     scope = ("structures",)
     extension = ".nbt"
 
-    data = FileDeserialize[StructureFileData]()
+    data = FileDeserialize()  # type: FileDeserialize[StructureFileData]
 
-    @classmethod
-    def from_bytes(cls, content: bytes) -> StructureFileData:
+    def from_bytes(self, content: bytes) -> StructureFileData:
         with GzipFile(fileobj=io.BytesIO(content)) as fileobj:
             return StructureFile.parse(fileobj).root
 
-    @classmethod
-    def to_bytes(cls, content: StructureFileData) -> bytes:
+    def to_bytes(self, content: StructureFileData) -> bytes:
         dst = io.BytesIO()
         with GzipFile(fileobj=dst, mode="wb") as fileobj:
             StructureFile(content).write(fileobj)
