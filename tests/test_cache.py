@@ -179,6 +179,6 @@ def test_match(tmp_path: Path):
 def test_transaction(tmp_path: Path):
     with MultiCache(tmp_path) as cache:
         with cache["test-foo"] as foo:
-            foo.json["value"] = 42
-        assert "42" not in (tmp_path / "test-foo" / "index.json").read_text()
-    assert "42" in (tmp_path / "test-foo" / "index.json").read_text()
+            foo.json["something"] = 42
+        assert "something" not in (tmp_path / "test-foo" / "index.json").read_text()
+    assert "something" in (tmp_path / "test-foo" / "index.json").read_text()
