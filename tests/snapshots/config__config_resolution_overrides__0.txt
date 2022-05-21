@@ -1,0 +1,40 @@
+{
+  "id": "",
+  "name": "foo",
+  "description": "",
+  "author": "",
+  "version": "",
+  "directory": "tests/config_examples/overrides",
+  "extend": [],
+  "output": "tests/config_examples/overrides/out",
+  "ignore": [],
+  "whitelist": null,
+  "require": [],
+  "templates": [],
+  "data_pack": {
+    "name": "",
+    "description": "",
+    "pack_format": 0,
+    "zipped": null,
+    "compression": null,
+    "compression_level": null,
+    "load": [
+      "tests/config_examples/overrides/src"
+    ],
+    "render": {}
+  },
+  "resource_pack": {
+    "name": "",
+    "description": "",
+    "pack_format": 0,
+    "zipped": null,
+    "compression": null,
+    "compression_level": null,
+    "load": [],
+    "render": {}
+  },
+  "pipeline": [
+    "beet.contrib.minify_json"
+  ],
+  "meta": {}
+}

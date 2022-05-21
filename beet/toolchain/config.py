@@ -32,7 +32,7 @@ from typing import (
 
 import toml
 import yaml
-from pydantic import BaseModel, ValidationError, validator
+from pydantic import BaseModel, ValidationError, root_validator, validator
 from pydantic.generics import GenericModel
 
 from beet.core.error import BubbleException
@@ -45,7 +45,7 @@ from beet.core.utils import (
     resolve_packageable_path,
 )
 
-from .utils import apply_option, eval_option
+from .utils import apply_option, eval_option, iter_options
 
 DETECT_CONFIG_FILES: Tuple[str, ...] = (
     "beet.json",
@@ -206,6 +206,19 @@ class ProjectConfig(BaseModel):
     class Config:
         extra = "forbid"
 
+    @root_validator(pre=True)
+    def apply_overrides(cls, values: JsonDict):
+        """Apply config overrides."""
+        for option in iter_options(values):
+            try:
+                values = apply_option(values, eval_option(option))
+            except Exception:
+                raise InvalidProjectConfig(
+                    f"Couldn't apply override {option!r}."
+                ) from None
+        values.pop("overrides", None)
+        return values
+
     def resolve(self, directory: FileSystemPath) -> "ProjectConfig":
         """Resolve paths relative to the given directory and apply inheritance."""
         path = Path(directory)
@@ -329,17 +342,12 @@ def load_config(
                 if authors := poetry.get("authors"):
                     config.setdefault("author", authors[0])
 
+        if overrides:
+            config["overrides"] = [config.get("overrides"), overrides]
+
         config_dir = path.resolve().parent if path else None
 
         with local_import_path(str(config_dir)) if config_dir else nullcontext():
-            for option in overrides or []:
-                try:
-                    config = apply_option(config, eval_option(option))
-                except Exception:
-                    raise InvalidProjectConfig(
-                        f"Couldn't apply override {option!r}."
-                    ) from None
-
             return ProjectConfig(**config).resolve(config_dir or Path.cwd())
 
 

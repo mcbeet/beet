@@ -1,0 +1,8 @@
+{
+  "overrides": [
+    "name = foo",
+    "output = out",
+    "data_pack.load = src",
+    "pipeline[] = beet.contrib.minify_json"
+  ]
+}

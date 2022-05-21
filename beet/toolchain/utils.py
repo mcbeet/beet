@@ -3,6 +3,7 @@ __all__ = [
     "stable_int_hash",
     "stable_hash",
     "ensure_builtins",
+    "iter_options",
     "eval_option",
     "default_option",
     "apply_option",
@@ -12,7 +13,7 @@ __all__ = [
 import json
 import re
 from copy import copy
-from typing import Any, Callable, List, Literal, Mapping, Sequence, cast
+from typing import Any, Callable, Iterable, List, Literal, Mapping, Sequence, cast
 
 FNV_32_INIT = 0x811C9DC5
 FNV_64_INIT = 0xCBF29CE484222325
@@ -70,6 +71,16 @@ def ensure_builtins(value: Any) -> Any:
         return json.loads(json.dumps(value))
     except Exception:
         raise TypeError(value) from None
+
+
+def iter_options(options: Any) -> Iterable[str]:
+    if isinstance(options, str):
+        yield from options.splitlines()
+    elif isinstance(options, Mapping):
+        yield from iter_options(options.get("overrides", []))  # type: ignore
+    elif isinstance(options, Sequence):
+        for option in options:  # type: ignore
+            yield from iter_options(option)
 
 
 def eval_option(option: str) -> Any:
