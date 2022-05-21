@@ -2,6 +2,19 @@
 
 <!--next-version-placeholder-->
 
+## v0.65.0 (2022-05-21)
+### Feature
+* Make it possible to link subprojects ([`45c04d0`](https://github.com/mcbeet/beet/commit/45c04d0e3ee9c331cef9d96ab8d2e0d66bf1eebd))
+* Freeze context ([`1bebe8d`](https://github.com/mcbeet/beet/commit/1bebe8d01524012f3d3fb4d2e17b01f9cecfde84))
+* Process overrides directly in config file ([`3c49d83`](https://github.com/mcbeet/beet/commit/3c49d83299cb5d52225871251e9a836b5567d08a))
+* Dedicated exception for pack overwrite ([`7c9268b`](https://github.com/mcbeet/beet/commit/7c9268b12819bfcec01792c181d1b5afb0140b8a))
+* Add cache transaction to only flush once ([`5c03411`](https://github.com/mcbeet/beet/commit/5c03411069a2a31c246bbd01da20c680f2122599))
+
+### Fix
+* Flaky cache test ([`f9f3e81`](https://github.com/mcbeet/beet/commit/f9f3e818fce253fc81b406a7b86ad0235ced8ecc))
+* More efficient equality check for files ([`c780c46`](https://github.com/mcbeet/beet/commit/c780c460ad0494cd8eeb18ef51c8f5122a63db1a))
+* Better explanation for files ([`cf29902`](https://github.com/mcbeet/beet/commit/cf29902501415495828a9b79c62631b2b4d22338))
+
 ## v0.64.2 (2022-05-19)
 ### Fix
 * Properly handle tag replace ([`6575092`](https://github.com/mcbeet/beet/commit/65750922a1e0a368443a17b45610040adf4d6dc0))
