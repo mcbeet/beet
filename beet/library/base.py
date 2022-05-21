@@ -16,6 +16,7 @@ __all__ = [
     "NamespaceProxyDescriptor",
     "MergeCallback",
     "MergePolicy",
+    "PackOverwrite",
     "PACK_COMPRESSION",
 ]
 
@@ -653,6 +654,19 @@ class PackPin(McmetaPin[PinType]):
         return super().forward(obj).setdefault("pack", {})
 
 
+class PackOverwrite(Exception):
+    """Raised when trying to overwrite a pack."""
+
+    path: FileSystemPath
+
+    def __init__(self, path: FileSystemPath) -> None:
+        super().__init__(path)
+        self.path = path
+
+    def __str__(self) -> str:
+        return f"Couldn't overwrite {str(self.path)!r}."
+
+
 class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
     """Class representing a pack."""
 
@@ -1020,7 +1034,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
 
         if output_path.exists():
             if not overwrite:
-                raise FileExistsError(f"Couldn't overwrite {str(output_path)!r}.")
+                raise PackOverwrite(output_path)
             if output_path.is_dir():
                 shutil.rmtree(output_path)
             else:

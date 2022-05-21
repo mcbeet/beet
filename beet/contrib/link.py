@@ -14,6 +14,7 @@ from typing import List, Optional, Union
 
 from beet import Cache, CachePin, Context, ErrorMessage, MultiCache
 from beet.core.utils import FileSystemPath, log_time, remove_path
+from beet.library.base import PackOverwrite
 
 logger = logging.getLogger("link")
 
@@ -26,12 +27,13 @@ def link_cache_finalizer(cache: Cache):
 class LinkManager:
     cache: Cache
 
-    world: CachePin[Optional[str]] = CachePin("world", None)
-    minecraft: CachePin[Optional[str]] = CachePin("minecraft", None)
-    data_pack: CachePin[Optional[str]] = CachePin("data_pack", None)
-    resource_pack: CachePin[Optional[str]] = CachePin("resource_pack", None)
-
+    enabled = CachePin[bool]("enabled", True)
     dirty = CachePin[List[str]]("dirty", default_factory=list)
+
+    world = CachePin[Optional[str]]("world", None)
+    minecraft = CachePin[Optional[str]]("minecraft", None)
+    data_pack = CachePin[Optional[str]]("data_pack", None)
+    resource_pack = CachePin[Optional[str]]("resource_pack", None)
 
     def __init__(self, arg: Union[Context, MultiCache[Cache], Cache]):
         if isinstance(arg, Context):
@@ -48,7 +50,8 @@ class LinkManager:
 
     def autosave_handler(self, ctx: Context):
         """Plugin for linking the generated resource pack and data pack to Minecraft."""
-        self.clean()
+        if not self.enabled:
+            return
 
         to_link = [
             (Path(directory), pack)
@@ -61,7 +64,7 @@ class LinkManager:
                 for directory, pack in to_link:
                     try:
                         self.dirty.append(str(pack.save(directory)))
-                    except FileExistsError as exc:
+                    except PackOverwrite as exc:
                         logger.warning(
                             f"Remove the conflicting pack to set up the link. {exc}."
                         )
