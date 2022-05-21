@@ -61,7 +61,7 @@ class LinkManager:
                         self.dirty.append(str(pack.save(directory)))
                     except PackOverwrite as exc:
                         logger.warning(
-                            f"Remove the conflicting pack to set up the link. {exc}."
+                            f"Remove the conflicting pack to set up the link. {exc}"
                         )
 
     def setup_link(

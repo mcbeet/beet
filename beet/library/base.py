@@ -664,7 +664,7 @@ class PackOverwrite(Exception):
         self.path = path
 
     def __str__(self) -> str:
-        return f"Couldn't overwrite {str(self.path)!r}."
+        return f'Couldn\'t overwrite "{str(self.path)}".'
 
 
 class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
