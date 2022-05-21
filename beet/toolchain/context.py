@@ -119,9 +119,7 @@ class ConfigurablePlugin(Protocol):
 class ContextContainer(Container[Callable[["Context"], Any], Any]):
     """Dict-like container that instantiates and holds objects injected into the context."""
 
-    def __init__(self, ctx: "Context"):
-        super().__init__()
-        self.ctx = ctx
+    ctx: "Context"
 
     def missing(self, key: Callable[["Context"], Any]) -> Any:
         return key(self.ctx)
@@ -158,7 +156,7 @@ class ProjectCache(MultiCache[Cache]):
         self.generated.flush()
 
 
-@dataclass
+@dataclass(eq=False, frozen=True)
 class Context:
     """The build context."""
 
@@ -170,25 +168,24 @@ class Context:
 
     directory: Path
     output_directory: Optional[Path]
-    meta: JsonDict
-    cache: ProjectCache
-    worker: WorkerPoolHandle
-    template: TemplateManager
-    generate: Generator = field(init=False)
+    meta: JsonDict = extra_field()
+    cache: ProjectCache = extra_field()
+    worker: WorkerPoolHandle = extra_field()
+    template: TemplateManager = extra_field()
 
     assets: ResourcePack = field(default_factory=ResourcePack)
     data: DataPack = field(default_factory=DataPack)
 
-    whitelist: InitVar[Optional[List[str]]] = None
+    whitelist: InitVar[Optional[List[str]]] = extra_field(default=None)
 
-    _container: ContextContainer = extra_field(init=False)
-    _path_entry: str = extra_field(init=False)
+    _container: ContextContainer = extra_field(
+        init=False,
+        default_factory=ContextContainer,
+    )
 
     def __post_init__(self, whitelist: Optional[List[str]]):
-        self._container = ContextContainer(self)
-        self._path_entry = str(self.directory.resolve())
+        self._container.ctx = self
 
-        self.generate = self.inject(Generator)
         self.generate.assets = self.assets
         self.generate.data = self.data
 
@@ -234,7 +231,7 @@ class Context:
     @contextmanager
     def activate(self):
         """Push the context directory to sys.path and handle cleanup to allow module reloading."""
-        with local_import_path(self._path_entry), self.cache:
+        with local_import_path(str(self.directory.resolve())), self.cache:
             yield self.inject(Pipeline)
 
     @contextmanager
@@ -279,6 +276,10 @@ class Context:
     @property
     def packs(self) -> Tuple[ResourcePack, DataPack]:
         return self.assets, self.data
+
+    @property
+    def generate(self) -> Generator:
+        return self.inject(Generator)
 
     def require(self, *args: PluginSpec):
         """Execute the specified plugin."""

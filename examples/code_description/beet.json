@@ -1,3 +1,7 @@
 {
+  "name": "Something else",
+  "description": { "text": "bold description", "bold": true },
+  "author": "Fizzy",
+  "version": "1.2.3",
   "pipeline": ["demo"]
 }

@@ -2,10 +2,13 @@ from beet import Context, Function
 
 
 def beet_default(ctx: Context):
-    ctx.project_id = "demo"
-    ctx.project_name = "Demo"
-    ctx.project_description = "The description of my project"
-    ctx.project_author = "Example"
-    ctx.project_version = "1.7.4"
-
-    ctx.data["demo:foo"] = Function(ctx.template.render("foo.mcfunction"))
+    ctx.data["demo:foo"] = Function(
+        ctx.template.render(
+            "foo.mcfunction",
+            id=ctx.project_id,
+            name=ctx.project_name,
+            description=ctx.project_description,
+            author=ctx.project_author,
+            version=ctx.project_version,
+        )
+    )
