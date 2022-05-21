@@ -2,6 +2,7 @@ __all__ = [
     "MultiCache",
     "Cache",
     "CachePin",
+    "CacheTransaction",
 ]
 
 
@@ -33,6 +34,22 @@ CacheType = TypeVar("CacheType", bound="Cache")
 logger = logging.getLogger("cache")
 
 
+class CacheTransaction:
+    """Shared transaction for flushing automatically."""
+
+    depth: int
+
+    def __init__(self):
+        self.depth = 0
+
+    def enter(self):
+        self.depth += 1
+
+    def exit(self) -> bool:
+        self.depth -= 1
+        return not self.depth
+
+
 class Cache:
     """An expiring filesystem cache that can store serialized json."""
 
@@ -40,10 +57,15 @@ class Cache:
     directory: Path
     index_path: Path
     index: JsonDict
+    transaction: CacheTransaction
 
     index_file: ClassVar[str] = "index.json"
 
-    def __init__(self, directory: FileSystemPath):
+    def __init__(
+        self,
+        directory: FileSystemPath,
+        transaction: Optional[CacheTransaction] = None,
+    ):
         self.deleted = False
         self.directory = Path(directory).resolve()
         self.index_path = self.directory / self.index_file
@@ -52,6 +74,7 @@ class Cache:
             if self.index_path.is_file()
             else self.get_initial_index()
         )
+        self.transaction = transaction or CacheTransaction()
         self.flush()
 
     def get_initial_index(self) -> JsonDict:
@@ -153,10 +176,12 @@ class Cache:
         self.index["timestamp"] = now.isoformat()
 
     def __enter__(self) -> "Cache":
+        self.transaction.enter()
         return self
 
     def __exit__(self, *_):
-        self.flush()
+        if self.transaction.exit():
+            self.flush()
 
     def delete(self):
         """Delete the entire cache."""
@@ -264,6 +289,7 @@ class MultiCache(MatchMixin, Container[str, CacheType]):
     default_cache: str
     gitignore: bool
     cache_type: Type[CacheType]
+    transaction: CacheTransaction
 
     def __init__(
         self,
@@ -277,9 +303,10 @@ class MultiCache(MatchMixin, Container[str, CacheType]):
         self.default_cache = default_cache
         self.gitignore = gitignore
         self.cache_type = cache_type
+        self.transaction = CacheTransaction()
 
     def missing(self, key: str) -> CacheType:
-        cache = self.cache_type(self.path / key)
+        cache = self.cache_type(self.path / key, self.transaction)
         self[key] = cache
         return cache
 
@@ -296,10 +323,12 @@ class MultiCache(MatchMixin, Container[str, CacheType]):
         return self[self.default_cache].json
 
     def __enter__(self) -> "MultiCache[CacheType]":
+        self.transaction.enter()
         return self
 
     def __exit__(self, *_):
-        self.flush()
+        if self.transaction.exit():
+            self.flush()
 
     def preload(self):
         """Preload all the named caches."""
