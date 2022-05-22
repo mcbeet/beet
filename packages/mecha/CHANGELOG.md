@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.51.0 (2022-05-22)
+### Feature
+* 1.19 command tree ([`1ef4324`](https://github.com/mcbeet/mecha/commit/1ef4324a542ff11464d21880bcc0dd977311d148))
+
 ## v0.50.2 (2022-05-17)
 ### Fix
 * Allow resource redefinition if content matches ([`0e15796`](https://github.com/mcbeet/mecha/commit/0e157966e5c972811ef33e95c68ff779cd03825e))
