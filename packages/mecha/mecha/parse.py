@@ -80,7 +80,6 @@ from typing import (
 )
 from uuid import UUID
 
-# pyright: reportMissingTypeStubs=false
 from nbtlib import Byte, Double, Float, Int, Long, OutOfRange, Short, String
 from tokenstream import InvalidSyntax, SourceLocation, TokenStream, set_location
 
@@ -156,6 +155,7 @@ from .ast import (
     AstWildcard,
     AstWord,
 )
+from .config import CommandTree
 from .error import MechaError
 from .spec import CommandSpec, Parser
 from .utils import (
@@ -552,7 +552,7 @@ def parse_root(stream: TokenStream) -> AstRoot:
     start = stream.peek()
 
     if not start:
-        node = AstRoot(commands=AstChildren())
+        node = AstRoot(commands=AstChildren[AstCommand]())
         return set_location(node, SourceLocation(0, 1, 1))
 
     commands: List[AstCommand] = []
@@ -602,7 +602,7 @@ def parse_command(stream: TokenStream) -> AstCommand:
                 commit()
 
         if commit.rollback:
-            choices = list((tree.children or {}).items())
+            choices: List[Tuple[str, CommandTree]] = list((tree.children or {}).items())
             choices.sort(key=lambda p: p[1].type != "argument")
 
             if tree.executable:
@@ -1225,7 +1225,7 @@ class BlockParser:
         if block_states := self.block_states_parser(stream):
             end_location = stream.current.end_location
         else:
-            block_states = AstChildren()
+            block_states = AstChildren[AstBlockState]()
 
         data_tags = delegate("adjacent_nbt_compound", stream)
 

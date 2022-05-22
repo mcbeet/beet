@@ -20,8 +20,6 @@ from dataclasses import dataclass, field
 from typing import Any, Callable, Generic, Iterator, List, TypeVar
 
 from beet import Context
-
-# pyright: reportMissingTypeStubs=false
 from nbtlib import String
 from tokenstream import SourceLocation, TokenStream, set_location
 

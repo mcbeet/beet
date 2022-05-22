@@ -96,8 +96,6 @@ from typing import (
 from uuid import UUID
 
 from beet.core.utils import extra_field, required_field
-
-# pyright: reportMissingTypeStubs=false
 from nbtlib import Byte, ByteArray, Compound, CompoundMatch, Double, Int, IntArray
 from nbtlib import List as ListTag
 from nbtlib import ListIndex, LongArray, NamedKey, Numeric, Path, String
