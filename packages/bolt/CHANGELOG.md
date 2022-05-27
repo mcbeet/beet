@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.6.0 (2022-05-27)
+### Feature
+* Add bolt.contrib.debug_codegen ([`d504b00`](https://github.com/mcbeet/bolt/commit/d504b00867bf22770708e6eeb6190ed790f0a483))
+
 ## v0.5.1 (2022-05-27)
 ### Fix
 * Handle uppercase python imports ([`a5e50e0`](https://github.com/mcbeet/bolt/commit/a5e50e0173b47310db43b6915d31b707b7218c3a))
