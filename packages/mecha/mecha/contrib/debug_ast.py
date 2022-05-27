@@ -28,7 +28,7 @@ def beet_default(ctx: Context):
 @configurable(validator=DebugAstOptions)
 def debug_ast(ctx: Context, opts: DebugAstOptions):
     mc = ctx.inject(Mecha)
-    mc.steps.insert(0, DebugAstEmitter(location=opts.location, database=mc.database))
+    mc.steps[:] = [DebugAstEmitter(location=opts.location, database=mc.database)]
 
 
 @dataclass
