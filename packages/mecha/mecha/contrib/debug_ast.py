@@ -3,6 +3,7 @@
 
 __all__ = [
     "DebugAstOptions",
+    "DebugAstEmitter",
     "debug_ast",
 ]
 
