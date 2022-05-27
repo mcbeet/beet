@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.52.2 (2022-05-27)
+### Fix
+* Slice update to modify steps ([`76fb08c`](https://github.com/mcbeet/mecha/commit/76fb08c21887ce1386dae0788428b8e96cd6362a))
+
 ## v0.52.1 (2022-05-27)
 ### Fix
 * Forgot to export DebugAstEmitter ([`3c31e46`](https://github.com/mcbeet/mecha/commit/3c31e46fa37c9ba6598abfce2e26854d5245702a))
