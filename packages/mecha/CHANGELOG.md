@@ -2,6 +2,11 @@
 
 <!--next-version-placeholder-->
 
+## v0.52.0 (2022-05-27)
+### Feature
+* Add mecha.contrib.debug_ast ([`b61e8ab`](https://github.com/mcbeet/mecha/commit/b61e8aba97767c500c7feaf031a165ce8430dd73))
+* Dump exclude ([`56673e7`](https://github.com/mcbeet/mecha/commit/56673e755c7841a10e6f4807544fa88b859b41f6))
+
 ## v0.51.0 (2022-05-22)
 ### Feature
 * 1.19 command tree ([`1ef4324`](https://github.com/mcbeet/mecha/commit/1ef4324a542ff11464d21880bcc0dd977311d148))
