@@ -2,6 +2,11 @@
 
 <!--next-version-placeholder-->
 
+## v0.67.0 (2022-05-27)
+### Feature
+* Json log ([`64d8f46`](https://github.com/mcbeet/beet/commit/64d8f46be9704fd2f6b5fbb7b9b08b5079c46126))
+* Add beet.contrib.clear ([`5e2e66f`](https://github.com/mcbeet/beet/commit/5e2e66f1c1f0b84636bbb575cd97f716fed3d9e9))
+
 ## v0.66.0 (2022-05-21)
 ### Feature
 * Config broadcasting ([`c734c12`](https://github.com/mcbeet/beet/commit/c734c1299ad7a717f4ae915396950d527416a1a1))
