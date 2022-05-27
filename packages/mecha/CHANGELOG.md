@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.52.1 (2022-05-27)
+### Fix
+* Forgot to export DebugAstEmitter ([`3c31e46`](https://github.com/mcbeet/mecha/commit/3c31e46fa37c9ba6598abfce2e26854d5245702a))
+
 ## v0.52.0 (2022-05-27)
 ### Feature
 * Add mecha.contrib.debug_ast ([`b61e8ab`](https://github.com/mcbeet/mecha/commit/b61e8aba97767c500c7feaf031a165ce8430dd73))
