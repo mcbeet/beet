@@ -19,7 +19,7 @@ import zipfile
 from contextlib import contextmanager, redirect_stdout
 from dataclasses import dataclass, field
 from functools import cached_property
-from typing import Any, List, Optional, Union
+from typing import Any, Iterator, List, Optional, Union
 
 from pydantic import BaseModel
 
@@ -43,6 +43,7 @@ class JsonReporterOptions(BaseModel):
     exception_filter: Optional[ListOption[str]] = None
     handlers: List[str] = [
         "beet.contrib.json_reporter.stdout",
+        "beet.contrib.json_log",
         "beet.contrib.json_reporter.resource_pack_listing",
         "beet.contrib.json_reporter.resource_pack_zip",
         "beet.contrib.json_reporter.data_pack_listing",
@@ -51,7 +52,9 @@ class JsonReporterOptions(BaseModel):
 
 
 def beet_default(ctx: Context):
-    with ctx.inject(JsonReporter).activate():
+    with ctx.inject(JsonReporter).activate() as json_reporter:
+        if json_reporter.opts.enabled:
+            ctx.require("beet.contrib.json_log.activate_json_log")
         yield
 
 
@@ -75,9 +78,9 @@ class JsonReporter:
         self.handlers.extend(specs)
 
     @contextmanager
-    def activate(self):
+    def activate(self) -> Iterator["JsonReporter"]:
         if not self.opts.enabled:
-            yield
+            yield self
             return
 
         message = None
@@ -85,7 +88,7 @@ class JsonReporter:
 
         try:
             with redirect_stdout(self.stdout):
-                yield
+                yield self
         except WrappedException as exc:
             message = str(exc)
             if not exc.hide_wrapped_exception:
