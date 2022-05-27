@@ -772,3 +772,7 @@ give @s stone{CanPlaceOn: [*stone_can_place_on], **custom_model_data}
 ###
 red = {"color": "red"}
 tellraw @p ["", {"text": "hey", **red}, *red.color]
+###
+from PIL import Image
+###
+from PIL.Image import Image

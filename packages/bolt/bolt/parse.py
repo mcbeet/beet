@@ -22,6 +22,7 @@ __all__ = [
     "parse_identifier",
     "ImportLocationConstraint",
     "ImportStatementHandler",
+    "parse_python_import",
     "parse_import_name",
     "GlobalNonlocalHandler",
     "parse_name_list",
@@ -105,11 +106,12 @@ TRUE_PATTERN: str = r"\b[tT]rue\b"
 FALSE_PATTERN: str = r"\b[fF]alse\b"
 NULL_PATTERN: str = r"\b(?:null|None)\b"
 IDENTIFIER_PATTERN: str = rf"(?!_mecha_|{KEYWORD_PATTERN})[a-zA-Z_][a-zA-Z0-9_]*\b"
+MODULE_PATTERN: str = rf"{IDENTIFIER_PATTERN}(?:\.{IDENTIFIER_PATTERN})*"
 STRING_PATTERN: str = r'"(?:\\.|[^\\\n])*?"' "|" r"'(?:\\.|[^\\\n])*?'"
 NUMBER_PATTERN: str = r"(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?\b"
 RESOURCE_LOCATION_PATTERN: str = r"(?:\.\./|\./|[0-9a-z_\-\.]+:)[0-9a-z_./-]+"
 
-IMPORT_REGEX = re.compile(rf"^{IDENTIFIER_PATTERN}(?:\.{IDENTIFIER_PATTERN})*$")
+IMPORT_REGEX = re.compile(rf"^{MODULE_PATTERN}$")
 
 
 def get_bolt_parsers(
@@ -173,7 +175,12 @@ def get_bolt_parsers(
         "bolt:del_target": parse_del_target,
         "bolt:interpolation": PrimaryParser(delegate("bolt:identifier")),
         "bolt:identifier": parse_identifier,
-        "bolt:import": ImportLocationConstraint(parsers["resource_location_or_tag"]),
+        "bolt:import": AlternativeParser(
+            [
+                ImportLocationConstraint(parsers["resource_location_or_tag"]),
+                parse_python_import,
+            ]
+        ),
         "bolt:import_name": parse_import_name,
         "bolt:global_name": parse_name_list,
         "bolt:nonlocal_name": parse_name_list,
@@ -916,6 +923,13 @@ class ImportStatementHandler:
                         break
 
         return node
+
+
+def parse_python_import(stream: TokenStream) -> Any:
+    """Parse python import."""
+    with stream.syntax(module=rf"{MODULE_PATTERN}(?=\s)"):
+        token = stream.expect("module")
+        return set_location(AstResourceLocation(path=token.value), token)
 
 
 def parse_import_name(stream: TokenStream) -> AstImportedIdentifier:
