@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.5.1 (2022-05-27)
+### Fix
+* Handle uppercase python imports ([`a5e50e0`](https://github.com/mcbeet/bolt/commit/a5e50e0173b47310db43b6915d31b707b7218c3a))
+
 ## v0.5.0 (2022-05-06)
 ### Feature
 * Iterable/mapping unpacking in json/nbt interpolation ([`32acee0`](https://github.com/mcbeet/bolt/commit/32acee0e8bbf2c831fa48c30595b63ed61f1de40))
