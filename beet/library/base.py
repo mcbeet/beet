@@ -451,6 +451,10 @@ class Namespace(
 
         return True
 
+    def clear(self):
+        self.extra.clear()
+        super().clear()
+
     @property
     def content(self) -> Iterator[Tuple[str, NamespaceFile]]:
         """Iterator that yields all the files stored in the namespace."""
@@ -843,6 +847,14 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
         """Iterator that yields all the files stored in the pack."""
         for file_type in self.resolve_scope_map().values():
             yield from NamespaceProxy[NamespaceFile](self, file_type).items()
+
+    def clear(self):
+        self.extra.clear()
+        super().clear()
+        if not self.pack_format:
+            self.pack_format = self.latest_pack_format
+        if not self.description:
+            self.description = ""
 
     @overload
     def list_files(
