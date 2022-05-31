@@ -63,7 +63,7 @@ from .prefetch import MarkdownPrefetcher
 @error_handler(should_exit=True)
 def lectern(
     ctx: click.Context,
-    path: Tuple[str],
+    path: Tuple[str, ...],
     data_pack: Optional[str],
     resource_pack: Optional[str],
     external_files: Optional[str],
