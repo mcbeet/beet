@@ -44,7 +44,7 @@ pytest-minecraft = "^0.2.0"
 isort = "^5.10.1"
 pytest-insta = "^0.1.11"
 python-semantic-release = "^7.28.1"
-mudkip = "^0.5.3"
+mudkip = "^0.7.0"
 
 [tool.poetry.scripts]
 beet = "beet.toolchain.cli:main"
