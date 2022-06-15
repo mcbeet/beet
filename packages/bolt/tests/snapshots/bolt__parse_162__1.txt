@@ -1,19 +1,19 @@
-_mecha_lineno = [1, 10], [1, 2]
-_mecha_helper_children = _mecha_runtime.helpers['children']
-_mecha_helper_replace = _mecha_runtime.helpers['replace']
-with _mecha_runtime.scope() as _mecha_var5:
-    _mecha_var0 = 'foo'
-    _mecha_var1 = 1
-    _mecha_var2 = {_mecha_var0: _mecha_var1}
-    d = _mecha_var2
-    _mecha_var3 = 1
-    _mecha_var4 = d
-    _mecha_var4.foo += _mecha_var3
-_mecha_var6 = _mecha_helper_replace(_mecha_refs[0], commands=_mecha_helper_children(_mecha_var5))
+_bolt_lineno = [1, 10], [1, 2]
+_bolt_helper_children = _bolt_runtime.helpers['children']
+_bolt_helper_replace = _bolt_runtime.helpers['replace']
+with _bolt_runtime.scope() as _bolt_var5:
+    _bolt_var0 = 'foo'
+    _bolt_var1 = 1
+    _bolt_var2 = {_bolt_var0: _bolt_var1}
+    d = _bolt_var2
+    _bolt_var3 = 1
+    _bolt_var4 = d
+    _bolt_var4.foo += _bolt_var3
+_bolt_var6 = _bolt_helper_replace(_bolt_refs[0], commands=_bolt_helper_children(_bolt_var5))
 ---
-output = _mecha_var6
+output = _bolt_var6
 ---
-_mecha_refs[0]
+_bolt_refs[0]
 <class 'mecha.ast.AstRoot'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=24, lineno=3, colno=1)

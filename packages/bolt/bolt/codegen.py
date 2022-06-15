@@ -76,7 +76,7 @@ class Accumulator:
     counter: int = 0
     header: Dict[str, str] = field(default_factory=dict)
 
-    last_condition: str = "_mecha_error_last_condition"
+    last_condition: str = "_bolt_error_last_condition"
 
     def get_source(self) -> str:
         """Return the source code."""
@@ -85,7 +85,7 @@ class Accumulator:
             for expression, variable in self.header.items()
         )
 
-        lines: List[str] = ["_mecha_lineno = "]
+        lines: List[str] = ["_bolt_lineno = "]
         numbers1: List[int] = [1]
         numbers2: List[int] = [1]
 
@@ -104,10 +104,10 @@ class Accumulator:
 
     def helper(self, name: str, *args: Any) -> str:
         """Emit helper."""
-        helper = f"_mecha_runtime.helpers[{name!r}]"
+        helper = f"_bolt_runtime.helpers[{name!r}]"
 
         if helper not in self.header:
-            self.header[helper] = f"_mecha_helper_{normalize_string(name)}"
+            self.header[helper] = f"_bolt_helper_{normalize_string(name)}"
 
         return f"{self.header[helper]}({', '.join(map(str, args))})"
 
@@ -117,8 +117,8 @@ class Accumulator:
 
     def missing(self) -> str:
         """Emit missing sentinel."""
-        self.header["_mecha_runtime.helpers['missing']"] = f"_mecha_helper_missing"
-        return f"_mecha_helper_missing"
+        self.header["_bolt_runtime.helpers['missing']"] = f"_bolt_helper_missing"
+        return f"_bolt_helper_missing"
 
     def children(self, nodes: Iterable[str]) -> str:
         """Emit children helper."""
@@ -136,18 +136,18 @@ class Accumulator:
         """Register ref."""
         index = len(self.refs)
         self.refs.append(obj)
-        return f"_mecha_refs[{index}]"
+        return f"_bolt_refs[{index}]"
 
     def make_ref_slice(self, objs: Iterable[Any]) -> str:
         """Register ref slice."""
         start = len(self.refs)
         self.refs.extend(objs)
         stop = len(self.refs)
-        return f"_mecha_refs[{start}:{stop}]"
+        return f"_bolt_refs[{start}:{stop}]"
 
     def make_variable(self) -> str:
         """Create a unique variable name."""
-        name = f"_mecha_var{self.counter}"
+        name = f"_bolt_var{self.counter}"
         self.counter += 1
         return name
 
@@ -173,9 +173,9 @@ class Accumulator:
     def if_statement(self, condition: str):
         """Emit if statement."""
         branch = self.helper("branch", condition)
-        self.statement(f"with {branch} as _mecha_condition:")
+        self.statement(f"with {branch} as _bolt_condition:")
         with self.block():
-            self.statement(f"if _mecha_condition:")
+            self.statement(f"if _bolt_condition:")
             with self.block():
                 yield
         self.last_condition = condition
@@ -213,16 +213,16 @@ class CommandCollector(ChildrenCollector):
     def add_static(self, *args: AstNode):
         if len(args) > 1:
             self.acc.statement(
-                f"_mecha_runtime.commands.extend({self.acc.make_ref_slice(args)})"
+                f"_bolt_runtime.commands.extend({self.acc.make_ref_slice(args)})"
             )
         elif args:
             self.acc.statement(
-                f"_mecha_runtime.commands.append({self.acc.make_ref(args[0])})"
+                f"_bolt_runtime.commands.append({self.acc.make_ref(args[0])})"
             )
 
     def add_dynamic(self, *args: str):
         for arg in args:
-            self.acc.statement(f"_mecha_runtime.commands.append({arg})")
+            self.acc.statement(f"_bolt_runtime.commands.append({arg})")
 
 
 class RootCommandCollector(CommandCollector):
@@ -236,7 +236,7 @@ class RootCommandCollector(CommandCollector):
         ]
         self.acc.lines.insert(
             self.start_index,
-            f"{self.acc.indentation}with _mecha_runtime.scope() as {commands}:\n",
+            f"{self.acc.indentation}with _bolt_runtime.scope() as {commands}:\n",
         )
         return self.acc.helper("children", commands)
 
@@ -346,7 +346,7 @@ def visit_body(
     """Emit each individual command in the current scope."""
     result = yield from visit_multiple(node.commands, acc, CommandCollector)
     if result is None:
-        acc.statement(f"_mecha_runtime.commands.extend({acc.make_ref(node)}.commands)")
+        acc.statement(f"_bolt_runtime.commands.extend({acc.make_ref(node)}.commands)")
 
 
 def visit_binding(
@@ -363,7 +363,7 @@ def visit_binding(
 
     if len(targets) > 1 and isinstance(target_node, AstTargetUnpack):
         nodes = target_node.targets
-        values = [f"_mecha_unpack{i}" for i in range(len(targets))]
+        values = [f"_bolt_unpack{i}" for i in range(len(targets))]
         acc.statement(f"{', '.join(values)} = {value}", lineno=target_node)
     else:
         nodes = [target_node]
@@ -372,11 +372,11 @@ def visit_binding(
     for node, target, value in zip(nodes, targets, values):
         if isinstance(node, AstTargetIdentifier) and node.rebind:
             rebind = acc.helper("get_rebind", target)
-            acc.statement(f"_mecha_rebind = {rebind}", lineno=node)
+            acc.statement(f"_bolt_rebind = {rebind}", lineno=node)
             acc.statement(f"{target} {op} {value}")
-            acc.statement(f"if _mecha_rebind is not None:")
+            acc.statement(f"if _bolt_rebind is not None:")
             with acc.block():
-                acc.statement(f"{target} = _mecha_rebind({target})")
+                acc.statement(f"{target} = _bolt_rebind({target})")
         else:
             acc.statement(f"{target} {op} {value}", lineno=node)
 
@@ -594,7 +594,7 @@ class Codegen(Visitor):
 
             if module.namespace:
                 acc.statement(
-                    f"{', '.join(names)} = _mecha_runtime.from_module_import({module.get_value()!r}, {', '.join(map(repr, names))})",
+                    f"{', '.join(names)} = _bolt_runtime.from_module_import({module.get_value()!r}, {', '.join(map(repr, names))})",
                     lineno=node,
                 )
             else:
@@ -607,7 +607,7 @@ class Codegen(Visitor):
 
             if module.namespace:
                 acc.statement(
-                    f"{alias} = _mecha_runtime.import_module({module.get_value()!r}).namespace",
+                    f"{alias} = _bolt_runtime.import_module({module.get_value()!r}).namespace",
                     lineno=node,
                 )
             else:
@@ -713,11 +713,11 @@ class Codegen(Visitor):
             acc.statement(f"if {dup} is not None:")
             with acc.block():
                 rebind = acc.helper("get_rebind", left)
-                acc.statement(f"_mecha_rebind = {rebind}", lineno=node.right)
+                acc.statement(f"_bolt_rebind = {rebind}", lineno=node.right)
                 acc.statement(f"{left} = {right}")
-                acc.statement(f"if _mecha_rebind is not None:")
+                acc.statement(f"if _bolt_rebind is not None:")
                 with acc.block():
-                    acc.statement(f"{left} = _mecha_rebind({left})")
+                    acc.statement(f"{left} = _bolt_rebind({left})")
 
             acc.statement("else:")
             with acc.block():

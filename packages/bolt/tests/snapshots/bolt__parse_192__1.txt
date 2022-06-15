@@ -1,31 +1,31 @@
-_mecha_lineno = [1, 10, 14, 15, 16, 18], [1, 2, 4, 5, 6, 7]
-_mecha_helper_interpolate_message = _mecha_runtime.helpers['interpolate_message']
-_mecha_helper_children = _mecha_runtime.helpers['children']
-_mecha_helper_replace = _mecha_runtime.helpers['replace']
-_mecha_helper_import_module = _mecha_runtime.helpers['import_module']
-_mecha_helper_get_attribute = _mecha_runtime.helpers['get_attribute']
-with _mecha_runtime.scope() as _mecha_var5:
-    _mecha_var0 = 0
-    math = _mecha_var0
-    _mecha_var1 = math
-    _mecha_var1 = _mecha_helper_interpolate_message(_mecha_var1, _mecha_refs[0])
-    _mecha_runtime.commands.append(_mecha_helper_replace(_mecha_refs[1], arguments=_mecha_helper_children([_mecha_var1])))
+_bolt_lineno = [1, 10, 14, 15, 16, 18], [1, 2, 4, 5, 6, 7]
+_bolt_helper_interpolate_message = _bolt_runtime.helpers['interpolate_message']
+_bolt_helper_children = _bolt_runtime.helpers['children']
+_bolt_helper_replace = _bolt_runtime.helpers['replace']
+_bolt_helper_import_module = _bolt_runtime.helpers['import_module']
+_bolt_helper_get_attribute = _bolt_runtime.helpers['get_attribute']
+with _bolt_runtime.scope() as _bolt_var5:
+    _bolt_var0 = 0
+    math = _bolt_var0
+    _bolt_var1 = math
+    _bolt_var1 = _bolt_helper_interpolate_message(_bolt_var1, _bolt_refs[0])
+    _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[1], arguments=_bolt_helper_children([_bolt_var1])))
     def wat():
         global math
-        math = _mecha_helper_import_module('math')
-    _mecha_var2 = wat
-    _mecha_var2 = _mecha_var2()
-    _mecha_var3 = math
-    _mecha_var3 = _mecha_helper_get_attribute(_mecha_var3, 'ceil')
-    _mecha_var4 = 0.1
-    _mecha_var3 = _mecha_var3(_mecha_var4)
-    _mecha_var3 = _mecha_helper_interpolate_message(_mecha_var3, _mecha_refs[2])
-    _mecha_runtime.commands.append(_mecha_helper_replace(_mecha_refs[3], arguments=_mecha_helper_children([_mecha_var3])))
-_mecha_var6 = _mecha_helper_replace(_mecha_refs[4], commands=_mecha_helper_children(_mecha_var5))
+        math = _bolt_helper_import_module('math')
+    _bolt_var2 = wat
+    _bolt_var2 = _bolt_var2()
+    _bolt_var3 = math
+    _bolt_var3 = _bolt_helper_get_attribute(_bolt_var3, 'ceil')
+    _bolt_var4 = 0.1
+    _bolt_var3 = _bolt_var3(_bolt_var4)
+    _bolt_var3 = _bolt_helper_interpolate_message(_bolt_var3, _bolt_refs[2])
+    _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[3], arguments=_bolt_helper_children([_bolt_var3])))
+_bolt_var6 = _bolt_helper_replace(_bolt_refs[4], commands=_bolt_helper_children(_bolt_var5))
 ---
-output = _mecha_var6
+output = _bolt_var6
 ---
-_mecha_refs[0]
+_bolt_refs[0]
 <class 'bolt.ast.AstInterpolation'>
   location: SourceLocation(pos=13, lineno=2, colno=5)
   end_location: SourceLocation(pos=17, lineno=2, colno=9)
@@ -34,14 +34,14 @@ _mecha_refs[0]
   converter: 'message'
   value:
     <class 'bolt.ast.AstIdentifier'>
-_mecha_refs[1]
+_bolt_refs[1]
 <class 'mecha.ast.AstCommand'>
   location: SourceLocation(pos=9, lineno=2, colno=1)
   end_location: SourceLocation(pos=17, lineno=2, colno=9)
   identifier: 'say:message'
   arguments:
     <class 'bolt.ast.AstInterpolation'>
-_mecha_refs[2]
+_bolt_refs[2]
 <class 'bolt.ast.AstInterpolation'>
   location: SourceLocation(pos=71, lineno=7, colno=5)
   end_location: SourceLocation(pos=85, lineno=7, colno=19)
@@ -50,14 +50,14 @@ _mecha_refs[2]
   converter: 'message'
   value:
     <class 'bolt.ast.AstCall'>
-_mecha_refs[3]
+_bolt_refs[3]
 <class 'mecha.ast.AstCommand'>
   location: SourceLocation(pos=67, lineno=7, colno=1)
   end_location: SourceLocation(pos=85, lineno=7, colno=19)
   identifier: 'say:message'
   arguments:
     <class 'bolt.ast.AstInterpolation'>
-_mecha_refs[4]
+_bolt_refs[4]
 <class 'mecha.ast.AstRoot'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=86, lineno=8, colno=1)

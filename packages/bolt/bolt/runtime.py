@@ -253,8 +253,8 @@ class Runtime:
         logger.debug("Evaluate module %s.", module.resource_location or "<unknown>")
 
         module.namespace.update(self.globals)
-        module.namespace["_mecha_runtime"] = self
-        module.namespace["_mecha_refs"] = module.refs
+        module.namespace["_bolt_runtime"] = self
+        module.namespace["_bolt_refs"] = module.refs
         module.namespace["__name__"] = module.resource_location
         module.namespace["__file__"] = module.code.co_filename
 

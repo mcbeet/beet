@@ -1,24 +1,24 @@
-_mecha_lineno = [1, 12], [1, 2]
-_mecha_helper_interpolate_message = _mecha_runtime.helpers['interpolate_message']
-_mecha_helper_children = _mecha_runtime.helpers['children']
-_mecha_helper_replace = _mecha_runtime.helpers['replace']
-with _mecha_runtime.scope() as _mecha_var5:
-    _mecha_var0 = list
-    _mecha_var1 = range
-    _mecha_var2 = 12
-    _mecha_var1 = _mecha_var1(_mecha_var2)
-    _mecha_var0 = _mecha_var0(_mecha_var1)
-    numbers = _mecha_var0
-    _mecha_var3 = numbers
-    _mecha_var4 = 3
-    _mecha_var3 = _mecha_var3[_mecha_var4:]
-    _mecha_var3 = _mecha_helper_interpolate_message(_mecha_var3, _mecha_refs[0])
-    _mecha_runtime.commands.append(_mecha_helper_replace(_mecha_refs[1], arguments=_mecha_helper_children([_mecha_var3])))
-_mecha_var6 = _mecha_helper_replace(_mecha_refs[2], commands=_mecha_helper_children(_mecha_var5))
+_bolt_lineno = [1, 12], [1, 2]
+_bolt_helper_interpolate_message = _bolt_runtime.helpers['interpolate_message']
+_bolt_helper_children = _bolt_runtime.helpers['children']
+_bolt_helper_replace = _bolt_runtime.helpers['replace']
+with _bolt_runtime.scope() as _bolt_var5:
+    _bolt_var0 = list
+    _bolt_var1 = range
+    _bolt_var2 = 12
+    _bolt_var1 = _bolt_var1(_bolt_var2)
+    _bolt_var0 = _bolt_var0(_bolt_var1)
+    numbers = _bolt_var0
+    _bolt_var3 = numbers
+    _bolt_var4 = 3
+    _bolt_var3 = _bolt_var3[_bolt_var4:]
+    _bolt_var3 = _bolt_helper_interpolate_message(_bolt_var3, _bolt_refs[0])
+    _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[1], arguments=_bolt_helper_children([_bolt_var3])))
+_bolt_var6 = _bolt_helper_replace(_bolt_refs[2], commands=_bolt_helper_children(_bolt_var5))
 ---
-output = _mecha_var6
+output = _bolt_var6
 ---
-_mecha_refs[0]
+_bolt_refs[0]
 <class 'bolt.ast.AstInterpolation'>
   location: SourceLocation(pos=30, lineno=2, colno=5)
   end_location: SourceLocation(pos=41, lineno=2, colno=16)
@@ -27,14 +27,14 @@ _mecha_refs[0]
   converter: 'message'
   value:
     <class 'bolt.ast.AstLookup'>
-_mecha_refs[1]
+_bolt_refs[1]
 <class 'mecha.ast.AstCommand'>
   location: SourceLocation(pos=26, lineno=2, colno=1)
   end_location: SourceLocation(pos=41, lineno=2, colno=16)
   identifier: 'say:message'
   arguments:
     <class 'bolt.ast.AstInterpolation'>
-_mecha_refs[2]
+_bolt_refs[2]
 <class 'mecha.ast.AstRoot'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=42, lineno=3, colno=1)

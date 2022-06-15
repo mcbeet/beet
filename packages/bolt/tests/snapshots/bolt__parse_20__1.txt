@@ -1,45 +1,45 @@
-_mecha_lineno = [1], [1]
-_mecha_helper_get_dup = _mecha_runtime.helpers['get_dup']
-_mecha_helper_branch = _mecha_runtime.helpers['branch']
-_mecha_helper_operator_not = _mecha_runtime.helpers['operator_not']
-_mecha_helper_get_rebind = _mecha_runtime.helpers['get_rebind']
-_mecha_helper_children = _mecha_runtime.helpers['children']
-_mecha_helper_replace = _mecha_runtime.helpers['replace']
-with _mecha_runtime.scope() as _mecha_var7:
-    _mecha_var0 = True
-    _mecha_var1 = _mecha_var0
-    _mecha_var2 = _mecha_helper_get_dup(_mecha_var0)
-    if _mecha_var2 is not None:
-        _mecha_var0 = _mecha_var2()
-    with _mecha_helper_branch(_mecha_var1) as _mecha_condition:
-        if _mecha_condition:
-            _mecha_var3 = False
-            _mecha_var4 = _mecha_helper_operator_not(_mecha_var3)
-            _mecha_var5 = _mecha_helper_get_dup(_mecha_var3)
-            if _mecha_var5 is not None:
-                _mecha_var3 = _mecha_var5()
-            with _mecha_helper_branch(_mecha_var4) as _mecha_condition:
-                if _mecha_condition:
-                    _mecha_var6 = True
-                    if _mecha_var5 is not None:
-                        _mecha_rebind = _mecha_helper_get_rebind(_mecha_var3)
-                        _mecha_var3 = _mecha_var6
-                        if _mecha_rebind is not None:
-                            _mecha_var3 = _mecha_rebind(_mecha_var3)
+_bolt_lineno = [1], [1]
+_bolt_helper_get_dup = _bolt_runtime.helpers['get_dup']
+_bolt_helper_branch = _bolt_runtime.helpers['branch']
+_bolt_helper_operator_not = _bolt_runtime.helpers['operator_not']
+_bolt_helper_get_rebind = _bolt_runtime.helpers['get_rebind']
+_bolt_helper_children = _bolt_runtime.helpers['children']
+_bolt_helper_replace = _bolt_runtime.helpers['replace']
+with _bolt_runtime.scope() as _bolt_var7:
+    _bolt_var0 = True
+    _bolt_var1 = _bolt_var0
+    _bolt_var2 = _bolt_helper_get_dup(_bolt_var0)
+    if _bolt_var2 is not None:
+        _bolt_var0 = _bolt_var2()
+    with _bolt_helper_branch(_bolt_var1) as _bolt_condition:
+        if _bolt_condition:
+            _bolt_var3 = False
+            _bolt_var4 = _bolt_helper_operator_not(_bolt_var3)
+            _bolt_var5 = _bolt_helper_get_dup(_bolt_var3)
+            if _bolt_var5 is not None:
+                _bolt_var3 = _bolt_var5()
+            with _bolt_helper_branch(_bolt_var4) as _bolt_condition:
+                if _bolt_condition:
+                    _bolt_var6 = True
+                    if _bolt_var5 is not None:
+                        _bolt_rebind = _bolt_helper_get_rebind(_bolt_var3)
+                        _bolt_var3 = _bolt_var6
+                        if _bolt_rebind is not None:
+                            _bolt_var3 = _bolt_rebind(_bolt_var3)
                     else:
-                        _mecha_var3 = _mecha_var6
-            if _mecha_var2 is not None:
-                _mecha_rebind = _mecha_helper_get_rebind(_mecha_var0)
-                _mecha_var0 = _mecha_var3
-                if _mecha_rebind is not None:
-                    _mecha_var0 = _mecha_rebind(_mecha_var0)
+                        _bolt_var3 = _bolt_var6
+            if _bolt_var2 is not None:
+                _bolt_rebind = _bolt_helper_get_rebind(_bolt_var0)
+                _bolt_var0 = _bolt_var3
+                if _bolt_rebind is not None:
+                    _bolt_var0 = _bolt_rebind(_bolt_var0)
             else:
-                _mecha_var0 = _mecha_var3
-_mecha_var8 = _mecha_helper_replace(_mecha_refs[0], commands=_mecha_helper_children(_mecha_var7))
+                _bolt_var0 = _bolt_var3
+_bolt_var8 = _bolt_helper_replace(_bolt_refs[0], commands=_bolt_helper_children(_bolt_var7))
 ---
-output = _mecha_var8
+output = _bolt_var8
 ---
-_mecha_refs[0]
+_bolt_refs[0]
 <class 'mecha.ast.AstRoot'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=25, lineno=2, colno=1)

@@ -1,32 +1,32 @@
-_mecha_lineno = [1, 7, 8, 15, 16, 22], [1, 2, 3, 5, 6, 7]
-_mecha_helper_get_rebind = _mecha_runtime.helpers['get_rebind']
-_mecha_helper_children = _mecha_runtime.helpers['children']
-_mecha_helper_replace = _mecha_runtime.helpers['replace']
-with _mecha_runtime.scope() as _mecha_var3:
+_bolt_lineno = [1, 7, 8, 15, 16, 22], [1, 2, 3, 5, 6, 7]
+_bolt_helper_get_rebind = _bolt_runtime.helpers['get_rebind']
+_bolt_helper_children = _bolt_runtime.helpers['children']
+_bolt_helper_replace = _bolt_runtime.helpers['replace']
+with _bolt_runtime.scope() as _bolt_var3:
     def foo():
         global thing
-        _mecha_var0 = bar
-        _mecha_var0 = _mecha_var0()
-        _mecha_rebind = _mecha_helper_get_rebind(thing)
-        thing += _mecha_var0
-        if _mecha_rebind is not None:
-            thing = _mecha_rebind(thing)
+        _bolt_var0 = bar
+        _bolt_var0 = _bolt_var0()
+        _bolt_rebind = _bolt_helper_get_rebind(thing)
+        thing += _bolt_var0
+        if _bolt_rebind is not None:
+            thing = _bolt_rebind(thing)
     def bar():
         global thing
-        _mecha_var1 = foo
-        _mecha_var1 = _mecha_var1()
-        _mecha_rebind = _mecha_helper_get_rebind(thing)
-        thing += _mecha_var1
-        if _mecha_rebind is not None:
-            thing = _mecha_rebind(thing)
-    _mecha_var2 = bar
-    _mecha_var2 = _mecha_var2()
-    thing = _mecha_var2
-_mecha_var4 = _mecha_helper_replace(_mecha_refs[0], commands=_mecha_helper_children(_mecha_var3))
+        _bolt_var1 = foo
+        _bolt_var1 = _bolt_var1()
+        _bolt_rebind = _bolt_helper_get_rebind(thing)
+        thing += _bolt_var1
+        if _bolt_rebind is not None:
+            thing = _bolt_rebind(thing)
+    _bolt_var2 = bar
+    _bolt_var2 = _bolt_var2()
+    thing = _bolt_var2
+_bolt_var4 = _bolt_helper_replace(_bolt_refs[0], commands=_bolt_helper_children(_bolt_var3))
 ---
-output = _mecha_var4
+output = _bolt_var4
 ---
-_mecha_refs[0]
+_bolt_refs[0]
 <class 'mecha.ast.AstRoot'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=108, lineno=8, colno=1)

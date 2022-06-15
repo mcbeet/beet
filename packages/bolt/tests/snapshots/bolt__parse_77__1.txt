@@ -1,31 +1,31 @@
-_mecha_lineno = [1, 11], [1, 2]
-_mecha_helper_missing = _mecha_runtime.helpers['missing']
-_mecha_helper_get_rebind = _mecha_runtime.helpers['get_rebind']
-_mecha_helper_children = _mecha_runtime.helpers['children']
-_mecha_helper_replace = _mecha_runtime.helpers['replace']
-with _mecha_runtime.scope() as _mecha_var2:
-    def f(a, b=_mecha_helper_missing):
-        if b is _mecha_helper_missing:
-            _mecha_var0 = a
-            b = _mecha_var0
-        _mecha_var1 = a
-        _mecha_rebind = _mecha_helper_get_rebind(b)
-        b += _mecha_var1
-        if _mecha_rebind is not None:
-            b = _mecha_rebind(b)
-        _mecha_runtime.commands.append(_mecha_refs[0])
-_mecha_var3 = _mecha_helper_replace(_mecha_refs[1], commands=_mecha_helper_children(_mecha_var2))
+_bolt_lineno = [1, 11], [1, 2]
+_bolt_helper_missing = _bolt_runtime.helpers['missing']
+_bolt_helper_get_rebind = _bolt_runtime.helpers['get_rebind']
+_bolt_helper_children = _bolt_runtime.helpers['children']
+_bolt_helper_replace = _bolt_runtime.helpers['replace']
+with _bolt_runtime.scope() as _bolt_var2:
+    def f(a, b=_bolt_helper_missing):
+        if b is _bolt_helper_missing:
+            _bolt_var0 = a
+            b = _bolt_var0
+        _bolt_var1 = a
+        _bolt_rebind = _bolt_helper_get_rebind(b)
+        b += _bolt_var1
+        if _bolt_rebind is not None:
+            b = _bolt_rebind(b)
+        _bolt_runtime.commands.append(_bolt_refs[0])
+_bolt_var3 = _bolt_helper_replace(_bolt_refs[1], commands=_bolt_helper_children(_bolt_var2))
 ---
-output = _mecha_var3
+output = _bolt_var3
 ---
-_mecha_refs[0]
+_bolt_refs[0]
 <class 'mecha.ast.AstCommand'>
   location: SourceLocation(pos=30, lineno=3, colno=5)
   end_location: SourceLocation(pos=37, lineno=3, colno=12)
   identifier: 'say:message'
   arguments:
     <class 'mecha.ast.AstMessage'>
-_mecha_refs[1]
+_bolt_refs[1]
 <class 'mecha.ast.AstRoot'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=37, lineno=3, colno=12)

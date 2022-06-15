@@ -1,71 +1,71 @@
-_mecha_lineno = [1, 9, 15], [1, 2, 4]
-_mecha_helper_branch = _mecha_runtime.helpers['branch']
-_mecha_helper_children = _mecha_runtime.helpers['children']
-_mecha_helper_replace = _mecha_runtime.helpers['replace']
-with _mecha_runtime.scope() as _mecha_var5:
-    with _mecha_runtime.scope() as _mecha_var4:
-        _mecha_var0 = 'thing'
-        _mecha_var1 = 'bar'
-        _mecha_var0 = _mecha_var0 == _mecha_var1
-        with _mecha_helper_branch(_mecha_var0) as _mecha_condition:
-            if _mecha_condition:
-                _mecha_runtime.commands.extend(_mecha_refs[0].commands)
-        _mecha_var2 = 'thing'
-        _mecha_var3 = 'foo'
-        _mecha_var2 = _mecha_var2 == _mecha_var3
-        with _mecha_helper_branch(_mecha_var2) as _mecha_condition:
-            if _mecha_condition:
-                _mecha_runtime.commands.extend(_mecha_refs[1].commands)
-    _mecha_runtime.commands.append(_mecha_helper_replace(_mecha_refs[8], arguments=_mecha_helper_children([_mecha_helper_replace(_mecha_refs[7], arguments=_mecha_helper_children([_mecha_refs[4], _mecha_refs[5], _mecha_refs[6], _mecha_helper_replace(_mecha_refs[3], arguments=_mecha_helper_children([_mecha_helper_replace(_mecha_refs[2], commands=_mecha_helper_children(_mecha_var4))]))]))])))
-_mecha_var6 = _mecha_helper_replace(_mecha_refs[9], commands=_mecha_helper_children(_mecha_var5))
+_bolt_lineno = [1, 9, 15], [1, 2, 4]
+_bolt_helper_branch = _bolt_runtime.helpers['branch']
+_bolt_helper_children = _bolt_runtime.helpers['children']
+_bolt_helper_replace = _bolt_runtime.helpers['replace']
+with _bolt_runtime.scope() as _bolt_var5:
+    with _bolt_runtime.scope() as _bolt_var4:
+        _bolt_var0 = 'thing'
+        _bolt_var1 = 'bar'
+        _bolt_var0 = _bolt_var0 == _bolt_var1
+        with _bolt_helper_branch(_bolt_var0) as _bolt_condition:
+            if _bolt_condition:
+                _bolt_runtime.commands.extend(_bolt_refs[0].commands)
+        _bolt_var2 = 'thing'
+        _bolt_var3 = 'foo'
+        _bolt_var2 = _bolt_var2 == _bolt_var3
+        with _bolt_helper_branch(_bolt_var2) as _bolt_condition:
+            if _bolt_condition:
+                _bolt_runtime.commands.extend(_bolt_refs[1].commands)
+    _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[8], arguments=_bolt_helper_children([_bolt_helper_replace(_bolt_refs[7], arguments=_bolt_helper_children([_bolt_refs[4], _bolt_refs[5], _bolt_refs[6], _bolt_helper_replace(_bolt_refs[3], arguments=_bolt_helper_children([_bolt_helper_replace(_bolt_refs[2], commands=_bolt_helper_children(_bolt_var4))]))]))])))
+_bolt_var6 = _bolt_helper_replace(_bolt_refs[9], commands=_bolt_helper_children(_bolt_var5))
 ---
-output = _mecha_var6
+output = _bolt_var6
 ---
-_mecha_refs[0]
+_bolt_refs[0]
 <class 'mecha.ast.AstRoot'>
   location: SourceLocation(pos=60, lineno=3, colno=9)
   end_location: SourceLocation(pos=69, lineno=3, colno=18)
   commands:
     <class 'mecha.ast.AstCommand'>
-_mecha_refs[1]
+_bolt_refs[1]
 <class 'mecha.ast.AstRoot'>
   location: SourceLocation(pos=103, lineno=5, colno=9)
   end_location: SourceLocation(pos=112, lineno=5, colno=18)
   commands:
     <class 'mecha.ast.AstCommand'>
-_mecha_refs[2]
+_bolt_refs[2]
 <class 'mecha.ast.AstRoot'>
   location: SourceLocation(pos=31, lineno=2, colno=5)
   end_location: SourceLocation(pos=112, lineno=5, colno=18)
   commands:
     <class 'mecha.ast.AstCommand'>
     <class 'mecha.ast.AstCommand'>
-_mecha_refs[3]
+_bolt_refs[3]
 <class 'mecha.ast.AstCommand'>
   location: SourceLocation(pos=31, lineno=2, colno=5)
   end_location: SourceLocation(pos=112, lineno=5, colno=18)
   identifier: 'execute:commands'
   arguments:
     <class 'mecha.ast.AstRoot'>
-_mecha_refs[4]
+_bolt_refs[4]
 <class 'mecha.ast.AstSelector'>
   location: SourceLocation(pos=9, lineno=1, colno=10)
   end_location: SourceLocation(pos=11, lineno=1, colno=12)
   variable: 's'
   arguments:
     <empty>
-_mecha_refs[5]
+_bolt_refs[5]
 <class 'mecha.ast.AstObjective'>
   location: SourceLocation(pos=12, lineno=1, colno=13)
   end_location: SourceLocation(pos=15, lineno=1, colno=16)
   value: 'tmp'
-_mecha_refs[6]
+_bolt_refs[6]
 <class 'mecha.ast.AstRange'>
   location: SourceLocation(pos=24, lineno=1, colno=25)
   end_location: SourceLocation(pos=25, lineno=1, colno=26)
   min: 0
   max: 0
-_mecha_refs[7]
+_bolt_refs[7]
 <class 'mecha.ast.AstCommand'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=112, lineno=5, colno=18)
@@ -75,14 +75,14 @@ _mecha_refs[7]
     <class 'mecha.ast.AstObjective'>
     <class 'mecha.ast.AstRange'>
     <class 'mecha.ast.AstCommand'>
-_mecha_refs[8]
+_bolt_refs[8]
 <class 'mecha.ast.AstCommand'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=112, lineno=5, colno=18)
   identifier: 'execute:subcommand'
   arguments:
     <class 'mecha.ast.AstCommand'>
-_mecha_refs[9]
+_bolt_refs[9]
 <class 'mecha.ast.AstRoot'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=112, lineno=5, colno=18)

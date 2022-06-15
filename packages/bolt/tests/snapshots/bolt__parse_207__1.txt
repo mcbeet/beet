@@ -1,24 +1,24 @@
-_mecha_lineno = [1, 11], [1, 2]
-_mecha_helper_interpolate_json = _mecha_runtime.helpers['interpolate_json']
-_mecha_helper_children = _mecha_runtime.helpers['children']
-_mecha_helper_replace = _mecha_runtime.helpers['replace']
-_mecha_helper_get_attribute = _mecha_runtime.helpers['get_attribute']
-with _mecha_runtime.scope() as _mecha_var5:
-    _mecha_var0 = 'color'
-    _mecha_var1 = 'red'
-    _mecha_var2 = {_mecha_var0: _mecha_var1}
-    red = _mecha_var2
-    _mecha_var3 = red
-    _mecha_var3 = _mecha_helper_interpolate_json({**_mecha_var3}, _mecha_refs[0])
-    _mecha_var4 = red
-    _mecha_var4 = _mecha_helper_get_attribute(_mecha_var4, 'color')
-    _mecha_var4 = _mecha_helper_interpolate_json([*_mecha_var4], _mecha_refs[4])
-    _mecha_runtime.commands.append(_mecha_helper_replace(_mecha_refs[7], arguments=_mecha_helper_children([_mecha_refs[6], _mecha_helper_replace(_mecha_refs[5], elements=_mecha_helper_children([_mecha_refs[3], _mecha_helper_replace(_mecha_refs[2], entries=_mecha_helper_children([_mecha_refs[1], *_mecha_var3])), *_mecha_var4]))])))
-_mecha_var6 = _mecha_helper_replace(_mecha_refs[8], commands=_mecha_helper_children(_mecha_var5))
+_bolt_lineno = [1, 11], [1, 2]
+_bolt_helper_interpolate_json = _bolt_runtime.helpers['interpolate_json']
+_bolt_helper_children = _bolt_runtime.helpers['children']
+_bolt_helper_replace = _bolt_runtime.helpers['replace']
+_bolt_helper_get_attribute = _bolt_runtime.helpers['get_attribute']
+with _bolt_runtime.scope() as _bolt_var5:
+    _bolt_var0 = 'color'
+    _bolt_var1 = 'red'
+    _bolt_var2 = {_bolt_var0: _bolt_var1}
+    red = _bolt_var2
+    _bolt_var3 = red
+    _bolt_var3 = _bolt_helper_interpolate_json({**_bolt_var3}, _bolt_refs[0])
+    _bolt_var4 = red
+    _bolt_var4 = _bolt_helper_get_attribute(_bolt_var4, 'color')
+    _bolt_var4 = _bolt_helper_interpolate_json([*_bolt_var4], _bolt_refs[4])
+    _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[7], arguments=_bolt_helper_children([_bolt_refs[6], _bolt_helper_replace(_bolt_refs[5], elements=_bolt_helper_children([_bolt_refs[3], _bolt_helper_replace(_bolt_refs[2], entries=_bolt_helper_children([_bolt_refs[1], *_bolt_var3])), *_bolt_var4]))])))
+_bolt_var6 = _bolt_helper_replace(_bolt_refs[8], commands=_bolt_helper_children(_bolt_var5))
 ---
-output = _mecha_var6
+output = _bolt_var6
 ---
-_mecha_refs[0]
+_bolt_refs[0]
 <class 'bolt.ast.AstInterpolation'>
   location: SourceLocation(pos=57, lineno=2, colno=35)
   end_location: SourceLocation(pos=60, lineno=2, colno=38)
@@ -27,7 +27,7 @@ _mecha_refs[0]
   converter: 'json'
   value:
     <class 'bolt.ast.AstIdentifier'>
-_mecha_refs[1]
+_bolt_refs[1]
 <class 'mecha.ast.AstJsonObjectEntry'>
   location: SourceLocation(pos=40, lineno=2, colno=18)
   end_location: SourceLocation(pos=53, lineno=2, colno=31)
@@ -35,19 +35,19 @@ _mecha_refs[1]
     <class 'mecha.ast.AstJsonObjectKey'>
   value:
     <class 'mecha.ast.AstJsonValue'>
-_mecha_refs[2]
+_bolt_refs[2]
 <class 'mecha.ast.AstJsonObject'>
   location: SourceLocation(pos=39, lineno=2, colno=17)
   end_location: SourceLocation(pos=61, lineno=2, colno=39)
   entries:
     <class 'mecha.ast.AstJsonObjectEntry'>
     <class 'bolt.ast.AstInterpolation'>
-_mecha_refs[3]
+_bolt_refs[3]
 <class 'mecha.ast.AstJsonValue'>
   location: SourceLocation(pos=35, lineno=2, colno=13)
   end_location: SourceLocation(pos=37, lineno=2, colno=15)
   value: ''
-_mecha_refs[4]
+_bolt_refs[4]
 <class 'bolt.ast.AstInterpolation'>
   location: SourceLocation(pos=64, lineno=2, colno=42)
   end_location: SourceLocation(pos=73, lineno=2, colno=51)
@@ -56,7 +56,7 @@ _mecha_refs[4]
   converter: 'json'
   value:
     <class 'bolt.ast.AstAttribute'>
-_mecha_refs[5]
+_bolt_refs[5]
 <class 'mecha.ast.AstJsonArray'>
   location: SourceLocation(pos=34, lineno=2, colno=12)
   end_location: SourceLocation(pos=74, lineno=2, colno=52)
@@ -64,14 +64,14 @@ _mecha_refs[5]
     <class 'mecha.ast.AstJsonValue'>
     <class 'mecha.ast.AstJsonObject'>
     <class 'bolt.ast.AstInterpolation'>
-_mecha_refs[6]
+_bolt_refs[6]
 <class 'mecha.ast.AstSelector'>
   location: SourceLocation(pos=31, lineno=2, colno=9)
   end_location: SourceLocation(pos=33, lineno=2, colno=11)
   variable: 'p'
   arguments:
     <empty>
-_mecha_refs[7]
+_bolt_refs[7]
 <class 'mecha.ast.AstCommand'>
   location: SourceLocation(pos=23, lineno=2, colno=1)
   end_location: SourceLocation(pos=74, lineno=2, colno=52)
@@ -79,7 +79,7 @@ _mecha_refs[7]
   arguments:
     <class 'mecha.ast.AstSelector'>
     <class 'mecha.ast.AstJsonArray'>
-_mecha_refs[8]
+_bolt_refs[8]
 <class 'mecha.ast.AstRoot'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=75, lineno=3, colno=1)

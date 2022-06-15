@@ -1,50 +1,50 @@
-_mecha_lineno = [1, 15, 19, 25, 35], [1, 2, 3, 4, 6]
-_mecha_helper_get_attribute = _mecha_runtime.helpers['get_attribute']
-_mecha_helper_interpolate_resource_location = _mecha_runtime.helpers['interpolate_resource_location']
-_mecha_helper_branch = _mecha_runtime.helpers['branch']
-_mecha_helper_interpolate_range = _mecha_runtime.helpers['interpolate_range']
-_mecha_helper_children = _mecha_runtime.helpers['children']
-_mecha_helper_replace = _mecha_runtime.helpers['replace']
-_mecha_helper_operator_not = _mecha_runtime.helpers['operator_not']
-_mecha_helper_interpolate_message = _mecha_runtime.helpers['interpolate_message']
-with _mecha_runtime.scope() as _mecha_var10:
-    _mecha_var0 = generate_tree
-    _mecha_var1 = 'abcdefghijklmnopqrstuvwxyz0123456789'
-    _mecha_var0 = _mecha_var0(_mecha_var1)
-    for node in _mecha_var0:
-        _mecha_var2 = node
-        _mecha_var2 = _mecha_helper_get_attribute(_mecha_var2, 'parent')
-        _mecha_var2 = _mecha_helper_interpolate_resource_location(_mecha_var2, _mecha_refs[0])
-        with _mecha_runtime.scope() as _mecha_var9:
-            _mecha_var3 = node
-            _mecha_var3 = _mecha_helper_get_attribute(_mecha_var3, 'partition')
-            _mecha_var4 = 5
-            _mecha_var3 = _mecha_var3(_mecha_var4)
-            with _mecha_helper_branch(_mecha_var3) as _mecha_condition:
-                if _mecha_condition:
-                    _mecha_var5 = node
-                    _mecha_var5 = _mecha_helper_get_attribute(_mecha_var5, 'range')
-                    _mecha_var5 = _mecha_helper_interpolate_range(_mecha_var5, _mecha_refs[1])
-                    _mecha_var6 = node
-                    _mecha_var6 = _mecha_helper_get_attribute(_mecha_var6, 'children')
-                    _mecha_var6 = _mecha_helper_interpolate_resource_location(_mecha_var6, _mecha_refs[4])
-                    _mecha_runtime.commands.append(_mecha_helper_replace(_mecha_refs[8], arguments=_mecha_helper_children([_mecha_helper_replace(_mecha_refs[7], arguments=_mecha_helper_children([_mecha_refs[2], _mecha_refs[3], _mecha_var5, _mecha_helper_replace(_mecha_refs[6], arguments=_mecha_helper_children([_mecha_helper_replace(_mecha_refs[5], arguments=_mecha_helper_children([_mecha_var6]))]))]))])))
-            _mecha_var3 = _mecha_helper_operator_not(_mecha_var3)
-            with _mecha_helper_branch(_mecha_var3) as _mecha_condition:
-                if _mecha_condition:
-                    _mecha_var7 = node
-                    _mecha_var7 = _mecha_helper_get_attribute(_mecha_var7, 'range')
-                    _mecha_var7 = _mecha_helper_interpolate_range(_mecha_var7, _mecha_refs[9])
-                    _mecha_var8 = node
-                    _mecha_var8 = _mecha_helper_get_attribute(_mecha_var8, 'value')
-                    _mecha_var8 = _mecha_helper_interpolate_message(_mecha_var8, _mecha_refs[12])
-                    _mecha_runtime.commands.append(_mecha_helper_replace(_mecha_refs[16], arguments=_mecha_helper_children([_mecha_helper_replace(_mecha_refs[15], arguments=_mecha_helper_children([_mecha_refs[10], _mecha_refs[11], _mecha_var7, _mecha_helper_replace(_mecha_refs[14], arguments=_mecha_helper_children([_mecha_helper_replace(_mecha_refs[13], arguments=_mecha_helper_children([_mecha_var8]))]))]))])))
-        _mecha_runtime.commands.append(_mecha_helper_replace(_mecha_refs[18], arguments=_mecha_helper_children([_mecha_var2, _mecha_helper_replace(_mecha_refs[17], commands=_mecha_helper_children(_mecha_var9))])))
-_mecha_var11 = _mecha_helper_replace(_mecha_refs[19], commands=_mecha_helper_children(_mecha_var10))
+_bolt_lineno = [1, 15, 19, 25, 35], [1, 2, 3, 4, 6]
+_bolt_helper_get_attribute = _bolt_runtime.helpers['get_attribute']
+_bolt_helper_interpolate_resource_location = _bolt_runtime.helpers['interpolate_resource_location']
+_bolt_helper_branch = _bolt_runtime.helpers['branch']
+_bolt_helper_interpolate_range = _bolt_runtime.helpers['interpolate_range']
+_bolt_helper_children = _bolt_runtime.helpers['children']
+_bolt_helper_replace = _bolt_runtime.helpers['replace']
+_bolt_helper_operator_not = _bolt_runtime.helpers['operator_not']
+_bolt_helper_interpolate_message = _bolt_runtime.helpers['interpolate_message']
+with _bolt_runtime.scope() as _bolt_var10:
+    _bolt_var0 = generate_tree
+    _bolt_var1 = 'abcdefghijklmnopqrstuvwxyz0123456789'
+    _bolt_var0 = _bolt_var0(_bolt_var1)
+    for node in _bolt_var0:
+        _bolt_var2 = node
+        _bolt_var2 = _bolt_helper_get_attribute(_bolt_var2, 'parent')
+        _bolt_var2 = _bolt_helper_interpolate_resource_location(_bolt_var2, _bolt_refs[0])
+        with _bolt_runtime.scope() as _bolt_var9:
+            _bolt_var3 = node
+            _bolt_var3 = _bolt_helper_get_attribute(_bolt_var3, 'partition')
+            _bolt_var4 = 5
+            _bolt_var3 = _bolt_var3(_bolt_var4)
+            with _bolt_helper_branch(_bolt_var3) as _bolt_condition:
+                if _bolt_condition:
+                    _bolt_var5 = node
+                    _bolt_var5 = _bolt_helper_get_attribute(_bolt_var5, 'range')
+                    _bolt_var5 = _bolt_helper_interpolate_range(_bolt_var5, _bolt_refs[1])
+                    _bolt_var6 = node
+                    _bolt_var6 = _bolt_helper_get_attribute(_bolt_var6, 'children')
+                    _bolt_var6 = _bolt_helper_interpolate_resource_location(_bolt_var6, _bolt_refs[4])
+                    _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[8], arguments=_bolt_helper_children([_bolt_helper_replace(_bolt_refs[7], arguments=_bolt_helper_children([_bolt_refs[2], _bolt_refs[3], _bolt_var5, _bolt_helper_replace(_bolt_refs[6], arguments=_bolt_helper_children([_bolt_helper_replace(_bolt_refs[5], arguments=_bolt_helper_children([_bolt_var6]))]))]))])))
+            _bolt_var3 = _bolt_helper_operator_not(_bolt_var3)
+            with _bolt_helper_branch(_bolt_var3) as _bolt_condition:
+                if _bolt_condition:
+                    _bolt_var7 = node
+                    _bolt_var7 = _bolt_helper_get_attribute(_bolt_var7, 'range')
+                    _bolt_var7 = _bolt_helper_interpolate_range(_bolt_var7, _bolt_refs[9])
+                    _bolt_var8 = node
+                    _bolt_var8 = _bolt_helper_get_attribute(_bolt_var8, 'value')
+                    _bolt_var8 = _bolt_helper_interpolate_message(_bolt_var8, _bolt_refs[12])
+                    _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[16], arguments=_bolt_helper_children([_bolt_helper_replace(_bolt_refs[15], arguments=_bolt_helper_children([_bolt_refs[10], _bolt_refs[11], _bolt_var7, _bolt_helper_replace(_bolt_refs[14], arguments=_bolt_helper_children([_bolt_helper_replace(_bolt_refs[13], arguments=_bolt_helper_children([_bolt_var8]))]))]))])))
+        _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[18], arguments=_bolt_helper_children([_bolt_var2, _bolt_helper_replace(_bolt_refs[17], commands=_bolt_helper_children(_bolt_var9))])))
+_bolt_var11 = _bolt_helper_replace(_bolt_refs[19], commands=_bolt_helper_children(_bolt_var10))
 ---
-output = _mecha_var11
+output = _bolt_var11
 ---
-_mecha_refs[0]
+_bolt_refs[0]
 <class 'bolt.ast.AstInterpolation'>
   location: SourceLocation(pos=87, lineno=2, colno=21)
   end_location: SourceLocation(pos=98, lineno=2, colno=32)
@@ -53,7 +53,7 @@ _mecha_refs[0]
   converter: 'resource_location'
   value:
     <class 'bolt.ast.AstAttribute'>
-_mecha_refs[1]
+_bolt_refs[1]
 <class 'bolt.ast.AstInterpolation'>
   location: SourceLocation(pos=169, lineno=4, colno=40)
   end_location: SourceLocation(pos=179, lineno=4, colno=50)
@@ -62,19 +62,19 @@ _mecha_refs[1]
   converter: 'range'
   value:
     <class 'bolt.ast.AstAttribute'>
-_mecha_refs[2]
+_bolt_refs[2]
 <class 'mecha.ast.AstSelector'>
   location: SourceLocation(pos=151, lineno=4, colno=22)
   end_location: SourceLocation(pos=153, lineno=4, colno=24)
   variable: 's'
   arguments:
     <empty>
-_mecha_refs[3]
+_bolt_refs[3]
 <class 'mecha.ast.AstObjective'>
   location: SourceLocation(pos=154, lineno=4, colno=25)
   end_location: SourceLocation(pos=160, lineno=4, colno=31)
   value: 'thingy'
-_mecha_refs[4]
+_bolt_refs[4]
 <class 'bolt.ast.AstInterpolation'>
   location: SourceLocation(pos=189, lineno=4, colno=60)
   end_location: SourceLocation(pos=202, lineno=4, colno=73)
@@ -83,21 +83,21 @@ _mecha_refs[4]
   converter: 'resource_location'
   value:
     <class 'bolt.ast.AstAttribute'>
-_mecha_refs[5]
+_bolt_refs[5]
 <class 'mecha.ast.AstCommand'>
   location: SourceLocation(pos=180, lineno=4, colno=51)
   end_location: SourceLocation(pos=202, lineno=4, colno=73)
   identifier: 'function:name'
   arguments:
     <class 'bolt.ast.AstInterpolation'>
-_mecha_refs[6]
+_bolt_refs[6]
 <class 'mecha.ast.AstCommand'>
   location: SourceLocation(pos=180, lineno=4, colno=51)
   end_location: SourceLocation(pos=202, lineno=4, colno=73)
   identifier: 'execute:run:subcommand'
   arguments:
     <class 'mecha.ast.AstCommand'>
-_mecha_refs[7]
+_bolt_refs[7]
 <class 'mecha.ast.AstCommand'>
   location: SourceLocation(pos=142, lineno=4, colno=13)
   end_location: SourceLocation(pos=202, lineno=4, colno=73)
@@ -107,14 +107,14 @@ _mecha_refs[7]
     <class 'mecha.ast.AstObjective'>
     <class 'bolt.ast.AstInterpolation'>
     <class 'mecha.ast.AstCommand'>
-_mecha_refs[8]
+_bolt_refs[8]
 <class 'mecha.ast.AstCommand'>
   location: SourceLocation(pos=142, lineno=4, colno=13)
   end_location: SourceLocation(pos=202, lineno=4, colno=73)
   identifier: 'execute:subcommand'
   arguments:
     <class 'mecha.ast.AstCommand'>
-_mecha_refs[9]
+_bolt_refs[9]
 <class 'bolt.ast.AstInterpolation'>
   location: SourceLocation(pos=256, lineno=6, colno=40)
   end_location: SourceLocation(pos=266, lineno=6, colno=50)
@@ -123,19 +123,19 @@ _mecha_refs[9]
   converter: 'range'
   value:
     <class 'bolt.ast.AstAttribute'>
-_mecha_refs[10]
+_bolt_refs[10]
 <class 'mecha.ast.AstSelector'>
   location: SourceLocation(pos=238, lineno=6, colno=22)
   end_location: SourceLocation(pos=240, lineno=6, colno=24)
   variable: 's'
   arguments:
     <empty>
-_mecha_refs[11]
+_bolt_refs[11]
 <class 'mecha.ast.AstObjective'>
   location: SourceLocation(pos=241, lineno=6, colno=25)
   end_location: SourceLocation(pos=247, lineno=6, colno=31)
   value: 'thingy'
-_mecha_refs[12]
+_bolt_refs[12]
 <class 'bolt.ast.AstInterpolation'>
   location: SourceLocation(pos=271, lineno=6, colno=55)
   end_location: SourceLocation(pos=281, lineno=6, colno=65)
@@ -144,21 +144,21 @@ _mecha_refs[12]
   converter: 'message'
   value:
     <class 'bolt.ast.AstAttribute'>
-_mecha_refs[13]
+_bolt_refs[13]
 <class 'mecha.ast.AstCommand'>
   location: SourceLocation(pos=267, lineno=6, colno=51)
   end_location: SourceLocation(pos=281, lineno=6, colno=65)
   identifier: 'say:message'
   arguments:
     <class 'bolt.ast.AstInterpolation'>
-_mecha_refs[14]
+_bolt_refs[14]
 <class 'mecha.ast.AstCommand'>
   location: SourceLocation(pos=267, lineno=6, colno=51)
   end_location: SourceLocation(pos=281, lineno=6, colno=65)
   identifier: 'execute:run:subcommand'
   arguments:
     <class 'mecha.ast.AstCommand'>
-_mecha_refs[15]
+_bolt_refs[15]
 <class 'mecha.ast.AstCommand'>
   location: SourceLocation(pos=229, lineno=6, colno=13)
   end_location: SourceLocation(pos=281, lineno=6, colno=65)
@@ -168,21 +168,21 @@ _mecha_refs[15]
     <class 'mecha.ast.AstObjective'>
     <class 'bolt.ast.AstInterpolation'>
     <class 'mecha.ast.AstCommand'>
-_mecha_refs[16]
+_bolt_refs[16]
 <class 'mecha.ast.AstCommand'>
   location: SourceLocation(pos=229, lineno=6, colno=13)
   end_location: SourceLocation(pos=281, lineno=6, colno=65)
   identifier: 'execute:subcommand'
   arguments:
     <class 'mecha.ast.AstCommand'>
-_mecha_refs[17]
+_bolt_refs[17]
 <class 'mecha.ast.AstRoot'>
   location: SourceLocation(pos=108, lineno=3, colno=9)
   end_location: SourceLocation(pos=281, lineno=6, colno=65)
   commands:
     <class 'mecha.ast.AstCommand'>
     <class 'mecha.ast.AstCommand'>
-_mecha_refs[18]
+_bolt_refs[18]
 <class 'mecha.ast.AstCommand'>
   location: SourceLocation(pos=71, lineno=2, colno=5)
   end_location: SourceLocation(pos=281, lineno=6, colno=65)
@@ -190,7 +190,7 @@ _mecha_refs[18]
   arguments:
     <class 'bolt.ast.AstInterpolation'>
     <class 'mecha.ast.AstRoot'>
-_mecha_refs[19]
+_bolt_refs[19]
 <class 'mecha.ast.AstRoot'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=282, lineno=7, colno=1)

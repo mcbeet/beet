@@ -1,27 +1,27 @@
-_mecha_lineno = [1, 8, 12, 17, 18], [1, 2, 3, 5, 6]
-_mecha_helper_branch = _mecha_runtime.helpers['branch']
-_mecha_helper_children = _mecha_runtime.helpers['children']
-_mecha_helper_operator_not = _mecha_runtime.helpers['operator_not']
-_mecha_helper_replace = _mecha_runtime.helpers['replace']
-with _mecha_runtime.scope() as _mecha_var4:
+_bolt_lineno = [1, 8, 12, 17, 18], [1, 2, 3, 5, 6]
+_bolt_helper_branch = _bolt_runtime.helpers['branch']
+_bolt_helper_children = _bolt_runtime.helpers['children']
+_bolt_helper_operator_not = _bolt_runtime.helpers['operator_not']
+_bolt_helper_replace = _bolt_runtime.helpers['replace']
+with _bolt_runtime.scope() as _bolt_var4:
     def foo(value):
-        _mecha_var0 = value
-        with _mecha_helper_branch(_mecha_var0) as _mecha_condition:
-            if _mecha_condition:
-                _mecha_var1 = 1
-                result = _mecha_var1
-        _mecha_var0 = _mecha_helper_operator_not(_mecha_var0)
-        with _mecha_helper_branch(_mecha_var0) as _mecha_condition:
-            if _mecha_condition:
-                _mecha_var2 = 0
-                result = _mecha_var2
-        _mecha_var3 = result
-        return _mecha_var3
-_mecha_var5 = _mecha_helper_replace(_mecha_refs[0], commands=_mecha_helper_children(_mecha_var4))
+        _bolt_var0 = value
+        with _bolt_helper_branch(_bolt_var0) as _bolt_condition:
+            if _bolt_condition:
+                _bolt_var1 = 1
+                result = _bolt_var1
+        _bolt_var0 = _bolt_helper_operator_not(_bolt_var0)
+        with _bolt_helper_branch(_bolt_var0) as _bolt_condition:
+            if _bolt_condition:
+                _bolt_var2 = 0
+                result = _bolt_var2
+        _bolt_var3 = result
+        return _bolt_var3
+_bolt_var5 = _bolt_helper_replace(_bolt_refs[0], commands=_bolt_helper_children(_bolt_var4))
 ---
-output = _mecha_var5
+output = _bolt_var5
 ---
-_mecha_refs[0]
+_bolt_refs[0]
 <class 'mecha.ast.AstRoot'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=95, lineno=6, colno=18)

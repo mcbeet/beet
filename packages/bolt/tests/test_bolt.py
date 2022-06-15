@@ -44,7 +44,7 @@ def test_parse(snapshot: SnapshotFixture, ctx_bolt: Context, source: Function):
         text, output, refs = runtime.codegen(ast)
         text = text or "# Nothing\n"
         assert snapshot() == f"{text}---\noutput = {output}\n---\n" + "".join(
-            f"_mecha_refs[{i}]\n{obj.dump(shallow=True) if isinstance(obj, AstNode) else repr(obj)}\n"
+            f"_bolt_refs[{i}]\n{obj.dump(shallow=True) if isinstance(obj, AstNode) else repr(obj)}\n"
             for i, obj in enumerate(refs)
         )
     elif diagnostics:

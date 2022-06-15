@@ -24,13 +24,13 @@
 `@function demo:foo`
 
 ```mcfunction
-_mecha_lineno = [1, 7], [1, 4]
-_mecha_helper_children = _mecha_runtime.helpers['children']
-_mecha_helper_replace = _mecha_runtime.helpers['replace']
-with _mecha_runtime.scope() as _mecha_var1:
+_bolt_lineno = [1, 7], [1, 4]
+_bolt_helper_children = _bolt_runtime.helpers['children']
+_bolt_helper_replace = _bolt_runtime.helpers['replace']
+with _bolt_runtime.scope() as _bolt_var1:
     def say_hello():
-        _mecha_runtime.commands.extend(_mecha_refs[0].commands)
-    _mecha_var0 = say_hello
-    _mecha_var0 = _mecha_var0()
-_mecha_var2 = _mecha_helper_replace(_mecha_refs[1], commands=_mecha_helper_children(_mecha_var1))
+        _bolt_runtime.commands.extend(_bolt_refs[0].commands)
+    _bolt_var0 = say_hello
+    _bolt_var0 = _bolt_var0()
+_bolt_var2 = _bolt_helper_replace(_bolt_refs[1], commands=_bolt_helper_children(_bolt_var1))
 ```

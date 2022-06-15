@@ -82,7 +82,7 @@ def rewrite_traceback(exc: Exception) -> Exception:
             tb = tb.tb_next
             continue
 
-        line_numbers = tb.tb_frame.f_globals.get("_mecha_lineno")
+        line_numbers = tb.tb_frame.f_globals.get("_bolt_lineno")
 
         if line_numbers:
             n1, n2 = line_numbers
@@ -109,12 +109,12 @@ def fake_traceback(exc: Exception, tb: TracebackType, lineno: int) -> TracebackT
     if name == "<module>":
         name = tb.tb_frame.f_globals.get("__name__")
 
-    code = compile("\n" * (lineno - 1) + "raise _mecha_exc", filename, "exec")
+    code = compile("\n" * (lineno - 1) + "raise _bolt_exc", filename, "exec")
 
     if name:
         code = code.replace(co_name=name)
 
     try:
-        exec(code, {"_mecha_exc": exc})
+        exec(code, {"_bolt_exc": exc})
     except Exception as exc:
         return exc.__traceback__.tb_next  # type: ignore

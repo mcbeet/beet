@@ -1,32 +1,32 @@
-_mecha_lineno = [1, 20, 21, 22, 23], [1, 6, 5, 4, 1]
-_mecha_helper_children = _mecha_runtime.helpers['children']
-_mecha_helper_replace = _mecha_runtime.helpers['replace']
-with _mecha_runtime.scope() as _mecha_var19:
-    _mecha_var0 = 'condition'
-    _mecha_var1 = 'minecraft:entity_scores'
-    _mecha_var2 = 'entity'
-    _mecha_var3 = 'this'
-    _mecha_var4 = 'scores'
-    _mecha_var5 = 'score1'
-    _mecha_var6 = 'min'
-    _mecha_var7 = 'type'
-    _mecha_var8 = 'minecraft:score'
-    _mecha_var9 = 'target'
-    _mecha_var10 = 'this'
-    _mecha_var11 = 'score'
-    _mecha_var12 = 'score2'
-    _mecha_var13 = 'scale'
-    _mecha_var14 = 1
-    _mecha_var15 = {_mecha_var7: _mecha_var8, _mecha_var9: _mecha_var10, _mecha_var11: _mecha_var12, _mecha_var13: _mecha_var14}
-    _mecha_var16 = {_mecha_var6: _mecha_var15}
-    _mecha_var17 = {_mecha_var5: _mecha_var16}
-    _mecha_var18 = {_mecha_var0: _mecha_var1, _mecha_var2: _mecha_var3, _mecha_var4: _mecha_var17}
-    my_predicate = _mecha_var18
-_mecha_var20 = _mecha_helper_replace(_mecha_refs[0], commands=_mecha_helper_children(_mecha_var19))
+_bolt_lineno = [1, 20, 21, 22, 23], [1, 6, 5, 4, 1]
+_bolt_helper_children = _bolt_runtime.helpers['children']
+_bolt_helper_replace = _bolt_runtime.helpers['replace']
+with _bolt_runtime.scope() as _bolt_var19:
+    _bolt_var0 = 'condition'
+    _bolt_var1 = 'minecraft:entity_scores'
+    _bolt_var2 = 'entity'
+    _bolt_var3 = 'this'
+    _bolt_var4 = 'scores'
+    _bolt_var5 = 'score1'
+    _bolt_var6 = 'min'
+    _bolt_var7 = 'type'
+    _bolt_var8 = 'minecraft:score'
+    _bolt_var9 = 'target'
+    _bolt_var10 = 'this'
+    _bolt_var11 = 'score'
+    _bolt_var12 = 'score2'
+    _bolt_var13 = 'scale'
+    _bolt_var14 = 1
+    _bolt_var15 = {_bolt_var7: _bolt_var8, _bolt_var9: _bolt_var10, _bolt_var11: _bolt_var12, _bolt_var13: _bolt_var14}
+    _bolt_var16 = {_bolt_var6: _bolt_var15}
+    _bolt_var17 = {_bolt_var5: _bolt_var16}
+    _bolt_var18 = {_bolt_var0: _bolt_var1, _bolt_var2: _bolt_var3, _bolt_var4: _bolt_var17}
+    my_predicate = _bolt_var18
+_bolt_var20 = _bolt_helper_replace(_bolt_refs[0], commands=_bolt_helper_children(_bolt_var19))
 ---
-output = _mecha_var20
+output = _bolt_var20
 ---
-_mecha_refs[0]
+_bolt_refs[0]
 <class 'mecha.ast.AstRoot'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=251, lineno=15, colno=1)

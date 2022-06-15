@@ -1,20 +1,20 @@
-_mecha_lineno = [1, 10], [1, 2]
-_mecha_helper_interpolate_nbt = _mecha_runtime.helpers['interpolate_nbt']
-_mecha_helper_children = _mecha_runtime.helpers['children']
-_mecha_helper_replace = _mecha_runtime.helpers['replace']
-with _mecha_runtime.scope() as _mecha_var4:
-    _mecha_var0 = 'CustomModelData'
-    _mecha_var1 = 7
-    _mecha_var2 = {_mecha_var0: _mecha_var1}
-    bow_data = _mecha_var2
-    _mecha_var3 = bow_data
-    _mecha_var3 = _mecha_helper_interpolate_nbt({**_mecha_var3}, _mecha_refs[0])
-    _mecha_runtime.commands.append(_mecha_helper_replace(_mecha_refs[4], arguments=_mecha_helper_children([_mecha_refs[3], _mecha_helper_replace(_mecha_refs[2], data_tags=_mecha_helper_replace(_mecha_refs[1], entries=_mecha_helper_children([*_mecha_var3])))])))
-_mecha_var5 = _mecha_helper_replace(_mecha_refs[5], commands=_mecha_helper_children(_mecha_var4))
+_bolt_lineno = [1, 10], [1, 2]
+_bolt_helper_interpolate_nbt = _bolt_runtime.helpers['interpolate_nbt']
+_bolt_helper_children = _bolt_runtime.helpers['children']
+_bolt_helper_replace = _bolt_runtime.helpers['replace']
+with _bolt_runtime.scope() as _bolt_var4:
+    _bolt_var0 = 'CustomModelData'
+    _bolt_var1 = 7
+    _bolt_var2 = {_bolt_var0: _bolt_var1}
+    bow_data = _bolt_var2
+    _bolt_var3 = bow_data
+    _bolt_var3 = _bolt_helper_interpolate_nbt({**_bolt_var3}, _bolt_refs[0])
+    _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[4], arguments=_bolt_helper_children([_bolt_refs[3], _bolt_helper_replace(_bolt_refs[2], data_tags=_bolt_helper_replace(_bolt_refs[1], entries=_bolt_helper_children([*_bolt_var3])))])))
+_bolt_var5 = _bolt_helper_replace(_bolt_refs[5], commands=_bolt_helper_children(_bolt_var4))
 ---
-output = _mecha_var5
+output = _bolt_var5
 ---
-_mecha_refs[0]
+_bolt_refs[0]
 <class 'bolt.ast.AstInterpolation'>
   location: SourceLocation(pos=46, lineno=2, colno=15)
   end_location: SourceLocation(pos=54, lineno=2, colno=23)
@@ -23,13 +23,13 @@ _mecha_refs[0]
   converter: 'nbt'
   value:
     <class 'bolt.ast.AstIdentifier'>
-_mecha_refs[1]
+_bolt_refs[1]
 <class 'mecha.ast.AstNbtCompound'>
   location: SourceLocation(pos=43, lineno=2, colno=12)
   end_location: SourceLocation(pos=55, lineno=2, colno=24)
   entries:
     <class 'bolt.ast.AstInterpolation'>
-_mecha_refs[2]
+_bolt_refs[2]
 <class 'mecha.ast.AstItem'>
   location: SourceLocation(pos=40, lineno=2, colno=9)
   end_location: SourceLocation(pos=55, lineno=2, colno=24)
@@ -37,14 +37,14 @@ _mecha_refs[2]
     <class 'mecha.ast.AstResourceLocation'>
   data_tags:
     <class 'mecha.ast.AstNbtCompound'>
-_mecha_refs[3]
+_bolt_refs[3]
 <class 'mecha.ast.AstSelector'>
   location: SourceLocation(pos=37, lineno=2, colno=6)
   end_location: SourceLocation(pos=39, lineno=2, colno=8)
   variable: 's'
   arguments:
     <empty>
-_mecha_refs[4]
+_bolt_refs[4]
 <class 'mecha.ast.AstCommand'>
   location: SourceLocation(pos=32, lineno=2, colno=1)
   end_location: SourceLocation(pos=55, lineno=2, colno=24)
@@ -52,7 +52,7 @@ _mecha_refs[4]
   arguments:
     <class 'mecha.ast.AstSelector'>
     <class 'mecha.ast.AstItem'>
-_mecha_refs[5]
+_bolt_refs[5]
 <class 'mecha.ast.AstRoot'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=55, lineno=2, colno=24)
