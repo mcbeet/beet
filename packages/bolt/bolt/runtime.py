@@ -22,7 +22,7 @@ from types import CodeType
 from typing import Any, Callable, Dict, Iterator, List, Optional, Set, Union
 
 from beet import BubbleException, Context, TextFile, TextFileBase, generate_tree
-from beet.core.utils import JsonDict, required_field
+from beet.core.utils import JsonDict, import_from_string, required_field
 from mecha import (
     AstCacheBackend,
     AstCommand,
@@ -329,6 +329,17 @@ class ModuleCacheBackend(AstCacheBackend):
     """Cache backend that also restores the generated modules."""
 
     runtime: Runtime = required_field()
+    bolt_version: str = import_from_string("bolt.__version__")
+
+    def load_data(self, f: BufferedReader) -> JsonDict:
+        data = super().load_data(f)
+        if data["bolt"] != self.bolt_version:
+            raise ValueError("Version mismatch.")
+        return data
+
+    def dump_data(self, data: JsonDict, f: BufferedWriter):
+        data["bolt"] = self.bolt_version
+        super().dump_data(data, f)
 
     def load(self, f: BufferedReader) -> AstRoot:
         data = self.load_data(f)
