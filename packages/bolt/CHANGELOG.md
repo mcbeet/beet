@@ -2,6 +2,13 @@
 
 <!--next-version-placeholder-->
 
+## v0.7.0 (2022-06-15)
+### Feature
+* Support decorators ([`3e8f60b`](https://github.com/mcbeet/bolt/commit/3e8f60bf9b7e9c74b631bdf689f4370f76f37766))
+
+### Fix
+* Change prefix of codegen variables ([`f9cc901`](https://github.com/mcbeet/bolt/commit/f9cc9013ba1dd1333a2b5a199c29c84d054e15be))
+
 ## v0.6.0 (2022-05-27)
 ### Feature
 * Add bolt.contrib.debug_codegen ([`d504b00`](https://github.com/mcbeet/bolt/commit/d504b00867bf22770708e6eeb6190ed790f0a483))
