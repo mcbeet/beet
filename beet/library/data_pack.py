@@ -22,7 +22,7 @@ import io
 from copy import deepcopy
 from dataclasses import dataclass
 from gzip import GzipFile
-from typing import Iterable, List, Optional, TypeVar, Union
+from typing import ClassVar, Iterable, List, Optional, TypeVar, Union
 
 from nbtlib.contrib.minecraft import StructureFile, StructureFileData
 
@@ -59,7 +59,7 @@ class Function(TextFileBase[List[str]]):
     scope = ("functions",)
     extension = ".mcfunction"
 
-    lines = FileDeserialize()  # type: FileDeserialize[List[str]]
+    lines: ClassVar[FileDeserialize[List[str]]] = FileDeserialize()
 
     def append(self, other: Union["Function", Iterable[str], str]):
         """Append lines from another function."""
@@ -139,7 +139,7 @@ class Structure(BinaryFileBase[StructureFileData]):
     scope = ("structures",)
     extension = ".nbt"
 
-    data = FileDeserialize()  # type: FileDeserialize[StructureFileData]
+    data: ClassVar[FileDeserialize[StructureFileData]] = FileDeserialize()
 
     def from_bytes(self, content: bytes) -> StructureFileData:
         with GzipFile(fileobj=io.BytesIO(content)) as fileobj:

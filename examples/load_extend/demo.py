@@ -1,4 +1,4 @@
-from typing import cast
+from typing import ClassVar, cast
 
 from pydantic import BaseModel
 
@@ -21,7 +21,7 @@ class Blueprint(JsonFileBase[BlueprintOptions]):
     scope = ("blueprints",)
     extension = ".json"
 
-    data = FileDeserialize()  # type: FileDeserialize[BlueprintOptions]
+    data: ClassVar[FileDeserialize[BlueprintOptions]] = FileDeserialize()
 
 
 def extend_data_pack(ctx: Context):
