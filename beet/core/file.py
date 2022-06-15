@@ -360,7 +360,7 @@ class TextFileBase(File[ValueType, str]):
 
     @classmethod
     def from_path(cls, path: FileSystemPath, start: int, stop: int) -> str:
-        with open(path, "r") as f:
+        with open(path, "r", encoding="utf-8") as f:
             if start > 0:
                 f.seek(start)
             return f.read(stop - start) if stop >= -1 else f.read()
