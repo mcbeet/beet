@@ -435,6 +435,12 @@ class Codegen(Visitor):
         acc: Accumulator,
     ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
         signature = cast(AstFunctionSignature, node.arguments[0])
+
+        decorators: List[str] = []
+        for decorator in signature.decorators:
+            value = yield from visit_single(decorator.expression, required=True)
+            decorators.append(value)
+
         arguments: List[str] = [
             f"{arg.name}={acc.missing()}" if arg.default else arg.name
             for arg in signature.arguments
@@ -451,6 +457,12 @@ class Codegen(Visitor):
                         acc.statement(f"{arg.name} = {value}")
 
             yield from visit_body(cast(AstRoot, node.arguments[1]), acc)
+
+        for decorator, value in list(zip(signature.decorators, decorators))[::-1]:
+            acc.statement(
+                f"{signature.name} = {value}({signature.name})",
+                lineno=decorator,
+            )
 
         return []
 

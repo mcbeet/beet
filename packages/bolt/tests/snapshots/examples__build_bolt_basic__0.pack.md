@@ -259,6 +259,13 @@ execute if data storage demo:random_data {value: 42} run say json loaded success
 give @s bow{CustomModelData: 7}
 give @s stone{CanPlaceOn: ["minecraft:dirt", "minecraft:gravel"], CustomModelData: 7}
 tellraw @p ["", {"text": "hey", "color": "red"}, "minecraft:dirt", "r", "e", "d"]
+say 1
+say 2
+say ['demo:abc', 'demo:def']
+say inner dummy
+say dummy
+say dummy
+say dummy
 ```
 
 `@function demo:import_a`

@@ -30,6 +30,8 @@ b = a
         <class 'bolt.ast.AstFunctionSignature'>
           location: SourceLocation(pos=4, lineno=1, colno=5)
           end_location: SourceLocation(pos=33, lineno=1, colno=34)
+          decorators:
+            <empty>
           name: 'init_global_score'
           arguments:
             <class 'bolt.ast.AstFunctionSignatureArgument'>
@@ -78,6 +80,8 @@ b = a
         <class 'bolt.ast.AstFunctionSignature'>
           location: SourceLocation(pos=61, lineno=4, colno=5)
           end_location: SourceLocation(pos=91, lineno=4, colno=35)
+          decorators:
+            <empty>
           name: 'rebind_global_score'
           arguments:
             <class 'bolt.ast.AstFunctionSignatureArgument'>

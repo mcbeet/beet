@@ -619,6 +619,22 @@ give @s bow{**custom_model_data}
 
 stone_can_place_on = ["minecraft:dirt"]
 give @s stone{CanPlaceOn: [*stone_can_place_on, "minecraft:gravel"], **custom_model_data}
-
 red = {"color": "red"}
 tellraw @p ["", {"text": "hey", **red}, *stone_can_place_on, *red.color]
+
+def testing_decorator(f):
+    if callable(f):
+        f("dummy")
+    else:
+        say f
+    return testing_decorator
+
+@testing_decorator
+@testing_decorator(1)
+@testing_decorator(2)
+@testing_decorator([
+    ./abc,
+    ./def,
+]) or None
+def f(x):
+    say f"inner {x}"

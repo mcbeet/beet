@@ -14,6 +14,8 @@ foo()
         <class 'bolt.ast.AstFunctionSignature'>
           location: SourceLocation(pos=4, lineno=1, colno=5)
           end_location: SourceLocation(pos=9, lineno=1, colno=10)
+          decorators:
+            <empty>
           name: 'foo'
           arguments:
             <empty>

@@ -54,6 +54,8 @@ say math.ceil(0.1)
         <class 'bolt.ast.AstFunctionSignature'>
           location: SourceLocation(pos=22, lineno=3, colno=5)
           end_location: SourceLocation(pos=27, lineno=3, colno=10)
+          decorators:
+            <empty>
           name: 'wat'
           arguments:
             <empty>

@@ -22,6 +22,7 @@ __all__ = [
     "AstTargetAttribute",
     "AstTargetItem",
     "AstAssignment",
+    "AstDecorator",
     "AstFunctionSignature",
     "AstFunctionSignatureArgument",
     "AstFunctionRoot",
@@ -213,6 +214,13 @@ class AstAssignment(AstNode):
 
 
 @dataclass(frozen=True)
+class AstDecorator(AstNode):
+    """Ast decorator node."""
+
+    expression: AstExpression = required_field()
+
+
+@dataclass(frozen=True)
 class AstFunctionSignatureArgument(AstNode):
     """Ast function signature argument node."""
 
@@ -224,6 +232,7 @@ class AstFunctionSignatureArgument(AstNode):
 class AstFunctionSignature(AstNode):
     """Ast function signature node."""
 
+    decorators: AstChildren[AstDecorator] = AstChildren()
     name: str = required_field()
     arguments: AstChildren[AstFunctionSignatureArgument] = required_field()
 

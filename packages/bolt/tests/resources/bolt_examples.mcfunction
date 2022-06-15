@@ -776,3 +776,11 @@ tellraw @p ["", {"text": "hey", **red}, *red.color]
 from PIL import Image
 ###
 from PIL.Image import Image
+###
+def testing_decorator():
+    pass
+
+@testing_decorator
+@testing_decorator(1)
+def f():
+    pass

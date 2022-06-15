@@ -13,6 +13,8 @@ def f():
         <class 'bolt.ast.AstFunctionSignature'>
           location: SourceLocation(pos=4, lineno=1, colno=5)
           end_location: SourceLocation(pos=7, lineno=1, colno=8)
+          decorators:
+            <empty>
           name: 'f'
           arguments:
             <empty>

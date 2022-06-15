@@ -22,6 +22,8 @@ say Counter(9).incr()
         <class 'bolt.ast.AstFunctionSignature'>
           location: SourceLocation(pos=4, lineno=1, colno=5)
           end_location: SourceLocation(pos=16, lineno=1, colno=17)
+          decorators:
+            <empty>
           name: 'Counter'
           arguments:
             <class 'bolt.ast.AstFunctionSignatureArgument'>
@@ -45,6 +47,8 @@ say Counter(9).incr()
                 <class 'bolt.ast.AstFunctionSignature'>
                   location: SourceLocation(pos=26, lineno=2, colno=9)
                   end_location: SourceLocation(pos=32, lineno=2, colno=15)
+                  decorators:
+                    <empty>
                   name: 'incr'
                   arguments:
                     <empty>

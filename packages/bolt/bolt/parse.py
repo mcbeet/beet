@@ -12,6 +12,7 @@ __all__ = [
     "check_final_expression",
     "InterpolationParser",
     "parse_statement",
+    "parse_decorator",
     "AssignmentTargetParser",
     "IfElseLoweringParser",
     "BreakContinueConstraint",
@@ -74,6 +75,7 @@ from .ast import (
     AstAssignment,
     AstAttribute,
     AstCall,
+    AstDecorator,
     AstDict,
     AstDictItem,
     AstExpression,
@@ -165,6 +167,7 @@ def get_bolt_parsers(
             mask=True,
         ),
         "bolt:statement": parse_statement,
+        "bolt:decorator": parse_decorator,
         "bolt:assignment_target": AssignmentTargetParser(
             allow_undefined_identifiers=True,
             allow_multiple=True,
@@ -403,25 +406,27 @@ class UndefinedIdentifier(InvalidSyntax):
 
 def create_bolt_root_parser(parser: Parser):
     """Return parser for the root node for bolt."""
-    return FunctionRootBacktracker(
-        FlushPendingIdentifiersParser(
-            FunctionConstraint(
-                BreakContinueConstraint(
-                    parser=IfElseLoweringParser(parser),
-                    allowed_scopes={
-                        ("while", "condition", "body"),
-                        ("for", "target", "in", "iterable", "body"),
+    return DecoratorResolver(
+        FunctionRootBacktracker(
+            FlushPendingIdentifiersParser(
+                FunctionConstraint(
+                    BreakContinueConstraint(
+                        parser=IfElseLoweringParser(parser),
+                        allowed_scopes={
+                            ("while", "condition", "body"),
+                            ("for", "target", "in", "iterable", "body"),
+                        },
+                    ),
+                    command_identifiers={
+                        "return",
+                        "return:value",
+                        "yield",
+                        "yield:value",
+                        "yield:from:value",
+                        "global:subcommand",
+                        "nonlocal:subcommand",
                     },
-                ),
-                command_identifiers={
-                    "return",
-                    "return:value",
-                    "yield",
-                    "yield:value",
-                    "yield:from:value",
-                    "global:subcommand",
-                    "nonlocal:subcommand",
-                },
+                )
             )
         )
     )
@@ -544,6 +549,7 @@ def parse_statement(stream: TokenStream) -> Any:
         "bolt:augmented_assignment_target",
         "bolt:assignment_target",
         "bolt:expression",
+        "bolt:decorator",
     ):
         with alternative:
             pending_identifiers.clear()
@@ -606,6 +612,62 @@ def parse_statement(stream: TokenStream) -> Any:
             check_final_expression(stream)
 
             return node
+
+
+def parse_decorator(stream: TokenStream) -> Any:
+    """Parse decorator."""
+    with stream.syntax(decorator="@"):
+        token = stream.expect("decorator")
+        expression = delegate("bolt:expression", stream)
+        return set_location(AstDecorator(expression=expression), token, expression)
+
+
+@dataclass
+class DecoratorResolver:
+    """Parser for resolving decorators."""
+
+    parser: Parser = required_field()
+
+    def __call__(self, stream: TokenStream) -> AstRoot:
+        node: AstRoot = self.parser(stream)
+
+        stack: List[AstDecorator] = []
+
+        changed = False
+        result: List[AstCommand] = []
+
+        for command in node.commands:
+            if command.identifier == "statement" and isinstance(
+                decorator := command.arguments[0], AstDecorator
+            ):
+                changed = True
+                stack.append(decorator)
+            elif (
+                stack
+                and command.identifier == "def:function:body"
+                and isinstance(command.arguments[0], AstFunctionSignature)
+            ):
+                arg = replace(command.arguments[0], decorators=AstChildren(stack))
+                result.append(
+                    replace(
+                        command, arguments=AstChildren([arg, *command.arguments[1:]])
+                    )
+                )
+                stack.clear()
+            elif stack:
+                exc = InvalidSyntax("Decorators can only be applied to functions.")
+                raise set_location(exc, stack[-1])
+            else:
+                result.append(command)
+
+        if stack:
+            exc = InvalidSyntax("Can not apply decorator to nothing.")
+            raise set_location(exc, stack[-1])
+
+        if changed:
+            node = replace(node, commands=AstChildren(result))
+
+        return node
 
 
 @dataclass

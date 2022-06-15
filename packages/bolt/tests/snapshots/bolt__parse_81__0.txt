@@ -25,6 +25,8 @@ def foo(something):
         <class 'bolt.ast.AstFunctionSignature'>
           location: SourceLocation(pos=4, lineno=1, colno=5)
           end_location: SourceLocation(pos=18, lineno=1, colno=19)
+          decorators:
+            <empty>
           name: 'foo'
           arguments:
             <class 'bolt.ast.AstFunctionSignatureArgument'>
@@ -44,6 +46,8 @@ def foo(something):
                 <class 'bolt.ast.AstFunctionSignature'>
                   location: SourceLocation(pos=28, lineno=2, colno=9)
                   end_location: SourceLocation(pos=33, lineno=2, colno=14)
+                  decorators:
+                    <empty>
                   name: 'wat'
                   arguments:
                     <empty>
