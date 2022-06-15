@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.7.1 (2022-06-15)
+### Fix
+* Track bolt version in cached ast ([`1e5d2d1`](https://github.com/mcbeet/bolt/commit/1e5d2d119872397dadac006c18b2c3909ccf6496))
+
 ## v0.7.0 (2022-06-15)
 ### Feature
 * Support decorators ([`3e8f60b`](https://github.com/mcbeet/bolt/commit/3e8f60bf9b7e9c74b631bdf689f4370f76f37766))
