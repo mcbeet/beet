@@ -28,8 +28,7 @@ GitHub Repository <https://github.com/mcbeet/beet>
 PyPI Package <https://pypi.org/project/beet>
 ```
 
-```{eval-rst}
-.. mdinclude:: ../README.md
-  :start-line: 12
-  :end-line: -3
+```{include} ../README.md
+:start-line: 12
+:end-line: -3
 ```
