@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.67.1 (2022-06-15)
+### Fix
+* Force utf-8 ([`efae8f7`](https://github.com/mcbeet/beet/commit/efae8f765ff822ea4e7bc8c5da523830c6149181))
+
 ## v0.67.0 (2022-05-27)
 ### Feature
 * Json log ([`64d8f46`](https://github.com/mcbeet/beet/commit/64d8f46be9704fd2f6b5fbb7b9b08b5079c46126))
