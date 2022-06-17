@@ -32,11 +32,11 @@ execute facing ^1 ^ ^ run tp ~ ~ ~
 execute as @e at @s facing 0 64 0 run tp @s ^ ^ ^1
 execute as @e at @s facing 0 64 0 run tp @s ^ ^ ^1 ~ ~
 execute as @e[type=!player] at @s facing entity @p feet run tp @s ^ ^ ^1
-execute in the_end run locate endcity
+execute in the_end run locate structure endcity
 execute in minecraft:the_nether positioned as @s run tp ~ ~ ~
 execute in minecraft:the_nether run tp ~ ~ ~
 execute in minecraft:the_nether run tp ~ ~ ~5
-execute positioned 0 64 0 run locate village
+execute positioned 0 64 0 run locate structure village
 execute as @e[type=sheep] at @s rotated as @p run tp @s ^ ^ ^1
 execute as @e[type=sheep] positioned as @s rotated as @p run tp @s ^ ^ ^1
 execute as @a at @s if block ~ ~-1 ~ #wool run kill @s
@@ -84,7 +84,7 @@ kill @e[distance=..10]
 kill @e[type=!player]
 kill @e[distance=..10, type=creeper]
 kill @e[type=arrow, nbt={inBlockState: {Name: "minecraft:target"}}]
-locate mansion
+locate structure mansion
 msg @a Hi
 particle dust 1.0 0.5 0.5 1.0
 particle dust_color_transition 1.0 0.0 0.0 1.0 0.0 0.0 1.0

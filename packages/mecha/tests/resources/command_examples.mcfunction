@@ -40,11 +40,11 @@ execute facing ^1 ^ ^ run tp ~ ~ ~
 execute as @e at @s facing 0 64 0 run tp @s ^ ^ ^1
 execute as @e at @s facing 0 64 0 run tp @s ^ ^ ^1 ~ ~
 execute as @e[type=!player] at @s facing entity @p feet run tp @s ^ ^ ^1
-execute in the_end run locate endcity
+execute in the_end run locate structure endcity
 execute in minecraft:the_nether positioned as @s run tp ~ ~ ~
 execute in minecraft:the_nether run tp ~ ~ ~
 execute in minecraft:the_nether run tp ~ ~ ~5
-execute positioned 0 64 0 run locate village
+execute positioned 0 64 0 run locate structure village
 execute as @e[type=sheep] at @s rotated as @p run tp @s ^ ^ ^1
 execute as @e[type=sheep] positioned as @s rotated as @p run tp @s ^ ^ ^1
 execute as @a at @s if block ~ ~-1 ~ #wool run kill @s
@@ -101,7 +101,7 @@ kill @e[type=!player]
 kill @e[distance=..10,type=creeper]
 kill @e[type=arrow,nbt={inBlockState: {Name: "minecraft:target"}}]
 # locate
-locate mansion
+locate structure mansion
 # msg
 msg @a Hi
 # particle
@@ -146,6 +146,6 @@ weather rain
 # other
 scoreboard players operation #sie_1_flags_delta integer = #sie_1_flags integer
 scoreboard players set ✔ foo 42
-execute at @e[type=armor_stand, name="ctf", tag=!FlagBearer] run particle block_marker barrier ~ ~.8 ~ 0 0 0 0 1 force
+execute at @e[type=armor_stand,name="ctf",tag=!FlagBearer] run particle block_marker barrier ~ ~.8 ~ 0 0 0 0 1 force
 execute store result score @s smithed.data run clear @s #smithed:crafter/all 0
 execute if entity @s[distance=..0.00000001] run function demo:foo

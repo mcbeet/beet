@@ -18,5 +18,5 @@
 `@function demo:foo`
 
 ```mcfunction
-locate structure demo:thingy
+locate endcity
 ```

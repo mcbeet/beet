@@ -1,1 +1,0 @@
-locate structure demo:thingy

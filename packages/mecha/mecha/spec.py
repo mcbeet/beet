@@ -28,7 +28,7 @@ class CommandSpec:
     multiline: bool = False
 
     tree: CommandTree = extra_field(
-        default_factory=lambda: CommandTree.load_from(version="1.18")
+        default_factory=lambda: CommandTree.load_from(version="1.19")
     )
     prototypes: Dict[str, CommandPrototype] = extra_field(default_factory=dict)
 
