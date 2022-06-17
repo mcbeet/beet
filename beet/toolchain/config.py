@@ -179,6 +179,7 @@ class ProjectConfig(BaseModel):
     description: TextComponent = ""
     author: str = ""
     version: str = ""
+    minecraft: str = ""
 
     directory: FileSystemPath = ""
     broadcast: ListOption[FileSystemPath] = ListOption()
@@ -266,6 +267,7 @@ class ProjectConfig(BaseModel):
                 "description": self.description or other.description,
                 "author": self.author or other.author,
                 "version": self.version or other.version,
+                "minecraft": self.minecraft or other.minecraft,
                 "directory": self.directory,
                 "extend": self.extend,
                 "output": self.output,

@@ -9,6 +9,8 @@ __all__ = [
     "intersperse",
     "normalize_string",
     "snake_case",
+    "VersionNumber",
+    "split_version",
     "get_import_string",
     "import_from_string",
     "resolve_packageable_path",
@@ -44,6 +46,7 @@ from typing import (
     List,
     Optional,
     Protocol,
+    Tuple,
     TypeVar,
     Union,
     runtime_checkable,
@@ -110,6 +113,17 @@ CAMEL_REGEX = re.compile(r"((?<=[a-z0-9])[A-Z]|(?!^)[A-Z](?=[a-z]))")
 
 def snake_case(string: str) -> str:
     return CAMEL_REGEX.sub(r"_\1", string).lower()
+
+
+VersionNumber = Union[str, int, float, Tuple[Union[str, int], ...]]
+
+
+def split_version(version: VersionNumber) -> Tuple[int, ...]:
+    if isinstance(version, (int, float)):
+        version = str(version)
+    if isinstance(version, str):
+        version = tuple(normalize_string(version).split("_"))
+    return tuple(map(int, version))
 
 
 def get_import_string(obj: Any) -> str:

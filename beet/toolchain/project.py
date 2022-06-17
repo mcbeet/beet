@@ -25,8 +25,10 @@ from beet.core.utils import (
     intersperse,
     log_time,
     normalize_string,
+    split_version,
 )
 from beet.core.watch import DirectoryWatcher, FileChanges
+from beet.library.base import LATEST_MINECRAFT_VERSION
 
 from .config import PackConfig, ProjectConfig, load_config, locate_config
 from .context import Context, PluginSpec, ProjectCache
@@ -235,6 +237,7 @@ class ProjectBuilder:
                 project_author=self.config.author,
                 project_version=self.config.version,
                 project_root=self.root,
+                minecraft_version=self.config.minecraft or LATEST_MINECRAFT_VERSION,
                 directory=self.project.directory,
                 output_directory=self.project.output_directory,
                 meta=meta,
@@ -320,7 +323,11 @@ class ProjectBuilder:
                 PackConfig(
                     name=default_name,
                     description=pack.description or description,
-                    pack_format=pack.pack_format,
+                    pack_format=(
+                        pack.pack_format_registry[split_version(self.config.minecraft)]
+                        if self.config.minecraft
+                        else pack.pack_format
+                    ),
                     zipped=pack.zipped,
                     compression=pack.compression,
                     compression_level=pack.compression_level,

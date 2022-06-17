@@ -57,6 +57,7 @@ def sandbox(*specs: PluginSpec) -> Plugin:
             project_author=ctx.project_author,
             project_version=ctx.project_version,
             project_root=False,
+            minecraft_version=ctx.minecraft_version,
             directory=ctx.directory,
             output_directory=None,
             meta={},

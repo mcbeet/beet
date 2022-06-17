@@ -18,6 +18,7 @@ __all__ = [
     "MergePolicy",
     "PackOverwrite",
     "PACK_COMPRESSION",
+    "LATEST_MINECRAFT_VERSION",
 ]
 
 
@@ -66,6 +67,9 @@ from beet.core.file import File, FileOrigin, JsonFile, PngFile
 from beet.core.utils import FileSystemPath, JsonDict, TextComponent
 
 from .utils import list_extensions, list_files
+
+LATEST_MINECRAFT_VERSION: str = "1.19"
+
 
 T = TypeVar("T")
 PinType = TypeVar("PinType", covariant=True)
@@ -697,6 +701,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
 
     namespace_type: ClassVar[Type[Namespace]]
     default_name: ClassVar[str]
+    pack_format_registry: ClassVar[Dict[Tuple[int, ...], int]]
     latest_pack_format: ClassVar[int]
 
     def __init_subclass__(cls):

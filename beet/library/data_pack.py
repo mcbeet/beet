@@ -34,9 +34,15 @@ from beet.core.file import (
     TextFileBase,
     TextFileContent,
 )
-from beet.core.utils import JsonDict, extra_field
+from beet.core.utils import JsonDict, extra_field, split_version
 
-from .base import Namespace, NamespacePin, NamespaceProxyDescriptor, Pack
+from .base import (
+    LATEST_MINECRAFT_VERSION,
+    Namespace,
+    NamespacePin,
+    NamespaceProxyDescriptor,
+    Pack,
+)
 
 TagFileType = TypeVar("TagFileType", bound="TagFile")
 
@@ -264,7 +270,17 @@ class DataPack(Pack[DataPackNamespace]):
     """Class representing a data pack."""
 
     default_name = "untitled_data_pack"
-    latest_pack_format = 10
+
+    pack_format_registry = {
+        (1, 13): 4,
+        (1, 14): 4,
+        (1, 15): 5,
+        (1, 16): 6,
+        (1, 17): 7,
+        (1, 18): 9,
+        (1, 19): 10,
+    }
+    latest_pack_format = pack_format_registry[split_version(LATEST_MINECRAFT_VERSION)]
 
     # fmt: off
     advancements:     NamespaceProxyDescriptor[Advancement]   = NamespaceProxyDescriptor(Advancement)

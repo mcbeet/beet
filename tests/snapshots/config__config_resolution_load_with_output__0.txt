@@ -4,6 +4,7 @@
   "description": "",
   "author": "",
   "version": "",
+  "minecraft": "",
   "directory": "tests/config_examples/load_with_output",
   "broadcast": [],
   "extend": [],

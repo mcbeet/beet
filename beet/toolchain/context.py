@@ -166,6 +166,7 @@ class Context:
     project_author: str
     project_version: str
     project_root: bool
+    minecraft_version: str
 
     directory: Path
     output_directory: Optional[Path]

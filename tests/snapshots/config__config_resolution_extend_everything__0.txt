@@ -4,6 +4,7 @@
   "description": "foo",
   "author": "foo",
   "version": "foo",
+  "minecraft": "",
   "directory": "tests/config_examples/extend_everything",
   "broadcast": [],
   "extend": [],

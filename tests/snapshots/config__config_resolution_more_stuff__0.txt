@@ -4,6 +4,7 @@
   "description": "The description of my project",
   "author": "N/A",
   "version": "1.2.3",
+  "minecraft": "",
   "directory": "tests/config_examples/more_stuff",
   "broadcast": [],
   "extend": [],
