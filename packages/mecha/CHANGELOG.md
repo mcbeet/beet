@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.52.3 (2022-06-17)
+### Fix
+* Handle nested redirects ([`179bdcd`](https://github.com/mcbeet/mecha/commit/179bdcdbb6e62caeed100285425f0b964aa9b30d))
+
 ## v0.52.2 (2022-05-27)
 ### Fix
 * Slice update to modify steps ([`76fb08c`](https://github.com/mcbeet/mecha/commit/76fb08c21887ce1386dae0788428b8e96cd6362a))
