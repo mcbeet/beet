@@ -1,0 +1,5 @@
+open("/etc/passwd")
+---
+Reported 1 error.
+
+File "demo:foo", line 1, column 1: Identifier 'open' is not defined.

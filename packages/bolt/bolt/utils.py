@@ -3,7 +3,6 @@ __all__ = [
     "fake_traceback",
     "internal",
     "INTERNAL_CODE",
-    "SAFE_BUILTINS",
 ]
 
 
@@ -22,54 +21,6 @@ INTERNAL_CODE: Set[CodeType] = {string_to_number.__code__}
 def internal(f: T) -> T:
     INTERNAL_CODE.add(f.__code__)  # type: ignore
     return f
-
-
-SAFE_BUILTINS: List[str] = [
-    "abs",
-    "all",
-    "any",
-    "ascii",
-    "bin",
-    "bool",
-    "callable",
-    "chr",
-    "dict",
-    "divmod",
-    "enumerate",
-    "filter",
-    "float",
-    "frozenset",
-    "hasattr",
-    "hash",
-    "hex",
-    "int",
-    "isinstance",
-    "issubclass",
-    "iter",
-    "len",
-    "list",
-    "map",
-    "max",
-    "min",
-    "next",
-    "object",
-    "oct",
-    "ord",
-    "pow",
-    "print",
-    "range",
-    "repr",
-    "reversed",
-    "round",
-    "set",
-    "slice",
-    "sorted",
-    "str",
-    "sum",
-    "tuple",
-    "type",
-    "zip",
-]
 
 
 def rewrite_traceback(exc: Exception) -> Exception:

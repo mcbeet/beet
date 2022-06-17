@@ -51,6 +51,7 @@ class Sandbox:
     runtime: Runtime
     active: bool
 
+    allowed_builtins: Set[str]
     allowed_imports: Set[str]
     allowed_obj_attrs: Dict[Any, Set[str]]
     allowed_type_attrs: Dict[Type[Any], Set[str]]
@@ -63,6 +64,52 @@ class Sandbox:
 
         self.active = False
 
+        self.allowed_builtins = {
+            "abs",
+            "all",
+            "any",
+            "ascii",
+            "bin",
+            "bool",
+            "callable",
+            "chr",
+            "dict",
+            "divmod",
+            "enumerate",
+            "filter",
+            "float",
+            "frozenset",
+            "hasattr",
+            "hash",
+            "hex",
+            "int",
+            "isinstance",
+            "issubclass",
+            "iter",
+            "len",
+            "list",
+            "map",
+            "max",
+            "min",
+            "next",
+            "object",
+            "oct",
+            "ord",
+            "pow",
+            "print",
+            "range",
+            "repr",
+            "reversed",
+            "round",
+            "set",
+            "slice",
+            "sorted",
+            "str",
+            "sum",
+            "tuple",
+            "type",
+            "zip",
+        }
         self.allowed_imports = {
             "json",
             "math",
@@ -110,6 +157,7 @@ class Sandbox:
         if self.active:
             return
         self.active = True
+        self.runtime.builtins &= self.allowed_builtins
         self.runtime.globals["ctx"] = None
         self.runtime.helpers.update(
             get_attribute=SandboxedGetAttribute(

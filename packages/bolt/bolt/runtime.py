@@ -11,6 +11,7 @@ __all__ = [
 ]
 
 
+import builtins
 import logging
 import marshal
 from contextlib import contextmanager
@@ -47,7 +48,7 @@ from .codegen import Codegen
 from .helpers import get_bolt_helpers
 from .loop_info import loop_info
 from .parse import get_bolt_parsers
-from .utils import SAFE_BUILTINS, internal, rewrite_traceback
+from .utils import internal, rewrite_traceback
 
 logger = logging.getLogger("mecha")
 
@@ -109,7 +110,7 @@ class Runtime:
         self.commands = []
         self.helpers = get_bolt_helpers()
         self.globals = {"ctx": None, "loop_info": loop_info}
-        self.builtins = set(SAFE_BUILTINS)
+        self.builtins = {name for name in dir(builtins) if not name.startswith("_")}
 
         if isinstance(ctx, Context):
             ctx.require(

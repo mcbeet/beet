@@ -17,3 +17,5 @@ print(f'foo {str.__name__} bar')
 foo = "a{x.__class__}b".format_map({"x":42})
 ###
 say __name__.format()
+###
+open("/etc/passwd")
