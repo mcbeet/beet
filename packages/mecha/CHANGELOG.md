@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.53.0 (2022-06-17)
+### Feature
+* Default to minecraft 1.19 ([`f9eda9c`](https://github.com/mcbeet/mecha/commit/f9eda9c63b9346b5b1fc17bd510cab7ab62772e8))
+
 ## v0.52.3 (2022-06-17)
 ### Fix
 * Handle nested redirects ([`179bdcd`](https://github.com/mcbeet/mecha/commit/179bdcdbb6e62caeed100285425f0b964aa9b30d))
