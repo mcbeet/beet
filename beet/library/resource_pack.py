@@ -276,7 +276,7 @@ class ResourcePack(Pack[ResourcePackNamespace]):
     """Class representing a resource pack."""
 
     default_name = "untitled_resource_pack"
-    latest_pack_format = 8
+    latest_pack_format = 9
 
     language_config = McmetaPin[Dict[str, JsonDict]]("language", default_factory=dict)
 
