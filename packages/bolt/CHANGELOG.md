@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.7.2 (2022-06-17)
+### Fix
+* Only restrict builtins when sandbox is active ([`8eefb0c`](https://github.com/mcbeet/bolt/commit/8eefb0cf1f5d6f3a6b0e472ffb1da0e6b60ba5e7))
+
 ## v0.7.1 (2022-06-15)
 ### Fix
 * Track bolt version in cached ast ([`1e5d2d1`](https://github.com/mcbeet/bolt/commit/1e5d2d119872397dadac006c18b2c3909ccf6496))
