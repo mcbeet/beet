@@ -6,7 +6,7 @@ __all__ = [
 import json
 from importlib.resources import read_text
 from pathlib import Path
-from typing import Dict, Iterator, List, Literal, Optional, Tuple, Union
+from typing import Dict, Iterator, List, Literal, Optional, Set, Tuple, Union
 
 from beet import ErrorMessage
 from beet.core.utils import FileSystemPath, JsonDict
@@ -139,19 +139,26 @@ class CommandTree(BaseModel):
         if not root:
             root = self
 
+        hoisted: Set[str] = set()
+
         if self.redirect is not None:
             if target := root.get(self.redirect):
                 if scope[: len(self.redirect)] == self.redirect:
                     target.subcommand = True
-                self.children = target.children
+                if target.children:
+                    if not self.children:
+                        self.children = {}
+                    self.children.update(target.children)
+                    hoisted.update(target.children)
             else:
                 raise ValueError(f"Invalid redirect {self.redirect}.")
 
-        elif self.children:
+        if self.children:
             for name, child in self.children.items():
-                child.resolve(root, scope + (name,))
+                if name not in hoisted:
+                    child.resolve(root, scope + (name,))
 
-        elif not self.executable:
+        if self.redirect is None and not self.children and not self.executable:
             self.redirect = ()
             self.resolve(root, scope)
 

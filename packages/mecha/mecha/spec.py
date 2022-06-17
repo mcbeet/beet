@@ -5,7 +5,7 @@ __all__ = [
 
 
 from dataclasses import dataclass
-from typing import Any, Dict, Protocol, Tuple, Union
+from typing import Any, Dict, Protocol, Set, Tuple, Union
 
 from beet.core.utils import JsonDict, extra_field
 from tokenstream import TokenStream
@@ -65,8 +65,13 @@ class CommandSpec:
                 identifier, signature, arguments
             )
 
-        target = self.tree.get(tree.redirect)
-        recursive = target and target.subcommand
+        recursive = False
+        hoisted: Set[str] = set()
+
+        if target := self.tree.get(tree.redirect):
+            recursive = target.subcommand
+            if recursive and target.children:
+                hoisted.update(target.children)
 
         if scope and tree.subcommand or recursive:
             identifier = ":".join(scope + ("subcommand",))
@@ -81,9 +86,11 @@ class CommandSpec:
                 offset for arg in arguments if (offset := arg - len(scope)) >= 0
             )
 
-        if tree.children and not recursive:
+        if tree.children:
             for name, child in tree.children.items():
-                if child.type == "literal":
+                if name in hoisted:
+                    continue
+                elif child.type == "literal":
                     self.generate_prototypes(
                         child,
                         scope + (name,),
