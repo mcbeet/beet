@@ -2,6 +2,11 @@
 
 <!--next-version-placeholder-->
 
+## v0.68.0 (2022-06-17)
+### Feature
+* Add ctx.minecraft_version and pack_format registries ([`2328b80`](https://github.com/mcbeet/beet/commit/2328b808a7c3be46f97cc9b02845a8e5b3b43e4c))
+* Bump default pack format ([`cfc7507`](https://github.com/mcbeet/beet/commit/cfc750704c1a7851a5350bd7ed169e4a2394a953))
+
 ## v0.67.1 (2022-06-15)
 ### Fix
 * Force utf-8 ([`efae8f7`](https://github.com/mcbeet/beet/commit/efae8f765ff822ea4e7bc8c5da523830c6149181))
