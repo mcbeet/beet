@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.54.0 (2022-06-18)
+### Feature
+* Use minecraft version config from beet directly ([`ed3f597`](https://github.com/mcbeet/mecha/commit/ed3f597ed62a38483c014b5e2e2a634ba2949dbf))
+
 ## v0.53.0 (2022-06-17)
 ### Feature
 * Default to minecraft 1.19 ([`f9eda9c`](https://github.com/mcbeet/mecha/commit/f9eda9c63b9346b5b1fc17bd510cab7ab62772e8))
