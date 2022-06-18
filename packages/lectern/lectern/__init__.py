@@ -7,4 +7,4 @@ from .plugin import *
 from .prefetch import *
 from .serialize import *
 
-__version__ = "0.22.0"
+__version__ = "0.23.0"

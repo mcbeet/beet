@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.23.0 (2022-06-18)
+### Feature
+* Add serialization pack filter ([`c841d6b`](https://github.com/mcbeet/lectern/commit/c841d6b6eb7dea115c3d2a791f36cca672362aaf))
+
 ## v0.22.0 (2022-06-18)
 ### Feature
 * Update beet to default to 1.19 ([`4f2f2e9`](https://github.com/mcbeet/lectern/commit/4f2f2e901dbe6f80f5b000e2ee6abe78546b9f96))
