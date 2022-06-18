@@ -20,3 +20,16 @@
 ```mcfunction
 locate endcity
 ```
+
+## Resource pack
+
+`@resource_pack pack.mcmeta`
+
+```json
+{
+  "pack": {
+    "pack_format": 8,
+    "description": ""
+  }
+}
+```

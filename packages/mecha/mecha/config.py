@@ -9,10 +9,8 @@ from pathlib import Path
 from typing import Dict, Iterator, List, Literal, Optional, Set, Tuple, Union
 
 from beet import ErrorMessage
-from beet.core.utils import FileSystemPath, JsonDict
+from beet.core.utils import FileSystemPath, JsonDict, VersionNumber, split_version
 from pydantic import BaseModel
-
-from .utils import VersionNumber, split_version
 
 
 class CommandTree(BaseModel):

@@ -6,17 +6,14 @@ __all__ = [
     "normalize_whitespace",
     "string_to_number",
     "number_to_string",
-    "VersionNumber",
-    "split_version",
     "underline_code",
 ]
 
 
 import re
 from dataclasses import dataclass, field
-from typing import Dict, Tuple, Union
+from typing import Dict, Union
 
-from beet.core.utils import normalize_string
 from tokenstream import InvalidSyntax, SourceLocation, Token, set_location
 
 from .error import MechaError
@@ -26,9 +23,6 @@ UNICODE_ESCAPE_REGEX = re.compile(r"\\(?:u([0-9a-fA-F]{4})|.)")
 AVOID_QUOTES_REGEX = re.compile(r"^[0-9A-Za-z_\.\+\-]+$")
 
 WHITESPACE_REGEX = re.compile(r"\s+")
-
-
-VersionNumber = Union[str, int, float, Tuple[Union[str, int], ...]]
 
 
 def normalize_whitespace(op: str) -> str:
@@ -47,15 +41,6 @@ def number_to_string(number: Union[int, float]) -> str:
     if "e" in value:
         value = f"{number:.20f}".rstrip("0")
     return value
-
-
-def split_version(version: VersionNumber) -> Tuple[int, ...]:
-    """Break version number into a tuple of integers."""
-    if isinstance(version, (int, float)):
-        version = str(version)
-    if isinstance(version, str):
-        version = tuple(normalize_string(version).split("_"))
-    return tuple(map(int, version))
 
 
 class InvalidEscapeSequence(MechaError):

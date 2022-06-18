@@ -22,7 +22,7 @@ tests_no_zope = ["coverage[toml] (>=5.0.2)", "hypothesis", "pympler", "pytest (>
 
 [[package]]
 name = "beet"
-version = "0.67.1"
+version = "0.68.1"
 description = "The Minecraft pack development kit"
 category = "main"
 optional = false
@@ -112,7 +112,7 @@ unicode_backport = ["unicodedata2"]
 
 [[package]]
 name = "click"
-version = "8.1.2"
+version = "8.1.3"
 description = "Composable command line interface toolkit"
 category = "main"
 optional = false
@@ -314,36 +314,36 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 
 [[package]]
 name = "lectern"
-version = "0.21.2"
+version = "0.22.0"
 description = "Literate Minecraft data packs and resource packs."
 category = "dev"
 optional = false
 python-versions = ">=3.8,<4.0"
 
 [package.dependencies]
-beet = ">=0.60.0"
-click = ">=8.1.2,<9.0.0"
-markdown-it-py = ">=1.1"
+beet = ">=0.68.1"
+click = ">=8.1.3,<9.0.0"
+markdown-it-py = ">=2.1.0,<3.0.0"
 
 [[package]]
 name = "markdown-it-py"
-version = "2.0.1"
+version = "2.1.0"
 description = "Python port of markdown-it. Markdown parsing, done right!"
 category = "dev"
 optional = false
-python-versions = "~=3.6"
+python-versions = ">=3.7"
 
 [package.dependencies]
-attrs = ">=19,<22"
 mdurl = ">=0.1,<1.0"
 
 [package.extras]
 benchmarking = ["psutil", "pytest", "pytest-benchmark (>=3.2,<4.0)"]
 code_style = ["pre-commit (==2.6)"]
-compare = ["commonmark (>=0.9.1,<0.10.0)", "markdown (>=3.2.2,<3.3.0)", "mistletoe-ebp (>=0.10.0,<0.11.0)", "mistune (>=0.8.4,<0.9.0)", "panflute (>=1.12,<2.0)"]
+compare = ["commonmark (>=0.9.1,<0.10.0)", "markdown (>=3.3.6,<3.4.0)", "mistletoe (>=0.8.1,<0.9.0)", "mistune (>=2.0.2,<2.1.0)", "panflute (>=2.1.3,<2.2.0)"]
 linkify = ["linkify-it-py (>=1.0,<2.0)"]
 plugins = ["mdit-py-plugins"]
-rtd = ["myst-nb (==0.13.0a1)", "pyyaml", "sphinx (>=2,<4)", "sphinx-copybutton", "sphinx-panels (>=0.4.0,<0.5.0)", "sphinx-book-theme"]
+profiling = ["gprof2dot"]
+rtd = ["attrs", "myst-parser", "pyyaml", "sphinx", "sphinx-copybutton", "sphinx-design", "sphinx-book-theme"]
 testing = ["coverage", "pytest", "pytest-cov", "pytest-regressions"]
 
 [[package]]
@@ -813,7 +813,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "8ba4cb0f3579e33b922852f5be237f9c5276c10078660c5b277932246815e521"
+content-hash = "20698329fd779d1474e12c34a3efbcc7059f2e4679e748b2432e25dc6d1a5194"
 
 [metadata.files]
 atomicwrites = [
@@ -825,8 +825,8 @@ attrs = [
     {file = "attrs-21.4.0.tar.gz", hash = "sha256:626ba8234211db98e869df76230a137c4c40a12d72445c45d5f5b716f076e2fd"},
 ]
 beet = [
-    {file = "beet-0.67.1-py3-none-any.whl", hash = "sha256:1b849bef4133012f3f058ea7a56a2250b4afd9bc2bdf785c7d381bf3b2a7bca3"},
-    {file = "beet-0.67.1.tar.gz", hash = "sha256:cd874be2e4894be467043bebd6477b04ccebb8c52e5d5957db539371dd47c4b2"},
+    {file = "beet-0.68.1-py3-none-any.whl", hash = "sha256:49f865161831eab37202f5b74f99e97bafc0c8fc9375032a2bed93fff95e1aab"},
+    {file = "beet-0.68.1.tar.gz", hash = "sha256:92fccb6448a64f02fb7c92d2cafa253afc9482b4b0f9bdf1de6344ae4205f05b"},
 ]
 black = [
     {file = "black-22.3.0-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:2497f9c2386572e28921fa8bec7be3e51de6801f7459dffd6e62492531c47e09"},
@@ -918,8 +918,8 @@ charset-normalizer = [
     {file = "charset_normalizer-2.0.12-py3-none-any.whl", hash = "sha256:6881edbebdb17b39b4eaaa821b438bf6eddffb4468cf344f09f89def34a8b1df"},
 ]
 click = [
-    {file = "click-8.1.2-py3-none-any.whl", hash = "sha256:24e1a4a9ec5bf6299411369b208c1df2188d9eb8d916302fe6bf03faed227f1e"},
-    {file = "click-8.1.2.tar.gz", hash = "sha256:479707fe14d9ec9a0757618b7a100a0ae4c4e236fac5b7f80ca68028141a1a72"},
+    {file = "click-8.1.3-py3-none-any.whl", hash = "sha256:bb4d8133cb15a609f44e8213d9b391b0809795062913b383c62be0ee95b1db48"},
+    {file = "click-8.1.3.tar.gz", hash = "sha256:7682dc8afb30297001674575ea00d1814d808d6a36af415a82bd481d37ba7b8e"},
 ]
 click-help-colors = [
     {file = "click-help-colors-0.9.1.tar.gz", hash = "sha256:78cbcf30cfa81c5fc2a52f49220121e1a8190cd19197d9245997605d3405824d"},
@@ -1003,12 +1003,12 @@ keyring = [
     {file = "keyring-23.5.0.tar.gz", hash = "sha256:9012508e141a80bd1c0b6778d5c610dd9f8c464d75ac6774248500503f972fb9"},
 ]
 lectern = [
-    {file = "lectern-0.21.2-py3-none-any.whl", hash = "sha256:ff395bd6ab5fc4851e7f17909f1a7f96f71a8e192529f26ff936ab202361e68d"},
-    {file = "lectern-0.21.2.tar.gz", hash = "sha256:515a0bf602bdf90eca64416b05e79292f9137cb32e5a6ab9a1a9f82fa3ab99f0"},
+    {file = "lectern-0.22.0-py3-none-any.whl", hash = "sha256:a6e50a770d8d31bfb4499bd6361973752286f0cd4f5d72df08953a464ea1e31b"},
+    {file = "lectern-0.22.0.tar.gz", hash = "sha256:4c906ba45caf87021e2b1a0249b235e7bb1584c014c4d4f0f425678d21add874"},
 ]
 markdown-it-py = [
-    {file = "markdown-it-py-2.0.1.tar.gz", hash = "sha256:7b5c153ae1ab2cde00a33938bce68f3ad5d68fbe363f946de7d28555bed4e08a"},
-    {file = "markdown_it_py-2.0.1-py3-none-any.whl", hash = "sha256:31974138ca8cafbcb62213f4974b29571b940e78364584729233f59b8dfdb8bd"},
+    {file = "markdown-it-py-2.1.0.tar.gz", hash = "sha256:cf7e59fed14b5ae17c0006eff14a2d9a00ed5f3a846148153899a0224e2c07da"},
+    {file = "markdown_it_py-2.1.0-py3-none-any.whl", hash = "sha256:93de681e5c021a432c63147656fe21790bc01231e0cd2da73626f1aa3ac0fe27"},
 ]
 markupsafe = [
     {file = "MarkupSafe-2.1.1-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:86b1f75c4e7c2ac2ccdaec2b9022845dbb81880ca318bb7a0a01fbf7813e3812"},

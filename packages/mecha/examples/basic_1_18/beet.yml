@@ -1,7 +1,5 @@
+minecraft: 1.18
 data_pack:
   load: "src"
 pipeline:
   - mecha
-meta:
-  mecha:
-    version: 1.18

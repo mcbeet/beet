@@ -26,8 +26,22 @@ from typing import (
     overload,
 )
 
-from beet import Cache, Context, DataPack, Function, NamespaceFile, TextFileBase
-from beet.core.utils import FileSystemPath, JsonDict, extra_field, import_from_string
+from beet import (
+    LATEST_MINECRAFT_VERSION,
+    Cache,
+    Context,
+    DataPack,
+    Function,
+    NamespaceFile,
+    TextFileBase,
+)
+from beet.core.utils import (
+    FileSystemPath,
+    JsonDict,
+    VersionNumber,
+    extra_field,
+    import_from_string,
+)
 from pydantic import BaseModel
 from tokenstream import InvalidSyntax, TokenStream
 from tokenstream.location import set_location
@@ -45,7 +59,6 @@ from .dispatch import Dispatcher, MutatingReducer, Reducer
 from .parse import delegate, get_parsers
 from .serialize import Formatting, Serializer
 from .spec import CommandSpec
-from .utils import VersionNumber
 
 AstNodeType = TypeVar("AstNodeType", bound=AstNode)
 TextFileType = TypeVar("TextFileType", bound=TextFileBase[Any])
@@ -85,7 +98,7 @@ class AstCacheBackend:
 class MechaOptions(BaseModel):
     """Mecha options."""
 
-    version: VersionNumber = "1.19"
+    version: str = ""
     multiline: bool = False
     formatting: Formatting = "dense"
     readonly: Optional[bool] = None
@@ -99,7 +112,7 @@ class Mecha:
     """Class exposing the command api."""
 
     ctx: InitVar[Optional[Context]] = None
-    version: InitVar[VersionNumber] = "1.19"
+    version: InitVar[VersionNumber] = LATEST_MINECRAFT_VERSION
     multiline: InitVar[bool] = False
     formatting: InitVar[Formatting] = "dense"
     readonly: bool = False
@@ -138,7 +151,7 @@ class Mecha:
     ):
         if ctx:
             opts = ctx.validate("mecha", MechaOptions)
-            version = opts.version
+            version = opts.version or ctx.minecraft_version
             multiline = opts.multiline
             formatting = opts.formatting
 

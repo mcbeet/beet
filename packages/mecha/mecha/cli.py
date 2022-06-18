@@ -12,7 +12,7 @@ from pathlib import Path
 from typing import Optional, Tuple
 
 import click
-from beet import Context, DataPack, Function, run_beet
+from beet import LATEST_MINECRAFT_VERSION, Context, DataPack, Function, run_beet
 from beet.toolchain.cli import BeetCommand, LogHandler, error_handler, message_fence
 
 from mecha import __version__
@@ -44,7 +44,7 @@ def validate(ctx: Context):
     "-m",
     "--minecraft",
     metavar="VERSION",
-    default="1.19",
+    default=LATEST_MINECRAFT_VERSION,
     help="Minecraft version.",
 )
 @click.option(
@@ -94,12 +94,12 @@ def mecha(
     logger.addHandler(LogHandler())
 
     config = {
+        "minecraft": minecraft,
         "require": stats * ["mecha.contrib.statistics"],
         "pipeline": ["mecha.cli.validate"],
         "meta": {
             "source": source,
             "mecha": {
-                "version": minecraft,
                 "readonly": True,
                 "cache": False,
             },

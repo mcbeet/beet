@@ -80,6 +80,8 @@ from typing import (
 )
 from uuid import UUID
 
+from beet import LATEST_MINECRAFT_VERSION
+from beet.core.utils import VersionNumber, split_version
 from nbtlib import Byte, Double, Float, Int, Long, OutOfRange, Short, String
 from tokenstream import InvalidSyntax, SourceLocation, TokenStream, set_location
 
@@ -158,13 +160,7 @@ from .ast import (
 from .config import CommandTree
 from .error import MechaError
 from .spec import CommandSpec, Parser
-from .utils import (
-    JsonQuoteHelper,
-    QuoteHelper,
-    VersionNumber,
-    split_version,
-    string_to_number,
-)
+from .utils import JsonQuoteHelper, QuoteHelper, string_to_number
 
 NUMBER_PATTERN: str = r"-?(?:\d+\.?\d*|\.\d+)"
 
@@ -454,7 +450,7 @@ def get_default_parsers() -> Dict[str, Parser]:
     }
 
 
-def get_parsers(version: VersionNumber = "1.19") -> Dict[str, Parser]:
+def get_parsers(version: VersionNumber = LATEST_MINECRAFT_VERSION) -> Dict[str, Parser]:
     """Return parsers for a specific version."""
     version = split_version(version)
 

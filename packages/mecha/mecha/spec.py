@@ -7,6 +7,7 @@ __all__ = [
 from dataclasses import dataclass
 from typing import Any, Dict, Protocol, Set, Tuple, Union
 
+from beet import LATEST_MINECRAFT_VERSION
 from beet.core.utils import JsonDict, extra_field
 from tokenstream import TokenStream
 
@@ -28,7 +29,7 @@ class CommandSpec:
     multiline: bool = False
 
     tree: CommandTree = extra_field(
-        default_factory=lambda: CommandTree.load_from(version="1.19")
+        default_factory=lambda: CommandTree.load_from(version=LATEST_MINECRAFT_VERSION)
     )
     prototypes: Dict[str, CommandPrototype] = extra_field(default_factory=dict)
 
