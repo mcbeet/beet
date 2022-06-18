@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.68.2 (2022-06-18)
+### Fix
+* Revert bool tweak ([`54f83f9`](https://github.com/mcbeet/beet/commit/54f83f953a7ca37b77420aa812b9565bfb42f622))
+
 ## v0.68.1 (2022-06-18)
 ### Fix
 * Tweak pack bool ([`693f30e`](https://github.com/mcbeet/beet/commit/693f30e709b6f2583efa543b3b7cf5a5fe441bcd))
