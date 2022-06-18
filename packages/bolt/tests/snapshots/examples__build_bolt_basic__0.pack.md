@@ -7,7 +7,7 @@
 ```json
 {
   "pack": {
-    "pack_format": 9,
+    "pack_format": 10,
     "description": ""
   }
 }
@@ -198,14 +198,14 @@ execute at @s run particle minecraft:block minecraft:light_blue_concrete ~ ~1 ~ 
 execute as @a[scores={foo=1..}] run scoreboard players remove @s foo 1
 execute as @a[scores={bar=1..}] run scoreboard players remove @s bar 1
 scoreboard players set @p tmp -8
-tp @s ~12 ~23 ~34
-tp @s ~12 23 ~34
-tp @s 12 23 34
-tp @s ~12 ~23 ~34
-tp @s ^12 ^23 ^34
-tp @s -12 -23 -34
-tp @s ~-12 ~-23 ~-34
-tp @s ^-12 ^-23 ^-34
+setblock ~12 ~23 ~34 stone
+setblock ~12 23 ~34 stone
+setblock 12 23 34 stone
+setblock ~12 ~23 ~34 stone
+setblock ^12 ^23 ^34 stone
+setblock -12 -23 -34 stone
+setblock ~-12 ~-23 ~-34 stone
+setblock ^-12 ^-23 ^-34 stone
 say 0 a
 say 1 b
 say 2 c
@@ -266,6 +266,7 @@ say inner dummy
 say dummy
 say dummy
 say dummy
+say AstCommand(identifier='tellraw:targets:message', arguments=AstChildren((AstSelector(variable='p', arguments=AstChildren(())), AstJsonValue(value='hello'))))
 ```
 
 `@function demo:import_a`
@@ -638,7 +639,7 @@ say json loaded!
 ```json
 {
   "pack": {
-    "pack_format": 8,
+    "pack_format": 9,
     "description": ""
   }
 }

@@ -158,6 +158,40 @@
       "type": "literal",
       "executable": true
     },
+    "with": {
+      "type": "literal",
+      "children": {
+        "expression": {
+          "type": "argument",
+          "parser": "bolt:with_expression",
+          "redirect": ["with"],
+          "children": {
+            "as": {
+              "type": "literal",
+              "children": {
+                "target": {
+                  "type": "argument",
+                  "parser": "bolt:with_target",
+                  "redirect": ["with"],
+                  "children": {
+                    "body": {
+                      "type": "argument",
+                      "parser": "mecha:nested_root",
+                      "executable": true
+                    }
+                  }
+                }
+              }
+            },
+            "body": {
+              "type": "argument",
+              "parser": "mecha:nested_root",
+              "executable": true
+            }
+          }
+        }
+      }
+    },
     "import": {
       "type": "literal",
       "children": {

@@ -784,3 +784,19 @@ def testing_decorator():
 @testing_decorator(1)
 def f():
     pass
+###
+with open("README.md") as f:
+    tellraw @p f.readline()
+###
+with:
+    pass
+###
+with None:
+###
+with None as:
+###
+with None, None, None:
+    pass
+###
+with None as x, None, None as y:
+    pass

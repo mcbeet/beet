@@ -1,0 +1,50 @@
+_bolt_lineno = [1, 12], [1, 2]
+_bolt_helper_get_attribute = _bolt_runtime.helpers['get_attribute']
+_bolt_helper_interpolate_json = _bolt_runtime.helpers['interpolate_json']
+_bolt_helper_children = _bolt_runtime.helpers['children']
+_bolt_helper_replace = _bolt_runtime.helpers['replace']
+with _bolt_runtime.scope() as _bolt_var3:
+    _bolt_var0 = open
+    _bolt_var1 = 'README.md'
+    _bolt_var0 = _bolt_var0(_bolt_var1)
+    with _bolt_var0 as _bolt_with0:
+        f = _bolt_with0
+        _bolt_var2 = f
+        _bolt_var2 = _bolt_helper_get_attribute(_bolt_var2, 'readline')
+        _bolt_var2 = _bolt_var2()
+        _bolt_var2 = _bolt_helper_interpolate_json(_bolt_var2, _bolt_refs[0])
+        _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[2], arguments=_bolt_helper_children([_bolt_refs[1], _bolt_var2])))
+_bolt_var4 = _bolt_helper_replace(_bolt_refs[3], commands=_bolt_helper_children(_bolt_var3))
+---
+output = _bolt_var4
+---
+_bolt_refs[0]
+<class 'bolt.ast.AstInterpolation'>
+  location: SourceLocation(pos=44, lineno=2, colno=16)
+  end_location: SourceLocation(pos=56, lineno=2, colno=28)
+  prefix: None
+  unpack: None
+  converter: 'json'
+  value:
+    <class 'bolt.ast.AstCall'>
+_bolt_refs[1]
+<class 'mecha.ast.AstSelector'>
+  location: SourceLocation(pos=41, lineno=2, colno=13)
+  end_location: SourceLocation(pos=43, lineno=2, colno=15)
+  variable: 'p'
+  arguments:
+    <empty>
+_bolt_refs[2]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=33, lineno=2, colno=5)
+  end_location: SourceLocation(pos=56, lineno=2, colno=28)
+  identifier: 'tellraw:targets:message'
+  arguments:
+    <class 'mecha.ast.AstSelector'>
+    <class 'bolt.ast.AstInterpolation'>
+_bolt_refs[3]
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=56, lineno=2, colno=28)
+  commands:
+    <class 'mecha.ast.AstCommand'>

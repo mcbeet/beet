@@ -56,6 +56,7 @@ from .ast import (
     AstList,
     AstLookup,
     AstSlice,
+    AstTarget,
     AstTargetAttribute,
     AstTargetIdentifier,
     AstTargetItem,
@@ -568,6 +569,42 @@ class Codegen(Visitor):
         acc: Accumulator,
     ) -> Optional[List[str]]:
         acc.statement("continue")
+        return []
+
+    @rule(AstCommand, identifier="with:subcommand")
+    def with_statement(
+        self,
+        node: AstCommand,
+        acc: Accumulator,
+    ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
+        clauses: List[str] = []
+        bindings: List[Tuple[str, AstTarget]] = []
+
+        subcommand = cast(AstCommand, node.arguments[0])
+        body: Optional[AstNode] = None
+
+        while not body:
+            value = yield from visit_single(subcommand.arguments[0], required=True)
+
+            if isinstance(target := subcommand.arguments[1], AstTarget):
+                tmp = f"_bolt_with{len(bindings)}"
+                clauses.append(f"{value} as {tmp}")
+                bindings.append((tmp, target))
+            else:
+                clauses.append(value)
+
+            last_arg = subcommand.arguments[-1]
+            if isinstance(last_arg, AstRoot):
+                body = last_arg
+            elif isinstance(last_arg, AstCommand):
+                subcommand = last_arg
+
+        acc.statement(f"with {', '.join(clauses)}:", lineno=node)
+        with acc.block():
+            for tmp, target in bindings:
+                yield from visit_binding(target, "=", tmp, acc)
+            yield from visit_body(body, acc)
+
         return []
 
     @rule(AstCommand, identifier="import:module")

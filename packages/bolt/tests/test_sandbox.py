@@ -1,7 +1,7 @@
 from pathlib import Path
 
 import pytest
-from beet import Context, Function, run_beet
+from beet import Context, Function
 from beet.core.utils import format_exc
 from mecha import CompilationError, DiagnosticError, Mecha
 from pytest_insta import SnapshotFixture
@@ -12,12 +12,6 @@ SANDBOX_EXAMPLES = [
     .read_text()
     .split("###\n")
 ]
-
-
-@pytest.fixture(scope="session")
-def ctx_sandbox():
-    with run_beet({"require": ["bolt.contrib.sandbox"]}) as ctx:
-        yield ctx
 
 
 @pytest.mark.parametrize(

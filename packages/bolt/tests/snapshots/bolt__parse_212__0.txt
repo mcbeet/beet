@@ -1,0 +1,7 @@
+#>ERROR  Expected bracket '[', curly '{', false, identifier, null, number or 3 other tokens but got invalid ':'.
+# line 1, column 5
+#      1 |  with:
+#        :      ^
+#      2 |      pass
+with:
+    pass

@@ -1,8 +1,7 @@
-#>ERROR  Can't inline conditions as execute subcommands.
-# line 1, column 7
+#>ERROR  Expected literal 'block', literal 'blocks', literal 'data', literal 'entity', literal 'predicate' or literal 'score' but got literal '"foo"'.
+# line 1, column 10
 #      1 |  at @s if "foo" == "bar":
-#        :        ^^^^^^^^^^^^^^^^^^
+#        :           ^^^^^
 #      2 |      say yolo
-#        :      ^^^^^^^^
 at @s if "foo" == "bar":
     say yolo

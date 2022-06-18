@@ -7,7 +7,6 @@ __all__ = [
     "get_stream_branch_scope",
     "UndefinedIdentifier",
     "create_bolt_root_parser",
-    "ExecuteIfConditionConstraint",
     "BranchScopeManager",
     "check_final_expression",
     "InterpolationParser",
@@ -21,6 +20,7 @@ __all__ = [
     "parse_function_root",
     "parse_del_target",
     "parse_identifier",
+    "TrailingCommaParser",
     "ImportLocationConstraint",
     "ImportStatementHandler",
     "parse_python_import",
@@ -48,7 +48,6 @@ from dataclasses import dataclass, field, replace
 from difflib import get_close_matches
 from typing import Any, Dict, List, Optional, Set, Tuple, cast
 
-from beet.core.utils import required_field
 from mecha import (
     AlternativeParser,
     AstChildren,
@@ -128,9 +127,7 @@ def get_bolt_parsers(
         "root": create_bolt_root_parser(parsers["root"]),
         "nested_root": create_bolt_root_parser(parsers["nested_root"]),
         "command": UndefinedIdentifierErrorHandler(
-            ImportStatementHandler(
-                GlobalNonlocalHandler(ExecuteIfConditionConstraint(parsers["command"]))
-            )
+            ImportStatementHandler(GlobalNonlocalHandler(parsers["command"]))
         ),
         "command:argument:bolt:if_block": delegate("bolt:if_block"),
         "command:argument:bolt:elif_condition": delegate("bolt:elif_condition"),
@@ -138,6 +135,8 @@ def get_bolt_parsers(
         "command:argument:bolt:else_block": delegate("bolt:else_block"),
         "command:argument:bolt:statement": delegate("bolt:statement"),
         "command:argument:bolt:assignment_target": delegate("bolt:assignment_target"),
+        "command:argument:bolt:with_expression": delegate("bolt:with_expression"),
+        "command:argument:bolt:with_target": delegate("bolt:with_target"),
         "command:argument:bolt:import": delegate("bolt:import"),
         "command:argument:bolt:import_name": delegate("bolt:import_name"),
         "command:argument:bolt:global_name": delegate("bolt:global_name"),
@@ -178,13 +177,17 @@ def get_bolt_parsers(
         "bolt:del_target": parse_del_target,
         "bolt:interpolation": PrimaryParser(delegate("bolt:identifier")),
         "bolt:identifier": parse_identifier,
+        "bolt:with_expression": TrailingCommaParser(delegate("bolt:expression")),
+        "bolt:with_target": TrailingCommaParser(
+            AssignmentTargetParser(allow_undefined_identifiers=True)
+        ),
         "bolt:import": AlternativeParser(
             [
                 ImportLocationConstraint(parsers["resource_location_or_tag"]),
                 parse_python_import,
             ]
         ),
-        "bolt:import_name": parse_import_name,
+        "bolt:import_name": TrailingCommaParser(parse_import_name),
         "bolt:global_name": parse_name_list,
         "bolt:nonlocal_name": parse_name_list,
         "bolt:expression": delegate("bolt:disjunction"),
@@ -433,21 +436,6 @@ def create_bolt_root_parser(parser: Parser):
 
 
 @dataclass
-class ExecuteIfConditionConstraint:
-    """Constraint that prevents inlining if conditions as execute subcommands."""
-
-    parser: Parser
-
-    def __call__(self, stream: TokenStream) -> Any:
-        if isinstance(node := self.parser(stream), AstCommand):
-            if node.identifier == "execute:if:condition:body":
-                exc = InvalidSyntax("Can't inline conditions as execute subcommands.")
-                raise set_location(exc, node)
-
-        return node
-
-
-@dataclass
 class BranchScopeManager:
     """Parser that manages accessible identifiers for conditional branches."""
 
@@ -626,7 +614,7 @@ def parse_decorator(stream: TokenStream) -> Any:
 class DecoratorResolver:
     """Parser for resolving decorators."""
 
-    parser: Parser = required_field()
+    parser: Parser
 
     def __call__(self, stream: TokenStream) -> AstRoot:
         node: AstRoot = self.parser(stream)
@@ -932,6 +920,19 @@ def parse_identifier(stream: TokenStream) -> AstIdentifier:
 
 
 @dataclass
+class TrailingCommaParser:
+    """Parser for discarding trailing comma."""
+
+    parser: Parser
+
+    def __call__(self, stream: TokenStream) -> Any:
+        node = self.parser(stream)
+        with stream.syntax(comma=r","):
+            stream.get("comma")
+        return node
+
+
+@dataclass
 class ImportLocationConstraint:
     """Constraint for import location."""
 
@@ -996,9 +997,8 @@ def parse_python_import(stream: TokenStream) -> Any:
 
 def parse_import_name(stream: TokenStream) -> AstImportedIdentifier:
     """Parse import name."""
-    with stream.syntax(name=IDENTIFIER_PATTERN, comma=r","):
+    with stream.syntax(name=IDENTIFIER_PATTERN):
         token = stream.expect("name")
-        stream.get("comma")
         return set_location(AstImportedIdentifier(value=token.value), token)
 
 
@@ -1041,7 +1041,7 @@ def parse_name_list(stream: TokenStream) -> AstIdentifier:
 class FunctionRootBacktracker:
     """Parser for backtracking over function root nodes."""
 
-    parser: Parser = required_field()
+    parser: Parser
 
     def __call__(self, stream: TokenStream) -> AstRoot:
         should_replace = False

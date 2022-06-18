@@ -381,15 +381,15 @@ x = 12
 y = 23
 z = 34
 
-tp @s f"~{x} ~{y} ~{z}"
-tp @s f"~{x}" y f"~{z}"
+setblock f"~{x} ~{y} ~{z}" stone
+setblock f"~{x}" y f"~{z}" stone
 
-tp @s x y z
-tp @s ~x ~y ~z
-tp @s ^x ^y ^z
-tp @s -x -y -z
-tp @s ~-x ~-y ~-z
-tp @s ^-x ^-y ^-z
+setblock x y z stone
+setblock ~x ~y ~z stone
+setblock ^x ^y ^z stone
+setblock -x -y -z stone
+setblock ~-x ~-y ~-z stone
+setblock ^-x ^-y ^-z stone
 
 for i, x in enumerate("abc"):
     say f"{i} {x}"
@@ -638,3 +638,16 @@ def testing_decorator(f):
 ]) or None
 def f(x):
     say f"inner {x}"
+
+from contextlib import suppress
+
+with suppress(ZeroDivisionError):
+    1 / 0
+
+from bolt import Runtime
+runtime = ctx.inject(Runtime)
+
+with runtime.scope() as commands:
+    tellraw @p "hello"
+
+say commands[0]

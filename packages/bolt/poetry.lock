@@ -22,7 +22,7 @@ tests_no_zope = ["coverage[toml] (>=5.0.2)", "hypothesis", "pympler", "pytest (>
 
 [[package]]
 name = "beet"
-version = "0.67.0"
+version = "0.68.1"
 description = "The Minecraft pack development kit"
 category = "main"
 optional = false
@@ -314,16 +314,16 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 
 [[package]]
 name = "lectern"
-version = "0.21.2"
+version = "0.22.0"
 description = "Literate Minecraft data packs and resource packs."
 category = "dev"
 optional = false
 python-versions = ">=3.8,<4.0"
 
 [package.dependencies]
-beet = ">=0.60.0"
-click = ">=8.1.2,<9.0.0"
-markdown-it-py = ">=1.1"
+beet = ">=0.68.1"
+click = ">=8.1.3,<9.0.0"
+markdown-it-py = ">=2.1.0,<3.0.0"
 
 [[package]]
 name = "markdown-it-py"
@@ -364,15 +364,15 @@ python-versions = ">=3.7"
 
 [[package]]
 name = "mecha"
-version = "0.52.2"
+version = "0.54.1"
 description = "A powerful Minecraft command library"
 category = "main"
 optional = false
 python-versions = ">=3.8,<4.0"
 
 [package.dependencies]
-beet = ">=0.67.0"
-tokenstream = "1.4.1"
+beet = ">=0.68.1"
+tokenstream = "1.4.2"
 
 [[package]]
 name = "mypy-extensions"
@@ -706,7 +706,7 @@ python-versions = ">=3.6"
 
 [[package]]
 name = "tokenstream"
-version = "1.4.1"
+version = "1.4.2"
 description = "A versatile token stream for handwritten parsers"
 category = "main"
 optional = false
@@ -825,7 +825,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "0727ac01b0e41167696ac756a365d64f3146f93c7472abe1cebd87a072d0aa7b"
+content-hash = "dac87c089627cdbfb400346ad7a112f10c6441d4f286f59ed318a523ae39b590"
 
 [metadata.files]
 atomicwrites = [
@@ -837,8 +837,8 @@ attrs = [
     {file = "attrs-21.4.0.tar.gz", hash = "sha256:626ba8234211db98e869df76230a137c4c40a12d72445c45d5f5b716f076e2fd"},
 ]
 beet = [
-    {file = "beet-0.67.0-py3-none-any.whl", hash = "sha256:4e44e7278be50ebd8dec697e411ccdc377a24308e21cdb197f071dfbe1e1cde7"},
-    {file = "beet-0.67.0.tar.gz", hash = "sha256:f6796b7a8e8241aabbbf5b7e15403e87645055b4ec952bb9cfc0a5c0ba52d48d"},
+    {file = "beet-0.68.1-py3-none-any.whl", hash = "sha256:49f865161831eab37202f5b74f99e97bafc0c8fc9375032a2bed93fff95e1aab"},
+    {file = "beet-0.68.1.tar.gz", hash = "sha256:92fccb6448a64f02fb7c92d2cafa253afc9482b4b0f9bdf1de6344ae4205f05b"},
 ]
 black = [
     {file = "black-22.3.0-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:2497f9c2386572e28921fa8bec7be3e51de6801f7459dffd6e62492531c47e09"},
@@ -1017,8 +1017,8 @@ keyring = [
     {file = "keyring-23.5.0.tar.gz", hash = "sha256:9012508e141a80bd1c0b6778d5c610dd9f8c464d75ac6774248500503f972fb9"},
 ]
 lectern = [
-    {file = "lectern-0.21.2-py3-none-any.whl", hash = "sha256:ff395bd6ab5fc4851e7f17909f1a7f96f71a8e192529f26ff936ab202361e68d"},
-    {file = "lectern-0.21.2.tar.gz", hash = "sha256:515a0bf602bdf90eca64416b05e79292f9137cb32e5a6ab9a1a9f82fa3ab99f0"},
+    {file = "lectern-0.22.0-py3-none-any.whl", hash = "sha256:a6e50a770d8d31bfb4499bd6361973752286f0cd4f5d72df08953a464ea1e31b"},
+    {file = "lectern-0.22.0.tar.gz", hash = "sha256:4c906ba45caf87021e2b1a0249b235e7bb1584c014c4d4f0f425678d21add874"},
 ]
 markdown-it-py = [
     {file = "markdown-it-py-2.1.0.tar.gz", hash = "sha256:cf7e59fed14b5ae17c0006eff14a2d9a00ed5f3a846148153899a0224e2c07da"},
@@ -1071,8 +1071,8 @@ mdurl = [
     {file = "mdurl-0.1.1.tar.gz", hash = "sha256:f79c9709944df218a4cdb0fcc0b0c7ead2f44594e3e84dc566606f04ad749c20"},
 ]
 mecha = [
-    {file = "mecha-0.52.2-py3-none-any.whl", hash = "sha256:69a49ec9273699d340eb4d8e63395f885437753b3503bec0eba5312f7303c52b"},
-    {file = "mecha-0.52.2.tar.gz", hash = "sha256:c16cb38435710d249ec9dd1b277e875c446d39b6b48a2e7cf4390e821449392e"},
+    {file = "mecha-0.54.1-py3-none-any.whl", hash = "sha256:e3ab536a1d98fd550f9552113c1fc062706309fe8a46e070f09c633dc092dca8"},
+    {file = "mecha-0.54.1.tar.gz", hash = "sha256:85100af58169db44d7ca653675f545307cd27dbf4940166cedc78163f6ada38d"},
 ]
 mypy-extensions = [
     {file = "mypy_extensions-0.4.3-py2.py3-none-any.whl", hash = "sha256:090fedd75945a69ae91ce1303b5824f428daf5a028d2f6ab8a299250a846f15d"},
@@ -1269,8 +1269,8 @@ smmap = [
     {file = "smmap-5.0.0.tar.gz", hash = "sha256:c840e62059cd3be204b0c9c9f74be2c09d5648eddd4580d9314c3ecde0b30936"},
 ]
 tokenstream = [
-    {file = "tokenstream-1.4.1-py3-none-any.whl", hash = "sha256:66b42b059e1bda1b88dc54b63f4de935e1e8e2f1f746e06d5323e694d10d38fa"},
-    {file = "tokenstream-1.4.1.tar.gz", hash = "sha256:a3e65dea39ca75a3cbe68880f325cd65a0b957f952137bc8bd2eeca8b4a44df7"},
+    {file = "tokenstream-1.4.2-py3-none-any.whl", hash = "sha256:e4979949e3ca8ab68fe9e924005e668da5b262892c370daf043d767e8e509e4b"},
+    {file = "tokenstream-1.4.2.tar.gz", hash = "sha256:f106b0bd0ae629847485e8ddfc9ac3c479c6c2d8c9db164f9b666e9fda6608cf"},
 ]
 toml = [
     {file = "toml-0.10.2-py2.py3-none-any.whl", hash = "sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b"},
