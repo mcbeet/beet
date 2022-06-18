@@ -15,7 +15,17 @@ from itertools import chain
 from mimetypes import guess_type
 from pathlib import Path
 from textwrap import indent
-from typing import Any, Dict, Iterable, Iterator, Mapping, Optional, Type, Union
+from typing import (
+    Any,
+    Callable,
+    Dict,
+    Iterable,
+    Iterator,
+    Mapping,
+    Optional,
+    Type,
+    Union,
+)
 from urllib.parse import urlparse
 
 from beet import DataPack, File, NamespaceFile, ResourcePack, TextFileBase
@@ -125,9 +135,11 @@ class TextSerializer:
     """Document serializer that outputs plain text."""
 
     escaped_regex: Optional["re.Pattern[str]"]
+    pack_filter: Callable[[Union[ResourcePack, DataPack]], bool]
 
     def __init__(self):
         self.escaped_regex = None
+        self.pack_filter = bool
 
     def get_escaped_regex(
         self, mapping: Mapping[Type[NamespaceFile], str]
@@ -162,7 +174,7 @@ class TextSerializer:
                 (assets, "resource_pack"),
                 (data, "data_pack"),
             ]
-            if pack
+            if self.pack_filter(pack)
             for directive_name, argument, file_instance in chain(
                 (
                     (extra_directive, path, file_instance)
@@ -210,9 +222,11 @@ class MarkdownSerializer:
     """Document serializer that outputs markdown and emits associated files."""
 
     flat: bool
+    pack_filter: Callable[[Union[ResourcePack, DataPack]], bool]
 
     def __init__(self, flat: bool = False):
         self.flat = flat
+        self.pack_filter = bool
 
     @contextmanager
     def use_flat_format(self, flat: bool = True):
@@ -241,7 +255,7 @@ class MarkdownSerializer:
                     ("Data pack", "data_pack", data),
                     ("Resource pack", "resource_pack", assets),
                 ]
-                if pack
+                if self.pack_filter(pack)
                 for text in self.serialize_pack(
                     title,
                     directive,
