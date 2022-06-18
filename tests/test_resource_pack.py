@@ -24,6 +24,7 @@ def test_default():
 )
 def test_empty(snapshot: SnapshotFixture, pack: ResourcePack):
     assert snapshot("resource_pack") == pack
+    assert not pack
     assert dict(pack) == {}
 
 
