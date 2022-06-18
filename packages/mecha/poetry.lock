@@ -22,7 +22,7 @@ tests_no_zope = ["coverage[toml] (>=5.0.2)", "hypothesis", "pympler", "pytest (>
 
 [[package]]
 name = "beet"
-version = "0.68.1"
+version = "0.68.2"
 description = "The Minecraft pack development kit"
 category = "main"
 optional = false
@@ -314,14 +314,14 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 
 [[package]]
 name = "lectern"
-version = "0.22.0"
+version = "0.24.0"
 description = "Literate Minecraft data packs and resource packs."
 category = "dev"
 optional = false
 python-versions = ">=3.8,<4.0"
 
 [package.dependencies]
-beet = ">=0.68.1"
+beet = ">=0.68.2"
 click = ">=8.1.3,<9.0.0"
 markdown-it-py = ">=2.1.0,<3.0.0"
 
@@ -813,7 +813,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "20698329fd779d1474e12c34a3efbcc7059f2e4679e748b2432e25dc6d1a5194"
+content-hash = "acce0738de22ed8569b757afa9eee6ba9c2b6cf0d506cfa59cb0137afaddcc71"
 
 [metadata.files]
 atomicwrites = [
@@ -825,8 +825,8 @@ attrs = [
     {file = "attrs-21.4.0.tar.gz", hash = "sha256:626ba8234211db98e869df76230a137c4c40a12d72445c45d5f5b716f076e2fd"},
 ]
 beet = [
-    {file = "beet-0.68.1-py3-none-any.whl", hash = "sha256:49f865161831eab37202f5b74f99e97bafc0c8fc9375032a2bed93fff95e1aab"},
-    {file = "beet-0.68.1.tar.gz", hash = "sha256:92fccb6448a64f02fb7c92d2cafa253afc9482b4b0f9bdf1de6344ae4205f05b"},
+    {file = "beet-0.68.2-py3-none-any.whl", hash = "sha256:dddd10e0dc2114d7ecfa7bd919a5550ac7ef8621ce788996f38fd285614dde22"},
+    {file = "beet-0.68.2.tar.gz", hash = "sha256:140a966b6016ac96910280c4629f2c169d13b3e2a1cffb52dca780ec3c1eda85"},
 ]
 black = [
     {file = "black-22.3.0-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:2497f9c2386572e28921fa8bec7be3e51de6801f7459dffd6e62492531c47e09"},
@@ -1003,8 +1003,8 @@ keyring = [
     {file = "keyring-23.5.0.tar.gz", hash = "sha256:9012508e141a80bd1c0b6778d5c610dd9f8c464d75ac6774248500503f972fb9"},
 ]
 lectern = [
-    {file = "lectern-0.22.0-py3-none-any.whl", hash = "sha256:a6e50a770d8d31bfb4499bd6361973752286f0cd4f5d72df08953a464ea1e31b"},
-    {file = "lectern-0.22.0.tar.gz", hash = "sha256:4c906ba45caf87021e2b1a0249b235e7bb1584c014c4d4f0f425678d21add874"},
+    {file = "lectern-0.24.0-py3-none-any.whl", hash = "sha256:d20aebaf9062424d5d072c63c3708b1cc03360adc6eae157bd4ca54ab38d4e19"},
+    {file = "lectern-0.24.0.tar.gz", hash = "sha256:b8f8bdaf2ff90184218df47fc8a8c30ac51ac581d4147139b6d5d83a75b1d251"},
 ]
 markdown-it-py = [
     {file = "markdown-it-py-2.1.0.tar.gz", hash = "sha256:cf7e59fed14b5ae17c0006eff14a2d9a00ed5f3a846148153899a0224e2c07da"},
