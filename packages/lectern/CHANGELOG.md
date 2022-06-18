@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.24.0 (2022-06-18)
+### Feature
+* Change serialization filter for pytest snapshots ([`aea38cf`](https://github.com/mcbeet/lectern/commit/aea38cfd2db89b8d4470fa0805b54b5e2752d231))
+
 ## v0.23.0 (2022-06-18)
 ### Feature
 * Add serialization pack filter ([`c841d6b`](https://github.com/mcbeet/lectern/commit/c841d6b6eb7dea115c3d2a791f36cca672362aaf))
