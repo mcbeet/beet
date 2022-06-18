@@ -655,7 +655,10 @@ def parse_command(stream: TokenStream) -> AstCommand:
             if tree.executable and (not stream.peek() or stream.get("newline", "eof")):
                 break
             subcommand_scope = tree.redirect if tree.redirect is not None else scope
-            with stream.provide(scope=subcommand_scope, line_indentation=level):
+            with stream.alternative(bool(target and target.children)), stream.provide(
+                scope=subcommand_scope,
+                line_indentation=level,
+            ):
                 node = delegate("command", stream)
                 arguments.append(node)
                 end_location = node.end_location
