@@ -9,7 +9,7 @@
   ```json
   {
     "pack": {
-      "pack_format": 9,
+      "pack_format": 10,
       "description": ""
     }
   }
@@ -34,7 +34,7 @@
   ```json
   {
     "pack": {
-      "pack_format": 8,
+      "pack_format": 9,
       "description": ""
     }
   }

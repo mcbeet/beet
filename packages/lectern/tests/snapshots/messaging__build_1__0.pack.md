@@ -7,7 +7,7 @@
 ```json
 {
   "pack": {
-    "pack_format": 9,
+    "pack_format": 10,
     "description": ""
   }
 }
@@ -15,7 +15,7 @@
 
 ### demo
 
-`@function demo:foo`
+`@function(strip_final_newline) demo:foo`
 
 ```mcfunction
 say hello2
