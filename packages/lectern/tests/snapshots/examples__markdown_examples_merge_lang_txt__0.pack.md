@@ -2,32 +2,24 @@
 
 ## Resource pack
 
-- `@resource_pack pack.mcmeta`
+`@resource_pack pack.mcmeta`
 
-  <details>
-
-  ```json
-  {
-    "pack": {
-      "pack_format": 9,
-      "description": ""
-    }
+```json
+{
+  "pack": {
+    "pack_format": 9,
+    "description": ""
   }
-  ```
-
-  </details>
+}
+```
 
 ### minecraft
 
-- `@language minecraft:custom`
+`@language minecraft:custom`
 
-  <details>
-
-  ```json
-  {
-    "custom.foo": "foo",
-    "custom.bar": "bar"
-  }
-  ```
-
-  </details>
+```json
+{
+  "custom.foo": "foo",
+  "custom.bar": "bar"
+}
+```

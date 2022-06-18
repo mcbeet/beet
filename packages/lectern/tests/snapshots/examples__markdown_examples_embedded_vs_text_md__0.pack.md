@@ -2,39 +2,27 @@
 
 ## Data pack
 
-- `@data_pack pack.mcmeta`
+`@data_pack pack.mcmeta`
 
-  <details>
-
-  ```json
-  {
-    "pack": {
-      "pack_format": 10,
-      "description": ""
-    }
+```json
+{
+  "pack": {
+    "pack_format": 10,
+    "description": ""
   }
-  ```
-
-  </details>
+}
+```
 
 ### evst
 
-- `@function evst:thing1`
+`@function evst:thing1`
 
-  <details>
+```mcfunction
+@function this is invalid
+```
 
-  ```mcfunction
-  @function this is invalid
-  ```
+`@function evst:thing2`
 
-  </details>
-
-- `@function evst:thing2`
-
-  <details>
-
-  ```mcfunction
-  @function this is invalid
-  ```
-
-  </details>
+```mcfunction
+@function this is invalid
+```

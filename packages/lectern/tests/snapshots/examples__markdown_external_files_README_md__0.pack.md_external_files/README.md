@@ -2,260 +2,204 @@
 
 ## Data pack
 
-- `@data_pack pack.mcmeta`
+`@data_pack pack.mcmeta`
 
-  <details>
-
-  ```json
-  {
-    "pack": {
-      "pack_format": 10,
-      "description": ""
-    }
+```json
+{
+  "pack": {
+    "pack_format": 10,
+    "description": ""
   }
-  ```
+}
+```
 
-  </details>
+`@data_pack pack.png`
 
-- `@data_pack pack.png`
-
-  <details>
-
-  ![data_pack.png](pack.png)
-
-  </details>
+![data_pack.png](pack.png)
 
 ### tutorial
 
-- `@function tutorial:greeting`
+`@function tutorial:greeting`
 
-  <details>
+```mcfunction
+say This is added before.
+say Hello, world!
+say This is added afterwards.
+```
 
-  ```mcfunction
-  say This is added before.
-  say Hello, world!
-  say This is added afterwards.
-  ```
+`@function tutorial:obtained_dead_bush`
 
-  </details>
+```mcfunction
+say You obtained a dead bush!
+```
 
-- `@function tutorial:obtained_dead_bush`
+`@function tutorial:hidden`
 
-  <details>
+```mcfunction
+say This will not appear in the rendered markdown.
+```
 
-  ```mcfunction
-  say You obtained a dead bush!
-  ```
+`@function tutorial:also_hidden`
 
-  </details>
+```mcfunction
+say This is also hidden.
+```
 
-- `@function tutorial:hidden`
+`@function(strip_final_newline) tutorial:stripped`
 
-  <details>
+```mcfunction
+say This function doesn't have a final newline.
+```
 
-  ```mcfunction
-  say This will not appear in the rendered markdown.
-  ```
+`@advancement tutorial:obtained_dead_bush`
 
-  </details>
-
-- `@function tutorial:also_hidden`
-
-  <details>
-
-  ```mcfunction
-  say This is also hidden.
-  ```
-
-  </details>
-
-- `@function(strip_final_newline) tutorial:stripped`
-
-  <details>
-
-  ```mcfunction
-  say This function doesn't have a final newline.
-  ```
-
-  </details>
-
-- `@advancement tutorial:obtained_dead_bush`
-
-  <details>
-
-  ```json
-  {
-    "criteria": {
-      "dead_bush": {
-        "trigger": "minecraft:inventory_changed",
-        "conditions": {
-          "items": [
-            {
-              "item": "minecraft:dead_bush"
-            }
-          ]
-        }
+```json
+{
+  "criteria": {
+    "dead_bush": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:dead_bush"
+          }
+        ]
       }
-    },
-    "requirements": [
-      [
-        "dead_bush"
-      ]
-    ],
-    "rewards": {
-      "function": "tutorial:obtained_dead_bush"
     }
+  },
+  "requirements": [
+    [
+      "dead_bush"
+    ]
+  ],
+  "rewards": {
+    "function": "tutorial:obtained_dead_bush"
   }
-  ```
+}
+```
 
-  </details>
+`@function_tag(strip_final_newline) tutorial:something_else`
 
-- `@function_tag(strip_final_newline) tutorial:something_else`
+```json
+{
+  "values": ["tutorial:stripped"]
+}
+```
 
-  <details>
+`@function_tag tutorial:from_github`
 
-  ```json
-  {
-    "values": ["tutorial:stripped"]
-  }
-  ```
-
-  </details>
-
-- `@function_tag tutorial:from_github`
-
-  <details>
-
-  ```json
-  say foo
-  ```
-
-  </details>
+```json
+say foo
+```
 
 ### minecraft
 
-- `@function_tag minecraft:load`
+`@function_tag minecraft:load`
 
-  <details>
+```json
+{
+  "values": [
+    "tutorial:greeting",
+    "#tutorial:something_else"
+  ]
+}
+```
 
-  ```json
-  {
-    "values": [
-      "tutorial:greeting",
-      "#tutorial:something_else"
-    ]
-  }
-  ```
+`@loot_table minecraft:blocks/diamond_ore`
 
-  </details>
+```json
+{
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:dead_bush"
+        }
+      ]
+    }
+  ]
+}
+```
 
-- `@loot_table minecraft:blocks/diamond_ore`
+`@loot_table minecraft:blocks/yellow_shulker_box`
 
-  <details>
-
-  ```json
-  {
-    "pools": [
-      {
-        "rolls": 1,
-        "entries": [
-          {
-            "type": "minecraft:item",
-            "name": "minecraft:dead_bush"
-          }
-        ]
-      }
-    ]
-  }
-  ```
-
-  </details>
-
-- `@loot_table minecraft:blocks/yellow_shulker_box`
-
-  <details>
-
-  ```json
-  {
-    "type": "minecraft:block",
-    "pools": [
-      {
-        "rolls": 1,
-        "entries": [
-          {
-            "type": "minecraft:alternatives",
-            "children": [
-              {
-                "type": "minecraft:dynamic",
-                "name": "minecraft:contents",
-                "conditions": [
-                  {
-                    "condition": "minecraft:match_tool",
-                    "predicate": {
-                      "item": "minecraft:air",
-                      "nbt": "{drop_contents:1b}"
+```json
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:alternatives",
+          "children": [
+            {
+              "type": "minecraft:dynamic",
+              "name": "minecraft:contents",
+              "conditions": [
+                {
+                  "condition": "minecraft:match_tool",
+                  "predicate": {
+                    "item": "minecraft:air",
+                    "nbt": "{drop_contents:1b}"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "minecraft:item",
+              "name": "minecraft:yellow_shulker_box",
+              "functions": [
+                {
+                  "function": "minecraft:copy_name",
+                  "source": "block_entity"
+                },
+                {
+                  "function": "minecraft:copy_nbt",
+                  "source": "block_entity",
+                  "ops": [
+                    {
+                      "source": "Lock",
+                      "target": "BlockEntityTag.Lock",
+                      "op": "replace"
+                    },
+                    {
+                      "source": "LootTable",
+                      "target": "BlockEntityTag.LootTable",
+                      "op": "replace"
+                    },
+                    {
+                      "source": "LootTableSeed",
+                      "target": "BlockEntityTag.LootTableSeed",
+                      "op": "replace"
                     }
-                  }
-                ]
-              },
-              {
-                "type": "minecraft:item",
-                "name": "minecraft:yellow_shulker_box",
-                "functions": [
-                  {
-                    "function": "minecraft:copy_name",
-                    "source": "block_entity"
-                  },
-                  {
-                    "function": "minecraft:copy_nbt",
-                    "source": "block_entity",
-                    "ops": [
-                      {
-                        "source": "Lock",
-                        "target": "BlockEntityTag.Lock",
-                        "op": "replace"
-                      },
-                      {
-                        "source": "LootTable",
-                        "target": "BlockEntityTag.LootTable",
-                        "op": "replace"
-                      },
-                      {
-                        "source": "LootTableSeed",
-                        "target": "BlockEntityTag.LootTableSeed",
-                        "op": "replace"
-                      }
-                    ]
-                  },
-                  {
-                    "function": "minecraft:set_contents",
-                    "entries": [
-                      {
-                        "type": "minecraft:dynamic",
-                        "name": "minecraft:contents"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  }
-  ```
-
-  </details>
+                  ]
+                },
+                {
+                  "function": "minecraft:set_contents",
+                  "entries": [
+                    {
+                      "type": "minecraft:dynamic",
+                      "name": "minecraft:contents"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+```
 
 ### text_in_block
 
-- `@function text_in_block:foo`
+`@function text_in_block:foo`
 
-  <details>
-
-  ```mcfunction
-  say foo
-  ```
-
-  </details>
+```mcfunction
+say foo
+```

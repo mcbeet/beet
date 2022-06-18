@@ -2,79 +2,51 @@
 
 ## Data pack
 
-- `@data_pack pack.mcmeta`
+`@data_pack pack.mcmeta`
 
-  <details>
-
-  ```json
-  {
-    "pack": {
-      "pack_format": 10,
-      "description": ""
-    }
+```json
+{
+  "pack": {
+    "pack_format": 10,
+    "description": ""
   }
-  ```
-
-  </details>
+}
+```
 
 ### demo
 
-- `@function demo:foo`
+`@function demo:foo`
 
-  <details>
+```mcfunction
+say foo
+```
 
-  ```mcfunction
-  say foo
-  ```
+`@function demo:bar`
 
-  </details>
+```mcfunction
+say bar
+```
 
-- `@function demo:bar`
+`@function demo:hidden_foo`
 
-  <details>
+```mcfunction
+say hidden foo
+```
 
-  ```mcfunction
-  say bar
-  ```
+`@function demo:hidden_bar`
 
-  </details>
+```mcfunction
+say hidden bar
+```
 
-- `@function demo:hidden_foo`
+`@function demo:embedded_foo`
 
-  <details>
+```mcfunction
+say embedded foo
+```
 
-  ```mcfunction
-  say hidden foo
-  ```
+`@function demo:embedded_bar`
 
-  </details>
-
-- `@function demo:hidden_bar`
-
-  <details>
-
-  ```mcfunction
-  say hidden bar
-  ```
-
-  </details>
-
-- `@function demo:embedded_foo`
-
-  <details>
-
-  ```mcfunction
-  say embedded foo
-  ```
-
-  </details>
-
-- `@function demo:embedded_bar`
-
-  <details>
-
-  ```mcfunction
-  say embedded bar
-  ```
-
-  </details>
+```mcfunction
+say embedded bar
+```

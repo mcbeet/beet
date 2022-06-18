@@ -2,49 +2,33 @@
 
 ## Data pack
 
-- `@data_pack pack.mcmeta`
+`@data_pack pack.mcmeta`
 
-  <details>
-
-  ```json
-  {
-    "pack": {
-      "pack_format": 10,
-      "description": ""
-    }
+```json
+{
+  "pack": {
+    "pack_format": 10,
+    "description": ""
   }
-  ```
-
-  </details>
+}
+```
 
 ### demo
 
-- `@function(strip_final_newline) demo:hello`
+`@function(strip_final_newline) demo:hello`
 
-  <details>
+```mcfunction
+say hello
+```
 
-  ```mcfunction
-  say hello
-  ```
+`@function(strip_final_newline) demo:foo`
 
-  </details>
+```mcfunction
+say foo
+```
 
-- `@function(strip_final_newline) demo:foo`
+`@function(strip_final_newline) demo:bar`
 
-  <details>
-
-  ```mcfunction
-  say foo
-  ```
-
-  </details>
-
-- `@function(strip_final_newline) demo:bar`
-
-  <details>
-
-  ```mcfunction
-  say bar
-  ```
-
-  </details>
+```mcfunction
+say bar
+```

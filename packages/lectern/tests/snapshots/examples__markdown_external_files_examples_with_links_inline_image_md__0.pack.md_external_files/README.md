@@ -2,72 +2,48 @@
 
 ## Data pack
 
-- `@data_pack pack.mcmeta`
+`@data_pack pack.mcmeta`
 
-  <details>
-
-  ```json
-  {
-    "pack": {
-      "pack_format": 10,
-      "description": ""
-    }
+```json
+{
+  "pack": {
+    "pack_format": 10,
+    "description": ""
   }
-  ```
+}
+```
 
-  </details>
+`@data_pack pack.png`
 
-- `@data_pack pack.png`
-
-  <details>
-
-  ![data_pack.png](pack.png)
-
-  </details>
+![data_pack.png](pack.png)
 
 ## Resource pack
 
-- `@resource_pack pack.mcmeta`
+`@resource_pack pack.mcmeta`
 
-  <details>
-
-  ```json
-  {
-    "pack": {
-      "pack_format": 9,
-      "description": ""
-    }
+```json
+{
+  "pack": {
+    "pack_format": 9,
+    "description": ""
   }
-  ```
-
-  </details>
+}
+```
 
 ### foo
 
-- `@texture foo:hello`
+`@texture foo:hello`
 
-  <details>
-
-  ![texture.png](hello.png)
-
-  </details>
+![texture.png](hello.png)
 
 ### bar
 
-- `@texture bar:hello`
+`@texture bar:hello`
 
-  <details>
-
-  ![texture.png](hello_1.png)
-
-  </details>
+![texture.png](hello_1.png)
 
 ### baz
 
-- `@texture baz:hello`
+`@texture baz:hello`
 
-  <details>
-
-  ![texture.png](hello_2.png)
-
-  </details>
+![texture.png](hello_2.png)

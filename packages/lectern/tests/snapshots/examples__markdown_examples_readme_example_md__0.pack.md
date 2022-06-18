@@ -2,43 +2,31 @@
 
 ## Data pack
 
-- `@data_pack pack.mcmeta`
+`@data_pack pack.mcmeta`
 
-  <details>
-
-  ```json
-  {
-    "pack": {
-      "pack_format": 10,
-      "description": ""
-    }
+```json
+{
+  "pack": {
+    "pack_format": 10,
+    "description": ""
   }
-  ```
-
-  </details>
+}
+```
 
 ### tutorial
 
-- `@function tutorial:greeting`
+`@function tutorial:greeting`
 
-  <details>
-
-  ```mcfunction
-  say Hello, world!
-  ```
-
-  </details>
+```mcfunction
+say Hello, world!
+```
 
 ### minecraft
 
-- `@function_tag minecraft:load`
+`@function_tag minecraft:load`
 
-  <details>
-
-  ```json
-  {
-    "values": ["tutorial:greeting"]
-  }
-  ```
-
-  </details>
+```json
+{
+  "values": ["tutorial:greeting"]
+}
+```

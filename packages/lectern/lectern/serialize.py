@@ -3,6 +3,7 @@ __all__ = [
     "MarkdownSerializer",
     "ExternalFilesManager",
     "SerializedFile",
+    "snapshot_serialization_filter",
     "EXTENSION_HIGHLIGHTING",
 ]
 
@@ -39,6 +40,11 @@ EXTENSION_HIGHLIGHTING = {
     ".vsh": "glsl",
     ".glsl": "glsl",
 }
+
+
+def snapshot_serialization_filter(pack: Union[DataPack, ResourcePack]) -> bool:
+    """Filter that selects non-empty packs and empty packs with modified pack.mcmeta."""
+    return bool(pack or pack.mcmeta != type(pack)().mcmeta)
 
 
 @dataclass

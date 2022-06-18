@@ -2,33 +2,25 @@
 
 ## Data pack
 
-- `@data_pack pack.mcmeta`
+`@data_pack pack.mcmeta`
 
-  <details>
-
-  ```json
-  {
-    "pack": {
-      "pack_format": 10,
-      "description": ""
-    }
+```json
+{
+  "pack": {
+    "pack_format": 10,
+    "description": ""
   }
-  ```
-
-  </details>
+}
+```
 
 ### demo
 
-- `@function demo:foo`
+`@function demo:foo`
 
-  <details>
-
-  ```mcfunction
-  @function demo:foo
-  @@blah demo:foo
-  @function(@@) demo:bar
-  @@function(@@@) demo:bar
-  @function demo:bar
-  ```
-
-  </details>
+```mcfunction
+@function demo:foo
+@@blah demo:foo
+@function(@@) demo:bar
+@@function(@@@) demo:bar
+@function demo:bar
+```

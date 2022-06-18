@@ -2,34 +2,26 @@
 
 ## Data pack
 
-- `@data_pack pack.mcmeta`
+`@data_pack pack.mcmeta`
 
-  <details>
-
-  ```json
-  {
-    "pack": {
-      "pack_format": 10,
-      "description": ""
-    }
+```json
+{
+  "pack": {
+    "pack_format": 10,
+    "description": ""
   }
-  ```
-
-  </details>
+}
+```
 
 ### minecraft
 
-- `@function_tag minecraft:load`
+`@function_tag minecraft:load`
 
-  <details>
-
-  ```json
-  {
-    "values": [
-      "demo:foo",
-      "demo:bar"
-    ]
-  }
-  ```
-
-  </details>
+```json
+{
+  "values": [
+    "demo:foo",
+    "demo:bar"
+  ]
+}
+```

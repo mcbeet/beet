@@ -2,50 +2,34 @@
 
 ## Data pack
 
-- `@data_pack pack.mcmeta`
+`@data_pack pack.mcmeta`
 
-  <details>
-
-  ```json
-  {
-    "pack": {
-      "pack_format": 10,
-      "description": ""
-    }
+```json
+{
+  "pack": {
+    "pack_format": 10,
+    "description": ""
   }
-  ```
+}
+```
 
-  </details>
+`@data_pack pack.png`
 
-- `@data_pack pack.png`
-
-  <details>
-
-  ![data_pack.png](pack.png)
-
-  </details>
+![data_pack.png](pack.png)
 
 ## Resource pack
 
-- `@resource_pack pack.mcmeta`
+`@resource_pack pack.mcmeta`
 
-  <details>
-
-  ```json
-  {
-    "pack": {
-      "pack_format": 9,
-      "description": ""
-    }
+```json
+{
+  "pack": {
+    "pack_format": 9,
+    "description": ""
   }
-  ```
+}
+```
 
-  </details>
+`@resource_pack pack.png`
 
-- `@resource_pack pack.png`
-
-  <details>
-
-  ![resource_pack.png](pack_1.png)
-
-  </details>
+![resource_pack.png](pack_1.png)

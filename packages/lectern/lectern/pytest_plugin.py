@@ -27,7 +27,7 @@ else:
             return load_snapshot(path)
 
         def dump(self, path: Path, value: Document):
-            value.save(path)
+            value.save(path, snapshot=True)
 
     class FmtPackMarkdown(Fmt[Document]):
         extension = ".pack.md"
@@ -36,7 +36,7 @@ else:
             return load_snapshot(path)
 
         def dump(self, path: Path, value: Document):
-            value.save(path)
+            value.save(path, snapshot=True)
 
     class FmtPackMarkdownExternalFiles(Fmt[Document]):
         extension = ".pack.md_external_files"
@@ -46,7 +46,7 @@ else:
 
         def dump(self, path: Path, value: Document):
             path.mkdir(exist_ok=True)
-            value.save(path / "README.md", external_files=path)
+            value.save(path / "README.md", snapshot=True, external_files=path)
 
 
 def pytest_assertrepr_compare(config, op, left, right):

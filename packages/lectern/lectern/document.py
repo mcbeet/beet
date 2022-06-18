@@ -13,7 +13,12 @@ from beet.core.utils import FileSystemPath, extra_field
 
 from .directive import DirectiveRegistry
 from .extract import FragmentLoader, MarkdownExtractor, TextExtractor
-from .serialize import ExternalFilesManager, MarkdownSerializer, TextSerializer
+from .serialize import (
+    ExternalFilesManager,
+    MarkdownSerializer,
+    TextSerializer,
+    snapshot_serialization_filter,
+)
 
 
 @dataclass
@@ -173,8 +178,14 @@ class Document:
         self,
         path: FileSystemPath,
         external_files: Optional[FileSystemPath] = None,
+        snapshot: bool = False,
     ):
         """Save the serialized document at the specified location."""
+        if snapshot:
+            self.text_serializer.pack_filter = snapshot_serialization_filter
+            self.markdown_serializer.flat = True
+            self.markdown_serializer.pack_filter = snapshot_serialization_filter
+
         path = Path(path).resolve()
 
         if path.suffix == ".md":

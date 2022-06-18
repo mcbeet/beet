@@ -2,63 +2,47 @@
 
 ## Data pack
 
-- `@data_pack pack.mcmeta`
+`@data_pack pack.mcmeta`
 
-  <details>
-
-  ```json
-  {
-    "pack": {
-      "description": "hello",
-      "pack_format": 7
-    }
+```json
+{
+  "pack": {
+    "description": "hello",
+    "pack_format": 7
   }
-  ```
-
-  </details>
+}
+```
 
 ### demo
 
-- `@function demo:foo`
+`@function demo:foo`
 
-  <details>
-
-  ```mcfunction
-  say foo
-  ```
-
-  </details>
+```mcfunction
+say foo
+```
 
 ## Resource pack
 
-- `@resource_pack pack.mcmeta`
+`@resource_pack pack.mcmeta`
 
-  <details>
-
-  ```json
-  {
-    "pack": {
-      "pack_format": 9,
-      "description": ""
-    }
+```json
+{
+  "pack": {
+    "pack_format": 9,
+    "description": ""
   }
-  ```
-
-  </details>
+}
+```
 
 ### minecraft
 
-- `@blockstate minecraft:grass_block`
+`@blockstate minecraft:grass_block`
 
-  <details>
-
-  ```json
-  {
-    "variants": {
-      "snowy=false": { "model": "block/grass_block" },
-      "snowy=true": { "model": "block/grass_block_snow" }
-    }
+```json
+{
+  "variants": {
+    "snowy=false": { "model": "block/grass_block" },
+    "snowy=true": { "model": "block/grass_block_snow" }
   }
-  ```
-
-  </details>
+}
+```
