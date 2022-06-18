@@ -818,7 +818,11 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
         return NotImplemented
 
     def __bool__(self) -> bool:
-        return any(self.values()) or self.extra.keys() > {"pack.mcmeta"}
+        return (
+            any(self.values())
+            or self.extra.keys() > {"pack.mcmeta"}
+            or self.mcmeta != self.__class__().mcmeta
+        )
 
     def __enter__(self: T) -> T:
         return self
