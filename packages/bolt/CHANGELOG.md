@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.8.0 (2022-06-18)
+### Feature
+* Add context managers ([`38e614e`](https://github.com/mcbeet/bolt/commit/38e614e8d38d1c62af019f2b5f08a78cff22ed0b))
+
 ## v0.7.2 (2022-06-17)
 ### Fix
 * Only restrict builtins when sandbox is active ([`8eefb0c`](https://github.com/mcbeet/bolt/commit/8eefb0cf1f5d6f3a6b0e472ffb1da0e6b60ba5e7))
