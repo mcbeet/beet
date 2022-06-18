@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.54.1 (2022-06-18)
+### Fix
+* Make redirects conditional ([`a0046bf`](https://github.com/mcbeet/mecha/commit/a0046bf9e4dc64edd9cde51f759bcfa5123fe4fe))
+
 ## v0.54.0 (2022-06-18)
 ### Feature
 * Use minecraft version config from beet directly ([`ed3f597`](https://github.com/mcbeet/mecha/commit/ed3f597ed62a38483c014b5e2e2a634ba2949dbf))
