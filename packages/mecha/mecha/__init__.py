@@ -1,4 +1,4 @@
-__version__ = "0.54.1"
+__version__ = "0.54.2"
 
 
 from .api import *

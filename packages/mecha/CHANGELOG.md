@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.54.2 (2022-06-18)
+### Fix
+* Update lectern for new snapshot settings ([`00ff0cf`](https://github.com/mcbeet/mecha/commit/00ff0cfe83bf9f84596c231338a9916a65d6dd4c))
+
 ## v0.54.1 (2022-06-18)
 ### Fix
 * Make redirects conditional ([`a0046bf`](https://github.com/mcbeet/mecha/commit/a0046bf9e4dc64edd9cde51f759bcfa5123fe4fe))
