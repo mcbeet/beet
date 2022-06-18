@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.22.0 (2022-06-18)
+### Feature
+* Update beet to default to 1.19 ([`4f2f2e9`](https://github.com/mcbeet/lectern/commit/4f2f2e901dbe6f80f5b000e2ee6abe78546b9f96))
+
 ## v0.21.2 (2022-04-29)
 ### Fix
 * Don't do fancy concatenation ([`8d7dd36`](https://github.com/mcbeet/lectern/commit/8d7dd367553524ca061e92edb6c78f9f0fd4ce4c))
