@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.8.1 (2022-06-18)
+### Fix
+* Update deps for new snapshot settings ([`6739b2b`](https://github.com/mcbeet/bolt/commit/6739b2bb0d4521de90e6162f40033d37b2550fcd))
+
 ## v0.8.0 (2022-06-18)
 ### Feature
 * Add context managers ([`38e614e`](https://github.com/mcbeet/bolt/commit/38e614e8d38d1c62af019f2b5f08a78cff22ed0b))
