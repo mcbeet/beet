@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.68.1 (2022-06-18)
+### Fix
+* Tweak pack bool ([`693f30e`](https://github.com/mcbeet/beet/commit/693f30e709b6f2583efa543b3b7cf5a5fe441bcd))
+
 ## v0.68.0 (2022-06-17)
 ### Feature
 * Add ctx.minecraft_version and pack_format registries ([`2328b80`](https://github.com/mcbeet/beet/commit/2328b808a7c3be46f97cc9b02845a8e5b3b43e4c))
