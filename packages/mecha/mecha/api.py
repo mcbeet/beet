@@ -444,7 +444,8 @@ class Mecha:
                     continue
                 with self.steps[step].use_diagnostics(compilation_unit.diagnostics):
                     compilation_unit.ast = self.steps[step](compilation_unit.ast)
-                    self.database.enqueue(function, step + 1)
+                    if compilation_unit.ast:
+                        self.database.enqueue(function, step + 1)
 
             elif not readonly:
                 if not compilation_unit.ast:
