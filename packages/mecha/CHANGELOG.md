@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.54.3 (2022-06-21)
+### Fix
+* Allow compilation step to return None to abort ([`8f3ce64`](https://github.com/mcbeet/mecha/commit/8f3ce64708607078736090370b166af215a48f5b))
+
 ## v0.54.2 (2022-06-18)
 ### Fix
 * Update lectern for new snapshot settings ([`00ff0cf`](https://github.com/mcbeet/mecha/commit/00ff0cfe83bf9f84596c231338a9916a65d6dd4c))
