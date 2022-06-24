@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.8.2 (2022-06-24)
+### Fix
+* Remove leftover extern plugin ([`42cc659`](https://github.com/mcbeet/bolt/commit/42cc6590bfef34cc4573ed8d2fe8404cf26c9f34))
+
 ## v0.8.1 (2022-06-18)
 ### Fix
 * Update deps for new snapshot settings ([`6739b2b`](https://github.com/mcbeet/bolt/commit/6739b2bb0d4521de90e6162f40033d37b2550fcd))
