@@ -1,0 +1,2 @@
+function ./hello2:
+    say hello2

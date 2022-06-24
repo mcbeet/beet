@@ -1,0 +1,10 @@
+require:
+  - bolt
+  - bolt.contrib.lazy
+data_pack:
+  load: "src"
+pipeline:
+  - mecha
+meta:
+  bolt_lazy:
+    match: "*.lazy"
