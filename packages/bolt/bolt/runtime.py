@@ -230,12 +230,12 @@ class Runtime:
             code = None
 
         module = CompiledModule(
-            target,
-            code,
-            refs,
-            output,
-            compilation_unit.resource_location,
-            set(self.globals),
+            ast=target,
+            code=code,
+            refs=refs,
+            output=output,
+            resource_location=compilation_unit.resource_location,
+            globals=set(self.globals),
         )
         self.modules[current] = module
 
@@ -302,7 +302,7 @@ class Runtime:
         try:
             module = self.get_module(resource_location)
         except KeyError:
-            msg = f"Couldn't import {resource_location!r}."
+            msg = f'Couldn\'t import "{resource_location}".'
             raise ImportError(msg) from None
         if not module.executing:
             self.get_output(module)
@@ -315,7 +315,7 @@ class Runtime:
         try:
             values = [module.namespace[name] for name in args]
         except KeyError as exc:
-            msg = f"Couldn't import {exc} from {resource_location!r}."
+            msg = f'Couldn\'t import {exc} from "{resource_location}".'
             raise ImportError(msg) from None
         return values[0] if len(values) == 1 else values
 
@@ -441,7 +441,7 @@ class ModuleRootSerializer(Visitor):
             command = node.commands[0]
             name = command.identifier.partition(":")[0]
             raise set_location(
-                Diagnostic("warn", f"Standalone {name!r} command in module."),
+                Diagnostic("warn", f'Standalone "{name}" command in module.'),
                 command,
                 command.arguments[0] if command.arguments else command,
             )
