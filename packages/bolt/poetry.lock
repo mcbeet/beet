@@ -364,7 +364,7 @@ python-versions = ">=3.7"
 
 [[package]]
 name = "mecha"
-version = "0.54.2"
+version = "0.54.3"
 description = "A powerful Minecraft command library"
 category = "main"
 optional = false
@@ -825,7 +825,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "229f643d3d8cbcad0301696e66c85753b52c2f93f6a9378349493665dbb95602"
+content-hash = "315f87451fb9ea3c24fcd67e4eae0f61e0673e627d85e4382b0ae32ec92be9f0"
 
 [metadata.files]
 atomicwrites = [
@@ -1071,8 +1071,8 @@ mdurl = [
     {file = "mdurl-0.1.1.tar.gz", hash = "sha256:f79c9709944df218a4cdb0fcc0b0c7ead2f44594e3e84dc566606f04ad749c20"},
 ]
 mecha = [
-    {file = "mecha-0.54.2-py3-none-any.whl", hash = "sha256:338454b003d60d555f9ded2c5b51ec3711a2a098d72f9d6e553a3ea7250431d7"},
-    {file = "mecha-0.54.2.tar.gz", hash = "sha256:2f10d4e5b8ae66b4f7ccf21a9aa59c8615ac739b20d78a2f3a83b99f60988fe6"},
+    {file = "mecha-0.54.3-py3-none-any.whl", hash = "sha256:2aacfa8252229cc1f8377587aea2d3c4e85c6ff8497e159ed4a30901d27e8443"},
+    {file = "mecha-0.54.3.tar.gz", hash = "sha256:7a78cdd3427f1240ee1fa7f905db4096d283dbe3f557641b5cc0b9b4a307ef27"},
 ]
 mypy-extensions = [
     {file = "mypy_extensions-0.4.3-py2.py3-none-any.whl", hash = "sha256:090fedd75945a69ae91ce1303b5824f428daf5a028d2f6ab8a299250a846f15d"},
