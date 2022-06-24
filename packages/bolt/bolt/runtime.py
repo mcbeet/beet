@@ -87,6 +87,8 @@ class CompiledModule:
     globals: Set[str]
     namespace: JsonDict = field(default_factory=dict)
     executing: bool = False
+    executed: bool = False
+    execution_hooks: List[Callable[[], Any]] = field(default_factory=list)
 
 
 class Runtime:
@@ -243,6 +245,11 @@ class Runtime:
 
     def get_output(self, module: CompiledModule) -> AstRoot:
         """Run the module and return the output ast."""
+        if not module.executed:
+            module.executed = True
+            for hook in module.execution_hooks:
+                hook()
+
         if not module.code or not module.output:
             return module.ast
         if module.output in module.namespace:
