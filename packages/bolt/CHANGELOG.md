@@ -2,6 +2,14 @@
 
 <!--next-version-placeholder-->
 
+## v0.9.0 (2022-06-24)
+### Feature
+* Add bolt.contrib.lazy ([`c9f12f3`](https://github.com/mcbeet/bolt/commit/c9f12f360c70ca031acfe5f9b2f0213bc7c3fdff))
+* Add compiled module execution hooks ([`0a91936`](https://github.com/mcbeet/bolt/commit/0a91936a8172ad7b2b246c38b931cac8da6a27d2))
+
+### Fix
+* Minor visual changes ([`0ab3519`](https://github.com/mcbeet/bolt/commit/0ab35197e9d8f8532c39faf4b2a03caa938077bc))
+
 ## v0.8.2 (2022-06-24)
 ### Fix
 * Remove leftover extern plugin ([`42cc659`](https://github.com/mcbeet/bolt/commit/42cc6590bfef34cc4573ed8d2fe8404cf26c9f34))
