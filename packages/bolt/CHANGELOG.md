@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.9.1 (2022-07-02)
+### Fix
+* Allow ast node interpolation directly ([`ffa076e`](https://github.com/mcbeet/bolt/commit/ffa076efa635be32c735371e2761da954385abbf))
+
 ## v0.9.0 (2022-06-24)
 ### Feature
 * Add bolt.contrib.lazy ([`c9f12f3`](https://github.com/mcbeet/bolt/commit/c9f12f360c70ca031acfe5f9b2f0213bc7c3fdff))
