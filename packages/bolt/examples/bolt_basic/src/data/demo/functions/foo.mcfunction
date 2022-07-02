@@ -650,4 +650,5 @@ runtime = ctx.inject(Runtime)
 with runtime.scope() as commands:
     tellraw @p "hello"
 
+say repr(commands[0])
 say commands[0]

@@ -267,6 +267,7 @@ say dummy
 say dummy
 say dummy
 say AstCommand(identifier='tellraw:targets:message', arguments=AstChildren((AstSelector(variable='p', arguments=AstChildren(())), AstJsonValue(value='hello'))))
+say tellraw @p "hello"
 ```
 
 `@function demo:import_a`

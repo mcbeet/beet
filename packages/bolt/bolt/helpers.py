@@ -186,6 +186,8 @@ def converter(f: Callable[[Any], AstNode]) -> Callable[[Any, AstNode], AstNode]:
     @internal
     @wraps(f)
     def wrapper(obj: Any, node: AstNode) -> AstNode:
+        if isinstance(obj, AstNode):
+            return set_location(obj, node)
         return set_location(f(obj), node)
 
     return wrapper
@@ -199,6 +201,8 @@ class JsonObjectConverter:
 
     @internal
     def __call__(self, obj: Any, node: AstNode) -> AstNode:
+        if isinstance(obj, AstNode):
+            return set_location(obj, node)
         if isinstance(node := self.json_converter(obj, node), AstJsonObject):
             return node
         raise ValueError(f"Invalid json object of type {type(obj)!r}.")
@@ -212,6 +216,8 @@ class NbtCompoundConverter:
 
     @internal
     def __call__(self, obj: Any, node: AstNode) -> AstNode:
+        if isinstance(obj, AstNode):
+            return set_location(obj, node)
         if isinstance(node := self.nbt_converter(obj, node), AstNbtCompound):
             return node
         raise ValueError(f"Invalid nbt compound of type {type(obj)!r}.")
@@ -226,6 +232,8 @@ class EntityConverter:
 
     @internal
     def __call__(self, obj: Any, node: AstNode) -> AstNode:
+        if isinstance(obj, AstNode):
+            return set_location(obj, node)
         if isinstance(obj, str):
             if obj.count("-") == 4:
                 return self.uuid_converter(obj, node)
