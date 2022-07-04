@@ -28,7 +28,7 @@ mecha = ">=0.54.3"
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.1.2"
-black = "^22.3.0"
+black = "^22.6.0"
 isort = "^5.10.1"
 python-semantic-release = "^7.28.1"
 pytest-insta = "^0.1.11"
