@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.68.3 (2022-07-06)
+### Fix
+* Update worldgen to 1.19 ([#282](https://github.com/mcbeet/beet/issues/282)) ([`f54ca03`](https://github.com/mcbeet/beet/commit/f54ca03fea63ae5436d37ab352f8744722424ee6))
+
 ## v0.68.2 (2022-06-18)
 ### Fix
 * Revert bool tweak ([`54f83f9`](https://github.com/mcbeet/beet/commit/54f83f953a7ca37b77420aa812b9565bfb42f622))
