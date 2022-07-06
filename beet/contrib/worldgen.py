@@ -8,7 +8,7 @@ __all__ = [
     "WorldgenBiome",
     "WorldgenConfiguredCarver",
     "WorldgenConfiguredFeature",
-    "WorldgenConfiguredStructureFeature",
+    "WorldgenStructure",
     "WorldgenConfiguredSurfaceBuilder",
     "WorldgenDensityFunction",
     "WorldgenNoise",
@@ -19,7 +19,7 @@ __all__ = [
     "WorldgenStructureSet",
     "WorldgenBiomeTag",
     "WorldgenStructureSetTag",
-    "WorldgenConfiguredStructureFeatureTag",
+    "WorldgenStructureTag",
     "WorldgenConfiguredCarverTag",
     "WorldgenPlacedFeatureTag",
 ]
@@ -44,7 +44,7 @@ def worldgen(pack: Union[Context, DataPack]):
         WorldgenBiome,
         WorldgenConfiguredCarver,
         WorldgenConfiguredFeature,
-        WorldgenConfiguredStructureFeature,
+        WorldgenStructure,
         WorldgenConfiguredSurfaceBuilder,
         WorldgenDensityFunction,
         WorldgenNoise,
@@ -55,7 +55,7 @@ def worldgen(pack: Union[Context, DataPack]):
         WorldgenStructureSet,
         WorldgenBiomeTag,
         WorldgenStructureSetTag,
-        WorldgenConfiguredStructureFeatureTag,
+        WorldgenStructureTag,
         WorldgenConfiguredCarverTag,
         WorldgenPlacedFeatureTag,
     ]
@@ -96,10 +96,10 @@ class WorldgenConfiguredFeature(JsonFile):
     extension = ".json"
 
 
-class WorldgenConfiguredStructureFeature(JsonFile):
+class WorldgenStructure(JsonFile):
     """Class representing a worldgen structure feature."""
 
-    scope = ("worldgen", "configured_structure_feature")
+    scope = ("worldgen", "structure")
     extension = ".json"
 
 
@@ -171,10 +171,10 @@ class WorldgenStructureSetTag(TagFile):
     scope = ("tags", "worldgen", "structure_set")
 
 
-class WorldgenConfiguredStructureFeatureTag(TagFile):
+class WorldgenStructureTag(TagFile):
     """Class representing a worldgen structure feature tag."""
 
-    scope = ("tags", "worldgen", "configured_structure_feature")
+    scope = ("tags", "worldgen", "structure")
 
 
 class WorldgenConfiguredCarverTag(TagFile):
