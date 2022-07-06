@@ -43,7 +43,7 @@ pytest = "^7.1.2"
 pytest-minecraft = "^0.2.0"
 isort = "^5.10.1"
 pytest-insta = "^0.1.11"
-python-semantic-release = "^7.28.1"
+python-semantic-release = "^7.29.4"
 mudkip = "^0.7.0"
 
 [tool.poetry.scripts]
