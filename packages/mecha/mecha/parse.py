@@ -23,9 +23,11 @@ __all__ = [
     "parse_string_argument",
     "Vector2Parser",
     "Vector3Parser",
-    "JsonParser",
     "TypeConstraint",
+    "JsonParser",
+    "JsonObjectParser",
     "NbtParser",
+    "NbtCompoundParser",
     "AdjacentConstraint",
     "ResourceLocationParser",
     "NoTagConstraint",
@@ -168,7 +170,14 @@ NUMBER_PATTERN: str = r"-?(?:\d+\.?\d*|\.\d+)"
 def get_default_parsers() -> Dict[str, Parser]:
     """Return the default parsers."""
     json_parser = JsonParser()
+    json_parser.object_entry_parser = delegate("json_object_entry")
+    json_parser.array_element_parser = delegate("json_array_element")
+    json_parser.recursive_parser = delegate("json")
+
     nbt_parser = NbtParser()
+    nbt_parser.compound_entry_parser = delegate("nbt_compound_entry")
+    nbt_parser.list_or_array_element_parser = delegate("nbt_list_or_array_element")
+    nbt_parser.recursive_parser = delegate("nbt")
 
     return {
         ################################################################################
@@ -186,24 +195,16 @@ def get_default_parsers() -> Dict[str, Parser]:
         "json": json_parser,
         "json_object_entry": json_parser.parse_object_entry,
         "json_array_element": delegate("json"),
-        "json_object": TypeConstraint(
-            parser=delegate("json"),
-            type=AstJsonObject,
-            message="Expected json object.",
-        ),
+        "json_object": JsonObjectParser(delegate("json")),
         "nbt": nbt_parser,
         "nbt_compound_entry": nbt_parser.parse_compound_entry,
         "nbt_list_or_array_element": delegate("nbt"),
-        "nbt_compound": TypeConstraint(
-            parser=delegate("nbt"),
-            type=AstNbtCompound,
-            message="Expected nbt compound.",
+        "nbt_compound": NbtCompoundParser(delegate("nbt")),
+        "adjacent_nbt_compound": AdjacentConstraint(delegate("nbt_compound"), r"\{"),
+        "nbt_path": NbtPathParser(
+            integer_parser=delegate("integer"),
+            nbt_compound_parser=delegate("nbt_compound"),
         ),
-        "adjacent_nbt_compound": AdjacentConstraint(
-            parser=delegate("nbt_compound"),
-            hint=r"\{",
-        ),
-        "nbt_path": NbtPathParser(),
         "range": RangeParser(),
         "integer_range": IntegerRangeConstraint(delegate("range")),
         "resource_location_or_tag": CommentDisambiguation(ResourceLocationParser()),
@@ -227,26 +228,36 @@ def get_default_parsers() -> Dict[str, Parser]:
             resource_location_parser=delegate("resource_location_or_tag"),
             block_states_parser=AdjacentConstraint(
                 parser=MultilineParser(
-                    BlockStatesParser(key_parser=StringParser(type="phrase"))
+                    BlockStatesParser(
+                        key_parser=StringParser(type="phrase"),
+                        value_parser=delegate("phrase"),
+                    )
                 ),
                 hint=r"\[",
             ),
+            data_tags_parser=delegate("adjacent_nbt_compound"),
         ),
         "block_state": BlockParser(
             resource_location_parser=delegate("resource_location"),
             block_states_parser=AdjacentConstraint(
                 parser=MultilineParser(
-                    BlockStatesParser(key_parser=StringParser(type="phrase"))
+                    BlockStatesParser(
+                        key_parser=StringParser(type="phrase"),
+                        value_parser=delegate("phrase"),
+                    )
                 ),
                 hint=r"\[",
             ),
+            data_tags_parser=delegate("adjacent_nbt_compound"),
         ),
         "item_predicate": ItemParser(
             resource_location_parser=delegate("resource_location_or_tag"),
+            data_tags_parser=delegate("adjacent_nbt_compound"),
         ),
         "item_slot": BasicLiteralParser(AstItemSlot),
         "item_stack": ItemParser(
             resource_location_parser=delegate("resource_location"),
+            data_tags_parser=delegate("adjacent_nbt_compound"),
         ),
         "message": parse_message,
         "block_pos": Vector3Parser(coordinate_parser=delegate("coordinate")),
@@ -876,36 +887,74 @@ class Vector3Parser:
 
 
 @dataclass
+class TypeConstraint:
+    """Constraint that only allows specific instances."""
+
+    parser: Parser
+    type: Union[Type[Any], Tuple[Type[Any], ...]]
+    message: str
+
+    def __call__(self, stream: TokenStream) -> Any:
+        node = self.parser(stream)
+
+        if not isinstance(node, self.type):
+            raise node.emit_error(InvalidSyntax(self.message))
+
+        return node
+
+
+@dataclass
 class JsonParser:
     """Parser for json values."""
 
+    curly_pattern: str = r"\{|\}"
+    bracket_pattern: str = r"\[|\]"
+    string_pattern: str = r'"(?:\\.|[^\\\n])*?"'
+    number_pattern: str = r"-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?\b"
+    colon_pattern: str = r":"
+    comma_pattern: str = r","
+    null_pattern: str = r"\bnull\b"
+    true_pattern: str = r"\btrue\b"
+    false_pattern: str = r"\bfalse\b"
+
+    object_entry_parser: Parser = field(init=False)
+    array_element_parser: Parser = field(init=False)
+    recursive_parser: Parser = field(init=False)
+
     quote_helper: QuoteHelper = field(default_factory=JsonQuoteHelper)
+
+    def __post_init__(self):
+        self.object_entry_parser = self.parse_object_entry
+        self.array_element_parser = self
+        self.recursive_parser = self
 
     def __call__(self, stream: TokenStream) -> AstJson:
         with stream.syntax(
-            curly=r"\{|\}",
-            bracket=r"\[|\]",
-            string=r'"(?:\\.|[^\\\n])*?"',
-            number=r"-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?\b",
-            colon=r":",
-            comma=r",",
-            literal=r"\w+",
+            curly=self.curly_pattern,
+            bracket=self.bracket_pattern,
+            string=self.string_pattern,
+            number=self.number_pattern,
+            colon=self.colon_pattern,
+            comma=self.comma_pattern,
+            null=self.null_pattern,
+            true=self.true_pattern,
+            false=self.false_pattern,
         ):
             curly, bracket, string, number, null, true, false = stream.expect(
                 ("curly", "{"),
                 ("bracket", "["),
                 "string",
                 "number",
-                ("literal", "null"),
-                ("literal", "true"),
-                ("literal", "false"),
+                "null",
+                "true",
+                "false",
             )
 
             if curly:
                 entries: List[AstJsonObjectEntry] = []
 
                 for _ in stream.peek_until(("curly", "}")):
-                    entries.append(delegate("json_object_entry", stream))
+                    entries.append(self.object_entry_parser(stream))
 
                     if not stream.get("comma"):
                         stream.expect(("curly", "}"))
@@ -918,7 +967,7 @@ class JsonParser:
                 elements: List[AstJson] = []
 
                 for _ in stream.peek_until(("bracket", "]")):
-                    elements.append(delegate("json_array_element", stream))
+                    elements.append(self.array_element_parser(stream))
 
                     if not stream.get("comma"):
                         stream.expect(("bracket", "]"))
@@ -949,32 +998,37 @@ class JsonParser:
 
         stream.expect("colon")
 
-        value_node = delegate("json", stream)
+        value_node = self.recursive_parser(stream)
 
         entry_node = AstJsonObjectEntry(key=key_node, value=value_node)
         return set_location(entry_node, key_node, value_node)
 
 
 @dataclass
-class TypeConstraint:
-    """Constraint that only allows specific instances."""
+class JsonObjectParser(TypeConstraint):
+    """Parser for json objects."""
 
-    parser: Parser
-    type: Union[Type[Any], Tuple[Type[Any], ...]]
-    message: str
-
-    def __call__(self, stream: TokenStream) -> Any:
-        node = self.parser(stream)
-
-        if not isinstance(node, self.type):
-            raise node.emit_error(InvalidSyntax(self.message))
-
-        return node
+    parser: Parser = field(default_factory=JsonParser)
+    type: Type[AstJsonObject] = AstJsonObject
+    message: str = "Expected json object."
 
 
 @dataclass
 class NbtParser:
     """Parser for nbt tags."""
+
+    array_pattern: str = r"\[[BIL];"
+    curly_pattern: str = r"\{|\}"
+    bracket_pattern: str = r"\[|\]"
+    quoted_string_pattern: str = r'"(?:\\.|[^\\\n])*?"' "|" r"'(?:\\.|[^\\\n])*?'"
+    number_pattern: str = r"[+-]?(?:[0-9]*?\.[0-9]+|[0-9]+\.[0-9]*?|[1-9][0-9]*|0)(?:[eE][+-]?[0-9]+)?[bslfdBSLFD]?\b"
+    string_pattern: str = r"[a-zA-Z0-9._+-]+"
+    colon_pattern: str = r":"
+    comma_pattern: str = r","
+
+    compound_entry_parser: Parser = field(init=False)
+    list_or_array_element_parser: Parser = field(init=False)
+    recursive_parser: Parser = field(init=False)
 
     number_suffixes: Dict[str, Type[Any]] = field(
         default_factory=lambda: {  # type: ignore
@@ -1001,16 +1055,21 @@ class NbtParser:
         )
     )
 
+    def __post_init__(self):
+        self.compound_entry_parser = self.parse_compound_entry
+        self.list_or_array_element_parser = self
+        self.recursive_parser = self
+
     def __call__(self, stream: TokenStream) -> AstNbt:
         with stream.syntax(
-            array=r"\[[BIL];",
-            curly=r"\{|\}",
-            bracket=r"\[|\]",
-            quoted_string=r'"(?:\\.|[^\\\n])*?"' "|" r"'(?:\\.|[^\\\n])*?'",
-            number=r"[+-]?(?:[0-9]*?\.[0-9]+|[0-9]+\.[0-9]*?|[1-9][0-9]*|0)(?:[eE][+-]?[0-9]+)?[bslfdBSLFD]?\b",
-            string=r"[a-zA-Z0-9._+-]+",
-            colon=r":",
-            comma=r",",
+            array=self.array_pattern,
+            curly=self.curly_pattern,
+            bracket=self.bracket_pattern,
+            quoted_string=self.quoted_string_pattern,
+            number=self.number_pattern,
+            string=self.string_pattern,
+            colon=self.colon_pattern,
+            comma=self.comma_pattern,
         ):
             curly, bracket, array, number, string, quoted_string = stream.expect(
                 ("curly", "{"),
@@ -1025,7 +1084,7 @@ class NbtParser:
                 entries: List[AstNbtCompoundEntry] = []
 
                 for _ in stream.peek_until(("curly", "}")):
-                    entries.append(delegate("nbt_compound_entry", stream))
+                    entries.append(self.compound_entry_parser(stream))
 
                     if not stream.get("comma"):
                         stream.expect(("curly", "}"))
@@ -1038,7 +1097,7 @@ class NbtParser:
                 elements: List[AstNbt] = []
 
                 for _ in stream.peek_until(("bracket", "]")):
-                    elements.append(delegate("nbt_list_or_array_element", stream))
+                    elements.append(self.list_or_array_element_parser(stream))
 
                     if not stream.get("comma"):
                         stream.expect(("bracket", "]"))
@@ -1115,10 +1174,19 @@ class NbtParser:
 
         stream.expect("colon")
 
-        value_node = delegate("nbt", stream)
+        value_node = self.recursive_parser(stream)
 
         entry_node = AstNbtCompoundEntry(key=key_node, value=value_node)
         return set_location(entry_node, key_node, value_node)
+
+
+@dataclass
+class NbtCompoundParser(TypeConstraint):
+    """Parser for nbt compounds."""
+
+    parser: Parser = field(default_factory=NbtParser)
+    type: Type[AstNbtCompound] = AstNbtCompound
+    message: str = "Expected nbt compound."
 
 
 @dataclass
@@ -1214,6 +1282,7 @@ class BlockParser:
 
     resource_location_parser: Parser
     block_states_parser: Parser
+    data_tags_parser: Parser
 
     def __call__(self, stream: TokenStream) -> AstBlock:
         identifier = self.resource_location_parser(stream)
@@ -1226,7 +1295,7 @@ class BlockParser:
         else:
             block_states = AstChildren[AstBlockState]()
 
-        data_tags = delegate("adjacent_nbt_compound", stream)
+        data_tags = self.data_tags_parser(stream)
 
         node = AstBlock(
             identifier=identifier,
@@ -1241,6 +1310,7 @@ class BlockStatesParser:
     """Parser for minecraft block state."""
 
     key_parser: Parser
+    value_parser: Parser
 
     def __call__(self, stream: TokenStream) -> AstChildren[AstBlockState]:
         block_states: List[AstBlockState] = []
@@ -1255,7 +1325,7 @@ class BlockStatesParser:
             for _ in stream.peek_until(("bracket", "]")):
                 key_node = self.key_parser(stream)
                 stream.expect("equal")
-                value_node = delegate("phrase", stream)
+                value_node = self.value_parser(stream)
 
                 entry_node = AstBlockState(key=key_node, value=value_node)
                 entry_node = set_location(entry_node, key_node, value_node)
@@ -1273,13 +1343,14 @@ class ItemParser:
     """Parser for minecraft items."""
 
     resource_location_parser: Parser
+    data_tags_parser: Parser
 
     def __call__(self, stream: TokenStream) -> AstItem:
         identifier = self.resource_location_parser(stream)
         location = identifier.location
         end_location = identifier.end_location
 
-        data_tags = delegate("adjacent_nbt_compound", stream)
+        data_tags = self.data_tags_parser(stream)
 
         node = AstItem(identifier=identifier, data_tags=data_tags)
         return set_location(node, location, data_tags if data_tags else end_location)
@@ -1733,6 +1804,13 @@ def parse_message(stream: TokenStream) -> AstMessage:
 
 @dataclass
 class NbtPathParser:
+    """Parser for nbt paths."""
+
+    integer_parser: Parser = field(
+        default_factory=lambda: IntegerConstraint(NumericParser())
+    )
+    nbt_compound_parser: Parser = field(default_factory=NbtCompoundParser)
+
     quote_helper: QuoteHelper = field(
         default_factory=lambda: QuoteHelper(
             escape_sequences={
@@ -1778,7 +1856,7 @@ class NbtPathParser:
         hint = stream.peek()
 
         if hint and hint.match(("curly", "{")):
-            yield delegate("nbt_compound", stream)
+            yield self.nbt_compound_parser(stream)
             return
 
         while bracket := stream.get(("bracket", "[")):
@@ -1786,9 +1864,9 @@ class NbtPathParser:
 
             hint = stream.peek()
             if hint and hint.match(("curly", "{")):
-                index = delegate("nbt_compound", stream)
+                index = self.nbt_compound_parser(stream)
             elif hint and not hint.match(("bracket", "]")):
-                index = delegate("integer", stream)
+                index = self.integer_parser(stream)
 
             close_bracket = stream.expect(("bracket", "]"))
 
