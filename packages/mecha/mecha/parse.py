@@ -623,7 +623,7 @@ def parse_command(stream: TokenStream) -> AstCommand:
                     literal = None
                     argument = None
 
-                    if tree is child:
+                    if tree is child and tree.executable:
                         if stream.peek():
                             stream.expect("newline", "eof")
                         reached_terminal = True
