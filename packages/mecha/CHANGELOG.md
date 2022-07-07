@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.54.5 (2022-07-07)
+### Fix
+* Missing executable check ([`d646789`](https://github.com/mcbeet/mecha/commit/d6467890aa8ee42d413d3c411309a4f255eb8a89))
+
 ## v0.54.4 (2022-07-07)
 ### Fix
 * Don't hardcode some hookable parsers ([`c18f839`](https://github.com/mcbeet/mecha/commit/c18f83979bc7ce0fbf396bcfe36fd81a5758be6d))
