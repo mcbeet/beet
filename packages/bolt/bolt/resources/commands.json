@@ -15,7 +15,7 @@
           "children": {
             "body": {
               "type": "argument",
-              "parser": "bolt:function_root",
+              "parser": "bolt:deferred_root",
               "executable": true
             }
           }
@@ -51,6 +51,27 @@
           "type": "argument",
           "parser": "bolt:expression",
           "executable": true
+        }
+      }
+    },
+    "macro": {
+      "type": "literal",
+      "children": {
+        "name": {
+          "type": "argument",
+          "parser": "bolt:macro_name",
+          "children": {
+            "match": {
+              "type": "argument",
+              "parser": "bolt:macro_match",
+              "redirect": ["macro", "name"]
+            },
+            "body": {
+              "type": "argument",
+              "parser": "bolt:deferred_root",
+              "executable": true
+            }
+          }
         }
       }
     },

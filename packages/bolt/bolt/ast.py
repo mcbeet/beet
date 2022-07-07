@@ -25,18 +25,33 @@ __all__ = [
     "AstDecorator",
     "AstFunctionSignature",
     "AstFunctionSignatureArgument",
-    "AstFunctionRoot",
+    "AstDeferredRoot",
+    "AstMacroLiteral",
+    "AstMacroArgument",
+    "AstMacroMatch",
+    "AstMacroMatchLiteral",
+    "AstMacroMatchArgument",
     "AstInterpolation",
     "AstImportedIdentifier",
 ]
 
 
+import re
 from dataclasses import dataclass
 from typing import Any, Optional, Union
 
 from beet.core.utils import required_field
-from mecha import AstChildren, AstNode, AstRoot
+from mecha import (
+    AstChildren,
+    AstJson,
+    AstLiteral,
+    AstNode,
+    AstResourceLocation,
+    AstRoot,
+)
 from tokenstream import TokenStream
+
+from .pattern import IDENTIFIER_PATTERN
 
 
 @dataclass(frozen=True)
@@ -238,10 +253,47 @@ class AstFunctionSignature(AstNode):
 
 
 @dataclass(frozen=True)
-class AstFunctionRoot(AstNode):
-    """Ast function root node."""
+class AstDeferredRoot(AstNode):
+    """Ast deferred root node."""
 
     stream: TokenStream = required_field()
+
+
+@dataclass(frozen=True)
+class AstMacroLiteral(AstLiteral):
+    """Ast macro literal node."""
+
+    parser = "bolt_macro_literal"
+
+
+@dataclass(frozen=True)
+class AstMacroArgument(AstLiteral):
+    """Ast macro argument node."""
+
+    parser = "bolt_macro_argument"
+
+    regex = re.compile(IDENTIFIER_PATTERN)
+
+
+@dataclass(frozen=True)
+class AstMacroMatch(AstNode):
+    """Base node for macro match."""
+
+
+@dataclass(frozen=True)
+class AstMacroMatchLiteral(AstMacroMatch):
+    """Ast macro match literal node."""
+
+    match: AstMacroLiteral = required_field()
+
+
+@dataclass(frozen=True)
+class AstMacroMatchArgument(AstMacroMatch):
+    """Ast macro match argument node."""
+
+    match_identifier: AstMacroArgument = required_field()
+    match_argument_parser: AstResourceLocation = required_field()
+    match_argument_properties: Optional[AstJson] = None
 
 
 @dataclass(frozen=True)

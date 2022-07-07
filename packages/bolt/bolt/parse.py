@@ -4,20 +4,23 @@ __all__ = [
     "get_stream_pending_identifiers",
     "get_stream_identifiers_storage",
     "get_stream_pending_identifiers_storage",
+    "get_stream_deferred_locals",
     "get_stream_branch_scope",
     "UndefinedIdentifier",
     "create_bolt_root_parser",
     "BranchScopeManager",
     "check_final_expression",
     "InterpolationParser",
+    "DisableInterpolationParser",
     "parse_statement",
     "parse_decorator",
     "AssignmentTargetParser",
     "IfElseLoweringParser",
     "BreakContinueConstraint",
     "FlushPendingIdentifiersParser",
+    "parse_deferred_root",
     "parse_function_signature",
-    "parse_function_root",
+    "MacroMatchParser",
     "parse_del_target",
     "parse_identifier",
     "TrailingCommaParser",
@@ -27,7 +30,7 @@ __all__ = [
     "parse_import_name",
     "GlobalNonlocalHandler",
     "parse_name_list",
-    "FunctionRootBacktracker",
+    "DeferredRootBacktracker",
     "FunctionConstraint",
     "BinaryParser",
     "UnaryParser",
@@ -42,18 +45,19 @@ __all__ = [
 ]
 
 
-import keyword
 import re
 from dataclasses import dataclass, field, replace
 from difflib import get_close_matches
 from typing import Any, Dict, List, Optional, Set, Tuple, cast
 
 from mecha import (
+    AdjacentConstraint,
     AlternativeParser,
     AstChildren,
     AstCommand,
     AstResourceLocation,
     AstRoot,
+    BasicLiteralParser,
     CommentDisambiguation,
     CompilationDatabase,
     Parser,
@@ -75,13 +79,13 @@ from .ast import (
     AstAttribute,
     AstCall,
     AstDecorator,
+    AstDeferredRoot,
     AstDict,
     AstDictItem,
     AstExpression,
     AstExpressionBinary,
     AstExpressionUnary,
     AstFormatString,
-    AstFunctionRoot,
     AstFunctionSignature,
     AstFunctionSignatureArgument,
     AstIdentifier,
@@ -90,6 +94,11 @@ from .ast import (
     AstKeyword,
     AstList,
     AstLookup,
+    AstMacroArgument,
+    AstMacroLiteral,
+    AstMacroMatch,
+    AstMacroMatchArgument,
+    AstMacroMatchLiteral,
     AstSlice,
     AstTarget,
     AstTargetAttribute,
@@ -100,17 +109,16 @@ from .ast import (
     AstUnpack,
     AstValue,
 )
-
-KEYWORD_PATTERN: str = "|".join(rf"\b{kw}\b" for kw in keyword.kwlist)
-
-TRUE_PATTERN: str = r"\b[tT]rue\b"
-FALSE_PATTERN: str = r"\b[fF]alse\b"
-NULL_PATTERN: str = r"\b(?:null|None)\b"
-IDENTIFIER_PATTERN: str = rf"(?!_bolt_|{KEYWORD_PATTERN})[a-zA-Z_][a-zA-Z0-9_]*\b"
-MODULE_PATTERN: str = rf"{IDENTIFIER_PATTERN}(?:\.{IDENTIFIER_PATTERN})*"
-STRING_PATTERN: str = r'"(?:\\.|[^\\\n])*?"' "|" r"'(?:\\.|[^\\\n])*?'"
-NUMBER_PATTERN: str = r"(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?\b"
-RESOURCE_LOCATION_PATTERN: str = r"(?:\.\./|\./|[0-9a-z_\-\.]+:)[0-9a-z_./-]+"
+from .pattern import (
+    FALSE_PATTERN,
+    IDENTIFIER_PATTERN,
+    MODULE_PATTERN,
+    NULL_PATTERN,
+    NUMBER_PATTERN,
+    RESOURCE_LOCATION_PATTERN,
+    STRING_PATTERN,
+    TRUE_PATTERN,
+)
 
 IMPORT_REGEX = re.compile(rf"^{MODULE_PATTERN}$")
 
@@ -142,8 +150,10 @@ def get_bolt_parsers(
         "command:argument:bolt:global_name": delegate("bolt:global_name"),
         "command:argument:bolt:nonlocal_name": delegate("bolt:nonlocal_name"),
         "command:argument:bolt:expression": delegate("bolt:expression"),
+        "command:argument:bolt:deferred_root": delegate("bolt:deferred_root"),
         "command:argument:bolt:function_signature": delegate("bolt:function_signature"),
-        "command:argument:bolt:function_root": delegate("bolt:function_root"),
+        "command:argument:bolt:macro_name": delegate("bolt:macro_name"),
+        "command:argument:bolt:macro_match": delegate("bolt:macro_match"),
         "command:argument:bolt:del_target": delegate("bolt:del_target"),
         ################################################################################
         # Bolt
@@ -172,8 +182,23 @@ def get_bolt_parsers(
             allow_multiple=True,
         ),
         "bolt:augmented_assignment_target": AssignmentTargetParser(),
+        "bolt:deferred_root": parse_deferred_root,
         "bolt:function_signature": parse_function_signature,
-        "bolt:function_root": parse_function_root,
+        "bolt_macro_literal": delegate("bolt:macro_literal"),
+        "bolt:macro_literal": BasicLiteralParser(AstMacroLiteral),
+        "bolt_macro_argument": delegate("bolt:macro_argument"),
+        "bolt:macro_argument": BasicLiteralParser(AstMacroArgument),
+        "bolt:macro_name": delegate("bolt:macro_literal"),
+        "bolt:macro_match": MacroMatchParser(
+            literal_parser=delegate("bolt:macro_literal"),
+            argument_parser=delegate("bolt:macro_argument"),
+            resource_location_parser=DisableInterpolationParser(
+                delegate("resource_location")
+            ),
+            json_properties_parser=DisableInterpolationParser(
+                AdjacentConstraint(delegate("json_object"), r"\{")
+            ),
+        ),
         "bolt:del_target": parse_del_target,
         "bolt:interpolation": PrimaryParser(delegate("bolt:identifier")),
         "bolt:identifier": parse_identifier,
@@ -374,6 +399,11 @@ def get_stream_pending_identifiers_storage(stream: TokenStream) -> Dict[str, str
     return stream.data.setdefault("pending_identifiers_storage", {})
 
 
+def get_stream_deferred_locals(stream: TokenStream) -> Set[str]:
+    """Return a set of identifiers that will be available in the next deferred root."""
+    return stream.data.setdefault("deferred_locals", set())
+
+
 def get_stream_branch_scope(stream: TokenStream) -> Set[str]:
     """Return the identifiers available inside the branch."""
     return stream.data.setdefault("branch_scope", set())
@@ -410,7 +440,7 @@ class UndefinedIdentifier(InvalidSyntax):
 def create_bolt_root_parser(parser: Parser):
     """Return parser for the root node for bolt."""
     return DecoratorResolver(
-        FunctionRootBacktracker(
+        DeferredRootBacktracker(
             FlushPendingIdentifiersParser(
                 FunctionConstraint(
                     BreakContinueConstraint(
@@ -503,6 +533,8 @@ class InterpolationParser:
     final: bool = False
 
     def __call__(self, stream: TokenStream) -> Any:
+        if stream.data.get("disable_interpolation"):
+            return self.parser(stream)
         order = ["interpolation", "original"]
         if self.fallback:
             order.reverse()
@@ -524,6 +556,17 @@ class InterpolationParser:
                     return set_location(node, prefix or node.value, node.value)
                 elif parser == "original":
                     return self.parser(stream)
+
+
+@dataclass
+class DisableInterpolationParser:
+    """Parser that disables interpolation."""
+
+    parser: Parser
+
+    def __call__(self, stream: TokenStream) -> Any:
+        with stream.provide(disable_interpolation=True):
+            return self.parser(stream)
 
 
 def parse_statement(stream: TokenStream) -> Any:
@@ -813,10 +856,41 @@ class FlushPendingIdentifiersParser:
         return self.parser(stream)
 
 
+def parse_deferred_root(stream: TokenStream) -> AstDeferredRoot:
+    """Parse deferred root."""
+    identifiers = get_stream_identifiers(stream)
+    pending_identifiers = get_stream_pending_identifiers(stream)
+    deferred_locals = get_stream_deferred_locals(stream)
+
+    stream_copy = stream.copy()
+
+    with stream.syntax(colon=r":"):
+        token = stream.expect("colon")
+
+    with stream.syntax(statement=r"[^\s#].*"):
+        while consume_line_continuation(stream):
+            stream.expect("statement")
+
+    stream_copy.data["identifiers"] = identifiers | pending_identifiers
+    stream_copy.data["pending_identifiers"] = set()
+    stream_copy.data["identifiers_storage"] = {loc: "local" for loc in deferred_locals}
+    stream_copy.data["pending_identifiers_storage"] = {}
+    stream_copy.data["deferred_locals"] = set()
+    stream_copy.data["branch_scope"] = set()
+
+    pending_identifiers.clear()
+    deferred_locals.clear()
+
+    node = AstDeferredRoot(stream=stream_copy)
+    return set_location(node, token, stream.current)
+
+
 def parse_function_signature(stream: TokenStream) -> AstFunctionSignature:
     """Parse function signature."""
     identifiers = get_stream_identifiers(stream)
     pending_identifiers = get_stream_pending_identifiers(stream)
+    deferred_locals = get_stream_deferred_locals(stream)
+
     scoped_identifiers = set(identifiers)
 
     arguments: List[AstFunctionSignatureArgument] = []
@@ -854,34 +928,52 @@ def parse_function_signature(stream: TokenStream) -> AstFunctionSignature:
                     break
 
     identifiers.add(identifier.value)
-    pending_identifiers |= {arg.name for arg in arguments}
+
+    args = {arg.name for arg in arguments}
+    pending_identifiers |= args
+    deferred_locals |= args
 
     node = AstFunctionSignature(name=identifier.value, arguments=AstChildren(arguments))
     return set_location(node, identifier, stream.current)
 
 
-def parse_function_root(stream: TokenStream) -> AstFunctionRoot:
-    """Parse function root."""
-    identifiers = get_stream_identifiers(stream)
-    pending_identifiers = get_stream_pending_identifiers(stream)
+@dataclass
+class MacroMatchParser:
+    """Parser for macro matching."""
 
-    stream_copy = stream.copy()
+    literal_parser: Parser
+    argument_parser: Parser
+    resource_location_parser: Parser
+    json_properties_parser: Parser
 
-    with stream.syntax(statement=r"[^\s#].*"):
-        token = stream.expect("statement")
-        while consume_line_continuation(stream):
-            stream.expect("statement")
+    def __call__(self, stream: TokenStream) -> AstMacroMatch:
+        pending_identifiers = get_stream_pending_identifiers(stream)
+        deferred_locals = get_stream_deferred_locals(stream)
 
-    stream_copy.data["identifiers"] = identifiers | pending_identifiers
-    stream_copy.data["pending_identifiers"] = set()
-    stream_copy.data["identifiers_storage"] = {}
-    stream_copy.data["pending_identifiers_storage"] = {}
-    stream_copy.data["branch_scope"] = set()
+        with stream.syntax(equal=r"(?<!\s)=(?!\s)"), stream.checkpoint() as commit:
+            argument = self.argument_parser(stream)
+            stream.expect("equal")
+            commit()
 
-    pending_identifiers.clear()
+            pending_identifiers.add(argument.value)
+            deferred_locals.add(argument.value)
 
-    node = AstFunctionRoot(stream=stream_copy)
-    return set_location(node, token, stream.current)
+            node = AstMacroMatchArgument(
+                match_identifier=argument,
+                match_argument_parser=self.resource_location_parser(stream),
+                match_argument_properties=self.json_properties_parser(stream),
+            )
+            node = set_location(
+                node,
+                argument,
+                node.match_argument_properties or node.match_argument_parser,
+            )
+
+        if commit.rollback:
+            literal = self.literal_parser(stream)
+            node = set_location(AstMacroMatchLiteral(match=literal), literal)
+
+        return node
 
 
 def parse_del_target(stream: TokenStream) -> AstTarget:
@@ -1038,8 +1130,8 @@ def parse_name_list(stream: TokenStream) -> AstIdentifier:
 
 
 @dataclass
-class FunctionRootBacktracker:
-    """Parser for backtracking over function root nodes."""
+class DeferredRootBacktracker:
+    """Parser for backtracking over deferred root nodes."""
 
     parser: Parser
 
@@ -1052,28 +1144,38 @@ class FunctionRootBacktracker:
         identifiers = get_stream_identifiers(stream)
 
         for command in node.commands:
-            if command.identifier == "def:function:body":
-                if isinstance(function_root := command.arguments[-1], AstFunctionRoot):
-                    should_replace = True
+            stack: List[AstCommand] = [command]
 
-                    function_stream = function_root.stream
-                    function_stream.data["identifiers"] |= identifiers
-                    function_stream.data["function"] = True
+            while command.arguments and isinstance(
+                command := command.arguments[-1], AstCommand
+            ):
+                stack.append(command)
 
-                    if isinstance(s := command.arguments[0], AstFunctionSignature):
-                        function_stream.data["identifiers_storage"].update(
-                            {arg.name: "local" for arg in s.arguments}
-                        )
+            command = stack.pop()
 
+            if command.arguments and isinstance(
+                deferred_root := command.arguments[-1], AstDeferredRoot
+            ):
+                should_replace = True
+
+                deferred_stream = deferred_root.stream
+                deferred_stream.data["identifiers"] |= identifiers
+                deferred_stream.data["function"] = True
+                nested_root = delegate("nested_root", deferred_stream)
+
+                command = replace(
+                    command,
+                    arguments=AstChildren([*command.arguments[:-1], nested_root]),
+                )
+                while stack:
+                    parent = stack.pop()
                     command = replace(
-                        command,
-                        arguments=AstChildren(
-                            [
-                                *command.arguments[:-1],
-                                delegate("nested_root", function_root.stream),
-                            ]
-                        ),
+                        parent,
+                        arguments=AstChildren([*parent.arguments[:-1], command]),
                     )
+
+            elif stack:
+                command = stack[0]
 
             commands.append(command)
 
