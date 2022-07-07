@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.54.4 (2022-07-07)
+### Fix
+* Don't hardcode some hookable parsers ([`c18f839`](https://github.com/mcbeet/mecha/commit/c18f83979bc7ce0fbf396bcfe36fd81a5758be6d))
+
 ## v0.54.3 (2022-06-21)
 ### Fix
 * Allow compilation step to return None to abort ([`8f3ce64`](https://github.com/mcbeet/mecha/commit/8f3ce64708607078736090370b166af215a48f5b))
