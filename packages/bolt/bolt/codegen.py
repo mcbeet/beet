@@ -28,7 +28,6 @@ from typing import (
     overload,
 )
 
-from beet.core.utils import normalize_string
 from mecha import (
     AstChildren,
     AstCommand,
@@ -83,7 +82,7 @@ class Accumulator:
         """Return the source code."""
         header = "".join(
             f"{variable} = {expression}\n"
-            for expression, variable in self.header.items()
+            for variable, expression in self.header.items()
         )
 
         lines: List[str] = ["_bolt_lineno = "]
@@ -105,12 +104,12 @@ class Accumulator:
 
     def helper(self, name: str, *args: Any) -> str:
         """Emit helper."""
-        helper = f"_bolt_runtime.helpers[{name!r}]"
+        helper = f"_bolt_helper_{name}"
 
         if helper not in self.header:
-            self.header[helper] = f"_bolt_helper_{normalize_string(name)}"
+            self.header[helper] = f"_bolt_runtime.helpers[{name!r}]"
 
-        return f"{self.header[helper]}({', '.join(map(str, args))})"
+        return f"{helper}({', '.join(map(str, args))})"
 
     def replace(self, node: str, **kwargs: str) -> str:
         """Emit replace helper."""
@@ -118,8 +117,8 @@ class Accumulator:
 
     def missing(self) -> str:
         """Emit missing sentinel."""
-        self.header["_bolt_runtime.helpers['missing']"] = f"_bolt_helper_missing"
-        return f"_bolt_helper_missing"
+        self.header["_bolt_helper_missing"] = "_bolt_runtime.helpers['missing']"
+        return "_bolt_helper_missing"
 
     def children(self, nodes: Iterable[str]) -> str:
         """Emit children helper."""
