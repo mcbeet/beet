@@ -2,18 +2,19 @@
 
 
 __all__ = [
+    "LazyExecution",
     "LazyFilter",
     "BoltLazyOptions",
     "bolt_lazy",
 ]
 
 
-from dataclasses import dataclass
+from dataclasses import InitVar, dataclass, field
 from functools import partial
-from typing import Any
+from typing import Any, List
 
 from beet import Context, ListOption, TextFileBase, configurable
-from beet.core.utils import required_field
+from beet.core.utils import extra_field, required_field
 from mecha import CompilationDatabase, Mecha, Visitor, rule
 from pathspec import PathSpec
 from pydantic import BaseModel
@@ -32,17 +33,37 @@ def beet_default(ctx: Context):
 @configurable(validator=BoltLazyOptions)
 def bolt_lazy(ctx: Context, opts: BoltLazyOptions):
     """Plugin for importing bolt modules lazily."""
-    mc = ctx.inject(Mecha)
-    runtime = ctx.inject(Runtime)
+    lazy = ctx.inject(LazyExecution)
+    lazy.register(*opts.match.entries())
 
-    mc.steps.insert(
-        mc.steps.index(runtime.evaluate),
-        LazyFilter(
-            runtime=runtime,
-            database=mc.database,
-            path_spec=PathSpec.from_lines("gitwildmatch", opts.match.entries()),
-        ),
-    )
+
+@dataclass
+class LazyExecution:
+    """Service for managing lazy execution."""
+
+    ctx: InitVar[Context]
+    match: List[str] = field(default_factory=list)
+    path_spec: PathSpec = extra_field(init=False)
+
+    def __post_init__(self, ctx: Context):
+        self.register()
+
+        mc = ctx.inject(Mecha)
+        runtime = ctx.inject(Runtime)
+
+        mc.steps.insert(
+            mc.steps.index(runtime.evaluate),
+            LazyFilter(runtime=runtime, database=mc.database, lazy=self),
+        )
+
+    def register(self, *match: str):
+        """Make the modules matching the specified patterns lazy."""
+        self.match.extend(match)
+        self.path_spec = PathSpec.from_lines("gitwildmatch", self.match)
+
+    def check(self, resource_location: str) -> bool:
+        """Check if the specified module is lazy."""
+        return self.path_spec.match_file(resource_location)
 
 
 @dataclass
@@ -51,14 +72,12 @@ class LazyFilter(Visitor):
 
     runtime: Runtime = required_field()
     database: CompilationDatabase = required_field()
-    path_spec: PathSpec = required_field()
+    lazy: LazyExecution = required_field()
 
     @rule(AstModuleRoot)
     def lazy_module(self, node: AstModuleRoot):
         module = self.runtime.get_module(node)
-        path = module.resource_location
-
-        if path and self.path_spec.match_file(path):
+        if module.resource_location and self.lazy.check(module.resource_location):
             module.execution_hooks.append(
                 partial(
                     self.restore_lazy,
@@ -68,7 +87,6 @@ class LazyFilter(Visitor):
                 )
             )
             return None
-
         return node
 
     def restore_lazy(self, key: TextFileBase[Any], node: AstModuleRoot, step: int):
