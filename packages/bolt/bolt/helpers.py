@@ -7,13 +7,14 @@ from dataclasses import dataclass, replace
 from functools import partial, wraps
 from importlib import import_module
 from types import TracebackType
-from typing import Any, Callable, ContextManager, Dict, Optional, Type
+from typing import Any, Callable, ContextManager, Dict, Generator, Optional, Type
 from uuid import UUID
 
 from mecha import (
     AstBool,
     AstChildren,
     AstColor,
+    AstCommand,
     AstCoordinate,
     AstGamemode,
     AstGreedy,
@@ -31,6 +32,7 @@ from mecha import (
     AstPlayerName,
     AstRange,
     AstResourceLocation,
+    AstRoot,
     AstScoreboardSlot,
     AstSortOrder,
     AstString,
@@ -61,6 +63,7 @@ def get_bolt_helpers() -> Dict[str, Any]:
         "get_rebind": get_rebind,
         "get_attribute": get_attribute,
         "import_module": python_import_module,
+        "macro_call": macro_call,
         "interpolate_bool": converter(AstBool.from_value),
         "interpolate_numeric": converter(AstNumber.from_value),
         "interpolate_coordinate": converter(AstCoordinate.from_value),
@@ -178,6 +181,42 @@ def python_import_module(name: str):
         while tb and tb.tb_frame.f_code.co_filename.startswith("<frozen importlib"):
             tb = tb.tb_next
         raise exc.with_traceback(tb)
+
+
+@internal
+def macro_call(runtime: Any, function: Any, command: AstCommand):
+    with runtime.scope() as output:
+        result = function(*command.arguments)
+
+        if isinstance(result, Generator):
+            try:
+                while True:
+                    node: Any = next(result)  # type: ignore
+                    if isinstance(node, AstRoot):
+                        runtime.commands.extend(node.commands)
+                    elif isinstance(node, AstCommand):
+                        runtime.commands.append(node)
+                    elif node:
+                        msg = f'Emit invalid command of type {type(node)!r} from macro "{command.identifier}".'
+                        raise TypeError(msg)
+            except StopIteration as exc:
+                result = exc.value
+
+    if not result:
+        result = []
+    elif isinstance(result, AstNode):
+        result = [result]
+
+    for node in result:
+        if isinstance(node, AstRoot):
+            output.extend(node.commands)
+        elif isinstance(node, AstCommand):
+            output.append(node)
+        elif node:
+            msg = f'Return invalid command of type {type(node)!r} from macro "{command.identifier}".'
+            raise TypeError(msg)
+
+    return output
 
 
 def converter(f: Callable[[Any], AstNode]) -> Callable[[Any, AstNode], AstNode]:

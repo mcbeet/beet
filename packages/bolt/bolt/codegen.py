@@ -54,6 +54,9 @@ from .ast import (
     AstKeyword,
     AstList,
     AstLookup,
+    AstMacro,
+    AstMacroCall,
+    AstMacroMatchArgument,
     AstSlice,
     AstTarget,
     AstTargetAttribute,
@@ -72,6 +75,7 @@ class Accumulator:
 
     indentation: str = ""
     refs: List[Any] = field(default_factory=list)
+    macro_ids: Dict[str, int] = field(default_factory=dict)
     lines: List[str] = field(default_factory=list)
     counter: int = 0
     header: Dict[str, str] = field(default_factory=dict)
@@ -151,6 +155,19 @@ class Accumulator:
         self.counter += 1
         return name
 
+    def get_macro(self, name: str) -> str:
+        """Get macro."""
+        if name not in self.macro_ids:
+            self.macro_ids[name] = len(self.macro_ids)
+        return f"_bolt_macro{self.macro_ids[name]}"
+
+    def lineno(self, lineno: Any):
+        """Emit line number."""
+        if isinstance(lineno, AstNode) and not lineno.location.unknown:
+            lineno = lineno.location.lineno
+        if isinstance(lineno, int):
+            self.lines.append(f"!lineno {lineno}\n")
+
     @contextmanager
     def block(self):
         """Wrap statements in an indented block."""
@@ -163,11 +180,15 @@ class Accumulator:
 
     def statement(self, code: str, *, lineno: Any = None):
         """Emit statement."""
-        if isinstance(lineno, AstNode) and not lineno.location.unknown:
-            lineno = lineno.location.lineno
-        if isinstance(lineno, int):
-            self.lines.append(f"!lineno {lineno}\n")
+        self.lineno(lineno)
         self.lines.append(f"{self.indentation}{code}\n")
+
+    @contextmanager
+    def function(self, name: str, *args: str):
+        """Emit function."""
+        self.statement(f"def {name}({', '.join(args)}):")
+        with self.block():
+            yield
 
     @contextmanager
     def if_statement(self, condition: str):
@@ -222,7 +243,10 @@ class CommandCollector(ChildrenCollector):
 
     def add_dynamic(self, *args: str):
         for arg in args:
-            self.acc.statement(f"_bolt_runtime.commands.append({arg})")
+            if arg.startswith("*"):
+                self.acc.statement(f"_bolt_runtime.commands.extend({arg[1:]})")
+            else:
+                self.acc.statement(f"_bolt_runtime.commands.append({arg})")
 
 
 class RootCommandCollector(CommandCollector):
@@ -446,9 +470,7 @@ class Codegen(Visitor):
             for arg in signature.arguments
         ]
 
-        acc.statement(f"def {signature.name}({', '.join(arguments)}):")
-
-        with acc.block():
+        with acc.function(signature.name, *arguments):
             for arg in signature.arguments:
                 if arg.default:
                     acc.statement(f"if {arg.name} is {acc.missing()}:")
@@ -494,6 +516,41 @@ class Codegen(Visitor):
             statement += f" {value}"
         acc.statement(statement)
         return []
+
+    @rule(AstMacro)
+    def macro(
+        self,
+        node: AstMacro,
+        acc: Accumulator,
+    ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
+        macro = acc.get_macro(node.identifier)
+        arguments = [
+            arg.match_identifier.value
+            for arg in node.arguments
+            if isinstance(arg, AstMacroMatchArgument)
+        ]
+
+        with acc.function(macro, *arguments):
+            yield from visit_body(cast(AstRoot, node.arguments[-1]), acc)
+
+        return []
+
+    @rule(AstMacroCall)
+    def macro_call(
+        self,
+        node: AstMacroCall,
+        acc: Accumulator,
+    ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
+        macro = acc.get_macro(node.identifier)
+        result = yield from visit_generic(node, acc)
+        if result is None:
+            result = acc.make_ref(node)
+
+        macro_call = acc.helper("macro_call", "_bolt_runtime", macro, result)
+        result = acc.make_variable()
+        acc.statement(f"{result} = {macro_call}", lineno=node)
+
+        return [f"*{result}"]
 
     @rule(AstCommand, identifier="del:target")
     def del_statement(

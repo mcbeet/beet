@@ -1,0 +1,7 @@
+#>ERROR  Unrecognized argument parser "brigadier:does_not_exist".
+# line 1, column 15
+#      1 |  macro foo bar=brigadier:does_not_exist:
+#        :                ^^^^^^^^^^^^^^^^^^^^^^^^
+#      2 |      pass
+macro foo bar=brigadier:does_not_exist:
+    pass

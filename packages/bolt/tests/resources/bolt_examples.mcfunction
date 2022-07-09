@@ -800,3 +800,73 @@ with None, None, None:
 ###
 with None as x, None, None as y:
     pass
+###
+macro foo:
+    pass
+###
+macro foo:
+    foo
+foo
+###
+macro foo number=brigadier:integer text=brigadier:string{"type": "greedy"}:
+    print(number, text)
+foo 42 this is fine really
+###
+macro foo:
+    bar
+macro bar:
+    foo
+###
+macro foo:
+    macro bar:
+        foo
+    bar
+###
+def thing():
+    macro bar:
+        pass
+    bar
+bar
+###
+macro foo:
+    macro bar:
+        foo
+    bar
+def thing():
+    bar
+###
+macro foo bar=#brigadier:integer:
+    pass
+###
+macro foo bar=brigadier:does_not_exist:
+    pass
+###
+macro >> message=minecraft:message:
+    say message
+>> hello @p
+###
+macro setblock block=minecraft:block_state:
+    setblock ~ ~ ~ block
+setblock stone
+setblock 1 2 3 stone
+###
+macro do_twice body=mecha:nested_root:
+    yield body
+    yield body
+do_twice:
+    say hello
+###
+macro foo:
+    pass
+as @p run foo
+###
+macro foo:
+    pass
+as @p foo
+###
+macro execute foo:
+    pass
+as @p foo
+###
+macro macro:
+    pass

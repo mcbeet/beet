@@ -1,0 +1,13 @@
+def thing():
+    macro bar:
+        pass
+    bar
+#>ERROR  Identifier 'bar' is not defined.
+# line 5, column 1
+#      3 |          pass
+#      4 |      bar
+#      5 |  bar
+#        :  ^^^
+# Notes:
+#   - Expected assignment but got newline '\n'.
+bar

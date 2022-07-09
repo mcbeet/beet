@@ -1,0 +1,35 @@
+_bolt_lineno = [1, 8, 10], [1, 3, 4]
+_bolt_helper_macro_call = _bolt_runtime.helpers['macro_call']
+_bolt_helper_children = _bolt_runtime.helpers['children']
+_bolt_helper_replace = _bolt_runtime.helpers['replace']
+with _bolt_runtime.scope() as _bolt_var2:
+    def _bolt_macro0():
+        def _bolt_macro1():
+            _bolt_var0 = _bolt_helper_macro_call(_bolt_runtime, _bolt_macro0, _bolt_refs[0])
+            _bolt_runtime.commands.extend(_bolt_var0)
+        _bolt_var1 = _bolt_helper_macro_call(_bolt_runtime, _bolt_macro1, _bolt_refs[1])
+        _bolt_runtime.commands.extend(_bolt_var1)
+_bolt_var3 = _bolt_helper_replace(_bolt_refs[2], commands=_bolt_helper_children(_bolt_var2))
+---
+output = _bolt_var3
+---
+_bolt_refs[0]
+<class 'bolt.ast.AstMacroCall'>
+  location: SourceLocation(pos=34, lineno=3, colno=9)
+  end_location: SourceLocation(pos=37, lineno=3, colno=12)
+  identifier: 'foo'
+  arguments:
+    <empty>
+_bolt_refs[1]
+<class 'bolt.ast.AstMacroCall'>
+  location: SourceLocation(pos=42, lineno=4, colno=5)
+  end_location: SourceLocation(pos=45, lineno=4, colno=8)
+  identifier: 'bar'
+  arguments:
+    <empty>
+_bolt_refs[2]
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=45, lineno=4, colno=8)
+  commands:
+    <class 'bolt.ast.AstMacro'>

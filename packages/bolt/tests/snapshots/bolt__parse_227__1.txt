@@ -1,0 +1,76 @@
+_bolt_lineno = [1, 8, 11], [1, 2, 3]
+_bolt_helper_interpolate_resource_location = _bolt_runtime.helpers['interpolate_resource_location']
+_bolt_helper_replace = _bolt_runtime.helpers['replace']
+_bolt_helper_children = _bolt_runtime.helpers['children']
+_bolt_helper_macro_call = _bolt_runtime.helpers['macro_call']
+with _bolt_runtime.scope() as _bolt_var2:
+    def _bolt_macro0(block):
+        _bolt_var0 = block
+        _bolt_var0 = _bolt_helper_interpolate_resource_location(_bolt_var0, _bolt_refs[0])
+        _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[3], arguments=_bolt_helper_children([_bolt_refs[2], _bolt_helper_replace(_bolt_refs[1], identifier=_bolt_var0)])))
+    _bolt_var1 = _bolt_helper_macro_call(_bolt_runtime, _bolt_macro0, _bolt_refs[4])
+    _bolt_runtime.commands.extend(_bolt_var1)
+    _bolt_runtime.commands.append(_bolt_refs[5])
+_bolt_var3 = _bolt_helper_replace(_bolt_refs[6], commands=_bolt_helper_children(_bolt_var2))
+---
+output = _bolt_var3
+---
+_bolt_refs[0]
+<class 'bolt.ast.AstInterpolation'>
+  location: SourceLocation(pos=63, lineno=2, colno=20)
+  end_location: SourceLocation(pos=68, lineno=2, colno=25)
+  prefix: None
+  unpack: None
+  converter: 'resource_location'
+  value:
+    <class 'bolt.ast.AstIdentifier'>
+_bolt_refs[1]
+<class 'mecha.ast.AstBlock'>
+  location: SourceLocation(pos=63, lineno=2, colno=20)
+  end_location: SourceLocation(pos=68, lineno=2, colno=25)
+  identifier:
+    <class 'bolt.ast.AstInterpolation'>
+  block_states:
+    <empty>
+  data_tags: None
+_bolt_refs[2]
+<class 'mecha.ast.AstVector3'>
+  location: SourceLocation(pos=57, lineno=2, colno=14)
+  end_location: SourceLocation(pos=62, lineno=2, colno=19)
+  x:
+    <class 'mecha.ast.AstCoordinate'>
+  y:
+    <class 'mecha.ast.AstCoordinate'>
+  z:
+    <class 'mecha.ast.AstCoordinate'>
+_bolt_refs[3]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=48, lineno=2, colno=5)
+  end_location: SourceLocation(pos=68, lineno=2, colno=25)
+  identifier: 'setblock:pos:block'
+  arguments:
+    <class 'mecha.ast.AstVector3'>
+    <class 'mecha.ast.AstBlock'>
+_bolt_refs[4]
+<class 'bolt.ast.AstMacroCall'>
+  location: SourceLocation(pos=69, lineno=3, colno=1)
+  end_location: SourceLocation(pos=83, lineno=3, colno=15)
+  identifier: 'setblock:block'
+  arguments:
+    <class 'mecha.ast.AstBlock'>
+_bolt_refs[5]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=84, lineno=4, colno=1)
+  end_location: SourceLocation(pos=104, lineno=4, colno=21)
+  identifier: 'setblock:pos:block'
+  arguments:
+    <class 'mecha.ast.AstVector3'>
+    <class 'mecha.ast.AstBlock'>
+_bolt_refs[6]
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=104, lineno=4, colno=21)
+  commands:
+    <class 'bolt.ast.AstMacro'>
+    <class 'bolt.ast.AstMacroCall'>
+    <class 'mecha.ast.AstCommand'>

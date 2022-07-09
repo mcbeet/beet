@@ -26,6 +26,8 @@ __all__ = [
     "AstFunctionSignature",
     "AstFunctionSignatureArgument",
     "AstDeferredRoot",
+    "AstMacro",
+    "AstMacroCall",
     "AstMacroLiteral",
     "AstMacroArgument",
     "AstMacroMatch",
@@ -43,6 +45,7 @@ from typing import Any, Optional, Union
 from beet.core.utils import required_field
 from mecha import (
     AstChildren,
+    AstCommand,
     AstJson,
     AstLiteral,
     AstNode,
@@ -257,6 +260,16 @@ class AstDeferredRoot(AstNode):
     """Ast deferred root node."""
 
     stream: TokenStream = required_field()
+
+
+@dataclass(frozen=True)
+class AstMacro(AstCommand):
+    """Ast macro node."""
+
+
+@dataclass(frozen=True)
+class AstMacroCall(AstCommand):
+    """Ast macro call node."""
 
 
 @dataclass(frozen=True)

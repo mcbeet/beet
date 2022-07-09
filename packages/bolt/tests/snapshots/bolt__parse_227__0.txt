@@ -1,0 +1,139 @@
+macro setblock block=minecraft:block_state:
+    setblock ~ ~ ~ block
+setblock stone
+setblock 1 2 3 stone
+---
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=104, lineno=4, colno=21)
+  commands:
+    <class 'bolt.ast.AstMacro'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=68, lineno=2, colno=25)
+      identifier: 'setblock:block'
+      arguments:
+        <class 'bolt.ast.AstMacroLiteral'>
+          location: SourceLocation(pos=6, lineno=1, colno=7)
+          end_location: SourceLocation(pos=14, lineno=1, colno=15)
+          value: 'setblock'
+        <class 'bolt.ast.AstMacroMatchArgument'>
+          location: SourceLocation(pos=15, lineno=1, colno=16)
+          end_location: SourceLocation(pos=42, lineno=1, colno=43)
+          match_identifier:
+            <class 'bolt.ast.AstMacroArgument'>
+              location: SourceLocation(pos=15, lineno=1, colno=16)
+              end_location: SourceLocation(pos=20, lineno=1, colno=21)
+              value: 'block'
+          match_argument_parser:
+            <class 'mecha.ast.AstResourceLocation'>
+              location: SourceLocation(pos=21, lineno=1, colno=22)
+              end_location: SourceLocation(pos=42, lineno=1, colno=43)
+              is_tag: False
+              namespace: 'minecraft'
+              path: 'block_state'
+          match_argument_properties: None
+        <class 'mecha.ast.AstRoot'>
+          location: SourceLocation(pos=48, lineno=2, colno=5)
+          end_location: SourceLocation(pos=68, lineno=2, colno=25)
+          commands:
+            <class 'mecha.ast.AstCommand'>
+              location: SourceLocation(pos=48, lineno=2, colno=5)
+              end_location: SourceLocation(pos=68, lineno=2, colno=25)
+              identifier: 'setblock:pos:block'
+              arguments:
+                <class 'mecha.ast.AstVector3'>
+                  location: SourceLocation(pos=57, lineno=2, colno=14)
+                  end_location: SourceLocation(pos=62, lineno=2, colno=19)
+                  x:
+                    <class 'mecha.ast.AstCoordinate'>
+                      location: SourceLocation(pos=57, lineno=2, colno=14)
+                      end_location: SourceLocation(pos=58, lineno=2, colno=15)
+                      type: 'relative'
+                      value: 0
+                  y:
+                    <class 'mecha.ast.AstCoordinate'>
+                      location: SourceLocation(pos=59, lineno=2, colno=16)
+                      end_location: SourceLocation(pos=60, lineno=2, colno=17)
+                      type: 'relative'
+                      value: 0
+                  z:
+                    <class 'mecha.ast.AstCoordinate'>
+                      location: SourceLocation(pos=61, lineno=2, colno=18)
+                      end_location: SourceLocation(pos=62, lineno=2, colno=19)
+                      type: 'relative'
+                      value: 0
+                <class 'mecha.ast.AstBlock'>
+                  location: SourceLocation(pos=63, lineno=2, colno=20)
+                  end_location: SourceLocation(pos=68, lineno=2, colno=25)
+                  identifier:
+                    <class 'bolt.ast.AstInterpolation'>
+                      location: SourceLocation(pos=63, lineno=2, colno=20)
+                      end_location: SourceLocation(pos=68, lineno=2, colno=25)
+                      prefix: None
+                      unpack: None
+                      converter: 'resource_location'
+                      value:
+                        <class 'bolt.ast.AstIdentifier'>
+                          location: SourceLocation(pos=63, lineno=2, colno=20)
+                          end_location: SourceLocation(pos=68, lineno=2, colno=25)
+                          value: 'block'
+                  block_states:
+                    <empty>
+                  data_tags: None
+    <class 'bolt.ast.AstMacroCall'>
+      location: SourceLocation(pos=69, lineno=3, colno=1)
+      end_location: SourceLocation(pos=83, lineno=3, colno=15)
+      identifier: 'setblock:block'
+      arguments:
+        <class 'mecha.ast.AstBlock'>
+          location: SourceLocation(pos=78, lineno=3, colno=10)
+          end_location: SourceLocation(pos=83, lineno=3, colno=15)
+          identifier:
+            <class 'mecha.ast.AstResourceLocation'>
+              location: SourceLocation(pos=78, lineno=3, colno=10)
+              end_location: SourceLocation(pos=83, lineno=3, colno=15)
+              is_tag: False
+              namespace: None
+              path: 'stone'
+          block_states:
+            <empty>
+          data_tags: None
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=84, lineno=4, colno=1)
+      end_location: SourceLocation(pos=104, lineno=4, colno=21)
+      identifier: 'setblock:pos:block'
+      arguments:
+        <class 'mecha.ast.AstVector3'>
+          location: SourceLocation(pos=93, lineno=4, colno=10)
+          end_location: SourceLocation(pos=98, lineno=4, colno=15)
+          x:
+            <class 'mecha.ast.AstCoordinate'>
+              location: SourceLocation(pos=93, lineno=4, colno=10)
+              end_location: SourceLocation(pos=94, lineno=4, colno=11)
+              type: 'absolute'
+              value: 1
+          y:
+            <class 'mecha.ast.AstCoordinate'>
+              location: SourceLocation(pos=95, lineno=4, colno=12)
+              end_location: SourceLocation(pos=96, lineno=4, colno=13)
+              type: 'absolute'
+              value: 2
+          z:
+            <class 'mecha.ast.AstCoordinate'>
+              location: SourceLocation(pos=97, lineno=4, colno=14)
+              end_location: SourceLocation(pos=98, lineno=4, colno=15)
+              type: 'absolute'
+              value: 3
+        <class 'mecha.ast.AstBlock'>
+          location: SourceLocation(pos=99, lineno=4, colno=16)
+          end_location: SourceLocation(pos=104, lineno=4, colno=21)
+          identifier:
+            <class 'mecha.ast.AstResourceLocation'>
+              location: SourceLocation(pos=99, lineno=4, colno=16)
+              end_location: SourceLocation(pos=104, lineno=4, colno=21)
+              is_tag: False
+              namespace: None
+              path: 'stone'
+          block_states:
+            <empty>
+          data_tags: None

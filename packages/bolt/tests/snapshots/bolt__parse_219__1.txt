@@ -1,0 +1,31 @@
+_bolt_lineno = [1, 7, 11], [1, 2, 3]
+_bolt_helper_children = _bolt_runtime.helpers['children']
+_bolt_helper_macro_call = _bolt_runtime.helpers['macro_call']
+_bolt_helper_replace = _bolt_runtime.helpers['replace']
+with _bolt_runtime.scope() as _bolt_var4:
+    def _bolt_macro0(number, text):
+        _bolt_var0 = print
+        _bolt_var1 = number
+        _bolt_var2 = text
+        _bolt_var0 = _bolt_var0(_bolt_var1, _bolt_var2)
+    _bolt_var3 = _bolt_helper_macro_call(_bolt_runtime, _bolt_macro0, _bolt_refs[0])
+    _bolt_runtime.commands.extend(_bolt_var3)
+_bolt_var5 = _bolt_helper_replace(_bolt_refs[1], commands=_bolt_helper_children(_bolt_var4))
+---
+output = _bolt_var5
+---
+_bolt_refs[0]
+<class 'bolt.ast.AstMacroCall'>
+  location: SourceLocation(pos=100, lineno=3, colno=1)
+  end_location: SourceLocation(pos=126, lineno=3, colno=27)
+  identifier: 'foo:number:text'
+  arguments:
+    <class 'mecha.ast.AstNumber'>
+    <class 'mecha.ast.AstGreedy'>
+_bolt_refs[1]
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=127, lineno=4, colno=1)
+  commands:
+    <class 'bolt.ast.AstMacro'>
+    <class 'bolt.ast.AstMacroCall'>

@@ -6,6 +6,7 @@ __all__ = [
     "get_stream_pending_identifiers_storage",
     "get_stream_deferred_locals",
     "get_stream_branch_scope",
+    "get_stream_macro_scope",
     "UndefinedIdentifier",
     "create_bolt_root_parser",
     "BranchScopeManager",
@@ -21,6 +22,7 @@ __all__ = [
     "parse_deferred_root",
     "parse_function_signature",
     "MacroMatchParser",
+    "MacroHandler",
     "parse_del_target",
     "parse_identifier",
     "TrailingCommaParser",
@@ -50,20 +52,25 @@ from dataclasses import dataclass, field, replace
 from difflib import get_close_matches
 from typing import Any, Dict, List, Optional, Set, Tuple, cast
 
+from beet.core.utils import JsonDict
 from mecha import (
     AdjacentConstraint,
     AlternativeParser,
     AstChildren,
     AstCommand,
+    AstNode,
     AstResourceLocation,
     AstRoot,
     BasicLiteralParser,
+    CommandTree,
     CommentDisambiguation,
     CompilationDatabase,
+    MultilineParser,
     Parser,
     consume_line_continuation,
     delegate,
     get_stream_scope,
+    get_stream_spec,
 )
 from mecha.contrib.relative_location import resolve_using_database
 from mecha.utils import (
@@ -94,7 +101,9 @@ from .ast import (
     AstKeyword,
     AstList,
     AstLookup,
+    AstMacro,
     AstMacroArgument,
+    AstMacroCall,
     AstMacroLiteral,
     AstMacroMatch,
     AstMacroMatchArgument,
@@ -135,7 +144,9 @@ def get_bolt_parsers(
         "root": create_bolt_root_parser(parsers["root"]),
         "nested_root": create_bolt_root_parser(parsers["nested_root"]),
         "command": UndefinedIdentifierErrorHandler(
-            ImportStatementHandler(GlobalNonlocalHandler(parsers["command"]))
+            MacroHandler(
+                ImportStatementHandler(GlobalNonlocalHandler(parsers["command"]))
+            )
         ),
         "command:argument:bolt:if_block": delegate("bolt:if_block"),
         "command:argument:bolt:elif_condition": delegate("bolt:elif_condition"),
@@ -196,7 +207,7 @@ def get_bolt_parsers(
                 delegate("resource_location")
             ),
             json_properties_parser=DisableInterpolationParser(
-                AdjacentConstraint(delegate("json_object"), r"\{")
+                AdjacentConstraint(MultilineParser(delegate("json_object")), r"\{")
             ),
         ),
         "bolt:del_target": parse_del_target,
@@ -407,6 +418,11 @@ def get_stream_deferred_locals(stream: TokenStream) -> Set[str]:
 def get_stream_branch_scope(stream: TokenStream) -> Set[str]:
     """Return the identifiers available inside the branch."""
     return stream.data.setdefault("branch_scope", set())
+
+
+def get_stream_macro_scope(stream: TokenStream) -> Set[str]:
+    """Return the macro identifiers currently available."""
+    return stream.data.setdefault("macro_scope", set())
 
 
 class UndefinedIdentifier(InvalidSyntax):
@@ -947,6 +963,7 @@ class MacroMatchParser:
     json_properties_parser: Parser
 
     def __call__(self, stream: TokenStream) -> AstMacroMatch:
+        spec = get_stream_spec(stream)
         pending_identifiers = get_stream_pending_identifiers(stream)
         deferred_locals = get_stream_deferred_locals(stream)
 
@@ -969,11 +986,106 @@ class MacroMatchParser:
                 node.match_argument_properties or node.match_argument_parser,
             )
 
+            parser_name = node.match_argument_parser.get_canonical_value()
+            if f"command:argument:{parser_name}" not in spec.parsers:
+                exc = InvalidSyntax(f'Unrecognized argument parser "{parser_name}".')
+                raise set_location(exc, node.match_argument_parser)
+
         if commit.rollback:
             literal = self.literal_parser(stream)
             node = set_location(AstMacroMatchLiteral(match=literal), literal)
 
         return node
+
+
+@dataclass
+class MacroHandler:
+    """Handle macros."""
+
+    parser: Parser
+
+    def __call__(self, stream: TokenStream) -> Any:
+        node = self.parser(stream)
+
+        if not isinstance(node, AstCommand):
+            return node
+
+        if node.identifier == "macro:name:subcommand":
+            node = self.create_macro(node)
+            self.inject_syntax(stream, node)
+        elif node.identifier in get_stream_macro_scope(stream):
+            call = AstMacroCall(identifier=node.identifier, arguments=node.arguments)
+            node = set_location(call, node)
+
+        return node
+
+    @classmethod
+    def create_macro(cls, command: AstCommand) -> AstMacro:
+        identifier_parts: List[str] = []
+        arguments: List[AstNode] = []
+
+        node = command
+        while isinstance(subcommand := node.arguments[-1], AstCommand):
+            if isinstance(literal := node.arguments[0], AstMacroLiteral):
+                if literal.value == "macro":
+                    exc = InvalidSyntax(f'Forbidden literal "{literal.value}".')
+                    raise set_location(exc, literal)
+                identifier_parts.append(literal.value)
+            elif isinstance(literal := node.arguments[0], AstMacroMatchLiteral):
+                identifier_parts.append(literal.match.value)
+            elif isinstance(argument := node.arguments[0], AstMacroMatchArgument):
+                identifier_parts.append(argument.match_identifier.value)
+            arguments.append(node.arguments[0])
+            node = subcommand
+
+        arguments.append(node.arguments[0])
+
+        macro = AstMacro(
+            identifier=":".join(identifier_parts),
+            arguments=AstChildren(arguments),
+        )
+
+        return set_location(macro, command)
+
+    @classmethod
+    def inject_syntax(cls, stream: TokenStream, *macros: AstMacro):
+        spec = get_stream_spec(stream)
+        macro_scope = get_stream_macro_scope(stream)
+
+        # TODO: Find a way to memoize resulting command spec
+        if not stream.data.get("local_spec"):
+            stream.data["local_spec"] = True
+            spec = replace(spec, tree=spec.tree.copy(deep=True), prototypes={})
+            stream.data["spec"] = spec
+            macro_scope = macro_scope.copy()
+            stream.data["macro_scope"] = macro_scope
+
+        for macro in macros:
+            tree_root: JsonDict = {"type": "root"}
+            tree: JsonDict = tree_root
+
+            for node in macro.arguments:
+                if isinstance(node, AstMacroLiteral):
+                    child = {"type": "literal"}
+                    tree["children"] = {node.value: child}
+                elif isinstance(node, AstMacroMatchLiteral):
+                    child = {"type": "literal"}
+                    tree["children"] = {node.match.value: child}
+                elif isinstance(node, AstMacroMatchArgument):
+                    child = {"type": "argument"}
+                    child["parser"] = node.match_argument_parser.get_canonical_value()
+                    if properties := node.match_argument_properties:
+                        child["properties"] = properties.evaluate()
+                    tree["children"] = {node.match_identifier.value: child}
+                else:
+                    tree["executable"] = True
+                    break
+                tree = child
+
+            spec.tree.extend(CommandTree.parse_obj(tree_root))
+            macro_scope.add(macro.identifier)
+
+        spec.update()
 
 
 def parse_del_target(stream: TokenStream) -> AstTarget:
@@ -1141,7 +1253,9 @@ class DeferredRootBacktracker:
 
         node: AstRoot = self.parser(stream)
 
+        spec = get_stream_spec(stream)
         identifiers = get_stream_identifiers(stream)
+        macro_scope = get_stream_macro_scope(stream)
 
         for command in node.commands:
             stack: List[AstCommand] = [command]
@@ -1159,8 +1273,11 @@ class DeferredRootBacktracker:
                 should_replace = True
 
                 deferred_stream = deferred_root.stream
+                deferred_stream.data["local_spec"] = False
+                deferred_stream.data["spec"] = spec
                 deferred_stream.data["identifiers"] |= identifiers
                 deferred_stream.data["function"] = True
+                deferred_stream.data["macro_scope"] = macro_scope
                 nested_root = delegate("nested_root", deferred_stream)
 
                 command = replace(
