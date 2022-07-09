@@ -2,6 +2,14 @@
 
 <!--next-version-placeholder-->
 
+## v0.10.0 (2022-07-09)
+### Feature
+* Working macro and tests ([`a0ddfba`](https://github.com/mcbeet/bolt/commit/a0ddfbab5a46b173ec8a0bd46f8e78c76a098c85))
+* Start working on macro ([`e3bbb3e`](https://github.com/mcbeet/bolt/commit/e3bbb3e83dd2f60df2a4f8ca848782b7a83a2c84))
+
+### Fix
+* Update mecha ([`e6c77e9`](https://github.com/mcbeet/bolt/commit/e6c77e9d495e7de8dcc3326ea15c2edc767249f7))
+
 ## v0.9.1 (2022-07-02)
 ### Fix
 * Allow ast node interpolation directly ([`ffa076e`](https://github.com/mcbeet/bolt/commit/ffa076efa635be32c735371e2761da954385abbf))
