@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.11.0 (2022-07-10)
+### Feature
+* Turn module manager into a mapping ([`3c486eb`](https://github.com/mcbeet/bolt/commit/3c486eb6d9ce6c9a47ec16c14342fa98db6fbfd7))
+* Extract module manager from runtime ([`20e7499`](https://github.com/mcbeet/bolt/commit/20e74995ab2b44505a494e352f94d1c756ba0ec6))
+* Make it possible to run the lazy plugin multiple times ([`87df070`](https://github.com/mcbeet/bolt/commit/87df070d2f528a95c06b14fb2a8b3e019e80651c))
+
 ## v0.10.0 (2022-07-09)
 ### Feature
 * Working macro and tests ([`a0ddfba`](https://github.com/mcbeet/bolt/commit/a0ddfbab5a46b173ec8a0bd46f8e78c76a098c85))
