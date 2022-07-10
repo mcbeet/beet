@@ -39,28 +39,31 @@ say a
                   end_location: SourceLocation(pos=39, lineno=2, colno=31)
                   identifier: 'from:module:import:name:subcommand'
                   arguments:
-                    <class 'bolt.ast.AstImportedIdentifier'>
+                    <class 'bolt.ast.AstImportedItem'>
                       location: SourceLocation(pos=34, lineno=2, colno=26)
                       end_location: SourceLocation(pos=35, lineno=2, colno=27)
-                      value: 'a'
+                      name: 'a'
+                      identifier: True
                     <class 'mecha.ast.AstCommand'>
                       location: SourceLocation(pos=36, lineno=2, colno=28)
                       end_location: SourceLocation(pos=39, lineno=2, colno=31)
                       identifier: 'from:module:import:name:subcommand'
                       arguments:
-                        <class 'bolt.ast.AstImportedIdentifier'>
+                        <class 'bolt.ast.AstImportedItem'>
                           location: SourceLocation(pos=36, lineno=2, colno=28)
                           end_location: SourceLocation(pos=37, lineno=2, colno=29)
-                          value: 'b'
+                          name: 'b'
+                          identifier: True
                         <class 'mecha.ast.AstCommand'>
                           location: SourceLocation(pos=38, lineno=2, colno=30)
                           end_location: SourceLocation(pos=39, lineno=2, colno=31)
                           identifier: 'from:module:import:name'
                           arguments:
-                            <class 'bolt.ast.AstImportedIdentifier'>
+                            <class 'bolt.ast.AstImportedItem'>
                               location: SourceLocation(pos=38, lineno=2, colno=30)
                               end_location: SourceLocation(pos=39, lineno=2, colno=31)
-                              value: 'c'
+                              name: 'c'
+                              identifier: True
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=40, lineno=3, colno=1)
       end_location: SourceLocation(pos=45, lineno=3, colno=6)

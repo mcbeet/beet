@@ -1,4 +1,4 @@
-#>ERROR  Identifier 'a' is not defined.
+#>ERROR  Identifier "a" is not defined.
 # line 1, column 9
 #      1 |  def f(a=a):
 #        :          ^

@@ -1,7 +1,7 @@
 def f(a, b):
     def g(c):
         a + b
-#>ERROR  Identifier 'c' is not defined.
+#>ERROR  Identifier "c" is not defined.
 # line 4, column 7
 #      3 |          a + b
 #      4 |      f(c)

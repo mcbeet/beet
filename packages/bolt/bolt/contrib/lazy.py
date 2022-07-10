@@ -15,11 +15,11 @@ from typing import Any, List
 
 from beet import Context, ListOption, TextFileBase, configurable
 from beet.core.utils import extra_field, required_field
-from mecha import CompilationDatabase, Mecha, Visitor, rule
+from mecha import Mecha, Visitor, rule
 from pathspec import PathSpec
 from pydantic import BaseModel
 
-from bolt import AstModuleRoot, Runtime
+from bolt import AstModuleRoot, ModuleManager, Runtime
 
 
 class BoltLazyOptions(BaseModel):
@@ -53,7 +53,7 @@ class LazyExecution:
 
         mc.steps.insert(
             mc.steps.index(runtime.evaluate),
-            LazyFilter(runtime=runtime, database=mc.database, lazy=self),
+            LazyFilter(modules=runtime.modules, lazy=self),
         )
 
     def register(self, *match: str):
@@ -70,26 +70,25 @@ class LazyExecution:
 class LazyFilter(Visitor):
     """Visitor that filters lazy modules from the compilation by matching resource location."""
 
-    runtime: Runtime = required_field()
-    database: CompilationDatabase = required_field()
+    modules: ModuleManager = required_field()
     lazy: LazyExecution = required_field()
 
     @rule(AstModuleRoot)
     def lazy_module(self, node: AstModuleRoot):
-        module = self.runtime.get_module(node)
+        module = self.modules.get(node)
         if module.resource_location and self.lazy.check(module.resource_location):
             module.execution_hooks.append(
                 partial(
                     self.restore_lazy,
-                    self.database.current,
+                    self.modules.database.current,
                     node,
-                    self.database.step + 1,
+                    self.modules.database.step + 1,
                 )
             )
             return None
         return node
 
     def restore_lazy(self, key: TextFileBase[Any], node: AstModuleRoot, step: int):
-        compilation_unit = self.database[key]
+        compilation_unit = self.modules.database[key]
         compilation_unit.ast = node
-        self.database.enqueue(key, step)
+        self.modules.database.enqueue(key, step)

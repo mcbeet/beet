@@ -8,6 +8,7 @@ __all__ = [
     "get_stream_branch_scope",
     "get_stream_macro_scope",
     "UndefinedIdentifier",
+    "ToplevelHandler",
     "create_bolt_root_parser",
     "BranchScopeManager",
     "check_final_expression",
@@ -96,7 +97,7 @@ from .ast import (
     AstFunctionSignature,
     AstFunctionSignatureArgument,
     AstIdentifier,
-    AstImportedIdentifier,
+    AstImportedItem,
     AstInterpolation,
     AstKeyword,
     AstList,
@@ -108,6 +109,7 @@ from .ast import (
     AstMacroMatch,
     AstMacroMatchArgument,
     AstMacroMatchLiteral,
+    AstModuleRoot,
     AstSlice,
     AstTarget,
     AstTargetAttribute,
@@ -118,6 +120,7 @@ from .ast import (
     AstUnpack,
     AstValue,
 )
+from .module import Module, ModuleManager
 from .pattern import (
     FALSE_PATTERN,
     IDENTIFIER_PATTERN,
@@ -133,19 +136,18 @@ IMPORT_REGEX = re.compile(rf"^{MODULE_PATTERN}$")
 
 
 def get_bolt_parsers(
-    parsers: Dict[str, Parser],
-    database: CompilationDatabase,
+    parsers: Dict[str, Parser], modules: ModuleManager
 ) -> Dict[str, Parser]:
     """Return the bolt parsers."""
     return {
         ################################################################################
         # Command
         ################################################################################
-        "root": create_bolt_root_parser(parsers["root"]),
+        "root": ToplevelHandler(create_bolt_root_parser(parsers["root"]), modules),
         "nested_root": create_bolt_root_parser(parsers["nested_root"]),
         "command": UndefinedIdentifierErrorHandler(
-            MacroHandler(
-                ImportStatementHandler(GlobalNonlocalHandler(parsers["command"]))
+            ImportStatementHandler(
+                MacroHandler(GlobalNonlocalHandler(parsers["command"]))
             )
         ),
         "command:argument:bolt:if_block": delegate("bolt:if_block"),
@@ -320,7 +322,7 @@ def get_bolt_parsers(
                 parse_dict_item,
             ]
         ),
-        "bolt:literal": LiteralParser(database),
+        "bolt:literal": LiteralParser(modules.database),
         ################################################################################
         # Interpolation
         ################################################################################
@@ -437,7 +439,7 @@ class UndefinedIdentifier(InvalidSyntax):
         self.identifiers = identifiers
 
     def __str__(self) -> str:
-        msg = f"Identifier {self.token.value!r} is not defined."
+        msg = f'Identifier "{self.token.value}" is not defined.'
 
         if matches := get_close_matches(self.token.value, self.identifiers):
             matches = [repr(m) for m in matches]
@@ -451,6 +453,30 @@ class UndefinedIdentifier(InvalidSyntax):
             msg += f" Did you mean {suggestion}?"
 
         return msg
+
+
+@dataclass
+class ToplevelHandler:
+    """Handle toplevel root node."""
+
+    parser: Parser
+
+    modules: ModuleManager
+
+    def __call__(self, stream: TokenStream) -> Any:
+        with stream.provide(
+            identifiers=set(self.modules.globals)
+            | self.modules.builtins
+            | {"__name__"},
+        ):
+            node = self.parser(stream)
+
+        if isinstance(node, AstRoot) and isinstance(
+            self.modules.database.current, Module
+        ):
+            node = set_location(AstModuleRoot(commands=node.commands), node)
+
+        return node
 
 
 def create_bolt_root_parser(parser: Parser):
@@ -845,7 +871,7 @@ class BreakContinueConstraint:
             for command in node.commands:
                 if command.identifier in ["break", "continue"]:
                     exc = InvalidSyntax(
-                        f"Can only use {command.identifier!r} in loops."
+                        f'Can only use "{command.identifier}" in loops.'
                     )
                     raise set_location(exc, command)
 
@@ -1146,7 +1172,7 @@ class ImportLocationConstraint:
         node: AstResourceLocation = self.parser(stream)
 
         if node.is_tag or node.namespace is None and not IMPORT_REGEX.match(node.path):
-            exc = InvalidSyntax(f"Invalid module location {node.get_value()!r}.")
+            exc = InvalidSyntax(f'Invalid module location "{node.get_value()}".')
             raise set_location(exc, node)
 
         return node
@@ -1167,23 +1193,29 @@ class ImportStatementHandler:
                 if isinstance(module := node.arguments[0], AstResourceLocation):
                     if module.namespace:
                         exc = InvalidSyntax(
-                            f"Can't import {module.get_value()!r} without alias."
+                            f'Can\'t import "{module.get_value()}" without alias.'
                         )
                         raise set_location(exc, module)
                     else:
                         identifiers.add(module.path.partition(".")[0])
+
             elif node.identifier == "import:module:as:alias":
-                if isinstance(alias := node.arguments[1], AstImportedIdentifier):
-                    identifiers.add(alias.value)
-                    identifiers_storage.setdefault(alias.value, "local")
+                if isinstance(alias := node.arguments[1], AstImportedItem):
+                    if not alias.identifier:
+                        exc = InvalidSyntax(f'Invalid identifier "{alias.name}".')
+                        raise set_location(exc, alias)
+                    identifiers.add(alias.name)
+                    identifiers_storage.setdefault(alias.name, "local")
+
             elif node.identifier == "from:module:import:subcommand":
                 subcommand = cast(AstCommand, node.arguments[1])
                 while True:
-                    if isinstance(
-                        name := subcommand.arguments[0], AstImportedIdentifier
-                    ):
-                        identifiers.add(name.value)
-                        identifiers_storage.setdefault(name.value, "local")
+                    if isinstance(item := subcommand.arguments[0], AstImportedItem):
+                        if not item.identifier:
+                            exc = InvalidSyntax(f'Invalid identifier "{item.name}".')
+                            raise set_location(exc, item)
+                        identifiers.add(item.name)
+                        identifiers_storage.setdefault(item.name, "local")
                     if subcommand.identifier == "from:module:import:name:subcommand":
                         subcommand = cast(AstCommand, subcommand.arguments[1])
                     else:
@@ -1199,11 +1231,18 @@ def parse_python_import(stream: TokenStream) -> Any:
         return set_location(AstResourceLocation(path=token.value), token)
 
 
-def parse_import_name(stream: TokenStream) -> AstImportedIdentifier:
+def parse_import_name(stream: TokenStream) -> AstImportedItem:
     """Parse import name."""
-    with stream.syntax(name=IDENTIFIER_PATTERN):
-        token = stream.expect("name")
-        return set_location(AstImportedIdentifier(value=token.value), token)
+    with stream.syntax(name=IDENTIFIER_PATTERN, literal=AstMacroLiteral.regex.pattern):
+        token = stream.get("name")
+
+        if token:
+            node = AstImportedItem(name=token.value)
+        else:
+            token = stream.expect("literal")
+            node = AstImportedItem(name=token.value, identifier=False)
+
+        return set_location(node, token)
 
 
 @dataclass
@@ -1319,7 +1358,7 @@ class FunctionConstraint:
             for command in node.commands:
                 if command.identifier in self.command_identifiers:
                     name, _, _ = command.identifier.partition(":")
-                    exc = InvalidSyntax(f"Can only use {name!r} in functions.")
+                    exc = InvalidSyntax(f'Can only use "{name}" in functions.')
                     raise set_location(exc, command)
 
         return node

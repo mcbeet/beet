@@ -10,25 +10,25 @@ from dataclasses import dataclass
 
 from beet import Context
 from beet.core.utils import required_field
-from mecha import AstRoot, CompilationDatabase, Mecha, Visitor, rule
+from mecha import AstRoot, Mecha, Visitor, rule
 
 from bolt import Runtime
+from bolt.module import ModuleManager
 
 
 def beet_default(ctx: Context):
     mc = ctx.inject(Mecha)
     runtime = ctx.inject(Runtime)
-    mc.steps[:] = [DebugCodegenEmitter(runtime=runtime, database=mc.database)]
+    mc.steps[:] = [DebugCodegenEmitter(modules=runtime.modules)]
 
 
 @dataclass
 class DebugCodegenEmitter(Visitor):
     """Visitor that interrupts the compilation process and dumps the generated code."""
 
-    runtime: Runtime = required_field()
-    database: CompilationDatabase = required_field()
+    modules: ModuleManager = required_field()
 
     @rule(AstRoot)
     def debug_codegen(self, node: AstRoot):
-        self.database.current.text = self.runtime.codegen(node)[0] or ""
+        self.modules.database.current.text = self.modules.codegen(node).source or ""
         return None

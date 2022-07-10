@@ -20,7 +20,8 @@ from PIL import Image
           end_location: SourceLocation(pos=21, lineno=1, colno=22)
           identifier: 'from:module:import:name'
           arguments:
-            <class 'bolt.ast.AstImportedIdentifier'>
+            <class 'bolt.ast.AstImportedItem'>
               location: SourceLocation(pos=16, lineno=1, colno=17)
               end_location: SourceLocation(pos=21, lineno=1, colno=22)
-              value: 'Image'
+              name: 'Image'
+              identifier: True

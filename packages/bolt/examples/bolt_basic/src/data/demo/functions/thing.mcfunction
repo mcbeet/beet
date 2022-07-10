@@ -9,7 +9,7 @@ def do_stuff(a, b):
     return a + math.cos(b)
 
 def call_recursive():
-    if score @s loop_again matches 1 function runtime.get_path()
+    if score @s loop_again matches 1 function runtime.modules.path
 
 def raw(cmd):
     runtime.commands.append(mc.parse(cmd, using="command"))

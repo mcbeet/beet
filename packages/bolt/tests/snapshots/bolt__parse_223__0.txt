@@ -3,7 +3,7 @@ macro foo:
         foo
     bar
 def thing():
-#>ERROR  Identifier 'bar' is not defined.
+#>ERROR  Identifier "bar" is not defined.
 # line 6, column 5
 #      5 |  def thing():
 #      6 |      bar

@@ -35,11 +35,11 @@ def test_parse(snapshot: SnapshotFixture, ctx: Context, source: Function):
 
     if ast:
         assert snapshot() == f"{source.text}---\n{ast.dump()}\n"
-        text, output, refs = runtime.codegen(ast)
-        text = text or "# Nothing\n"
-        assert snapshot() == f"{text}---\noutput = {output}\n---\n" + "".join(
+        result = runtime.modules.codegen(ast)
+        text = result.source or "# Nothing\n"
+        assert snapshot() == f"{text}---\noutput = {result.output}\n---\n" + "".join(
             f"_bolt_refs[{i}]\n{obj.dump(shallow=True) if isinstance(obj, AstNode) else repr(obj)}\n"
-            for i, obj in enumerate(refs)
+            for i, obj in enumerate(result.refs)
         )
     elif diagnostics:
         database = CompilationDatabase()

@@ -1,5 +1,5 @@
 if true:
-#>ERROR  Can only use 'break' in loops.
+#>ERROR  Can only use "break" in loops.
 # line 2, column 5
 #      1 |  if true:
 #      2 |      break

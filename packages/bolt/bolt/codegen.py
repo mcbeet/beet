@@ -49,7 +49,7 @@ from .ast import (
     AstFormatString,
     AstFunctionSignature,
     AstIdentifier,
-    AstImportedIdentifier,
+    AstImportedItem,
     AstInterpolation,
     AstKeyword,
     AstList,
@@ -67,6 +67,7 @@ from .ast import (
     AstUnpack,
     AstValue,
 )
+from .module import CodegenResult
 
 
 @dataclass
@@ -408,18 +409,18 @@ def visit_binding(
 class Codegen(Visitor):
     """Code generator."""
 
-    def __call__(self, node: AstRoot) -> Tuple[Optional[str], Optional[str], List[Any]]:  # type: ignore
+    def __call__(self, node: AstRoot) -> CodegenResult:  # type: ignore
         acc = Accumulator()
         result = self.invoke(node, acc)
         if result is None:
-            return None, None, acc.refs
+            return CodegenResult(refs=acc.refs)
         elif len(result) != 1:
             raise ValueError(
                 f"Expected single result for {node.__class__.__name__} {result!r}."
             )
         output = acc.make_variable()
         acc.statement(f"{output} = {result[0]}")
-        return acc.get_source(), output, acc.refs
+        return CodegenResult(source=acc.get_source(), output=output, refs=acc.refs)
 
     @rule(AstNode)
     def fallback(
@@ -678,8 +679,8 @@ class Codegen(Visitor):
             subcommand = cast(AstCommand, node.arguments[1])
 
             while True:
-                if isinstance(name := subcommand.arguments[0], AstImportedIdentifier):
-                    names.append(name.value)
+                if isinstance(item := subcommand.arguments[0], AstImportedItem):
+                    names.append(item.name)
                 if subcommand.identifier == "from:module:import:name:subcommand":
                     subcommand = cast(AstCommand, subcommand.arguments[1])
                 else:
@@ -696,7 +697,7 @@ class Codegen(Visitor):
                     acc.statement(f"{name} = {rhs}", lineno=node)
 
         elif node.identifier == "import:module:as:alias":
-            alias = cast(AstImportedIdentifier, node.arguments[1]).value
+            alias = cast(AstImportedItem, node.arguments[1]).name
 
             if module.namespace:
                 acc.statement(

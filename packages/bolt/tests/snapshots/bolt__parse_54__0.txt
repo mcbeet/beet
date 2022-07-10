@@ -1,4 +1,4 @@
-#>ERROR  Identifier 'foo' is not defined.
+#>ERROR  Identifier "foo" is not defined.
 # line 1, column 12
 #      1 |  for foo in foo:
 #        :             ^^^

@@ -8,9 +8,9 @@ def callback():
     return bar
 
 def logb(f):
-    runtime.get_module().namespace["foo"] *= 2
+    runtime.modules.get().namespace["foo"] *= 2
     say __name__
-    say runtime.get_path()
+    say runtime.modules.path
     say f()
 
 from ./import_a import loga

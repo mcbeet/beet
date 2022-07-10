@@ -7,7 +7,7 @@ def foo(something):
             dat
 # this is a comment
         x = "hello"
-#>ERROR  Identifier 'somehng' is not defined. Did you mean 'something'?
+#>ERROR  Identifier "somehng" is not defined. Did you mean 'something'?
 # line 10, column 18
 #      9 |          x = "hello"
 #     10 |          for i in somehng:
