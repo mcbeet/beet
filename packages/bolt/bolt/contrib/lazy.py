@@ -75,7 +75,7 @@ class LazyFilter(Visitor):
 
     @rule(AstModuleRoot)
     def lazy_module(self, node: AstModuleRoot):
-        module = self.modules.get(node)
+        module = self.modules.for_current_ast(node)
         if module.resource_location and self.lazy.check(module.resource_location):
             module.execution_hooks.append(
                 partial(

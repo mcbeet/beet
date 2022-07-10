@@ -82,9 +82,11 @@ class Runtime:
             self.expose(
                 "generate_tree",
                 lambda *args, **kwargs: generate_tree(
-                    root := kwargs.pop("root")
-                    if "root" in kwargs
-                    else self.modules.path,
+                    (
+                        root := kwargs.pop("root")
+                        if "root" in kwargs
+                        else self.modules.current_path
+                    ),
                     *args,
                     name=(
                         kwargs.pop("name")
@@ -146,7 +148,7 @@ class Runtime:
     def import_module(self, resource_location: str) -> CompiledModule:
         """Import module."""
         try:
-            module = self.modules.get(resource_location)
+            module = self.modules[resource_location]
         except KeyError:
             msg = f'Couldn\'t import "{resource_location}".'
             raise ImportError(msg) from None
@@ -179,7 +181,7 @@ class Evaluator(Visitor):
 
     @rule(AstRoot)
     def root(self, node: AstRoot) -> AstRoot:
-        module = self.modules.get(node)
+        module = self.modules.for_current_ast(node)
         try:
             return self.modules.eval(module)
         except BubbleException:

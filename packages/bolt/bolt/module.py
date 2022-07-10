@@ -15,7 +15,7 @@ from dataclasses import dataclass, field
 from io import BufferedReader, BufferedWriter
 from pathlib import Path
 from types import CodeType
-from typing import Any, Callable, Dict, List, Optional, Set, Union
+from typing import Any, Callable, Dict, Iterator, List, Mapping, Optional, Set, Union
 
 from beet import TextFile, TextFileBase
 from beet.core.utils import JsonDict, extra_field, import_from_string, required_field
@@ -79,8 +79,8 @@ class CodegenResult:
 
 
 @dataclass(frozen=True)
-class ModuleManager:
-    """Service that manages bolt modules."""
+class ModuleManager(Mapping[TextFileBase[Any], CompiledModule]):
+    """Container for managing bolt modules."""
 
     directory: Path = extra_field()
     database: CompilationDatabase = extra_field()
@@ -94,47 +94,58 @@ class ModuleManager:
     builtins: Set[str] = extra_field(default_factory=set)
 
     @property
-    def path(self) -> str:
-        """Return the current path."""
+    def current(self) -> CompiledModule:
+        """Return the currently executing module."""
+        if not self.stack:
+            raise ValueError("No module currently executing.")
+        return self.stack[-1]
+
+    @property
+    def current_path(self) -> str:
+        """Return the path corresponding to the currently executing module."""
         if not self.stack:
             raise ValueError("No module currently executing.")
         if path := self.stack[-1].resource_location:
             return path
-        raise ValueError("No resource location corresponding to the current module.")
+        raise ValueError(
+            "Currently executing module has no associated resource location."
+        )
 
-    def get(
-        self,
-        target: Optional[Union[AstRoot, str]] = None,
-        current: Optional[TextFileBase[Any]] = None,
-    ) -> CompiledModule:
-        """Retrieve an executable module."""
-        if self.stack and not target and not current:
-            return self.stack[-1]
+    def for_current_ast(self, node: AstRoot) -> CompiledModule:
+        """Return executable module for the current ast."""
+        current = self.database.current
 
-        if isinstance(target, str):
-            current = self.database.index[target]
-        elif current is None:
-            current = self.database.current
-
-        module = self.registry.get(current)
         compilation_unit = self.database[current]
         name = compilation_unit.resource_location or "<unknown>"
 
-        if module:
-            if isinstance(target, AstRoot) and module.ast is not target:
-                logger.debug("Code generation due to ast update for module %s.", name)
-            else:
+        if module := self.registry.get(current):
+            if module.ast is node:
                 return module
-        else:
-            if not isinstance(target, AstRoot):
-                target = compilation_unit.ast
-                if not target:
-                    raise UnusableCompilationUnit(
-                        f"No ast for module {name}.", compilation_unit
-                    )
-            logger.debug("Code generation for module %s.", name)
+            logger.debug('Evict stale module "%s" due to ast update.', name)
+            del self.registry[current]
 
-        result = self.codegen(target)
+        compilation_unit.ast = node
+        return self[current]
+
+    def __getitem__(self, current: Union[TextFileBase[Any], str]) -> CompiledModule:
+        if isinstance(current, str):
+            current = self.database.index[current]
+
+        if module := self.registry.get(current):
+            return module
+
+        compilation_unit = self.database[current]
+        node = compilation_unit.ast
+        name = compilation_unit.resource_location or "<unknown>"
+
+        if not node:
+            raise UnusableCompilationUnit(
+                f"No ast for module {name}.", compilation_unit
+            )
+
+        logger.debug('Code generation for module "%s".', name)
+
+        result = self.codegen(node)
 
         if result.source and result.output:
             filename = (
@@ -149,7 +160,7 @@ class ModuleManager:
             code = None
 
         module = CompiledModule(
-            ast=target,
+            ast=node,
             code=code,
             refs=result.refs,
             output=result.output,
@@ -159,6 +170,12 @@ class ModuleManager:
         self.registry[current] = module
 
         return module
+
+    def __iter__(self) -> Iterator[TextFileBase[Any]]:
+        return iter(self.database)
+
+    def __len__(self) -> int:
+        return len(self.database)
 
     def eval(self, module: CompiledModule) -> AstRoot:
         """Run the module and return the output ast."""
@@ -175,7 +192,7 @@ class ModuleManager:
         if module.executing:
             raise ValueError("Import cycle detected.")
 
-        logger.debug("Evaluate module %s.", module.resource_location or "<unknown>")
+        logger.debug('Evaluate module "%s".', module.resource_location or "<unknown>")
 
         module.namespace.update(self.globals)
         module.namespace["_bolt_refs"] = module.refs
@@ -240,7 +257,7 @@ class ModuleCacheBackend(AstCacheBackend):
         return ast
 
     def dump(self, node: AstRoot, f: BufferedWriter):
-        module = self.modules.get(node)
+        module = self.modules.for_current_ast(node)
 
         self.dump_data(
             {
