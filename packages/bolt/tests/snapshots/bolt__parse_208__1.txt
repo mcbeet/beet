@@ -4,7 +4,8 @@ _bolt_helper_get_attribute = _bolt_runtime.helpers['get_attribute']
 _bolt_helper_children = _bolt_runtime.helpers['children']
 _bolt_helper_replace = _bolt_runtime.helpers['replace']
 with _bolt_runtime.scope() as _bolt_var0:
-    Image = _bolt_helper_get_attribute(_bolt_helper_import_module('PIL'), 'Image')
+    _bolt_from_import = _bolt_helper_import_module('PIL')
+    Image = _bolt_helper_get_attribute(_bolt_from_import, 'Image')
 _bolt_var1 = _bolt_helper_replace(_bolt_refs[0], commands=_bolt_helper_children(_bolt_var0))
 ---
 output = _bolt_var1
@@ -14,4 +15,4 @@ _bolt_refs[0]
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=22, lineno=2, colno=1)
   commands:
-    <class 'mecha.ast.AstCommand'>
+    <class 'bolt.ast.AstFromImport'>

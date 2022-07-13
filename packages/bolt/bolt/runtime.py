@@ -2,7 +2,6 @@ __all__ = [
     "Runtime",
     "Evaluator",
     "check_toplevel_commands",
-    "UnusableCompilationUnit",
 ]
 
 
@@ -106,6 +105,7 @@ class Runtime:
             directory=mc.directory,
             database=mc.database,
             codegen=Codegen(),
+            parse_callback=mc.parse,
             globals=self.globals,
             builtins=self.builtins,
         )
@@ -181,7 +181,7 @@ class Evaluator(Visitor):
 
     @rule(AstRoot)
     def root(self, node: AstRoot) -> AstRoot:
-        module = self.modules.for_current_ast(node)
+        module = self.modules.match_ast(node)
         try:
             return self.modules.eval(module)
         except BubbleException:

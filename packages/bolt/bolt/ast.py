@@ -34,7 +34,9 @@ __all__ = [
     "AstMacroMatchLiteral",
     "AstMacroMatchArgument",
     "AstInterpolation",
+    "AstFromImport",
     "AstImportedItem",
+    "AstImportedMacro",
 ]
 
 
@@ -320,8 +322,23 @@ class AstInterpolation(AstNode):
 
 
 @dataclass(frozen=True)
+class AstFromImport(AstCommand):
+    """Ast from import node."""
+
+    identifier: str = ""
+
+
+@dataclass(frozen=True)
 class AstImportedItem(AstNode):
     """Ast imported item node."""
 
     name: str = required_field()
     identifier: bool = True
+
+
+@dataclass(frozen=True)
+class AstImportedMacro(AstNode):
+    """Ast imported macro node."""
+
+    name: str = required_field()
+    declaration: AstMacro = required_field()

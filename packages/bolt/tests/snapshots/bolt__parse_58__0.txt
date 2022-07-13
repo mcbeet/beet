@@ -1,4 +1,4 @@
-#>ERROR  Identifier "the" is not defined. Did you mean 'hex'?
+#>ERROR  Identifier "the" is not defined. Did you mean "hex"?
 # line 1, column 7
 #      1 |  wat = the = "f"
 #        :        ^^^

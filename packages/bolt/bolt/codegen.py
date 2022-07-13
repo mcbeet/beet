@@ -13,7 +13,7 @@ __all__ = [
 
 
 from contextlib import contextmanager
-from dataclasses import dataclass, field, fields
+from dataclasses import dataclass, field, fields, replace
 from typing import (
     Any,
     Dict,
@@ -24,6 +24,7 @@ from typing import (
     Optional,
     Tuple,
     Type,
+    Union,
     cast,
     overload,
 )
@@ -47,9 +48,11 @@ from .ast import (
     AstExpressionBinary,
     AstExpressionUnary,
     AstFormatString,
+    AstFromImport,
     AstFunctionSignature,
     AstIdentifier,
     AstImportedItem,
+    AstImportedMacro,
     AstInterpolation,
     AstKeyword,
     AstList,
@@ -67,7 +70,7 @@ from .ast import (
     AstUnpack,
     AstValue,
 )
-from .module import CodegenResult
+from .module import CodegenResult, MacroLibrary
 
 
 @dataclass
@@ -76,6 +79,7 @@ class Accumulator:
 
     indentation: str = ""
     refs: List[Any] = field(default_factory=list)
+    macros: MacroLibrary = field(default_factory=dict)
     macro_ids: Dict[str, int] = field(default_factory=dict)
     lines: List[str] = field(default_factory=list)
     counter: int = 0
@@ -156,6 +160,23 @@ class Accumulator:
         self.counter += 1
         return name
 
+    def make_macro(self, node: AstMacro) -> str:
+        """Add macro to macro library."""
+        macro = self.get_macro(node.identifier)
+        group = node.identifier.partition(":")[0]
+        self.macros.setdefault(group, {})[macro, node] = None
+        return macro
+
+    def import_macro(self, resource_location: str, node: AstImportedMacro) -> str:
+        """Import macro into macro library."""
+        macro = self.get_macro(node.declaration.identifier)
+        group = node.declaration.identifier.partition(":")[0]
+        self.macros.setdefault(group, {})[macro, node.declaration] = (
+            resource_location,
+            node.name,
+        )
+        return macro
+
     def get_macro(self, name: str) -> str:
         """Get macro."""
         if name not in self.macro_ids:
@@ -189,7 +210,10 @@ class Accumulator:
         """Emit function."""
         self.statement(f"def {name}({', '.join(args)}):")
         with self.block():
+            previous_macros = self.macros
+            self.macros = {k: dict(v) for k, v in self.macros.items()}
             yield
+            self.macros = previous_macros
 
     @contextmanager
     def if_statement(self, condition: str):
@@ -412,15 +436,24 @@ class Codegen(Visitor):
     def __call__(self, node: AstRoot) -> CodegenResult:  # type: ignore
         acc = Accumulator()
         result = self.invoke(node, acc)
+
         if result is None:
-            return CodegenResult(refs=acc.refs)
-        elif len(result) != 1:
+            return CodegenResult()
+
+        if len(result) != 1:
             raise ValueError(
                 f"Expected single result for {node.__class__.__name__} {result!r}."
             )
+
         output = acc.make_variable()
         acc.statement(f"{output} = {result[0]}")
-        return CodegenResult(source=acc.get_source(), output=output, refs=acc.refs)
+
+        return CodegenResult(
+            source=acc.get_source(),
+            output=output,
+            refs=acc.refs,
+            macros=acc.macros,
+        )
 
     @rule(AstNode)
     def fallback(
@@ -524,7 +557,9 @@ class Codegen(Visitor):
         node: AstMacro,
         acc: Accumulator,
     ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
-        macro = acc.get_macro(node.identifier)
+        macro = acc.make_macro(
+            replace(node, arguments=AstChildren(node.arguments[:-1]))
+        )
         arguments = [
             arg.match_identifier.value
             for arg in node.arguments
@@ -666,7 +701,6 @@ class Codegen(Visitor):
 
     @rule(AstCommand, identifier="import:module")
     @rule(AstCommand, identifier="import:module:as:alias")
-    @rule(AstCommand, identifier="from:module:import:subcommand")
     def import_statement(
         self,
         node: AstCommand,
@@ -674,29 +708,7 @@ class Codegen(Visitor):
     ) -> Optional[List[str]]:
         module = cast(AstResourceLocation, node.arguments[0])
 
-        if node.identifier == "from:module:import:subcommand":
-            names: List[str] = []
-            subcommand = cast(AstCommand, node.arguments[1])
-
-            while True:
-                if isinstance(item := subcommand.arguments[0], AstImportedItem):
-                    names.append(item.name)
-                if subcommand.identifier == "from:module:import:name:subcommand":
-                    subcommand = cast(AstCommand, subcommand.arguments[1])
-                else:
-                    break
-
-            if module.namespace:
-                acc.statement(
-                    f"{', '.join(names)} = _bolt_runtime.from_module_import({module.get_value()!r}, {', '.join(map(repr, names))})",
-                    lineno=node,
-                )
-            else:
-                for name in names:
-                    rhs = acc.get_attribute(acc.import_module(module.path), name)
-                    acc.statement(f"{name} = {rhs}", lineno=node)
-
-        elif node.identifier == "import:module:as:alias":
+        if node.identifier == "import:module:as:alias":
             alias = cast(AstImportedItem, node.arguments[1]).name
 
             if module.namespace:
@@ -716,6 +728,37 @@ class Codegen(Visitor):
             else:
                 acc.statement(rhs, lineno=node)
                 acc.statement(f"{name} = {acc.import_module(name)}")
+
+        return []
+
+    @rule(AstFromImport)
+    def from_import_statement(
+        self,
+        node: AstFromImport,
+        acc: Accumulator,
+    ) -> Optional[List[str]]:
+        module = cast(AstResourceLocation, node.arguments[0])
+        items = cast(
+            AstChildren[Union[AstImportedItem, AstImportedMacro]], node.arguments[1:]
+        )
+        names = [item.name for item in items]
+
+        if module.namespace:
+            full_path = module.get_value()
+            targets: List[str] = []
+            for item in items:
+                if isinstance(item, AstImportedMacro):
+                    targets.append(acc.import_macro(full_path, item))
+                else:
+                    targets.append(item.name)
+            stmt = f"{', '.join(targets)} = _bolt_runtime.from_module_import({full_path!r}, {', '.join(map(repr, names))})"
+            acc.statement(stmt, lineno=node)
+        else:
+            stmt = f"_bolt_from_import = {acc.import_module(module.path)}"
+            acc.statement(stmt, lineno=node)
+            for name in names:
+                rhs = acc.get_attribute("_bolt_from_import", name)
+                acc.statement(f"{name} = {rhs}", lineno=node)
 
         return []
 

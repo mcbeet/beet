@@ -1,14 +1,16 @@
 __all__ = [
     "rewrite_traceback",
     "fake_traceback",
+    "suggest_typo",
     "internal",
     "INTERNAL_CODE",
 ]
 
 
 from bisect import bisect
+from difflib import get_close_matches
 from types import CodeType, TracebackType
-from typing import List, Set, TypeVar
+from typing import Iterable, List, Optional, Set, TypeVar
 
 from mecha.utils import string_to_number
 
@@ -69,3 +71,16 @@ def fake_traceback(exc: Exception, tb: TracebackType, lineno: int) -> TracebackT
         exec(code, {"_bolt_exc": exc})
     except Exception as exc:
         return exc.__traceback__.tb_next  # type: ignore
+
+
+def suggest_typo(wrong: str, possibilities: Iterable[str]) -> Optional[str]:
+    if matches := get_close_matches(wrong, possibilities):
+        matches = [f'"{m}"' for m in matches]
+
+        if len(matches) == 1:
+            return matches[0]
+        else:
+            *head, before_last, last = matches
+            return ", ".join(head + [f"{before_last} or {last}"])
+
+    return None

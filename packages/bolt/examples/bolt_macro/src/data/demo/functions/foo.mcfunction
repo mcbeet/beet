@@ -83,3 +83,10 @@ macro ! targets=minecraft:entity{"type": "entities", "amount": "multiple"} !:
     do_it()
 
 ! @e !
+
+macro abc num1=brigadier:integer:
+    macro def num2=brigadier:integer:
+        say num2
+    def num1
+
+abc 42

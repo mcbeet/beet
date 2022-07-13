@@ -7,9 +7,10 @@ __all__ = [
     "get_stream_deferred_locals",
     "get_stream_branch_scope",
     "get_stream_macro_scope",
-    "UndefinedIdentifier",
     "ToplevelHandler",
     "create_bolt_root_parser",
+    "UndefinedIdentifier",
+    "UndefinedIdentifierErrorHandler",
     "BranchScopeManager",
     "check_final_expression",
     "InterpolationParser",
@@ -44,14 +45,12 @@ __all__ = [
     "PrimaryParser",
     "parse_dict_item",
     "LiteralParser",
-    "UndefinedIdentifierErrorHandler",
 ]
 
 
 import re
 from dataclasses import dataclass, field, replace
-from difflib import get_close_matches
-from typing import Any, Dict, List, Optional, Set, Tuple, cast
+from typing import Any, Dict, Iterable, List, Optional, Set, Tuple, cast
 
 from beet.core.utils import JsonDict
 from mecha import (
@@ -94,10 +93,12 @@ from .ast import (
     AstExpressionBinary,
     AstExpressionUnary,
     AstFormatString,
+    AstFromImport,
     AstFunctionSignature,
     AstFunctionSignatureArgument,
     AstIdentifier,
     AstImportedItem,
+    AstImportedMacro,
     AstInterpolation,
     AstKeyword,
     AstList,
@@ -120,7 +121,7 @@ from .ast import (
     AstUnpack,
     AstValue,
 )
-from .module import Module, ModuleManager
+from .module import Module, ModuleManager, UnusableCompilationUnit
 from .pattern import (
     FALSE_PATTERN,
     IDENTIFIER_PATTERN,
@@ -131,6 +132,7 @@ from .pattern import (
     STRING_PATTERN,
     TRUE_PATTERN,
 )
+from .utils import suggest_typo
 
 IMPORT_REGEX = re.compile(rf"^{MODULE_PATTERN}$")
 
@@ -147,7 +149,8 @@ def get_bolt_parsers(
         "nested_root": create_bolt_root_parser(parsers["nested_root"]),
         "command": UndefinedIdentifierErrorHandler(
             ImportStatementHandler(
-                MacroHandler(GlobalNonlocalHandler(parsers["command"]))
+                parser=MacroHandler(GlobalNonlocalHandler(parsers["command"])),
+                modules=modules,
             )
         ),
         "command:argument:bolt:if_block": delegate("bolt:if_block"),
@@ -427,34 +430,6 @@ def get_stream_macro_scope(stream: TokenStream) -> Set[str]:
     return stream.data.setdefault("macro_scope", set())
 
 
-class UndefinedIdentifier(InvalidSyntax):
-    """Raised when an identifier is not defined."""
-
-    token: Token
-    identifiers: Set[str]
-
-    def __init__(self, token: Token, identifiers: Set[str]):
-        super().__init__(token, identifiers)
-        self.token = token
-        self.identifiers = identifiers
-
-    def __str__(self) -> str:
-        msg = f'Identifier "{self.token.value}" is not defined.'
-
-        if matches := get_close_matches(self.token.value, self.identifiers):
-            matches = [repr(m) for m in matches]
-
-            if len(matches) == 1:
-                suggestion = f"{matches[0]}"
-            else:
-                *head, before_last, last = matches
-                suggestion = ", ".join(head + [f"{before_last} or {last}"])
-
-            msg += f" Did you mean {suggestion}?"
-
-        return msg
-
-
 @dataclass
 class ToplevelHandler:
     """Handle toplevel root node."""
@@ -464,7 +439,7 @@ class ToplevelHandler:
     modules: ModuleManager
 
     def __call__(self, stream: TokenStream) -> Any:
-        with stream.provide(
+        with self.modules.parse_push(self.modules.database.current), stream.provide(
             identifiers=set(self.modules.globals)
             | self.modules.builtins
             | {"__name__"},
@@ -505,6 +480,43 @@ def create_bolt_root_parser(parser: Parser):
             )
         )
     )
+
+
+class UndefinedIdentifier(InvalidSyntax):
+    """Raised when an identifier is not defined."""
+
+    identifier: str
+    possible_identifiers: Iterable[str]
+
+    def __init__(self, identifier: str, identifiers: Iterable[str]):
+        super().__init__(identifier, identifiers)
+        self.identifier = identifier
+        self.identifiers = identifiers
+
+    def __str__(self) -> str:
+        msg = f'Identifier "{self.identifier}" is not defined.'
+        if suggestion := suggest_typo(self.identifier, self.identifiers):
+            msg += f" Did you mean {suggestion}?"
+        return msg
+
+
+@dataclass
+class UndefinedIdentifierErrorHandler:
+    """Parser that provides hints for errors involving undefined identifiers."""
+
+    parser: Parser
+
+    def __call__(self, stream: TokenStream) -> Any:
+        try:
+            return self.parser(stream)
+        except UndefinedIdentifier:
+            raise
+        except InvalidSyntax as exc:
+            for alt in exc.alternatives.get(UndefinedIdentifier, []):
+                if alt.end_location.pos + 1 >= exc.location.pos:  # kind of a cheat
+                    alt.notes.append(str(exc))
+                    raise alt from None
+            raise
 
 
 @dataclass
@@ -770,7 +782,7 @@ class AssignmentTargetParser:
                     if not with_storage:
                         pending_identifiers_storage[token.value] = "local"
                 elif not rebind:
-                    exc = UndefinedIdentifier(token, set(identifiers_storage))
+                    exc = UndefinedIdentifier(token.value, list(identifiers_storage))
                     if is_defined and not with_storage:
                         exc.notes.append(
                             f"Use 'global {token.value}' or 'nonlocal {token.value}' to mutate the variable defined in outer scope."
@@ -1104,9 +1116,10 @@ class MacroHandler:
                         child["properties"] = properties.evaluate()
                     tree["children"] = {node.match_identifier.value: child}
                 else:
-                    tree["executable"] = True
                     break
                 tree = child
+
+            tree["executable"] = True
 
             spec.tree.extend(CommandTree.parse_obj(tree_root))
             macro_scope.add(macro.identifier)
@@ -1143,7 +1156,7 @@ def parse_identifier(stream: TokenStream) -> AstIdentifier:
         token = stream.expect("identifier")
 
     if token.value not in identifiers:
-        exc = UndefinedIdentifier(token, set(identifiers))
+        exc = UndefinedIdentifier(token.value, list(identifiers))
         raise set_location(exc, token)
 
     return set_location(AstIdentifier(value=token.value), token)
@@ -1183,45 +1196,79 @@ class ImportStatementHandler:
     """Handle import statements."""
 
     parser: Parser
+    modules: ModuleManager
 
     def __call__(self, stream: TokenStream) -> Any:
+        if isinstance(node := self.parser(stream), AstCommand):
+            if node.identifier in ["import:module", "import:module:as:alias"]:
+                return self.handle_import(stream, node)
+            elif node.identifier == "from:module:import:subcommand":
+                return self.handle_from_import(stream, node)
+        return node
+
+    def handle_import(self, stream: TokenStream, node: AstCommand) -> AstCommand:
         identifiers = get_stream_identifiers(stream)
         identifiers_storage = get_stream_identifiers_storage(stream)
 
-        if isinstance(node := self.parser(stream), AstCommand):
-            if node.identifier == "import:module":
-                if isinstance(module := node.arguments[0], AstResourceLocation):
-                    if module.namespace:
-                        exc = InvalidSyntax(
-                            f'Can\'t import "{module.get_value()}" without alias.'
-                        )
-                        raise set_location(exc, module)
-                    else:
-                        identifiers.add(module.path.partition(".")[0])
+        if node.identifier == "import:module":
+            if isinstance(module := node.arguments[0], AstResourceLocation):
+                if module.namespace:
+                    message = f'Can\'t import "{module.get_value()}" without alias.'
+                    raise set_location(InvalidSyntax(message), module)
+                identifiers.add(module.path.partition(".")[0])
 
-            elif node.identifier == "import:module:as:alias":
-                if isinstance(alias := node.arguments[1], AstImportedItem):
-                    if not alias.identifier:
-                        exc = InvalidSyntax(f'Invalid identifier "{alias.name}".')
-                        raise set_location(exc, alias)
-                    identifiers.add(alias.name)
-                    identifiers_storage.setdefault(alias.name, "local")
-
-            elif node.identifier == "from:module:import:subcommand":
-                subcommand = cast(AstCommand, node.arguments[1])
-                while True:
-                    if isinstance(item := subcommand.arguments[0], AstImportedItem):
-                        if not item.identifier:
-                            exc = InvalidSyntax(f'Invalid identifier "{item.name}".')
-                            raise set_location(exc, item)
-                        identifiers.add(item.name)
-                        identifiers_storage.setdefault(item.name, "local")
-                    if subcommand.identifier == "from:module:import:name:subcommand":
-                        subcommand = cast(AstCommand, subcommand.arguments[1])
-                    else:
-                        break
+        elif node.identifier == "import:module:as:alias":
+            if isinstance(alias := node.arguments[1], AstImportedItem):
+                if not alias.identifier:
+                    exc = InvalidSyntax(f'Invalid identifier "{alias.name}".')
+                    raise set_location(exc, alias)
+                identifiers.add(alias.name)
+                identifiers_storage.setdefault(alias.name, "local")
 
         return node
+
+    def handle_from_import(self, stream: TokenStream, node: AstCommand) -> AstCommand:
+        identifiers = get_stream_identifiers(stream)
+        identifiers_storage = get_stream_identifiers_storage(stream)
+
+        module = cast(AstResourceLocation, node.arguments[0])
+
+        try:
+            compiled_module = (
+                isinstance(module := node.arguments[0], AstResourceLocation)
+                and bool(module.namespace)
+                and self.modules.get(module.get_value())
+            )
+        except UnusableCompilationUnit:
+            compiled_module = None
+
+        arguments: List[AstNode] = [module]
+        macros: List[AstMacro] = []
+
+        subcommand = cast(AstCommand, node.arguments[1])
+        while True:
+            if isinstance(item := subcommand.arguments[0], AstImportedItem):
+                if compiled_module and item.name in compiled_module.macros:
+                    for name, macro in compiled_module.macros[item.name]:
+                        imported_macro = AstImportedMacro(name=name, declaration=macro)
+                        arguments.append(set_location(imported_macro, item))
+                        macros.append(macro)
+                elif item.identifier:
+                    arguments.append(item)
+                    identifiers.add(item.name)
+                    identifiers_storage.setdefault(item.name, "local")
+                else:
+                    exc = InvalidSyntax(f'Invalid identifier "{item.name}".')
+                    raise set_location(exc, item)
+            if subcommand.identifier == "from:module:import:name:subcommand":
+                subcommand = cast(AstCommand, subcommand.arguments[1])
+            else:
+                break
+
+        if macros:
+            MacroHandler.inject_syntax(stream, *macros)
+
+        return set_location(AstFromImport(arguments=AstChildren(arguments)), node)
 
 
 def parse_python_import(stream: TokenStream) -> Any:
@@ -1233,7 +1280,7 @@ def parse_python_import(stream: TokenStream) -> Any:
 
 def parse_import_name(stream: TokenStream) -> AstImportedItem:
     """Parse import name."""
-    with stream.syntax(name=IDENTIFIER_PATTERN, literal=AstMacroLiteral.regex.pattern):
+    with stream.syntax(name=IDENTIFIER_PATTERN, literal=r"[^#:\s]+(?<!,)"):
         token = stream.get("name")
 
         if token:
@@ -1787,22 +1834,3 @@ class LiteralParser:
 
             node = AstValue(value=value)  # type: ignore
             return set_location(node, stream.current)
-
-
-@dataclass
-class UndefinedIdentifierErrorHandler:
-    """Parser that provides hints for errors involving undefined identifiers."""
-
-    parser: Parser
-
-    def __call__(self, stream: TokenStream) -> Any:
-        try:
-            return self.parser(stream)
-        except UndefinedIdentifier:
-            raise
-        except InvalidSyntax as exc:
-            for alt in exc.alternatives.get(UndefinedIdentifier, []):
-                if alt.end_location.pos + 1 >= exc.location.pos:  # kind of a cheat
-                    alt.notes.append(str(exc))
-                    raise alt from None
-            raise

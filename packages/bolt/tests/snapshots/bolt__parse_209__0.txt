@@ -4,10 +4,10 @@ from PIL.Image import Image
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=28, lineno=2, colno=1)
   commands:
-    <class 'mecha.ast.AstCommand'>
+    <class 'bolt.ast.AstFromImport'>
       location: SourceLocation(pos=0, lineno=1, colno=1)
       end_location: SourceLocation(pos=27, lineno=1, colno=28)
-      identifier: 'from:module:import:subcommand'
+      identifier: ''
       arguments:
         <class 'mecha.ast.AstResourceLocation'>
           location: SourceLocation(pos=5, lineno=1, colno=6)
@@ -15,13 +15,8 @@ from PIL.Image import Image
           is_tag: False
           namespace: None
           path: 'PIL.Image'
-        <class 'mecha.ast.AstCommand'>
+        <class 'bolt.ast.AstImportedItem'>
           location: SourceLocation(pos=22, lineno=1, colno=23)
           end_location: SourceLocation(pos=27, lineno=1, colno=28)
-          identifier: 'from:module:import:name'
-          arguments:
-            <class 'bolt.ast.AstImportedItem'>
-              location: SourceLocation(pos=22, lineno=1, colno=23)
-              end_location: SourceLocation(pos=27, lineno=1, colno=28)
-              name: 'Image'
-              identifier: True
+          name: 'Image'
+          identifier: True
