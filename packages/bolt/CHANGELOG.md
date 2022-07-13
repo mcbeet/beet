@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.12.0 (2022-07-13)
+### Feature
+* Add macro imports ([`e8ca750`](https://github.com/mcbeet/bolt/commit/e8ca750c6664ffa610b09c17d00cb7f9eed445c8))
+
 ## v0.11.0 (2022-07-10)
 ### Feature
 * Turn module manager into a mapping ([`3c486eb`](https://github.com/mcbeet/bolt/commit/3c486eb6d9ce6c9a47ec16c14342fa98db6fbfd7))
