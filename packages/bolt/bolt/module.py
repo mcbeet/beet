@@ -139,9 +139,7 @@ class ModuleManager(Mapping[TextFileBase[Any], CompiledModule]):
     @property
     def current_path(self) -> str:
         """Return the path corresponding to the currently executing module."""
-        if not self.stack:
-            raise ValueError("No module currently executing.")
-        if path := self.stack[-1].resource_location:
+        if path := self.current.resource_location:
             return path
         raise ValueError(
             "Currently executing module has no associated resource location."
@@ -177,7 +175,7 @@ class ModuleManager(Mapping[TextFileBase[Any], CompiledModule]):
                 or module.ast is compilation_unit.ast
             ):
                 return module
-            logger.debug('Code generation due to ast update for module "%s".', name)
+            logger.warning('Code generation due to ast update for module "%s".', name)
 
         elif not compilation_unit.ast:
             previous = self.database.current
@@ -188,8 +186,10 @@ class ModuleManager(Mapping[TextFileBase[Any], CompiledModule]):
                     filename=compilation_unit.filename,
                     resource_location=compilation_unit.resource_location,
                 )
-            except DiagnosticError:
-                raise UnusableCompilationUnit("Parsing failed.", compilation_unit)
+            except DiagnosticError as exc:
+                raise UnusableCompilationUnit(
+                    "Parsing failed.", compilation_unit
+                ) from exc
             finally:
                 self.database.current = previous
             return self[current]

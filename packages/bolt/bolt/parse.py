@@ -1065,7 +1065,7 @@ class MacroHandler:
         node = command
         while isinstance(subcommand := node.arguments[-1], AstCommand):
             if isinstance(literal := node.arguments[0], AstMacroLiteral):
-                if literal.value == "macro":
+                if literal.value in ["macro", "from"]:
                     exc = InvalidSyntax(f'Forbidden literal "{literal.value}".')
                     raise set_location(exc, literal)
                 identifier_parts.append(literal.value)
