@@ -1249,7 +1249,7 @@ yaml = ["PyYaml (>=5.2)"]
 
 [[package]]
 name = "python-semantic-release"
-version = "7.28.1"
+version = "7.29.5"
 description = "Automatic Semantic Versioning for Python projects"
 category = "dev"
 optional = false
@@ -1261,6 +1261,7 @@ click-log = ">=0.3,<1"
 dotty-dict = ">=1.3.0,<2"
 gitpython = ">=3.0.8,<4"
 invoke = ">=1.4.1,<2"
+packaging = "*"
 python-gitlab = ">=2,<4"
 requests = ">=2.25,<3"
 semver = ">=2.10,<3"
@@ -1269,7 +1270,7 @@ twine = ">=3,<4"
 
 [package.extras]
 dev = ["tox", "isort", "black"]
-docs = ["Sphinx (==1.3.6)"]
+docs = ["Sphinx (==1.3.6)", "Jinja2 (==3.0.3)"]
 mypy = ["mypy", "types-requests"]
 test = ["coverage (>=5,<6)", "pytest (>=5,<6)", "pytest-xdist (>=1,<2)", "pytest-mock (>=2,<3)", "responses (==0.13.3)", "mock (==1.3.0)"]
 
@@ -1839,7 +1840,7 @@ image = ["Pillow"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "e4f8de29164c1de9e0879c393d5038f3e4d762874778c503c658b7f5e1b2876d"
+content-hash = "208f77710d6fc53fb06a86f5a1fc18098218cf6512fe2b6e5dcd0e47f6682c05"
 
 [metadata.files]
 alabaster = [
@@ -2593,8 +2594,8 @@ python-gitlab = [
     {file = "python_gitlab-3.3.0-py3-none-any.whl", hash = "sha256:ab1fd4c98a206f22f01f832bc58f24a09952089b7bbf67cdaee6308e7797503f"},
 ]
 python-semantic-release = [
-    {file = "python-semantic-release-7.28.1.tar.gz", hash = "sha256:d7f82b3d4c06b304d07689b8a1c7d0d448ff07c2ab81cd810c4f2f900f24c599"},
-    {file = "python_semantic_release-7.28.1-py3-none-any.whl", hash = "sha256:319c3e811d6e10bc3f0e967419eae0e5e9ba1e6745aa2fd94dd24e3995541ca2"},
+    {file = "python-semantic-release-7.29.5.tar.gz", hash = "sha256:be24dec8649433f9c32f376ea9ffdc89c3f63a02fa1f08647449af36ca4d4dc5"},
+    {file = "python_semantic_release-7.29.5-py3-none-any.whl", hash = "sha256:f3beff452edffafbea5d9ea6b90ba47d82f2dae0901ecc042ab73f3d57c77abc"},
 ]
 pytz = [
     {file = "pytz-2022.1-py2.py3-none-any.whl", hash = "sha256:e68985985296d9a66a881eb3193b0906246245294a881e7c8afe623866ac6a5c"},
