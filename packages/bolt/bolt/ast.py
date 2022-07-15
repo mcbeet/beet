@@ -44,7 +44,7 @@ import re
 from dataclasses import dataclass
 from typing import Any, Optional, Union
 
-from beet.core.utils import required_field
+from beet.core.utils import JsonDict, required_field
 from mecha import (
     AstChildren,
     AstCommand,
@@ -267,6 +267,31 @@ class AstDeferredRoot(AstNode):
 @dataclass(frozen=True)
 class AstMacro(AstCommand):
     """Ast macro node."""
+
+    def get_command_tree(self) -> JsonDict:
+        tree_root: JsonDict = {"type": "root"}
+        tree: JsonDict = tree_root
+
+        for node in self.arguments:
+            if isinstance(node, AstMacroLiteral):
+                child = {"type": "literal"}
+                tree["children"] = {node.value: child}
+            elif isinstance(node, AstMacroMatchLiteral):
+                child = {"type": "literal"}
+                tree["children"] = {node.match.value: child}
+            elif isinstance(node, AstMacroMatchArgument):
+                child = {"type": "argument"}
+                child["parser"] = node.match_argument_parser.get_canonical_value()
+                if properties := node.match_argument_properties:
+                    child["properties"] = properties.evaluate()
+                tree["children"] = {node.match_identifier.value: child}
+            else:
+                break
+            tree = child
+
+        tree["executable"] = True
+
+        return tree_root
 
 
 @dataclass(frozen=True)

@@ -7,6 +7,7 @@ __all__ = [
     "get_stream_deferred_locals",
     "get_stream_branch_scope",
     "get_stream_macro_scope",
+    "get_stream_pending_macros",
     "ToplevelHandler",
     "create_bolt_root_parser",
     "UndefinedIdentifier",
@@ -50,9 +51,9 @@ __all__ = [
 
 import re
 from dataclasses import dataclass, field, replace
-from typing import Any, Dict, Iterable, List, Optional, Set, Tuple, cast
+from typing import Any, Dict, FrozenSet, Iterable, List, Optional, Set, Tuple, cast
 
-from beet.core.utils import JsonDict, log_time
+from beet.core.utils import extra_field
 from mecha import (
     AdjacentConstraint,
     AlternativeParser,
@@ -62,6 +63,7 @@ from mecha import (
     AstResourceLocation,
     AstRoot,
     BasicLiteralParser,
+    CommandSpec,
     CommandTree,
     CommentDisambiguation,
     CompilationDatabase,
@@ -141,17 +143,20 @@ def get_bolt_parsers(
     parsers: Dict[str, Parser], modules: ModuleManager
 ) -> Dict[str, Parser]:
     """Return the bolt parsers."""
+    macro_handler = MacroHandler(parsers["command"])
+
     return {
         ################################################################################
         # Command
         ################################################################################
-        "root": ToplevelHandler(create_bolt_root_parser(parsers["root"]), modules),
-        "nested_root": create_bolt_root_parser(parsers["nested_root"]),
+        "root": ToplevelHandler(
+            parser=create_bolt_root_parser(parsers["root"], macro_handler),
+            modules=modules,
+            macro_handler=macro_handler,
+        ),
+        "nested_root": create_bolt_root_parser(parsers["nested_root"], macro_handler),
         "command": UndefinedIdentifierErrorHandler(
-            ImportStatementHandler(
-                parser=MacroHandler(GlobalNonlocalHandler(parsers["command"])),
-                modules=modules,
-            )
+            ImportStatementHandler(GlobalNonlocalHandler(macro_handler), modules)
         ),
         "command:argument:bolt:if_block": delegate("bolt:if_block"),
         "command:argument:bolt:elif_condition": delegate("bolt:elif_condition"),
@@ -425,9 +430,9 @@ def get_stream_branch_scope(stream: TokenStream) -> Set[str]:
     return stream.data.setdefault("branch_scope", set())
 
 
-def get_stream_macro_scope(stream: TokenStream) -> Set[str]:
+def get_stream_macro_scope(stream: TokenStream) -> Dict[str, AstMacro]:
     """Return the macro identifiers currently available."""
-    return stream.data.setdefault("macro_scope", set())
+    return stream.data.setdefault("macro_scope", {})
 
 
 def get_stream_pending_macros(stream: TokenStream) -> List[AstMacro]:
@@ -442,6 +447,7 @@ class ToplevelHandler:
     parser: Parser
 
     modules: ModuleManager
+    macro_handler: "MacroHandler"
 
     def __call__(self, stream: TokenStream) -> Any:
         with self.modules.parse_push(self.modules.database.current), stream.provide(
@@ -451,6 +457,8 @@ class ToplevelHandler:
         ):
             node = self.parser(stream)
 
+        self.macro_handler.cache_local_spec(stream)
+
         if isinstance(node, AstRoot) and isinstance(
             self.modules.database.current, Module
         ):
@@ -459,11 +467,11 @@ class ToplevelHandler:
         return node
 
 
-def create_bolt_root_parser(parser: Parser):
+def create_bolt_root_parser(parser: Parser, macro_handler: "MacroHandler"):
     """Return parser for the root node for bolt."""
     return DecoratorResolver(
         DeferredRootBacktracker(
-            FlushPendingIdentifiersParser(
+            parser=FlushPendingIdentifiersParser(
                 FunctionConstraint(
                     BreakContinueConstraint(
                         parser=IfElseLoweringParser(parser),
@@ -482,7 +490,8 @@ def create_bolt_root_parser(parser: Parser):
                         "nonlocal:subcommand",
                     },
                 )
-            )
+            ),
+            macro_handler=macro_handler,
         )
     )
 
@@ -1046,23 +1055,21 @@ class MacroHandler:
     """Handle macros."""
 
     parser: Parser
+    spec_cache: Dict[FrozenSet[AstMacro], CommandSpec] = extra_field(
+        default_factory=dict
+    )
 
     def __call__(self, stream: TokenStream) -> Any:
-        scope = get_stream_scope(stream)
-        pending_macros = get_stream_pending_macros(stream)
-
         should_flush = not (
             scope[0] in ["macro", "from"]
-            if scope
+            if (scope := get_stream_scope(stream))
             else (
                 (token := stream.peek())
                 and token.match(("literal", "macro"), ("literal", "from"))
             )
         )
-
-        if should_flush and pending_macros:
-            self.inject_syntax(stream, *pending_macros)
-            pending_macros.clear()
+        if should_flush:
+            self.flush_pending_macros(stream)
 
         node = self.parser(stream)
 
@@ -1071,7 +1078,7 @@ class MacroHandler:
 
         if node.identifier == "macro:name:subcommand":
             node = self.create_macro(node)
-            pending_macros.append(
+            get_stream_pending_macros(stream).append(
                 replace(node, arguments=AstChildren(node.arguments[:-1]))
             )
         elif node.identifier in get_stream_macro_scope(stream):
@@ -1080,8 +1087,7 @@ class MacroHandler:
 
         return node
 
-    @classmethod
-    def create_macro(cls, command: AstCommand) -> AstMacro:
+    def create_macro(self, command: AstCommand) -> AstMacro:
         identifier_parts: List[str] = []
         arguments: List[AstNode] = []
 
@@ -1108,12 +1114,31 @@ class MacroHandler:
 
         return set_location(macro, command)
 
-    @classmethod
-    def inject_syntax(cls, stream: TokenStream, *macros: AstMacro):
-        spec = get_stream_spec(stream)
+    def flush_pending_macros(self, stream: TokenStream):
+        if pending_macros := get_stream_pending_macros(stream):
+            self.inject_syntax(stream, *pending_macros)
+            pending_macros.clear()
+
+    def cache_local_spec(self, stream: TokenStream):
+        if stream.data.get("local_spec"):
+            scope_key = frozenset(get_stream_macro_scope(stream).values())
+            self.spec_cache[scope_key] = get_stream_spec(stream)
+            stream.data["local_spec"] = False
+
+    def inject_syntax(self, stream: TokenStream, *macros: AstMacro):
         macro_scope = get_stream_macro_scope(stream)
 
-        # TODO: Find a way to memoize resulting command spec
+        scope_key = frozenset(macros) | frozenset(macro_scope.values())
+        if spec := self.spec_cache.get(scope_key):
+            stream.data["local_spec"] = False
+            stream.data["spec"] = spec
+            stream.data["macro_scope"] = {
+                macro.identifier: macro for macro in scope_key
+            }
+            return
+
+        spec = get_stream_spec(stream)
+
         if not stream.data.get("local_spec"):
             stream.data["local_spec"] = True
             spec = replace(spec, tree=spec.tree.copy(deep=True), prototypes={})
@@ -1122,30 +1147,8 @@ class MacroHandler:
             stream.data["macro_scope"] = macro_scope
 
         for macro in macros:
-            tree_root: JsonDict = {"type": "root"}
-            tree: JsonDict = tree_root
-
-            for node in macro.arguments:
-                if isinstance(node, AstMacroLiteral):
-                    child = {"type": "literal"}
-                    tree["children"] = {node.value: child}
-                elif isinstance(node, AstMacroMatchLiteral):
-                    child = {"type": "literal"}
-                    tree["children"] = {node.match.value: child}
-                elif isinstance(node, AstMacroMatchArgument):
-                    child = {"type": "argument"}
-                    child["parser"] = node.match_argument_parser.get_canonical_value()
-                    if properties := node.match_argument_properties:
-                        child["properties"] = properties.evaluate()
-                    tree["children"] = {node.match_identifier.value: child}
-                else:
-                    break
-                tree = child
-
-            tree["executable"] = True
-
-            spec.tree.extend(CommandTree.parse_obj(tree_root))
-            macro_scope.add(macro.identifier)
+            spec.tree.extend(CommandTree.parse_obj(macro.get_command_tree()))
+            macro_scope[macro.identifier] = macro
 
         spec.update()
 
@@ -1352,6 +1355,7 @@ class DeferredRootBacktracker:
     """Parser for backtracking over deferred root nodes."""
 
     parser: Parser
+    macro_handler: MacroHandler
 
     def __call__(self, stream: TokenStream) -> AstRoot:
         should_replace = False
@@ -1374,9 +1378,7 @@ class DeferredRootBacktracker:
             ):
                 should_replace = True
 
-                if pending_macros := get_stream_pending_macros(stream):
-                    MacroHandler.inject_syntax(stream, *pending_macros)
-                    pending_macros.clear()
+                self.macro_handler.flush_pending_macros(stream)
 
                 deferred_stream = deferred_root.stream
                 deferred_stream.data["local_spec"] = False
@@ -1386,6 +1388,8 @@ class DeferredRootBacktracker:
                 deferred_stream.data["macro_scope"] = get_stream_macro_scope(stream)
                 deferred_stream.data["pending_macros"] = []
                 nested_root = delegate("nested_root", deferred_stream)
+
+                self.macro_handler.cache_local_spec(deferred_stream)
 
                 command = replace(
                     command,
