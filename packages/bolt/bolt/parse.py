@@ -52,7 +52,7 @@ import re
 from dataclasses import dataclass, field, replace
 from typing import Any, Dict, Iterable, List, Optional, Set, Tuple, cast
 
-from beet.core.utils import JsonDict
+from beet.core.utils import JsonDict, log_time
 from mecha import (
     AdjacentConstraint,
     AlternativeParser,
@@ -428,6 +428,11 @@ def get_stream_branch_scope(stream: TokenStream) -> Set[str]:
 def get_stream_macro_scope(stream: TokenStream) -> Set[str]:
     """Return the macro identifiers currently available."""
     return stream.data.setdefault("macro_scope", set())
+
+
+def get_stream_pending_macros(stream: TokenStream) -> List[AstMacro]:
+    """Return pending macro declarations."""
+    return stream.data.setdefault("pending_macros", [])
 
 
 @dataclass
@@ -1043,6 +1048,22 @@ class MacroHandler:
     parser: Parser
 
     def __call__(self, stream: TokenStream) -> Any:
+        scope = get_stream_scope(stream)
+        pending_macros = get_stream_pending_macros(stream)
+
+        should_flush = not (
+            scope[0] in ["macro", "from"]
+            if scope
+            else (
+                (token := stream.peek())
+                and token.match(("literal", "macro"), ("literal", "from"))
+            )
+        )
+
+        if should_flush and pending_macros:
+            self.inject_syntax(stream, *pending_macros)
+            pending_macros.clear()
+
         node = self.parser(stream)
 
         if not isinstance(node, AstCommand):
@@ -1050,7 +1071,9 @@ class MacroHandler:
 
         if node.identifier == "macro:name:subcommand":
             node = self.create_macro(node)
-            self.inject_syntax(stream, node)
+            pending_macros.append(
+                replace(node, arguments=AstChildren(node.arguments[:-1]))
+            )
         elif node.identifier in get_stream_macro_scope(stream):
             call = AstMacroCall(identifier=node.identifier, arguments=node.arguments)
             node = set_location(call, node)
@@ -1230,6 +1253,7 @@ class ImportStatementHandler:
     def handle_from_import(self, stream: TokenStream, node: AstCommand) -> AstCommand:
         identifiers = get_stream_identifiers(stream)
         identifiers_storage = get_stream_identifiers_storage(stream)
+        pending_macros = get_stream_pending_macros(stream)
 
         module = cast(AstResourceLocation, node.arguments[0])
 
@@ -1243,7 +1267,6 @@ class ImportStatementHandler:
             compiled_module = None
 
         arguments: List[AstNode] = [module]
-        macros: List[AstMacro] = []
 
         subcommand = cast(AstCommand, node.arguments[1])
         while True:
@@ -1252,7 +1275,7 @@ class ImportStatementHandler:
                     for name, macro in compiled_module.macros[item.name]:
                         imported_macro = AstImportedMacro(name=name, declaration=macro)
                         arguments.append(set_location(imported_macro, item))
-                        macros.append(macro)
+                        pending_macros.append(macro)
                 elif item.identifier:
                     arguments.append(item)
                     identifiers.add(item.name)
@@ -1264,9 +1287,6 @@ class ImportStatementHandler:
                 subcommand = cast(AstCommand, subcommand.arguments[1])
             else:
                 break
-
-        if macros:
-            MacroHandler.inject_syntax(stream, *macros)
 
         return set_location(AstFromImport(arguments=AstChildren(arguments)), node)
 
@@ -1339,10 +1359,6 @@ class DeferredRootBacktracker:
 
         node: AstRoot = self.parser(stream)
 
-        spec = get_stream_spec(stream)
-        identifiers = get_stream_identifiers(stream)
-        macro_scope = get_stream_macro_scope(stream)
-
         for command in node.commands:
             stack: List[AstCommand] = [command]
 
@@ -1358,12 +1374,17 @@ class DeferredRootBacktracker:
             ):
                 should_replace = True
 
+                if pending_macros := get_stream_pending_macros(stream):
+                    MacroHandler.inject_syntax(stream, *pending_macros)
+                    pending_macros.clear()
+
                 deferred_stream = deferred_root.stream
                 deferred_stream.data["local_spec"] = False
-                deferred_stream.data["spec"] = spec
-                deferred_stream.data["identifiers"] |= identifiers
+                deferred_stream.data["spec"] = get_stream_spec(stream)
+                deferred_stream.data["identifiers"] |= get_stream_identifiers(stream)
                 deferred_stream.data["function"] = True
-                deferred_stream.data["macro_scope"] = macro_scope
+                deferred_stream.data["macro_scope"] = get_stream_macro_scope(stream)
+                deferred_stream.data["pending_macros"] = []
                 nested_root = delegate("nested_root", deferred_stream)
 
                 command = replace(
