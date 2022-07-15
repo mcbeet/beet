@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.12.1 (2022-07-15)
+### Fix
+* Memoize command trees ([`8c8911a`](https://github.com/mcbeet/bolt/commit/8c8911ae16e3c2829c0e33dbc3a2fab248505b81))
+* Make command tree updates lazy ([`ec17f74`](https://github.com/mcbeet/bolt/commit/ec17f7479072a63e8e81a8c17163d69c680a9b5e))
+* Minor tweaks ([`35a537e`](https://github.com/mcbeet/bolt/commit/35a537e9a4a6e471a17cfc99b8776bdc3135fd88))
+
 ## v0.12.0 (2022-07-13)
 ### Feature
 * Add macro imports ([`e8ca750`](https://github.com/mcbeet/bolt/commit/e8ca750c6664ffa610b09c17d00cb7f9eed445c8))
