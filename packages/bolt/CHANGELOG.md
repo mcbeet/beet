@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.12.2 (2022-07-15)
+### Fix
+* Update beet ([`a4f2f97`](https://github.com/mcbeet/bolt/commit/a4f2f97feef98d9c9f624ffc82a3d8e5ff282337))
+
 ## v0.12.1 (2022-07-15)
 ### Fix
 * Memoize command trees ([`8c8911a`](https://github.com/mcbeet/bolt/commit/8c8911ae16e3c2829c0e33dbc3a2fab248505b81))

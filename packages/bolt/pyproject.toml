@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "bolt"
-version = "0.12.1"
+version = "0.12.2"
 description = "Supercharge Minecraft commands with Python"
 authors = ["Valentin Berlier <berlier.v@gmail.com>"]
 license = "MIT"
