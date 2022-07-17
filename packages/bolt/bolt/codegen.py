@@ -1138,3 +1138,33 @@ class Codegen(Visitor):
     ) -> Optional[List[str]]:
         acc.statement("pass")
         return []
+
+    @rule(AstCommand, identifier="raise")
+    def raise_statement(
+        self,
+        node: AstCommand,
+        acc: Accumulator,
+    ) -> Optional[List[str]]:
+        acc.statement("raise")
+        return []
+
+    @rule(AstCommand, identifier="raise:exception")
+    def raise_exc_statement(
+        self,
+        node: AstCommand,
+        acc: Accumulator,
+    ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
+        result = yield from visit_single(node.arguments[0], required=True)
+        acc.statement(f"raise {result}")
+        return []
+
+    @rule(AstCommand, identifier="raise:exception:from:cause")
+    def raise_exc_from_statement(
+        self,
+        node: AstCommand,
+        acc: Accumulator,
+    ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
+        result = yield from visit_single(node.arguments[0], required=True)
+        cause = yield from visit_single(node.arguments[1], required=True)
+        acc.statement(f"raise {result} from {cause}")
+        return []

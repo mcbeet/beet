@@ -884,3 +884,9 @@ macro foo(stream):
 ###
 macro foo message=minecraft:message(stream):
     pass
+###
+raise
+###
+raise ValueError()
+###
+raise ValueError() from None

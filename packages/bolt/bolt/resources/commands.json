@@ -293,6 +293,29 @@
     "pass": {
       "type": "literal",
       "executable": true
+    },
+    "raise": {
+      "type": "literal",
+      "executable": true,
+      "children": {
+        "exception": {
+          "type": "argument",
+          "parser": "bolt:expression",
+          "executable": true,
+          "children": {
+            "from": {
+              "type": "literal",
+              "children": {
+                "cause": {
+                  "type": "argument",
+                  "parser": "bolt:expression",
+                  "executable": true
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
 }
