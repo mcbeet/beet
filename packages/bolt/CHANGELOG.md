@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.15.0 (2022-07-17)
+### Feature
+* Add raw strings ([`e24d772`](https://github.com/mcbeet/bolt/commit/e24d7721ddd8e708735f7e3b16c50b81cbfb4a89))
+
 ## v0.14.0 (2022-07-17)
 ### Feature
 * Ergonomic improvements for dicts without quotes ([`18c747e`](https://github.com/mcbeet/bolt/commit/18c747e74aa2500fbb47414d0bc4ea24a3af04a1))
