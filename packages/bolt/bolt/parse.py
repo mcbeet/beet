@@ -96,6 +96,7 @@ from .ast import (
     AstDeferredRoot,
     AstDict,
     AstDictItem,
+    AstDictUnquotedKey,
     AstExpression,
     AstExpressionBinary,
     AstExpressionUnary,
@@ -1931,7 +1932,7 @@ def parse_dict_item(stream: TokenStream) -> Any:
             if identifier.value in identifiers:
                 key = AstIdentifier(value=identifier.value)
             else:
-                key = AstValue(value=identifier.value)
+                key = AstDictUnquotedKey(value=identifier.value)
 
             key = set_location(key, identifier)
 
@@ -1982,14 +1983,32 @@ class LiteralParser:
 
             if curly:
                 items: List[Any] = []
+                unquoted = False
 
                 with stream.ignore("newline"):
                     for _ in stream.peek_until(("curly", "}")):
-                        items.append(delegate("bolt:dict_item", stream))
+                        items.append(item := delegate("bolt:dict_item", stream))
+                        unquoted = unquoted or (
+                            isinstance(item, AstDictItem)
+                            and isinstance(item.key, AstDictUnquotedKey)
+                        )
 
                         if not stream.get("comma"):
                             stream.expect(("curly", "}"))
                             break
+
+                if unquoted:
+                    for i, item in enumerate(items):
+                        if isinstance(item, AstDictItem):
+                            if isinstance(item.key, AstIdentifier):
+                                key = AstDictUnquotedKey(value=item.key.value)
+                                key = set_location(key, item.key)
+                                items[i] = replace(item, key=key)
+                            elif not isinstance(item.key, AstDictUnquotedKey):
+                                exc = InvalidSyntax(
+                                    "Forbidden dynamic key in dict without quotes."
+                                )
+                                raise set_location(exc, item.key)
 
                 node = AstDict(items=AstChildren(items))
                 return set_location(node, curly, stream.current)

@@ -30,7 +30,7 @@ give @s stone{CanPlaceOn: [*stone_can_place_on], **custom_model_data}
                   location: SourceLocation(pos=21, lineno=1, colno=22)
                   end_location: SourceLocation(pos=39, lineno=1, colno=40)
                   key:
-                    <class 'bolt.ast.AstValue'>
+                    <class 'bolt.ast.AstDictUnquotedKey'>
                       location: SourceLocation(pos=21, lineno=1, colno=22)
                       end_location: SourceLocation(pos=36, lineno=1, colno=37)
                       value: 'CustomModelData'

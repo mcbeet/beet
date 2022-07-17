@@ -29,7 +29,7 @@ item replace entity @s my_weapon.offhand from entity @s my_weapon.mainhand
                   location: SourceLocation(pos=13, lineno=1, colno=14)
                   end_location: SourceLocation(pos=38, lineno=1, colno=39)
                   key:
-                    <class 'bolt.ast.AstValue'>
+                    <class 'bolt.ast.AstDictUnquotedKey'>
                       location: SourceLocation(pos=13, lineno=1, colno=14)
                       end_location: SourceLocation(pos=20, lineno=1, colno=21)
                       value: 'offhand'
@@ -42,7 +42,7 @@ item replace entity @s my_weapon.offhand from entity @s my_weapon.mainhand
                   location: SourceLocation(pos=40, lineno=1, colno=41)
                   end_location: SourceLocation(pos=67, lineno=1, colno=68)
                   key:
-                    <class 'bolt.ast.AstValue'>
+                    <class 'bolt.ast.AstDictUnquotedKey'>
                       location: SourceLocation(pos=40, lineno=1, colno=41)
                       end_location: SourceLocation(pos=48, lineno=1, colno=49)
                       value: 'mainhand'

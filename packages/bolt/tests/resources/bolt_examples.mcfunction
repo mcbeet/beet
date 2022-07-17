@@ -344,7 +344,7 @@ my_predicate = {
   scores: {
     score1: {
       "min": {
-        "type": "minecraft:score",
+        type: "minecraft:score",
         target: "this",
         score: "score2",
         scale: 1
@@ -354,7 +354,7 @@ my_predicate = {
 }
 ###
 def f():
-    return {f(): f(), other: [{}, {}, "wat"]}
+    return {f(): f(), "other": [{}, {}, "wat"]}
 ###
 at @s if "foo" == "bar":
     say yolo
@@ -890,3 +890,8 @@ raise
 raise ValueError()
 ###
 raise ValueError() from None
+###
+foo = {
+    a: 1,
+    "b" + "c": 2
+}

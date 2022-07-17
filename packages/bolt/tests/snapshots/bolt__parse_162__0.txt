@@ -29,7 +29,7 @@ d.foo += 1
                   location: SourceLocation(pos=5, lineno=1, colno=6)
                   end_location: SourceLocation(pos=11, lineno=1, colno=12)
                   key:
-                    <class 'bolt.ast.AstValue'>
+                    <class 'bolt.ast.AstDictUnquotedKey'>
                       location: SourceLocation(pos=5, lineno=1, colno=6)
                       end_location: SourceLocation(pos=8, lineno=1, colno=9)
                       value: 'foo'

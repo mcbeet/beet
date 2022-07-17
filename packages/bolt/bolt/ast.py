@@ -8,8 +8,9 @@ __all__ = [
     "AstFormatString",
     "AstTuple",
     "AstList",
-    "AstDictItem",
     "AstDict",
+    "AstDictItem",
+    "AstDictUnquotedKey",
     "AstSlice",
     "AstUnpack",
     "AstKeyword",
@@ -123,6 +124,11 @@ class AstList(AstExpression):
     """Ast list node."""
 
     items: AstChildren[AstExpression] = required_field()
+
+
+@dataclass(frozen=True)
+class AstDictUnquotedKey(AstValue):
+    """Ast dict unquoted key node."""
 
 
 @dataclass(frozen=True)
