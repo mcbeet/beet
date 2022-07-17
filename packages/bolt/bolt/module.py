@@ -291,7 +291,6 @@ class ModuleManager(Mapping[TextFileBase[Any], CompiledModule]):
         except (BubbleException, InvalidSyntax):
             raise
         except UnusableCompilationUnit as exc:
-            print(exc)
             if not exc.compilation_unit.diagnostics.error:
                 message = "Failed to instantiate module."
                 if resource_location:

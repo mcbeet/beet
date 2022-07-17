@@ -5,3 +5,6 @@ data_pack:
     data/demo/modules: src
 pipeline:
   - mecha
+meta:
+  bolt:
+    entrypoint: "demo:main"

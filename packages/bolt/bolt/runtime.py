@@ -7,22 +7,15 @@ __all__ = [
 
 import builtins
 from contextlib import contextmanager
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from functools import partial
 from importlib.resources import read_text
-from typing import Any, Callable, Dict, Iterator, List, Optional, Set, Union
+from typing import Any, Callable, Dict, Iterable, Iterator, List, Optional, Set, Union
 
-from beet import Context, generate_tree
-from beet.core.utils import JsonDict, required_field
-from mecha import (
-    AstCommand,
-    AstRoot,
-    CommandTree,
-    Diagnostic,
-    Dispatcher,
-    Mecha,
-    Visitor,
-    rule,
-)
+from beet import Context, TextFileBase, generate_tree
+from beet.core.utils import JsonDict, extra_field, required_field
+from mecha import AstCommand, AstRoot, CommandTree, Diagnostic, Mecha, Visitor, rule
+from pathspec import PathSpec
 from tokenstream import set_location
 
 from .ast import AstModuleRoot
@@ -43,7 +36,7 @@ class Runtime:
     builtins: Set[str]
 
     modules: ModuleManager
-    evaluate: Dispatcher[AstRoot]
+    evaluate: "Evaluator"
 
     def __init__(self, ctx: Union[Context, Mecha]):
         self.commands = []
@@ -144,7 +137,10 @@ class Runtime:
         if not module:
             raise ImportError(f'Couldn\'t import "{resource_location}".')
         if not module.executing:
-            self.modules.eval(module)
+            with self.modules.error_handler(
+                "Top-level statement raised an exception.", module.resource_location
+            ):
+                self.modules.eval(module)
         return module
 
     @internal
@@ -170,14 +166,51 @@ class Evaluator(Visitor):
 
     modules: ModuleManager = required_field()
 
+    entrypoint: List[str] = field(default_factory=list)
+    entrypoint_spec: PathSpec = extra_field(init=False)
+
+    def __post_init__(self):
+        super().__post_init__()
+        self.add_entrypoint()
+
+    def add_entrypoint(self, *args: Union[str, Iterable[str]]):
+        self.entrypoint.extend(
+            entry
+            for patterns in args
+            for entry in ([patterns] if isinstance(patterns, str) else patterns)
+        )
+        self.entrypoint_spec = PathSpec.from_lines("gitwildmatch", self.entrypoint)
+
     @rule(AstRoot)
     @internal
-    def root(self, node: AstRoot) -> AstRoot:
+    def root(self, node: AstRoot) -> Optional[AstRoot]:
         module = self.modules.match_ast(node)
+
+        if (
+            isinstance(node, AstModuleRoot)
+            and not module.executed
+            and module.resource_location
+            and not self.entrypoint_spec.match_file(module.resource_location)
+        ):
+            module.execution_hooks.append(
+                partial(
+                    self.restore_module,
+                    self.modules.database.current,
+                    node,
+                    self.modules.database.step,
+                )
+            )
+            return None
+
         with self.modules.error_handler(
             "Top-level statement raised an exception.", module.resource_location
         ):
             return self.modules.eval(module)
+
+    def restore_module(self, key: TextFileBase[Any], node: AstModuleRoot, step: int):
+        compilation_unit = self.modules.database[key]
+        compilation_unit.ast = node
+        self.modules.database.enqueue(key, step)
 
 
 @rule(AstModuleRoot)
