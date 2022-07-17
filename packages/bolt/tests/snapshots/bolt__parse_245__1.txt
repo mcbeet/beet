@@ -1,0 +1,32 @@
+_bolt_lineno = [1, 8, 14, 18], [1, 2, 3, 4]
+_bolt_helper_get_attribute = _bolt_runtime.helpers['get_attribute']
+_bolt_helper_children = _bolt_runtime.helpers['children']
+_bolt_proc_macros = {}
+_bolt_helper_replace = _bolt_runtime.helpers['replace']
+with _bolt_runtime.scope() as _bolt_var7:
+    def _bolt_macro0(stream):
+        _bolt_var0 = stream
+        _bolt_var0 = _bolt_helper_get_attribute(_bolt_var0, 'syntax')
+        _bolt_var1 = '\\d+'
+        _bolt_var2 = '\\w+'
+        _bolt_var0 = _bolt_var0(number=_bolt_var1, name=_bolt_var2)
+        with _bolt_var0:
+            _bolt_var3 = stream
+            _bolt_var3 = _bolt_helper_get_attribute(_bolt_var3, 'expect')
+            _bolt_var4 = 'number'
+            _bolt_var3 = _bolt_var3(_bolt_var4)
+            _bolt_var5 = stream
+            _bolt_var5 = _bolt_helper_get_attribute(_bolt_var5, 'expect')
+            _bolt_var6 = 'name'
+            _bolt_var5 = _bolt_var5(_bolt_var6)
+    _bolt_proc_macros['foo:proc_macro_overload3'] = _bolt_macro0
+_bolt_var8 = _bolt_helper_replace(_bolt_refs[0], commands=_bolt_helper_children(_bolt_var7))
+---
+output = _bolt_var8
+---
+_bolt_refs[0]
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=132, lineno=4, colno=30)
+  commands:
+    <class 'bolt.ast.AstProcMacro'>

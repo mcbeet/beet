@@ -1,0 +1,5 @@
+#>ERROR  Identifier "r" is not defined.
+# line 1, column 7
+#      1 |  foo = r"\"
+#        :        ^
+foo = r"\"

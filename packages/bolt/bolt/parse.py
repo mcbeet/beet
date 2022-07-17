@@ -1863,7 +1863,11 @@ class PrimaryParser:
                         continue
 
                     if string:
-                        value = self.quote_helper.unquote_string(string)
+                        value = (
+                            string.value[2:-1]
+                            if string.value.startswith("r")
+                            else self.quote_helper.unquote_string(string)
+                        )
                     elif number:
                         value = int(number.value)
 
@@ -2034,7 +2038,11 @@ class LiteralParser:
             elif null:
                 value = None
             elif string:
-                value = self.quote_helper.unquote_string(string)
+                value = (
+                    string.value[2:-1]
+                    if string.value.startswith("r")
+                    else self.quote_helper.unquote_string(string)
+                )
             elif resource:
                 if resource.value.startswith(("./", "../")):
                     value = ":".join(

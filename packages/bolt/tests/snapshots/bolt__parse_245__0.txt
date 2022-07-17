@@ -1,0 +1,160 @@
+macro foo(stream):
+    with stream.syntax(number=r"\d+", name=r"\w+"):
+        stream.expect("number")
+        stream.expect("name")
+---
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=132, lineno=4, colno=30)
+  commands:
+    <class 'bolt.ast.AstProcMacro'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=132, lineno=4, colno=30)
+      identifier: 'foo:proc_macro_overload3'
+      arguments:
+        <class 'bolt.ast.AstMacroLiteral'>
+          location: SourceLocation(pos=6, lineno=1, colno=7)
+          end_location: SourceLocation(pos=9, lineno=1, colno=10)
+          value: 'foo'
+        <class 'bolt.ast.AstMacroMatchArgument'>
+          location: SourceLocation(pos=-1, lineno=0, colno=0)
+          end_location: SourceLocation(pos=-1, lineno=0, colno=0)
+          match_identifier:
+            <class 'bolt.ast.AstMacroArgument'>
+              location: SourceLocation(pos=-1, lineno=0, colno=0)
+              end_location: SourceLocation(pos=-1, lineno=0, colno=0)
+              value: 'proc_macro_overload3'
+          match_argument_parser:
+            <class 'mecha.ast.AstResourceLocation'>
+              location: SourceLocation(pos=-1, lineno=0, colno=0)
+              end_location: SourceLocation(pos=-1, lineno=0, colno=0)
+              is_tag: False
+              namespace: 'bolt'
+              path: 'proc_macro'
+          match_argument_properties:
+            <class 'mecha.ast.AstJsonObject'>
+              location: SourceLocation(pos=-1, lineno=0, colno=0)
+              end_location: SourceLocation(pos=-1, lineno=0, colno=0)
+              entries:
+                <class 'mecha.ast.AstJsonObjectEntry'>
+                  location: SourceLocation(pos=-1, lineno=0, colno=0)
+                  end_location: SourceLocation(pos=-1, lineno=0, colno=0)
+                  key:
+                    <class 'mecha.ast.AstJsonObjectKey'>
+                      location: SourceLocation(pos=-1, lineno=0, colno=0)
+                      end_location: SourceLocation(pos=-1, lineno=0, colno=0)
+                      value: 'resource_location'
+                  value:
+                    <class 'mecha.ast.AstJsonValue'>
+                      location: SourceLocation(pos=-1, lineno=0, colno=0)
+                      end_location: SourceLocation(pos=-1, lineno=0, colno=0)
+                      value: 'demo:test'
+                <class 'mecha.ast.AstJsonObjectEntry'>
+                  location: SourceLocation(pos=-1, lineno=0, colno=0)
+                  end_location: SourceLocation(pos=-1, lineno=0, colno=0)
+                  key:
+                    <class 'mecha.ast.AstJsonObjectKey'>
+                      location: SourceLocation(pos=-1, lineno=0, colno=0)
+                      end_location: SourceLocation(pos=-1, lineno=0, colno=0)
+                      value: 'identifier'
+                  value:
+                    <class 'mecha.ast.AstJsonValue'>
+                      location: SourceLocation(pos=-1, lineno=0, colno=0)
+                      end_location: SourceLocation(pos=-1, lineno=0, colno=0)
+                      value: 'foo:proc_macro_overload3'
+        <class 'mecha.ast.AstRoot'>
+          location: SourceLocation(pos=23, lineno=2, colno=5)
+          end_location: SourceLocation(pos=132, lineno=4, colno=30)
+          commands:
+            <class 'mecha.ast.AstCommand'>
+              location: SourceLocation(pos=23, lineno=2, colno=5)
+              end_location: SourceLocation(pos=132, lineno=4, colno=30)
+              identifier: 'with:subcommand'
+              arguments:
+                <class 'mecha.ast.AstCommand'>
+                  location: SourceLocation(pos=28, lineno=2, colno=10)
+                  end_location: SourceLocation(pos=132, lineno=4, colno=30)
+                  identifier: 'with:expression:body'
+                  arguments:
+                    <class 'bolt.ast.AstCall'>
+                      location: SourceLocation(pos=28, lineno=2, colno=10)
+                      end_location: SourceLocation(pos=69, lineno=2, colno=51)
+                      value:
+                        <class 'bolt.ast.AstAttribute'>
+                          location: SourceLocation(pos=28, lineno=2, colno=10)
+                          end_location: SourceLocation(pos=41, lineno=2, colno=23)
+                          name: 'syntax'
+                          value:
+                            <class 'bolt.ast.AstIdentifier'>
+                              location: SourceLocation(pos=28, lineno=2, colno=10)
+                              end_location: SourceLocation(pos=34, lineno=2, colno=16)
+                              value: 'stream'
+                      arguments:
+                        <class 'bolt.ast.AstKeyword'>
+                          location: SourceLocation(pos=42, lineno=2, colno=24)
+                          end_location: SourceLocation(pos=55, lineno=2, colno=37)
+                          name: 'number'
+                          value:
+                            <class 'bolt.ast.AstValue'>
+                              location: SourceLocation(pos=49, lineno=2, colno=31)
+                              end_location: SourceLocation(pos=55, lineno=2, colno=37)
+                              value: '\\d+'
+                        <class 'bolt.ast.AstKeyword'>
+                          location: SourceLocation(pos=57, lineno=2, colno=39)
+                          end_location: SourceLocation(pos=68, lineno=2, colno=50)
+                          name: 'name'
+                          value:
+                            <class 'bolt.ast.AstValue'>
+                              location: SourceLocation(pos=62, lineno=2, colno=44)
+                              end_location: SourceLocation(pos=68, lineno=2, colno=50)
+                              value: '\\w+'
+                    <class 'mecha.ast.AstRoot'>
+                      location: SourceLocation(pos=79, lineno=3, colno=9)
+                      end_location: SourceLocation(pos=132, lineno=4, colno=30)
+                      commands:
+                        <class 'mecha.ast.AstCommand'>
+                          location: SourceLocation(pos=79, lineno=3, colno=9)
+                          end_location: SourceLocation(pos=102, lineno=3, colno=32)
+                          identifier: 'statement'
+                          arguments:
+                            <class 'bolt.ast.AstCall'>
+                              location: SourceLocation(pos=79, lineno=3, colno=9)
+                              end_location: SourceLocation(pos=102, lineno=3, colno=32)
+                              value:
+                                <class 'bolt.ast.AstAttribute'>
+                                  location: SourceLocation(pos=79, lineno=3, colno=9)
+                                  end_location: SourceLocation(pos=92, lineno=3, colno=22)
+                                  name: 'expect'
+                                  value:
+                                    <class 'bolt.ast.AstIdentifier'>
+                                      location: SourceLocation(pos=79, lineno=3, colno=9)
+                                      end_location: SourceLocation(pos=85, lineno=3, colno=15)
+                                      value: 'stream'
+                              arguments:
+                                <class 'bolt.ast.AstValue'>
+                                  location: SourceLocation(pos=93, lineno=3, colno=23)
+                                  end_location: SourceLocation(pos=101, lineno=3, colno=31)
+                                  value: 'number'
+                        <class 'mecha.ast.AstCommand'>
+                          location: SourceLocation(pos=111, lineno=4, colno=9)
+                          end_location: SourceLocation(pos=132, lineno=4, colno=30)
+                          identifier: 'statement'
+                          arguments:
+                            <class 'bolt.ast.AstCall'>
+                              location: SourceLocation(pos=111, lineno=4, colno=9)
+                              end_location: SourceLocation(pos=132, lineno=4, colno=30)
+                              value:
+                                <class 'bolt.ast.AstAttribute'>
+                                  location: SourceLocation(pos=111, lineno=4, colno=9)
+                                  end_location: SourceLocation(pos=124, lineno=4, colno=22)
+                                  name: 'expect'
+                                  value:
+                                    <class 'bolt.ast.AstIdentifier'>
+                                      location: SourceLocation(pos=111, lineno=4, colno=9)
+                                      end_location: SourceLocation(pos=117, lineno=4, colno=15)
+                                      value: 'stream'
+                              arguments:
+                                <class 'bolt.ast.AstValue'>
+                                  location: SourceLocation(pos=125, lineno=4, colno=23)
+                                  end_location: SourceLocation(pos=131, lineno=4, colno=29)
+                                  value: 'name'

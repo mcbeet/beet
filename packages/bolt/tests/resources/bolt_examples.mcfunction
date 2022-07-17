@@ -895,3 +895,16 @@ foo = {
     a: 1,
     "b" + "c": 2
 }
+###
+foo = r""
+###
+foo = r"\"
+###
+foo = r"\\"
+###
+foo = r"\""
+###
+macro foo(stream):
+    with stream.syntax(number=r"\d+", name=r"\w+"):
+        stream.expect("number")
+        stream.expect("name")
