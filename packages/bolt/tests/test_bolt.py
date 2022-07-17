@@ -28,10 +28,14 @@ def test_parse(snapshot: SnapshotFixture, ctx: Context, source: Function):
     ast = None
     diagnostics = None
 
+    mc.database[mc.database.current] = CompilationUnit(resource_location="demo:test")
+
     try:
         ast = mc.parse(source)
     except DiagnosticError as exc:
         diagnostics = exc.diagnostics
+    finally:
+        del mc.database[mc.database.current]
 
     if ast:
         assert snapshot() == f"{source.text}---\n{ast.dump()}\n"

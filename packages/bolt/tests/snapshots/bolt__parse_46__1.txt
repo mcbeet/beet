@@ -1,4 +1,4 @@
-_bolt_lineno = [1, 8, 9, 14], [1, 2, 3, 5]
+_bolt_lineno = [1, 8, 10, 16], [1, 2, 3, 5]
 _bolt_helper_get_rebind = _bolt_runtime.helpers['get_rebind']
 _bolt_helper_children = _bolt_runtime.helpers['children']
 _bolt_helper_replace = _bolt_runtime.helpers['replace']
@@ -6,10 +6,12 @@ with _bolt_runtime.scope() as _bolt_var6:
     with _bolt_runtime.scope() as _bolt_var5:
         _bolt_var0 = 42
         count = _bolt_var0
-        _bolt_var1 = count
-        _bolt_var2 = 0
-        _bolt_var1 = _bolt_var1 > _bolt_var2
-        while _bolt_var1:
+        while True:
+            _bolt_var1 = count
+            _bolt_var2 = 0
+            _bolt_var1 = _bolt_var1 > _bolt_var2
+            if not _bolt_var1:
+                break
             _bolt_runtime.commands.append(_bolt_refs[0])
             _bolt_var3 = count
             _bolt_var4 = 1

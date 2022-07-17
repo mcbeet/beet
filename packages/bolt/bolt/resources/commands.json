@@ -61,6 +61,17 @@
           "type": "argument",
           "parser": "bolt:macro_name",
           "children": {
+            "proc": {
+              "type": "argument",
+              "parser": "bolt:macro_signature",
+              "children": {
+                "body": {
+                  "type": "argument",
+                  "parser": "bolt:deferred_root",
+                  "executable": true
+                }
+              }
+            },
             "match": {
               "type": "argument",
               "parser": "bolt:macro_match",

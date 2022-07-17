@@ -31,17 +31,20 @@ from typing import (
     cast,
 )
 
-from beet import TextFile, TextFileBase
+from beet import BubbleException, Cache, TextFile, TextFileBase
 from beet.core.utils import JsonDict, extra_field, import_from_string, required_field
 from mecha import (
     AstCacheBackend,
     AstRoot,
     CompilationDatabase,
+    CompilationError,
     CompilationUnit,
+    DiagnosticCollection,
     DiagnosticError,
     Dispatcher,
     MechaError,
 )
+from tokenstream import InvalidSyntax
 
 from .ast import AstMacro
 from .utils import internal, rewrite_traceback
@@ -120,6 +123,7 @@ class ModuleManager(Mapping[TextFileBase[Any], CompiledModule]):
     database: CompilationDatabase = extra_field()
     codegen: Dispatcher[CodegenResult] = extra_field()
     parse_callback: ModuleParseCallback = extra_field()
+    cache: Optional[Cache] = extra_field(default=None)
 
     registry: Dict[TextFileBase[Any], CompiledModule] = extra_field(
         default_factory=dict
@@ -272,13 +276,32 @@ class ModuleManager(Mapping[TextFileBase[Any], CompiledModule]):
 
         try:
             exec(module.code, module.namespace)
-        except Exception as exc:
-            raise rewrite_traceback(exc) from None
         finally:
             module.executing = False
             self.stack.pop()
 
         return module.namespace[module.output]
+
+    @contextmanager
+    @internal
+    def error_handler(self, message: str, resource_location: Optional[str] = None):
+        """Error handler for running module code."""
+        try:
+            yield
+        except (BubbleException, InvalidSyntax):
+            raise
+        except UnusableCompilationUnit as exc:
+            print(exc)
+            if not exc.compilation_unit.diagnostics.error:
+                message = "Failed to instantiate module."
+                if resource_location:
+                    message += f" ({resource_location})"
+                raise CompilationError(message) from rewrite_traceback(exc)
+            raise DiagnosticCollection() from None
+        except Exception as exc:
+            if resource_location:
+                message += f" ({resource_location})"
+            raise CompilationError(message) from rewrite_traceback(exc)
 
     @contextmanager
     def parse_push(self, current: TextFileBase[Any]):

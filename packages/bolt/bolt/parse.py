@@ -24,8 +24,11 @@ __all__ = [
     "FlushPendingIdentifiersParser",
     "parse_deferred_root",
     "parse_function_signature",
+    "parse_proc_macro_signature",
     "MacroMatchParser",
     "MacroHandler",
+    "ProcMacroParser",
+    "ProcMacroExpansion",
     "parse_del_target",
     "parse_identifier",
     "TrailingCommaParser",
@@ -59,6 +62,7 @@ from mecha import (
     AlternativeParser,
     AstChildren,
     AstCommand,
+    AstJson,
     AstNode,
     AstResourceLocation,
     AstRoot,
@@ -71,6 +75,7 @@ from mecha import (
     Parser,
     consume_line_continuation,
     delegate,
+    get_stream_properties,
     get_stream_scope,
     get_stream_spec,
 )
@@ -113,6 +118,9 @@ from .ast import (
     AstMacroMatchArgument,
     AstMacroMatchLiteral,
     AstModuleRoot,
+    AstProcMacro,
+    AstProcMacroMarker,
+    AstProcMacroResult,
     AstSlice,
     AstTarget,
     AstTargetAttribute,
@@ -123,6 +131,7 @@ from .ast import (
     AstUnpack,
     AstValue,
 )
+from .macro import invoke_macro
 from .module import Module, ModuleManager, UnusableCompilationUnit
 from .pattern import (
     FALSE_PATTERN,
@@ -134,7 +143,7 @@ from .pattern import (
     STRING_PATTERN,
     TRUE_PATTERN,
 )
-from .utils import suggest_typo
+from .utils import internal, suggest_typo
 
 IMPORT_REGEX = re.compile(rf"^{MODULE_PATTERN}$")
 
@@ -143,7 +152,14 @@ def get_bolt_parsers(
     parsers: Dict[str, Parser], modules: ModuleManager
 ) -> Dict[str, Parser]:
     """Return the bolt parsers."""
-    macro_handler = MacroHandler(parsers["command"])
+    macro_handler = MacroHandler(
+        parser=parsers["command"],
+        proc_macro_overloads=(
+            modules.cache.json.setdefault("proc_macro_overloads", {})
+            if modules.cache
+            else {}
+        ),
+    )
 
     return {
         ################################################################################
@@ -174,7 +190,9 @@ def get_bolt_parsers(
         "command:argument:bolt:deferred_root": delegate("bolt:deferred_root"),
         "command:argument:bolt:function_signature": delegate("bolt:function_signature"),
         "command:argument:bolt:macro_name": delegate("bolt:macro_name"),
+        "command:argument:bolt:macro_signature": delegate("bolt:macro_signature"),
         "command:argument:bolt:macro_match": delegate("bolt:macro_match"),
+        "command:argument:bolt:proc_macro": delegate("bolt:proc_macro"),
         "command:argument:bolt:del_target": delegate("bolt:del_target"),
         ################################################################################
         # Bolt
@@ -210,6 +228,7 @@ def get_bolt_parsers(
         "bolt_macro_argument": delegate("bolt:macro_argument"),
         "bolt:macro_argument": BasicLiteralParser(AstMacroArgument),
         "bolt:macro_name": delegate("bolt:macro_literal"),
+        "bolt:macro_signature": parse_proc_macro_signature,
         "bolt:macro_match": MacroMatchParser(
             literal_parser=delegate("bolt:macro_literal"),
             argument_parser=delegate("bolt:macro_argument"),
@@ -220,6 +239,7 @@ def get_bolt_parsers(
                 AdjacentConstraint(MultilineParser(delegate("json_object")), r"\{")
             ),
         ),
+        "bolt:proc_macro": ProcMacroParser(modules),
         "bolt:del_target": parse_del_target,
         "bolt:interpolation": PrimaryParser(delegate("bolt:identifier")),
         "bolt:identifier": parse_identifier,
@@ -450,7 +470,10 @@ class ToplevelHandler:
     macro_handler: "MacroHandler"
 
     def __call__(self, stream: TokenStream) -> Any:
-        with self.modules.parse_push(self.modules.database.current), stream.provide(
+        current = self.modules.database.current
+
+        with self.modules.parse_push(current), stream.provide(
+            resource_location=self.modules.database[current].resource_location,
             identifiers=set(self.modules.globals)
             | self.modules.builtins
             | {"__name__"},
@@ -459,9 +482,7 @@ class ToplevelHandler:
 
         self.macro_handler.cache_local_spec(stream)
 
-        if isinstance(node, AstRoot) and isinstance(
-            self.modules.database.current, Module
-        ):
+        if isinstance(node, AstRoot) and isinstance(current, Module):
             node = set_location(AstModuleRoot(commands=node.commands), node)
 
         return node
@@ -469,29 +490,31 @@ class ToplevelHandler:
 
 def create_bolt_root_parser(parser: Parser, macro_handler: "MacroHandler"):
     """Return parser for the root node for bolt."""
-    return DecoratorResolver(
-        DeferredRootBacktracker(
-            parser=FlushPendingIdentifiersParser(
-                FunctionConstraint(
-                    BreakContinueConstraint(
-                        parser=IfElseLoweringParser(parser),
-                        allowed_scopes={
-                            ("while", "condition", "body"),
-                            ("for", "target", "in", "iterable", "body"),
+    return ProcMacroExpansion(
+        DecoratorResolver(
+            DeferredRootBacktracker(
+                parser=FlushPendingIdentifiersParser(
+                    FunctionConstraint(
+                        BreakContinueConstraint(
+                            parser=IfElseLoweringParser(parser),
+                            allowed_scopes={
+                                ("while", "condition", "body"),
+                                ("for", "target", "in", "iterable", "body"),
+                            },
+                        ),
+                        command_identifiers={
+                            "return",
+                            "return:value",
+                            "yield",
+                            "yield:value",
+                            "yield:from:value",
+                            "global:subcommand",
+                            "nonlocal:subcommand",
                         },
-                    ),
-                    command_identifiers={
-                        "return",
-                        "return:value",
-                        "yield",
-                        "yield:value",
-                        "yield:from:value",
-                        "global:subcommand",
-                        "nonlocal:subcommand",
-                    },
-                )
-            ),
-            macro_handler=macro_handler,
+                    )
+                ),
+                macro_handler=macro_handler,
+            )
         )
     )
 
@@ -760,7 +783,7 @@ class DecoratorResolver:
                 result.append(command)
 
         if stack:
-            exc = InvalidSyntax("Can not apply decorator to nothing.")
+            exc = InvalidSyntax("Can't apply decorator to nothing.")
             raise set_location(exc, stack[-1])
 
         if changed:
@@ -1005,6 +1028,19 @@ def parse_function_signature(stream: TokenStream) -> AstFunctionSignature:
     return set_location(node, identifier, stream.current)
 
 
+def parse_proc_macro_signature(stream: TokenStream):
+    """Parse proc macro signature."""
+    with stream.syntax(brace=r"\(|\)", identifier=IDENTIFIER_PATTERN):
+        begin = stream.expect(("brace", "("))
+        stream.expect(("identifier", "stream"))
+        end = stream.expect(("brace", ")"))
+
+    get_stream_pending_identifiers(stream).add("stream")
+    get_stream_deferred_locals(stream).add("stream")
+
+    return set_location(AstProcMacroMarker(), begin, end)
+
+
 @dataclass
 class MacroMatchParser:
     """Parser for macro matching."""
@@ -1055,6 +1091,8 @@ class MacroHandler:
     """Handle macros."""
 
     parser: Parser
+
+    proc_macro_overloads: Dict[str, Dict[str, int]] = extra_field(default_factory=dict)
     spec_cache: Dict[FrozenSet[AstMacro], CommandSpec] = extra_field(
         default_factory=dict
     )
@@ -1077,17 +1115,25 @@ class MacroHandler:
             return node
 
         if node.identifier == "macro:name:subcommand":
-            node = self.create_macro(node)
-            get_stream_pending_macros(stream).append(
-                replace(node, arguments=AstChildren(node.arguments[:-1]))
-            )
-        elif node.identifier in get_stream_macro_scope(stream):
-            call = AstMacroCall(identifier=node.identifier, arguments=node.arguments)
-            node = set_location(call, node)
+            node = self.create_macro(node, stream.data.get("resource_location"))
+            if not isinstance(node, AstProcMacro):
+                declaration = replace(node, arguments=AstChildren(node.arguments[:-1]))
+                get_stream_pending_macros(stream).append(declaration)
+
+        elif macro := get_stream_macro_scope(stream).get(node.identifier):
+            if not isinstance(macro, AstProcMacro):
+                node = set_location(
+                    AstMacroCall(identifier=node.identifier, arguments=node.arguments),
+                    node,
+                )
 
         return node
 
-    def create_macro(self, command: AstCommand) -> AstMacro:
+    def create_macro(
+        self,
+        command: AstCommand,
+        resource_location: Optional[str] = None,
+    ) -> AstMacro:
         identifier_parts: List[str] = []
         arguments: List[AstNode] = []
 
@@ -1104,6 +1150,44 @@ class MacroHandler:
                 identifier_parts.append(argument.match_identifier.value)
             arguments.append(node.arguments[0])
             node = subcommand
+
+        if isinstance(marker := node.arguments[0], AstProcMacroMarker):
+            identifier = ":".join(identifier_parts)
+
+            if not resource_location:
+                message = f'Can\'t define proc macro "{identifier_parts[0]}" without resource location information.'
+                raise set_location(InvalidSyntax(message), arguments[0], marker)
+
+            for argument in arguments:
+                if isinstance(argument, AstMacroMatchArgument):
+                    message = f'Proc macro "{identifier_parts[0]}" contains non-literal match.'
+                    raise set_location(InvalidSyntax(message), argument)
+
+            macro_overload = self.proc_macro_overloads.setdefault(resource_location, {})
+            overload_id = macro_overload.setdefault(identifier, 0)
+            macro_overload[identifier] += 1
+
+            argument = f"proc_macro_overload{overload_id}"
+            identifier = f"{identifier}:{argument}"
+
+            match_node = AstMacroMatchArgument(
+                match_identifier=AstMacroArgument(value=argument),
+                match_argument_parser=AstResourceLocation.from_value("bolt:proc_macro"),
+                match_argument_properties=AstJson.from_value(
+                    {
+                        "resource_location": resource_location,
+                        "identifier": identifier,
+                    }
+                ),
+            )
+            arguments.append(match_node)
+            arguments.append(node.arguments[-1])
+
+            macro = AstProcMacro(
+                identifier=identifier,
+                arguments=AstChildren(arguments),
+            )
+            return set_location(macro, command)
 
         arguments.append(node.arguments[0])
 
@@ -1127,8 +1211,11 @@ class MacroHandler:
 
     def inject_syntax(self, stream: TokenStream, *macros: AstMacro):
         macro_scope = get_stream_macro_scope(stream)
-
         scope_key = frozenset(macros) | frozenset(macro_scope.values())
+
+        if len(macro_scope) == len(scope_key):
+            return
+
         if spec := self.spec_cache.get(scope_key):
             stream.data["local_spec"] = False
             stream.data["spec"] = spec
@@ -1151,6 +1238,76 @@ class MacroHandler:
             macro_scope[macro.identifier] = macro
 
         spec.update()
+
+
+@dataclass
+class ProcMacroParser:
+    """Parser for invoking proc macros."""
+
+    modules: ModuleManager
+
+    @internal
+    def __call__(self, stream: TokenStream) -> AstProcMacroResult:
+        properties = get_stream_properties(stream)
+        resource_location = properties["resource_location"]
+        identifier = properties["identifier"]
+
+        module = self.modules[resource_location]
+        runtime = module.namespace["_bolt_runtime"]
+        macro = module.namespace["_bolt_proc_macros"][identifier]
+
+        with self.modules.error_handler(
+            "Proc macro raised an exception.", resource_location
+        ):
+            result = invoke_macro(runtime, macro, identifier, [stream])
+
+        return AstProcMacroResult(commands=AstChildren(result))
+
+
+@dataclass
+class ProcMacroExpansion:
+    """Expand proc macro results."""
+
+    parser: Parser
+
+    def __call__(self, stream: TokenStream) -> AstRoot:
+        should_replace = False
+        commands: List[AstCommand] = []
+
+        node: AstRoot = self.parser(stream)
+
+        for command in node.commands:
+            stack: List[AstCommand] = [command]
+
+            while command.arguments and isinstance(
+                command := command.arguments[-1], AstCommand
+            ):
+                stack.append(command)
+
+            command = stack.pop()
+
+            if command.arguments and isinstance(
+                result := command.arguments[-1], AstProcMacroResult
+            ):
+                should_replace = True
+
+                for expansion in result.commands:
+                    for prefix in reversed(stack):
+                        args = AstChildren([*prefix.arguments[:-1], expansion])
+                        expansion = replace(prefix, arguments=args)
+                    commands.append(expansion)
+
+                continue
+
+            elif stack:
+                command = stack[0]
+
+            commands.append(command)
+
+        if should_replace:
+            return replace(node, commands=AstChildren(commands))
+
+        return node
 
 
 def parse_del_target(stream: TokenStream) -> AstTarget:
@@ -1253,18 +1410,21 @@ class ImportStatementHandler:
 
         return node
 
+    @internal
     def handle_from_import(self, stream: TokenStream, node: AstCommand) -> AstCommand:
         identifiers = get_stream_identifiers(stream)
         identifiers_storage = get_stream_identifiers_storage(stream)
         pending_macros = get_stream_pending_macros(stream)
 
         module = cast(AstResourceLocation, node.arguments[0])
+        target_name = module.get_value()
+        target = self.modules.database.index.get(target_name)
 
         try:
             compiled_module = (
-                isinstance(module := node.arguments[0], AstResourceLocation)
-                and bool(module.namespace)
-                and self.modules.get(module.get_value())
+                target
+                and target not in self.modules.parse_stack
+                and self.modules.get(target)
             )
         except UnusableCompilationUnit:
             compiled_module = None
@@ -1279,13 +1439,27 @@ class ImportStatementHandler:
                         imported_macro = AstImportedMacro(name=name, declaration=macro)
                         arguments.append(set_location(imported_macro, item))
                         pending_macros.append(macro)
+
+                        if not compiled_module.executed and isinstance(
+                            macro, AstProcMacro
+                        ):
+                            with self.modules.error_handler(
+                                "Top-level statement raised an exception.",
+                                target_name,
+                            ), self.modules.parse_push(
+                                target  # type: ignore
+                            ):
+                                self.modules.eval(compiled_module)
+
                 elif item.identifier:
                     arguments.append(item)
                     identifiers.add(item.name)
                     identifiers_storage.setdefault(item.name, "local")
+
                 else:
                     exc = InvalidSyntax(f'Invalid identifier "{item.name}".')
                     raise set_location(exc, item)
+
             if subcommand.identifier == "from:module:import:name:subcommand":
                 subcommand = cast(AstCommand, subcommand.arguments[1])
             else:

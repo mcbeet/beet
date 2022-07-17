@@ -1388,6 +1388,7 @@
   "loot_table:name:content",
   "macro:name:body",
   "macro:name:match:subcommand",
+  "macro:name:proc:body",
   "macro:name:subcommand",
   "me:action",
   "merge:advancement:name:content",

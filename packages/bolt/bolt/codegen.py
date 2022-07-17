@@ -60,6 +60,7 @@ from .ast import (
     AstMacro,
     AstMacroCall,
     AstMacroMatchArgument,
+    AstProcMacro,
     AstSlice,
     AstTarget,
     AstTargetAttribute,
@@ -84,6 +85,7 @@ class Accumulator:
     lines: List[str] = field(default_factory=list)
     counter: int = 0
     header: Dict[str, str] = field(default_factory=dict)
+    root_scope: bool = True
 
     last_condition: str = "_bolt_error_last_condition"
 
@@ -164,17 +166,19 @@ class Accumulator:
         """Add macro to macro library."""
         macro = self.get_macro(node.identifier)
         group = node.identifier.partition(":")[0]
-        self.macros.setdefault(group, {})[macro, node] = None
+        if self.root_scope:
+            self.macros.setdefault(group, {})[macro, node] = None
         return macro
 
     def import_macro(self, resource_location: str, node: AstImportedMacro) -> str:
         """Import macro into macro library."""
         macro = self.get_macro(node.declaration.identifier)
         group = node.declaration.identifier.partition(":")[0]
-        self.macros.setdefault(group, {})[macro, node.declaration] = (
-            resource_location,
-            node.name,
-        )
+        if self.root_scope:
+            self.macros.setdefault(group, {})[macro, node.declaration] = (
+                resource_location,
+                node.name,
+            )
         return macro
 
     def get_macro(self, name: str) -> str:
@@ -210,10 +214,10 @@ class Accumulator:
         """Emit function."""
         self.statement(f"def {name}({', '.join(args)}):")
         with self.block():
-            previous_macros = self.macros
-            self.macros = {k: dict(v) for k, v in self.macros.items()}
+            previous_root = self.root_scope
+            self.root_scope = False
             yield
-            self.macros = previous_macros
+            self.root_scope = previous_root
 
     @contextmanager
     def if_statement(self, condition: str):
@@ -588,6 +592,25 @@ class Codegen(Visitor):
 
         return [f"*{result}"]
 
+    @rule(AstProcMacro)
+    def proc_macro(
+        self,
+        node: AstProcMacro,
+        acc: Accumulator,
+    ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
+        macro = acc.make_macro(
+            replace(node, arguments=AstChildren(node.arguments[:-1]))
+        )
+
+        with acc.function(macro, "stream"):
+            yield from visit_body(cast(AstRoot, node.arguments[-1]), acc)
+
+        if acc.root_scope:
+            acc.header["_bolt_proc_macros"] = "{}"
+            acc.statement(f"_bolt_proc_macros[{node.identifier!r}] = {macro}")
+
+        return []
+
     @rule(AstCommand, identifier="del:target")
     def del_statement(
         self,
@@ -626,9 +649,12 @@ class Codegen(Visitor):
         node: AstCommand,
         acc: Accumulator,
     ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
-        condition = yield from visit_single(node.arguments[0], required=True)
-        acc.statement(f"while {condition}:")
+        acc.statement(f"while True:")
         with acc.block():
+            condition = yield from visit_single(node.arguments[0], required=True)
+            acc.statement(f"if not {condition}:")
+            with acc.block():
+                acc.statement("break")
             yield from visit_body(cast(AstRoot, node.arguments[1]), acc)
         return []
 

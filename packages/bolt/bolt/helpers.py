@@ -7,7 +7,7 @@ from dataclasses import dataclass, replace
 from functools import partial, wraps
 from importlib import import_module
 from types import TracebackType
-from typing import Any, Callable, ContextManager, Dict, Generator, Optional, Type
+from typing import Any, Callable, ContextManager, Dict, Optional, Type
 from uuid import UUID
 
 from mecha import (
@@ -32,7 +32,6 @@ from mecha import (
     AstPlayerName,
     AstRange,
     AstResourceLocation,
-    AstRoot,
     AstScoreboardSlot,
     AstSortOrder,
     AstString,
@@ -46,6 +45,7 @@ from mecha import (
 )
 from tokenstream import set_location
 
+from .macro import invoke_macro
 from .utils import internal
 
 
@@ -185,38 +185,7 @@ def python_import_module(name: str):
 
 @internal
 def macro_call(runtime: Any, function: Any, command: AstCommand):
-    with runtime.scope() as output:
-        result = function(*command.arguments)
-
-        if isinstance(result, Generator):
-            try:
-                while True:
-                    node: Any = next(result)  # type: ignore
-                    if isinstance(node, AstRoot):
-                        runtime.commands.extend(node.commands)
-                    elif isinstance(node, AstCommand):
-                        runtime.commands.append(node)
-                    elif node:
-                        msg = f'Emit invalid command of type {type(node)!r} from macro "{command.identifier}".'
-                        raise TypeError(msg)
-            except StopIteration as exc:
-                result = exc.value
-
-    if not result:
-        result = []
-    elif isinstance(result, AstNode):
-        result = [result]
-
-    for node in result:
-        if isinstance(node, AstRoot):
-            output.extend(node.commands)
-        elif isinstance(node, AstCommand):
-            output.append(node)
-        elif node:
-            msg = f'Return invalid command of type {type(node)!r} from macro "{command.identifier}".'
-            raise TypeError(msg)
-
-    return output
+    return invoke_macro(runtime, function, command.identifier, command.arguments)
 
 
 def converter(f: Callable[[Any], AstNode]) -> Callable[[Any, AstNode], AstNode]:

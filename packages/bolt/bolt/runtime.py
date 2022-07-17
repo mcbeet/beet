@@ -11,15 +11,13 @@ from dataclasses import dataclass
 from importlib.resources import read_text
 from typing import Any, Callable, Dict, Iterator, List, Optional, Set, Union
 
-from beet import BubbleException, Context, generate_tree
+from beet import Context, generate_tree
 from beet.core.utils import JsonDict, required_field
 from mecha import (
     AstCommand,
     AstRoot,
     CommandTree,
-    CompilationError,
     Diagnostic,
-    DiagnosticCollection,
     Dispatcher,
     Mecha,
     Visitor,
@@ -31,13 +29,7 @@ from .ast import AstModuleRoot
 from .codegen import Codegen
 from .helpers import get_bolt_helpers
 from .loop_info import loop_info
-from .module import (
-    CompiledModule,
-    Module,
-    ModuleCacheBackend,
-    ModuleManager,
-    UnusableCompilationUnit,
-)
+from .module import CompiledModule, Module, ModuleCacheBackend, ModuleManager
 from .parse import get_bolt_parsers
 from .utils import internal
 
@@ -106,6 +98,7 @@ class Runtime:
             database=mc.database,
             codegen=Codegen(),
             parse_callback=mc.parse,
+            cache=mc.cache,
             globals=self.globals,
             builtins=self.builtins,
         )
@@ -147,11 +140,9 @@ class Runtime:
     @internal
     def import_module(self, resource_location: str) -> CompiledModule:
         """Import module."""
-        try:
-            module = self.modules[resource_location]
-        except KeyError:
-            msg = f'Couldn\'t import "{resource_location}".'
-            raise ImportError(msg) from None
+        module = self.modules.get(resource_location)
+        if not module:
+            raise ImportError(f'Couldn\'t import "{resource_location}".')
         if not module.executing:
             self.modules.eval(module)
         return module
@@ -163,8 +154,8 @@ class Runtime:
         try:
             values = [module.namespace[name] for name in args]
         except KeyError as exc:
-            msg = f'Couldn\'t import {exc} from "{resource_location}".'
-            raise ImportError(msg) from None
+            message = f'Couldn\'t import {exc} from "{resource_location}".'
+            raise ImportError(message) from None
         return values[0] if len(values) == 1 else values
 
     def finalize(self, ctx: Context):
@@ -180,22 +171,13 @@ class Evaluator(Visitor):
     modules: ModuleManager = required_field()
 
     @rule(AstRoot)
+    @internal
     def root(self, node: AstRoot) -> AstRoot:
         module = self.modules.match_ast(node)
-        try:
+        with self.modules.error_handler(
+            "Top-level statement raised an exception.", module.resource_location
+        ):
             return self.modules.eval(module)
-        except BubbleException:
-            raise
-        except UnusableCompilationUnit as exc:
-            if not exc.compilation_unit.diagnostics.error:
-                raise
-            raise DiagnosticCollection()
-        except Exception as exc:
-            msg = "Top-level statement raised an exception."
-            if module.resource_location:
-                msg += f" ({module.resource_location})"
-            tb = exc.__traceback__.tb_next.tb_next  # type: ignore
-            raise CompilationError(msg) from exc.with_traceback(tb)
 
 
 @rule(AstModuleRoot)

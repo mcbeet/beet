@@ -33,6 +33,9 @@ __all__ = [
     "AstMacroMatch",
     "AstMacroMatchLiteral",
     "AstMacroMatchArgument",
+    "AstProcMacro",
+    "AstProcMacroMarker",
+    "AstProcMacroResult",
     "AstInterpolation",
     "AstFromImport",
     "AstImportedItem",
@@ -305,6 +308,8 @@ class AstMacroLiteral(AstLiteral):
 
     parser = "bolt_macro_literal"
 
+    regex = re.compile(r"[^#:\s()]+")
+
 
 @dataclass(frozen=True)
 class AstMacroArgument(AstLiteral):
@@ -334,6 +339,23 @@ class AstMacroMatchArgument(AstMacroMatch):
     match_identifier: AstMacroArgument = required_field()
     match_argument_parser: AstResourceLocation = required_field()
     match_argument_properties: Optional[AstJson] = None
+
+
+@dataclass(frozen=True)
+class AstProcMacro(AstMacro):
+    """Ast proc macro node."""
+
+
+@dataclass(frozen=True)
+class AstProcMacroMarker(AstNode):
+    """Ast proc macro marker node."""
+
+
+@dataclass(frozen=True)
+class AstProcMacroResult(AstNode):
+    """Ast proc macro result node."""
+
+    commands: AstChildren[AstCommand] = required_field()
 
 
 @dataclass(frozen=True)

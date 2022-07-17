@@ -870,3 +870,17 @@ as @p foo
 ###
 macro macro:
     pass
+###
+macro foo(stream):
+    pass
+###
+macro foo bar(stream):
+    pass
+###
+macro foo(stream):
+    pass
+macro foo(stream):
+    pass
+###
+macro foo message=minecraft:message(stream):
+    pass
