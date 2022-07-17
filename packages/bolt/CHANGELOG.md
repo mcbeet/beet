@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.14.0 (2022-07-17)
+### Feature
+* Ergonomic improvements for dicts without quotes ([`18c747e`](https://github.com/mcbeet/bolt/commit/18c747e74aa2500fbb47414d0bc4ea24a3af04a1))
+
 ## v0.13.0 (2022-07-17)
 ### Feature
 * Add raise statement ([`d5654a5`](https://github.com/mcbeet/bolt/commit/d5654a58c95ea326ff01da92b88bfd2e29e48b6c))
