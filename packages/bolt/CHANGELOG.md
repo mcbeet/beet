@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.16.0 (2022-07-17)
+### Feature
+* Make modules lazy by default ([`370a759`](https://github.com/mcbeet/bolt/commit/370a7596d0a5764dfe0c2ce5e553483f8728ab60))
+
 ## v0.15.0 (2022-07-17)
 ### Feature
 * Add raw strings ([`e24d772`](https://github.com/mcbeet/bolt/commit/e24d7721ddd8e708735f7e3b16c50b81cbfb4a89))
