@@ -2,6 +2,11 @@
 
 <!--next-version-placeholder-->
 
+## v0.13.0 (2022-07-17)
+### Feature
+* Add raise statement ([`d5654a5`](https://github.com/mcbeet/bolt/commit/d5654a58c95ea326ff01da92b88bfd2e29e48b6c))
+* Add proc macro ([`97e1bea`](https://github.com/mcbeet/bolt/commit/97e1beadb033de13453ef9deee1c290bdd730f4e))
+
 ## v0.12.2 (2022-07-15)
 ### Fix
 * Update beet ([`a4f2f97`](https://github.com/mcbeet/bolt/commit/a4f2f97feef98d9c9f624ffc82a3d8e5ff282337))
