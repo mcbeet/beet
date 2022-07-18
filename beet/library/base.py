@@ -522,7 +522,9 @@ class Namespace(
         extend_namespace_extra: Optional[Mapping[str, Type[PackFile]]] = None,
     ) -> Iterator[Tuple[str, "Namespace"]]:
         """Load namespaces by walking through a zipfile or directory."""
-        name, namespace = None, None
+        preparts = tuple(filter(None, prefix.split("/")))
+        if preparts and preparts[0] != cls.directory:
+            return
 
         if isinstance(origin, ZipFile):
             filenames = map(PurePosixPath, origin.namelist())
@@ -531,8 +533,6 @@ class Namespace(
         else:
             filenames = list_files(origin)
 
-        preparts = tuple(filter(None, prefix.split("/")))
-
         extra_info = cls.get_extra_info()
         if extend_namespace_extra:
             extra_info.update(extend_namespace_extra)
@@ -540,6 +540,9 @@ class Namespace(
         scope_map = dict(cls.scope_map)
         for file_type in extend_namespace:
             scope_map[file_type.scope, file_type.extension] = file_type
+
+        name = None
+        namespace = None
 
         for filename in sorted(filenames):
             try:
@@ -698,6 +701,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
     extend_namespace_extra: Dict[str, Type[PackFile]]
 
     merge_policy: MergePolicy
+    unveiled: Dict[Path, Set[str]]
 
     namespace_type: ClassVar[Type[Namespace]]
     default_name: ClassVar[str]
@@ -750,6 +754,8 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
         self.merge_policy = MergePolicy()
         if merge_policy:
             self.merge_policy.extend(merge_policy)
+
+        self.unveiled = {}
 
         self.load(path or zipfile)
 
@@ -992,6 +998,26 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
         }
 
         self.merge(namespaces)  # type: ignore
+
+    def unveil(self, prefix: str, origin: FileSystemPath):
+        """Lazily mount resources from the root of a pack on the filesystem."""
+        origin = Path(origin).resolve()
+        mounted = self.unveiled.setdefault(origin, set())
+
+        if prefix in mounted:
+            return
+
+        to_remove: Set[str] = set()
+        for mnt in mounted:
+            if prefix.startswith(mnt):
+                return
+            if mnt.startswith(prefix):
+                to_remove.add(mnt)
+
+        mounted -= to_remove
+        mounted.add(prefix)
+
+        self.mount(prefix, origin / prefix)
 
     def dump(self, origin: FileOrigin):
         """Write the content of the pack to a zipfile or to the filesystem"""
