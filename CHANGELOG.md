@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.69.0 (2022-07-18)
+### Feature
+* Add beet.contrib.vanilla ([`e0d6e6a`](https://github.com/mcbeet/beet/commit/e0d6e6a000f5a637faddc16cf717714d1f8039a9))
+
 ## v0.68.3 (2022-07-06)
 ### Fix
 * Update worldgen to 1.19 ([#282](https://github.com/mcbeet/beet/issues/282)) ([`f54ca03`](https://github.com/mcbeet/beet/commit/f54ca03fea63ae5436d37ab352f8744722424ee6))
