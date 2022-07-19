@@ -43,6 +43,8 @@ from .ast import (
     AstAssignment,
     AstAttribute,
     AstCall,
+    AstClassBases,
+    AstClassName,
     AstDict,
     AstDictItem,
     AstExpressionBinary,
@@ -216,7 +218,9 @@ class Accumulator:
         with self.block():
             previous_root = self.root_scope
             self.root_scope = False
+            temp_counter = self.counter
             yield
+            self.counter = temp_counter
             self.root_scope = previous_root
 
     @contextmanager
@@ -608,6 +612,49 @@ class Codegen(Visitor):
         if acc.root_scope:
             acc.header["_bolt_proc_macros"] = "{}"
             acc.statement(f"_bolt_proc_macros[{node.identifier!r}] = {macro}")
+
+        return []
+
+    @rule(AstCommand, identifier="class:name:bases:body")
+    @rule(AstCommand, identifier="class:name:body")
+    def class_definition(
+        self,
+        node: AstCommand,
+        acc: Accumulator,
+    ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
+        name = cast(AstClassName, node.arguments[0])
+        body = cast(AstRoot, node.arguments[-1])
+
+        decorators: List[str] = []
+        for decorator in name.decorators:
+            value = yield from visit_single(decorator.expression, required=True)
+            decorators.append(value)
+
+        inherit: List[str] = []
+
+        if isinstance(bases := node.arguments[1], AstClassBases):
+            for base in bases.inherit:
+                result = yield from visit_single(base, required=True)
+                inherit.append(result)
+
+        joined_bases = f"({', '.join(inherit)})" if inherit else ""
+        acc.statement(f"class {name.value}{joined_bases}:", lineno=node)
+
+        with acc.block():
+            temp_start = acc.counter
+            yield from visit_body(body, acc)
+            temp_stop = acc.counter
+
+            for i in range(temp_start, temp_stop):
+                acc.statement(f"del _bolt_var{i}")
+
+            acc.counter = temp_start
+
+        for decorator, value in list(zip(name.decorators, decorators))[::-1]:
+            acc.statement(
+                f"{name.value} = {value}({name.value})",
+                lineno=decorator,
+            )
 
         return []
 

@@ -3,7 +3,7 @@ _bolt_helper_branch = _bolt_runtime.helpers['branch']
 _bolt_helper_children = _bolt_runtime.helpers['children']
 _bolt_helper_operator_not = _bolt_runtime.helpers['operator_not']
 _bolt_helper_replace = _bolt_runtime.helpers['replace']
-with _bolt_runtime.scope() as _bolt_var4:
+with _bolt_runtime.scope() as _bolt_var0:
     def foo(value):
         _bolt_var0 = value
         with _bolt_helper_branch(_bolt_var0) as _bolt_condition:
@@ -17,9 +17,9 @@ with _bolt_runtime.scope() as _bolt_var4:
                 result = _bolt_var2
         _bolt_var3 = result
         return _bolt_var3
-_bolt_var5 = _bolt_helper_replace(_bolt_refs[0], commands=_bolt_helper_children(_bolt_var4))
+_bolt_var1 = _bolt_helper_replace(_bolt_refs[0], commands=_bolt_helper_children(_bolt_var0))
 ---
-output = _bolt_var5
+output = _bolt_var1
 ---
 _bolt_refs[0]
 <class 'mecha.ast.AstRoot'>

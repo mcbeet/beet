@@ -29,6 +29,10 @@ __all__ = [
     "MacroHandler",
     "ProcMacroParser",
     "ProcMacroExpansion",
+    "parse_class_name",
+    "parse_class_bases",
+    "parse_class_root",
+    "ClassBodyScoping",
     "parse_del_target",
     "parse_identifier",
     "TrailingCommaParser",
@@ -92,6 +96,9 @@ from .ast import (
     AstAssignment,
     AstAttribute,
     AstCall,
+    AstClassBases,
+    AstClassName,
+    AstClassRoot,
     AstDecorator,
     AstDeferredRoot,
     AstDict,
@@ -194,6 +201,9 @@ def get_bolt_parsers(
         "command:argument:bolt:macro_signature": delegate("bolt:macro_signature"),
         "command:argument:bolt:macro_match": delegate("bolt:macro_match"),
         "command:argument:bolt:proc_macro": delegate("bolt:proc_macro"),
+        "command:argument:bolt:class_name": delegate("bolt:class_name"),
+        "command:argument:bolt:class_bases": delegate("bolt:class_bases"),
+        "command:argument:bolt:class_root": delegate("bolt:class_root"),
         "command:argument:bolt:del_target": delegate("bolt:del_target"),
         ################################################################################
         # Bolt
@@ -241,6 +251,9 @@ def get_bolt_parsers(
             ),
         ),
         "bolt:proc_macro": ProcMacroParser(modules),
+        "bolt:class_name": parse_class_name,
+        "bolt:class_bases": parse_class_bases,
+        "bolt:class_root": parse_class_root,
         "bolt:del_target": parse_del_target,
         "bolt:interpolation": PrimaryParser(delegate("bolt:identifier")),
         "bolt:identifier": parse_identifier,
@@ -461,6 +474,11 @@ def get_stream_pending_macros(stream: TokenStream) -> List[AstMacro]:
     return stream.data.setdefault("pending_macros", [])
 
 
+def get_stream_class_scope(stream: TokenStream) -> Optional[Set[str]]:
+    """Return the set of outer identifiers available inside the class."""
+    return stream.data.get("class_scope")
+
+
 @dataclass
 class ToplevelHandler:
     """Handle toplevel root node."""
@@ -494,24 +512,26 @@ def create_bolt_root_parser(parser: Parser, macro_handler: "MacroHandler"):
     return ProcMacroExpansion(
         DecoratorResolver(
             DeferredRootBacktracker(
-                parser=FlushPendingIdentifiersParser(
-                    FunctionConstraint(
-                        BreakContinueConstraint(
-                            parser=IfElseLoweringParser(parser),
-                            allowed_scopes={
-                                ("while", "condition", "body"),
-                                ("for", "target", "in", "iterable", "body"),
+                parser=ClassBodyScoping(
+                    FlushPendingIdentifiersParser(
+                        FunctionConstraint(
+                            BreakContinueConstraint(
+                                parser=IfElseLoweringParser(parser),
+                                allowed_scopes={
+                                    ("while", "condition", "body"),
+                                    ("for", "target", "in", "iterable", "body"),
+                                },
+                            ),
+                            command_identifiers={
+                                "return",
+                                "return:value",
+                                "yield",
+                                "yield:value",
+                                "yield:from:value",
+                                "global:subcommand",
+                                "nonlocal:subcommand",
                             },
-                        ),
-                        command_identifiers={
-                            "return",
-                            "return:value",
-                            "yield",
-                            "yield:value",
-                            "yield:from:value",
-                            "global:subcommand",
-                            "nonlocal:subcommand",
-                        },
+                        )
                     )
                 ),
                 macro_handler=macro_handler,
@@ -765,12 +785,10 @@ class DecoratorResolver:
             ):
                 changed = True
                 stack.append(decorator)
-            elif (
-                stack
-                and command.identifier == "def:function:body"
-                and isinstance(command.arguments[0], AstFunctionSignature)
+            elif stack and isinstance(
+                target := command.arguments[0], (AstFunctionSignature, AstClassName)
             ):
-                arg = replace(command.arguments[0], decorators=AstChildren(stack))
+                arg = replace(target, decorators=AstChildren(stack))
                 result.append(
                     replace(
                         command, arguments=AstChildren([arg, *command.arguments[1:]])
@@ -778,8 +796,8 @@ class DecoratorResolver:
                 )
                 stack.clear()
             elif stack:
-                exc = InvalidSyntax("Decorators can only be applied to functions.")
-                raise set_location(exc, stack[-1])
+                message = "Decorators can only be applied to functions or classes."
+                raise set_location(InvalidSyntax(message), stack[-1])
             else:
                 result.append(command)
 
@@ -953,6 +971,13 @@ def parse_deferred_root(stream: TokenStream) -> AstDeferredRoot:
     identifiers = get_stream_identifiers(stream)
     pending_identifiers = get_stream_pending_identifiers(stream)
     deferred_locals = get_stream_deferred_locals(stream)
+    class_scope = get_stream_class_scope(stream)
+
+    identifiers.update(pending_identifiers)
+    pending_identifiers.clear()
+
+    if class_scope is not None:
+        identifiers = class_scope
 
     stream_copy = stream.copy()
 
@@ -963,14 +988,14 @@ def parse_deferred_root(stream: TokenStream) -> AstDeferredRoot:
         while consume_line_continuation(stream):
             stream.expect("statement")
 
-    stream_copy.data["identifiers"] = identifiers | pending_identifiers
+    stream_copy.data["identifiers"] = identifiers | deferred_locals
     stream_copy.data["pending_identifiers"] = set()
     stream_copy.data["identifiers_storage"] = {loc: "local" for loc in deferred_locals}
     stream_copy.data["pending_identifiers_storage"] = {}
     stream_copy.data["deferred_locals"] = set()
     stream_copy.data["branch_scope"] = set()
+    stream_copy.data["class_scope"] = None
 
-    pending_identifiers.clear()
     deferred_locals.clear()
 
     node = AstDeferredRoot(stream=stream_copy)
@@ -982,6 +1007,10 @@ def parse_function_signature(stream: TokenStream) -> AstFunctionSignature:
     identifiers = get_stream_identifiers(stream)
     pending_identifiers = get_stream_pending_identifiers(stream)
     deferred_locals = get_stream_deferred_locals(stream)
+    class_scope = get_stream_class_scope(stream)
+
+    if class_scope is not None:
+        identifiers = class_scope
 
     scoped_identifiers = set(identifiers)
 
@@ -1019,11 +1048,8 @@ def parse_function_signature(stream: TokenStream) -> AstFunctionSignature:
                     stream.expect(("brace", ")"))
                     break
 
-    identifiers.add(identifier.value)
-
-    args = {arg.name for arg in arguments}
-    pending_identifiers |= args
-    deferred_locals |= args
+    pending_identifiers.add(identifier.value)
+    deferred_locals |= {arg.name for arg in arguments}
 
     node = AstFunctionSignature(name=identifier.value, arguments=AstChildren(arguments))
     return set_location(node, identifier, stream.current)
@@ -1311,6 +1337,72 @@ class ProcMacroExpansion:
         return node
 
 
+def parse_class_name(stream: TokenStream) -> AstClassName:
+    """Parse class name."""
+    with stream.syntax(identifier=IDENTIFIER_PATTERN):
+        token = stream.expect("identifier")
+
+    get_stream_pending_identifiers(stream).add(token.value)
+    return set_location(AstClassName(value=token.value), token)
+
+
+def parse_class_bases(stream: TokenStream) -> AstClassBases:
+    """Parse class bases."""
+    inherit: List[AstExpression] = []
+
+    with stream.syntax(brace=r"\(|\)", comma=","):
+        token = stream.expect(("brace", "("))
+
+        with stream.ignore("newline"):
+            for _ in stream.peek_until(("brace", ")")):
+                inherit.append(delegate("bolt:expression", stream))
+
+                if not stream.get("comma"):
+                    stream.expect(("brace", ")"))
+                    break
+
+    node = AstClassBases(inherit=AstChildren(inherit))
+    return set_location(node, token, stream.current)
+
+
+def parse_class_root(stream: TokenStream) -> AstRoot:
+    """Parse class root."""
+    with stream.provide(class_scope=get_stream_identifiers(stream)):
+        return delegate("nested_root", stream)
+
+
+@dataclass
+class ClassBodyScoping:
+    """Handle class body scoping."""
+
+    parser: Parser
+
+    def __call__(self, stream: TokenStream) -> Any:
+        class_scope = get_stream_class_scope(stream)
+        if class_scope is None:
+            return self.parser(stream)
+
+        identifiers = get_stream_identifiers(stream)
+        pending_identifiers = get_stream_pending_identifiers(stream)
+        identifiers_storage = get_stream_identifiers_storage(stream)
+        pending_identifiers_storage = get_stream_pending_identifiers_storage(stream)
+
+        with stream.provide(
+            function=False,
+            identifiers=identifiers.copy(),
+            pending_identifiers=set(),
+            identifiers_storage=identifiers_storage.copy(),
+            pending_identifiers_storage={},
+        ):
+            node = self.parser(stream)
+            identifiers.update(pending_identifiers)
+            pending_identifiers.clear()
+            identifiers_storage.update(pending_identifiers_storage)
+            pending_identifiers_storage.clear()
+
+        return set_location(AstClassRoot(commands=node.commands), node)
+
+
 def parse_del_target(stream: TokenStream) -> AstTarget:
     node = delegate("bolt:expression", stream)
 
@@ -1533,12 +1625,29 @@ class DeferredRootBacktracker:
     macro_handler: MacroHandler
 
     def __call__(self, stream: TokenStream) -> AstRoot:
+        node: AstRoot = self.parser(stream)
+
+        if isinstance(node, AstClassRoot):
+            return node
+
+        return self.resolve_deferred(node, stream)
+
+    def resolve_deferred(self, node: AstRoot, stream: TokenStream) -> AstRoot:
         should_replace = False
         commands: List[AstCommand] = []
 
-        node: AstRoot = self.parser(stream)
-
         for command in node.commands:
+            if command.arguments and isinstance(
+                body := command.arguments[-1], AstClassRoot
+            ):
+                resolved_body = self.resolve_deferred(body, stream)
+                if resolved_body is not body:
+                    should_replace = True
+                    command = replace(
+                        command,
+                        arguments=AstChildren([*command.arguments[:-1], resolved_body]),
+                    )
+
             stack: List[AstCommand] = [command]
 
             while command.arguments and isinstance(

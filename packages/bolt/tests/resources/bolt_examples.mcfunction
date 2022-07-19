@@ -908,3 +908,85 @@ macro foo(stream):
     with stream.syntax(number=r"\d+", name=r"\w+"):
         stream.expect("number")
         stream.expect("name")
+###
+class Foo:
+    pass
+###
+class Foo(object):
+    pass
+###
+class A:
+    pass
+class B:
+    pass
+class Foo(A, B):
+    pass
+###
+class Foo:
+    def bar(self):
+        pass
+###
+class Foo:
+    pass
+Foo()
+###
+class Foo:
+    bar = 2
+print(Foo.bar)
+###
+class Foo:
+    Foo()
+###
+class Foo:
+    bar = 2
+print(bar)
+###
+@print
+class Foo:
+    pass
+###
+@print
+@str.upper
+@str
+class Foo:
+    pass
+###
+@print
+foo = "bar"
+###
+@print
+###
+if True:
+    @print
+class A:
+    pass
+###
+class Foo:
+    def __init__(self, name):
+        self.name = name
+###
+class Foo:
+    return
+###
+def f():
+    class Foo:
+        return
+###
+class Foo:
+    bar = 1 + 2
+###
+class Foo:
+    say bar
+###
+class Foo:
+    def bar(self):
+        say bar
+###
+class A:
+    def b(self):
+        say b
+        return B()
+class B:
+    def a(self):
+        say a
+        return A()

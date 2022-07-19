@@ -74,6 +74,8 @@
   "bossbar:set:id:value:value",
   "bossbar:set:id:visible:visible",
   "break",
+  "class:name:bases:body",
+  "class:name:body",
   "clear",
   "clear:targets",
   "clear:targets:item",

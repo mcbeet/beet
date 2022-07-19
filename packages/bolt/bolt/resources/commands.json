@@ -86,6 +86,33 @@
         }
       }
     },
+    "class": {
+      "type": "literal",
+      "children": {
+        "name": {
+          "type": "argument",
+          "parser": "bolt:class_name",
+          "children": {
+            "bases": {
+              "type": "argument",
+              "parser": "bolt:class_bases",
+              "children": {
+                "body": {
+                  "type": "argument",
+                  "parser": "bolt:class_root",
+                  "executable": true
+                }
+              }
+            },
+            "body": {
+              "type": "argument",
+              "parser": "bolt:class_root",
+              "executable": true
+            }
+          }
+        }
+      }
+    },
     "del": {
       "type": "literal",
       "executable": true,

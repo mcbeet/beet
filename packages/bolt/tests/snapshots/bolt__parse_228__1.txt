@@ -2,17 +2,17 @@ _bolt_lineno = [1, 7, 9, 11], [1, 2, 3, 4]
 _bolt_helper_children = _bolt_runtime.helpers['children']
 _bolt_helper_macro_call = _bolt_runtime.helpers['macro_call']
 _bolt_helper_replace = _bolt_runtime.helpers['replace']
-with _bolt_runtime.scope() as _bolt_var3:
+with _bolt_runtime.scope() as _bolt_var1:
     def _bolt_macro0(body):
         _bolt_var0 = body
         yield _bolt_var0
         _bolt_var1 = body
         yield _bolt_var1
-    _bolt_var2 = _bolt_helper_macro_call(_bolt_runtime, _bolt_macro0, _bolt_refs[0])
-    _bolt_runtime.commands.extend(_bolt_var2)
-_bolt_var4 = _bolt_helper_replace(_bolt_refs[1], commands=_bolt_helper_children(_bolt_var3))
+    _bolt_var0 = _bolt_helper_macro_call(_bolt_runtime, _bolt_macro0, _bolt_refs[0])
+    _bolt_runtime.commands.extend(_bolt_var0)
+_bolt_var2 = _bolt_helper_replace(_bolt_refs[1], commands=_bolt_helper_children(_bolt_var1))
 ---
-output = _bolt_var4
+output = _bolt_var2
 ---
 _bolt_refs[0]
 <class 'bolt.ast.AstMacroCall'>

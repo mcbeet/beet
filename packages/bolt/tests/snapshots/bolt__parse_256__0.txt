@@ -1,0 +1,7 @@
+#>ERROR  Decorators can only be applied to functions or classes.
+# line 1, column 1
+#      1 |  @print
+#        :  ^^^^^^
+#      2 |  foo = "bar"
+@print
+foo = "bar"

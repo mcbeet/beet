@@ -1,0 +1,36 @@
+class Foo(object):
+    pass
+---
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=28, lineno=3, colno=1)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=27, lineno=2, colno=9)
+      identifier: 'class:name:bases:body'
+      arguments:
+        <class 'bolt.ast.AstClassName'>
+          location: SourceLocation(pos=6, lineno=1, colno=7)
+          end_location: SourceLocation(pos=9, lineno=1, colno=10)
+          decorators:
+            <empty>
+          value: 'Foo'
+        <class 'bolt.ast.AstClassBases'>
+          location: SourceLocation(pos=9, lineno=1, colno=10)
+          end_location: SourceLocation(pos=17, lineno=1, colno=18)
+          inherit:
+            <class 'bolt.ast.AstIdentifier'>
+              location: SourceLocation(pos=10, lineno=1, colno=11)
+              end_location: SourceLocation(pos=16, lineno=1, colno=17)
+              value: 'object'
+        <class 'bolt.ast.AstClassRoot'>
+          location: SourceLocation(pos=23, lineno=2, colno=5)
+          end_location: SourceLocation(pos=27, lineno=2, colno=9)
+          commands:
+            <class 'mecha.ast.AstCommand'>
+              location: SourceLocation(pos=23, lineno=2, colno=5)
+              end_location: SourceLocation(pos=27, lineno=2, colno=9)
+              identifier: 'pass'
+              arguments:
+                <empty>

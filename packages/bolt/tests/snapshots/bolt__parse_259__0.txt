@@ -1,0 +1,73 @@
+class Foo:
+    def __init__(self, name):
+        self.name = name
+---
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=65, lineno=3, colno=25)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=65, lineno=3, colno=25)
+      identifier: 'class:name:body'
+      arguments:
+        <class 'bolt.ast.AstClassName'>
+          location: SourceLocation(pos=6, lineno=1, colno=7)
+          end_location: SourceLocation(pos=9, lineno=1, colno=10)
+          decorators:
+            <empty>
+          value: 'Foo'
+        <class 'bolt.ast.AstClassRoot'>
+          location: SourceLocation(pos=15, lineno=2, colno=5)
+          end_location: SourceLocation(pos=65, lineno=3, colno=25)
+          commands:
+            <class 'mecha.ast.AstCommand'>
+              location: SourceLocation(pos=15, lineno=2, colno=5)
+              end_location: SourceLocation(pos=65, lineno=3, colno=25)
+              identifier: 'def:function:body'
+              arguments:
+                <class 'bolt.ast.AstFunctionSignature'>
+                  location: SourceLocation(pos=19, lineno=2, colno=9)
+                  end_location: SourceLocation(pos=39, lineno=2, colno=29)
+                  decorators:
+                    <empty>
+                  name: '__init__'
+                  arguments:
+                    <class 'bolt.ast.AstFunctionSignatureArgument'>
+                      location: SourceLocation(pos=28, lineno=2, colno=18)
+                      end_location: SourceLocation(pos=32, lineno=2, colno=22)
+                      name: 'self'
+                      default: None
+                    <class 'bolt.ast.AstFunctionSignatureArgument'>
+                      location: SourceLocation(pos=34, lineno=2, colno=24)
+                      end_location: SourceLocation(pos=38, lineno=2, colno=28)
+                      name: 'name'
+                      default: None
+                <class 'mecha.ast.AstRoot'>
+                  location: SourceLocation(pos=49, lineno=3, colno=9)
+                  end_location: SourceLocation(pos=65, lineno=3, colno=25)
+                  commands:
+                    <class 'mecha.ast.AstCommand'>
+                      location: SourceLocation(pos=49, lineno=3, colno=9)
+                      end_location: SourceLocation(pos=65, lineno=3, colno=25)
+                      identifier: 'statement'
+                      arguments:
+                        <class 'bolt.ast.AstAssignment'>
+                          location: SourceLocation(pos=49, lineno=3, colno=9)
+                          end_location: SourceLocation(pos=65, lineno=3, colno=25)
+                          operator: '='
+                          target:
+                            <class 'bolt.ast.AstTargetAttribute'>
+                              location: SourceLocation(pos=49, lineno=3, colno=9)
+                              end_location: SourceLocation(pos=58, lineno=3, colno=18)
+                              name: 'name'
+                              value:
+                                <class 'bolt.ast.AstIdentifier'>
+                                  location: SourceLocation(pos=49, lineno=3, colno=9)
+                                  end_location: SourceLocation(pos=53, lineno=3, colno=13)
+                                  value: 'self'
+                          value:
+                            <class 'bolt.ast.AstIdentifier'>
+                              location: SourceLocation(pos=61, lineno=3, colno=21)
+                              end_location: SourceLocation(pos=65, lineno=3, colno=25)
+                              value: 'name'

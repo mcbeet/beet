@@ -1,0 +1,41 @@
+_bolt_lineno = [1, 8, 11, 14], [1, 4, 5, 8]
+_bolt_helper_children = _bolt_runtime.helpers['children']
+_bolt_helper_replace = _bolt_runtime.helpers['replace']
+with _bolt_runtime.scope() as _bolt_var0:
+    class A:
+        def b(self):
+            _bolt_runtime.commands.append(_bolt_refs[0])
+            _bolt_var0 = B
+            _bolt_var0 = _bolt_var0()
+            return _bolt_var0
+    class B:
+        def a(self):
+            _bolt_runtime.commands.append(_bolt_refs[1])
+            _bolt_var0 = A
+            _bolt_var0 = _bolt_var0()
+            return _bolt_var0
+_bolt_var1 = _bolt_helper_replace(_bolt_refs[2], commands=_bolt_helper_children(_bolt_var0))
+---
+output = _bolt_var1
+---
+_bolt_refs[0]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=34, lineno=3, colno=9)
+  end_location: SourceLocation(pos=39, lineno=3, colno=14)
+  identifier: 'say:message'
+  arguments:
+    <class 'mecha.ast.AstMessage'>
+_bolt_refs[1]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=93, lineno=7, colno=9)
+  end_location: SourceLocation(pos=98, lineno=7, colno=14)
+  identifier: 'say:message'
+  arguments:
+    <class 'mecha.ast.AstMessage'>
+_bolt_refs[2]
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=117, lineno=8, colno=19)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+    <class 'mecha.ast.AstCommand'>

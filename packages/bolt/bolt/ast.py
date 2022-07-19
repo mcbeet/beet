@@ -37,6 +37,9 @@ __all__ = [
     "AstProcMacro",
     "AstProcMacroMarker",
     "AstProcMacroResult",
+    "AstClassName",
+    "AstClassBases",
+    "AstClassRoot",
     "AstInterpolation",
     "AstFromImport",
     "AstImportedItem",
@@ -362,6 +365,26 @@ class AstProcMacroResult(AstNode):
     """Ast proc macro result node."""
 
     commands: AstChildren[AstCommand] = required_field()
+
+
+@dataclass(frozen=True)
+class AstClassName(AstNode):
+    """Ast class name node."""
+
+    decorators: AstChildren[AstDecorator] = AstChildren()
+    value: str = required_field()
+
+
+@dataclass(frozen=True)
+class AstClassBases(AstNode):
+    """Ast class bases node."""
+
+    inherit: AstChildren[AstExpression] = AstChildren()
+
+
+@dataclass(frozen=True)
+class AstClassRoot(AstRoot):
+    """Ast class root node."""
 
 
 @dataclass(frozen=True)
