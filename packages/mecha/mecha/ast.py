@@ -260,7 +260,7 @@ class AstNumber(AstNode):
             value = string_to_number(value)
         if isinstance(value, (int, float)):
             return AstNumber(value=value)
-        raise ValueError("Invalid number {value!r}.")
+        raise ValueError(f"Invalid number {value!r}.")
 
 
 @dataclass(frozen=True)
