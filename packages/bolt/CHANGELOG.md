@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.17.0 (2022-07-20)
+### Feature
+* Add bolt classes ([`71c1162`](https://github.com/mcbeet/bolt/commit/71c1162c99c61eb747573a370646f80b787f95f5))
+
 ## v0.16.0 (2022-07-17)
 ### Feature
 * Make modules lazy by default ([`370a759`](https://github.com/mcbeet/bolt/commit/370a7596d0a5764dfe0c2ce5e553483f8728ab60))
