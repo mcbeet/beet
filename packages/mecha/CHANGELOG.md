@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.54.6 (2022-07-20)
+### Fix
+* Missing fstring ([`7ad01d0`](https://github.com/mcbeet/mecha/commit/7ad01d03b901b117a8edf0bcd9a6a87c1d4f7eb6))
+
 ## v0.54.5 (2022-07-07)
 ### Fix
 * Missing executable check ([`d646789`](https://github.com/mcbeet/mecha/commit/d6467890aa8ee42d413d3c411309a4f255eb8a89))
