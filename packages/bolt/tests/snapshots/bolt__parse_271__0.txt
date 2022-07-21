@@ -1,0 +1,9 @@
+class A:
+#>ERROR  Macro definition can only appear directly at scope level.
+# line 2, column 5
+#      1 |  class A:
+#      2 |      macro foo:
+#        :      ^^^^^^^^^
+#      3 |          pass
+    macro foo:
+        pass

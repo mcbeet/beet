@@ -990,3 +990,30 @@ class B:
     def a(self):
         say a
         return A()
+###
+if 0:
+    import math
+###
+def f():
+    if 0:
+        import this
+###
+for i in range(10):
+    if i % 2 == 0:
+        from math import sin
+###
+if "beans":
+    macro beans:
+        pass
+###
+for bean in "beans":
+    if bean:
+        macro jelly bean(stream):
+            pass
+###
+class A:
+    macro foo:
+        pass
+###
+class B:
+    import math

@@ -44,6 +44,7 @@ __all__ = [
     "parse_name_list",
     "DeferredRootBacktracker",
     "FunctionConstraint",
+    "RootScopeHandler",
     "BinaryParser",
     "UnaryParser",
     "UnpackParser",
@@ -534,6 +535,7 @@ def create_bolt_root_parser(parser: Parser, macro_handler: "MacroHandler"):
     parser = DeferredRootBacktracker(parser, macro_handler=macro_handler)
     parser = DecoratorResolver(parser)
     parser = ProcMacroExpansion(parser)
+    parser = RootScopeHandler(parser)
     return parser
 
 
@@ -992,6 +994,7 @@ def parse_deferred_root(stream: TokenStream) -> AstDeferredRoot:
     stream_copy.data["deferred_locals"] = set()
     stream_copy.data["branch_scope"] = set()
     stream_copy.data["class_scope"] = None
+    del stream_copy.data["root_scope"]
 
     deferred_locals.clear()
 
@@ -1139,6 +1142,7 @@ class MacroHandler:
             return node
 
         if node.identifier == "macro:name:subcommand":
+            self.check_root_scope(stream, node)
             node = self.create_macro(node, stream.data.get("resource_location"))
             if not isinstance(node, AstProcMacro):
                 declaration = replace(node, arguments=AstChildren(node.arguments[:-1]))
@@ -1152,6 +1156,11 @@ class MacroHandler:
                 )
 
         return node
+
+    def check_root_scope(self, stream: TokenStream, node: AstCommand):
+        if not stream.data.get("root_scope"):
+            message = "Macro definition can only appear directly at scope level."
+            raise set_location(InvalidSyntax(message), node, node.arguments[0])
 
     def create_macro(
         self,
@@ -1474,10 +1483,17 @@ class ImportStatementHandler:
     def __call__(self, stream: TokenStream) -> Any:
         if isinstance(node := self.parser(stream), AstCommand):
             if node.identifier in ["import:module", "import:module:as:alias"]:
+                self.check_root_scope(stream, node)
                 return self.handle_import(stream, node)
             elif node.identifier == "from:module:import:subcommand":
+                self.check_root_scope(stream, node)
                 return self.handle_from_import(stream, node)
         return node
+
+    def check_root_scope(self, stream: TokenStream, node: AstCommand):
+        if not stream.data.get("root_scope"):
+            message = "Import statement can only appear directly at scope level."
+            raise set_location(InvalidSyntax(message), node)
 
     def handle_import(self, stream: TokenStream, node: AstCommand) -> AstCommand:
         identifiers = get_stream_identifiers(stream)
@@ -1715,6 +1731,17 @@ class FunctionConstraint:
                     raise set_location(exc, command)
 
         return node
+
+
+@dataclass
+class RootScopeHandler:
+    """Handle root scope."""
+
+    parser: Parser
+
+    def __call__(self, stream: TokenStream) -> Any:
+        with stream.provide(root_scope="root_scope" not in stream.data):
+            return self.parser(stream)
 
 
 @dataclass

@@ -1,0 +1,7 @@
+class B:
+#>ERROR  Import statement can only appear directly at scope level.
+# line 2, column 5
+#      1 |  class B:
+#      2 |      import math
+#        :      ^^^^^^^^^^^
+    import math

@@ -1,0 +1,8 @@
+def f():
+    if 0:
+#>ERROR  Import statement can only appear directly at scope level.
+# line 3, column 9
+#      2 |      if 0:
+#      3 |          import this
+#        :          ^^^^^^^^^^^
+        import this

@@ -1,0 +1,7 @@
+if 0:
+#>ERROR  Import statement can only appear directly at scope level.
+# line 2, column 5
+#      1 |  if 0:
+#      2 |      import math
+#        :      ^^^^^^^^^^^
+    import math
