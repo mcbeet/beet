@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.17.1 (2022-07-21)
+### Fix
+* Only allow imports and macros directly at scope level ([`2f069bd`](https://github.com/mcbeet/bolt/commit/2f069bd6ae7e689605303fb99fa272bdc4b17e36))
+
 ## v0.17.0 (2022-07-20)
 ### Feature
 * Add bolt classes ([`71c1162`](https://github.com/mcbeet/bolt/commit/71c1162c99c61eb747573a370646f80b787f95f5))
