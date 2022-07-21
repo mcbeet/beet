@@ -509,35 +509,32 @@ class ToplevelHandler:
 
 def create_bolt_root_parser(parser: Parser, macro_handler: "MacroHandler"):
     """Return parser for the root node for bolt."""
-    return ProcMacroExpansion(
-        DecoratorResolver(
-            DeferredRootBacktracker(
-                parser=ClassBodyScoping(
-                    FlushPendingIdentifiersParser(
-                        FunctionConstraint(
-                            BreakContinueConstraint(
-                                parser=IfElseLoweringParser(parser),
-                                allowed_scopes={
-                                    ("while", "condition", "body"),
-                                    ("for", "target", "in", "iterable", "body"),
-                                },
-                            ),
-                            command_identifiers={
-                                "return",
-                                "return:value",
-                                "yield",
-                                "yield:value",
-                                "yield:from:value",
-                                "global:subcommand",
-                                "nonlocal:subcommand",
-                            },
-                        )
-                    )
-                ),
-                macro_handler=macro_handler,
-            )
-        )
+    parser = IfElseLoweringParser(parser)
+    parser = BreakContinueConstraint(
+        parser,
+        allowed_scopes={
+            ("while", "condition", "body"),
+            ("for", "target", "in", "iterable", "body"),
+        },
     )
+    parser = FunctionConstraint(
+        parser,
+        command_identifiers={
+            "return",
+            "return:value",
+            "yield",
+            "yield:value",
+            "yield:from:value",
+            "global:subcommand",
+            "nonlocal:subcommand",
+        },
+    )
+    parser = FlushPendingIdentifiersParser(parser)
+    parser = ClassBodyScoping(parser)
+    parser = DeferredRootBacktracker(parser, macro_handler=macro_handler)
+    parser = DecoratorResolver(parser)
+    parser = ProcMacroExpansion(parser)
+    return parser
 
 
 class UndefinedIdentifier(InvalidSyntax):
