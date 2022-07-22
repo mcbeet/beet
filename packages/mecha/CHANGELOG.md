@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.54.7 (2022-07-22)
+### Fix
+* Properly initialize result ([`9c7ad4c`](https://github.com/mcbeet/mecha/commit/9c7ad4c9b2ae7f98a05fb19d8dfc0ad0f6982ebb))
+
 ## v0.54.6 (2022-07-20)
 ### Fix
 * Missing fstring ([`7ad01d0`](https://github.com/mcbeet/mecha/commit/7ad01d03b901b117a8edf0bcd9a6a87c1d4f7eb6))
