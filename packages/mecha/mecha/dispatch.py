@@ -360,6 +360,7 @@ class MutatingReducer(Dispatcher[Any]):
         if to_replace:
             node = replace(node, **to_replace)
 
+        result = node
         exhausted = False
 
         while not exhausted:
