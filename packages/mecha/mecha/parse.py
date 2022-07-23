@@ -151,6 +151,8 @@ from .ast import (
     AstString,
     AstSwizzle,
     AstTeam,
+    AstTemplateMirror,
+    AstTemplateRotation,
     AstTime,
     AstUUID,
     AstVector2,
@@ -224,6 +226,8 @@ def get_default_parsers() -> Dict[str, Parser]:
         "sort_order": BasicLiteralParser(AstSortOrder),
         "gamemode": BasicLiteralParser(AstGamemode),
         "entity_anchor": BasicLiteralParser(AstEntityAnchor),
+        "template_rotation": BasicLiteralParser(AstTemplateRotation),
+        "template_mirror": BasicLiteralParser(AstTemplateMirror),
         "block_predicate": BlockParser(
             resource_location_parser=delegate("resource_location_or_tag"),
             block_states_parser=AdjacentConstraint(
@@ -414,6 +418,8 @@ def get_default_parsers() -> Dict[str, Parser]:
         "command:argument:minecraft:entity": delegate("entity"),
         "command:argument:minecraft:entity_anchor": delegate("entity_anchor"),
         "command:argument:minecraft:entity_summon": delegate("resource_location"),
+        "command:argument:minecraft:template_rotation": delegate("template_rotation"),
+        "command:argument:minecraft:template_mirror": delegate("template_mirror"),
         "command:argument:minecraft:float_range": delegate("range"),
         "command:argument:minecraft:function": delegate("resource_location_or_tag"),
         "command:argument:minecraft:game_profile": EntityParser(

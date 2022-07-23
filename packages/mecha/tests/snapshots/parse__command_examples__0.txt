@@ -1,6 +1,6 @@
 <class 'mecha.ast.AstRoot'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
-  end_location: SourceLocation(pos=6359, lineno=152, colno=1)
+  end_location: SourceLocation(pos=6669, lineno=157, colno=1)
   commands:
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=14, lineno=2, colno=1)
@@ -5599,3 +5599,203 @@
                       is_tag: False
                       namespace: 'demo'
                       path: 'foo'
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=6359, lineno=152, colno=1)
+      end_location: SourceLocation(pos=6404, lineno=152, colno=46)
+      identifier: 'place:template:template:pos'
+      arguments:
+        <class 'mecha.ast.AstResourceLocation'>
+          location: SourceLocation(pos=6374, lineno=152, colno=16)
+          end_location: SourceLocation(pos=6398, lineno=152, colno=40)
+          is_tag: False
+          namespace: 'minecraft'
+          path: 'fossil/spine_1'
+        <class 'mecha.ast.AstVector3'>
+          location: SourceLocation(pos=6399, lineno=152, colno=41)
+          end_location: SourceLocation(pos=6404, lineno=152, colno=46)
+          x:
+            <class 'mecha.ast.AstCoordinate'>
+              location: SourceLocation(pos=6399, lineno=152, colno=41)
+              end_location: SourceLocation(pos=6400, lineno=152, colno=42)
+              type: 'relative'
+              value: 0
+          y:
+            <class 'mecha.ast.AstCoordinate'>
+              location: SourceLocation(pos=6401, lineno=152, colno=43)
+              end_location: SourceLocation(pos=6402, lineno=152, colno=44)
+              type: 'relative'
+              value: 0
+          z:
+            <class 'mecha.ast.AstCoordinate'>
+              location: SourceLocation(pos=6403, lineno=152, colno=45)
+              end_location: SourceLocation(pos=6404, lineno=152, colno=46)
+              type: 'relative'
+              value: 0
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=6405, lineno=153, colno=1)
+      end_location: SourceLocation(pos=6454, lineno=153, colno=50)
+      identifier: 'place:template:template:pos:rotation'
+      arguments:
+        <class 'mecha.ast.AstResourceLocation'>
+          location: SourceLocation(pos=6420, lineno=153, colno=16)
+          end_location: SourceLocation(pos=6444, lineno=153, colno=40)
+          is_tag: False
+          namespace: 'minecraft'
+          path: 'fossil/spine_1'
+        <class 'mecha.ast.AstVector3'>
+          location: SourceLocation(pos=6445, lineno=153, colno=41)
+          end_location: SourceLocation(pos=6450, lineno=153, colno=46)
+          x:
+            <class 'mecha.ast.AstCoordinate'>
+              location: SourceLocation(pos=6445, lineno=153, colno=41)
+              end_location: SourceLocation(pos=6446, lineno=153, colno=42)
+              type: 'relative'
+              value: 0
+          y:
+            <class 'mecha.ast.AstCoordinate'>
+              location: SourceLocation(pos=6447, lineno=153, colno=43)
+              end_location: SourceLocation(pos=6448, lineno=153, colno=44)
+              type: 'relative'
+              value: 0
+          z:
+            <class 'mecha.ast.AstCoordinate'>
+              location: SourceLocation(pos=6449, lineno=153, colno=45)
+              end_location: SourceLocation(pos=6450, lineno=153, colno=46)
+              type: 'relative'
+              value: 0
+        <class 'mecha.ast.AstTemplateRotation'>
+          location: SourceLocation(pos=6451, lineno=153, colno=47)
+          end_location: SourceLocation(pos=6454, lineno=153, colno=50)
+          value: '180'
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=6455, lineno=154, colno=1)
+      end_location: SourceLocation(pos=6524, lineno=154, colno=70)
+      identifier: 'place:template:template:pos:rotation:mirror'
+      arguments:
+        <class 'mecha.ast.AstResourceLocation'>
+          location: SourceLocation(pos=6470, lineno=154, colno=16)
+          end_location: SourceLocation(pos=6494, lineno=154, colno=40)
+          is_tag: False
+          namespace: 'minecraft'
+          path: 'fossil/spine_1'
+        <class 'mecha.ast.AstVector3'>
+          location: SourceLocation(pos=6495, lineno=154, colno=41)
+          end_location: SourceLocation(pos=6500, lineno=154, colno=46)
+          x:
+            <class 'mecha.ast.AstCoordinate'>
+              location: SourceLocation(pos=6495, lineno=154, colno=41)
+              end_location: SourceLocation(pos=6496, lineno=154, colno=42)
+              type: 'relative'
+              value: 0
+          y:
+            <class 'mecha.ast.AstCoordinate'>
+              location: SourceLocation(pos=6497, lineno=154, colno=43)
+              end_location: SourceLocation(pos=6498, lineno=154, colno=44)
+              type: 'relative'
+              value: 0
+          z:
+            <class 'mecha.ast.AstCoordinate'>
+              location: SourceLocation(pos=6499, lineno=154, colno=45)
+              end_location: SourceLocation(pos=6500, lineno=154, colno=46)
+              type: 'relative'
+              value: 0
+        <class 'mecha.ast.AstTemplateRotation'>
+          location: SourceLocation(pos=6501, lineno=154, colno=47)
+          end_location: SourceLocation(pos=6513, lineno=154, colno=59)
+          value: 'clockwise_90'
+        <class 'mecha.ast.AstTemplateMirror'>
+          location: SourceLocation(pos=6514, lineno=154, colno=60)
+          end_location: SourceLocation(pos=6524, lineno=154, colno=70)
+          value: 'left_right'
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=6525, lineno=155, colno=1)
+      end_location: SourceLocation(pos=6590, lineno=155, colno=66)
+      identifier: 'place:template:template:pos:rotation:mirror:integrity'
+      arguments:
+        <class 'mecha.ast.AstResourceLocation'>
+          location: SourceLocation(pos=6540, lineno=155, colno=16)
+          end_location: SourceLocation(pos=6564, lineno=155, colno=40)
+          is_tag: False
+          namespace: 'minecraft'
+          path: 'fossil/spine_1'
+        <class 'mecha.ast.AstVector3'>
+          location: SourceLocation(pos=6565, lineno=155, colno=41)
+          end_location: SourceLocation(pos=6570, lineno=155, colno=46)
+          x:
+            <class 'mecha.ast.AstCoordinate'>
+              location: SourceLocation(pos=6565, lineno=155, colno=41)
+              end_location: SourceLocation(pos=6566, lineno=155, colno=42)
+              type: 'relative'
+              value: 0
+          y:
+            <class 'mecha.ast.AstCoordinate'>
+              location: SourceLocation(pos=6567, lineno=155, colno=43)
+              end_location: SourceLocation(pos=6568, lineno=155, colno=44)
+              type: 'relative'
+              value: 0
+          z:
+            <class 'mecha.ast.AstCoordinate'>
+              location: SourceLocation(pos=6569, lineno=155, colno=45)
+              end_location: SourceLocation(pos=6570, lineno=155, colno=46)
+              type: 'relative'
+              value: 0
+        <class 'mecha.ast.AstTemplateRotation'>
+          location: SourceLocation(pos=6571, lineno=155, colno=47)
+          end_location: SourceLocation(pos=6575, lineno=155, colno=51)
+          value: 'none'
+        <class 'mecha.ast.AstTemplateMirror'>
+          location: SourceLocation(pos=6576, lineno=155, colno=52)
+          end_location: SourceLocation(pos=6586, lineno=155, colno=62)
+          value: 'front_back'
+        <class 'mecha.ast.AstNumber'>
+          location: SourceLocation(pos=6587, lineno=155, colno=63)
+          end_location: SourceLocation(pos=6590, lineno=155, colno=66)
+          value: 0.5
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=6591, lineno=156, colno=1)
+      end_location: SourceLocation(pos=6668, lineno=156, colno=78)
+      identifier: 'place:template:template:pos:rotation:mirror:integrity:seed'
+      arguments:
+        <class 'mecha.ast.AstResourceLocation'>
+          location: SourceLocation(pos=6606, lineno=156, colno=16)
+          end_location: SourceLocation(pos=6630, lineno=156, colno=40)
+          is_tag: False
+          namespace: 'minecraft'
+          path: 'fossil/spine_1'
+        <class 'mecha.ast.AstVector3'>
+          location: SourceLocation(pos=6631, lineno=156, colno=41)
+          end_location: SourceLocation(pos=6636, lineno=156, colno=46)
+          x:
+            <class 'mecha.ast.AstCoordinate'>
+              location: SourceLocation(pos=6631, lineno=156, colno=41)
+              end_location: SourceLocation(pos=6632, lineno=156, colno=42)
+              type: 'relative'
+              value: 0
+          y:
+            <class 'mecha.ast.AstCoordinate'>
+              location: SourceLocation(pos=6633, lineno=156, colno=43)
+              end_location: SourceLocation(pos=6634, lineno=156, colno=44)
+              type: 'relative'
+              value: 0
+          z:
+            <class 'mecha.ast.AstCoordinate'>
+              location: SourceLocation(pos=6635, lineno=156, colno=45)
+              end_location: SourceLocation(pos=6636, lineno=156, colno=46)
+              type: 'relative'
+              value: 0
+        <class 'mecha.ast.AstTemplateRotation'>
+          location: SourceLocation(pos=6637, lineno=156, colno=47)
+          end_location: SourceLocation(pos=6656, lineno=156, colno=66)
+          value: 'counterclockwise_90'
+        <class 'mecha.ast.AstTemplateMirror'>
+          location: SourceLocation(pos=6657, lineno=156, colno=67)
+          end_location: SourceLocation(pos=6661, lineno=156, colno=71)
+          value: 'none'
+        <class 'mecha.ast.AstNumber'>
+          location: SourceLocation(pos=6662, lineno=156, colno=72)
+          end_location: SourceLocation(pos=6665, lineno=156, colno=75)
+          value: 0.6
+        <class 'mecha.ast.AstNumber'>
+          location: SourceLocation(pos=6666, lineno=156, colno=76)
+          end_location: SourceLocation(pos=6668, lineno=156, colno=78)
+          value: 42

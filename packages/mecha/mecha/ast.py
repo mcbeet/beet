@@ -26,6 +26,8 @@ __all__ = [
     "AstSortOrder",
     "AstGamemode",
     "AstEntityAnchor",
+    "AstTemplateRotation",
+    "AstTemplateMirror",
     "AstVector2",
     "AstVector3",
     "AstJson",
@@ -510,6 +512,22 @@ class AstEntityAnchor(AstOption):
 
     parser = "entity_anchor"
     options = {"eyes", "feet"}
+
+
+@dataclass(frozen=True)
+class AstTemplateRotation(AstOption):
+    """Ast template rotation node."""
+
+    parser = "template_rotation"
+    options = {"180", "clockwise_90", "counterclockwise_90", "none"}
+
+
+@dataclass(frozen=True)
+class AstTemplateMirror(AstOption):
+    """Ast template mirror node."""
+
+    parser = "template_mirror"
+    options = {"front_back", "left_right", "none"}
 
 
 @dataclass(frozen=True)

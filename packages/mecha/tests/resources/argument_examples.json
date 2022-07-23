@@ -228,6 +228,16 @@
       "examples": ["#minecraft:pig", "#cow"]
     }
   ],
+  "minecraft:template_rotation": [
+    {
+      "examples": ["180", "clockwise_90", "counterclockwise_90", "none"]
+    }
+  ],
+  "minecraft:template_mirror": [
+    {
+      "examples": ["front_back", "left_right", "none"]
+    }
+  ],
   "minecraft:float_range": [
     {
       "examples": ["0..5.2", "0", "-5.4", "-100.76..", "..100"]

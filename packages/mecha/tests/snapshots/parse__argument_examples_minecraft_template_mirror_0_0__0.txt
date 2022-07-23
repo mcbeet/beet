@@ -1,0 +1,12 @@
+minecraft:template_mirror 0 0
+---
+{}
+---
+front_back
+---
+front_back
+---
+<class 'mecha.ast.AstTemplateMirror'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=10, lineno=1, colno=11)
+  value: 'front_back'

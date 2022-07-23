@@ -1,0 +1,12 @@
+minecraft:template_rotation 0 2
+---
+{}
+---
+counterclockwise_90
+---
+counterclockwise_90
+---
+<class 'mecha.ast.AstTemplateRotation'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=19, lineno=1, colno=20)
+  value: 'counterclockwise_90'

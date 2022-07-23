@@ -149,3 +149,8 @@ scoreboard players set ✔ foo 42
 execute at @e[type=armor_stand,name="ctf",tag=!FlagBearer] run particle block_marker barrier ~ ~.8 ~ 0 0 0 0 1 force
 execute store result score @s smithed.data run clear @s #smithed:crafter/all 0
 execute if entity @s[distance=..0.00000001] run function demo:foo
+place template minecraft:fossil/spine_1 ~ ~ ~
+place template minecraft:fossil/spine_1 ~ ~ ~ 180
+place template minecraft:fossil/spine_1 ~ ~ ~ clockwise_90 left_right
+place template minecraft:fossil/spine_1 ~ ~ ~ none front_back 0.5
+place template minecraft:fossil/spine_1 ~ ~ ~ counterclockwise_90 none 0.6 42

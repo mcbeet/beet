@@ -1,0 +1,12 @@
+minecraft:template_mirror 0 2
+---
+{}
+---
+none
+---
+none
+---
+<class 'mecha.ast.AstTemplateMirror'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=4, lineno=1, colno=5)
+  value: 'none'
