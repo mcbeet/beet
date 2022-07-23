@@ -2,6 +2,11 @@
 
 <!--next-version-placeholder-->
 
+## v0.54.8 (2022-07-23)
+### Fix
+* Resolve source paths provided for validation according to the context directory ([`72e638f`](https://github.com/mcbeet/mecha/commit/72e638fe75392b70d06661c67c6405b1ac99281c))
+* Add missing template_rotation and template_mirror parsers ([`718c907`](https://github.com/mcbeet/mecha/commit/718c907e263e3b516fe1881fd3f4775485d3d1e9))
+
 ## v0.54.7 (2022-07-22)
 ### Fix
 * Properly initialize result ([`9c7ad4c`](https://github.com/mcbeet/mecha/commit/9c7ad4c9b2ae7f98a05fb19d8dfc0ad0f6982ebb))
