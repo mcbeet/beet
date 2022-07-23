@@ -8,7 +8,6 @@ __all__ = [
 import logging
 import os
 import zipfile
-from pathlib import Path
 from typing import Optional, Tuple
 
 import click
@@ -23,14 +22,17 @@ from .api import Mecha
 def validate(ctx: Context):
     """Plugin for running mecha on the provided sources."""
     mc = ctx.inject(Mecha)
-    source = ctx.meta["source"]
 
-    for path in map(Path, source):
+    for path in ctx.meta["source"]:
+        path = ctx.directory / path
+
         if zipfile.is_zipfile(path) or (path / "data").is_dir():
             mc.compile(DataPack(path=path), report=mc.diagnostics)
+
         elif path.is_dir():
             for filename in path.glob("**/*.mcfunction"):
                 mc.compile(Function(source_path=filename), report=mc.diagnostics)
+
         elif path.is_file():
             mc.compile(Function(source_path=path), report=mc.diagnostics)
 
