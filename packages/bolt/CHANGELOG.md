@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.17.3 (2022-07-25)
+### Fix
+* Enable interpolation for uuid ([`39cc462`](https://github.com/mcbeet/bolt/commit/39cc4624f555874808c629000c260c2feefbb5b4))
+
 ## v0.17.2 (2022-07-25)
 ### Fix
 * Enable interpolation for game_profile argument ([`e844f49`](https://github.com/mcbeet/bolt/commit/e844f49906fa693edf9fe509427211b2b01ad39d))
