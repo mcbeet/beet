@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.17.2 (2022-07-25)
+### Fix
+* Enable interpolation for game_profile argument ([`e844f49`](https://github.com/mcbeet/bolt/commit/e844f49906fa693edf9fe509427211b2b01ad39d))
+
 ## v0.17.1 (2022-07-21)
 ### Fix
 * Only allow imports and macros directly at scope level ([`2f069bd`](https://github.com/mcbeet/bolt/commit/2f069bd6ae7e689605303fb99fa272bdc4b17e36))
