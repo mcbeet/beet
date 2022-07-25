@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.54.9 (2022-07-25)
+### Fix
+* Expose game_profile parser ([`2d0d6d6`](https://github.com/mcbeet/mecha/commit/2d0d6d6825cf8a649d5f054de7a3d419548505c9))
+
 ## v0.54.8 (2022-07-23)
 ### Fix
 * Resolve source paths provided for validation according to the context directory ([`72e638f`](https://github.com/mcbeet/mecha/commit/72e638fe75392b70d06661c67c6405b1ac99281c))
