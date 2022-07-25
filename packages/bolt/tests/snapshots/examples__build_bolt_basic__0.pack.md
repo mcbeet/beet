@@ -268,6 +268,8 @@ say dummy
 say dummy
 say AstCommand(identifier='tellraw:targets:message', arguments=AstChildren((AstSelector(variable='p', arguments=AstChildren(())), AstJsonValue(value='hello'))))
 say tellraw @p "hello"
+execute as 00000001-0002-0003-0405-000000000006 run function test:test
+whitelist add bdd640fb-0667-1ad1-1c80-317fa3b1799d
 ```
 
 `@function demo:import_a`

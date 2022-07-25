@@ -432,6 +432,9 @@ def get_bolt_parsers(
         "score_holder": CommentDisambiguation(
             InterpolationParser("entity", parsers["score_holder"])
         ),
+        "game_profile": CommentDisambiguation(
+            InterpolationParser("entity", parsers["game_profile"])
+        ),
     }
 
 

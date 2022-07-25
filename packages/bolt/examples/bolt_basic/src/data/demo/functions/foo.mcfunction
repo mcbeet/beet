@@ -652,3 +652,13 @@ with runtime.scope() as commands:
 
 say repr(commands[0])
 say commands[0]
+
+from uuid import UUID
+execute as UUID(fields=(1, 2, 3, 4, 5, 6)) function test:test
+
+from random import Random
+
+rd = Random()
+rd.seed(42)
+random_id = UUID(int=rd.getrandbits(128))
+whitelist add random_id
