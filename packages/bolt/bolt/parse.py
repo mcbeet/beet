@@ -406,6 +406,7 @@ def get_bolt_parsers(
         "item_slot": InterpolationParser(
             "item_slot", parsers["item_slot"], fallback=True
         ),
+        "uuid": InterpolationParser("uuid", parsers["uuid"]),
         "objective": InterpolationParser("objective", parsers["objective"]),
         "objective_criteria": InterpolationParser(
             "objective_criteria", parsers["objective_criteria"]
