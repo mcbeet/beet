@@ -13,7 +13,7 @@ __all__ = [
 
 from typing import Union
 
-from beet import Context, JsonFile, ResourcePack, TextFile, Texture
+from beet import Context, JsonFile, PngFile, ResourcePack, TextFile
 
 
 def beet_default(ctx: Context):
@@ -54,10 +54,11 @@ class OptifineProperties(TextFile):
     extension = ".properties"
 
 
-class OptifineTexture(Texture):
+class OptifineTexture(PngFile):
     """Class representing an optifine texture."""
 
     scope = ("optifine",)
+    extension = ".png"
 
 
 class ShaderProperties(TextFile):
