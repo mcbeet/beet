@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.70.0 (2022-07-29)
+### Feature
+* Add beet.contrib.optifine ([#295](https://github.com/mcbeet/beet/issues/295)) ([`98e99eb`](https://github.com/mcbeet/beet/commit/98e99eb62508e99ebaf875d38a73a3c54d434727))
+
 ## v0.69.0 (2022-07-18)
 ### Feature
 * Add beet.contrib.vanilla ([`e0d6e6a`](https://github.com/mcbeet/beet/commit/e0d6e6a000f5a637faddc16cf717714d1f8039a9))
