@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.71.0 (2022-07-30)
+### Feature
+* Warn about watcher triggering builds repeatedly ([`2a4ee1c`](https://github.com/mcbeet/beet/commit/2a4ee1c10a80f4a9af9ab7ac4a92d36569c05cfc))
+
 ## v0.70.0 (2022-07-29)
 ### Feature
 * Add beet.contrib.optifine ([#295](https://github.com/mcbeet/beet/issues/295)) ([`98e99eb`](https://github.com/mcbeet/beet/commit/98e99eb62508e99ebaf875d38a73a3c54d434727))
