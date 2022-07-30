@@ -4,6 +4,7 @@ __all__ = [
 ]
 
 
+import logging
 from contextlib import ExitStack, contextmanager
 from copy import deepcopy
 from dataclasses import dataclass
@@ -27,7 +28,7 @@ from beet.core.utils import (
     normalize_string,
     split_version,
 )
-from beet.core.watch import DirectoryWatcher, FileChanges
+from beet.core.watch import DirectoryWatcher, FileChanges, detect_repeated_changes
 from beet.library.base import LATEST_MINECRAFT_VERSION
 
 from .config import PackConfig, ProjectConfig, load_config, locate_config
@@ -120,19 +121,33 @@ class Project:
 
     def watch(self, interval: float = 0.6) -> Iterator[FileChanges]:
         """Watch the project."""
+        watch_logger = logging.getLogger("watch")
+
+        watcher = DirectoryWatcher(
+            self.directory,
+            interval,
+            ignore_file=".gitignore",
+            ignore_patterns=[
+                f"{self.cache.path.relative_to(self.directory.resolve()).as_posix()}/",
+                f"{self.cache.generated.path.relative_to(self.directory.resolve()).as_posix()}/",
+                "__pycache__/",
+                "*.tmp",
+                ".*",
+                *self.ignore,
+            ],
+        )
+        watcher = detect_repeated_changes(watcher, min_interval=interval * 2)
+
         with self.worker_pool.long_lived_session():
-            for changes in DirectoryWatcher(
-                self.directory,
-                interval,
-                ignore_file=".gitignore",
-                ignore_patterns=[
-                    f"{self.cache.path.relative_to(self.directory.resolve()).as_posix()}/",
-                    "__pycache__/",
-                    "*.tmp",
-                    ".*",
-                    *self.ignore,
-                ],
-            ):
+            for repeated, changes in watcher:
+                if repeated:
+                    watch_logger.warning(
+                        "Build triggered repeatedly by file changes in the project directory.\n"
+                        "The following files are picked up by the directory watcher after each build:\n"
+                        + "\n".join(f'  - "{filename}"' for filename in changes)
+                    )
+                    continue
+
                 self.reset()
                 yield changes
 

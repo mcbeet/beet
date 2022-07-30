@@ -1,6 +1,7 @@
 __all__ = [
     "DirectoryWatcher",
     "FileChanges",
+    "detect_repeated_changes",
 ]
 
 
@@ -8,7 +9,7 @@ import os
 import time
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Dict, Iterator, Literal, Optional, Sequence, Tuple, cast
+from typing import Dict, Iterable, Iterator, Literal, Optional, Sequence, Tuple, cast
 
 from pathspec import PathSpec
 
@@ -97,3 +98,25 @@ class DirectoryWatcher:
                 yield from self.walk(relative_path)
             else:
                 yield str(relative_path), entry.stat().st_mtime
+
+
+def detect_repeated_changes(
+    source: Iterable[FileChanges],
+    min_interval: float = 1.2,
+    max_streak: int = 3,
+) -> Iterator[Tuple[bool, FileChanges]]:
+    """Detect repeated changes."""
+    streak: int = 0
+    last_build: float = 0.0
+    last_changes: FileChanges = {}
+
+    for changes in source:
+        if time.time() - last_build < min_interval and changes == last_changes:
+            streak += 1
+        else:
+            streak = 0
+
+        yield streak > max_streak, changes
+
+        last_build = time.time()
+        last_changes = changes

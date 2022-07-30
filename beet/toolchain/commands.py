@@ -88,7 +88,7 @@ def watch(
             filename, action = next(iter(changes.items()))
 
             text = (
-                f"{action.capitalize()} '{filename}'"
+                f'{action.capitalize()} "{filename}"'
                 if changes == {filename: action}
                 else f"{len(changes)} changes detected"
             )
