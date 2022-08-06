@@ -1019,3 +1019,19 @@ class B:
     import math
 ###
 particle minecraft:dust 0.00000 (117/255) (164/255) 0.5 ~ ~ ~ 0 0 0 0 1 force @s
+###
+say @s[tag=hex.summon]
+###
+hex = 42
+say @s[tag=hex.summon]
+###
+say @s[tag=hex(42)]
+###
+time set hex.time
+###
+hex = 123
+time set hex.time
+###
+time set hex(123)
+###
+say @s[tag=id]

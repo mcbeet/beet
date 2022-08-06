@@ -1,0 +1,5 @@
+#>ERROR  Expected literal 'day', literal 'midnight', literal 'night', literal 'noon' or time but got literal 'hex.time'.
+# line 1, column 10
+#      1 |  time set hex.time
+#        :           ^^^^^^^^
+time set hex.time

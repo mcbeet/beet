@@ -1,5 +1,6 @@
 __all__ = [
     "get_bolt_parsers",
+    "get_stream_builtins",
     "get_stream_identifiers",
     "get_stream_pending_identifiers",
     "get_stream_identifiers_storage",
@@ -52,6 +53,7 @@ __all__ = [
     "KeywordParser",
     "LookupParser",
     "PrimaryParser",
+    "BuiltinCallRestriction",
     "parse_dict_item",
     "LiteralParser",
 ]
@@ -256,7 +258,9 @@ def get_bolt_parsers(
         "bolt:class_bases": parse_class_bases,
         "bolt:class_root": parse_class_root,
         "bolt:del_target": parse_del_target,
-        "bolt:interpolation": PrimaryParser(delegate("bolt:identifier"), truncate=True),
+        "bolt:interpolation": BuiltinCallRestriction(
+            PrimaryParser(delegate("bolt:identifier"), truncate=True)
+        ),
         "bolt:identifier": parse_identifier,
         "bolt:with_expression": TrailingCommaParser(delegate("bolt:expression")),
         "bolt:with_target": TrailingCommaParser(
@@ -439,6 +443,11 @@ def get_bolt_parsers(
     }
 
 
+def get_stream_builtins(stream: TokenStream) -> Set[str]:
+    """Return the set of builtin identifiers currently associated with the token stream."""
+    return stream.data.setdefault("builtins", set())
+
+
 def get_stream_identifiers(stream: TokenStream) -> Set[str]:
     """Return the set of accessible identifiers currently associated with the token stream."""
     return stream.data.setdefault("identifiers", set())
@@ -498,6 +507,7 @@ class ToplevelHandler:
 
         with self.modules.parse_push(current), stream.provide(
             resource_location=self.modules.database[current].resource_location,
+            builtins=self.modules.builtins,
             identifiers=set(self.modules.globals)
             | self.modules.builtins
             | {"__name__"},
@@ -2066,6 +2076,33 @@ class PrimaryParser:
                 node = set_location(node, node.value, stream.current)
 
         return node
+
+
+@dataclass
+class BuiltinCallRestriction:
+    """Only allow call expressions on builtins."""
+
+    parser: Parser
+
+    def __call__(self, stream: TokenStream) -> Any:
+        parent = None
+        node = self.parser(stream)
+        original = node
+
+        while isinstance(node, (AstAttribute, AstLookup, AstCall)):
+            parent = node
+            node = node.value
+
+        if (
+            isinstance(node, AstIdentifier)
+            and not isinstance(parent, AstCall)
+            and node.value in get_stream_builtins(stream)
+            and node.value not in get_stream_identifiers_storage(stream)
+        ):
+            msg = f'Expected call expression on builtin "{node.value}".'
+            raise set_location(InvalidSyntax(msg), parent)
+
+        return original
 
 
 def parse_dict_item(stream: TokenStream) -> Any:

@@ -1,0 +1,67 @@
+hex = 42
+say @s[tag=hex.summon]
+---
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=31, lineno=2, colno=23)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=8, lineno=1, colno=9)
+      identifier: 'statement'
+      arguments:
+        <class 'bolt.ast.AstAssignment'>
+          location: SourceLocation(pos=0, lineno=1, colno=1)
+          end_location: SourceLocation(pos=8, lineno=1, colno=9)
+          operator: '='
+          target:
+            <class 'bolt.ast.AstTargetIdentifier'>
+              location: SourceLocation(pos=0, lineno=1, colno=1)
+              end_location: SourceLocation(pos=3, lineno=1, colno=4)
+              value: 'hex'
+              rebind: False
+          value:
+            <class 'bolt.ast.AstValue'>
+              location: SourceLocation(pos=6, lineno=1, colno=7)
+              end_location: SourceLocation(pos=8, lineno=1, colno=9)
+              value: 42
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=9, lineno=2, colno=1)
+      end_location: SourceLocation(pos=31, lineno=2, colno=23)
+      identifier: 'say:message'
+      arguments:
+        <class 'mecha.ast.AstMessage'>
+          location: SourceLocation(pos=13, lineno=2, colno=5)
+          end_location: SourceLocation(pos=31, lineno=2, colno=23)
+          fragments:
+            <class 'mecha.ast.AstSelector'>
+              location: SourceLocation(pos=13, lineno=2, colno=5)
+              end_location: SourceLocation(pos=31, lineno=2, colno=23)
+              variable: 's'
+              arguments:
+                <class 'mecha.ast.AstSelectorArgument'>
+                  location: SourceLocation(pos=16, lineno=2, colno=8)
+                  end_location: SourceLocation(pos=30, lineno=2, colno=22)
+                  inverted: False
+                  key:
+                    <class 'mecha.ast.AstString'>
+                      location: SourceLocation(pos=16, lineno=2, colno=8)
+                      end_location: SourceLocation(pos=19, lineno=2, colno=11)
+                      value: 'tag'
+                  value:
+                    <class 'bolt.ast.AstInterpolation'>
+                      location: SourceLocation(pos=20, lineno=2, colno=12)
+                      end_location: SourceLocation(pos=30, lineno=2, colno=22)
+                      prefix: None
+                      unpack: None
+                      converter: 'word'
+                      value:
+                        <class 'bolt.ast.AstAttribute'>
+                          location: SourceLocation(pos=20, lineno=2, colno=12)
+                          end_location: SourceLocation(pos=30, lineno=2, colno=22)
+                          name: 'summon'
+                          value:
+                            <class 'bolt.ast.AstIdentifier'>
+                              location: SourceLocation(pos=20, lineno=2, colno=12)
+                              end_location: SourceLocation(pos=23, lineno=2, colno=15)
+                              value: 'hex'

@@ -1,0 +1,34 @@
+say @s[tag=id]
+---
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=14, lineno=1, colno=15)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=14, lineno=1, colno=15)
+      identifier: 'say:message'
+      arguments:
+        <class 'mecha.ast.AstMessage'>
+          location: SourceLocation(pos=4, lineno=1, colno=5)
+          end_location: SourceLocation(pos=14, lineno=1, colno=15)
+          fragments:
+            <class 'mecha.ast.AstSelector'>
+              location: SourceLocation(pos=4, lineno=1, colno=5)
+              end_location: SourceLocation(pos=14, lineno=1, colno=15)
+              variable: 's'
+              arguments:
+                <class 'mecha.ast.AstSelectorArgument'>
+                  location: SourceLocation(pos=7, lineno=1, colno=8)
+                  end_location: SourceLocation(pos=13, lineno=1, colno=14)
+                  inverted: False
+                  key:
+                    <class 'mecha.ast.AstString'>
+                      location: SourceLocation(pos=7, lineno=1, colno=8)
+                      end_location: SourceLocation(pos=10, lineno=1, colno=11)
+                      value: 'tag'
+                  value:
+                    <class 'mecha.ast.AstWord'>
+                      location: SourceLocation(pos=11, lineno=1, colno=12)
+                      end_location: SourceLocation(pos=13, lineno=1, colno=14)
+                      value: 'id'

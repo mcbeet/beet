@@ -1,0 +1,61 @@
+_bolt_lineno = [1, 9], [1, 2]
+_bolt_helper_get_attribute = _bolt_runtime.helpers['get_attribute']
+_bolt_helper_interpolate_word = _bolt_runtime.helpers['interpolate_word']
+_bolt_helper_replace = _bolt_runtime.helpers['replace']
+_bolt_helper_children = _bolt_runtime.helpers['children']
+with _bolt_runtime.scope() as _bolt_var2:
+    _bolt_var0 = 42
+    hex = _bolt_var0
+    _bolt_var1 = hex
+    _bolt_var1 = _bolt_helper_get_attribute(_bolt_var1, 'summon')
+    _bolt_var1 = _bolt_helper_interpolate_word(_bolt_var1, _bolt_refs[0])
+    _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[4], arguments=_bolt_helper_children([_bolt_helper_replace(_bolt_refs[3], fragments=_bolt_helper_children([_bolt_helper_replace(_bolt_refs[2], arguments=_bolt_helper_children([_bolt_helper_replace(_bolt_refs[1], value=_bolt_var1)]))]))])))
+_bolt_var3 = _bolt_helper_replace(_bolt_refs[5], commands=_bolt_helper_children(_bolt_var2))
+---
+output = _bolt_var3
+---
+_bolt_refs[0]
+<class 'bolt.ast.AstInterpolation'>
+  location: SourceLocation(pos=20, lineno=2, colno=12)
+  end_location: SourceLocation(pos=30, lineno=2, colno=22)
+  prefix: None
+  unpack: None
+  converter: 'word'
+  value:
+    <class 'bolt.ast.AstAttribute'>
+_bolt_refs[1]
+<class 'mecha.ast.AstSelectorArgument'>
+  location: SourceLocation(pos=16, lineno=2, colno=8)
+  end_location: SourceLocation(pos=30, lineno=2, colno=22)
+  inverted: False
+  key:
+    <class 'mecha.ast.AstString'>
+  value:
+    <class 'bolt.ast.AstInterpolation'>
+_bolt_refs[2]
+<class 'mecha.ast.AstSelector'>
+  location: SourceLocation(pos=13, lineno=2, colno=5)
+  end_location: SourceLocation(pos=31, lineno=2, colno=23)
+  variable: 's'
+  arguments:
+    <class 'mecha.ast.AstSelectorArgument'>
+_bolt_refs[3]
+<class 'mecha.ast.AstMessage'>
+  location: SourceLocation(pos=13, lineno=2, colno=5)
+  end_location: SourceLocation(pos=31, lineno=2, colno=23)
+  fragments:
+    <class 'mecha.ast.AstSelector'>
+_bolt_refs[4]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=9, lineno=2, colno=1)
+  end_location: SourceLocation(pos=31, lineno=2, colno=23)
+  identifier: 'say:message'
+  arguments:
+    <class 'mecha.ast.AstMessage'>
+_bolt_refs[5]
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=31, lineno=2, colno=23)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+    <class 'mecha.ast.AstCommand'>
