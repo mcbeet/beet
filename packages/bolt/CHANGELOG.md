@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.17.4 (2022-08-06)
+### Fix
+* Truncate primary expression for interpolation ([`014802f`](https://github.com/mcbeet/bolt/commit/014802fcf98314b270868503a8f4bca1a3429d31))
+
 ## v0.17.3 (2022-07-25)
 ### Fix
 * Enable interpolation for uuid ([`39cc462`](https://github.com/mcbeet/bolt/commit/39cc4624f555874808c629000c260c2feefbb5b4))
