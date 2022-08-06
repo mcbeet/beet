@@ -2,6 +2,11 @@
 
 <!--next-version-placeholder-->
 
+## v0.17.5 (2022-08-06)
+### Fix
+* Builtins used as dict keys are now unquoted strings ([`015ff65`](https://github.com/mcbeet/bolt/commit/015ff657229b02d5930b0a5756e95d515e8df70e))
+* Only allow call expressions on builtins for interpolation ([`0526a85`](https://github.com/mcbeet/bolt/commit/0526a85af232e05255e24e07a43ee720a1bb87f4))
+
 ## v0.17.4 (2022-08-06)
 ### Fix
 * Truncate primary expression for interpolation ([`014802f`](https://github.com/mcbeet/bolt/commit/014802fcf98314b270868503a8f4bca1a3429d31))
