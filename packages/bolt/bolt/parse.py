@@ -256,7 +256,7 @@ def get_bolt_parsers(
         "bolt:class_bases": parse_class_bases,
         "bolt:class_root": parse_class_root,
         "bolt:del_target": parse_del_target,
-        "bolt:interpolation": PrimaryParser(delegate("bolt:identifier")),
+        "bolt:interpolation": PrimaryParser(delegate("bolt:identifier"), truncate=True),
         "bolt:identifier": parse_identifier,
         "bolt:with_expression": TrailingCommaParser(delegate("bolt:expression")),
         "bolt:with_target": TrailingCommaParser(
@@ -1898,6 +1898,8 @@ class PrimaryParser:
     """Parser for primary expressions."""
 
     parser: Parser
+    truncate: bool = False
+
     quote_helper: QuoteHelper = field(default_factory=JsonQuoteHelper)
 
     def __call__(self, stream: TokenStream) -> Any:
@@ -1921,6 +1923,9 @@ class PrimaryParser:
                     else:
                         node = AstTuple(items=AstChildren(items))
                         node = set_location(node, token, stream.current)
+
+                if self.truncate:
+                    return node
 
             elif token and token.match("format_string"):
                 quote = token.value[-1]
@@ -1971,6 +1976,9 @@ class PrimaryParser:
 
                     node = AstFormatString(fmt=fmt, values=AstChildren(values))
                     node = set_location(node, token, end_quote)
+
+                if self.truncate:
+                    return node
 
             else:
                 node = self.parser(stream)
