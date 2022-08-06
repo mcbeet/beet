@@ -343,7 +343,7 @@ my_predicate = {
   entity: "this",
   scores: {
     score1: {
-      "min": {
+      min: {
         type: "minecraft:score",
         target: "this",
         score: "score2",
@@ -1035,3 +1035,8 @@ time set hex.time
 time set hex(123)
 ###
 say @s[tag=id]
+###
+ingredients = [{id: "minecraft:blaze_powder"}, {id: "minecraft:furnace"}]
+###
+id = 42
+ingredients = [{id: "minecraft:blaze_powder"}, {id: "minecraft:furnace"}]

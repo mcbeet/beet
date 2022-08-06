@@ -29,6 +29,6 @@ output = _bolt_var20
 _bolt_refs[0]
 <class 'mecha.ast.AstRoot'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
-  end_location: SourceLocation(pos=235, lineno=15, colno=1)
+  end_location: SourceLocation(pos=233, lineno=15, colno=1)
   commands:
     <class 'mecha.ast.AstCommand'>

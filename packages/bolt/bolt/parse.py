@@ -2107,15 +2107,16 @@ class BuiltinCallRestriction:
 
 def parse_dict_item(stream: TokenStream) -> Any:
     """Parse dict item node."""
-    identifiers = get_stream_identifiers(stream)
-
     with stream.syntax(colon=r":", identifier=IDENTIFIER_PATTERN):
         with stream.checkpoint() as commit:
             identifier = stream.expect("identifier")
             stream.expect("colon")
             commit()
 
-            if identifier.value in identifiers:
+            if identifier.value in get_stream_identifiers(stream) and (
+                not identifier.value in get_stream_builtins(stream)
+                or identifier.value in get_stream_identifiers_storage(stream)
+            ):
                 key = AstIdentifier(value=identifier.value)
             else:
                 key = AstDictUnquotedKey(value=identifier.value)

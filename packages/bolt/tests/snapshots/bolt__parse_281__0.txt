@@ -1,0 +1,60 @@
+ingredients = [{id: "minecraft:blaze_powder"}, {id: "minecraft:furnace"}]
+---
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=74, lineno=2, colno=1)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=73, lineno=1, colno=74)
+      identifier: 'statement'
+      arguments:
+        <class 'bolt.ast.AstAssignment'>
+          location: SourceLocation(pos=0, lineno=1, colno=1)
+          end_location: SourceLocation(pos=73, lineno=1, colno=74)
+          operator: '='
+          target:
+            <class 'bolt.ast.AstTargetIdentifier'>
+              location: SourceLocation(pos=0, lineno=1, colno=1)
+              end_location: SourceLocation(pos=11, lineno=1, colno=12)
+              value: 'ingredients'
+              rebind: False
+          value:
+            <class 'bolt.ast.AstList'>
+              location: SourceLocation(pos=14, lineno=1, colno=15)
+              end_location: SourceLocation(pos=73, lineno=1, colno=74)
+              items:
+                <class 'bolt.ast.AstDict'>
+                  location: SourceLocation(pos=15, lineno=1, colno=16)
+                  end_location: SourceLocation(pos=45, lineno=1, colno=46)
+                  items:
+                    <class 'bolt.ast.AstDictItem'>
+                      location: SourceLocation(pos=16, lineno=1, colno=17)
+                      end_location: SourceLocation(pos=44, lineno=1, colno=45)
+                      key:
+                        <class 'bolt.ast.AstDictUnquotedKey'>
+                          location: SourceLocation(pos=16, lineno=1, colno=17)
+                          end_location: SourceLocation(pos=18, lineno=1, colno=19)
+                          value: 'id'
+                      value:
+                        <class 'bolt.ast.AstValue'>
+                          location: SourceLocation(pos=20, lineno=1, colno=21)
+                          end_location: SourceLocation(pos=44, lineno=1, colno=45)
+                          value: 'minecraft:blaze_powder'
+                <class 'bolt.ast.AstDict'>
+                  location: SourceLocation(pos=47, lineno=1, colno=48)
+                  end_location: SourceLocation(pos=72, lineno=1, colno=73)
+                  items:
+                    <class 'bolt.ast.AstDictItem'>
+                      location: SourceLocation(pos=48, lineno=1, colno=49)
+                      end_location: SourceLocation(pos=71, lineno=1, colno=72)
+                      key:
+                        <class 'bolt.ast.AstDictUnquotedKey'>
+                          location: SourceLocation(pos=48, lineno=1, colno=49)
+                          end_location: SourceLocation(pos=50, lineno=1, colno=51)
+                          value: 'id'
+                      value:
+                        <class 'bolt.ast.AstValue'>
+                          location: SourceLocation(pos=52, lineno=1, colno=53)
+                          end_location: SourceLocation(pos=71, lineno=1, colno=72)
+                          value: 'minecraft:furnace'

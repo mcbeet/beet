@@ -3,7 +3,7 @@ my_predicate = {
   entity: "this",
   scores: {
     score1: {
-      "min": {
+      min: {
         type: "minecraft:score",
         target: "this",
         score: "score2",
@@ -15,16 +15,16 @@ my_predicate = {
 ---
 <class 'mecha.ast.AstRoot'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
-  end_location: SourceLocation(pos=235, lineno=15, colno=1)
+  end_location: SourceLocation(pos=233, lineno=15, colno=1)
   commands:
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=0, lineno=1, colno=1)
-      end_location: SourceLocation(pos=234, lineno=14, colno=2)
+      end_location: SourceLocation(pos=232, lineno=14, colno=2)
       identifier: 'statement'
       arguments:
         <class 'bolt.ast.AstAssignment'>
           location: SourceLocation(pos=0, lineno=1, colno=1)
-          end_location: SourceLocation(pos=234, lineno=14, colno=2)
+          end_location: SourceLocation(pos=232, lineno=14, colno=2)
           operator: '='
           target:
             <class 'bolt.ast.AstTargetIdentifier'>
@@ -35,7 +35,7 @@ my_predicate = {
           value:
             <class 'bolt.ast.AstDict'>
               location: SourceLocation(pos=15, lineno=1, colno=16)
-              end_location: SourceLocation(pos=234, lineno=14, colno=2)
+              end_location: SourceLocation(pos=232, lineno=14, colno=2)
               items:
                 <class 'bolt.ast.AstDictItem'>
                   location: SourceLocation(pos=19, lineno=2, colno=3)
@@ -65,7 +65,7 @@ my_predicate = {
                       value: 'this'
                 <class 'bolt.ast.AstDictItem'>
                   location: SourceLocation(pos=77, lineno=4, colno=3)
-                  end_location: SourceLocation(pos=232, lineno=13, colno=4)
+                  end_location: SourceLocation(pos=230, lineno=13, colno=4)
                   key:
                     <class 'bolt.ast.AstDictUnquotedKey'>
                       location: SourceLocation(pos=77, lineno=4, colno=3)
@@ -74,11 +74,11 @@ my_predicate = {
                   value:
                     <class 'bolt.ast.AstDict'>
                       location: SourceLocation(pos=85, lineno=4, colno=11)
-                      end_location: SourceLocation(pos=232, lineno=13, colno=4)
+                      end_location: SourceLocation(pos=230, lineno=13, colno=4)
                       items:
                         <class 'bolt.ast.AstDictItem'>
                           location: SourceLocation(pos=91, lineno=5, colno=5)
-                          end_location: SourceLocation(pos=228, lineno=12, colno=6)
+                          end_location: SourceLocation(pos=226, lineno=12, colno=6)
                           key:
                             <class 'bolt.ast.AstDictUnquotedKey'>
                               location: SourceLocation(pos=91, lineno=5, colno=5)
@@ -87,70 +87,70 @@ my_predicate = {
                           value:
                             <class 'bolt.ast.AstDict'>
                               location: SourceLocation(pos=99, lineno=5, colno=13)
-                              end_location: SourceLocation(pos=228, lineno=12, colno=6)
+                              end_location: SourceLocation(pos=226, lineno=12, colno=6)
                               items:
                                 <class 'bolt.ast.AstDictItem'>
                                   location: SourceLocation(pos=107, lineno=6, colno=7)
-                                  end_location: SourceLocation(pos=222, lineno=11, colno=8)
+                                  end_location: SourceLocation(pos=220, lineno=11, colno=8)
                                   key:
-                                    <class 'bolt.ast.AstValue'>
+                                    <class 'bolt.ast.AstDictUnquotedKey'>
                                       location: SourceLocation(pos=107, lineno=6, colno=7)
-                                      end_location: SourceLocation(pos=112, lineno=6, colno=12)
+                                      end_location: SourceLocation(pos=110, lineno=6, colno=10)
                                       value: 'min'
                                   value:
                                     <class 'bolt.ast.AstDict'>
-                                      location: SourceLocation(pos=114, lineno=6, colno=14)
-                                      end_location: SourceLocation(pos=222, lineno=11, colno=8)
+                                      location: SourceLocation(pos=112, lineno=6, colno=12)
+                                      end_location: SourceLocation(pos=220, lineno=11, colno=8)
                                       items:
                                         <class 'bolt.ast.AstDictItem'>
-                                          location: SourceLocation(pos=124, lineno=7, colno=9)
-                                          end_location: SourceLocation(pos=147, lineno=7, colno=32)
+                                          location: SourceLocation(pos=122, lineno=7, colno=9)
+                                          end_location: SourceLocation(pos=145, lineno=7, colno=32)
                                           key:
                                             <class 'bolt.ast.AstDictUnquotedKey'>
-                                              location: SourceLocation(pos=124, lineno=7, colno=9)
-                                              end_location: SourceLocation(pos=128, lineno=7, colno=13)
+                                              location: SourceLocation(pos=122, lineno=7, colno=9)
+                                              end_location: SourceLocation(pos=126, lineno=7, colno=13)
                                               value: 'type'
                                           value:
                                             <class 'bolt.ast.AstValue'>
-                                              location: SourceLocation(pos=130, lineno=7, colno=15)
-                                              end_location: SourceLocation(pos=147, lineno=7, colno=32)
+                                              location: SourceLocation(pos=128, lineno=7, colno=15)
+                                              end_location: SourceLocation(pos=145, lineno=7, colno=32)
                                               value: 'minecraft:score'
                                         <class 'bolt.ast.AstDictItem'>
-                                          location: SourceLocation(pos=157, lineno=8, colno=9)
-                                          end_location: SourceLocation(pos=171, lineno=8, colno=23)
+                                          location: SourceLocation(pos=155, lineno=8, colno=9)
+                                          end_location: SourceLocation(pos=169, lineno=8, colno=23)
                                           key:
                                             <class 'bolt.ast.AstDictUnquotedKey'>
-                                              location: SourceLocation(pos=157, lineno=8, colno=9)
-                                              end_location: SourceLocation(pos=163, lineno=8, colno=15)
+                                              location: SourceLocation(pos=155, lineno=8, colno=9)
+                                              end_location: SourceLocation(pos=161, lineno=8, colno=15)
                                               value: 'target'
                                           value:
                                             <class 'bolt.ast.AstValue'>
-                                              location: SourceLocation(pos=165, lineno=8, colno=17)
-                                              end_location: SourceLocation(pos=171, lineno=8, colno=23)
+                                              location: SourceLocation(pos=163, lineno=8, colno=17)
+                                              end_location: SourceLocation(pos=169, lineno=8, colno=23)
                                               value: 'this'
                                         <class 'bolt.ast.AstDictItem'>
-                                          location: SourceLocation(pos=181, lineno=9, colno=9)
-                                          end_location: SourceLocation(pos=196, lineno=9, colno=24)
+                                          location: SourceLocation(pos=179, lineno=9, colno=9)
+                                          end_location: SourceLocation(pos=194, lineno=9, colno=24)
                                           key:
                                             <class 'bolt.ast.AstDictUnquotedKey'>
-                                              location: SourceLocation(pos=181, lineno=9, colno=9)
-                                              end_location: SourceLocation(pos=186, lineno=9, colno=14)
+                                              location: SourceLocation(pos=179, lineno=9, colno=9)
+                                              end_location: SourceLocation(pos=184, lineno=9, colno=14)
                                               value: 'score'
                                           value:
                                             <class 'bolt.ast.AstValue'>
-                                              location: SourceLocation(pos=188, lineno=9, colno=16)
-                                              end_location: SourceLocation(pos=196, lineno=9, colno=24)
+                                              location: SourceLocation(pos=186, lineno=9, colno=16)
+                                              end_location: SourceLocation(pos=194, lineno=9, colno=24)
                                               value: 'score2'
                                         <class 'bolt.ast.AstDictItem'>
-                                          location: SourceLocation(pos=206, lineno=10, colno=9)
-                                          end_location: SourceLocation(pos=214, lineno=10, colno=17)
+                                          location: SourceLocation(pos=204, lineno=10, colno=9)
+                                          end_location: SourceLocation(pos=212, lineno=10, colno=17)
                                           key:
                                             <class 'bolt.ast.AstDictUnquotedKey'>
-                                              location: SourceLocation(pos=206, lineno=10, colno=9)
-                                              end_location: SourceLocation(pos=211, lineno=10, colno=14)
+                                              location: SourceLocation(pos=204, lineno=10, colno=9)
+                                              end_location: SourceLocation(pos=209, lineno=10, colno=14)
                                               value: 'scale'
                                           value:
                                             <class 'bolt.ast.AstValue'>
-                                              location: SourceLocation(pos=213, lineno=10, colno=16)
-                                              end_location: SourceLocation(pos=214, lineno=10, colno=17)
+                                              location: SourceLocation(pos=211, lineno=10, colno=16)
+                                              end_location: SourceLocation(pos=212, lineno=10, colno=17)
                                               value: 1
