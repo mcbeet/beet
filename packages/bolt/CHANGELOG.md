@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.17.6 (2022-08-12)
+### Fix
+* Import parser properly delegates to resource location parser ([#37](https://github.com/mcbeet/bolt/issues/37)) ([`a971b07`](https://github.com/mcbeet/bolt/commit/a971b07e15d7382216f90c51233e3e7762a05b47))
+
 ## v0.17.5 (2022-08-06)
 ### Fix
 * Builtins used as dict keys are now unquoted strings ([`015ff65`](https://github.com/mcbeet/bolt/commit/015ff657229b02d5930b0a5756e95d515e8df70e))
