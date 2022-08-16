@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.17.7 (2022-08-16)
+### Fix
+* Update beet ([`c494033`](https://github.com/mcbeet/bolt/commit/c494033639d389fb6a3165ddefa04d8dc3c4a08e))
+
 ## v0.17.6 (2022-08-12)
 ### Fix
 * Import parser properly delegates to resource location parser ([#37](https://github.com/mcbeet/bolt/issues/37)) ([`a971b07`](https://github.com/mcbeet/bolt/commit/a971b07e15d7382216f90c51233e3e7762a05b47))
