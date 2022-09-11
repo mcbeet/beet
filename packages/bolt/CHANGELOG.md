@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.19.0 (2022-09-11)
+### Feature
+* Update compilation priority depending on execution order ([`d6aa9ec`](https://github.com/mcbeet/bolt/commit/d6aa9ecf55027e411889459986d79123239ec81b))
+
 ## v0.18.1 (2022-09-11)
 ### Fix
 * Update deps ([`89b37c1`](https://github.com/mcbeet/bolt/commit/89b37c1b1d5cac57b1fdc1f5bef0971c41dd3e1b))
