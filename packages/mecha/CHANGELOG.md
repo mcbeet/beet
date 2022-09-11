@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.54.10 (2022-09-11)
+### Fix
+* Bump deps ([`ddfdf2e`](https://github.com/mcbeet/mecha/commit/ddfdf2ec4f8b77664e79ac436723dc1db910ffa6))
+
 ## v0.54.9 (2022-07-25)
 ### Fix
 * Expose game_profile parser ([`2d0d6d6`](https://github.com/mcbeet/mecha/commit/2d0d6d6825cf8a649d5f054de7a3d419548505c9))
