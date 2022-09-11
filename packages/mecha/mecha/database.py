@@ -23,6 +23,7 @@ class CompilationUnit:
     source: Optional[str] = None
     filename: Optional[str] = None
     resource_location: Optional[str] = None
+    priority: int = 0
 
     diagnostics: DiagnosticCollection = extra_field(init=False)
 
@@ -75,7 +76,7 @@ class CompilationDatabase(Container[TextFileBase[Any], CompilationUnit]):
         self.session.clear()
         self.queue.clear()
 
-    def enqueue(self, key: TextFileBase[Any], step: int = -1, adjust_priority: int = 0):
+    def enqueue(self, key: TextFileBase[Any], step: int = -1, priority: int = 0):
         """Enqueue a file and schedule it to be processed with the given step."""
         self.session.add(key)
         self.count += 1
@@ -83,7 +84,7 @@ class CompilationDatabase(Container[TextFileBase[Any], CompilationUnit]):
             self.queue,
             (
                 step,
-                adjust_priority,
+                priority,
                 self[key].resource_location or "<unknown>",
                 self.count,
                 key,
