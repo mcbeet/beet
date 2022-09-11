@@ -38,7 +38,7 @@ class CompilationDatabase(Container[TextFileBase[Any], CompilationUnit]):
 
     index: Dict[str, TextFileBase[Any]]
     session: Set[TextFileBase[Any]]
-    queue: List[Tuple[int, str, int, TextFileBase[Any]]]
+    queue: List[Tuple[int, int, str, int, TextFileBase[Any]]]
     step: int
     current: TextFileBase[Any]
     count: int
@@ -75,18 +75,24 @@ class CompilationDatabase(Container[TextFileBase[Any], CompilationUnit]):
         self.session.clear()
         self.queue.clear()
 
-    def enqueue(self, key: TextFileBase[Any], step: int = -1):
+    def enqueue(self, key: TextFileBase[Any], step: int = -1, adjust_priority: int = 0):
         """Enqueue a file and schedule it to be processed with the given step."""
         self.session.add(key)
         self.count += 1
         heappush(
             self.queue,
-            (step, self[key].resource_location or "<unknown>", self.count, key),
+            (
+                step,
+                adjust_priority,
+                self[key].resource_location or "<unknown>",
+                self.count,
+                key,
+            ),
         )
 
     def dequeue(self) -> Tuple[int, TextFileBase[Any]]:
         """Dequeue the next file that needs to be processed."""
-        step, _, _, key = heappop(self.queue)
+        step, _, _, _, key = heappop(self.queue)
         return step, key
 
     def process_queue(self) -> Iterator[Tuple[int, TextFileBase[Any]]]:
