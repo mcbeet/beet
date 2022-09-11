@@ -356,7 +356,7 @@ python-versions = ">=3.7"
 
 [[package]]
 name = "mecha"
-version = "0.54.10"
+version = "0.55.1"
 description = "A powerful Minecraft command library"
 category = "main"
 optional = false
@@ -817,7 +817,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "9d88889d399c632dfe9fe7c7d1650e14e82ef08a34563051a15cfc8e8c1628a5"
+content-hash = "3e6fdc6222ef765be16fdd361efd33602f0ae0bd866a7aa2fec3fec1f5c55fbc"
 
 [metadata.files]
 attrs = []

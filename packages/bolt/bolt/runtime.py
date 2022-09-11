@@ -184,7 +184,7 @@ class Evaluator(Visitor):
     @rule(AstRoot)
     @internal
     def root(self, node: AstRoot) -> Optional[AstRoot]:
-        module = self.modules.match_ast(node)
+        compilation_unit, module = self.modules.match_ast(node)
 
         if (
             isinstance(node, AstModuleRoot)
@@ -205,12 +205,14 @@ class Evaluator(Visitor):
         with self.modules.error_handler(
             "Top-level statement raised an exception.", module.resource_location
         ):
-            return self.modules.eval(module)
+            node = self.modules.eval(module)
+            compilation_unit.priority = module.execution_index
+            return node
 
     def restore_module(self, key: TextFileBase[Any], node: AstModuleRoot, step: int):
         compilation_unit = self.modules.database[key]
         compilation_unit.ast = node
-        self.modules.database.enqueue(key, step)
+        self.modules.database.enqueue(key, step, compilation_unit.priority)
 
 
 @rule(AstModuleRoot)

@@ -1,0 +1,9 @@
+require:
+  - bolt
+data_pack:
+  load: "src"
+pipeline:
+  - mecha
+meta:
+  bolt:
+    entrypoint: hello:entry_point

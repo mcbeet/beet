@@ -92,6 +92,7 @@ class CompiledModule:
     executing: bool = False
     executed: bool = False
     execution_hooks: List[Callable[[], Any]] = field(default_factory=list)
+    execution_index: int = 0
 
 
 @dataclass(frozen=True)
@@ -115,7 +116,7 @@ class ModuleParseCallback(Protocol):
         ...
 
 
-@dataclass(frozen=True)
+@dataclass
 class ModuleManager(Mapping[TextFileBase[Any], CompiledModule]):
     """Container for managing bolt modules."""
 
@@ -132,6 +133,8 @@ class ModuleManager(Mapping[TextFileBase[Any], CompiledModule]):
     parse_stack: List[TextFileBase[Any]] = extra_field(default_factory=list)
     globals: JsonDict = extra_field(default_factory=dict)
     builtins: Set[str] = extra_field(default_factory=set)
+
+    execution_count: int = 0
 
     @property
     def current(self) -> CompiledModule:
@@ -153,8 +156,8 @@ class ModuleManager(Mapping[TextFileBase[Any], CompiledModule]):
         self,
         node: AstRoot,
         current: Optional[Union[TextFileBase[Any], str]] = None,
-    ) -> CompiledModule:
-        """Return executable module for the current ast."""
+    ) -> Tuple[CompilationUnit, CompiledModule]:
+        """Return the compilation unit and executable module for the current ast."""
         if not current:
             current = self.database.current
         elif isinstance(current, str):
@@ -163,7 +166,7 @@ class ModuleManager(Mapping[TextFileBase[Any], CompiledModule]):
         compilation_unit = self.database[current]
         compilation_unit.ast = node
 
-        return self[current]
+        return compilation_unit, self[current]
 
     def __getitem__(self, current: Union[TextFileBase[Any], str]) -> CompiledModule:
         if isinstance(current, str):
@@ -279,6 +282,8 @@ class ModuleManager(Mapping[TextFileBase[Any], CompiledModule]):
         finally:
             module.executing = False
             self.stack.pop()
+            self.execution_count += 1
+            module.execution_index = self.execution_count
 
         return module.namespace[module.output]
 
@@ -369,7 +374,7 @@ class ModuleCacheBackend(AstCacheBackend):
         return data["ast"]
 
     def dump(self, node: AstRoot, f: BufferedWriter):
-        module = self.modules.match_ast(node)
+        _, module = self.modules.match_ast(node)
 
         self.dump_data(
             {
