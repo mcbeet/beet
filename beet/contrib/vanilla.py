@@ -169,7 +169,7 @@ class Vanilla:
         elif ctx:
             self.cache = ctx.cache["vanilla"]
         else:
-            raise ValueError("Cache was not be provided.")
+            raise ValueError("Cache was not provided.")
 
         self.releases = ReleaseRegistry(self.cache, manifest or opts and opts.manifest)
 
