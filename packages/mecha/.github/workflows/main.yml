@@ -20,7 +20,7 @@ jobs:
         with:
           python-version: 3.9
       - name: Install Poetry
-        uses: snok/install-poetry@v1.1.1
+        uses: snok/install-poetry@v1
         with:
           virtualenvs-in-project: true
       - name: Install Pyright
