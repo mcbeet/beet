@@ -126,7 +126,7 @@ def generate_tree(
     name: Optional[str] = None,
 ) -> Iterator[TreeNode[T]]:
     """Generate a search tree and yield nodes in a depth-first traversal."""
-    data = TreeData(root, [], list(items), key, name)
+    data = TreeData[T](root, [], list(items), key, name)
 
     data.stack.append(
         TreeNode(
