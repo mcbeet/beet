@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.18.1 (2022-09-11)
+### Fix
+* Update deps ([`89b37c1`](https://github.com/mcbeet/bolt/commit/89b37c1b1d5cac57b1fdc1f5bef0971c41dd3e1b))
+
 ## v0.18.0 (2022-09-11)
 ### Feature
 * Positional-only, variadic, keyword-only, and variadic keyword arguments ([`6413593`](https://github.com/mcbeet/bolt/commit/64135935c8f54dbde20807cba6481202dbf394e6))
