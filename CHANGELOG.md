@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.71.2 (2022-09-11)
+### Fix
+* Typo in error message ([`c14cb33`](https://github.com/mcbeet/beet/commit/c14cb33f94e7f4670a8f07066c98bbc95bc93a8d))
+
 ## v0.71.1 (2022-09-11)
 ### Fix
 * Bump deps ([`1b40954`](https://github.com/mcbeet/beet/commit/1b40954ff8d0566eaa209f5a868514311e08ed10))
