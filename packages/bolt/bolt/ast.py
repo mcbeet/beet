@@ -25,7 +25,12 @@ __all__ = [
     "AstAssignment",
     "AstDecorator",
     "AstFunctionSignature",
+    "AstFunctionSignatureElement",
     "AstFunctionSignatureArgument",
+    "AstFunctionSignaturePositionalMarker",
+    "AstFunctionSignatureVariadicArgument",
+    "AstFunctionSignatureVariadicMarker",
+    "AstFunctionSignatureVariadicKeywordArgument",
     "AstDeferredRoot",
     "AstMacro",
     "AstMacroCall",
@@ -253,11 +258,40 @@ class AstDecorator(AstNode):
 
 
 @dataclass(frozen=True)
-class AstFunctionSignatureArgument(AstNode):
+class AstFunctionSignatureElement(AstNode):
+    """Base node for function signature element."""
+
+
+@dataclass(frozen=True)
+class AstFunctionSignatureArgument(AstFunctionSignatureElement):
     """Ast function signature argument node."""
 
     name: str = required_field()
     default: Optional[AstExpression] = None
+
+
+@dataclass(frozen=True)
+class AstFunctionSignaturePositionalMarker(AstFunctionSignatureElement):
+    """Ast function signature positional marker node."""
+
+
+@dataclass(frozen=True)
+class AstFunctionSignatureVariadicArgument(AstFunctionSignatureElement):
+    """Ast function signature variadic argument node."""
+
+    name: str = required_field()
+
+
+@dataclass(frozen=True)
+class AstFunctionSignatureVariadicMarker(AstFunctionSignatureElement):
+    """Ast function signature variadic marker node."""
+
+
+@dataclass(frozen=True)
+class AstFunctionSignatureVariadicKeywordArgument(AstFunctionSignatureElement):
+    """Ast function signature variadic keyword argument node."""
+
+    name: str = required_field()
 
 
 @dataclass(frozen=True)
@@ -266,7 +300,7 @@ class AstFunctionSignature(AstNode):
 
     decorators: AstChildren[AstDecorator] = AstChildren()
     name: str = required_field()
-    arguments: AstChildren[AstFunctionSignatureArgument] = required_field()
+    arguments: AstChildren[AstFunctionSignatureElement] = required_field()
 
 
 @dataclass(frozen=True)

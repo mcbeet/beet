@@ -1,0 +1,7 @@
+#>ERROR  Positional marker can not appear after variadic arguments.
+# line 1, column 10
+#      1 |  def g(*, /):
+#        :           ^
+#      2 |      pass
+def g(*, /):
+    pass

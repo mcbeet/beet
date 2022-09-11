@@ -114,6 +114,11 @@ from .ast import (
     AstFromImport,
     AstFunctionSignature,
     AstFunctionSignatureArgument,
+    AstFunctionSignatureElement,
+    AstFunctionSignaturePositionalMarker,
+    AstFunctionSignatureVariadicArgument,
+    AstFunctionSignatureVariadicKeywordArgument,
+    AstFunctionSignatureVariadicMarker,
     AstIdentifier,
     AstImportedItem,
     AstImportedMacro,
@@ -1030,12 +1035,21 @@ def parse_function_signature(stream: TokenStream) -> AstFunctionSignature:
 
     scoped_identifiers = set(identifiers)
 
-    arguments: List[AstFunctionSignatureArgument] = []
+    arguments: List[AstFunctionSignatureElement] = []
+    new_locals: Set[str] = set()
+
+    encountered_positional = False
+    encountered_variadic = False
+    encountered_variadic_keyword = False
+    expect_named_argument = False
 
     with stream.syntax(
         comma=r",",
         equal=r"=(?!=)",
         brace=r"\(|\)",
+        separator=r"/",
+        kwargs=r"\*\*",
+        args=r"\*",
         identifier=IDENTIFIER_PATTERN,
     ):
         identifier = stream.expect("identifier")
@@ -1044,28 +1058,94 @@ def parse_function_signature(stream: TokenStream) -> AstFunctionSignature:
         scoped_identifiers.add(identifier.value)
 
         with stream.ignore("newline"):
-            for _ in stream.peek_until(("brace", ")")):
-                name = stream.expect("identifier")
+            for token in stream.peek_until(("brace", ")")):
+                if encountered_variadic_keyword:
+                    exc = InvalidSyntax(
+                        "Variadic keyword arguments should not be followed by anything."
+                    )
+                    raise set_location(exc, token)
 
-                default = None
-                if stream.get("equal"):
-                    with stream.provide(
-                        identifiers=scoped_identifiers | {arg.name for arg in arguments}
-                    ):
-                        default = delegate("bolt:expression", stream)
-
-                argument = AstFunctionSignatureArgument(
-                    name=name.value,
-                    default=default,
+                name, separator, kwargs, args = stream.expect(
+                    "identifier",
+                    "separator",
+                    "kwargs",
+                    "args",
                 )
-                arguments.append(set_location(argument, name, stream.current))
+
+                if name:
+                    expect_named_argument = False
+
+                    default = None
+                    if stream.get("equal"):
+                        with stream.provide(
+                            identifiers=scoped_identifiers | new_locals
+                        ):
+                            default = delegate("bolt:expression", stream)
+
+                    argument = AstFunctionSignatureArgument(
+                        name=name.value,
+                        default=default,
+                    )
+                    arguments.append(set_location(argument, name, stream.current))
+                    new_locals.add(argument.name)
+
+                elif separator:
+                    if encountered_positional:
+                        exc = InvalidSyntax(
+                            "Positional marker already present in function signature."
+                        )
+                        raise set_location(exc, separator)
+                    if encountered_variadic:
+                        exc = InvalidSyntax(
+                            "Positional marker can not appear after variadic arguments."
+                        )
+                        raise set_location(exc, separator)
+                    if not arguments:
+                        exc = InvalidSyntax(
+                            "Positional marker can not appear directly at the beginning of the argument list."
+                        )
+                        raise set_location(exc, separator)
+                    encountered_positional = True
+                    argument = AstFunctionSignaturePositionalMarker()
+                    arguments.append(set_location(argument, separator))
+
+                elif kwargs:
+                    encountered_variadic_keyword = True
+                    name = stream.expect("identifier")
+                    argument = AstFunctionSignatureVariadicKeywordArgument(
+                        name=name.value
+                    )
+                    arguments.append(set_location(argument, kwargs, name))
+                    new_locals.add(argument.name)
+
+                elif args:
+                    if encountered_variadic:
+                        exc = InvalidSyntax("Variadic arguments already specified.")
+                        raise set_location(exc, args)
+                    encountered_variadic = True
+                    if name := stream.get("identifier"):
+                        argument = AstFunctionSignatureVariadicArgument(name=name.value)
+                        arguments.append(set_location(argument, args, name))
+                        new_locals.add(argument.name)
+                    else:
+                        expect_named_argument = True
+                        argument = AstFunctionSignatureVariadicMarker()
+                        arguments.append(set_location(argument, args))
 
                 if not stream.get("comma"):
                     stream.expect(("brace", ")"))
                     break
 
+        if expect_named_argument:
+            for argument in arguments:
+                if isinstance(argument, AstFunctionSignatureVariadicMarker):
+                    exc = InvalidSyntax(
+                        "Expected at least one named argument after bare variadic marker."
+                    )
+                    raise set_location(exc, argument)
+
     pending_identifiers.add(identifier.value)
-    deferred_locals |= {arg.name for arg in arguments}
+    deferred_locals |= new_locals
 
     node = AstFunctionSignature(name=identifier.value, arguments=AstChildren(arguments))
     return set_location(node, identifier, stream.current)

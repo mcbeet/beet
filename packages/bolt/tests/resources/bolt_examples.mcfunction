@@ -1040,3 +1040,66 @@ ingredients = [{id: "minecraft:blaze_powder"}, {id: "minecraft:furnace"}]
 ###
 id = 42
 ingredients = [{id: "minecraft:blaze_powder"}, {id: "minecraft:furnace"}]
+###
+def f():
+    pass
+###
+def f(a):
+    pass
+###
+def f(a=1):
+    pass
+###
+def f(a=1,):
+    pass
+###
+def f(a=1, /):
+    pass
+###
+def f(a=1, /, b):
+    pass
+###
+def f(a=1, /, b=2):
+    pass
+###
+def f(a=1, /, b=2, *args):
+    pass
+###
+def f(a=1, /, b=2, *, c):
+    pass
+###
+def f(a=1, /, b=2, *, c=3):
+    pass
+###
+def f(a=1, /, b=2, *, c=3, **kwargs):
+    pass
+###
+def f(a=1, /, b=2, *args, c=3, **kwargs):
+    pass
+###
+def g(/):
+    pass
+###
+def g(*):
+    pass
+###
+def g(/, *):
+    pass
+###
+def g(*, /):
+    pass
+###
+def g(/, foo):
+    pass
+###
+def g(foo, *):
+    pass
+###
+def g(**kwargs, foo):
+    pass
+###
+def g(foo, /, bar, /):
+    pass
+###
+def g(foo, *args, bar, *args):
+    pass

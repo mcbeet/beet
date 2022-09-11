@@ -1,0 +1,7 @@
+#>ERROR  Positional marker already present in function signature.
+# line 1, column 20
+#      1 |  def g(foo, /, bar, /):
+#        :                     ^
+#      2 |      pass
+def g(foo, /, bar, /):
+    pass

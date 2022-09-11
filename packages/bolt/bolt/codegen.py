@@ -52,6 +52,11 @@ from .ast import (
     AstFormatString,
     AstFromImport,
     AstFunctionSignature,
+    AstFunctionSignatureArgument,
+    AstFunctionSignaturePositionalMarker,
+    AstFunctionSignatureVariadicArgument,
+    AstFunctionSignatureVariadicKeywordArgument,
+    AstFunctionSignatureVariadicMarker,
     AstIdentifier,
     AstImportedItem,
     AstImportedMacro,
@@ -508,13 +513,23 @@ class Codegen(Visitor):
             decorators.append(value)
 
         arguments: List[str] = [
-            f"{arg.name}={acc.missing()}" if arg.default else arg.name
+            (f"{arg.name}={acc.missing()}" if arg.default else arg.name)
+            if isinstance(arg, AstFunctionSignatureArgument)
+            else "/"
+            if isinstance(arg, AstFunctionSignaturePositionalMarker)
+            else f"*{arg.name}"
+            if isinstance(arg, AstFunctionSignatureVariadicArgument)
+            else "*"
+            if isinstance(arg, AstFunctionSignatureVariadicMarker)
+            else f"**{arg.name}"
+            if isinstance(arg, AstFunctionSignatureVariadicKeywordArgument)
+            else "_"
             for arg in signature.arguments
         ]
 
         with acc.function(signature.name, *arguments):
             for arg in signature.arguments:
-                if arg.default:
+                if isinstance(arg, AstFunctionSignatureArgument) and arg.default:
                     acc.statement(f"if {arg.name} is {acc.missing()}:")
                     with acc.block():
                         value = yield from visit_single(arg.default, required=True)
