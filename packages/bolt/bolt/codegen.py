@@ -347,7 +347,7 @@ def visit_multiple(
 ) -> Generator[AstNode, Optional[List[str]], Optional[str]]:
     """Yield all the nodes and return a single result pointing to the new children."""
     current_count = 0
-    collector = None
+    collector: Optional[ChildrenCollector] = None
     index = len(acc.lines)
 
     for i, child in enumerate(children):
