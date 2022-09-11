@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.71.1 (2022-09-11)
+### Fix
+* Bump deps ([`1b40954`](https://github.com/mcbeet/beet/commit/1b40954ff8d0566eaa209f5a868514311e08ed10))
+
 ## v0.71.0 (2022-07-30)
 ### Feature
 * Warn about watcher triggering builds repeatedly ([`2a4ee1c`](https://github.com/mcbeet/beet/commit/2a4ee1c10a80f4a9af9ab7ac4a92d36569c05cfc))
