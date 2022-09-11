@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.18.0 (2022-09-11)
+### Feature
+* Positional-only, variadic, keyword-only, and variadic keyword arguments ([`6413593`](https://github.com/mcbeet/bolt/commit/64135935c8f54dbde20807cba6481202dbf394e6))
+
 ## v0.17.7 (2022-08-16)
 ### Fix
 * Update beet ([`c494033`](https://github.com/mcbeet/bolt/commit/c494033639d389fb6a3165ddefa04d8dc3c4a08e))
