@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.55.1 (2022-09-11)
+### Fix
+* Store priority on compilation unit ([`b78c5be`](https://github.com/mcbeet/mecha/commit/b78c5bea58daeb661974a69052b2494dcc4fa986))
+
 ## v0.55.0 (2022-09-11)
 ### Feature
 * Make it possible to adjust the priority ([`4ef97c2`](https://github.com/mcbeet/mecha/commit/4ef97c2df858049fad23e07d97bf2791b6e3b33b))
