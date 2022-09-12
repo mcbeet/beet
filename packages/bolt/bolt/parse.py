@@ -1039,6 +1039,7 @@ def parse_function_signature(stream: TokenStream) -> AstFunctionSignature:
     new_locals: Set[str] = set()
 
     encountered_positional = False
+    encountered_default = False
     encountered_variadic = False
     encountered_variadic_keyword = False
     expect_named_argument = False
@@ -1077,10 +1078,16 @@ def parse_function_signature(stream: TokenStream) -> AstFunctionSignature:
 
                     default = None
                     if stream.get("equal"):
+                        encountered_default = True
                         with stream.provide(
                             identifiers=scoped_identifiers | new_locals
                         ):
                             default = delegate("bolt:expression", stream)
+                    elif encountered_default:
+                        exc = InvalidSyntax(
+                            "Argument without default can not appear after arguments with default values."
+                        )
+                        raise set_location(exc, token)
 
                     argument = AstFunctionSignatureArgument(
                         name=name.value,

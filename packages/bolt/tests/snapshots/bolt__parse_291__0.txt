@@ -1,58 +1,50 @@
-def f(a=1, /, b=2, *, c):
+def f(a, /, b, *, c):
     pass
 ---
 <class 'mecha.ast.AstRoot'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
-  end_location: SourceLocation(pos=34, lineno=2, colno=9)
+  end_location: SourceLocation(pos=30, lineno=2, colno=9)
   commands:
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=0, lineno=1, colno=1)
-      end_location: SourceLocation(pos=34, lineno=2, colno=9)
+      end_location: SourceLocation(pos=30, lineno=2, colno=9)
       identifier: 'def:function:body'
       arguments:
         <class 'bolt.ast.AstFunctionSignature'>
           location: SourceLocation(pos=4, lineno=1, colno=5)
-          end_location: SourceLocation(pos=24, lineno=1, colno=25)
+          end_location: SourceLocation(pos=20, lineno=1, colno=21)
           decorators:
             <empty>
           name: 'f'
           arguments:
             <class 'bolt.ast.AstFunctionSignatureArgument'>
               location: SourceLocation(pos=6, lineno=1, colno=7)
-              end_location: SourceLocation(pos=9, lineno=1, colno=10)
+              end_location: SourceLocation(pos=7, lineno=1, colno=8)
               name: 'a'
-              default:
-                <class 'bolt.ast.AstValue'>
-                  location: SourceLocation(pos=8, lineno=1, colno=9)
-                  end_location: SourceLocation(pos=9, lineno=1, colno=10)
-                  value: 1
+              default: None
             <class 'bolt.ast.AstFunctionSignaturePositionalMarker'>
-              location: SourceLocation(pos=11, lineno=1, colno=12)
-              end_location: SourceLocation(pos=12, lineno=1, colno=13)
+              location: SourceLocation(pos=9, lineno=1, colno=10)
+              end_location: SourceLocation(pos=10, lineno=1, colno=11)
             <class 'bolt.ast.AstFunctionSignatureArgument'>
-              location: SourceLocation(pos=14, lineno=1, colno=15)
-              end_location: SourceLocation(pos=17, lineno=1, colno=18)
+              location: SourceLocation(pos=12, lineno=1, colno=13)
+              end_location: SourceLocation(pos=13, lineno=1, colno=14)
               name: 'b'
-              default:
-                <class 'bolt.ast.AstValue'>
-                  location: SourceLocation(pos=16, lineno=1, colno=17)
-                  end_location: SourceLocation(pos=17, lineno=1, colno=18)
-                  value: 2
+              default: None
             <class 'bolt.ast.AstFunctionSignatureVariadicMarker'>
-              location: SourceLocation(pos=19, lineno=1, colno=20)
-              end_location: SourceLocation(pos=20, lineno=1, colno=21)
+              location: SourceLocation(pos=15, lineno=1, colno=16)
+              end_location: SourceLocation(pos=16, lineno=1, colno=17)
             <class 'bolt.ast.AstFunctionSignatureArgument'>
-              location: SourceLocation(pos=22, lineno=1, colno=23)
-              end_location: SourceLocation(pos=23, lineno=1, colno=24)
+              location: SourceLocation(pos=18, lineno=1, colno=19)
+              end_location: SourceLocation(pos=19, lineno=1, colno=20)
               name: 'c'
               default: None
         <class 'mecha.ast.AstRoot'>
-          location: SourceLocation(pos=30, lineno=2, colno=5)
-          end_location: SourceLocation(pos=34, lineno=2, colno=9)
+          location: SourceLocation(pos=26, lineno=2, colno=5)
+          end_location: SourceLocation(pos=30, lineno=2, colno=9)
           commands:
             <class 'mecha.ast.AstCommand'>
-              location: SourceLocation(pos=30, lineno=2, colno=5)
-              end_location: SourceLocation(pos=34, lineno=2, colno=9)
+              location: SourceLocation(pos=26, lineno=2, colno=5)
+              end_location: SourceLocation(pos=30, lineno=2, colno=9)
               identifier: 'pass'
               arguments:
                 <empty>

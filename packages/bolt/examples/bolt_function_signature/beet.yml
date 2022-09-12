@@ -2,6 +2,6 @@ require:
   - bolt
 data_pack:
   load:
-    data/demo/functions/foo: "foo.mcfunction"
+    data/demo/functions/foo.mcfunction: "foo.mcfunction"
 pipeline:
   - mecha

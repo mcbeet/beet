@@ -13,7 +13,7 @@ def f(a=1,):
 def f(a=1, /):
     pass
 
-def f(a=1, /, b):
+def f(a, /, b):
     pass
 
 def f(a=1, /, b=2):
@@ -22,7 +22,7 @@ def f(a=1, /, b=2):
 def f(a=1, /, b=2, *args):
     pass
 
-def f(a=1, /, b=2, *, c):
+def f(a, /, b, *, c):
     pass
 
 def f(a=1, /, b=2, *, c=3):
