@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.19.1 (2022-09-12)
+### Fix
+* Add error for non-default args following default args ([`2af9854`](https://github.com/mcbeet/bolt/commit/2af9854d91818804b642ffe2a7b625a6412665ec))
+
 ## v0.19.0 (2022-09-11)
 ### Feature
 * Update compilation priority depending on execution order ([`d6aa9ec`](https://github.com/mcbeet/bolt/commit/d6aa9ecf55027e411889459986d79123239ec81b))
