@@ -2,6 +2,7 @@ __all__ = [
     "Mecha",
     "MechaOptions",
     "AstCacheBackend",
+    "FORMATTING_PRESETS",
 ]
 
 
@@ -42,7 +43,7 @@ from beet.core.utils import (
     extra_field,
     import_from_string,
 )
-from pydantic import BaseModel
+from pydantic import BaseModel, validator
 from tokenstream import InvalidSyntax, TokenStream
 from tokenstream.location import set_location
 
@@ -57,7 +58,7 @@ from .diagnostic import (
 )
 from .dispatch import Dispatcher, MutatingReducer, Reducer
 from .parse import delegate, get_parsers
-from .serialize import Formatting, Serializer
+from .serialize import FormattingOptions, Serializer
 from .spec import CommandSpec
 
 AstNodeType = TypeVar("AstNodeType", bound=AstNode)
@@ -95,16 +96,39 @@ class AstCacheBackend:
         self.dump_data({"ast": node}, f)
 
 
+FORMATTING_PRESETS: Dict[str, JsonDict] = {
+    "minify": {
+        "layout": "dense",
+        "cmd_compact": True,
+        "nbt_compact": True,
+        "json_compact": True,
+    },
+    "dense": {
+        "layout": "dense",
+    },
+    "preserve": {
+        "layout": "preserve",
+    },
+}
+
+
 class MechaOptions(BaseModel):
     """Mecha options."""
 
     version: str = ""
     multiline: bool = False
-    formatting: Formatting = "dense"
+    formatting: FormattingOptions = FormattingOptions()
     readonly: Optional[bool] = None
     match: Optional[List[str]] = None
     rules: Dict[str, Literal["ignore", "info", "warn", "error"]] = {}
     cache: bool = True
+
+    @validator("formatting", pre=True)
+    def formatting_preset(cls, value: Any):
+        if isinstance(value, str):
+            assert value in FORMATTING_PRESETS, "invalid formatting preset"
+            return FORMATTING_PRESETS[value]
+        return value
 
 
 @dataclass
@@ -114,7 +138,7 @@ class Mecha:
     ctx: InitVar[Optional[Context]] = None
     version: InitVar[VersionNumber] = LATEST_MINECRAFT_VERSION
     multiline: InitVar[bool] = False
-    formatting: InitVar[Formatting] = "dense"
+    formatting: InitVar[Optional[FormattingOptions]] = None
     readonly: bool = False
     match: Optional[List[str]] = None
 
@@ -147,7 +171,7 @@ class Mecha:
         ctx: Optional[Context],
         version: VersionNumber,
         multiline: bool,
-        formatting: Formatting,
+        formatting: Optional[FormattingOptions],
     ):
         if ctx:
             opts = ctx.validate("mecha", MechaOptions)
@@ -195,7 +219,7 @@ class Mecha:
         self.serialize = Serializer(
             spec=self.spec,
             database=self.database,
-            formatting=formatting,
+            formatting=formatting or FormattingOptions(),
         )
 
     @contextmanager
@@ -330,7 +354,7 @@ class Mecha:
         *,
         match: Optional[List[str]] = None,
         multiline: Optional[bool] = None,
-        formatting: Optional[Formatting] = None,
+        formatting: Optional[JsonDict] = None,
         readonly: Optional[bool] = None,
         report: Optional[DiagnosticCollection] = None,
     ) -> DataPack:
@@ -344,7 +368,7 @@ class Mecha:
         filename: Optional[FileSystemPath] = None,
         resource_location: Optional[str] = None,
         multiline: Optional[bool] = None,
-        formatting: Optional[Formatting] = None,
+        formatting: Optional[JsonDict] = None,
         readonly: Optional[bool] = None,
         report: Optional[DiagnosticCollection] = None,
     ) -> TextFileType:
@@ -358,7 +382,7 @@ class Mecha:
         filename: Optional[FileSystemPath] = None,
         resource_location: Optional[str] = None,
         multiline: Optional[bool] = None,
-        formatting: Optional[Formatting] = None,
+        formatting: Optional[JsonDict] = None,
         readonly: Optional[bool] = None,
         report: Optional[DiagnosticCollection] = None,
     ) -> Function:
@@ -372,13 +396,15 @@ class Mecha:
         filename: Optional[FileSystemPath] = None,
         resource_location: Optional[str] = None,
         multiline: Optional[bool] = None,
-        formatting: Optional[Formatting] = None,
+        formatting: Optional[JsonDict] = None,
         readonly: Optional[bool] = None,
         report: Optional[DiagnosticCollection] = None,
     ) -> Union[DataPack, TextFileBase[Any]]:
         """Apply all compilation steps."""
         self.database.setup_compilation()
 
+        if formatting is None:
+            formatting = {}
         if readonly is None:
             readonly = self.readonly
 
@@ -455,7 +481,7 @@ class Mecha:
                 if not compilation_unit.ast:
                     continue
                 with self.serialize.use_diagnostics(compilation_unit.diagnostics):
-                    function.text = self.serialize(compilation_unit.ast, formatting)
+                    function.text = self.serialize(compilation_unit.ast, **formatting)
 
         diagnostics = DiagnosticCollection(
             [

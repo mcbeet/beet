@@ -1,15 +1,16 @@
 __all__ = [
     "Serializer",
-    "Formatting",
+    "FormattingOptions",
 ]
 
 
 import json
 import re
 from dataclasses import dataclass, field
-from typing import Any, Iterable, Iterator, List, Literal, Optional
+from typing import Any, Iterable, Iterator, List, Literal
 
 from beet.core.utils import required_field
+from pydantic import BaseModel
 
 from .ast import (
     AstBlock,
@@ -54,7 +55,16 @@ from .utils import QuoteHelper, number_to_string
 REGEX_COMMENTS = re.compile(r"^(?:(\s*#.*)|.+)", re.MULTILINE)
 
 
-Formatting = Literal["dense", "preserve"]
+class FormattingOptions(BaseModel):
+    """Formatting options."""
+
+    layout: Literal["dense", "preserve"] = "dense"
+    cmd_compact: bool = False
+    nbt_compact: bool = False
+    json_compact: bool = False
+    json_ensure_ascii: bool = True
+    json_allow_nan: bool = True
+    json_sort_keys: bool = False
 
 
 @dataclass
@@ -62,7 +72,7 @@ class Serializer(Visitor):
     spec: CommandSpec = required_field()
     database: CompilationDatabase = field(default_factory=CompilationDatabase)
 
-    formatting: Formatting = "dense"
+    formatting: FormattingOptions = field(default_factory=FormattingOptions)
 
     regex_comments: "re.Pattern[str]" = field(default=REGEX_COMMENTS)
     quote_helper: QuoteHelper = field(
@@ -77,17 +87,20 @@ class Serializer(Visitor):
         )
     )
 
-    def __call__(self, node: AstNode, formatting: Optional[Formatting] = None) -> str:
+    def __call__(self, node: AstNode, **kwargs: Any) -> str:
         result: List[str] = []
 
-        if formatting is not None:
-            self.formatting, formatting = formatting, self.formatting
+        previous_formatting = self.formatting if kwargs else None
+        if previous_formatting:
+            options = previous_formatting.dict()
+            options.update(kwargs)
+            self.formatting = FormattingOptions.parse_obj(options)
 
         try:
             self.invoke(node, result)
         finally:
-            if formatting is not None:
-                self.formatting = formatting
+            if previous_formatting:
+                self.formatting = previous_formatting
 
         return "".join(result)
 
@@ -99,10 +112,11 @@ class Serializer(Visitor):
     ) -> Iterator[AstNode]:
         """Helper for serializing collections."""
         result.append(delimitters[0])
+        comma = "," if self.formatting.cmd_compact else ", "
         sep = ""
         for node in nodes:
             result.append(sep)
-            sep = ", "
+            sep = comma
             yield node
         result.append(delimitters[-1])
 
@@ -131,7 +145,7 @@ class Serializer(Visitor):
     def root(self, node: AstRoot, result: List[str]):
         pos = 0
         source = (
-            self.formatting == "preserve"
+            self.formatting.layout == "preserve"
             and self.database[self.database.current].source
         )
 
@@ -203,11 +217,19 @@ class Serializer(Visitor):
 
     @rule(AstJson)
     def json(self, node: AstJson, result: List[str]):
-        result.append(json.dumps(node.evaluate()))
+        result.append(
+            json.dumps(
+                node.evaluate(),
+                separators=(",", ":") if self.formatting.json_compact else None,
+                ensure_ascii=self.formatting.json_ensure_ascii,
+                allow_nan=self.formatting.json_allow_nan,
+                sort_keys=self.formatting.json_sort_keys,
+            )
+        )
 
     @rule(AstNbt)
     def nbt(self, node: AstNbt, result: List[str]):
-        result.append(node.evaluate().snbt())
+        result.append(node.evaluate().snbt(compact=self.formatting.nbt_compact))
 
     @rule(AstResourceLocation)
     def resource_location(self, node: AstResourceLocation, result: List[str]):
