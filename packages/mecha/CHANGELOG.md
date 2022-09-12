@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.56.0 (2022-09-12)
+### Feature
+* Improve formatting options ([`150be65`](https://github.com/mcbeet/mecha/commit/150be6570ef7e178347d818958e31cb395de9c52))
+
 ## v0.55.1 (2022-09-11)
 ### Fix
 * Store priority on compilation unit ([`b78c5be`](https://github.com/mcbeet/mecha/commit/b78c5bea58daeb661974a69052b2494dcc4fa986))
