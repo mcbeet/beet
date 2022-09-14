@@ -12,8 +12,7 @@ from typing import Any, Callable, Optional, Tuple, Union
 
 from pydantic import BaseModel
 
-from beet import Context, JsonFileBase
-from beet.toolchain.context import configurable
+from beet import Context, JsonFileBase, configurable
 
 
 class FormatJsonOptions(BaseModel):
