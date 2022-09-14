@@ -2,6 +2,13 @@
 
 <!--next-version-placeholder-->
 
+## v0.72.0 (2022-09-14)
+### Feature
+* Add beet.contrib.line_endings ([`e6255fc`](https://github.com/mcbeet/beet/commit/e6255fc3e66cd30cef514f2991c75e3420c87351))
+* Add beet.contrib.text_encoding ([`37a23ce`](https://github.com/mcbeet/beet/commit/37a23cefa967be6c099794d37d58fef96ed912f7))
+* Add text encoding and line endings attributes to text files ([`fd8b0fc`](https://github.com/mcbeet/beet/commit/fd8b0fc2d5a1e48648da14b035c5a7e1366b933c))
+* Add beet.contrib.strip_final_newlines ([`f1f4b9a`](https://github.com/mcbeet/beet/commit/f1f4b9ab6d8d19cac719b4235b16b4c5d1c2798e))
+
 ## v0.71.2 (2022-09-11)
 ### Fix
 * Typo in error message ([`c14cb33`](https://github.com/mcbeet/beet/commit/c14cb33f94e7f4670a8f07066c98bbc95bc93a8d))
