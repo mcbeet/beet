@@ -240,6 +240,14 @@ class File(Generic[ValueType, SerializeType]):
         path = Path(origin, path)
         return cls(source_path=path) if path.is_file() else None
 
+    def dump_path(self, path: FileSystemPath, raw: SerializeType) -> None:
+        """Write file content to path."""
+        raise NotImplementedError()
+
+    def dump_zip(self, origin: ZipFile, name: str, raw: SerializeType) -> None:
+        """Write file content to zip."""
+        raise NotImplementedError()
+
     def dump(self, origin: FileOrigin, path: FileSystemPath):
         """Write the file to a zipfile or to the filesystem."""
         if self._content is None:
@@ -250,11 +258,9 @@ class File(Generic[ValueType, SerializeType]):
         else:
             raw = self.ensure_serialized()
             if isinstance(origin, ZipFile):
-                origin.writestr(str(path), raw)
-            elif isinstance(raw, str):
-                Path(origin, path).write_text(raw)
+                self.dump_zip(origin, str(path), raw)
             else:
-                Path(origin, path).write_bytes(raw)
+                self.dump_path(Path(origin, path), raw)
 
     def __repr__(self) -> str:
         content = (
@@ -333,10 +339,17 @@ class TextFileBase(File[ValueType, str]):
 
     text: FileSerialize[str] = FileSerialize()
 
+    encoding: Optional[str]
+    errors: Optional[str]
+    newline: Optional[str]
+
     def __post_init__(self):
         super().__post_init__()
         self.serializer = self.to_str
         self.deserializer = self.from_str
+        self.encoding = "utf-8"
+        self.errors = None
+        self.newline = None
 
     def serialize(self, content: Union[ValueType, str]) -> str:
         try:
@@ -355,15 +368,35 @@ class TextFileBase(File[ValueType, str]):
             raise DeserializationError(self) from exc
 
     @classmethod
-    def from_zip(cls, origin: ZipFile, name: str) -> str:
-        return origin.read(name).decode()
-
-    @classmethod
     def from_path(cls, path: FileSystemPath, start: int, stop: int) -> str:
         with open(path, "r", encoding="utf-8") as f:
             if start > 0:
                 f.seek(start)
             return f.read(stop - start) if stop >= -1 else f.read()
+
+    @classmethod
+    def from_zip(cls, origin: ZipFile, name: str) -> str:
+        return origin.read(name).decode()
+
+    def dump_path(self, path: FileSystemPath, raw: str) -> None:
+        with open(
+            path,
+            "w",
+            encoding=self.encoding,
+            errors=self.errors,
+            newline=self.newline,
+        ) as f:
+            f.write(raw)
+
+    def dump_zip(self, origin: ZipFile, name: str, raw: str) -> None:
+        with origin.open(name, "w") as f:
+            with io.TextIOWrapper(
+                f,
+                encoding=self.encoding,
+                errors=self.errors,
+                newline=self.newline,
+            ) as text_io:
+                text_io.write(raw)
 
     def to_str(self, content: ValueType) -> str:
         """Convert content to string."""
@@ -415,15 +448,23 @@ class BinaryFileBase(File[ValueType, bytes]):
             raise DeserializationError(self) from exc
 
     @classmethod
-    def from_zip(cls, origin: ZipFile, name: str) -> bytes:
-        return origin.read(name)
-
-    @classmethod
     def from_path(cls, path: FileSystemPath, start: int, stop: int) -> bytes:
         with open(path, "rb") as f:
             if start > 0:
                 f.seek(start)
             return f.read() if stop == -1 else f.read(stop - start)
+
+    @classmethod
+    def from_zip(cls, origin: ZipFile, name: str) -> bytes:
+        return origin.read(name)
+
+    def dump_path(self, path: FileSystemPath, raw: bytes) -> None:
+        with open(path, "wb") as f:
+            f.write(raw)
+
+    def dump_zip(self, origin: ZipFile, name: str, raw: bytes) -> None:
+        with origin.open(name, "w") as f:
+            f.write(raw)
 
     def to_bytes(self, content: ValueType) -> bytes:
         """Convert content to bytes."""
