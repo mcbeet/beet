@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.72.1 (2022-09-16)
+### Fix
+* Use entry point select api in python >= 3.10 ([`02baf28`](https://github.com/mcbeet/beet/commit/02baf283e526ddbb74499f61576df1a715b6608a))
+
 ## v0.72.0 (2022-09-14)
 ### Feature
 * Add beet.contrib.line_endings ([`e6255fc`](https://github.com/mcbeet/beet/commit/e6255fc3e66cd30cef514f2991c75e3420c87351))
