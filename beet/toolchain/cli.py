@@ -14,7 +14,6 @@ __all__ = [
 
 import logging
 from contextlib import contextmanager
-from importlib.metadata import entry_points
 from typing import Any, Callable, Iterator, List, Optional
 
 import click
@@ -25,6 +24,7 @@ from beet.core.error import BeetException, WrappedException
 from beet.core.utils import format_exc
 
 from .project import Project
+from .utils import select_entry_points
 
 
 def format_error(
@@ -211,7 +211,7 @@ class MainGroup(BeetGroup):
 
         self.entry_points_loaded = True
 
-        for ep in entry_points().get("beet", ()):
+        for ep in select_entry_points("beet"):
             if ep.name == "commands":
                 ep.load()
 

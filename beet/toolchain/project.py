@@ -8,7 +8,6 @@ import logging
 from contextlib import ExitStack, contextmanager
 from copy import deepcopy
 from dataclasses import dataclass
-from importlib.metadata import entry_points
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from typing import Any, ClassVar, Iterable, Iterator, List, Optional, Sequence
@@ -34,6 +33,7 @@ from beet.library.base import LATEST_MINECRAFT_VERSION
 from .config import PackConfig, ProjectConfig, load_config, locate_config
 from .context import Context, PluginSpec, ProjectCache
 from .template import TemplateManager
+from .utils import select_entry_points
 from .worker import WorkerPool
 
 
@@ -219,9 +219,7 @@ class ProjectBuilder:
 
         if ProjectBuilder.autoload is None:
             ProjectBuilder.autoload = [
-                ep.value
-                for ep in entry_points().get("beet", ())
-                if ep.name == "autoload"
+                ep.value for ep in select_entry_points("beet") if ep.name == "autoload"
             ]
 
     @contextmanager

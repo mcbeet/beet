@@ -12,8 +12,20 @@ __all__ = [
 
 import json
 import re
+import sys
 from copy import copy
-from typing import Any, Callable, Iterable, List, Literal, Mapping, Sequence, cast
+from importlib.metadata import EntryPoint, entry_points
+from typing import (
+    Any,
+    Callable,
+    Iterable,
+    List,
+    Literal,
+    Mapping,
+    Sequence,
+    Tuple,
+    cast,
+)
 
 FNV_32_INIT = 0x811C9DC5
 FNV_64_INIT = 0xCBF29CE484222325
@@ -71,6 +83,14 @@ def ensure_builtins(value: Any) -> Any:
         return json.loads(json.dumps(value))
     except Exception:
         raise TypeError(value) from None
+
+
+def select_entry_points(group: str) -> Tuple[EntryPoint, ...]:
+    eps: Any = entry_points()
+    if sys.version_info >= (3, 10):
+        return eps.select(group=group)
+    else:
+        return eps.get(group, ())
 
 
 def iter_options(options: Any) -> Iterable[str]:
