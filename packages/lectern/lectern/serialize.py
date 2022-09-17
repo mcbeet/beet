@@ -298,6 +298,9 @@ class MarkdownSerializer:
             )
 
         for name, namespace in pack.items():
+            if not namespace:
+                continue
+
             yield f"\n### {name}"
 
             for path, file_instance in namespace.extra.items():
