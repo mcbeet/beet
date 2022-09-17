@@ -81,10 +81,16 @@ class Fragment:
 
     def as_file(self, file_type: Type[File[Any, Any]] = BinaryFile) -> File[Any, Any]:
         """Retrieve the content of the fragment as a file."""
-        if self.file:
-            return file_type(self.file.ensure_serialized())
-
         is_binary = issubclass(file_type, BinaryFileBase)
+
+        if self.file:
+            content = self.file.ensure_serialized()
+            if is_binary and isinstance(content, str):
+                content = content.encode()
+            elif not is_binary and isinstance(content, bytes):
+                content = content.decode()
+            return file_type(content)
+
         content = self.content
 
         if content is not None and self.modifier == "base64":
