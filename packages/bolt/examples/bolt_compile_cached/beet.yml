@@ -1,0 +1,7 @@
+require:
+  - bolt
+data_pack:
+  load: "src"
+pipeline:
+  - mecha
+  - compile_cached
