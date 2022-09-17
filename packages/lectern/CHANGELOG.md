@@ -2,6 +2,11 @@
 
 <!--next-version-placeholder-->
 
+## v0.24.1 (2022-09-17)
+### Fix
+* Don't add namespace title when the namespace is empty ([`adfa7e5`](https://github.com/mcbeet/lectern/commit/adfa7e5493d4fc05df2e771c59f8e455c4e239c2))
+* Properly convert serialized content ([`3301864`](https://github.com/mcbeet/lectern/commit/3301864338413427ac7ab14e6aa0b7fb0e56d55f))
+
 ## v0.24.0 (2022-06-18)
 ### Feature
 * Change serialization filter for pytest snapshots ([`aea38cf`](https://github.com/mcbeet/lectern/commit/aea38cfd2db89b8d4470fa0805b54b5e2752d231))
