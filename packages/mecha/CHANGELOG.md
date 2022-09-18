@@ -2,6 +2,16 @@
 
 <!--next-version-placeholder-->
 
+## v0.57.0 (2022-09-18)
+### Feature
+* Use context generator to implement nesting ([`c15e258`](https://github.com/mcbeet/mecha/commit/c15e25864de0f29aba4711c49b0d819e815b565d))
+* Use context generator to implement nested_resources ([`4036ad5`](https://github.com/mcbeet/mecha/commit/4036ad5bd98695103f430253a2f3abffbe78a320))
+* Use context generator to implement inline_function_tag ([`48dcbd7`](https://github.com/mcbeet/mecha/commit/48dcbd70633cce9a77be713fee74b468e109465f))
+* Support yield in dispatcher directly and allow using yield/return for diagnostics ([`c746f5a`](https://github.com/mcbeet/mecha/commit/c746f5abe87f732e20079b2abead2fd2b821191f))
+
+### Fix
+* Update lint_basic to yield diagnostic ([`658aeda`](https://github.com/mcbeet/mecha/commit/658aeda383076431dbb72035b97ee3697e7ea5f8))
+
 ## v0.56.0 (2022-09-12)
 ### Feature
 * Improve formatting options ([`150be65`](https://github.com/mcbeet/mecha/commit/150be6570ef7e178347d818958e31cb395de9c52))
