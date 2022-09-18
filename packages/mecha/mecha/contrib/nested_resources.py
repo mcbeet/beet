@@ -9,7 +9,7 @@ __all__ = [
 from dataclasses import dataclass, replace
 from typing import Dict, List, Type
 
-from beet import Context, DataModelBase, NamespaceFile, TagFile
+from beet import Context, DataModelBase, Generator, NamespaceFile, TagFile
 from beet.core.utils import required_field, snake_case
 from tokenstream import set_location
 
@@ -21,7 +21,6 @@ from mecha import (
     AstRoot,
     CompilationDatabase,
     Diagnostic,
-    DiagnosticCollection,
     Mecha,
     MultilineParser,
     MutatingReducer,
@@ -90,7 +89,7 @@ def beet_default(ctx: Context):
 
     mc.transform.extend(
         NestedResourcesTransformer(
-            ctx=ctx,
+            generate=ctx.generate,
             database=mc.database,
             json_identifiers={
                 f"{prefix}{name}:name:content": file_type
@@ -106,60 +105,54 @@ def beet_default(ctx: Context):
 class NestedResourcesTransformer(MutatingReducer):
     """Transformer that handles nested resources."""
 
-    ctx: Context = required_field()
+    generate: Generator = required_field()
     database: CompilationDatabase = required_field()
 
     json_identifiers: Dict[str, Type[NamespaceFile]] = required_field()
 
     @rule(AstRoot)
     def nested_resources(self, node: AstRoot):
-        assets, data = self.ctx.packs
-
         changed = False
         commands: List[AstCommand] = []
 
-        with DiagnosticCollection() as diagnostics:
-            for command in node.commands:
-                if file_type := self.json_identifiers.get(command.identifier):
-                    name, content = command.arguments
+        for command in node.commands:
+            if file_type := self.json_identifiers.get(command.identifier):
+                name, content = command.arguments
 
-                    if isinstance(name, AstResourceLocation) and isinstance(
-                        content, AstJson
-                    ):
-                        if file_type in assets.namespace_type.field_map:
-                            proxy = assets[file_type]
-                        else:
-                            proxy = data[file_type]
+                if isinstance(name, AstResourceLocation) and isinstance(
+                    content, AstJson
+                ):
+                    full_name = name.get_canonical_value()
+                    file_instance = file_type(
+                        content.evaluate(),
+                        original=self.database.current.original,
+                    )
 
-                        full_name = name.get_canonical_value()
-                        file_instance = file_type(  # type: ignore
-                            content.evaluate(),
-                            original=self.database.current.original,
-                        )
+                    if command.identifier.startswith("merge:"):
+                        self.generate(full_name, merge=file_instance)
+                        changed = True
+                        continue
 
-                        if command.identifier.startswith("merge:"):
-                            proxy.merge({full_name: file_instance})  # type: ignore
-                        elif full_name not in proxy:
-                            proxy[full_name] = file_instance
-                        elif command.identifier.startswith("append:"):
-                            proxy[full_name].merge(file_instance)  # type: ignore
+                    target = self.generate(full_name, default=file_instance)
+                    if target is not file_instance:
+                        if command.identifier.startswith("append:"):
+                            target.append(file_instance)  # type: ignore
                         elif command.identifier.startswith("prepend:"):
-                            proxy[full_name].prepend(file_instance)  # type: ignore
+                            target.prepend(file_instance)  # type: ignore
                         elif (
-                            proxy[full_name].ensure_deserialized()
+                            target.ensure_deserialized()
                             != file_instance.ensure_deserialized()
                         ):
                             d = Diagnostic(
                                 level="error",
                                 message=f'Redefinition of {snake_case(file_type.__name__)} "{full_name}" doesn\'t match existing file.',
                             )
-                            diagnostics.add(set_location(d, name))
-                            continue
+                            yield set_location(d, name)
 
-                        changed = True
-                        continue
+                    changed = True
+                    continue
 
-                commands.append(command)
+            commands.append(command)
 
         if changed:
             return replace(node, commands=AstChildren(commands))
