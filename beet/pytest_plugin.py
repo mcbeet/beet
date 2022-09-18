@@ -72,8 +72,8 @@ def plural(name, count):
 def generate_explanation(config, left, right, item_name):
     verbose = config.getoption("verbose")
 
-    left_keys = set(left)
-    right_keys = set(right)
+    left_keys = set(k for k, v in left.items() if v)
+    right_keys = set(k for k, v in right.items() if v)
 
     common = left_keys & right_keys
     same = {key for key in common if left[key] == right[key]}
