@@ -18,7 +18,10 @@ from typing import (
     Iterator,
     Optional,
     Tuple,
+    Type,
     TypeVar,
+    Union,
+    cast,
     overload,
 )
 
@@ -37,6 +40,7 @@ if TYPE_CHECKING:
 
 T = TypeVar("T", contravariant=True)
 GeneratorType = TypeVar("GeneratorType", bound="Generator")
+NamespaceFileType = TypeVar("NamespaceFileType", bound="NamespaceFile")
 
 
 @dataclass
@@ -134,6 +138,26 @@ class Generator:
     @overload
     def __call__(
         self,
+        fmt: str,
+        *,
+        merge: NamespaceFile,
+        hash: Any = None,
+    ) -> str:
+        ...
+
+    @overload
+    def __call__(
+        self,
+        fmt: str,
+        *,
+        default: Union[Type[NamespaceFileType], NamespaceFileType],
+        hash: Any = None,
+    ) -> NamespaceFileType:
+        ...
+
+    @overload
+    def __call__(
+        self,
         file_instance: NamespaceFile,
         *,
         hash: Any = None,
@@ -154,27 +178,40 @@ class Generator:
         self,
         *args: Any,
         render: Optional[TextFileBase[Any]] = None,
+        merge: Optional[NamespaceFile] = None,
+        default: Optional[Union[Type[NamespaceFile], NamespaceFile]] = None,
         hash: Any = None,
         **kwargs: Any,
     ) -> Any:
-        file_instance: NamespaceFile
+        default_file = None
 
-        if render:
-            file_instance = render  # type: ignore
-            fmt = args[0] if args else None
-        elif len(args) == 2:
-            fmt, file_instance = args
+        if default:
+            if isinstance(default, type):
+                file_type = default
+            else:
+                file_type = type(default)
+                default_file = default
+
+            file_instance = None
+            fmt = args[0]
+
         else:
-            file_instance = args[0]
-            fmt = None
+            if render:
+                file_instance = cast(NamespaceFile, render)
+                fmt = args[0] if args else None
+            elif merge:
+                file_instance = merge
+                fmt = args[0]
+            elif len(args) == 2:
+                fmt, file_instance = args
+            else:
+                file_instance = args[0]
+                fmt = None
 
-        if hash is None and not render:
-            hash = lambda: file_instance.ensure_serialized()
+            if hash is None and not render:
+                hash = lambda: file_instance.ensure_serialized()
 
-        file_type = type(file_instance)
-        key = (
-            self[file_type].path(fmt, hash) if fmt else self[file_type].path(hash=hash)
-        )
+            file_type = type(file_instance)
 
         pack = (
             self.data
@@ -182,7 +219,20 @@ class Generator:
             else self.assets
         )
 
-        pack[key] = file_instance
+        if not fmt:
+            key = self[file_type].path(hash=hash)
+        elif ":" in fmt:
+            key = self[file_type].format(fmt, hash)
+        else:
+            key = self[file_type].path(fmt, hash)
+
+        if file_instance:
+            if merge:
+                pack[file_type].merge({key: file_instance})
+            else:
+                pack[key] = file_instance
+        elif default:
+            return pack[file_type].setdefault(key, default_file)
 
         if render:
             with self.ctx.override(

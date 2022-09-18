@@ -1,4 +1,4 @@
-from beet import Context, Function
+from beet import Context, Function, FunctionTag
 
 
 def beet_default(ctx: Context):
@@ -40,3 +40,13 @@ def beet_default(ctx: Context):
     tag2 = generate.id("foo")
     obj2 = generate.hash("foo")
     generate(Function([f"scoreboard players set @s[tag={tag2}] {obj2} 1"]))
+
+    func = ctx.generate(
+        "hoisted:{namespace}/{path}{hash}",
+        Function(["say hoisted"], tags=["minecraft:load"]),
+    )
+
+    for i in range(3):
+        ctx.generate("hoisted:foo", merge=FunctionTag({"values": [f"demo:foo{i}"]}))
+        ctx.generate("hoisted:abc", default=Function).append(f"function {func}")
+        ctx.generate("hoisted:def", default=Function("say init")).prepend(f"say {i+1}")

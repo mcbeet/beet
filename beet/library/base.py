@@ -96,6 +96,9 @@ class NamespaceFile(Protocol):
     scope: ClassVar[Tuple[str, ...]]
     extension: ClassVar[str]
 
+    def merge(self, other: Any) -> bool:
+        ...
+
     def bind(self, pack: Any, path: str) -> Any:
         ...
 
@@ -118,6 +121,10 @@ class NamespaceFile(Protocol):
         self,
         deserializer: Optional[Callable[[Any], Any]] = None,
     ) -> Any:
+        ...
+
+    @classmethod
+    def default(cls) -> Any:
         ...
 
     @classmethod
@@ -318,6 +325,23 @@ class NamespaceContainer(MatchMixin, MergeMixin, Container[str, NamespaceFileTyp
                 self.process(key, value)
             except Drop:
                 del self[key]
+
+    def setdefault(
+        self,
+        key: str,
+        default: Optional[NamespaceFileType] = None,
+    ) -> NamespaceFileType:
+        if value := self.get(key):
+            return value
+        if default:
+            self[key] = default
+        else:
+            if not self.file_type:
+                raise ValueError(
+                    "File type associated to the namespace container is not available."
+                )
+            self[key] = self.file_type()
+        return self[key]
 
     def merge(self, other: Mapping[Any, SupportsMerge]) -> bool:
         if (
@@ -608,6 +632,14 @@ class NamespaceProxy(
 
     def join_key(self, key1: str, key2: str) -> str:
         return f"{key1}:{key2}"
+
+    def setdefault(
+        self,
+        key: str,
+        default: Optional[NamespaceFileType] = None,
+    ) -> NamespaceFileType:
+        key1, key2 = self.split_key(key)
+        return self.proxy[key1][self.proxy_key].setdefault(key2, default)  # type: ignore
 
     def walk(self) -> Iterator[Tuple[str, Set[str], Dict[str, NamespaceFileType]]]:
         """Walk over the file hierarchy."""
