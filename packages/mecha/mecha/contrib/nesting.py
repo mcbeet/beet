@@ -11,7 +11,7 @@ from dataclasses import dataclass, replace
 from importlib.resources import read_text
 from typing import List, cast
 
-from beet import Context, Function
+from beet import Context, Function, Generator
 from beet.core.utils import required_field
 from tokenstream import InvalidSyntax, TokenStream, set_location
 
@@ -42,7 +42,12 @@ def beet_default(ctx: Context):
     mc.spec.parsers["nested_root"] = parse_nested_root
     mc.spec.parsers["command:argument:mecha:nested_root"] = delegate("nested_root")
 
-    mc.transform.extend(NestedCommandsTransformer(ctx=ctx, database=mc.database))
+    mc.transform.extend(
+        NestedCommandsTransformer(
+            generate=ctx.generate,
+            database=mc.database,
+        )
+    )
 
 
 def parse_nested_root(stream: TokenStream) -> AstRoot:
@@ -82,13 +87,13 @@ def parse_nested_root(stream: TokenStream) -> AstRoot:
 class NestedCommandsTransformer(MutatingReducer):
     """Transformer that handles nested commands."""
 
-    ctx: Context = required_field()
+    generate: Generator = required_field()
     database: CompilationDatabase = required_field()
 
     def emit_function(self, path: str, root: AstRoot):
         """Helper method for emitting nested commands into a separate function."""
         function = Function()
-        self.ctx.data[path] = function
+        self.generate(path, function)
         self.database[function] = replace(
             self.database[self.database.current],
             ast=root,
@@ -123,7 +128,6 @@ class NestedCommandsTransformer(MutatingReducer):
 
     @rule(AstCommand, identifier="execute:commands")
     def nesting_execute_commands(self, node: AstCommand):
-        generate = self.ctx.generate["nested_execute"]
         root = cast(AstRoot, node.arguments[0])
 
         if len(root.commands) == 1:
@@ -134,9 +138,9 @@ class NestedCommandsTransformer(MutatingReducer):
 
         else:
             if path := self.database[self.database.current].resource_location:
-                path = generate.format(path + "/nested_execute_{incr}")
+                path = self.generate.format(path + "/nested_execute_{incr}")
             else:
-                path = generate.path()
+                path = self.generate.path()
 
             self.emit_function(path, root)
 
