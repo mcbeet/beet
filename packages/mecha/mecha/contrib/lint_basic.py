@@ -6,15 +6,7 @@ __all__ = [
 from beet import Context
 from tokenstream import set_location
 
-from mecha import (
-    AstCommand,
-    AstSelector,
-    Diagnostic,
-    DiagnosticCollection,
-    Mecha,
-    Reducer,
-    rule,
-)
+from mecha import AstCommand, AstSelector, Diagnostic, Mecha, Reducer, rule
 
 
 def beet_default(ctx: Context):
@@ -66,28 +58,27 @@ class BasicLinter(Reducer):
         ]
         conflict = [-1] * len(order)
 
-        with DiagnosticCollection() as diagnostics:
-            for i, arg in enumerate(node.arguments):
-                name = "inverted " * arg.inverted + arg.key.value
+        for i, arg in enumerate(node.arguments):
+            name = "inverted " * arg.inverted + arg.key.value
 
-                try:
-                    index = order.index(name)
-                except ValueError:
-                    continue
+            try:
+                index = order.index(name)
+            except ValueError:
+                continue
 
-                j = conflict[index]
+            j = conflict[index]
 
-                if j >= 0:
-                    bad_arg = node.arguments[j]
-                    bad_arg_name = "inverted " * bad_arg.inverted + bad_arg.key.value
+            if j >= 0:
+                bad_arg = node.arguments[j]
+                bad_arg_name = "inverted " * bad_arg.inverted + bad_arg.key.value
 
-                    d = Diagnostic(
-                        level="warn",
-                        message=f"{name.capitalize()} argument should go before {bad_arg_name}.",
-                    )
+                d = Diagnostic(
+                    level="warn",
+                    message=f"{name.capitalize()} argument should go before {bad_arg_name}.",
+                )
 
-                    diagnostics.add(set_location(d, arg))
+                yield set_location(d, arg)
 
-                for conflict_index in range(index):
-                    if conflict[conflict_index] < 0:
-                        conflict[conflict_index] = i
+            for conflict_index in range(index):
+                if conflict[conflict_index] < 0:
+                    conflict[conflict_index] = i
