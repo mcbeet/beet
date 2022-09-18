@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.73.3 (2022-09-18)
+### Fix
+* Add append alias for function tags ([`f911da4`](https://github.com/mcbeet/beet/commit/f911da47fe5ee337d6b87917f12b73ad69c0ccd0))
+
 ## v0.73.2 (2022-09-18)
 ### Fix
 * Missing init method for NamespaceFile protocol ([`02fbae9`](https://github.com/mcbeet/beet/commit/02fbae9ff1195b1097f99e60488e73c51fbabde3))
