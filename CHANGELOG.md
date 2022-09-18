@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.73.1 (2022-09-18)
+### Fix
+* Double quotes in log messages ([`7c98b5a`](https://github.com/mcbeet/beet/commit/7c98b5a24681e42571c520d93569ef22d9eb7fa1))
+
 ## v0.73.0 (2022-09-18)
 ### Feature
 * Merge and default overloads for context generator ([`810a859`](https://github.com/mcbeet/beet/commit/810a859fceedab6735b8ff4d545aafba95375ecf))
