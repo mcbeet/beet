@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.73.2 (2022-09-18)
+### Fix
+* Missing init method for NamespaceFile protocol ([`02fbae9`](https://github.com/mcbeet/beet/commit/02fbae9ff1195b1097f99e60488e73c51fbabde3))
+
 ## v0.73.1 (2022-09-18)
 ### Fix
 * Double quotes in log messages ([`7c98b5a`](https://github.com/mcbeet/beet/commit/7c98b5a24681e42571c520d93569ef22d9eb7fa1))
