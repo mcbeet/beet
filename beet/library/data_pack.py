@@ -176,6 +176,10 @@ class TagFile(JsonFile):
                 values.append(deepcopy(value))
         return True
 
+    def append(self: TagFileType, other: TagFileType):
+        """Append values from another tag."""
+        self.merge(other)
+
     def prepend(self: TagFileType, other: TagFileType):
         """Prepend values from another tag."""
         if other.data.get("replace"):
