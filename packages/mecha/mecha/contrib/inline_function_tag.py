@@ -10,7 +10,7 @@ from dataclasses import dataclass, replace
 from importlib.resources import read_text
 from typing import List
 
-from beet import Context, FunctionTag
+from beet import Context, FunctionTag, Generator
 from beet.core.utils import required_field
 from tokenstream import set_location
 
@@ -37,7 +37,7 @@ def beet_default(ctx: Context):
     mc.transform.extend(inline_execute_function_tag)
     mc.steps.insert(
         mc.steps.index(mc.transform) + 1,
-        InlineFunctionTagHandler(ctx=ctx, database=mc.database),
+        InlineFunctionTagHandler(generate=ctx.generate, database=mc.database),
     )
 
 
@@ -54,7 +54,7 @@ def inline_execute_function_tag(node: AstCommand) -> AstCommand:
 class InlineFunctionTagHandler(Visitor):
     """Handler for inline function tags."""
 
-    ctx: Context = required_field()
+    generate: Generator = required_field()
     database: CompilationDatabase = required_field()
 
     @rule(AstRoot)
@@ -68,8 +68,8 @@ class InlineFunctionTagHandler(Visitor):
             ):
                 changed = True
                 if path := self.database[self.database.current].resource_location:
-                    self.ctx.data.function_tags.merge(
-                        {tag.get_canonical_value(): FunctionTag({"values": [path]})}
+                    self.generate(
+                        tag.get_canonical_value(), merge=FunctionTag({"values": [path]})
                     )
                 else:
                     d = Diagnostic("error", "No current path to add function tag.")
