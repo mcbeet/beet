@@ -379,13 +379,13 @@ class Draft(Generator):
         key = f"{key} {zipped=}"
 
         if cache.json.get("draft_key") == key:
-            with log_time("Load draft %r from cache.", name):
+            with log_time('Load draft "%s" from cache.', name):
                 self.assets.load(cached_resource_pack)
                 self.data.load(cached_data_pack)
             raise DraftCacheSignal()
 
         @self.exit_stack.callback
-        @log_time("Update cache for draft %r.", name)
+        @log_time('Update cache for draft "%s".', name)
         def _():
             if self.assets:
                 self.assets.save(path=cached_resource_pack, overwrite=True)
@@ -393,4 +393,4 @@ class Draft(Generator):
                 self.data.save(path=cached_data_pack, overwrite=True)
             cache.json["draft_key"] = key
 
-        self.exit_stack.enter_context(log_time("Generate draft %r.", name))
+        self.exit_stack.enter_context(log_time('Generate draft "%s".', name))

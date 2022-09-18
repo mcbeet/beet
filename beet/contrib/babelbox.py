@@ -84,7 +84,7 @@ def load_languages(
                     languages[code].data[identifier] = value
                 else:
                     logger.warning(
-                        "Locale %r has no translation for %r.", code, identifier
+                        'Locale "%s" has no translation for "%s".', code, identifier
                     )
 
         return languages
