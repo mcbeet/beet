@@ -236,9 +236,80 @@ class Dispatcher(Generic[T]):
     def invoke(self, node: AstNode, *args: Any, **kwargs: Any) -> Any:
         """Invoke rules on the given ast node."""
         for name, rule in self.dispatch(node):
-            with self.use_rule(node, name):
-                rule(node, *args, **kwargs)
+            self.process(node, name, rule, *args, **kwargs)
         return node
+
+    def process(
+        self,
+        node: AstNode,
+        name: Optional[str] = None,
+        rule: Optional[Callable[..., Any]] = None,
+        *args: Any,
+        **kwargs: Any,
+    ) -> Any:
+        """Process the given ast node."""
+        result = None
+
+        with self.use_rule(node, name):
+            result = rule(node, *args, **kwargs) if rule else (child for child in node)
+
+        if isinstance(result, Generator):
+            try:
+                with self.use_rule(node, name):
+                    child = next(result)
+
+            except StopIteration as exc:
+                result = exc.value
+
+            else:
+                while True:
+                    child = self.handle_output(node, child, name)
+
+                    feedback = None
+                    if isinstance(child, AstNode):
+                        feedback = self.invoke(child, *args, **kwargs)
+                    elif child is not None:
+                        msg = f"Invalid node of type {type(child)}."
+                        if name:
+                            msg += f" ({name})"
+                        raise CompilationError(msg)
+
+                    try:
+                        child = result.send(feedback)
+                    except StopIteration as exc:
+                        result = exc.value
+                        break
+
+        return self.handle_output(node, result, name)
+
+    def handle_output(
+        self,
+        node: AstNode,
+        output: Any,
+        name: Optional[str] = None,
+    ) -> Any:
+        """Handle rule output."""
+        if isinstance(output, Diagnostic):
+            override_level = self.levels.get(name or "")
+            if override_level == "ignore":
+                override_level = None
+            if override_level:
+                output.level = override_level
+            self.diagnostics.add(
+                output.with_defaults(
+                    rule=name,
+                    location=node.location,
+                    end_location=node.end_location,
+                )
+            )
+            return None
+
+        if isinstance(output, DiagnosticCollection):
+            for diagnostic in output.exceptions:
+                self.handle_output(node, diagnostic, name)
+            return None
+
+        return output
 
     @contextmanager
     def use_diagnostics(self, diagnostics: DiagnosticCollection) -> Iterator[None]:
@@ -254,33 +325,10 @@ class Dispatcher(Generic[T]):
     @contextmanager
     def use_rule(self, node: AstNode, name: Optional[str] = None) -> Iterator[None]:
         """Handle rule diagnostics."""
-        override_level = self.levels.get(name or "")
-        if override_level == "ignore":
-            override_level = None
-
         try:
             yield
-        except Diagnostic as diagnostic:
-            if override_level:
-                diagnostic.level = override_level
-            self.diagnostics.add(
-                diagnostic.with_defaults(
-                    rule=name,
-                    location=node.location,
-                    end_location=node.end_location,
-                )
-            )
-        except DiagnosticCollection as diagnostic:
-            for diagnostic in diagnostic.exceptions:
-                if override_level:
-                    diagnostic.level = override_level
-                self.diagnostics.add(
-                    diagnostic.with_defaults(
-                        rule=name,
-                        location=node.location,
-                        end_location=node.end_location,
-                    )
-                )
+        except (Diagnostic, DiagnosticCollection) as exc:
+            self.handle_output(node, exc, name)
         except StopIteration:
             raise
         except BubbleException:
@@ -302,33 +350,8 @@ class Visitor(Dispatcher[Any]):
     """Ast visitor."""
 
     def invoke(self, node: AstNode, *args: Any, **kwargs: Any) -> Any:
-        rules = list(self.dispatch(node))
-
-        if rules:
-            name, rule = rules[0]
-        else:
-            name, rule = None, None
-
-        result = None
-
-        with self.use_rule(node, name):
-            result = rule(node, *args, **kwargs) if rule else (child for child in node)
-
-        if isinstance(result, Generator):
-            try:
-                with self.use_rule(node, name):
-                    child = next(result)
-            except StopIteration as exc:
-                return exc.value
-
-            while True:
-                feedback = self.invoke(child, *args, **kwargs)
-                try:
-                    child = result.send(feedback)
-                except StopIteration as exc:
-                    return exc.value
-
-        return result
+        name, rule = next(self.dispatch(node), (None, None))
+        return self.process(node, name, rule, *args, **kwargs)
 
 
 class Reducer(Dispatcher[Any]):
@@ -367,12 +390,17 @@ class MutatingReducer(Dispatcher[Any]):
             exhausted = True
 
             for name, rule in self.dispatch(node):
-                with self.use_rule(node, name):
-                    result = rule(node, *args, **kwargs)
+                result = self.process(node, name, rule, *args, **kwargs)
 
                 if result is not node:
-                    exhausted = False
-                    node = result
-                    break
+                    if isinstance(result, AstNode):
+                        exhausted = False
+                        node = result
+                        break
+                    elif result is not None:
+                        msg = f"Invalid node of type {type(result)}."
+                        if name:
+                            msg += f" ({name})"
+                        raise CompilationError(msg)
 
         return node
