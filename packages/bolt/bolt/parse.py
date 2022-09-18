@@ -41,8 +41,9 @@ __all__ = [
     "ImportStatementHandler",
     "parse_python_import",
     "parse_import_name",
-    "GlobalNonlocalHandler",
     "parse_name_list",
+    "GlobalNonlocalHandler",
+    "StatementSubcommandHandler",
     "DeferredRootBacktracker",
     "FunctionConstraint",
     "RootScopeHandler",
@@ -187,8 +188,10 @@ def get_bolt_parsers(
             macro_handler=macro_handler,
         ),
         "nested_root": create_bolt_root_parser(parsers["nested_root"], macro_handler),
-        "command": UndefinedIdentifierErrorHandler(
-            ImportStatementHandler(GlobalNonlocalHandler(macro_handler), modules)
+        "command": StatementSubcommandHandler(
+            UndefinedIdentifierErrorHandler(
+                ImportStatementHandler(GlobalNonlocalHandler(macro_handler), modules)
+            )
         ),
         "command:argument:bolt:if_block": delegate("bolt:if_block"),
         "command:argument:bolt:elif_condition": delegate("bolt:elif_condition"),
@@ -1698,6 +1701,14 @@ def parse_import_name(stream: TokenStream) -> AstImportedItem:
         return set_location(node, token)
 
 
+def parse_name_list(stream: TokenStream) -> AstIdentifier:
+    """Parse name list."""
+    node = delegate("bolt:identifier", stream)
+    with stream.syntax(comma=r","):
+        stream.get("comma")
+    return node
+
+
 @dataclass
 class GlobalNonlocalHandler:
     """Handle global and nonlocal declarations."""
@@ -1725,12 +1736,22 @@ class GlobalNonlocalHandler:
         return node
 
 
-def parse_name_list(stream: TokenStream) -> AstIdentifier:
-    """Parse name list."""
-    node = delegate("bolt:identifier", stream)
-    with stream.syntax(comma=r","):
-        stream.get("comma")
-    return node
+@dataclass
+class StatementSubcommandHandler:
+    """Prevent statements as subcommands."""
+
+    parser: Parser
+
+    def __call__(self, stream: TokenStream) -> Any:
+        if (
+            isinstance(node := self.parser(stream), AstCommand)
+            and node.arguments
+            and isinstance(child := node.arguments[-1], AstCommand)
+            and child.identifier == "statement"
+        ):
+            exc = InvalidSyntax("Can't use statement as a subcommand.")
+            raise set_location(exc, child)
+        return node
 
 
 @dataclass

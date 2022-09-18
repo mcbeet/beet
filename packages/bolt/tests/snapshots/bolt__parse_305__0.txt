@@ -1,0 +1,7 @@
+#>ERROR  Can't use statement as a subcommand.
+# line 1, column 11
+#      1 |  as @a run foo = "bar"
+#        :            ^^^^^^^^^^^
+#      2 |  say foo
+as @a run foo = "bar"
+say foo

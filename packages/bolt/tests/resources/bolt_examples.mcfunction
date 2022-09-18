@@ -1106,3 +1106,6 @@ def g(foo, *args, bar, *args):
 ###
 def g(a=1, b):
     pass
+###
+as @a run foo = "bar"
+say foo
