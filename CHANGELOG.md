@@ -2,6 +2,13 @@
 
 <!--next-version-placeholder-->
 
+## v0.73.0 (2022-09-18)
+### Feature
+* Merge and default overloads for context generator ([`810a859`](https://github.com/mcbeet/beet/commit/810a859fceedab6735b8ff4d545aafba95375ecf))
+
+### Fix
+* Improve pytest diff by ignoring falsy items ([`520de01`](https://github.com/mcbeet/beet/commit/520de011d558022695e0e1ffcfec7ea7afafef8b))
+
 ## v0.72.1 (2022-09-16)
 ### Fix
 * Use entry point select api in python >= 3.10 ([`02baf28`](https://github.com/mcbeet/beet/commit/02baf283e526ddbb74499f61576df1a715b6608a))
