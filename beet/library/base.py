@@ -96,6 +96,19 @@ class NamespaceFile(Protocol):
     scope: ClassVar[Tuple[str, ...]]
     extension: ClassVar[str]
 
+    def __init__(
+        self,
+        _content: Optional[Any] = None,
+        /,
+        *,
+        source_path: Optional[FileSystemPath] = None,
+        source_start: Optional[int] = None,
+        source_stop: Optional[int] = None,
+        on_bind: Optional[Callable[[Any, Any, str], Any]] = None,
+        original: Any = None,
+    ) -> None:
+        ...
+
     def merge(self, other: Any) -> bool:
         ...
 
