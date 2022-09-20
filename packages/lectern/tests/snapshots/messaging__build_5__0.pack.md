@@ -15,7 +15,7 @@
 
 ### msg
 
-`@function msg:cbnnd5`
+`@function msg:default`
 
 ```mcfunction
 say foo

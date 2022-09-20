@@ -15,7 +15,7 @@
 
 ### msg
 
-`@function msg:az4ih8`
+`@function msg:default`
 
 ```mcfunction
 say hello1

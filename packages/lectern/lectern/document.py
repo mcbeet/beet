@@ -111,9 +111,10 @@ class Document:
             directives=self.directives.resolve(),
             loaders=self.loaders,
         )
+        non_empty = bool(assets or data)
         self.assets.merge(assets)
         self.data.merge(data)
-        return bool(assets or data)
+        return non_empty
 
     def add_markdown(
         self,
@@ -127,9 +128,10 @@ class Document:
             loaders=self.loaders,
             external_files=external_files,
         )
+        non_empty = bool(assets or data)
         self.assets.merge(assets)
         self.data.merge(data)
-        return bool(assets or data)
+        return non_empty
 
     def get_text(self) -> str:
         """Turn the data pack and the resource pack into text."""

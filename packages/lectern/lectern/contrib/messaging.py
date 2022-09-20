@@ -7,9 +7,9 @@ __all__ = [
 ]
 
 
-from typing import Literal
+from typing import Literal, Optional
 
-from beet import Context, Function, ListOption, configurable
+from beet import Context, ErrorMessage, Function, ListOption, configurable
 from pydantic import BaseModel
 
 from lectern import Document, LinkFragmentLoader
@@ -18,6 +18,7 @@ from lectern import Document, LinkFragmentLoader
 class MessagingOptions(BaseModel):
     links: Literal["enable", "ignore", "disable"] = "enable"
     input: ListOption[str] = ListOption()
+    nothing_error: Optional[str] = None
 
 
 def beet_default(ctx: Context):
@@ -38,9 +39,11 @@ def messaging(ctx: Context, opts: MessagingOptions):
 
     for message in opts.input.entries():
         if not document.add(message):
-            code_blocks = [
+            if code_blocks := [
                 token.content
                 for token in document.markdown_extractor.parser.parse(message)  # type: ignore
                 if token.type in ["fence", "code_block"]
-            ]
-            ctx.generate("{short_hash}", Function("\n".join(code_blocks)))
+            ]:
+                ctx.generate("default", Function("\n".join(code_blocks)))
+            elif opts.nothing_error:
+                raise ErrorMessage(opts.nothing_error)
