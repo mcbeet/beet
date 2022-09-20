@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.25.0 (2022-09-20)
+### Feature
+* Make it possible to raise an error if there was nothing in the message ([`165330e`](https://github.com/mcbeet/lectern/commit/165330e29e490860107d2755f09a0aa3f9d9c03a))
+
 ## v0.24.1 (2022-09-17)
 ### Fix
 * Don't add namespace title when the namespace is empty ([`adfa7e5`](https://github.com/mcbeet/lectern/commit/adfa7e5493d4fc05df2e771c59f8e455c4e239c2))
