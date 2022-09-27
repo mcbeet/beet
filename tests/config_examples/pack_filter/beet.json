@@ -1,0 +1,12 @@
+{
+  "extend": "beet-filter.json",
+  "data_pack": {
+    "filter": {
+      "block": [
+        {
+          "namespace": "bar"
+        }
+      ]
+    }
+  }
+}

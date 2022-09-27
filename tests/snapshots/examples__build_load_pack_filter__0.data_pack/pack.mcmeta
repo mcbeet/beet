@@ -11,6 +11,9 @@
       },
       {
         "namespace": "thing"
+      },
+      {
+        "namespace": "minecraft"
       }
     ]
   }

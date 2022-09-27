@@ -1,14 +1,14 @@
 {
   "id": "",
-  "name": "my_project",
+  "name": "",
   "description": "",
   "author": "",
   "version": "",
   "minecraft": "",
-  "directory": "tests/config_examples/basic",
+  "directory": "tests/config_examples/pack_filter",
   "broadcast": [],
   "extend": [],
-  "output": "tests/config_examples/basic/build",
+  "output": null,
   "ignore": [],
   "whitelist": null,
   "require": [],
@@ -17,18 +17,23 @@
     "name": "",
     "description": "",
     "pack_format": 0,
-    "filter": null,
+    "filter": {
+      "block": [
+        {
+          "namespace": "foo",
+          "path": null
+        },
+        {
+          "namespace": "bar",
+          "path": null
+        }
+      ]
+    },
     "zipped": null,
     "compression": null,
     "compression_level": null,
-    "load": [
-      "tests/config_examples/basic/src"
-    ],
-    "render": {
-      "functions": [
-        "my_project:*"
-      ]
-    }
+    "load": [],
+    "render": {}
   },
   "resource_pack": {
     "name": "",

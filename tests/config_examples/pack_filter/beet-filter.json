@@ -1,0 +1,11 @@
+{
+  "data_pack": {
+    "filter": {
+      "block": [
+        {
+          "namespace": "foo"
+        }
+      ]
+    }
+  }
+}

@@ -28,7 +28,7 @@ from beet.core.utils import (
     split_version,
 )
 from beet.core.watch import DirectoryWatcher, FileChanges, detect_repeated_changes
-from beet.library.base import LATEST_MINECRAFT_VERSION
+from beet.library.base import LATEST_MINECRAFT_VERSION, Mcmeta
 
 from .config import PackConfig, ProjectConfig, load_config, locate_config
 from .context import Context, PluginSpec, ProjectCache
@@ -350,6 +350,10 @@ class ProjectBuilder:
             pack.name = ctx.template.render_string(config.name)
             pack.description = ctx.template.render_json(config.description)
             pack.pack_format = config.pack_format
+            if config.filter:
+                pack.mcmeta.merge(
+                    Mcmeta({"filter": config.filter.dict(exclude_none=True)})
+                )
             pack.zipped = bool(config.zipped)
             pack.compression = config.compression
             pack.compression_level = config.compression_level

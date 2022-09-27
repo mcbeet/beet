@@ -1,6 +1,8 @@
 __all__ = [
     "ProjectConfig",
     "PackConfig",
+    "PackFilterBlockConfig",
+    "PackFilterConfig",
     "PackLoadOptions",
     "ListOption",
     "PackageablePath",
@@ -129,12 +131,33 @@ class PackLoadOptions(
         )
 
 
+class PackFilterBlockConfig(BaseModel):
+    """Data pack and resource pack filter block configuration."""
+
+    namespace: Optional[str] = None
+    path: Optional[str] = None
+
+
+class PackFilterConfig(BaseModel):
+    """Data pack and resource pack filter configuration."""
+
+    block: ListOption[PackFilterBlockConfig] = ListOption()
+
+    def with_defaults(self, other: "PackFilterConfig") -> "PackFilterConfig":
+        return PackFilterConfig.parse_obj(
+            {
+                "block": other.block.entries() + self.block.entries(),
+            }
+        )
+
+
 class PackConfig(BaseModel):
     """Data pack and resource pack configuration."""
 
     name: str = ""
     description: TextComponent = ""
     pack_format: int = 0
+    filter: Optional[PackFilterConfig] = None
     zipped: Optional[bool] = None
     compression: Optional[Literal["none", "deflate", "bzip2", "lzma"]] = None
     compression_level: Optional[int] = None
@@ -152,6 +175,11 @@ class PackConfig(BaseModel):
                 "name": self.name or other.name,
                 "description": self.description or other.description,
                 "pack_format": self.pack_format or other.pack_format,
+                "filter": (
+                    self.filter.with_defaults(other.filter)
+                    if self.filter and other.filter
+                    else self.filter or other.filter
+                ),
                 "zipped": other.zipped if self.zipped is None else self.zipped,
                 "compression": (
                     other.compression if self.compression is None else self.compression
