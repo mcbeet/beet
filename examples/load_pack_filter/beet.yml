@@ -1,0 +1,4 @@
+data_pack:
+  load: "src"
+pipeline:
+  - demo

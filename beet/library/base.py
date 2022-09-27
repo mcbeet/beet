@@ -6,6 +6,7 @@ __all__ = [
     "ExtraPin",
     "NamespaceExtraContainer",
     "PackExtraContainer",
+    "Mcmeta",
     "McmetaPin",
     "PackPin",
     "Namespace",
@@ -696,6 +697,21 @@ class NamespaceProxyDescriptor(Generic[NamespaceFileType]):
         return NamespaceProxy[NamespaceFileType](obj, self.proxy_key)
 
 
+class Mcmeta(JsonFile):
+    """Class representing a pack.mcmeta file."""
+
+    def merge(self, other: "Mcmeta") -> bool:  # type: ignore
+        for key, value in other.data.items():
+            if key == "filter":
+                block = self.data.setdefault("filter", {}).setdefault("block", [])
+                for item in value.get("block", []):
+                    if item not in block:
+                        block.append(item)
+            else:
+                self.data[key] = value
+        return True
+
+
 class McmetaPin(Pin[str, PinType]):
     """Descriptor that makes it possible to bind pack.mcmeta information to attribute lookup."""
 
@@ -733,13 +749,14 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
     compression_level: Optional[int]
 
     extra: PackExtraContainer["Pack[NamespaceType]"]
-    mcmeta: ExtraPin[JsonFile] = ExtraPin(
-        "pack.mcmeta", default_factory=lambda: JsonFile({})
-    )
+    mcmeta: ExtraPin[Mcmeta] = ExtraPin("pack.mcmeta", default_factory=lambda: Mcmeta())
     icon: ExtraPin[Optional[PngFile]] = ExtraPin("pack.png", default=None)
 
     description: PackPin[TextComponent] = PackPin("description", default="")
     pack_format: PackPin[int] = PackPin("pack_format", default=0)
+    filter: McmetaPin[JsonDict] = McmetaPin(
+        "filter", default_factory=lambda: {"block": []}
+    )
 
     extend_extra: Dict[str, Type[PackFile]]
     extend_namespace: List[Type[NamespaceFile]]
@@ -764,10 +781,11 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
         zipped: bool = False,
         compression: Optional[Literal["none", "deflate", "bzip2", "lzma"]] = None,
         compression_level: Optional[int] = None,
-        mcmeta: Optional[JsonFile] = None,
+        mcmeta: Optional[Mcmeta] = None,
         icon: Optional[PngFile] = None,
         description: Optional[str] = None,
         pack_format: Optional[int] = None,
+        filter: Optional[JsonDict] = None,
         extend_extra: Optional[Mapping[str, Type[PackFile]]] = None,
         extend_namespace: Iterable[Type[NamespaceFile]] = (),
         extend_namespace_extra: Optional[Mapping[str, Type[PackFile]]] = None,
@@ -791,6 +809,8 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
             self.description = description
         if pack_format is not None:
             self.pack_format = pack_format
+        if filter is not None:
+            self.filter = filter
 
         self.extend_extra = dict(extend_extra or {})
         self.extend_namespace = list(extend_namespace)
@@ -950,7 +970,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
 
     @classmethod
     def get_extra_info(cls) -> Dict[str, Type[PackFile]]:
-        return {"pack.mcmeta": JsonFile, "pack.png": PngFile}
+        return {"pack.mcmeta": Mcmeta, "pack.png": PngFile}
 
     def resolve_extra_info(self) -> Dict[str, Type[PackFile]]:
         extra_info = self.get_extra_info()

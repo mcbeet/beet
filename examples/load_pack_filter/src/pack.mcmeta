@@ -1,0 +1,10 @@
+{
+  "filter": {
+    "block": [
+      {
+        "namespace": "foo",
+        "path": "bar"
+      }
+    ]
+  }
+}

@@ -4,7 +4,7 @@ import pytest
 from PIL import Image, ImageDraw
 from pytest_insta import SnapshotFixture
 
-from beet import JsonFile, PngFile, ResourcePack, Sound, SoundConfig, Texture
+from beet import Mcmeta, PngFile, ResourcePack, Sound, SoundConfig, Texture
 
 
 def test_default():
@@ -16,9 +16,9 @@ def test_default():
     "pack",
     [
         ResourcePack("p1"),
-        ResourcePack("p2", mcmeta=JsonFile({"pack": {"description": "world"}})),
+        ResourcePack("p2", mcmeta=Mcmeta({"pack": {"description": "world"}})),
         ResourcePack(
-            "p3", mcmeta=JsonFile({"pack": {"description": "world", "pack_format": 42}})
+            "p3", mcmeta=Mcmeta({"pack": {"description": "world", "pack_format": 42}})
         ),
     ],
 )

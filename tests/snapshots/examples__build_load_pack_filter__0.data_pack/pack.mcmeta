@@ -1,0 +1,17 @@
+{
+  "pack": {
+    "pack_format": 10,
+    "description": ""
+  },
+  "filter": {
+    "block": [
+      {
+        "namespace": "foo",
+        "path": "bar"
+      },
+      {
+        "namespace": "thing"
+      }
+    ]
+  }
+}

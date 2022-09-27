@@ -1,10 +1,10 @@
 from typing import List, Optional
 
-from beet import Connection, Context, JsonFile, subproject
+from beet import Connection, Context, Mcmeta, subproject
 
 
-def bridge(connection: Connection[Optional[JsonFile], JsonFile]):
-    q: List[JsonFile] = []
+def bridge(connection: Connection[Optional[Mcmeta], Mcmeta]):
+    q: List[Mcmeta] = []
 
     for client in connection:
         for mcmeta in client:
@@ -36,7 +36,7 @@ def beet_default(ctx: Context):
         # Request mcmeta files from the worker
         channel.send(None)
 
-    final_mcmeta = JsonFile(
+    final_mcmeta = Mcmeta(
         {
             "pack": {
                 "pack_format": 7,

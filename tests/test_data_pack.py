@@ -9,6 +9,7 @@ from beet import (
     Function,
     FunctionTag,
     JsonFile,
+    Mcmeta,
     MergePolicy,
     Structure,
 )
@@ -19,15 +20,15 @@ def test_equality():
     assert DataPack("hello") == DataPack("hello")
     assert DataPack("hello") != DataPack("world")
 
-    p1 = DataPack("foo", mcmeta=JsonFile({"pack": {"description": "bar"}}))
-    p2 = DataPack("foo", mcmeta=JsonFile({"pack": {"description": "bar"}}))
+    p1 = DataPack("foo", mcmeta=Mcmeta({"pack": {"description": "bar"}}))
+    p2 = DataPack("foo", mcmeta=Mcmeta({"pack": {"description": "bar"}}))
     assert p1 == p2
 
     p1 = DataPack(
-        "foo", mcmeta=JsonFile({"pack": {"description": "bar", "pack_format": 6}})
+        "foo", mcmeta=Mcmeta({"pack": {"description": "bar", "pack_format": 6}})
     )
     p2 = DataPack(
-        "foo", mcmeta=JsonFile({"pack": {"description": "bar", "pack_format": 5}})
+        "foo", mcmeta=Mcmeta({"pack": {"description": "bar", "pack_format": 5}})
     )
     assert p1 != p2
 
@@ -440,3 +441,23 @@ def test_merge_nuke():
     assert list(p1.functions) == ["demo:bar"]
     assert list(p1["demo"].extra) == []
     assert p1["thing"].extra["foo.json"] == JsonFile()
+
+
+def test_merge_filter():
+    p1 = DataPack(filter={"block": [{"namespace": "foo"}]})
+    p2 = DataPack(filter={"block": [{"namespace": "bar"}]})
+    p1.merge(p2)
+
+    assert p1.filter == {"block": [{"namespace": "foo"}, {"namespace": "bar"}]}
+
+    p1.merge(p2)
+    assert p1.filter == {"block": [{"namespace": "foo"}, {"namespace": "bar"}]}
+
+    p3 = DataPack()
+    p3.filter["block"].append({"namespace": "thing"})
+
+    p1.merge(p3)
+
+    assert p1.filter == {
+        "block": [{"namespace": "foo"}, {"namespace": "bar"}, {"namespace": "thing"}]
+    }
