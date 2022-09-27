@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.75.0 (2022-09-27)
+### Feature
+* Add pack filter config option ([`ce8f113`](https://github.com/mcbeet/beet/commit/ce8f1134e6ae9231e8e0e60d812d464098c2b815))
+
 ## v0.74.0 (2022-09-27)
 ### Feature
 * Add pack filter ([`87eb025`](https://github.com/mcbeet/beet/commit/87eb0254ff2a0d470233e730db63970dc18c4fc9))
