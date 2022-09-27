@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.74.0 (2022-09-27)
+### Feature
+* Add pack filter ([`87eb025`](https://github.com/mcbeet/beet/commit/87eb0254ff2a0d470233e730db63970dc18c4fc9))
+
 ## v0.73.3 (2022-09-18)
 ### Fix
 * Add append alias for function tags ([`f911da4`](https://github.com/mcbeet/beet/commit/f911da47fe5ee337d6b87917f12b73ad69c0ccd0))
