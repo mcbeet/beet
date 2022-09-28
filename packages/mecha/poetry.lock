@@ -14,7 +14,7 @@ tests_no_zope = ["cloudpickle", "coverage[toml] (>=5.0.2)", "hypothesis", "mypy"
 
 [[package]]
 name = "beet"
-version = "0.73.3"
+version = "0.75.0"
 description = "The Minecraft pack development kit"
 category = "main"
 optional = false
@@ -838,8 +838,8 @@ attrs = [
     {file = "attrs-21.4.0.tar.gz", hash = "sha256:626ba8234211db98e869df76230a137c4c40a12d72445c45d5f5b716f076e2fd"},
 ]
 beet = [
-    {file = "beet-0.73.3-py3-none-any.whl", hash = "sha256:d052fcd6c95f6601b89997730e577032fb7715d4f372348bf4e134e209230706"},
-    {file = "beet-0.73.3.tar.gz", hash = "sha256:413e88a32e73b90d08b7838654b7fbf584187a2c58d2e6477046b05da001359c"},
+    {file = "beet-0.75.0-py3-none-any.whl", hash = "sha256:dd32bcffc1365dba303a607d1cd0acf342ea865477e4848c794c70e142fca3fb"},
+    {file = "beet-0.75.0.tar.gz", hash = "sha256:e2004077126fad2f47ceef26cfea73361ce4125b4e807d5aaf8fe3e4cc66978c"},
 ]
 black = [
     {file = "black-22.8.0-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:ce957f1d6b78a8a231b18e0dd2d94a33d2ba738cd88a7fe64f53f659eea49fdd"},
