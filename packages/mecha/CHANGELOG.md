@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.57.1 (2022-10-01)
+### Fix
+* Improve typing for AlternativeParser ([`08727c4`](https://github.com/mcbeet/mecha/commit/08727c4a8256ad8afa459eb76c02f7f7785555e4))
+
 ## v0.57.0 (2022-09-18)
 ### Feature
 * Use context generator to implement nesting ([`c15e258`](https://github.com/mcbeet/mecha/commit/c15e25864de0f29aba4711c49b0d819e815b565d))
