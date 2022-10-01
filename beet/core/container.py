@@ -35,6 +35,7 @@ from .utils import SENTINEL_OBJ, Sentinel
 
 K = TypeVar("K")
 V = TypeVar("V")
+CV = TypeVar("CV", covariant=True)
 ProxyKeyType = TypeVar("ProxyKeyType")
 
 PinDefault = Union[V, Sentinel]
@@ -72,14 +73,14 @@ class MatchMixin:
 
 
 @dataclass
-class Pin(Generic[K, V]):
+class Pin(Generic[K, CV]):
     """Descriptor that exposes a specific value from a dict-like object."""
 
     key: K
-    default: PinDefault[V] = SENTINEL_OBJ
-    default_factory: PinDefaultFactory[V] = SENTINEL_OBJ
+    default: PinDefault[CV] = SENTINEL_OBJ
+    default_factory: PinDefaultFactory[CV] = SENTINEL_OBJ
 
-    def __get__(self, obj: Any, objtype: Optional[Type[Any]] = None) -> V:
+    def __get__(self, obj: Any, objtype: Optional[Type[Any]] = None) -> CV:
         mapping = self.forward(obj)
 
         try:
@@ -97,7 +98,7 @@ class Pin(Generic[K, V]):
             mapping[self.key] = value
             return self.__get__(obj, objtype)
 
-    def __set__(self, obj: Any, value: V):
+    def __set__(self: "Pin[K, V]", obj: Any, value: V):
         self.forward(obj)[self.key] = value
 
     def __delete__(self, obj: Any):
@@ -109,8 +110,8 @@ class Pin(Generic[K, V]):
 
     @classmethod
     def collect_from(
-        cls: Type["Pin[K, V]"], target: Type[Any]
-    ) -> Dict[str, "Pin[K, V]"]:
+        cls: Type["Pin[K, CV]"], target: Type[Any]
+    ) -> Dict[str, "Pin[K, CV]"]:
         return {
             key: value for key, value in vars(target).items() if isinstance(value, cls)
         }

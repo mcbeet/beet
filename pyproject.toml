@@ -16,7 +16,7 @@ keywords = [
   "minecraft",
   "datapack",
   "resourcepack",
-  "mcfunction"
+  "mcfunction",
 ]
 
 include = ["beet/py.typed"]
@@ -61,24 +61,20 @@ minversion = "6.0"
 addopts = "tests beet --ignore beet/__main__.py --doctest-modules"
 doctest_optionflags = "NORMALIZE_WHITESPACE IGNORE_EXCEPTION_DETAIL ELLIPSIS"
 
+[tool.pyright]
+typeCheckingMode = "basic"
+ignore = ["docs", "setup.py"]
+strict = [
+  "beet/contrib",
+  "beet/core",
+  "beet/library",
+  "beet/toolchain",
+  "examples",
+  "tests",
+]
+
 [tool.black]
 target-version = ["py38"]
-include = '\.pyi?$'
-exclude = '''
-/(
-    \.eggs
-  | \.git
-  | \.hg
-  | \.mypy_cache
-  | \.tox
-  | \.venv
-  | node_modules
-  | _build
-  | buck-out
-  | build
-  | dist
-)/
-'''
 
 [tool.isort]
 profile = "black"
