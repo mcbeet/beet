@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.76.0 (2022-10-01)
+### Feature
+* Add File.copy() ([`d1f5b36`](https://github.com/mcbeet/beet/commit/d1f5b36b1860fe3d0c61cf225e0ec9a85b98e041))
+
 ## v0.75.0 (2022-09-27)
 ### Feature
 * Add pack filter config option ([`ce8f113`](https://github.com/mcbeet/beet/commit/ce8f1134e6ae9231e8e0e60d812d464098c2b815))
