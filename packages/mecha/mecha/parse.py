@@ -75,6 +75,7 @@ from typing import (
     List,
     Literal,
     Optional,
+    Sequence,
     Tuple,
     Type,
     Union,
@@ -1924,7 +1925,7 @@ class SingleLineConstraint:
 class AlternativeParser:
     """Parser that tries the given alternatives in order."""
 
-    parsers: List[Parser]
+    parsers: Sequence[Parser]
 
     def __call__(self, stream: TokenStream) -> Any:
         for parser, alternative in stream.choose(*self.parsers):
