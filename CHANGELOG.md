@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.76.1 (2022-10-01)
+### Fix
+* Update pyright ([`4ec611e`](https://github.com/mcbeet/beet/commit/4ec611ea51a3ea2417073c3de6535d1a9066cce5))
+
 ## v0.76.0 (2022-10-01)
 ### Feature
 * Add File.copy() ([`d1f5b36`](https://github.com/mcbeet/beet/commit/d1f5b36b1860fe3d0c61cf225e0ec9a85b98e041))
