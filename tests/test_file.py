@@ -93,3 +93,8 @@ def test_model(data: str):
     ab = ABFile(data)
     ab.ensure_deserialized()
     assert json.loads(data) == json.loads(ab.text)
+
+
+def test_copy():
+    assert TextFile(source_path="foo.txt").copy().source_path == "foo.txt"
+    assert TextFile("hello").copy().text == "hello"

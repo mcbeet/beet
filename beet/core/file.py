@@ -24,6 +24,7 @@ __all__ = [
 import io
 import json
 import shutil
+from copy import deepcopy
 from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Any, Callable, ClassVar, Generic, Optional, Type, TypeVar, Union
@@ -194,6 +195,10 @@ class File(Generic[ValueType, SerializeType]):
             f"{cls.__name__} object must be initialized with "
             "either a value, serialized data, or a source path."
         )
+
+    def copy(self: FileType) -> FileType:
+        """Copy the file."""
+        return replace(self, _content=deepcopy(self._content))
 
     def serialize(self, content: Union[ValueType, SerializeType]) -> SerializeType:
         """Serialize file content."""
