@@ -1,0 +1,18 @@
+broadcast: "projects/*"
+extend: "beet.yml"
+
+# A broadcast config is resolved at the root of each
+# individual subproject so we need to go up to output
+# all packs in the same location.
+output: "../../out"
+
+data_pack:
+  zipped: true
+
+# Disabling the "meta.autosave.link" option makes it so
+# that if we have a "beet link" set up for development
+# we won't pollute the "datapacks" directory with the
+# release zips.
+meta:
+  autosave:
+    link: false

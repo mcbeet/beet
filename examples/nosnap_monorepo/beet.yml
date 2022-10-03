@@ -1,0 +1,2 @@
+broadcast: "projects/*"
+extend: "beet.yml"

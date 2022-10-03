@@ -1,0 +1,13 @@
+author: Chad Beeter
+
+# We can't use "data_pack.load" because the "src" path would be
+# resolved relative to the "beet-common.yml" file instead of the
+# root of each individual subproject. Config options provided
+# through "meta" aren't resolved when the config is loaded but by
+# plugins directly, which is what we want in this particular case.
+pipeline:
+  - beet.contrib.load
+
+meta:
+  load:
+    data_pack: "src"

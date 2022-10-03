@@ -1,0 +1,3 @@
+version: 42.0.1
+
+extend: "../../beet-common.yml"
