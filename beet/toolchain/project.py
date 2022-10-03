@@ -80,10 +80,19 @@ class Project:
     def cache(self) -> ProjectCache:
         if self.resolved_cache is not None:
             return self.resolved_cache
+
+        for path in [self.directory, *self.directory.parents]:
+            cache_directory = path / self.cache_name
+            if cache_directory.is_dir():
+                break
+        else:
+            cache_directory = self.directory / self.cache_name
+
         self.resolved_cache = ProjectCache(
-            directory=self.directory / self.cache_name,
+            directory=cache_directory,
             generated_directory=self.directory / "generated",
         )
+
         return self.resolved_cache
 
     @property
