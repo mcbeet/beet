@@ -2,6 +2,13 @@
 
 <!--next-version-placeholder-->
 
+## v0.77.0 (2022-10-03)
+### Feature
+* Hoist cache ([`e5b130a`](https://github.com/mcbeet/beet/commit/e5b130a2163abb720bac9b07de732a0c64172b2e))
+
+### Documentation
+* Example monorepo ([`36a949d`](https://github.com/mcbeet/beet/commit/36a949debfeb04c8ee8c3adc608f30344c9b6e17))
+
 ## v0.76.1 (2022-10-01)
 ### Fix
 * Update pyright ([`4ec611e`](https://github.com/mcbeet/beet/commit/4ec611ea51a3ea2417073c3de6535d1a9066cce5))
