@@ -2,6 +2,11 @@
 
 <!--next-version-placeholder-->
 
+## v0.19.2 (2022-10-04)
+### Fix
+* Reported 0 errors message ([`16e64b7`](https://github.com/mcbeet/bolt/commit/16e64b77d5516fa04687f156ace6a4ee050be95b))
+* Proper error for statements used as subcommands ([`647b1c6`](https://github.com/mcbeet/bolt/commit/647b1c6685f5653bf34fdc87fab7ce2a7edc6fba))
+
 ## v0.19.1 (2022-09-12)
 ### Fix
 * Add error for non-default args following default args ([`2af9854`](https://github.com/mcbeet/bolt/commit/2af9854d91818804b642ffe2a7b625a6412665ec))
