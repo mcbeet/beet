@@ -6,6 +6,7 @@ __all__ = [
     "MacroLibrary",
     "CodegenResult",
     "UnusableCompilationUnit",
+    "SilentCompilationInterrupt",
 ]
 
 
@@ -65,6 +66,10 @@ class UnusableCompilationUnit(MechaError):
 
     def __str__(self) -> str:
         return self.message
+
+
+class SilentCompilationInterrupt(DiagnosticCollection):
+    """Raised for interrupting the compilation when an unusable compilation unit already reported its own diagnostics."""
 
 
 class Module(TextFile):
@@ -293,7 +298,7 @@ class ModuleManager(Mapping[TextFileBase[Any], CompiledModule]):
         """Error handler for running module code."""
         try:
             yield
-        except (BubbleException, InvalidSyntax):
+        except (BubbleException, InvalidSyntax, SilentCompilationInterrupt):
             raise
         except UnusableCompilationUnit as exc:
             if not exc.compilation_unit.diagnostics.error:
@@ -301,7 +306,7 @@ class ModuleManager(Mapping[TextFileBase[Any], CompiledModule]):
                 if resource_location:
                     message += f" ({resource_location})"
                 raise CompilationError(message) from rewrite_traceback(exc)
-            raise DiagnosticCollection() from None
+            raise SilentCompilationInterrupt() from None
         except Exception as exc:
             if resource_location:
                 message += f" ({resource_location})"
