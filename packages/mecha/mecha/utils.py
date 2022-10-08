@@ -24,6 +24,8 @@ AVOID_QUOTES_REGEX = re.compile(r"^[0-9A-Za-z_\.\+\-]+$")
 
 WHITESPACE_REGEX = re.compile(r"\s+")
 
+NOTABS_REGEX = re.compile(r"[^\t]")
+
 
 def normalize_whitespace(op: str) -> str:
     """Replace whitespace with underscores."""
@@ -171,7 +173,7 @@ def underline_code(
         stop = min(stop, len(code.rstrip()) + 1)
 
         if start < stop:
-            underline = " " * (start - 1) + "^" * (stop - start)
+            underline = NOTABS_REGEX.sub(" ", code[: start - 1]) + "^" * (stop - start)
             view.insert(index + 1, underline)
             gutter.insert(index + 1, ":")
 
