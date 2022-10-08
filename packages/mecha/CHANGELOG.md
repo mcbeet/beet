@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.57.2 (2022-10-08)
+### Fix
+* Accurate error underline for tab freaks ([`8f1064d`](https://github.com/mcbeet/mecha/commit/8f1064d5f4d2bd9fd8dd2b357d0626de933b596e))
+
 ## v0.57.1 (2022-10-01)
 ### Fix
 * Improve typing for AlternativeParser ([`08727c4`](https://github.com/mcbeet/mecha/commit/08727c4a8256ad8afa459eb76c02f7f7785555e4))
