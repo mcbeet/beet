@@ -2053,7 +2053,7 @@ image = ["Pillow"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "26ecebfe6092a2a6deaf260fb489b838282f747c43ec7314f1b6d87c9e3df22f"
+content-hash = "ce54deced240342afc556dd88f5070b4ecc03a443743e182d6cfbcf3e36f5b36"
 
 [metadata.files]
 alabaster = [
