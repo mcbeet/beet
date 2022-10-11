@@ -1,0 +1,10 @@
+pipeline:
+  - demo
+meta:
+  demo:
+    thing1:
+      value: hello
+    thing2:
+      value: world
+  demo.thing3:
+    value: foo

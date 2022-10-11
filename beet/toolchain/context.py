@@ -265,6 +265,18 @@ class Context:
         """Validate options."""
         if options is None:
             options = self.meta.get(key)
+
+        if options is None:
+            head, *tail = key.split(".")
+            options = self.meta.get(head)
+
+            for part in tail:
+                if isinstance(options, dict):
+                    options = options.get(part)
+                else:
+                    options = None
+                    break
+
         try:
             return validator(**(options or {}))
         except BubbleException:
