@@ -521,7 +521,10 @@ class Namespace(
         ...
 
     def list_files(
-        self, namespace: str, *extensions: str, extend: Optional[Any] = None
+        self, 
+        namespace: str, 
+        *extensions: str, 
+        extend: Optional[Any] = None,
     ) -> Iterator[Tuple[str, Any]]:
         """List and filter all the files in the namespace."""
         if extend and (origin := get_origin(extend)):
@@ -541,10 +544,10 @@ class Namespace(
                 continue
             if extensions and content_type.extension not in extensions:
                 continue
+            if extend and not issubclass(content_type, extend):
+                continue
             prefix = "/".join((self.directory, namespace) + content_type.scope)
             for name, item in container.items():
-                if extend and not isinstance(item, extend):
-                    continue
                 yield f"{prefix}/{name}{content_type.extension}", item
 
     @classmethod
