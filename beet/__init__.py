@@ -15,6 +15,7 @@ from .toolchain.generator import *
 from .toolchain.helpers import *
 from .toolchain.pipeline import *
 from .toolchain.project import *
+from .toolchain.select import *
 from .toolchain.template import *
 from .toolchain.tree import *
 from .toolchain.worker import *

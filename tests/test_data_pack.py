@@ -9,9 +9,12 @@ from beet import (
     Function,
     FunctionTag,
     JsonFile,
+    JsonFileBase,
+    LootTable,
     Mcmeta,
     MergePolicy,
     Structure,
+    select_files,
 )
 
 
@@ -460,4 +463,107 @@ def test_merge_filter():
 
     assert p1.filter == {
         "block": [{"namespace": "foo"}, {"namespace": "bar"}, {"namespace": "thing"}]
+    }
+
+
+def test_select():
+    p = DataPack()
+    p["demo:foo"] = Function()
+    p["demo:bar"] = Function()
+    p["demo:some_loot"] = LootTable()
+    p["demo:some_other_loot"] = LootTable()
+    p["minecraft:default_loot"] = LootTable()
+    p["minecraft:tick"] = FunctionTag()
+    p["minecraft:load"] = FunctionTag()
+    p["other_namespace:what/is/that"] = BlockTag()
+
+    assert select_files(p, ".mcfunction", files=r".*") == {
+        p.functions["demo:foo"]: ("data/demo/functions/foo.mcfunction", None),
+        p.functions["demo:bar"]: ("data/demo/functions/bar.mcfunction", None),
+    }
+    assert select_files(p, extend=Function, files=r".*") == {
+        p.functions["demo:foo"]: ("data/demo/functions/foo.mcfunction", None),
+        p.functions["demo:bar"]: ("data/demo/functions/bar.mcfunction", None),
+    }
+    assert select_files(p, ".mcfunction", match="*") == {
+        p.functions["demo:foo"]: (None, "demo:foo"),
+        p.functions["demo:bar"]: (None, "demo:bar"),
+    }
+    assert select_files(p, extend=Function, match="*") == {
+        p.functions["demo:foo"]: (None, "demo:foo"),
+        p.functions["demo:bar"]: (None, "demo:bar"),
+    }
+    assert select_files(p, match={"function": "*"}) == {
+        p.functions["demo:foo"]: (None, "demo:foo"),
+        p.functions["demo:bar"]: (None, "demo:bar"),
+    }
+    assert select_files(p, match={"functions": "*"}) == {
+        p.functions["demo:foo"]: (None, "demo:foo"),
+        p.functions["demo:bar"]: (None, "demo:bar"),
+    }
+
+    assert select_files(p, files=r"^pack\.mcmeta$") == {
+        p.mcmeta: ("pack.mcmeta", None),
+    }
+    assert select_files(p, ".mcmeta", files=r".*") == {
+        p.mcmeta: ("pack.mcmeta", None),
+    }
+    assert select_files(p, extend=Mcmeta, files=r".*") == {
+        p.mcmeta: ("pack.mcmeta", None),
+    }
+    assert select_files(p, extend=Mcmeta, match="*") == {}
+
+    assert set(select_files(p, files=r".*\.json")) == {
+        p.loot_tables["demo:some_loot"],
+        p.loot_tables["demo:some_other_loot"],
+        p.loot_tables["minecraft:default_loot"],
+        p.function_tags["minecraft:tick"],
+        p.function_tags["minecraft:load"],
+        p.block_tags["other_namespace:what/is/that"],
+    }
+    assert set(select_files(p, files=r"data/minecraft/.*\.json")) == {
+        p.loot_tables["minecraft:default_loot"],
+        p.function_tags["minecraft:tick"],
+        p.function_tags["minecraft:load"],
+    }
+    assert set(select_files(p, ".json", match=r"minecraft:*")) == {
+        p.loot_tables["minecraft:default_loot"],
+        p.function_tags["minecraft:tick"],
+        p.function_tags["minecraft:load"],
+    }
+    assert set(select_files(p, extend=JsonFileBase[Any], match=r"minecraft:*")) == {
+        p.loot_tables["minecraft:default_loot"],
+        p.function_tags["minecraft:tick"],
+        p.function_tags["minecraft:load"],
+    }
+    assert set(select_files(p, extend=JsonFileBase[Any], files=r".*")) == {
+        p.mcmeta,
+        p.loot_tables["demo:some_loot"],
+        p.loot_tables["demo:some_other_loot"],
+        p.loot_tables["minecraft:default_loot"],
+        p.function_tags["minecraft:tick"],
+        p.function_tags["minecraft:load"],
+        p.block_tags["other_namespace:what/is/that"],
+    }
+
+    assert set(select_files(p, files=[r".*loot\.json", r"pack\.mcmeta"])) == {
+        p.mcmeta,
+        p.loot_tables["demo:some_loot"],
+        p.loot_tables["demo:some_other_loot"],
+        p.loot_tables["minecraft:default_loot"],
+    }
+    assert set(
+        select_files(p, files={"regex": r".*LoOt.*", "flags": "IGNORECASE"})
+    ) == {
+        p.loot_tables["demo:some_loot"],
+        p.loot_tables["demo:some_other_loot"],
+        p.loot_tables["minecraft:default_loot"],
+    }
+    assert set(select_files(p, match=["minecraft:*", "demo:*", "!*other*"])) == {
+        p.functions["demo:foo"],
+        p.functions["demo:bar"],
+        p.loot_tables["demo:some_loot"],
+        p.loot_tables["minecraft:default_loot"],
+        p.function_tags["minecraft:tick"],
+        p.function_tags["minecraft:load"],
     }

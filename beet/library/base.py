@@ -521,9 +521,9 @@ class Namespace(
         ...
 
     def list_files(
-        self, 
-        namespace: str, 
-        *extensions: str, 
+        self,
+        namespace: str,
+        *extensions: str,
         extend: Optional[Any] = None,
     ) -> Iterator[Tuple[str, Any]]:
         """List and filter all the files in the namespace."""

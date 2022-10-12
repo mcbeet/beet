@@ -1,0 +1,39 @@
+pipeline:
+  - data_pack:
+      load:
+        data/demo/functions/thing1.mcfunction: "thing1.mcfunction"
+    pipeline:
+      - beet.contrib.find_replace
+    meta:
+      find_replace:
+        data_pack:
+          match: "*"
+        substitute:
+          find: 'creeper'
+          replace: 'aw man'
+  - version: 1.2.3
+    data_pack:
+      load: "src"
+    pipeline:
+      - beet.contrib.find_replace
+    meta:
+      find_replace:
+        substitute:
+          - data_pack:
+              match:
+                functions: "demo:*"
+                function_tag: "minecraft:*"
+            substitute:
+              - find: ['({{ project_version.replace(".", "\\.") }})', '(X\.X\.X)']
+                replace: '{{ project_id }}_version_\1\2'
+              - find:
+                  regex: 'PROJNAME'
+                  flags: IGNORECASE
+                replace: '{{ project_name }}'
+              - find: 'upper\(([^)]*)\)'
+                render: '{{ match[1].upper() }}'
+          - data_pack:
+              files: '.*\.mcfunction'
+            substitute:
+              find: '{{ project_name.upper() }}'
+              replace: 'something_else'

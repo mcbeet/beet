@@ -38,6 +38,7 @@ from pydantic import ValidationError
 from beet.core.cache import Cache, MultiCache
 from beet.core.container import Container
 from beet.core.error import BubbleException, WrappedException
+from beet.core.file import File
 from beet.core.utils import (
     FileSystemPath,
     JsonDict,
@@ -52,6 +53,7 @@ from beet.library.resource_pack import ResourcePack
 
 from .generator import Generator
 from .pipeline import GenericPipeline, GenericPlugin, GenericPluginSpec
+from .select import PackSelection, select_files
 from .template import TemplateManager
 from .tree import generate_tree
 from .worker import WorkerPoolHandle
@@ -298,6 +300,56 @@ class Context:
     def require(self, *args: PluginSpec):
         """Execute the specified plugin."""
         self.inject(Pipeline).require(*args)
+
+    @overload
+    def select(
+        self,
+        *extensions: str,
+        files: Optional[Any] = None,
+        match: Optional[Any] = None,
+    ) -> PackSelection[File[Any, Any]]:
+        ...
+
+    @overload
+    def select(
+        self,
+        *extensions: str,
+        extend: Type[T],
+        files: Optional[Any] = None,
+        match: Optional[Any] = None,
+    ) -> PackSelection[T]:
+        ...
+
+    def select(
+        self,
+        *extensions: str,
+        extend: Optional[Any] = None,
+        files: Optional[Any] = None,
+        match: Optional[Any] = None,
+    ) -> PackSelection[Any]:
+        result: PackSelection[Any] = {}
+
+        for pack in self.packs:
+            result.update(
+                select_files(
+                    pack,
+                    *extensions,
+                    extend=extend,
+                    files=files,
+                    match=match,
+                    template=self.template,
+                )
+                if extend
+                else select_files(
+                    pack,
+                    *extensions,
+                    files=files,
+                    match=match,
+                    template=self.template,
+                )
+            )
+
+        return result
 
 
 @overload
