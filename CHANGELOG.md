@@ -2,6 +2,14 @@
 
 <!--next-version-placeholder-->
 
+## v0.78.0 (2022-10-12)
+### Feature
+* Add beet.contrib.find_replace and generic pack selector ([`8e27ddd`](https://github.com/mcbeet/beet/commit/8e27dddc89ad2cec706ef0f66b2d0f14659055e6))
+* Validate nested options ([`48d5f86`](https://github.com/mcbeet/beet/commit/48d5f8667d26ae3b140071b310fb213e9c2b397b))
+
+### Fix
+* Validate extend once against content type when listing files ([`5e27735`](https://github.com/mcbeet/beet/commit/5e27735adad55327969c888d5afe5a51ebfef9e8))
+
 ## v0.77.0 (2022-10-03)
 ### Feature
 * Hoist cache ([`e5b130a`](https://github.com/mcbeet/beet/commit/e5b130a2163abb720bac9b07de732a0c64172b2e))
