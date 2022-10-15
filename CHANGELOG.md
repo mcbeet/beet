@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.78.1 (2022-10-15)
+### Fix
+* Update lockfile ([`23c4ec6`](https://github.com/mcbeet/beet/commit/23c4ec6f6a12a719ac9407e8bb10b1e7cdf6a747))
+
 ## v0.78.0 (2022-10-12)
 ### Feature
 * Add beet.contrib.find_replace and generic pack selector ([`8e27ddd`](https://github.com/mcbeet/beet/commit/8e27dddc89ad2cec706ef0f66b2d0f14659055e6))
