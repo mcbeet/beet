@@ -34,7 +34,7 @@ PackType = TypeVar("PackType", bound=Pack[Any])
 
 
 class TextSubstitutionOption(BaseModel):
-    find: RegexOption = RegexOption()
+    find: RegexOption
     replace: str
 
     class Config:

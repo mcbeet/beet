@@ -1,0 +1,40 @@
+pipeline:
+  - name: Demo
+    data_pack:
+      load:
+        data/demo/functions/foo1.mcfunction: "foo1.mcfunction"
+    pipeline:
+      - beet.contrib.rename_files
+    meta:
+      rename_files:
+        data_pack:
+          match: "*"
+          find: '{{ project_id }}:foo(\d+)'
+          replace: '{{ project_id }}:bar\1/run\1'
+  - version: 1.2.3
+    data_pack:
+      load: "src"
+    resource_pack:
+      load: "src"
+    pipeline:
+      - beet.contrib.rename_files
+    meta:
+      rename_files:
+        resource_pack:
+          - find: 'assets/\w+/sounds.json'
+            replace: 'assets/minecraft/sounds.json'
+        data_pack:
+          - match:
+              function: "demo:*"
+            find:
+              regex:
+                - '.+FOO'
+                - '.+THING'
+              flags: IGNORECASE
+            render: 'demo:{{ project_version }}/{{ match[0].partition(":")[-1] }}'
+          - find: '(.+)/main.mcfunction'
+            replace: '\1/actual_main.mcfunction'
+          - match:
+              predicates: "*"
+            find: '(\w+):(.+)'
+            replace: 'v{{ project_version }}:\1/\2_final'

@@ -1,0 +1,19 @@
+data_pack:
+  load:
+    - "src"
+    - "vendor/*"
+pipeline:
+  - beet.contrib.rename_files
+  - beet.contrib.find_replace
+meta:
+  rename_files:
+    data_pack:
+      match: "*"
+      find: '(cool_lib|nice_lib):([a-z_/]+)'
+      replace: 'demo:bundled/\1/\2'
+  find_replace:
+    data_pack:
+      match: "*"
+    substitute:
+      find: '(cool_lib|nice_lib):([a-z_/]+)'
+      replace: 'demo:bundled/\1/\2'

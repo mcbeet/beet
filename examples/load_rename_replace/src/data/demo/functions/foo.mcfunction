@@ -1,0 +1,2 @@
+function cool_lib:do_the_thing
+function nice_lib:do_the_thing
