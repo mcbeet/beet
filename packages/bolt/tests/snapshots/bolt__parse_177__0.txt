@@ -1,4 +1,4 @@
-#>ERROR  Expected colon but reached end of file.
+#>ERROR  Expected colon but got newline '\n'.
 # line 1, column 25
 #      1 |  append function demo:foo
 append function demo:foo

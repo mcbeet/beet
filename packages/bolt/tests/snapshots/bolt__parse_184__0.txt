@@ -3,7 +3,7 @@ positioned ~ ~a ~ function demo:foo
 ---
 <class 'mecha.ast.AstRoot'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
-  end_location: SourceLocation(pos=41, lineno=2, colno=36)
+  end_location: SourceLocation(pos=42, lineno=3, colno=1)
   commands:
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=0, lineno=1, colno=1)

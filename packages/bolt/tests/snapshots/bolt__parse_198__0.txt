@@ -3,7 +3,7 @@ function #tag_name
 ---
 <class 'mecha.ast.AstRoot'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
-  end_location: SourceLocation(pos=37, lineno=2, colno=19)
+  end_location: SourceLocation(pos=38, lineno=3, colno=1)
   commands:
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=0, lineno=1, colno=1)

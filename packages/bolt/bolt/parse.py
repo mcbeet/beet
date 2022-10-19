@@ -1865,6 +1865,10 @@ class RootScopeHandler:
 
     def __call__(self, stream: TokenStream) -> Any:
         with stream.provide(root_scope="root_scope" not in stream.data):
+            # Resetting the underlying token generator shouldn't be necessary but
+            # currently overloading between nested_root/nested_yaml drops tokens
+            # for some reason (see summon macro example).
+            stream.generator = stream.generate_tokens()
             return self.parser(stream)
 
 
