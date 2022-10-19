@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.57.3 (2022-10-19)
+### Fix
+* Update deps ([`146c8bc`](https://github.com/mcbeet/mecha/commit/146c8bcfcf8a4bf5ed5053980c878ffb061ed12b))
+
 ## v0.57.2 (2022-10-08)
 ### Fix
 * Accurate error underline for tab freaks ([`8f1064d`](https://github.com/mcbeet/mecha/commit/8f1064d5f4d2bd9fd8dd2b357d0626de933b596e))
