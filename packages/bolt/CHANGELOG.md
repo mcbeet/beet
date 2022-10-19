@@ -2,6 +2,11 @@
 
 <!--next-version-placeholder-->
 
+## v0.19.3 (2022-10-19)
+### Fix
+* Reset generator to prevent dropping tokens ([`6551578`](https://github.com/mcbeet/bolt/commit/65515786d6a941a2f4e94c4e8932c0dc90faa14f))
+* Update deps ([`1a00f20`](https://github.com/mcbeet/bolt/commit/1a00f208fce10a37e2ef9003d478b8dddce30d73))
+
 ## v0.19.2 (2022-10-04)
 ### Fix
 * Reported 0 errors message ([`16e64b7`](https://github.com/mcbeet/bolt/commit/16e64b77d5516fa04687f156ace6a4ee050be95b))
