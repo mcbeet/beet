@@ -268,36 +268,35 @@ class NestedYamlParser:
             with self.array_collector.start():
                 while True:
                     with stream.provide(line_indentation=dash.location.colno - 1):
-                        self.array_collector.emit(self.parse_yaml(stream))
+                        with stream.checkpoint() as commit:
+                            self.array_collector.emit(self.parse_yaml(stream))
+                            commit()
+                        if commit.rollback:
+                            self.array_collector.emit(self.parser(stream))
 
                     if consume_line_continuation(stream):
                         dash = stream.expect("dash")
                     else:
                         return self.array_collector.result()
 
-        with stream.checkpoint() as commit:
-            key = stream.expect("key")
-            stream.expect("colon")
+        key = stream.expect("key")
+        stream.expect("colon")
 
-            commit()
+        with self.object_collector.start():
+            while True:
+                with stream.provide(line_indentation=key.location.colno - 1):
+                    self.object_collector.emit(
+                        key=key.value,
+                        value=self.parser(stream),
+                        location=key.location,
+                        end_location=key.end_location,
+                    )
 
-            with self.object_collector.start():
-                while True:
-                    with stream.provide(line_indentation=key.location.colno - 1):
-                        self.object_collector.emit(
-                            key=key.value,
-                            value=self.parser(stream),
-                            location=key.location,
-                            end_location=key.end_location,
-                        )
-
-                    if consume_line_continuation(stream):
-                        key = stream.expect("key")
-                        stream.expect("colon")
-                    else:
-                        return self.object_collector.result()
-
-        return self.parser(stream)  # type: ignore
+                if consume_line_continuation(stream):
+                    key = stream.expect("key")
+                    stream.expect("colon")
+                else:
+                    return self.object_collector.result()
 
 
 @dataclass
