@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.79.0 (2022-10-19)
+### Feature
+* Add beet.contrib.rename_files ([`0932dc0`](https://github.com/mcbeet/beet/commit/0932dc07cc5b01c447d1ef8f7bc8e75ce27dcaa4))
+
 ## v0.78.1 (2022-10-15)
 ### Fix
 * Update lockfile ([`23c4ec6`](https://github.com/mcbeet/beet/commit/23c4ec6f6a12a719ac9407e8bb10b1e7cdf6a747))
