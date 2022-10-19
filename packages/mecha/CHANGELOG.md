@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.57.4 (2022-10-19)
+### Fix
+* Tweak nested yaml ([`9c69a1d`](https://github.com/mcbeet/mecha/commit/9c69a1d21f581e8e9bef7e44cb41e7c6f2f18025))
+
 ## v0.57.3 (2022-10-19)
 ### Fix
 * Update deps ([`146c8bc`](https://github.com/mcbeet/mecha/commit/146c8bcfcf8a4bf5ed5053980c878ffb061ed12b))
