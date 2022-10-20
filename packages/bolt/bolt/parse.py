@@ -15,6 +15,7 @@ __all__ = [
     "UndefinedIdentifierErrorHandler",
     "BranchScopeManager",
     "check_final_expression",
+    "FinalExpressionParser",
     "InterpolationParser",
     "DisableInterpolationParser",
     "parse_statement",
@@ -383,72 +384,101 @@ def get_bolt_parsers(
         ################################################################################
         # Interpolation
         ################################################################################
-        "bool": InterpolationParser("bool", parsers["bool"], fallback=True),
-        "numeric": InterpolationParser(
-            "numeric", parsers["numeric"], prefix="-", fallback=True
+        "bool": AlternativeParser([parsers["bool"], InterpolationParser("bool")]),
+        "numeric": AlternativeParser(
+            [parsers["numeric"], InterpolationParser("numeric", prefix="-")]
         ),
-        "coordinate": InterpolationParser(
-            "coordinate", parsers["coordinate"], prefix="[~^]-?|-", fallback=True
+        "coordinate": AlternativeParser(
+            [
+                parsers["coordinate"],
+                InterpolationParser("coordinate", prefix="[~^]-?|-"),
+            ]
         ),
-        "time": InterpolationParser("time", parsers["time"], fallback=True),
-        "word": InterpolationParser("word", parsers["word"]),
-        "phrase": InterpolationParser("phrase", parsers["phrase"]),
-        "greedy": InterpolationParser("greedy", parsers["greedy"]),
-        "json": InterpolationParser("json", parsers["json"]),
-        "json_object_entry": InterpolationParser(
-            "json", parsers["json_object_entry"], unpack=r"\*\*"
+        "time": AlternativeParser([parsers["time"], InterpolationParser("time")]),
+        "word": AlternativeParser([InterpolationParser("word"), parsers["word"]]),
+        "phrase": AlternativeParser([InterpolationParser("phrase"), parsers["phrase"]]),
+        "greedy": AlternativeParser([InterpolationParser("greedy"), parsers["greedy"]]),
+        "json": AlternativeParser([InterpolationParser("json"), parsers["json"]]),
+        "json_object_entry": AlternativeParser(
+            [InterpolationParser("json", unpack=r"\*\*"), parsers["json_object_entry"]]
         ),
-        "json_array_element": InterpolationParser(
-            "json", parsers["json_array_element"], unpack=r"\*"
+        "json_array_element": AlternativeParser(
+            [InterpolationParser("json", unpack=r"\*"), parsers["json_array_element"]]
         ),
-        "json_object": InterpolationParser("json_object", parsers["json_object"]),
-        "nbt": InterpolationParser("nbt", parsers["nbt"]),
-        "nbt_compound_entry": InterpolationParser(
-            "nbt", parsers["nbt_compound_entry"], unpack=r"\*\*"
+        "json_object": AlternativeParser(
+            [InterpolationParser("json_object"), parsers["json_object"]]
         ),
-        "nbt_list_or_array_element": InterpolationParser(
-            "nbt", parsers["nbt_list_or_array_element"], unpack=r"\*"
+        "nbt": AlternativeParser([InterpolationParser("nbt"), parsers["nbt"]]),
+        "nbt_compound_entry": AlternativeParser(
+            [InterpolationParser("nbt", unpack=r"\*\*"), parsers["nbt_compound_entry"]]
         ),
-        "nbt_compound": InterpolationParser("nbt_compound", parsers["nbt_compound"]),
-        "nbt_path": InterpolationParser("nbt_path", parsers["nbt_path"]),
-        "range": InterpolationParser("range", parsers["range"], fallback=True),
+        "nbt_list_or_array_element": AlternativeParser(
+            [
+                InterpolationParser("nbt", unpack=r"\*"),
+                parsers["nbt_list_or_array_element"],
+            ]
+        ),
+        "nbt_compound": AlternativeParser(
+            [InterpolationParser("nbt_compound"), parsers["nbt_compound"]]
+        ),
+        "nbt_path": AlternativeParser(
+            [InterpolationParser("nbt_path"), parsers["nbt_path"]]
+        ),
+        "range": AlternativeParser([parsers["range"], InterpolationParser("range")]),
         "resource_location_or_tag": CommentDisambiguation(
-            InterpolationParser(
-                "resource_location", parsers["resource_location_or_tag"], prefix=r"#"
+            AlternativeParser(
+                [
+                    InterpolationParser("resource_location", prefix=r"#"),
+                    parsers["resource_location_or_tag"],
+                ]
             )
         ),
-        "item_slot": InterpolationParser(
-            "item_slot", parsers["item_slot"], fallback=True
+        "item_slot": AlternativeParser(
+            [parsers["item_slot"], InterpolationParser("item_slot")]
         ),
-        "uuid": InterpolationParser("uuid", parsers["uuid"]),
-        "objective": InterpolationParser("objective", parsers["objective"]),
-        "objective_criteria": InterpolationParser(
-            "objective_criteria", parsers["objective_criteria"]
+        "uuid": AlternativeParser([InterpolationParser("uuid"), parsers["uuid"]]),
+        "objective": AlternativeParser(
+            [InterpolationParser("objective"), parsers["objective"]]
         ),
-        "scoreboard_slot": InterpolationParser(
-            "scoreboard_slot", parsers["scoreboard_slot"], fallback=True
+        "objective_criteria": AlternativeParser(
+            [InterpolationParser("objective_criteria"), parsers["objective_criteria"]]
         ),
-        "swizzle": InterpolationParser("swizzle", parsers["swizzle"], fallback=True),
-        "team": InterpolationParser("team", parsers["team"]),
-        "color": InterpolationParser("color", parsers["color"]),
-        "sort_order": InterpolationParser(
-            "sort_order", parsers["sort_order"], fallback=True
+        "scoreboard_slot": AlternativeParser(
+            [parsers["scoreboard_slot"], InterpolationParser("scoreboard_slot")]
         ),
-        "gamemode": InterpolationParser("gamemode", parsers["gamemode"], fallback=True),
-        "message": InterpolationParser("message", parsers["message"], final=True),
-        "block_pos": InterpolationParser("vec3", parsers["block_pos"], fallback=True),
-        "column_pos": InterpolationParser("vec2", parsers["column_pos"], fallback=True),
-        "rotation": InterpolationParser("vec2", parsers["rotation"], fallback=True),
-        "vec2": InterpolationParser("vec2", parsers["vec2"], fallback=True),
-        "vec3": InterpolationParser("vec3", parsers["vec3"], fallback=True),
+        "swizzle": AlternativeParser(
+            [parsers["swizzle"], InterpolationParser("swizzle")]
+        ),
+        "team": AlternativeParser([InterpolationParser("team"), parsers["team"]]),
+        "color": AlternativeParser([InterpolationParser("color"), parsers["color"]]),
+        "sort_order": AlternativeParser(
+            [parsers["sort_order"], InterpolationParser("sort_order")]
+        ),
+        "gamemode": AlternativeParser(
+            [parsers["gamemode"], InterpolationParser("gamemode")]
+        ),
+        "message": AlternativeParser(
+            [FinalExpressionParser(InterpolationParser("message")), parsers["message"]]
+        ),
+        "block_pos": AlternativeParser(
+            [parsers["block_pos"], InterpolationParser("vec3")]
+        ),
+        "column_pos": AlternativeParser(
+            [parsers["column_pos"], InterpolationParser("vec2")]
+        ),
+        "rotation": AlternativeParser(
+            [parsers["rotation"], InterpolationParser("vec2")]
+        ),
+        "vec2": AlternativeParser([parsers["vec2"], InterpolationParser("vec2")]),
+        "vec3": AlternativeParser([parsers["vec3"], InterpolationParser("vec3")]),
         "entity": CommentDisambiguation(
-            InterpolationParser("entity", parsers["entity"])
+            AlternativeParser([InterpolationParser("entity"), parsers["entity"]])
         ),
         "score_holder": CommentDisambiguation(
-            InterpolationParser("entity", parsers["score_holder"])
+            AlternativeParser([InterpolationParser("entity"), parsers["score_holder"]])
         ),
         "game_profile": CommentDisambiguation(
-            InterpolationParser("entity", parsers["game_profile"])
+            AlternativeParser([InterpolationParser("entity"), parsers["game_profile"]])
         ),
     }
 
@@ -657,40 +687,55 @@ def check_final_expression(stream: TokenStream):
 
 
 @dataclass
+class FinalExpressionParser:
+    """Parser that verifies that the expression isn't followed by anything."""
+
+    parser: Parser
+
+    def __call__(self, stream: TokenStream) -> Any:
+        node = self.parser(stream)
+
+        current_index = stream.index
+
+        if consume_line_continuation(stream):
+            exc = InvalidSyntax("Invalid indent following final expression.")
+            raise set_location(exc, stream.get())
+
+        next_token = stream.get()
+        if next_token and not next_token.match("newline", "eof"):
+            exc = InvalidSyntax("Trailing input following final expression.")
+            raise set_location(exc, next_token)
+
+        stream.index = current_index
+
+        return node
+
+
+@dataclass
 class InterpolationParser:
     """Parser for interpolation."""
 
     converter: str
-    parser: Parser
     prefix: Optional[str] = None
     unpack: Optional[str] = None
-    fallback: bool = False
-    final: bool = False
 
     def __call__(self, stream: TokenStream) -> Any:
         if stream.data.get("disable_interpolation"):
-            return self.parser(stream)
-        order = ["interpolation", "original"]
-        if self.fallback:
-            order.reverse()
-        for parser, alternative in stream.choose(*order):
-            with alternative:
-                if parser == "interpolation":
-                    with stream.syntax(prefix=self.prefix, unpack=self.unpack):
-                        prefix = stream.get("prefix")
-                        unpack = self.unpack is not None and stream.expect("unpack")
-                    node = delegate("bolt:interpolation", stream)
-                    node = AstInterpolation(
-                        prefix=prefix.value if prefix else None,
-                        unpack=unpack.value if unpack else None,
-                        converter=self.converter,
-                        value=node,
-                    )
-                    if self.final:
-                        check_final_expression(stream)
-                    return set_location(node, prefix or node.value, node.value)
-                elif parser == "original":
-                    return self.parser(stream)
+            token = stream.expect()
+            raise set_location(InvalidSyntax("Interpolation disabled."), token)
+
+        with stream.syntax(prefix=self.prefix, unpack=self.unpack):
+            prefix = stream.get("prefix")
+            unpack = self.unpack is not None and stream.expect("unpack")
+
+        node = delegate("bolt:interpolation", stream)
+        node = AstInterpolation(
+            prefix=prefix.value if prefix else None,
+            unpack=unpack.value if unpack else None,
+            converter=self.converter,
+            value=node,
+        )
+        return set_location(node, prefix or node.value, node.value)
 
 
 @dataclass
