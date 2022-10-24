@@ -11,6 +11,7 @@ from typing import Any, Callable, ContextManager, Dict, Optional, Type
 from uuid import UUID
 
 from mecha import (
+    AstAdvancementPredicate,
     AstBool,
     AstChildren,
     AstColor,
@@ -85,6 +86,9 @@ def get_bolt_helpers() -> Dict[str, Any]:
         "interpolate_scoreboard_slot": converter(AstScoreboardSlot.from_value),
         "interpolate_swizzle": converter(AstSwizzle.from_value),
         "interpolate_team": converter(AstTeam.from_value),
+        "interpolate_advancement_predicate": converter(
+            AstAdvancementPredicate.from_value
+        ),
         "interpolate_color": converter(AstColor.from_value),
         "interpolate_sort_order": converter(AstSortOrder.from_value),
         "interpolate_gamemode": converter(AstGamemode.from_value),

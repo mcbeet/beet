@@ -450,6 +450,12 @@ def get_bolt_parsers(
             [parsers["swizzle"], InterpolationParser("swizzle")]
         ),
         "team": AlternativeParser([InterpolationParser("team"), parsers["team"]]),
+        "advancement_predicate": AlternativeParser(
+            [
+                InterpolationParser("advancement_predicate"),
+                parsers["advancement_predicate"],
+            ]
+        ),
         "color": AlternativeParser([InterpolationParser("color"), parsers["color"]]),
         "sort_order": AlternativeParser(
             [parsers["sort_order"], InterpolationParser("sort_order")]
