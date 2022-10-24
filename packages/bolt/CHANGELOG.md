@@ -2,6 +2,13 @@
 
 <!--next-version-placeholder-->
 
+## v0.20.0 (2022-10-24)
+### Feature
+* Interpolate advancement predicate ([`e4338b0`](https://github.com/mcbeet/bolt/commit/e4338b0f4004601daf9c86b169a3771f876cff16))
+
+### Fix
+* Refactor interpolation ([`44c2d0e`](https://github.com/mcbeet/bolt/commit/44c2d0ed74c8100698fa75931df626c96329b820))
+
 ## v0.19.3 (2022-10-19)
 ### Fix
 * Reset generator to prevent dropping tokens ([`6551578`](https://github.com/mcbeet/bolt/commit/65515786d6a941a2f4e94c4e8932c0dc90faa14f))
