@@ -16,28 +16,45 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - name: Set up Python 3.9
-        uses: actions/setup-python@v2
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v4
         with:
-          python-version: 3.9
-      - name: Install Poetry
-        uses: snok/install-poetry@v1.1.8
+          python-version: "3.10"
+      - name: Cache poetry
+        id: cache-poetry
+        uses: actions/cache@v3
+        with:
+          path: ~/.local
+          key: poetry-${{ runner.os }}
+      - name: Install poetry
+        if: steps.cache-poetry.outputs.cache-hit != 'true'
+        uses: snok/install-poetry@v1
         with:
           virtualenvs-in-project: true
-      - name: Install Pyright
-        run: npm install
-      - name: Setup cache
-        id: cached-poetry-dependencies
-        uses: actions/cache@v2
+      - name: Cache venv
+        id: cache-venv
+        uses: actions/cache@v3
         with:
           path: .venv
-          key: venv-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}
+          key: venv-${{ runner.os }}-${{ hashFiles('poetry.lock') }}
+          restore-keys: |
+            venv-${{ runner.os }}-
       - name: Install dependencies
-        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
+        if: steps.cache-venv.outputs.cache-hit != 'true'
         run: poetry install --extras image
+      - name: Setup npm cache
+        id: cache-npm
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: npm-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+      - name: Install Pyright
+        if: steps.cache-npm.outputs.cache-hit != 'true'
+        run: npm install
       - name: Run tests
         run: poetry run pytest -v
       - name: Run type-checking
