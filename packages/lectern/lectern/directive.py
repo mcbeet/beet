@@ -5,6 +5,7 @@ __all__ = [
     "DataPackDirective",
     "ResourcePackDirective",
     "BundleFragmentMixin",
+    "MergeZipDirective",
     "SkipDirective",
 ]
 
@@ -46,6 +47,7 @@ class DirectiveRegistry(Container[str, Directive]):
 
         self["data_pack"] = DataPackDirective()
         self["resource_pack"] = ResourcePackDirective()
+        self["merge_zip"] = MergeZipDirective()
         self["skip"] = SkipDirective()
 
         @self.add_resolver
@@ -129,6 +131,23 @@ class ResourcePackDirective(BundleFragmentMixin):
 
     def __call__(self, fragment: Fragment, assets: ResourcePack, data: DataPack):
         assets.load(self.bundle_pack_fragment(fragment))
+
+
+@dataclass
+class MergeZipDirective:
+    """Directive that merges a zipped resource pack or data pack."""
+
+    def __call__(self, fragment: Fragment, assets: ResourcePack, data: DataPack):
+        fragment.expect()
+        file_instance = fragment.as_file()
+        with ZipFile(io.BytesIO(file_instance.blob)) as origin:
+            for path in origin.namelist():
+                if path.startswith("assets/"):
+                    assets.load(origin)
+                    break
+                elif path.startswith("data/"):
+                    data.load(origin)
+                    break
 
 
 @dataclass

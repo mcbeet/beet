@@ -166,6 +166,15 @@ There are also two built-in directives that can be used to include files using a
 
 This is useful for adding files that aren't part of any particular namespace.
 
+In case you need to bundle existing resource packs or data packs, you can use the `@merge_zip` directive.
+
+<!-- @skip -->
+
+```
+@merge_zip(download)
+https://example.com/my_zipped_data_pack.zip
+```
+
 Finally, the `@skip` directive is simply ignored and allows you to end a previous fragment in the plain text format.
 
 <!-- @skip -->
