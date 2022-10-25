@@ -1,0 +1,7 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "up": "demo:something/red",
+    "down": "demo:item/red"
+  }
+}

@@ -1,0 +1,19 @@
+resource_pack:
+  load: "src"
+pipeline:
+  - beet.contrib.rename_files
+  - beet.contrib.find_replace
+meta:
+  rename_files:
+    resource_pack:
+      match:
+        textures: "*"
+      find: '([a-z0-9_]+):(?!item/|block/)([a-z0-9_/]+)'
+      replace: '\1:block/\2'
+  find_replace:
+    resource_pack:
+      match:
+        models: "*"
+    substitute:
+      find: '([a-z0-9_]+):(?!item/|block/)([a-z0-9_/]+)'
+      replace: '\1:block/\2'
