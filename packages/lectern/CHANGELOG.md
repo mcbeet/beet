@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.26.0 (2022-10-25)
+### Feature
+* Add merge_zip directive ([`add74f2`](https://github.com/mcbeet/lectern/commit/add74f2f8b223b29f2270de3aec5205ff217944d))
+
 ## v0.25.0 (2022-09-20)
 ### Feature
 * Make it possible to raise an error if there was nothing in the message ([`165330e`](https://github.com/mcbeet/lectern/commit/165330e29e490860107d2755f09a0aa3f9d9c03a))
