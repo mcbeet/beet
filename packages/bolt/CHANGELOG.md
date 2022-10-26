@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.20.1 (2022-10-26)
+### Fix
+* Reset token generator after discarding builtin identifier in interpolation ([`37f74bc`](https://github.com/mcbeet/bolt/commit/37f74bc8f9fbf60b0493bf8e158be678ced5f272))
+
 ## v0.20.0 (2022-10-24)
 ### Feature
 * Interpolate advancement predicate ([`e4338b0`](https://github.com/mcbeet/bolt/commit/e4338b0f4004601daf9c86b169a3771f876cff16))
