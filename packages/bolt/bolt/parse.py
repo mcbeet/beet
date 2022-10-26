@@ -2264,6 +2264,11 @@ class BuiltinCallRestriction:
             and node.value in get_stream_builtins(stream)
             and node.value not in get_stream_identifiers_storage(stream)
         ):
+            # Reset the underlying token generator so that the identifier can
+            # be re-parsed as a different token. That shouldn't be necessary
+            # but otherwise this currently induces an error in files that aren't
+            # terminated by a newline.
+            stream.generator = stream.generate_tokens()
             msg = f'Expected call expression on builtin "{node.value}".'
             raise set_location(InvalidSyntax(msg), parent)
 
