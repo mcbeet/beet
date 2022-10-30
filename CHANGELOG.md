@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.79.1 (2022-10-30)
+### Fix
+* Crash with out of project output path ([`b66bfb5`](https://github.com/mcbeet/beet/commit/b66bfb57d6f6ad463592e3d6a21dca27252e24eb))
+
 ## v0.79.0 (2022-10-19)
 ### Feature
 * Add beet.contrib.rename_files ([`0932dc0`](https://github.com/mcbeet/beet/commit/0932dc07cc5b01c447d1ef8f7bc8e75ce27dcaa4))
