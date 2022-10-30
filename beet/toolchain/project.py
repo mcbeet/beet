@@ -98,7 +98,7 @@ class Project:
     @property
     def ignore(self) -> List[str]:
         ignore = list(self.config.ignore)
-        if self.output_directory:
+        if self.output_directory and self.directory in self.output_directory.parents:
             ignore.append(
                 f"{self.output_directory.relative_to(self.directory).as_posix()}/"
             )
