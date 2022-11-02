@@ -857,7 +857,7 @@ class StringParser:
 def parse_string_argument(stream: TokenStream) -> Any:
     """Parse string argument."""
     properties = get_stream_properties(stream)
-    string_type = properties["type"]
+    string_type = properties.get("type", "word")
 
     if string_type not in ["word", "phrase", "greedy"]:
         raise ValueError(f"Invalid string type {string_type!r}.")
@@ -1681,7 +1681,7 @@ class SelectorTypeConstraint:
 
     def __call__(self, stream: TokenStream) -> Any:
         properties = get_stream_properties(stream)
-        selector_type = properties["type"]
+        selector_type = properties.get("type", "entities")
 
         if selector_type not in ["players", "entities"]:
             raise ValueError(f"Invalid selector type {selector_type}.")
@@ -1726,7 +1726,7 @@ class SelectorAmountConstraint:
     def __call__(self, stream: TokenStream) -> Any:
         properties = get_stream_properties(stream)
 
-        amount = properties["amount"]
+        amount = properties.get("amount", "multiple")
 
         if amount not in ["single", "multiple"]:
             raise ValueError(f"Invalid selector amount {amount}.")
