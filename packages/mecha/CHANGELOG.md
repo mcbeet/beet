@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.57.5 (2022-11-02)
+### Fix
+* Default argument parser properties ([`7e63b14`](https://github.com/mcbeet/mecha/commit/7e63b147ad1f248a84c4e8f398f5cb28295dab36))
+
 ## v0.57.4 (2022-10-19)
 ### Fix
 * Tweak nested yaml ([`9c69a1d`](https://github.com/mcbeet/mecha/commit/9c69a1d21f581e8e9bef7e44cb41e7c6f2f18025))
