@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.79.2 (2022-11-09)
+### Fix
+* Classvar annotation for namespace files ([`1c41e0c`](https://github.com/mcbeet/beet/commit/1c41e0ce8e75734b29387164a6b00971e44905fa))
+
 ## v0.79.1 (2022-10-30)
 ### Fix
 * Crash with out of project output path ([`b66bfb5`](https://github.com/mcbeet/beet/commit/b66bfb57d6f6ad463592e3d6a21dca27252e24eb))
