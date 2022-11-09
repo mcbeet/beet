@@ -23,7 +23,7 @@ __all__ = [
 
 from copy import deepcopy
 from dataclasses import dataclass
-from typing import Any, Dict, Optional, Type
+from typing import Any, ClassVar, Dict, Optional, Tuple, Type
 
 try:
     from PIL.Image import Image
@@ -48,22 +48,22 @@ from .base import (
 class Blockstate(JsonFile):
     """Class representing a blockstate."""
 
-    scope = ("blockstates",)
-    extension = ".json"
+    scope: ClassVar[Tuple[str, ...]] = ("blockstates",)
+    extension: ClassVar[str] = ".json"
 
 
 class Model(JsonFile):
     """Class representing a model."""
 
-    scope = ("models",)
-    extension = ".json"
+    scope: ClassVar[Tuple[str, ...]] = ("models",)
+    extension: ClassVar[str] = ".json"
 
 
 class Language(JsonFile):
     """Class representing a language file."""
 
-    scope = ("lang",)
-    extension = ".json"
+    scope: ClassVar[Tuple[str, ...]] = ("lang",)
+    extension: ClassVar[str] = ".json"
 
     def merge(self, other: "Language") -> bool:  # type: ignore
         self.data.update(other.data)
@@ -73,8 +73,8 @@ class Language(JsonFile):
 class Font(JsonFile):
     """Class representing a font configuration file."""
 
-    scope = ("font",)
-    extension = ".json"
+    scope: ClassVar[Tuple[str, ...]] = ("font",)
+    extension: ClassVar[str] = ".json"
 
     def merge(self, other: "Font") -> bool:  # type: ignore
         providers = self.data.setdefault("providers", [])
@@ -87,64 +87,64 @@ class Font(JsonFile):
 class GlyphSizes(BinaryFile):
     """Class representing a legacy unicode glyph size file."""
 
-    scope = ("font",)
-    extension = ".bin"
+    scope: ClassVar[Tuple[str, ...]] = ("font",)
+    extension: ClassVar[str] = ".bin"
 
 
 class TrueTypeFont(BinaryFile):
     """Class representing a TrueType font."""
 
-    scope = ("font",)
-    extension = ".ttf"
+    scope: ClassVar[Tuple[str, ...]] = ("font",)
+    extension: ClassVar[str] = ".ttf"
 
 
 class ShaderPost(JsonFile):
     """Class representing a shader post-processing pipeline."""
 
-    scope = ("shaders", "post")
-    extension = ".json"
+    scope: ClassVar[Tuple[str, ...]] = ("shaders", "post")
+    extension: ClassVar[str] = ".json"
 
 
 class Shader(JsonFile):
     """Class representing a shader."""
 
-    scope = ("shaders",)
-    extension = ".json"
+    scope: ClassVar[Tuple[str, ...]] = ("shaders",)
+    extension: ClassVar[str] = ".json"
 
 
 class FragmentShader(TextFile):
     """Class representing a fragment shader."""
 
-    scope = ("shaders",)
-    extension = ".fsh"
+    scope: ClassVar[Tuple[str, ...]] = ("shaders",)
+    extension: ClassVar[str] = ".fsh"
 
 
 class VertexShader(TextFile):
     """Class representing a vertex shader."""
 
-    scope = ("shaders",)
-    extension = ".vsh"
+    scope: ClassVar[Tuple[str, ...]] = ("shaders",)
+    extension: ClassVar[str] = ".vsh"
 
 
 class GlslShader(TextFile):
     """Class representing a glsl shader."""
 
-    scope = ("shaders",)
-    extension = ".glsl"
+    scope: ClassVar[Tuple[str, ...]] = ("shaders",)
+    extension: ClassVar[str] = ".glsl"
 
 
 class Text(TextFile):
     """Class representing a text file."""
 
-    scope = ("texts",)
-    extension = ".txt"
+    scope: ClassVar[Tuple[str, ...]] = ("texts",)
+    extension: ClassVar[str] = ".txt"
 
 
 class TextureMcmeta(JsonFile):
     """Class representing a texture mcmeta."""
 
-    scope = ("textures",)
-    extension = ".png.mcmeta"
+    scope: ClassVar[Tuple[str, ...]] = ("textures",)
+    extension: ClassVar[str] = ".png.mcmeta"
 
 
 @dataclass(eq=False, repr=False)
@@ -154,8 +154,8 @@ class Texture(PngFile):
     content: BinaryFileContent[Image] = None
     mcmeta: Optional[JsonDict] = extra_field(default=None)
 
-    scope = ("textures",)
-    extension = ".png"
+    scope: ClassVar[Tuple[str, ...]] = ("textures",)
+    extension: ClassVar[str] = ".png"
 
     def bind(self, pack: "ResourcePack", path: str):
         super().bind(pack, path)
@@ -178,8 +178,8 @@ class Sound(BinaryFile):
     attenuation_distance: Optional[int] = extra_field(default=None)
     preload: Optional[bool] = extra_field(default=None)
 
-    scope = ("sounds",)
-    extension = ".ogg"
+    scope: ClassVar[Tuple[str, ...]] = ("sounds",)
+    extension: ClassVar[str] = ".ogg"
 
     def bind(self, pack: "ResourcePack", path: str):
         super().bind(pack, path)
@@ -236,8 +236,8 @@ class SoundConfig(JsonFile):
 class Particle(JsonFile):
     """Class representing a particle configuration file."""
 
-    scope = ("particles",)
-    extension = ".json"
+    scope: ClassVar[Tuple[str, ...]] = ("particles",)
+    extension: ClassVar[str] = ".json"
 
 
 class ResourcePackNamespace(Namespace):

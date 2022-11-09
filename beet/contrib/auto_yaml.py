@@ -9,7 +9,7 @@ __all__ = [
 ]
 
 
-from typing import Any, Tuple, Type
+from typing import Any, ClassVar, Tuple, Type
 
 from beet import Context, Drop, JsonFileBase, NamespaceFile, Pack, YamlFile
 
@@ -55,8 +55,8 @@ def create_namespace_handler(
     """Create handler that turns yaml namespace files into json."""
 
     class AutoYamlNamespaceHandler(YamlFile):
-        scope = namespace_scope
-        extension = namespace_extension
+        scope: ClassVar[Tuple[str, ...]] = namespace_scope
+        extension: ClassVar[str] = namespace_extension
 
         model = file_type.model
 

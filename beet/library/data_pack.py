@@ -22,7 +22,7 @@ import io
 from copy import deepcopy
 from dataclasses import dataclass
 from gzip import GzipFile
-from typing import ClassVar, Iterable, List, Optional, TypeVar, Union
+from typing import ClassVar, Iterable, List, Optional, Tuple, TypeVar, Union
 
 from nbtlib.contrib.minecraft import StructureFile, StructureFileData
 
@@ -50,8 +50,8 @@ TagFileType = TypeVar("TagFileType", bound="TagFile")
 class Advancement(JsonFile):
     """Class representing an advancement."""
 
-    scope = ("advancements",)
-    extension = ".json"
+    scope: ClassVar[Tuple[str, ...]] = ("advancements",)
+    extension: ClassVar[str] = ".json"
 
 
 @dataclass(eq=False, repr=False)
@@ -62,8 +62,8 @@ class Function(TextFileBase[List[str]]):
     tags: Optional[List[str]] = extra_field(default=None)
     prepend_tags: Optional[List[str]] = extra_field(default=None)
 
-    scope = ("functions",)
-    extension = ".mcfunction"
+    scope: ClassVar[Tuple[str, ...]] = ("functions",)
+    extension: ClassVar[str] = ".mcfunction"
 
     lines: ClassVar[FileDeserialize[List[str]]] = FileDeserialize()
 
@@ -111,29 +111,29 @@ class Function(TextFileBase[List[str]]):
 class ItemModifier(JsonFile):
     """Class representing an item modifier."""
 
-    scope = ("item_modifiers",)
-    extension = ".json"
+    scope: ClassVar[Tuple[str, ...]] = ("item_modifiers",)
+    extension: ClassVar[str] = ".json"
 
 
 class LootTable(JsonFile):
     """Class representing a loot table."""
 
-    scope = ("loot_tables",)
-    extension = ".json"
+    scope: ClassVar[Tuple[str, ...]] = ("loot_tables",)
+    extension: ClassVar[str] = ".json"
 
 
 class Predicate(JsonFile):
     """Class representing a predicate."""
 
-    scope = ("predicates",)
-    extension = ".json"
+    scope: ClassVar[Tuple[str, ...]] = ("predicates",)
+    extension: ClassVar[str] = ".json"
 
 
 class Recipe(JsonFile):
     """Class representing a recipe."""
 
-    scope = ("recipes",)
-    extension = ".json"
+    scope: ClassVar[Tuple[str, ...]] = ("recipes",)
+    extension: ClassVar[str] = ".json"
 
 
 @dataclass(eq=False, repr=False)
@@ -142,8 +142,8 @@ class Structure(BinaryFileBase[StructureFileData]):
 
     content: BinaryFileContent[StructureFileData] = None
 
-    scope = ("structures",)
-    extension = ".nbt"
+    scope: ClassVar[Tuple[str, ...]] = ("structures",)
+    extension: ClassVar[str] = ".nbt"
 
     data: ClassVar[FileDeserialize[StructureFileData]] = FileDeserialize()
 
@@ -161,7 +161,7 @@ class Structure(BinaryFileBase[StructureFileData]):
 class TagFile(JsonFile):
     """Base class for tag files."""
 
-    extension = ".json"
+    extension: ClassVar[str] = ".json"
 
     def merge(self: TagFileType, other: TagFileType) -> bool:  # type: ignore
         if other.data.get("replace"):
@@ -215,37 +215,37 @@ class TagFile(JsonFile):
 class BlockTag(TagFile):
     """Class representing a block tag."""
 
-    scope = ("tags", "blocks")
+    scope: ClassVar[Tuple[str, ...]] = ("tags", "blocks")
 
 
 class EntityTypeTag(TagFile):
     """Class representing an entity tag."""
 
-    scope = ("tags", "entity_types")
+    scope: ClassVar[Tuple[str, ...]] = ("tags", "entity_types")
 
 
 class FluidTag(TagFile):
     """Class representing a fluid tag."""
 
-    scope = ("tags", "fluids")
+    scope: ClassVar[Tuple[str, ...]] = ("tags", "fluids")
 
 
 class FunctionTag(TagFile):
     """Class representing a function tag."""
 
-    scope = ("tags", "functions")
+    scope: ClassVar[Tuple[str, ...]] = ("tags", "functions")
 
 
 class GameEventTag(TagFile):
     """Class representing a game event tag."""
 
-    scope = ("tags", "game_events")
+    scope: ClassVar[Tuple[str, ...]] = ("tags", "game_events")
 
 
 class ItemTag(TagFile):
     """Class representing an item tag."""
 
-    scope = ("tags", "items")
+    scope: ClassVar[Tuple[str, ...]] = ("tags", "items")
 
 
 class DataPackNamespace(Namespace):

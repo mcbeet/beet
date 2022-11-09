@@ -11,7 +11,7 @@ __all__ = [
 ]
 
 
-from typing import Union
+from typing import ClassVar, Tuple, Union
 
 from beet import Context, JsonFile, PngFile, ResourcePack, TextFile
 
@@ -36,33 +36,33 @@ def optifine(pack: Union[Context, ResourcePack]):
 class JsonEntityModel(JsonFile):
     """Class representing a json entity model."""
 
-    scope = ("optifine", "cem")
-    extension = ".jem"
+    scope: ClassVar[Tuple[str, ...]] = ("optifine", "cem")
+    extension: ClassVar[str] = ".jem"
 
 
 class JsonPartModel(JsonFile):
     """Class representing a json part model."""
 
-    scope = ("optifine", "cem")
-    extension = ".jpm"
+    scope: ClassVar[Tuple[str, ...]] = ("optifine", "cem")
+    extension: ClassVar[str] = ".jpm"
 
 
 class OptifineProperties(TextFile):
     """Class representing optifine properties."""
 
-    scope = ("optifine",)
-    extension = ".properties"
+    scope: ClassVar[Tuple[str, ...]] = ("optifine",)
+    extension: ClassVar[str] = ".properties"
 
 
 class OptifineTexture(PngFile):
     """Class representing an optifine texture."""
 
-    scope = ("optifine",)
-    extension = ".png"
+    scope: ClassVar[Tuple[str, ...]] = ("optifine",)
+    extension: ClassVar[str] = ".png"
 
 
 class ShaderProperties(TextFile):
     """Class representing shader properties."""
 
-    scope = ("shaders",)
-    extension = ".properties"
+    scope: ClassVar[Tuple[str, ...]] = ("shaders",)
+    extension: ClassVar[str] = ".properties"
