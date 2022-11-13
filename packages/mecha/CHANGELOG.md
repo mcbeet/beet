@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.58.1 (2022-11-13)
+### Fix
+* Prevent inifinite recursion in CommandTree.__repr__ ([`a5a776c`](https://github.com/mcbeet/mecha/commit/a5a776c9322a97aa0e55ba8b329800c5073977c4))
+
 ## v0.58.0 (2022-11-13)
 ### Feature
 * Add meta.nesting.generate_execute option ([`9406954`](https://github.com/mcbeet/mecha/commit/94069545a28c3aec1dbc8a950191839b95e5b6e6))
