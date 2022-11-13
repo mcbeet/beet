@@ -26,3 +26,15 @@ def test_parsers(snapshot: SnapshotFixture, mc: Mecha):
     undefined_parsers = all_used_parser - all_defined_parsers
 
     assert not undefined_parsers
+
+
+def test_repr(snapshot: SnapshotFixture, mc: Mecha):
+    assert (
+        str(mc.spec.tree.get("execute", "if", "score"))
+        == "CommandTree(type='literal', children={'target': ...})"
+    )
+
+    assert (
+        str(mc.spec.tree.get("execute", "if", "score", "target"))
+        == "CommandTree(type='argument', parser='minecraft:score_holder', properties={'amount': 'single'}, children={'targetObjective': ...})"
+    )

@@ -162,5 +162,21 @@ class CommandTree(BaseModel):
 
         return self
 
+    def __repr__(self) -> str:
+        args = ", ".join(
+            f"{name}="
+            + (
+                "{" + ", ".join(f"{k!r}: ..." for k in value) + "}"
+                if name == "children"
+                else repr(value)
+            )
+            for name in self.__class__.__fields__
+            if (value := getattr(self, name))
+        )
+        return f"{self.__class__.__name__}({args})"
+
+    def __str__(self) -> str:
+        return self.__repr__()
+
 
 CommandTree.update_forward_refs()
