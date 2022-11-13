@@ -3,6 +3,8 @@
 
 __all__ = [
     "NestedCommandsTransformer",
+    "NestingOptions",
+    "nesting",
     "parse_nested_root",
 ]
 
@@ -11,8 +13,10 @@ from dataclasses import dataclass, replace
 from importlib.resources import read_text
 from typing import List, cast
 
-from beet import Context, Function, Generator
+from beet import Context, Function, Generator, configurable
 from beet.core.utils import required_field
+from jinja2 import Template
+from pydantic import BaseModel
 from tokenstream import InvalidSyntax, TokenStream, set_location
 
 from mecha import (
@@ -31,7 +35,23 @@ from mecha import (
 )
 
 
+class NestingOptions(BaseModel):
+    generate_execute: str = (
+        "{% if original_location %}"
+        "{{ original_location }}/"
+        "{% else %}"
+        "{namespace}:{path}"
+        "{% endif %}"
+        "nested_execute_{incr}"
+    )
+
+
 def beet_default(ctx: Context):
+    ctx.require(nesting)
+
+
+@configurable(validator=NestingOptions)
+def nesting(ctx: Context, opts: NestingOptions):
     mc = ctx.inject(Mecha)
 
     mc.spec.multiline = True
@@ -46,6 +66,7 @@ def beet_default(ctx: Context):
         NestedCommandsTransformer(
             generate=ctx.generate,
             database=mc.database,
+            generate_execute_template=ctx.template.compile(opts.generate_execute),
         )
     )
 
@@ -89,6 +110,7 @@ class NestedCommandsTransformer(MutatingReducer):
 
     generate: Generator = required_field()
     database: CompilationDatabase = required_field()
+    generate_execute_template: Template = required_field()
 
     def emit_function(self, path: str, root: AstRoot):
         """Helper method for emitting nested commands into a separate function."""
@@ -137,18 +159,18 @@ class NestedCommandsTransformer(MutatingReducer):
                 return subcommand.arguments[0]
 
         else:
-            if path := self.database[self.database.current].resource_location:
-                path = self.generate.format(path + "/nested_execute_{incr}")
-            else:
-                path = self.generate.path()
+            original_location = self.database[self.database.current].resource_location
+            path = self.generate.format(
+                self.generate_execute_template.render(
+                    original_location=original_location
+                )
+            )
 
             self.emit_function(path, root)
 
-            resource_location = AstResourceLocation.from_value(path)
-
             subcommand = AstCommand(
                 identifier="function:name",
-                arguments=AstChildren([resource_location]),
+                arguments=AstChildren([AstResourceLocation.from_value(path)]),
             )
 
         return AstCommand(
