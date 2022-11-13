@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.58.0 (2022-11-13)
+### Feature
+* Add meta.nesting.generate_execute option ([`9406954`](https://github.com/mcbeet/mecha/commit/94069545a28c3aec1dbc8a950191839b95e5b6e6))
+
 ## v0.57.5 (2022-11-02)
 ### Fix
 * Default argument parser properties ([`7e63b14`](https://github.com/mcbeet/mecha/commit/7e63b147ad1f248a84c4e8f398f5cb28295dab36))
