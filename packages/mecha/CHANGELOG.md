@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.59.0 (2022-11-14)
+### Feature
+* Looser implicit execute normalization ([`1d0fabe`](https://github.com/mcbeet/mecha/commit/1d0fabe26ba2f97dc1f89e71fbc0c312c45957f2))
+
 ## v0.58.1 (2022-11-13)
 ### Fix
 * Prevent inifinite recursion in CommandTree.__repr__ ([`a5a776c`](https://github.com/mcbeet/mecha/commit/a5a776c9322a97aa0e55ba8b329800c5073977c4))
