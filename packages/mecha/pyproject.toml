@@ -22,7 +22,7 @@ keywords = [
 include = ["mecha/py.typed"]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.10"
 beet = ">=0.79.0"
 tokenstream = "^1.4.2"
 
@@ -47,7 +47,7 @@ addopts = "tests --import-mode=importlib"
 typeCheckingMode = "strict"
 
 [tool.black]
-target-version = ["py38"]
+target-version = ["py310"]
 
 [tool.isort]
 profile = "black"
