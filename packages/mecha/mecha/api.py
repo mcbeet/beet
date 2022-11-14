@@ -502,10 +502,8 @@ class Mecha:
 
         return result
 
-    def finalize(self, ctx: Context):
-        """Plugin that logs diagnostics and raises an exception if there are errors."""
-        yield
-
+    def log_reported_diagnostics(self):
+        """Log reported diagnostics."""
         for diagnostic in self.diagnostics.exceptions:
             message = diagnostic.format_message()
 
@@ -526,5 +524,14 @@ class Mecha:
             elif diagnostic.level == "info":
                 logger.info("%s", message, extra=extra)
 
-        if errors := list(self.diagnostics.get_all_errors()):
-            raise DiagnosticErrorSummary(DiagnosticCollection(errors))
+    def finalize(self, ctx: Context):
+        """Plugin that logs diagnostics and raises an exception if there are errors."""
+        try:
+            yield
+        except:
+            raise
+        else:
+            if errors := list(self.diagnostics.get_all_errors()):
+                raise DiagnosticErrorSummary(DiagnosticCollection(errors))
+        finally:
+            self.log_reported_diagnostics()
