@@ -49,18 +49,8 @@ def beet_default(ctx: Context):
         )
 
         mc.spec.parsers["command"] = ImplicitExecuteParser(
-            commands={
-                name
-                for name in mc.spec.prototypes
-                if (s := name.split(":", 2)[:2])
-                and s[0] == "execute"
-                and s[1] in commands
-            },
-            shorthands={
-                name
-                for name in mc.spec.prototypes
-                if name.partition(":")[0] in shorthands
-            },
+            commands=commands,
+            shorthands=shorthands,
             parser=mc.spec.parsers["command"],
         )
 
@@ -75,20 +65,22 @@ class ImplicitExecuteParser:
 
     def __call__(self, stream: TokenStream) -> Any:
         if isinstance(node := self.parser(stream), AstCommand):
-            if node.identifier in self.commands:
-                subcommand = replace(node, identifier=node.identifier[8:])
-                run = AstCommand(
-                    identifier="execute:run:subcommand",
-                    arguments=AstChildren([subcommand]),
-                )
-                return set_location(run, node)
-
-            elif node.identifier in self.shorthands:
-                subcommand = replace(node, identifier=f"execute:{node.identifier}")
-                execute = AstCommand(
-                    identifier="execute:subcommand",
-                    arguments=AstChildren([subcommand]),
-                )
-                return set_location(execute, node)
+            match node.identifier.split(":"):
+                case ["execute", command, *_] if command in self.commands:
+                    subcommand = replace(node, identifier=node.identifier[8:])
+                    run = AstCommand(
+                        identifier="execute:run:subcommand",
+                        arguments=AstChildren([subcommand]),
+                    )
+                    return set_location(run, node)
+                case [shorthand, *_] if shorthand in self.shorthands:
+                    subcommand = replace(node, identifier=f"execute:{node.identifier}")
+                    execute = AstCommand(
+                        identifier="execute:subcommand",
+                        arguments=AstChildren([subcommand]),
+                    )
+                    return set_location(execute, node)
+                case _:
+                    pass
 
         return node
