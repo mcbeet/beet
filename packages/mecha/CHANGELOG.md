@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.59.2 (2022-11-15)
+### Fix
+* Revert looser implicit execute normalization ([`014af4f`](https://github.com/mcbeet/mecha/commit/014af4f84a8b97e9d534fa85423338cfa028d4dc))
+
 ## v0.59.1 (2022-11-14)
 ### Fix
 * Log mecha diagnostics even when there's an error ([`6f30f0b`](https://github.com/mcbeet/mecha/commit/6f30f0b4eee25e69005b1b76fce8e672a71a92dd))
