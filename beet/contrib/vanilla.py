@@ -7,12 +7,14 @@ __all__ = [
     "ReleaseRegistry",
     "Release",
     "ClientJar",
+    "AssetIndex",
     "MANIFEST_URL",
+    "RESOURCES_URL",
 ]
 
 
 from pathlib import Path
-from typing import Optional, Union
+from typing import Iterator, Optional, Union
 from zipfile import ZipFile
 
 from pydantic import BaseModel
@@ -25,10 +27,12 @@ from beet import (
     DataPack,
     JsonFile,
     ResourcePack,
+    UnveilMapping,
 )
 from beet.core.utils import FileSystemPath, log_time
 
 MANIFEST_URL: str = "https://piston-meta.mojang.com/mc/game/version_manifest_v2.json"
+RESOURCES_URL: str = "https://resources.download.minecraft.net"
 
 
 class VanillaOptions(BaseModel):
@@ -50,11 +54,15 @@ class ClientJar:
         self.assets = ResourcePack()
         self.data = DataPack()
 
-    def mount(self, prefix: Optional[str] = None) -> "ClientJar":
+    def mount(
+        self,
+        prefix: Optional[str] = None,
+        object_mapping: Optional[UnveilMapping] = None,
+    ) -> "ClientJar":
         """Mount the specified prefix if it's not available already."""
         if not prefix:
-            self.mount("assets")
-            self.mount("data")
+            self.mount("assets", object_mapping)
+            self.mount("data", object_mapping)
             return self
 
         if prefix.startswith("assets"):
@@ -70,14 +78,53 @@ class ClientJar:
             with log_time("Extract vanilla pack."):
                 pack.load(ZipFile(self.path))
                 pack.save(path=path)
-                return self
+        elif pack.path != path.parent:
+            pack.unveil(prefix, path)
 
-        if pack.path == path.parent:
-            return self
-
-        pack.unveil(prefix, path)
+        if object_mapping and isinstance(pack, ResourcePack):
+            with self.cache.parallel_downloads():
+                pack.unveil(prefix, object_mapping)
 
         return self
+
+
+class AssetIndex(Container[str, FileSystemPath]):
+    """Class for retrieving assets referenced by a particular release."""
+
+    cache: Cache
+    info: JsonFile
+
+    def __init__(self, cache: Cache, info: JsonFile):
+        super().__init__()
+        self.cache = cache
+        self.info = info
+
+    def missing(self, key: str) -> FileSystemPath:
+        if not key.startswith("assets/"):
+            raise KeyError(key)
+
+        try:
+            object_hash: str = self.info.data["objects"][key[7:]]["hash"]
+        except KeyError as exc:
+            raise KeyError(key) from exc
+
+        path = self.cache.directory / "objects" / object_hash[:2] / object_hash
+
+        if not path.is_file():
+            path.parent.mkdir(parents=True, exist_ok=True)
+            self.cache.download(
+                f"{RESOURCES_URL}/{object_hash[:2]}/{object_hash}",
+                path,
+            )
+
+        return path
+
+    def __iter__(self) -> Iterator[str]:
+        for key in self.info.data["objects"]:
+            yield f"assets/{key}"
+
+    def __len__(self) -> int:
+        return len(self.info.data["objects"])
 
 
 class Release:
@@ -87,11 +134,13 @@ class Release:
     info: JsonFile
 
     _client_jar: Optional[ClientJar]
+    _object_mapping: Optional[UnveilMapping]
 
     def __init__(self, cache: Cache, info: JsonFile):
         self.cache = cache
         self.info = info
         self._client_jar = None
+        self._object_mapping = None
 
     @property
     def type(self) -> str:
@@ -104,8 +153,24 @@ class Release:
             self._client_jar = ClientJar(self.cache, path)
         return self._client_jar
 
-    def mount(self, prefix: Optional[str] = None) -> ClientJar:
-        return self.client_jar.mount(prefix)
+    @property
+    def object_mapping(self) -> UnveilMapping:
+        if not self._object_mapping:
+            path = self.cache.download(self.info.data["assetIndex"]["url"])
+            self._object_mapping = UnveilMapping(
+                AssetIndex(self.cache, JsonFile(source_path=path))
+            )
+        return self._object_mapping
+
+    def mount(
+        self,
+        prefix: Optional[str] = None,
+        fetch_objects: bool = False,
+    ) -> ClientJar:
+        return self.client_jar.mount(
+            prefix=prefix,
+            object_mapping=self.object_mapping if fetch_objects else None,
+        )
 
     @property
     def assets(self) -> ResourcePack:
@@ -182,8 +247,12 @@ class Vanilla:
         else:
             self.minecraft_version = LATEST_MINECRAFT_VERSION
 
-    def mount(self, prefix: Optional[str] = None) -> ClientJar:
-        return self.releases[self.minecraft_version].mount(prefix)
+    def mount(
+        self,
+        prefix: Optional[str] = None,
+        fetch_objects: bool = False,
+    ) -> ClientJar:
+        return self.releases[self.minecraft_version].mount(prefix, fetch_objects)
 
     @property
     def assets(self) -> ResourcePack:

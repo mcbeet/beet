@@ -27,7 +27,17 @@ import shutil
 from copy import deepcopy
 from dataclasses import dataclass, replace
 from pathlib import Path
-from typing import Any, Callable, ClassVar, Generic, Optional, Type, TypeVar, Union
+from typing import (
+    Any,
+    Callable,
+    ClassVar,
+    Generic,
+    Mapping,
+    Optional,
+    Type,
+    TypeVar,
+    Union,
+)
 from zipfile import ZipFile
 
 import yaml
@@ -62,7 +72,7 @@ ValueType = TypeVar("ValueType", bound=Any)
 SerializeType = TypeVar("SerializeType", bound=Any)
 FileType = TypeVar("FileType", bound="File[Any, Any]")
 
-FileOrigin = Union[FileSystemPath, ZipFile]
+FileOrigin = Union[FileSystemPath, ZipFile, Mapping[str, FileSystemPath]]
 TextFileContent = Union[ValueType, str, None]
 BinaryFileContent = Union[ValueType, bytes, None]
 
@@ -242,6 +252,12 @@ class File(Generic[ValueType, SerializeType]):
                 return cls(cls.from_zip(origin, str(path)))
             except KeyError:
                 return None
+        elif isinstance(origin, Mapping):
+            try:
+                path = "" if path == Path() else str(path)
+                origin, path = origin[path], ""
+            except KeyError:
+                return None
         path = Path(origin, path)
         return cls(source_path=path) if path.is_file() else None
 
@@ -255,6 +271,8 @@ class File(Generic[ValueType, SerializeType]):
 
     def dump(self, origin: FileOrigin, path: FileSystemPath):
         """Write the file to a zipfile or to the filesystem."""
+        if isinstance(origin, Mapping):
+            raise TypeError(f'Can\'t dump file "{path}" to read-only mapping.')
         if self._content is None:
             if isinstance(origin, ZipFile):
                 origin.write(self.ensure_source_path(), str(path))

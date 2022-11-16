@@ -3,17 +3,19 @@ __all__ = [
     "Cache",
     "CachePin",
     "CacheTransaction",
+    "DownloadManager",
 ]
 
 
 import json
 import logging
 import shutil
-from contextlib import contextmanager
+from concurrent.futures import Executor, ThreadPoolExecutor
+from contextlib import closing, contextmanager
 from datetime import datetime, timedelta
 from pathlib import Path
 from textwrap import indent
-from typing import Any, ClassVar, Iterator, Optional, Set, Type, TypeVar
+from typing import Any, BinaryIO, ClassVar, Iterator, Optional, Set, Type, TypeVar
 from urllib.request import urlopen
 
 from .container import Container, MatchMixin, Pin
@@ -58,6 +60,7 @@ class Cache:
     index_path: Path
     index: JsonDict
     transaction: CacheTransaction
+    download_manager: "DownloadManager"
 
     index_file: ClassVar[str] = "index.json"
 
@@ -75,6 +78,7 @@ class Cache:
             else self.get_initial_index()
         )
         self.transaction = transaction or CacheTransaction()
+        self.download_manager = DownloadManager()
         self.flush()
 
     def get_initial_index(self) -> JsonDict:
@@ -112,15 +116,22 @@ class Cache:
 
         return self.directory / path
 
-    def download(self, url: str) -> Path:
+    @contextmanager
+    def parallel_downloads(self, max_workers: Optional[int] = None):
+        """Launch multiple requests at the same time."""
+        with DownloadManager.parallel(max_workers) as parallel_download_manager:
+            previous_manager = self.download_manager
+            self.download_manager = parallel_download_manager
+            try:
+                yield
+            finally:
+                self.download_manager = previous_manager
+
+    def download(self, url: str, path: Optional[FileSystemPath] = None) -> Path:
         """Download and cache a given url."""
-        path = self.get_path(url)
-
-        if not path.is_file():
-            with log_time('Download "%s".', url), urlopen(url) as f:
-                path.write_bytes(f.read())
-
-        return path
+        if not path:
+            path = self.get_path(url)
+        return self.download_manager.download(url, path)
 
     def has_changed(self, *filenames: Optional[FileSystemPath]) -> bool:
         """Return whether any of the given files changed since the last check."""
@@ -358,3 +369,37 @@ class MultiCache(MatchMixin, Container[str, CacheType]):
 
     def __repr__(self) -> str:
         return f"{self.__class__.__name__}({str(self.path)!r})"
+
+
+class DownloadManager:
+    """Download manager."""
+
+    executor: Optional[Executor]
+
+    def __init__(self, executor: Optional[Executor] = None):
+        self.executor = executor
+
+    @classmethod
+    @contextmanager
+    def parallel(cls, max_workers: Optional[int] = None):
+        """Create a download manager that launches multiple requests at the same time."""
+        with ThreadPoolExecutor(max_workers) as executor:
+            yield cls(executor)
+
+    def download(self, url: str, path: FileSystemPath) -> Path:
+        """Download and cache a given url."""
+        path = Path(path)
+
+        if not path.is_file():
+            fileobj = path.open("wb")
+            if self.executor:
+                self.executor.submit(self.retrieve, url, fileobj)
+            else:
+                self.retrieve(url, fileobj)
+
+        return path
+
+    def retrieve(self, url: str, fileobj: BinaryIO):
+        """Retrieve file from url."""
+        with log_time('Download "%s".', url), closing(fileobj), urlopen(url) as f:
+            fileobj.write(f.read())

@@ -17,6 +17,7 @@ __all__ = [
     "NamespaceProxyDescriptor",
     "MergeCallback",
     "MergePolicy",
+    "UnveilMapping",
     "PackOverwrite",
     "PACK_COMPRESSION",
     "LATEST_MINECRAFT_VERSION",
@@ -49,6 +50,7 @@ from typing import (
     Tuple,
     Type,
     TypeVar,
+    Union,
     get_args,
     get_origin,
     overload,
@@ -569,6 +571,8 @@ class Namespace(
 
         if isinstance(origin, ZipFile):
             filenames = map(PurePosixPath, origin.namelist())
+        elif isinstance(origin, Mapping):
+            filenames = map(PurePosixPath, origin)
         elif Path(origin).is_file():
             filenames = [PurePosixPath()]
         else:
@@ -729,6 +733,50 @@ class PackPin(McmetaPin[PinType]):
         return super().forward(obj).setdefault("pack", {})
 
 
+class UnveilMapping(Mapping[str, FileSystemPath]):
+    """Unveil mapping."""
+
+    files: Mapping[str, FileSystemPath]
+    prefix: str
+
+    def __init__(self, files: Mapping[str, FileSystemPath], prefix: str = ""):
+        self.files = files
+        self.prefix = prefix
+
+    def with_prefix(self, prefix: str) -> "UnveilMapping":
+        return self.__class__(self.files, prefix)
+
+    def __getitem__(self, key: str) -> FileSystemPath:
+        sep = "/" if key and self.prefix else ""
+        return self.files[f"{self.prefix}{sep}{key}"]
+
+    def __iter__(self) -> Iterator[str]:
+        if self.prefix:
+            directory_prefix = f"{self.prefix}/"
+            for key in self.files:
+                if key == self.prefix:
+                    yield ""
+                elif key.startswith(directory_prefix):
+                    yield key[len(directory_prefix) :]
+        else:
+            yield from self.files
+
+    def __len__(self) -> int:
+        return len(self.files)
+
+    def __eq__(self, other: Any) -> bool:
+        return self is other
+
+    def __hash__(self) -> int:
+        return id(self)
+
+    def __repr__(self) -> str:
+        args = f"files={self.files}"
+        if self.prefix:
+            args += f"prefix={self.prefix!r}"
+        return f"{self.__class__.__name__}({args})"
+
+
 class PackOverwrite(Exception):
     """Raised when trying to overwrite a pack."""
 
@@ -766,7 +814,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
     extend_namespace_extra: Dict[str, Type[PackFile]]
 
     merge_policy: MergePolicy
-    unveiled: Dict[Path, Set[str]]
+    unveiled: Dict[Union[Path, UnveilMapping], Set[str]]
 
     namespace_type: ClassVar[Type[Namespace]]
     default_name: ClassVar[str]
@@ -781,6 +829,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
         name: Optional[str] = None,
         path: Optional[FileSystemPath] = None,
         zipfile: Optional[ZipFile] = None,
+        mapping: Optional[Mapping[str, FileSystemPath]] = None,
         zipped: bool = False,
         compression: Optional[Literal["none", "deflate", "bzip2", "lzma"]] = None,
         compression_level: Optional[int] = None,
@@ -825,7 +874,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
 
         self.unveiled = {}
 
-        self.load(path or zipfile)
+        self.load(path or zipfile or mapping)
 
     def configure(
         self: PackType,
@@ -1011,7 +1060,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
         if merge_policy:
             self.merge_policy.extend(merge_policy)
 
-        if origin:
+        if origin and not isinstance(origin, Mapping):
             if not isinstance(origin, ZipFile):
                 origin = Path(origin).resolve()
                 self.path = origin.parent
@@ -1067,9 +1116,11 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
 
         self.merge(namespaces)  # type: ignore
 
-    def unveil(self, prefix: str, origin: FileSystemPath):
+    def unveil(self, prefix: str, origin: Union[FileSystemPath, UnveilMapping]):
         """Lazily mount resources from the root of a pack on the filesystem."""
-        origin = Path(origin).resolve()
+        if not isinstance(origin, UnveilMapping):
+            origin = Path(origin).resolve()
+
         mounted = self.unveiled.setdefault(origin, set())
 
         if prefix in mounted:
@@ -1085,7 +1136,10 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
         mounted -= to_remove
         mounted.add(prefix)
 
-        self.mount(prefix, origin / prefix)
+        if isinstance(origin, UnveilMapping):
+            self.mount(prefix, origin.with_prefix(prefix))
+        else:
+            self.mount(prefix, origin / prefix)
 
     def dump(self, origin: FileOrigin):
         """Write the content of the pack to a zipfile or to the filesystem"""
@@ -1176,7 +1230,7 @@ def _dump_files(origin: FileOrigin, files: Mapping[str, PackFile]):
         dirs[(directory,) if directory else ()].append((filename, item))
 
     for directory, entries in dirs.items():
-        if not isinstance(origin, ZipFile):
+        if not isinstance(origin, (ZipFile, Mapping)):
             Path(origin, *directory).resolve().mkdir(parents=True, exist_ok=True)
-        for (filename, f) in entries:
+        for filename, f in entries:
             f.dump(origin, "/".join(directory + (filename,)))
