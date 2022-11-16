@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.80.0 (2022-11-16)
+### Feature
+* Fetch external objects using asset index ([`3e7d9b5`](https://github.com/mcbeet/beet/commit/3e7d9b52fb4a573ac651fa806de231e2f4438776))
+
 ## v0.79.2 (2022-11-09)
 ### Fix
 * Classvar annotation for namespace files ([`1c41e0c`](https://github.com/mcbeet/beet/commit/1c41e0ce8e75734b29387164a6b00971e44905fa))
