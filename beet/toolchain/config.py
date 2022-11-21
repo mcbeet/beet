@@ -258,6 +258,7 @@ class ProjectConfig(BaseModel):
                             update={"directory": dirname, "broadcast": ListOption()},
                             deep=True,
                         )
+                        config.meta.setdefault("broadcast_directory", path)
                         config.meta.setdefault("autosave", {}).setdefault("link", True)
                         parent.pipeline.append(config)
                 else:

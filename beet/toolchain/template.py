@@ -59,6 +59,9 @@ class FallbackContext(JinjaContext):
             if key in manager.globals:
                 return manager.globals[key]
 
+            if key == "project_directory":
+                return manager.ctx.project_directory
+
             if key in [
                 "project_id",
                 "project_name",
