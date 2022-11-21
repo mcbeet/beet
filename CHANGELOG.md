@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.80.1 (2022-11-21)
+### Fix
+* Expose project_directory and broadcast_directory to templates ([`779ca95`](https://github.com/mcbeet/beet/commit/779ca950be3021cd45bec237fd63bc602c32db3e))
+
 ## v0.80.0 (2022-11-16)
 ### Feature
 * Fetch external objects using asset index ([`3e7d9b5`](https://github.com/mcbeet/beet/commit/3e7d9b52fb4a573ac651fa806de231e2f4438776))
