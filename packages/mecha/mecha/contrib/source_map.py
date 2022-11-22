@@ -24,7 +24,7 @@ from mecha import (
     AstRoot,
     CompilationDatabase,
     Mecha,
-    Reducer,
+    MutatingReducer,
     Visitor,
     rule,
 )
@@ -61,7 +61,7 @@ class AstSourceMap(AstCommandSentinel):
 
 
 @dataclass
-class SourceMapTransformer(Reducer):
+class SourceMapTransformer(MutatingReducer):
     database: CompilationDatabase = required_field()
     header_template: Template = required_field()
 
