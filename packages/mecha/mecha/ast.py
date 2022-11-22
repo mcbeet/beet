@@ -3,6 +3,7 @@ __all__ = [
     "AstChildren",
     "AstRoot",
     "AstCommand",
+    "AstPhantomCommand",
     "AstString",
     "AstBool",
     "AstNumber",
@@ -77,7 +78,7 @@ __all__ = [
 
 
 import re
-from dataclasses import dataclass, fields
+from dataclasses import dataclass, field, fields
 from itertools import islice, permutations, zip_longest
 from typing import (
     Any,
@@ -202,7 +203,7 @@ class AstChildren(Tuple[AstNodeType, ...]):
 
 @dataclass(frozen=True)
 class AstRoot(AstNode):
-    """Root ast node"""
+    """Ast root node."""
 
     commands: AstChildren["AstCommand"] = required_field()
 
@@ -211,12 +212,22 @@ class AstRoot(AstNode):
 
 @dataclass(frozen=True)
 class AstCommand(AstNode):
-    """Command ast node"""
+    """Ast command node."""
 
     identifier: str = required_field()
     arguments: AstChildren[AstNode] = required_field()
 
     parser = "command"
+
+
+@dataclass(frozen=True)
+class AstPhantomCommand(AstCommand):
+    """Ast phantom command node."""
+
+    identifier: str = field(default="mecha:phantom")
+    arguments: AstChildren[AstNode] = field(default=AstChildren([]))
+
+    parser = None
 
 
 @dataclass(frozen=True)
