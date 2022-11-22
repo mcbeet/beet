@@ -78,7 +78,7 @@ __all__ = [
 
 
 import re
-from dataclasses import dataclass, field, fields
+from dataclasses import dataclass, fields
 from itertools import islice, permutations, zip_longest
 from typing import (
     Any,
@@ -224,8 +224,8 @@ class AstCommand(AstNode):
 class AstPhantomCommand(AstCommand):
     """Ast phantom command node."""
 
-    identifier: str = field(default="mecha:phantom")
-    arguments: AstChildren[AstNode] = field(default=AstChildren([]))
+    identifier: str = "mecha:phantom"
+    arguments: AstChildren[AstNode] = AstChildren([])
 
     parser = None
 
