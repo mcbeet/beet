@@ -3,7 +3,7 @@ __all__ = [
     "AstChildren",
     "AstRoot",
     "AstCommand",
-    "AstPhantomCommand",
+    "AstCommandSentinel",
     "AstString",
     "AstBool",
     "AstNumber",
@@ -221,10 +221,10 @@ class AstCommand(AstNode):
 
 
 @dataclass(frozen=True)
-class AstPhantomCommand(AstCommand):
-    """Ast phantom command node."""
+class AstCommandSentinel(AstCommand):
+    """Ast command sentinel node."""
 
-    identifier: str = "mecha:phantom"
+    identifier: str = "mecha:sentinel"
     arguments: AstChildren[AstNode] = AstChildren([])
 
     parser = None

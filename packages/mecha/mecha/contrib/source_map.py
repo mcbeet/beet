@@ -20,7 +20,7 @@ from pydantic import BaseModel
 
 from mecha import (
     AstChildren,
-    AstPhantomCommand,
+    AstCommandSentinel,
     AstRoot,
     CompilationDatabase,
     Mecha,
@@ -54,7 +54,7 @@ def source_map(ctx: Context, opts: SourceMapOptions):
 
 
 @dataclass(frozen=True)
-class AstSourceMap(AstPhantomCommand):
+class AstSourceMap(AstCommandSentinel):
     """Ast source map node."""
 
     header: str = required_field()
