@@ -14,7 +14,7 @@ tests-no-zope = ["cloudpickle", "coverage[toml] (>=5.0.2)", "hypothesis", "mypy 
 
 [[package]]
 name = "beet"
-version = "0.79.2"
+version = "0.80.1"
 description = "The Minecraft pack development kit"
 category = "main"
 optional = false
@@ -533,15 +533,15 @@ testing = ["argcomplete", "hypothesis (>=3.56)", "mock", "nose", "pygments (>=2.
 
 [[package]]
 name = "pytest-insta"
-version = "0.1.11"
+version = "0.2.0"
 description = "A practical snapshot testing plugin for pytest"
 category = "dev"
 optional = false
 python-versions = ">=3.8,<4.0"
 
 [package.dependencies]
-pytest = ">=6.0.2"
-wrapt = ">=1.12.1,<2.0.0"
+pytest = ">=7.2.0,<8.0.0"
+wrapt = ">=1.14.1,<2.0.0"
 
 [[package]]
 name = "python-gitlab"
@@ -827,7 +827,7 @@ testing = ["flake8 (<5)", "func-timeout", "jaraco.functools", "jaraco.itertools"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "fd184e196ffaca2fcfdac78e8fe5344ebbb5e2b70112ac91f97d1fa90f03780d"
+content-hash = "172cf22c05b4d737d62fac033e210b406c39e63b75ebaeddd87d097433b0f515"
 
 [metadata.files]
 attrs = [
@@ -835,8 +835,8 @@ attrs = [
     {file = "attrs-22.1.0.tar.gz", hash = "sha256:29adc2665447e5191d0e7c568fde78b21f9672d344281d0c6e1ab085429b22b6"},
 ]
 beet = [
-    {file = "beet-0.79.2-py3-none-any.whl", hash = "sha256:f02e1d14cda88d5c25e84df483aba169a60687e63d1365ff5e0c65a9cfb656da"},
-    {file = "beet-0.79.2.tar.gz", hash = "sha256:ed683d68411b27e639ffd762d5c6a06cd09a040f1e441d6f6f6337b94cec6442"},
+    {file = "beet-0.80.1-py3-none-any.whl", hash = "sha256:499ffc70888afd0a81a41ba432dcbd5a7c08c016b9476b0e587624476fd0e17f"},
+    {file = "beet-0.80.1.tar.gz", hash = "sha256:4ccda72bef9ccfffc34dbefe8ec479852f1ed6e3da459feadaf71d0ddfefb530"},
 ]
 black = [
     {file = "black-22.10.0-1fixedarch-cp310-cp310-macosx_11_0_x86_64.whl", hash = "sha256:5cc42ca67989e9c3cf859e84c2bf014f6633db63d1cbdf8fdb666dcd9e77e3fa"},
@@ -1210,8 +1210,8 @@ pytest = [
     {file = "pytest-7.2.0.tar.gz", hash = "sha256:c4014eb40e10f11f355ad4e3c2fb2c6c6d1919c73f3b5a433de4708202cade59"},
 ]
 pytest-insta = [
-    {file = "pytest-insta-0.1.11.tar.gz", hash = "sha256:cc0f338a8ac215dbf3b690198dc24a1c5987e2bef269f85170d415039cce06e5"},
-    {file = "pytest_insta-0.1.11-py3-none-any.whl", hash = "sha256:c31af45255a8da234a73eff7649e297a053ffa22ba21806457f0fae66fc85f8a"},
+    {file = "pytest_insta-0.2.0-py3-none-any.whl", hash = "sha256:e8d8a19f44917fa70102b132ddd4d6afcebe2a31987422dc79458ff849fe1a9e"},
+    {file = "pytest_insta-0.2.0.tar.gz", hash = "sha256:c4e549f3c5aea8acf1ae6da12cffaaf4e4b3b03d9059c5115deab59f37b23867"},
 ]
 python-gitlab = [
     {file = "python-gitlab-3.11.0.tar.gz", hash = "sha256:db9472b6ae4fba968b409dc32faee20dd65089065daa93e08d21b796a65d6578"},
