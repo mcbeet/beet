@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.60.0 (2022-11-22)
+### Feature
+* Add mecha.contrib.source_map ([`34cf945`](https://github.com/mcbeet/mecha/commit/34cf945a089079b40761e41ae2921a51e9b48b4c))
+
 ## v0.59.2 (2022-11-15)
 ### Fix
 * Revert looser implicit execute normalization ([`014af4f`](https://github.com/mcbeet/mecha/commit/014af4f84a8b97e9d534fa85423338cfa028d4dc))
