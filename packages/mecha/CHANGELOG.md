@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.60.3 (2022-11-22)
+### Fix
+* Make SourceMapTransformer a MutatingReducer ([`c0f7109`](https://github.com/mcbeet/mecha/commit/c0f7109b2ef0bf74e21929b114146941e6d0b77c))
+
 ## v0.60.2 (2022-11-22)
 ### Fix
 * Rename AstPhantomCommand to AstCommandSentinel ([`28cb612`](https://github.com/mcbeet/mecha/commit/28cb612fd592142dccf3ef359fe0e0c9047675d4))
