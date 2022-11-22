@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.60.2 (2022-11-22)
+### Fix
+* Rename AstPhantomCommand to AstCommandSentinel ([`28cb612`](https://github.com/mcbeet/mecha/commit/28cb612fd592142dccf3ef359fe0e0c9047675d4))
+
 ## v0.60.1 (2022-11-22)
 ### Fix
 * Default fields for phantom command ([`1d2344f`](https://github.com/mcbeet/mecha/commit/1d2344f26622f2cb5d732e3af7ad19403f2e9d43))
