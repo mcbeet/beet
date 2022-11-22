@@ -20,6 +20,7 @@ from types import CodeType
 from typing import (
     Any,
     Callable,
+    ClassVar,
     Dict,
     Iterator,
     List,
@@ -75,8 +76,8 @@ class SilentCompilationInterrupt(DiagnosticCollection):
 class Module(TextFile):
     """Class representing a bolt module."""
 
-    scope = ("modules",)
-    extension = ".bolt"
+    scope: ClassVar[Tuple[str, ...]] = ("modules",)
+    extension: ClassVar[str] = ".bolt"
 
 
 MacroLibrary = Dict[str, Dict[Tuple[str, AstMacro], Optional[Tuple[str, str]]]]
