@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.60.1 (2022-11-22)
+### Fix
+* Default fields for phantom command ([`1d2344f`](https://github.com/mcbeet/mecha/commit/1d2344f26622f2cb5d732e3af7ad19403f2e9d43))
+
 ## v0.60.0 (2022-11-22)
 ### Feature
 * Add mecha.contrib.source_map ([`34cf945`](https://github.com/mcbeet/mecha/commit/34cf945a089079b40761e41ae2921a51e9b48b4c))
