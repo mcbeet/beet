@@ -373,7 +373,7 @@ class MutatingReducer(Dispatcher[Any]):
             attribute = getattr(node, f.name)
             if isinstance(attribute, AstChildren):
                 result = AstChildren(self.invoke(child, *args, **kwargs) for child in attribute)  # type: ignore
-                if any(child is not original for child, original in zip(result, attribute)):  # type: ignore
+                if len(result) != len(attribute) or any(child is not original for child, original in zip(result, attribute)):  # type: ignore
                     to_replace[f.name] = result
             elif isinstance(attribute, AstNode):
                 result = self.invoke(attribute, *args, **kwargs)
@@ -383,7 +383,6 @@ class MutatingReducer(Dispatcher[Any]):
         if to_replace:
             node = replace(node, **to_replace)
 
-        result = node
         exhausted = False
 
         while not exhausted:
@@ -397,7 +396,9 @@ class MutatingReducer(Dispatcher[Any]):
                         exhausted = False
                         node = result
                         break
-                    elif result is not None:
+                    elif result is None or isinstance(result, AstChildren):
+                        return result  # type: ignore
+                    else:
                         msg = f"Invalid node of type {type(result)}."
                         if name:
                             msg += f" ({name})"

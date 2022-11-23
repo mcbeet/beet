@@ -83,6 +83,7 @@ from itertools import islice, permutations, zip_longest
 from typing import (
     Any,
     ClassVar,
+    Iterable,
     Iterator,
     List,
     Literal,
@@ -196,6 +197,18 @@ class AstNode:
 
 class AstChildren(Tuple[AstNodeType, ...]):
     """Specialized tuple subclass for holding multiple child ast nodes."""
+
+    def __new__(
+        cls,
+        children: Iterable[None | AstNodeType | "AstChildren[AstNodeType]"] = (),
+    ):
+        children = [
+            c
+            for child in children
+            if child is not None
+            for c in (child if isinstance(child, AstChildren) else [child])
+        ]
+        return super().__new__(cls, children)
 
     def __repr__(self) -> str:
         return f"AstChildren({super().__repr__()})"
