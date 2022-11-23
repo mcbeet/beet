@@ -149,7 +149,7 @@ from .ast import (
     AstUnpack,
     AstValue,
 )
-from .macro import invoke_macro
+from .collect import CommandCollector
 from .module import Module, ModuleManager, UnusableCompilationUnit
 from .pattern import (
     FALSE_PATTERN,
@@ -1439,17 +1439,17 @@ class ProcMacroParser:
     @internal
     def __call__(self, stream: TokenStream) -> AstProcMacroResult:
         properties = get_stream_properties(stream)
-        resource_location = properties["resource_location"]
-        identifier = properties["identifier"]
+        resource_location: str = properties["resource_location"]
+        identifier: str = properties["identifier"]
 
         module = self.modules[resource_location]
-        runtime = module.namespace["_bolt_runtime"]
+        runtime: CommandCollector = module.namespace["_bolt_runtime"]
         macro = module.namespace["_bolt_proc_macros"][identifier]
 
         with self.modules.error_handler(
-            "Proc macro raised an exception.", resource_location
+            f'Proc macro "{identifier}" raised an exception.', resource_location
         ):
-            result = invoke_macro(runtime, macro, identifier, [stream])
+            result = runtime.capture_output(macro, stream)
 
         return AstProcMacroResult(commands=AstChildren(result))
 

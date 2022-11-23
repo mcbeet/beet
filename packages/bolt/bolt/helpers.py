@@ -46,7 +46,6 @@ from mecha import (
 )
 from tokenstream import set_location
 
-from .macro import invoke_macro
 from .utils import internal
 
 
@@ -190,7 +189,10 @@ def python_import_module(name: str):
 
 @internal
 def macro_call(runtime: Any, function: Any, command: AstCommand):
-    return invoke_macro(runtime, function, command.identifier, command.arguments)
+    with runtime.modules.error_handler(
+        f'Macro "{command.identifier}" raised an exception.'
+    ):
+        return runtime.capture_output(function, *command.arguments)
 
 
 def converter(f: Callable[[Any], AstNode]) -> Callable[[Any, AstNode], AstNode]:

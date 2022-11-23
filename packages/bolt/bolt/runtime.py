@@ -6,20 +6,20 @@ __all__ = [
 
 
 import builtins
-from contextlib import contextmanager
 from dataclasses import dataclass, field
 from functools import partial
 from importlib.resources import read_text
-from typing import Any, Callable, Dict, Iterable, Iterator, List, Optional, Set, Union
+from typing import Any, Callable, Dict, Iterable, List, Optional, Set, Union
 
 from beet import Context, TextFileBase, generate_tree
 from beet.core.utils import JsonDict, extra_field, required_field
-from mecha import AstCommand, AstRoot, CommandTree, Diagnostic, Mecha, Visitor, rule
+from mecha import AstRoot, CommandTree, Diagnostic, Mecha, Visitor, rule
 from pathspec import PathSpec
 from tokenstream import set_location
 
 from .ast import AstModuleRoot
 from .codegen import Codegen
+from .collect import CommandCollector
 from .helpers import get_bolt_helpers
 from .loop_info import loop_info
 from .module import CompiledModule, Module, ModuleCacheBackend, ModuleManager
@@ -27,10 +27,9 @@ from .parse import get_bolt_parsers
 from .utils import internal
 
 
-class Runtime:
+class Runtime(CommandCollector):
     """The bolt runtime."""
 
-    commands: List[AstCommand]
     helpers: Dict[str, Any]
     globals: JsonDict
     builtins: Set[str]
@@ -39,7 +38,7 @@ class Runtime:
     evaluate: "Evaluator"
 
     def __init__(self, ctx: Union[Context, Mecha]):
-        self.commands = []
+        super().__init__()
         self.helpers = get_bolt_helpers()
         self.globals = {"_bolt_runtime": self, "ctx": None, "loop_info": loop_info}
         self.builtins = {name for name in dir(builtins) if not name.startswith("_")}
@@ -111,23 +110,6 @@ class Runtime:
     def expose(self, name: str, function: Callable[..., Any]):
         """Expose a utility function."""
         self.globals[name] = lambda *args, **kwargs: function(*args, **kwargs)  # type: ignore
-
-    @contextmanager
-    def scope(
-        self,
-        commands: Optional[List[AstCommand]] = None,
-    ) -> Iterator[List[AstCommand]]:
-        """Create a new scope to gather commands."""
-        if commands is None:
-            commands = []
-
-        previous_commands = self.commands
-        self.commands = commands
-
-        try:
-            yield commands
-        finally:
-            self.commands = previous_commands
 
     @internal
     def import_module(self, resource_location: str) -> CompiledModule:
