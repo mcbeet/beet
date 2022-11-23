@@ -2,6 +2,11 @@
 
 <!--next-version-placeholder-->
 
+## v0.61.0 (2022-11-23)
+### Feature
+* Splice children ([`2e4c6a9`](https://github.com/mcbeet/mecha/commit/2e4c6a9d04112ed64dc566db03af09784ca90bac))
+* Deprecate mecha.contrib.inline_function_tag ([`c748479`](https://github.com/mcbeet/mecha/commit/c748479187958bb0b4f7b1307195d3d3f9ced82d))
+
 ## v0.60.3 (2022-11-22)
 ### Fix
 * Make SourceMapTransformer a MutatingReducer ([`c0f7109`](https://github.com/mcbeet/mecha/commit/c0f7109b2ef0bf74e21929b114146941e6d0b77c))
