@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.21.0 (2022-11-23)
+### Feature
+* Add bolt.contrib.defer ([`6a0527f`](https://github.com/mcbeet/bolt/commit/6a0527f4696081a168a5adbfbb6a5f74d4853c4b))
+* Add CommandCollector ([`a07cedd`](https://github.com/mcbeet/bolt/commit/a07cedd2e4636b50494ff7cdd914050d194fe922))
+* Disable mecha.contrib.inline_function_tag by default ([`a9bf8bf`](https://github.com/mcbeet/bolt/commit/a9bf8bfe3d7bb39d767c204e4f06a80cc4133d78))
+
 ## v0.20.1 (2022-10-26)
 ### Fix
 * Reset token generator after discarding builtin identifier in interpolation ([`37f74bc`](https://github.com/mcbeet/bolt/commit/37f74bc8f9fbf60b0493bf8e158be678ced5f272))
