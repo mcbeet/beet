@@ -379,14 +379,14 @@ python-versions = ">=3.7"
 
 [[package]]
 name = "mecha"
-version = "0.60.3"
+version = "0.61.0"
 description = "A powerful Minecraft command library"
 category = "main"
 optional = false
 python-versions = ">=3.10,<4.0"
 
 [package.dependencies]
-beet = ">=0.79.0"
+beet = ">=0.80.1"
 tokenstream = ">=1.4.2,<2.0.0"
 
 [[package]]
@@ -839,7 +839,7 @@ testing = ["flake8 (<5)", "func-timeout", "jaraco.functools", "jaraco.itertools"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "8d7aae6b7881974103ebccc51787ddcf6a582fcbec4503295b45c1b11fa40d5b"
+content-hash = "71a3bbddcf2ba075cb7c7f19c40e9a9b8ef9bd391785efdd32946ca8d1fbd306"
 
 [metadata.files]
 attrs = [
@@ -1106,8 +1106,8 @@ mdurl = [
     {file = "mdurl-0.1.2.tar.gz", hash = "sha256:bb413d29f5eea38f31dd4754dd7377d4465116fb207585f97bf925588687c1ba"},
 ]
 mecha = [
-    {file = "mecha-0.60.3-py3-none-any.whl", hash = "sha256:ebd153ccb9f87591bdea6f14c3b23c7a49027e4b9b6632ed05b6b3b17b400766"},
-    {file = "mecha-0.60.3.tar.gz", hash = "sha256:95c00787203219efd9349e4dc77153f10c6d8b058c0b452445334b0762a86bdd"},
+    {file = "mecha-0.61.0-py3-none-any.whl", hash = "sha256:305c00d16f2caf582d3779da8be1515ebf546ace3aa3b5f3707e7bc5834b0061"},
+    {file = "mecha-0.61.0.tar.gz", hash = "sha256:479cfcfabecf98c6866db8054702cbb62b3655024e33398c20322a536e087cf1"},
 ]
 more-itertools = [
     {file = "more-itertools-9.0.0.tar.gz", hash = "sha256:5a6257e40878ef0520b1803990e3e22303a41b5714006c32a3fd8304b26ea1ab"},
