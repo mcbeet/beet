@@ -6,6 +6,7 @@ __all__ = [
 ]
 
 
+import logging
 from dataclasses import dataclass, replace
 from importlib.resources import read_text
 from typing import List
@@ -27,8 +28,12 @@ from mecha import (
     rule,
 )
 
+logger = logging.getLogger(__name__)
+
 
 def beet_default(ctx: Context):
+    logger.warning('Deprecated in favor of "mecha.contrib.nested_resources".')
+
     mc = ctx.inject(Mecha)
 
     commands_json = read_text("mecha.resources", "inline_function_tag.json")
