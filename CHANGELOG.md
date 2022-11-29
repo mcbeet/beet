@@ -2,6 +2,14 @@
 
 <!--next-version-placeholder-->
 
+## v0.81.0 (2022-11-29)
+### Feature
+* Add PluginOptions ([`d6de473`](https://github.com/mcbeet/beet/commit/d6de4736fa6eaa9a618653f4d866131d63a3b0c1))
+* Use python 3.10 ([`95c419d`](https://github.com/mcbeet/beet/commit/95c419d9e5ad1a111bec782b50881baa55f9c831))
+
+### Fix
+* Tweak Context.validate ([`285d89c`](https://github.com/mcbeet/beet/commit/285d89c2e9fd5cd78804f19756584b9f7c071acf))
+
 ## v0.80.1 (2022-11-21)
 ### Fix
 * Expose project_directory and broadcast_directory to templates ([`779ca95`](https://github.com/mcbeet/beet/commit/779ca950be3021cd45bec237fd63bc602c32db3e))
