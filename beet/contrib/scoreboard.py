@@ -9,12 +9,10 @@ __all__ = [
 
 from typing import List
 
-from pydantic import BaseModel
-
-from beet import Context, Function, configurable
+from beet import Context, Function, PluginOptions, configurable
 
 
-class ScoreboardOptions(BaseModel):
+class ScoreboardOptions(PluginOptions):
     function: str = "scoreboard"
     tags: List[str] = ["minecraft:load"]
 

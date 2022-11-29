@@ -11,12 +11,10 @@ __all__ = [
 from dataclasses import dataclass
 from typing import Any, Callable
 
-from pydantic import BaseModel
-
-from beet import Context, ListOption, TextFileBase, configurable
+from beet import Context, ListOption, PluginOptions, TextFileBase, configurable
 
 
-class StripFinalNewlinesOptions(BaseModel):
+class StripFinalNewlinesOptions(PluginOptions):
     extensions: ListOption[str] = ListOption()
 
 

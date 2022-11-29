@@ -23,6 +23,7 @@ from beet import (
     Pack,
     PackSelectOption,
     PackSelector,
+    PluginOptions,
     RegexOption,
     ResourcePack,
     TemplateManager,
@@ -80,13 +81,10 @@ class SubstitutionOption(BaseModel):
         return apply
 
 
-class FindReplaceOptions(BaseModel):
+class FindReplaceOptions(PluginOptions):
     resource_pack: PackSelectOption = PackSelectOption()
     data_pack: PackSelectOption = PackSelectOption()
     substitute: ListOption[Union[SubstitutionOption, "FindReplaceOptions"]]
-
-    class Config:
-        extra = "forbid"
 
     def compile(
         self,

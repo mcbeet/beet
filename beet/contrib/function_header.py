@@ -9,12 +9,10 @@ __all__ = [
 
 from typing import List, Optional
 
-from pydantic import BaseModel
-
-from beet import Context, configurable
+from beet import Context, PluginOptions, configurable
 
 
-class FunctionHeaderOptions(BaseModel):
+class FunctionHeaderOptions(PluginOptions):
     match: List[str] = []
     template: Optional[str] = "function_header.mcfunction"
 

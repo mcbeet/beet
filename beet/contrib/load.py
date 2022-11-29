@@ -11,12 +11,10 @@ from glob import glob
 from pathlib import Path
 from zipfile import ZipFile
 
-from pydantic import BaseModel
-
-from beet import Context, ErrorMessage, PackLoadOptions, configurable
+from beet import Context, ErrorMessage, PackLoadOptions, PluginOptions, configurable
 
 
-class LoadOptions(BaseModel):
+class LoadOptions(PluginOptions):
     resource_pack: PackLoadOptions = PackLoadOptions()
     data_pack: PackLoadOptions = PackLoadOptions()
 

@@ -9,14 +9,11 @@ __all__ = [
 
 from typing import Optional
 
-from pydantic import BaseModel
-
-from beet import Context, configurable
+from beet import Context, ListOption, PluginOptions, configurable
 from beet.core.utils import FileSystemPath, log_time
-from beet.toolchain.config import ListOption
 
 
-class OutputOptions(BaseModel):
+class OutputOptions(PluginOptions):
     directory: Optional[ListOption[FileSystemPath]] = None
 
 

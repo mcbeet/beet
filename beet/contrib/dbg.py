@@ -16,13 +16,12 @@ from itertools import cycle
 from typing import Any, Dict, List, Tuple
 
 from jinja2.nodes import Node, Output, TemplateData
-from pydantic import BaseModel
 
-from beet import Context, JinjaExtension
+from beet import Context, JinjaExtension, PluginOptions
 from beet.core.utils import JsonDict, TextComponent
 
 
-class DbgOptions(BaseModel):
+class DbgOptions(PluginOptions):
     command: str = "tellraw @a {payload}"
 
     enabled: bool = True

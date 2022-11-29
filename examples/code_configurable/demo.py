@@ -1,8 +1,6 @@
 from typing import List
 
-from pydantic import BaseModel
-
-from beet import Context, Function, configurable
+from beet import Context, Function, PluginOptions, configurable
 from beet.core.utils import JsonDict
 
 
@@ -26,17 +24,17 @@ def plugin2(ctx: Context, opts: JsonDict):
     ctx.generate("plugin2_{incr}", Function(opts["commands"]))
 
 
-class PluginOptions(BaseModel):
+class TestOptions(PluginOptions):
     commands: List[str]
 
 
-@configurable(validator=PluginOptions)
-def plugin3(ctx: Context, opts: PluginOptions):
+@configurable(validator=TestOptions)
+def plugin3(ctx: Context, opts: TestOptions):
     ctx.generate("plugin3_{incr}", Function(opts.commands))
 
 
-@configurable("something_else", validator=PluginOptions)
-def plugin4(ctx: Context, opts: PluginOptions):
+@configurable("something_else", validator=TestOptions)
+def plugin4(ctx: Context, opts: TestOptions):
     ctx.generate("plugin4_{incr}", Function(opts.commands))
 
 

@@ -15,8 +15,6 @@ from glob import glob
 from pathlib import Path
 from typing import Dict, Iterator, Tuple, Type
 
-from pydantic import BaseModel
-
 from beet import (
     BinaryFile,
     Context,
@@ -24,6 +22,7 @@ from beet import (
     ListOption,
     PackageablePath,
     PackFile,
+    PluginOptions,
     PngFile,
     TextFile,
     YamlFile,
@@ -32,7 +31,7 @@ from beet import (
 from beet.core.utils import FileSystemPath
 
 
-class CopyFilesOptions(BaseModel):
+class CopyFilesOptions(PluginOptions):
     resource_pack: Dict[str, ListOption[PackageablePath]] = {}
     data_pack: Dict[str, ListOption[PackageablePath]] = {}
     output: Dict[str, ListOption[PackageablePath]] = {}

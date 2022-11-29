@@ -21,14 +21,13 @@ from dataclasses import dataclass, field
 from functools import cached_property
 from typing import Any, Iterator, List, Optional, Union
 
-from pydantic import BaseModel
-
 from beet import (
     BeetException,
     BinaryFileBase,
     Context,
     DataPack,
     ListOption,
+    PluginOptions,
     PluginSpec,
     ResourcePack,
     TextFileBase,
@@ -37,7 +36,7 @@ from beet import (
 from beet.core.utils import JsonDict, format_exc, get_import_string
 
 
-class JsonReporterOptions(BaseModel):
+class JsonReporterOptions(PluginOptions):
     enabled: bool = False
     binary_files: bool = False
     exception_filter: Optional[ListOption[str]] = None

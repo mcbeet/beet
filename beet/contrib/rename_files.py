@@ -25,6 +25,7 @@ from beet import (
     NamespaceFile,
     PackSelector,
     PathSpecOption,
+    PluginOptions,
     ResourcePack,
     TemplateManager,
     configurable,
@@ -60,12 +61,9 @@ class RenameOption(BaseModel):
         ]
 
 
-class RenameFilesOptions(BaseModel):
+class RenameFilesOptions(PluginOptions):
     resource_pack: RenameOption = RenameOption()
     data_pack: RenameOption = RenameOption()
-
-    class Config:
-        extra = "forbid"
 
 
 @dataclass

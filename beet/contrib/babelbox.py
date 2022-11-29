@@ -18,11 +18,15 @@ from glob import glob
 from pathlib import Path
 from typing import Dict, Optional, Type, Union
 
-from pydantic import BaseModel
-
-from beet import Context, Language, configurable
+from beet import (
+    Context,
+    Language,
+    ListOption,
+    PackageablePath,
+    PluginOptions,
+    configurable,
+)
 from beet.core.utils import FileSystemPath
-from beet.toolchain.config import ListOption, PackageablePath
 
 DialectLike = Union[str, Dialect, Type[Dialect]]
 
@@ -30,7 +34,7 @@ DialectLike = Union[str, Dialect, Type[Dialect]]
 logger = logging.getLogger(__name__)
 
 
-class BabelboxOptions(BaseModel):
+class BabelboxOptions(PluginOptions):
     load: ListOption[PackageablePath] = ListOption()
     dialect: Optional[str] = None
     namespace: str = "minecraft"

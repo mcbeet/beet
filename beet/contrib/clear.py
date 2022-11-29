@@ -7,12 +7,10 @@ __all__ = [
 ]
 
 
-from pydantic import BaseModel
-
-from beet import Context, configurable
+from beet import Context, PluginOptions, configurable
 
 
-class ClearOptions(BaseModel):
+class ClearOptions(PluginOptions):
     resource_pack: bool = True
     data_pack: bool = True
 

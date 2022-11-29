@@ -13,7 +13,6 @@ from dataclasses import InitVar, dataclass, field
 from typing import Any, Dict, List, Optional, Type, TypeVar
 
 import yaml
-from pydantic import BaseModel
 
 from beet import (
     Context,
@@ -22,6 +21,7 @@ from beet import (
     File,
     FileOrigin,
     Pack,
+    PluginOptions,
     ResourcePack,
     configurable,
 )
@@ -33,7 +33,7 @@ PackType = TypeVar("PackType", bound=Pack[Any])
 PackFile = File[Any, Any]
 
 
-class LoadYamlOptions(BaseModel):
+class LoadYamlOptions(PluginOptions):
     resource_pack: List[str] = []
     data_pack: List[str] = []
 

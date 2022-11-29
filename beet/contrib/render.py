@@ -9,13 +9,11 @@ __all__ = [
 
 from typing import Dict
 
-from pydantic import BaseModel
-
-from beet import Context, ListOption, configurable
+from beet import Context, ListOption, PluginOptions, configurable
 from beet.core.utils import snake_case
 
 
-class RenderOptions(BaseModel):
+class RenderOptions(PluginOptions):
     resource_pack: Dict[str, ListOption[str]] = {}
     data_pack: Dict[str, ListOption[str]] = {}
 

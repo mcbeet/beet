@@ -23,9 +23,7 @@ import logging
 import re
 from typing import Iterable, Iterator, List, Literal, Optional, Tuple
 
-from pydantic import BaseModel
-
-from beet import Context, Function, configurable
+from beet import Context, Function, PluginOptions, configurable
 from beet.toolchain.utils import stable_hash
 
 logger = logging.getLogger(__name__)
@@ -49,7 +47,7 @@ TokenType = Literal[
 Token = Tuple[TokenType, str]
 
 
-class HangmanOptions(BaseModel):
+class HangmanOptions(PluginOptions):
     match: List[str] = []
 
 

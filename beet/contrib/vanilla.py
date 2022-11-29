@@ -17,8 +17,6 @@ from pathlib import Path
 from typing import Iterator, Optional, Union
 from zipfile import ZipFile
 
-from pydantic import BaseModel
-
 from beet import (
     LATEST_MINECRAFT_VERSION,
     Cache,
@@ -26,6 +24,7 @@ from beet import (
     Context,
     DataPack,
     JsonFile,
+    PluginOptions,
     ResourcePack,
     UnveilMapping,
 )
@@ -35,7 +34,7 @@ MANIFEST_URL: str = "https://piston-meta.mojang.com/mc/game/version_manifest_v2.
 RESOURCES_URL: str = "https://resources.download.minecraft.net"
 
 
-class VanillaOptions(BaseModel):
+class VanillaOptions(PluginOptions):
     version: Optional[str] = None
     manifest: Optional[str] = None
 

@@ -9,12 +9,10 @@ __all__ = [
 
 from typing import Any, Optional
 
-from pydantic import BaseModel
-
-from beet import Context, ListOption, TextFileBase, configurable
+from beet import Context, ListOption, PluginOptions, TextFileBase, configurable
 
 
-class TextEncodingOptions(BaseModel):
+class TextEncodingOptions(PluginOptions):
     extensions: ListOption[str] = ListOption()
     encoding: str = "utf-8"
     errors: Optional[str] = None

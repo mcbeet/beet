@@ -10,12 +10,10 @@ __all__ = [
 from dataclasses import dataclass, field
 from typing import List
 
-from pydantic import BaseModel
-
-from beet import Context, PluginSpec
+from beet import Context, PluginOptions, PluginSpec
 
 
-class AutosaveOptions(BaseModel):
+class AutosaveOptions(PluginOptions):
     link: bool = False
     output_handlers: List[str] = []
     link_handlers: List[str] = []

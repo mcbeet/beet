@@ -10,12 +10,10 @@ __all__ = [
 import json
 from typing import Any, Callable, Optional, Tuple, Union
 
-from pydantic import BaseModel
-
-from beet import Context, JsonFileBase, configurable
+from beet import Context, JsonFileBase, PluginOptions, configurable
 
 
-class FormatJsonOptions(BaseModel):
+class FormatJsonOptions(PluginOptions):
     ensure_ascii: bool = True
     allow_nan: bool = True
     indent: Union[int, str, None] = 2

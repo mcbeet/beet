@@ -15,13 +15,11 @@ __all__ = [
 
 from typing import Optional
 
-from pydantic import BaseModel
-
-from beet import Advancement, Context, configurable
+from beet import Advancement, Context, PluginOptions, configurable
 from beet.core.utils import JsonDict, TextComponent, normalize_string
 
 
-class InstallationAdvancementOptions(BaseModel):
+class InstallationAdvancementOptions(PluginOptions):
     icon: JsonDict = {"item": "minecraft:apple"}
     author_namespace: Optional[str] = None
     author_description: str = ""

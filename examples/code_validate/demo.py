@@ -1,9 +1,7 @@
-from pydantic import BaseModel
-
-from beet import Context, Function
+from beet import Context, Function, PluginOptions
 
 
-class DemoOptions(BaseModel):
+class DemoOptions(PluginOptions):
     message: str
     repeat: int
 

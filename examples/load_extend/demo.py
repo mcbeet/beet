@@ -2,8 +2,7 @@ from typing import ClassVar, Tuple, cast
 
 from pydantic import BaseModel
 
-from beet import Context, JsonFile, TextFile, YamlFile
-from beet.core.file import FileDeserialize, JsonFileBase
+from beet import Context, FileDeserialize, JsonFile, JsonFileBase, TextFile, YamlFile
 
 
 class FunctionConfig(YamlFile):
@@ -11,17 +10,17 @@ class FunctionConfig(YamlFile):
     extension: ClassVar[str] = ".yml"
 
 
-class BlueprintOptions(BaseModel):
+class BlueprintData(BaseModel):
     name: str
 
 
-class Blueprint(JsonFileBase[BlueprintOptions]):
-    model = BlueprintOptions
+class Blueprint(JsonFileBase[BlueprintData]):
+    model = BlueprintData
 
     scope: ClassVar[Tuple[str, ...]] = ("blueprints",)
     extension: ClassVar[str] = ".json"
 
-    data: ClassVar[FileDeserialize[BlueprintOptions]] = FileDeserialize()
+    data: ClassVar[FileDeserialize[BlueprintData]] = FileDeserialize()
 
 
 def extend_data_pack(ctx: Context):

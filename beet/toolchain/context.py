@@ -4,6 +4,7 @@ __all__ = [
     "PluginSpec",
     "PluginWithOptions",
     "ConfigurablePlugin",
+    "PluginOptions",
     "ServiceFactory",
     "Validator",
     "ProjectCache",
@@ -33,7 +34,7 @@ from typing import (
     overload,
 )
 
-from pydantic import ValidationError
+from pydantic import BaseModel, ValidationError
 
 from beet.core.cache import Cache, MultiCache
 from beet.core.container import Container
@@ -116,6 +117,13 @@ class ConfigurablePlugin(Protocol):
     @overload
     def __call__(self, **kwds: Any) -> "ConfigurablePlugin":
         ...
+
+
+class PluginOptions(BaseModel):
+    """Base pydantic model for plugin options."""
+
+    class Config:
+        extra = "forbid"
 
 
 class ContextContainer(Container[Callable[["Context"], Any], Any]):
