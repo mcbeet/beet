@@ -22,9 +22,9 @@ keywords = [
 include = ["beet/py.typed"]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.10"
 nbtlib = "^1.12.1"
-pathspec = "^0.10.1"
+pathspec = "^0.10.2"
 pydantic = "^1.10.2"
 click = "^8.1.3"
 click-help-colors = "^0.9.1"
@@ -39,11 +39,11 @@ image = ["Pillow"]
 
 [tool.poetry.group.dev.dependencies]
 black = "^22.10.0"
-pytest = "^7.1.3"
+pytest = "^7.2.0"
 pytest-minecraft = "^0.2.0"
 isort = "^5.10.1"
 pytest-insta = "^0.1.11"
-python-semantic-release = "^7.32.1"
+python-semantic-release = "^7.32.2"
 mudkip = "^0.8.0"
 
 [tool.poetry.scripts]
@@ -74,7 +74,7 @@ strict = [
 ]
 
 [tool.black]
-target-version = ["py38"]
+target-version = ["py310"]
 
 [tool.isort]
 profile = "black"
