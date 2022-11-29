@@ -273,22 +273,28 @@ class Context:
         options: Optional[JsonDict] = None,
     ) -> T:
         """Validate options."""
-        if options is None:
-            options = self.meta.get(key)
+        if options is None and isinstance(value := self.meta.get(key), dict):
+            options = value
 
         if options is None:
             head, *tail = key.split(".")
-            options = self.meta.get(head)
 
-            for part in tail:
-                if isinstance(options, dict):
-                    options = options.get(part)  # type: ignore
-                else:
-                    options = None
-                    break
+            if isinstance(value := self.meta.get(head), dict):
+                options = value
+
+                for part in tail:
+                    if isinstance(value := options.get(part), dict):
+                        options = value
+                    else:
+                        break
+
+        if options is None:
+            options = {}
 
         try:
-            return validator(**(options or {}))
+            if isinstance(validator, type) and issubclass(validator, BaseModel):
+                return validator.parse_obj(options)  # type: ignore
+            return validator(**options)
         except BubbleException:
             raise
         except ValidationError as exc:
