@@ -274,7 +274,7 @@ class Context:
 
             for part in tail:
                 if isinstance(options, dict):
-                    options = options.get(part)
+                    options = options.get(part)  # type: ignore
                 else:
                     options = None
                     break
