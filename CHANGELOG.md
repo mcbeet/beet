@@ -2,6 +2,11 @@
 
 <!--next-version-placeholder-->
 
+## v0.81.1 (2022-11-29)
+### Fix
+* Update deps ([`d0765a7`](https://github.com/mcbeet/beet/commit/d0765a7c20134f674d2224a7d63de89cb34d4d7b))
+* Remove pytest minversion ([`2b0f120`](https://github.com/mcbeet/beet/commit/2b0f12028364496de76d00ef356a7554f3077285))
+
 ## v0.81.0 (2022-11-29)
 ### Feature
 * Add PluginOptions ([`d6de473`](https://github.com/mcbeet/beet/commit/d6de4736fa6eaa9a618653f4d866131d63a3b0c1))
