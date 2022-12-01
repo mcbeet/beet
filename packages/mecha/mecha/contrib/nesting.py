@@ -152,8 +152,18 @@ class NestedCommandsTransformer(MutatingReducer):
     def nesting_execute_commands(self, node: AstCommand):
         root = cast(AstRoot, node.arguments[0])
 
-        if len(root.commands) == 1:
-            subcommand = root.commands[0]
+        single_command = None
+        for command in root.commands:
+            if command.compile_hints.get("skip_execute_inline_single_command"):
+                continue
+            if single_command is None:
+                single_command = command
+            else:
+                single_command = None
+                break
+
+        if single_command:
+            subcommand = single_command
 
             if subcommand.identifier == "execute:subcommand":
                 return subcommand.arguments[0]

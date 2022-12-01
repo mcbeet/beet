@@ -59,6 +59,8 @@ class AstSourceMap(AstCommandSentinel):
 
     header: str = required_field()
 
+    compile_hints = {"skip_execute_inline_single_command": True}
+
 
 @dataclass
 class SourceMapTransformer(MutatingReducer):

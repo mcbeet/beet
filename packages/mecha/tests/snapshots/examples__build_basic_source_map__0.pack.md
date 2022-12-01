@@ -20,6 +20,8 @@
 ```mcfunction
 # [source_map] src/data/demo/functions/foo.mcfunction
 say abc
+execute as @p run say something
+execute as @p run function demo:foo/nested_execute_0
 ```
 
 `@function demo:thing`
@@ -27,6 +29,14 @@ say abc
 ```mcfunction
 # [source_map] basic_source_map:generated_0
 say 456
+```
+
+`@function demo:foo/nested_execute_0`
+
+```mcfunction
+# [source_map] src/data/demo/functions/foo.mcfunction
+say foo
+say bar
 ```
 
 `@function demo:bar`

@@ -99,7 +99,7 @@ from typing import (
 )
 from uuid import UUID
 
-from beet.core.utils import extra_field, required_field
+from beet.core.utils import JsonDict, extra_field, required_field
 from nbtlib import Byte, ByteArray, Compound, CompoundMatch, Double, Int, IntArray
 from nbtlib import List as ListTag
 from nbtlib import ListIndex, LongArray, NamedKey, Numeric, Path, String
@@ -140,6 +140,7 @@ class AstNode:
     end_location: SourceLocation = extra_field(default=UNKNOWN_LOCATION)
 
     parser: ClassVar[Optional[str]] = None
+    compile_hints: ClassVar[JsonDict] = {}
 
     def __iter__(self) -> Iterator["AstNode"]:
         for f in fields(self):
