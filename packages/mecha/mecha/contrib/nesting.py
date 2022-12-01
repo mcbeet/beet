@@ -114,7 +114,7 @@ class NestedCommandsTransformer(MutatingReducer):
 
     def emit_function(self, path: str, root: AstRoot):
         """Helper method for emitting nested commands into a separate function."""
-        function = Function()
+        function = Function(original=self.database.current.original)
         self.generate(path, function)
         self.database[function] = replace(
             self.database[self.database.current],
