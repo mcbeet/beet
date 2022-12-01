@@ -2,6 +2,13 @@
 
 <!--next-version-placeholder-->
 
+## v0.62.0 (2022-12-01)
+### Feature
+* Add ast node compile_hints and make it so that AstSourceMap can't end up inlined into execute ([`a6537ff`](https://github.com/mcbeet/mecha/commit/a6537ffb50df3ef7550095a8b9366d7fc47e5d52))
+
+### Fix
+* Propagate original for nested function ([`235efbd`](https://github.com/mcbeet/mecha/commit/235efbd5ebeb7a45d217ba9b46685a3086600058))
+
 ## v0.61.0 (2022-11-23)
 ### Feature
 * Splice children ([`2e4c6a9`](https://github.com/mcbeet/mecha/commit/2e4c6a9d04112ed64dc566db03af09784ca90bac))
