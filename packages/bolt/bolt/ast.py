@@ -300,7 +300,7 @@ class AstFunctionSignature(AstNode):
 
     decorators: AstChildren[AstDecorator] = AstChildren()
     name: str = required_field()
-    arguments: AstChildren[AstFunctionSignatureElement] = required_field()
+    arguments: AstChildren[AstFunctionSignatureElement] = AstChildren()
 
 
 @dataclass(frozen=True)
