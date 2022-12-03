@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.21.1 (2022-12-03)
+### Fix
+* Default empty arguments for AstFunctionSignature ([`6c79443`](https://github.com/mcbeet/bolt/commit/6c794431fe5b4c826dea8cae54a63d8c54838ad9))
+
 ## v0.21.0 (2022-11-23)
 ### Feature
 * Add bolt.contrib.defer ([`6a0527f`](https://github.com/mcbeet/bolt/commit/6a0527f4696081a168a5adbfbb6a5f74d4853c4b))
