@@ -39,6 +39,7 @@ addopts = "tests --import-mode=importlib"
 
 [tool.pyright]
 typeCheckingMode = "strict"
+reportShadowedImports = false
 
 [tool.black]
 target-version = ["py310"]
