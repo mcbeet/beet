@@ -74,7 +74,9 @@ def fake_traceback(exc: Exception, tb: TracebackType, lineno: int) -> TracebackT
 
 
 def suggest_typo(wrong: str, possibilities: Iterable[str]) -> Optional[str]:
-    if matches := get_close_matches(wrong, possibilities):
+    cutoff = 0.6 if len(wrong) < 3 else 0.7
+
+    if matches := get_close_matches(wrong, possibilities, cutoff=cutoff):
         matches = [f'"{m}"' for m in matches]
 
         if len(matches) == 1:

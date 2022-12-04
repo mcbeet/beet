@@ -1,5 +1,5 @@
 x = 1
-#>ERROR  Can't make local identifier global.
+#>ERROR  Can't make local identifier "x" global.
 # line 2, column 8
 #      1 |  x = 1
 #      2 |  global x

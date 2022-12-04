@@ -6,6 +6,6 @@ def f():
 #      3 |      a += 1
 #        :      ^
 # Notes:
-#   - Use 'global a' or 'nonlocal a' to mutate the variable defined in outer scope.
+#   - Use "global a" or "nonlocal a" to mutate the variable defined in outer scope.
 #   - Expected assignment but got literal '+='.
     a += 1

@@ -1,5 +1,5 @@
 for i in range(3):
-#>ERROR  Identifier "parent" is not defined.
+#>ERROR  Identifier "parent" is not defined. Did you mean "print"?
 # line 2, column 5
 #      1 |  for i in range(3):
 #      2 |      parent[i] = f"param{i}"

@@ -1,7 +1,7 @@
 x = 1
 def f():
     global x
-#>ERROR  Can't make global identifier nonlocal.
+#>ERROR  Can't make global identifier "x" nonlocal.
 # line 4, column 14
 #      3 |      global x
 #      4 |      nonlocal x

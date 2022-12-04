@@ -10,3 +10,4 @@ from .module import *
 from .parse import *
 from .plugin import *
 from .runtime import *
+from .semantics import *
