@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.22.0 (2022-12-04)
+### Feature
+* Refactor identifier tracing with proper lexical scope abstraction ([`2f60bd4`](https://github.com/mcbeet/bolt/commit/2f60bd43c8affc2747c56e2d4dd4045e45561677))
+
 ## v0.21.1 (2022-12-03)
 ### Fix
 * Default empty arguments for AstFunctionSignature ([`6c79443`](https://github.com/mcbeet/bolt/commit/6c794431fe5b4c826dea8cae54a63d8c54838ad9))
