@@ -89,10 +89,10 @@ class File(Generic[ValueType, SerializeType]):
 
     on_bind: Optional[Callable[[Any, Any, str], Any]] = extra_field(default=None)
 
-    serializer: Callable[[ValueType], SerializeType] = extra_field(init=False)
-    deserializer: Callable[[SerializeType], ValueType] = extra_field(init=False)
+    serializer: Callable[[ValueType], SerializeType] = extra_field(default=None)
+    deserializer: Callable[[SerializeType], ValueType] = extra_field(default=None)
     reader: Callable[[FileSystemPath, int, int], SerializeType] = extra_field(
-        init=False
+        default=None
     )
 
     original: "File[ValueType, SerializeType]" = extra_field(default=None)
@@ -100,7 +100,8 @@ class File(Generic[ValueType, SerializeType]):
     def __post_init__(self):
         if self._content is self.source_path is None:
             self._content = self.default()
-        self.reader = self.from_path
+        if not self.reader:  # type: ignore
+            self.reader = self.from_path
         if not self.original:
             self.original = self
 
@@ -345,7 +346,6 @@ class DeserializationError(WrappedException):
     """Raised when deserialization fails."""
 
     file: File[Any, Any]
-    message: str
 
     def __init__(self, file: File[Any, Any]):
         super().__init__(file)
@@ -357,22 +357,22 @@ class DeserializationError(WrappedException):
         return f"Couldn't deserialize file of type {type(self.file)}."
 
 
+@dataclass(eq=False, repr=False)
 class TextFileBase(File[ValueType, str]):
     """Base class for files that get serialized to strings."""
 
-    text: FileSerialize[str] = FileSerialize()
+    encoding: Optional[str] = extra_field(default="utf-8")
+    errors: Optional[str] = extra_field(default=None)
+    newline: Optional[str] = extra_field(default=None)
 
-    encoding: Optional[str]
-    errors: Optional[str]
-    newline: Optional[str]
+    text: ClassVar[FileSerialize[str]] = FileSerialize()
 
     def __post_init__(self):
         super().__post_init__()
-        self.serializer = self.to_str
-        self.deserializer = self.from_str
-        self.encoding = "utf-8"
-        self.errors = None
-        self.newline = None
+        if not self.serializer:  # type: ignore
+            self.serializer = self.to_str
+        if not self.deserializer:  # type: ignore
+            self.deserializer = self.from_str
 
     def serialize(self, content: Union[ValueType, str]) -> str:
         try:
@@ -444,15 +444,18 @@ class TextFile(TextFileBase[str]):
         return ""
 
 
+@dataclass(eq=False, repr=False)
 class BinaryFileBase(File[ValueType, bytes]):
     """Base class for files that get serialized to bytes."""
 
-    blob: FileSerialize[bytes] = FileSerialize()
+    blob: ClassVar[FileSerialize[bytes]] = FileSerialize()
 
     def __post_init__(self):
         super().__post_init__()
-        self.serializer = self.to_bytes
-        self.deserializer = self.from_bytes
+        if not self.serializer:  # type: ignore
+            self.serializer = self.to_bytes
+        if not self.deserializer:  # type: ignore
+            self.deserializer = self.from_bytes
 
     def serialize(self, content: Union[ValueType, bytes]) -> bytes:
         try:
@@ -532,10 +535,10 @@ class InvalidDataModel(DeserializationError):
 class DataModelBase(TextFileBase[ValueType]):
     """Base class for data models."""
 
-    encoder: Callable[[Any], str] = extra_field(init=False)
-    decoder: Callable[[str], Any] = extra_field(init=False)
+    encoder: Callable[[Any], str] = extra_field(default=None)
+    decoder: Callable[[str], Any] = extra_field(default=None)
 
-    data = FileDeserialize[ValueType]()
+    data: ClassVar[FileDeserialize[Any]] = FileDeserialize()
 
     model: ClassVar[Optional[Type[Any]]] = None
 
@@ -570,14 +573,17 @@ class JsonFileBase(DataModelBase[ValueType]):
 
     def __post_init__(self):
         super().__post_init__()
-        self.encoder = dump_json
-        self.decoder = json.loads
+        if not self.encoder:  # type: ignore
+            self.encoder = dump_json
+        if not self.decoder:  # type: ignore
+            self.decoder = json.loads
 
 
+@dataclass(eq=False, repr=False)
 class JsonFile(JsonFileBase[JsonDict]):
     """Class representing a json file."""
 
-    data = FileDeserialize[JsonDict]()
+    data: ClassVar[FileDeserialize[JsonDict]] = FileDeserialize()
 
     @classmethod
     def default(cls) -> JsonDict:
@@ -589,24 +595,28 @@ class YamlFileBase(DataModelBase[ValueType]):
 
     def __post_init__(self):
         super().__post_init__()
-        self.encoder = yaml.safe_dump
-        self.decoder = yaml.safe_load
+        if not self.encoder:  # type: ignore
+            self.encoder = yaml.safe_dump
+        if not self.decoder:  # type: ignore
+            self.decoder = yaml.safe_load
 
 
+@dataclass(eq=False, repr=False)
 class YamlFile(YamlFileBase[JsonDict]):
     """Class representing a yaml file."""
 
-    data = FileDeserialize[JsonDict]()
+    data: ClassVar[FileDeserialize[JsonDict]] = FileDeserialize()
 
     @classmethod
     def default(cls) -> JsonDict:
         return {}
 
 
+@dataclass(eq=False, repr=False)
 class PngFile(BinaryFileBase[Image]):
     """Class representing a png file."""
 
-    image = FileDeserialize[Image]()
+    image: ClassVar[FileDeserialize[Image]] = FileDeserialize()
 
     def to_bytes(self, content: Image) -> bytes:
         dst = io.BytesIO()
@@ -618,4 +628,4 @@ class PngFile(BinaryFileBase[Image]):
 
     @classmethod
     def default(cls) -> Image:
-        return new_image("RGB", (16, 16), "black")
+        return new_image("RGBA", (16, 16), "magenta")
