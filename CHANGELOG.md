@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.81.2 (2022-12-10)
+### Fix
+* Core file tweaks ([`3e64b01`](https://github.com/mcbeet/beet/commit/3e64b01e1aa4ccc2847dd357316f6f36eea240af))
+
 ## v0.81.1 (2022-11-29)
 ### Fix
 * Update deps ([`d0765a7`](https://github.com/mcbeet/beet/commit/d0765a7c20134f674d2224a7d63de89cb34d4d7b))
