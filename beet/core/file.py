@@ -179,6 +179,9 @@ class File(Generic[ValueType, SerializeType]):
         return content  # type: ignore
 
     def __eq__(self, other: Any) -> bool:
+        if self is other:
+            return True
+
         if type(self) != type(other):
             return NotImplemented
 

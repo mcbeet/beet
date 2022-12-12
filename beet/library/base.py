@@ -467,6 +467,8 @@ class Namespace(
             self[type(value)][key] = value
 
     def __eq__(self, other: Any) -> bool:
+        if self is other:
+            return True
         if type(self) == type(other) and not self.extra == other.extra:
             return False
         if isinstance(other, Mapping):
@@ -931,6 +933,8 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
             NamespaceProxy[NamespaceFile](self, type(value))[key] = value
 
     def __eq__(self, other: Any) -> bool:
+        if self is other:
+            return True
         if type(self) == type(other) and not (
             self.name == other.name and self.extra == other.extra
         ):
@@ -939,6 +943,9 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
             rhs: Mapping[str, Namespace] = other
             return all(self[key] == rhs[key] for key in self.keys() | rhs.keys())
         return NotImplemented
+
+    def __hash__(self) -> int:
+        return id(self)
 
     def __bool__(self) -> bool:
         return any(self.values()) or self.extra.keys() > {"pack.mcmeta"}
