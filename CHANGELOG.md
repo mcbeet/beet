@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.81.3 (2022-12-12)
+### Fix
+* Fast path for eq and id hash for pack objects ([`0aaf36b`](https://github.com/mcbeet/beet/commit/0aaf36b193e28a854fb52a82f7fd1eaba3cfc4f1))
+
 ## v0.81.2 (2022-12-10)
 ### Fix
 * Core file tweaks ([`3e64b01`](https://github.com/mcbeet/beet/commit/3e64b01e1aa4ccc2847dd357316f6f36eea240af))
