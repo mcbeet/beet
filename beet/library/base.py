@@ -664,6 +664,19 @@ class NamespaceProxy(
         key1, key2 = self.split_key(key)
         return self.proxy[key1][self.proxy_key].setdefault(key2, default)  # type: ignore
 
+    def merge(self, other: Mapping[Any, SupportsMerge]) -> bool:
+        if isinstance(pack := self.proxy, Pack):
+            return pack.merge_policy.merge_with_rules(
+                pack=pack,
+                current=self,  # type: ignore
+                other=other,
+                map_rules=lambda key: (
+                    key,
+                    pack.merge_policy.namespace.get(self.proxy_key, []),
+                ),
+            )
+        return super().merge(other)
+
     def walk(self) -> Iterator[Tuple[str, Set[str], Dict[str, NamespaceFileType]]]:
         """Walk over the file hierarchy."""
         for prefix, namespace in self.proxy.items():
