@@ -2,6 +2,13 @@
 
 <!--next-version-placeholder-->
 
+## v0.82.0 (2022-12-29)
+### Feature
+* Merge model overrides ([`b16adcc`](https://github.com/mcbeet/beet/commit/b16adcc197787725810e84af6493dfb37372ffd2))
+
+### Fix
+* Use merge policy when merging proxy ([`412fd65`](https://github.com/mcbeet/beet/commit/412fd652f0cb8b966a4395835b89d9dd7a43a3c2))
+
 ## v0.81.3 (2022-12-12)
 ### Fix
 * Fast path for eq and id hash for pack objects ([`0aaf36b`](https://github.com/mcbeet/beet/commit/0aaf36b193e28a854fb52a82f7fd1eaba3cfc4f1))
