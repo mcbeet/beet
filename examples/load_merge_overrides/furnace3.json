@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/furnace",
+  "overrides": [
+    {
+      "predicate": { "custom_model_data": 1430000 },
+      "model": "simpledrawer:block/item/drawer_wood_"
+    }
+  ]
+}

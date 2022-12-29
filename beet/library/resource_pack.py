@@ -58,6 +58,26 @@ class Model(JsonFile):
     scope: ClassVar[Tuple[str, ...]] = ("models",)
     extension: ClassVar[str] = ".json"
 
+    def merge(self, other: "Model") -> bool:  # type: ignore
+        overrides = self.data.get("overrides", [])
+        merged_overrides = deepcopy(overrides)
+
+        for other_override in other.data.get("overrides", []):
+            other_predicate = other_override.get("predicate")
+
+            for i, override in enumerate(overrides):
+                if override.get("predicate") == other_predicate:
+                    merged_overrides[i]["model"] = other_override["model"]
+                    break
+            else:
+                merged_overrides.append(other_override)
+
+        self.data = dict(other.data)
+        if merged_overrides:
+            self.data["overrides"] = merged_overrides
+
+        return True
+
 
 class Language(JsonFile):
     """Class representing a language file."""

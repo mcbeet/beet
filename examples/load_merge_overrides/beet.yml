@@ -1,0 +1,5 @@
+resource_pack:
+  load:
+    - assets/minecraft/models/item/furnace.json: furnace1.json
+    - assets/minecraft/models/item/furnace.json: furnace2.json
+    - assets/minecraft/models/item/furnace.json: furnace3.json
