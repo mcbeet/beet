@@ -39,7 +39,7 @@ class DirectoryWatcher:
 
             if ignore_file.parts == (ignore_file.name,):
                 for directory in Path(self.path, ignore_file).parents:
-                    if (path := (directory / ignore_file)).is_file():
+                    if (path := directory / ignore_file).is_file():
                         ignore_file = path
                         break
 

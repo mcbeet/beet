@@ -109,6 +109,7 @@ def eval_option(option: str) -> Any:
     if option.startswith("{"):
         return json.loads(option)
 
+    value: Any
     key, sep, value = option.partition("=")
     matches = list(OPTION_KEY_REGEX.finditer(key))
 
