@@ -215,7 +215,7 @@ class Generator:
 
         pack = (
             self.data
-            if file_type in self.data.namespace_type.field_map
+            if file_type in self.data.resolve_scope_map().values()
             else self.assets
         )
 
@@ -237,7 +237,7 @@ class Generator:
         if render:
             with self.ctx.override(
                 render_path=key,
-                render_group=pack.namespace_type.field_map[file_type],
+                render_group=pack.namespace_type.field_map.get(file_type),
             ):
                 self.ctx.template.render_file(render, **kwargs)
 
