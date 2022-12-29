@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.82.1 (2022-12-29)
+### Fix
+* Don't use field_map to figure out if generated files should go in the resource pack or data pack ([`e69cf14`](https://github.com/mcbeet/beet/commit/e69cf14ffeeba613b7e624daf150c522cc5d6740))
+
 ## v0.82.0 (2022-12-29)
 ### Feature
 * Merge model overrides ([`b16adcc`](https://github.com/mcbeet/beet/commit/b16adcc197787725810e84af6493dfb37372ffd2))
