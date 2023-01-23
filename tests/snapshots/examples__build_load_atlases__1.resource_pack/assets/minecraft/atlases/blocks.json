@@ -1,0 +1,19 @@
+{
+  "sources": [
+    {
+      "type": "directory",
+      "source": "assembly",
+      "prefix": "assembly/"
+    },
+    {
+      "type": "directory",
+      "source": "base",
+      "prefix": "base/"
+    },
+    {
+      "type": "directory",
+      "source": "test",
+      "prefix": "test/"
+    }
+  ]
+}

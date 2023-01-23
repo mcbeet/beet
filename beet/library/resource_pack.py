@@ -334,6 +334,7 @@ class ResourcePackNamespace(Namespace):
     textures:         NamespacePin[Texture]        = NamespacePin(Texture)
     sounds:           NamespacePin[Sound]          = NamespacePin(Sound)
     particles:        NamespacePin[Particle]       = NamespacePin(Particle)
+    atlases:          NamespacePin[Atlas]          = NamespacePin(Atlas)
     # fmt: on
 
     @classmethod
@@ -383,4 +384,5 @@ class ResourcePack(Pack[ResourcePackNamespace]):
     textures:         NamespaceProxyDescriptor[Texture]        = NamespaceProxyDescriptor(Texture)
     sounds:           NamespaceProxyDescriptor[Sound]          = NamespaceProxyDescriptor(Sound)
     particles:        NamespaceProxyDescriptor[Particle]       = NamespaceProxyDescriptor(Particle)
+    atlases:          NamespaceProxyDescriptor[Atlas]          = NamespaceProxyDescriptor(Atlas)
     # fmt: on
