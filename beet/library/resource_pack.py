@@ -21,10 +21,10 @@ __all__ = [
 ]
 
 
+from contextlib import suppress
 from copy import deepcopy
 from dataclasses import dataclass
 from typing import Any, ClassVar, Dict, Optional, Tuple, Type
-from contextlib import suppress
 
 try:
     from PIL.Image import Image
@@ -274,7 +274,7 @@ class Atlas(JsonFile):
             if value not in values:
                 values.append(deepcopy(value))
         return True
-    
+
     def append(self, other: "Atlas"):
         """Append values from another atlas."""
 
