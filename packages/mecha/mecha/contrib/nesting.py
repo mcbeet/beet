@@ -10,7 +10,7 @@ __all__ = [
 
 
 from dataclasses import dataclass, replace
-from importlib.resources import read_text
+from importlib.resources import files
 from typing import List, cast
 
 from beet import Context, Function, Generator, configurable
@@ -56,7 +56,7 @@ def nesting(ctx: Context, opts: NestingOptions):
 
     mc.spec.multiline = True
 
-    commands_json = read_text("mecha.resources", "nesting.json")
+    commands_json = files("mecha.resources").joinpath("nesting.json").read_text()
     mc.spec.add_commands(CommandTree.parse_raw(commands_json))
 
     mc.spec.parsers["nested_root"] = parse_nested_root

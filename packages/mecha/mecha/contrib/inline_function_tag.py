@@ -8,7 +8,7 @@ __all__ = [
 
 import logging
 from dataclasses import dataclass, replace
-from importlib.resources import read_text
+from importlib.resources import files
 from typing import List
 
 from beet import Context, FunctionTag, Generator
@@ -36,7 +36,9 @@ def beet_default(ctx: Context):
 
     mc = ctx.inject(Mecha)
 
-    commands_json = read_text("mecha.resources", "inline_function_tag.json")
+    commands_json = (
+        files("mecha.resources").joinpath("inline_function_tag.json").read_text()
+    )
     mc.spec.add_commands(CommandTree.parse_raw(commands_json))
 
     mc.transform.extend(inline_execute_function_tag)

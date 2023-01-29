@@ -4,7 +4,7 @@ __all__ = [
 
 
 import json
-from importlib.resources import read_text
+from importlib.resources import files
 from pathlib import Path
 from typing import Dict, Iterator, List, Literal, Optional, Set, Tuple, Union
 
@@ -42,7 +42,11 @@ class CommandTree(BaseModel):
         if version:
             version_name = "_".join(map(str, version))
             try:
-                sources.append(read_text("mecha.resources", f"{version_name}.json"))
+                sources.append(
+                    files("mecha.resources")
+                    .joinpath(f"{version_name}.json")
+                    .read_text()
+                )
             except FileNotFoundError as exc:
                 raise ErrorMessage(f"Invalid minecraft version {version!r}.") from exc
 
@@ -52,7 +56,9 @@ class CommandTree(BaseModel):
             tree.extend(cls.parse_raw(source))
 
         if version and not unpatched:
-            for patch in json.loads(read_text("mecha.resources", "patches.json")):
+            for patch in json.loads(
+                files("mecha.resources").joinpath("patches.json").read_text()
+            ):
                 if any(split_version(v) == version for v in patch["versions"]):
                     tree.extend(cls(**patch["config"]))
 
