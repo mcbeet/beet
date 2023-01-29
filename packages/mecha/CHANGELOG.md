@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.63.0 (2023-01-29)
+### Feature
+* Highest protocol version for pickle.dump to improve performance ([#232](https://github.com/mcbeet/mecha/issues/232)) ([`2045360`](https://github.com/mcbeet/mecha/commit/204536038ea5ae3d3d26f00dc5b5447f1cb5e563))
+
 ## v0.62.2 (2023-01-29)
 ### Fix
 * Use slots for ast nodes ([`940854e`](https://github.com/mcbeet/mecha/commit/940854e4756a5001f62bc53770edd2a55f1daf90))
