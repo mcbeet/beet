@@ -30,14 +30,14 @@ from mecha import (
 )
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstMessageReferencePath(AstNode):
     """Ast message reference path node."""
 
     value: str = required_field()
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstMessageReference(AstNode):
     """Ast message reference node."""
 

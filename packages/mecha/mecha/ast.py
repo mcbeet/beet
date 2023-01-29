@@ -132,7 +132,7 @@ COLORS: Tuple[str, ...] = (
 )
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstNode:
     """Base class for all ast nodes."""
 
@@ -215,7 +215,7 @@ class AstChildren(Tuple[AstNodeType, ...]):
         return f"AstChildren({super().__repr__()})"
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstRoot(AstNode):
     """Ast root node."""
 
@@ -224,7 +224,7 @@ class AstRoot(AstNode):
     parser = "root"
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstCommand(AstNode):
     """Ast command node."""
 
@@ -234,7 +234,7 @@ class AstCommand(AstNode):
     parser = "command"
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstCommandSentinel(AstCommand):
     """Ast command sentinel node."""
 
@@ -244,7 +244,7 @@ class AstCommandSentinel(AstCommand):
     parser = None
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstString(AstNode):
     """Ast string node."""
 
@@ -258,7 +258,7 @@ class AstString(AstNode):
         return AstString(value=str(value))
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstBool(AstNode):
     """Ast bool node."""
 
@@ -272,7 +272,7 @@ class AstBool(AstNode):
         return AstBool(value=bool(value))
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstNumber(AstNode):
     """Ast number node."""
 
@@ -290,7 +290,7 @@ class AstNumber(AstNode):
         raise ValueError(f"Invalid number {value!r}.")
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstUUID(AstNode):
     """Ast uuid node."""
 
@@ -309,7 +309,7 @@ class AstUUID(AstNode):
         raise ValueError(f"Invalid UUID {value!r}.")
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstCoordinate(AstNode):
     """Coordinate ast node."""
 
@@ -335,7 +335,7 @@ class AstCoordinate(AstNode):
         raise ValueError(f"Invalid coordinate {value!r}.")
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstVector2(AstNode):
     """Vector 2 ast node."""
 
@@ -351,7 +351,7 @@ class AstVector2(AstNode):
         return AstVector2(x=x, y=y)
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstVector3(AstNode):
     """Vector 3 ast node."""
 
@@ -368,7 +368,7 @@ class AstVector3(AstNode):
         return AstVector3(x=x, y=y, z=z)
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstLiteral(AstNode):
     """Base ast node for literals."""
 
@@ -386,7 +386,7 @@ class AstLiteral(AstNode):
         raise ValueError(f"Invalid {cls.parser or 'literal'} {value!r}.")
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstWord(AstLiteral):
     """Ast word node."""
 
@@ -394,7 +394,7 @@ class AstWord(AstLiteral):
     regex = re.compile(r"[0-9A-Za-z_\.\+\-]+")
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstOption(AstLiteral):
     """Base node for options."""
 
@@ -409,7 +409,7 @@ class AstOption(AstLiteral):
         cls.regex = re.compile("|".join(patterns))
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstGreedy(AstLiteral):
     """Ast greedy node."""
 
@@ -417,7 +417,7 @@ class AstGreedy(AstLiteral):
     regex = re.compile(r".+")
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstObjective(AstLiteral):
     """Ast objective node."""
 
@@ -425,7 +425,7 @@ class AstObjective(AstLiteral):
     regex = re.compile(r"[a-zA-Z0-9_.+-]+")
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstObjectiveCriteria(AstLiteral):
     """Ast objective criteria node."""
 
@@ -433,7 +433,7 @@ class AstObjectiveCriteria(AstLiteral):
     regex = re.compile(r"[a-zA-Z0-9_.+-]+(?::[a-zA-Z0-9_.+-]+)?")
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstScoreboardOperation(AstOption):
     """Ast scoreboard operation node."""
 
@@ -441,7 +441,7 @@ class AstScoreboardOperation(AstOption):
     options = {"+=", "-=", "*=", "/=", "%=", "=", "><", "<", ">"}
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstTeam(AstLiteral):
     """Ast team node."""
 
@@ -449,7 +449,7 @@ class AstTeam(AstLiteral):
     regex = re.compile(r"[a-zA-Z0-9_.+-]+")
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstPlayerName(AstLiteral):
     """Ast player name node."""
 
@@ -457,7 +457,7 @@ class AstPlayerName(AstLiteral):
     regex = re.compile(r"(?!@)[^*\s]+")
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstScoreboardSlot(AstOption):
     """Ast scoreboard slot node."""
 
@@ -469,7 +469,7 @@ class AstScoreboardSlot(AstOption):
     }
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstSwizzle(AstOption):
     """Ast swizzle node."""
 
@@ -481,7 +481,7 @@ class AstSwizzle(AstOption):
     )
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstAdvancementPredicate(AstLiteral):
     """Ast advancement predicate node."""
 
@@ -489,7 +489,7 @@ class AstAdvancementPredicate(AstLiteral):
     regex = re.compile(r"[0-9A-Za-z_\.\+\-]+")
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstWildcard(AstLiteral):
     """Ast wildcard node."""
 
@@ -499,7 +499,7 @@ class AstWildcard(AstLiteral):
     regex = re.compile(r"\*")
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstColor(AstOption):
     """Ast color node."""
 
@@ -507,7 +507,7 @@ class AstColor(AstOption):
     options = set(COLORS)
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstColorReset(AstOption):
     """Ast color reset node."""
 
@@ -515,7 +515,7 @@ class AstColorReset(AstOption):
     options = {"reset"}
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstSortOrder(AstOption):
     """Ast sort order node."""
 
@@ -523,7 +523,7 @@ class AstSortOrder(AstOption):
     options = {"nearest", "furthest", "random", "arbitrary"}
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstGamemode(AstOption):
     """Ast gamemode node."""
 
@@ -531,7 +531,7 @@ class AstGamemode(AstOption):
     options = {"adventure", "creative", "spectator", "survival"}
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstEntityAnchor(AstOption):
     """Ast entity anchor node."""
 
@@ -539,7 +539,7 @@ class AstEntityAnchor(AstOption):
     options = {"eyes", "feet"}
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstTemplateRotation(AstOption):
     """Ast template rotation node."""
 
@@ -547,7 +547,7 @@ class AstTemplateRotation(AstOption):
     options = {"180", "clockwise_90", "counterclockwise_90", "none"}
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstTemplateMirror(AstOption):
     """Ast template mirror node."""
 
@@ -555,7 +555,7 @@ class AstTemplateMirror(AstOption):
     options = {"front_back", "left_right", "none"}
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstJson(AstNode):
     """Base ast node for json."""
 
@@ -588,7 +588,7 @@ class AstJson(AstNode):
             raise ValueError(f"Invalid json value of type {type(value)!r}.")
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstJsonValue(AstJson):
     """Ast json value node."""
 
@@ -600,7 +600,7 @@ class AstJsonValue(AstJson):
         return self.value
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstJsonArray(AstJson):
     """Ast json array node."""
 
@@ -612,14 +612,14 @@ class AstJsonArray(AstJson):
         return [element.evaluate() for element in self.elements]
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstJsonObjectKey(AstNode):
     """Ast json object key node."""
 
     value: str = required_field()
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstJsonObjectEntry(AstNode):
     """Ast json object entry node."""
 
@@ -627,7 +627,7 @@ class AstJsonObjectEntry(AstNode):
     value: AstJson = required_field()
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstJsonObject(AstJson):
     """Ast json object node."""
 
@@ -639,7 +639,7 @@ class AstJsonObject(AstJson):
         return {entry.key.value: entry.value.evaluate() for entry in self.entries}
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstNbt(AstNode):
     """Base ast node for nbt."""
 
@@ -712,7 +712,7 @@ class AstNbt(AstNode):
             raise ValueError(f"Invalid nbt value of type {type(value)!r}.")
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstNbtValue(AstNbt):
     """Ast nbt value node."""
 
@@ -724,7 +724,7 @@ class AstNbtValue(AstNbt):
         return self.value
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstNbtList(AstNbt):
     """Ast nbt list node."""
 
@@ -736,14 +736,14 @@ class AstNbtList(AstNbt):
         return ListTag([element.evaluate() for element in self.elements])  # type: ignore
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstNbtCompoundKey(AstNode):
     """Ast nbt compound key node."""
 
     value: str = required_field()
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstNbtCompoundEntry(AstNode):
     """Ast nbt compound entry node."""
 
@@ -751,7 +751,7 @@ class AstNbtCompoundEntry(AstNode):
     value: AstNbt = required_field()
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstNbtCompound(AstNbt):
     """Ast nbt compound node."""
 
@@ -765,7 +765,7 @@ class AstNbtCompound(AstNbt):
         )
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstNbtByteArray(AstNbt):
     """Ast nbt byte array node."""
 
@@ -777,7 +777,7 @@ class AstNbtByteArray(AstNbt):
         return ByteArray([element.evaluate() for element in self.elements])  # type: ignore
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstNbtIntArray(AstNbt):
     """Ast nbt int array node."""
 
@@ -789,7 +789,7 @@ class AstNbtIntArray(AstNbt):
         return IntArray([element.evaluate() for element in self.elements])  # type: ignore
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstNbtLongArray(AstNbt):
     """Ast nbt long array node."""
 
@@ -801,7 +801,7 @@ class AstNbtLongArray(AstNbt):
         return LongArray([element.evaluate() for element in self.elements])  # type: ignore
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstResourceLocation(AstNode):
     """Ast resource location node."""
 
@@ -833,7 +833,7 @@ class AstResourceLocation(AstNode):
         return prefix + namespace + self.path
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstBlockState(AstNode):
     """Ast block state node."""
 
@@ -841,7 +841,7 @@ class AstBlockState(AstNode):
     value: AstString = required_field()
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstBlock(AstNode):
     """Ast block node."""
 
@@ -850,7 +850,7 @@ class AstBlock(AstNode):
     data_tags: Optional[AstNbt] = None
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstItem(AstNode):
     """Ast item node."""
 
@@ -858,7 +858,7 @@ class AstItem(AstNode):
     data_tags: Optional[AstNbt] = None
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstItemSlot(AstOption):
     """Ast item slot node."""
 
@@ -883,7 +883,7 @@ class AstItemSlot(AstOption):
     )
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstRange(AstNode):
     """Ast range node."""
 
@@ -934,7 +934,7 @@ class AstRange(AstNode):
         )
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstTime(AstNode):
     """Ast time node."""
 
@@ -962,7 +962,7 @@ class AstTime(AstNode):
         return cls(value=value, unit=unit)
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstSelectorScoreMatch(AstNode):
     """Ast selector score match node."""
 
@@ -970,14 +970,14 @@ class AstSelectorScoreMatch(AstNode):
     value: AstRange = required_field()
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstSelectorScores(AstNode):
     """Ast selector scores node."""
 
     scores: AstChildren[AstSelectorScoreMatch] = required_field()
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstSelectorAdvancementPredicateMatch(AstNode):
     """Ast selector advancement predicate match node."""
 
@@ -985,7 +985,7 @@ class AstSelectorAdvancementPredicateMatch(AstNode):
     value: AstBool = required_field()
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstSelectorAdvancementMatch(AstNode):
     """Ast selector advancement match node."""
 
@@ -995,14 +995,14 @@ class AstSelectorAdvancementMatch(AstNode):
     ] = required_field()
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstSelectorAdvancements(AstNode):
     """Ast selector advancements node."""
 
     advancements: AstChildren[AstSelectorAdvancementMatch] = required_field()
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstSelectorArgument(AstNode):
     """Ast selector argument node."""
 
@@ -1011,7 +1011,7 @@ class AstSelectorArgument(AstNode):
     value: Optional[AstNode] = required_field()
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstSelector(AstNode):
     """Ast selector node."""
 
@@ -1021,7 +1021,7 @@ class AstSelector(AstNode):
     parser = "selector"
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstMessageText(AstLiteral):
     """Ast message text node."""
 
@@ -1029,7 +1029,7 @@ class AstMessageText(AstLiteral):
     regex = re.compile(r".+")
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstMessage(AstNode):
     """Ast message node."""
 
@@ -1041,21 +1041,21 @@ class AstMessage(AstNode):
         return AstMessage(fragments=AstChildren([AstMessageText.from_value(obj)]))
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstNbtPathKey(AstNode):
     """Ast nbt path key node."""
 
     value: str = required_field()
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstNbtPathSubscript(AstNode):
     """Ast nbt path subscript node."""
 
     index: Union[None, AstNumber, AstNbtCompound] = None
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstNbtPath(AstNode):
     """Ast nbt path node."""
 
@@ -1104,12 +1104,12 @@ class AstNbtPath(AstNode):
         return AstNbtPath(components=AstChildren(components))
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstParticleParameters(AstNode):
     """Base ast node for particle parameters."""
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstDustParticleParameters(AstParticleParameters):
     """Ast dust particle parameters node."""
 
@@ -1119,7 +1119,7 @@ class AstDustParticleParameters(AstParticleParameters):
     size: AstNumber = required_field()
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstDustColorTransitionParticleParameters(AstParticleParameters):
     """Ast dust color transition particle parameters node."""
 
@@ -1132,28 +1132,28 @@ class AstDustColorTransitionParticleParameters(AstParticleParameters):
     end_blue: AstNumber = required_field()
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstBlockParticleParameters(AstParticleParameters):
     """Ast block particle parameters node."""
 
     block: AstBlock = required_field()
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstFallingDustParticleParameters(AstParticleParameters):
     """Ast falling dust particle parameters node."""
 
     block: AstBlock = required_field()
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstItemParticleParameters(AstParticleParameters):
     """Ast item particle parameters node."""
 
     item: AstItem = required_field()
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstVibrationParticleParameters(AstParticleParameters):
     """Ast vibration particle parameters node."""
 
@@ -1166,14 +1166,14 @@ class AstVibrationParticleParameters(AstParticleParameters):
     duration: AstNumber = required_field()
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstBlockMarkerParticleParameters(AstParticleParameters):
     """Ast block marker particle parameters node."""
 
     block: AstBlock = required_field()
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstParticle(AstNode):
     """Ast particle node."""
 

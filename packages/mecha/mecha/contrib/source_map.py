@@ -53,7 +53,7 @@ def source_map(ctx: Context, opts: SourceMapOptions):
     mc.serialize.extend(SourceMapSerializer())
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstSourceMap(AstCommandSentinel):
     """Ast source map node."""
 
