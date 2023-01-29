@@ -85,7 +85,7 @@ class AstCacheBackend:
         """Dump the pickled data."""
         data["mecha"] = self.version
         data["python"] = sys.version
-        pickle.dump(data, f)
+        pickle.dump(data, f, protocol=pickle.HIGHEST_PROTOCOL)
 
     def load(self, f: BufferedReader) -> AstRoot:
         """Load the ast."""
