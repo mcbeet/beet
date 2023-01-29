@@ -356,6 +356,7 @@ class Mecha:
         multiline: Optional[bool] = None,
         formatting: Optional[JsonDict] = None,
         readonly: Optional[bool] = None,
+        initial_step: int = 0,
         report: Optional[DiagnosticCollection] = None,
     ) -> DataPack:
         ...
@@ -370,6 +371,7 @@ class Mecha:
         multiline: Optional[bool] = None,
         formatting: Optional[JsonDict] = None,
         readonly: Optional[bool] = None,
+        initial_step: int = 0,
         report: Optional[DiagnosticCollection] = None,
     ) -> TextFileType:
         ...
@@ -384,6 +386,7 @@ class Mecha:
         multiline: Optional[bool] = None,
         formatting: Optional[JsonDict] = None,
         readonly: Optional[bool] = None,
+        initial_step: int = 0,
         report: Optional[DiagnosticCollection] = None,
     ) -> Function:
         ...
@@ -398,6 +401,7 @@ class Mecha:
         multiline: Optional[bool] = None,
         formatting: Optional[JsonDict] = None,
         readonly: Optional[bool] = None,
+        initial_step: int = 0,
         report: Optional[DiagnosticCollection] = None,
     ) -> Union[DataPack, TextFileBase[Any]]:
         """Apply all compilation steps."""
@@ -451,7 +455,7 @@ class Mecha:
 
             if step < 0:
                 if compilation_unit.ast:
-                    self.database.enqueue(function, 0)
+                    self.database.enqueue(function, initial_step)
                     continue
                 try:
                     compilation_unit.source = function.text
@@ -461,7 +465,7 @@ class Mecha:
                         resource_location=compilation_unit.resource_location,
                         multiline=multiline,
                     )
-                    self.database.enqueue(function, 0)
+                    self.database.enqueue(function, initial_step)
                 except DiagnosticError as exc:
                     compilation_unit.diagnostics.extend(exc.diagnostics)
 
