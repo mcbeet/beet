@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.82.2 (2023-01-29)
+### Fix
+* Pin default value if there's no cache ([`c39a6c6`](https://github.com/mcbeet/beet/commit/c39a6c6cbdc2300bb7e7771327bd24ba94cbfb43))
+
 ## v0.82.1 (2022-12-29)
 ### Fix
 * Don't use field_map to figure out if generated files should go in the resource pack or data pack ([`e69cf14`](https://github.com/mcbeet/beet/commit/e69cf14ffeeba613b7e624daf150c522cc5d6740))
