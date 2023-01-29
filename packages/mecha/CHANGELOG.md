@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.62.1 (2023-01-29)
+### Fix
+* Make it possible to start compiling from a custom initial step ([`f2037ad`](https://github.com/mcbeet/mecha/commit/f2037ad8a8422cca386833db0da24bc3e6250031))
+
 ## v0.62.0 (2022-12-01)
 ### Feature
 * Add ast node compile_hints and make it so that AstSourceMap can't end up inlined into execute ([`a6537ff`](https://github.com/mcbeet/mecha/commit/a6537ffb50df3ef7550095a8b9366d7fc47e5d52))
