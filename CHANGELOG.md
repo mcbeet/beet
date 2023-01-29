@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.82.3 (2023-01-29)
+### Fix
+* Migrate to modern entry_points api ([`473e6e5`](https://github.com/mcbeet/beet/commit/473e6e53cfa38d9eab4aa868219775548863c4f8))
+
 ## v0.82.2 (2023-01-29)
 ### Fix
 * Pin default value if there's no cache ([`c39a6c6`](https://github.com/mcbeet/beet/commit/c39a6c6cbdc2300bb7e7771327bd24ba94cbfb43))
