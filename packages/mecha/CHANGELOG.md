@@ -2,6 +2,11 @@
 
 <!--next-version-placeholder-->
 
+## v0.62.2 (2023-01-29)
+### Fix
+* Use slots for ast nodes ([`940854e`](https://github.com/mcbeet/mecha/commit/940854e4756a5001f62bc53770edd2a55f1daf90))
+* Stop using importlib.resources.read_text ([`6c6b965`](https://github.com/mcbeet/mecha/commit/6c6b965a15594669641f1a595c8d16c9b1564a06))
+
 ## v0.62.1 (2023-01-29)
 ### Fix
 * Make it possible to start compiling from a custom initial step ([`f2037ad`](https://github.com/mcbeet/mecha/commit/f2037ad8a8422cca386833db0da24bc3e6250031))
