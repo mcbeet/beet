@@ -290,7 +290,7 @@ class CachePin(Pin[str, PinType]):
     """Descriptor that makes cache data accessible through attribute lookup."""
 
     def forward(self, obj: Any) -> JsonDict:
-        return obj.cache.json
+        return obj.cache.json if isinstance(obj.cache, Cache) else {}
 
 
 class MultiCache(MatchMixin, Container[str, CacheType]):
