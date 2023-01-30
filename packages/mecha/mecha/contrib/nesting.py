@@ -3,6 +3,7 @@
 
 __all__ = [
     "NestedCommandsTransformer",
+    "InplaceNestingPredicate",
     "NestingOptions",
     "nesting",
     "parse_nested_root",
@@ -11,9 +12,9 @@ __all__ = [
 
 from dataclasses import dataclass, replace
 from importlib.resources import files
-from typing import List, cast
+from typing import Any, Callable, List, cast
 
-from beet import Context, Function, Generator, configurable
+from beet import Context, Function, Generator, TextFileBase, configurable
 from beet.core.utils import required_field
 from jinja2 import Template
 from pydantic import BaseModel
@@ -67,6 +68,7 @@ def nesting(ctx: Context, opts: NestingOptions):
             generate=ctx.generate,
             database=mc.database,
             generate_execute_template=ctx.template.compile(opts.generate_execute),
+            inplace_nesting_predicate=ctx.inject(InplaceNestingPredicate),
         )
     )
 
@@ -104,6 +106,16 @@ def parse_nested_root(stream: TokenStream) -> AstRoot:
     return set_location(node, commands[0], commands[-1])
 
 
+class InplaceNestingPredicate:
+    """Overridable predicate for enabling inplace nesting."""
+
+    callback: Callable[[TextFileBase[Any]], bool]
+
+    def __init__(self, ctx: Context):
+        mc = ctx.inject(Mecha)
+        self.callback = lambda target: target is mc.database.current
+
+
 @dataclass
 class NestedCommandsTransformer(MutatingReducer):
     """Transformer that handles nested commands."""
@@ -111,6 +123,7 @@ class NestedCommandsTransformer(MutatingReducer):
     generate: Generator = required_field()
     database: CompilationDatabase = required_field()
     generate_execute_template: Template = required_field()
+    inplace_nesting_predicate: InplaceNestingPredicate = required_field()
 
     def emit_function(self, path: str, root: AstRoot):
         """Helper method for emitting nested commands into a separate function."""
@@ -289,7 +302,7 @@ class NestedCommandsTransformer(MutatingReducer):
                     )
                     raise set_location(d, name)
 
-            elif target is self.database.current:
+            elif self.inplace_nesting_predicate.callback(target):
                 if node.identifier == "prepend:function:name:commands":
                     d = Diagnostic(
                         "error",
