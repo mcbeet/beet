@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.82.4 (2023-01-30)
+### Fix
+* Extract format_directory ([`1716184`](https://github.com/mcbeet/beet/commit/17161849ad4f4179c891740536126134253a0222))
+
 ## v0.82.3 (2023-01-29)
 ### Fix
 * Migrate to modern entry_points api ([`473e6e5`](https://github.com/mcbeet/beet/commit/473e6e53cfa38d9eab4aa868219775548863c4f8))

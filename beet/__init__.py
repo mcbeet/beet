@@ -1,4 +1,4 @@
-__version__ = "0.82.3"
+__version__ = "0.82.4"
 
 
 from .core.cache import *
