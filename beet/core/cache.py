@@ -15,7 +15,7 @@ from contextlib import closing, contextmanager
 from datetime import datetime, timedelta
 from pathlib import Path
 from textwrap import indent
-from typing import Any, BinaryIO, ClassVar, Iterator, Optional, Set, Type, TypeVar
+from typing import Any, BinaryIO, ClassVar, Optional, Set, Type, TypeVar
 from urllib.request import urlopen
 
 from .container import Container, MatchMixin, Pin
@@ -23,6 +23,7 @@ from .utils import (
     FileSystemPath,
     JsonDict,
     dump_json,
+    format_directory,
     get_import_string,
     import_from_string,
     log_time,
@@ -247,7 +248,7 @@ class Cache:
 
     def __str__(self) -> str:
         formatted_json = indent(dump_json(self.json), "  |  ")[5:]
-        contents = indent("\n".join(self._format_directory()), "  |    ")
+        contents = indent("\n".join(format_directory(self.directory)), "  |    ")
 
         return (
             f"Cache {self.index_path.parent.name}:\n"
@@ -256,34 +257,6 @@ class Cache:
             f"  |  directory = {self.directory}\n{contents}\n  |  \n"
             f"  |  json = {formatted_json}"
         )
-
-    def _format_directory(
-        self,
-        directory: Optional[FileSystemPath] = None,
-        prefix: str = "",
-    ) -> Iterator[str]:
-        max_entries = 8
-        crop_entries = 5
-
-        entries = list(sorted(Path(directory or self.directory).iterdir()))
-
-        count = len(entries)
-        if count > max_entries:
-            del entries[crop_entries:]
-
-        indents = ["├─"] * len(entries)
-        if count <= max_entries:
-            indents[-1] = "└─"
-
-        for indent, entry in zip(indents, entries):
-            yield f"{prefix}{indent} {entry.name}"
-
-            if entry.is_dir():
-                indent = "│  " if indent == "├─" else "   "
-                yield from self._format_directory(entry, prefix + indent)
-
-        if count > max_entries:
-            yield f"{prefix}└─ ... ({count - crop_entries} more entries)"
 
 
 class CachePin(Pin[str, PinType]):

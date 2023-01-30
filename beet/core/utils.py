@@ -20,6 +20,7 @@ __all__ = [
     "format_obj",
     "format_exc",
     "format_validation_error",
+    "format_directory",
     "pop_traceback",
     "change_directory",
 ]
@@ -262,6 +263,31 @@ def format_validation_error(prefix: str, exc: ValidationError) -> str:
         )
         for loc, msg in errors
     )
+
+
+def format_directory(directory: FileSystemPath, prefix: str = "") -> Iterator[str]:
+    max_entries = 8
+    crop_entries = 5
+
+    entries = list(sorted(Path(directory).iterdir()))
+
+    count = len(entries)
+    if count > max_entries:
+        del entries[crop_entries:]
+
+    indents = ["├─"] * len(entries)
+    if count <= max_entries:
+        indents[-1] = "└─"
+
+    for indent, entry in zip(indents, entries):
+        yield f"{prefix}{indent} {entry.name}"
+
+        if entry.is_dir():
+            indent = "│  " if indent == "├─" else "   "
+            yield from format_directory(entry, prefix + indent)
+
+    if count > max_entries:
+        yield f"{prefix}└─ ... ({count - crop_entries} more entries)"
 
 
 ExceptionType = TypeVar("ExceptionType", bound=BaseException)
