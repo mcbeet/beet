@@ -2,6 +2,11 @@
 
 <!--next-version-placeholder-->
 
+## v0.64.0 (2023-01-30)
+### Feature
+* Add mecha.contrib.raw ([`ec018dc`](https://github.com/mcbeet/mecha/commit/ec018dc67edf725c7c0b943260da11f9fda57986))
+* Allow customizing inplace nesting ([`1ef7539`](https://github.com/mcbeet/mecha/commit/1ef75398b7447cfb2161393786382cfe734f02cb))
+
 ## v0.63.0 (2023-01-29)
 ### Feature
 * Highest protocol version for pickle.dump to improve performance ([#232](https://github.com/mcbeet/mecha/issues/232)) ([`2045360`](https://github.com/mcbeet/mecha/commit/204536038ea5ae3d3d26f00dc5b5447f1cb5e563))
