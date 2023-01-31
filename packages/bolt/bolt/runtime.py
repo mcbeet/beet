@@ -14,25 +14,29 @@ from typing import Any, Callable, Dict, Iterable, List, Optional, Set, Union
 from beet import Context, TextFileBase, generate_tree
 from beet.core.utils import JsonDict, extra_field, required_field
 from mecha import AstRoot, CommandTree, Diagnostic, Mecha, Visitor, rule
+from mecha.contrib.nesting import InplaceNestingPredicate
 from pathspec import PathSpec
 from tokenstream import set_location
 
 from .ast import AstModuleRoot
 from .codegen import Codegen
-from .collect import CommandCollector
+from .emit import CommandEmitter
 from .helpers import get_bolt_helpers
 from .loop_info import loop_info
+from .memo import MemoHandler, MemoRegistry
 from .module import CompiledModule, Module, ModuleCacheBackend, ModuleManager
 from .parse import get_bolt_parsers
 from .utils import internal
 
 
-class Runtime(CommandCollector):
+class Runtime(CommandEmitter):
     """The bolt runtime."""
 
     helpers: Dict[str, Any]
     globals: JsonDict
     builtins: Set[str]
+
+    memo: MemoHandler
 
     modules: ModuleManager
     evaluate: "Evaluator"
@@ -45,6 +49,7 @@ class Runtime(CommandCollector):
 
         if isinstance(ctx, Context):
             ctx.require(
+                "mecha.contrib.raw",
                 "mecha.contrib.relative_location",
                 "mecha.contrib.nesting",
                 "mecha.contrib.nested_resources",
@@ -80,9 +85,16 @@ class Runtime(CommandCollector):
             )
 
             mc = ctx.inject(Mecha)
+            self.memo = MemoHandler(
+                mc,
+                registry=ctx.inject(MemoRegistry),
+                generate=ctx.generate,
+                inplace_nesting_predicate=ctx.inject(InplaceNestingPredicate),
+            )
 
         else:
             mc = ctx
+            self.memo = MemoHandler(mc, MemoRegistry())
 
         self.modules = ModuleManager(
             directory=mc.directory,
@@ -136,9 +148,12 @@ class Runtime(CommandCollector):
         return values[0] if len(values) == 1 else values
 
     def finalize(self, ctx: Context):
-        """Plugin that removes modules at the end of the build."""
-        yield
-        ctx.data[Module].clear()
+        """Plugin that runs at the end of the build."""
+        try:
+            yield
+        finally:
+            ctx.data[Module].clear()
+            self.memo.finalize()
 
 
 @dataclass

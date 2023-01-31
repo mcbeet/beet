@@ -3,9 +3,10 @@ __version__ = "0.22.0"
 
 from .ast import *
 from .codegen import *
-from .collect import *
+from .emit import *
 from .helpers import *
 from .loop_info import *
+from .memo import *
 from .module import *
 from .parse import *
 from .plugin import *

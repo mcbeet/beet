@@ -10,14 +10,18 @@ __all__ = [
 from bisect import bisect
 from difflib import get_close_matches
 from types import CodeType, TracebackType
-from typing import Iterable, List, Optional, Set, TypeVar
+from typing import Any, Iterable, List, Optional, Set, TypeVar
 
+from beet import Container
 from mecha.utils import string_to_number
 
 T = TypeVar("T")
 
 
-INTERNAL_CODE: Set[CodeType] = {string_to_number.__code__}
+INTERNAL_CODE: Set[CodeType] = {
+    string_to_number.__code__,
+    Container[Any, Any].__getitem__.__code__,
+}
 
 
 def internal(f: T) -> T:

@@ -42,14 +42,14 @@ def defer(ctx: Context):
     runtime.expose("defer", defer)
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstDefer(AstNode):
     """Ast defer node."""
 
     callback: Callable[[], Any] = required_field()
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstDeferCommand(AstCommandSentinel):
     """Ast defer command node.
 

@@ -1,5 +1,5 @@
 __all__ = [
-    "CommandCollector",
+    "CommandEmitter",
 ]
 
 
@@ -13,8 +13,8 @@ from .utils import internal
 P = ParamSpec("P")
 
 
-class CommandCollector:
-    """Command collector."""
+class CommandEmitter:
+    """Command emitter."""
 
     commands: List[AstCommand]
 

@@ -1109,3 +1109,54 @@ def g(a=1, b):
 ###
 as @a run foo = "bar"
 say foo
+###
+memo
+###
+memo:
+###
+memo 123:
+    pass
+###
+memo foo:
+    pass
+###
+memo foo=foo:
+    pass
+###
+memo {}:
+    pass
+###
+memo something=123:
+    print(somethig)
+###
+memo list() (1 + 2):
+    pass
+###
+memo list(), (1 + 2):
+    pass
+###
+memo foo=123, bar="hello":
+    say foo
+    say bar
+###
+memo:
+    pass
+memo:
+    pass
+###
+memo foo=42:
+    print(foo)
+memo foo=42:
+    print(foo)
+memo foo=42:
+    print(foo)
+###
+def f():
+    memo:
+        pass
+###
+bop = 123
+memo bop foo=bop foo:
+    foo += 8
+    say foo
+print(foo)

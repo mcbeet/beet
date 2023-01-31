@@ -1,0 +1,9 @@
+#>ERROR  Identifier "foo" is not defined.
+# line 1, column 6
+#      1 |  memo foo:
+#        :       ^^^
+#      2 |      pass
+# Notes:
+#   - Expected assignment but got invalid ':'.
+memo foo:
+    pass

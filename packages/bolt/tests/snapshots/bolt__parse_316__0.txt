@@ -1,0 +1,41 @@
+memo:
+    pass
+memo:
+    pass
+---
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=30, lineno=5, colno=1)
+  commands:
+    <class 'bolt.ast.AstMemo'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=14, lineno=2, colno=9)
+      identifier: 'memo'
+      arguments:
+        <class 'mecha.ast.AstRoot'>
+          location: SourceLocation(pos=10, lineno=2, colno=5)
+          end_location: SourceLocation(pos=14, lineno=2, colno=9)
+          commands:
+            <class 'mecha.ast.AstCommand'>
+              location: SourceLocation(pos=10, lineno=2, colno=5)
+              end_location: SourceLocation(pos=14, lineno=2, colno=9)
+              identifier: 'pass'
+              arguments:
+                <empty>
+      persistent_id: UUID('bdd640fb-0667-1ad1-1c80-317fa3b1799d')
+    <class 'bolt.ast.AstMemo'>
+      location: SourceLocation(pos=15, lineno=3, colno=1)
+      end_location: SourceLocation(pos=29, lineno=4, colno=9)
+      identifier: 'memo'
+      arguments:
+        <class 'mecha.ast.AstRoot'>
+          location: SourceLocation(pos=25, lineno=4, colno=5)
+          end_location: SourceLocation(pos=29, lineno=4, colno=9)
+          commands:
+            <class 'mecha.ast.AstCommand'>
+              location: SourceLocation(pos=25, lineno=4, colno=5)
+              end_location: SourceLocation(pos=29, lineno=4, colno=9)
+              identifier: 'pass'
+              arguments:
+                <empty>
+      persistent_id: UUID('23b8c1e9-3924-56de-3eb1-3b9046685257')

@@ -113,6 +113,21 @@
         }
       }
     },
+    "memo": {
+      "type": "literal",
+      "children": {
+        "body": {
+          "type": "argument",
+          "parser": "mecha:nested_root",
+          "executable": true
+        },
+        "variable": {
+          "type": "argument",
+          "parser": "bolt:memo_variable",
+          "redirect": ["memo"]
+        }
+      }
+    },
     "del": {
       "type": "literal",
       "executable": true,

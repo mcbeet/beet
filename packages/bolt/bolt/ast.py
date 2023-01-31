@@ -45,6 +45,8 @@ __all__ = [
     "AstClassName",
     "AstClassBases",
     "AstClassRoot",
+    "AstMemo",
+    "AstMemoResult",
     "AstInterpolation",
     "AstFromImport",
     "AstImportedItem",
@@ -55,11 +57,13 @@ __all__ = [
 import re
 from dataclasses import dataclass
 from typing import Any, Optional, Union
+from uuid import UUID, uuid4
 
-from beet.core.utils import JsonDict, required_field
+from beet.core.utils import JsonDict, extra_field, required_field
 from mecha import (
     AstChildren,
     AstCommand,
+    AstCommandSentinel,
     AstJson,
     AstLiteral,
     AstNode,
@@ -71,17 +75,17 @@ from tokenstream import TokenStream
 from .pattern import IDENTIFIER_PATTERN
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstModuleRoot(AstRoot):
     """Module root ast node."""
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstExpression(AstNode):
     """Base ast node for expressions."""
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstExpressionBinary(AstExpression):
     """Ast expression binary node."""
 
@@ -90,7 +94,7 @@ class AstExpressionBinary(AstExpression):
     right: AstExpression = required_field()
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstExpressionUnary(AstExpression):
     """Ast expression unary node."""
 
@@ -98,21 +102,21 @@ class AstExpressionUnary(AstExpression):
     value: AstExpression = required_field()
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstValue(AstExpression):
     """Ast value node."""
 
     value: Any = required_field()
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstIdentifier(AstExpression):
     """Ast identifier node."""
 
     value: str = required_field()
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstFormatString(AstExpression):
     """Ast format string node."""
 
@@ -120,26 +124,26 @@ class AstFormatString(AstExpression):
     values: AstChildren[AstExpression] = required_field()
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstTuple(AstExpression):
     """Ast tuple node."""
 
     items: AstChildren[AstExpression] = required_field()
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstList(AstExpression):
     """Ast list node."""
 
     items: AstChildren[AstExpression] = required_field()
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstDictUnquotedKey(AstValue):
     """Ast dict unquoted key node."""
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstDictItem(AstNode):
     """Ast dict item node."""
 
@@ -147,14 +151,14 @@ class AstDictItem(AstNode):
     value: AstExpression = required_field()
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstDict(AstExpression):
     """Ast dict node."""
 
     items: AstChildren[AstDictItem] = required_field()
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstSlice(AstNode):
     """Ast slice node."""
 
@@ -163,7 +167,7 @@ class AstSlice(AstNode):
     step: Optional[AstExpression] = None
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstUnpack(AstNode):
     """Ast unpack node."""
 
@@ -171,7 +175,7 @@ class AstUnpack(AstNode):
     value: AstExpression = required_field()
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstKeyword(AstNode):
     """Ast keyword node."""
 
@@ -179,7 +183,7 @@ class AstKeyword(AstNode):
     value: AstExpression = required_field()
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstAttribute(AstExpression):
     """Ast attribute node."""
 
@@ -187,7 +191,7 @@ class AstAttribute(AstExpression):
     value: AstExpression = required_field()
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstLookup(AstExpression):
     """Ast lookup node."""
 
@@ -195,7 +199,7 @@ class AstLookup(AstExpression):
     arguments: AstChildren[Union[AstExpression, AstSlice]] = required_field()
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstCall(AstExpression):
     """Ast call node."""
 
@@ -205,12 +209,12 @@ class AstCall(AstExpression):
     ] = required_field()
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstTarget(AstNode):
     """Base node for targets."""
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstTargetIdentifier(AstTarget):
     """Ast target identifier node."""
 
@@ -218,14 +222,14 @@ class AstTargetIdentifier(AstTarget):
     rebind: bool = False
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstTargetUnpack(AstTarget):
     """Ast target unpack node."""
 
     targets: AstChildren[AstTarget] = required_field()
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstTargetAttribute(AstTarget):
     """Ast target attribute node."""
 
@@ -233,7 +237,7 @@ class AstTargetAttribute(AstTarget):
     value: AstExpression = required_field()
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstTargetItem(AstTarget):
     """Ast target item node."""
 
@@ -241,7 +245,7 @@ class AstTargetItem(AstTarget):
     arguments: AstChildren[Union[AstExpression, AstSlice]] = required_field()
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstAssignment(AstNode):
     """Ast assignment node."""
 
@@ -250,19 +254,19 @@ class AstAssignment(AstNode):
     value: AstExpression = required_field()
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstDecorator(AstNode):
     """Ast decorator node."""
 
     expression: AstExpression = required_field()
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstFunctionSignatureElement(AstNode):
     """Base node for function signature element."""
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstFunctionSignatureArgument(AstFunctionSignatureElement):
     """Ast function signature argument node."""
 
@@ -270,31 +274,31 @@ class AstFunctionSignatureArgument(AstFunctionSignatureElement):
     default: Optional[AstExpression] = None
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstFunctionSignaturePositionalMarker(AstFunctionSignatureElement):
     """Ast function signature positional marker node."""
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstFunctionSignatureVariadicArgument(AstFunctionSignatureElement):
     """Ast function signature variadic argument node."""
 
     name: str = required_field()
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstFunctionSignatureVariadicMarker(AstFunctionSignatureElement):
     """Ast function signature variadic marker node."""
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstFunctionSignatureVariadicKeywordArgument(AstFunctionSignatureElement):
     """Ast function signature variadic keyword argument node."""
 
     name: str = required_field()
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstFunctionSignature(AstNode):
     """Ast function signature node."""
 
@@ -303,14 +307,14 @@ class AstFunctionSignature(AstNode):
     arguments: AstChildren[AstFunctionSignatureElement] = AstChildren()
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstDeferredRoot(AstNode):
     """Ast deferred root node."""
 
     stream: TokenStream = required_field()
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstMacro(AstCommand):
     """Ast macro node."""
 
@@ -340,12 +344,12 @@ class AstMacro(AstCommand):
         return tree_root
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstMacroCall(AstCommand):
     """Ast macro call node."""
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstMacroLiteral(AstLiteral):
     """Ast macro literal node."""
 
@@ -354,7 +358,7 @@ class AstMacroLiteral(AstLiteral):
     regex = re.compile(r"[^#:\s()]+")
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstMacroArgument(AstLiteral):
     """Ast macro argument node."""
 
@@ -363,19 +367,19 @@ class AstMacroArgument(AstLiteral):
     regex = re.compile(IDENTIFIER_PATTERN)
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstMacroMatch(AstNode):
     """Base node for macro match."""
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstMacroMatchLiteral(AstMacroMatch):
     """Ast macro match literal node."""
 
     match: AstMacroLiteral = required_field()
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstMacroMatchArgument(AstMacroMatch):
     """Ast macro match argument node."""
 
@@ -384,24 +388,24 @@ class AstMacroMatchArgument(AstMacroMatch):
     match_argument_properties: Optional[AstJson] = None
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstProcMacro(AstMacro):
     """Ast proc macro node."""
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstProcMacroMarker(AstNode):
     """Ast proc macro marker node."""
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstProcMacroResult(AstNode):
     """Ast proc macro result node."""
 
     commands: AstChildren[AstCommand] = required_field()
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstClassName(AstNode):
     """Ast class name node."""
 
@@ -409,19 +413,35 @@ class AstClassName(AstNode):
     value: str = required_field()
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstClassBases(AstNode):
     """Ast class bases node."""
 
     inherit: AstChildren[AstExpression] = AstChildren()
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstClassRoot(AstRoot):
     """Ast class root node."""
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
+class AstMemo(AstCommand):
+    """Ast memo node."""
+
+    persistent_id: UUID = extra_field(default_factory=uuid4)
+
+
+@dataclass(frozen=True, slots=True)
+class AstMemoResult(AstCommandSentinel):
+    """Ast memo result node."""
+
+    serialized: str = ""
+
+    compile_hints = {"skip_execute_inline_single_command": True}
+
+
+@dataclass(frozen=True, slots=True)
 class AstInterpolation(AstNode):
     """Ast interpolation node."""
 
@@ -431,14 +451,14 @@ class AstInterpolation(AstNode):
     value: AstExpression = required_field()
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstFromImport(AstCommand):
     """Ast from import node."""
 
     identifier: str = ""
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstImportedItem(AstNode):
     """Ast imported item node."""
 
@@ -446,7 +466,7 @@ class AstImportedItem(AstNode):
     identifier: bool = True
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class AstImportedMacro(AstNode):
     """Ast imported macro node."""
 

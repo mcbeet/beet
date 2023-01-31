@@ -23,8 +23,8 @@ include = ["bolt/py.typed"]
 
 [tool.poetry.dependencies]
 python = "^3.10"
-beet = ">=0.80.1"
-mecha = ">=0.61.0"
+beet = ">=0.82.4"
+mecha = ">=0.64.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.2.0"
@@ -33,6 +33,9 @@ isort = "^5.10.1"
 python-semantic-release = "^7.32.2"
 pytest-insta = "^0.2.0"
 lectern = ">=0.26.0"
+
+[tool.poetry.plugins.beet]
+commands = "bolt.commands"
 
 [tool.pytest.ini_options]
 addopts = "tests --import-mode=importlib"

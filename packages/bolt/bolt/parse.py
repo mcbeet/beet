@@ -37,6 +37,7 @@ __all__ = [
     "parse_import_name",
     "parse_name_list",
     "GlobalNonlocalHandler",
+    "FlushPendingBindingsParser",
     "StatementSubcommandHandler",
     "DeferredRootBacktracker",
     "LexicalScopeConstraint",
@@ -57,6 +58,7 @@ __all__ = [
 import re
 from dataclasses import dataclass, field, replace
 from typing import Any, Dict, FrozenSet, List, Literal, Optional, Set, Tuple, Type, cast
+from uuid import UUID, uuid4
 
 from beet.core.utils import extra_field
 from mecha import (
@@ -128,6 +130,7 @@ from .ast import (
     AstMacroMatch,
     AstMacroMatchArgument,
     AstMacroMatchLiteral,
+    AstMemo,
     AstModuleRoot,
     AstProcMacro,
     AstProcMacroMarker,
@@ -142,7 +145,7 @@ from .ast import (
     AstUnpack,
     AstValue,
 )
-from .collect import CommandCollector
+from .emit import CommandEmitter
 from .module import Module, ModuleManager, UnusableCompilationUnit
 from .pattern import (
     FALSE_PATTERN,
@@ -215,6 +218,7 @@ def get_bolt_parsers(
         "command:argument:bolt:class_name": delegate("bolt:class_name"),
         "command:argument:bolt:class_bases": delegate("bolt:class_bases"),
         "command:argument:bolt:class_root": delegate("bolt:class_root"),
+        "command:argument:bolt:memo_variable": delegate("bolt:memo_variable"),
         "command:argument:bolt:del_target": delegate("bolt:del_target"),
         ################################################################################
         # Bolt
@@ -289,6 +293,22 @@ def get_bolt_parsers(
         "bolt:class_name": parse_class_name,
         "bolt:class_bases": parse_class_bases,
         "bolt:class_root": FlushPendingBindingsParser(parse_class_root, after=True),
+        "bolt:memo_variable": TrailingCommaParser(
+            AlternativeParser(
+                [
+                    ForkLexicalScopeParser(
+                        FlushPendingBindingsParser(
+                            AssignmentStatementParser(
+                                AssignmentTargetParser(require_single=True),
+                                binding_only=True,
+                            ),
+                            after=True,
+                        )
+                    ),
+                    delegate("bolt:interpolation"),
+                ]
+            )
+        ),
         "bolt:del_target": parse_del_target,
         "bolt:interpolation": BuiltinCallRestriction(
             PrimaryParser(delegate("bolt:identifier"), truncate=True),
@@ -594,6 +614,7 @@ def create_bolt_root_parser(parser: Parser, macro_handler: "MacroHandler"):
 
 def create_bolt_command_parser(parser: Parser, modules: ModuleManager):
     """Compose command parsers."""
+    parser = MemoHandler(parser)
     parser = GlobalNonlocalHandler(parser)
     parser = ImportStatementHandler(parser, modules)
     parser = UndefinedIdentifierErrorHandler(parser)
@@ -769,6 +790,50 @@ class AssignmentStatementParser:
                 node = set_location(node, node.target, node.value)
 
         return node
+
+
+@dataclass
+class MemoHandler:
+    """Handle memo."""
+
+    parser: Parser
+
+    def __call__(self, stream: TokenStream) -> Any:
+        node = self.parser(stream)
+
+        if not isinstance(node, AstCommand):
+            return node
+        if node.identifier == "memo:subcommand":
+            node = self.create_memo(node, stream.data.get("uuid_factory", uuid4)())
+
+        return node
+
+    def create_memo(self, command: AstCommand, persistent_id: UUID) -> AstMemo:
+        identifier_parts: List[str] = ["memo"]
+        arguments: List[AstNode] = []
+
+        node = command
+        while isinstance(subcommand := node.arguments[-1], AstCommand):
+            if isinstance(assignment := node.arguments[0], AstAssignment):
+                if not isinstance(assignment.target, AstTargetIdentifier):
+                    exc = InvalidSyntax("Assignment target must be an identifier.")
+                    raise set_location(exc, assignment.target)
+                identifier_parts.append(assignment.target.value)
+                arguments.append(assignment)
+            elif isinstance(expression := node.arguments[0], AstExpression):
+                identifier_parts.append(str(len(arguments)))
+                arguments.append(expression)
+            node = subcommand
+
+        arguments.append(node.arguments[0])
+
+        memo = AstMemo(
+            identifier=":".join(identifier_parts),
+            arguments=AstChildren(arguments),
+            persistent_id=persistent_id,
+        )
+
+        return set_location(memo, command)
 
 
 def parse_decorator(stream: TokenStream) -> Any:
@@ -1332,7 +1397,7 @@ class ProcMacroParser:
         identifier: str = properties["identifier"]
 
         module = self.modules[resource_location]
-        runtime: CommandCollector = module.namespace["_bolt_runtime"]
+        runtime: CommandEmitter = module.namespace["_bolt_runtime"]
         macro = module.namespace["_bolt_proc_macros"][identifier]
 
         with self.modules.error_handler(
@@ -1663,7 +1728,12 @@ class FlushPendingBindingsParser:
         if self.before:
             lexical_scope = get_stream_lexical_scope(stream)
             lexical_scope.flush_pending_bindings()
-        node = self.parser(stream)
+        try:
+            node = self.parser(stream)
+        except Exception:
+            lexical_scope = get_stream_lexical_scope(stream)
+            lexical_scope.pending_bindings.clear()
+            raise
         if self.after:
             lexical_scope = get_stream_lexical_scope(stream)
             lexical_scope.flush_pending_bindings()

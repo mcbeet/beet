@@ -67,6 +67,7 @@ from .ast import (
     AstMacro,
     AstMacroCall,
     AstMacroMatchArgument,
+    AstMemo,
     AstProcMacro,
     AstSlice,
     AstTarget,
@@ -89,6 +90,7 @@ class Accumulator:
     refs: List[Any] = field(default_factory=list)
     macros: MacroLibrary = field(default_factory=dict)
     macro_ids: Dict[str, int] = field(default_factory=dict)
+    memo_index: Dict[AstMemo, int] = field(default_factory=dict)
     lines: List[str] = field(default_factory=list)
     counter: int = 0
     header: Dict[str, str] = field(default_factory=dict)
@@ -497,6 +499,54 @@ class Codegen(Visitor):
         acc: Accumulator,
     ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
         yield node.arguments[0]
+        return []
+
+    @rule(AstMemo)
+    def memo(
+        self,
+        node: AstMemo,
+        acc: Accumulator,
+    ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
+        file_index = acc.memo_index.setdefault(node, 0)
+        acc.memo_index[node] = file_index + 1
+
+        keys: List[str] = []
+
+        *arguments, body = node.arguments
+        for arg in arguments:
+            if isinstance(arg, AstAssignment):
+                target = cast(AstTargetIdentifier, arg.target)
+                yield arg
+                keys.append(f"{target.value},")
+            else:
+                value = yield from visit_single(arg, required=True)
+                keys.append(f"{value},")
+
+        storage = f"_bolt_memo_storage_{node.persistent_id.hex}"
+        acc.header[storage] = "None"
+        if not acc.root_scope:
+            acc.statement(f"global {storage}", lineno=node)
+        acc.statement(f"if {storage} is None:")
+        with acc.block():
+            acc.statement(
+                f"{storage} = _bolt_runtime.memo.registry[__file__][{acc.make_ref(node)}, {file_index}]"
+            )
+
+        invocation = f"_bolt_memo_invocation_{node.persistent_id.hex}"
+        acc.statement(f"{invocation} = {storage}[({' '.join(keys)})]")
+
+        acc.statement(f"if {invocation}.cached:")
+        with acc.block():
+            acc.statement(f"_bolt_runtime.memo.restore(_bolt_runtime, {invocation})")
+
+        acc.statement("else:")
+        with acc.block():
+            acc.statement(
+                f"with _bolt_runtime.memo.record(_bolt_runtime, {invocation}, __name__):"
+            )
+            with acc.block():
+                yield from visit_body(cast(AstRoot, body), acc)
+
         return []
 
     @rule(AstCommand, identifier="def:function:body")

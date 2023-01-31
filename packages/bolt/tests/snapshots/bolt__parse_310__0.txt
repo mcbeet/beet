@@ -1,0 +1,7 @@
+#>ERROR  Identifier "foo" is not defined.
+# line 1, column 10
+#      1 |  memo foo=foo:
+#        :           ^^^
+#      2 |      pass
+memo foo=foo:
+    pass

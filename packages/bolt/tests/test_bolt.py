@@ -1,4 +1,6 @@
 from pathlib import Path
+from random import Random
+from uuid import UUID
 
 import pytest
 from beet import Context, Function
@@ -30,8 +32,13 @@ def test_parse(snapshot: SnapshotFixture, ctx: Context, source: Function):
 
     mc.database[mc.database.current] = CompilationUnit(resource_location="demo:test")
 
+    rand = Random()
+    rand.seed(42)
+
     try:
-        ast = mc.parse(source)
+        ast = mc.parse(
+            source, provide={"uuid_factory": lambda: UUID(int=rand.getrandbits(128))}
+        )
     except DiagnosticError as exc:
         diagnostics = exc.diagnostics
     finally:
