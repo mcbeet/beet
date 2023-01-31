@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.23.0 (2023-01-31)
+### Feature
+* Add memo and a bunch of tweaks ([`77326b7`](https://github.com/mcbeet/bolt/commit/77326b7056a038743a1f20511ae565cacbc15f10))
+
 ## v0.22.0 (2022-12-04)
 ### Feature
 * Refactor identifier tracing with proper lexical scope abstraction ([`2f60bd4`](https://github.com/mcbeet/bolt/commit/2f60bd43c8affc2747c56e2d4dd4045e45561677))
