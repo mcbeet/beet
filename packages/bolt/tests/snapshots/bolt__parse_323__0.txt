@@ -1,0 +1,30 @@
+print(
+    """
+    This is a docstring.
+
+    Hello world
+    """
+)
+---
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=67, lineno=8, colno=1)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=66, lineno=7, colno=2)
+      identifier: 'statement'
+      arguments:
+        <class 'bolt.ast.AstCall'>
+          location: SourceLocation(pos=0, lineno=1, colno=1)
+          end_location: SourceLocation(pos=66, lineno=7, colno=2)
+          value:
+            <class 'bolt.ast.AstIdentifier'>
+              location: SourceLocation(pos=0, lineno=1, colno=1)
+              end_location: SourceLocation(pos=5, lineno=1, colno=6)
+              value: 'print'
+          arguments:
+            <class 'bolt.ast.AstValue'>
+              location: SourceLocation(pos=11, lineno=2, colno=5)
+              end_location: SourceLocation(pos=64, lineno=6, colno=8)
+              value: '\n    This is a docstring.\n\n    Hello world\n    '

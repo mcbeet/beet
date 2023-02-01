@@ -24,6 +24,7 @@ __all__ = [
     "AstTargetItem",
     "AstAssignment",
     "AstDecorator",
+    "AstDocstring",
     "AstFunctionSignature",
     "AstFunctionSignatureElement",
     "AstFunctionSignatureArgument",
@@ -259,6 +260,11 @@ class AstDecorator(AstNode):
     """Ast decorator node."""
 
     expression: AstExpression = required_field()
+
+
+@dataclass(frozen=True, slots=True)
+class AstDocstring(AstCommandSentinel):
+    """Ast docstring node."""
 
 
 @dataclass(frozen=True, slots=True)

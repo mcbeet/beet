@@ -37,6 +37,7 @@ __all__ = [
     "parse_import_name",
     "parse_name_list",
     "GlobalNonlocalHandler",
+    "DocstringHandler",
     "FlushPendingBindingsParser",
     "StatementSubcommandHandler",
     "DeferredRootBacktracker",
@@ -104,6 +105,7 @@ from .ast import (
     AstDict,
     AstDictItem,
     AstDictUnquotedKey,
+    AstDocstring,
     AstExpression,
     AstExpressionBinary,
     AstExpressionUnary,
@@ -148,6 +150,7 @@ from .ast import (
 from .emit import CommandEmitter
 from .module import Module, ModuleManager, UnusableCompilationUnit
 from .pattern import (
+    DOCSTRING_PATTERN,
     FALSE_PATTERN,
     IDENTIFIER_PATTERN,
     MODULE_PATTERN,
@@ -617,6 +620,7 @@ def create_bolt_command_parser(parser: Parser, modules: ModuleManager):
     parser = MemoHandler(parser)
     parser = GlobalNonlocalHandler(parser)
     parser = ImportStatementHandler(parser, modules)
+    parser = DocstringHandler(parser)
     parser = UndefinedIdentifierErrorHandler(parser)
     parser = StatementSubcommandHandler(parser)
     return parser
@@ -1717,6 +1721,24 @@ class GlobalNonlocalHandler:
 
 
 @dataclass
+class DocstringHandler:
+    """Emit docstring as special node."""
+
+    parser: Parser
+
+    def __call__(self, stream: TokenStream) -> Any:
+        if (
+            isinstance(node := self.parser(stream), AstCommand)
+            and node.identifier == "statement"
+            and node.arguments
+            and isinstance(literal := node.arguments[0], AstValue)
+            and isinstance(literal.value, str)
+        ):
+            return set_location(AstDocstring(arguments=AstChildren([literal])), node)
+        return node
+
+
+@dataclass
 class FlushPendingBindingsParser:
     """Parser that flushes pending bindings."""
 
@@ -2273,6 +2295,7 @@ class LiteralParser:
             true=TRUE_PATTERN,
             false=FALSE_PATTERN,
             null=NULL_PATTERN,
+            docstring=DOCSTRING_PATTERN,
             string=STRING_PATTERN,
             resource=(
                 None
@@ -2282,12 +2305,23 @@ class LiteralParser:
             ),
             number=NUMBER_PATTERN,
         ):
-            curly, bracket, true, false, null, string, resource, number = stream.expect(
+            (
+                curly,
+                bracket,
+                true,
+                false,
+                null,
+                docstring,
+                string,
+                resource,
+                number,
+            ) = stream.expect(
                 ("curly", "{"),
                 ("bracket", "["),
                 "true",
                 "false",
                 "null",
+                "docstring",
                 "string",
                 "resource",
                 "number",
@@ -2345,6 +2379,14 @@ class LiteralParser:
                 value = False
             elif null:
                 value = None
+            elif docstring:
+                value = (
+                    docstring.value[4:-3]
+                    if docstring.value.startswith("r")
+                    else self.quote_helper.unquote_string(
+                        docstring._replace(value=docstring.value[2:-2])
+                    )
+                )
             elif string:
                 value = (
                     string.value[2:-1]

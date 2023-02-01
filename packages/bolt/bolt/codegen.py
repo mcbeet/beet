@@ -47,6 +47,7 @@ from .ast import (
     AstClassName,
     AstDict,
     AstDictItem,
+    AstDocstring,
     AstExpressionBinary,
     AstExpressionUnary,
     AstFormatString,
@@ -556,6 +557,7 @@ class Codegen(Visitor):
         acc: Accumulator,
     ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
         signature = cast(AstFunctionSignature, node.arguments[0])
+        body = cast(AstRoot, node.arguments[1])
 
         decorators: List[str] = []
         for decorator in signature.decorators:
@@ -578,6 +580,10 @@ class Codegen(Visitor):
         ]
 
         with acc.function(signature.name, *arguments):
+            if body.commands and isinstance(body.commands[0], AstDocstring):
+                yield body.commands[0]
+                body = replace(body, commands=AstChildren(body.commands[1:]))
+
             for arg in signature.arguments:
                 if isinstance(arg, AstFunctionSignatureArgument) and arg.default:
                     acc.statement(f"if {arg.name} is {acc.missing()}:")
@@ -585,7 +591,7 @@ class Codegen(Visitor):
                         value = yield from visit_single(arg.default, required=True)
                         acc.statement(f"{arg.name} = {value}")
 
-            yield from visit_body(cast(AstRoot, node.arguments[1]), acc)
+            yield from visit_body(body, acc)
 
         for decorator, value in list(zip(signature.decorators, decorators))[::-1]:
             acc.statement(
@@ -721,6 +727,15 @@ class Codegen(Visitor):
                 lineno=decorator,
             )
 
+        return []
+
+    @rule(AstDocstring)
+    def docstring(
+        self,
+        node: AstDocstring,
+        acc: Accumulator,
+    ) -> Optional[List[str]]:
+        acc.statement(repr(cast(AstValue, node.arguments[0]).value))
         return []
 
     @rule(AstCommand, identifier="del:target")

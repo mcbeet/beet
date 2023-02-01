@@ -1160,3 +1160,55 @@ memo bop foo=bop foo:
     foo += 8
     say foo
 print(foo)
+###
+"""hello"""
+###
+"""hello
+world"""
+###
+"""
+This is a docstring.
+
+Hello world
+"""
+###
+print(
+    """
+    This is a docstring.
+
+    Hello world
+    """
+)
+###
+foo = """
+    This is a docstring.
+
+    Hello world
+"""
+###
+"""
+###
+foo = """
+    This is a docstring.
+###
+def f():
+    """My function"""
+    return 42
+###
+def g(a=123):
+    """My other function"""
+    return a
+###
+class A:
+    """This is a class.
+
+    It doesn't do anything.
+    """
+###
+"""
+foo\n\nbar
+"""
+###
+r"""
+foo\n\nbar
+"""

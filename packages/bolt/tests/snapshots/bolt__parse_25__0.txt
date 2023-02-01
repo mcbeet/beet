@@ -4,10 +4,10 @@
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=7, lineno=2, colno=1)
   commands:
-    <class 'mecha.ast.AstCommand'>
+    <class 'bolt.ast.AstDocstring'>
       location: SourceLocation(pos=0, lineno=1, colno=1)
       end_location: SourceLocation(pos=6, lineno=1, colno=7)
-      identifier: 'statement'
+      identifier: 'mecha:sentinel'
       arguments:
         <class 'bolt.ast.AstValue'>
           location: SourceLocation(pos=0, lineno=1, colno=1)

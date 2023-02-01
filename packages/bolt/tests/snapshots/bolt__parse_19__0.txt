@@ -1,4 +1,4 @@
-#>ERROR  Expected bracket '[', curly '{', false, identifier, null, number or 3 other tokens but got literal '%3'.
+#>ERROR  Expected bracket '[', curly '{', docstring, false, identifier, null or 4 other tokens but got literal '%3'.
 # line 1, column 6
 #      1 |  17 % %3
 #        :       ^^
