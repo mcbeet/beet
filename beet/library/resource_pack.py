@@ -289,14 +289,14 @@ class Atlas(JsonFile):
             if value not in values:
                 values.insert(0, deepcopy(value))
 
-    def add(self, value: JsonDict):
+    def add(self, value: str):
         """Add an entry."""
 
         values = self.data.setdefault("sources", [])
         if value not in values:
             values.append(value)
 
-    def remove(self, value: JsonDict):
+    def remove(self, value: str):
         """Remove an entry."""
 
         values = self.data.setdefault("sources", [])
