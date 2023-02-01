@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.25.0 (2023-02-01)
+### Feature
+* Add docstrings ([`c1c1488`](https://github.com/mcbeet/bolt/commit/c1c1488d60d58abc2a66d8cd02b671831bbf4473))
+
 ## v0.24.1 (2023-02-01)
 ### Fix
 * Update pyright ([`24120a9`](https://github.com/mcbeet/bolt/commit/24120a963b476676391a51fa25350a6a06225469))
