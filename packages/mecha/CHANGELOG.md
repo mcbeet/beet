@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.65.1 (2023-02-01)
+### Fix
+* Update some typings ([`d08b712`](https://github.com/mcbeet/mecha/commit/d08b712ce3f8d60f52c44af6e37b154e37ee4ed7))
+
 ## v0.65.0 (2023-02-01)
 ### Feature
 * Add output_perf ([`d2cb290`](https://github.com/mcbeet/mecha/commit/d2cb290ba819ee0c55311e248478cca6e022e0cf))
