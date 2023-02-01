@@ -1,5 +1,4 @@
 __all__ = [
-    "Atlas",
     "ResourcePack",
     "ResourcePackNamespace",
     "Blockstate",
@@ -278,10 +277,12 @@ class Atlas(JsonFile):
 
     def append(self, other: "Atlas"):
         """Append values from another atlas."""
+
         self.merge(other)
 
     def prepend(self, other: "Atlas"):
         """Prepend values from another atlas."""
+
         values = self.data.setdefault("sources", [])
 
         for value in other.data.get("sources", []):
@@ -290,12 +291,14 @@ class Atlas(JsonFile):
 
     def add(self, value: JsonDict):
         """Add an entry."""
+
         values = self.data.setdefault("sources", [])
         if value not in values:
             values.append(value)
 
     def remove(self, value: JsonDict):
         """Remove an entry."""
+
         values = self.data.setdefault("sources", [])
         with suppress(ValueError):
             values.remove(value)
