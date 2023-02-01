@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.24.1 (2023-02-01)
+### Fix
+* Update pyright ([`24120a9`](https://github.com/mcbeet/bolt/commit/24120a963b476676391a51fa25350a6a06225469))
+
 ## v0.24.0 (2023-02-01)
 ### Feature
 * Atlas ([`8703186`](https://github.com/mcbeet/bolt/commit/87031867ab7ce7014f88ef30e129cf1b115f5945))
