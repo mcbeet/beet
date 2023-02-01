@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.65.0 (2023-02-01)
+### Feature
+* Add output_perf ([`d2cb290`](https://github.com/mcbeet/mecha/commit/d2cb290ba819ee0c55311e248478cca6e022e0cf))
+
 ## v0.64.0 (2023-01-30)
 ### Feature
 * Add mecha.contrib.raw ([`ec018dc`](https://github.com/mcbeet/mecha/commit/ec018dc67edf725c7c0b943260da11f9fda57986))
