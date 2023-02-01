@@ -26,12 +26,14 @@ class CompilationUnit:
     priority: int = 0
 
     diagnostics: DiagnosticCollection = extra_field(init=False)
+    perf: Dict[int, float] = extra_field(init=False)
 
     def __post_init__(self):
         self.diagnostics = DiagnosticCollection(
             filename=self.filename,
             hint=self.resource_location,
         )
+        self.perf = {}
 
 
 class CompilationDatabase(Container[TextFileBase[Any], CompilationUnit]):

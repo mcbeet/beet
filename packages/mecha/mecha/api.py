@@ -6,6 +6,7 @@ __all__ = [
 ]
 
 
+import csv
 import logging
 import os
 import pickle
@@ -14,6 +15,7 @@ from contextlib import contextmanager
 from dataclasses import InitVar, dataclass
 from io import BufferedReader, BufferedWriter
 from pathlib import Path
+from time import perf_counter_ns
 from typing import (
     Any,
     Dict,
@@ -21,6 +23,7 @@ from typing import (
     List,
     Literal,
     Optional,
+    Tuple,
     Type,
     TypeVar,
     Union,
@@ -122,6 +125,7 @@ class MechaOptions(BaseModel):
     match: Optional[List[str]] = None
     rules: Dict[str, Literal["ignore", "info", "warn", "error"]] = {}
     cache: bool = True
+    output_perf: Optional[FileSystemPath] = None
 
     @validator("formatting", pre=True)
     def formatting_preset(cls, value: Any):
@@ -145,6 +149,10 @@ class Mecha:
     directory: Path = extra_field(init=False)
     cache: Optional[Cache] = extra_field(default=None)
     cache_backend: AstCacheBackend = extra_field(default_factory=AstCacheBackend)
+    output_perf: Optional[FileSystemPath] = extra_field(default=None)
+    perf_report: Optional[List[Tuple[str, str, int, List[float]]]] = extra_field(
+        default=None
+    )
 
     spec: CommandSpec = extra_field(default=None)
 
@@ -194,6 +202,9 @@ class Mecha:
             if not self.cache and opts.cache:
                 self.cache = ctx.cache["mecha"]
 
+            if opts.output_perf:
+                self.output_perf = ctx.directory / opts.output_perf
+
             ctx.require(self.finalize)
 
         else:
@@ -208,6 +219,9 @@ class Mecha:
         self.steps.append(self.transform)
         self.steps.append(self.optimize)
         self.steps.append(self.check)
+
+        if self.perf_report is None and self.output_perf:
+            self.perf_report = []
 
         if not self.spec:
             self.spec = CommandSpec(
@@ -452,6 +466,7 @@ class Mecha:
 
         for step, function in self.database.process_queue():
             compilation_unit = self.database[function]
+            start_time = perf_counter_ns()
 
             if step < 0:
                 if compilation_unit.ast:
@@ -487,13 +502,32 @@ class Mecha:
                 with self.serialize.use_diagnostics(compilation_unit.diagnostics):
                     function.text = self.serialize(compilation_unit.ast, **formatting)
 
+            compilation_unit.perf[step] = (perf_counter_ns() - start_time) * 1e-06
+
+        sorted_functions = sorted(
+            self.database.session,
+            key=lambda f: self.database[f].resource_location or "<unknown>",
+        )
+
+        if self.perf_report is not None:
+            for function in sorted_functions:
+                compilation_unit = self.database[function]
+                self.perf_report.append(
+                    (
+                        compilation_unit.filename or "",
+                        compilation_unit.resource_location or "",
+                        len(list(compilation_unit.diagnostics.get_all_errors())),
+                        [
+                            compilation_unit.perf.get(i, float("nan"))
+                            for i in range(-1, len(self.steps) + 1)
+                        ],
+                    )
+                )
+
         diagnostics = DiagnosticCollection(
             [
                 exc
-                for function in sorted(
-                    self.database.session,
-                    key=lambda f: self.database[f].resource_location or "<unknown>",
-                )
+                for function in sorted_functions
                 for exc in self.database[function].diagnostics.exceptions
             ]
         )
@@ -528,6 +562,30 @@ class Mecha:
             elif diagnostic.level == "info":
                 logger.info("%s", message, extra=extra)
 
+    def format_perf(self) -> List[List[str]]:
+        """Format perf report."""
+        step_headers = [
+            "Lint"
+            if step is self.lint
+            else "Transform"
+            if step is self.transform
+            else "Optimize"
+            if step is self.optimize
+            else "Check"
+            if step is self.check
+            else repr(step)
+            for step in self.steps
+        ]
+
+        return [
+            ["Filename", "Resource location", "Errors", "Parse"]
+            + step_headers
+            + ["Serialize"]
+        ] + [
+            [filename, resource_location, str(errors)] + [f"{t:.3f}" for t in steps]
+            for filename, resource_location, errors, steps in self.perf_report or []
+        ]
+
     def finalize(self, ctx: Context):
         """Plugin that logs diagnostics and raises an exception if there are errors."""
         try:
@@ -538,4 +596,8 @@ class Mecha:
             if errors := list(self.diagnostics.get_all_errors()):
                 raise DiagnosticErrorSummary(DiagnosticCollection(errors))
         finally:
+            if path := self.output_perf:
+                logger.info('Output perf "%s".', os.path.relpath(path, self.directory))
+                with open(path, "w") as f:
+                    csv.writer(f).writerows(self.format_perf())
             self.log_reported_diagnostics()
