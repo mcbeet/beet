@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.24.0 (2023-02-01)
+### Feature
+* Atlas ([`8703186`](https://github.com/mcbeet/bolt/commit/87031867ab7ce7014f88ef30e129cf1b115f5945))
+
 ## v0.23.0 (2023-01-31)
 ### Feature
 * Add memo and a bunch of tweaks ([`77326b7`](https://github.com/mcbeet/bolt/commit/77326b7056a038743a1f20511ae565cacbc15f10))
