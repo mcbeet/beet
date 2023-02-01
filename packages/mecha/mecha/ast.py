@@ -684,15 +684,15 @@ class AstNbt(AstNode):
             return AstNbtValue(value=String(value))
         elif isinstance(value, ByteArray):
             return AstNbtByteArray(
-                elements=AstChildren(cls.from_value(e) for e in value)
+                elements=AstChildren(cls.from_value(e) for e in value)  # type: ignore
             )
         elif isinstance(value, IntArray):
             return AstNbtIntArray(
-                elements=AstChildren(cls.from_value(e) for e in value)
+                elements=AstChildren(cls.from_value(e) for e in value)  # type: ignore
             )
         elif isinstance(value, LongArray):
             return AstNbtLongArray(
-                elements=AstChildren(cls.from_value(e) for e in value)
+                elements=AstChildren(cls.from_value(e) for e in value)  # type: ignore
             )
         elif isinstance(value, Mapping):
             compound: Mapping[Any, Any] = value
@@ -700,14 +700,14 @@ class AstNbt(AstNode):
                 entries=AstChildren(
                     AstNbtCompoundEntry(
                         key=AstNbtCompoundKey(value=str(k)),
-                        value=cls.from_value(v),
+                        value=cls.from_value(v),  # type: ignore
                     )
                     for k, v in compound.items()
                 )
             )
         elif isinstance(value, Sequence):
             lst: Sequence[Any] = value
-            return AstNbtList(elements=AstChildren(cls.from_value(e) for e in lst))
+            return AstNbtList(elements=AstChildren(cls.from_value(e) for e in lst))  # type: ignore
         else:
             raise ValueError(f"Invalid nbt value of type {type(value)!r}.")
 
