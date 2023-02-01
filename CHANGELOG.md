@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.83.1 (2023-02-01)
+### Fix
+* Remove unnecessary None checks ([`f464d62`](https://github.com/mcbeet/beet/commit/f464d623ff74cf2c8bd87380d1ee9148b04a1ff9))
+
 ## v0.83.0 (2023-02-01)
 ### Feature
 * Add atlases support for mc 1.19.3 ([`f1f0443`](https://github.com/mcbeet/beet/commit/f1f0443ab16566b3184c793371ededc57cc279b9))
