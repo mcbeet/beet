@@ -2,6 +2,13 @@
 
 <!--next-version-placeholder-->
 
+## v0.83.0 (2023-02-01)
+### Feature
+* Add atlases support for mc 1.19.3 ([`f1f0443`](https://github.com/mcbeet/beet/commit/f1f0443ab16566b3184c793371ededc57cc279b9))
+
+### Fix
+* Missing __all__ + spacing ([`7ee59e7`](https://github.com/mcbeet/beet/commit/7ee59e71bdbacbcac929677f6ea813a7372ac77a))
+
 ## v0.82.4 (2023-01-30)
 ### Fix
 * Extract format_directory ([`1716184`](https://github.com/mcbeet/beet/commit/17161849ad4f4179c891740536126134253a0222))
