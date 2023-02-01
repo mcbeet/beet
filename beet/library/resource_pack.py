@@ -24,7 +24,6 @@ __all__ = [
 from copy import deepcopy
 from dataclasses import dataclass
 from typing import Any, ClassVar, Dict, Optional, Tuple, Type
-from contextlib import suppress
 
 try:
     from PIL.Image import Image
@@ -259,53 +258,6 @@ class Particle(JsonFile):
 
     scope: ClassVar[Tuple[str, ...]] = ("particles",)
     extension: ClassVar[str] = ".json"
-
-
-class Atlas(JsonFile):
-    """Class representing an atlas configuration file."""
-
-    scope: ClassVar[Tuple[str, ...]] = ("atlases",)
-    extension: ClassVar[str] = ".json"
-
-    def merge(self, other: "Atlas") -> bool:  # type: ignore
-        values = self.data.setdefault("sources", [])
-
-        for value in other.data.get("sources", []):
-            if value not in values:
-                values.append(deepcopy(value))
-        return True
-    
-    def append(self, other: "Atlas"):
-        """Append values from another atlas."""
-
-        self.merge(other)
-
-    def prepend(self, other: "Atlas"):
-        """Prepend values from another atlas."""
-
-        values = self.data.setdefault("sources", [])
-
-        for value in other.data.get("sources", []):
-            if value not in values:
-                values.insert(0, deepcopy(value))
-
-    def add(self, value: str):
-        """Add an entry."""
-
-        values = self.data.setdefault("sources", [])
-        if value not in values:
-            values.append(value)
-
-    def remove(self, value: str):
-        """Remove an entry."""
-
-        values = self.data.setdefault("sources", [])
-        with suppress(ValueError):
-            values.remove(value)
-
-    @classmethod
-    def default(cls) -> JsonDict:
-        return {"sources": []}
 
 
 class ResourcePackNamespace(Namespace):
