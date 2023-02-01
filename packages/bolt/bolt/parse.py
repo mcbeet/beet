@@ -2218,7 +2218,7 @@ class BuiltinCallRestriction:
         if (
             isinstance(node, AstIdentifier)
             and not isinstance(parent, AstCall)
-            and node.value in self.builtins
+            and node.value in self.builtins  # type: ignore
             and not lexical_scope.has_binding(node.value, search_parents=True)
         ):
             # Reset the underlying token generator so that the identifier can
