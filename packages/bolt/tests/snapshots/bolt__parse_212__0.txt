@@ -1,4 +1,4 @@
-#>ERROR  Expected bracket '[', curly '{', docstring, false, identifier, null or 4 other tokens but got invalid ':'.
+#>ERROR  Expected bracket '[', curly '{', docstring, ellipsis, false, identifier or 5 other tokens but got invalid ':'.
 # line 1, column 5
 #      1 |  with:
 #        :      ^

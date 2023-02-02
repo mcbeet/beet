@@ -25,6 +25,7 @@ function #tag_name
               location: SourceLocation(pos=11, lineno=1, colno=12)
               end_location: SourceLocation(pos=18, lineno=1, colno=19)
               value: 'foo:bar'
+          type_annotation: None
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=19, lineno=2, colno=1)
       end_location: SourceLocation(pos=37, lineno=2, colno=19)

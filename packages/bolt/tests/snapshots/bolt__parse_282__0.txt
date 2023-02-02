@@ -25,6 +25,7 @@ ingredients = [{id: "minecraft:blaze_powder"}, {id: "minecraft:furnace"}]
               location: SourceLocation(pos=5, lineno=1, colno=6)
               end_location: SourceLocation(pos=7, lineno=1, colno=8)
               value: 42
+          type_annotation: None
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=8, lineno=2, colno=1)
       end_location: SourceLocation(pos=81, lineno=2, colno=74)
@@ -79,3 +80,4 @@ ingredients = [{id: "minecraft:blaze_powder"}, {id: "minecraft:furnace"}]
                           location: SourceLocation(pos=60, lineno=2, colno=53)
                           end_location: SourceLocation(pos=79, lineno=2, colno=72)
                           value: 'minecraft:furnace'
+          type_annotation: None

@@ -24,3 +24,4 @@ a = demo:foo/bar
               location: SourceLocation(pos=4, lineno=1, colno=5)
               end_location: SourceLocation(pos=16, lineno=1, colno=17)
               value: 'demo:foo/bar'
+          type_annotation: None

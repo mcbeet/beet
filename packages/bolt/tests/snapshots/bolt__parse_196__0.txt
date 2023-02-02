@@ -25,7 +25,9 @@ def foo(value):
               location: SourceLocation(pos=8, lineno=1, colno=9)
               end_location: SourceLocation(pos=13, lineno=1, colno=14)
               name: 'value'
+              type_annotation: None
               default: None
+          return_type_annotation: None
         <class 'mecha.ast.AstRoot'>
           location: SourceLocation(pos=20, lineno=2, colno=5)
           end_location: SourceLocation(pos=95, lineno=6, colno=18)
@@ -63,6 +65,7 @@ def foo(value):
                               location: SourceLocation(pos=47, lineno=3, colno=18)
                               end_location: SourceLocation(pos=48, lineno=3, colno=19)
                               value: 1
+                          type_annotation: None
             <class 'mecha.ast.AstCommand'>
               location: SourceLocation(pos=53, lineno=4, colno=5)
               end_location: SourceLocation(pos=77, lineno=5, colno=19)
@@ -92,6 +95,7 @@ def foo(value):
                               location: SourceLocation(pos=76, lineno=5, colno=18)
                               end_location: SourceLocation(pos=77, lineno=5, colno=19)
                               value: 0
+                          type_annotation: None
             <class 'mecha.ast.AstCommand'>
               location: SourceLocation(pos=82, lineno=6, colno=5)
               end_location: SourceLocation(pos=95, lineno=6, colno=18)

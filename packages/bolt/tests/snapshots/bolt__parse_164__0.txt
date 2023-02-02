@@ -25,6 +25,7 @@ scoreboard objectives setdisplay f"sidebar.team.{color}" some_score_name
               location: SourceLocation(pos=8, lineno=1, colno=9)
               end_location: SourceLocation(pos=13, lineno=1, colno=14)
               value: 'red'
+          type_annotation: None
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=14, lineno=2, colno=1)
       end_location: SourceLocation(pos=86, lineno=2, colno=73)

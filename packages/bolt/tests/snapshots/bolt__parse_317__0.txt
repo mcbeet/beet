@@ -29,6 +29,7 @@ memo foo=42:
               location: SourceLocation(pos=9, lineno=1, colno=10)
               end_location: SourceLocation(pos=11, lineno=1, colno=12)
               value: 42
+          type_annotation: None
         <class 'mecha.ast.AstRoot'>
           location: SourceLocation(pos=17, lineno=2, colno=5)
           end_location: SourceLocation(pos=27, lineno=2, colno=15)
@@ -72,6 +73,7 @@ memo foo=42:
               location: SourceLocation(pos=37, lineno=3, colno=10)
               end_location: SourceLocation(pos=39, lineno=3, colno=12)
               value: 42
+          type_annotation: None
         <class 'mecha.ast.AstRoot'>
           location: SourceLocation(pos=45, lineno=4, colno=5)
           end_location: SourceLocation(pos=55, lineno=4, colno=15)
@@ -115,6 +117,7 @@ memo foo=42:
               location: SourceLocation(pos=65, lineno=5, colno=10)
               end_location: SourceLocation(pos=67, lineno=5, colno=12)
               value: 42
+          type_annotation: None
         <class 'mecha.ast.AstRoot'>
           location: SourceLocation(pos=73, lineno=6, colno=5)
           end_location: SourceLocation(pos=83, lineno=6, colno=15)

@@ -39,3 +39,4 @@ yo = f"{{{f"{{{f"{{{7:08}}}"}}}"}}}"
                           location: SourceLocation(pos=20, lineno=1, colno=21)
                           end_location: SourceLocation(pos=21, lineno=1, colno=22)
                           value: 7
+          type_annotation: None

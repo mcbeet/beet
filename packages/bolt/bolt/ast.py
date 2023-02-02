@@ -23,6 +23,7 @@ __all__ = [
     "AstTargetAttribute",
     "AstTargetItem",
     "AstAssignment",
+    "AstTypeDeclaration",
     "AstDecorator",
     "AstDocstring",
     "AstFunctionSignature",
@@ -108,6 +109,10 @@ class AstValue(AstExpression):
     """Ast value node."""
 
     value: Any = required_field()
+
+    @property
+    def literal(self) -> str:
+        return "..." if self.value is ... else repr(self.value)
 
 
 @dataclass(frozen=True, slots=True)
@@ -253,6 +258,15 @@ class AstAssignment(AstNode):
     operator: str = required_field()
     target: AstTarget = required_field()
     value: AstExpression = required_field()
+    type_annotation: Optional[AstExpression] = None
+
+
+@dataclass(frozen=True, slots=True)
+class AstTypeDeclaration(AstNode):
+    """Ast type declaration node."""
+
+    identifier: AstTargetIdentifier = required_field()
+    type_annotation: AstExpression = required_field()
 
 
 @dataclass(frozen=True, slots=True)
@@ -277,6 +291,7 @@ class AstFunctionSignatureArgument(AstFunctionSignatureElement):
     """Ast function signature argument node."""
 
     name: str = required_field()
+    type_annotation: Optional[AstExpression] = None
     default: Optional[AstExpression] = None
 
 
@@ -290,6 +305,7 @@ class AstFunctionSignatureVariadicArgument(AstFunctionSignatureElement):
     """Ast function signature variadic argument node."""
 
     name: str = required_field()
+    type_annotation: Optional[AstExpression] = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -302,6 +318,7 @@ class AstFunctionSignatureVariadicKeywordArgument(AstFunctionSignatureElement):
     """Ast function signature variadic keyword argument node."""
 
     name: str = required_field()
+    type_annotation: Optional[AstExpression] = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -311,6 +328,7 @@ class AstFunctionSignature(AstNode):
     decorators: AstChildren[AstDecorator] = AstChildren()
     name: str = required_field()
     arguments: AstChildren[AstFunctionSignatureElement] = AstChildren()
+    return_type_annotation: Optional[AstExpression] = None
 
 
 @dataclass(frozen=True, slots=True)

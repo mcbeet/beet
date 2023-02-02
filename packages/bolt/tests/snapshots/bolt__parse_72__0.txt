@@ -25,6 +25,7 @@ def foo(
               location: SourceLocation(pos=13, lineno=2, colno=5)
               end_location: SourceLocation(pos=16, lineno=2, colno=8)
               name: 'a'
+              type_annotation: None
               default:
                 <class 'bolt.ast.AstValue'>
                   location: SourceLocation(pos=15, lineno=2, colno=7)
@@ -34,6 +35,7 @@ def foo(
               location: SourceLocation(pos=22, lineno=3, colno=5)
               end_location: SourceLocation(pos=25, lineno=3, colno=8)
               name: 'b'
+              type_annotation: None
               default:
                 <class 'bolt.ast.AstIdentifier'>
                   location: SourceLocation(pos=24, lineno=3, colno=7)
@@ -43,6 +45,7 @@ def foo(
               location: SourceLocation(pos=31, lineno=4, colno=5)
               end_location: SourceLocation(pos=38, lineno=4, colno=12)
               name: 'c'
+              type_annotation: None
               default:
                 <class 'bolt.ast.AstExpressionBinary'>
                   location: SourceLocation(pos=33, lineno=4, colno=7)
@@ -58,6 +61,7 @@ def foo(
                       location: SourceLocation(pos=37, lineno=4, colno=11)
                       end_location: SourceLocation(pos=38, lineno=4, colno=12)
                       value: 'b'
+          return_type_annotation: None
         <class 'mecha.ast.AstRoot'>
           location: SourceLocation(pos=47, lineno=6, colno=5)
           end_location: SourceLocation(pos=56, lineno=6, colno=14)

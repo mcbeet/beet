@@ -62,6 +62,7 @@ if score @s tmp matches 42:
                               location: SourceLocation(pos=40, lineno=2, colno=13)
                               end_location: SourceLocation(pos=42, lineno=2, colno=15)
                               value: 42
+                          type_annotation: None
                     <class 'mecha.ast.AstCommand'>
                       location: SourceLocation(pos=47, lineno=3, colno=5)
                       end_location: SourceLocation(pos=107, lineno=5, colno=26)
@@ -128,3 +129,4 @@ if score @s tmp matches 42:
                                           location: SourceLocation(pos=106, lineno=5, colno=25)
                                           end_location: SourceLocation(pos=107, lineno=5, colno=26)
                                           value: 1
+                                  type_annotation: None

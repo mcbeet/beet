@@ -24,3 +24,4 @@ foo = r"\\"
               location: SourceLocation(pos=6, lineno=1, colno=7)
               end_location: SourceLocation(pos=11, lineno=1, colno=12)
               value: '\\\\'
+          type_annotation: None

@@ -25,6 +25,7 @@ at @e[type=entity_type] summon lightning_bolt
               location: SourceLocation(pos=14, lineno=1, colno=15)
               end_location: SourceLocation(pos=23, lineno=1, colno=24)
               value: 'creeper'
+          type_annotation: None
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=24, lineno=2, colno=1)
       end_location: SourceLocation(pos=69, lineno=2, colno=46)

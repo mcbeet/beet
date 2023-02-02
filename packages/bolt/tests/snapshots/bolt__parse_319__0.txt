@@ -28,6 +28,7 @@ print(foo)
               location: SourceLocation(pos=6, lineno=1, colno=7)
               end_location: SourceLocation(pos=9, lineno=1, colno=10)
               value: 123
+          type_annotation: None
     <class 'bolt.ast.AstMemo'>
       location: SourceLocation(pos=10, lineno=2, colno=1)
       end_location: SourceLocation(pos=56, lineno=4, colno=12)
@@ -52,6 +53,7 @@ print(foo)
               location: SourceLocation(pos=23, lineno=2, colno=14)
               end_location: SourceLocation(pos=26, lineno=2, colno=17)
               value: 'bop'
+          type_annotation: None
         <class 'bolt.ast.AstIdentifier'>
           location: SourceLocation(pos=27, lineno=2, colno=18)
           end_location: SourceLocation(pos=30, lineno=2, colno=21)
@@ -80,6 +82,7 @@ print(foo)
                       location: SourceLocation(pos=43, lineno=3, colno=12)
                       end_location: SourceLocation(pos=44, lineno=3, colno=13)
                       value: 8
+                  type_annotation: None
             <class 'mecha.ast.AstCommand'>
               location: SourceLocation(pos=49, lineno=4, colno=5)
               end_location: SourceLocation(pos=56, lineno=4, colno=12)

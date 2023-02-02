@@ -25,6 +25,7 @@ item replace entity @s weapon.offhand from entity @s weapon.mainhand
               location: SourceLocation(pos=9, lineno=1, colno=10)
               end_location: SourceLocation(pos=16, lineno=1, colno=17)
               value: 'thing'
+          type_annotation: None
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=17, lineno=2, colno=1)
       end_location: SourceLocation(pos=85, lineno=2, colno=69)

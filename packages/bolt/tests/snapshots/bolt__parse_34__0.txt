@@ -26,6 +26,7 @@ if a == 1:
               location: SourceLocation(pos=4, lineno=1, colno=5)
               end_location: SourceLocation(pos=5, lineno=1, colno=6)
               value: 1
+          type_annotation: None
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=6, lineno=2, colno=1)
       end_location: SourceLocation(pos=26, lineno=3, colno=10)
@@ -69,3 +70,4 @@ if a == 1:
                       location: SourceLocation(pos=25, lineno=3, colno=9)
                       end_location: SourceLocation(pos=26, lineno=3, colno=10)
                       value: 0
+                  type_annotation: None

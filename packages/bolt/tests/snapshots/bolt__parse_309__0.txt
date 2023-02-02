@@ -4,6 +4,6 @@
 #        :       ^^^
 #      2 |      pass
 # Notes:
-#   - Expected assignment but got invalid ':'.
+#   - Expected bracket '[', curly '{', docstring, ellipsis, false, identifier or 5 other tokens but got newline '\n'.
 memo foo:
     pass

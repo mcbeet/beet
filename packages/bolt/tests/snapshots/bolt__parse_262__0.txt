@@ -50,3 +50,4 @@ class Foo:
                           location: SourceLocation(pos=25, lineno=2, colno=15)
                           end_location: SourceLocation(pos=26, lineno=2, colno=16)
                           value: 2
+                  type_annotation: None

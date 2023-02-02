@@ -42,7 +42,9 @@ class B:
                       location: SourceLocation(pos=19, lineno=2, colno=11)
                       end_location: SourceLocation(pos=23, lineno=2, colno=15)
                       name: 'self'
+                      type_annotation: None
                       default: None
+                  return_type_annotation: None
                 <class 'mecha.ast.AstRoot'>
                   location: SourceLocation(pos=34, lineno=3, colno=9)
                   end_location: SourceLocation(pos=58, lineno=4, colno=19)
@@ -106,7 +108,9 @@ class B:
                       location: SourceLocation(pos=78, lineno=6, colno=11)
                       end_location: SourceLocation(pos=82, lineno=6, colno=15)
                       name: 'self'
+                      type_annotation: None
                       default: None
+                  return_type_annotation: None
                 <class 'mecha.ast.AstRoot'>
                   location: SourceLocation(pos=93, lineno=7, colno=9)
                   end_location: SourceLocation(pos=117, lineno=8, colno=19)

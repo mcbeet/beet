@@ -18,6 +18,7 @@ def f():
           name: 'f'
           arguments:
             <empty>
+          return_type_annotation: None
         <class 'mecha.ast.AstRoot'>
           location: SourceLocation(pos=13, lineno=2, colno=5)
           end_location: SourceLocation(pos=56, lineno=2, colno=48)

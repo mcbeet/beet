@@ -25,6 +25,7 @@ tellraw @p a
               location: SourceLocation(pos=4, lineno=1, colno=5)
               end_location: SourceLocation(pos=6, lineno=1, colno=7)
               value: ''
+          type_annotation: None
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=7, lineno=2, colno=1)
       end_location: SourceLocation(pos=19, lineno=2, colno=13)

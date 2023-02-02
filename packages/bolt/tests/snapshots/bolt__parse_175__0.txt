@@ -25,6 +25,7 @@ if data storage some:path/to/storage (mypath) run say hi
               location: SourceLocation(pos=9, lineno=1, colno=10)
               end_location: SourceLocation(pos=75, lineno=1, colno=76)
               value: 'some.path{my: "compound"}.stuff[42].beep[{my: "subscript"}].boop'
+          type_annotation: None
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=76, lineno=2, colno=1)
       end_location: SourceLocation(pos=132, lineno=2, colno=57)

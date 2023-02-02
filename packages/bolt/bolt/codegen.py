@@ -77,6 +77,7 @@ from .ast import (
     AstTargetItem,
     AstTargetUnpack,
     AstTuple,
+    AstTypeDeclaration,
     AstUnpack,
     AstValue,
 )
@@ -220,9 +221,10 @@ class Accumulator:
         self.lines.append(f"{self.indentation}{code}\n")
 
     @contextmanager
-    def function(self, name: str, *args: str):
+    def function(self, name: str, *args: str, return_type: str = ""):
         """Emit function."""
-        self.statement(f"def {name}({', '.join(args)}):")
+        return_type_annotation = return_type and f" -> {return_type}"
+        self.statement(f"def {name}({', '.join(args)}){return_type_annotation}:")
         with self.block():
             previous_root = self.root_scope
             self.root_scope = False
@@ -564,22 +566,42 @@ class Codegen(Visitor):
             value = yield from visit_single(decorator.expression, required=True)
             decorators.append(value)
 
-        arguments: List[str] = [
-            (f"{arg.name}={acc.missing()}" if arg.default else arg.name)
-            if isinstance(arg, AstFunctionSignatureArgument)
-            else "/"
-            if isinstance(arg, AstFunctionSignaturePositionalMarker)
-            else f"*{arg.name}"
-            if isinstance(arg, AstFunctionSignatureVariadicArgument)
-            else "*"
-            if isinstance(arg, AstFunctionSignatureVariadicMarker)
-            else f"**{arg.name}"
-            if isinstance(arg, AstFunctionSignatureVariadicKeywordArgument)
-            else "_"
-            for arg in signature.arguments
-        ]
+        arguments: List[str] = []
+        for arg in signature.arguments:
+            if isinstance(arg, AstFunctionSignatureArgument):
+                a = arg.name
+                if arg.type_annotation:
+                    value = yield from visit_single(arg.type_annotation, required=True)
+                    a = f"{a}: {value}"
+                if arg.default:
+                    padding = " " * bool(arg.type_annotation)
+                    a = f"{a}{padding}={padding}{acc.missing()}"
+                arguments.append(a)
+                f"{arg.name}={acc.missing()}" if arg.default else arg.name
+            elif isinstance(arg, AstFunctionSignaturePositionalMarker):
+                arguments.append("/")
+            elif isinstance(arg, AstFunctionSignatureVariadicArgument):
+                a = f"*{arg.name}"
+                if arg.type_annotation:
+                    value = yield from visit_single(arg.type_annotation, required=True)
+                    a = f"{a}: {value}"
+                arguments.append(a)
+            elif isinstance(arg, AstFunctionSignatureVariadicMarker):
+                arguments.append("*")
+            elif isinstance(arg, AstFunctionSignatureVariadicKeywordArgument):
+                a = f"**{arg.name}"
+                if arg.type_annotation:
+                    value = yield from visit_single(arg.type_annotation, required=True)
+                    a = f"{a}: {value}"
+                arguments.append(a)
 
-        with acc.function(signature.name, *arguments):
+        return_type = ""
+        if signature.return_type_annotation:
+            return_type = yield from visit_single(
+                signature.return_type_annotation, required=True
+            )
+
+        with acc.function(signature.name, *arguments, return_type=return_type):
             if body.commands and isinstance(body.commands[0], AstDocstring):
                 yield body.commands[0]
                 body = replace(body, commands=AstChildren(body.commands[1:]))
@@ -1033,7 +1055,7 @@ class Codegen(Visitor):
     @rule(AstValue)
     def value(self, node: AstValue, acc: Accumulator) -> Optional[List[str]]:
         result = acc.make_variable()
-        acc.statement(f"{result} = {node.value!r}")
+        acc.statement(f"{result} = {node.literal}")
         return [result]
 
     @rule(AstIdentifier)
@@ -1211,6 +1233,19 @@ class Codegen(Visitor):
     ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
         value = yield from visit_single(node.value, required=True)
         yield from visit_binding(node.target, node.operator, value, acc)
+        if node.type_annotation and isinstance(node.target, AstTargetIdentifier):
+            value = yield from visit_single(node.type_annotation, required=True)
+            acc.statement(f"{node.target.value}: {value}")
+        return []
+
+    @rule(AstTypeDeclaration)
+    def type_declaration(
+        self,
+        node: AstTypeDeclaration,
+        acc: Accumulator,
+    ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
+        value = yield from visit_single(node.type_annotation, required=True)
+        acc.statement(f"{node.identifier.value}: {value}")
         return []
 
     @rule(AstTargetIdentifier)

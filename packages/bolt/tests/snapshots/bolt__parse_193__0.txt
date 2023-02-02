@@ -38,12 +38,15 @@ b = a
               location: SourceLocation(pos=22, lineno=1, colno=23)
               end_location: SourceLocation(pos=26, lineno=1, colno=27)
               name: 'self'
+              type_annotation: None
               default: None
             <class 'bolt.ast.AstFunctionSignatureArgument'>
               location: SourceLocation(pos=28, lineno=1, colno=29)
               end_location: SourceLocation(pos=32, lineno=1, colno=33)
               name: 'name'
+              type_annotation: None
               default: None
+          return_type_annotation: None
         <class 'mecha.ast.AstRoot'>
           location: SourceLocation(pos=39, lineno=2, colno=5)
           end_location: SourceLocation(pos=55, lineno=2, colno=21)
@@ -72,6 +75,7 @@ b = a
                       location: SourceLocation(pos=51, lineno=2, colno=17)
                       end_location: SourceLocation(pos=55, lineno=2, colno=21)
                       value: 'name'
+                  type_annotation: None
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=57, lineno=4, colno=1)
       end_location: SourceLocation(pos=279, lineno=9, colno=16)
@@ -88,12 +92,15 @@ b = a
               location: SourceLocation(pos=81, lineno=4, colno=25)
               end_location: SourceLocation(pos=85, lineno=4, colno=29)
               name: 'self'
+              type_annotation: None
               default: None
             <class 'bolt.ast.AstFunctionSignatureArgument'>
               location: SourceLocation(pos=87, lineno=4, colno=31)
               end_location: SourceLocation(pos=90, lineno=4, colno=34)
               name: 'rhs'
+              type_annotation: None
               default: None
+          return_type_annotation: None
         <class 'mecha.ast.AstRoot'>
           location: SourceLocation(pos=97, lineno=5, colno=5)
           end_location: SourceLocation(pos=279, lineno=9, colno=16)
@@ -291,6 +298,7 @@ b = a
                           location: SourceLocation(pos=365, lineno=11, colno=85)
                           end_location: SourceLocation(pos=384, lineno=11, colno=104)
                           value: 'rebind_global_score'
+          type_annotation: None
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=388, lineno=13, colno=1)
       end_location: SourceLocation(pos=408, lineno=13, colno=21)
@@ -320,6 +328,7 @@ b = a
                   location: SourceLocation(pos=404, lineno=13, colno=17)
                   end_location: SourceLocation(pos=407, lineno=13, colno=20)
                   value: 'a'
+          type_annotation: None
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=409, lineno=14, colno=1)
       end_location: SourceLocation(pos=416, lineno=14, colno=8)
@@ -340,6 +349,7 @@ b = a
               location: SourceLocation(pos=413, lineno=14, colno=5)
               end_location: SourceLocation(pos=416, lineno=14, colno=8)
               value: 123
+          type_annotation: None
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=417, lineno=15, colno=1)
       end_location: SourceLocation(pos=424, lineno=15, colno=8)
@@ -360,6 +370,7 @@ b = a
               location: SourceLocation(pos=421, lineno=15, colno=5)
               end_location: SourceLocation(pos=424, lineno=15, colno=8)
               value: 456
+          type_annotation: None
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=426, lineno=17, colno=1)
       end_location: SourceLocation(pos=446, lineno=17, colno=21)
@@ -389,6 +400,7 @@ b = a
                   location: SourceLocation(pos=442, lineno=17, colno=17)
                   end_location: SourceLocation(pos=445, lineno=17, colno=20)
                   value: 'b'
+          type_annotation: None
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=447, lineno=18, colno=1)
       end_location: SourceLocation(pos=454, lineno=18, colno=8)
@@ -409,6 +421,7 @@ b = a
               location: SourceLocation(pos=451, lineno=18, colno=5)
               end_location: SourceLocation(pos=454, lineno=18, colno=8)
               value: 789
+          type_annotation: None
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=455, lineno=19, colno=1)
       end_location: SourceLocation(pos=460, lineno=19, colno=6)
@@ -429,3 +442,4 @@ b = a
               location: SourceLocation(pos=459, lineno=19, colno=5)
               end_location: SourceLocation(pos=460, lineno=19, colno=6)
               value: 'a'
+          type_annotation: None

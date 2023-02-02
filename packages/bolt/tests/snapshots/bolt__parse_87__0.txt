@@ -20,6 +20,7 @@ def f():
           name: 'f'
           arguments:
             <empty>
+          return_type_annotation: None
         <class 'mecha.ast.AstRoot'>
           location: SourceLocation(pos=13, lineno=2, colno=5)
           end_location: SourceLocation(pos=52, lineno=4, colno=12)
@@ -37,6 +38,7 @@ def f():
                   name: 'g'
                   arguments:
                     <empty>
+                  return_type_annotation: None
                 <class 'mecha.ast.AstRoot'>
                   location: SourceLocation(pos=30, lineno=3, colno=9)
                   end_location: SourceLocation(pos=40, lineno=3, colno=19)
@@ -70,3 +72,4 @@ def f():
                       location: SourceLocation(pos=51, lineno=4, colno=11)
                       end_location: SourceLocation(pos=52, lineno=4, colno=12)
                       value: 0
+                  type_annotation: None

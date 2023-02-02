@@ -37,7 +37,9 @@ class Foo:
                       location: SourceLocation(pos=23, lineno=2, colno=13)
                       end_location: SourceLocation(pos=27, lineno=2, colno=17)
                       name: 'self'
+                      type_annotation: None
                       default: None
+                  return_type_annotation: None
                 <class 'mecha.ast.AstRoot'>
                   location: SourceLocation(pos=38, lineno=3, colno=9)
                   end_location: SourceLocation(pos=42, lineno=3, colno=13)

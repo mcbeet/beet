@@ -41,6 +41,7 @@ print(Foo.bar)
                       location: SourceLocation(pos=21, lineno=2, colno=11)
                       end_location: SourceLocation(pos=22, lineno=2, colno=12)
                       value: 2
+                  type_annotation: None
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=23, lineno=3, colno=1)
       end_location: SourceLocation(pos=37, lineno=3, colno=15)

@@ -23,6 +23,7 @@ def f():
           name: 'testing_decorator'
           arguments:
             <empty>
+          return_type_annotation: None
         <class 'mecha.ast.AstRoot'>
           location: SourceLocation(pos=29, lineno=2, colno=5)
           end_location: SourceLocation(pos=33, lineno=2, colno=9)
@@ -70,6 +71,7 @@ def f():
           name: 'f'
           arguments:
             <empty>
+          return_type_annotation: None
         <class 'mecha.ast.AstRoot'>
           location: SourceLocation(pos=89, lineno=7, colno=5)
           end_location: SourceLocation(pos=93, lineno=7, colno=9)

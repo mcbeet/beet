@@ -25,6 +25,7 @@ if block ^ f"^{a}" ^ #planks say 42
               location: SourceLocation(pos=4, lineno=1, colno=5)
               end_location: SourceLocation(pos=5, lineno=1, colno=6)
               value: 1
+          type_annotation: None
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=6, lineno=2, colno=1)
       end_location: SourceLocation(pos=41, lineno=2, colno=36)

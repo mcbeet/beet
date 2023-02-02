@@ -25,6 +25,7 @@ if score @s tmp matches (x, None) say wat
               location: SourceLocation(pos=4, lineno=1, colno=5)
               end_location: SourceLocation(pos=5, lineno=1, colno=6)
               value: 8
+          type_annotation: None
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=6, lineno=2, colno=1)
       end_location: SourceLocation(pos=47, lineno=2, colno=42)

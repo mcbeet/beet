@@ -28,3 +28,4 @@ foo = """
               location: SourceLocation(pos=6, lineno=1, colno=7)
               end_location: SourceLocation(pos=55, lineno=5, colno=4)
               value: '\n    This is a docstring.\n\n    Hello world\n'
+          type_annotation: None

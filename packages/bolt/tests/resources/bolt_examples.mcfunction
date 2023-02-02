@@ -1212,3 +1212,27 @@ foo\n\nbar
 r"""
 foo\n\nbar
 """
+###
+a = ...
+###
+def f() -> int:
+    pass
+###
+def f(a: str, /, b: int, c: list[int] | None = None, *d: float, **kwargs: object) -> tuple[int, ...]:
+    ...
+###
+def f(a: int, b: int = f(a - 1), *c: f) -> int:
+    return a + b
+###
+foo: int
+###
+foo: int = 123
+###
+foo: int
+foo = 123
+###
+foo: doesnotexist = 123
+###
+class A:
+    foo: int
+    bar: str = "hello"

@@ -28,6 +28,7 @@ foo = "hello"
               location: SourceLocation(pos=6, lineno=1, colno=7)
               end_location: SourceLocation(pos=13, lineno=1, colno=14)
               value: 'hello'
+          type_annotation: None
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=14, lineno=2, colno=1)
       end_location: SourceLocation(pos=50, lineno=5, colno=2)

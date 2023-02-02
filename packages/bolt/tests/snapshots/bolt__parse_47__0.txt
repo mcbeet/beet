@@ -37,3 +37,4 @@ foo = (
                   location: SourceLocation(pos=24, lineno=3, colno=7)
                   end_location: SourceLocation(pos=29, lineno=3, colno=12)
                   value: 'def'
+          type_annotation: None

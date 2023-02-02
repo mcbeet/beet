@@ -38,6 +38,7 @@ give @s bow{**bow_data}
                       location: SourceLocation(pos=29, lineno=1, colno=30)
                       end_location: SourceLocation(pos=30, lineno=1, colno=31)
                       value: 7
+          type_annotation: None
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=32, lineno=2, colno=1)
       end_location: SourceLocation(pos=55, lineno=2, colno=24)

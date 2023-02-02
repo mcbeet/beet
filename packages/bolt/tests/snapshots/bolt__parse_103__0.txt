@@ -32,6 +32,7 @@ as @a at @s if block ~ ~-1 ~ #wool give @s stone{
               location: SourceLocation(pos=6, lineno=1, colno=7)
               end_location: SourceLocation(pos=41, lineno=1, colno=42)
               value: '[{"text": "Hello", "bold": true}]'
+          type_annotation: None
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=42, lineno=2, colno=1)
       end_location: SourceLocation(pos=210, lineno=9, colno=2)

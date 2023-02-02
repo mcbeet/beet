@@ -26,3 +26,4 @@ yo = f"\\"
               fmt: '\\'
               values:
                 <empty>
+          type_annotation: None

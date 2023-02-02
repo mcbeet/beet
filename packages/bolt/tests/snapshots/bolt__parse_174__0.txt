@@ -25,6 +25,7 @@ if data storage some:path/to/storage f'some.{mykey}.path{{my: "compound"}}' run 
               location: SourceLocation(pos=8, lineno=1, colno=9)
               end_location: SourceLocation(pos=13, lineno=1, colno=14)
               value: 'aaa'
+          type_annotation: None
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=14, lineno=2, colno=1)
       end_location: SourceLocation(pos=100, lineno=2, colno=87)

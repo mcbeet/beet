@@ -21,6 +21,7 @@ def f(a=1, /, b=2, *args):
               location: SourceLocation(pos=6, lineno=1, colno=7)
               end_location: SourceLocation(pos=9, lineno=1, colno=10)
               name: 'a'
+              type_annotation: None
               default:
                 <class 'bolt.ast.AstValue'>
                   location: SourceLocation(pos=8, lineno=1, colno=9)
@@ -33,6 +34,7 @@ def f(a=1, /, b=2, *args):
               location: SourceLocation(pos=14, lineno=1, colno=15)
               end_location: SourceLocation(pos=17, lineno=1, colno=18)
               name: 'b'
+              type_annotation: None
               default:
                 <class 'bolt.ast.AstValue'>
                   location: SourceLocation(pos=16, lineno=1, colno=17)
@@ -42,6 +44,8 @@ def f(a=1, /, b=2, *args):
               location: SourceLocation(pos=19, lineno=1, colno=20)
               end_location: SourceLocation(pos=24, lineno=1, colno=25)
               name: 'args'
+              type_annotation: None
+          return_type_annotation: None
         <class 'mecha.ast.AstRoot'>
           location: SourceLocation(pos=31, lineno=2, colno=5)
           end_location: SourceLocation(pos=35, lineno=2, colno=9)

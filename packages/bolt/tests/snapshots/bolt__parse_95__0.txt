@@ -154,3 +154,4 @@ my_predicate = {
                                               location: SourceLocation(pos=229, lineno=10, colno=18)
                                               end_location: SourceLocation(pos=230, lineno=10, colno=19)
                                               value: 1
+          type_annotation: None

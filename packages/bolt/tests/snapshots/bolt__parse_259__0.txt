@@ -37,12 +37,15 @@ class Foo:
                       location: SourceLocation(pos=28, lineno=2, colno=18)
                       end_location: SourceLocation(pos=32, lineno=2, colno=22)
                       name: 'self'
+                      type_annotation: None
                       default: None
                     <class 'bolt.ast.AstFunctionSignatureArgument'>
                       location: SourceLocation(pos=34, lineno=2, colno=24)
                       end_location: SourceLocation(pos=38, lineno=2, colno=28)
                       name: 'name'
+                      type_annotation: None
                       default: None
+                  return_type_annotation: None
                 <class 'mecha.ast.AstRoot'>
                   location: SourceLocation(pos=49, lineno=3, colno=9)
                   end_location: SourceLocation(pos=65, lineno=3, colno=25)
@@ -71,3 +74,4 @@ class Foo:
                               location: SourceLocation(pos=61, lineno=3, colno=21)
                               end_location: SourceLocation(pos=65, lineno=3, colno=25)
                               value: 'name'
+                          type_annotation: None

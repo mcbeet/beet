@@ -19,6 +19,7 @@ foo()
           name: 'foo'
           arguments:
             <empty>
+          return_type_annotation: None
         <class 'mecha.ast.AstRoot'>
           location: SourceLocation(pos=15, lineno=2, colno=5)
           end_location: SourceLocation(pos=24, lineno=2, colno=14)

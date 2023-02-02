@@ -144,6 +144,7 @@ from .ast import (
     AstTargetItem,
     AstTargetUnpack,
     AstTuple,
+    AstTypeDeclaration,
     AstUnpack,
     AstValue,
 )
@@ -333,6 +334,7 @@ def get_bolt_parsers(
         "bolt:import_name": TrailingCommaParser(parse_import_name),
         "bolt:global_name": parse_name_list,
         "bolt:nonlocal_name": parse_name_list,
+        "bolt:type_annotation": delegate("bolt:expression"),
         "bolt:expression": delegate("bolt:disjunction"),
         "bolt:disjunction": BinaryParser(
             operators=[r"\bor\b"],
@@ -765,14 +767,44 @@ class AssignmentStatementParser:
         assignment_pattern = r"=(?!=)|\+=|-=|\*=|//=|/=|%=|&=|\|=|\^=|<<=|>>=|\*\*="
 
         if isinstance(node, AstTarget):
+            type_annotation = None
+            identifier = None
+            if isinstance(node, AstTargetIdentifier):
+                with stream.syntax(colon=r":"):
+                    if stream.get("colon"):
+                        type_annotation = delegate("bolt:type_annotation", stream)
+                        identifier = node
+                        assignment_pattern = r"=(?!=)"
+
             if self.binding_only:
                 assignment_pattern = r"=(?!=)"
             with stream.syntax(assignment=assignment_pattern):
-                op = stream.expect("assignment")
+                if identifier and type_annotation:
+                    op = stream.get("assignment")
+                    if not op:
+                        lexical_scope = get_stream_lexical_scope(stream)
+                        for i, (_, node) in reversed(
+                            list(enumerate(lexical_scope.pending_bindings))
+                        ):
+                            if node is identifier:
+                                del lexical_scope.pending_bindings[i]
+                                break
+                        node = AstTypeDeclaration(
+                            identifier=identifier,
+                            type_annotation=type_annotation,
+                        )
+                        return set_location(node, identifier, type_annotation)
+                else:
+                    op = stream.expect("assignment")
 
             expression = delegate("bolt:expression", stream)
 
-            node = AstAssignment(operator=op.value, target=node, value=expression)
+            node = AstAssignment(
+                operator=op.value,
+                target=node,
+                value=expression,
+                type_annotation=type_annotation,
+            )
             node = set_location(node, node.target, node.value)
 
         elif isinstance(node, (AstAttribute, AstLookup)):
@@ -1044,6 +1076,7 @@ def parse_deferred_root(stream: TokenStream) -> AstDeferredRoot:
 def parse_function_signature(stream: TokenStream) -> AstFunctionSignature:
     """Parse function signature."""
     lexical_scope = get_stream_lexical_scope(stream)
+    type_annotation_scope = lexical_scope.fork()
 
     arguments: List[AstFunctionSignatureElement] = []
 
@@ -1060,6 +1093,8 @@ def parse_function_signature(stream: TokenStream) -> AstFunctionSignature:
         separator=r"/",
         kwargs=r"\*\*",
         args=r"\*",
+        colon=r":",
+        arrow=r"->",
         identifier=IDENTIFIER_PATTERN,
     ):
         identifier = stream.expect("identifier")
@@ -1070,7 +1105,7 @@ def parse_function_signature(stream: TokenStream) -> AstFunctionSignature:
 
         deferred_scope = lexical_scope.deferred(FunctionScope)
 
-        with stream.ignore("newline"), stream.provide(lexical_scope=deferred_scope):
+        with stream.ignore("newline"):
             for token in stream.peek_until(("brace", ")")):
                 if encountered_variadic_keyword:
                     exc = InvalidSyntax(
@@ -1088,10 +1123,16 @@ def parse_function_signature(stream: TokenStream) -> AstFunctionSignature:
                 if name:
                     expect_named_argument = False
 
+                    type_annotation = None
+                    if stream.get("colon"):
+                        with stream.provide(lexical_scope=type_annotation_scope):
+                            type_annotation = delegate("bolt:type_annotation", stream)
+
                     default = None
                     if stream.get("equal"):
                         encountered_default = True
-                        default = delegate("bolt:expression", stream)
+                        with stream.provide(lexical_scope=deferred_scope):
+                            default = delegate("bolt:expression", stream)
                     elif encountered_default:
                         exc = InvalidSyntax(
                             "Argument without default can not appear after arguments with default values."
@@ -1101,6 +1142,7 @@ def parse_function_signature(stream: TokenStream) -> AstFunctionSignature:
                     argument = AstFunctionSignatureArgument(
                         name=name.value,
                         default=default,
+                        type_annotation=type_annotation,
                     )
                     argument = set_location(argument, name, stream.current)
                     deferred_scope.bind_variable(argument.name, argument)
@@ -1129,8 +1171,15 @@ def parse_function_signature(stream: TokenStream) -> AstFunctionSignature:
                 elif kwargs:
                     encountered_variadic_keyword = True
                     name = stream.expect("identifier")
+
+                    type_annotation = None
+                    if stream.get("colon"):
+                        with stream.provide(lexical_scope=type_annotation_scope):
+                            type_annotation = delegate("bolt:type_annotation", stream)
+
                     argument = AstFunctionSignatureVariadicKeywordArgument(
-                        name=name.value
+                        name=name.value,
+                        type_annotation=type_annotation,
                     )
                     argument = set_location(argument, kwargs, name)
                     deferred_scope.bind_variable(argument.name, argument)
@@ -1142,7 +1191,17 @@ def parse_function_signature(stream: TokenStream) -> AstFunctionSignature:
                         raise set_location(exc, args)
                     encountered_variadic = True
                     if name := stream.get("identifier"):
-                        argument = AstFunctionSignatureVariadicArgument(name=name.value)
+                        type_annotation = None
+                        if stream.get("colon"):
+                            with stream.provide(lexical_scope=type_annotation_scope):
+                                type_annotation = delegate(
+                                    "bolt:type_annotation", stream
+                                )
+
+                        argument = AstFunctionSignatureVariadicArgument(
+                            name=name.value,
+                            type_annotation=type_annotation,
+                        )
                         argument = set_location(argument, args, name)
                         deferred_scope.bind_variable(argument.name, argument)
                         arguments.append(argument)
@@ -1155,15 +1214,24 @@ def parse_function_signature(stream: TokenStream) -> AstFunctionSignature:
                     stream.expect(("brace", ")"))
                     break
 
-        if expect_named_argument:
-            for argument in arguments:
-                if isinstance(argument, AstFunctionSignatureVariadicMarker):
-                    exc = InvalidSyntax(
-                        "Expected at least one named argument after bare variadic marker."
-                    )
-                    raise set_location(exc, argument)
+            if expect_named_argument:
+                for argument in arguments:
+                    if isinstance(argument, AstFunctionSignatureVariadicMarker):
+                        exc = InvalidSyntax(
+                            "Expected at least one named argument after bare variadic marker."
+                        )
+                        raise set_location(exc, argument)
 
-    node = replace(node, arguments=AstChildren(arguments))
+            return_type_annotation = None
+            if stream.get("arrow"):
+                with stream.provide(lexical_scope=type_annotation_scope):
+                    return_type_annotation = delegate("bolt:type_annotation", stream)
+
+    node = replace(
+        node,
+        arguments=AstChildren(arguments),
+        return_type_annotation=return_type_annotation,
+    )
     return set_location(node, node, stream.current)
 
 
@@ -2292,6 +2360,7 @@ class LiteralParser:
             curly=r"\{|\}",
             bracket=r"\[|\]",
             comma=r",",
+            ellipsis=r"\.\.\.",
             true=TRUE_PATTERN,
             false=FALSE_PATTERN,
             null=NULL_PATTERN,
@@ -2308,6 +2377,7 @@ class LiteralParser:
             (
                 curly,
                 bracket,
+                ellipsis,
                 true,
                 false,
                 null,
@@ -2318,6 +2388,7 @@ class LiteralParser:
             ) = stream.expect(
                 ("curly", "{"),
                 ("bracket", "["),
+                "ellipsis",
                 "true",
                 "false",
                 "null",
@@ -2373,7 +2444,9 @@ class LiteralParser:
                 node = AstList(items=AstChildren(elements))
                 return set_location(node, bracket, stream.current)
 
-            if true:
+            if ellipsis:
+                value = ...
+            elif true:
                 value = True
             elif false:
                 value = False

@@ -43,3 +43,4 @@ for foo in "foo":
                       location: SourceLocation(pos=28, lineno=2, colno=11)
                       end_location: SourceLocation(pos=31, lineno=2, colno=14)
                       value: 'foo'
+                  type_annotation: None

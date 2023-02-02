@@ -33,3 +33,4 @@ a, b = "ab"
               location: SourceLocation(pos=7, lineno=1, colno=8)
               end_location: SourceLocation(pos=11, lineno=1, colno=12)
               value: 'ab'
+          type_annotation: None

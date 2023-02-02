@@ -43,6 +43,7 @@ numbers[3:] = []
                       location: SourceLocation(pos=21, lineno=1, colno=22)
                       end_location: SourceLocation(pos=23, lineno=1, colno=24)
                       value: 12
+          type_annotation: None
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=26, lineno=2, colno=1)
       end_location: SourceLocation(pos=42, lineno=2, colno=17)
@@ -78,3 +79,4 @@ numbers[3:] = []
               end_location: SourceLocation(pos=42, lineno=2, colno=17)
               items:
                 <empty>
+          type_annotation: None

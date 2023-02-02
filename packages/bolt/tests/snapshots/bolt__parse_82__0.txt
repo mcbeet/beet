@@ -23,6 +23,7 @@ thing = bar()
           name: 'foo'
           arguments:
             <empty>
+          return_type_annotation: None
         <class 'mecha.ast.AstRoot'>
           location: SourceLocation(pos=15, lineno=2, colno=5)
           end_location: SourceLocation(pos=46, lineno=3, colno=19)
@@ -67,6 +68,7 @@ thing = bar()
                           value: 'bar'
                       arguments:
                         <empty>
+                  type_annotation: None
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=47, lineno=4, colno=1)
       end_location: SourceLocation(pos=93, lineno=6, colno=19)
@@ -80,6 +82,7 @@ thing = bar()
           name: 'bar'
           arguments:
             <empty>
+          return_type_annotation: None
         <class 'mecha.ast.AstRoot'>
           location: SourceLocation(pos=62, lineno=5, colno=5)
           end_location: SourceLocation(pos=93, lineno=6, colno=19)
@@ -124,6 +127,7 @@ thing = bar()
                           value: 'foo'
                       arguments:
                         <empty>
+                  type_annotation: None
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=94, lineno=7, colno=1)
       end_location: SourceLocation(pos=107, lineno=7, colno=14)
@@ -150,3 +154,4 @@ thing = bar()
                   value: 'bar'
               arguments:
                 <empty>
+          type_annotation: None

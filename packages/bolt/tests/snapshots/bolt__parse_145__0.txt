@@ -36,3 +36,4 @@ a = [][]
                   start: None
                   stop: None
                   step: None
+          type_annotation: None

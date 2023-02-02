@@ -39,6 +39,7 @@ give @s stone{CanPlaceOn: [*stone_can_place_on], **custom_model_data}
                       location: SourceLocation(pos=38, lineno=1, colno=39)
                       end_location: SourceLocation(pos=39, lineno=1, colno=40)
                       value: 7
+          type_annotation: None
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=41, lineno=2, colno=1)
       end_location: SourceLocation(pos=80, lineno=2, colno=40)
@@ -63,6 +64,7 @@ give @s stone{CanPlaceOn: [*stone_can_place_on], **custom_model_data}
                   location: SourceLocation(pos=63, lineno=2, colno=23)
                   end_location: SourceLocation(pos=79, lineno=2, colno=39)
                   value: 'minecraft:dirt'
+          type_annotation: None
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=81, lineno=3, colno=1)
       end_location: SourceLocation(pos=150, lineno=3, colno=70)

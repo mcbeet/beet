@@ -30,6 +30,7 @@ say math.ceil(0.1)
               location: SourceLocation(pos=7, lineno=1, colno=8)
               end_location: SourceLocation(pos=8, lineno=1, colno=9)
               value: 0
+          type_annotation: None
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=9, lineno=2, colno=1)
       end_location: SourceLocation(pos=17, lineno=2, colno=9)
@@ -59,6 +60,7 @@ say math.ceil(0.1)
           name: 'wat'
           arguments:
             <empty>
+          return_type_annotation: None
         <class 'mecha.ast.AstRoot'>
           location: SourceLocation(pos=33, lineno=4, colno=5)
           end_location: SourceLocation(pos=60, lineno=5, colno=16)
