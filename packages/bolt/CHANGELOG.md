@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.26.0 (2023-02-02)
+### Feature
+* Add type annotations ([`a3970f1`](https://github.com/mcbeet/bolt/commit/a3970f1a61668c5cf772ad24eacd7a835aa1824e))
+
 ## v0.25.0 (2023-02-01)
 ### Feature
 * Add docstrings ([`c1c1488`](https://github.com/mcbeet/bolt/commit/c1c1488d60d58abc2a66d8cd02b671831bbf4473))
