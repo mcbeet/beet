@@ -119,6 +119,8 @@ execute if score @s thingy matches 29..56 run function demo:ref/bar/tree_57/29_5
 say 123
 say (((1, 2), (1, 2)), ((1, 2), (1, 2)))
 say wat
+say 3
+say 2
 ```
 
 `@function demo:ref/bar/tree_42/0_20`
@@ -902,6 +904,8 @@ execute if score @s thingy matches 29..56 run function demo:bar/tree_57/29_56
 say 123
 say (((1, 2), (1, 2)), ((1, 2), (1, 2)))
 say wat
+say 3
+say 2
 ```
 
 `@function demo:bar/tree_42/0_1`

@@ -1236,3 +1236,10 @@ foo: doesnotexist = 123
 class A:
     foo: int
     bar: str = "hello"
+###
+a = 1
+b = 2
+memo a, b:
+    say (a + b)
+    memo b:
+        say b

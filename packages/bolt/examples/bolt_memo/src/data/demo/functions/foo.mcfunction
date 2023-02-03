@@ -16,3 +16,10 @@ memo a, a:
     say a
 
 say wat
+
+a = 1
+b = 2
+memo a, b:
+    say (a + b)
+    memo b:
+        say b
