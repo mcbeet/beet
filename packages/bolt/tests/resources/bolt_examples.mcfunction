@@ -1273,3 +1273,15 @@ memo thing:
     thing += 1
 thing *= 7
 say thing
+###
+for i in range(10):
+    def f():
+        break
+###
+for i in range(10):
+    memo:
+        break
+###
+def f():
+    memo:
+        return 9999

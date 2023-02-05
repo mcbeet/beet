@@ -1,5 +1,5 @@
 if True:
-#>ERROR  Can only use "yield" in functions.
+#>ERROR  Statement "yield" is not allowed in this context.
 # line 2, column 5
 #      1 |  if True:
 #      2 |      yield

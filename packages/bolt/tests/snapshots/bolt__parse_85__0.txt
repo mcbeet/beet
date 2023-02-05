@@ -1,4 +1,4 @@
-#>ERROR  Can only use "return" in functions.
+#>ERROR  Statement "return" is not allowed in this context.
 # line 1, column 1
 #      1 |  return "hello"
 #        :  ^^^^^^^^^^^^^^

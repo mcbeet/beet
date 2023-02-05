@@ -16,6 +16,7 @@ __all__ = [
     "AssignmentStatementParser",
     "EscapeAnalysisParser",
     "EscapeAnalysisResolver",
+    "MemoRootParser",
     "MemoHandler",
     "parse_decorator",
     "AssignmentTargetParser",
@@ -320,7 +321,7 @@ def get_bolt_parsers(
                 ]
             )
         ),
-        "bolt:memo_root": EscapeAnalysisParser(delegate("nested_root")),
+        "bolt:memo_root": MemoRootParser(EscapeAnalysisParser(delegate("nested_root"))),
         "bolt:del_target": parse_del_target,
         "bolt:interpolation": BuiltinCallRestriction(
             PrimaryParser(delegate("bolt:identifier"), truncate=True),
@@ -608,6 +609,7 @@ def create_bolt_root_parser(parser: Parser, macro_handler: "MacroHandler"):
     parser = LexicalScopeConstraint(
         parser,
         type=FunctionScope,
+        flags={"memo": False},
         command_identifiers={
             "return",
             "return:value",
@@ -950,6 +952,17 @@ class EscapeAnalysisResolver:
             node = replace(node, commands=AstChildren(commands))
 
         return node
+
+
+@dataclass
+class MemoRootParser:
+    """Parse memo root."""
+
+    parser: Parser
+
+    def __call__(self, stream: TokenStream) -> Any:
+        with stream.provide(loop=False, memo=True):
+            return self.parser(stream)
 
 
 @dataclass
@@ -2021,6 +2034,8 @@ class DeferredRootBacktracker:
                 self.macro_handler.flush_pending_macros(stream)
 
                 deferred_stream = deferred_root.stream
+                deferred_stream.data["loop"] = False
+                deferred_stream.data["memo"] = False
                 deferred_stream.data["local_spec"] = False
                 deferred_stream.data["spec"] = get_stream_spec(stream)
                 deferred_stream.data["macro_scope"] = get_stream_macro_scope(stream)
@@ -2058,20 +2073,26 @@ class LexicalScopeConstraint:
 
     parser: Parser
     type: Type[LexicalScope]
+    flags: Dict[str, bool]
     command_identifiers: Set[str]
 
     def __call__(self, stream: TokenStream) -> AstRoot:
         node = self.parser(stream)
 
         lexical_scope = get_stream_lexical_scope(stream)
-        if isinstance(lexical_scope, self.type):
+        if isinstance(lexical_scope, self.type) and all(
+            stream.data.get(flag, False) == enabled
+            for flag, enabled in self.flags.items()
+        ):
             return node
 
         if isinstance(node, AstRoot):
             for command in node.commands:
                 if command.identifier in self.command_identifiers:
                     name, _, _ = command.identifier.partition(":")
-                    exc = InvalidSyntax(f'Can only use "{name}" in functions.')
+                    exc = InvalidSyntax(
+                        f'Statement "{name}" is not allowed in this context.'
+                    )
                     raise set_location(exc, command)
 
         return node

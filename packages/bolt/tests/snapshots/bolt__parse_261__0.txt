@@ -1,6 +1,6 @@
 def f():
     class Foo:
-#>ERROR  Can only use "return" in functions.
+#>ERROR  Statement "return" is not allowed in this context.
 # line 3, column 9
 #      2 |      class Foo:
 #      3 |          return

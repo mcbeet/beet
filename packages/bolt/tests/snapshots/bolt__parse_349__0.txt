@@ -1,0 +1,8 @@
+def f():
+    memo:
+#>ERROR  Statement "return" is not allowed in this context.
+# line 3, column 9
+#      2 |      memo:
+#      3 |          return 9999
+#        :          ^^^^^^^^^^^
+        return 9999
