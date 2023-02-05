@@ -1243,3 +1243,33 @@ memo a, b:
     say (a + b)
     memo b:
         say b
+###
+uwu = 0
+def f():
+    global uwu
+    memo:
+        uwu = 9
+###
+def fib(n):
+    if n <= 1:
+        return n
+    memo n:
+        result = fib(n - 1) + fib(n - 2)
+    return result
+###
+thing = 9
+memo thing:
+    thing += 1
+say thing
+###
+thing = 9
+memo thing:
+    thing += 1
+thing = 7
+say thing
+###
+thing = 9
+memo thing:
+    thing += 1
+thing *= 7
+say thing

@@ -9,7 +9,6 @@ __all__ = [
 
 
 import logging
-import pickle
 from contextlib import contextmanager
 from dataclasses import dataclass
 from pathlib import Path
@@ -45,6 +44,7 @@ from mecha.contrib.nesting import InplaceNestingPredicate
 
 from .ast import AstMemo, AstMemoResult
 from .emit import CommandEmitter
+from .utils import dump_pickle, load_pickle
 
 logger = logging.getLogger("memo")
 
@@ -124,6 +124,12 @@ class MemoInvocation:
         load=lambda p: DataPack(path=p),
         dump=lambda p, pack: pack.save(path=p),
         default=DataPack,
+    )
+
+    bindings: ClassVar[MemoState[Tuple[Any, ...]]] = MemoState(
+        load=load_pickle,
+        dump=dump_pickle,
+        default=tuple,
     )
 
     def __getstate__(self) -> Tuple["MemoStorage", int, bool, int]:
@@ -267,18 +273,16 @@ class MemoRegistry(Container[str, MemoFileIndex]):
 
         index_path = self.cache.get_path(f"{key}-memo")
         if index_path.is_file():
-            with index_path.open("rb") as f:
-                if isinstance(memo_file_index := pickle.load(f), MemoFileIndex):
-                    memo_file_index.path = index_path
-                    return memo_file_index
+            if isinstance(memo_file_index := load_pickle(index_path), MemoFileIndex):
+                memo_file_index.path = index_path
+                return memo_file_index
 
         return MemoFileIndex(key, index_path)
 
     def flush(self):
         for memo_file_index in self.values():
             if memo_file_index.path:
-                with memo_file_index.path.open("wb") as f:
-                    pickle.dump(memo_file_index, f, protocol=pickle.HIGHEST_PROTOCOL)
+                dump_pickle(memo_file_index.path, memo_file_index)
 
     @property
     def gc_cutoff(self) -> int:

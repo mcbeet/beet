@@ -1,0 +1,70 @@
+_bolt_lineno = [1, 10, 20, 26, 30], [1, 2, 3, 4, 5]
+_bolt_memo_storage_bdd640fb06671ad11c80317fa3b1799d = None
+_bolt_helper_get_rebind = _bolt_runtime.helpers['get_rebind']
+_bolt_helper_children = _bolt_runtime.helpers['children']
+_bolt_helper_interpolate_message = _bolt_runtime.helpers['interpolate_message']
+_bolt_helper_replace = _bolt_runtime.helpers['replace']
+with _bolt_runtime.scope() as _bolt_var5:
+    _bolt_var0 = 9
+    thing = _bolt_var0
+    _bolt_var1 = thing
+    if _bolt_memo_storage_bdd640fb06671ad11c80317fa3b1799d is None:
+        _bolt_memo_storage_bdd640fb06671ad11c80317fa3b1799d = _bolt_runtime.memo.registry[__file__][_bolt_refs[0], 0]
+    _bolt_memo_invocation_bdd640fb06671ad11c80317fa3b1799d = _bolt_memo_storage_bdd640fb06671ad11c80317fa3b1799d[(_bolt_var1,)]
+    if _bolt_memo_invocation_bdd640fb06671ad11c80317fa3b1799d.cached:
+        _bolt_runtime.memo.restore(_bolt_runtime, _bolt_memo_invocation_bdd640fb06671ad11c80317fa3b1799d)
+        (thing,) = _bolt_memo_invocation_bdd640fb06671ad11c80317fa3b1799d.bindings
+    else:
+        with _bolt_runtime.memo.record(_bolt_runtime, _bolt_memo_invocation_bdd640fb06671ad11c80317fa3b1799d, __name__):
+            _bolt_var2 = 1
+            _bolt_rebind = _bolt_helper_get_rebind(thing)
+            thing += _bolt_var2
+            if _bolt_rebind is not None:
+                thing = _bolt_rebind(thing)
+        _bolt_memo_invocation_bdd640fb06671ad11c80317fa3b1799d.bindings = (thing,)
+    _bolt_var3 = 7
+    _bolt_rebind = _bolt_helper_get_rebind(thing)
+    thing = _bolt_var3
+    if _bolt_rebind is not None:
+        thing = _bolt_rebind(thing)
+    _bolt_var4 = thing
+    _bolt_var4 = _bolt_helper_interpolate_message(_bolt_var4, _bolt_refs[1])
+    _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[2], arguments=_bolt_helper_children([_bolt_var4])))
+_bolt_var6 = _bolt_helper_replace(_bolt_refs[3], commands=_bolt_helper_children(_bolt_var5))
+---
+output = _bolt_var6
+---
+_bolt_refs[0]
+<class 'bolt.ast.AstMemo'>
+  location: SourceLocation(pos=10, lineno=2, colno=1)
+  end_location: SourceLocation(pos=36, lineno=3, colno=15)
+  identifier: 'memo:0'
+  arguments:
+    <class 'bolt.ast.AstIdentifier'>
+    <class 'bolt.ast.AstEscapeRoot'>
+  persistent_id: UUID('bdd640fb-0667-1ad1-1c80-317fa3b1799d')
+_bolt_refs[1]
+<class 'bolt.ast.AstInterpolation'>
+  location: SourceLocation(pos=51, lineno=5, colno=5)
+  end_location: SourceLocation(pos=56, lineno=5, colno=10)
+  prefix: None
+  unpack: None
+  converter: 'message'
+  value:
+    <class 'bolt.ast.AstIdentifier'>
+_bolt_refs[2]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=47, lineno=5, colno=1)
+  end_location: SourceLocation(pos=56, lineno=5, colno=10)
+  identifier: 'say:message'
+  arguments:
+    <class 'bolt.ast.AstInterpolation'>
+_bolt_refs[3]
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=57, lineno=6, colno=1)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+    <class 'bolt.ast.AstMemo'>
+    <class 'mecha.ast.AstCommand'>
+    <class 'mecha.ast.AstCommand'>

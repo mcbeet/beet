@@ -123,6 +123,63 @@ say 3
 say 2
 ```
 
+`@function demo:ref/vars`
+
+```mcfunction
+say 5
+say 10
+say fib(0) = 0
+say fib(1) = 1
+say fib(2) = 1
+say fib(3) = 2
+say fib(4) = 3
+say fib(5) = 5
+say fib(6) = 8
+say fib(7) = 13
+say fib(8) = 21
+say fib(9) = 34
+say fib(10) = 55
+say fib(11) = 89
+say fib(12) = 144
+say fib(13) = 233
+say fib(14) = 377
+say fib(15) = 610
+say fib(16) = 987
+say fib(17) = 1597
+say fib(18) = 2584
+say fib(19) = 4181
+say fib(20) = 6765
+say fib(21) = 10946
+say fib(22) = 17711
+say fib(23) = 28657
+say fib(24) = 46368
+say fib(25) = 75025
+say fib(26) = 121393
+say fib(27) = 196418
+say fib(28) = 317811
+say fib(29) = 514229
+say fib(30) = 832040
+say fib(31) = 1346269
+say fib(32) = 2178309
+say fib(33) = 3524578
+say fib(34) = 5702887
+say fib(35) = 9227465
+say fib(36) = 14930352
+say fib(37) = 24157817
+say fib(38) = 39088169
+say fib(39) = 63245986
+say fib(40) = 102334155
+say fib(41) = 165580141
+say fib(42) = 267914296
+say fib(43) = 433494437
+say fib(44) = 701408733
+say fib(45) = 1134903170
+say fib(46) = 1836311903
+say fib(47) = 2971215073
+say fib(48) = 4807526976
+say fib(49) = 7778742049
+```
+
 `@function demo:ref/bar/tree_42/0_20`
 
 ```mcfunction
@@ -906,6 +963,63 @@ say (((1, 2), (1, 2)), ((1, 2), (1, 2)))
 say wat
 say 3
 say 2
+```
+
+`@function demo:vars`
+
+```mcfunction
+say 5
+say 10
+say fib(0) = 0
+say fib(1) = 1
+say fib(2) = 1
+say fib(3) = 2
+say fib(4) = 3
+say fib(5) = 5
+say fib(6) = 8
+say fib(7) = 13
+say fib(8) = 21
+say fib(9) = 34
+say fib(10) = 55
+say fib(11) = 89
+say fib(12) = 144
+say fib(13) = 233
+say fib(14) = 377
+say fib(15) = 610
+say fib(16) = 987
+say fib(17) = 1597
+say fib(18) = 2584
+say fib(19) = 4181
+say fib(20) = 6765
+say fib(21) = 10946
+say fib(22) = 17711
+say fib(23) = 28657
+say fib(24) = 46368
+say fib(25) = 75025
+say fib(26) = 121393
+say fib(27) = 196418
+say fib(28) = 317811
+say fib(29) = 514229
+say fib(30) = 832040
+say fib(31) = 1346269
+say fib(32) = 2178309
+say fib(33) = 3524578
+say fib(34) = 5702887
+say fib(35) = 9227465
+say fib(36) = 14930352
+say fib(37) = 24157817
+say fib(38) = 39088169
+say fib(39) = 63245986
+say fib(40) = 102334155
+say fib(41) = 165580141
+say fib(42) = 267914296
+say fib(43) = 433494437
+say fib(44) = 701408733
+say fib(45) = 1134903170
+say fib(46) = 1836311903
+say fib(47) = 2971215073
+say fib(48) = 4807526976
+say fib(49) = 7778742049
 ```
 
 `@function demo:bar/tree_42/0_1`

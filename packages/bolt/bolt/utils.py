@@ -2,17 +2,21 @@ __all__ = [
     "rewrite_traceback",
     "fake_traceback",
     "suggest_typo",
+    "load_pickle",
+    "dump_pickle",
     "internal",
     "INTERNAL_CODE",
 ]
 
 
+import pickle
 from bisect import bisect
 from difflib import get_close_matches
 from types import CodeType, TracebackType
 from typing import Any, Iterable, List, Optional, Set, TypeVar
 
 from beet import Container
+from beet.core.utils import FileSystemPath
 from mecha.utils import string_to_number
 
 T = TypeVar("T")
@@ -90,3 +94,13 @@ def suggest_typo(wrong: str, possibilities: Iterable[str]) -> Optional[str]:
             return ", ".join(head + [f"{before_last} or {last}"])
 
     return None
+
+
+def load_pickle(path: FileSystemPath) -> Any:
+    with open(path, "rb") as f:
+        return pickle.load(f)
+
+
+def dump_pickle(path: FileSystemPath, value: Any):
+    with open(path, "wb") as f:
+        return pickle.dump(value, f, protocol=pickle.HIGHEST_PROTOCOL)

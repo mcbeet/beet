@@ -295,22 +295,28 @@ class LexicalScope:
             self,
             parent=self.parent and self.parent.fork(),
             dirty=False,
-            variables={
-                identifier: variable.fork()
-                for identifier, variable in self.variables.items()
-            },
+            variables=self.fork_variables(),
         )
+
+    def fork_variables(self) -> Dict[str, Variable]:
+        return {
+            identifier: variable.fork()
+            for identifier, variable in self.variables.items()
+        }
 
     def reconcile(self, lexical_scope: "LexicalScope"):
         if lexical_scope.dirty:
             self.dirty = True
-            for identifier, variable in lexical_scope.variables.items():
-                if current_variable := self.variables.get(identifier):
-                    current_variable.reconcile(variable)
-                else:
-                    self.variables[identifier] = variable
+            self.reconcile_variables(lexical_scope.variables)
             if self.parent and lexical_scope.parent:
                 self.parent.reconcile(lexical_scope.parent)
+
+    def reconcile_variables(self, variables: Dict[str, Variable]):
+        for identifier, variable in variables.items():
+            if current_variable := self.variables.get(identifier):
+                current_variable.reconcile(variable)
+            else:
+                self.variables[identifier] = variable
 
     def create_pending_binding(self, identifier: str, node: AstNode):
         self.pending_bindings.append((identifier, node))

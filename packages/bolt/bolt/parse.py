@@ -14,6 +14,9 @@ __all__ = [
     "DisableInterpolationParser",
     "ForkLexicalScopeParser",
     "AssignmentStatementParser",
+    "EscapeAnalysisParser",
+    "EscapeAnalysisResolver",
+    "MemoHandler",
     "parse_decorator",
     "AssignmentTargetParser",
     "IfElseLoweringParser",
@@ -106,6 +109,8 @@ from .ast import (
     AstDictItem,
     AstDictUnquotedKey,
     AstDocstring,
+    AstEscapeAnalysisRoot,
+    AstEscapeRoot,
     AstExpression,
     AstExpressionBinary,
     AstExpressionUnary,
@@ -162,6 +167,7 @@ from .pattern import (
     TRUE_PATTERN,
 )
 from .semantics import (
+    Binding,
     ClassScope,
     FunctionScope,
     GlobalScope,
@@ -223,6 +229,7 @@ def get_bolt_parsers(
         "command:argument:bolt:class_bases": delegate("bolt:class_bases"),
         "command:argument:bolt:class_root": delegate("bolt:class_root"),
         "command:argument:bolt:memo_variable": delegate("bolt:memo_variable"),
+        "command:argument:bolt:memo_root": delegate("bolt:memo_root"),
         "command:argument:bolt:del_target": delegate("bolt:del_target"),
         ################################################################################
         # Bolt
@@ -313,6 +320,7 @@ def get_bolt_parsers(
                 ]
             )
         ),
+        "bolt:memo_root": EscapeAnalysisParser(delegate("nested_root")),
         "bolt:del_target": parse_del_target,
         "bolt:interpolation": BuiltinCallRestriction(
             PrimaryParser(delegate("bolt:identifier"), truncate=True),
@@ -611,6 +619,7 @@ def create_bolt_root_parser(parser: Parser, macro_handler: "MacroHandler"):
         },
     )
     parser = DeferredRootBacktracker(parser, macro_handler=macro_handler)
+    parser = EscapeAnalysisResolver(parser)
     parser = DecoratorResolver(parser)
     parser = ProcMacroExpansion(parser)
     parser = RootScopeHandler(parser)
@@ -824,6 +833,121 @@ class AssignmentStatementParser:
                     value=expression,
                 )
                 node = set_location(node, node.target, node.value)
+
+        return node
+
+
+@dataclass
+class EscapeAnalysisParser:
+    """Initiate escape analysis on a nested block."""
+
+    parser: Parser
+
+    def __call__(self, stream: TokenStream) -> Any:
+        lexical_scope = get_stream_lexical_scope(stream)
+        previous_bindings = {
+            identifier: len(variable.bindings)
+            for identifier, variable in lexical_scope.variables.items()
+        }
+
+        if isinstance(node := self.parser(stream), AstRoot):
+            refcount_snapshots: List[Tuple[str, Binding, int]] = []
+
+            for identifier, variable in lexical_scope.variables.items():
+                nb_bindings = previous_bindings.get(identifier)
+                last_binding = len(variable.bindings) - 1
+                if nb_bindings is None or last_binding >= nb_bindings:
+                    binding = variable.bindings[last_binding]
+                    refcount = len(binding.references)
+                    if variable.storage != "local":
+                        exc = InvalidSyntax(
+                            f'Binding to {variable.storage} variable "{identifier}" is not allowed in this context.'
+                        )
+                        raise set_location(exc, binding.origin)
+                    refcount_snapshots.append((identifier, binding, refcount))
+
+            if refcount_snapshots:
+                escape_analysis = AstEscapeAnalysisRoot(
+                    commands=node.commands,
+                    refcount_snapshots=refcount_snapshots,
+                )
+                node = set_location(escape_analysis, node)
+                stream.data["do_escape_analysis"] = True
+
+        return node
+
+
+@dataclass
+class EscapeAnalysisResolver:
+    """Resolve escape analysis."""
+
+    parser: Parser
+
+    def __call__(self, stream: TokenStream) -> Any:
+        if not stream.data.get("root_scope"):
+            return self.parser(stream)
+
+        stream.data["do_escape_analysis"] = False
+
+        if (
+            isinstance(node := self.parser(stream), AstRoot)
+            and stream.data["do_escape_analysis"]
+        ):
+            node = self.resolve(node)
+
+        return node
+
+    def resolve(self, node: AstRoot) -> AstRoot:
+        should_replace = False
+        commands: List[AstCommand] = []
+
+        for command in node.commands:
+            stack: List[AstCommand] = [command]
+
+            while command.arguments and isinstance(
+                command := command.arguments[-1], AstCommand
+            ):
+                stack.append(command)
+
+            command = stack.pop()
+
+            if (
+                command.arguments
+                and isinstance(root := command.arguments[-1], AstRoot)
+                and (resolved_root := self.resolve(root)) is not root
+            ):
+                should_replace = True
+
+                command = replace(
+                    command,
+                    arguments=AstChildren([*command.arguments[:-1], resolved_root]),
+                )
+                while stack:
+                    parent = stack.pop()
+                    command = replace(
+                        parent,
+                        arguments=AstChildren([*parent.arguments[:-1], command]),
+                    )
+
+            elif stack:
+                command = stack[0]
+
+            commands.append(command)
+
+        if isinstance(node, AstEscapeAnalysisRoot):
+            identifiers = tuple(
+                name
+                for name, binding, refcount in node.refcount_snapshots
+                if len(binding.references) > refcount
+            )
+            node = set_location(
+                AstEscapeRoot(commands=AstChildren(commands), identifiers=identifiers)
+                if identifiers
+                else AstRoot(commands=AstChildren(commands)),
+                node,
+            )
+        elif should_replace:
+            node = replace(node, commands=AstChildren(commands))
 
         return node
 

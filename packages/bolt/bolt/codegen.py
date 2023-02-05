@@ -48,6 +48,7 @@ from .ast import (
     AstDict,
     AstDictItem,
     AstDocstring,
+    AstEscapeRoot,
     AstExpressionBinary,
     AstExpressionUnary,
     AstFormatString,
@@ -516,6 +517,12 @@ class Codegen(Visitor):
         keys: List[str] = []
 
         *arguments, body = node.arguments
+        cached_identifiers = (
+            "".join(f"{name}," for name in body.identifiers)
+            if isinstance(body, AstEscapeRoot)
+            else None
+        )
+
         for arg in arguments:
             if isinstance(arg, AstAssignment):
                 target = cast(AstTargetIdentifier, arg.target)
@@ -541,6 +548,8 @@ class Codegen(Visitor):
         acc.statement(f"if {invocation}.cached:")
         with acc.block():
             acc.statement(f"_bolt_runtime.memo.restore(_bolt_runtime, {invocation})")
+            if cached_identifiers:
+                acc.statement(f"({cached_identifiers}) = {invocation}.bindings")
 
         acc.statement("else:")
         with acc.block():
@@ -549,6 +558,8 @@ class Codegen(Visitor):
             )
             with acc.block():
                 yield from visit_body(cast(AstRoot, body), acc)
+            if cached_identifiers:
+                acc.statement(f"{invocation}.bindings = ({cached_identifiers})")
 
         return []
 

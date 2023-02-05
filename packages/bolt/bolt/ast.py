@@ -47,6 +47,8 @@ __all__ = [
     "AstClassName",
     "AstClassBases",
     "AstClassRoot",
+    "AstEscapeAnalysisRoot",
+    "AstEscapeRoot",
     "AstMemo",
     "AstMemoResult",
     "AstInterpolation",
@@ -58,7 +60,7 @@ __all__ = [
 
 import re
 from dataclasses import dataclass
-from typing import Any, Optional, Union
+from typing import Any, List, Optional, Tuple, Union
 from uuid import UUID, uuid4
 
 from beet.core.utils import JsonDict, extra_field, required_field
@@ -75,6 +77,7 @@ from mecha import (
 from tokenstream import TokenStream
 
 from .pattern import IDENTIFIER_PATTERN
+from .semantics import Binding
 
 
 @dataclass(frozen=True, slots=True)
@@ -447,6 +450,22 @@ class AstClassBases(AstNode):
 @dataclass(frozen=True, slots=True)
 class AstClassRoot(AstRoot):
     """Ast class root node."""
+
+
+@dataclass(frozen=True, slots=True)
+class AstEscapeAnalysisRoot(AstRoot):
+    """Ast escape analysis root node."""
+
+    refcount_snapshots: List[Tuple[str, Binding, int]] = extra_field(
+        default_factory=list
+    )
+
+
+@dataclass(frozen=True, slots=True)
+class AstEscapeRoot(AstRoot):
+    """Ast escape root node."""
+
+    identifiers: Tuple[str, ...] = ()
 
 
 @dataclass(frozen=True, slots=True)

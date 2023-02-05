@@ -118,7 +118,7 @@
       "children": {
         "body": {
           "type": "argument",
-          "parser": "mecha:nested_root",
+          "parser": "bolt:memo_root",
           "executable": true
         },
         "variable": {
