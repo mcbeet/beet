@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.28.0 (2023-02-05)
+### Feature
+* Error when using unsupported statements in memo ([`e57c845`](https://github.com/mcbeet/bolt/commit/e57c845f28cd40669ace582dcb2f404cf384582d))
+
 ## v0.27.0 (2023-02-05)
 ### Feature
 * Restore memo bindings ([`48c5fe9`](https://github.com/mcbeet/bolt/commit/48c5fe996ff5a575bf50b5bf5f572320fedfb39e))
