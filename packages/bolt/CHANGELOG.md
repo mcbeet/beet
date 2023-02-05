@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.27.0 (2023-02-05)
+### Feature
+* Restore memo bindings ([`48c5fe9`](https://github.com/mcbeet/bolt/commit/48c5fe996ff5a575bf50b5bf5f572320fedfb39e))
+
 ## v0.26.0 (2023-02-02)
 ### Feature
 * Add type annotations ([`a3970f1`](https://github.com/mcbeet/bolt/commit/a3970f1a61668c5cf772ad24eacd7a835aa1824e))
