@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.29.0 (2023-02-06)
+### Feature
+* Update 1.19 ([`0a8ca58`](https://github.com/mcbeet/bolt/commit/0a8ca580f4e3b155154fd8714ddb6ccc4c13121f))
+
 ## v0.28.0 (2023-02-05)
 ### Feature
 * Error when using unsupported statements in memo ([`e57c845`](https://github.com/mcbeet/bolt/commit/e57c845f28cd40669ace582dcb2f404cf384582d))
