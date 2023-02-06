@@ -870,8 +870,12 @@
                 <class 'mecha.ast.AstCommand'>
                   location: SourceLocation(pos=1557, lineno=92, colno=9)
                   end_location: SourceLocation(pos=1611, lineno=95, colno=24)
-                  identifier: 'gamemode:survival:target'
+                  identifier: 'gamemode:gamemode:target'
                   arguments:
+                    <class 'mecha.ast.AstGamemode'>
+                      location: SourceLocation(pos=1578, lineno=93, colno=13)
+                      end_location: SourceLocation(pos=1586, lineno=93, colno=21)
+                      value: 'survival'
                     <class 'mecha.ast.AstSelector'>
                       location: SourceLocation(pos=1600, lineno=95, colno=13)
                       end_location: SourceLocation(pos=1611, lineno=95, colno=24)

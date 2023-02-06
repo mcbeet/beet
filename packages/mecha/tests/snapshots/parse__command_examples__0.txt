@@ -694,9 +694,12 @@
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=915, lineno=21, colno=1)
       end_location: SourceLocation(pos=939, lineno=21, colno=25)
-      identifier: 'defaultgamemode:survival'
+      identifier: 'defaultgamemode:gamemode'
       arguments:
-        <empty>
+        <class 'mecha.ast.AstGamemode'>
+          location: SourceLocation(pos=931, lineno=21, colno=17)
+          end_location: SourceLocation(pos=939, lineno=21, colno=25)
+          value: 'survival'
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=949, lineno=23, colno=1)
       end_location: SourceLocation(pos=999, lineno=23, colno=51)
@@ -830,10 +833,12 @@
           variable: 'a'
           arguments:
             <empty>
-        <class 'mecha.ast.AstWord'>
+        <class 'mecha.ast.AstResourceLocation'>
           location: SourceLocation(pos=1154, lineno=29, colno=12)
           end_location: SourceLocation(pos=1162, lineno=29, colno=20)
-          value: 'infinity'
+          is_tag: False
+          namespace: None
+          path: 'infinity'
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=1163, lineno=30, colno=1)
       end_location: SourceLocation(pos=1185, lineno=30, colno=23)
@@ -845,10 +850,12 @@
           variable: 'p'
           arguments:
             <empty>
-        <class 'mecha.ast.AstWord'>
+        <class 'mecha.ast.AstResourceLocation'>
           location: SourceLocation(pos=1174, lineno=30, colno=12)
           end_location: SourceLocation(pos=1183, lineno=30, colno=21)
-          value: 'sharpness'
+          is_tag: False
+          namespace: None
+          path: 'sharpness'
         <class 'mecha.ast.AstNumber'>
           location: SourceLocation(pos=1184, lineno=30, colno=22)
           end_location: SourceLocation(pos=1185, lineno=30, colno=23)
@@ -3288,14 +3295,21 @@
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=3436, lineno=75, colno=1)
       end_location: SourceLocation(pos=3453, lineno=75, colno=18)
-      identifier: 'gamemode:creative'
+      identifier: 'gamemode:gamemode'
       arguments:
-        <empty>
+        <class 'mecha.ast.AstGamemode'>
+          location: SourceLocation(pos=3445, lineno=75, colno=10)
+          end_location: SourceLocation(pos=3453, lineno=75, colno=18)
+          value: 'creative'
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=3454, lineno=76, colno=1)
       end_location: SourceLocation(pos=3474, lineno=76, colno=21)
-      identifier: 'gamemode:survival:target'
+      identifier: 'gamemode:gamemode:target'
       arguments:
+        <class 'mecha.ast.AstGamemode'>
+          location: SourceLocation(pos=3463, lineno=76, colno=10)
+          end_location: SourceLocation(pos=3471, lineno=76, colno=18)
+          value: 'survival'
         <class 'mecha.ast.AstSelector'>
           location: SourceLocation(pos=3472, lineno=76, colno=19)
           end_location: SourceLocation(pos=3474, lineno=76, colno=21)
@@ -5303,10 +5317,11 @@
       end_location: SourceLocation(pos=5964, lineno=144, colno=19)
       identifier: 'weather:clear:duration'
       arguments:
-        <class 'mecha.ast.AstNumber'>
+        <class 'mecha.ast.AstTime'>
           location: SourceLocation(pos=5960, lineno=144, colno=15)
           end_location: SourceLocation(pos=5964, lineno=144, colno=19)
           value: 1200
+          unit: 'tick'
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=5965, lineno=145, colno=1)
       end_location: SourceLocation(pos=5977, lineno=145, colno=13)
