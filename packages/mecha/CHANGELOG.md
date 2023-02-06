@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.66.0 (2023-02-06)
+### Feature
+* Update 1.19 ([`ab74039`](https://github.com/mcbeet/mecha/commit/ab7403976be1f0185d0b346103bd5bb6eb837d67))
+
 ## v0.65.1 (2023-02-01)
 ### Fix
 * Update some typings ([`d08b712`](https://github.com/mcbeet/mecha/commit/d08b712ce3f8d60f52c44af6e37b154e37ee4ed7))
