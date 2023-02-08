@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.83.2 (2023-02-08)
+### Fix
+* Dump extra after namespaced files ([`0f5ed47`](https://github.com/mcbeet/beet/commit/0f5ed47920d23ae4d4b551cd1d117011051ae0c2))
+
 ## v0.83.1 (2023-02-01)
 ### Fix
 * Remove unnecessary None checks ([`f464d62`](https://github.com/mcbeet/beet/commit/f464d623ff74cf2c8bd87380d1ee9148b04a1ff9))
