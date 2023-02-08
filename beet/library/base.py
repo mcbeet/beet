@@ -1159,11 +1159,11 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
 
     def dump(self, origin: FileOrigin):
         """Write the content of the pack to a zipfile or to the filesystem"""
-        extra = {path: item for path, item in self.extra.items()}
-        _dump_files(origin, extra)
-
         for namespace_name, namespace in self.items():
             namespace.dump(namespace_name, origin)
+
+        extra = {path: item for path, item in self.extra.items()}
+        _dump_files(origin, extra)
 
     def save(
         self,
