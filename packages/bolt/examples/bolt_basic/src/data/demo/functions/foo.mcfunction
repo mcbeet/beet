@@ -309,7 +309,7 @@ try_entity_interpolation("0-0-0-0-1")
 try_entity_interpolation(UUID("12345678-1234-5678-1234-567812345678"))
 
 entity_type = "creeper"
-at @e[type=entity_type] summon lightning_bolt
+at @e[type=entity_type] run summon lightning_bolt
 
 language minecraft:aaaa {
     "menu.singleplayer": "AAAA"

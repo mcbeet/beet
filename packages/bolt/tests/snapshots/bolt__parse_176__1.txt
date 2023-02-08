@@ -40,14 +40,14 @@ _bolt_refs[2]
 _bolt_refs[3]
 <class 'mecha.ast.AstCommand'>
   location: SourceLocation(pos=48, lineno=2, colno=25)
-  end_location: SourceLocation(pos=69, lineno=2, colno=46)
+  end_location: SourceLocation(pos=73, lineno=2, colno=50)
   identifier: 'execute:run:subcommand'
   arguments:
     <class 'mecha.ast.AstCommand'>
 _bolt_refs[4]
 <class 'mecha.ast.AstCommand'>
   location: SourceLocation(pos=24, lineno=2, colno=1)
-  end_location: SourceLocation(pos=69, lineno=2, colno=46)
+  end_location: SourceLocation(pos=73, lineno=2, colno=50)
   identifier: 'execute:at:targets:subcommand'
   arguments:
     <class 'mecha.ast.AstSelector'>
@@ -55,14 +55,14 @@ _bolt_refs[4]
 _bolt_refs[5]
 <class 'mecha.ast.AstCommand'>
   location: SourceLocation(pos=24, lineno=2, colno=1)
-  end_location: SourceLocation(pos=69, lineno=2, colno=46)
+  end_location: SourceLocation(pos=73, lineno=2, colno=50)
   identifier: 'execute:subcommand'
   arguments:
     <class 'mecha.ast.AstCommand'>
 _bolt_refs[6]
 <class 'mecha.ast.AstRoot'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
-  end_location: SourceLocation(pos=69, lineno=2, colno=46)
+  end_location: SourceLocation(pos=73, lineno=2, colno=50)
   commands:
     <class 'mecha.ast.AstCommand'>
     <class 'mecha.ast.AstCommand'>

@@ -1,9 +1,9 @@
 entity_type = "creeper"
-at @e[type=entity_type] summon lightning_bolt
+at @e[type=entity_type] run summon lightning_bolt
 ---
 <class 'mecha.ast.AstRoot'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
-  end_location: SourceLocation(pos=69, lineno=2, colno=46)
+  end_location: SourceLocation(pos=73, lineno=2, colno=50)
   commands:
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=0, lineno=1, colno=1)
@@ -28,12 +28,12 @@ at @e[type=entity_type] summon lightning_bolt
           type_annotation: None
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=24, lineno=2, colno=1)
-      end_location: SourceLocation(pos=69, lineno=2, colno=46)
+      end_location: SourceLocation(pos=73, lineno=2, colno=50)
       identifier: 'execute:subcommand'
       arguments:
         <class 'mecha.ast.AstCommand'>
           location: SourceLocation(pos=24, lineno=2, colno=1)
-          end_location: SourceLocation(pos=69, lineno=2, colno=46)
+          end_location: SourceLocation(pos=73, lineno=2, colno=50)
           identifier: 'execute:at:targets:subcommand'
           arguments:
             <class 'mecha.ast.AstSelector'>
@@ -64,17 +64,17 @@ at @e[type=entity_type] summon lightning_bolt
                           value: 'entity_type'
             <class 'mecha.ast.AstCommand'>
               location: SourceLocation(pos=48, lineno=2, colno=25)
-              end_location: SourceLocation(pos=69, lineno=2, colno=46)
+              end_location: SourceLocation(pos=73, lineno=2, colno=50)
               identifier: 'execute:run:subcommand'
               arguments:
                 <class 'mecha.ast.AstCommand'>
-                  location: SourceLocation(pos=48, lineno=2, colno=25)
-                  end_location: SourceLocation(pos=69, lineno=2, colno=46)
+                  location: SourceLocation(pos=52, lineno=2, colno=29)
+                  end_location: SourceLocation(pos=73, lineno=2, colno=50)
                   identifier: 'summon:entity'
                   arguments:
                     <class 'mecha.ast.AstResourceLocation'>
-                      location: SourceLocation(pos=55, lineno=2, colno=32)
-                      end_location: SourceLocation(pos=69, lineno=2, colno=46)
+                      location: SourceLocation(pos=59, lineno=2, colno=36)
+                      end_location: SourceLocation(pos=73, lineno=2, colno=50)
                       is_tag: False
                       namespace: None
                       path: 'lightning_bolt'
