@@ -1,5 +1,5 @@
 as @a at @s align xyz
-    summon armor_stand ~ ~ ~ {
+    run summon armor_stand ~ ~ ~ {
         Tags: [
             "position_history",
             "new"
