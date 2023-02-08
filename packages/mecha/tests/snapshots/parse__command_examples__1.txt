@@ -126,3 +126,35 @@ place template minecraft:fossil/spine_1 ~ ~ ~ 180
 place template minecraft:fossil/spine_1 ~ ~ ~ clockwise_90 left_right
 place template minecraft:fossil/spine_1 ~ ~ ~ none front_back 0.5
 place template minecraft:fossil/spine_1 ~ ~ ~ counterclockwise_90 none 0.6 42
+execute on vehicle at @s if loaded ~10 ~ ~ run tp @s ~10 ~ ~
+execute if biome ~10 ~ ~ minecraft:plains run say ok
+execute if dimension minecraft:overworld run say ok
+execute unless loaded ~ ~ ~ run say ok
+execute unless biome ~10 ~ ~ minecraft:forest run say ok
+execute unless dimension minecraft:overworld run say ok
+fillbiome ~ ~ ~ ~16 ~16 ~16 minecraft:deep_dark
+gamemode survival @a
+gamerule blockExplosionDropDecay true
+gamerule commandModificationBlockLimit 1000
+gamerule globalSoundEvents false
+gamerule lavaSourceConversion true
+gamerule mobExplosionDropDecay true
+gamerule snowAccumulationHeight 10
+gamerule tntExplosionDropDecay true
+gamerule waterSourceConversion true
+clone ~ ~ ~ ~10 ~10 ~10 0 0 0 masked
+clone from overworld ~ ~ ~ ~10 ~10 ~10 0 0 0 masked
+clone ~ ~ ~ ~10 ~10 ~10 to nether 0 0 0 masked
+clone from overworld ~ ~ ~ ~10 ~10 ~10 to nether 0 0 0 masked
+data modify block ~ ~ ~ Name set string storage test:main value 0 1
+data modify block ~ ~ ~ Name append string block ~ ~1 ~ value 0 1
+data modify block ~ ~ ~ Name prepend string entity @s EntityName 0 1
+data modify block ~ ~ ~ Name insert 0 string storage test:main value 0 1
+data modify block ~ ~ ~ Name merge string storage test:main value 0 1
+title @s times 0.5s 10 1d
+weather clear 10
+weather rain 0.235s
+weather thunder 1d
+ride @s mount @e[type=pig, limit=1, sort=nearest]
+ride @s dismount
+execute if score @s abc matches 0 run ride @s dismount
