@@ -1,0 +1,7 @@
+#>ERROR  Unexpected macro argument after subcommand.
+# line 1, column 30
+#      1 |  macro hello thing=subcommand after:
+#        :                               ^^^^^
+#      2 |      pass
+macro hello thing=subcommand after:
+    pass

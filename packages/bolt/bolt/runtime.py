@@ -8,12 +8,12 @@ __all__ = [
 import builtins
 from dataclasses import dataclass, field
 from functools import partial
-from importlib.resources import read_text
+from importlib.resources import files
 from typing import Any, Callable, Dict, Iterable, List, Optional, Set, Union
 
 from beet import Context, TextFileBase, generate_tree
 from beet.core.utils import JsonDict, extra_field, required_field
-from mecha import AstRoot, CommandTree, Diagnostic, Mecha, Visitor, rule
+from mecha import AstRoot, CommandSpec, CommandTree, Diagnostic, Mecha, Visitor, rule
 from mecha.contrib.nesting import InplaceNestingPredicate
 from pathspec import PathSpec
 from tokenstream import set_location
@@ -110,9 +110,13 @@ class Runtime(CommandEmitter):
 
         mc.providers.append(Module)
 
-        commands_json = read_text("bolt.resources", "commands.json")
-        mc.spec.add_commands(CommandTree.parse_raw(commands_json))
-        mc.spec.parsers.update(get_bolt_parsers(mc.spec.parsers, self.modules))
+        commands_json = files("bolt.resources").joinpath("commands.json").read_text()
+        command_tree = CommandTree.parse_raw(commands_json)
+        bolt_prototypes = set(CommandSpec(tree=command_tree).prototypes)
+        mc.spec.add_commands(command_tree)
+        mc.spec.parsers.update(
+            get_bolt_parsers(mc.spec.parsers, self.modules, bolt_prototypes)
+        )
 
         mc.steps.insert(0, self.evaluate)
 

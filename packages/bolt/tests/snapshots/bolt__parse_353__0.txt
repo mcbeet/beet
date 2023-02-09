@@ -1,0 +1,11 @@
+macro hello thing=subcommand:
+    pass
+#>ERROR  Can't use if as a subcommand.
+# line 3, column 7
+#      2 |      pass
+#      3 |  hello if True:
+#        :        ^^^^^^^^
+#      4 |      pass
+#        :      ^^^^
+hello if True:
+    pass

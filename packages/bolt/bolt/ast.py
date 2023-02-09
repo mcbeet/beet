@@ -357,6 +357,13 @@ class AstMacro(AstCommand):
                 child = {"type": "literal"}
                 tree["children"] = {node.match.value: child}
             elif isinstance(node, AstMacroMatchArgument):
+                if node.is_subcommand():
+                    tree["redirect"] = (
+                        node.match_argument_properties.evaluate().get("redirect", [])
+                        if node.match_argument_properties
+                        else []
+                    )
+                    return tree_root
                 child = {"type": "argument"}
                 child["parser"] = node.match_argument_parser.get_canonical_value()
                 if properties := node.match_argument_properties:
@@ -413,6 +420,12 @@ class AstMacroMatchArgument(AstMacroMatch):
     match_identifier: AstMacroArgument = required_field()
     match_argument_parser: AstResourceLocation = required_field()
     match_argument_properties: Optional[AstJson] = None
+
+    def is_subcommand(self) -> bool:
+        return (
+            not self.match_argument_parser.namespace
+            and self.match_argument_parser.path == "subcommand"
+        )
 
 
 @dataclass(frozen=True, slots=True)

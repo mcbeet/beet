@@ -43,7 +43,7 @@ __all__ = [
     "GlobalNonlocalHandler",
     "DocstringHandler",
     "FlushPendingBindingsParser",
-    "StatementSubcommandHandler",
+    "SubcommandConstraint",
     "DeferredRootBacktracker",
     "LexicalScopeConstraint",
     "RootScopeHandler",
@@ -184,7 +184,9 @@ IMPORT_REGEX = re.compile(rf"^{MODULE_PATTERN}$")
 
 
 def get_bolt_parsers(
-    parsers: Dict[str, Parser], modules: ModuleManager
+    parsers: Dict[str, Parser],
+    modules: ModuleManager,
+    bolt_prototypes: Set[str],
 ) -> Dict[str, Parser]:
     """Return the bolt parsers."""
     macro_handler = MacroHandler(
@@ -206,7 +208,7 @@ def get_bolt_parsers(
             macro_handler=macro_handler,
         ),
         "nested_root": create_bolt_root_parser(parsers["nested_root"], macro_handler),
-        "command": create_bolt_command_parser(macro_handler, modules),
+        "command": create_bolt_command_parser(macro_handler, modules, bolt_prototypes),
         "command:argument:bolt:if_block": delegate("bolt:if_block"),
         "command:argument:bolt:elif_condition": delegate("bolt:elif_condition"),
         "command:argument:bolt:elif_block": delegate("bolt:elif_block"),
@@ -628,14 +630,16 @@ def create_bolt_root_parser(parser: Parser, macro_handler: "MacroHandler"):
     return parser
 
 
-def create_bolt_command_parser(parser: Parser, modules: ModuleManager):
+def create_bolt_command_parser(
+    parser: Parser, modules: ModuleManager, bolt_prototypes: Set[str]
+):
     """Compose command parsers."""
     parser = MemoHandler(parser)
     parser = GlobalNonlocalHandler(parser)
     parser = ImportStatementHandler(parser, modules)
     parser = DocstringHandler(parser)
     parser = UndefinedIdentifierErrorHandler(parser)
-    parser = StatementSubcommandHandler(parser)
+    parser = SubcommandConstraint(parser, command_identifiers=bolt_prototypes)
     return parser
 
 
@@ -1417,10 +1421,11 @@ class MacroMatchParser:
                 node.match_argument_properties or node.match_argument_parser,
             )
 
-            parser_name = node.match_argument_parser.get_canonical_value()
-            if f"command:argument:{parser_name}" not in spec.parsers:
-                exc = InvalidSyntax(f'Unrecognized argument parser "{parser_name}".')
-                raise set_location(exc, node.match_argument_parser)
+            if not node.is_subcommand():
+                name = node.match_argument_parser.get_canonical_value()
+                if f"command:argument:{name}" not in spec.parsers:
+                    exc = InvalidSyntax(f'Unrecognized argument parser "{name}".')
+                    raise set_location(exc, node.match_argument_parser)
 
             lexical_scope = get_stream_lexical_scope(stream)
             deferred_scope = lexical_scope.deferred(MacroScope)
@@ -1500,7 +1505,11 @@ class MacroHandler:
             elif isinstance(literal := node.arguments[0], AstMacroMatchLiteral):
                 identifier_parts.append(literal.match.value)
             elif isinstance(argument := node.arguments[0], AstMacroMatchArgument):
-                identifier_parts.append(argument.match_identifier.value)
+                identifier_parts.append(
+                    "subcommand"
+                    if argument.is_subcommand()
+                    else argument.match_identifier.value
+                )
             arguments.append(node.arguments[0])
             node = subcommand
 
@@ -1541,6 +1550,11 @@ class MacroHandler:
                 arguments=AstChildren(arguments),
             )
             return set_location(macro, command)
+
+        for left, right in zip(arguments, arguments[1:]):
+            if isinstance(left, AstMacroMatchArgument) and left.is_subcommand():
+                exc = InvalidSyntax("Unexpected macro argument after subcommand.")
+                raise set_location(exc, right)
 
         arguments.append(node.arguments[0])
 
@@ -1968,19 +1982,22 @@ class FlushPendingBindingsParser:
 
 
 @dataclass
-class StatementSubcommandHandler:
-    """Prevent statements as subcommands."""
+class SubcommandConstraint:
+    """Prevent using the specified prototypes as general subcommands."""
 
     parser: Parser
+    command_identifiers: Set[str]
 
     def __call__(self, stream: TokenStream) -> Any:
         if (
             isinstance(node := self.parser(stream), AstCommand)
             and node.arguments
             and isinstance(child := node.arguments[-1], AstCommand)
-            and child.identifier == "statement"
+            and child.identifier in self.command_identifiers
+            and node.identifier not in self.command_identifiers
         ):
-            exc = InvalidSyntax("Can't use statement as a subcommand.")
+            name, _, _ = child.identifier.partition(":")
+            exc = InvalidSyntax(f"Can't use {name} as a subcommand.")
             raise set_location(exc, child)
         return node
 

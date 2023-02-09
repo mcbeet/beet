@@ -84,3 +84,46 @@ tellraw @s {"text": "from demo:dummy_message"}
 kill @e
 say 42
 ```
+
+`@function demo:redirect`
+
+```mcfunction
+function demo:redirect/nested_execute_2
+function demo:redirect/nested_execute_3
+execute if score foo bar matches 1 run say over!
+execute as @e[type=pig] at @s if block ~ ~ ~ water run say blbllblb
+execute as @e[type=bat] at @s run setblock ~ ~ ~ lava
+execute if score foo bar matches 1 run execute as @e[type=chicken] at @s run kill @e[type=fox, distance=..4]
+execute if score foo bar matches 1 as @e[type=chicken] at @s run kill @e[type=fox, distance=..4]
+```
+
+`@function demo:redirect/nested_execute_0`
+
+```mcfunction
+say ok
+say ok
+say ok
+```
+
+`@function demo:redirect/nested_execute_1`
+
+```mcfunction
+say ok
+say ok
+say ok
+```
+
+`@function demo:redirect/nested_execute_2`
+
+```mcfunction
+execute as @a run function demo:redirect/nested_execute_0
+execute as @a run function demo:redirect/nested_execute_1
+```
+
+`@function demo:redirect/nested_execute_3`
+
+```mcfunction
+say world
+say world
+say world
+```

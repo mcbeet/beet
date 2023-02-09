@@ -1285,3 +1285,32 @@ for i in range(10):
 def f():
     memo:
         return 9999
+###
+macro hello thing=subcommand after:
+    pass
+###
+macro hello thing=subcommand{"redirect": ]
+    pass
+###
+macro hello thing=subcommand:
+    pass
+hello print(123)
+###
+macro hello thing=subcommand:
+    pass
+hello if True:
+    pass
+###
+macro hello thing=subcommand:
+    pass
+hello say world
+###
+macro execute hello thing=subcommand:
+    pass
+as @p hello say world
+###
+macro hello clause=subcommand{"redirect": ["execute"]}:
+    pass
+hello if block ~ ~ ~ water say blbllblb
+hello setblock ~ ~ ~ lava
+hello run summon bat

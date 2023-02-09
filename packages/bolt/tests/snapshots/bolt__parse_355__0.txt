@@ -1,0 +1,85 @@
+macro execute hello thing=subcommand:
+    pass
+as @p hello say world
+---
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=68, lineno=3, colno=22)
+  commands:
+    <class 'bolt.ast.AstMacro'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=46, lineno=2, colno=9)
+      identifier: 'execute:hello:subcommand'
+      arguments:
+        <class 'bolt.ast.AstMacroLiteral'>
+          location: SourceLocation(pos=6, lineno=1, colno=7)
+          end_location: SourceLocation(pos=13, lineno=1, colno=14)
+          value: 'execute'
+        <class 'bolt.ast.AstMacroMatchLiteral'>
+          location: SourceLocation(pos=14, lineno=1, colno=15)
+          end_location: SourceLocation(pos=19, lineno=1, colno=20)
+          match:
+            <class 'bolt.ast.AstMacroLiteral'>
+              location: SourceLocation(pos=14, lineno=1, colno=15)
+              end_location: SourceLocation(pos=19, lineno=1, colno=20)
+              value: 'hello'
+        <class 'bolt.ast.AstMacroMatchArgument'>
+          location: SourceLocation(pos=20, lineno=1, colno=21)
+          end_location: SourceLocation(pos=36, lineno=1, colno=37)
+          match_identifier:
+            <class 'bolt.ast.AstMacroArgument'>
+              location: SourceLocation(pos=20, lineno=1, colno=21)
+              end_location: SourceLocation(pos=25, lineno=1, colno=26)
+              value: 'thing'
+          match_argument_parser:
+            <class 'mecha.ast.AstResourceLocation'>
+              location: SourceLocation(pos=26, lineno=1, colno=27)
+              end_location: SourceLocation(pos=36, lineno=1, colno=37)
+              is_tag: False
+              namespace: None
+              path: 'subcommand'
+          match_argument_properties: None
+        <class 'mecha.ast.AstRoot'>
+          location: SourceLocation(pos=42, lineno=2, colno=5)
+          end_location: SourceLocation(pos=46, lineno=2, colno=9)
+          commands:
+            <class 'mecha.ast.AstCommand'>
+              location: SourceLocation(pos=42, lineno=2, colno=5)
+              end_location: SourceLocation(pos=46, lineno=2, colno=9)
+              identifier: 'pass'
+              arguments:
+                <empty>
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=47, lineno=3, colno=1)
+      end_location: SourceLocation(pos=68, lineno=3, colno=22)
+      identifier: 'execute:subcommand'
+      arguments:
+        <class 'mecha.ast.AstCommand'>
+          location: SourceLocation(pos=47, lineno=3, colno=1)
+          end_location: SourceLocation(pos=68, lineno=3, colno=22)
+          identifier: 'execute:as:targets:subcommand'
+          arguments:
+            <class 'mecha.ast.AstSelector'>
+              location: SourceLocation(pos=50, lineno=3, colno=4)
+              end_location: SourceLocation(pos=52, lineno=3, colno=6)
+              variable: 'p'
+              arguments:
+                <empty>
+            <class 'bolt.ast.AstMacroCall'>
+              location: SourceLocation(pos=53, lineno=3, colno=7)
+              end_location: SourceLocation(pos=68, lineno=3, colno=22)
+              identifier: 'execute:hello:subcommand'
+              arguments:
+                <class 'mecha.ast.AstCommand'>
+                  location: SourceLocation(pos=59, lineno=3, colno=13)
+                  end_location: SourceLocation(pos=68, lineno=3, colno=22)
+                  identifier: 'say:message'
+                  arguments:
+                    <class 'mecha.ast.AstMessage'>
+                      location: SourceLocation(pos=63, lineno=3, colno=17)
+                      end_location: SourceLocation(pos=68, lineno=3, colno=22)
+                      fragments:
+                        <class 'mecha.ast.AstMessageText'>
+                          location: SourceLocation(pos=63, lineno=3, colno=17)
+                          end_location: SourceLocation(pos=68, lineno=3, colno=22)
+                          value: 'world'
