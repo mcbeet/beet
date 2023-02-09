@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.30.0 (2023-02-09)
+### Feature
+* Macro subcommands ([`5db484e`](https://github.com/mcbeet/bolt/commit/5db484ef754bbd5eaeea0c16574ecc23e160a490))
+
 ## v0.29.0 (2023-02-06)
 ### Feature
 * Update 1.19 ([`0a8ca58`](https://github.com/mcbeet/bolt/commit/0a8ca580f4e3b155154fd8714ddb6ccc4c13121f))
