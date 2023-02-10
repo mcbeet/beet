@@ -1659,14 +1659,14 @@ test = ["check-manifest", "pep440", "pre-commit", "pytest", "testpath"]
 
 [[package]]
 name = "nbtlib"
-version = "1.12.1"
+version = "2.0.4"
 description = "A python package to read and edit nbt data"
 category = "main"
 optional = false
 python-versions = ">=3.8,<4.0"
 files = [
-    {file = "nbtlib-1.12.1-py3-none-any.whl", hash = "sha256:55e6811aa4e4bfe9000cbe026f1fe540ebc231c8a3f3558d7819c6c7274001c6"},
-    {file = "nbtlib-1.12.1.tar.gz", hash = "sha256:1642e34ace7131718c21354562a183757613f3554445e6fcf8effb155b6591f5"},
+    {file = "nbtlib-2.0.4-py3-none-any.whl", hash = "sha256:38d571fbf2f7ebd640639461b47fc79919a8ea8e74633ffcc8aa6b2acfc9c889"},
+    {file = "nbtlib-2.0.4.tar.gz", hash = "sha256:d4b861047fb9beb546a2e3f3b776dc61b0fb5831375752a39961882e2f76cc93"},
 ]
 
 [package.dependencies]
@@ -3501,4 +3501,4 @@ image = ["Pillow"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "401d09383968645cc48a9cf0c4a847dae46b806d4df89405d457d543d33502fa"
+content-hash = "c0c283c49a30d34e111395a21fbb717f9c00d14e01c2fe574e28e922ec268f48"
