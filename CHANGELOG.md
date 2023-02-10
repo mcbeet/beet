@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.84.0 (2023-02-10)
+### Feature
+* Better model merging ([`5d588b6`](https://github.com/mcbeet/beet/commit/5d588b6304ad1019b05ac95ffd8885bf59d83ddb))
+
 ## v0.83.2 (2023-02-08)
 ### Fix
 * Dump extra after namespaced files ([`0f5ed47`](https://github.com/mcbeet/beet/commit/0f5ed47920d23ae4d4b551cd1d117011051ae0c2))
