@@ -25,7 +25,7 @@ __all__ = [
 from contextlib import suppress
 from copy import deepcopy
 from dataclasses import dataclass
-from typing import Any, ClassVar, Dict, Optional, Tuple, Type
+from typing import Any, ClassVar, Dict, List, Optional, Tuple, Type
 
 try:
     from PIL.Image import Image
@@ -61,22 +61,33 @@ class Model(JsonFile):
     extension: ClassVar[str] = ".json"
 
     def merge(self, other: "Model") -> bool:  # type: ignore
+        merged = deepcopy(other.data)
+
         overrides = self.data.get("overrides", [])
-        merged_overrides = deepcopy(overrides)
+        other_overrides = merged.pop("overrides", [])
+        concatenated_overrides = overrides + other_overrides
 
-        for other_override in other.data.get("overrides", []):
-            other_predicate = other_override.get("predicate")
+        predicate_cases: List[str] = []
+        for override in concatenated_overrides:
+            for predicate in override.get("predicate", {}):
+                if predicate not in predicate_cases:
+                    predicate_cases.append(predicate)
 
-            for i, override in enumerate(overrides):
-                if override.get("predicate") == other_predicate:
-                    merged_overrides[i]["model"] = other_override["model"]
-                    break
-            else:
-                merged_overrides.append(other_override)
+        override_index: Dict[Tuple[float, ...], JsonDict] = {}
+        for override in concatenated_overrides:
+            predicate = override.get("predicate", {})
+            key = tuple(predicate.get(case, 0) for case in predicate_cases)
+            override_index[key] = override
 
-        self.data = dict(other.data)
-        if merged_overrides:
-            self.data["overrides"] = merged_overrides
+        if not merged:
+            merged = self.data
+
+        if override_index:
+            merged["overrides"] = [
+                override for _, override in sorted(override_index.items())
+            ]
+
+        self.data = merged
 
         return True
 
