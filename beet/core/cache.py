@@ -7,7 +7,6 @@ __all__ = [
 ]
 
 
-import json
 import logging
 import shutil
 from concurrent.futures import Executor, ThreadPoolExecutor
@@ -18,11 +17,12 @@ from textwrap import indent
 from typing import Any, BinaryIO, Callable, ClassVar, Optional, Set, Type, TypeVar
 from urllib.request import urlopen
 
+from pydantic import BaseModel, Extra, Field
+
 from .container import Container, MatchMixin, Pin
 from .utils import (
     FileSystemPath,
     JsonDict,
-    dump_json,
     format_directory,
     get_import_string,
     import_from_string,
@@ -53,13 +53,22 @@ class CacheTransaction:
         return not self.depth
 
 
+class CacheIndex(BaseModel, extra=Extra.forbid, allow_population_by_field_name=True):
+    timestamp: datetime
+    expire: Optional[datetime] = None
+    data: JsonDict = Field(alias="json", default={})
+    finalizers: list[str] = []
+    keys: dict[str, str] = {}
+    mtime: dict[str, float] = {}
+
+
 class Cache:
     """An expiring filesystem cache that can store serialized json."""
 
     deleted: bool
     directory: Path
     index_path: Path
-    index: JsonDict
+    index: CacheIndex
     transaction: CacheTransaction
     download_manager: "DownloadManager"
 
@@ -74,7 +83,7 @@ class Cache:
         self.directory = Path(directory).resolve()
         self.index_path = self.directory / self.index_file
         self.index = (
-            json.loads(self.index_path.read_text())
+            CacheIndex.parse_file(self.index_path)
             if self.index_path.is_file()
             else self.get_initial_index()
         )
@@ -82,32 +91,28 @@ class Cache:
         self.download_manager = DownloadManager()
         self.flush()
 
-    def get_initial_index(self) -> JsonDict:
+    def get_initial_index(self) -> CacheIndex:
         """Return the initial cache index."""
-        return {
-            "timestamp": datetime.now().isoformat(),
-            "expire": None,
-            "json": {},
-        }
+        return CacheIndex(timestamp=datetime.now())
 
     def add_finalizer(self, obj: str | Callable[["Cache"], Any]):
         """Register the given handler as finalizer."""
-        finalizers = self.index.setdefault("finalizers", [])
+        finalizers = self.index.finalizers
         dotted_path = obj if isinstance(obj, str) else get_import_string(obj)
         if dotted_path not in finalizers:
             finalizers.append(dotted_path)
 
     @property
     def json(self) -> JsonDict:
-        return self.index["json"]
+        return self.index.data
 
     @json.setter
     def json(self, value: JsonDict):
-        self.index["json"] = value
+        self.index.data = value
 
     def get_path(self, key: str) -> Path:
         """Return a unique file path associated with the given key."""
-        keys = self.index.setdefault("keys", {})
+        keys = self.index.keys
 
         if not (path := keys.get(key)):
             _, dot, extension = key[-12:].rpartition(".")
@@ -136,7 +141,7 @@ class Cache:
 
     def has_changed(self, *filenames: Optional[FileSystemPath]) -> bool:
         """Return whether any of the given files changed since the last check."""
-        mtime = self.index.setdefault("mtime", {})
+        mtime = self.index.mtime
         changed = False
 
         for filename in filenames:
@@ -155,37 +160,35 @@ class Cache:
 
     def invalidate_changes(self, *filenames: Optional[FileSystemPath]):
         """Reset the modification time of the given files."""
-        mtime = self.index.setdefault("mtime", {})
+        mtime = self.index.mtime
         for filename in filenames:
             if filename:
                 mtime.pop(str(Path(filename)), None)
 
     @property
     def expire(self) -> Optional[datetime]:
-        expire = self.index["expire"]
-        return expire and datetime.fromisoformat(expire)
+        return self.index.expire
 
     @expire.setter
     def expire(self, value: Optional[datetime]):
-        self.index["expire"] = value and value.isoformat()
+        self.index.expire = value
 
     def timeout(self, delta: Optional[timedelta] = None, **kwargs: Any) -> "Cache":
         """Invalidate the cache after a given timeout."""
         if not delta:
             delta = timedelta()
         delta += timedelta(**kwargs)
-        self.expire = datetime.fromisoformat(self.index["timestamp"]) + delta
+        self.expire = self.index.timestamp + delta
         return self
 
     def restart_timeout(self):
         """Restart the invalidation timeout."""
         now = datetime.now()
-        timestamp = datetime.fromisoformat(self.index["timestamp"])
 
         if self.expire:
-            self.expire += now - timestamp
+            self.expire += now - self.index.timestamp
 
-        self.index["timestamp"] = now.isoformat()
+        self.index.timestamp = now
 
     def __enter__(self) -> "Cache":
         self.transaction.enter()
@@ -198,7 +201,7 @@ class Cache:
     def delete(self):
         """Delete the entire cache."""
         if not self.deleted:
-            for finalizer in self.index.get("finalizers", []):
+            for finalizer in self.index.finalizers:
                 import_from_string(finalizer)(self)
             if self.directory.is_dir():
                 shutil.rmtree(self.directory)
@@ -211,6 +214,10 @@ class Cache:
         self.deleted = False
         self.flush()
 
+    def dumps(self) -> str:
+        """Serialize this cache to a JSON formatted str"""
+        return self.index.json(by_alias=True, exclude_defaults=True, indent=2)
+
     def flush(self):
         """Flush the modifications to the filesystem."""
         if self.deleted:
@@ -221,7 +228,7 @@ class Cache:
             self.clear()
         else:
             self.directory.mkdir(parents=True, exist_ok=True)
-            self.index_path.write_text(dump_json(self.index))
+            self.index_path.write_text(self.dumps())
 
     @contextmanager
     def override(self, **data: Any):
@@ -247,12 +254,12 @@ class Cache:
         return f"{self.__class__.__name__}({str(self.directory)!r})"
 
     def __str__(self) -> str:
-        formatted_json = indent(dump_json(self.json), "  |  ")[5:]
+        formatted_json = indent(self.dumps(), "  |  ")[5:]
         contents = indent("\n".join(format_directory(self.directory)), "  |    ")
 
         return (
             f"Cache {self.index_path.parent.name}:\n"
-            f"  |  timestamp = {datetime.fromisoformat(self.index['timestamp']).ctime()}\n"
+            f"  |  timestamp = {self.index.timestamp.ctime()}\n"
             f"  |  expire = {self.expire and self.expire.ctime()}\n  |  \n"
             f"  |  directory = {self.directory}\n{contents}\n  |  \n"
             f"  |  json = {formatted_json}"
