@@ -135,9 +135,7 @@ class Cache:
 
     def download(self, url: str, path: Optional[FileSystemPath] = None) -> Path:
         """Download and cache a given url."""
-        if not path:
-            path = self.get_path(url)
-        return self.download_manager.download(url, path)
+        return self.download_manager.download(url, path or self.get_path(url))
 
     def has_changed(self, *filenames: Optional[FileSystemPath]) -> bool:
         """Return whether any of the given files changed since the last check."""
@@ -203,8 +201,10 @@ class Cache:
         if not self.deleted:
             for finalizer in self.index.finalizers:
                 import_from_string(finalizer)(self)
+
             if self.directory.is_dir():
                 shutil.rmtree(self.directory)
+
             self.index = self.get_initial_index()
             self.deleted = True
 
@@ -254,14 +254,18 @@ class Cache:
         return f"{self.__class__.__name__}({str(self.directory)!r})"
 
     def __str__(self) -> str:
-        formatted_json = indent(self.dumps(), "  |  ")[5:]
+        line_prefix = "  |  "
+        formatted_json = indent(self.dumps(), line_prefix)[len(line_prefix) :]
         contents = indent("\n".join(format_directory(self.directory)), "  |    ")
 
         return (
             f"Cache {self.index_path.parent.name}:\n"
             f"  |  timestamp = {self.index.timestamp.ctime()}\n"
-            f"  |  expire = {self.expire and self.expire.ctime()}\n  |  \n"
-            f"  |  directory = {self.directory}\n{contents}\n  |  \n"
+            f"  |  expire = {self.expire and self.expire.ctime()}\n"
+            f"  |  \n"
+            f"  |  directory = {self.directory}\n"
+            f"{contents}\n"
+            f"  |  \n"
             f"  |  json = {formatted_json}"
         )
 
