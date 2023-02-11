@@ -15,7 +15,7 @@ from contextlib import closing, contextmanager
 from datetime import datetime, timedelta
 from pathlib import Path
 from textwrap import indent
-from typing import Any, BinaryIO, ClassVar, Optional, Set, Type, TypeVar
+from typing import Any, BinaryIO, Callable, ClassVar, Optional, Set, Type, TypeVar
 from urllib.request import urlopen
 
 from .container import Container, MatchMixin, Pin
@@ -90,7 +90,7 @@ class Cache:
             "json": {},
         }
 
-    def add_finalizer(self, obj: Any):
+    def add_finalizer(self, obj: str | Callable[["Cache"], Any]):
         """Register the given handler as finalizer."""
         finalizers = self.index.setdefault("finalizers", [])
         dotted_path = obj if isinstance(obj, str) else get_import_string(obj)
