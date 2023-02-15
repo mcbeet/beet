@@ -41,15 +41,12 @@ from pathlib import Path
 from traceback import format_exception
 from typing import (
     Any,
-    Dict,
     Iterable,
     Iterator,
-    List,
     Optional,
     Protocol,
     Tuple,
     TypeVar,
-    Union,
     runtime_checkable,
 )
 
@@ -65,9 +62,9 @@ class PathLikeFallback(Protocol):
         ...
 
 
-JsonDict = Dict[str, Any]
-FileSystemPath = Union[str, PathLikeFallback]
-TextComponent = Union[str, List[Any], JsonDict]
+JsonDict = dict[str, Any]
+FileSystemPath = str | PathLikeFallback
+TextComponent = str | list["TextComponent"] | JsonDict | int | float
 
 
 class Sentinel:
@@ -116,7 +113,7 @@ def snake_case(string: str) -> str:
     return CAMEL_REGEX.sub(r"_\1", string).lower()
 
 
-VersionNumber = Union[str, int, float, Tuple[Union[str, int], ...]]
+VersionNumber = str | int | float | Tuple[str | int, ...]
 
 
 def split_version(version: VersionNumber) -> Tuple[int, ...]:
@@ -134,7 +131,7 @@ def get_import_string(obj: Any) -> str:
 def import_from_string(
     dotted_path: str,
     default_member: Optional[str] = None,
-    whitelist: Optional[List[str]] = None,
+    whitelist: Optional[list[str]] = None,
 ) -> Any:
     if whitelist is not None and dotted_path not in whitelist:
         raise ModuleNotFoundError(f"No module named {dotted_path!r}")
@@ -154,7 +151,7 @@ def import_from_string(
     return getattr(module, default_member) if default_member else module
 
 
-def resolve_packageable_path(value: T) -> Union[T, Path]:
+def resolve_packageable_path(value: T) -> T | Path:
     value_str = str(value)
 
     if value_str.startswith("@"):
