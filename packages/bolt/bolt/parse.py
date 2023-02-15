@@ -40,7 +40,7 @@ __all__ = [
     "parse_python_import",
     "parse_import_name",
     "parse_name_list",
-    "GlobalNonlocalHandler",
+    "BindingStorageHandler",
     "DocstringHandler",
     "FlushPendingBindingsParser",
     "SubcommandConstraint",
@@ -635,7 +635,7 @@ def create_bolt_command_parser(
 ):
     """Compose command parsers."""
     parser = MemoHandler(parser)
-    parser = GlobalNonlocalHandler(parser)
+    parser = BindingStorageHandler(parser)
     parser = ImportStatementHandler(parser, modules)
     parser = DocstringHandler(parser)
     parser = UndefinedIdentifierErrorHandler(parser)
@@ -1910,31 +1910,35 @@ def parse_name_list(stream: TokenStream) -> AstIdentifier:
 
 
 @dataclass
-class GlobalNonlocalHandler:
-    """Handle global and nonlocal declarations."""
+class BindingStorageHandler:
+    """Handle binding storage."""
 
     parser: Parser
 
-    storage_qualifiers: Dict[str, Literal["global", "nonlocal"]] = field(
+    storage_qualifiers: Dict[str, Literal["global", "nonlocal", "deleted"]] = field(
         default_factory=lambda: {
             "global:subcommand": "global",
             "nonlocal:subcommand": "nonlocal",
+            "del:target": "deleted",
         }
     )
 
     def __call__(self, stream: TokenStream) -> Any:
         if isinstance(node := self.parser(stream), AstCommand):
             if storage := self.storage_qualifiers.get(node.identifier):
-                subcommand = cast(AstCommand, node.arguments[0])
-
                 lexical_scope = get_stream_lexical_scope(stream)
-                while True:
-                    if isinstance(name := subcommand.arguments[0], AstIdentifier):
-                        lexical_scope.bind_storage(name.value, storage, name)
-                    if subcommand.identifier == f"{storage}:name:subcommand":
-                        subcommand = cast(AstCommand, subcommand.arguments[1])
-                    else:
-                        break
+
+                if isinstance(target := node.arguments[0], AstTargetIdentifier):
+                    lexical_scope.bind_storage(target.value, storage, target)
+
+                elif isinstance(subcommand := node.arguments[0], AstCommand):
+                    while True:
+                        if isinstance(name := subcommand.arguments[0], AstIdentifier):
+                            lexical_scope.bind_storage(name.value, storage, name)
+                        if subcommand.identifier == f"{storage}:name:subcommand":
+                            subcommand = cast(AstCommand, subcommand.arguments[1])
+                        else:
+                            break
 
         return node
 

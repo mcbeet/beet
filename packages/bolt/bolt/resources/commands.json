@@ -130,7 +130,6 @@
     },
     "del": {
       "type": "literal",
-      "executable": true,
       "children": {
         "target": {
           "type": "argument",

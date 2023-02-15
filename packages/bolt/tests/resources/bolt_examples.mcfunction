@@ -1314,3 +1314,7 @@ macro hello clause=subcommand{"redirect": ["execute"]}:
 hello if block ~ ~ ~ water say blbllblb
 hello setblock ~ ~ ~ lava
 hello run summon bat
+###
+x = 1
+del x
+x = 2

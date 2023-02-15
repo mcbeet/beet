@@ -145,7 +145,7 @@ class Variable:
         The number of bindings in common after forking.
     """
 
-    storage: Literal["local", "nonlocal", "global"] = "local"
+    storage: Literal["local", "nonlocal", "global", "deleted"] = "local"
     bindings: List[Binding] = field(default_factory=list)
 
     cutoff: int = extra_field(default=0)
@@ -193,7 +193,8 @@ class LexicalScope:
     pending_bindings: List[Tuple[str, AstNode]] = extra_field(default_factory=list)
 
     def has_binding(self, identifier: str, search_parents: bool = False) -> bool:
-        return identifier in self.variables or bool(
+        variable = self.variables.get(identifier)
+        return (variable and variable.storage != "deleted") or bool(
             search_parents
             and self.parent
             and self.parent.has_binding(identifier, search_parents=True)
@@ -260,7 +261,7 @@ class LexicalScope:
     def bind_storage(
         self,
         identifier: str,
-        storage: Literal["nonlocal", "global"],
+        storage: Literal["nonlocal", "global", "deleted"],
         node: AstNode,
     ):
         self.dirty = True
@@ -271,6 +272,8 @@ class LexicalScope:
         if not variable:
             variable = Variable(storage=storage)
             self.variables[identifier] = variable
+        elif storage == "deleted":
+            variable.storage = storage
         elif variable.storage != storage:
             exc = InconsistentIdentifierStorage(identifier, storage, self)
             raise set_location(exc, node)
