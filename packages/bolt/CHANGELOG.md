@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.30.1 (2023-02-15)
+### Fix
+* Properly track del statement semantics ([`66c543f`](https://github.com/mcbeet/bolt/commit/66c543fd82902ed7cbf7e04e6a0b57a45715c0bd))
+
 ## v0.30.0 (2023-02-09)
 ### Feature
 * Macro subcommands ([`5db484e`](https://github.com/mcbeet/bolt/commit/5db484ef754bbd5eaeea0c16574ecc23e160a490))
