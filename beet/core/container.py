@@ -32,7 +32,7 @@ from typing import (
 from pathspec import PathSpec
 from typing_extensions import Self
 
-from .utils import SENTINEL_OBJ, Sentinel
+from .utils import SENTINEL_OBJ, KeysProtocol, Sentinel
 
 K = TypeVar("K")
 V = TypeVar("V")
@@ -70,10 +70,14 @@ class MergeMixin(MutableMapping[K, MergeableType]):
 
 
 class MatchMixin:
-    def match(self, *patterns: str) -> Set[str]:
+    def match(self: KeysProtocol[str], *patterns: str) -> Set[str]:
         """Return keys matching the given path patterns."""
         spec = PathSpec.from_lines("gitwildmatch", patterns)
-        return set(spec.match_files(self.keys()))  # type: ignore
+        return {
+            key
+            for key in self.keys()
+            if spec.match_file(key)  # pyright: ignore[reportUnknownMemberType]
+        }
 
 
 @dataclass
