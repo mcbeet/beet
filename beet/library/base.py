@@ -58,13 +58,12 @@ from typing import (
 from zipfile import ZIP_BZIP2, ZIP_DEFLATED, ZIP_LZMA, ZIP_STORED, ZipFile
 
 from beet.core.container import (
-    Container,
-    ContainerProxy,
     Drop,
     MatchMixin,
-    MergeMixin,
+    MergeableType,
+    MergeContainer,
+    MergeContainerProxy,
     Pin,
-    SupportsMerge,
 )
 from beet.core.file import File, FileOrigin, JsonFile, PngFile
 from beet.core.utils import FileSystemPath, JsonDict, TextComponent
@@ -80,7 +79,6 @@ PackFileType = TypeVar("PackFileType", bound="PackFile")
 NamespaceType = TypeVar("NamespaceType", bound="Namespace")
 NamespaceFileType = TypeVar("NamespaceFileType", bound="NamespaceFile")
 PackType = TypeVar("PackType", bound="Pack[Any]")
-MergeableType = TypeVar("MergeableType", bound=SupportsMerge)
 
 PackFile = File[Any, Any]
 
@@ -154,7 +152,9 @@ class NamespaceFile(Protocol):
 class MergeCallback(Protocol):
     """Protocol for detecting merge callbacks."""
 
-    def __call__(self, pack: Any, path: str, current: Any, conflict: Any, /) -> bool:
+    def __call__(
+        self, pack: Any, path: str, current: MergeableType, conflict: MergeableType, /
+    ) -> bool:
         ...
 
 
@@ -192,8 +192,8 @@ class MergePolicy:
     def merge_with_rules(
         self,
         pack: Any,
-        current: MutableMapping[Any, SupportsMerge],
-        other: Mapping[Any, SupportsMerge],
+        current: MutableMapping[str, MergeableType],
+        other: Mapping[str, MergeableType],
         map_rules: Callable[[str], Tuple[str, List[MergeCallback]]],
     ) -> bool:
         """Merge values according to the given rules."""
@@ -218,7 +218,7 @@ class MergePolicy:
         return True
 
 
-class ExtraContainer(MatchMixin, MergeMixin, Container[str, PackFile]):
+class ExtraContainer(MatchMixin, MergeContainer[str, PackFile]):
     """Container that stores extra files in a pack or a namespace."""
 
 
@@ -259,7 +259,7 @@ class NamespaceExtraContainer(ExtraContainer, Generic[NamespaceType]):
             except Drop:
                 del self[key]
 
-    def merge(self, other: Mapping[Any, SupportsMerge]) -> bool:
+    def merge(self, other: Mapping[str, PackFile]) -> bool:
         if (
             self.namespace is not None
             and self.namespace.pack is not None
@@ -300,7 +300,7 @@ class PackExtraContainer(ExtraContainer, Generic[PackType]):
             except Drop:
                 del self[key]
 
-    def merge(self, other: Mapping[Any, SupportsMerge]) -> bool:
+    def merge(self, other: Mapping[str, PackFile]) -> bool:
         if self.pack is not None:
             pack = self.pack
 
@@ -316,7 +316,7 @@ class PackExtraContainer(ExtraContainer, Generic[PackType]):
         return super().merge(other)
 
 
-class NamespaceContainer(MatchMixin, MergeMixin, Container[str, NamespaceFileType]):
+class NamespaceContainer(MatchMixin, MergeContainer[str, NamespaceFileType]):
     """Container that stores one type of files in a namespace."""
 
     namespace: Optional["Namespace"] = None
@@ -359,7 +359,7 @@ class NamespaceContainer(MatchMixin, MergeMixin, Container[str, NamespaceFileTyp
             self[key] = self.file_type()
         return self[key]
 
-    def merge(self, other: Mapping[Any, SupportsMerge]) -> bool:
+    def merge(self, other: Mapping[str, NamespaceFileType]) -> bool:
         if (
             self.namespace is not None
             and self.namespace.pack is not None
@@ -405,10 +405,7 @@ class NamespacePin(Pin[Type[NamespaceFileType], NamespaceContainer[NamespaceFile
     """Descriptor for accessing namespace containers by attribute lookup."""
 
 
-class Namespace(
-    MergeMixin,
-    Container[Type[NamespaceFile], NamespaceContainer[NamespaceFile]],
-):
+class Namespace(MergeContainer[Type[NamespaceFile], NamespaceContainer[NamespaceFile]]):
     """Class representing a namespace."""
 
     pack: Optional["Pack[Namespace]"] = None
@@ -483,10 +480,9 @@ class Namespace(
         return NamespaceContainer()
 
     def merge(
-        self: MutableMapping[T, MergeableType],  # type: ignore
-        other: Mapping[T, MergeableType],
+        self, other: Mapping[Type[NamespaceFile], NamespaceContainer[NamespaceFile]]
     ) -> bool:
-        super().merge(other)  # type: ignore
+        super().merge(other)
 
         if isinstance(self, Namespace) and isinstance(other, Namespace):
             self.extra.merge(other.extra)
@@ -640,8 +636,7 @@ class Namespace(
 
 class NamespaceProxy(
     MatchMixin,
-    MergeMixin,
-    ContainerProxy[Type[NamespaceFileType], str, NamespaceFileType],
+    MergeContainerProxy[Type[NamespaceFileType], str, NamespaceFileType],
 ):
     """Aggregated view that exposes a certain type of files over all namespaces."""
 
@@ -662,7 +657,7 @@ class NamespaceProxy(
         key1, key2 = self.split_key(key)
         return self.proxy[key1][self.proxy_key].setdefault(key2, default)  # type: ignore
 
-    def merge(self, other: Mapping[Any, SupportsMerge]) -> bool:
+    def merge(self, other: Mapping[str, NamespaceFileType]) -> bool:
         if isinstance(pack := self.proxy, Pack):
             return pack.merge_policy.merge_with_rules(
                 pack=pack,
@@ -803,7 +798,7 @@ class PackOverwrite(Exception):
         return f'Couldn\'t overwrite "{str(self.path)}".'
 
 
-class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
+class Pack(MatchMixin, MergeContainer[str, NamespaceType]):
     """Class representing a pack."""
 
     name: Optional[str]
@@ -974,13 +969,11 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
     def missing(self, key: str) -> NamespaceType:
         return self.namespace_type()  # type: ignore
 
-    def merge(
-        self: MutableMapping[T, MergeableType], other: Mapping[T, MergeableType]
-    ) -> bool:
-        super().merge(other)  # type: ignore
+    def merge(self, other: Mapping[str, NamespaceType]) -> bool:
+        super().merge(other)
 
-        if isinstance(self, Pack) and isinstance(other, Pack):
-            self.extra.merge(other.extra)  # type: ignore
+        if isinstance(other, Pack):
+            self.extra.merge(other.extra)
 
         empty_namespaces = [key for key, value in self.items() if not value]  # type: ignore
         for namespace in empty_namespaces:

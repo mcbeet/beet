@@ -30,6 +30,7 @@ from typing import (
 )
 
 from pathspec import PathSpec
+from typing_extensions import Self
 
 from .utils import SENTINEL_OBJ, Sentinel
 
@@ -49,19 +50,22 @@ class Drop(Exception):
 class SupportsMerge(Protocol):
     """Protocol for detecting mergeable types."""
 
-    def merge(self, other: Any) -> bool:
+    def merge(self, other: Self) -> bool:
         ...
 
 
-class MergeMixin:
-    def merge(self, other: Mapping[Any, SupportsMerge]) -> bool:
+MergeableType = TypeVar("MergeableType", bound=SupportsMerge)
+
+
+class MergeMixin(MutableMapping[K, MergeableType]):
+    def merge(self, other: Mapping[K, MergeableType]) -> bool:
         """Merge values from the given dict-like object."""
         for key, value in other.items():
             try:
-                if key not in self or not self[key].merge(value):  # type: ignore
-                    self[key] = value  # type: ignore
+                if key not in self or not self[key].merge(value):
+                    self[key] = value
             except Drop:
-                del self[key]  # type: ignore
+                del self[key]
         return True
 
 
@@ -178,6 +182,10 @@ class Container(MutableMapping[K, V]):
         return f"{self.__class__.__name__}(keys={list(self.keys())})"
 
 
+class MergeContainer(MergeMixin[K, MergeableType], Container[K, MergeableType]):
+    pass
+
+
 class ContainerProxy(Generic[ProxyKeyType, K, V], MutableMapping[K, V]):
     """Generic aggregated view over several nested bounded dict-like objects."""
 
@@ -222,3 +230,11 @@ class ContainerProxy(Generic[ProxyKeyType, K, V], MutableMapping[K, V]):
 
     def __repr__(self) -> str:
         return f"{self.__class__.__name__}(keys={list(self.keys())})"
+
+
+class MergeContainerProxy(
+    Generic[ProxyKeyType, K, MergeableType],
+    MergeMixin[K, MergeableType],
+    ContainerProxy[ProxyKeyType, K, MergeableType],
+):
+    pass
