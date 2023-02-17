@@ -29,6 +29,7 @@ from typing import (
     Type,
     TypeVar,
     Union,
+    overload,
 )
 
 from pathspec import PathSpec
@@ -115,23 +116,36 @@ class Pin(Generic[K, CV]):
             case _:
                 pass
 
-    def __get__(self, obj: Any, objtype: Optional[Type[Any]] = None) -> CV:
+    @overload
+    def __get__(self, obj: None, objtype: None) -> Self:
+        ...
+
+    @overload
+    def __get__(self, obj: Any, objtype: Type[Any]) -> CV:
+        ...
+
+    def __get__(
+        self, obj: Optional[Any], objtype: Optional[Type[Any]] = None
+    ) -> CV | Self:
+        if obj is None:
+            return self
+
         mapping = self.forward(obj)
 
-        try:
-            return mapping[self.key]
-        except KeyError:
-            value = (
-                self.default
-                if isinstance(self.default_factory, Sentinel)
-                else self.default_factory()
-            )
+        while True:
+            try:
+                return mapping[self.key]
+            except KeyError:
+                value = (
+                    self.default
+                    if isinstance(self.default_factory, Sentinel)
+                    else self.default_factory()
+                )
 
-            if isinstance(value, Sentinel):
-                raise
+                if isinstance(value, Sentinel):
+                    raise
 
-            mapping[self.key] = value
-            return self.__get__(obj, objtype)
+                mapping[self.key] = value
 
     def __set__(self: "Pin[K, V]", obj: Any, value: V):
         self.forward(obj)[self.key] = value
@@ -144,9 +158,7 @@ class Pin(Generic[K, CV]):
         return obj
 
     @classmethod
-    def collect_from(
-        cls: Type["Pin[K, CV]"], target: Type[Any]
-    ) -> Dict[str, "Pin[K, CV]"]:
+    def collect_from(cls, target: Type[Any]) -> dict[str, "Pin[K, CV]"]:
         return {
             key: value for key, value in vars(target).items() if isinstance(value, cls)
         }
