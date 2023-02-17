@@ -14,7 +14,17 @@ from contextlib import closing, contextmanager
 from datetime import datetime, timedelta
 from pathlib import Path
 from textwrap import indent
-from typing import Any, BinaryIO, Callable, ClassVar, Optional, Set, Type, TypeVar
+from typing import (
+    Any,
+    BinaryIO,
+    Callable,
+    ClassVar,
+    Optional,
+    Protocol,
+    Set,
+    Type,
+    TypeVar,
+)
 from urllib.request import urlopen
 
 from pydantic import BaseModel, Extra, Field
@@ -270,11 +280,15 @@ class Cache:
         )
 
 
+class SupportsCache(Protocol):
+    cache: Cache
+
+
 class CachePin(Pin[str, PinType]):
     """Descriptor that makes cache data accessible through attribute lookup."""
 
-    def forward(self, obj: Any) -> JsonDict:
-        return obj.cache.json if isinstance(obj.cache, Cache) else {}
+    def forward(self, obj: SupportsCache) -> JsonDict:
+        return obj.cache.json
 
 
 class MultiCache(MatchMixin, Container[str, CacheType]):
