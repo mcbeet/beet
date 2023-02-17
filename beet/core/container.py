@@ -19,6 +19,7 @@ from typing import (
     Dict,
     Generic,
     Iterator,
+    KeysView,
     Mapping,
     MutableMapping,
     Optional,
@@ -33,15 +34,21 @@ from typing import (
 from pathspec import PathSpec
 from typing_extensions import Self
 
-from .utils import SENTINEL_OBJ, KeysProtocol, Sentinel
+from .utils import SENTINEL_OBJ, Sentinel
 
 K = TypeVar("K")
+CK = TypeVar("CK", covariant=True)
 V = TypeVar("V")
 CV = TypeVar("CV", covariant=True)
 ProxyKeyType = TypeVar("ProxyKeyType")
 
 PinDefault = Union[V, Sentinel]
 PinDefaultFactory = Union[Callable[[], V], Sentinel]
+
+
+class SupportsKeys(Generic[CK], Protocol):
+    def keys(self) -> KeysView[CK]:
+        ...
 
 
 class Drop(Exception):
@@ -71,7 +78,7 @@ class MergeMixin(MutableMapping[K, MergeableType]):
 
 
 class MatchMixin:
-    def match(self: KeysProtocol[str], *patterns: str) -> Set[str]:
+    def match(self: SupportsKeys[str], *patterns: str) -> Set[str]:
         """Return keys matching the given path patterns."""
         spec = PathSpec.from_lines("gitwildmatch", patterns)
         return {

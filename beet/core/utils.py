@@ -23,7 +23,6 @@ __all__ = [
     "format_directory",
     "pop_traceback",
     "change_directory",
-    "KeysProtocol",
 ]
 
 
@@ -42,10 +41,8 @@ from pathlib import Path
 from traceback import format_exception
 from typing import (
     Any,
-    Generic,
     Iterable,
     Iterator,
-    KeysView,
     Optional,
     Protocol,
     Tuple,
@@ -57,12 +54,6 @@ from pydantic import PydanticTypeError, ValidationError
 from pydantic.validators import _VALIDATORS  # type: ignore
 
 T = TypeVar("T")
-CK = TypeVar("CK", covariant=True)
-
-
-class KeysProtocol(Generic[CK], Protocol):
-    def keys(self) -> KeysView[CK]:
-        ...
 
 
 @runtime_checkable
