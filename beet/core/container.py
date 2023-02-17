@@ -11,6 +11,7 @@ __all__ = [
 ]
 
 
+import logging
 from dataclasses import dataclass
 from typing import (
     Any,
@@ -80,6 +81,9 @@ class MatchMixin:
         }
 
 
+logger = logging.getLogger(__name__)
+
+
 @dataclass
 class Pin(Generic[K, CV]):
     """Descriptor that exposes a specific value from a dict-like object."""
@@ -87,6 +91,22 @@ class Pin(Generic[K, CV]):
     key: K
     default: PinDefault[CV] = SENTINEL_OBJ
     default_factory: PinDefaultFactory[CV] = SENTINEL_OBJ
+
+    def __post_init__(self):
+        match (
+            isinstance(self.default, Sentinel),
+            isinstance(self.default_factory, Sentinel),
+        ):
+            case (True, True):
+                raise ValueError(
+                    "At least one of default and default_factory must be set to a non-sentinal value"
+                )
+            case (False, False):
+                logger.warning(
+                    "Both default and default_factory were set, ignoring the default and using only the default_factory"
+                )
+            case _:
+                pass
 
     def __get__(self, obj: Any, objtype: Optional[Type[Any]] = None) -> CV:
         mapping = self.forward(obj)
