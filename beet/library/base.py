@@ -51,11 +51,14 @@ from typing import (
     Type,
     TypeVar,
     Union,
+    cast,
     get_args,
     get_origin,
     overload,
 )
 from zipfile import ZIP_BZIP2, ZIP_DEFLATED, ZIP_LZMA, ZIP_STORED, ZipFile
+
+from typing_extensions import Self
 
 from beet.core.container import (
     CV,
@@ -272,13 +275,14 @@ class NamespaceExtraContainer(ExtraContainer, Generic[NamespaceType]):
 
             return pack.merge_policy.merge_with_rules(
                 pack=pack,
-                current=self,  # type: ignore
+                current=self,
                 other=other,
                 map_rules=lambda key: (
                     f"{name}:{key}",
                     pack.merge_policy.namespace_extra.get(key, []),
                 ),
             )
+
         return super().merge(other)
 
 
@@ -308,7 +312,7 @@ class PackExtraContainer(ExtraContainer, Generic[PackType]):
 
             return pack.merge_policy.merge_with_rules(
                 pack=pack,
-                current=self,  # type: ignore
+                current=self,
                 other=other,
                 map_rules=lambda key: (
                     key,
@@ -331,6 +335,7 @@ class NamespaceContainer(MatchMixin, MergeContainer[str, NamespaceFileType]):
             and self.namespace.name
         ):
             value.bind(self.namespace.pack, f"{self.namespace.name}:{key}")
+
         return value
 
     def bind(self, namespace: "Namespace", file_type: Type[NamespaceFileType]):
@@ -351,6 +356,7 @@ class NamespaceContainer(MatchMixin, MergeContainer[str, NamespaceFileType]):
     ) -> NamespaceFileType:
         if value := self.get(key):
             return value
+
         if default:
             self[key] = default
         else:
@@ -359,6 +365,7 @@ class NamespaceContainer(MatchMixin, MergeContainer[str, NamespaceFileType]):
                     "File type associated to the namespace container is not available."
                 )
             self[key] = self.file_type()
+
         return self[key]
 
     def merge(self, other: Mapping[str, NamespaceFileType]) -> bool:
@@ -374,7 +381,7 @@ class NamespaceContainer(MatchMixin, MergeContainer[str, NamespaceFileType]):
 
             return pack.merge_policy.merge_with_rules(
                 pack=pack,
-                current=self,  # type: ignore
+                current=self,
                 other=other,
                 map_rules=lambda key: (
                     f"{name}:{key}",
@@ -383,10 +390,10 @@ class NamespaceContainer(MatchMixin, MergeContainer[str, NamespaceFileType]):
             )
         return super().merge(other)
 
-    def generate_tree(self, path: str = "") -> Dict[Any, Any]:
+    def generate_tree(self, path: str = "") -> dict[Any, Any]:
         """Generate a hierarchy of nested dictionaries representing the files and folders."""
         prefix = path.split("/") if path else []
-        tree: Dict[Any, Any] = {}
+        tree: dict[Any, Any] = {}
 
         for filename, file_instance in self.items():
             parts = filename.split("/")
@@ -410,7 +417,7 @@ class NamespacePin(Pin[Type[NamespaceFileType], NamespaceContainer[NamespaceFile
 class Namespace(MergeContainer[Type[NamespaceFile], NamespaceContainer[NamespaceFile]]):
     """Class representing a namespace."""
 
-    pack: Optional["Pack[Namespace]"] = None
+    pack: Optional["Pack[Self]"] = None
     name: Optional[str] = None
     extra: NamespaceExtraContainer["Namespace"]
 
@@ -437,7 +444,7 @@ class Namespace(MergeContainer[Type[NamespaceFile], NamespaceContainer[Namespace
         value.bind(self, key)
         return value
 
-    def bind(self, pack: "Pack[Namespace]", name: str):
+    def bind(self, pack: "Pack[Self]", name: str):
         """Handle insertion."""
         self.pack = pack
         self.name = name
@@ -459,20 +466,29 @@ class Namespace(MergeContainer[Type[NamespaceFile], NamespaceContainer[Namespace
     def __setitem__(self, key: str, value: NamespaceFile):
         ...
 
-    def __setitem__(self, key: Any, value: Any):
+    def __setitem__(
+        self,
+        key: Type[NamespaceFile] | str,
+        value: NamespaceContainer[NamespaceFile] | NamespaceFile,
+    ):
         if isinstance(key, type):
-            super().__setitem__(key, value)  # type: ignore
+            value = cast(NamespaceContainer[NamespaceFile], value)
+            super().__setitem__(key, value)
         else:
+            value = cast(NamespaceFile, value)
             self[type(value)][key] = value
 
     def __eq__(self, other: Any) -> bool:
         if self is other:
             return True
+
         if type(self) == type(other) and not self.extra == other.extra:
             return False
+
         if isinstance(other, Mapping):
             rhs: Mapping[Type[NamespaceFile], NamespaceContainer[NamespaceFile]] = other
             return all(self[key] == rhs[key] for key in self.keys() | rhs.keys())
+
         return NotImplemented
 
     def __bool__(self) -> bool:
@@ -489,9 +505,9 @@ class Namespace(MergeContainer[Type[NamespaceFile], NamespaceContainer[Namespace
         if isinstance(self, Namespace) and isinstance(other, Namespace):
             self.extra.merge(other.extra)
 
-        empty_containers = [key for key, value in self.items() if not value]  # type: ignore
+        empty_containers = [key for key, value in self.items() if not value]
         for container in empty_containers:
-            del self[container]  # type: ignore
+            del self[container]
 
         return True
 
@@ -921,10 +937,14 @@ class Pack(MatchMixin, MergeContainer[str, NamespaceType]):
     ) -> NamespaceProxy[NamespaceFileType]:
         ...
 
-    def __getitem__(self, key: Any) -> Any:
+    def __getitem__(
+        self, key: str | Type[NamespaceFileType]
+    ) -> NamespaceType | NamespaceProxy[NamespaceFileType]:
         if isinstance(key, str):
             return super().__getitem__(key)
-        return NamespaceProxy(self, key)
+
+        # Using [Any] to silence the variance mismatch
+        return NamespaceProxy[Any](self, key)
 
     @overload
     def __setitem__(self, key: str, value: NamespaceType):
@@ -934,22 +954,25 @@ class Pack(MatchMixin, MergeContainer[str, NamespaceType]):
     def __setitem__(self, key: str, value: NamespaceFile):
         ...
 
-    def __setitem__(self, key: str, value: Any):
+    def __setitem__(self, key: str, value: NamespaceType | NamespaceFile):
         if isinstance(value, Namespace):
-            super().__setitem__(key, value)  # type: ignore
+            super().__setitem__(key, value)
         else:
             NamespaceProxy[NamespaceFile](self, type(value))[key] = value
 
     def __eq__(self, other: Any) -> bool:
         if self is other:
             return True
+
         if type(self) == type(other) and not (
             self.name == other.name and self.extra == other.extra
         ):
             return False
+
         if isinstance(other, Mapping):
             rhs: Mapping[str, Namespace] = other
             return all(self[key] == rhs[key] for key in self.keys() | rhs.keys())
+
         return NotImplemented
 
     def __hash__(self) -> int:
@@ -965,7 +988,7 @@ class Pack(MatchMixin, MergeContainer[str, NamespaceType]):
         self.save(overwrite=True)
 
     def process(self, key: str, value: NamespaceType) -> NamespaceType:
-        value.bind(self, key)  # type: ignore
+        value.bind(self, key)
         return value
 
     def missing(self, key: str) -> NamespaceType:
@@ -977,9 +1000,9 @@ class Pack(MatchMixin, MergeContainer[str, NamespaceType]):
         if isinstance(other, Pack):
             self.extra.merge(other.extra)
 
-        empty_namespaces = [key for key, value in self.items() if not value]  # type: ignore
+        empty_namespaces = [key for key, value in self.items() if not value]
         for namespace in empty_namespaces:
-            del self[namespace]  # type: ignore
+            del self[namespace]
 
         return True
 
