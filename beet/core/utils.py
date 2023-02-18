@@ -38,19 +38,23 @@ import shutil
 import sys
 import time
 from contextlib import contextmanager
-from dataclasses import field
+from dataclasses import MISSING, field
 from importlib import import_module
 from importlib.util import find_spec
 from pathlib import Path
 from traceback import format_exception
 from typing import (
     Any,
+    Callable,
     Iterable,
     Iterator,
+    Mapping,
     Optional,
     Protocol,
     Tuple,
     TypeVar,
+    cast,
+    overload,
     runtime_checkable,
 )
 
@@ -84,12 +88,60 @@ def dump_json(value: Any) -> str:
     return json.dumps(value, indent=2) + "\n"
 
 
+@overload
+def extra_field(
+    *,
+    default: T,
+    init: bool = True,
+    metadata: Optional[Mapping[Any, Any]] = None,
+    kw_only: bool = cast(bool, MISSING),
+) -> T:
+    ...
+
+
+@overload
+def extra_field(
+    *,
+    default_factory: Callable[[], T],
+    init: bool = True,
+    metadata: Optional[Mapping[Any, Any]] = None,
+    kw_only: bool = cast(bool, MISSING),
+) -> T:
+    ...
+
+
+@overload
+def extra_field(
+    *,
+    init: bool = True,
+    metadata: Optional[Mapping[Any, Any]] = None,
+    kw_only: bool = cast(bool, MISSING),
+) -> Any:
+    ...
+
+
 def extra_field(**kwargs: Any) -> Any:
     return field(repr=False, hash=False, compare=False, **kwargs)
 
 
-def required_field(**kwargs: Any) -> Any:
-    return field(**kwargs, default_factory=_raise_required_field)
+def required_field(
+    *,
+    init: bool = True,
+    repr: bool = True,
+    hash: Optional[bool] = None,
+    compare: bool = True,
+    metadata: Optional[Mapping[Any, Any]] = None,
+    kw_only: bool = cast(bool, MISSING),
+) -> Any:
+    return field(
+        default_factory=_raise_required_field,
+        init=init,
+        repr=repr,
+        hash=hash,
+        compare=compare,
+        metadata=metadata,
+        kw_only=kw_only,
+    )
 
 
 def _raise_required_field() -> Any:
