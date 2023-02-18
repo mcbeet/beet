@@ -314,9 +314,7 @@ class MultiCache(MatchMixin, Container[str, CacheType]):
         self.transaction = CacheTransaction()
 
     def missing(self, key: str) -> CacheType:
-        cache = self.cache_type(self.path / key, self.transaction)
-        self[key] = cache
-        return cache
+        return self.cache_type(self.path / key, self.transaction)
 
     def __delitem__(self, key: str):
         self[key].delete()
