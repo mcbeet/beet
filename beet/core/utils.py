@@ -1,6 +1,9 @@
 __all__ = [
+    "T",
+    "CT",
     "JsonDict",
     "FileSystemPath",
+    "TextComponent",
     "Sentinel",
     "SENTINEL_OBJ",
     "dump_json",
@@ -17,12 +20,13 @@ __all__ = [
     "local_import_path",
     "log_time",
     "remove_path",
-    "format_obj",
     "format_exc",
+    "format_obj",
     "format_validation_error",
     "format_directory",
     "pop_traceback",
     "change_directory",
+    "PathObjectError",
 ]
 
 
@@ -54,6 +58,7 @@ from pydantic import PydanticTypeError, ValidationError
 from pydantic.validators import _VALIDATORS  # type: ignore
 
 T = TypeVar("T")
+CT = TypeVar("CT", covariant=True)
 
 
 @runtime_checkable

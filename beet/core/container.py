@@ -1,13 +1,19 @@
 __all__ = [
+    "K",
+    "CK",
+    "V",
+    "CV",
+    "PinDefault",
+    "PinDefaultFactory",
+    "SupportsKeys",
+    "Drop",
     "SupportsMerge",
+    "MergeableType",
     "MergeMixin",
     "MatchMixin",
     "Pin",
-    "PinDefault",
-    "PinDefaultFactory",
     "Container",
     "ContainerProxy",
-    "Drop",
 ]
 
 
@@ -16,7 +22,6 @@ from dataclasses import dataclass
 from typing import (
     Any,
     Callable,
-    Dict,
     Generic,
     Iterator,
     KeysView,
@@ -167,7 +172,7 @@ class Pin(Generic[K, CV]):
 class Container(MutableMapping[K, V]):
     """Generic dict-like container."""
 
-    _wrapped: Dict[K, V]
+    _wrapped: dict[K, V]
 
     def __init__(self):
         self._wrapped = {}

@@ -1,8 +1,8 @@
 __all__ = [
-    "MultiCache",
+    "CacheTransaction",
     "Cache",
     "CachePin",
-    "CacheTransaction",
+    "MultiCache",
     "DownloadManager",
 ]
 
@@ -29,7 +29,7 @@ from urllib.request import urlopen
 
 from pydantic import BaseModel, Extra, Field
 
-from .container import Container, MatchMixin, Pin
+from .container import CV, Container, MatchMixin, Pin
 from .utils import (
     FileSystemPath,
     JsonDict,
@@ -40,11 +40,7 @@ from .utils import (
     normalize_string,
 )
 
-PinType = TypeVar("PinType", covariant=True)
-CacheType = TypeVar("CacheType", bound="Cache")
-
-
-logger = logging.getLogger("cache")
+logger = logging.getLogger(__name__)
 
 
 class CacheTransaction:
@@ -280,11 +276,14 @@ class Cache:
         )
 
 
+CacheType = TypeVar("CacheType", bound=Cache)
+
+
 class SupportsCache(Protocol):
     cache: Cache
 
 
-class CachePin(Pin[str, PinType]):
+class CachePin(Pin[str, CV]):
     """Descriptor that makes cache data accessible through attribute lookup."""
 
     def forward(self, obj: SupportsCache) -> JsonDict:

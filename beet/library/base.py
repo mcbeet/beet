@@ -58,6 +58,7 @@ from typing import (
 from zipfile import ZIP_BZIP2, ZIP_DEFLATED, ZIP_LZMA, ZIP_STORED, ZipFile
 
 from beet.core.container import (
+    CV,
     Drop,
     MatchMixin,
     MergeableType,
@@ -66,15 +67,13 @@ from beet.core.container import (
     Pin,
 )
 from beet.core.file import File, FileOrigin, JsonFile, PngFile
-from beet.core.utils import FileSystemPath, JsonDict, TextComponent
+from beet.core.utils import FileSystemPath, JsonDict, T, TextComponent
 
 from .utils import list_extensions, list_files
 
 LATEST_MINECRAFT_VERSION: str = "1.19"
 
 
-T = TypeVar("T")
-PinType = TypeVar("PinType", covariant=True)
 PackFileType = TypeVar("PackFileType", bound="PackFile")
 NamespaceType = TypeVar("NamespaceType", bound="Namespace")
 NamespaceFileType = TypeVar("NamespaceFileType", bound="NamespaceFile")
@@ -228,7 +227,10 @@ class SupportsExtra(Protocol):
     extra: ExtraContainer
 
 
-class ExtraPin(Pin[str, PinType]):
+ExtraPinType = TypeVar("ExtraPinType", bound=Optional[PackFile], covariant=True)
+
+
+class ExtraPin(Pin[str, ExtraPinType]):
     """Descriptor that makes a specific file accessible through attribute lookup."""
 
     def forward(self, obj: SupportsExtra) -> ExtraContainer:
@@ -727,14 +729,14 @@ class Mcmeta(JsonFile):
         return True
 
 
-class McmetaPin(Pin[str, PinType]):
+class McmetaPin(Pin[str, CV]):
     """Descriptor that makes it possible to bind pack.mcmeta information to attribute lookup."""
 
     def forward(self, obj: "Pack[Namespace]") -> JsonDict:
         return obj.mcmeta.data
 
 
-class PackPin(McmetaPin[PinType]):
+class PackPin(McmetaPin[CV]):
     """Descriptor that makes pack metadata accessible through attribute lookup."""
 
     def forward(self, obj: "Pack[Namespace]") -> JsonDict:
