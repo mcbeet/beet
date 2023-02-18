@@ -13,11 +13,13 @@ __all__ = [
     "MatchMixin",
     "Pin",
     "Container",
+    "MergeContainer",
     "ContainerProxy",
 ]
 
 
 import logging
+from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import (
     Any,
@@ -234,7 +236,7 @@ class MergeContainer(MergeMixin[K, MergeableType], Container[K, MergeableType]):
     pass
 
 
-class ContainerProxy(Generic[ProxyKeyType, K, V], MutableMapping[K, V]):
+class ContainerProxy(ABC, Generic[ProxyKeyType, K, V], MutableMapping[K, V]):
     """Generic aggregated view over several nested bounded dict-like objects."""
 
     proxy: Mapping[K, Mapping[ProxyKeyType, MutableMapping[K, V]]]
@@ -244,7 +246,7 @@ class ContainerProxy(Generic[ProxyKeyType, K, V], MutableMapping[K, V]):
         self,
         proxy: Mapping[K, Mapping[ProxyKeyType, MutableMapping[K, V]]],
         proxy_key: ProxyKeyType,
-    ) -> None:
+    ):
         self.proxy = proxy
         self.proxy_key = proxy_key
 
@@ -268,13 +270,15 @@ class ContainerProxy(Generic[ProxyKeyType, K, V], MutableMapping[K, V]):
     def __len__(self) -> int:
         return sum(len(mapping[self.proxy_key]) for mapping in self.proxy.values())
 
+    @abstractmethod
     def split_key(self, key: K) -> Tuple[K, K]:
         """Return the outer mapping key and the nested key."""
-        raise NotImplementedError()
+        ...
 
+    @abstractmethod
     def join_key(self, key1: K, key2: K) -> K:
         """Combine the outer mapping key and the nested key."""
-        raise NotImplementedError()
+        ...
 
     def __repr__(self) -> str:
         return f"{self.__class__.__name__}(keys={list(self.keys())})"
