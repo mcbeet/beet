@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.31.0 (2023-02-19)
+### Feature
+* Add prelude option ([`b0937e0`](https://github.com/mcbeet/bolt/commit/b0937e06affd62e8f358638358ce2797644d36e7))
+
 ## v0.30.1 (2023-02-15)
 ### Fix
 * Properly track del statement semantics ([`66c543f`](https://github.com/mcbeet/bolt/commit/66c543fd82902ed7cbf7e04e6a0b57a45715c0bd))
