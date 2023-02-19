@@ -22,6 +22,7 @@ from typing import (
     Callable,
     ClassVar,
     Dict,
+    Iterable,
     Iterator,
     List,
     Mapping,
@@ -37,6 +38,9 @@ from beet import BubbleException, Cache, TextFile, TextFileBase
 from beet.core.utils import JsonDict, extra_field, import_from_string, required_field
 from mecha import (
     AstCacheBackend,
+    AstChildren,
+    AstNode,
+    AstResourceLocation,
     AstRoot,
     CompilationDatabase,
     CompilationError,
@@ -48,10 +52,11 @@ from mecha import (
 )
 from tokenstream import InvalidSyntax
 
-from .ast import AstMacro
+from .ast import AstImportedItem, AstImportedMacro, AstMacro, AstPrelude
+from .semantics import LexicalScope
 from .utils import internal, rewrite_traceback
 
-logger = logging.getLogger("mecha")
+logger = logging.getLogger("bolt")
 
 
 class UnusableCompilationUnit(MechaError):
@@ -90,7 +95,10 @@ class CompiledModule:
     ast: AstRoot
     code: Optional[CodeType]
     refs: List[Any]
+    dependencies: Set[str]
+    prelude_imports: List[AstPrelude]
     macros: MacroLibrary
+    lexical_scope: LexicalScope
     output: Optional[str]
     resource_location: Optional[str]
     globals: Set[str]
@@ -106,6 +114,8 @@ class CodegenResult:
     source: Optional[str] = None
     output: Optional[str] = None
     refs: List[Any] = field(default_factory=list)
+    dependencies: Set[str] = field(default_factory=set)
+    prelude_imports: List[AstPrelude] = field(default_factory=list)
     macros: MacroLibrary = field(default_factory=dict)
 
 
@@ -137,8 +147,12 @@ class ModuleManager(Mapping[TextFileBase[Any], CompiledModule]):
     )
     stack: List[CompiledModule] = extra_field(default_factory=list)
     parse_stack: List[TextFileBase[Any]] = extra_field(default_factory=list)
+    parse_scopes: Dict[TextFileBase[Any], LexicalScope] = extra_field(
+        default_factory=dict
+    )
     globals: JsonDict = extra_field(default_factory=dict)
     builtins: Set[str] = extra_field(default_factory=set)
+    prelude: Dict[str, Optional[AstPrelude]] = extra_field(default_factory=dict)
 
     execution_count: int = 0
 
@@ -188,7 +202,7 @@ class ModuleManager(Mapping[TextFileBase[Any], CompiledModule]):
                 or module.ast is compilation_unit.ast
             ):
                 return module
-            logger.warning('Code generation due to ast update for module "%s".', name)
+            logger.warning('Code generation due to ast update "%s".', name)
 
         elif not compilation_unit.ast:
             previous = self.database.current
@@ -208,7 +222,7 @@ class ModuleManager(Mapping[TextFileBase[Any], CompiledModule]):
             return self[current]
 
         else:
-            logger.debug('Code generation for module "%s".', name)
+            logger.debug('Code generation "%s".', name)
 
         result = self.codegen(compilation_unit.ast)
 
@@ -230,7 +244,10 @@ class ModuleManager(Mapping[TextFileBase[Any], CompiledModule]):
             ast=compilation_unit.ast,
             code=code,
             refs=result.refs,
+            dependencies=result.dependencies,
+            prelude_imports=result.prelude_imports,
             macros=result.macros,
+            lexical_scope=self.parse_scopes.get(current) or LexicalScope(),
             output=result.output,
             resource_location=compilation_unit.resource_location,
             globals=set(self.globals),
@@ -333,6 +350,59 @@ class ModuleManager(Mapping[TextFileBase[Any], CompiledModule]):
         finally:
             self.parse_stack.pop()
 
+    def add_prelude(self, *args: Union[str, Iterable[str]]):
+        """Add modules to the prelude."""
+        for arg in args:
+            if isinstance(arg, str):
+                arg = [arg]
+            for resource_location in arg:
+                self.prelude.setdefault(resource_location, None)
+
+    def export_prelude(self, module: CompiledModule) -> Optional[AstPrelude]:
+        """Export local variables and macros from a given module into a prelude import."""
+        if not module.resource_location:
+            return None
+
+        arguments: List[AstNode] = [
+            AstResourceLocation.from_value(module.resource_location)
+        ]
+
+        for name, variable in module.lexical_scope.variables.items():
+            if variable.storage == "local":
+                arguments.append(AstImportedItem(name=name))
+
+        for overloads in module.macros.values():
+            for name, macro in overloads:
+                arguments.append(AstImportedMacro(name=name, declaration=macro))
+
+        return AstPrelude(arguments=AstChildren(arguments))
+
+    def load_prelude(self) -> List[AstPrelude]:
+        """Load the prelude imports."""
+        current_prelude = self.prelude
+
+        prelude_imports: List[AstPrelude] = []
+
+        for resource_location, prelude in list(current_prelude.items()):
+            if not prelude:
+                self.prelude = {}
+                try:
+                    module = self[resource_location]
+                except UnusableCompilationUnit:
+                    pass
+                else:
+                    prelude = self.export_prelude(module)
+                finally:
+                    self.prelude = current_prelude
+
+            if not prelude:
+                prelude = AstPrelude.placeholder(resource_location)
+
+            current_prelude[resource_location] = prelude
+            prelude_imports.append(prelude)
+
+        return prelude_imports
+
 
 @dataclass
 class ModuleCacheBackend(AstCacheBackend):
@@ -349,6 +419,8 @@ class ModuleCacheBackend(AstCacheBackend):
             raise ValueError("Version mismatch.")
         if data["globals"] != set(self.modules.globals):
             raise ValueError("Globals mismatch.")
+        if data["prelude_imports"] != self.modules.load_prelude():
+            raise ValueError("Prelude mismatch.")
 
         for group, exports in cast(MacroLibrary, data["macros"]).items():
             for (_, macro), extern in exports.items():
@@ -371,11 +443,17 @@ class ModuleCacheBackend(AstCacheBackend):
             ast=data["ast"],
             code=marshal.load(f),
             refs=data["refs"],
+            dependencies=data["dependencies"],
+            prelude_imports=data["prelude_imports"],
             macros=data["macros"],
+            lexical_scope=data["lexical_scope"],
             output=data["output"],
             resource_location=data["resource_location"],
             globals=data["globals"],
         )
+
+        for dependency in data["dependencies"]:
+            self.modules.get(dependency)
 
         return data["ast"]
 
@@ -386,7 +464,10 @@ class ModuleCacheBackend(AstCacheBackend):
             {
                 "ast": module.ast,
                 "refs": module.refs,
+                "dependencies": module.dependencies,
+                "prelude_imports": module.prelude_imports,
                 "macros": module.macros,
+                "lexical_scope": module.lexical_scope,
                 "output": module.output,
                 "resource_location": module.resource_location,
                 "globals": module.globals,

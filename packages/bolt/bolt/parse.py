@@ -577,17 +577,37 @@ class ToplevelHandler:
         current = self.modules.database.current
         resource_location = self.modules.database[current].resource_location
 
+        prelude = self.modules.load_prelude()
+
+        if module := self.modules.registry.get(current):
+            return module.ast
+
         global_scope = GlobalScope(
             identifiers=set(self.modules.globals)
             | self.modules.builtins
             | {"__name__"},
         )
 
+        lexical_scope = global_scope.push(LexicalScope)
+        self.modules.parse_scopes[current] = lexical_scope
+
+        pending_macros = get_stream_pending_macros(stream)
+
+        for from_import in prelude:
+            for item in from_import.arguments[1:]:
+                if isinstance(item, AstImportedMacro):
+                    pending_macros.append(item.declaration)
+                elif isinstance(item, AstImportedItem):
+                    lexical_scope.bind_variable(item.name, item)
+
         with self.modules.parse_push(current), stream.provide(
             resource_location=resource_location,
-            lexical_scope=global_scope.push(LexicalScope),
+            lexical_scope=lexical_scope,
         ):
             node = self.parser(stream)
+
+            if prelude and isinstance(node, AstRoot):
+                node = replace(node, commands=AstChildren([*prelude, *node.commands]))
 
         self.macro_handler.cache_local_spec(stream)
 
@@ -1620,6 +1640,14 @@ class ProcMacroParser:
         identifier: str = properties["identifier"]
 
         module = self.modules[resource_location]
+
+        if not module.executed:
+            with self.modules.error_handler(
+                "Top-level statement raised an exception.",
+                resource_location,
+            ):
+                self.modules.eval(module)
+
         runtime: CommandEmitter = module.namespace["_bolt_runtime"]
         macro = module.namespace["_bolt_proc_macros"][identifier]
 
@@ -1852,17 +1880,6 @@ class ImportStatementHandler:
                         imported_macro = AstImportedMacro(name=name, declaration=macro)
                         arguments.append(set_location(imported_macro, item))
                         pending_macros.append(macro)
-
-                        if not compiled_module.executed and isinstance(
-                            macro, AstProcMacro
-                        ):
-                            with self.modules.error_handler(
-                                "Top-level statement raised an exception.",
-                                target_name,
-                            ), self.modules.parse_push(
-                                target  # type: ignore
-                            ):
-                                self.modules.eval(compiled_module)
 
                 elif item.identifier:
                     arguments.append(item)

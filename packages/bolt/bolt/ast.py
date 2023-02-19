@@ -55,6 +55,7 @@ __all__ = [
     "AstFromImport",
     "AstImportedItem",
     "AstImportedMacro",
+    "AstPrelude",
 ]
 
 
@@ -528,3 +529,19 @@ class AstImportedMacro(AstNode):
 
     name: str = required_field()
     declaration: AstMacro = required_field()
+
+
+@dataclass(frozen=True, slots=True)
+class AstPrelude(AstFromImport):
+    """Ast prelude node."""
+
+    @classmethod
+    def placeholder(cls, resource_location: str) -> "AstPrelude":
+        return cls(
+            arguments=AstChildren(
+                [
+                    AstResourceLocation.from_value(resource_location),
+                    AstImportedItem(name="_bolt_placeholder"),
+                ]
+            )
+        )

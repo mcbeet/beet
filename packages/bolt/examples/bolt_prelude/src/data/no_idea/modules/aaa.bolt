@@ -1,0 +1,6 @@
+from ./bbb import okok
+from demo:macros import greet
+
+def alright_then():
+    okok()
+    greet steve

@@ -22,6 +22,7 @@ from typing import (
     List,
     Literal,
     Optional,
+    Set,
     Tuple,
     Type,
     Union,
@@ -70,6 +71,7 @@ from .ast import (
     AstMacroCall,
     AstMacroMatchArgument,
     AstMemo,
+    AstPrelude,
     AstProcMacro,
     AstSlice,
     AstTarget,
@@ -91,6 +93,8 @@ class Accumulator:
 
     indentation: str = ""
     refs: List[Any] = field(default_factory=list)
+    dependencies: Set[str] = field(default_factory=set)
+    prelude_imports: List[AstPrelude] = field(default_factory=list)
     macros: MacroLibrary = field(default_factory=dict)
     macro_ids: Dict[str, int] = field(default_factory=dict)
     memo_index: Dict[AstMemo, int] = field(default_factory=dict)
@@ -471,6 +475,8 @@ class Codegen(Visitor):
             source=acc.get_source(),
             output=output,
             refs=acc.refs,
+            dependencies=acc.dependencies,
+            prelude_imports=acc.prelude_imports,
             macros=acc.macros,
         )
 
@@ -898,10 +904,12 @@ class Codegen(Visitor):
             alias = cast(AstImportedItem, node.arguments[1]).name
 
             if module.namespace:
+                full_path = module.get_value()
                 acc.statement(
-                    f"{alias} = _bolt_runtime.import_module({module.get_value()!r}).namespace",
+                    f"{alias} = _bolt_runtime.import_module({full_path!r}).namespace",
                     lineno=node,
                 )
+                acc.dependencies.add(full_path)
             else:
                 rhs = acc.import_module(module.path)
                 acc.statement(f"{alias} = {rhs}", lineno=node)
@@ -923,6 +931,9 @@ class Codegen(Visitor):
         node: AstFromImport,
         acc: Accumulator,
     ) -> Optional[List[str]]:
+        if isinstance(node, AstPrelude):
+            acc.prelude_imports.append(node)
+
         module = cast(AstResourceLocation, node.arguments[0])
         items = cast(
             AstChildren[Union[AstImportedItem, AstImportedMacro]], node.arguments[1:]
@@ -939,6 +950,7 @@ class Codegen(Visitor):
                     targets.append(item.name)
             stmt = f"{', '.join(targets)} = _bolt_runtime.from_module_import({full_path!r}, {', '.join(map(repr, names))})"
             acc.statement(stmt, lineno=node)
+            acc.dependencies.add(full_path)
         else:
             stmt = f"_bolt_from_import = {acc.import_module(module.path)}"
             acc.statement(stmt, lineno=node)

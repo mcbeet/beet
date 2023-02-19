@@ -1,0 +1,9 @@
+from bolt import Runtime
+
+CALAMAR = minecraft:squid
+
+def dump_ast():
+    runtime = ctx.inject(Runtime)
+    function generate_path():
+        for line in runtime.modules.current.ast.dump().splitlines():
+            raw f"# {line}"

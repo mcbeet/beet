@@ -1,0 +1,61 @@
+pipeline:
+  - require:
+      - bolt
+    data_pack:
+      load: "src"
+    pipeline:
+      - mecha
+      - beet.contrib.rename_files
+      - beet.contrib.find_replace
+    meta:
+      bolt:
+        prelude:
+          - "demo:prelude"
+          - "no_idea:prelude"
+      rename_files:
+        data_pack:
+          match: "demo:*"
+          find: "demo:([a-z_/]+)"
+          replace: 'demo:ref/\1'
+      find_replace:
+        data_pack:
+          match: "demo:*"
+        substitute:
+          find: "demo:([a-z_/]+)"
+          replace: 'demo:ref/\1'
+  - require:
+      - bolt
+      - bolt.contrib.debug_codegen
+    data_pack:
+      load: "src"
+    pipeline:
+      - mecha
+      - beet.contrib.rename_files
+      - beet.contrib.find_replace
+    meta:
+      bolt:
+        prelude:
+          - "demo:prelude"
+          - "no_idea:prelude"
+      rename_files:
+        data_pack:
+          match: "demo:*"
+          find: "demo:([a-z_/]+)"
+          replace: 'demo:codegen/\1'
+      find_replace:
+        data_pack:
+          match: "demo:*"
+        substitute:
+          find: "demo:([a-z_/]+)"
+          replace: 'demo:codegen/\1'
+  - require:
+      - bolt
+    data_pack:
+      load: "src"
+    pipeline:
+      - mecha
+    meta:
+      bolt:
+        prelude:
+          - "demo:prelude"
+          - "no_idea:prelude"
