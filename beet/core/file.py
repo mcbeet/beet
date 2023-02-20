@@ -71,8 +71,11 @@ from .utils import (
     FileSystemPath,
     JsonDict,
     dump_json,
+    ensure_subclass_initialized_lazy_field,
     extra_field,
     format_validation_error,
+    is_lazy_field_uninitialized,
+    lazy_extra_field,
     snake_case,
 )
 
@@ -107,31 +110,20 @@ class File(Generic[ValueType, SerializeType], ABC):
         default=None
     )
 
-    serializer: Callable[[ValueType], SerializeType] = extra_field(
-        default=cast(Any, None)  # Overridden in subclass __post_init__ if None
-    )
-    deserializer: Callable[[SerializeType], ValueType] = extra_field(
-        default=cast(Any, None)  # Overridden in subclass __post_init__ if None
-    )
-    reader: Callable[[FileSystemPath, int, int], SerializeType] = extra_field(
-        default=cast(Any, None)  # Overridden in __post_init__ if None
-    )
+    serializer: Callable[[ValueType], SerializeType] = lazy_extra_field()
+    deserializer: Callable[[SerializeType], ValueType] = lazy_extra_field()
+    reader: Callable[[FileSystemPath, int, int], SerializeType] = lazy_extra_field()
 
-    original: "File[ValueType, SerializeType]" = extra_field(
-        default=cast(Any, None)  # Overridden in __post_init__ if None
-    )
+    original: "File[ValueType, SerializeType]" = lazy_extra_field()
 
     def __post_init__(self):
-        if not self.serializer:  # pyright: ignore[reportUnnecessaryComparison]
-            raise NotImplementedError("Subclass hasn't provided a serializer")
-
-        if not self.deserializer:  # pyright: ignore[reportUnnecessaryComparison]
-            raise NotImplementedError("Subclass hasn't provided a deserializer")
+        ensure_subclass_initialized_lazy_field(self.serializer, "serializer")
+        ensure_subclass_initialized_lazy_field(self.deserializer, "deserializer")
 
         if self._content is self.source_path is None:
             self._content = self.default()
 
-        if not self.reader:  # pyright: ignore[reportUnnecessaryComparison]
+        if is_lazy_field_uninitialized(self.reader):
             self.reader = self.from_path
 
         if not self.original:
@@ -442,10 +434,10 @@ class TextFileBase(File[ValueType, str]):
     text: ClassVar[FileSerialize[str]] = FileSerialize()
 
     def __post_init__(self):
-        if not self.serializer:  # pyright: ignore[reportUnnecessaryComparison]
+        if is_lazy_field_uninitialized(self.serializer):
             self.serializer = self.to_str
 
-        if not self.deserializer:  # pyright: ignore[reportUnnecessaryComparison]
+        if is_lazy_field_uninitialized(self.deserializer):
             self.deserializer = self.from_str
 
         super().__post_init__()
@@ -516,10 +508,10 @@ class BinaryFileBase(File[ValueType, bytes]):
     blob: ClassVar[FileSerialize[bytes]] = FileSerialize()
 
     def __post_init__(self):
-        if not self.serializer:  # pyright: ignore[reportUnnecessaryComparison]
+        if is_lazy_field_uninitialized(self.serializer):
             self.serializer = self.to_bytes
 
-        if not self.deserializer:  # pyright: ignore[reportUnnecessaryComparison]
+        if is_lazy_field_uninitialized(self.deserializer):
             self.deserializer = self.from_bytes
 
         super().__post_init__()
@@ -601,11 +593,8 @@ class DataModelBase(TextFileBase[ValueType]):
     model: ClassVar[Optional[Type[Any]]] = None
 
     def __post_init__(self):
-        if not self.encoder:  # pyright: ignore[reportUnnecessaryComparison]
-            raise NotImplementedError("Subclass hasn't provided an encoder")
-
-        if not self.decoder:  # pyright: ignore[reportUnnecessaryComparison]
-            raise NotImplementedError("Subclass hasn't provided a decoder")
+        ensure_subclass_initialized_lazy_field(self.encoder, "encoder")
+        ensure_subclass_initialized_lazy_field(self.decoder, "decoder")
 
         super().__post_init__()
 
@@ -639,10 +628,10 @@ class JsonFileBase(DataModelBase[ValueType]):
     """Base class for json files."""
 
     def __post_init__(self):
-        if not self.encoder:  # pyright: ignore[reportUnnecessaryComparison]
+        if is_lazy_field_uninitialized(self.encoder):
             self.encoder = dump_json
 
-        if not self.decoder:  # pyright: ignore[reportUnnecessaryComparison]
+        if is_lazy_field_uninitialized(self.decoder):
             self.decoder = json.loads
 
         super().__post_init__()
@@ -663,10 +652,10 @@ class YamlFileBase(DataModelBase[ValueType]):
     """Base class for yaml files."""
 
     def __post_init__(self):
-        if not self.encoder:  # pyright: ignore[reportUnnecessaryComparison]
+        if is_lazy_field_uninitialized(self.encoder):
             self.encoder = yaml.safe_dump
 
-        if not self.decoder:  # pyright: ignore[reportUnnecessaryComparison]
+        if is_lazy_field_uninitialized(self.decoder):
             self.decoder = yaml.safe_load
 
         super().__post_init__()

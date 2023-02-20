@@ -124,6 +124,26 @@ def extra_field(**kwargs: Any) -> Any:
     return field(repr=False, hash=False, compare=False, **kwargs)
 
 
+def lazy_extra_field(
+    *,
+    init: bool = True,
+    metadata: Optional[Mapping[Any, Any]] = None,
+    kw_only: bool = cast(bool, MISSING),
+) -> Any:
+    return extra_field(
+        default=SENTINEL_OBJ, init=init, metadata=metadata, kw_only=kw_only
+    )
+
+
+def is_lazy_field_uninitialized(field: Any) -> bool:
+    return isinstance(field, Sentinel)
+
+
+def ensure_subclass_initialized_lazy_field(field: Any, name: str):
+    if is_lazy_field_uninitialized(field):
+        raise NotImplementedError(f"Subclass hasn't provided a {name}")
+
+
 def required_field(
     *,
     init: bool = True,
