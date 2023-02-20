@@ -580,12 +580,8 @@ class InvalidDataModel(DeserializationError):
 class DataModelBase(TextFileBase[ValueType]):
     """Base class for data models."""
 
-    encoder: Callable[[Any], str] = extra_field(
-        default=cast(Any, None)  # Overridden in subclass __post_init__ if None
-    )
-    decoder: Callable[[str], Any] = extra_field(
-        default=cast(Any, None)  # Overridden in subclass __post_init__ if None
-    )
+    encoder: Callable[[Any], str] = lazy_extra_field()
+    decoder: Callable[[str], Any] = lazy_extra_field()
 
     data: ClassVar[FileDeserialize[Any]] = FileDeserialize()
 
