@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-from typing import List, Literal, Union
+from typing import Any, List, Literal, Union
 
 import pytest
 from pydantic import BaseModel, Field
@@ -28,7 +28,7 @@ def test_binary_range(tmp_path: Path):
 def test_original(tmp_path: Path):
     p1 = tmp_path / "p1"
     p1.write_text("abc")
-    f = TextFile(source_path=p1, source_start=1)
+    f = TextFile[Any](source_path=p1, source_start=1)
     assert f is f.original
     f.text += "d"
     assert f.text == "bcd"
@@ -76,7 +76,7 @@ class ABGroup(BaseModel):
     __root__: Union[AB, List[AB]]
 
 
-class ABFile(JsonFileBase[ABGroup]):
+class ABFile(JsonFileBase[Any, ABGroup]):
 
     model = ABGroup
 

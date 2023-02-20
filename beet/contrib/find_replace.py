@@ -112,7 +112,9 @@ class FindReplaceHandler(Generic[PackType]):
     substitute: Sequence[Union[Callable[[str], str], "FindReplaceHandler[PackType]"]]
 
     def __call__(self, pack: PackType):
-        text_files = self.pack_selector.select_files(pack, extend=TextFileBase[Any])
+        text_files = self.pack_selector.select_files(
+            pack, extend=TextFileBase[Pack[Any], Any]
+        )
         for find_replace in self.substitute:
             if isinstance(find_replace, FindReplaceHandler):
                 find_replace(pack)

@@ -10,7 +10,7 @@ __all__ = [
 
 import logging
 from dataclasses import InitVar, dataclass, field
-from typing import Any, Dict, List, Optional, Type, TypeVar
+from typing import Dict, List, Optional, Type
 
 import yaml
 
@@ -18,19 +18,15 @@ from beet import (
     Context,
     DataPack,
     ExtraContainer,
-    File,
     FileOrigin,
-    Pack,
+    PackFile,
+    PackType,
     PluginOptions,
     ResourcePack,
     configurable,
 )
 
 logger = logging.getLogger(__name__)
-
-
-PackType = TypeVar("PackType", bound=Pack[Any])
-PackFile = File[Any, Any]
 
 
 class LoadYamlOptions(PluginOptions):

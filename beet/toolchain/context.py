@@ -321,7 +321,7 @@ class Context:
         *extensions: str,
         files: Optional[Any] = None,
         match: Optional[Any] = None,
-    ) -> PackSelection[File[Any, Any]]:
+    ) -> PackSelection[File[Any, Any, Any]]:
         ...
 
     @overload

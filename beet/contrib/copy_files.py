@@ -13,7 +13,7 @@ import mimetypes
 import os
 from glob import glob
 from pathlib import Path
-from typing import Dict, Iterator, Tuple, Type
+from typing import Any, Dict, Iterator, Tuple, Type
 
 from beet import (
     BinaryFile,
@@ -86,14 +86,14 @@ def guess_file_type(filename: FileSystemPath) -> Type[PackFile]:
     filename = str(filename)
 
     if filename.endswith(".json"):
-        return JsonFile
+        return JsonFile[Any]
     elif filename.endswith((".yml", ".yaml")):
-        return YamlFile
+        return YamlFile[Any]
     elif filename.endswith(".png"):
-        return PngFile
+        return PngFile[Any]
 
     mime_type, _ = mimetypes.guess_type(filename, strict=False)
     if mime_type and mime_type.startswith("text/"):
-        return TextFile
+        return TextFile[Any]
 
-    return BinaryFile
+    return BinaryFile[Any]

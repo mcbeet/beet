@@ -10,7 +10,7 @@ __all__ = [
 import json
 from typing import Any, Callable, Optional, Tuple, Union
 
-from beet import Context, JsonFileBase, PluginOptions, configurable
+from beet import Context, JsonFileBase, Pack, PluginOptions, configurable
 
 
 class FormatJsonOptions(PluginOptions):
@@ -54,6 +54,6 @@ def beet_default(ctx: Context):
 def format_json(ctx: Context, formatter: Callable[[Any], str]):
     """Plugin that formats json files with the given formatter."""
     for pack in ctx.packs:
-        for _, json_file in pack.list_files(extend=JsonFileBase[Any]):
+        for _, json_file in pack.list_files(extend=JsonFileBase[Pack[Any], Any]):
             json_file.encoder = formatter
             json_file.text = formatter(json_file.data)

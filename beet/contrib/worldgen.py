@@ -61,98 +61,98 @@ def worldgen(pack: Union[Context, DataPack]):
     ]
 
 
-class Dimension(JsonFile):
+class Dimension(JsonFile[DataPack]):
     """Class representing a dimension."""
 
     scope: ClassVar[Tuple[str, ...]] = ("dimension",)
     extension: ClassVar[str] = ".json"
 
 
-class DimensionType(JsonFile):
+class DimensionType(JsonFile[DataPack]):
     """Class representing a dimension type."""
 
     scope: ClassVar[Tuple[str, ...]] = ("dimension_type",)
     extension: ClassVar[str] = ".json"
 
 
-class WorldgenBiome(JsonFile):
+class WorldgenBiome(JsonFile[DataPack]):
     """Class representing a biome."""
 
     scope: ClassVar[Tuple[str, ...]] = ("worldgen", "biome")
     extension: ClassVar[str] = ".json"
 
 
-class WorldgenConfiguredCarver(JsonFile):
+class WorldgenConfiguredCarver(JsonFile[DataPack]):
     """Class representing a worldgen carver."""
 
     scope: ClassVar[Tuple[str, ...]] = ("worldgen", "configured_carver")
     extension: ClassVar[str] = ".json"
 
 
-class WorldgenConfiguredFeature(JsonFile):
+class WorldgenConfiguredFeature(JsonFile[DataPack]):
     """Class representing a worldgen feature."""
 
     scope: ClassVar[Tuple[str, ...]] = ("worldgen", "configured_feature")
     extension: ClassVar[str] = ".json"
 
 
-class WorldgenStructure(JsonFile):
+class WorldgenStructure(JsonFile[DataPack]):
     """Class representing a worldgen structure feature."""
 
     scope: ClassVar[Tuple[str, ...]] = ("worldgen", "structure")
     extension: ClassVar[str] = ".json"
 
 
-class WorldgenConfiguredSurfaceBuilder(JsonFile):
+class WorldgenConfiguredSurfaceBuilder(JsonFile[DataPack]):
     """Class representing a worldgen surface builder."""
 
     scope: ClassVar[Tuple[str, ...]] = ("worldgen", "configured_surface_builder")
     extension: ClassVar[str] = ".json"
 
 
-class WorldgenDensityFunction(JsonFile):
+class WorldgenDensityFunction(JsonFile[DataPack]):
     """Class representing a density function."""
 
     scope: ClassVar[Tuple[str, ...]] = ("worldgen", "density_function")
     extension: ClassVar[str] = ".json"
 
 
-class WorldgenNoise(JsonFile):
+class WorldgenNoise(JsonFile[DataPack]):
     """Class representing a worldgen noise."""
 
     scope: ClassVar[Tuple[str, ...]] = ("worldgen", "noise")
     extension: ClassVar[str] = ".json"
 
 
-class WorldgenNoiseSettings(JsonFile):
+class WorldgenNoiseSettings(JsonFile[DataPack]):
     """Class representing worldgen noise settings."""
 
     scope: ClassVar[Tuple[str, ...]] = ("worldgen", "noise_settings")
     extension: ClassVar[str] = ".json"
 
 
-class WorldgenPlacedFeature(JsonFile):
+class WorldgenPlacedFeature(JsonFile[DataPack]):
     """Class representing a placed feature."""
 
     scope: ClassVar[Tuple[str, ...]] = ("worldgen", "placed_feature")
     extension: ClassVar[str] = ".json"
 
 
-class WorldgenProcessorList(JsonFile):
+class WorldgenProcessorList(JsonFile[DataPack]):
     """Class representing a worldgen processor list."""
 
     scope: ClassVar[Tuple[str, ...]] = ("worldgen", "processor_list")
     extension: ClassVar[str] = ".json"
 
 
-class WorldgenTemplatePool(JsonFile):
+class WorldgenTemplatePool(JsonFile[DataPack]):
     """Class representing a worldgen template pool."""
 
     scope: ClassVar[Tuple[str, ...]] = ("worldgen", "template_pool")
     extension: ClassVar[str] = ".json"
 
 
-class WorldgenStructureSet(JsonFile):
+class WorldgenStructureSet(JsonFile[DataPack]):
     """Class representing a worldgen structure set."""
 
     scope: ClassVar[Tuple[str, ...]] = ("worldgen", "structure_set")

@@ -47,14 +47,14 @@ from .base import (
 )
 
 
-class Blockstate(JsonFile):
+class Blockstate(JsonFile["ResourcePack"]):
     """Class representing a blockstate."""
 
     scope: ClassVar[Tuple[str, ...]] = ("blockstates",)
     extension: ClassVar[str] = ".json"
 
 
-class Model(JsonFile):
+class Model(JsonFile["ResourcePack"]):
     """Class representing a model."""
 
     scope: ClassVar[Tuple[str, ...]] = ("models",)
@@ -81,7 +81,7 @@ class Model(JsonFile):
         return True
 
 
-class Language(JsonFile):
+class Language(JsonFile["ResourcePack"]):
     """Class representing a language file."""
 
     scope: ClassVar[Tuple[str, ...]] = ("lang",)
@@ -92,7 +92,7 @@ class Language(JsonFile):
         return True
 
 
-class Font(JsonFile):
+class Font(JsonFile["ResourcePack"]):
     """Class representing a font configuration file."""
 
     scope: ClassVar[Tuple[str, ...]] = ("font",)
@@ -106,63 +106,63 @@ class Font(JsonFile):
         return True
 
 
-class GlyphSizes(BinaryFile):
+class GlyphSizes(BinaryFile["ResourcePack"]):
     """Class representing a legacy unicode glyph size file."""
 
     scope: ClassVar[Tuple[str, ...]] = ("font",)
     extension: ClassVar[str] = ".bin"
 
 
-class TrueTypeFont(BinaryFile):
+class TrueTypeFont(BinaryFile["ResourcePack"]):
     """Class representing a TrueType font."""
 
     scope: ClassVar[Tuple[str, ...]] = ("font",)
     extension: ClassVar[str] = ".ttf"
 
 
-class ShaderPost(JsonFile):
+class ShaderPost(JsonFile["ResourcePack"]):
     """Class representing a shader post-processing pipeline."""
 
     scope: ClassVar[Tuple[str, ...]] = ("shaders", "post")
     extension: ClassVar[str] = ".json"
 
 
-class Shader(JsonFile):
+class Shader(JsonFile["ResourcePack"]):
     """Class representing a shader."""
 
     scope: ClassVar[Tuple[str, ...]] = ("shaders",)
     extension: ClassVar[str] = ".json"
 
 
-class FragmentShader(TextFile):
+class FragmentShader(TextFile["ResourcePack"]):
     """Class representing a fragment shader."""
 
     scope: ClassVar[Tuple[str, ...]] = ("shaders",)
     extension: ClassVar[str] = ".fsh"
 
 
-class VertexShader(TextFile):
+class VertexShader(TextFile["ResourcePack"]):
     """Class representing a vertex shader."""
 
     scope: ClassVar[Tuple[str, ...]] = ("shaders",)
     extension: ClassVar[str] = ".vsh"
 
 
-class GlslShader(TextFile):
+class GlslShader(TextFile["ResourcePack"]):
     """Class representing a glsl shader."""
 
     scope: ClassVar[Tuple[str, ...]] = ("shaders",)
     extension: ClassVar[str] = ".glsl"
 
 
-class Text(TextFile):
+class Text(TextFile["ResourcePack"]):
     """Class representing a text file."""
 
     scope: ClassVar[Tuple[str, ...]] = ("texts",)
     extension: ClassVar[str] = ".txt"
 
 
-class TextureMcmeta(JsonFile):
+class TextureMcmeta(JsonFile["ResourcePack"]):
     """Class representing a texture mcmeta."""
 
     scope: ClassVar[Tuple[str, ...]] = ("textures",)
@@ -170,7 +170,7 @@ class TextureMcmeta(JsonFile):
 
 
 @dataclass(eq=False, repr=False)
-class Texture(PngFile):
+class Texture(PngFile["ResourcePack"]):
     """Class representing a texture."""
 
     content: BinaryFileContent[Image] = None
@@ -187,7 +187,7 @@ class Texture(PngFile):
 
 
 @dataclass(eq=False, repr=False)
-class Sound(BinaryFile):
+class Sound(BinaryFile["ResourcePack"]):
     """Class representing a sound file."""
 
     event: Optional[str] = extra_field(default=None)
@@ -233,7 +233,7 @@ class Sound(BinaryFile):
             )
 
 
-class SoundConfig(JsonFile):
+class SoundConfig(JsonFile["ResourcePack"]):
     """Class representing the sounds.json configuration."""
 
     def merge(self, other: "SoundConfig") -> bool:  # type: ignore
@@ -255,14 +255,14 @@ class SoundConfig(JsonFile):
         return True
 
 
-class Particle(JsonFile):
+class Particle(JsonFile["ResourcePack"]):
     """Class representing a particle configuration file."""
 
     scope: ClassVar[Tuple[str, ...]] = ("particles",)
     extension: ClassVar[str] = ".json"
 
 
-class Atlas(JsonFile):
+class Atlas(JsonFile["ResourcePack"]):
     """Class representing an atlas configuration file."""
 
     scope: ClassVar[Tuple[str, ...]] = ("atlases",)

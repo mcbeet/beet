@@ -1,5 +1,6 @@
 __all__ = [
     "Pack",
+    "PackType",
     "PackFile",
     "ExtraContainer",
     "SupportsExtra",
@@ -69,7 +70,7 @@ from beet.core.container import (
     MergeContainerProxy,
     Pin,
 )
-from beet.core.file import File, FileOrigin, JsonFile, PngFile
+from beet.core.file import File, FileOrigin, JsonFile, MutableFileOrigin, PngFile
 from beet.core.utils import FileSystemPath, JsonDict, T, TextComponent
 
 from .utils import list_extensions, list_files
@@ -82,7 +83,7 @@ NamespaceType = TypeVar("NamespaceType", bound="Namespace")
 NamespaceFileType = TypeVar("NamespaceFileType", bound="NamespaceFile")
 PackType = TypeVar("PackType", bound="Pack[Any]")
 
-PackFile = File[Any, Any]
+PackFile = File[Any, Any, Any]
 
 
 PACK_COMPRESSION: Dict[str, int] = {
@@ -147,7 +148,7 @@ class NamespaceFile(Protocol):
     def load(cls: Type[T], origin: FileOrigin, path: FileSystemPath) -> T:
         ...
 
-    def dump(self, origin: FileOrigin, path: FileSystemPath):
+    def dump(self, origin: MutableFileOrigin, path: FileSystemPath):
         ...
 
 
@@ -639,7 +640,7 @@ class Namespace(MergeContainer[Type[NamespaceFile], NamespaceContainer[Namespace
         if name and namespace:
             yield name, namespace
 
-    def dump(self, namespace: str, origin: FileOrigin):
+    def dump(self, namespace: str, origin: MutableFileOrigin):
         """Write the namespace to a zipfile or to the filesystem."""
         _dump_files(origin, dict(self.list_files(namespace)))
 
@@ -730,10 +731,10 @@ class NamespaceProxyDescriptor(Generic[NamespaceFileType]):
         return NamespaceProxy[NamespaceFileType](obj, self.proxy_key)
 
 
-class Mcmeta(JsonFile):
+class Mcmeta(JsonFile[PackType]):
     """Class representing a pack.mcmeta file."""
 
-    def merge(self, other: "Mcmeta") -> bool:  # type: ignore
+    def merge(self, other: Self) -> bool:
         for key, value in other.data.items():
             if key == "filter":
                 block = self.data.setdefault("filter", {}).setdefault("block", [])
@@ -825,9 +826,12 @@ class Pack(MatchMixin, MergeContainer[str, NamespaceType]):
     compression: Optional[Literal["none", "deflate", "bzip2", "lzma"]]
     compression_level: Optional[int]
 
-    extra: PackExtraContainer["Pack[NamespaceType]"]
-    mcmeta: ExtraPin[Mcmeta] = ExtraPin("pack.mcmeta", default_factory=lambda: Mcmeta())
-    icon: ExtraPin[Optional[PngFile]] = ExtraPin("pack.png", default=None)
+    extra: PackExtraContainer[Self]
+    mcmeta: ExtraPin[Mcmeta[Self]] = ExtraPin(
+        "pack.mcmeta", default_factory=lambda: Mcmeta[Self]()
+    )
+
+    icon: ExtraPin[Optional[PngFile[Self]]] = ExtraPin("pack.png", default=None)
 
     description: PackPin[TextComponent] = PackPin("description", default="")
     pack_format: PackPin[int] = PackPin("pack_format", default=0)
@@ -859,8 +863,8 @@ class Pack(MatchMixin, MergeContainer[str, NamespaceType]):
         zipped: bool = False,
         compression: Optional[Literal["none", "deflate", "bzip2", "lzma"]] = None,
         compression_level: Optional[int] = None,
-        mcmeta: Optional[Mcmeta] = None,
-        icon: Optional[PngFile] = None,
+        mcmeta: Optional[Mcmeta[Self]] = None,
+        icon: Optional[PngFile[Self]] = None,
         description: Optional[str] = None,
         pack_format: Optional[int] = None,
         filter: Optional[JsonDict] = None,
@@ -1175,7 +1179,7 @@ class Pack(MatchMixin, MergeContainer[str, NamespaceType]):
         else:
             self.mount(prefix, origin / prefix)
 
-    def dump(self, origin: FileOrigin):
+    def dump(self, origin: MutableFileOrigin):
         """Write the content of the pack to a zipfile or to the filesystem"""
         extra = {path: item for path, item in self.extra.items()}
         _dump_files(origin, extra)
@@ -1256,7 +1260,7 @@ class Pack(MatchMixin, MergeContainer[str, NamespaceType]):
         )
 
 
-def _dump_files(origin: FileOrigin, files: Mapping[str, PackFile]):
+def _dump_files(origin: MutableFileOrigin, files: Mapping[str, PackFile]):
     dirs: DefaultDict[Tuple[str, ...], List[Tuple[str, PackFile]]] = defaultdict(list)
 
     for full_path, item in files.items():
@@ -1264,7 +1268,8 @@ def _dump_files(origin: FileOrigin, files: Mapping[str, PackFile]):
         dirs[(directory,) if directory else ()].append((filename, item))
 
     for directory, entries in dirs.items():
-        if not isinstance(origin, (ZipFile, Mapping)):
+        if not isinstance(origin, ZipFile):
             Path(origin, *directory).resolve().mkdir(parents=True, exist_ok=True)
+
         for filename, f in entries:
             f.dump(origin, "/".join(directory + (filename,)))

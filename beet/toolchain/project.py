@@ -22,6 +22,7 @@ from beet.contrib.render import render
 from beet.core.utils import (
     FileSystemPath,
     JsonDict,
+    TextComponent,
     change_directory,
     intersperse,
     log_time,
@@ -329,7 +330,7 @@ class ProjectBuilder:
             ctx.project_version and f"Version: {ctx.project_version}",
         ]
 
-        description = "\n".join(filter(None, description_parts))
+        description: TextComponent = "\n".join(filter(None, description_parts))
         if not isinstance(ctx.project_description, str):
             description = list(
                 intersperse(filter(None, [ctx.project_description, description]), "\n")
@@ -361,7 +362,7 @@ class ProjectBuilder:
             pack.pack_format = config.pack_format
             if config.filter:
                 pack.mcmeta.merge(
-                    Mcmeta({"filter": config.filter.dict(exclude_none=True)})
+                    Mcmeta[Any]({"filter": config.filter.dict(exclude_none=True)})
                 )
             pack.zipped = bool(config.zipped)
             pack.compression = config.compression

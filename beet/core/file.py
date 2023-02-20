@@ -39,7 +39,6 @@ from typing import (
     Type,
     TypeGuard,
     TypeVar,
-    cast,
 )
 from zipfile import ZipFile
 
@@ -50,7 +49,7 @@ from typing_extensions import Self
 from .error import BubbleException, WrappedException
 
 if TYPE_CHECKING:
-    from ..library.base import Pack
+    from ..library.base import Pack, PackType
 
 try:
     from PIL.Image import Image
@@ -80,16 +79,16 @@ from .utils import (
 
 ValueType = TypeVar("ValueType")
 SerializeType = TypeVar("SerializeType")
-FileType = TypeVar("FileType", bound="File[Any, Any]")
+FileType = TypeVar("FileType", bound="File[Pack[Any], Any, Any]")
 
-FileOrigin = FileSystemPath | ZipFile | Mapping[str, FileSystemPath]
+MutableFileOrigin = FileSystemPath | ZipFile
+FileOrigin = MutableFileOrigin | Mapping[str, FileSystemPath]
 TextFileContent = Optional[ValueType | str]
 BinaryFileContent = Optional[ValueType | bytes]
 
 
-# TODO: Should this also be generic on the pack type that the file can be used within?
 @dataclass(eq=False, repr=False)
-class File(Generic[ValueType, SerializeType], ABC):
+class File(Generic["PackType", ValueType, SerializeType], ABC):
     """Base file class."""
 
     _content: Optional[ValueType | SerializeType] = None
@@ -106,7 +105,7 @@ class File(Generic[ValueType, SerializeType], ABC):
     def source_stop_or_default(self) -> int:
         return -1 if self.source_stop is None else self.source_stop
 
-    on_bind: Optional[Callable[[Self, "Pack[Any]", str], Any]] = extra_field(
+    on_bind: Optional[Callable[[Self, "PackType", str], Any]] = extra_field(
         default=None
     )
 
@@ -114,7 +113,7 @@ class File(Generic[ValueType, SerializeType], ABC):
     deserializer: Callable[[SerializeType], ValueType] = lazy_extra_field()
     reader: Callable[[FileSystemPath, int, int], SerializeType] = lazy_extra_field()
 
-    original: "File[ValueType, SerializeType]" = lazy_extra_field()
+    original: "File[PackType, ValueType, SerializeType]" = lazy_extra_field()
 
     def __post_init__(self):
         ensure_subclass_initialized_lazy_field(self.serializer, "serializer")
@@ -133,7 +132,7 @@ class File(Generic[ValueType, SerializeType], ABC):
         """Merge the given file or return False to indicate no special handling."""
         return False
 
-    def bind(self, pack: "Pack[Any]", path: str) -> Any:
+    def bind(self, pack: "PackType", path: str) -> Any:
         """Handle file binding."""
         if self.on_bind:
             self.on_bind(self, pack, path)
@@ -327,11 +326,8 @@ class File(Generic[ValueType, SerializeType], ABC):
         """Write file content to zip."""
         ...
 
-    def dump(self, origin: FileOrigin, path: FileSystemPath):
+    def dump(self, origin: MutableFileOrigin, path: FileSystemPath):
         """Write the file to a zipfile or to the filesystem."""
-        if isinstance(origin, Mapping):
-            raise TypeError(f'Can\'t dump file "{path}" to read-only mapping.')
-
         if self._content is None:
             if isinstance(origin, ZipFile):
                 origin.write(self.ensure_source_path(), str(path))
@@ -368,12 +364,12 @@ class FileSerialize(Generic[SerializeType]):
 
     def __get__(
         self,
-        obj: File[Any, SerializeType],
+        obj: File[Any, Any, SerializeType],
         objtype: Optional[Type[Any]] = None,
     ) -> SerializeType:
         return obj.ensure_serialized()
 
-    def __set__(self, obj: File[Any, SerializeType], value: SerializeType):
+    def __set__(self, obj: File[Any, Any, SerializeType], value: SerializeType):
         obj.set_content(value)
 
 
@@ -382,21 +378,21 @@ class FileDeserialize(Generic[ValueType]):
 
     def __get__(
         self,
-        obj: File[ValueType, Any],
+        obj: File[Any, ValueType, Any],
         objtype: Optional[Type[Any]] = None,
     ) -> ValueType:
         return obj.ensure_deserialized()
 
-    def __set__(self, obj: File[ValueType, Any], value: ValueType):
+    def __set__(self, obj: File[Any, ValueType, Any], value: ValueType):
         obj.set_content(value)
 
 
 class SerializationError(WrappedException):
     """Raised when serialization fails."""
 
-    file: File[Any, Any]
+    file: File[Any, Any, Any]
 
-    def __init__(self, file: File[Any, Any]):
+    def __init__(self, file: File[Any, Any, Any]):
         super().__init__(file)
         self.file = file
 
@@ -409,9 +405,9 @@ class SerializationError(WrappedException):
 class DeserializationError(WrappedException):
     """Raised when deserialization fails."""
 
-    file: File[Any, Any]
+    file: File[Any, Any, Any]
 
-    def __init__(self, file: File[Any, Any]):
+    def __init__(self, file: File[Any, Any, Any]):
         super().__init__(file)
         self.file = file
 
@@ -422,7 +418,7 @@ class DeserializationError(WrappedException):
 
 
 @dataclass(eq=False, repr=False)
-class TextFileBase(File[ValueType, str]):
+class TextFileBase(File["PackType", ValueType, str]):
     """Base class for files that get serialized to strings."""
 
     default_encoding: ClassVar[str] = "utf-8"
@@ -453,7 +449,7 @@ class TextFileBase(File[ValueType, str]):
 
     @classmethod
     def from_zip(cls, origin: ZipFile, name: str) -> str:
-        return origin.read(name).decode()
+        return origin.read(name).decode(encoding=cls.default_encoding)
 
     def dump_path(self, path: FileSystemPath, raw: str) -> None:
         with open(
@@ -486,7 +482,7 @@ class TextFileBase(File[ValueType, str]):
         ...
 
 
-class TextFile(TextFileBase[str]):
+class TextFile(TextFileBase["PackType", str]):
     """Class representing a text file."""
 
     def to_str(self, content: str) -> str:
@@ -501,7 +497,7 @@ class TextFile(TextFileBase[str]):
 
 
 @dataclass(eq=False, repr=False)
-class BinaryFileBase(File[ValueType, bytes]):
+class BinaryFileBase(File["PackType", ValueType, bytes]):
     """Base class for files that get serialized to bytes."""
 
     blob: ClassVar[FileSerialize[bytes]] = FileSerialize()
@@ -537,16 +533,18 @@ class BinaryFileBase(File[ValueType, bytes]):
         with origin.open(name, "w") as f:
             f.write(raw)
 
+    @abstractmethod
     def to_bytes(self, content: ValueType) -> bytes:
         """Convert content to bytes."""
-        raise NotImplementedError()
+        ...
 
+    @abstractmethod
     def from_bytes(self, content: bytes) -> ValueType:
         """Convert bytes to content."""
-        raise NotImplementedError()
+        ...
 
 
-class BinaryFile(BinaryFileBase[bytes]):
+class BinaryFile(BinaryFileBase["PackType", bytes]):
     """Class representing a binary file."""
 
     def to_bytes(self, content: bytes) -> bytes:
@@ -565,7 +563,7 @@ class InvalidDataModel(DeserializationError):
 
     explanation: str
 
-    def __init__(self, file: File[Any, Any], explanation: str):
+    def __init__(self, file: File[Any, Any, Any], explanation: str):
         super().__init__(file)
         self.explanation = explanation
         self.hide_wrapped_exception = True
@@ -577,12 +575,15 @@ class InvalidDataModel(DeserializationError):
 
 
 @dataclass(eq=False, repr=False)
-class DataModelBase(TextFileBase[ValueType]):
+class DataModelBase(TextFileBase["PackType", ValueType]):
     """Base class for data models."""
 
-    encoder: Callable[[Any], str] = lazy_extra_field()
-    decoder: Callable[[str], Any] = lazy_extra_field()
+    encoder: Callable[[ValueType], str] = lazy_extra_field()
+    decoder: Callable[[str], ValueType] = lazy_extra_field()
 
+    # TODO: Investigate how to remove this ClassVar weirdness so that the generic type can be used
+    # Currently a ClassVar to prevent the dataclass decorator from treating it as a field
+    # Since this is a descriptor it does work as a class var despite really being an instance attribute
     data: ClassVar[FileDeserialize[Any]] = FileDeserialize()
 
     model: ClassVar[Optional[Type[Any]]] = None
@@ -619,7 +620,7 @@ class DataModelBase(TextFileBase[ValueType]):
         return cls.model() if cls.model and issubclass(cls.model, BaseModel) else {}  # type: ignore
 
 
-class JsonFileBase(DataModelBase[ValueType]):
+class JsonFileBase(DataModelBase["PackType", ValueType]):
     """Base class for json files."""
 
     def __post_init__(self):
@@ -633,7 +634,7 @@ class JsonFileBase(DataModelBase[ValueType]):
 
 
 @dataclass(eq=False, repr=False)
-class JsonFile(JsonFileBase[JsonDict]):
+class JsonFile(JsonFileBase["PackType", JsonDict]):
     """Class representing a json file."""
 
     data: ClassVar[FileDeserialize[JsonDict]] = FileDeserialize()
@@ -643,7 +644,7 @@ class JsonFile(JsonFileBase[JsonDict]):
         return {}
 
 
-class YamlFileBase(DataModelBase[ValueType]):
+class YamlFileBase(DataModelBase["PackType", ValueType]):
     """Base class for yaml files."""
 
     def __post_init__(self):
@@ -657,7 +658,7 @@ class YamlFileBase(DataModelBase[ValueType]):
 
 
 @dataclass(eq=False, repr=False)
-class YamlFile(YamlFileBase[JsonDict]):
+class YamlFile(YamlFileBase["PackType", JsonDict]):
     """Class representing a yaml file."""
 
     data: ClassVar[FileDeserialize[JsonDict]] = FileDeserialize()
@@ -668,7 +669,7 @@ class YamlFile(YamlFileBase[JsonDict]):
 
 
 @dataclass(eq=False, repr=False)
-class PngFile(BinaryFileBase[Image]):
+class PngFile(BinaryFileBase["PackType", Image]):
     """Class representing a png file."""
 
     image: ClassVar[FileDeserialize[Image]] = FileDeserialize()

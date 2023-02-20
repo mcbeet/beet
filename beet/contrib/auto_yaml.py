@@ -48,19 +48,23 @@ def use_auto_yaml(pack: Pack[Any]):
 
 
 def create_namespace_handler(
-    file_type: Type[JsonFileBase[Any]],
+    file_type: Type[NamespaceFile],
     namespace_scope: Tuple[str, ...],
     namespace_extension: str,
 ) -> Type[NamespaceFile]:
     """Create handler that turns yaml namespace files into json."""
 
-    class AutoYamlNamespaceHandler(YamlFile):
+    # Subclass check to get the currently unrepresentable type for a subclass of both a NamespaceFile and a JsonFileBase
+    if not issubclass(file_type, JsonFileBase):
+        raise TypeError()
+
+    class AutoYamlNamespaceHandler(YamlFile[Pack[Any]]):
         scope: ClassVar[Tuple[str, ...]] = namespace_scope
         extension: ClassVar[str] = namespace_extension
 
         model = file_type.model
 
-        def bind(self, pack: Any, path: str):
+        def bind(self, pack: Pack[Any], path: str):
             super().bind(pack, path)
             pack[file_type].merge({path: file_type(self.data, original=self.original)})
             raise Drop()
@@ -70,14 +74,14 @@ def create_namespace_handler(
 
 def create_extra_handler(
     filename: str,
-    file_type: Type[JsonFileBase[Any]],
-) -> Type[YamlFile]:
+    file_type: Type[JsonFileBase[Pack[Any], Any]],
+) -> Type[YamlFile[Pack[Any]]]:
     """Create handler that turns yaml extra files into json."""
 
-    class AutoYamlExtraHandler(YamlFile):
+    class AutoYamlExtraHandler(YamlFile[Pack[Any]]):
         model = file_type.model
 
-        def bind(self, pack: Any, path: str):
+        def bind(self, pack: Pack[Any], path: str):
             super().bind(pack, path)
             pack.extra.merge({filename: file_type(self.data, original=self.original)})
             raise Drop()
@@ -87,14 +91,14 @@ def create_extra_handler(
 
 def create_namespace_extra_handler(
     filename: str,
-    file_type: Type[JsonFileBase[Any]],
-) -> Type[YamlFile]:
+    file_type: Type[JsonFileBase[Pack[Any], Any]],
+) -> Type[YamlFile[Pack[Any]]]:
     """Create handler that turns yaml namespace extra files into json."""
 
-    class AutoYamlExtraHandler(YamlFile):
+    class AutoYamlExtraHandler(YamlFile[Pack[Any]]):
         model = file_type.model
 
-        def bind(self, pack: Any, path: str):
+        def bind(self, pack: Pack[Any], path: str):
             super().bind(pack, path)
             namespace, _, path = path.partition(":")
             pack[namespace].extra.merge(

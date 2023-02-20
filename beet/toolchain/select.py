@@ -150,9 +150,9 @@ class PackSelector:
     @overload
     def select_files(
         self,
-        pack: Pack[Any],
+        pack: PackType,
         *extensions: str,
-    ) -> PackSelection[File[Any, Any]]:
+    ) -> PackSelection[File[PackType, Any, Any]]:
         ...
 
     @overload
@@ -200,13 +200,17 @@ class PackSelector:
                 for group, spec in self.match_spec.items():
                     if file_type := group_map.get(group):
                         for path, file_instance in pack[file_type].items():
-                            if spec.match_file(path):
+                            if spec.match_file(  # pyright: ignore[reportUnknownMemberType]
+                                path
+                            ):
                                 result[file_instance] = None, path
 
             else:
                 for file_type in file_types:
                     for path, file_instance in pack[file_type].items():
-                        if self.match_spec.match_file(path):
+                        if self.match_spec.match_file(  # pyright: ignore[reportUnknownMemberType]
+                            path
+                        ):
                             result[file_instance] = None, path
 
         return result
@@ -214,12 +218,12 @@ class PackSelector:
 
 @overload
 def select_files(
-    pack: Pack[Any],
+    pack: PackType,
     *extensions: str,
     files: Optional[Any] = None,
     match: Optional[Any] = None,
     template: Optional[TemplateManager] = None,
-) -> PackSelection[File[Any, Any]]:
+) -> PackSelection[File[PackType, Any, Any]]:
     ...
 
 

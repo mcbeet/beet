@@ -33,35 +33,35 @@ def optifine(pack: Union[Context, ResourcePack]):
     ]
 
 
-class JsonEntityModel(JsonFile):
+class JsonEntityModel(JsonFile[ResourcePack]):
     """Class representing a json entity model."""
 
     scope: ClassVar[Tuple[str, ...]] = ("optifine", "cem")
     extension: ClassVar[str] = ".jem"
 
 
-class JsonPartModel(JsonFile):
+class JsonPartModel(JsonFile[ResourcePack]):
     """Class representing a json part model."""
 
     scope: ClassVar[Tuple[str, ...]] = ("optifine", "cem")
     extension: ClassVar[str] = ".jpm"
 
 
-class OptifineProperties(TextFile):
+class OptifineProperties(TextFile[ResourcePack]):
     """Class representing optifine properties."""
 
     scope: ClassVar[Tuple[str, ...]] = ("optifine",)
     extension: ClassVar[str] = ".properties"
 
 
-class OptifineTexture(PngFile):
+class OptifineTexture(PngFile[ResourcePack]):
     """Class representing an optifine texture."""
 
     scope: ClassVar[Tuple[str, ...]] = ("optifine",)
     extension: ClassVar[str] = ".png"
 
 
-class ShaderProperties(TextFile):
+class ShaderProperties(TextFile[ResourcePack]):
     """Class representing shader properties."""
 
     scope: ClassVar[Tuple[str, ...]] = ("shaders",)

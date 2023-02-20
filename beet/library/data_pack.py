@@ -47,7 +47,7 @@ from .base import (
 TagFileType = TypeVar("TagFileType", bound="TagFile")
 
 
-class Advancement(JsonFile):
+class Advancement(JsonFile["DataPack"]):
     """Class representing an advancement."""
 
     scope: ClassVar[Tuple[str, ...]] = ("advancements",)
@@ -55,7 +55,7 @@ class Advancement(JsonFile):
 
 
 @dataclass(eq=False, repr=False)
-class Function(TextFileBase[List[str]]):
+class Function(TextFileBase["DataPack", list[str]]):
     """Class representing a function."""
 
     content: TextFileContent[List[str]] = None
@@ -108,28 +108,28 @@ class Function(TextFileBase[List[str]]):
             function_tag.prepend(FunctionTag({"values": [path]}))
 
 
-class ItemModifier(JsonFile):
+class ItemModifier(JsonFile["DataPack"]):
     """Class representing an item modifier."""
 
     scope: ClassVar[Tuple[str, ...]] = ("item_modifiers",)
     extension: ClassVar[str] = ".json"
 
 
-class LootTable(JsonFile):
+class LootTable(JsonFile["DataPack"]):
     """Class representing a loot table."""
 
     scope: ClassVar[Tuple[str, ...]] = ("loot_tables",)
     extension: ClassVar[str] = ".json"
 
 
-class Predicate(JsonFile):
+class Predicate(JsonFile["DataPack"]):
     """Class representing a predicate."""
 
     scope: ClassVar[Tuple[str, ...]] = ("predicates",)
     extension: ClassVar[str] = ".json"
 
 
-class Recipe(JsonFile):
+class Recipe(JsonFile["DataPack"]):
     """Class representing a recipe."""
 
     scope: ClassVar[Tuple[str, ...]] = ("recipes",)
@@ -137,7 +137,7 @@ class Recipe(JsonFile):
 
 
 @dataclass(eq=False, repr=False)
-class Structure(BinaryFileBase[StructureFileData]):
+class Structure(BinaryFileBase["DataPack", StructureFileData]):
     """Class representing a structure file."""
 
     content: BinaryFileContent[StructureFileData] = None
@@ -158,7 +158,7 @@ class Structure(BinaryFileBase[StructureFileData]):
         return dst.getvalue()
 
 
-class TagFile(JsonFile):
+class TagFile(JsonFile["DataPack"]):
     """Base class for tag files."""
 
     extension: ClassVar[str] = ".json"

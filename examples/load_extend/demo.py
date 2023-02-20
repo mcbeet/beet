@@ -2,10 +2,18 @@ from typing import ClassVar, Tuple, cast
 
 from pydantic import BaseModel
 
-from beet import Context, FileDeserialize, JsonFile, JsonFileBase, TextFile, YamlFile
+from beet import (
+    Context,
+    DataPack,
+    FileDeserialize,
+    JsonFile,
+    JsonFileBase,
+    TextFile,
+    YamlFile,
+)
 
 
-class FunctionConfig(YamlFile):
+class FunctionConfig(YamlFile[DataPack]):
     scope: ClassVar[Tuple[str, ...]] = ("functions",)
     extension: ClassVar[str] = ".yml"
 
@@ -14,7 +22,7 @@ class BlueprintData(BaseModel):
     name: str
 
 
-class Blueprint(JsonFileBase[BlueprintData]):
+class Blueprint(JsonFileBase[DataPack, BlueprintData]):
     model = BlueprintData
 
     scope: ClassVar[Tuple[str, ...]] = ("blueprints",)
@@ -31,13 +39,15 @@ def extend_data_pack(ctx: Context):
 
 
 def process_functions(ctx: Context):
-    project_data = cast(JsonFile, ctx.data.extra["myproject.json"]).data
+    project_data = cast(JsonFile[DataPack], ctx.data.extra["myproject.json"]).data
 
     for prefix, dirs, functions in ctx.data.functions.walk():
         dirs.discard("zprivate")
 
         namespace = ctx.data[prefix.partition(":")[0]]
-        numbers = cast(TextFile, namespace.extra["numbers.txt"]).text.splitlines()
+        numbers = cast(
+            TextFile[DataPack], namespace.extra["numbers.txt"]
+        ).text.splitlines()
 
         folder_config = ctx.data[FunctionConfig][prefix + "config"].data
 

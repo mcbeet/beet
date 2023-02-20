@@ -12,13 +12,13 @@ import re
 from dataclasses import dataclass
 from typing import Any, ClassVar, Optional, Tuple, cast
 
-from beet import Context, JsonFile
+from beet import Context, JsonFile, Pack
 from beet.core.utils import TextComponent
 
 PATH_REGEX = re.compile(r"\w+")
 
 
-class Message(JsonFile):
+class Message(JsonFile[Pack[Any]]):
     """Class representing a message file."""
 
     scope: ClassVar[Tuple[str, ...]] = ("messages",)

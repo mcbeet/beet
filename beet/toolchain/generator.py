@@ -129,7 +129,7 @@ class Generator:
         self,
         fmt: str,
         *,
-        render: TextFileBase[Any],
+        render: TextFileBase[Any, Any],
         hash: Any = None,
         **kwargs: Any,
     ) -> str:
@@ -168,7 +168,7 @@ class Generator:
     def __call__(
         self,
         *,
-        render: TextFileBase[Any],
+        render: TextFileBase[Any, Any],
         hash: Any = None,
         **kwargs: Any,
     ) -> str:
@@ -177,7 +177,7 @@ class Generator:
     def __call__(
         self,
         *args: Any,
-        render: Optional[TextFileBase[Any]] = None,
+        render: Optional[TextFileBase[Any, Any]] = None,
         merge: Optional[NamespaceFile] = None,
         default: Optional[Union[Type[NamespaceFile], NamespaceFile]] = None,
         hash: Any = None,

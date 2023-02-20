@@ -91,7 +91,9 @@ class DirectoryWatcher:
             entry_path = Path(entry.path)
             relative_path = entry_path.relative_to(base_path)
 
-            if self.ignore.match_file(relative_path):
+            if self.ignore.match_file(  # pyright: ignore[reportUnknownMemberType]
+                relative_path
+            ):
                 continue
 
             if entry_path.is_dir():

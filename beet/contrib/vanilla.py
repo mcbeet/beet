@@ -14,7 +14,7 @@ __all__ = [
 
 
 from pathlib import Path
-from typing import Iterator, Optional, Union
+from typing import Any, Iterator, Optional, Union
 from zipfile import ZipFile
 
 from beet import (
@@ -91,9 +91,9 @@ class AssetIndex(Container[str, FileSystemPath]):
     """Class for retrieving assets referenced by a particular release."""
 
     cache: Cache
-    info: JsonFile
+    info: JsonFile[Any]
 
-    def __init__(self, cache: Cache, info: JsonFile):
+    def __init__(self, cache: Cache, info: JsonFile[Any]):
         super().__init__()
         self.cache = cache
         self.info = info
@@ -130,12 +130,12 @@ class Release:
     """Class holding information about a minecraft release."""
 
     cache: Cache
-    info: JsonFile
+    info: JsonFile[Any]
 
     _client_jar: Optional[ClientJar]
     _object_mapping: Optional[UnveilMapping]
 
-    def __init__(self, cache: Cache, info: JsonFile):
+    def __init__(self, cache: Cache, info: JsonFile[Any]):
         self.cache = cache
         self.info = info
         self._client_jar = None
@@ -184,12 +184,12 @@ class ReleaseRegistry(Container[str, Release]):
     """Registry for minecraft releases."""
 
     cache: Cache
-    manifest: JsonFile
+    manifest: JsonFile[Any]
 
     def __init__(
         self,
         cache: Cache,
-        manifest: Optional[Union[FileSystemPath, JsonFile]] = None,
+        manifest: Optional[Union[FileSystemPath, JsonFile[Any]]] = None,
     ):
         super().__init__()
         self.cache = cache
@@ -206,7 +206,7 @@ class ReleaseRegistry(Container[str, Release]):
     def missing(self, key: str) -> Release:
         for version in self.manifest.data["versions"]:
             if version["id"] == key:
-                info = JsonFile(source_path=self.cache.download(version["url"]))
+                info = JsonFile[Any](source_path=self.cache.download(version["url"]))
                 return Release(self.cache, info)
         raise KeyError(key)
 
@@ -223,7 +223,7 @@ class Vanilla:
         ctx: Optional[Context] = None,
         *,
         cache: Optional[Cache] = None,
-        manifest: Optional[Union[FileSystemPath, JsonFile]] = None,
+        manifest: Optional[Union[FileSystemPath, JsonFile[Any]]] = None,
         minecraft_version: Optional[str] = None,
     ):
         opts = ctx and ctx.validate("vanilla", VanillaOptions)

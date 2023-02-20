@@ -74,7 +74,7 @@ def beet_default(ctx: Context):
     ctx.template.env.add_extension(DbgExtension)
 
 
-def get_padding(pixels: int) -> TextComponent:
+def get_padding(pixels: int) -> list[TextComponent]:
     """Generate a sequence of bold and normal spaces matching the given number of pixels."""
     if pixels < 12 and pixels not in [4, 5, 8, 9, 10]:
         raise ValueError(f"Invalid number of pixels {pixels}.")

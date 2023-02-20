@@ -29,7 +29,7 @@ from beet.core.utils import FileSystemPath, JsonDict
 from .utils import ensure_builtins
 
 T = TypeVar("T")
-TextFileType = TypeVar("TextFileType", bound=TextFileBase[Any])
+TextFileType = TypeVar("TextFileType", bound=TextFileBase[Any, Any])
 
 
 class TemplateError(WrappedException):

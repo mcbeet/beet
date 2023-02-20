@@ -16,6 +16,8 @@ from beet import (
     Structure,
     select_files,
 )
+from beet.core.container import SupportsMerge
+from beet.library.base import MergeCallback
 
 
 def test_equality():
@@ -403,9 +405,12 @@ def test_merge_rules():
     def combine_description(
         pack: DataPack,
         path: str,
-        current: JsonFile,
-        conflict: JsonFile,
+        current: SupportsMerge,
+        conflict: SupportsMerge,
     ) -> bool:
+        if not (isinstance(current, JsonFile) and isinstance(conflict, JsonFile)):
+            return False
+
         current.data["pack"]["description"] += conflict.data["pack"]["description"]
         return True
 
@@ -531,12 +536,12 @@ def test_select():
         p.function_tags["minecraft:tick"],
         p.function_tags["minecraft:load"],
     }
-    assert set(select_files(p, extend=JsonFileBase[Any], match=r"minecraft:*")) == {
+    assert set(select_files(p, extend=JsonFileBase[DataPack, Any], match=r"minecraft:*")) == {
         p.loot_tables["minecraft:default_loot"],
         p.function_tags["minecraft:tick"],
         p.function_tags["minecraft:load"],
     }
-    assert set(select_files(p, extend=JsonFileBase[Any], files=r".*")) == {
+    assert set(select_files(p, extend=JsonFileBase[DataPack, Any], files=r".*")) == {
         p.mcmeta,
         p.loot_tables["demo:some_loot"],
         p.loot_tables["demo:some_other_loot"],

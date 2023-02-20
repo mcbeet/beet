@@ -9,7 +9,7 @@ __all__ = [
 
 from typing import Any, Optional
 
-from beet import Context, ListOption, PluginOptions, TextFileBase, configurable
+from beet import Context, ListOption, Pack, PluginOptions, TextFileBase, configurable
 
 
 class TextEncodingOptions(PluginOptions):
@@ -28,7 +28,7 @@ def text_encoding(ctx: Context, opts: TextEncodingOptions):
     for pack in ctx.packs:
         for _, text_file in pack.list_files(
             *opts.extensions.entries(),
-            extend=TextFileBase[Any],
+            extend=TextFileBase[Pack[Any], Any],
         ):
             text_file.encoding = opts.encoding
             text_file.errors = opts.errors

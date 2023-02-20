@@ -73,7 +73,7 @@ class RenameFilesHandler:
 
     def __call__(self, pack: Union[ResourcePack, DataPack]):
         namespace_file_types = {
-            cast(Type[File[Any, Any]], file_type)
+            cast(Type[File[ResourcePack | DataPack, Any, Any]], file_type)
             for file_type in pack.resolve_scope_map().values()
         }
 
@@ -132,8 +132,8 @@ class RenameFilesHandler:
 
     def handle_filename(
         self,
-        pack: Union[ResourcePack, DataPack],
-        file_instance: File[Any, Any],
+        pack: ResourcePack | DataPack,
+        file_instance: File[ResourcePack | DataPack, Any, Any],
         filename: str,
     ):
         dest = self.substitute(filename)

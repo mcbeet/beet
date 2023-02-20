@@ -3,11 +3,9 @@ __all__ = [
 ]
 
 
-from typing import Any, TypeVar
+from typing import Any
 
-from .base import Namespace, Pack
-
-PackType = TypeVar("PackType", bound=Pack[Any])
+from .base import Namespace, Pack, PackType
 
 
 def ignore_name(pack: PackType) -> PackType:

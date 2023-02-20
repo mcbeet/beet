@@ -154,7 +154,7 @@ def data_pack_zip(ctx: Context):
 
 
 def create_pack_listing(
-    pack: Union[ResourcePack, DataPack],
+    pack: ResourcePack | DataPack,
     binary_files: bool = False,
 ) -> JsonDict:
     listing: JsonDict = {
@@ -165,13 +165,16 @@ def create_pack_listing(
     }
 
     listing["text_files"] = {
-        k: v.text for k, v in pack.list_files(extend=TextFileBase[Any])
+        k: v.text
+        for k, v in pack.list_files(extend=TextFileBase[ResourcePack | DataPack, Any])
     }
 
     if binary_files:
         listing["binary_files"] = {
             k: base64.b64encode(v.blob).decode()
-            for k, v in pack.list_files(extend=BinaryFileBase[Any])
+            for k, v in pack.list_files(
+                extend=BinaryFileBase[ResourcePack | DataPack, Any]
+            )
         }
 
     return listing

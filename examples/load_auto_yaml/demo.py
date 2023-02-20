@@ -11,7 +11,7 @@ class MessageData(BaseModel):
     color: str = "yellow"
 
 
-class MessageConfig(JsonFileBase[MessageData]):
+class MessageConfig(JsonFileBase[DataPack, MessageData]):
     model = MessageData
 
     data: ClassVar[FileDeserialize[MessageData]] = FileDeserialize()
