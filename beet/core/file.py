@@ -261,7 +261,6 @@ class File(Generic[ValueType, SerializeType], ABC):
         except Exception as exc:
             raise SerializationError(self) from exc
 
-    @abstractmethod
     def deserialize(self, content: Union[ValueType, SerializeType]) -> ValueType:
         """Deserialize file content."""
         try:
