@@ -1,13 +1,13 @@
 __all__ = [
-    "File",
     "FileOrigin",
+    "TextFileContent",
+    "BinaryFileContent",
+    "File",
     "FileSerialize",
     "FileDeserialize",
     "TextFileBase",
-    "TextFileContent",
     "TextFile",
     "BinaryFileBase",
-    "BinaryFileContent",
     "BinaryFile",
     "DataModelBase",
     "JsonFileBase",
@@ -39,7 +39,6 @@ from typing import (
     Type,
     TypeGuard,
     TypeVar,
-    Union,
     cast,
 )
 from zipfile import ZipFile
@@ -83,11 +82,12 @@ ValueType = TypeVar("ValueType")
 SerializeType = TypeVar("SerializeType")
 FileType = TypeVar("FileType", bound="File[Any, Any]")
 
-FileOrigin = Union[FileSystemPath, ZipFile, Mapping[str, FileSystemPath]]
-TextFileContent = Union[ValueType, str, None]
-BinaryFileContent = Union[ValueType, bytes, None]
+FileOrigin = FileSystemPath | ZipFile | Mapping[str, FileSystemPath]
+TextFileContent = Optional[ValueType | str]
+BinaryFileContent = Optional[ValueType | bytes]
 
 
+# TODO: Should this also be generic on the pack type that the file can be used within?
 @dataclass(eq=False, repr=False)
 class File(Generic[ValueType, SerializeType], ABC):
     """Base file class."""
@@ -231,7 +231,7 @@ class File(Generic[ValueType, SerializeType], ABC):
             f"{cls.__name__} object must be initialized with either a value, serialized data, or a source path."
         )
 
-    def copy(self: FileType) -> FileType:
+    def copy(self) -> Self:
         """Copy the file."""
         return replace(self, _content=deepcopy(self._content))
 
@@ -245,7 +245,7 @@ class File(Generic[ValueType, SerializeType], ABC):
     def is_value_type(self, content: ValueType | SerializeType) -> TypeGuard[ValueType]:
         return not self.is_serialized_type(content)
 
-    def serialize(self, content: Union[ValueType, SerializeType]) -> SerializeType:
+    def serialize(self, content: ValueType | SerializeType) -> SerializeType:
         """Serialize file content."""
         try:
             if self.is_serialized_type(content):
@@ -261,7 +261,7 @@ class File(Generic[ValueType, SerializeType], ABC):
         except Exception as exc:
             raise SerializationError(self) from exc
 
-    def deserialize(self, content: Union[ValueType, SerializeType]) -> ValueType:
+    def deserialize(self, content: ValueType | SerializeType) -> ValueType:
         """Deserialize file content."""
         try:
             if self.is_serialized_type(content):
