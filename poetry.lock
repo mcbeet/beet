@@ -2329,14 +2329,14 @@ files = [
 
 [[package]]
 name = "python-semantic-release"
-version = "7.33.1"
+version = "7.33.2"
 description = "Automatic Semantic Versioning for Python projects"
 category = "dev"
 optional = false
 python-versions = "*"
 files = [
-    {file = "python-semantic-release-7.33.1.tar.gz", hash = "sha256:9d2e5681c2c296e0fc5d24088b59d7528c1c162920df29a4663d1131b5dfc97b"},
-    {file = "python_semantic_release-7.33.1-py3-none-any.whl", hash = "sha256:ad8bc816526d3d0d7a4cf4833cc57e655a28b34d6fa33b3d2786a07ae4e8a075"},
+    {file = "python-semantic-release-7.33.2.tar.gz", hash = "sha256:c23b4bb746e9ddbe1ba7497c48f7d81403e67a14ceb37928ef667c1fbee5e324"},
+    {file = "python_semantic_release-7.33.2-py3-none-any.whl", hash = "sha256:9e4990cc0a4dc37482ac5ec7fe6f70f71681228f68f0fa39370415701fdcf632"},
 ]
 
 [package.dependencies]
