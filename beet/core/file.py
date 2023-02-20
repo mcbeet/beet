@@ -24,10 +24,12 @@ __all__ = [
 import io
 import json
 import shutil
+from abc import ABC, abstractmethod
 from copy import deepcopy
 from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import (
+    TYPE_CHECKING,
     Any,
     Callable,
     ClassVar,
@@ -35,15 +37,21 @@ from typing import (
     Mapping,
     Optional,
     Type,
+    TypeGuard,
     TypeVar,
     Union,
+    cast,
 )
 from zipfile import ZipFile
 
 import yaml
 from pydantic import BaseModel, ValidationError
+from typing_extensions import Self
 
 from .error import BubbleException, WrappedException
+
+if TYPE_CHECKING:
+    from ..library.base import Pack
 
 try:
     from PIL.Image import Image
@@ -68,8 +76,8 @@ from .utils import (
     snake_case,
 )
 
-ValueType = TypeVar("ValueType", bound=Any)
-SerializeType = TypeVar("SerializeType", bound=Any)
+ValueType = TypeVar("ValueType")
+SerializeType = TypeVar("SerializeType")
 FileType = TypeVar("FileType", bound="File[Any, Any]")
 
 FileOrigin = Union[FileSystemPath, ZipFile, Mapping[str, FileSystemPath]]
@@ -78,43 +86,67 @@ BinaryFileContent = Union[ValueType, bytes, None]
 
 
 @dataclass(eq=False, repr=False)
-class File(Generic[ValueType, SerializeType]):
+class File(Generic[ValueType, SerializeType], ABC):
     """Base file class."""
 
-    _content: Union[ValueType, SerializeType, None] = None
+    _content: Optional[ValueType | SerializeType] = None
     source_path: Optional[FileSystemPath] = None
 
     source_start: Optional[int] = extra_field(default=None)
     source_stop: Optional[int] = extra_field(default=None)
 
-    on_bind: Optional[Callable[[Any, Any, str], Any]] = extra_field(default=None)
+    @property
+    def source_start_or_default(self) -> int:
+        return 0 if self.source_start is None else self.source_start
 
-    serializer: Callable[[ValueType], SerializeType] = extra_field(default=None)
-    deserializer: Callable[[SerializeType], ValueType] = extra_field(default=None)
-    reader: Callable[[FileSystemPath, int, int], SerializeType] = extra_field(
+    @property
+    def source_stop_or_default(self) -> int:
+        return -1 if self.source_stop is None else self.source_stop
+
+    on_bind: Optional[Callable[[Self, "Pack[Any]", str], Any]] = extra_field(
         default=None
     )
 
-    original: "File[ValueType, SerializeType]" = extra_field(default=None)
+    serializer: Callable[[ValueType], SerializeType] = extra_field(
+        default=cast(Any, None)  # Overridden in subclass __post_init__ if None
+    )
+    deserializer: Callable[[SerializeType], ValueType] = extra_field(
+        default=cast(Any, None)  # Overridden in subclass __post_init__ if None
+    )
+    reader: Callable[[FileSystemPath, int, int], SerializeType] = extra_field(
+        default=cast(Any, None)  # Overridden in __post_init__ if None
+    )
+
+    original: "File[ValueType, SerializeType]" = extra_field(
+        default=cast(Any, None)  # Overridden in __post_init__ if None
+    )
 
     def __post_init__(self):
+        if not self.serializer:  # pyright: ignore[reportUnnecessaryComparison]
+            raise NotImplementedError("Subclass hasn't provided a serializer")
+
+        if not self.deserializer:  # pyright: ignore[reportUnnecessaryComparison]
+            raise NotImplementedError("Subclass hasn't provided a deserializer")
+
         if self._content is self.source_path is None:
             self._content = self.default()
-        if not self.reader:  # type: ignore
+
+        if not self.reader:  # pyright: ignore[reportUnnecessaryComparison]
             self.reader = self.from_path
+
         if not self.original:
             self.original = self
 
-    def merge(self: FileType, other: FileType) -> bool:
+    def merge(self, other: Self) -> bool:
         """Merge the given file or return False to indicate no special handling."""
         return False
 
-    def bind(self, pack: Any, path: str) -> Any:
+    def bind(self, pack: "Pack[Any]", path: str) -> Any:
         """Handle file binding."""
         if self.on_bind:
             self.on_bind(self, pack, path)
 
-    def set_content(self, content: Union[ValueType, SerializeType]):
+    def set_content(self, content: ValueType | SerializeType):
         """Update the internal content."""
         if self.source_path:
             self.original = replace(self, original=None)
@@ -123,13 +155,13 @@ class File(Generic[ValueType, SerializeType]):
             self.source_stop = None
         self._content = content
 
-    def get_content(self) -> Union[ValueType, SerializeType]:
+    def get_content(self) -> ValueType | SerializeType:
         """Return the internal content."""
         return (
             self.reader(
                 self.ensure_source_path(),
-                0 if self.source_start is None else self.source_start,
-                -1 if self.source_stop is None else self.source_stop,
+                self.source_start_or_default,
+                self.source_stop_or_default,
             )
             if self._content is None
             else self._content
@@ -139,9 +171,9 @@ class File(Generic[ValueType, SerializeType]):
         """Make sure that the file has a source path and return it."""
         if self.source_path:
             return self.source_path
+
         raise ValueError(
-            f"Expected {self.__class__.__name__} object to be initialized with "  # type: ignore
-            "a source path."
+            f"Expected {self.__class__.__name__} object to be initialized with a source path."
         )
 
     def ensure_serialized(
@@ -159,7 +191,7 @@ class File(Generic[ValueType, SerializeType]):
             self.serializer = backup
 
         self.set_content(content)
-        return content  # type: ignore
+        return content
 
     def ensure_deserialized(
         self,
@@ -176,7 +208,7 @@ class File(Generic[ValueType, SerializeType]):
             self.deserializer = backup
 
         self.set_content(content)
-        return content  # type: ignore
+        return content
 
     def __eq__(self, other: Any) -> bool:
         if self is other:
@@ -189,10 +221,8 @@ class File(Generic[ValueType, SerializeType]):
             (
                 self.source_path is not None
                 and self.source_path == other.source_path
-                and (0 if self.source_start is None else self.source_start)
-                == (0 if other.source_start is None else other.source_start)
-                and (-1 if self.source_stop is None else self.source_stop)
-                == (-1 if other.source_stop is None else other.source_stop)
+                and self.source_start_or_default == other.source_start_or_default
+                and self.source_stop_or_default == other.source_stop_or_default
             )
             or self.get_content() == other.get_content()
             or self.ensure_serialized() == other.ensure_serialized()
@@ -206,38 +236,70 @@ class File(Generic[ValueType, SerializeType]):
     def default(cls) -> ValueType:
         """Return the file's default value."""
         raise ValueError(
-            f"{cls.__name__} object must be initialized with "
-            "either a value, serialized data, or a source path."
+            f"{cls.__name__} object must be initialized with either a value, serialized data, or a source path."
         )
 
     def copy(self: FileType) -> FileType:
         """Copy the file."""
         return replace(self, _content=deepcopy(self._content))
 
+    @abstractmethod
+    def is_serialized_type(
+        self,
+        content: ValueType | SerializeType,
+    ) -> TypeGuard[SerializeType]:
+        ...
+
+    def is_value_type(self, content: ValueType | SerializeType) -> TypeGuard[ValueType]:
+        return not self.is_serialized_type(content)
+
     def serialize(self, content: Union[ValueType, SerializeType]) -> SerializeType:
         """Serialize file content."""
-        raise NotImplementedError()
+        try:
+            if self.is_serialized_type(content):
+                return content
+            elif self.is_value_type(content):
+                return self.serializer(content)
+            else:
+                raise TypeError(
+                    "is_serialized_type and is_value_type must be mutually exclusive"
+                )
+        except BubbleException:
+            raise
+        except Exception as exc:
+            raise SerializationError(self) from exc
 
+    @abstractmethod
     def deserialize(self, content: Union[ValueType, SerializeType]) -> ValueType:
         """Deserialize file content."""
-        raise NotImplementedError()
+        try:
+            if self.is_serialized_type(content):
+                return self.deserializer(content)
+            elif self.is_value_type(content):
+                return content
+            else:
+                raise TypeError(
+                    "is_serialized_type and is_value_type must be mutually exclusive"
+                )
+        except BubbleException:
+            raise
+        except Exception as exc:
+            raise DeserializationError(self) from exc
 
     @classmethod
+    @abstractmethod
     def from_path(cls, path: FileSystemPath, start: int, stop: int) -> SerializeType:
         """Read file content from path."""
-        raise NotImplementedError()
+        ...
 
     @classmethod
+    @abstractmethod
     def from_zip(cls, origin: ZipFile, name: str) -> SerializeType:
         """Read file content from zip."""
-        raise NotImplementedError()
+        ...
 
     @classmethod
-    def load(
-        cls: Type[FileType],
-        origin: FileOrigin,
-        path: FileSystemPath = "",
-    ) -> FileType:
+    def load(cls, origin: FileOrigin, path: FileSystemPath = "") -> Self:
         """Load a file from a zipfile or from the filesystem."""
         instance = cls.try_load(origin, path)
         if instance is None:
@@ -245,38 +307,40 @@ class File(Generic[ValueType, SerializeType]):
         return instance
 
     @classmethod
-    def try_load(
-        cls: Type[FileType],
-        origin: FileOrigin,
-        path: FileSystemPath = "",
-    ) -> Optional[FileType]:
+    def try_load(cls, origin: FileOrigin, path: FileSystemPath = "") -> Optional[Self]:
         """Try to load a file from a zipfile or from the filesystem."""
-        if isinstance(origin, ZipFile):
-            try:
-                return cls(cls.from_zip(origin, str(path)))
-            except KeyError:
-                return None
-        elif isinstance(origin, Mapping):
-            try:
-                path = "" if path == Path() else str(path)
-                origin, path = origin[path], ""
-            except KeyError:
-                return None
-        path = Path(origin, path)
+        match origin:
+            case ZipFile():
+                try:
+                    return cls(cls.from_zip(origin, str(path)))
+                except KeyError:
+                    return None
+            case Mapping():
+                try:
+                    path = "" if path == Path() else str(path)
+                    path = Path(origin[path])
+                except KeyError:
+                    return None
+            case _:
+                path = Path(origin, path)
+
         return cls(source_path=path) if path.is_file() else None
 
+    @abstractmethod
     def dump_path(self, path: FileSystemPath, raw: SerializeType) -> None:
         """Write file content to path."""
-        raise NotImplementedError()
+        ...
 
+    @abstractmethod
     def dump_zip(self, origin: ZipFile, name: str, raw: SerializeType) -> None:
         """Write file content to zip."""
-        raise NotImplementedError()
+        ...
 
     def dump(self, origin: FileOrigin, path: FileSystemPath):
         """Write the file to a zipfile or to the filesystem."""
         if isinstance(origin, Mapping):
             raise TypeError(f'Can\'t dump file "{path}" to read-only mapping.')
+
         if self._content is None:
             if isinstance(origin, ZipFile):
                 origin.write(self.ensure_source_path(), str(path))
@@ -290,15 +354,21 @@ class File(Generic[ValueType, SerializeType]):
                 self.dump_path(Path(origin, path), raw)
 
     def __repr__(self) -> str:
-        content = (
-            repr(self._content)
-            if self._content is not None
-            else f"source_path={self.source_path!r}"
-            + (self.source_start is not None) * f", source_start={self.source_start}"
-            + (self.source_stop is not None) * f", source_stop={self.source_stop}"
-            if self.source_path
-            else ""
-        )
+        content: str
+
+        if self._content is not None:
+            content = repr(self._content)
+        elif self.source_path:
+            content = f"source_path={self.source_path!r}"
+
+            if self.source_start is not None:
+                content += f", source_start={self.source_start}"
+
+            if self.source_stop is not None:
+                content += f", source_stop={self.source_stop}"
+        else:
+            content = ""
+
         return f"{self.__class__.__name__}({content})"
 
 
@@ -364,38 +434,28 @@ class DeserializationError(WrappedException):
 class TextFileBase(File[ValueType, str]):
     """Base class for files that get serialized to strings."""
 
-    encoding: Optional[str] = extra_field(default="utf-8")
+    default_encoding: ClassVar[str] = "utf-8"
+    encoding: Optional[str] = extra_field(default=default_encoding)
     errors: Optional[str] = extra_field(default=None)
     newline: Optional[str] = extra_field(default=None)
 
     text: ClassVar[FileSerialize[str]] = FileSerialize()
 
     def __post_init__(self):
-        super().__post_init__()
-        if not self.serializer:  # type: ignore
+        if not self.serializer:  # pyright: ignore[reportUnnecessaryComparison]
             self.serializer = self.to_str
-        if not self.deserializer:  # type: ignore
+
+        if not self.deserializer:  # pyright: ignore[reportUnnecessaryComparison]
             self.deserializer = self.from_str
 
-    def serialize(self, content: Union[ValueType, str]) -> str:
-        try:
-            return content if isinstance(content, str) else self.serializer(content)
-        except BubbleException:
-            raise
-        except Exception as exc:
-            raise SerializationError(self) from exc
+        super().__post_init__()
 
-    def deserialize(self, content: Union[ValueType, str]) -> ValueType:
-        try:
-            return self.deserializer(content) if isinstance(content, str) else content
-        except BubbleException:
-            raise
-        except Exception as exc:
-            raise DeserializationError(self) from exc
+    def is_serialized_type(self, content: ValueType | str) -> TypeGuard[str]:
+        return isinstance(content, str)
 
     @classmethod
     def from_path(cls, path: FileSystemPath, start: int, stop: int) -> str:
-        with open(path, "r", encoding="utf-8") as f:
+        with open(path, "r", encoding=cls.default_encoding) as f:
             if start > 0:
                 f.seek(start)
             return f.read(stop - start) if stop >= -1 else f.read()
@@ -424,13 +484,15 @@ class TextFileBase(File[ValueType, str]):
             ) as text_io:
                 text_io.write(raw)
 
+    @abstractmethod
     def to_str(self, content: ValueType) -> str:
         """Convert content to string."""
-        raise NotImplementedError()
+        ...
 
+    @abstractmethod
     def from_str(self, content: str) -> ValueType:
         """Convert string to content."""
-        raise NotImplementedError()
+        ...
 
 
 class TextFile(TextFileBase[str]):
@@ -454,27 +516,16 @@ class BinaryFileBase(File[ValueType, bytes]):
     blob: ClassVar[FileSerialize[bytes]] = FileSerialize()
 
     def __post_init__(self):
-        super().__post_init__()
-        if not self.serializer:  # type: ignore
+        if not self.serializer:  # pyright: ignore[reportUnnecessaryComparison]
             self.serializer = self.to_bytes
-        if not self.deserializer:  # type: ignore
+
+        if not self.deserializer:  # pyright: ignore[reportUnnecessaryComparison]
             self.deserializer = self.from_bytes
 
-    def serialize(self, content: Union[ValueType, bytes]) -> bytes:
-        try:
-            return content if isinstance(content, bytes) else self.serializer(content)
-        except BubbleException:
-            raise
-        except Exception as exc:
-            raise SerializationError(self) from exc
+        super().__post_init__()
 
-    def deserialize(self, content: Union[ValueType, bytes]) -> ValueType:
-        try:
-            return self.deserializer(content) if isinstance(content, bytes) else content
-        except BubbleException:
-            raise
-        except Exception as exc:
-            raise DeserializationError(self) from exc
+    def is_serialized_type(self, content: ValueType | bytes) -> TypeGuard[bytes]:
+        return isinstance(content, bytes)
 
     @classmethod
     def from_path(cls, path: FileSystemPath, start: int, stop: int) -> bytes:
@@ -538,12 +589,25 @@ class InvalidDataModel(DeserializationError):
 class DataModelBase(TextFileBase[ValueType]):
     """Base class for data models."""
 
-    encoder: Callable[[Any], str] = extra_field(default=None)
-    decoder: Callable[[str], Any] = extra_field(default=None)
+    encoder: Callable[[Any], str] = extra_field(
+        default=cast(Any, None)  # Overridden in subclass __post_init__ if None
+    )
+    decoder: Callable[[str], Any] = extra_field(
+        default=cast(Any, None)  # Overridden in subclass __post_init__ if None
+    )
 
     data: ClassVar[FileDeserialize[Any]] = FileDeserialize()
 
     model: ClassVar[Optional[Type[Any]]] = None
+
+    def __post_init__(self):
+        if not self.encoder:  # pyright: ignore[reportUnnecessaryComparison]
+            raise NotImplementedError("Subclass hasn't provided an encoder")
+
+        if not self.decoder:  # pyright: ignore[reportUnnecessaryComparison]
+            raise NotImplementedError("Subclass hasn't provided a decoder")
+
+        super().__post_init__()
 
     def to_str(self, content: ValueType) -> str:
         if (
@@ -575,11 +639,13 @@ class JsonFileBase(DataModelBase[ValueType]):
     """Base class for json files."""
 
     def __post_init__(self):
-        super().__post_init__()
-        if not self.encoder:  # type: ignore
+        if not self.encoder:  # pyright: ignore[reportUnnecessaryComparison]
             self.encoder = dump_json
-        if not self.decoder:  # type: ignore
+
+        if not self.decoder:  # pyright: ignore[reportUnnecessaryComparison]
             self.decoder = json.loads
+
+        super().__post_init__()
 
 
 @dataclass(eq=False, repr=False)
@@ -597,11 +663,13 @@ class YamlFileBase(DataModelBase[ValueType]):
     """Base class for yaml files."""
 
     def __post_init__(self):
-        super().__post_init__()
-        if not self.encoder:  # type: ignore
+        if not self.encoder:  # pyright: ignore[reportUnnecessaryComparison]
             self.encoder = yaml.safe_dump
-        if not self.decoder:  # type: ignore
+
+        if not self.decoder:  # pyright: ignore[reportUnnecessaryComparison]
             self.decoder = yaml.safe_load
+
+        super().__post_init__()
 
 
 @dataclass(eq=False, repr=False)
