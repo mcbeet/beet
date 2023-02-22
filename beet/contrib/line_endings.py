@@ -9,7 +9,7 @@ __all__ = [
 
 from typing import Any, Optional
 
-from beet import Context, ListOption, Pack, PluginOptions, TextFileBase, configurable
+from beet import Context, ListOption, PluginOptions, TextFileBase, configurable
 
 
 class LineEndingsOptions(PluginOptions):
@@ -27,6 +27,6 @@ def line_endings(ctx: Context, opts: LineEndingsOptions):
     for pack in ctx.packs:
         for _, text_file in pack.list_files(
             *opts.extensions.entries(),
-            extend=TextFileBase[Pack[Any], Any],
+            extend=TextFileBase[Any],
         ):
             text_file.newline = opts.newline

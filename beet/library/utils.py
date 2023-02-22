@@ -7,7 +7,7 @@ __all__ = [
 import os
 from itertools import accumulate
 from pathlib import Path, PurePath
-from typing import Iterator, List
+from typing import Iterator
 
 from beet.core.utils import FileSystemPath
 
@@ -18,9 +18,9 @@ def list_files(directory: FileSystemPath) -> Iterator[Path]:
             yield Path(root, filename).relative_to(directory)
 
 
-def list_extensions(path: PurePath) -> List[str]:
-    extensions: List[str] = list(
-        accumulate(reversed(path.suffixes), lambda a, b: b + a)  # type: ignore
+def list_extensions(path: PurePath) -> list[str]:
+    extensions: list[str] = list(
+        accumulate(reversed(path.suffixes), lambda a, b: b + a)
     )
     extensions.reverse()
     return extensions

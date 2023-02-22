@@ -6,7 +6,7 @@ __all__ = [
 
 
 from contextlib import contextmanager
-from typing import Any, Callable, Dict, List, Optional, Type, TypeVar
+from typing import Any, Callable, Optional, TypeVar
 
 from jinja2 import (
     BaseLoader,
@@ -29,7 +29,7 @@ from beet.core.utils import FileSystemPath, JsonDict
 from .utils import ensure_builtins
 
 T = TypeVar("T")
-TextFileType = TypeVar("TextFileType", bound=TextFileBase[Any, Any])
+TextFileType = TypeVar("TextFileType", bound=TextFileBase[Any])
 
 
 class TemplateError(WrappedException):
@@ -83,14 +83,14 @@ class TemplateManager:
     """Class responsible for managing the Jinja environment."""
 
     env: Environment
-    loaders: List[BaseLoader]
-    prefix_map: Dict[str, BaseLoader]
-    directories: List[FileSystemPath]
+    loaders: list[BaseLoader]
+    prefix_map: dict[str, BaseLoader]
+    directories: list[FileSystemPath]
     cache_dir: FileSystemPath
     ctx: Any
     globals: JsonDict
 
-    def __init__(self, templates: List[FileSystemPath], cache_dir: FileSystemPath):
+    def __init__(self, templates: list[FileSystemPath], cache_dir: FileSystemPath):
         self.prefix_map = {}
         self.directories = templates
         self.cache_dir = cache_dir
@@ -104,7 +104,7 @@ class TemplateManager:
 
         self.reset_environment()
 
-    def reset_environment(self, cls: Type[Environment] = Environment):
+    def reset_environment(self, cls: type[Environment] = Environment):
         """Reset the Jinja environment."""
         self.env = cls(
             autoescape=False,

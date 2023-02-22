@@ -7,15 +7,13 @@ __all__ = [
 ]
 
 
-from typing import Dict
-
 from beet import Context, ListOption, PluginOptions, configurable
 from beet.core.utils import snake_case
 
 
 class RenderOptions(PluginOptions):
-    resource_pack: Dict[str, ListOption[str]] = {}
-    data_pack: Dict[str, ListOption[str]] = {}
+    resource_pack: dict[str, ListOption[str]] = {}
+    data_pack: dict[str, ListOption[str]] = {}
 
 
 def beet_default(ctx: Context):

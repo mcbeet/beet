@@ -14,17 +14,7 @@ from contextlib import closing, contextmanager
 from datetime import datetime, timedelta
 from pathlib import Path
 from textwrap import indent
-from typing import (
-    Any,
-    BinaryIO,
-    Callable,
-    ClassVar,
-    Optional,
-    Protocol,
-    Set,
-    Type,
-    TypeVar,
-)
+from typing import Any, BinaryIO, Callable, ClassVar, Optional, Protocol, TypeVar
 from urllib.request import urlopen
 
 from pydantic import BaseModel, Extra, Field
@@ -240,7 +230,7 @@ class Cache:
     def override(self, **data: Any):
         """Temporarily update the json data."""
         to_restore: JsonDict = {}
-        to_remove: Set[str] = set()
+        to_remove: set[str] = set()
 
         for key, value in data.items():
             if key in self.json:
@@ -296,7 +286,7 @@ class MultiCache(MatchMixin, Container[str, CacheType]):
     path: Path
     default_cache: str
     gitignore: bool
-    cache_type: Type[CacheType]
+    cache_type: type[CacheType]
     transaction: CacheTransaction
 
     def __init__(
@@ -304,7 +294,7 @@ class MultiCache(MatchMixin, Container[str, CacheType]):
         directory: FileSystemPath,
         default_cache: str = "default",
         gitignore: bool = True,
-        cache_type: Type[CacheType] = Cache,
+        cache_type: type[CacheType] = Cache,
     ):
         super().__init__()
         self.path = Path(directory).resolve()

@@ -1,19 +1,12 @@
-from typing import ClassVar, Tuple, cast
+from typing import Any, ClassVar, Tuple, cast
 
 from pydantic import BaseModel
 
-from beet import (
-    Context,
-    DataPack,
-    FileDeserialize,
-    JsonFile,
-    JsonFileBase,
-    TextFile,
-    YamlFile,
-)
+from beet import Context, JsonFile, JsonFileBase, TextFile, TextFileBase, YamlFileBase
+from beet.core.utils import JsonDict
 
 
-class FunctionConfig(YamlFile[DataPack]):
+class FunctionConfig(YamlFileBase[JsonDict]):
     scope: ClassVar[Tuple[str, ...]] = ("functions",)
     extension: ClassVar[str] = ".yml"
 
@@ -22,13 +15,9 @@ class BlueprintData(BaseModel):
     name: str
 
 
-class Blueprint(JsonFileBase[DataPack, BlueprintData]):
-    model = BlueprintData
-
+class Blueprint(JsonFileBase[BlueprintData]):
     scope: ClassVar[Tuple[str, ...]] = ("blueprints",)
     extension: ClassVar[str] = ".json"
-
-    data: ClassVar[FileDeserialize[BlueprintData]] = FileDeserialize()
 
 
 def extend_data_pack(ctx: Context):
@@ -39,14 +28,14 @@ def extend_data_pack(ctx: Context):
 
 
 def process_functions(ctx: Context):
-    project_data = cast(JsonFile[DataPack], ctx.data.extra["myproject.json"]).data
+    project_data = cast(JsonFileBase[Any], ctx.data.extra["myproject.json"]).data
 
     for prefix, dirs, functions in ctx.data.functions.walk():
         dirs.discard("zprivate")
 
         namespace = ctx.data[prefix.partition(":")[0]]
         numbers = cast(
-            TextFile[DataPack], namespace.extra["numbers.txt"]
+            TextFileBase[Any], namespace.extra["numbers.txt"]
         ).text.splitlines()
 
         folder_config = ctx.data[FunctionConfig][prefix + "config"].data

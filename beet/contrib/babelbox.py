@@ -16,7 +16,7 @@ import logging
 from csv import Dialect, DictReader, Sniffer
 from glob import glob
 from pathlib import Path
-from typing import Dict, Optional, Type, Union
+from typing import Optional
 
 from beet import (
     Context,
@@ -28,7 +28,7 @@ from beet import (
 )
 from beet.core.utils import FileSystemPath
 
-DialectLike = Union[str, Dialect, Type[Dialect]]
+DialectLike = str | Dialect | type[Dialect]
 
 
 logger = logging.getLogger(__name__)
@@ -65,14 +65,14 @@ def load_languages(
     path: FileSystemPath,
     dialect: Optional[DialectLike] = None,
     prefix: str = "",
-) -> Dict[str, Language]:
+) -> dict[str, Language]:
     """Return a dictionnary mapping each column to a language file."""
     with open(path, newline="") as csv_file:
         if not dialect:
             dialect = Sniffer().sniff(csv_file.read(1024))
             csv_file.seek(0)
 
-        reader: DictReader[str] = DictReader(csv_file, dialect=dialect)
+        reader = DictReader[str](csv_file, dialect=dialect)
 
         key, *language_codes = reader.fieldnames or [""]
         languages = {code: Language() for code in language_codes}

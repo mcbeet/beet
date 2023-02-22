@@ -76,9 +76,8 @@ class ABGroup(BaseModel):
     __root__: Union[AB, List[AB]]
 
 
-class ABFile(JsonFileBase[Any, ABGroup]):
-
-    model = ABGroup
+class ABFile(JsonFileBase[ABGroup]):
+    pass
 
 
 @pytest.mark.parametrize(

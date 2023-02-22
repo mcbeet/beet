@@ -13,7 +13,7 @@ import json
 from dataclasses import dataclass, field
 from functools import cached_property
 from itertools import cycle
-from typing import Any, Dict, List, Tuple
+from typing import Any
 
 from jinja2.nodes import Node, Output, TemplateData
 
@@ -27,7 +27,7 @@ class DbgOptions(PluginOptions):
     enabled: bool = True
     level: str = "info"
 
-    level_config: List[Tuple[str, str]] = [
+    level_config: list[tuple[str, str]] = [
         ("critical", "dark_red"),
         ("error", "red"),
         ("warn", "yellow"),
@@ -108,11 +108,11 @@ class DbgRenderer:
         return self.ctx.validate("dbg", DbgOptions)
 
     @cached_property
-    def level_colors(self) -> Dict[str, str]:
+    def level_colors(self) -> dict[str, str]:
         return dict(self.opts.level_config)
 
     @cached_property
-    def level_ranks(self) -> Dict[str, int]:
+    def level_ranks(self) -> dict[str, int]:
         return {
             level: len(self.opts.level_config) - i
             for i, (level, _) in enumerate(self.opts.level_config)
@@ -131,7 +131,7 @@ class DbgRenderer:
         ]
         number_width = max(len(n) for n in numbers)
 
-        output: List[TextComponent] = [""]
+        output: list[TextComponent] = [""]
 
         for number, line, color in zip(numbers, preview, cycle(["#dddddd", "gray"])):
             if len(line) > self.opts.preview_line_limit:

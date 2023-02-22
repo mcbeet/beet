@@ -10,7 +10,7 @@ import logging
 import os
 import platform
 from pathlib import Path
-from typing import List, Optional, Union
+from typing import Optional
 
 from beet import Cache, CachePin, Context, ErrorMessage, MultiCache, PackOverwrite
 from beet.core.utils import FileSystemPath, log_time, remove_path
@@ -26,14 +26,14 @@ def link_cache_finalizer(cache: Cache):
 class LinkManager:
     cache: Cache
 
-    dirty = CachePin[List[str]]("dirty", default_factory=list)
+    dirty = CachePin[list[str]]("dirty", default_factory=list)
 
     world = CachePin[Optional[str]]("world", None)
     minecraft = CachePin[Optional[str]]("minecraft", None)
     data_pack = CachePin[Optional[str]]("data_pack", None)
     resource_pack = CachePin[Optional[str]]("resource_pack", None)
 
-    def __init__(self, arg: Union[Context, MultiCache[Cache], Cache]):
+    def __init__(self, arg: Context | MultiCache[Cache] | Cache):
         if isinstance(arg, Context):
             arg = arg.cache
         if isinstance(arg, MultiCache):

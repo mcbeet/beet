@@ -21,18 +21,7 @@ from contextlib import contextmanager
 from dataclasses import InitVar, dataclass, field
 from functools import partial, update_wrapper, wraps
 from pathlib import Path
-from typing import (
-    Any,
-    Callable,
-    List,
-    Optional,
-    Protocol,
-    Set,
-    Tuple,
-    Type,
-    TypeVar,
-    overload,
-)
+from typing import Any, Callable, Optional, Protocol, TypeVar, overload
 
 from pydantic import BaseModel, ValidationError
 
@@ -151,7 +140,7 @@ class ProjectCache(MultiCache[Cache]):
         generated_directory: FileSystemPath,
         default_cache: str = "default",
         gitignore: bool = True,
-        cache_type: Type[Cache] = Cache,
+        cache_type: type[Cache] = Cache,
     ):
         super().__init__(directory, default_cache, gitignore, cache_type=Cache)
         self.generated = MultiCache(
@@ -188,14 +177,14 @@ class Context:
     assets: ResourcePack = field(default_factory=ResourcePack)
     data: DataPack = field(default_factory=DataPack)
 
-    whitelist: InitVar[Optional[List[str]]] = extra_field(default=None)
+    whitelist: InitVar[Optional[list[str]]] = extra_field(default=None)
 
     _container: ContextContainer = extra_field(
         init=False,
         default_factory=ContextContainer,
     )
 
-    def __post_init__(self, whitelist: Optional[List[str]]):
+    def __post_init__(self, whitelist: Optional[list[str]]):
         self._container.ctx = self
 
         self.generate.assets = self.assets
@@ -250,7 +239,7 @@ class Context:
     def override(self, **meta: Any):
         """Temporarily update the context meta."""
         to_restore: JsonDict = {}
-        to_remove: Set[str] = set()
+        to_remove: set[str] = set()
 
         for key, value in meta.items():
             if key in self.meta:
@@ -304,7 +293,7 @@ class Context:
             raise InvalidOptions(key) from exc
 
     @property
-    def packs(self) -> Tuple[ResourcePack, DataPack]:
+    def packs(self) -> tuple[ResourcePack, DataPack]:
         return self.assets, self.data
 
     @property
@@ -321,14 +310,14 @@ class Context:
         *extensions: str,
         files: Optional[Any] = None,
         match: Optional[Any] = None,
-    ) -> PackSelection[File[Any, Any, Any]]:
+    ) -> PackSelection[File[Any, Any]]:
         ...
 
     @overload
     def select(
         self,
         *extensions: str,
-        extend: Type[T],
+        extend: type[T],
         files: Optional[Any] = None,
         match: Optional[Any] = None,
     ) -> PackSelection[T]:

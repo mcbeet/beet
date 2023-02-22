@@ -25,19 +25,21 @@ __all__ = [
 ]
 
 
-from typing import ClassVar, Tuple, Union
+from typing import ClassVar
 
-from beet import Context, DataPack, JsonFile, TagFile
+from beet import Context, DataPack, JsonFileBase, TagFileBase
+from beet.core.utils import JsonDict
 
 
 def beet_default(ctx: Context):
     ctx.require(worldgen)
 
 
-def worldgen(pack: Union[Context, DataPack]):
+def worldgen(pack: Context | DataPack):
     """Enable worldgen."""
     if isinstance(pack, Context):
         pack = pack.data
+
     pack.extend_namespace += [
         Dimension,
         DimensionType,
@@ -61,129 +63,129 @@ def worldgen(pack: Union[Context, DataPack]):
     ]
 
 
-class Dimension(JsonFile[DataPack]):
+class Dimension(JsonFileBase[JsonDict]):
     """Class representing a dimension."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("dimension",)
+    scope: ClassVar[tuple[str, ...]] = ("dimension",)
     extension: ClassVar[str] = ".json"
 
 
-class DimensionType(JsonFile[DataPack]):
+class DimensionType(JsonFileBase[JsonDict]):
     """Class representing a dimension type."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("dimension_type",)
+    scope: ClassVar[tuple[str, ...]] = ("dimension_type",)
     extension: ClassVar[str] = ".json"
 
 
-class WorldgenBiome(JsonFile[DataPack]):
+class WorldgenBiome(JsonFileBase[JsonDict]):
     """Class representing a biome."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("worldgen", "biome")
+    scope: ClassVar[tuple[str, ...]] = ("worldgen", "biome")
     extension: ClassVar[str] = ".json"
 
 
-class WorldgenConfiguredCarver(JsonFile[DataPack]):
+class WorldgenConfiguredCarver(JsonFileBase[JsonDict]):
     """Class representing a worldgen carver."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("worldgen", "configured_carver")
+    scope: ClassVar[tuple[str, ...]] = ("worldgen", "configured_carver")
     extension: ClassVar[str] = ".json"
 
 
-class WorldgenConfiguredFeature(JsonFile[DataPack]):
+class WorldgenConfiguredFeature(JsonFileBase[JsonDict]):
     """Class representing a worldgen feature."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("worldgen", "configured_feature")
+    scope: ClassVar[tuple[str, ...]] = ("worldgen", "configured_feature")
     extension: ClassVar[str] = ".json"
 
 
-class WorldgenStructure(JsonFile[DataPack]):
+class WorldgenStructure(JsonFileBase[JsonDict]):
     """Class representing a worldgen structure feature."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("worldgen", "structure")
+    scope: ClassVar[tuple[str, ...]] = ("worldgen", "structure")
     extension: ClassVar[str] = ".json"
 
 
-class WorldgenConfiguredSurfaceBuilder(JsonFile[DataPack]):
+class WorldgenConfiguredSurfaceBuilder(JsonFileBase[JsonDict]):
     """Class representing a worldgen surface builder."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("worldgen", "configured_surface_builder")
+    scope: ClassVar[tuple[str, ...]] = ("worldgen", "configured_surface_builder")
     extension: ClassVar[str] = ".json"
 
 
-class WorldgenDensityFunction(JsonFile[DataPack]):
+class WorldgenDensityFunction(JsonFileBase[JsonDict]):
     """Class representing a density function."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("worldgen", "density_function")
+    scope: ClassVar[tuple[str, ...]] = ("worldgen", "density_function")
     extension: ClassVar[str] = ".json"
 
 
-class WorldgenNoise(JsonFile[DataPack]):
+class WorldgenNoise(JsonFileBase[JsonDict]):
     """Class representing a worldgen noise."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("worldgen", "noise")
+    scope: ClassVar[tuple[str, ...]] = ("worldgen", "noise")
     extension: ClassVar[str] = ".json"
 
 
-class WorldgenNoiseSettings(JsonFile[DataPack]):
+class WorldgenNoiseSettings(JsonFileBase[JsonDict]):
     """Class representing worldgen noise settings."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("worldgen", "noise_settings")
+    scope: ClassVar[tuple[str, ...]] = ("worldgen", "noise_settings")
     extension: ClassVar[str] = ".json"
 
 
-class WorldgenPlacedFeature(JsonFile[DataPack]):
+class WorldgenPlacedFeature(JsonFileBase[JsonDict]):
     """Class representing a placed feature."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("worldgen", "placed_feature")
+    scope: ClassVar[tuple[str, ...]] = ("worldgen", "placed_feature")
     extension: ClassVar[str] = ".json"
 
 
-class WorldgenProcessorList(JsonFile[DataPack]):
+class WorldgenProcessorList(JsonFileBase[JsonDict]):
     """Class representing a worldgen processor list."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("worldgen", "processor_list")
+    scope: ClassVar[tuple[str, ...]] = ("worldgen", "processor_list")
     extension: ClassVar[str] = ".json"
 
 
-class WorldgenTemplatePool(JsonFile[DataPack]):
+class WorldgenTemplatePool(JsonFileBase[JsonDict]):
     """Class representing a worldgen template pool."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("worldgen", "template_pool")
+    scope: ClassVar[tuple[str, ...]] = ("worldgen", "template_pool")
     extension: ClassVar[str] = ".json"
 
 
-class WorldgenStructureSet(JsonFile[DataPack]):
+class WorldgenStructureSet(JsonFileBase[JsonDict]):
     """Class representing a worldgen structure set."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("worldgen", "structure_set")
+    scope: ClassVar[tuple[str, ...]] = ("worldgen", "structure_set")
     extension: ClassVar[str] = ".json"
 
 
-class WorldgenBiomeTag(TagFile):
+class WorldgenBiomeTag(TagFileBase):
     """Class representing a biome tag."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("tags", "worldgen", "biome")
+    scope: ClassVar[tuple[str, ...]] = ("tags", "worldgen", "biome")
 
 
-class WorldgenStructureSetTag(TagFile):
+class WorldgenStructureSetTag(TagFileBase):
     """Class representing a worldgen structure set tag."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("tags", "worldgen", "structure_set")
+    scope: ClassVar[tuple[str, ...]] = ("tags", "worldgen", "structure_set")
 
 
-class WorldgenStructureTag(TagFile):
+class WorldgenStructureTag(TagFileBase):
     """Class representing a worldgen structure feature tag."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("tags", "worldgen", "structure")
+    scope: ClassVar[tuple[str, ...]] = ("tags", "worldgen", "structure")
 
 
-class WorldgenConfiguredCarverTag(TagFile):
+class WorldgenConfiguredCarverTag(TagFileBase):
     """Class representing a worldgen carver tag."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("tags", "worldgen", "configured_carver")
+    scope: ClassVar[tuple[str, ...]] = ("tags", "worldgen", "configured_carver")
 
 
-class WorldgenPlacedFeatureTag(TagFile):
+class WorldgenPlacedFeatureTag(TagFileBase):
     """Class representing a worldgen placed feature tag."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("tags", "worldgen", "placed_feature")
+    scope: ClassVar[tuple[str, ...]] = ("tags", "worldgen", "placed_feature")

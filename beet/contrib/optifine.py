@@ -11,19 +11,21 @@ __all__ = [
 ]
 
 
-from typing import ClassVar, Tuple, Union
+from typing import ClassVar
 
-from beet import Context, JsonFile, PngFile, ResourcePack, TextFile
+from beet import Context, JsonFileBase, PngFile, RawTextFileBase, ResourcePack
+from beet.core.utils import JsonDict
 
 
 def beet_default(ctx: Context):
     ctx.require(optifine)
 
 
-def optifine(pack: Union[Context, ResourcePack]):
+def optifine(pack: Context | ResourcePack):
     """Enable optifine resources."""
     if isinstance(pack, Context):
         pack = pack.assets
+
     pack.extend_namespace += [
         JsonEntityModel,
         JsonPartModel,
@@ -33,36 +35,36 @@ def optifine(pack: Union[Context, ResourcePack]):
     ]
 
 
-class JsonEntityModel(JsonFile[ResourcePack]):
+class JsonEntityModel(JsonFileBase[JsonDict]):
     """Class representing a json entity model."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("optifine", "cem")
+    scope: ClassVar[tuple[str, ...]] = ("optifine", "cem")
     extension: ClassVar[str] = ".jem"
 
 
-class JsonPartModel(JsonFile[ResourcePack]):
+class JsonPartModel(JsonFileBase[JsonDict]):
     """Class representing a json part model."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("optifine", "cem")
+    scope: ClassVar[tuple[str, ...]] = ("optifine", "cem")
     extension: ClassVar[str] = ".jpm"
 
 
-class OptifineProperties(TextFile[ResourcePack]):
+class OptifineProperties(RawTextFileBase):
     """Class representing optifine properties."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("optifine",)
+    scope: ClassVar[tuple[str, ...]] = ("optifine",)
     extension: ClassVar[str] = ".properties"
 
 
-class OptifineTexture(PngFile[ResourcePack]):
+class OptifineTexture(PngFile):
     """Class representing an optifine texture."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("optifine",)
+    scope: ClassVar[tuple[str, ...]] = ("optifine",)
     extension: ClassVar[str] = ".png"
 
 
-class ShaderProperties(TextFile[ResourcePack]):
+class ShaderProperties(RawTextFileBase):
     """Class representing shader properties."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("shaders",)
+    scope: ClassVar[tuple[str, ...]] = ("shaders",)
     extension: ClassVar[str] = ".properties"

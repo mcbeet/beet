@@ -13,14 +13,10 @@ from typing import (
     TYPE_CHECKING,
     Any,
     Callable,
-    DefaultDict,
     Iterable,
     Iterator,
     Optional,
-    Tuple,
-    Type,
     TypeVar,
-    Union,
     cast,
     overload,
 )
@@ -48,9 +44,9 @@ class Generator:
     """Helper for generating assets and data pack resources."""
 
     ctx: "Context"
-    scope: Tuple[Any, ...] = ()
-    registry: DefaultDict[Tuple[Any, ...], int] = field(
-        default_factory=lambda: defaultdict(int)  # type: ignore
+    scope: tuple[Any, ...] = ()
+    registry: defaultdict[tuple[Any, ...], int] = field(
+        default_factory=lambda: defaultdict(int)
     )
 
     assets: ResourcePack = field(default_factory=ResourcePack)
@@ -129,7 +125,7 @@ class Generator:
         self,
         fmt: str,
         *,
-        render: TextFileBase[Any, Any],
+        render: TextFileBase[Any],
         hash: Any = None,
         **kwargs: Any,
     ) -> str:
@@ -150,7 +146,7 @@ class Generator:
         self,
         fmt: str,
         *,
-        default: Union[Type[NamespaceFileType], NamespaceFileType],
+        default: type[NamespaceFileType] | NamespaceFileType,
         hash: Any = None,
     ) -> NamespaceFileType:
         ...
@@ -168,7 +164,7 @@ class Generator:
     def __call__(
         self,
         *,
-        render: TextFileBase[Any, Any],
+        render: TextFileBase[Any],
         hash: Any = None,
         **kwargs: Any,
     ) -> str:
@@ -177,9 +173,9 @@ class Generator:
     def __call__(
         self,
         *args: Any,
-        render: Optional[TextFileBase[Any, Any]] = None,
+        render: Optional[TextFileBase[Any]] = None,
         merge: Optional[NamespaceFile] = None,
-        default: Optional[Union[Type[NamespaceFile], NamespaceFile]] = None,
+        default: Optional[type[NamespaceFile] | NamespaceFile] = None,
         hash: Any = None,
         **kwargs: Any,
     ) -> Any:
@@ -291,7 +287,7 @@ class Generator:
         key: Optional[Callable[[T], int]] = None,
         hash: Any = None,
         name: Optional[str] = None,
-    ) -> Iterator[Tuple[TreeNode[T], Function]]:
+    ) -> Iterator[tuple[TreeNode[T], Function]]:
         ...
 
     @overload
@@ -303,7 +299,7 @@ class Generator:
         key: Optional[Callable[[T], int]] = None,
         hash: Any = None,
         name: Optional[str] = None,
-    ) -> Iterator[Tuple[TreeNode[T], Function]]:
+    ) -> Iterator[tuple[TreeNode[T], Function]]:
         ...
 
     def function_tree(
@@ -312,7 +308,7 @@ class Generator:
         key: Optional[Callable[[Any], int]] = None,
         hash: Any = None,
         name: Optional[str] = None,
-    ) -> Iterator[Tuple[TreeNode[Any], Function]]:
+    ) -> Iterator[tuple[TreeNode[Any], Function]]:
         """Generate a function tree."""
         if len(args) == 2:
             fmt, items = args

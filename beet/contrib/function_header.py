@@ -7,13 +7,13 @@ __all__ = [
 ]
 
 
-from typing import List, Optional
+from typing import Optional
 
 from beet import Context, PluginOptions, configurable
 
 
 class FunctionHeaderOptions(PluginOptions):
-    match: List[str] = []
+    match: list[str] = []
     template: Optional[str] = "function_header.mcfunction"
 
 

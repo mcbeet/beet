@@ -12,7 +12,7 @@ __all__ = [
 
 
 from dataclasses import dataclass
-from typing import Any, Callable, Generic, Sequence, Tuple, TypeVar, Union
+from typing import Any, Callable, Generic, Sequence, Union
 
 from pydantic import BaseModel
 
@@ -20,9 +20,9 @@ from beet import (
     Context,
     DataPack,
     ListOption,
-    Pack,
     PackSelectOption,
     PackSelector,
+    PackType,
     PluginOptions,
     RegexOption,
     ResourcePack,
@@ -30,8 +30,6 @@ from beet import (
     TextFileBase,
     configurable,
 )
-
-PackType = TypeVar("PackType", bound=Pack[Any])
 
 
 class TextSubstitutionOption(BaseModel):
@@ -68,7 +66,7 @@ class RenderSubstitutionOption(BaseModel):
 
 
 class SubstitutionOption(BaseModel):
-    __root__: ListOption[Union[TextSubstitutionOption, RenderSubstitutionOption]]
+    __root__: ListOption[TextSubstitutionOption | RenderSubstitutionOption]
 
     def compile(self, template: TemplateManager) -> Callable[[str], str]:
         substitutions = [sub.compile(template) for sub in self.__root__.entries()]
@@ -81,15 +79,19 @@ class SubstitutionOption(BaseModel):
         return apply
 
 
+# Using Union because `|` doesn't support strings for forward reference
+SubstituteList = ListOption[Union[SubstitutionOption, "FindReplaceOptions"]]
+
+
 class FindReplaceOptions(PluginOptions):
     resource_pack: PackSelectOption = PackSelectOption()
     data_pack: PackSelectOption = PackSelectOption()
-    substitute: ListOption[Union[SubstitutionOption, "FindReplaceOptions"]]
+    substitute: SubstituteList
 
     def compile(
         self,
         template: TemplateManager,
-    ) -> Tuple["FindReplaceHandler[ResourcePack]", "FindReplaceHandler[DataPack]"]:
+    ) -> tuple["FindReplaceHandler[ResourcePack]", "FindReplaceHandler[DataPack]"]:
         substitute = [sub.compile(template) for sub in self.substitute.entries()]
         return (
             FindReplaceHandler(
@@ -103,7 +105,7 @@ class FindReplaceOptions(PluginOptions):
         )
 
 
-ListOption[Union[SubstitutionOption, "FindReplaceOptions"]].update_forward_refs()
+SubstituteList.update_forward_refs()
 
 
 @dataclass(frozen=True)
@@ -112,9 +114,7 @@ class FindReplaceHandler(Generic[PackType]):
     substitute: Sequence[Union[Callable[[str], str], "FindReplaceHandler[PackType]"]]
 
     def __call__(self, pack: PackType):
-        text_files = self.pack_selector.select_files(
-            pack, extend=TextFileBase[Pack[Any], Any]
-        )
+        text_files = self.pack_selector.select_files(pack, extend=TextFileBase[Any])
         for find_replace in self.substitute:
             if isinstance(find_replace, FindReplaceHandler):
                 find_replace(pack)

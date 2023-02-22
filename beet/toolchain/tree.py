@@ -7,7 +7,7 @@ __all__ = [
 
 from dataclasses import dataclass
 from math import ceil
-from typing import Callable, Generic, Iterable, Iterator, List, Optional, Tuple, TypeVar
+from typing import Callable, Generic, Iterable, Iterator, Optional, TypeVar
 
 T = TypeVar("T")
 
@@ -17,8 +17,8 @@ class TreeData(Generic[T]):
     """Holds the static data for the search tree."""
 
     root: str
-    stack: List["TreeNode[T]"]
-    items: List[T]
+    stack: list["TreeNode[T]"]
+    items: list[T]
     key: Optional[Callable[[T], int]]
     name: Optional[str]
 
@@ -79,11 +79,11 @@ class TreeNode(Generic[T]):
         return self.data.items[self.start]
 
     @property
-    def items(self) -> List[T]:
+    def items(self) -> list[T]:
         return self.data.items[self.start : self.stop]
 
     @property
-    def delimitters(self) -> Tuple[int, int]:
+    def delimitters(self) -> tuple[int, int]:
         begin, end = self.start, self.stop - 1
 
         if self.data.key:

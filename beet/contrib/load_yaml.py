@@ -10,7 +10,7 @@ __all__ = [
 
 import logging
 from dataclasses import InitVar, dataclass, field
-from typing import Dict, List, Optional, Type
+from typing import Any, Optional
 
 import yaml
 
@@ -19,6 +19,8 @@ from beet import (
     DataPack,
     ExtraContainer,
     FileOrigin,
+    Namespace,
+    Pack,
     PackFile,
     PackType,
     PluginOptions,
@@ -30,8 +32,8 @@ logger = logging.getLogger(__name__)
 
 
 class LoadYamlOptions(PluginOptions):
-    resource_pack: List[str] = []
-    data_pack: List[str] = []
+    resource_pack: list[str] = []
+    data_pack: list[str] = []
 
 
 def beet_default(ctx: Context):
@@ -76,24 +78,30 @@ class YamlPackLoader:
         extended_pack.load(origin)
         self.merge_extended_pack(self.data, extended_pack)
 
-    def create_extended_pack(self, pack_type: Type[PackType]) -> PackType:
-        class ExtendedNamespace(pack_type.namespace_type):  # type: ignore
-            @classmethod
-            def get_extra_info(cls) -> Dict[str, Type[PackFile]]:
-                return self.rewrite_extra_info(super().get_extra_info())  # type: ignore
+    def create_extended_pack(self, pack_type: type[PackType]) -> PackType:
+        # Using this variable fixes "unknown type" errors in Pyright, with or without the type annotation
+        namespace_type: type[Namespace] = pack_type.namespace_type
 
-        ExtendedNamespace.field_map = pack_type.namespace_type.field_map
+        class ExtendedNamespace(namespace_type):
+            @classmethod
+            def get_extra_info(cls) -> dict[str, type[PackFile]]:
+                return self.rewrite_extra_info(super().get_extra_info())
+
+        ExtendedNamespace.field_map = namespace_type.field_map
         ExtendedNamespace.scope_map = {
             (scope, yaml_extension): key
             for yaml_extension in [".yml", ".yaml"]
-            for (scope, extension), key in pack_type.namespace_type.scope_map.items()
+            for (scope, extension), key in namespace_type.scope_map.items()
             if extension == ".json"
         }
 
-        class ExtendedPack(pack_type):  # type: ignore
+        # Using this variable fixes "unknown type" errors in Pyright
+        pack_base: type[Pack[Any]] = pack_type
+
+        class ExtendedPack(pack_base):
             @classmethod
-            def get_extra_info(cls) -> Dict[str, Type[PackFile]]:
-                return self.rewrite_extra_info(super().get_extra_info())  # type: ignore
+            def get_extra_info(cls) -> dict[str, type[PackFile]]:
+                return self.rewrite_extra_info(super().get_extra_info())
 
         ExtendedPack.namespace_type = ExtendedNamespace
 
@@ -101,8 +109,8 @@ class YamlPackLoader:
 
     def rewrite_extra_info(
         self,
-        original: Dict[str, Type[PackFile]],
-    ) -> Dict[str, Type[PackFile]]:
+        original: dict[str, type[PackFile]],
+    ) -> dict[str, type[PackFile]]:
         return {
             filename[:-5] + yaml_extension: file_type
             for yaml_extension in [".yml", ".yaml"]

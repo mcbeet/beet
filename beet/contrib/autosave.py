@@ -8,15 +8,14 @@ __all__ = [
 
 
 from dataclasses import dataclass, field
-from typing import List
 
 from beet import Context, PluginOptions, PluginSpec
 
 
 class AutosaveOptions(PluginOptions):
     link: bool = False
-    output_handlers: List[str] = []
-    link_handlers: List[str] = []
+    output_handlers: list[str] = []
+    link_handlers: list[str] = []
 
 
 @dataclass
@@ -25,8 +24,8 @@ class Autosave:
 
     ctx: Context
     link: bool = False
-    output_handlers: List[PluginSpec] = field(default_factory=list)
-    link_handlers: List[PluginSpec] = field(default_factory=list)
+    output_handlers: list[PluginSpec] = field(default_factory=list)
+    link_handlers: list[PluginSpec] = field(default_factory=list)
 
     def __post_init__(self):
         opts = self.ctx.validate("autosave", AutosaveOptions)

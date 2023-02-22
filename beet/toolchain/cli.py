@@ -15,7 +15,7 @@ __all__ = [
 import logging
 from contextlib import contextmanager
 from importlib.metadata import entry_points
-from typing import Any, Callable, Iterator, List, Optional
+from typing import Any, Callable, Iterator, Optional
 
 import click
 from click_help_colors import HelpColorsCommand, HelpColorsGroup
@@ -218,7 +218,7 @@ class MainGroup(BeetGroup):
         self.load_entry_points()
         return super().get_command(ctx, cmd_name)
 
-    def list_commands(self, ctx: click.Context) -> List[str]:
+    def list_commands(self, ctx: click.Context) -> list[str]:
         self.load_entry_points()
         return super().list_commands(ctx)
 
@@ -258,7 +258,7 @@ class MainGroup(BeetGroup):
 def beet(
     ctx: click.Context,
     project: Optional[str],
-    set: List[str],
+    set: list[str],
     log: str,
 ):
     """The beet toolchain."""

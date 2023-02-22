@@ -15,12 +15,9 @@ from typing import (
     Generic,
     Iterable,
     Iterator,
-    List,
     Optional,
     Protocol,
-    Set,
     TypeVar,
-    Union,
     cast,
 )
 
@@ -38,7 +35,7 @@ class GenericPlugin(Protocol[ContextType]):
         ...
 
 
-GenericPluginSpec = Union[GenericPlugin[ContextType], str]
+GenericPluginSpec = GenericPlugin[ContextType] | str
 
 
 class PluginError(WrappedException):
@@ -108,9 +105,9 @@ class GenericPipeline(Generic[T]):
     ctx: T
     default_symbol: str = "beet_default"
 
-    whitelist: Optional[List[str]] = None
-    plugins: Set[GenericPlugin[T]] = field(default_factory=set)
-    tasks: List[Task[T]] = field(default_factory=list)
+    whitelist: Optional[list[str]] = None
+    plugins: set[GenericPlugin[T]] = field(default_factory=set)
+    tasks: list[Task[T]] = field(default_factory=list)
 
     def require(self, *args: GenericPluginSpec[T]):
         """Execute the specified plugin."""

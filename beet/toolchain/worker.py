@@ -15,18 +15,7 @@ from contextlib import ExitStack, contextmanager
 from dataclasses import dataclass, field
 from queue import Queue
 from threading import Thread
-from typing import (
-    Any,
-    Dict,
-    Generic,
-    Iterator,
-    Optional,
-    Protocol,
-    Set,
-    Tuple,
-    TypeVar,
-    Union,
-)
+from typing import Any, Generic, Iterator, Optional, Protocol, TypeVar
 
 from beet.core.error import BubbleException, WrappedException
 from beet.core.utils import SENTINEL_OBJ, Sentinel, format_obj, pop_traceback
@@ -76,7 +65,7 @@ class MessageQueue(Generic[T]):
     messages once the queue is closed.
     """
 
-    queue: "Queue[Union[T, Sentinel, BaseException]]" = field(default_factory=Queue)
+    queue: "Queue[T | Sentinel | BaseException]" = field(default_factory=Queue)
     closed: bool = False
 
     def send(self, message: T):
@@ -177,7 +166,7 @@ class Channel(Generic[T, U]):
         self.close()
 
     @classmethod
-    def entangled_pair(cls) -> Tuple["Channel[Any, Any]", "Channel[Any, Any]"]:
+    def entangled_pair(cls) -> tuple["Channel[Any, Any]", "Channel[Any, Any]"]:
         """Return a pair of channels that can communicate with each other.
 
         Messages sent from one channel will be received by the other.
@@ -262,11 +251,11 @@ class WorkerPoolHandle:
 
     exit_stack: Optional[ExitStack]
     long_lived: bool = False
-    connections: Dict[Worker[Any, Any], Connection[Any, Any]] = field(
+    connections: dict[Worker[Any, Any], Connection[Any, Any]] = field(
         default_factory=dict
     )
-    active_workers: Dict[str, Worker[Any, Any]] = field(default_factory=dict)
-    reload_skipped: Set[str] = field(default_factory=set)
+    active_workers: dict[str, Worker[Any, Any]] = field(default_factory=dict)
+    reload_skipped: set[str] = field(default_factory=set)
 
     def __call__(self, func: Worker[T, U]) -> Channel[U, T]:
         if self.exit_stack is None:

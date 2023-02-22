@@ -13,7 +13,7 @@ import mimetypes
 import os
 from glob import glob
 from pathlib import Path
-from typing import Any, Dict, Iterator, Tuple, Type
+from typing import Iterator
 
 from beet import (
     BinaryFile,
@@ -32,9 +32,9 @@ from beet.core.utils import FileSystemPath
 
 
 class CopyFilesOptions(PluginOptions):
-    resource_pack: Dict[str, ListOption[PackageablePath]] = {}
-    data_pack: Dict[str, ListOption[PackageablePath]] = {}
-    output: Dict[str, ListOption[PackageablePath]] = {}
+    resource_pack: dict[str, ListOption[PackageablePath]] = {}
+    data_pack: dict[str, ListOption[PackageablePath]] = {}
+    output: dict[str, ListOption[PackageablePath]] = {}
 
 
 def beet_default(ctx: Context):
@@ -59,9 +59,9 @@ def copy_files(ctx: Context, opts: CopyFilesOptions):
 
 
 def resolve_file_mapping(
-    mapping: Dict[str, ListOption[PackageablePath]],
+    mapping: dict[str, ListOption[PackageablePath]],
     directory: Path,
-) -> Iterator[Tuple[str, Path, Type[PackFile]]]:
+) -> Iterator[tuple[str, Path, type[PackFile]]]:
     """Expand glob patterns and guess the type of each file."""
     for key, value in mapping.items():
         entries = [
@@ -81,19 +81,19 @@ def resolve_file_mapping(
                 yield dst, entry, guess_file_type(entry)
 
 
-def guess_file_type(filename: FileSystemPath) -> Type[PackFile]:
+def guess_file_type(filename: FileSystemPath) -> type[PackFile]:
     """Helper to figure out the most appropriate file type depending on a filename."""
     filename = str(filename)
 
     if filename.endswith(".json"):
-        return JsonFile[Any]
+        return JsonFile
     elif filename.endswith((".yml", ".yaml")):
-        return YamlFile[Any]
+        return YamlFile
     elif filename.endswith(".png"):
-        return PngFile[Any]
+        return PngFile
 
     mime_type, _ = mimetypes.guess_type(filename, strict=False)
     if mime_type and mime_type.startswith("text/"):
-        return TextFile[Any]
+        return TextFile
 
-    return BinaryFile[Any]
+    return BinaryFile

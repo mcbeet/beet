@@ -20,7 +20,7 @@ from copy import deepcopy
 from glob import glob
 from itertools import chain
 from pathlib import Path
-from typing import Any, Dict, Generic, List, Literal, Optional, Tuple, TypeVar, Union
+from typing import Any, Generic, Literal, Optional, TypeVar, Union
 
 import toml
 import yaml
@@ -39,7 +39,7 @@ from beet.core.utils import (
 
 from .utils import apply_option, eval_option, iter_options
 
-DETECT_CONFIG_FILES: Tuple[str, ...] = (
+DETECT_CONFIG_FILES: tuple[str, ...] = (
     "beet.json",
     "beet.toml",
     "beet.yml",
@@ -67,7 +67,7 @@ ItemType = TypeVar("ItemType")
 class ListOption(GenericModel, Generic[ItemType]):
     """List that transparently wraps single values."""
 
-    __root__: List[ItemType] = []
+    __root__: list[ItemType] = []
 
     @validator("__root__", pre=True)
     def validate_root(cls, value: Any) -> Any:
@@ -77,9 +77,12 @@ class ListOption(GenericModel, Generic[ItemType]):
             value = value.entries()
         if not isinstance(value, (list, tuple)):
             value = [value]
-        return value  # type: ignore
 
-    def entries(self) -> List[ItemType]:
+        # Using this variable silences "unknown type" errors
+        res: Any = value
+        return res
+
+    def entries(self) -> list[ItemType]:
         """Return the internal list."""
         return self.__root__
 
@@ -105,7 +108,7 @@ class PackageablePath(BaseModel):
 
 
 class PackLoadOptions(
-    ListOption[Union[PackageablePath, Dict[str, ListOption[PackageablePath]]]]
+    ListOption[PackageablePath | dict[str, ListOption[PackageablePath]]]
 ):
     """Options for loading data packs and resource packs."""
 
@@ -163,7 +166,7 @@ class PackConfig(BaseModel):
     compression_level: Optional[int] = None
 
     load: PackLoadOptions = PackLoadOptions()
-    render: Dict[str, ListOption[str]] = {}
+    render: dict[str, ListOption[str]] = {}
 
     class Config:
         extra = "forbid"
@@ -213,14 +216,15 @@ class ProjectConfig(BaseModel):
     broadcast: ListOption[FileSystemPath] = ListOption()
     extend: ListOption[PackageablePath] = ListOption()
     output: Optional[FileSystemPath] = None
-    ignore: List[str] = []
-    whitelist: Optional[List[str]] = None
+    ignore: list[str] = []
+    whitelist: Optional[list[str]] = None
 
-    require: List[str] = []
+    require: list[str] = []
     templates: ListOption[PackageablePath] = ListOption()
     data_pack: PackConfig = PackConfig()
     resource_pack: PackConfig = PackConfig()
-    pipeline: List[Union[str, "ProjectConfig"]] = []
+    # Using Union because `|` doesn't support using strings for forward references
+    pipeline: list[Union[str, "ProjectConfig"]] = []
     meta: JsonDict = {}
 
     class Config:

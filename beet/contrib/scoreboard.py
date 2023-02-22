@@ -7,14 +7,12 @@ __all__ = [
 ]
 
 
-from typing import List
-
 from beet import Context, Function, PluginOptions, configurable
 
 
 class ScoreboardOptions(PluginOptions):
     function: str = "scoreboard"
-    tags: List[str] = ["minecraft:load"]
+    tags: list[str] = ["minecraft:load"]
 
 
 def beet_default(ctx: Context):

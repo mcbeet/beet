@@ -9,9 +9,10 @@ __all__ = [
 ]
 
 
-from typing import Any, ClassVar, Tuple, Type
+from typing import Any, ClassVar
 
-from beet import Context, Drop, JsonFileBase, NamespaceFile, Pack, YamlFile
+from beet import Context, Drop, JsonFileBase, NamespaceFile, Pack, YamlFileBase
+from beet.library.base import Namespace
 
 
 def beet_default(ctx: Context):
@@ -48,21 +49,19 @@ def use_auto_yaml(pack: Pack[Any]):
 
 
 def create_namespace_handler(
-    file_type: Type[NamespaceFile],
-    namespace_scope: Tuple[str, ...],
+    file_type: type[NamespaceFile],
+    namespace_scope: tuple[str, ...],
     namespace_extension: str,
-) -> Type[NamespaceFile]:
+) -> type[NamespaceFile]:
     """Create handler that turns yaml namespace files into json."""
 
     # Subclass check to get the currently unrepresentable type for a subclass of both a NamespaceFile and a JsonFileBase
     if not issubclass(file_type, JsonFileBase):
         raise TypeError()
 
-    class AutoYamlNamespaceHandler(YamlFile[Pack[Any]]):
-        scope: ClassVar[Tuple[str, ...]] = namespace_scope
+    class AutoYamlNamespaceHandler(YamlFileBase[Any], model=file_type.base_model):
+        scope: ClassVar[tuple[str, ...]] = namespace_scope
         extension: ClassVar[str] = namespace_extension
-
-        model = file_type.model
 
         def bind(self, pack: Pack[Any], path: str):
             super().bind(pack, path)
@@ -74,13 +73,11 @@ def create_namespace_handler(
 
 def create_extra_handler(
     filename: str,
-    file_type: Type[JsonFileBase[Pack[Any], Any]],
-) -> Type[YamlFile[Pack[Any]]]:
+    file_type: type[JsonFileBase[Any]],
+) -> type[YamlFileBase[Any]]:
     """Create handler that turns yaml extra files into json."""
 
-    class AutoYamlExtraHandler(YamlFile[Pack[Any]]):
-        model = file_type.model
-
+    class AutoYamlExtraHandler(YamlFileBase[Any], model=file_type.base_model):
         def bind(self, pack: Pack[Any], path: str):
             super().bind(pack, path)
             pack.extra.merge({filename: file_type(self.data, original=self.original)})
@@ -91,14 +88,12 @@ def create_extra_handler(
 
 def create_namespace_extra_handler(
     filename: str,
-    file_type: Type[JsonFileBase[Pack[Any], Any]],
-) -> Type[YamlFile[Pack[Any]]]:
+    file_type: type[JsonFileBase[Any]],
+) -> type[YamlFileBase[Any]]:
     """Create handler that turns yaml namespace extra files into json."""
 
-    class AutoYamlExtraHandler(YamlFile[Pack[Any]]):
-        model = file_type.model
-
-        def bind(self, pack: Pack[Any], path: str):
+    class AutoYamlExtraHandler(YamlFileBase[Any], model=file_type.base_model):
+        def bind(self, pack: Pack[Namespace], path: str):
             super().bind(pack, path)
             namespace, _, path = path.partition(":")
             pack[namespace].extra.merge(

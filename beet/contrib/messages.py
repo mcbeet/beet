@@ -10,18 +10,18 @@ __all__ = [
 import json
 import re
 from dataclasses import dataclass
-from typing import Any, ClassVar, Optional, Tuple, cast
+from typing import Any, ClassVar, Optional
 
-from beet import Context, JsonFile, Pack
+from beet import Context, JsonFileBase
 from beet.core.utils import TextComponent
 
 PATH_REGEX = re.compile(r"\w+")
 
 
-class Message(JsonFile[Pack[Any]]):
+class Message(JsonFileBase[TextComponent]):
     """Class representing a message file."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("messages",)
+    scope: ClassVar[tuple[str, ...]] = ("messages",)
     extension: ClassVar[str] = ".json"
 
 
@@ -46,9 +46,15 @@ class MessageManager:
 
         if path:
             for key in PATH_REGEX.findall(path):
-                if isinstance(message, list):
-                    key = int(key)
-                message = cast(Any, message[key])
+                match message:
+                    case list():
+                        message = message[int(key)]
+                    case dict():
+                        message = message[key]
+                    case _:
+                        raise KeyError(
+                            "Tried to index into a JSON element that isn't an object or a list"
+                        )
 
         return message
 

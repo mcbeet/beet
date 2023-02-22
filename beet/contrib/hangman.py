@@ -21,7 +21,7 @@ __all__ = [
 
 import logging
 import re
-from typing import Iterable, Iterator, List, Literal, Optional, Tuple
+from typing import Iterable, Iterator, Literal, Optional
 
 from beet import Context, Function, PluginOptions, configurable
 from beet.toolchain.utils import stable_hash
@@ -44,11 +44,11 @@ TokenType = Literal[
     "INDENT",
     "DEDENT",
 ]
-Token = Tuple[TokenType, str]
+Token = tuple[TokenType, str]
 
 
 class HangmanOptions(PluginOptions):
-    match: List[str] = []
+    match: list[str] = []
 
 
 def beet_default(ctx: Context):
@@ -130,7 +130,7 @@ def fold_hanging_commands(
 def parse_lines(lines: Iterable[str]) -> Iterator[Token]:
     """Split the input lines into tokens."""
     indentation = [0]
-    blanks: List[Token] = []
+    blanks: list[Token] = []
     fold_off = False
 
     for line in lines:
@@ -182,7 +182,7 @@ def parse_lines(lines: Iterable[str]) -> Iterator[Token]:
     yield from blanks
 
 
-def parse_trailing_comment(line: str) -> Tuple[str, Optional[str]]:
+def parse_trailing_comment(line: str) -> tuple[str, Optional[str]]:
     """Split the line and return the extracted trailing comment."""
     chunks = REGEX_QUOTE.split(line)
     result = ""

@@ -36,24 +36,16 @@ from typing import (
     Any,
     Callable,
     ClassVar,
-    DefaultDict,
-    Dict,
     Generic,
     Iterable,
     Iterator,
-    List,
     Literal,
     Mapping,
     MutableMapping,
     Optional,
     Protocol,
-    Set,
-    Tuple,
-    Type,
     TypeVar,
-    Union,
     cast,
-    get_args,
     get_origin,
     overload,
 )
@@ -70,8 +62,14 @@ from beet.core.container import (
     MergeContainerProxy,
     Pin,
 )
-from beet.core.file import File, FileOrigin, JsonFile, MutableFileOrigin, PngFile
-from beet.core.utils import FileSystemPath, JsonDict, T, TextComponent
+from beet.core.file import File, FileOrigin, JsonFileBase, MutableFileOrigin, PngFile
+from beet.core.utils import (
+    FileSystemPath,
+    JsonDict,
+    T,
+    TextComponent,
+    get_first_generic_param_type,
+)
 
 from .utils import list_extensions, list_files
 
@@ -83,10 +81,10 @@ NamespaceType = TypeVar("NamespaceType", bound="Namespace")
 NamespaceFileType = TypeVar("NamespaceFileType", bound="NamespaceFile")
 PackType = TypeVar("PackType", bound="Pack[Any]")
 
-PackFile = File[Any, Any, Any]
+PackFile = File[Any, Any]
 
 
-PACK_COMPRESSION: Dict[str, int] = {
+PACK_COMPRESSION: dict[str, int] = {
     "none": ZIP_STORED,
     "deflate": ZIP_DEFLATED,
     "bzip2": ZIP_BZIP2,
@@ -97,7 +95,7 @@ PACK_COMPRESSION: Dict[str, int] = {
 class NamespaceFile(Protocol):
     """Protocol for detecting files that belong in pack namespaces."""
 
-    scope: ClassVar[Tuple[str, ...]]
+    scope: ClassVar[tuple[str, ...]]
     extension: ClassVar[str]
 
     def __init__(
@@ -145,7 +143,7 @@ class NamespaceFile(Protocol):
         ...
 
     @classmethod
-    def load(cls: Type[T], origin: FileOrigin, path: FileSystemPath) -> T:
+    def load(cls, origin: FileOrigin, path: FileSystemPath) -> Self:
         ...
 
     def dump(self, origin: MutableFileOrigin, path: FileSystemPath):
@@ -165,11 +163,11 @@ class MergeCallback(Protocol):
 class MergePolicy:
     """Class holding lists of rules for merging files."""
 
-    extra: Dict[str, List[MergeCallback]] = field(default_factory=dict)
-    namespace: Dict[Type[NamespaceFile], List[MergeCallback]] = field(
+    extra: dict[str, list[MergeCallback]] = field(default_factory=dict)
+    namespace: dict[type[NamespaceFile], list[MergeCallback]] = field(
         default_factory=dict
     )
-    namespace_extra: Dict[str, List[MergeCallback]] = field(default_factory=dict)
+    namespace_extra: dict[str, list[MergeCallback]] = field(default_factory=dict)
 
     def extend(self, other: "MergePolicy"):
         for rules, other_rules in [
@@ -184,7 +182,7 @@ class MergePolicy:
         """Add rule for merging extra files."""
         self.extra.setdefault(filename, []).append(rule)
 
-    def extend_namespace(self, file_type: Type[NamespaceFile], rule: MergeCallback):
+    def extend_namespace(self, file_type: type[NamespaceFile], rule: MergeCallback):
         """Add rule for merging namespace files."""
         self.namespace.setdefault(file_type, []).append(rule)
 
@@ -197,7 +195,7 @@ class MergePolicy:
         pack: Any,
         current: MutableMapping[str, MergeableType],
         other: Mapping[str, MergeableType],
-        map_rules: Callable[[str], Tuple[str, List[MergeCallback]]],
+        map_rules: Callable[[str], tuple[str, list[MergeCallback]]],
     ) -> bool:
         """Merge values according to the given rules."""
         for key, value in other.items():
@@ -327,7 +325,7 @@ class NamespaceContainer(MatchMixin, MergeContainer[str, NamespaceFileType]):
     """Container that stores one type of files in a namespace."""
 
     namespace: Optional["Namespace"] = None
-    file_type: Optional[Type[NamespaceFileType]] = None
+    file_type: Optional[type[NamespaceFileType]] = None
 
     def process(self, key: str, value: NamespaceFileType) -> NamespaceFileType:
         if (
@@ -339,7 +337,7 @@ class NamespaceContainer(MatchMixin, MergeContainer[str, NamespaceFileType]):
 
         return value
 
-    def bind(self, namespace: "Namespace", file_type: Type[NamespaceFileType]):
+    def bind(self, namespace: "Namespace", file_type: type[NamespaceFileType]):
         """Handle insertion."""
         self.namespace = namespace
         self.file_type = file_type
@@ -411,11 +409,11 @@ class NamespaceContainer(MatchMixin, MergeContainer[str, NamespaceFileType]):
         return tree
 
 
-class NamespacePin(Pin[Type[NamespaceFileType], NamespaceContainer[NamespaceFileType]]):
+class NamespacePin(Pin[type[NamespaceFileType], NamespaceContainer[NamespaceFileType]]):
     """Descriptor for accessing namespace containers by attribute lookup."""
 
 
-class Namespace(MergeContainer[Type[NamespaceFile], NamespaceContainer[NamespaceFile]]):
+class Namespace(MergeContainer[type[NamespaceFile], NamespaceContainer[NamespaceFile]]):
     """Class representing a namespace."""
 
     pack: Optional["Pack[Self]"] = None
@@ -423,8 +421,8 @@ class Namespace(MergeContainer[Type[NamespaceFile], NamespaceContainer[Namespace
     extra: NamespaceExtraContainer["Namespace"]
 
     directory: ClassVar[str]
-    field_map: ClassVar[Mapping[Type[NamespaceFile], str]]
-    scope_map: ClassVar[Mapping[Tuple[Tuple[str, ...], str], Type[NamespaceFile]]]
+    field_map: ClassVar[Mapping[type[NamespaceFile], str]]
+    scope_map: ClassVar[Mapping[tuple[tuple[str, ...], str], type[NamespaceFile]]]
 
     def __init_subclass__(cls):
         pins = NamespacePin[NamespaceFileType].collect_from(cls)
@@ -439,7 +437,7 @@ class Namespace(MergeContainer[Type[NamespaceFile], NamespaceContainer[Namespace
 
     def process(
         self,
-        key: Type[NamespaceFile],
+        key: type[NamespaceFile],
         value: NamespaceContainer[NamespaceFile],
     ) -> NamespaceContainer[NamespaceFile]:
         value.bind(self, key)
@@ -458,7 +456,7 @@ class Namespace(MergeContainer[Type[NamespaceFile], NamespaceContainer[Namespace
     @overload
     def __setitem__(
         self,
-        key: Type[NamespaceFile],
+        key: type[NamespaceFile],
         value: NamespaceContainer[NamespaceFile],
     ):
         ...
@@ -469,7 +467,7 @@ class Namespace(MergeContainer[Type[NamespaceFile], NamespaceContainer[Namespace
 
     def __setitem__(
         self,
-        key: Type[NamespaceFile] | str,
+        key: type[NamespaceFile] | str,
         value: NamespaceContainer[NamespaceFile] | NamespaceFile,
     ):
         if isinstance(key, type):
@@ -487,7 +485,7 @@ class Namespace(MergeContainer[Type[NamespaceFile], NamespaceContainer[Namespace
             return False
 
         if isinstance(other, Mapping):
-            rhs: Mapping[Type[NamespaceFile], NamespaceContainer[NamespaceFile]] = other
+            rhs: Mapping[type[NamespaceFile], NamespaceContainer[NamespaceFile]] = other
             return all(self[key] == rhs[key] for key in self.keys() | rhs.keys())
 
         return NotImplemented
@@ -495,11 +493,11 @@ class Namespace(MergeContainer[Type[NamespaceFile], NamespaceContainer[Namespace
     def __bool__(self) -> bool:
         return any(self.values()) or bool(self.extra)
 
-    def missing(self, key: Type[NamespaceFile]) -> NamespaceContainer[NamespaceFile]:
+    def missing(self, key: type[NamespaceFile]) -> NamespaceContainer[NamespaceFile]:
         return NamespaceContainer()
 
     def merge(
-        self, other: Mapping[Type[NamespaceFile], NamespaceContainer[NamespaceFile]]
+        self, other: Mapping[type[NamespaceFile], NamespaceContainer[NamespaceFile]]
     ) -> bool:
         super().merge(other)
 
@@ -517,7 +515,7 @@ class Namespace(MergeContainer[Type[NamespaceFile], NamespaceContainer[Namespace
         super().clear()
 
     @property
-    def content(self) -> Iterator[Tuple[str, NamespaceFile]]:
+    def content(self) -> Iterator[tuple[str, NamespaceFile]]:
         """Iterator that yields all the files stored in the namespace."""
         for container in self.values():
             yield from container.items()
@@ -527,7 +525,7 @@ class Namespace(MergeContainer[Type[NamespaceFile], NamespaceContainer[Namespace
         self,
         namespace: str,
         *extensions: str,
-    ) -> Iterator[Tuple[str, PackFile]]:
+    ) -> Iterator[tuple[str, PackFile]]:
         ...
 
     @overload
@@ -535,8 +533,8 @@ class Namespace(MergeContainer[Type[NamespaceFile], NamespaceContainer[Namespace
         self,
         namespace: str,
         *extensions: str,
-        extend: Type[T],
-    ) -> Iterator[Tuple[str, T]]:
+        extend: type[T],
+    ) -> Iterator[tuple[str, T]]:
         ...
 
     def list_files(
@@ -544,7 +542,7 @@ class Namespace(MergeContainer[Type[NamespaceFile], NamespaceContainer[Namespace
         namespace: str,
         *extensions: str,
         extend: Optional[Any] = None,
-    ) -> Iterator[Tuple[str, Any]]:
+    ) -> Iterator[tuple[str, Any]]:
         """List and filter all the files in the namespace."""
         if extend and (origin := get_origin(extend)):
             extend = origin
@@ -568,7 +566,7 @@ class Namespace(MergeContainer[Type[NamespaceFile], NamespaceContainer[Namespace
                 yield f"{prefix}/{name}{content_type.extension}", item
 
     @classmethod
-    def get_extra_info(cls) -> Dict[str, Type[PackFile]]:
+    def get_extra_info(cls) -> dict[str, type[PackFile]]:
         return {}
 
     @classmethod
@@ -576,9 +574,9 @@ class Namespace(MergeContainer[Type[NamespaceFile], NamespaceContainer[Namespace
         cls,
         prefix: str,
         origin: FileOrigin,
-        extend_namespace: Iterable[Type[NamespaceFile]] = (),
-        extend_namespace_extra: Optional[Mapping[str, Type[PackFile]]] = None,
-    ) -> Iterator[Tuple[str, "Namespace"]]:
+        extend_namespace: Iterable[type[NamespaceFile]] = (),
+        extend_namespace_extra: Optional[Mapping[str, type[PackFile]]] = None,
+    ) -> Iterator[tuple[str, "Namespace"]]:
         """Load namespaces by walking through a zipfile or directory."""
         preparts = tuple(filter(None, prefix.split("/")))
         if preparts and preparts[0] != cls.directory:
@@ -624,7 +622,7 @@ class Namespace(MergeContainer[Type[NamespaceFile], NamespaceContainer[Namespace
                 namespace.extra[path] = file_type.load(origin, filename)
                 continue
 
-            file_dir: List[str] = []
+            file_dir: list[str] = []
 
             while path := tuple(scope):
                 for extension in extensions:
@@ -655,11 +653,11 @@ class Namespace(MergeContainer[Type[NamespaceFile], NamespaceContainer[Namespace
 
 class NamespaceProxy(
     MatchMixin,
-    MergeContainerProxy[Type[NamespaceFileType], str, NamespaceFileType],
+    MergeContainerProxy[type[NamespaceFileType], str, NamespaceFileType],
 ):
     """Aggregated view that exposes a certain type of files over all namespaces."""
 
-    def split_key(self, key: str) -> Tuple[str, str]:
+    def split_key(self, key: str) -> tuple[str, str]:
         namespace, _, file_path = key.partition(":")
         if not file_path:
             raise KeyError(key)
@@ -680,7 +678,7 @@ class NamespaceProxy(
         if isinstance(pack := self.proxy, Pack):
             return pack.merge_policy.merge_with_rules(
                 pack=pack,
-                current=self,  # type: ignore
+                current=self,
                 other=other,
                 map_rules=lambda key: (
                     key,
@@ -689,19 +687,19 @@ class NamespaceProxy(
             )
         return super().merge(other)
 
-    def walk(self) -> Iterator[Tuple[str, Set[str], Dict[str, NamespaceFileType]]]:
+    def walk(self) -> Iterator[tuple[str, set[str], dict[str, NamespaceFileType]]]:
         """Walk over the file hierarchy."""
         for prefix, namespace in self.proxy.items():
             separator = ":"
-            roots: List[Tuple[str, Dict[Any, Any]]] = [
+            roots: list[tuple[str, dict[Any, Any]]] = [
                 (prefix, namespace[self.proxy_key].generate_tree())  # type: ignore
             ]
 
             while roots:
                 prefix, root = roots.pop()
 
-                dirs: Set[str] = set()
-                files: Dict[str, NamespaceFileType] = {}
+                dirs: set[str] = set()
+                files: dict[str, NamespaceFileType] = {}
 
                 for key, value in root.items():
                     if not isinstance(key, str):
@@ -723,15 +721,15 @@ class NamespaceProxy(
 class NamespaceProxyDescriptor(Generic[NamespaceFileType]):
     """Descriptor that dynamically instantiates a namespace proxy."""
 
-    proxy_key: Type[NamespaceFileType]
+    proxy_key: type[NamespaceFileType]
 
     def __get__(
-        self, obj: Any, objtype: Optional[Type[Any]] = None
+        self, obj: Any, objtype: Optional[type[Any]] = None
     ) -> NamespaceProxy[NamespaceFileType]:
         return NamespaceProxy[NamespaceFileType](obj, self.proxy_key)
 
 
-class Mcmeta(JsonFile[PackType]):
+class Mcmeta(JsonFileBase[JsonDict]):
     """Class representing a pack.mcmeta file."""
 
     def merge(self, other: Self) -> bool:
@@ -817,7 +815,7 @@ class PackOverwrite(Exception):
         return f'Couldn\'t overwrite "{str(self.path)}".'
 
 
-class Pack(MatchMixin, MergeContainer[str, NamespaceType]):
+class Pack(Generic[NamespaceType], MatchMixin, MergeContainer[str, NamespaceType]):
     """Class representing a pack."""
 
     name: Optional[str]
@@ -827,11 +825,9 @@ class Pack(MatchMixin, MergeContainer[str, NamespaceType]):
     compression_level: Optional[int]
 
     extra: PackExtraContainer[Self]
-    mcmeta: ExtraPin[Mcmeta[Self]] = ExtraPin(
-        "pack.mcmeta", default_factory=lambda: Mcmeta[Self]()
-    )
+    mcmeta: ExtraPin[Mcmeta] = ExtraPin("pack.mcmeta", default_factory=lambda: Mcmeta())
 
-    icon: ExtraPin[Optional[PngFile[Self]]] = ExtraPin("pack.png", default=None)
+    icon: ExtraPin[Optional[PngFile]] = ExtraPin("pack.png", default=None)
 
     description: PackPin[TextComponent] = PackPin("description", default="")
     pack_format: PackPin[int] = PackPin("pack_format", default=0)
@@ -839,20 +835,27 @@ class Pack(MatchMixin, MergeContainer[str, NamespaceType]):
         "filter", default_factory=lambda: {"block": []}
     )
 
-    extend_extra: Dict[str, Type[PackFile]]
-    extend_namespace: List[Type[NamespaceFile]]
-    extend_namespace_extra: Dict[str, Type[PackFile]]
+    extend_extra: dict[str, type[PackFile]]
+    extend_namespace: list[type[NamespaceFile]]
+    extend_namespace_extra: dict[str, type[PackFile]]
 
     merge_policy: MergePolicy
-    unveiled: Dict[Union[Path, UnveilMapping], Set[str]]
+    unveiled: dict[Path | UnveilMapping, set[str]]
 
-    namespace_type: ClassVar[Type[Namespace]]
+    namespace_type: ClassVar[type[Namespace]]
     default_name: ClassVar[str]
-    pack_format_registry: ClassVar[Dict[Tuple[int, ...], int]]
+    pack_format_registry: ClassVar[dict[tuple[int, ...], int]]
     latest_pack_format: ClassVar[int]
 
     def __init_subclass__(cls):
-        cls.namespace_type = get_args(getattr(cls, "__orig_bases__")[0])[0]
+        if (namespace_type := get_first_generic_param_type(cls)) and issubclass(
+            namespace_type, Namespace
+        ):
+            cls.namespace_type = namespace_type
+        else:
+            raise TypeError(
+                "The namespace type for pack subclasses should be the first generic"
+            )
 
     def __init__(
         self,
@@ -863,14 +866,14 @@ class Pack(MatchMixin, MergeContainer[str, NamespaceType]):
         zipped: bool = False,
         compression: Optional[Literal["none", "deflate", "bzip2", "lzma"]] = None,
         compression_level: Optional[int] = None,
-        mcmeta: Optional[Mcmeta[Self]] = None,
-        icon: Optional[PngFile[Self]] = None,
+        mcmeta: Optional[Mcmeta] = None,
+        icon: Optional[PngFile] = None,
         description: Optional[str] = None,
         pack_format: Optional[int] = None,
         filter: Optional[JsonDict] = None,
-        extend_extra: Optional[Mapping[str, Type[PackFile]]] = None,
-        extend_namespace: Iterable[Type[NamespaceFile]] = (),
-        extend_namespace_extra: Optional[Mapping[str, Type[PackFile]]] = None,
+        extend_extra: Optional[Mapping[str, type[PackFile]]] = None,
+        extend_namespace: Iterable[type[NamespaceFile]] = (),
+        extend_namespace_extra: Optional[Mapping[str, type[PackFile]]] = None,
         merge_policy: Optional[MergePolicy] = None,
     ):
         super().__init__()
@@ -910,9 +913,9 @@ class Pack(MatchMixin, MergeContainer[str, NamespaceType]):
         self: PackType,
         other: Optional[PackType] = None,
         *,
-        extend_extra: Optional[Mapping[str, Type[PackFile]]] = None,
-        extend_namespace: Iterable[Type[NamespaceFile]] = (),
-        extend_namespace_extra: Optional[Mapping[str, Type[PackFile]]] = None,
+        extend_extra: Optional[Mapping[str, type[PackFile]]] = None,
+        extend_namespace: Iterable[type[NamespaceFile]] = (),
+        extend_namespace_extra: Optional[Mapping[str, type[PackFile]]] = None,
         merge_policy: Optional[MergePolicy] = None,
     ) -> PackType:
         """Helper for updating or copying configuration from another pack."""
@@ -937,12 +940,12 @@ class Pack(MatchMixin, MergeContainer[str, NamespaceType]):
 
     @overload
     def __getitem__(
-        self, key: Type[NamespaceFileType]
+        self, key: type[NamespaceFileType]
     ) -> NamespaceProxy[NamespaceFileType]:
         ...
 
     def __getitem__(
-        self, key: str | Type[NamespaceFileType]
+        self, key: str | type[NamespaceFileType]
     ) -> NamespaceType | NamespaceProxy[NamespaceFileType]:
         if isinstance(key, str):
             return super().__getitem__(key)
@@ -1011,7 +1014,7 @@ class Pack(MatchMixin, MergeContainer[str, NamespaceType]):
         return True
 
     @property
-    def content(self) -> Iterator[Tuple[str, NamespaceFile]]:
+    def content(self) -> Iterator[tuple[str, NamespaceFile]]:
         """Iterator that yields all the files stored in the pack."""
         for file_type in self.resolve_scope_map().values():
             yield from NamespaceProxy[NamespaceFile](self, file_type).items()
@@ -1028,22 +1031,22 @@ class Pack(MatchMixin, MergeContainer[str, NamespaceType]):
     def list_files(
         self,
         *extensions: str,
-    ) -> Iterator[Tuple[str, PackFile]]:
+    ) -> Iterator[tuple[str, PackFile]]:
         ...
 
     @overload
     def list_files(
         self,
         *extensions: str,
-        extend: Type[T],
-    ) -> Iterator[Tuple[str, T]]:
+        extend: type[T],
+    ) -> Iterator[tuple[str, T]]:
         ...
 
     def list_files(
         self,
         *extensions: str,
         extend: Optional[Any] = None,
-    ) -> Iterator[Tuple[str, Any]]:
+    ) -> Iterator[tuple[str, Any]]:
         """List and filter all the files in the pack."""
         if extend and (origin := get_origin(extend)):
             extend = origin
@@ -1059,10 +1062,10 @@ class Pack(MatchMixin, MergeContainer[str, NamespaceType]):
             yield from namespace.list_files(namespace_name, *extensions, extend=extend)  # type: ignore
 
     @classmethod
-    def get_extra_info(cls) -> Dict[str, Type[PackFile]]:
+    def get_extra_info(cls) -> dict[str, type[PackFile]]:
         return {"pack.mcmeta": Mcmeta, "pack.png": PngFile}
 
-    def resolve_extra_info(self) -> Dict[str, Type[PackFile]]:
+    def resolve_extra_info(self) -> dict[str, type[PackFile]]:
         extra_info = self.get_extra_info()
         if self.extend_extra:
             extra_info.update(self.extend_extra)
@@ -1070,13 +1073,13 @@ class Pack(MatchMixin, MergeContainer[str, NamespaceType]):
 
     def resolve_scope_map(
         self,
-    ) -> Dict[Tuple[Tuple[str, ...], str], Type[NamespaceFile]]:
+    ) -> dict[tuple[tuple[str, ...], str], type[NamespaceFile]]:
         scope_map = dict(self.namespace_type.scope_map)
         for file_type in self.extend_namespace:
             scope_map[file_type.scope, file_type.extension] = file_type
         return scope_map
 
-    def resolve_namespace_extra_info(self) -> Dict[str, Type[PackFile]]:
+    def resolve_namespace_extra_info(self) -> dict[str, type[PackFile]]:
         namespace_extra_info = self.namespace_type.get_extra_info()
         if self.extend_namespace_extra:
             namespace_extra_info.update(self.extend_namespace_extra)
@@ -1085,9 +1088,9 @@ class Pack(MatchMixin, MergeContainer[str, NamespaceType]):
     def load(
         self,
         origin: Optional[FileOrigin] = None,
-        extend_extra: Optional[Mapping[str, Type[PackFile]]] = None,
-        extend_namespace: Iterable[Type[NamespaceFile]] = (),
-        extend_namespace_extra: Optional[Mapping[str, Type[PackFile]]] = None,
+        extend_extra: Optional[Mapping[str, type[PackFile]]] = None,
+        extend_namespace: Iterable[type[NamespaceFile]] = (),
+        extend_namespace_extra: Optional[Mapping[str, type[PackFile]]] = None,
         merge_policy: Optional[MergePolicy] = None,
     ):
         """Load pack from a zipfile or from the filesystem."""
@@ -1127,7 +1130,7 @@ class Pack(MatchMixin, MergeContainer[str, NamespaceType]):
 
     def mount(self, prefix: str, origin: FileOrigin):
         """Mount files from a zipfile or from the filesystem."""
-        files: Dict[str, PackFile] = {}
+        files: dict[str, PackFile] = {}
 
         for filename, file_type in self.resolve_extra_info().items():
             if not prefix:
@@ -1154,7 +1157,7 @@ class Pack(MatchMixin, MergeContainer[str, NamespaceType]):
 
         self.merge(namespaces)  # type: ignore
 
-    def unveil(self, prefix: str, origin: Union[FileSystemPath, UnveilMapping]):
+    def unveil(self, prefix: str, origin: FileSystemPath | UnveilMapping):
         """Lazily mount resources from the root of a pack on the filesystem."""
         if not isinstance(origin, UnveilMapping):
             origin = Path(origin).resolve()
@@ -1164,7 +1167,7 @@ class Pack(MatchMixin, MergeContainer[str, NamespaceType]):
         if prefix in mounted:
             return
 
-        to_remove: Set[str] = set()
+        to_remove: set[str] = set()
         for mnt in mounted:
             if prefix.startswith(mnt):
                 return
@@ -1261,7 +1264,7 @@ class Pack(MatchMixin, MergeContainer[str, NamespaceType]):
 
 
 def _dump_files(origin: MutableFileOrigin, files: Mapping[str, PackFile]):
-    dirs: DefaultDict[Tuple[str, ...], List[Tuple[str, PackFile]]] = defaultdict(list)
+    dirs: defaultdict[tuple[str, ...], list[tuple[str, PackFile]]] = defaultdict(list)
 
     for full_path, item in files.items():
         directory, _, filename = full_path.rpartition("/")

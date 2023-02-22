@@ -11,7 +11,7 @@ __all__ = [
 from dataclasses import dataclass
 from typing import Any, Callable
 
-from beet import Context, ListOption, Pack, PluginOptions, TextFileBase, configurable
+from beet import Context, ListOption, PluginOptions, TextFileBase, configurable
 
 
 class StripFinalNewlinesOptions(PluginOptions):
@@ -41,7 +41,7 @@ def strip_final_newlines(ctx: Context, opts: StripFinalNewlinesOptions):
     for pack in ctx.packs:
         for _, text_file in pack.list_files(
             *opts.extensions.entries(),
-            extend=TextFileBase[Pack[Any], Any],
+            extend=TextFileBase[Any],
         ):
             text_file.serializer = StripFinalNewlinesSerializer(text_file.serializer)
             if isinstance(raw := text_file.get_content(), str) and raw.endswith("\n"):

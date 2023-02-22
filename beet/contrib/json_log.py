@@ -10,7 +10,7 @@ __all__ = [
 
 import logging
 from contextlib import contextmanager
-from typing import List, Optional
+from typing import Optional
 
 from pydantic import BaseModel
 
@@ -24,7 +24,7 @@ class JsonLogEntry(BaseModel):
     prefix: str
     message: str
     annotation: Optional[str]
-    details: List[str]
+    details: list[str]
 
 
 def activate_json_log(ctx: Context):
@@ -42,7 +42,7 @@ def beet_default(ctx: Context):
 class JsonLogHandler(LogHandler):
     """Logging handler that collects log records as json."""
 
-    entries: List[JsonLogEntry]
+    entries: list[JsonLogEntry]
 
     def __init__(self, ctx: Optional[Context] = None):
         super().__init__()

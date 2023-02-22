@@ -11,7 +11,7 @@ from dataclasses import dataclass
 from importlib.metadata import entry_points
 from pathlib import Path
 from tempfile import TemporaryDirectory
-from typing import Any, ClassVar, Iterable, Iterator, List, Optional, Sequence
+from typing import Any, ClassVar, Iterable, Iterator, Optional, Sequence
 
 from beet.contrib.autosave import Autosave
 from beet.contrib.json_reporter import JsonReporter
@@ -71,7 +71,7 @@ class Project:
         return self.directory / self.config.output if self.config.output else None
 
     @property
-    def template_directories(self) -> List[FileSystemPath]:
+    def template_directories(self) -> list[FileSystemPath]:
         return [
             self.directory / template_directory
             for template_directory in self.config.templates.entries() or ["templates"]
@@ -97,7 +97,7 @@ class Project:
         return self.resolved_cache
 
     @property
-    def ignore(self) -> List[str]:
+    def ignore(self) -> list[str]:
         ignore = list(self.config.ignore)
         if self.output_directory and self.directory in self.output_directory.parents:
             ignore.append(
@@ -214,7 +214,7 @@ class ProjectBuilder:
     root: bool
     tmpdir: bool
 
-    autoload: ClassVar[Optional[List[str]]] = None
+    autoload: ClassVar[Optional[list[str]]] = None
 
     def __init__(
         self,
@@ -273,7 +273,7 @@ class ProjectBuilder:
                 whitelist=self.config.whitelist,
             )
 
-            plugins: List[PluginSpec] = [self.bootstrap]
+            plugins: list[PluginSpec] = [self.bootstrap]
             plugins.extend(
                 item
                 if isinstance(item, str)
@@ -362,7 +362,7 @@ class ProjectBuilder:
             pack.pack_format = config.pack_format
             if config.filter:
                 pack.mcmeta.merge(
-                    Mcmeta[Any]({"filter": config.filter.dict(exclude_none=True)})
+                    Mcmeta({"filter": config.filter.dict(exclude_none=True)})
                 )
             pack.zipped = bool(config.zipped)
             pack.compression = config.compression

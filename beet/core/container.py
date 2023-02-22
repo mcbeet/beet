@@ -31,11 +31,7 @@ from typing import (
     MutableMapping,
     Optional,
     Protocol,
-    Set,
-    Tuple,
-    Type,
     TypeVar,
-    Union,
     overload,
 )
 
@@ -50,8 +46,8 @@ V = TypeVar("V")
 CV = TypeVar("CV", covariant=True)
 ProxyKeyType = TypeVar("ProxyKeyType")
 
-PinDefault = Union[V, Sentinel]
-PinDefaultFactory = Union[Callable[[], V], Sentinel]
+PinDefault = V | Sentinel
+PinDefaultFactory = Callable[[], V] | Sentinel
 
 
 class SupportsKeys(Generic[CK], Protocol):
@@ -86,7 +82,7 @@ class MergeMixin(MutableMapping[K, MergeableType]):
 
 
 class MatchMixin:
-    def match(self: SupportsKeys[str], *patterns: str) -> Set[str]:
+    def match(self: SupportsKeys[str], *patterns: str) -> set[str]:
         """Return keys matching the given path patterns."""
         spec = PathSpec.from_lines("gitwildmatch", patterns)
         return {
@@ -128,11 +124,11 @@ class Pin(Generic[K, CV]):
         ...
 
     @overload
-    def __get__(self, obj: Any, objtype: Type[Any]) -> CV:
+    def __get__(self, obj: Any, objtype: type[Any]) -> CV:
         ...
 
     def __get__(
-        self, obj: Optional[Any], objtype: Optional[Type[Any]] = None
+        self, obj: Optional[Any], objtype: Optional[type[Any]] = None
     ) -> CV | Self:
         if obj is None:
             return self
@@ -165,7 +161,7 @@ class Pin(Generic[K, CV]):
         return obj
 
     @classmethod
-    def collect_from(cls, target: Type[Any]) -> dict[str, "Pin[K, CV]"]:
+    def collect_from(cls, target: type[Any]) -> dict[str, "Pin[K, CV]"]:
         return {
             key: value for key, value in vars(target).items() if isinstance(value, cls)
         }
@@ -271,7 +267,7 @@ class ContainerProxy(ABC, Generic[ProxyKeyType, K, V], MutableMapping[K, V]):
         return sum(len(mapping[self.proxy_key]) for mapping in self.proxy.values())
 
     @abstractmethod
-    def split_key(self, key: K) -> Tuple[K, K]:
+    def split_key(self, key: K) -> tuple[K, K]:
         """Return the outer mapping key and the nested key."""
         ...
 

@@ -8,16 +8,16 @@ __all__ = [
 
 
 import json
-from typing import Any, Callable, Optional, Tuple, Union
+from typing import Any, Callable, Optional
 
-from beet import Context, JsonFileBase, Pack, PluginOptions, configurable
+from beet import Context, JsonFileBase, PluginOptions, configurable
 
 
 class FormatJsonOptions(PluginOptions):
     ensure_ascii: bool = True
     allow_nan: bool = True
-    indent: Union[int, str, None] = 2
-    separators: Optional[Tuple[str, str]] = None
+    indent: Optional[int | str] = 2
+    separators: Optional[tuple[str, str]] = None
     sort_keys: bool = False
     final_newline: bool = True
 
@@ -54,6 +54,6 @@ def beet_default(ctx: Context):
 def format_json(ctx: Context, formatter: Callable[[Any], str]):
     """Plugin that formats json files with the given formatter."""
     for pack in ctx.packs:
-        for _, json_file in pack.list_files(extend=JsonFileBase[Pack[Any], Any]):
+        for _, json_file in pack.list_files(extend=JsonFileBase[Any]):
             json_file.encoder = formatter
             json_file.text = formatter(json_file.data)

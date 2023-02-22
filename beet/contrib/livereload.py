@@ -16,7 +16,7 @@ import re
 import time
 from pathlib import Path
 from threading import Event, Thread
-from typing import Any, Callable, List, Optional, Tuple, overload
+from typing import Any, Callable, Optional, overload
 
 from beet import Connection, Context, DataPack, Function, PackOverwrite
 from beet.contrib.autosave import Autosave
@@ -94,7 +94,7 @@ def create_livereload_data_pack() -> DataPack:
     return data
 
 
-def livereload_server(connection: Connection[Tuple[Optional[str], Path], None]):
+def livereload_server(connection: Connection[tuple[Optional[str], Path], None]):
     minecraft_path = None
     livereload_path = None
 
@@ -162,7 +162,7 @@ class LogWatcher:
             return decorator
 
     def target(self, path: FileSystemPath, callback: LogCallback):
-        queue: List[str] = []
+        queue: list[str] = []
 
         with open(path, "r", errors="ignore") as f:
             f.seek(0, 2)
@@ -180,7 +180,7 @@ class LogWatcher:
                         self.handle_message(queue, callback)
                     queue.append(line)
 
-    def handle_message(self, queue: List[str], callback: LogCallback):
+    def handle_message(self, queue: list[str], callback: LogCallback):
         message, *details = queue
         queue.clear()
 

@@ -51,14 +51,14 @@ from typing import (
     Mapping,
     Optional,
     Protocol,
-    Tuple,
     TypeVar,
     cast,
+    get_args,
     overload,
     runtime_checkable,
 )
 
-from pydantic import PydanticTypeError, ValidationError
+from pydantic import BaseModel, PydanticTypeError, ValidationError
 from pydantic.validators import _VALIDATORS  # type: ignore
 
 T = TypeVar("T")
@@ -168,6 +168,23 @@ def _raise_required_field() -> Any:
     raise ValueError("Field required.")
 
 
+def model_content(model: BaseModel) -> Any:
+    data = model.dict()
+    return data["__root__"] if model.__custom_root_type__ else data
+
+
+def get_first_generic_param_type(cls: type[Any]) -> Optional[type[Any]]:
+    if (generic_bases := getattr(cls, "__orig_bases__", None)) and (
+        args := get_args(generic_bases[0])
+    ):
+        value_type = args[0]
+        # Checking if it is a type is needed in case it is a TypeVar, Any, etc
+        if isinstance(value_type, type):
+            return value_type
+
+    return None
+
+
 def intersperse(iterable: Iterable[T], delimitter: T) -> Iterator[T]:
     it = iter(iterable)
     yield next(it)
@@ -190,10 +207,10 @@ def snake_case(string: str) -> str:
     return CAMEL_REGEX.sub(r"_\1", string).lower()
 
 
-VersionNumber = str | int | float | Tuple[str | int, ...]
+VersionNumber = str | int | float | tuple[str | int, ...]
 
 
-def split_version(version: VersionNumber) -> Tuple[int, ...]:
+def split_version(version: VersionNumber) -> tuple[int, ...]:
     if isinstance(version, (int, float)):
         version = str(version)
     if isinstance(version, str):

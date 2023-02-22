@@ -5,7 +5,7 @@ __all__ = [
 
 from typing import Any
 
-from .base import Namespace, Pack, PackType
+from .base import Pack, PackType
 
 
 def ignore_name(pack: PackType) -> PackType:
@@ -15,7 +15,7 @@ def ignore_name(pack: PackType) -> PackType:
 
 
 class IgnoreName:
-    def __init__(self, pack: Pack[Namespace]):
+    def __init__(self, pack: Pack[Any]):
         self.pack = pack
 
     def __eq__(self, other: Any) -> bool:

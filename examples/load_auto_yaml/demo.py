@@ -1,9 +1,8 @@
 import json
-from typing import ClassVar
 
 from pydantic import BaseModel
 
-from beet import Context, DataPack, Drop, FileDeserialize, Function, JsonFileBase
+from beet import Context, DataPack, Drop, Function, JsonFileBase
 
 
 class MessageData(BaseModel):
@@ -11,11 +10,7 @@ class MessageData(BaseModel):
     color: str = "yellow"
 
 
-class MessageConfig(JsonFileBase[DataPack, MessageData]):
-    model = MessageData
-
-    data: ClassVar[FileDeserialize[MessageData]] = FileDeserialize()
-
+class MessageConfig(JsonFileBase[MessageData]):
     def bind(self, pack: DataPack, path: str):
         super().bind(pack, path)
         message = {"text": self.data.greeting, "color": self.data.color}

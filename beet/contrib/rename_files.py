@@ -13,7 +13,7 @@ __all__ = [
 
 import logging
 from dataclasses import dataclass
-from typing import Any, Callable, Dict, List, Optional, Type, Union, cast
+from typing import Any, Callable, Optional, cast
 
 from pydantic import BaseModel
 
@@ -35,19 +35,21 @@ from beet.core.utils import snake_case
 
 logger = logging.getLogger(__name__)
 
+MatchOptions = Optional[PathSpecOption | dict[str, PathSpecOption]]
+
 
 class TextRenameOption(TextSubstitutionOption):
-    match: Optional[Union[PathSpecOption, Dict[str, PathSpecOption]]] = None
+    match: MatchOptions = None
 
 
 class RenderRenameOption(RenderSubstitutionOption):
-    match: Optional[Union[PathSpecOption, Dict[str, PathSpecOption]]] = None
+    match: MatchOptions = None
 
 
 class RenameOption(BaseModel):
-    __root__: ListOption[Union[TextRenameOption, RenderRenameOption]] = ListOption()
+    __root__: ListOption[TextRenameOption | RenderRenameOption] = ListOption()
 
-    def compile(self, template: TemplateManager) -> List["RenameFilesHandler"]:
+    def compile(self, template: TemplateManager) -> list["RenameFilesHandler"]:
         return [
             RenameFilesHandler(
                 (
@@ -71,9 +73,9 @@ class RenameFilesHandler:
     pack_selector: PackSelector
     substitute: Callable[[str], str]
 
-    def __call__(self, pack: Union[ResourcePack, DataPack]):
+    def __call__(self, pack: ResourcePack | DataPack):
         namespace_file_types = {
-            cast(Type[File[ResourcePack | DataPack, Any, Any]], file_type)
+            cast(type[File[Any, Any]], file_type)
             for file_type in pack.resolve_scope_map().values()
         }
 
@@ -90,7 +92,7 @@ class RenameFilesHandler:
 
     def handle_path_for_namespace_file(
         self,
-        pack: Union[ResourcePack, DataPack],
+        pack: ResourcePack | DataPack,
         file_instance: NamespaceFile,
         path: str,
     ):
@@ -101,7 +103,7 @@ class RenameFilesHandler:
 
     def handle_filename_for_namespace_file(
         self,
-        pack: Union[ResourcePack, DataPack],
+        pack: ResourcePack | DataPack,
         file_instance: NamespaceFile,
         filename: str,
     ):
@@ -133,7 +135,7 @@ class RenameFilesHandler:
     def handle_filename(
         self,
         pack: ResourcePack | DataPack,
-        file_instance: File[ResourcePack | DataPack, Any, Any],
+        file_instance: File[Any, Any],
         filename: str,
     ):
         dest = self.substitute(filename)

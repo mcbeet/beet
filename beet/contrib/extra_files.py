@@ -7,18 +7,16 @@ __all__ = [
 ]
 
 
-from typing import List
-
 from beet import Context, PluginOptions, configurable
 
 from .copy_files import guess_file_type
 
 
 class ExtraFilesOptions(PluginOptions):
-    resource_pack: List[str] = []
-    data_pack: List[str] = []
-    resource_pack_namespace: List[str] = []
-    data_pack_namespace: List[str] = []
+    resource_pack: list[str] = []
+    data_pack: list[str] = []
+    resource_pack_namespace: list[str] = []
+    data_pack_namespace: list[str] = []
 
 
 def beet_default(ctx: Context):

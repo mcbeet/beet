@@ -19,7 +19,7 @@ import zipfile
 from contextlib import contextmanager, redirect_stdout
 from dataclasses import dataclass, field
 from functools import cached_property
-from typing import Any, Iterator, List, Optional, Union
+from typing import Any, Iterator, Optional
 
 from beet import (
     BeetException,
@@ -40,7 +40,7 @@ class JsonReporterOptions(PluginOptions):
     enabled: bool = False
     binary_files: bool = False
     exception_filter: Optional[ListOption[str]] = None
-    handlers: List[str] = [
+    handlers: list[str] = [
         "beet.contrib.json_reporter.stdout",
         "beet.contrib.json_log",
         "beet.contrib.json_reporter.resource_pack_listing",
@@ -62,7 +62,7 @@ class JsonReporter:
     """Service for reporting the result of the build as json."""
 
     ctx: Context
-    handlers: List[PluginSpec] = field(default_factory=list)
+    handlers: list[PluginSpec] = field(default_factory=list)
     stdout: io.StringIO = field(default_factory=io.StringIO)
     data: JsonDict = field(default_factory=lambda: {"status": "unknown"})
 
@@ -165,22 +165,19 @@ def create_pack_listing(
     }
 
     listing["text_files"] = {
-        k: v.text
-        for k, v in pack.list_files(extend=TextFileBase[ResourcePack | DataPack, Any])
+        k: v.text for k, v in pack.list_files(extend=TextFileBase[Any])
     }
 
     if binary_files:
         listing["binary_files"] = {
             k: base64.b64encode(v.blob).decode()
-            for k, v in pack.list_files(
-                extend=BinaryFileBase[ResourcePack | DataPack, Any]
-            )
+            for k, v in pack.list_files(extend=BinaryFileBase[Any])
         }
 
     return listing
 
 
-def create_pack_zip(pack: Union[ResourcePack, DataPack]) -> JsonDict:
+def create_pack_zip(pack: ResourcePack | DataPack) -> JsonDict:
     fileobj = io.BytesIO()
     with zipfile.ZipFile(fileobj, mode="w") as output:
         pack.dump(output)

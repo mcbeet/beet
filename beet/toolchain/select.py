@@ -12,18 +12,7 @@ __all__ = [
 
 import re
 from dataclasses import dataclass
-from typing import (
-    Any,
-    Dict,
-    Literal,
-    Optional,
-    Tuple,
-    Type,
-    TypeVar,
-    Union,
-    get_origin,
-    overload,
-)
+from typing import Any, Literal, Optional, TypeVar, get_origin, overload
 
 from pathspec import PathSpec
 from pydantic import BaseModel
@@ -38,7 +27,7 @@ from .template import TemplateManager
 T = TypeVar("T")
 PackType = TypeVar("PackType", bound=Pack[Any])
 
-PackSelection = Dict[T, Tuple[Optional[str], Optional[str]]]
+PackSelection = dict[T, tuple[Optional[str], Optional[str]]]
 
 RegexFlags = Literal["ASCII", "IGNORECASE", "MULTILINE", "DOTALL", "VERBOSE"]
 
@@ -52,7 +41,7 @@ class RegexFlagsOption(BaseModel):
 
 
 class RegexOption(BaseModel):
-    __root__: Union[ListOption[str], RegexFlagsOption] = ListOption()
+    __root__: ListOption[str] | RegexFlagsOption = ListOption()
 
     def compile_regex(
         self,
@@ -94,7 +83,7 @@ class PathSpecOption(BaseModel):
 
 class PackSelectOption(BaseModel):
     files: RegexOption = RegexOption()
-    match: Union[PathSpecOption, Dict[str, PathSpecOption]] = PathSpecOption()
+    match: PathSpecOption | dict[str, PathSpecOption] = PathSpecOption()
 
     class Config:
         extra = "forbid"
@@ -102,10 +91,7 @@ class PackSelectOption(BaseModel):
     def compile(
         self,
         template: Optional[TemplateManager] = None,
-    ) -> Tuple[
-        Optional["re.Pattern[str]"],
-        Optional[Union[PathSpec, Dict[str, PathSpec]]],
-    ]:
+    ) -> tuple[Optional["re.Pattern[str]"], Optional[PathSpec | dict[str, PathSpec]]]:
         files_regex = None
         match_spec = None
 
@@ -127,7 +113,7 @@ class PackSelectOption(BaseModel):
 @dataclass(frozen=True)
 class PackSelector:
     files_regex: Optional["re.Pattern[str]"] = None
-    match_spec: Optional[Union[PathSpec, Dict[str, PathSpec]]] = None
+    match_spec: Optional[PathSpec | dict[str, PathSpec]] = None
 
     @classmethod
     def from_options(
@@ -150,9 +136,9 @@ class PackSelector:
     @overload
     def select_files(
         self,
-        pack: PackType,
+        pack: Pack[Any],
         *extensions: str,
-    ) -> PackSelection[File[PackType, Any, Any]]:
+    ) -> PackSelection[File[Any, Any]]:
         ...
 
     @overload
@@ -160,7 +146,7 @@ class PackSelector:
         self,
         pack: Pack[Any],
         *extensions: str,
-        extend: Type[T],
+        extend: type[T],
     ) -> PackSelection[T]:
         ...
 
@@ -218,12 +204,12 @@ class PackSelector:
 
 @overload
 def select_files(
-    pack: PackType,
+    pack: Pack[Any],
     *extensions: str,
     files: Optional[Any] = None,
     match: Optional[Any] = None,
     template: Optional[TemplateManager] = None,
-) -> PackSelection[File[PackType, Any, Any]]:
+) -> PackSelection[File[Any, Any]]:
     ...
 
 
@@ -231,7 +217,7 @@ def select_files(
 def select_files(
     pack: Pack[Any],
     *extensions: str,
-    extend: Type[T],
+    extend: type[T],
     files: Optional[Any] = None,
     match: Optional[Any] = None,
     template: Optional[TemplateManager] = None,

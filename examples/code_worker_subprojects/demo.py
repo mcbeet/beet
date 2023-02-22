@@ -1,10 +1,10 @@
 from typing import List, Optional
 
-from beet import Connection, Context, DataPack, Mcmeta, subproject
+from beet import Connection, Context, Mcmeta, subproject
 
 
-def bridge(connection: Connection[Optional[Mcmeta[DataPack]], Mcmeta[DataPack]]):
-    q: List[Mcmeta[DataPack]] = []
+def bridge(connection: Connection[Optional[Mcmeta], Mcmeta]):
+    q: List[Mcmeta] = []
 
     for client in connection:
         for mcmeta in client:
@@ -36,7 +36,7 @@ def beet_default(ctx: Context):
         # Request mcmeta files from the worker
         channel.send(None)
 
-    final_mcmeta = Mcmeta[DataPack](
+    final_mcmeta = Mcmeta(
         {
             "pack": {
                 "pack_format": 7,

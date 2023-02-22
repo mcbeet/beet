@@ -8,7 +8,7 @@ __all__ = [
     "Predicate",
     "Recipe",
     "Structure",
-    "TagFile",
+    "TagFileBase",
     "BlockTag",
     "EntityTypeTag",
     "FluidTag",
@@ -22,7 +22,7 @@ import io
 from copy import deepcopy
 from dataclasses import dataclass
 from gzip import GzipFile
-from typing import ClassVar, Iterable, List, Optional, Tuple, TypeVar, Union
+from typing import ClassVar, Iterable, Optional, TypeVar, Union
 
 from nbtlib.contrib.minecraft import StructureFile, StructureFileData
 
@@ -30,7 +30,7 @@ from beet.core.file import (
     BinaryFileBase,
     BinaryFileContent,
     FileDeserialize,
-    JsonFile,
+    JsonFileBase,
     TextFileBase,
     TextFileContent,
 )
@@ -44,30 +44,34 @@ from .base import (
     Pack,
 )
 
-TagFileType = TypeVar("TagFileType", bound="TagFile")
+TagFileType = TypeVar("TagFileType", bound="TagFileBase")
 
 
-class Advancement(JsonFile["DataPack"]):
+class Advancement(JsonFileBase[JsonDict]):
     """Class representing an advancement."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("advancements",)
+    scope: ClassVar[tuple[str, ...]] = ("advancements",)
     extension: ClassVar[str] = ".json"
 
 
+# Using Union because `|` doesn't support strings for forward references
+FuncCombineType = Union["Function", Iterable[str], str]
+
+
 @dataclass(eq=False, repr=False)
-class Function(TextFileBase["DataPack", list[str]]):
+class Function(TextFileBase[list[str]]):
     """Class representing a function."""
 
-    content: TextFileContent[List[str]] = None
-    tags: Optional[List[str]] = extra_field(default=None)
-    prepend_tags: Optional[List[str]] = extra_field(default=None)
+    content: TextFileContent[list[str]] = None
+    tags: Optional[list[str]] = extra_field(default=None)
+    prepend_tags: Optional[list[str]] = extra_field(default=None)
 
-    scope: ClassVar[Tuple[str, ...]] = ("functions",)
+    scope: ClassVar[tuple[str, ...]] = ("functions",)
     extension: ClassVar[str] = ".mcfunction"
 
-    lines: ClassVar[FileDeserialize[List[str]]] = FileDeserialize()
+    lines: ClassVar[FileDeserialize[list[str]]] = FileDeserialize()
 
-    def append(self, other: Union["Function", Iterable[str], str]):
+    def append(self, other: FuncCombineType):
         """Append lines from another function."""
         self.lines.extend(
             other.lines
@@ -77,7 +81,7 @@ class Function(TextFileBase["DataPack", list[str]]):
             else other
         )
 
-    def prepend(self, other: Union["Function", Iterable[str], str]):
+    def prepend(self, other: FuncCombineType):
         """Prepend lines from another function."""
         self.lines[0:0] = (
             other.lines
@@ -88,13 +92,13 @@ class Function(TextFileBase["DataPack", list[str]]):
         )
 
     @classmethod
-    def default(cls) -> List[str]:
+    def default(cls) -> list[str]:
         return []
 
-    def to_str(self, content: List[str]) -> str:
+    def to_str(self, content: list[str]) -> str:
         return "\n".join(content) + "\n"
 
-    def from_str(self, content: str) -> List[str]:
+    def from_str(self, content: str) -> list[str]:
         return content.splitlines()
 
     def bind(self, pack: "DataPack", path: str):
@@ -108,41 +112,41 @@ class Function(TextFileBase["DataPack", list[str]]):
             function_tag.prepend(FunctionTag({"values": [path]}))
 
 
-class ItemModifier(JsonFile["DataPack"]):
+class ItemModifier(JsonFileBase[JsonDict]):
     """Class representing an item modifier."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("item_modifiers",)
+    scope: ClassVar[tuple[str, ...]] = ("item_modifiers",)
     extension: ClassVar[str] = ".json"
 
 
-class LootTable(JsonFile["DataPack"]):
+class LootTable(JsonFileBase[JsonDict]):
     """Class representing a loot table."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("loot_tables",)
+    scope: ClassVar[tuple[str, ...]] = ("loot_tables",)
     extension: ClassVar[str] = ".json"
 
 
-class Predicate(JsonFile["DataPack"]):
+class Predicate(JsonFileBase[JsonDict]):
     """Class representing a predicate."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("predicates",)
+    scope: ClassVar[tuple[str, ...]] = ("predicates",)
     extension: ClassVar[str] = ".json"
 
 
-class Recipe(JsonFile["DataPack"]):
+class Recipe(JsonFileBase[JsonDict]):
     """Class representing a recipe."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("recipes",)
+    scope: ClassVar[tuple[str, ...]] = ("recipes",)
     extension: ClassVar[str] = ".json"
 
 
 @dataclass(eq=False, repr=False)
-class Structure(BinaryFileBase["DataPack", StructureFileData]):
+class Structure(BinaryFileBase[StructureFileData]):
     """Class representing a structure file."""
 
     content: BinaryFileContent[StructureFileData] = None
 
-    scope: ClassVar[Tuple[str, ...]] = ("structures",)
+    scope: ClassVar[tuple[str, ...]] = ("structures",)
     extension: ClassVar[str] = ".nbt"
 
     data: ClassVar[FileDeserialize[StructureFileData]] = FileDeserialize()
@@ -158,12 +162,12 @@ class Structure(BinaryFileBase["DataPack", StructureFileData]):
         return dst.getvalue()
 
 
-class TagFile(JsonFile["DataPack"]):
+class TagFileBase(JsonFileBase[JsonDict]):
     """Base class for tag files."""
 
     extension: ClassVar[str] = ".json"
 
-    def merge(self: TagFileType, other: TagFileType) -> bool:  # type: ignore
+    def merge(self: TagFileType, other: TagFileType) -> bool:
         if other.data.get("replace"):
             self.data["replace"] = True
             self.data["values"] = deepcopy(other.data.get("values", []))
@@ -212,40 +216,40 @@ class TagFile(JsonFile["DataPack"]):
         return {"values": []}
 
 
-class BlockTag(TagFile):
+class BlockTag(TagFileBase):
     """Class representing a block tag."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("tags", "blocks")
+    scope: ClassVar[tuple[str, ...]] = ("tags", "blocks")
 
 
-class EntityTypeTag(TagFile):
+class EntityTypeTag(TagFileBase):
     """Class representing an entity tag."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("tags", "entity_types")
+    scope: ClassVar[tuple[str, ...]] = ("tags", "entity_types")
 
 
-class FluidTag(TagFile):
+class FluidTag(TagFileBase):
     """Class representing a fluid tag."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("tags", "fluids")
+    scope: ClassVar[tuple[str, ...]] = ("tags", "fluids")
 
 
-class FunctionTag(TagFile):
+class FunctionTag(TagFileBase):
     """Class representing a function tag."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("tags", "functions")
+    scope: ClassVar[tuple[str, ...]] = ("tags", "functions")
 
 
-class GameEventTag(TagFile):
+class GameEventTag(TagFileBase):
     """Class representing a game event tag."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("tags", "game_events")
+    scope: ClassVar[tuple[str, ...]] = ("tags", "game_events")
 
 
-class ItemTag(TagFile):
+class ItemTag(TagFileBase):
     """Class representing an item tag."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("tags", "items")
+    scope: ClassVar[tuple[str, ...]] = ("tags", "items")
 
 
 class DataPackNamespace(Namespace):
