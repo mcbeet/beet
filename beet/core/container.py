@@ -25,13 +25,17 @@ from typing import (
     Any,
     Callable,
     Generic,
+    Iterable,
     Iterator,
     KeysView,
     Mapping,
     MutableMapping,
     Optional,
     Protocol,
+    TypeGuard,
     TypeVar,
+    get_args,
+    get_origin,
     overload,
 )
 
@@ -278,3 +282,58 @@ class MergeContainerProxy(
     Generic[ProxyKeyType, K, MergeableType],
 ):
     pass
+
+
+# TODO: Use actual union of possible generic values
+ResolvedGeneric = Any
+ResolvedGenerics = Mapping[TypeVar, ResolvedGeneric]
+
+
+BaseType = TypeVar("BaseType", bound=type[Any])
+
+
+def is_subclass_type(cls: Any, base: BaseType) -> TypeGuard[BaseType]:
+    # TODO: Check if it is necessary to get the origin of base
+    return isinstance(cls := get_origin(cls) or cls, type) and issubclass(cls, base)
+
+
+def get_orig_bases(cls: Any) -> Iterable[Any]:
+    return getattr(cls, "__orig_bases__", [])
+
+
+def resolve_base_generics(
+    cls: BaseType | Any, base: BaseType, generics: ResolvedGenerics = {}
+) -> Optional[ResolvedGenerics]:
+    if not is_subclass_type(cls, base):
+        return None
+
+    # TODO: Support caching the generic tree on types that implement a protocol
+
+    if (
+        (args := get_args(cls))
+        and (origin := get_origin(cls))
+        and (params := getattr(origin, "__parameters__", None))
+    ):
+        next_generics: dict[TypeVar, ResolvedGeneric] = {}
+        for param, arg in zip(params, args, strict=True):
+            # TODO: Support keeping the full sequence of TypeVars between the desired TypeVar and the original class
+            if isinstance(arg, TypeVar) and (value := generics.get(arg)):
+                next_generics[param] = value
+            else:
+                next_generics[param] = arg
+
+        # TODO: Check if it is necessary to call get_origin on base
+        if origin == base:
+            return next_generics
+
+        for orig_base in get_orig_bases(origin):
+            if (
+                res := resolve_base_generics(orig_base, base, next_generics)
+            ) is not None:
+                return res
+    else:
+        for orig_base in get_orig_bases(cls):
+            if (res := resolve_base_generics(orig_base, base)) is not None:
+                return res
+
+    return None
