@@ -743,6 +743,10 @@ class Mcmeta(JsonFileBase[JsonDict]):
                 self.data[key] = value
         return True
 
+    @classmethod
+    def default(cls) -> JsonDict:
+        return {}
+
 
 class McmetaPin(Pin[str, CV]):
     """Descriptor that makes it possible to bind pack.mcmeta information to attribute lookup."""
@@ -815,7 +819,7 @@ class PackOverwrite(Exception):
         return f'Couldn\'t overwrite "{str(self.path)}".'
 
 
-class Pack(Generic[NamespaceType], MatchMixin, MergeContainer[str, NamespaceType]):
+class Pack(MatchMixin, MergeContainer[str, NamespaceType], Generic[NamespaceType]):
     """Class representing a pack."""
 
     name: Optional[str]

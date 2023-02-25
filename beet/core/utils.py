@@ -73,7 +73,8 @@ class PathLikeFallback(Protocol):
 
 JsonDict = dict[str, Any]
 FileSystemPath = str | PathLikeFallback
-TextComponent = str | list["TextComponent"] | JsonDict | int | float
+# Can't use list["TextComponent"] as it causes infinite recursion in Pydantic when trying to resolve forward refs
+TextComponent = str | list[Any] | JsonDict | int | float
 
 
 class Sentinel:

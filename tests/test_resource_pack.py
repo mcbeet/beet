@@ -18,7 +18,8 @@ def test_default():
         ResourcePack("p1"),
         ResourcePack("p2", mcmeta=Mcmeta({"pack": {"description": "world"}})),
         ResourcePack(
-            "p3", mcmeta=Mcmeta({"pack": {"description": "world", "pack_format": 42}})
+            "p3",
+            mcmeta=Mcmeta({"pack": {"description": "world", "pack_format": 42}}),
         ),
     ],
 )

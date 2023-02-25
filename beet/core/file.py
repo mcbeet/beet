@@ -30,6 +30,7 @@ from abc import ABC, abstractmethod
 from copy import deepcopy
 from dataclasses import dataclass, replace
 from pathlib import Path
+from types import GenericAlias
 from typing import (
     Any,
     Callable,
@@ -64,6 +65,7 @@ except ImportError:
 
 
 from .utils import (
+    SENTINEL_OBJ,
     FileSystemPath,
     JsonDict,
     dump_json,
@@ -122,7 +124,7 @@ class File(Generic[ValueType, SerializeType], ABC):
         if is_lazy_field_uninitialized(self.reader):
             self.reader = self.from_path
 
-        if not self.original:
+        if is_lazy_field_uninitialized(self.original):
             self.original = self
 
     def merge(self, other: Self) -> bool:
@@ -137,7 +139,7 @@ class File(Generic[ValueType, SerializeType], ABC):
     def set_content(self, content: ValueType | SerializeType):
         """Update the internal content."""
         if self.source_path:
-            self.original = replace(self, original=None)
+            self.original = replace(self, original=SENTINEL_OBJ)
             self.source_path = None
             self.source_start = None
             self.source_stop = None
@@ -294,20 +296,19 @@ class File(Generic[ValueType, SerializeType], ABC):
     @classmethod
     def try_load(cls, origin: FileOrigin, path: FileSystemPath = "") -> Optional[Self]:
         """Try to load a file from a zipfile or from the filesystem."""
-        match origin:
-            case ZipFile():
-                try:
-                    return cls(cls.from_zip(origin, str(path)))
-                except KeyError:
-                    return None
-            case Mapping():
-                try:
-                    path = "" if path == Path() else str(path)
-                    path = Path(origin[path])
-                except KeyError:
-                    return None
-            case _:
-                path = Path(origin, path)
+        if isinstance(origin, ZipFile):
+            try:
+                return cls(cls.from_zip(origin, str(path)))
+            except KeyError:
+                return None
+        elif isinstance(origin, Mapping):
+            try:
+                path = "" if path == Path() else str(path)
+                path = Path(origin[path])
+            except KeyError:
+                return None
+        else:
+            path = Path(origin, path)
 
         return cls(source_path=path) if path.is_file() else None
 
@@ -550,20 +551,20 @@ class BinaryFileBase(File[ValueType, bytes]):
 
 
 class RawBinaryFileBase(BinaryFileBase[bytes]):
+    def to_bytes(self, content: bytes) -> bytes:
+        return content
+
+    def from_bytes(self, content: bytes) -> bytes:
+        return content
+
     def is_value_type(self, content: bytes) -> TypeGuard[bytes]:
         return True
 
 
 @final
 @dataclass(eq=False, repr=False)
-class BinaryFile(BinaryFileBase[bytes]):
+class BinaryFile(RawBinaryFileBase):
     """Class representing a binary file."""
-
-    def to_bytes(self, content: bytes) -> bytes:
-        return content
-
-    def from_bytes(self, content: bytes) -> bytes:
-        return content
 
     @classmethod
     def default(cls) -> bytes:
@@ -613,8 +614,11 @@ class DataModelBase(Generic[ValueType], TextFileBase[ValueType]):
                 raise TypeError(
                     "Model type must be None or a subclass of both ValueType and ModelBase"
                 )
-        elif (value_type := get_first_generic_param_type(cls)) and issubclass(
-            value_type, BaseModel
+        elif (
+            (value_type := get_first_generic_param_type(cls))
+            and isinstance(value_type, type)
+            and not isinstance(value_type, GenericAlias)
+            and issubclass(value_type, BaseModel)
         ):
             cls.base_model = value_type
 
@@ -640,7 +644,7 @@ class DataModelBase(Generic[ValueType], TextFileBase[ValueType]):
 
         if self.base_model:
             try:
-                return self.base_model.parse_obj(content)  # type: ignore
+                return self.base_model.parse_obj(value)  # type: ignore
             except ValidationError as exc:
                 message = format_validation_error(
                     snake_case(self.base_model.__name__), exc

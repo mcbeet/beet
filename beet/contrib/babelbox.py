@@ -72,7 +72,7 @@ def load_languages(
             dialect = Sniffer().sniff(csv_file.read(1024))
             csv_file.seek(0)
 
-        reader = DictReader[str](csv_file, dialect=dialect)
+        reader = DictReader(csv_file, dialect=dialect)
 
         key, *language_codes = reader.fieldnames or [""]
         languages = {code: Language() for code in language_codes}

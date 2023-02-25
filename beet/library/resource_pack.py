@@ -97,6 +97,10 @@ class Language(JsonFileBase[JsonDict]):
         self.data.update(other.data)
         return True
 
+    @classmethod
+    def default(cls) -> JsonDict:
+        return {}
+
 
 class Font(JsonFileBase[JsonDict]):
     """Class representing a font configuration file."""

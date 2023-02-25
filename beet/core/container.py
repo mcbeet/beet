@@ -104,20 +104,12 @@ class Pin(Generic[K, CV]):
     default_factory: PinDefaultFactory[CV] = SENTINEL_OBJ
 
     def __post_init__(self):
-        match (
-            isinstance(self.default, Sentinel),
-            isinstance(self.default_factory, Sentinel),
+        if not isinstance(self.default, Sentinel) and not isinstance(
+            self.default_factory, Sentinel
         ):
-            case (True, True):
-                raise ValueError(
-                    "At least one of default and default_factory must be set to a non-sentinal value"
-                )
-            case (False, False):
-                logger.warning(
-                    "Both default and default_factory were set, ignoring the default and using only the default_factory"
-                )
-            case _:
-                pass
+            logger.warning(
+                "Both default and default_factory were set, default will be ignored and only the default_factory will be used"
+            )
 
     @overload
     def __get__(self, obj: None, objtype: None) -> Self:
@@ -281,8 +273,8 @@ class ContainerProxy(ABC, Generic[ProxyKeyType, K, V], MutableMapping[K, V]):
 
 
 class MergeContainerProxy(
-    Generic[ProxyKeyType, K, MergeableType],
     MergeMixin[K, MergeableType],
     ContainerProxy[ProxyKeyType, K, MergeableType],
+    Generic[ProxyKeyType, K, MergeableType],
 ):
     pass

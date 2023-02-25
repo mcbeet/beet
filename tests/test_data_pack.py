@@ -407,11 +407,11 @@ def test_merge_rules():
         current: SupportsMerge,
         conflict: SupportsMerge,
     ) -> bool:
-        if not (isinstance(current, JsonFile) and isinstance(conflict, JsonFile)):
-            return False
+        if isinstance(current, Mcmeta) and isinstance(conflict, Mcmeta):
+            current.data["pack"]["description"] += conflict.data["pack"]["description"]
+            return True
 
-        current.data["pack"]["description"] += conflict.data["pack"]["description"]
-        return True
+        return False
 
     pack = DataPack(description="hello")
     pack.merge_policy.extend_extra("pack.mcmeta", combine_description)
