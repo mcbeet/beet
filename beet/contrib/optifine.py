@@ -13,7 +13,7 @@ __all__ = [
 
 from typing import ClassVar
 
-from beet import Context, JsonFileBase, PngFile, RawTextFileBase, ResourcePack
+from beet import Context, JsonFileBase, PngFileBase, RawTextFileBase, ResourcePack
 from beet.core.utils import JsonDict
 
 
@@ -56,7 +56,7 @@ class OptifineProperties(RawTextFileBase):
     extension: ClassVar[str] = ".properties"
 
 
-class OptifineTexture(PngFile):
+class OptifineTexture(PngFileBase):
     """Class representing an optifine texture."""
 
     scope: ClassVar[tuple[str, ...]] = ("optifine",)

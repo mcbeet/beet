@@ -26,14 +26,7 @@ from typing import ClassVar, Iterable, Optional, TypeVar, Union
 
 from nbtlib.contrib.minecraft import StructureFile, StructureFileData
 
-from beet.core.file import (
-    BinaryFileBase,
-    BinaryFileContent,
-    FileDeserialize,
-    JsonFileBase,
-    TextFileBase,
-    TextFileContent,
-)
+from beet.core.file import BinaryFileBase, FileDeserialize, JsonFileBase, TextFileBase
 from beet.core.utils import JsonDict, extra_field, split_version
 
 from .base import (
@@ -62,7 +55,6 @@ FuncCombineType = Union["Function", Iterable[str], str]
 class Function(TextFileBase[list[str]]):
     """Class representing a function."""
 
-    content: TextFileContent[list[str]] = None
     tags: Optional[list[str]] = extra_field(default=None)
     prepend_tags: Optional[list[str]] = extra_field(default=None)
 
@@ -125,6 +117,10 @@ class LootTable(JsonFileBase[JsonDict]):
     scope: ClassVar[tuple[str, ...]] = ("loot_tables",)
     extension: ClassVar[str] = ".json"
 
+    @classmethod
+    def default(cls) -> JsonDict:
+        return {}
+
 
 class Predicate(JsonFileBase[JsonDict]):
     """Class representing a predicate."""
@@ -143,8 +139,6 @@ class Recipe(JsonFileBase[JsonDict]):
 @dataclass(eq=False, repr=False)
 class Structure(BinaryFileBase[StructureFileData]):
     """Class representing a structure file."""
-
-    content: BinaryFileContent[StructureFileData] = None
 
     scope: ClassVar[tuple[str, ...]] = ("structures",)
     extension: ClassVar[str] = ".nbt"

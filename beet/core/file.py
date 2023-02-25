@@ -1,7 +1,5 @@
 __all__ = [
     "FileOrigin",
-    "TextFileContent",
-    "BinaryFileContent",
     "File",
     "FileSerialize",
     "FileDeserialize",
@@ -16,7 +14,7 @@ __all__ = [
     "JsonFile",
     "YamlFileBase",
     "YamlFile",
-    "PngFile",
+    "PngFileBase",
     "SerializationError",
     "DeserializationError",
     "InvalidDataModel",
@@ -84,8 +82,6 @@ SerializeType = TypeVar("SerializeType")
 
 MutableFileOrigin = FileSystemPath | ZipFile
 FileOrigin = MutableFileOrigin | Mapping[str, FileSystemPath]
-TextFileContent = Optional[ValueType | str]
-BinaryFileContent = Optional[ValueType | bytes]
 
 
 @dataclass(eq=False, repr=False)
@@ -704,9 +700,8 @@ class YamlFile(YamlFileBase[JsonDict]):
         return {}
 
 
-# TODO: Should this be final?
 @dataclass(eq=False, repr=False)
-class PngFile(BinaryFileBase[Image]):
+class PngFileBase(BinaryFileBase[Image]):
     """Class representing a png file."""
 
     image: ClassVar[FileDeserialize[Image]] = FileDeserialize()

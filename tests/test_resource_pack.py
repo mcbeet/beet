@@ -4,7 +4,7 @@ import pytest
 from PIL import Image, ImageDraw
 from pytest_insta import SnapshotFixture
 
-from beet import Mcmeta, PngFile, ResourcePack, Sound, SoundConfig, Texture
+from beet import Mcmeta, PngFileBase, ResourcePack, Sound, SoundConfig, Texture
 
 
 def test_default():
@@ -30,11 +30,17 @@ def test_empty(snapshot: SnapshotFixture, pack: ResourcePack):
 
 
 def test_empty_with_image():
-    pack = ResourcePack(icon=PngFile(Image.new("RGB", (32, 32), color="blue")))
+    pack = ResourcePack(icon=PngFileBase(Image.new("RGB", (32, 32), color="blue")))
     assert pack
-    assert pack == ResourcePack(icon=PngFile(Image.new("RGB", (32, 32), color="blue")))
-    assert pack != ResourcePack(icon=PngFile(Image.new("RGB", (32, 32), color="red")))
-    assert pack != ResourcePack(icon=PngFile(Image.new("RGB", (16, 16), color="blue")))
+    assert pack == ResourcePack(
+        icon=PngFileBase(Image.new("RGB", (32, 32), color="blue"))
+    )
+    assert pack != ResourcePack(
+        icon=PngFileBase(Image.new("RGB", (32, 32), color="red"))
+    )
+    assert pack != ResourcePack(
+        icon=PngFileBase(Image.new("RGB", (16, 16), color="blue"))
+    )
     assert dict(pack) == {}
 
 

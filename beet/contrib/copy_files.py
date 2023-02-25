@@ -23,7 +23,7 @@ from beet import (
     PackageablePath,
     PackFile,
     PluginOptions,
-    PngFile,
+    PngFileBase,
     TextFile,
     YamlFile,
     configurable,
@@ -90,7 +90,7 @@ def guess_file_type(filename: FileSystemPath) -> type[PackFile]:
     elif filename.endswith((".yml", ".yaml")):
         return YamlFile
     elif filename.endswith(".png"):
-        return PngFile
+        return PngFileBase
 
     mime_type, _ = mimetypes.guess_type(filename, strict=False)
     if mime_type and mime_type.startswith("text/"):

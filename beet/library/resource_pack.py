@@ -25,20 +25,9 @@ __all__ = [
 from contextlib import suppress
 from copy import deepcopy
 from dataclasses import dataclass
-from typing import Any, ClassVar, Optional
+from typing import ClassVar, Optional
 
-try:
-    from PIL.Image import Image
-except ImportError:
-    Image = Any
-
-from beet.core.file import (
-    BinaryFileContent,
-    JsonFileBase,
-    PngFile,
-    RawBinaryFileBase,
-    RawTextFileBase,
-)
+from beet.core.file import JsonFileBase, PngFileBase, RawBinaryFileBase, RawTextFileBase
 from beet.core.utils import JsonDict, extra_field, split_version
 
 from .base import (
@@ -180,10 +169,9 @@ class TextureMcmeta(JsonFileBase[JsonDict]):
 
 
 @dataclass(eq=False, repr=False)
-class Texture(PngFile):
+class Texture(PngFileBase):
     """Class representing a texture."""
 
-    content: BinaryFileContent[Image] = None
     mcmeta: Optional[JsonDict] = extra_field(default=None)
 
     scope: ClassVar[tuple[str, ...]] = ("textures",)

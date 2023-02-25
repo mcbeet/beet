@@ -62,7 +62,13 @@ from beet.core.container import (
     MergeContainerProxy,
     Pin,
 )
-from beet.core.file import File, FileOrigin, JsonFileBase, MutableFileOrigin, PngFile
+from beet.core.file import (
+    File,
+    FileOrigin,
+    JsonFileBase,
+    MutableFileOrigin,
+    PngFileBase,
+)
 from beet.core.utils import (
     FileSystemPath,
     JsonDict,
@@ -831,7 +837,7 @@ class Pack(MatchMixin, MergeContainer[str, NamespaceType], Generic[NamespaceType
     extra: PackExtraContainer[Self]
     mcmeta: ExtraPin[Mcmeta] = ExtraPin("pack.mcmeta", default_factory=lambda: Mcmeta())
 
-    icon: ExtraPin[Optional[PngFile]] = ExtraPin("pack.png", default=None)
+    icon: ExtraPin[Optional[PngFileBase]] = ExtraPin("pack.png", default=None)
 
     description: PackPin[TextComponent] = PackPin("description", default="")
     pack_format: PackPin[int] = PackPin("pack_format", default=0)
@@ -871,7 +877,7 @@ class Pack(MatchMixin, MergeContainer[str, NamespaceType], Generic[NamespaceType
         compression: Optional[Literal["none", "deflate", "bzip2", "lzma"]] = None,
         compression_level: Optional[int] = None,
         mcmeta: Optional[Mcmeta] = None,
-        icon: Optional[PngFile] = None,
+        icon: Optional[PngFileBase] = None,
         description: Optional[str] = None,
         pack_format: Optional[int] = None,
         filter: Optional[JsonDict] = None,
@@ -1067,7 +1073,7 @@ class Pack(MatchMixin, MergeContainer[str, NamespaceType], Generic[NamespaceType
 
     @classmethod
     def get_extra_info(cls) -> dict[str, type[PackFile]]:
-        return {"pack.mcmeta": Mcmeta, "pack.png": PngFile}
+        return {"pack.mcmeta": Mcmeta, "pack.png": PngFileBase}
 
     def resolve_extra_info(self) -> dict[str, type[PackFile]]:
         extra_info = self.get_extra_info()
