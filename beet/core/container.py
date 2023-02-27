@@ -301,39 +301,64 @@ def get_orig_bases(cls: Any) -> Iterable[Any]:
     return getattr(cls, "__orig_bases__", [])
 
 
-def resolve_base_generics(
-    cls: BaseType | Any, base: BaseType, generics: ResolvedGenerics = {}
-) -> Optional[ResolvedGenerics]:
-    if not is_subclass_type(cls, base):
+def get_params(cls: Any) -> tuple[TypeVar, ...]:
+    return getattr(cls, "__parameters__", ())
+
+
+def resolve_base_generics(cls: BaseType, base: BaseType) -> Optional[ResolvedGenerics]:
+    base_params: tuple[TypeVar]
+
+    if origin := get_origin(base):
+        if base_args := get_args(base):
+            if all(isinstance(arg, TypeVar) for arg in base_args):
+                base_params = base_args
+            else:
+                raise TypeError(
+                    "If generic args are specified for the base they must all be instances of TypeVar"
+                )
+        elif params := get_params(origin):
+            base_params = params
+        else:
+            return {}
+
+        base = origin
+    elif params := get_params(base):
+        base_params = params
+    else:
+        return {}
+
+    if cls == base:
+        return {param: param for param in base_params}
+
+    def resolve(cls: Any, generics: ResolvedGenerics) -> Optional[ResolvedGenerics]:
+        next_generics: dict[TypeVar, ResolvedGeneric] = {}
+
+        if origin := get_origin(cls):
+            if not issubclass(origin, base):
+                return None
+
+            params = get_params(origin) if origin != base else base_params
+
+            for param, arg in zip(params, get_args(cls), strict=True):
+                # TODO: Support keeping the full sequence of TypeVars between the desired TypeVar and the original class?
+                if isinstance(arg, TypeVar) and (value := generics.get(arg)):
+                    next_generics[param] = value
+                else:
+                    next_generics[param] = arg
+
+            assert len(next_generics) > 0
+
+            if origin == base:
+                return next_generics
+
+            cls = origin
+        elif not issubclass(cls, base):
+            return None
+
+        for orig_base in get_orig_bases(cls):
+            if (res := resolve(orig_base, next_generics)) is not None:
+                return res
+
         return None
 
-    # TODO: Support caching the generic tree on types that implement a protocol
-
-    if (
-        (args := get_args(cls))
-        and (origin := get_origin(cls))
-        and (params := getattr(origin, "__parameters__", None))
-    ):
-        next_generics: dict[TypeVar, ResolvedGeneric] = {}
-        for param, arg in zip(params, args, strict=True):
-            # TODO: Support keeping the full sequence of TypeVars between the desired TypeVar and the original class
-            if isinstance(arg, TypeVar) and (value := generics.get(arg)):
-                next_generics[param] = value
-            else:
-                next_generics[param] = arg
-
-        # TODO: Check if it is necessary to call get_origin on base
-        if origin == base:
-            return next_generics
-
-        for orig_base in get_orig_bases(origin):
-            if (
-                res := resolve_base_generics(orig_base, base, next_generics)
-            ) is not None:
-                return res
-    else:
-        for orig_base in get_orig_bases(cls):
-            if (res := resolve_base_generics(orig_base, base)) is not None:
-                return res
-
-    return None
+    return resolve(cls, {})

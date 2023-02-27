@@ -10,7 +10,20 @@ def test_resolve_direct_generics():
     class Base(Generic[T1, T2]):
         pass
 
+    assert resolve_base_generics(Base, Base) == {T1: T1, T2: T2}
     assert resolve_base_generics(Base[T1, T2], Base) == {T1: T1, T2: T2}
+
+
+def test_resolve_with_custom_typevars():
+    T1 = TypeVar("T1")
+    T2 = TypeVar("T2")
+
+    class Base(Generic[T1, T2]):
+        pass
+
+    A = TypeVar("A")
+    B = TypeVar("B")
+    assert resolve_base_generics(Base, Base[A, B]) == {A: A, B: B}
 
 
 def test_resolve_fully_generic_child():
