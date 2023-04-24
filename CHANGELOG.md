@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.84.1 (2023-04-24)
+### Fix
+* Update pack_format ([`7fbb788`](https://github.com/mcbeet/beet/commit/7fbb788a3a139a3d7a26dee2c6eb7522294d4026))
+
 ## v0.84.0 (2023-02-10)
 ### Feature
 * Better model merging ([`5d588b6`](https://github.com/mcbeet/beet/commit/5d588b6304ad1019b05ac95ffd8885bf59d83ddb))
