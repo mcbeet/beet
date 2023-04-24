@@ -1,13 +1,13 @@
 {
+  "pack": {
+    "pack_format": 13,
+    "description": ""
+  },
   "language": {
     "aaaa": {
       "name": "AAAA name",
       "region": "AAAA region",
       "bidirectional": false
     }
-  },
-  "pack": {
-    "pack_format": 9,
-    "description": ""
   }
 }
