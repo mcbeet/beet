@@ -2,6 +2,7 @@ __all__ = [
     "DataPack",
     "DataPackNamespace",
     "Advancement",
+    "DamageType",
     "Function",
     "ItemModifier",
     "LootTable",
@@ -262,6 +263,7 @@ class DataPackNamespace(Namespace):
 
     # fmt: off
     advancements:     NamespacePin[Advancement]   = NamespacePin(Advancement)
+    damage_type:      NamespacePin[DamageType]    = NamespacePin(DamageType)
     functions:        NamespacePin[Function]      = NamespacePin(Function)
     loot_tables:      NamespacePin[LootTable]     = NamespacePin(LootTable)
     predicates:       NamespacePin[Predicate]     = NamespacePin(Predicate)
@@ -296,6 +298,7 @@ class DataPack(Pack[DataPackNamespace]):
 
     # fmt: off
     advancements:     NamespaceProxyDescriptor[Advancement]   = NamespaceProxyDescriptor(Advancement)
+    damage_type:      NamespaceProxyDescriptor[DamageType]    = NamespaceProxyDescriptor(DamageType)
     functions:        NamespaceProxyDescriptor[Function]      = NamespaceProxyDescriptor(Function)
     loot_tables:      NamespaceProxyDescriptor[LootTable]     = NamespaceProxyDescriptor(LootTable)
     predicates:       NamespaceProxyDescriptor[Predicate]     = NamespaceProxyDescriptor(Predicate)
