@@ -54,6 +54,13 @@ class Advancement(JsonFile):
     extension: ClassVar[str] = ".json"
 
 
+class DamageType(JsonFile):
+    """Class representing a damage type."""
+
+    scope: ClassVar[Tuple[str, ...]] = ("damage_type",)
+    extension: ClassVar[str] = ".json"
+
+
 @dataclass(eq=False, repr=False)
 class Function(TextFileBase[List[str]]):
     """Class representing a function."""
