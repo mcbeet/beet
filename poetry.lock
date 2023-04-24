@@ -2309,19 +2309,19 @@ testing = ["argcomplete", "attrs (>=19.2.0)", "hypothesis (>=3.56)", "mock", "no
 
 [[package]]
 name = "pytest-insta"
-version = "0.1.11"
+version = "0.2.0"
 description = "A practical snapshot testing plugin for pytest"
 category = "dev"
 optional = false
 python-versions = ">=3.8,<4.0"
 files = [
-    {file = "pytest-insta-0.1.11.tar.gz", hash = "sha256:cc0f338a8ac215dbf3b690198dc24a1c5987e2bef269f85170d415039cce06e5"},
-    {file = "pytest_insta-0.1.11-py3-none-any.whl", hash = "sha256:c31af45255a8da234a73eff7649e297a053ffa22ba21806457f0fae66fc85f8a"},
+    {file = "pytest_insta-0.2.0-py3-none-any.whl", hash = "sha256:e8d8a19f44917fa70102b132ddd4d6afcebe2a31987422dc79458ff849fe1a9e"},
+    {file = "pytest_insta-0.2.0.tar.gz", hash = "sha256:c4e549f3c5aea8acf1ae6da12cffaaf4e4b3b03d9059c5115deab59f37b23867"},
 ]
 
 [package.dependencies]
-pytest = ">=6.0.2"
-wrapt = ">=1.12.1,<2.0.0"
+pytest = ">=7.2.0,<8.0.0"
+wrapt = ">=1.14.1,<2.0.0"
 
 [[package]]
 name = "pytest-minecraft"
@@ -3579,4 +3579,4 @@ image = ["Pillow"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "a0191f57b5000c70ccadfe1cab71864394fbfcae3f298e02b841f232288ca179"
+content-hash = "e85ae4a02fd041b7e00623c28d50b0ac195d9ceef5fe04a0d361f61226515a52"
