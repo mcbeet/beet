@@ -77,7 +77,6 @@ class ABGroup(BaseModel):
 
 
 class ABFile(JsonFileBase[ABGroup]):
-
     model = ABGroup
 
 
