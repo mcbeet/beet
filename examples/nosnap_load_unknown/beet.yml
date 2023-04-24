@@ -1,0 +1,5 @@
+require:
+  - beet.contrib.unknown_files
+data_pack:
+  load: "src"
+output: "out"

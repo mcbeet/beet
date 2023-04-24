@@ -611,15 +611,19 @@ class Namespace(
 
             file_dir: List[str] = []
 
-            while path := tuple(scope):
+            while True:
+                path = tuple(scope)
                 for extension in extensions:
                     if file_type := scope_map.get((path, extension)):
-                        key = "/".join(file_dir + [basename[: -len(extension)]])
+                        key = "/".join(
+                            file_dir + [basename[: len(basename) - len(extension)]]
+                        )
                         namespace[file_type][key] = file_type.load(origin, filename)
                         break
                 else:
-                    file_dir.insert(0, scope.pop())
-                    continue
+                    if scope:
+                        file_dir.insert(0, scope.pop())
+                        continue
                 break
 
         if name and namespace:

@@ -23,4 +23,5 @@ def list_extensions(path: PurePath) -> List[str]:
         accumulate(reversed(path.suffixes), lambda a, b: b + a)  # type: ignore
     )
     extensions.reverse()
+    extensions.append("")
     return extensions
