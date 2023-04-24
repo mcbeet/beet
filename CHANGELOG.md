@@ -2,6 +2,14 @@
 
 <!--next-version-placeholder-->
 
+## v0.85.0 (2023-04-24)
+### Feature
+* Add `chat_type` resource ([`414e7f6`](https://github.com/mcbeet/beet/commit/414e7f62e6c8eb36546749d14f8799bc57b320f8))
+* Add `damage_type` resource ([`3c5bb3c`](https://github.com/mcbeet/beet/commit/3c5bb3cdb9ca3ea1240da393e429194938dc29dc))
+
+### Fix
+* Add `DamageType` to namespace, etc ([`9dd44e7`](https://github.com/mcbeet/beet/commit/9dd44e7a224408c2a7ea262034402dc083004f80))
+
 ## v0.84.1 (2023-04-24)
 ### Fix
 * Update pack_format ([`7fbb788`](https://github.com/mcbeet/beet/commit/7fbb788a3a139a3d7a26dee2c6eb7522294d4026))
