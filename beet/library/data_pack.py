@@ -3,6 +3,7 @@ __all__ = [
     "DataPackNamespace",
     "Advancement",
     "DamageType",
+    "ChatType",
     "Function",
     "ItemModifier",
     "LootTable",
@@ -59,6 +60,13 @@ class DamageType(JsonFile):
     """Class representing a damage type."""
 
     scope: ClassVar[Tuple[str, ...]] = ("damage_type",)
+    extension: ClassVar[str] = ".json"
+
+
+class ChatType(JsonFile):
+    """Class representing a chat type."""
+
+    scope: ClassVar[Tuple[str, ...]] = ("chat_type",)
     extension: ClassVar[str] = ".json"
 
 
@@ -264,6 +272,7 @@ class DataPackNamespace(Namespace):
     # fmt: off
     advancements:     NamespacePin[Advancement]   = NamespacePin(Advancement)
     damage_type:      NamespacePin[DamageType]    = NamespacePin(DamageType)
+    chat_type:        NamespacePin[ChatType]      = NamespacePin(ChatType)
     functions:        NamespacePin[Function]      = NamespacePin(Function)
     loot_tables:      NamespacePin[LootTable]     = NamespacePin(LootTable)
     predicates:       NamespacePin[Predicate]     = NamespacePin(Predicate)
@@ -299,6 +308,7 @@ class DataPack(Pack[DataPackNamespace]):
     # fmt: off
     advancements:     NamespaceProxyDescriptor[Advancement]   = NamespaceProxyDescriptor(Advancement)
     damage_type:      NamespaceProxyDescriptor[DamageType]    = NamespaceProxyDescriptor(DamageType)
+    chat_type:        NamespaceProxyDescriptor[ChatType]      = NamespaceProxyDescriptor(ChatType)
     functions:        NamespaceProxyDescriptor[Function]      = NamespaceProxyDescriptor(Function)
     loot_tables:      NamespaceProxyDescriptor[LootTable]     = NamespaceProxyDescriptor(LootTable)
     predicates:       NamespaceProxyDescriptor[Predicate]     = NamespaceProxyDescriptor(Predicate)
