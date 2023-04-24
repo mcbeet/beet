@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.86.0 (2023-04-24)
+### Feature
+* Add beet.contrib.unknown_files ([`e4c67f5`](https://github.com/mcbeet/beet/commit/e4c67f56db57e48ce9078e50c71b74d4129347b8))
+
 ## v0.85.0 (2023-04-24)
 ### Feature
 * Add `chat_type` resource ([`414e7f6`](https://github.com/mcbeet/beet/commit/414e7f62e6c8eb36546749d14f8799bc57b320f8))
