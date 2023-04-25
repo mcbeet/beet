@@ -5,3 +5,8 @@ def f():
     return 99999
 
 say f()
+
+execute function ./thing:
+    return 42
+
+return 0

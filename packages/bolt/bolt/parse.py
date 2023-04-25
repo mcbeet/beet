@@ -1136,6 +1136,10 @@ class VanillaReturnHandler:
     def __call__(self, stream: TokenStream) -> Any:
         node: AstRoot = self.parser(stream)
 
+        lexical_scope = get_stream_lexical_scope(stream)
+        if not isinstance(lexical_scope, FunctionScope):
+            return node
+
         changed = False
         result: List[AstCommand] = []
 
@@ -1152,7 +1156,8 @@ class VanillaReturnHandler:
                 command = set_location(
                     AstCommand(
                         identifier="return:pythonresult", arguments=AstChildren([arg])
-                    )
+                    ),
+                    command,
                 )
 
             result.append(command)
