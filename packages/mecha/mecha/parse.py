@@ -106,6 +106,7 @@ from .ast import (
     AstFallingDustParticleParameters,
     AstGamemode,
     AstGreedy,
+    AstHeightmap,
     AstItem,
     AstItemParticleParameters,
     AstItemSlot,
@@ -226,6 +227,7 @@ def get_default_parsers() -> Dict[str, Parser]:
         "color_reset": BasicLiteralParser(AstColorReset),
         "sort_order": BasicLiteralParser(AstSortOrder),
         "gamemode": BasicLiteralParser(AstGamemode),
+        "heightmap": BasicLiteralParser(AstHeightmap),
         "entity_anchor": BasicLiteralParser(AstEntityAnchor),
         "template_rotation": BasicLiteralParser(AstTemplateRotation),
         "template_mirror": BasicLiteralParser(AstTemplateMirror),
@@ -428,6 +430,7 @@ def get_default_parsers() -> Dict[str, Parser]:
         "command:argument:minecraft:function": delegate("resource_location_or_tag"),
         "command:argument:minecraft:game_profile": delegate("game_profile"),
         "command:argument:minecraft:gamemode": delegate("gamemode"),
+        "command:argument:minecraft:heightmap": delegate("heightmap"),
         "command:argument:minecraft:int_range": delegate("integer_range"),
         "command:argument:minecraft:item_enchantment": delegate("word"),
         "command:argument:minecraft:item_predicate": MultilineParser(

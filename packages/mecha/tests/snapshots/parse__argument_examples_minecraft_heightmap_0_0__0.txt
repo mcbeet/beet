@@ -1,0 +1,12 @@
+minecraft:heightmap 0 0
+---
+{}
+---
+world_surface
+---
+world_surface
+---
+<class 'mecha.ast.AstHeightmap'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=13, lineno=1, colno=14)
+  value: 'world_surface'

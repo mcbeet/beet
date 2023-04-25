@@ -26,6 +26,7 @@ __all__ = [
     "AstColorReset",
     "AstSortOrder",
     "AstGamemode",
+    "AstHeightmap",
     "AstEntityAnchor",
     "AstTemplateRotation",
     "AstTemplateMirror",
@@ -529,6 +530,19 @@ class AstGamemode(AstOption):
 
     parser = "gamemode"
     options = {"adventure", "creative", "spectator", "survival"}
+
+
+@dataclass(frozen=True, slots=True)
+class AstHeightmap(AstOption):
+    """Ast heightmap node."""
+
+    parser = "heightmap"
+    options = {
+        "world_surface",
+        "motion_blocking",
+        "motion_blocking_no_leaves",
+        "ocean_floor",
+    }
 
 
 @dataclass(frozen=True, slots=True)

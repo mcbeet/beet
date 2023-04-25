@@ -267,6 +267,20 @@
       "examples": ["@e", "@s[type=cow]", "@e[type=!player]"]
     }
   ],
+  "minecraft:heightmap": [
+    {
+      "examples": [
+        "world_surface",
+        "motion_blocking",
+        "motion_blocking_no_leaves",
+        "ocean_floor"
+      ]
+    },
+    {
+      "invalid": true,
+      "examples": ["123"]
+    }
+  ],
   "minecraft:int_range": [
     {
       "examples": ["0..5", "0", "-5", "-100..", "..100", "..0", "0.."]

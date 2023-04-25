@@ -1,6 +1,6 @@
 <class 'mecha.ast.AstRoot'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
-  end_location: SourceLocation(pos=8106, lineno=190, colno=1)
+  end_location: SourceLocation(pos=8162, lineno=191, colno=1)
   commands:
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=14, lineno=2, colno=1)
@@ -7028,3 +7028,33 @@
                       variable: 's'
                       arguments:
                         <empty>
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=8106, lineno=190, colno=1)
+      end_location: SourceLocation(pos=8161, lineno=190, colno=56)
+      identifier: 'execute:subcommand'
+      arguments:
+        <class 'mecha.ast.AstCommand'>
+          location: SourceLocation(pos=8114, lineno=190, colno=9)
+          end_location: SourceLocation(pos=8161, lineno=190, colno=56)
+          identifier: 'execute:positioned:over:heightmap:subcommand'
+          arguments:
+            <class 'mecha.ast.AstHeightmap'>
+              location: SourceLocation(pos=8130, lineno=190, colno=25)
+              end_location: SourceLocation(pos=8141, lineno=190, colno=36)
+              value: 'ocean_floor'
+            <class 'mecha.ast.AstCommand'>
+              location: SourceLocation(pos=8142, lineno=190, colno=37)
+              end_location: SourceLocation(pos=8161, lineno=190, colno=56)
+              identifier: 'execute:run:subcommand'
+              arguments:
+                <class 'mecha.ast.AstCommand'>
+                  location: SourceLocation(pos=8146, lineno=190, colno=41)
+                  end_location: SourceLocation(pos=8161, lineno=190, colno=56)
+                  identifier: 'summon:entity'
+                  arguments:
+                    <class 'mecha.ast.AstResourceLocation'>
+                      location: SourceLocation(pos=8153, lineno=190, colno=48)
+                      end_location: SourceLocation(pos=8161, lineno=190, colno=56)
+                      is_tag: False
+                      namespace: None
+                      path: 'skeleton'

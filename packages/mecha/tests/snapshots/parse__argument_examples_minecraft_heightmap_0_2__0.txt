@@ -1,0 +1,12 @@
+minecraft:heightmap 0 2
+---
+{}
+---
+motion_blocking_no_leaves
+---
+motion_blocking_no_leaves
+---
+<class 'mecha.ast.AstHeightmap'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=25, lineno=1, colno=26)
+  value: 'motion_blocking_no_leaves'

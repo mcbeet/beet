@@ -497,6 +497,7 @@
   "execute:on:target:subcommand",
   "execute:on:vehicle:subcommand",
   "execute:positioned:as:targets:subcommand",
+  "execute:positioned:over:heightmap:subcommand",
   "execute:positioned:pos:subcommand",
   "execute:rotated:as:targets:subcommand",
   "execute:rotated:rot:subcommand",

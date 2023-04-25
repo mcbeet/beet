@@ -1,0 +1,9 @@
+minecraft:heightmap 1 0
+---
+{}
+---
+123
+---
+Reported 1 error.
+
+line 1, column 1: Expected heightmap but got literal '123'.
