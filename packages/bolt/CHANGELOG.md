@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.33.0 (2023-04-25)
+### Feature
+* Handle vanilla return ([`90c3f54`](https://github.com/mcbeet/bolt/commit/90c3f541c66af7e626f9bab83e4cd35ed71f4d05))
+
 ## v0.32.0 (2023-04-25)
 ### Feature
 * Update mecha ([`fba874e`](https://github.com/mcbeet/bolt/commit/fba874e345e655231cf1a66951c78b719fbb68c1))
