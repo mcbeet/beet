@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.68.0 (2023-04-25)
+### Feature
+* 1.19.4 ([`31570c8`](https://github.com/mcbeet/mecha/commit/31570c8aadb5f9bfdce813452a5810a36e3fde45))
+
 ## v0.67.0 (2023-02-08)
 ### Feature
 * Update command tree ([`c74062a`](https://github.com/mcbeet/mecha/commit/c74062adb614cc1266be1d90137bfccf39f1483b))
