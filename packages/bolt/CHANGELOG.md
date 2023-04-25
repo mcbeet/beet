@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.33.1 (2023-04-25)
+### Fix
+* Only rewrite vanilla return inside function scope ([`e874832`](https://github.com/mcbeet/bolt/commit/e874832ef13af24b69382c6d84a2a4fdaeac3fe3))
+
 ## v0.33.0 (2023-04-25)
 ### Feature
 * Handle vanilla return ([`90c3f54`](https://github.com/mcbeet/bolt/commit/90c3f541c66af7e626f9bab83e4cd35ed71f4d05))
