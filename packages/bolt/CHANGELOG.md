@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.32.0 (2023-04-25)
+### Feature
+* Update mecha ([`fba874e`](https://github.com/mcbeet/bolt/commit/fba874e345e655231cf1a66951c78b719fbb68c1))
+
 ## v0.31.0 (2023-02-19)
 ### Feature
 * Add prelude option ([`b0937e0`](https://github.com/mcbeet/bolt/commit/b0937e06affd62e8f358638358ce2797644d36e7))
