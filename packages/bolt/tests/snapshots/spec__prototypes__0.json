@@ -2069,7 +2069,7 @@
   "recipe:take:targets:recipe",
   "reload",
   "return",
-  "return:value",
+  "return:pythonresult",
   "ride:target:dismount",
   "ride:target:mount:vehicle",
   "rotated:as:targets:subcommand",

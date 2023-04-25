@@ -26,7 +26,7 @@ def f():
             <class 'mecha.ast.AstCommand'>
               location: SourceLocation(pos=13, lineno=2, colno=5)
               end_location: SourceLocation(pos=56, lineno=2, colno=48)
-              identifier: 'return:value'
+              identifier: 'return:pythonresult'
               arguments:
                 <class 'bolt.ast.AstDict'>
                   location: SourceLocation(pos=20, lineno=2, colno=12)

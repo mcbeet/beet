@@ -26,7 +26,7 @@
       "type": "literal",
       "executable": true,
       "children": {
-        "value": {
+        "pythonresult": {
           "type": "argument",
           "parser": "bolt:expression",
           "executable": true

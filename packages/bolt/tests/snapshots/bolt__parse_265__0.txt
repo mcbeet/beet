@@ -65,7 +65,7 @@ class B:
                     <class 'mecha.ast.AstCommand'>
                       location: SourceLocation(pos=48, lineno=4, colno=9)
                       end_location: SourceLocation(pos=58, lineno=4, colno=19)
-                      identifier: 'return:value'
+                      identifier: 'return:pythonresult'
                       arguments:
                         <class 'bolt.ast.AstCall'>
                           location: SourceLocation(pos=55, lineno=4, colno=16)
@@ -131,7 +131,7 @@ class B:
                     <class 'mecha.ast.AstCommand'>
                       location: SourceLocation(pos=107, lineno=8, colno=9)
                       end_location: SourceLocation(pos=117, lineno=8, colno=19)
-                      identifier: 'return:value'
+                      identifier: 'return:pythonresult'
                       arguments:
                         <class 'bolt.ast.AstCall'>
                           location: SourceLocation(pos=114, lineno=8, colno=16)

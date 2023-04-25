@@ -21,6 +21,7 @@ __all__ = [
     "parse_decorator",
     "AssignmentTargetParser",
     "IfElseLoweringParser",
+    "VanillaReturnHandler",
     "BreakContinueConstraint",
     "parse_deferred_root",
     "parse_function_signature",
@@ -73,6 +74,7 @@ from mecha import (
     AstCommand,
     AstJson,
     AstNode,
+    AstNumber,
     AstResourceLocation,
     AstRoot,
     BasicLiteralParser,
@@ -620,6 +622,7 @@ class ToplevelHandler:
 def create_bolt_root_parser(parser: Parser, macro_handler: "MacroHandler"):
     """Compose root parsers."""
     parser = FlushPendingBindingsParser(parser, before=True)
+    parser = VanillaReturnHandler(parser)
     parser = IfElseLoweringParser(parser)
     parser = BreakContinueConstraint(
         parser,
@@ -634,7 +637,7 @@ def create_bolt_root_parser(parser: Parser, macro_handler: "MacroHandler"):
         flags={"memo": False},
         command_identifiers={
             "return",
-            "return:value",
+            "return:pythonresult",
             "yield",
             "yield:value",
             "yield:from:value",
@@ -1122,6 +1125,42 @@ class AssignmentTargetParser:
 
         node = AstTargetUnpack(targets=AstChildren(nodes))
         return set_location(node, nodes[0], nodes[-1])
+
+
+@dataclass
+class VanillaReturnHandler:
+    """Turn vanilla return into bolt return statement when not prefixed by execute."""
+
+    parser: Parser
+
+    def __call__(self, stream: TokenStream) -> Any:
+        node: AstRoot = self.parser(stream)
+
+        changed = False
+        result: List[AstCommand] = []
+
+        for command in node.commands:
+            if command.identifier == "return:value" and command.arguments:
+                changed = True
+
+                arg = command.arguments[0]
+                if isinstance(arg, AstNumber):
+                    arg = set_location(AstValue(value=arg.value), arg)
+                elif isinstance(arg, AstInterpolation):
+                    arg = arg.value
+
+                command = set_location(
+                    AstCommand(
+                        identifier="return:pythonresult", arguments=AstChildren([arg])
+                    )
+                )
+
+            result.append(command)
+
+        if changed:
+            node = replace(node, commands=AstChildren(result))
+
+        return node
 
 
 @dataclass

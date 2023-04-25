@@ -58,7 +58,7 @@ def fib(n):
                     <class 'mecha.ast.AstCommand'>
                       location: SourceLocation(pos=35, lineno=3, colno=9)
                       end_location: SourceLocation(pos=43, lineno=3, colno=17)
-                      identifier: 'return:value'
+                      identifier: 'return:pythonresult'
                       arguments:
                         <class 'bolt.ast.AstIdentifier'>
                           location: SourceLocation(pos=42, lineno=3, colno=16)
@@ -151,7 +151,7 @@ def fib(n):
             <class 'mecha.ast.AstCommand'>
               location: SourceLocation(pos=101, lineno=6, colno=5)
               end_location: SourceLocation(pos=114, lineno=6, colno=18)
-              identifier: 'return:value'
+              identifier: 'return:pythonresult'
               arguments:
                 <class 'bolt.ast.AstIdentifier'>
                   location: SourceLocation(pos=108, lineno=6, colno=12)

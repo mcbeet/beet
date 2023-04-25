@@ -45,7 +45,7 @@ def g(a=123):
             <class 'mecha.ast.AstCommand'>
               location: SourceLocation(pos=46, lineno=3, colno=5)
               end_location: SourceLocation(pos=54, lineno=3, colno=13)
-              identifier: 'return:value'
+              identifier: 'return:pythonresult'
               arguments:
                 <class 'bolt.ast.AstIdentifier'>
                   location: SourceLocation(pos=53, lineno=3, colno=12)

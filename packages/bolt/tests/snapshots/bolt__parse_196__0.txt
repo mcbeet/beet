@@ -99,7 +99,7 @@ def foo(value):
             <class 'mecha.ast.AstCommand'>
               location: SourceLocation(pos=82, lineno=6, colno=5)
               end_location: SourceLocation(pos=95, lineno=6, colno=18)
-              identifier: 'return:value'
+              identifier: 'return:pythonresult'
               arguments:
                 <class 'bolt.ast.AstIdentifier'>
                   location: SourceLocation(pos=89, lineno=6, colno=12)

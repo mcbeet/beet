@@ -1,0 +1,7 @@
+minecraft: "1.20"
+require:
+  - bolt
+data_pack:
+  load: "src"
+pipeline:
+  - mecha

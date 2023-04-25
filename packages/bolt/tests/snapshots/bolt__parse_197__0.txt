@@ -121,7 +121,7 @@ def foo(value):
             <class 'mecha.ast.AstCommand'>
               location: SourceLocation(pos=102, lineno=7, colno=5)
               end_location: SourceLocation(pos=115, lineno=7, colno=18)
-              identifier: 'return:value'
+              identifier: 'return:pythonresult'
               arguments:
                 <class 'bolt.ast.AstIdentifier'>
                   location: SourceLocation(pos=109, lineno=7, colno=12)

@@ -641,7 +641,7 @@ class Codegen(Visitor):
         return []
 
     @rule(AstCommand, identifier="return")
-    @rule(AstCommand, identifier="return:value")
+    @rule(AstCommand, identifier="return:pythonresult")
     def return_statement(
         self,
         node: AstCommand,

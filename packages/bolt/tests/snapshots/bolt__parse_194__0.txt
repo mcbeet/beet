@@ -97,7 +97,7 @@ say Counter(9).incr()
                     <class 'mecha.ast.AstCommand'>
                       location: SourceLocation(pos=76, lineno=5, colno=9)
                       end_location: SourceLocation(pos=84, lineno=5, colno=17)
-                      identifier: 'return:value'
+                      identifier: 'return:pythonresult'
                       arguments:
                         <class 'bolt.ast.AstIdentifier'>
                           location: SourceLocation(pos=83, lineno=5, colno=16)
@@ -106,7 +106,7 @@ say Counter(9).incr()
             <class 'mecha.ast.AstCommand'>
               location: SourceLocation(pos=89, lineno=6, colno=5)
               end_location: SourceLocation(pos=110, lineno=6, colno=26)
-              identifier: 'return:value'
+              identifier: 'return:pythonresult'
               arguments:
                 <class 'bolt.ast.AstDict'>
                   location: SourceLocation(pos=96, lineno=6, colno=12)
