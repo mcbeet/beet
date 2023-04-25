@@ -8,7 +8,7 @@ on:
 
 env:
   PYTHON_VERSION: "3.10"
-  POETRY_VERSION: "1.3.2"
+  POETRY_VERSION: "1.4.2"
 
 jobs:
   main:
