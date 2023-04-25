@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.69.0 (2023-04-25)
+### Feature
+* 23w16a ([`b93bd3f`](https://github.com/mcbeet/mecha/commit/b93bd3fdcea18c5e391387fdfd9b6c2bb59d59e0))
+
 ## v0.68.0 (2023-04-25)
 ### Feature
 * 1.19.4 ([`31570c8`](https://github.com/mcbeet/mecha/commit/31570c8aadb5f9bfdce813452a5810a36e3fde45))
