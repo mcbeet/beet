@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.33.2 (2023-04-26)
+### Fix
+* Don't handle docstrings behind subcommands ([`2fd8c25`](https://github.com/mcbeet/bolt/commit/2fd8c256cf9272fea7b908b654f0ef25d2118c13))
+
 ## v0.33.1 (2023-04-25)
 ### Fix
 * Only rewrite vanilla return inside function scope ([`e874832`](https://github.com/mcbeet/bolt/commit/e874832ef13af24b69382c6d84a2a4fdaeac3fe3))
