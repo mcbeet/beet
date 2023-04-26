@@ -1,0 +1,5 @@
+#>ERROR  Can't use statement as a subcommand.
+# line 1, column 13
+#      1 |  execute run "not docstring"
+#        :              ^^^^^^^^^^^^^^^
+execute run "not docstring"

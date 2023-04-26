@@ -622,6 +622,7 @@ class ToplevelHandler:
 def create_bolt_root_parser(parser: Parser, macro_handler: "MacroHandler"):
     """Compose root parsers."""
     parser = FlushPendingBindingsParser(parser, before=True)
+    parser = DocstringHandler(parser)
     parser = VanillaReturnHandler(parser)
     parser = IfElseLoweringParser(parser)
     parser = BreakContinueConstraint(
@@ -660,7 +661,6 @@ def create_bolt_command_parser(
     parser = MemoHandler(parser)
     parser = BindingStorageHandler(parser)
     parser = ImportStatementHandler(parser, modules)
-    parser = DocstringHandler(parser)
     parser = UndefinedIdentifierErrorHandler(parser)
     parser = SubcommandConstraint(parser, command_identifiers=bolt_prototypes)
     return parser
@@ -2011,14 +2011,28 @@ class DocstringHandler:
     parser: Parser
 
     def __call__(self, stream: TokenStream) -> Any:
-        if (
-            isinstance(node := self.parser(stream), AstCommand)
-            and node.identifier == "statement"
-            and node.arguments
-            and isinstance(literal := node.arguments[0], AstValue)
-            and isinstance(literal.value, str)
-        ):
-            return set_location(AstDocstring(arguments=AstChildren([literal])), node)
+        node: AstRoot = self.parser(stream)
+
+        changed = False
+        result: List[AstCommand] = []
+
+        for command in node.commands:
+            if (
+                command.identifier == "statement"
+                and command.arguments
+                and isinstance(literal := command.arguments[0], AstValue)
+                and isinstance(literal.value, str)
+            ):
+                changed = True
+                command = set_location(
+                    AstDocstring(arguments=AstChildren([literal])), command
+                )
+
+            result.append(command)
+
+        if changed:
+            node = replace(node, commands=AstChildren(result))
+
         return node
 
 

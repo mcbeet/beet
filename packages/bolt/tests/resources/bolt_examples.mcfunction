@@ -1318,3 +1318,5 @@ hello run summon bat
 x = 1
 del x
 x = 2
+###
+execute run "not docstring"
