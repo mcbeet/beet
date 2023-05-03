@@ -1,6 +1,5 @@
 {
-  "python.pythonPath": "${workspaceFolder}/.venv",
-  "python.formatting.provider": "black",
+  "python.formatting.provider": "none",
   "python.languageServer": "Pylance",
   "python.linting.enabled": false,
   "python.linting.pylintEnabled": false,
@@ -18,6 +17,7 @@
     "editor.formatOnPaste": false,
     "editor.codeActionsOnSave": {
       "source.organizeImports": true
-    }
+    },
+    "editor.defaultFormatter": "ms-python.black-formatter"
   }
 }
