@@ -1,4 +1,6 @@
 __all__ = [
+    "AbstractNode",
+    "AbstractChildren",
     "AstNode",
     "AstChildren",
     "AstRoot",
@@ -109,6 +111,7 @@ from tokenstream import UNKNOWN_LOCATION, SourceLocation, set_location
 from .utils import string_to_number
 
 T = TypeVar("T")
+AbstractNodeType = TypeVar("AbstractNodeType", bound="AbstractNode", covariant=True)
 AstNodeType = TypeVar("AstNodeType", bound="AstNode", covariant=True)
 AstLiteralType = TypeVar("AstLiteralType", bound="AstLiteral")
 
@@ -134,37 +137,34 @@ COLORS: Tuple[str, ...] = (
 
 
 @dataclass(frozen=True, slots=True)
-class AstNode:
-    """Base class for all ast nodes."""
+class AbstractNode:
+    """Abstract node."""
 
     location: SourceLocation = extra_field(default=UNKNOWN_LOCATION)
     end_location: SourceLocation = extra_field(default=UNKNOWN_LOCATION)
 
-    parser: ClassVar[Optional[str]] = None
-    compile_hints: ClassVar[JsonDict] = {}
-
-    def __iter__(self) -> Iterator["AstNode"]:
+    def __iter__(self) -> Iterator["AbstractNode"]:
         for f in fields(self):
             attribute = getattr(self, f.name)
 
-            if isinstance(attribute, AstChildren):
+            if isinstance(attribute, AbstractChildren):
                 yield from attribute
 
-            if isinstance(attribute, AstNode):
+            if isinstance(attribute, AbstractNode):
                 yield attribute
 
-    def walk(self) -> Iterator["AstNode"]:
+    def walk(self) -> Iterator["AbstractNode"]:
         yield self
 
         for f in fields(self):
             attribute = getattr(self, f.name)
 
-            if isinstance(attribute, AstChildren):
+            if isinstance(attribute, AbstractChildren):
                 for child in attribute:  # type: ignore
-                    if isinstance(child, AstNode):
+                    if isinstance(child, AbstractNode):
                         yield from child.walk()
 
-            elif isinstance(attribute, AstNode):
+            elif isinstance(attribute, AbstractNode):
                 yield from attribute.walk()
 
     def dump(
@@ -178,14 +178,14 @@ class AstNode:
             f"{prefix}  {f.name}:"
             + (
                 "\n" + ("\n".join((f"{prefix}    {type(child)}" if shallow else child.dump(prefix + "    ", shallow, exclude)) for child in attribute) if attribute else prefix + "    <empty>")  # type: ignore
-                if isinstance(attribute := getattr(self, f.name), AstChildren)
+                if isinstance(attribute := getattr(self, f.name), AbstractChildren)
                 else "\n"
                 + (
                     f"{prefix}    {type(attribute)}"
                     if shallow
                     else attribute.dump(prefix + "    ", shallow, exclude)
                 )
-                if isinstance(attribute, AstNode)
+                if isinstance(attribute, AbstractNode)
                 else f" {attribute!r}"
             )
             for f in fields(self)
@@ -197,23 +197,42 @@ class AstNode:
         return set_location(exc, self)
 
 
-class AstChildren(Tuple[AstNodeType, ...]):
-    """Specialized tuple subclass for holding multiple child ast nodes."""
+class AbstractChildren(Tuple[AbstractNodeType, ...]):
+    """Abstract children."""
 
     def __new__(
         cls,
-        children: Iterable[None | AstNodeType | "AstChildren[AstNodeType]"] = (),
+        children: Iterable[
+            None | AbstractNodeType | "AbstractChildren[AbstractNodeType]"
+        ] = (),
     ):
         children = [
             c
             for child in children
             if child is not None
-            for c in (child if isinstance(child, AstChildren) else [child])
+            for c in (child if isinstance(child, AbstractChildren) else [child])
         ]
         return super().__new__(cls, children)
 
     def __repr__(self) -> str:
-        return f"AstChildren({super().__repr__()})"
+        return f"{self.__class__.__name__}({super().__repr__()})"
+
+
+class AstNode(AbstractNode):
+    """Base class for all ast nodes."""
+
+    parser: ClassVar[Optional[str]] = None
+    compile_hints: ClassVar[JsonDict] = {}
+
+    def __iter__(self) -> Iterator["AstNode"]:
+        return super().__iter__()  # type: ignore
+
+    def walk(self) -> Iterator["AstNode"]:
+        return super().walk()  # type: ignore
+
+
+class AstChildren(AbstractChildren[AstNodeType]):
+    """Specialized tuple subclass for holding multiple child ast nodes."""
 
 
 @dataclass(frozen=True, slots=True)

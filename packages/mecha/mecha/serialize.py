@@ -87,7 +87,7 @@ class Serializer(Visitor):
         )
     )
 
-    def __call__(self, node: AstNode, **kwargs: Any) -> str:
+    def __call__(self, node: AstNode, **kwargs: Any) -> str:  # type: ignore
         result: List[str] = []
 
         previous_formatting = self.formatting if kwargs else None

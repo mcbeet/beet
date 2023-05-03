@@ -36,7 +36,7 @@ from typing import (
 from beet import BubbleException, WrappedException
 from beet.core.utils import extra_field
 
-from .ast import AstChildren, AstNode
+from .ast import AbstractChildren, AbstractNode
 from .diagnostic import Diagnostic, DiagnosticCollection
 
 T = TypeVar("T")
@@ -60,7 +60,7 @@ class Rule:
     """Rule that can be associated to an ast node by the dispatcher."""
 
     callback: Callable[..., Any]
-    match_types: Tuple[Type[AstNode], ...] = ()
+    match_types: Tuple[Type[AbstractNode], ...] = ()
     match_fields: FrozenSet[Tuple[str, Any]] = frozenset()
 
     name: Optional[str] = None
@@ -99,7 +99,9 @@ def rule(func: Callable[..., Any]) -> Rule:
 
 
 @overload
-def rule(*args: Type[AstNode], **kwargs: Any) -> Callable[[Callable[..., Any]], Rule]:
+def rule(
+    *args: Type[AbstractNode], **kwargs: Any
+) -> Callable[[Callable[..., Any]], Rule]:
     ...
 
 
@@ -108,7 +110,7 @@ def rule(*args: Any, **kwargs: Any) -> Any:
     match_types = ()
     match_fields = frozenset(kwargs.items())
 
-    if args and isinstance(args[0], type) and issubclass(args[0], AstNode):
+    if args and isinstance(args[0], type) and issubclass(args[0], AbstractNode):
         match_types = args
 
     def decorator(func: Callable[..., Any]) -> Callable[..., Any]:
@@ -154,7 +156,7 @@ class Dispatcher(Generic[T]):
         if rule.name and self.levels.get(rule.name) == "ignore":
             return
 
-        for match_type in rule.match_types or [AstNode]:
+        for match_type in rule.match_types or [AbstractNode]:
             l = self.rules.setdefault(match_type, {}).setdefault(rule.match_fields, [])
             l.append((self.count, rule.name, rule.callback))
             self.count += 1
@@ -202,7 +204,7 @@ class Dispatcher(Generic[T]):
 
     def dispatch(
         self,
-        node: AstNode,
+        node: AbstractNode,
     ) -> Iterator[Tuple[Optional[str], Callable[..., Any]]]:
         """Dispatch rules."""
         priority_queue: List[
@@ -233,7 +235,7 @@ class Dispatcher(Generic[T]):
                 dispatched.add(callback)
                 yield name, callback
 
-    def invoke(self, node: AstNode, *args: Any, **kwargs: Any) -> Any:
+    def invoke(self, node: AbstractNode, *args: Any, **kwargs: Any) -> Any:
         """Invoke rules on the given ast node."""
         for name, rule in self.dispatch(node):
             self.process(node, name, rule, *args, **kwargs)
@@ -241,7 +243,7 @@ class Dispatcher(Generic[T]):
 
     def process(
         self,
-        node: AstNode,
+        node: AbstractNode,
         name: Optional[str] = None,
         rule: Optional[Callable[..., Any]] = None,
         *args: Any,
@@ -266,7 +268,7 @@ class Dispatcher(Generic[T]):
                     child = self.handle_output(node, child, name)
 
                     feedback = None
-                    if isinstance(child, AstNode):
+                    if isinstance(child, AbstractNode):
                         feedback = self.invoke(child, *args, **kwargs)
                     elif child is not None:
                         msg = f"Invalid node of type {type(child)}."
@@ -284,7 +286,7 @@ class Dispatcher(Generic[T]):
 
     def handle_output(
         self,
-        node: AstNode,
+        node: AbstractNode,
         output: Any,
         name: Optional[str] = None,
     ) -> Any:
@@ -323,7 +325,9 @@ class Dispatcher(Generic[T]):
             self.diagnostics = previous_diagnostics
 
     @contextmanager
-    def use_rule(self, node: AstNode, name: Optional[str] = None) -> Iterator[None]:
+    def use_rule(
+        self, node: AbstractNode, name: Optional[str] = None
+    ) -> Iterator[None]:
         """Handle rule diagnostics."""
         try:
             yield
@@ -340,7 +344,7 @@ class Dispatcher(Generic[T]):
             tb = exc.__traceback__ and exc.__traceback__.tb_next
             raise CompilationError(msg) from exc.with_traceback(tb)
 
-    def __call__(self, node: AstNode) -> T:
+    def __call__(self, node: AbstractNode) -> T:
         if not self.count:
             return node  # type: ignore
         return self.invoke(node)
@@ -349,7 +353,7 @@ class Dispatcher(Generic[T]):
 class Visitor(Dispatcher[Any]):
     """Ast visitor."""
 
-    def invoke(self, node: AstNode, *args: Any, **kwargs: Any) -> Any:
+    def invoke(self, node: AbstractNode, *args: Any, **kwargs: Any) -> Any:
         name, rule = next(self.dispatch(node), (None, None))
         return self.process(node, name, rule, *args, **kwargs)
 
@@ -357,7 +361,7 @@ class Visitor(Dispatcher[Any]):
 class Reducer(Dispatcher[Any]):
     """Ast reducer."""
 
-    def invoke(self, node: AstNode, *args: Any, **kwargs: Any) -> Any:
+    def invoke(self, node: AbstractNode, *args: Any, **kwargs: Any) -> Any:
         for child in node:
             self.invoke(child, *args, **kwargs)
         return super().invoke(node, *args, **kwargs)
@@ -366,16 +370,16 @@ class Reducer(Dispatcher[Any]):
 class MutatingReducer(Dispatcher[Any]):
     """Mutating ast reducer."""
 
-    def invoke(self, node: AstNode, *args: Any, **kwargs: Any) -> Any:
-        to_replace: Dict[str, Union[AstNode, AstChildren[AstNode]]] = {}
+    def invoke(self, node: AbstractNode, *args: Any, **kwargs: Any) -> Any:
+        to_replace: Dict[str, Union[AbstractNode, AbstractChildren[AbstractNode]]] = {}
 
         for f in fields(node):
             attribute = getattr(node, f.name)
-            if isinstance(attribute, AstChildren):
-                result = AstChildren(self.invoke(child, *args, **kwargs) for child in attribute)  # type: ignore
+            if isinstance(attribute, AbstractChildren):
+                result = AbstractChildren(self.invoke(child, *args, **kwargs) for child in attribute)  # type: ignore
                 if len(result) != len(attribute) or any(child is not original for child, original in zip(result, attribute)):  # type: ignore
                     to_replace[f.name] = result
-            elif isinstance(attribute, AstNode):
+            elif isinstance(attribute, AbstractNode):
                 result = self.invoke(attribute, *args, **kwargs)
                 if result is not attribute:
                     to_replace[f.name] = result
@@ -392,11 +396,11 @@ class MutatingReducer(Dispatcher[Any]):
                 result = self.process(node, name, rule, *args, **kwargs)
 
                 if result is not node:
-                    if isinstance(result, AstNode):
+                    if isinstance(result, AbstractNode):
                         exhausted = False
                         node = result
                         break
-                    elif result is None or isinstance(result, AstChildren):
+                    elif result is None or isinstance(result, AbstractChildren):
                         return result  # type: ignore
                     else:
                         msg = f"Invalid node of type {type(result)}."
