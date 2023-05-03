@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.70.0 (2023-05-03)
+### Feature
+* Reusable abstract ast and dispatch ([`d4cfe86`](https://github.com/mcbeet/mecha/commit/d4cfe86a059c4c66589358c440c79d60cf2d02f3))
+
 ## v0.69.0 (2023-04-25)
 ### Feature
 * 23w16a ([`b93bd3f`](https://github.com/mcbeet/mecha/commit/b93bd3fdcea18c5e391387fdfd9b6c2bb59d59e0))
