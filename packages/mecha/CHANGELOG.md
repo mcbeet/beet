@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.71.1 (2023-05-07)
+### Fix
+* Handle mcdoc super ([`7adfb86`](https://github.com/mcbeet/mecha/commit/7adfb8660744476b310b1e4a7ceff3eb8c76cfdc))
+
 ## v0.71.0 (2023-05-07)
 ### Feature
 * Initial mcdoc parser ([`b732822`](https://github.com/mcbeet/mecha/commit/b73282253427399cb5358eb46c3df53f93b61266))
