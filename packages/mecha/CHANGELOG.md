@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.71.0 (2023-05-07)
+### Feature
+* Initial mcdoc parser ([`b732822`](https://github.com/mcbeet/mecha/commit/b73282253427399cb5358eb46c3df53f93b61266))
+
 ## v0.70.0 (2023-05-03)
 ### Feature
 * Reusable abstract ast and dispatch ([`d4cfe86`](https://github.com/mcbeet/mecha/commit/d4cfe86a059c4c66589358c440c79d60cf2d02f3))
