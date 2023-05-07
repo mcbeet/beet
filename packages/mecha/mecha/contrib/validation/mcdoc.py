@@ -13,6 +13,8 @@ __all__ = [
     "McdocResourceLocation",
     "McdocIdentifier",
     "McdocPath",
+    "McdocPathSegment",
+    "McdocSuper",
     "McdocType",
     "McDocUnattributedType",
     "McdocTypeModifier",
@@ -87,7 +89,7 @@ PATTERN_RANGE_DELIMITER: str = r"<?\.\.<?"
 PATTERN_INTEGER_RANGE: str = rf"(?:{PATTERN_INTEGER})(?:{PATTERN_RANGE_DELIMITER})(?:{PATTERN_INTEGER})?|(?:{PATTERN_RANGE_DELIMITER})?(?:{PATTERN_INTEGER})"
 PATTERN_FLOAT_RANGE: str = rf"(?:{PATTERN_FLOAT})(?:{PATTERN_RANGE_DELIMITER})(?:{PATTERN_FLOAT})?|(?:{PATTERN_RANGE_DELIMITER})?(?:{PATTERN_FLOAT})"
 PATTERN_STRING: str = r'"(?:[^"\\]|\\[bfnrt\\"])*"'
-PATTERN_RESOURCE_LOCATION: str = r"[a-z0-9_.-]*:[a-z0-9_.-]*(?:/[a-z0-9_.-]*)*"
+PATTERN_RESOURCE_LOCATION: str = r"[a-z0-9_.-]*:(?!:)[a-z0-9_.-]*(?:/[a-z0-9_.-]*)*"
 PATTERN_IDENTIFIER: str = r"[a-zA-Z0-9_]+"
 
 
@@ -223,7 +225,15 @@ class McdocPath(McdocNode):
     """Mcdoc path node."""
 
     absolute: bool = required_field()
-    segments: McdocChildren[McdocIdentifier] = required_field()
+    segments: McdocChildren["McdocPathSegment"] = required_field()
+
+
+McdocPathSegment: TypeAlias = Union[McdocIdentifier, "McdocSuper"]
+
+
+@dataclass(frozen=True, slots=True)
+class McdocSuper(McdocNode):
+    """Mcdoc super node."""
 
 
 @dataclass(frozen=True, slots=True)
@@ -675,17 +685,23 @@ def parse_identifier(stream: TokenStream) -> McdocIdentifier:
 
 
 def parse_path(stream: TokenStream) -> McdocPath:
-    with stream.syntax(delimiter=r"::"):
-        token = stream.get("delimiter")
+    with stream.syntax(delimiter=r"::", super=r"super\b"):
+        start = stream.get("delimiter")
 
-        absolute = bool(token)
-        segments: List[McdocIdentifier] = [parse_identifier(stream)]
+        absolute = bool(start)
+        segments: List[McdocPathSegment] = []
 
-        while stream.get("delimiter"):
-            segments.append(parse_identifier(stream))
+        while True:
+            if token := stream.get("super"):
+                node = set_location(McdocSuper(), token)
+            else:
+                node = parse_identifier(stream)
+            segments.append(node)
+            if not stream.get("delimiter"):
+                break
 
         node = McdocPath(absolute=absolute, segments=McdocChildren(segments))
-        return set_location(node, token or segments[0], segments[-1])
+        return set_location(node, start or segments[0], segments[-1])
 
 
 def parse_type(stream: TokenStream) -> McdocType:

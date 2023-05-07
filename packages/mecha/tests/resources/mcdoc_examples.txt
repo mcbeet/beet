@@ -112,3 +112,7 @@ struct Foo {
 	}]
 	evilUUID2: int[] @ 4
 }
+###
+struct Foo {}
+
+type Bar = super::super::qux::Something
