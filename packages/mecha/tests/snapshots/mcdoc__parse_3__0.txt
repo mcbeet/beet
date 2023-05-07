@@ -1,0 +1,124 @@
+struct Player {
+	...Mob, // Reuse fields from the Mob struct here.
+	abilities: Abilities,
+	CustomName: (), // Overrides CustomName from the Mob struct to an empty union.
+}
+---
+<class 'mecha.contrib.validation.mcdoc.Mcdoc'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=171, lineno=5, colno=2)
+  items:
+    <class 'mecha.contrib.validation.mcdoc.McdocStruct'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=171, lineno=5, colno=2)
+      prelim:
+        <class 'mecha.contrib.validation.mcdoc.McdocPrelim'>
+          location: SourceLocation(pos=0, lineno=1, colno=1)
+          end_location: SourceLocation(pos=6, lineno=1, colno=7)
+          doc_comments:
+            <empty>
+          attributes:
+            <empty>
+      identifier:
+        <class 'mecha.contrib.validation.mcdoc.McdocIdentifier'>
+          location: SourceLocation(pos=7, lineno=1, colno=8)
+          end_location: SourceLocation(pos=13, lineno=1, colno=14)
+          name: 'Player'
+      fields:
+        <class 'mecha.contrib.validation.mcdoc.McdocSpread'>
+          location: SourceLocation(pos=17, lineno=2, colno=2)
+          end_location: SourceLocation(pos=23, lineno=2, colno=8)
+          attributes:
+            <empty>
+          type:
+            <class 'mecha.contrib.validation.mcdoc.McdocType'>
+              location: SourceLocation(pos=20, lineno=2, colno=5)
+              end_location: SourceLocation(pos=23, lineno=2, colno=8)
+              attributes:
+                <empty>
+              unattributed_type:
+                <class 'mecha.contrib.validation.mcdoc.McdocReferenceType'>
+                  location: SourceLocation(pos=20, lineno=2, colno=5)
+                  end_location: SourceLocation(pos=23, lineno=2, colno=8)
+                  path:
+                    <class 'mecha.contrib.validation.mcdoc.McdocPath'>
+                      location: SourceLocation(pos=20, lineno=2, colno=5)
+                      end_location: SourceLocation(pos=23, lineno=2, colno=8)
+                      absolute: False
+                      segments:
+                        <class 'mecha.contrib.validation.mcdoc.McdocIdentifier'>
+                          location: SourceLocation(pos=20, lineno=2, colno=5)
+                          end_location: SourceLocation(pos=23, lineno=2, colno=8)
+                          name: 'Mob'
+              modifiers:
+                <empty>
+        <class 'mecha.contrib.validation.mcdoc.McdocStructField'>
+          location: SourceLocation(pos=68, lineno=3, colno=2)
+          end_location: SourceLocation(pos=88, lineno=3, colno=22)
+          prelim:
+            <class 'mecha.contrib.validation.mcdoc.McdocPrelim'>
+              location: SourceLocation(pos=68, lineno=3, colno=2)
+              end_location: SourceLocation(pos=89, lineno=3, colno=23)
+              doc_comments:
+                <empty>
+              attributes:
+                <empty>
+          key:
+            <class 'mecha.contrib.validation.mcdoc.McdocIdentifier'>
+              location: SourceLocation(pos=68, lineno=3, colno=2)
+              end_location: SourceLocation(pos=77, lineno=3, colno=11)
+              name: 'abilities'
+          optional: False
+          type:
+            <class 'mecha.contrib.validation.mcdoc.McdocType'>
+              location: SourceLocation(pos=79, lineno=3, colno=13)
+              end_location: SourceLocation(pos=88, lineno=3, colno=22)
+              attributes:
+                <empty>
+              unattributed_type:
+                <class 'mecha.contrib.validation.mcdoc.McdocReferenceType'>
+                  location: SourceLocation(pos=79, lineno=3, colno=13)
+                  end_location: SourceLocation(pos=88, lineno=3, colno=22)
+                  path:
+                    <class 'mecha.contrib.validation.mcdoc.McdocPath'>
+                      location: SourceLocation(pos=79, lineno=3, colno=13)
+                      end_location: SourceLocation(pos=88, lineno=3, colno=22)
+                      absolute: False
+                      segments:
+                        <class 'mecha.contrib.validation.mcdoc.McdocIdentifier'>
+                          location: SourceLocation(pos=79, lineno=3, colno=13)
+                          end_location: SourceLocation(pos=88, lineno=3, colno=22)
+                          name: 'Abilities'
+              modifiers:
+                <empty>
+        <class 'mecha.contrib.validation.mcdoc.McdocStructField'>
+          location: SourceLocation(pos=91, lineno=4, colno=2)
+          end_location: SourceLocation(pos=105, lineno=4, colno=16)
+          prelim:
+            <class 'mecha.contrib.validation.mcdoc.McdocPrelim'>
+              location: SourceLocation(pos=91, lineno=4, colno=2)
+              end_location: SourceLocation(pos=169, lineno=4, colno=80)
+              doc_comments:
+                <empty>
+              attributes:
+                <empty>
+          key:
+            <class 'mecha.contrib.validation.mcdoc.McdocIdentifier'>
+              location: SourceLocation(pos=91, lineno=4, colno=2)
+              end_location: SourceLocation(pos=101, lineno=4, colno=12)
+              name: 'CustomName'
+          optional: False
+          type:
+            <class 'mecha.contrib.validation.mcdoc.McdocType'>
+              location: SourceLocation(pos=103, lineno=4, colno=14)
+              end_location: SourceLocation(pos=105, lineno=4, colno=16)
+              attributes:
+                <empty>
+              unattributed_type:
+                <class 'mecha.contrib.validation.mcdoc.McdocUnionType'>
+                  location: SourceLocation(pos=103, lineno=4, colno=14)
+                  end_location: SourceLocation(pos=105, lineno=4, colno=16)
+                  types:
+                    <empty>
+              modifiers:
+                <empty>

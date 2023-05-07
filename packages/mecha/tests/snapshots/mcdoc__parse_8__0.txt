@@ -1,0 +1,36 @@
+dispatch minecraft:block[%unknown] to ()
+---
+<class 'mecha.contrib.validation.mcdoc.Mcdoc'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=40, lineno=1, colno=41)
+  items:
+    <class 'mecha.contrib.validation.mcdoc.McdocDispatchStatement'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=40, lineno=1, colno=41)
+      attributes:
+        <empty>
+      resource_location:
+        <class 'mecha.contrib.validation.mcdoc.McdocResourceLocation'>
+          location: SourceLocation(pos=9, lineno=1, colno=10)
+          end_location: SourceLocation(pos=24, lineno=1, colno=25)
+          value: 'minecraft:block'
+      indices:
+        <class 'mecha.contrib.validation.mcdoc.McdocUnknownIndexKey'>
+          location: SourceLocation(pos=25, lineno=1, colno=26)
+          end_location: SourceLocation(pos=33, lineno=1, colno=34)
+      parameters:
+        <empty>
+      type:
+        <class 'mecha.contrib.validation.mcdoc.McdocType'>
+          location: SourceLocation(pos=38, lineno=1, colno=39)
+          end_location: SourceLocation(pos=40, lineno=1, colno=41)
+          attributes:
+            <empty>
+          unattributed_type:
+            <class 'mecha.contrib.validation.mcdoc.McdocUnionType'>
+              location: SourceLocation(pos=38, lineno=1, colno=39)
+              end_location: SourceLocation(pos=40, lineno=1, colno=41)
+              types:
+                <empty>
+          modifiers:
+            <empty>

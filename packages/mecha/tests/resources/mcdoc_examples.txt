@@ -1,0 +1,114 @@
+// This is a comment.
+struct Foo {
+	Bar: boolean, // This is another one.
+}
+###
+/// This doc comment describes the struct Foo.
+/// External tools, like VS Code, may show this block of text when the user hovers over the name "Foo".
+struct Foo {
+	/// This is another doc comment describing the field "Bar".
+	Bar: boolean, // This is just a regular comment because it only starts with two slashes.
+}
+###
+struct Tag {
+	replace?: boolean,
+	values: [string],
+}
+###
+struct Player {
+	...Mob, // Reuse fields from the Mob struct here.
+	abilities: Abilities,
+	CustomName: (), // Overrides CustomName from the Mob struct to an empty union.
+}
+###
+type Tag<V> = struct {
+	replace?: boolean,
+	values: [V],
+}
+
+type BlockTag = Tag<#[id=block] string>
+type EntityTypeTag = Tag<#[id=entity_type] string>
+type FunctionTag = Tag<#[id=function] string>
+type ItemTag = Tag<#[id=item] string>
+###
+struct Foo {
+	id: string,
+	cow_data: minecraft:entity[cow],
+	dynamic_entity_data: minecraft:entity[[id]],
+	command: minecraft:block[command_block][Command],
+	dynamic_memories: minecraft:entity[[id]][Brain][memories],
+}
+###
+type AnyEntity = minecraft:entity[%fallback]
+###
+struct RandomIntGenerator {
+	type?: ("uniform" | "binomial" | "constant"),
+	...minecraft:random_int_generator[[type]],
+}
+
+dispatch minecraft:random_int_generator[uniform, %none] to struct { min?: int, max?: int }
+###
+dispatch minecraft:block[%unknown] to ()
+###
+struct DebugStick {
+	DebugProperty: struct {
+		[#[id=block] string]: mcdoc:block_state_name[[%key]], // Get the type of the block state names of the block stored in the key.
+	},
+}
+###
+struct Item {
+	id: #[id=item] string,
+	tag: struct ItemTag {
+		BlockStateTag: mcdoc:block_item_states[[%parent.id]]
+	},
+}
+###
+type Integer = (byte | short | int | long)
+type Float = (float | double)
+type Number = (Integer | Float)
+###
+type NumericRange<T> = (
+	T |
+	[T, T] |
+	struct { min: T, max: T }
+)
+
+type FloatRange = NumericRange<float>
+type IntegerRange = NumericRange<int>
+type NaturalRange = NumericRange<int @ 0..>
+###
+struct T {}
+
+type List<T> = [T]
+###
+type List<T> = [T]
+
+type Struct<T> = struct { value: T }
+###
+use demo::foo
+use demo::bar as thing
+###
+struct Foo {
+	#[id=item]
+	id1: string,
+	id2: #[id=item] string,
+	// id1 and id2 will likely both be supported and have equivalent effects.
+
+	blockStateValue1: (
+		#[serializable] string |
+		byte | short | int | long | float | double
+	),
+	#[serialize_to=string]
+	blockStateValue2: (string | byte | short | int | long | float | double),
+
+	evilUUID1: (
+		#[until("1.16", uuid_string_to_compound)] #[parser=uuid] string |
+		#[until("1.17", uuid_compound_to_array)] MostLeastCompound |
+		int[] @ 4
+	),
+	#[history{
+		(#[parser=uuid] string, until="1.16", updater=uuid_string_to_compound),
+		(MostLeastCompound, until="1.17", updater=uuid_compound_to_array),
+	}]
+	evilUUID2: int[] @ 4
+}
