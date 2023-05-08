@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.71.2 (2023-05-08)
+### Fix
+* Swap mcdoc number patterns ([`ba18029`](https://github.com/mcbeet/mecha/commit/ba18029f58eedbe5b5f4461e4c053e21b9c4deec))
+
 ## v0.71.1 (2023-05-07)
 ### Fix
 * Handle mcdoc super ([`7adfb86`](https://github.com/mcbeet/mecha/commit/7adfb8660744476b310b1e4a7ceff3eb8c76cfdc))
