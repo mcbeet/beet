@@ -82,8 +82,8 @@ from mecha.utils import QuoteHelper
 
 McdocNodeType = TypeVar("McdocNodeType", bound="McdocNode", covariant=True)
 
-PATTERN_INTEGER: str = r"0|[-+]?[1-9][0-9]*"
-PATTERN_FLOAT: str = r"[-+]?(?:[0-9]+|[0-9]*\.[0-9]+)(?:[eE][-+]?[0-9]+)?"
+PATTERN_INTEGER: str = r"[-+]?[1-9][0-9]*|0"
+PATTERN_FLOAT: str = r"[-+]?(?:[0-9]*\.[0-9]+|[0-9]+)(?:[eE][-+]?[0-9]+)?"
 PATTERN_TYPED_NUMBER: str = rf"{PATTERN_FLOAT}[bBdDfFlLsS]?"
 PATTERN_RANGE_DELIMITER: str = r"<?\.\.<?"
 PATTERN_INTEGER_RANGE: str = rf"(?:{PATTERN_INTEGER})(?:{PATTERN_RANGE_DELIMITER})(?:{PATTERN_INTEGER})?|(?:{PATTERN_RANGE_DELIMITER})?(?:{PATTERN_INTEGER})"
