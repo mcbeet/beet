@@ -257,6 +257,14 @@ class Accumulator:
         with self.if_statement(self.last_condition):
             yield
 
+    def enclose(self, code: str, from_index: int):
+        """Enclose lines starting from the given index."""
+        self.lines[from_index:] = [
+            line if line.startswith("!") else f"    {line}"
+            for line in self.lines[from_index:]
+        ]
+        self.lines.insert(from_index, f"{self.indentation}{code}\n")
+
 
 @dataclass
 class ChildrenCollector:
@@ -302,14 +310,7 @@ class RootCommandCollector(CommandCollector):
 
     def flush(self) -> str:
         commands = self.acc.make_variable()
-        self.acc.lines[self.start_index :] = [
-            line if line.startswith("!") else f"    {line}"
-            for line in self.acc.lines[self.start_index :]
-        ]
-        self.acc.lines.insert(
-            self.start_index,
-            f"{self.acc.indentation}with _bolt_runtime.scope() as {commands}:\n",
-        )
+        self.acc.enclose(f"with _bolt_runtime.scope() as {commands}:", self.start_index)
         return self.acc.helper("children", commands)
 
 
@@ -351,7 +352,7 @@ def visit_single(
 
 
 def visit_multiple(
-    children: AstChildren[AstNode],
+    children: Tuple[AstNode, ...],
     acc: Accumulator,
     children_collector: Type[ChildrenCollector] = ChildrenCollector,
 ) -> Generator[AstNode, Optional[List[str]], Optional[str]]:
@@ -501,6 +502,41 @@ class Codegen(Visitor):
         if result is None:
             return None
         return [result]
+
+    @rule(AstCommand)
+    def command(
+        self,
+        node: AstCommand,
+        acc: Accumulator,
+    ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
+        if not node.arguments:
+            return None
+
+        if not isinstance(node.arguments[-1], (AstCommand, AstRoot)):
+            arguments = yield from visit_multiple(node.arguments, acc)
+            if arguments is None:
+                return None
+            return [acc.replace(acc.make_ref(node), arguments=arguments)]
+
+        arguments = yield from visit_multiple(node.arguments[:-1], acc)
+        nesting_index = len(acc.lines)
+        nesting = yield from visit_single(node.arguments[-1])
+
+        if nesting is None:
+            if arguments is None:
+                return None
+            nesting = acc.make_ref(node.arguments[-1])
+        else:
+            if arguments is None and len(node.arguments) > 1:
+                arguments = acc.make_ref_slice(node.arguments[:-1])
+            push_arguments = f", *{arguments}" if arguments else ""
+            acc.enclose(
+                f"with _bolt_runtime.push_nesting({node.identifier!r}{push_arguments}):",
+                nesting_index,
+            )
+
+        arguments = acc.children([f"*{arguments}", nesting] if arguments else [nesting])
+        return [acc.replace(acc.make_ref(node), arguments=arguments)]
 
     @rule(AstCommand, identifier="statement")
     def statement(

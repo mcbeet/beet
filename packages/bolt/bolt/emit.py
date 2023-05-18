@@ -4,7 +4,7 @@ __all__ = [
 
 
 from contextlib import contextmanager
-from typing import Any, Callable, Generator, Iterator, List, Optional, ParamSpec
+from typing import Any, Callable, Generator, Iterator, List, Optional, ParamSpec, Tuple
 
 from mecha import AstCommand, AstNode, AstRoot
 
@@ -17,9 +17,11 @@ class CommandEmitter:
     """Command emitter."""
 
     commands: List[AstCommand]
+    nesting: List[Tuple[str, Tuple[AstNode, ...]]]
 
     def __init__(self):
         self.commands = []
+        self.nesting = []
 
     @contextmanager
     def scope(
@@ -78,3 +80,11 @@ class CommandEmitter:
                 raise TypeError(msg)
 
         return output
+
+    @contextmanager
+    def push_nesting(self, identifier: str, *arguments: AstNode):
+        self.nesting.append((identifier, arguments))
+        try:
+            yield
+        finally:
+            self.nesting.pop()
