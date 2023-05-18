@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.34.0 (2023-05-18)
+### Feature
+* Add runtime nesting info ([`2100ee7`](https://github.com/mcbeet/bolt/commit/2100ee773026b6dc353fb8d753034c6db09a0b9f))
+
 ## v0.33.2 (2023-04-26)
 ### Fix
 * Don't handle docstrings behind subcommands ([`2fd8c25`](https://github.com/mcbeet/bolt/commit/2fd8c256cf9272fea7b908b654f0ef25d2118c13))
