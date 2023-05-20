@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.35.0 (2023-05-20)
+### Feature
+* Nested locations ([`a7fe760`](https://github.com/mcbeet/bolt/commit/a7fe760d552630d5528522f332bba211d4006233))
+
 ## v0.34.0 (2023-05-18)
 ### Feature
 * Add runtime nesting info ([`2100ee7`](https://github.com/mcbeet/bolt/commit/2100ee773026b6dc353fb8d753034c6db09a0b9f))
