@@ -1,0 +1,5 @@
+#>ERROR  Trailing input following final expression.
+# line 1, column 4
+#      1 |  ~/ ~/
+#        :     ^^
+~/ ~/

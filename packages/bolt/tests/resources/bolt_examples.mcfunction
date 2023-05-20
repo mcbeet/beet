@@ -1320,3 +1320,14 @@ del x
 x = 2
 ###
 execute run "not docstring"
+###
+~/
+###
+print(~/foo)
+###
+~/ ~/
+###
+function ~/foo:
+    function ~/bar
+###
+function ~/foo{"bar":_<5}

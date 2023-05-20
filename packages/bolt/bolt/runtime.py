@@ -13,7 +13,16 @@ from typing import Any, Callable, Dict, Iterable, List, Optional, Set, Union
 
 from beet import Context, TextFileBase, generate_tree
 from beet.core.utils import JsonDict, extra_field, required_field
-from mecha import AstRoot, CommandSpec, CommandTree, Diagnostic, Mecha, Visitor, rule
+from mecha import (
+    AstResourceLocation,
+    AstRoot,
+    CommandSpec,
+    CommandTree,
+    Diagnostic,
+    Mecha,
+    Visitor,
+    rule,
+)
 from mecha.contrib.nesting import InplaceNestingPredicate
 from pathspec import PathSpec
 from tokenstream import set_location
@@ -40,6 +49,8 @@ class Runtime(CommandEmitter):
 
     modules: ModuleManager
     evaluate: "Evaluator"
+
+    spec: CommandSpec
 
     def __init__(self, ctx: Union[Context, Mecha]):
         super().__init__()
@@ -108,6 +119,8 @@ class Runtime(CommandEmitter):
 
         self.evaluate = Evaluator(modules=self.modules)
 
+        self.spec = mc.spec
+
         mc.providers.append(Module)
 
         commands_json = files("bolt.resources").joinpath("commands.json").read_text()
@@ -150,6 +163,22 @@ class Runtime(CommandEmitter):
             message = f'Couldn\'t import {exc} from "{resource_location}".'
             raise ImportError(message) from None
         return values[0] if len(values) == 1 else values
+
+    def get_nested_location(self) -> str:
+        """Return the resource location associated with the current level of nesting."""
+        for identifier, arguments in reversed(self.nesting):
+            prototype = self.spec.prototypes[identifier]
+
+            for i, argument_node in enumerate(arguments):
+                node = self.spec.tree.get(prototype.get_argument(i).scope)
+                if (
+                    node
+                    and node.parser == "minecraft:function"
+                    and isinstance(argument_node, AstResourceLocation)
+                ):
+                    return argument_node.get_canonical_value()
+
+        return self.modules.current_path
 
     def finalize(self, ctx: Context):
         """Plugin that runs at the end of the build."""

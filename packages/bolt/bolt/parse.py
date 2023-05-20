@@ -142,6 +142,7 @@ from .ast import (
     AstMacroMatchLiteral,
     AstMemo,
     AstModuleRoot,
+    AstNestedLocation,
     AstProcMacro,
     AstProcMacroMarker,
     AstProcMacroResult,
@@ -2364,8 +2365,13 @@ class PrimaryParser:
     quote_helper: QuoteHelper = field(default_factory=JsonQuoteHelper)
 
     def __call__(self, stream: TokenStream) -> Any:
-        with stream.syntax(brace=r"\(|\)", comma=r",", format_string=r"f['\"]"):
-            token = stream.get(("brace", "("), "format_string")
+        with stream.syntax(
+            brace=r"\(|\)",
+            comma=r",",
+            format_string=r"f['\"]",
+            nested_location=r"~/",
+        ):
+            token = stream.get(("brace", "("), "format_string", "nested_location")
 
             if token and token.match("brace"):
                 with stream.ignore("newline"):
@@ -2440,6 +2446,32 @@ class PrimaryParser:
 
                 if self.truncate:
                     return node
+
+            elif token and token.match("nested_location"):
+                with stream.intercept("whitespace"), stream.provide(
+                    bolt_nested_location=True
+                ), stream.syntax(
+                    path=r"[0-9a-z_./-]+",
+                    curly=r"\{|\}",
+                ):
+                    fmt = ""
+                    values: List[AstExpression] = []
+
+                    for path, curly in stream.collect("path", ("curly", "{")):
+                        if path:
+                            fmt += path.value
+                        elif curly:
+                            fmt += "{"
+                            with stream.syntax(path=None), stream.ignore("whitespace"):
+                                values.append(delegate("bolt:expression", stream))
+                            with stream.syntax(spec=r"[:!][^\}]+"):
+                                if spec := stream.get("spec"):
+                                    fmt += spec.value
+                                stream.expect(("curly", "}"))
+                            fmt += "}"
+
+                    node = AstNestedLocation(fmt=fmt, values=AstChildren(values))
+                    node = set_location(node, token, stream.current)
 
             else:
                 node = self.parser(stream)
@@ -2611,6 +2643,7 @@ class LiteralParser:
                 None
                 if stream.data.get("bolt_lookup")
                 or stream.data.get("bolt_format_string")
+                or stream.data.get("bolt_nested_location")
                 else RESOURCE_LOCATION_PATTERN
             ),
             number=NUMBER_PATTERN,

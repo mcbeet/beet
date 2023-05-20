@@ -71,6 +71,7 @@ from .ast import (
     AstMacroCall,
     AstMacroMatchArgument,
     AstMemo,
+    AstNestedLocation,
     AstPrelude,
     AstProcMacro,
     AstSlice,
@@ -1139,6 +1140,27 @@ class Codegen(Visitor):
         acc.statement(
             f"{result} = {node.fmt!r}.format({', '.join(values)})", lineno=node
         )
+        return [result]
+
+    @rule(AstNestedLocation)
+    def nested_location(
+        self,
+        node: AstNestedLocation,
+        acc: Accumulator,
+    ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
+        values: List[str] = []
+
+        for value in node.values:
+            result = yield from visit_single(value, required=True)
+            values.append(result)
+
+        result = acc.make_variable()
+        resolved = acc.helper(
+            "resolve_nested_location",
+            "_bolt_runtime",
+            f"{node.fmt!r}.format({', '.join(values)})" if values else repr(node.fmt),
+        )
+        acc.statement(f"{result} = {resolved}", lineno=node)
         return [result]
 
     @rule(AstTuple)

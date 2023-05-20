@@ -1,0 +1,47 @@
+function ~/foo:
+    function ~/bar
+---
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=35, lineno=3, colno=1)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=34, lineno=2, colno=19)
+      identifier: 'function:name:commands'
+      arguments:
+        <class 'bolt.ast.AstInterpolation'>
+          location: SourceLocation(pos=9, lineno=1, colno=10)
+          end_location: SourceLocation(pos=14, lineno=1, colno=15)
+          prefix: None
+          unpack: None
+          converter: 'resource_location'
+          value:
+            <class 'bolt.ast.AstNestedLocation'>
+              location: SourceLocation(pos=9, lineno=1, colno=10)
+              end_location: SourceLocation(pos=14, lineno=1, colno=15)
+              fmt: 'foo'
+              values:
+                <empty>
+        <class 'mecha.ast.AstRoot'>
+          location: SourceLocation(pos=20, lineno=2, colno=5)
+          end_location: SourceLocation(pos=34, lineno=2, colno=19)
+          commands:
+            <class 'mecha.ast.AstCommand'>
+              location: SourceLocation(pos=20, lineno=2, colno=5)
+              end_location: SourceLocation(pos=34, lineno=2, colno=19)
+              identifier: 'function:name'
+              arguments:
+                <class 'bolt.ast.AstInterpolation'>
+                  location: SourceLocation(pos=29, lineno=2, colno=14)
+                  end_location: SourceLocation(pos=34, lineno=2, colno=19)
+                  prefix: None
+                  unpack: None
+                  converter: 'resource_location'
+                  value:
+                    <class 'bolt.ast.AstNestedLocation'>
+                      location: SourceLocation(pos=29, lineno=2, colno=14)
+                      end_location: SourceLocation(pos=34, lineno=2, colno=19)
+                      fmt: 'bar'
+                      values:
+                        <empty>

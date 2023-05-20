@@ -6,6 +6,7 @@ __all__ = [
 from dataclasses import dataclass, replace
 from functools import partial, wraps
 from importlib import import_module
+from pathlib import PurePosixPath
 from types import TracebackType
 from typing import Any, Callable, ContextManager, Dict, Optional, Type
 from uuid import UUID
@@ -64,6 +65,7 @@ def get_bolt_helpers() -> Dict[str, Any]:
         "get_attribute": get_attribute,
         "import_module": python_import_module,
         "macro_call": macro_call,
+        "resolve_nested_location": resolve_nested_location,
         "interpolate_bool": converter(AstBool.from_value),
         "interpolate_numeric": converter(AstNumber.from_value),
         "interpolate_coordinate": converter(AstCoordinate.from_value),
@@ -193,6 +195,20 @@ def macro_call(runtime: Any, function: Any, command: AstCommand):
         f'Macro "{command.identifier}" raised an exception.'
     ):
         return runtime.capture_output(function, *command.arguments)
+
+
+@internal
+def resolve_nested_location(runtime: Any, nested_path: str) -> str:
+    namespace, _, current_path = runtime.get_nested_location().partition(":")
+
+    resolved = PurePosixPath(current_path)
+    for name in nested_path.split("/"):
+        if name == "..":
+            resolved = resolved.parent
+        elif name and name != ".":
+            resolved = resolved / name
+
+    return f"{namespace}:{resolved}"
 
 
 def converter(f: Callable[[Any], AstNode]) -> Callable[[Any, AstNode], AstNode]:

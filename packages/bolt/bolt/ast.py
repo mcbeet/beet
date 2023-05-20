@@ -6,6 +6,7 @@ __all__ = [
     "AstValue",
     "AstIdentifier",
     "AstFormatString",
+    "AstNestedLocation",
     "AstTuple",
     "AstList",
     "AstDict",
@@ -129,6 +130,14 @@ class AstIdentifier(AstExpression):
 @dataclass(frozen=True, slots=True)
 class AstFormatString(AstExpression):
     """Ast format string node."""
+
+    fmt: str = required_field()
+    values: AstChildren[AstExpression] = required_field()
+
+
+@dataclass(frozen=True, slots=True)
+class AstNestedLocation(AstExpression):
+    """Ast nested location node."""
 
     fmt: str = required_field()
     values: AstChildren[AstExpression] = required_field()
