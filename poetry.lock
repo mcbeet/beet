@@ -2388,14 +2388,14 @@ files = [
 
 [[package]]
 name = "python-semantic-release"
-version = "7.33.3"
+version = "7.33.5"
 description = "Automatic Semantic Versioning for Python projects"
 category = "dev"
 optional = false
 python-versions = "*"
 files = [
-    {file = "python-semantic-release-7.33.3.tar.gz", hash = "sha256:6f1b28e16ac7bcd67722945794a66ae7df7dcaabcc719324f89cce7015fe5c88"},
-    {file = "python_semantic_release-7.33.3-py3-none-any.whl", hash = "sha256:911b9cef443d1eb2d6449a42d3728e9c54c01fe7a35e5a7fb607b5f9c764451d"},
+    {file = "python-semantic-release-7.33.5.tar.gz", hash = "sha256:83d6939bf32c4228b05dc49cf0c494cf8c7c233cf4f24c75c44fcdb34ac25616"},
+    {file = "python_semantic_release-7.33.5-py3-none-any.whl", hash = "sha256:0d31fb7f068601ea3c4cbfd2a0075497f16ec0c07dbc36371557a0a420d12c35"},
 ]
 
 [package.dependencies]
@@ -2414,7 +2414,7 @@ wheel = "*"
 
 [package.extras]
 dev = ["black", "isort", "tox"]
-docs = ["Jinja2 (==3.0.3)", "Sphinx (==1.3.6)"]
+docs = ["Jinja2 (==3.0.3)", "Sphinx (==1.8.6)"]
 mypy = ["mypy", "types-requests"]
 test = ["coverage (>=5,<6)", "mock (==1.3.0)", "pytest (>=7,<8)", "pytest-mock (>=2,<3)", "pytest-xdist (>=1,<2)", "responses (==0.13.3)"]
 
