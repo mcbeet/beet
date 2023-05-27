@@ -1,5 +1,5 @@
 1 * 2
-#>ERROR  Expected bracket '[', curly '{', decorator, docstring, ellipsis, false or 161 other tokens but got literal '*'.
+#>ERROR  Expected bracket '[', curly '{', decorator, docstring, ellipsis, false or 166 other tokens but got literal '*'.
 # line 2, column 1
 #      1 |  1 * 2
 #      2 |  * 3
