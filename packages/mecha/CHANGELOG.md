@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.72.0 (2023-05-27)
+### Feature
+* Add nested text resources ([`2e3a9ec`](https://github.com/mcbeet/mecha/commit/2e3a9ecffcc7e0b8bb6135a23f911acd1761d5dc))
+
 ## v0.71.2 (2023-05-08)
 ### Fix
 * Swap mcdoc number patterns ([`ba18029`](https://github.com/mcbeet/mecha/commit/ba18029f58eedbe5b5f4461e4c053e21b9c4deec))
