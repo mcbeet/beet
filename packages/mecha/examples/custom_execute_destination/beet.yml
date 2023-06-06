@@ -1,4 +1,3 @@
-id: demo
 require:
   - mecha.contrib.nesting
 data_pack:
@@ -7,9 +6,4 @@ pipeline:
   - mecha
 meta:
   nesting:
-    generate_execute: >-
-      {% if original_location == "demo:foo" -%}
-      demo:special_execute_{incr}
-      {%- else -%}
-      {namespace}:zprivate/{path}nested_execute_{incr}
-      {%- endif %}
+    generate_execute: generated/{incr:#x}

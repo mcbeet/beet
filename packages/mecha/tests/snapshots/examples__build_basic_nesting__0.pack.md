@@ -45,6 +45,12 @@ say after
 function demo:wat/nested_execute_0
 ```
 
+`@function demo:xct`
+
+```mcfunction
+function demo:xct/inner
+```
+
 `@function demo:thing2`
 
 ```mcfunction
@@ -148,4 +154,25 @@ say hello
 ```mcfunction
 say 1
 say 2
+```
+
+`@function demo:xct/inner/nested_execute_0`
+
+```mcfunction
+say foo
+say bar
+```
+
+`@function demo:xct/inner/nested_execute_1`
+
+```mcfunction
+say hello
+say world
+execute at @s run function demo:xct/inner/nested_execute_0
+```
+
+`@function demo:xct/inner`
+
+```mcfunction
+execute as @p run function demo:xct/inner/nested_execute_1
 ```

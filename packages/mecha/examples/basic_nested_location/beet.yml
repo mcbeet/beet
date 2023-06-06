@@ -1,0 +1,7 @@
+require:
+  - mecha.contrib.relative_location
+  - mecha.contrib.nested_location
+data_pack:
+  load: "src"
+pipeline:
+  - mecha

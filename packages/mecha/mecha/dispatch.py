@@ -143,6 +143,8 @@ class Dispatcher(Generic[T]):
         default_factory=DiagnosticCollection
     )
 
+    stack: List[AbstractNode] = extra_field(default_factory=list)
+
     def __post_init__(self):
         for name in dir(self):
             if isinstance(rule := getattr(self, name), Rule):
@@ -347,30 +349,41 @@ class Dispatcher(Generic[T]):
     def __call__(self, node: AbstractNode) -> T:
         if not self.count:
             return node  # type: ignore
-        return self.invoke(node)
+        self.stack.clear()
+        result = self.invoke(node)
+        self.stack.clear()
+        return result
 
 
 class Visitor(Dispatcher[Any]):
     """Ast visitor."""
 
     def invoke(self, node: AbstractNode, *args: Any, **kwargs: Any) -> Any:
+        self.stack.append(node)
         name, rule = next(self.dispatch(node), (None, None))
-        return self.process(node, name, rule, *args, **kwargs)
+        node = self.process(node, name, rule, *args, **kwargs)
+        self.stack.pop()
+        return node
 
 
 class Reducer(Dispatcher[Any]):
     """Ast reducer."""
 
     def invoke(self, node: AbstractNode, *args: Any, **kwargs: Any) -> Any:
+        self.stack.append(node)
         for child in node:
             self.invoke(child, *args, **kwargs)
-        return super().invoke(node, *args, **kwargs)
+        node = super().invoke(node, *args, **kwargs)
+        self.stack.pop()
+        return node
 
 
 class MutatingReducer(Dispatcher[Any]):
     """Mutating ast reducer."""
 
     def invoke(self, node: AbstractNode, *args: Any, **kwargs: Any) -> Any:
+        self.stack.append(node)
+
         to_replace: Dict[str, Union[AbstractNode, AbstractChildren[AbstractNode]]] = {}
 
         for f in fields(node):
@@ -408,4 +421,5 @@ class MutatingReducer(Dispatcher[Any]):
                             msg += f" ({name})"
                         raise CompilationError(msg)
 
+        self.stack.pop()
         return node

@@ -1228,11 +1228,9 @@ class ResourceLocationParser:
         with stream.syntax(resource_location=r"#?(?:[0-9a-z_\-\.]+:)?[0-9a-z_./-]+"):
             token = stream.expect("resource_location")
             value = token.value
-            location = token.location
 
             if is_tag := value.startswith("#"):
                 value = value[1:]
-                location = location.with_horizontal_offset(1)
 
             namespace, _, path = value.rpartition(":")
 

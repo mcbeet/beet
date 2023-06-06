@@ -16,7 +16,6 @@ from typing import Any, Callable, List, cast
 
 from beet import Context, Function, Generator, TextFileBase, configurable
 from beet.core.utils import required_field
-from jinja2 import Template
 from pydantic import BaseModel
 from tokenstream import InvalidSyntax, TokenStream, set_location
 
@@ -34,17 +33,11 @@ from mecha import (
     delegate,
     rule,
 )
+from mecha.contrib.nested_location import NestedLocationResolver
 
 
 class NestingOptions(BaseModel):
-    generate_execute: str = (
-        "{% if original_location %}"
-        "{{ original_location }}/"
-        "{% else %}"
-        "{namespace}:{path}"
-        "{% endif %}"
-        "nested_execute_{incr}"
-    )
+    generate_execute: str = "nested_execute_{incr}"
 
 
 def beet_default(ctx: Context):
@@ -67,7 +60,8 @@ def nesting(ctx: Context, opts: NestingOptions):
         NestedCommandsTransformer(
             generate=ctx.generate,
             database=mc.database,
-            generate_execute_template=ctx.template.compile(opts.generate_execute),
+            generate_execute_template=opts.generate_execute,
+            nested_location_resolver=ctx.inject(NestedLocationResolver),
             inplace_nesting_predicate=ctx.inject(InplaceNestingPredicate),
         )
     )
@@ -122,7 +116,8 @@ class NestedCommandsTransformer(MutatingReducer):
 
     generate: Generator = required_field()
     database: CompilationDatabase = required_field()
-    generate_execute_template: Template = required_field()
+    generate_execute_template: str = required_field()
+    nested_location_resolver: NestedLocationResolver = required_field()
     inplace_nesting_predicate: InplaceNestingPredicate = required_field()
 
     def emit_function(self, path: str, root: AstRoot):
@@ -182,11 +177,9 @@ class NestedCommandsTransformer(MutatingReducer):
                 return subcommand.arguments[0]
 
         else:
-            original_location = self.database[self.database.current].resource_location
+            namespace, resolved = self.nested_location_resolver.resolve()
             path = self.generate.format(
-                self.generate_execute_template.render(
-                    original_location=original_location
-                )
+                f"{namespace}:{resolved}/{self.generate_execute_template}"
             )
 
             self.emit_function(path, root)

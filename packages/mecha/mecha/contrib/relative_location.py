@@ -4,6 +4,7 @@
 __all__ = [
     "RelativeResourceLocationParser",
     "resolve_using_database",
+    "resolve_relative_location",
 ]
 
 
@@ -64,9 +65,20 @@ def resolve_using_database(
         )
         raise set_location(exc, location, end_location)
 
-    namespace, _, current_path = path.partition(":")
+    return resolve_relative_location(relative_path, path)
 
-    resolved = PurePosixPath(current_path).parent
+
+def resolve_relative_location(
+    relative_path: str,
+    root: str,
+    *,
+    include_root_file: bool = False,
+) -> Tuple[str, str]:
+    namespace, _, current_path = root.partition(":")
+
+    resolved = PurePosixPath(current_path)
+    if not include_root_file:
+        resolved = resolved.parent
     for name in relative_path.split("/"):
         if name == "..":
             resolved = resolved.parent
