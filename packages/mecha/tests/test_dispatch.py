@@ -104,3 +104,10 @@ def test_visitor_result(mc: Mecha):
             )
 
     assert Foo().invoke(ast) == ["say:message('hello')", "say:message('world')"]
+
+
+def test_index(mc: Mecha):
+    assert mc.steps.index(mc.lint) == 0
+    assert mc.steps.index(mc.transform) == 1
+    assert mc.steps.index(mc.optimize) == 2
+    assert mc.steps.index(mc.check) == 3

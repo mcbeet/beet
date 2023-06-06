@@ -122,7 +122,7 @@ def rule(*args: Any, **kwargs: Any) -> Any:
     return decorator
 
 
-@dataclass
+@dataclass(eq=False)
 class Dispatcher(Generic[T]):
     """Ast dispatcher."""
 
