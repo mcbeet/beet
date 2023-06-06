@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.73.0 (2023-06-06)
+
+### Feature
+
+* Mecha.contrib.nested_location ([`dbe306e`](https://github.com/mcbeet/mecha/commit/dbe306e09ba4fc8e179d5181ab64fbadf088edc9))
+
 ## v0.72.1 (2023-06-06)
 
 ### Fix
