@@ -25,7 +25,7 @@ __all__ = [
 from contextlib import suppress
 from copy import deepcopy
 from dataclasses import dataclass
-from typing import Any, ClassVar, Dict, List, Optional, Tuple, Type
+from typing import Any, ClassVar, Dict, Optional, Tuple, Type
 
 try:
     from PIL.Image import Image
@@ -59,37 +59,6 @@ class Model(JsonFile):
 
     scope: ClassVar[Tuple[str, ...]] = ("models",)
     extension: ClassVar[str] = ".json"
-
-    def merge(self, other: "Model") -> bool:  # type: ignore
-        merged = deepcopy(other.data)
-
-        overrides = self.data.get("overrides", [])
-        other_overrides = merged.pop("overrides", [])
-        concatenated_overrides = overrides + other_overrides
-
-        predicate_cases: List[str] = []
-        for override in concatenated_overrides:
-            for predicate in override.get("predicate", {}):
-                if predicate not in predicate_cases:
-                    predicate_cases.append(predicate)
-
-        override_index: Dict[Tuple[float, ...], JsonDict] = {}
-        for override in concatenated_overrides:
-            predicate = override.get("predicate", {})
-            key = tuple(predicate.get(case, 0) for case in predicate_cases)
-            override_index[key] = override
-
-        if not merged:
-            merged = self.data
-
-        if override_index:
-            merged["overrides"] = [
-                override for _, override in sorted(override_index.items())
-            ]
-
-        self.data = merged
-
-        return True
 
 
 class Language(JsonFile):

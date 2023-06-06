@@ -1,3 +1,5 @@
+require:
+  - beet.contrib.model_merging
 resource_pack:
   load:
     - assets/minecraft/models/item/furnace.json: furnace1.json
