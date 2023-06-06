@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.72.1 (2023-06-06)
+
+### Fix
+
+* Make dispatchers non-comparable ([`12bb3d6`](https://github.com/mcbeet/mecha/commit/12bb3d6a653192d371c17e44dea1aa0534d2c368))
+
 ## v0.72.0 (2023-05-27)
 ### Feature
 * Add nested text resources ([`2e3a9ec`](https://github.com/mcbeet/mecha/commit/2e3a9ecffcc7e0b8bb6135a23f911acd1761d5dc))
