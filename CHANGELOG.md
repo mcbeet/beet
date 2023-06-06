@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.87.0 (2023-06-06)
+
+### Feature
+
+* Extract beet.contrib.model_merging ([`45dcd6e`](https://github.com/mcbeet/beet/commit/45dcd6e6004338242113e2757f8be06c7e070b81))
+
 ## v0.86.0 (2023-04-24)
 ### Feature
 * Add beet.contrib.unknown_files ([`e4c67f5`](https://github.com/mcbeet/beet/commit/e4c67f56db57e48ce9078e50c71b74d4129347b8))
