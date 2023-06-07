@@ -2,6 +2,16 @@
 
 <!--next-version-placeholder-->
 
+## v0.36.0 (2023-06-07)
+
+### Feature
+
+* Delegate to mecha for nested locations without formatting ([`b5b753e`](https://github.com/mcbeet/bolt/commit/b5b753e80a80adda916976daf17aa0660590e83a))
+
+### Fix
+
+* Take whitespace into account for interpolation ([`3f59e63`](https://github.com/mcbeet/bolt/commit/3f59e6384bac384c46b9718cdf115fe7d994373d))
+
 ## v0.35.0 (2023-05-20)
 ### Feature
 * Nested locations ([`a7fe760`](https://github.com/mcbeet/bolt/commit/a7fe760d552630d5528522f332bba211d4006233))
