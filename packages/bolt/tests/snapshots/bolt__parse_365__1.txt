@@ -1,0 +1,44 @@
+_bolt_lineno = [1, 8], [1, 2]
+_bolt_helper_interpolate_resource_location = _bolt_runtime.helpers['interpolate_resource_location']
+_bolt_helper_children = _bolt_runtime.helpers['children']
+_bolt_helper_replace = _bolt_runtime.helpers['replace']
+with _bolt_runtime.scope() as _bolt_var2:
+    _bolt_var0 = 'demo:foo'
+    x = _bolt_var0
+    _bolt_var1 = x
+    _bolt_var1 = _bolt_helper_interpolate_resource_location(_bolt_var1, _bolt_refs[0])
+    _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[2], arguments=_bolt_helper_children([_bolt_var1, _bolt_refs[1]])))
+_bolt_var3 = _bolt_helper_replace(_bolt_refs[3], commands=_bolt_helper_children(_bolt_var2))
+---
+output = _bolt_var3
+---
+_bolt_refs[0]
+<class 'bolt.ast.AstInterpolation'>
+  location: SourceLocation(pos=20, lineno=2, colno=11)
+  end_location: SourceLocation(pos=21, lineno=2, colno=12)
+  prefix: None
+  unpack: None
+  converter: 'resource_location'
+  value:
+    <class 'bolt.ast.AstIdentifier'>
+_bolt_refs[1]
+<class 'mecha.ast.AstJsonArray'>
+  location: SourceLocation(pos=22, lineno=2, colno=13)
+  end_location: SourceLocation(pos=24, lineno=2, colno=15)
+  elements:
+    <empty>
+_bolt_refs[2]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=10, lineno=2, colno=1)
+  end_location: SourceLocation(pos=24, lineno=2, colno=15)
+  identifier: 'predicate:name:content'
+  arguments:
+    <class 'bolt.ast.AstInterpolation'>
+    <class 'mecha.ast.AstJsonArray'>
+_bolt_refs[3]
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=25, lineno=3, colno=1)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+    <class 'mecha.ast.AstCommand'>

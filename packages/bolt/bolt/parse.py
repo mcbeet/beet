@@ -2482,7 +2482,7 @@ class PrimaryParser:
             else:
                 node = self.parser(stream)
 
-        with stream.syntax(
+        with stream.intercept(*["whitespace"] * self.truncate), stream.syntax(
             dot=r"\.",
             comma=r",",
             brace=r"\(|\)",
@@ -2527,7 +2527,7 @@ class PrimaryParser:
 
                     allow_positional = True
 
-                    with stream.ignore("newline"):
+                    with stream.ignore("newline", "whitespace"):
                         for _ in stream.peek_until(close):
                             argument = argument_parser(stream)
 

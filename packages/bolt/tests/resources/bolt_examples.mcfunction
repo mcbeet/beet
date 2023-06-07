@@ -1131,6 +1131,8 @@ memo something=123:
 ###
 memo list() (1 + 2):
     pass
+memo list()(1 + 2):
+    pass
 ###
 memo list(), (1 + 2):
     pass
@@ -1331,3 +1333,9 @@ function ~/foo:
     function ~/bar
 ###
 function ~/foo{"bar":_<5}
+###
+x = ./foo
+predicate x[]
+###
+x = ./foo
+predicate x []
