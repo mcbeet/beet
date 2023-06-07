@@ -53,6 +53,7 @@ from .ast import (
     AstExpressionBinary,
     AstExpressionUnary,
     AstFormatString,
+    AstFormattedLocation,
     AstFromImport,
     AstFunctionSignature,
     AstFunctionSignatureArgument,
@@ -71,7 +72,6 @@ from .ast import (
     AstMacroCall,
     AstMacroMatchArgument,
     AstMemo,
-    AstNestedLocation,
     AstPrelude,
     AstProcMacro,
     AstSlice,
@@ -1142,10 +1142,10 @@ class Codegen(Visitor):
         )
         return [result]
 
-    @rule(AstNestedLocation)
-    def nested_location(
+    @rule(AstFormattedLocation)
+    def formatted_location(
         self,
-        node: AstNestedLocation,
+        node: AstFormattedLocation,
         acc: Accumulator,
     ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
         values: List[str] = []
@@ -1156,7 +1156,7 @@ class Codegen(Visitor):
 
         result = acc.make_variable()
         resolved = acc.helper(
-            "resolve_nested_location",
+            "resolve_formatted_location",
             "_bolt_runtime",
             f"{node.fmt!r}.format({', '.join(values)})" if values else repr(node.fmt),
         )

@@ -16,7 +16,7 @@ function ~/foo{"bar":_<5}
           unpack: None
           converter: 'resource_location'
           value:
-            <class 'bolt.ast.AstNestedLocation'>
+            <class 'bolt.ast.AstFormattedLocation'>
               location: SourceLocation(pos=9, lineno=1, colno=10)
               end_location: SourceLocation(pos=25, lineno=1, colno=26)
               fmt: 'foo{:_<5}'

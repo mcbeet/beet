@@ -118,6 +118,7 @@ from .ast import (
     AstExpressionBinary,
     AstExpressionUnary,
     AstFormatString,
+    AstFormattedLocation,
     AstFromImport,
     AstFunctionSignature,
     AstFunctionSignatureArgument,
@@ -142,7 +143,6 @@ from .ast import (
     AstMacroMatchLiteral,
     AstMemo,
     AstModuleRoot,
-    AstNestedLocation,
     AstProcMacro,
     AstProcMacroMarker,
     AstProcMacroResult,
@@ -2470,7 +2470,13 @@ class PrimaryParser:
                                 stream.expect(("curly", "}"))
                             fmt += "}"
 
-                    node = AstNestedLocation(fmt=fmt, values=AstChildren(values))
+                    if not values and self.truncate:
+                        exc = InvalidSyntax(
+                            "Truncated nested location requires interpolated values."
+                        )
+                        raise set_location(exc, token, stream.current)
+
+                    node = AstFormattedLocation(fmt=fmt, values=AstChildren(values))
                     node = set_location(node, token, stream.current)
 
             else:

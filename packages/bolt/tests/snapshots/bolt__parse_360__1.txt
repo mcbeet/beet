@@ -1,10 +1,10 @@
 _bolt_lineno = [1], [1]
-_bolt_helper_resolve_nested_location = _bolt_runtime.helpers['resolve_nested_location']
+_bolt_helper_resolve_formatted_location = _bolt_runtime.helpers['resolve_formatted_location']
 _bolt_helper_children = _bolt_runtime.helpers['children']
 _bolt_helper_replace = _bolt_runtime.helpers['replace']
 with _bolt_runtime.scope() as _bolt_var2:
     _bolt_var0 = print
-    _bolt_var1 = _bolt_helper_resolve_nested_location(_bolt_runtime, 'foo')
+    _bolt_var1 = _bolt_helper_resolve_formatted_location(_bolt_runtime, 'foo')
     _bolt_var0 = _bolt_var0(_bolt_var1)
 _bolt_var3 = _bolt_helper_replace(_bolt_refs[0], commands=_bolt_helper_children(_bolt_var2))
 ---

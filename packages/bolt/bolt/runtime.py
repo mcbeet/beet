@@ -9,7 +9,7 @@ import builtins
 from dataclasses import dataclass, field
 from functools import partial
 from importlib.resources import files
-from typing import Any, Callable, Dict, Iterable, List, Optional, Set, Union
+from typing import Any, Callable, Dict, Iterable, Iterator, List, Optional, Set, Union
 
 from beet import Context, TextFileBase, generate_tree
 from beet.core.utils import JsonDict, extra_field, required_field
@@ -23,7 +23,9 @@ from mecha import (
     Visitor,
     rule,
 )
+from mecha.contrib.nested_location import NestedLocationResolver
 from mecha.contrib.nesting import InplaceNestingPredicate
+from mecha.contrib.relative_location import resolve_relative_location
 from pathspec import PathSpec
 from tokenstream import set_location
 
@@ -63,6 +65,7 @@ class Runtime(CommandEmitter):
                 "mecha.contrib.raw",
                 "mecha.contrib.relative_location",
                 "mecha.contrib.nesting",
+                "mecha.contrib.nested_location",
                 "mecha.contrib.nested_resources",
                 "mecha.contrib.nested_yaml",
                 "mecha.contrib.implicit_execute",
@@ -166,6 +169,22 @@ class Runtime(CommandEmitter):
 
     def get_nested_location(self) -> str:
         """Return the resource location associated with the current level of nesting."""
+        root, relative_path = NestedLocationResolver.concat_nested_path(
+            self.walk_location_hierarchy()
+        )
+
+        if not root:
+            root = self.modules.current_path
+
+        namespace, resolved = resolve_relative_location(
+            relative_path,
+            root,
+            include_root_file=True,
+        )
+        return f"{namespace}:{resolved}"
+
+    def walk_location_hierarchy(self) -> Iterator[AstResourceLocation]:
+        """Yield resource locations contributing to the current nested context."""
         for identifier, arguments in reversed(self.nesting):
             prototype = self.spec.prototypes[identifier]
 
@@ -176,9 +195,8 @@ class Runtime(CommandEmitter):
                     and node.parser == "minecraft:function"
                     and isinstance(argument_node, AstResourceLocation)
                 ):
-                    return argument_node.get_canonical_value()
-
-        return self.modules.current_path
+                    yield argument_node
+                    break
 
     def finalize(self, ctx: Context):
         """Plugin that runs at the end of the build."""

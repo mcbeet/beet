@@ -15,7 +15,7 @@
 
 ### demo
 
-`@function demo:main/nested_execute_0`
+`@function demo:oby/nested_execute_0`
 
 ```mcfunction
 execute if data storage firework:temp data.item.tag.aftermath.stats.damage run say damage, present
@@ -33,6 +33,6 @@ say 5
 `@function demo:oby`
 
 ```mcfunction
-execute if data storage firework:temp data.item.tag.aftermath.stats run function demo:main/nested_execute_0
+execute if data storage firework:temp data.item.tag.aftermath.stats run function demo:oby/nested_execute_0
 execute unless data storage firework:temp data.item.tag.aftermath.stats run say 'hi'
 ```

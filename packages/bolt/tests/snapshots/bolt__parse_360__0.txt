@@ -18,7 +18,7 @@ print(~/foo)
               end_location: SourceLocation(pos=5, lineno=1, colno=6)
               value: 'print'
           arguments:
-            <class 'bolt.ast.AstNestedLocation'>
+            <class 'bolt.ast.AstFormattedLocation'>
               location: SourceLocation(pos=6, lineno=1, colno=7)
               end_location: SourceLocation(pos=11, lineno=1, colno=12)
               fmt: 'foo'
