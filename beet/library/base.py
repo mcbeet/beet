@@ -71,7 +71,7 @@ from beet.core.utils import FileSystemPath, JsonDict, TextComponent
 
 from .utils import list_extensions, list_files
 
-LATEST_MINECRAFT_VERSION: str = "1.19"
+LATEST_MINECRAFT_VERSION: str = "1.20"
 
 
 T = TypeVar("T")
