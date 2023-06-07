@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.88.0 (2023-06-07)
+
+### Feature
+
+* Update to 1.20 ([`1aa6413`](https://github.com/mcbeet/beet/commit/1aa641367117ec26195fa045f5bd23aa7da5def7))
+
 ## v0.87.0 (2023-06-06)
 
 ### Feature
