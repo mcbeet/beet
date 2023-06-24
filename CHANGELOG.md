@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.89.0 (2023-06-24)
+
+### Feature
+
+* Missing data pack resources ([`b5a49e8`](https://github.com/mcbeet/beet/commit/b5a49e889a4394e0b2a245ccaec7a2ccfc1b0a99))
+
 ## v0.88.0 (2023-06-07)
 
 ### Feature
