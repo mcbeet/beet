@@ -264,6 +264,18 @@ class ItemTag(TagFile):
     scope: ClassVar[Tuple[str, ...]] = ("tags", "items")
 
 
+class ChatTypeTag(TagFile):
+    """Class representing a chat type tag."""
+
+    scope: ClassVar[Tuple[str, ...]] = ("tags", "chat_type")
+
+
+class DamageTypeTag(TagFile):
+    """Class representing a damage type tag."""
+
+    scope: ClassVar[Tuple[str, ...]] = ("tags", "damage_type")
+
+
 class DataPackNamespace(Namespace):
     """Class representing a data pack namespace."""
 
@@ -271,20 +283,22 @@ class DataPackNamespace(Namespace):
 
     # fmt: off
     advancements:     NamespacePin[Advancement]   = NamespacePin(Advancement)
-    damage_type:      NamespacePin[DamageType]    = NamespacePin(DamageType)
-    chat_type:        NamespacePin[ChatType]      = NamespacePin(ChatType)
     functions:        NamespacePin[Function]      = NamespacePin(Function)
+    item_modifiers:   NamespacePin[ItemModifier]  = NamespacePin(ItemModifier)
     loot_tables:      NamespacePin[LootTable]     = NamespacePin(LootTable)
     predicates:       NamespacePin[Predicate]     = NamespacePin(Predicate)
     recipes:          NamespacePin[Recipe]        = NamespacePin(Recipe)
     structures:       NamespacePin[Structure]     = NamespacePin(Structure)
+    chat_type:        NamespacePin[ChatType]      = NamespacePin(ChatType)
+    damage_type:      NamespacePin[DamageType]    = NamespacePin(DamageType)
     block_tags:       NamespacePin[BlockTag]      = NamespacePin(BlockTag)
     entity_type_tags: NamespacePin[EntityTypeTag] = NamespacePin(EntityTypeTag)
     fluid_tags:       NamespacePin[FluidTag]      = NamespacePin(FluidTag)
     function_tags:    NamespacePin[FunctionTag]   = NamespacePin(FunctionTag)
     game_event_tags:  NamespacePin[GameEventTag]  = NamespacePin(GameEventTag)
     item_tags:        NamespacePin[ItemTag]       = NamespacePin(ItemTag)
-    item_modifiers:   NamespacePin[ItemModifier]  = NamespacePin(ItemModifier)
+    chat_type_tags:   NamespacePin[ChatTypeTag]   = NamespacePin(ChatTypeTag)
+    damage_type_tags: NamespacePin[DamageTypeTag] = NamespacePin(DamageTypeTag)
     # fmt: on
 
 
@@ -307,18 +321,20 @@ class DataPack(Pack[DataPackNamespace]):
 
     # fmt: off
     advancements:     NamespaceProxyDescriptor[Advancement]   = NamespaceProxyDescriptor(Advancement)
-    damage_type:      NamespaceProxyDescriptor[DamageType]    = NamespaceProxyDescriptor(DamageType)
-    chat_type:        NamespaceProxyDescriptor[ChatType]      = NamespaceProxyDescriptor(ChatType)
     functions:        NamespaceProxyDescriptor[Function]      = NamespaceProxyDescriptor(Function)
+    item_modifiers:   NamespaceProxyDescriptor[ItemModifier]  = NamespaceProxyDescriptor(ItemModifier)
     loot_tables:      NamespaceProxyDescriptor[LootTable]     = NamespaceProxyDescriptor(LootTable)
     predicates:       NamespaceProxyDescriptor[Predicate]     = NamespaceProxyDescriptor(Predicate)
     recipes:          NamespaceProxyDescriptor[Recipe]        = NamespaceProxyDescriptor(Recipe)
     structures:       NamespaceProxyDescriptor[Structure]     = NamespaceProxyDescriptor(Structure)
+    chat_type:        NamespaceProxyDescriptor[ChatType]      = NamespaceProxyDescriptor(ChatType)
+    damage_type:      NamespaceProxyDescriptor[DamageType]    = NamespaceProxyDescriptor(DamageType)
     block_tags:       NamespaceProxyDescriptor[BlockTag]      = NamespaceProxyDescriptor(BlockTag)
     entity_type_tags: NamespaceProxyDescriptor[EntityTypeTag] = NamespaceProxyDescriptor(EntityTypeTag)
     fluid_tags:       NamespaceProxyDescriptor[FluidTag]      = NamespaceProxyDescriptor(FluidTag)
     function_tags:    NamespaceProxyDescriptor[FunctionTag]   = NamespaceProxyDescriptor(FunctionTag)
     game_event_tags:  NamespaceProxyDescriptor[GameEventTag]  = NamespaceProxyDescriptor(GameEventTag)
     item_tags:        NamespaceProxyDescriptor[ItemTag]       = NamespaceProxyDescriptor(ItemTag)
-    item_modifiers:   NamespaceProxyDescriptor[ItemModifier]  = NamespaceProxyDescriptor(ItemModifier)
+    chat_type_tags:   NamespaceProxyDescriptor[ChatTypeTag]   = NamespaceProxyDescriptor(ChatTypeTag)
+    damage_type_tags: NamespaceProxyDescriptor[DamageTypeTag] = NamespaceProxyDescriptor(DamageTypeTag)
     # fmt: on
