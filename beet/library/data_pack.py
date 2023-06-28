@@ -10,6 +10,8 @@ __all__ = [
     "Predicate",
     "Recipe",
     "Structure",
+    "TrimPattern",
+    "TrimMaterial",
     "TagFile",
     "BlockTag",
     "EntityTypeTag",
@@ -152,20 +154,6 @@ class Recipe(JsonFile):
     extension: ClassVar[str] = ".json"
 
 
-class TrimPattern(JsonFile):
-    """Class representing a trim pattern."""
-
-    scope: ClassVar[Tuple[str, ...]] = ("trim_pattern",)
-    extension: ClassVar[str] = ".json"
-
-
-class TrimMaterial(JsonFile):
-    """Class representing a trim material."""
-
-    scope: ClassVar[Tuple[str, ...]] = ("trim_material",)
-    extension: ClassVar[str] = ".json"
-
-
 @dataclass(eq=False, repr=False)
 class Structure(BinaryFileBase[StructureFileData]):
     """Class representing a structure file."""
@@ -186,6 +174,20 @@ class Structure(BinaryFileBase[StructureFileData]):
         with GzipFile(fileobj=dst, mode="wb") as fileobj:
             StructureFile(content).write(fileobj)
         return dst.getvalue()
+
+
+class TrimPattern(JsonFile):
+    """Class representing a trim pattern."""
+
+    scope: ClassVar[Tuple[str, ...]] = ("trim_pattern",)
+    extension: ClassVar[str] = ".json"
+
+
+class TrimMaterial(JsonFile):
+    """Class representing a trim material."""
+
+    scope: ClassVar[Tuple[str, ...]] = ("trim_material",)
+    extension: ClassVar[str] = ".json"
 
 
 class TagFile(JsonFile):
