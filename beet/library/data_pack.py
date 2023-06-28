@@ -152,6 +152,19 @@ class Recipe(JsonFile):
     extension: ClassVar[str] = ".json"
 
 
+class TrimPattern(JsonFile):
+    """Class representing a trim pattern."""
+
+    scope: ClassVar[Tuple[str, ...]] = ("trim_pattern",)
+    extension: ClassVar[str] = ".json"
+
+class TrimMaterial(JsonFile):
+    """Class representing a trim material."""
+
+    scope: ClassVar[Tuple[str, ...]] = ("trim_material",)
+    extension: ClassVar[str] = ".json"
+
+
 @dataclass(eq=False, repr=False)
 class Structure(BinaryFileBase[StructureFileData]):
     """Class representing a structure file."""
@@ -288,6 +301,8 @@ class DataPackNamespace(Namespace):
     loot_tables:      NamespacePin[LootTable]     = NamespacePin(LootTable)
     predicates:       NamespacePin[Predicate]     = NamespacePin(Predicate)
     recipes:          NamespacePin[Recipe]        = NamespacePin(Recipe)
+    trim_pattern:     NamespacePin[TrimPattern]   = NamespacePin(TrimPattern)
+    trim_material:    NamespacePin[TrimMaterial]  = NamespacePin(TrimMaterial)
     structures:       NamespacePin[Structure]     = NamespacePin(Structure)
     chat_type:        NamespacePin[ChatType]      = NamespacePin(ChatType)
     damage_type:      NamespacePin[DamageType]    = NamespacePin(DamageType)
@@ -326,6 +341,8 @@ class DataPack(Pack[DataPackNamespace]):
     loot_tables:      NamespaceProxyDescriptor[LootTable]     = NamespaceProxyDescriptor(LootTable)
     predicates:       NamespaceProxyDescriptor[Predicate]     = NamespaceProxyDescriptor(Predicate)
     recipes:          NamespaceProxyDescriptor[Recipe]        = NamespaceProxyDescriptor(Recipe)
+    trim_pattern:     NamespaceProxyDescriptor[TrimPattern]   = NamespaceProxyDescriptor(TrimPattern)
+    trim_material:    NamespaceProxyDescriptor[TrimMaterial]  = NamespaceProxyDescriptor(TrimMaterial)
     structures:       NamespaceProxyDescriptor[Structure]     = NamespaceProxyDescriptor(Structure)
     chat_type:        NamespaceProxyDescriptor[ChatType]      = NamespaceProxyDescriptor(ChatType)
     damage_type:      NamespaceProxyDescriptor[DamageType]    = NamespaceProxyDescriptor(DamageType)
