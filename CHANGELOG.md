@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.89.1 (2023-06-28)
+
+### Fix
+
+* Add trim_material and trim_pattern ([#399](https://github.com/mcbeet/beet/issues/399)) ([`8dfd2a1`](https://github.com/mcbeet/beet/commit/8dfd2a1849914730a1ac607fbc76a8338d043064))
+
 ## v0.89.0 (2023-06-24)
 
 ### Feature
