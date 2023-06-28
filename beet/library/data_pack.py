@@ -158,6 +158,7 @@ class TrimPattern(JsonFile):
     scope: ClassVar[Tuple[str, ...]] = ("trim_pattern",)
     extension: ClassVar[str] = ".json"
 
+
 class TrimMaterial(JsonFile):
     """Class representing a trim material."""
 
