@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.73.1 (2023-07-20)
+
+### Fix
+
+* Properly stop compilation on error ([`2cc5a02`](https://github.com/mcbeet/mecha/commit/2cc5a02b8c0ec576c7e59359bd0c437be1bd474c))
+
 ## v0.73.0 (2023-06-06)
 
 ### Feature
