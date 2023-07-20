@@ -174,7 +174,7 @@ def test_lint_error_report(mc: Mecha, dummy_transform: Any, dummy_lint_error: An
     diagnostics = DiagnosticCollection()
 
     function = mc.compile("say hello world", report=diagnostics)
-    assert function.text == 'tellraw @a "hello world"\n'
+    assert function.text == "say hello world"
 
     d = mc.database[function].diagnostics.exceptions[0]
     assert d.level == "error"

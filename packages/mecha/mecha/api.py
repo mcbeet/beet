@@ -489,12 +489,13 @@ class Mecha:
                     continue
                 with self.steps[step].use_diagnostics(compilation_unit.diagnostics):
                     if ast := self.steps[step](compilation_unit.ast):
-                        compilation_unit.ast = ast
-                        self.database.enqueue(
-                            key=function,
-                            step=step + 1,
-                            priority=compilation_unit.priority,
-                        )
+                        if not compilation_unit.diagnostics.error:
+                            compilation_unit.ast = ast
+                            self.database.enqueue(
+                                key=function,
+                                step=step + 1,
+                                priority=compilation_unit.priority,
+                            )
 
             elif not readonly:
                 if not compilation_unit.ast:
