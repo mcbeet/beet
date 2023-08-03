@@ -706,19 +706,19 @@ files = [
 
 [[package]]
 name = "mecha"
-version = "0.73.0"
+version = "0.74.0"
 description = "A powerful Minecraft command library"
 category = "main"
 optional = false
 python-versions = ">=3.10,<4.0"
 files = [
-    {file = "mecha-0.73.0-py3-none-any.whl", hash = "sha256:28171b3b836b6401f31144cf11c1a810e10b8bef44f0fea0f2259dd0d204a1be"},
-    {file = "mecha-0.73.0.tar.gz", hash = "sha256:30d1fc261156c40a7367b7209a6cabeb48a68f9d412c3f8dc0553f2251eea077"},
+    {file = "mecha-0.74.0-py3-none-any.whl", hash = "sha256:21cf560dc54213ad20da687b8f26c7d43122b80d6ad61a10f6f4a72233b80008"},
+    {file = "mecha-0.74.0.tar.gz", hash = "sha256:c7bc7bc7b68841e63921cc21a1249adfd9993403b3ddfef0a6317ab1e3cfc12c"},
 ]
 
 [package.dependencies]
 beet = ">=0.86.0"
-tokenstream = ">=1.5.0,<2.0.0"
+tokenstream = ">=1.7.0,<2.0.0"
 
 [[package]]
 name = "more-itertools"
@@ -1227,14 +1227,14 @@ files = [
 
 [[package]]
 name = "tokenstream"
-version = "1.5.0"
+version = "1.7.0"
 description = "A versatile token stream for handwritten parsers"
 category = "main"
 optional = false
 python-versions = ">=3.10,<4.0"
 files = [
-    {file = "tokenstream-1.5.0-py3-none-any.whl", hash = "sha256:adf5805f3e734c863a535c5cfc31fed4bd831647b1f51d1aab69e5a81eb63b8e"},
-    {file = "tokenstream-1.5.0.tar.gz", hash = "sha256:3cb57c810f2fd1e57653c8270251a3df47656ef04f07eb3d4fc442f64f9ff0c0"},
+    {file = "tokenstream-1.7.0-py3-none-any.whl", hash = "sha256:fdbb20e8a99b07e94ce88016e5f243a1582630a7459bd2e7a1c786f33543fcf9"},
+    {file = "tokenstream-1.7.0.tar.gz", hash = "sha256:9f98387c7e74d224f7cca874ce77bb775ece6cb585e9ba18441960e2b35fae61"},
 ]
 
 [[package]]
@@ -1478,4 +1478,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "613fc8d7795b5378d768533550cbc0c57d63b0792d0860cc644bf6b4b2520b4e"
+content-hash = "b1f0656f4838c6041d3b755d28afa40f76f70a1d4a13765354b0ad1b659d4698"
