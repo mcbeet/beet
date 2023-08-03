@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.75.0 (2023-08-03)
+
+### Feature
+
+* Update command tree and add macro lines ([`033302c`](https://github.com/mcbeet/mecha/commit/033302cde9760717d32cb07fdcb6961e6119dd17))
+
 ## v0.74.0 (2023-08-03)
 
 ### Feature
