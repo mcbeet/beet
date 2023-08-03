@@ -2352,7 +2352,7 @@ class LookupParser:
                     step = self.parser(stream)
 
         node = AstSlice(start=start, stop=stop, step=step)
-        return set_location(node, location, stream.location)
+        return set_location(node, location, stream.current)
 
 
 @dataclass
