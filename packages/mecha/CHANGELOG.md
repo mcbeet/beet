@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.74.0 (2023-08-03)
+
+### Feature
+
+* Backslash continuation ([`bf1ac56`](https://github.com/mcbeet/mecha/commit/bf1ac56ef14868ef7c047474b4305e662dd17fb3))
+
 ## v0.73.1 (2023-07-20)
 
 ### Fix
