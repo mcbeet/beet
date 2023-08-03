@@ -85,7 +85,7 @@ def parse_nested_root(stream: TokenStream) -> AstRoot:
         line_indentation=command_level,
     ):
         while True:
-            commands.append(delegate("command", stream))
+            commands.append(delegate("root_item", stream))
 
             # The command parser consumes the trailing newline so we need to rewind
             # to be able to use "consume_line_continuation()".

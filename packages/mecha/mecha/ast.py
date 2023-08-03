@@ -76,6 +76,9 @@ __all__ = [
     "AstVibrationParticleParameters",
     "AstBlockMarkerParticleParameters",
     "AstParticle",
+    "AstMacroLine",
+    "AstMacroLineText",
+    "AstMacroLineVariable",
     "COLORS",
 ]
 
@@ -259,7 +262,7 @@ class AstCommandSentinel(AstCommand):
     """Ast command sentinel node."""
 
     identifier: str = "mecha:sentinel"
-    arguments: AstChildren[AstNode] = AstChildren([])
+    arguments: AstChildren[AstNode] = AstChildren()
 
     parser = None
 
@@ -1214,3 +1217,26 @@ class AstParticle(AstNode):
     parameters: Optional[AstParticleParameters] = None
 
     parser = "particle"
+
+
+@dataclass(frozen=True, slots=True)
+class AstMacroLineText(AstLiteral):
+    """Ast macro line text node."""
+
+    parser = "macro_line_text"
+    regex = re.compile(r"(?:[^\n$]|\$(?!\())+")
+
+
+@dataclass(frozen=True, slots=True)
+class AstMacroLineVariable(AstLiteral):
+    """Ast macro line variable node."""
+
+    parser = "macro_line_variable"
+    regex = re.compile(r"[0-9A-Za-z_]+")
+
+
+@dataclass(frozen=True, slots=True)
+class AstMacroLine(AstCommandSentinel):
+    """Ast macro line node."""
+
+    parser = "macro_line"

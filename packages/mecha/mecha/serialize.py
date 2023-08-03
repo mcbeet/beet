@@ -22,6 +22,9 @@ from .ast import (
     AstItem,
     AstJson,
     AstLiteral,
+    AstMacroLine,
+    AstMacroLineText,
+    AstMacroLineVariable,
     AstMessage,
     AstNbt,
     AstNbtPath,
@@ -341,3 +344,18 @@ class Serializer(Visitor):
                 result.append(sep)
             sep = "."
             yield component
+
+    @rule(AstMacroLine)
+    def macro_line(self, node: AstMacroLine, result: List[str]):
+        result.append("$")
+        yield from node.arguments
+
+    @rule(AstMacroLineText)
+    def macro_line_text(self, node: AstMacroLineText, result: List[str]):
+        result.append(node.value)
+
+    @rule(AstMacroLineVariable)
+    def macro_line_variable(self, node: AstMacroLineVariable, result: List[str]):
+        result.append("$(")
+        result.append(node.value)
+        result.append(")")

@@ -117,6 +117,9 @@ from .ast import (
     AstJsonObjectKey,
     AstJsonValue,
     AstLiteral,
+    AstMacroLine,
+    AstMacroLineText,
+    AstMacroLineVariable,
     AstMessage,
     AstMessageText,
     AstNbt,
@@ -393,6 +396,7 @@ def get_default_parsers() -> Dict[str, Parser]:
         # Command
         ################################################################################
         "root": parse_root,
+        "root_item": AlternativeParser([delegate("macro_line"), delegate("command")]),
         "command": parse_command,
         "command:argument": parse_argument,
         "command:argument:brigadier:bool": delegate("bool"),
@@ -474,6 +478,12 @@ def get_default_parsers() -> Dict[str, Parser]:
         "command:argument:minecraft:uuid": delegate("uuid"),
         "command:argument:minecraft:vec2": delegate("vec2"),
         "command:argument:minecraft:vec3": delegate("vec3"),
+        ################################################################################
+        # Macro line
+        ################################################################################
+        "macro_line": parse_macro_line,
+        "macro_line_text": BasicLiteralParser(AstMacroLineText),
+        "macro_line_variable": BasicLiteralParser(AstMacroLineVariable),
     }
 
 
@@ -586,7 +596,7 @@ def parse_root(stream: TokenStream) -> AstRoot:
                 continue
             if stream.get("eof"):
                 break
-            commands.append(delegate("command", stream))
+            commands.append(delegate("root_item", stream))
 
     node = AstRoot(commands=AstChildren(commands))
     return set_location(node, start, stream.current)
@@ -1901,6 +1911,35 @@ def parse_particle(stream: TokenStream) -> AstParticle:
 
     node = AstParticle(name=name, parameters=parameters)
     return set_location(node, name, parameters if parameters else name)
+
+
+def parse_macro_line(stream: TokenStream) -> AstMacroLine:
+    """Parse macro line."""
+    with stream.syntax(macro_line=r"\$"):
+        token = stream.expect("macro_line")
+
+    has_variable = False
+    arguments: List[AstNode] = []
+
+    with stream.intercept("newline", "whitespace"), stream.syntax(
+        open_variable=r"\$\("
+    ):
+        for _ in stream.peek_until("newline", "eof"):
+            if open_variable := stream.get("open_variable"):
+                node = delegate("macro_line_variable", stream)
+                with stream.syntax(close_variable=r"\)"):
+                    close_variable = stream.expect("close_variable")
+                arguments.append(set_location(node, open_variable, close_variable))
+                has_variable = True
+            else:
+                arguments.append(delegate("macro_line_text", stream))
+
+    if not has_variable:
+        exc = InvalidSyntax("Expected at least one macro line variable")
+        raise set_location(exc, token, stream.current)
+
+    node = AstMacroLine(arguments=AstChildren(arguments))
+    return set_location(node, token, arguments[-1])
 
 
 @dataclass
