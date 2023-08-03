@@ -1,6 +1,6 @@
 <class 'mecha.ast.AstRoot'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
-  end_location: SourceLocation(pos=8162, lineno=191, colno=1)
+  end_location: SourceLocation(pos=8272, lineno=205, colno=1)
   commands:
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=14, lineno=2, colno=1)
@@ -7058,3 +7058,61 @@
                       is_tag: False
                       namespace: None
                       path: 'skeleton'
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=8162, lineno=191, colno=1)
+      end_location: SourceLocation(pos=8247, lineno=196, colno=26)
+      identifier: 'execute:subcommand'
+      arguments:
+        <class 'mecha.ast.AstCommand'>
+          location: SourceLocation(pos=8176, lineno=192, colno=5)
+          end_location: SourceLocation(pos=8247, lineno=196, colno=26)
+          identifier: 'execute:as:targets:subcommand'
+          arguments:
+            <class 'mecha.ast.AstSelector'>
+              location: SourceLocation(pos=8179, lineno=192, colno=8)
+              end_location: SourceLocation(pos=8209, lineno=194, colno=6)
+              variable: 'a'
+              arguments:
+                <class 'mecha.ast.AstSelectorArgument'>
+                  location: SourceLocation(pos=8193, lineno=193, colno=9)
+                  end_location: SourceLocation(pos=8201, lineno=193, colno=17)
+                  inverted: False
+                  key:
+                    <class 'mecha.ast.AstString'>
+                      location: SourceLocation(pos=8193, lineno=193, colno=9)
+                      end_location: SourceLocation(pos=8196, lineno=193, colno=12)
+                      value: 'tag'
+                  value:
+                    <class 'mecha.ast.AstWord'>
+                      location: SourceLocation(pos=8197, lineno=193, colno=13)
+                      end_location: SourceLocation(pos=8201, lineno=193, colno=17)
+                      value: 'blob'
+            <class 'mecha.ast.AstCommand'>
+              location: SourceLocation(pos=8216, lineno=195, colno=5)
+              end_location: SourceLocation(pos=8247, lineno=196, colno=26)
+              identifier: 'execute:run:subcommand'
+              arguments:
+                <class 'mecha.ast.AstCommand'>
+                  location: SourceLocation(pos=8230, lineno=196, colno=9)
+                  end_location: SourceLocation(pos=8247, lineno=196, colno=26)
+                  identifier: 'function:name'
+                  arguments:
+                    <class 'mecha.ast.AstResourceLocation'>
+                      location: SourceLocation(pos=8239, lineno=196, colno=18)
+                      end_location: SourceLocation(pos=8247, lineno=196, colno=26)
+                      is_tag: False
+                      namespace: 'demo'
+                      path: 'foo'
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=8248, lineno=197, colno=1)
+      end_location: SourceLocation(pos=8271, lineno=204, colno=2)
+      identifier: 'say:message'
+      arguments:
+        <class 'mecha.ast.AstMessage'>
+          location: SourceLocation(pos=8258, lineno=200, colno=1)
+          end_location: SourceLocation(pos=8271, lineno=204, colno=2)
+          fragments:
+            <class 'mecha.ast.AstMessageText'>
+              location: SourceLocation(pos=8258, lineno=200, colno=1)
+              end_location: SourceLocation(pos=8271, lineno=204, colno=2)
+              value: 'hello'

@@ -188,3 +188,17 @@ ride @s mount @e[type=pig,limit=1,sort=nearest]
 ride @s dismount
 execute if score @s abc matches 0 run ride @s dismount
 execute positioned over ocean_floor run summon skeleton
+execute \
+    as @a[ \
+        tag=blob \
+    ] \
+    run \
+        function demo:foo
+s\
+a\
+y \
+h\
+e\
+l\
+l\
+o

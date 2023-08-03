@@ -10,6 +10,7 @@ from .dispatch import *
 from .error import *
 from .parse import *
 from .plugin import *
+from .preprocess import *
 from .prototype import *
 from .resources import *
 from .serialize import *

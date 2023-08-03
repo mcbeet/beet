@@ -47,8 +47,7 @@ from beet.core.utils import (
     import_from_string,
 )
 from pydantic import BaseModel, validator
-from tokenstream import InvalidSyntax, TokenStream
-from tokenstream.location import set_location
+from tokenstream import InvalidSyntax, TokenStream, set_location
 
 from .ast import AstLiteral, AstNode, AstRoot
 from .config import CommandTree
@@ -61,6 +60,7 @@ from .diagnostic import (
 )
 from .dispatch import Dispatcher, MutatingReducer, Reducer
 from .parse import delegate, get_parsers
+from .preprocess import wrap_backslash_continuation
 from .serialize import FormattingOptions, Serializer
 from .spec import CommandSpec
 
@@ -333,7 +333,7 @@ class Mecha:
 
             cache_miss = ast_path
 
-        stream = TokenStream(source.text)
+        stream = TokenStream(source.text, preprocessor=wrap_backslash_continuation)
 
         try:
             with self.prepare_token_stream(stream, multiline=multiline):
