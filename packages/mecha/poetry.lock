@@ -1211,14 +1211,14 @@ files = [
 
 [[package]]
 name = "tokenstream"
-version = "1.5.0"
+version = "1.7.0"
 description = "A versatile token stream for handwritten parsers"
 category = "main"
 optional = false
 python-versions = ">=3.10,<4.0"
 files = [
-    {file = "tokenstream-1.5.0-py3-none-any.whl", hash = "sha256:adf5805f3e734c863a535c5cfc31fed4bd831647b1f51d1aab69e5a81eb63b8e"},
-    {file = "tokenstream-1.5.0.tar.gz", hash = "sha256:3cb57c810f2fd1e57653c8270251a3df47656ef04f07eb3d4fc442f64f9ff0c0"},
+    {file = "tokenstream-1.7.0-py3-none-any.whl", hash = "sha256:fdbb20e8a99b07e94ce88016e5f243a1582630a7459bd2e7a1c786f33543fcf9"},
+    {file = "tokenstream-1.7.0.tar.gz", hash = "sha256:9f98387c7e74d224f7cca874ce77bb775ece6cb585e9ba18441960e2b35fae61"},
 ]
 
 [[package]]
@@ -1462,4 +1462,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "7135e77f373661b7444cb5272c462d829ed5e0d425d6cb63dab9bfcbf39fc1b8"
+content-hash = "f38479790039cbb8c4db4ed0bc42340af4d6c506960c647941143faa1dcd161a"
