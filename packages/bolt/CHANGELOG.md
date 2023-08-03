@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.37.0 (2023-08-03)
+
+### Feature
+
+* Bump mecha to support backslash continuations ([`3d25461`](https://github.com/mcbeet/bolt/commit/3d2546147b5be2438281ce44110444805ec25d05))
+
 ## v0.36.0 (2023-06-07)
 
 ### Feature
