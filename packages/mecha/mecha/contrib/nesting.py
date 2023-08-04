@@ -10,7 +10,7 @@ __all__ = [
 ]
 
 
-from dataclasses import dataclass, replace
+from dataclasses import dataclass, field, replace
 from importlib.resources import files
 from typing import Any, Callable, List, cast
 
@@ -120,6 +120,21 @@ class NestedCommandsTransformer(MutatingReducer):
     nested_location_resolver: NestedLocationResolver = required_field()
     inplace_nesting_predicate: InplaceNestingPredicate = required_field()
 
+    identifier_map: dict[str, str] = field(
+        default_factory=lambda: {
+            "function:name:commands": "function:name",
+            "function:name:arguments:commands": "function:name:arguments",
+            "function:name:with:block:sourcePos:commands": "function:name:with:block:sourcePos",
+            "function:name:with:block:sourcePos:path:commands": "function:name:with:block:sourcePos:path",
+            "function:name:with:entity:source:commands": "function:name:with:entity:source",
+            "function:name:with:entity:source:path:commands": "function:name:with:entity:source:path",
+            "function:name:with:storage:source:commands": "function:name:with:storage:source",
+            "function:name:with:storage:source:path:commands": "function:name:with:storage:source:path",
+            "append:function:name:commands": "function:name",
+            "prepend:function:name:commands": "function:name",
+        }
+    )
+
     def emit_function(self, path: str, root: AstRoot):
         """Helper method for emitting nested commands into a separate function."""
         function = Function(original=self.database.current.original)
@@ -141,16 +156,12 @@ class NestedCommandsTransformer(MutatingReducer):
     @rule(AstCommand, identifier="execute:run:subcommand")
     def nesting_execute_function(self, node: AstCommand):
         if isinstance(command := node.arguments[0], AstCommand):
-            if command.identifier in [
-                "function:name:commands",
-                "append:function:name:commands",
-                "prepend:function:name:commands",
-            ]:
+            if command.identifier in self.identifier_map:
                 self.handle_function(command)
                 command = replace(
                     command,
-                    identifier="function:name",
-                    arguments=AstChildren([command.arguments[0]]),
+                    identifier=self.identifier_map[command.identifier],
+                    arguments=AstChildren(command.arguments[:-1]),
                 )
                 return replace(node, arguments=AstChildren([command]))
 
@@ -217,11 +228,7 @@ class NestedCommandsTransformer(MutatingReducer):
         commands: List[AstCommand] = []
 
         for command in node.commands:
-            if command.identifier in [
-                "function:name:commands",
-                "append:function:name:commands",
-                "prepend:function:name:commands",
-            ]:
+            if command.identifier in self.identifier_map:
                 commands.extend(self.handle_function(command, top_level=True))
                 changed = True
                 continue
@@ -269,12 +276,27 @@ class NestedCommandsTransformer(MutatingReducer):
         node: AstCommand,
         top_level: bool = False,
     ) -> List[AstCommand]:
-        name, root = node.arguments
+        name, *args, root = node.arguments
 
         if isinstance(name, AstResourceLocation) and isinstance(root, AstRoot):
             path = name.get_canonical_value()
 
-            if not top_level:
+            if top_level:
+                if node.identifier in (
+                    "function:name:arguments:commands",
+                    "function:name:with:block:sourcePos:commands",
+                    "function:name:with:block:sourcePos:path:commands",
+                    "function:name:with:entity:source:commands",
+                    "function:name:with:entity:source:path:commands",
+                    "function:name:with:storage:source:commands",
+                    "function:name:with:storage:source:path:commands",
+                ):
+                    d = Diagnostic(
+                        "error",
+                        f"Can't define function with arguments. Use 'execute function ...' instead.",
+                    )
+                    raise set_location(d, node, args[-1])
+            else:
                 if node.identifier == "append:function:name:commands":
                     d = Diagnostic("error", f"Can't append commands with execute.")
                     raise set_location(d, node, name)
@@ -287,7 +309,16 @@ class NestedCommandsTransformer(MutatingReducer):
             if not target:
                 self.emit_function(path, root)
 
-            elif node.identifier == "function:name:commands":
+            elif node.identifier in (
+                "function:name:commands",
+                "function:name:arguments:commands",
+                "function:name:with:block:sourcePos:commands",
+                "function:name:with:block:sourcePos:path:commands",
+                "function:name:with:entity:source:commands",
+                "function:name:with:entity:source:path:commands",
+                "function:name:with:storage:source:commands",
+                "function:name:with:storage:source:path:commands",
+            ):
                 if self.database[target].ast != root:
                     d = Diagnostic(
                         "error",

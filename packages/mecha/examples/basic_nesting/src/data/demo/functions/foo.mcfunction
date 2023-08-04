@@ -131,3 +131,42 @@ function demo:abc:
 
 function demo:abc:
     say hello
+
+
+say calling function with parameters
+function demo:bar0 {i:10}
+function demo:bar1 with entity @s
+function demo:bar2 with entity @s Inventory
+function demo:bar3 with storage demo:temp
+function demo:bar4 with storage demo:temp args
+function demo:bar5 with block ~ ~ ~
+function demo:bar6 with block ~ ~ ~ Items
+function demo:bar7 with storage demo:temp
+function demo:bar8 with storage demo:temp args
+
+say it's forbidden to define and call function with parameters
+say error: Can't define function with arguments. Use 'execute function ...' instead.
+# function demo:bar0 {i:10}:
+#     say nested definition!
+
+say define and execute function with parameters
+execute run function demo:bar0 {i:10}:
+    say nested definition 0
+execute run function demo:bar1 with entity @s:
+    say nested definition 1
+execute run function demo:bar2 with entity @s Inventory:
+    say nested definition 2
+execute run function demo:bar3 with storage demo:temp:
+    say nested definition 3
+execute run function demo:bar4 with storage demo:temp args:
+    say nested definition 4
+execute run function demo:bar5 with block ~ ~ ~:
+    say nested definition 5
+execute run function demo:bar6 with block ~ ~ ~ Items:
+    say nested definition 6
+execute run function demo:bar7 with storage demo:temp:
+    say nested definition 7
+execute run function demo:bar8 with storage demo:temp args:
+    say nested definition 8
+
+

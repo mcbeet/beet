@@ -37,6 +37,28 @@ say foo1
 say foo2
 say foo3
 say after
+say calling function with parameters
+function demo:bar0 {i: 10}
+function demo:bar1 with entity @s
+function demo:bar2 with entity @s Inventory
+function demo:bar3 with storage demo:temp
+function demo:bar4 with storage demo:temp args
+function demo:bar5 with block ~ ~ ~
+function demo:bar6 with block ~ ~ ~ Items
+function demo:bar7 with storage demo:temp
+function demo:bar8 with storage demo:temp args
+say it's forbidden to define and call function with parameters
+say error: Can't define function with arguments. Use 'execute function ...' instead.
+say define and execute function with parameters
+function demo:bar0 {i: 10}
+function demo:bar1 with entity @s
+function demo:bar2 with entity @s Inventory
+function demo:bar3 with storage demo:temp
+function demo:bar4 with storage demo:temp args
+function demo:bar5 with block ~ ~ ~
+function demo:bar6 with block ~ ~ ~ Items
+function demo:bar7 with storage demo:temp
+function demo:bar8 with storage demo:temp args
 ```
 
 `@function demo:wat`
@@ -118,6 +140,60 @@ say hello2
 
 ```mcfunction
 say hello3
+```
+
+`@function demo:bar0`
+
+```mcfunction
+say nested definition 0
+```
+
+`@function demo:bar1`
+
+```mcfunction
+say nested definition 1
+```
+
+`@function demo:bar2`
+
+```mcfunction
+say nested definition 2
+```
+
+`@function demo:bar3`
+
+```mcfunction
+say nested definition 3
+```
+
+`@function demo:bar4`
+
+```mcfunction
+say nested definition 4
+```
+
+`@function demo:bar5`
+
+```mcfunction
+say nested definition 5
+```
+
+`@function demo:bar6`
+
+```mcfunction
+say nested definition 6
+```
+
+`@function demo:bar7`
+
+```mcfunction
+say nested definition 7
+```
+
+`@function demo:bar8`
+
+```mcfunction
+say nested definition 8
 ```
 
 `@function demo:thing1`

@@ -73,13 +73,121 @@
       "children": {
         "name": {
           "type": "argument",
-          "parser": "minecraft:function",
           "executable": true,
+          "parser": "minecraft:function",
           "children": {
             "commands": {
               "type": "argument",
-              "parser": "mecha:nested_root",
-              "executable": true
+              "executable": true,
+              "parser": "mecha:nested_root"
+            },
+            "arguments": {
+              "type": "argument",
+              "children": {
+                "commands": {
+                  "type": "argument",
+                  "executable": true,
+                  "parser": "mecha:nested_root"
+                }
+              },
+              "executable": true,
+              "parser": "minecraft:nbt_compound_tag"
+            },
+            "with": {
+              "type": "literal",
+              "children": {
+                "block": {
+                  "type": "literal",
+                  "children": {
+                    "sourcePos": {
+                      "type": "argument",
+                      "children": {
+                        "path": {
+                          "type": "argument",
+                          "children": {
+                            "commands": {
+                              "type": "argument",
+                              "executable": true,
+                              "parser": "mecha:nested_root"
+                            }
+                          },
+                          "executable": true,
+                          "parser": "minecraft:nbt_path"
+                        },
+                        "commands": {
+                          "type": "argument",
+                          "executable": true,
+                          "parser": "mecha:nested_root"
+                        }
+                      },
+                      "executable": true,
+                      "parser": "minecraft:block_pos"
+                    }
+                  }
+                },
+                "entity": {
+                  "type": "literal",
+                  "children": {
+                    "source": {
+                      "type": "argument",
+                      "children": {
+                        "path": {
+                          "type": "argument",
+                          "children": {
+                            "commands": {
+                              "type": "argument",
+                              "executable": true,
+                              "parser": "mecha:nested_root"
+                            }
+                          },
+                          "executable": true,
+                          "parser": "minecraft:nbt_path"
+                        },
+                        "commands": {
+                          "type": "argument",
+                          "executable": true,
+                          "parser": "mecha:nested_root"
+                        }
+                      },
+                      "executable": true,
+                      "parser": "minecraft:entity",
+                      "properties": {
+                        "type": "entities",
+                        "amount": "single"
+                      }
+                    }
+                  }
+                },
+                "storage": {
+                  "type": "literal",
+                  "children": {
+                    "source": {
+                      "type": "argument",
+                      "children": {
+                        "path": {
+                          "type": "argument",
+                          "children": {
+                            "commands": {
+                              "type": "argument",
+                              "executable": true,
+                              "parser": "mecha:nested_root"
+                            }
+                          },
+                          "executable": true,
+                          "parser": "minecraft:nbt_path"
+                        },
+                        "commands": {
+                          "type": "argument",
+                          "executable": true,
+                          "parser": "mecha:nested_root"
+                        }
+                      },
+                      "executable": true,
+                      "parser": "minecraft:resource_location"
+                    }
+                  }
+                }
+              }
             }
           }
         }
