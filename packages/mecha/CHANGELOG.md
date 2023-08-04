@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.75.1 (2023-08-04)
+
+### Fix
+
+* Prevent execute inlining for macro line ([`d7b14e6`](https://github.com/mcbeet/mecha/commit/d7b14e64858d77805c32b6e4f57a391f886b0435))
+
 ## v0.75.0 (2023-08-03)
 
 ### Feature
