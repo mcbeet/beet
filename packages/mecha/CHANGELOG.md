@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.75.2 (2023-08-04)
+
+### Fix
+
+* Update mecha.contrib.nesting to latest snapshot ([`7bdfba9`](https://github.com/mcbeet/mecha/commit/7bdfba93adfc83e5df619ea3117f99c071b42936))
+
 ## v0.75.1 (2023-08-04)
 
 ### Fix
