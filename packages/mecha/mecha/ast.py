@@ -1240,3 +1240,5 @@ class AstMacroLine(AstCommandSentinel):
     """Ast macro line node."""
 
     parser = "macro_line"
+
+    compile_hints = {"skip_execute_inline_single_command": True}
