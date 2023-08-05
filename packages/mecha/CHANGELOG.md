@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.76.0 (2023-08-05)
+
+### Feature
+
+* Add mecha.contrib.bake_macros ([`11081c2`](https://github.com/mcbeet/mecha/commit/11081c2be137e6df5a96a30757cdeebdcca3230f))
+
 ## v0.75.2 (2023-08-04)
 
 ### Fix
