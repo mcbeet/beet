@@ -47,7 +47,7 @@ from beet.core.utils import (
     import_from_string,
 )
 from pydantic import BaseModel, validator
-from tokenstream import InvalidSyntax, TokenStream, set_location
+from tokenstream import InvalidSyntax, Preprocessor, TokenStream, set_location
 
 from .ast import AstLiteral, AstNode, AstRoot
 from .config import CommandTree
@@ -160,6 +160,8 @@ class Mecha:
         default_factory=lambda: [Function]
     )
 
+    preprocessor: Preprocessor = extra_field(default=wrap_backslash_continuation)
+
     lint: Dispatcher[AstRoot] = extra_field(init=False)
     transform: Dispatcher[AstRoot] = extra_field(init=False)
     optimize: Dispatcher[AstRoot] = extra_field(init=False)
@@ -261,6 +263,7 @@ class Mecha:
         resource_location: Optional[str] = None,
         multiline: Optional[bool] = None,
         provide: Optional[JsonDict] = None,
+        preprocessor: Optional[Preprocessor] = None,
     ) -> AstRoot:
         ...
 
@@ -274,6 +277,7 @@ class Mecha:
         resource_location: Optional[str] = None,
         multiline: Optional[bool] = None,
         provide: Optional[JsonDict] = None,
+        preprocessor: Optional[Preprocessor] = None,
     ) -> AstNodeType:
         ...
 
@@ -287,6 +291,7 @@ class Mecha:
         resource_location: Optional[str] = None,
         multiline: Optional[bool] = None,
         provide: Optional[JsonDict] = None,
+        preprocessor: Optional[Preprocessor] = None,
     ) -> Any:
         ...
 
@@ -300,6 +305,7 @@ class Mecha:
         resource_location: Optional[str] = None,
         multiline: Optional[bool] = None,
         provide: Optional[JsonDict] = None,
+        preprocessor: Optional[Preprocessor] = None,
     ) -> Any:
         """Parse the given source into an AST."""
         if using:
@@ -333,7 +339,10 @@ class Mecha:
 
             cache_miss = ast_path
 
-        stream = TokenStream(source.text, preprocessor=wrap_backslash_continuation)
+        stream = TokenStream(
+            source.text,
+            preprocessor=preprocessor or self.preprocessor,
+        )
 
         try:
             with self.prepare_token_stream(stream, multiline=multiline):

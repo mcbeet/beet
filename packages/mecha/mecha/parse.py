@@ -1935,7 +1935,7 @@ def parse_macro_line(stream: TokenStream) -> AstMacroLine:
                 arguments.append(delegate("macro_line_text", stream))
 
     if not has_variable:
-        exc = InvalidSyntax("Expected at least one macro line variable")
+        exc = InvalidSyntax("Expected at least one macro line variable.")
         raise set_location(exc, token, stream.current)
 
     node = AstMacroLine(arguments=AstChildren(arguments))
