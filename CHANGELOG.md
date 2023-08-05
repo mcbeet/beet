@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.89.2 (2023-08-05)
+
+### Fix
+
+* Load worldgen from vanilla data pack ([`f721453`](https://github.com/mcbeet/beet/commit/f721453d070a64d473e886f838c3f1ddb1bf18c5))
+
 ## v0.89.1 (2023-06-28)
 
 ### Fix
