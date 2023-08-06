@@ -1,0 +1,13 @@
+@data_pack pack.mcmeta
+{
+  "pack": {
+    "pack_format": 15,
+    "description": ""
+  }
+}
+
+@function mcc:demo
+function mcc:thingy/baked_7gixa943r3e39
+
+@function mcc:thingy/baked_7gixa943r3e39
+execute as @a[tag=foo] run say hello

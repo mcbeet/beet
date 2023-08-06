@@ -37,6 +37,9 @@ from .fragment import Fragment
 FragmentLoader = Callable[[Fragment, Mapping[str, Directive]], Optional[Fragment]]
 
 
+RELATIVE_PATH_REGEX = re.compile(r"^(?:assets|data)(?:/[a-zA-Z0-9_.]+)+$")
+
+
 class Extractor:
     """Base class for extractors."""
 
@@ -291,7 +294,18 @@ class MarkdownExtractor(Extractor):
                 and (inline := tokens[i + 1])
                 and inline.children
                 and self.match_tokens(inline.children, "code_inline")
-                and (match := regex.match(inline.children[0].content))
+                and (
+                    match := regex.match(inline := inline.children[0].content)
+                    or (
+                        RELATIVE_PATH_REGEX.match(inline)
+                        and (
+                            directive := "@resource_pack"
+                            if inline.startswith("assets")
+                            else "@data_pack"
+                        )
+                        and regex.match(f"{directive} {inline}")
+                    )
+                )
             ):
                 yield self.create_fragment(
                     current_line, skip_to, match, content=tokens[i + 3].content
