@@ -153,15 +153,16 @@ class MacroBaker(Visitor):
                 stack.append(subcommand)
                 args = subcommand.arguments
 
-            command = stack[-1]
+            last = stack[-1]
 
-            if command.identifier == "function:name:arguments":
-                command = self.bake_macro_invocation(command)
-                if command is not stack.pop():
+            if last.identifier == "function:name:arguments":
+                last = self.bake_macro_invocation(last)
+                if last is not stack.pop():
                     for prefix in reversed(stack):
-                        args = AstChildren([*prefix.arguments[:-1], command])
-                        command = replace(prefix, arguments=args)
+                        args = AstChildren([*prefix.arguments[:-1], last])
+                        last = replace(prefix, arguments=args)
                     modified = True
+                    command = last
 
             result.append(command)
 
