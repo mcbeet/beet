@@ -15,8 +15,8 @@
 
 ### demo
 
-`@function(strip_final_newline) demo:foo`
+`@function demo:foo`
 
 ```mcfunction
-say hello2
+say hello3
 ```

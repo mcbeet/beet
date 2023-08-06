@@ -18,5 +18,5 @@
 `@function demo:foo`
 
 ```mcfunction
-say hello3
+say hello4
 ```

@@ -13,10 +13,12 @@
 }
 ```
 
-### demo
+### msg
 
-`@function demo:foo`
+`@function msg:default`
 
 ```mcfunction
-say hello5
+say foo
+
+say bar
 ```

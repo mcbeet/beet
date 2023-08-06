@@ -14,10 +14,6 @@ SAMPLES = [
     ```
     """,
     """
-    @function demo:foo
-    say hello2
-    """,
-    """
     ```
     @function demo:foo
     say hello3
