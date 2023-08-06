@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.91.0 (2023-08-06)
+
+### Feature
+
+* Make it possible to render everything ([`f5d3750`](https://github.com/mcbeet/beet/commit/f5d37504211e51cc33ef6bd70cb113251b4945e7))
+
 ## v0.90.0 (2023-08-06)
 
 ### Feature
