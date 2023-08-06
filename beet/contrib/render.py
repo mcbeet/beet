@@ -7,15 +7,15 @@ __all__ = [
 ]
 
 
-from typing import Dict
+from typing import Dict, Union
 
 from beet import Context, ListOption, PluginOptions, configurable
 from beet.core.utils import snake_case
 
 
 class RenderOptions(PluginOptions):
-    resource_pack: Dict[str, ListOption[str]] = {}
-    data_pack: Dict[str, ListOption[str]] = {}
+    resource_pack: Union[Dict[str, ListOption[str]], ListOption[str]] = {}
+    data_pack: Union[Dict[str, ListOption[str]], ListOption[str]] = {}
 
 
 def beet_default(ctx: Context):
@@ -31,8 +31,11 @@ def render(ctx: Context, opts: RenderOptions):
             snake_case(file_type.__name__): file_type for file_type in file_types
         }
 
-        for singular in list(group_map):
-            group_map.setdefault(f"{singular}s", group_map[singular])
+        if isinstance(groups, ListOption):
+            groups = {k: groups for k in group_map}
+        else:
+            for singular in list(group_map):
+                group_map.setdefault(f"{singular}s", group_map[singular])
 
         for group, render_options in groups.items():
             try:
