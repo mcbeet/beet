@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.27.1 (2023-08-06)
+
+### Fix
+
+* Don't emit fallback function if there are fragments ([`57c8c0f`](https://github.com/mcbeet/lectern/commit/57c8c0f2397a5723a5baa969475dc0f9e25bd48e))
+
 ## v0.27.0 (2023-08-06)
 
 ### Feature
