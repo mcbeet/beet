@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.27.0 (2023-08-06)
+
+### Feature
+
+* Shorthand ([`6717332`](https://github.com/mcbeet/lectern/commit/6717332d9facf92f3d58c8e6c62d2b58712c96a0))
+
 ## v0.26.0 (2022-10-25)
 ### Feature
 * Add merge_zip directive ([`add74f2`](https://github.com/mcbeet/lectern/commit/add74f2f8b223b29f2270de3aec5205ff217944d))
