@@ -28,7 +28,7 @@ say foo
 ```json
 {
   "pack": {
-    "pack_format": 9,
+    "pack_format": 15,
     "description": ""
   }
 }

@@ -1,7 +1,7 @@
 @data_pack pack.mcmeta
 {
   "pack": {
-    "pack_format": 10,
+    "pack_format": 15,
     "description": ""
   }
 }
