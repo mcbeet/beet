@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.90.0 (2023-08-06)
+
+### Feature
+
+* Add beet.contrib.log_level ([`8275c7e`](https://github.com/mcbeet/beet/commit/8275c7e6929b64ae0c49d061a49f5fc7eedb1c5d))
+
 ## v0.89.2 (2023-08-05)
 
 ### Fix
