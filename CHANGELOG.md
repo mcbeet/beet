@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.92.0 (2023-08-06)
+
+### Feature
+
+* Add beet.contrib.error_message ([`cf3faf6`](https://github.com/mcbeet/beet/commit/cf3faf603a53d90c84cbf61515112d471f8769fa))
+
 ## v0.91.0 (2023-08-06)
 
 ### Feature
