@@ -1,6 +1,11 @@
 """Plugin for setting the log level."""
 
 
+__all__ = [
+    "log_level",
+    "LogLevelOptions",
+]
+
 import logging
 from typing import Literal
 
