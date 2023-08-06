@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.76.1 (2023-08-06)
+
+### Fix
+
+* Mecha.contrib.bake_macros would only keep last subcommand ([`05cd650`](https://github.com/mcbeet/mecha/commit/05cd6504743f03656b4e767c12c2b59eef5144d5))
+
 ## v0.76.0 (2023-08-05)
 
 ### Feature
