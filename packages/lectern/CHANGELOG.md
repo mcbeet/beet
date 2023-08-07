@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.28.0 (2023-08-07)
+
+### Feature
+
+* Apply directives to context directly ([`a4cbf48`](https://github.com/mcbeet/lectern/commit/a4cbf48639fb553f2897adec049f47038d651b9c))
+
 ## v0.27.1 (2023-08-06)
 
 ### Fix
