@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.76.2 (2023-08-07)
+
+### Fix
+
+* Don't raise diagnostics ([`b3b72fc`](https://github.com/mcbeet/mecha/commit/b3b72fc9fc7cfca64d46dd8c5d508ef62f6e39c8))
+
 ## v0.76.1 (2023-08-06)
 
 ### Fix
