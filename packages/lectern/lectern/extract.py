@@ -106,19 +106,21 @@ class Extractor:
         loaders: Iterable[FragmentLoader] = (),
     ) -> Tuple[ResourcePack, DataPack]:
         """Extract a resource pack and a data pack."""
-        return self.apply_directives(
-            directives, self.parse_fragments(source, directives), loaders
+        assets, data = ResourcePack(), DataPack()
+        self.apply_directives(
+            assets, data, directives, self.parse_fragments(source, directives), loaders
         )
+        return assets, data
 
     def apply_directives(
         self,
+        assets: ResourcePack,
+        data: DataPack,
         directives: Mapping[str, Directive],
         fragments: Iterable[Fragment],
         loaders: Iterable[FragmentLoader] = (),
-    ) -> Tuple[ResourcePack, DataPack]:
+    ):
         """Apply directives into a blank data pack and a blank resource pack."""
-        assets, data = ResourcePack(), DataPack()
-
         for fragment in fragments:
             for loader in loaders:
                 fragment = loader(fragment, directives)
@@ -126,8 +128,6 @@ class Extractor:
                     break
             if fragment:
                 directives[fragment.directive](fragment, assets, data)
-
-        return assets, data
 
     def parse_fragments(
         self,
@@ -249,11 +249,15 @@ class MarkdownExtractor(Extractor):
         loaders: Iterable[FragmentLoader] = (),
         external_files: Optional[FileSystemPath] = None,
     ) -> Tuple[ResourcePack, DataPack]:
-        return self.apply_directives(
+        assets, data = ResourcePack(), DataPack()
+        self.apply_directives(
+            assets,
+            data,
             directives,
             self.parse_fragments(source, directives, external_files),
             loaders,
         )
+        return assets, data
 
     def parse_fragments(
         self,

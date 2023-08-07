@@ -43,11 +43,9 @@ def messaging(ctx: Context, opts: MessagingOptions):
         if fragments := list(
             document.markdown_extractor.parse_fragments(message, directives)
         ):
-            assets, data = document.markdown_extractor.apply_directives(
-                directives, fragments, document.loaders
+            document.markdown_extractor.apply_directives(
+                ctx.assets, ctx.data, directives, fragments, document.loaders
             )
-            ctx.assets.merge(assets)
-            ctx.data.merge(data)
         elif code_blocks := [
             token.content
             for token in document.markdown_extractor.parser.parse(message)  # type: ignore
