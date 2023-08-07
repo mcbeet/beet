@@ -267,5 +267,5 @@ class NestedResourcesTransformer(MutatingReducer):
             and subcommand.identifier in self.nested_resource_identifiers
         ):
             d = Diagnostic("error", "Nested resource not allowed behind execute.")
-            raise set_location(d, subcommand, subcommand.arguments[0])
+            yield set_location(d, subcommand, subcommand.arguments[0])
         return node

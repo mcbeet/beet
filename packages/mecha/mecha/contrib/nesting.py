@@ -12,9 +12,11 @@ __all__ = [
 
 from dataclasses import dataclass, field, replace
 from importlib.resources import files
-from typing import Any, Callable, List, cast
+from typing import Any, Callable, Generator, List, cast
 
-from beet import Context, Function, Generator, TextFileBase, configurable
+from beet import Context, Function
+from beet import Generator as BeetGenerator
+from beet import TextFileBase, configurable
 from beet.core.utils import required_field
 from pydantic import BaseModel
 from tokenstream import InvalidSyntax, TokenStream, set_location
@@ -114,7 +116,7 @@ class InplaceNestingPredicate:
 class NestedCommandsTransformer(MutatingReducer):
     """Transformer that handles nested commands."""
 
-    generate: Generator = required_field()
+    generate: BeetGenerator = required_field()
     database: CompilationDatabase = required_field()
     generate_execute_template: str = required_field()
     nested_location_resolver: NestedLocationResolver = required_field()
@@ -157,7 +159,7 @@ class NestedCommandsTransformer(MutatingReducer):
     def nesting_execute_function(self, node: AstCommand):
         if isinstance(command := node.arguments[0], AstCommand):
             if command.identifier in self.identifier_map:
-                self.handle_function(command)
+                yield from self.handle_function(command)
                 command = replace(
                     command,
                     identifier=self.identifier_map[command.identifier],
@@ -209,7 +211,7 @@ class NestedCommandsTransformer(MutatingReducer):
     @rule(AstCommand, identifier="schedule:function:function:time:append:commands")
     @rule(AstCommand, identifier="schedule:function:function:time:replace:commands")
     def nesting_schedule_function(self, node: AstCommand):
-        self.handle_function(
+        yield from self.handle_function(
             AstCommand(
                 identifier="function:name:commands",
                 arguments=AstChildren([node.arguments[0], node.arguments[-1]]),
@@ -229,7 +231,8 @@ class NestedCommandsTransformer(MutatingReducer):
 
         for command in node.commands:
             if command.identifier in self.identifier_map:
-                commands.extend(self.handle_function(command, top_level=True))
+                result = yield from self.handle_function(command, top_level=True)
+                commands.extend(result)
                 changed = True
                 continue
 
@@ -275,7 +278,7 @@ class NestedCommandsTransformer(MutatingReducer):
         self,
         node: AstCommand,
         top_level: bool = False,
-    ) -> List[AstCommand]:
+    ) -> Generator[Diagnostic, None, List[AstCommand]]:
         name, *args, root = node.arguments
 
         if isinstance(name, AstResourceLocation) and isinstance(root, AstRoot):
@@ -293,16 +296,22 @@ class NestedCommandsTransformer(MutatingReducer):
                 ):
                     d = Diagnostic(
                         "error",
-                        f"Can't define function with arguments. Use 'execute function ...' instead.",
+                        f"Nested function definition can not include arguments.",
                     )
-                    raise set_location(d, node, args[-1])
+                    d.notes.append(
+                        'Prefix with "execute" to invoke the nested function.'
+                    )
+                    yield set_location(d, node, args[-1])
+                    return []
             else:
                 if node.identifier == "append:function:name:commands":
                     d = Diagnostic("error", f"Can't append commands with execute.")
-                    raise set_location(d, node, name)
+                    yield set_location(d, node, name)
+                    return []
                 if node.identifier == "prepend:function:name:commands":
                     d = Diagnostic("error", f"Can't prepend commands with execute.")
-                    raise set_location(d, node, name)
+                    yield set_location(d, node, name)
+                    return []
 
             target = self.database.index.get(path)
 
@@ -324,7 +333,8 @@ class NestedCommandsTransformer(MutatingReducer):
                         "error",
                         f'Redefinition of function "{path}" doesn\'t match existing implementation.',
                     )
-                    raise set_location(d, name)
+                    yield set_location(d, name)
+                    return []
 
             elif self.inplace_nesting_predicate.callback(target):
                 if node.identifier == "prepend:function:name:commands":
@@ -332,7 +342,8 @@ class NestedCommandsTransformer(MutatingReducer):
                         "error",
                         f'Can\'t prepend commands to the current function "{path}".',
                     )
-                    raise set_location(d, node, name)
+                    yield set_location(d, node, name)
+                    return []
 
                 return list(root.commands)
 

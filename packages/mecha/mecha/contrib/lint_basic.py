@@ -21,7 +21,7 @@ class BasicLinter(Reducer):
     def execute_run(self, node: AstCommand):
         if isinstance(clause := node.arguments[0], AstCommand):
             if clause.identifier == "execute:run:subcommand":
-                raise set_location(
+                return set_location(
                     Diagnostic("warn", "Redundant `execute run` clause."),
                     node,
                     clause.arguments[0].location.with_horizontal_offset(-1),
@@ -31,7 +31,7 @@ class BasicLinter(Reducer):
     def run_execute(self, node: AstCommand):
         if isinstance(clause := node.arguments[0], AstCommand):
             if clause.identifier == "execute:subcommand":
-                raise set_location(
+                return set_location(
                     Diagnostic("warn", "Redundant `run execute` clause."),
                     node,
                     clause.arguments[0].location.with_horizontal_offset(-1),

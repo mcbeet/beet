@@ -49,11 +49,11 @@ def beet_default(ctx: Context):
 
 
 @rule(AstCommand, identifier="execute:run:subcommand")
-def inline_execute_function_tag(node: AstCommand) -> AstCommand:
+def inline_execute_function_tag(node: AstCommand):
     if isinstance(command := node.arguments[0], AstCommand):
         if command.identifier == "function:tag:name":
             d = Diagnostic("error", "Can't add function tag with execute.")
-            raise set_location(d, command.arguments[0])
+            yield set_location(d, command.arguments[0])
     return node
 
 
@@ -65,7 +65,7 @@ class InlineFunctionTagHandler(Visitor):
     database: CompilationDatabase = required_field()
 
     @rule(AstRoot)
-    def inline_function_tag(self, node: AstRoot) -> AstRoot:
+    def inline_function_tag(self, node: AstRoot):
         changed = False
         commands: List[AstCommand] = []
 
@@ -80,7 +80,8 @@ class InlineFunctionTagHandler(Visitor):
                     )
                 else:
                     d = Diagnostic("error", "No current path to add function tag.")
-                    raise set_location(d, tag)
+                    yield set_location(d, tag)
+                    return node
             else:
                 commands.append(command)
 
