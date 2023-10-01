@@ -420,7 +420,7 @@ class Namespace(
     scope_map: ClassVar[Mapping[Tuple[Tuple[str, ...], str], Type[NamespaceFile]]]
 
     def __init_subclass__(cls):
-        pins = NamespacePin[NamespaceFileType].collect_from(cls)
+        pins = NamespacePin[NamespaceFile].collect_from(cls)
         cls.field_map = {pin.key: attr for attr, pin in pins.items()}
         cls.scope_map = {
             (pin.key.scope, pin.key.extension): pin.key for pin in pins.values()
@@ -453,11 +453,11 @@ class Namespace(
         self,
         key: Type[NamespaceFile],
         value: NamespaceContainer[NamespaceFile],
-    ):
+    ) -> None:
         ...
 
     @overload
-    def __setitem__(self, key: str, value: NamespaceFile):
+    def __setitem__(self, key: str, value: NamespaceFile) -> None:
         ...
 
     def __setitem__(self, key: Any, value: Any):
@@ -934,11 +934,11 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
         return NamespaceProxy(self, key)
 
     @overload
-    def __setitem__(self, key: str, value: NamespaceType):
+    def __setitem__(self, key: str, value: NamespaceType) -> None:
         ...
 
     @overload
-    def __setitem__(self, key: str, value: NamespaceFile):
+    def __setitem__(self, key: str, value: NamespaceFile) -> None:
         ...
 
     def __setitem__(self, key: str, value: Any):
