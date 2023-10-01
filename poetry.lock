@@ -3771,4 +3771,4 @@ image = ["Pillow"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "70ec522ab39f781ec95c58c78368bf3f7d6b2aa372bf214564a92f3a1c0e1873"
+content-hash = "ad7845a235d4ed3e7f7ce1e049d5bb5f2b0364b334d4387e57a6e3f22c7cdccc"
