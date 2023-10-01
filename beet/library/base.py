@@ -562,7 +562,7 @@ class Namespace(
         prefix: str,
         origin: FileOrigin,
         extend_namespace: Iterable[Type[NamespaceFile]] = (),
-        extend_namespace_extra: Optional[Mapping[str, Type[PackFile]]] = None,
+        extend_namespace_extra: Optional[Mapping[str, Optional[Type[PackFile]]]] = None,
     ) -> Iterator[Tuple[str, "Namespace"]]:
         """Load namespaces by walking through a zipfile or directory."""
         preparts = tuple(filter(None, prefix.split("/")))
@@ -580,7 +580,7 @@ class Namespace(
 
         extra_info = cls.get_extra_info()
         if extend_namespace_extra:
-            extra_info.update(extend_namespace_extra)
+            _update_with_none(extra_info, extend_namespace_extra)
 
         scope_map = dict(cls.scope_map)
         for file_type in extend_namespace:
@@ -826,9 +826,9 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
         "filter", default_factory=lambda: {"block": []}
     )
 
-    extend_extra: Dict[str, Type[PackFile]]
+    extend_extra: Dict[str, Optional[Type[PackFile]]]
     extend_namespace: List[Type[NamespaceFile]]
-    extend_namespace_extra: Dict[str, Type[PackFile]]
+    extend_namespace_extra: Dict[str, Optional[Type[PackFile]]]
 
     merge_policy: MergePolicy
     unveiled: Dict[Union[Path, UnveilMapping], Set[str]]
@@ -1047,7 +1047,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
     def resolve_extra_info(self) -> Dict[str, Type[PackFile]]:
         extra_info = self.get_extra_info()
         if self.extend_extra:
-            extra_info.update(self.extend_extra)
+            _update_with_none(extra_info, self.extend_extra)
         return extra_info
 
     def resolve_scope_map(
@@ -1061,7 +1061,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
     def resolve_namespace_extra_info(self) -> Dict[str, Type[PackFile]]:
         namespace_extra_info = self.namespace_type.get_extra_info()
         if self.extend_namespace_extra:
-            namespace_extra_info.update(self.extend_namespace_extra)
+            _update_with_none(namespace_extra_info, self.extend_namespace_extra)
         return namespace_extra_info
 
     def load(
@@ -1254,3 +1254,15 @@ def _dump_files(origin: FileOrigin, files: Mapping[str, PackFile]):
             Path(origin, *directory).resolve().mkdir(parents=True, exist_ok=True)
         for filename, f in entries:
             f.dump(origin, "/".join(directory + (filename,)))
+
+
+K = TypeVar("K")
+V = TypeVar("V")
+
+
+def _update_with_none(dst: MutableMapping[K, V], src: Mapping[K, Optional[V]]):
+    for k, v in list(src.items()):
+        if v is None:
+            dst.pop(k, None)
+        else:
+            dst[k] = v
