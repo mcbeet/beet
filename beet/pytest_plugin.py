@@ -3,7 +3,15 @@ from pprint import pformat
 
 from _pytest.assertion.util import assertrepr_compare
 
-from beet import DataPack, File, Namespace, NamespaceContainer, Pack, ResourcePack
+from beet import (
+    DataPack,
+    File,
+    Namespace,
+    NamespaceContainer,
+    OverlayContainer,
+    Pack,
+    ResourcePack,
+)
 from beet.library.test_utils import ignore_name
 
 try:
@@ -45,6 +53,10 @@ def pytest_assertrepr_compare(config, op, left, right):
             explanation += generate_explanation(config, left.extra, right.extra, "file")
         if dict(left) != dict(right):
             explanation += generate_explanation(config, left, right, "namespace")
+        if left.overlays != right.overlays:
+            explanation += generate_explanation(
+                config, left.overlays, right.overlays, "overlay"
+            )
     elif isinstance(left, Namespace):
         if left.extra != right.extra:
             explanation += generate_explanation(config, left.extra, right.extra, "file")
@@ -60,6 +72,8 @@ def pytest_assertrepr_compare(config, op, left, right):
             right=right.ensure_deserialized(),
         ):
             return diff[0]
+    elif isinstance(left, OverlayContainer):
+        explanation += generate_explanation(config, left, right, "pack")
 
     if explanation and (diff := assertrepr_compare(config, op, left, right)):
         return [diff[0]] + explanation

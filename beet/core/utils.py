@@ -1,6 +1,8 @@
 __all__ = [
     "JsonDict",
     "FileSystemPath",
+    "TextComponent",
+    "SupportedFormats",
     "Sentinel",
     "SENTINEL_OBJ",
     "dump_json",
@@ -68,6 +70,7 @@ class PathLikeFallback(Protocol):
 JsonDict = Dict[str, Any]
 FileSystemPath = Union[str, PathLikeFallback]
 TextComponent = Union[str, List[Any], JsonDict]
+SupportedFormats = Union[int, List[int], JsonDict]
 
 
 class Sentinel:
