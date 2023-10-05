@@ -2,6 +2,16 @@
 
 <!--next-version-placeholder-->
 
+## v0.93.0 (2023-10-05)
+
+### Feature
+
+* Use None in extend extra to remove expected file from schema ([`cbd8b02`](https://github.com/mcbeet/beet/commit/cbd8b02aff0c7172d5a4831e0c64552422618bb4))
+
+### Fix
+
+* Pack typing ([`0659752`](https://github.com/mcbeet/beet/commit/06597528948e47d03463a0cf34cb05331e942329))
+
 ## v0.92.0 (2023-08-06)
 
 ### Feature
