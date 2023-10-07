@@ -102,6 +102,8 @@ class NamespaceFile(Protocol):
     scope: ClassVar[Tuple[str, ...]]
     extension: ClassVar[str]
 
+    snake_name: ClassVar[str]
+
     def __init__(
         self,
         _content: Optional[Any] = None,

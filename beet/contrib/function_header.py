@@ -9,7 +9,7 @@ __all__ = [
 
 from typing import List, Optional
 
-from beet import Context, PluginOptions, configurable
+from beet import Context, Function, PluginOptions, configurable
 
 
 class FunctionHeaderOptions(PluginOptions):
@@ -27,8 +27,7 @@ def function_header(ctx: Context, opts: FunctionHeaderOptions):
     if not opts.template:
         return
 
-    for path in ctx.data.functions.match(*opts.match):
+    for function, (_, path) in ctx.select(match=opts.match, extend=Function).items():
         with ctx.override(render_path=path, render_group="functions"):
             header = ctx.template.render(opts.template)
-        function = ctx.data.functions[path]
         function.text = header + function.text

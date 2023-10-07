@@ -1,8 +1,10 @@
 __all__ = [
     "select_files",
+    "select_all",
     "PackSelector",
     "PackSelection",
     "PackSelectOption",
+    "PackMatchOption",
     "PathSpecOption",
     "RegexOption",
     "RegexFlagsOption",
@@ -30,7 +32,6 @@ from pathspec import PathSpec
 from pydantic import BaseModel
 
 from beet.core.file import File
-from beet.core.utils import snake_case
 from beet.library.base import NamespaceFile, Pack
 
 from .config import ListOption
@@ -93,9 +94,26 @@ class PathSpecOption(BaseModel):
         return PathSpec.from_lines("gitwildmatch", patterns)
 
 
+class PackMatchOption(BaseModel):
+    __root__: Union[PathSpecOption, Dict[str, PathSpecOption]] = PathSpecOption()
+
+    def compile_match(
+        self,
+        template: Optional[TemplateManager] = None,
+    ) -> Optional[Union[PathSpec, Dict[str, PathSpec]]]:
+        if isinstance(self.__root__, PathSpecOption):
+            return self.__root__.compile_spec(template)
+        else:
+            return {
+                group_name: spec
+                for group_name, match in self.__root__.items()
+                if (spec := match.compile_spec(template))
+            }
+
+
 class PackSelectOption(BaseModel):
     files: RegexOption = RegexOption()
-    match: Union[PathSpecOption, Dict[str, PathSpecOption]] = PathSpecOption()
+    match: PackMatchOption = PackMatchOption()
 
     class Config:
         extra = "forbid"
@@ -107,22 +125,7 @@ class PackSelectOption(BaseModel):
         Optional["re.Pattern[str]"],
         Optional[Union[PathSpec, Dict[str, PathSpec]]],
     ]:
-        files_regex = None
-        match_spec = None
-
-        if self.files:
-            files_regex = self.files.compile_regex(template)
-
-        if isinstance(self.match, PathSpecOption):
-            match_spec = self.match.compile_spec(template)
-        else:
-            match_spec = {
-                group_name: spec
-                for group_name, match in self.match.items()
-                if (spec := match.compile_spec(template))
-            }
-
-        return files_regex, match_spec
+        return self.files.compile_regex(template), self.match.compile_match(template)
 
 
 @dataclass(frozen=True)
@@ -133,14 +136,20 @@ class PackSelector:
     @classmethod
     def from_options(
         cls,
-        select_options: Optional[PackSelectOption] = None,
+        select_options: Optional[
+            Union[PackSelectOption, RegexOption, PackMatchOption]
+        ] = None,
         *,
         files: Optional[Any] = None,
         match: Optional[Any] = None,
         template: Optional[TemplateManager] = None,
     ) -> "PackSelector":
-        if select_options:
+        if isinstance(select_options, PackSelectOption):
             return PackSelector(*select_options.compile(template))
+        if isinstance(select_options, RegexOption):
+            return cls.from_options(PackSelectOption(files=select_options))
+        if isinstance(select_options, PackMatchOption):
+            return cls.from_options(PackSelectOption(match=select_options))
         values = {}
         if files:
             values["files"] = files
@@ -194,7 +203,7 @@ class PackSelector:
                 file_types = {t for t in file_types if issubclass(t, extend)}
 
             if isinstance(self.match_spec, dict):
-                group_map = {snake_case(t.__name__): t for t in file_types}
+                group_map = {t.snake_name: t for t in file_types}
                 for singular in list(group_map):
                     group_map.setdefault(f"{singular}s", group_map[singular])
 
@@ -246,6 +255,17 @@ def select_files(
         if extend
         else selector.select_files(pack, *extensions)
     )
+
+
+def select_all(pack: Pack[Any], extend: Type[T]) -> Iterable[Tuple[str, T]]:
+    file_types = set(pack.resolve_scope_map().values())
+    if extend:
+        file_types = {t for t in file_types if issubclass(t, extend)}
+    for file_type in file_types:
+        yield from pack[file_type].items()  # type: ignore
+        if pack.overlay_parent is None:
+            for overlay in pack.overlays.values():
+                yield from overlay[file_type].items()  # type: ignore
 
 
 def _gather_from_pack(

@@ -125,7 +125,7 @@ class RenameFilesHandler:
 
         logger.warning(
             'Invalid %s destination "%s".',
-            snake_case(file_type.__name__),
+            file_type.snake_name,
             dest,
             extra={"annotate": filename},
         )

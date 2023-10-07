@@ -1,11 +1,11 @@
 """Plugin that minifies function files."""
 
 
-from beet import Context
+from beet import Context, Function
 
 
 def beet_default(ctx: Context):
-    for function in ctx.data.functions.values():
+    for _, function in ctx[Function]:
         function.text = "".join(
             stripped + "\n"
             for line in function.lines
