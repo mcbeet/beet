@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.94.0 (2023-10-07)
+
+### Feature
+
+* Support overlays ([#434](https://github.com/mcbeet/beet/issues/434)) ([`951764f`](https://github.com/mcbeet/beet/commit/951764f32a74c7d1794729cf470515cedec18dd6))
+
 ## v0.93.0 (2023-10-05)
 
 ### Feature
