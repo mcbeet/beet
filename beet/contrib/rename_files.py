@@ -31,7 +31,6 @@ from beet import (
     configurable,
 )
 from beet.contrib.find_replace import RenderSubstitutionOption, TextSubstitutionOption
-from beet.core.utils import snake_case
 
 logger = logging.getLogger(__name__)
 
