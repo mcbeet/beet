@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.95.1 (2023-10-07)
+
+### Fix
+
+* Only diff overlays in pytest plugin if root pack ([`ce6d7f0`](https://github.com/mcbeet/beet/commit/ce6d7f0811d9c143769db5435d32408fc45302af))
+
 ## v0.95.0 (2023-10-07)
 
 ### Feature
