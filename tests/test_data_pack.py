@@ -592,11 +592,11 @@ def test_overlay():
     assert a
 
     assert a.supported_formats is None
-    assert p.mcmeta.data == {"pack": {"pack_format": 15, "description": ""}}
+    assert p.mcmeta.data == {"pack": {"pack_format": 18, "description": ""}}
 
     a.supported_formats = [17, 18]
     assert p.mcmeta.data == {
-        "pack": {"pack_format": 15, "description": ""},
+        "pack": {"pack_format": 18, "description": ""},
         "overlays": {"entries": [{"formats": [17, 18], "directory": "a"}]},
     }
 
@@ -605,7 +605,7 @@ def test_overlay():
     )
     assert b.supported_formats == {"min_inclusive": 16, "max_inclusive": 17}
     assert p.mcmeta.data == {
-        "pack": {"pack_format": 15, "description": ""},
+        "pack": {"pack_format": 18, "description": ""},
         "overlays": {
             "entries": [
                 {
@@ -634,7 +634,7 @@ def test_overlay():
         "c/data/demo/functions/thing.mcfunction": Function([]),
         "pack.mcmeta": Mcmeta(
             {
-                "pack": {"pack_format": 15, "description": ""},
+                "pack": {"pack_format": 18, "description": ""},
                 "overlays": {
                     "entries": [
                         {
@@ -657,7 +657,7 @@ def test_overlay():
 
     del p.overlays["b"]
     assert p.mcmeta.data == {
-        "pack": {"pack_format": 15, "description": ""},
+        "pack": {"pack_format": 18, "description": ""},
         "overlays": {
             "entries": [
                 {
