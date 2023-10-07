@@ -769,11 +769,15 @@ class OverlayContainer(MatchMixin, MergeMixin, Container[str, PackType]):
 
     pack: Optional[PackType] = None
 
+    __currently_merging: Optional[Any] = Any
+
     def process(self, key: str, value: PackType) -> PackType:
         supported_formats = value.supported_formats
 
         value.overlay_name = key
         value.overlay_parent = self.pack
+        self.merge(value.overlays)
+        value.overlays = self
 
         if self.pack is not None:
             value.configure(self.pack)
@@ -815,17 +819,27 @@ class OverlayContainer(MatchMixin, MergeMixin, Container[str, PackType]):
         key: str,
         default: Optional[PackType] = None,
         *,
-        formats: Optional[SupportedFormats] = None,
+        supported_formats: Optional[SupportedFormats] = None,
     ) -> PackType:
         value = self._wrapped.get(key)
         if value is not None:
             return value
         if default is None:
             default = self.missing(key)
-        if formats is not None:
-            default.supported_formats = formats
+        if supported_formats is not None:
+            default.supported_formats = supported_formats
         self[key] = default
         return default
+
+    def merge(self, other: Mapping[str, SupportsMerge]) -> bool:
+        previous_other = self.__currently_merging
+        if previous_other is other:
+            return True
+        self.__currently_merging = other
+        try:
+            return super().merge(other)
+        finally:
+            self.__currently_merging = previous_other
 
     def __eq__(self, other: Any) -> bool:
         if self is other:
@@ -1078,7 +1092,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
             any(self.values())
             or self.extra.keys() > {"pack.mcmeta"}
             or (self.overlay_parent is not None and self.supported_formats is not None)
-            or bool(self.overlays)
+            or (self.overlay_parent is None and bool(self.overlays))
         )
 
     def __enter__(self: T) -> T:

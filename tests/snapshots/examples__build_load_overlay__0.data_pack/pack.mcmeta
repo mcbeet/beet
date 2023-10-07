@@ -2,5 +2,27 @@
   "pack": {
     "pack_format": 15,
     "description": ""
+  },
+  "overlays": {
+    "entries": [
+      {
+        "formats": {
+          "min_inclusive": 17,
+          "max_inclusive": 18
+        },
+        "directory": "overlay1"
+      },
+      {
+        "formats": {
+          "min_inclusive": 18,
+          "max_inclusive": 19
+        },
+        "directory": "overlay2"
+      },
+      {
+        "formats": 19,
+        "directory": "overlay_missing"
+      }
+    ]
   }
 }

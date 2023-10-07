@@ -600,7 +600,9 @@ def test_overlay():
         "overlays": {"entries": [{"formats": [17, 18], "directory": "a"}]},
     }
 
-    b = p.overlays.setdefault("b", formats={"min_inclusive": 16, "max_inclusive": 17})
+    b = p.overlays.setdefault(
+        "b", supported_formats={"min_inclusive": 16, "max_inclusive": 17}
+    )
     assert b.supported_formats == {"min_inclusive": 16, "max_inclusive": 17}
     assert p.mcmeta.data == {
         "pack": {"pack_format": 15, "description": ""},
@@ -618,7 +620,7 @@ def test_overlay():
         },
     }
 
-    assert p.overlays.setdefault("b", formats=18) is b
+    assert p.overlays.setdefault("b", supported_formats=18) is b
     assert b.supported_formats == {"min_inclusive": 16, "max_inclusive": 17}
 
     c = DataPack(supported_formats=19)
@@ -677,3 +679,18 @@ def test_overlay():
     assert p.overlays["stuff"].overlay_parent is p
     assert p.overlays["stuff"].functions["demo:stuff"] == Function(["say stuff"])
     assert p.overlays["stuff"].supported_formats is None
+
+    assert p.overlays["bingo"].overlays is p.overlays
+
+    d = DataPack()
+    d["demo:init"] = Function(["say original init"])
+    d.overlays["bop"]["demo:init"] = Function(["say init"])
+    d.overlays.setdefault("bop2", supported_formats=99)["demo:init"] = Function()
+    p.overlays["d"] = d
+
+    assert p.overlays["d"].overlays is p.overlays
+    assert p.overlays["bop"].overlays is p.overlays
+    assert p.overlays["bop2"].overlays is p.overlays
+    assert p.overlays["d"].functions["demo:init"] == Function(["say original init"])
+    assert p.overlays["bop"].functions["demo:init"] == Function(["say init"])
+    assert p.overlays["bop2"].functions["demo:init"] == Function()

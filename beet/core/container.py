@@ -56,6 +56,8 @@ class SupportsMerge(Protocol):
 class MergeMixin:
     def merge(self, other: Mapping[Any, SupportsMerge]) -> bool:
         """Merge values from the given dict-like object."""
+        if self is other:
+            return True
         for key, value in other.items():
             try:
                 if key not in self or not self[key].merge(value):  # type: ignore
