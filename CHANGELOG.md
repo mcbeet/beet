@@ -2,6 +2,16 @@
 
 <!--next-version-placeholder-->
 
+## v0.95.0 (2023-10-07)
+
+### Feature
+
+* Add ctx[Function] and refactor contrib to take into account overlays ([`6f0cec4`](https://github.com/mcbeet/beet/commit/6f0cec4b8de5af78358e9ed81b8b73caaf3b6a66))
+
+### Fix
+
+* Support overlays in select_files ([`1297472`](https://github.com/mcbeet/beet/commit/12974727631509d22fa97f9252c15f4ebb4d4ca0))
+
 ## v0.94.0 (2023-10-07)
 
 ### Feature
