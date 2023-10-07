@@ -15,6 +15,7 @@ from dataclasses import dataclass
 from typing import (
     Any,
     Dict,
+    Iterable,
     Literal,
     Optional,
     Tuple,
@@ -30,7 +31,7 @@ from pydantic import BaseModel
 
 from beet.core.file import File
 from beet.core.utils import snake_case
-from beet.library.base import Pack
+from beet.library.base import NamespaceFile, Pack
 
 from .config import ListOption
 from .template import TemplateManager
@@ -199,15 +200,11 @@ class PackSelector:
 
                 for group, spec in self.match_spec.items():
                     if file_type := group_map.get(group):
-                        for path, file_instance in pack[file_type].items():
-                            if spec.match_file(path):
-                                result[file_instance] = None, path
+                        result.update(_gather_from_pack(pack, file_type, spec))
 
             else:
                 for file_type in file_types:
-                    for path, file_instance in pack[file_type].items():
-                        if self.match_spec.match_file(path):
-                            result[file_instance] = None, path
+                    result.update(_gather_from_pack(pack, file_type, self.match_spec))
 
         return result
 
@@ -249,3 +246,14 @@ def select_files(
         if extend
         else selector.select_files(pack, *extensions)
     )
+
+
+def _gather_from_pack(
+    pack: Pack[Any], file_type: Type[NamespaceFile], spec: PathSpec
+) -> Iterable[Tuple[NamespaceFile, Tuple[Optional[str], Optional[str]]]]:
+    for path, file_instance in pack[file_type].items():
+        if spec.match_file(path):
+            yield file_instance, (None, path)
+    if pack.overlay_parent is None:
+        for overlay in pack.overlays.values():
+            yield from _gather_from_pack(overlay, file_type, spec)

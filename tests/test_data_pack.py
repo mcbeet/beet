@@ -694,3 +694,8 @@ def test_overlay():
     assert p.overlays["d"].functions["demo:init"] == Function(["say original init"])
     assert p.overlays["bop"].functions["demo:init"] == Function(["say init"])
     assert p.overlays["bop2"].functions["demo:init"] == Function()
+
+    f1 = set(select_files(p, files=r".*", extend=Function))
+    f2 = set(select_files(p, match="*"))
+    assert f1 == f2
+    assert len(f1) == 6
