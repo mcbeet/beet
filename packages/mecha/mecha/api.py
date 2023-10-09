@@ -38,6 +38,7 @@ from beet import (
     Function,
     NamespaceFile,
     TextFileBase,
+    select_files,
 )
 from beet.core.utils import (
     FileSystemPath,
@@ -444,17 +445,17 @@ class Mecha:
             for file_type in self.providers:
                 if not issubclass(file_type, TextFileBase):
                     continue
-                for key in source[file_type].match(*match or ["*"]):
-                    value = source[file_type][key]
-                    self.database[value] = CompilationUnit(
-                        resource_location=key,
+                sources = select_files(source, extend=file_type, match=match or "*")
+                for file_instance, (_, path) in sources.items():
+                    self.database[file_instance] = CompilationUnit(
+                        resource_location=path,
                         filename=(
-                            os.path.relpath(value.source_path, self.directory)
-                            if value.source_path
+                            os.path.relpath(file_instance.source_path, self.directory)
+                            if file_instance.source_path
                             else None
                         ),
                     )
-                    self.database.enqueue(value)
+                    self.database.enqueue(file_instance)
         else:
             if isinstance(source, (list, str)):
                 source = Function(source)
