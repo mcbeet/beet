@@ -195,7 +195,20 @@
     },
     "with": {
       "type": "literal",
-      "redirect": ["function", "name", "with"]
+      "children": {
+        "block": {
+          "type": "literal",
+          "redirect": ["function", "name", "with", "block"]
+        },
+        "entity": {
+          "type": "literal",
+          "redirect": ["function", "name", "with", "entity"]
+        },
+        "storage": {
+          "type": "literal",
+          "redirect": ["function", "name", "with", "storage"]
+        }
+      }
     },
     "append": {
       "type": "literal",
