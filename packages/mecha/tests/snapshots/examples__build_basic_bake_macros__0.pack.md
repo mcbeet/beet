@@ -7,7 +7,7 @@
 ```json
 {
   "pack": {
-    "pack_format": 14,
+    "pack_format": 18,
     "description": ""
   }
 }
@@ -49,17 +49,4 @@ execute positioned ~ ~1 ~ run function demo:bop/baked_6pw8q7r5nqc7y
 
 ```mcfunction
 say bye steve
-```
-
-## Resource pack
-
-`@resource_pack pack.mcmeta`
-
-```json
-{
-  "pack": {
-    "pack_format": 14,
-    "description": ""
-  }
-}
 ```

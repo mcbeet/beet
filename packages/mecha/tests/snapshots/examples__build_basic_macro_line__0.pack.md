@@ -7,7 +7,7 @@
 ```json
 {
   "pack": {
-    "pack_format": 14,
+    "pack_format": 18,
     "description": ""
   }
 }
@@ -27,17 +27,4 @@ function demo:thing {name: "steve", eval: "kill @a"}
 $say hello $(name)
 $   say hello $(name)
 $$(eval)
-```
-
-## Resource pack
-
-`@resource_pack pack.mcmeta`
-
-```json
-{
-  "pack": {
-    "pack_format": 14,
-    "description": ""
-  }
-}
 ```

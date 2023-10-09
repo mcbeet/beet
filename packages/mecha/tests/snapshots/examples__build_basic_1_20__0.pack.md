@@ -7,7 +7,7 @@
 ```json
 {
   "pack": {
-    "pack_format": 14,
+    "pack_format": 18,
     "description": ""
   }
 }
@@ -20,17 +20,4 @@
 ```mcfunction
 execute if entity @e[type=pig] run return 1
 return 0
-```
-
-## Resource pack
-
-`@resource_pack pack.mcmeta`
-
-```json
-{
-  "pack": {
-    "pack_format": 14,
-    "description": ""
-  }
-}
 ```
