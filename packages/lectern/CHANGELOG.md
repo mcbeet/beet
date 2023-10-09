@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.29.1 (2023-10-09)
+
+### Fix
+
+* Handle missing directive ([`d88289f`](https://github.com/mcbeet/lectern/commit/d88289ff3f8aec6c22e9091796f668ea3144d4cb))
+
 ## v0.29.0 (2023-10-09)
 
 ### Feature
