@@ -25,7 +25,7 @@ from beet import (
     configurable,
 )
 from beet.core.utils import required_field
-from nbtlib import String
+from nbtlib import Numeric, String
 from pathspec import PathSpec
 from tokenstream import INITIAL_LOCATION, Preprocessor, SourceLocation, set_location
 
@@ -316,9 +316,11 @@ class MacroBaker(Visitor):
                 entry.key.value: MacroInvocationArgument(
                     entry=entry,
                     stringified=(
-                        nbt_tag.unpack()
+                        str(nbt_tag.unpack())
                         if isinstance(entry.value, AstNbtValue)
-                        and isinstance(nbt_tag := entry.value.evaluate(), String)
+                        and isinstance(
+                            nbt_tag := entry.value.evaluate(), (String, Numeric)
+                        )
                         else self.serialize(entry.value)
                     ),
                 )
