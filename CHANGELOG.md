@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.95.3 (2023-10-09)
+
+### Fix
+
+* Clean up pack.mcmeta when deleting overlays ([`2f6d346`](https://github.com/mcbeet/beet/commit/2f6d346aa5f5eae6f193e7e1554efd46df460602))
+
 ## v0.95.2 (2023-10-09)
 
 ### Fix
