@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.95.4 (2023-10-09)
+
+### Fix
+
+* Default pack.mcmeta should compare equal to no pack.mcmeta ([`6898d99`](https://github.com/mcbeet/beet/commit/6898d99df0bbe4e335079539087eba34698e4ac7))
+
 ## v0.95.3 (2023-10-09)
 
 ### Fix
