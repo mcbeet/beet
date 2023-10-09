@@ -2,6 +2,17 @@
 
 <!--next-version-placeholder-->
 
+## v0.78.0 (2023-10-09)
+
+### Feature
+
+* Compile overlays ([`f5f0032`](https://github.com/mcbeet/mecha/commit/f5f00324ff0eb1e8530a4cc6c3568dcbc97a2c4a))
+* Anonymous macro invocation ([`eff5fcd`](https://github.com/mcbeet/mecha/commit/eff5fcdd4bc18e8257d3a699b601fafc4a8be519))
+
+### Fix
+
+* Discard number suffix when baking macros ([`e7dd9f5`](https://github.com/mcbeet/mecha/commit/e7dd9f530c58cb4415099de2d26334587e17a48d))
+
 ## v0.77.0 (2023-10-09)
 
 ### Feature
