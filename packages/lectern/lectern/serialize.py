@@ -22,6 +22,7 @@ from typing import (
     Dict,
     Iterable,
     Iterator,
+    List,
     Mapping,
     Optional,
     Type,
@@ -29,7 +30,7 @@ from typing import (
 )
 from urllib.parse import urlparse
 
-from beet import DataPack, File, NamespaceFile, ResourcePack, TextFileBase
+from beet import DataPack, File, NamespaceFile, ResourcePack, TextFile, TextFileBase
 from beet.core.utils import normalize_string
 
 EXTENSION_HIGHLIGHTING = {
@@ -166,6 +167,36 @@ class TextSerializer:
         mapping: Mapping[Type[NamespaceFile], str],
     ) -> str:
         """Return the serialized representation."""
+        result: List[str] = []
+
+        for pack, extra_directive in [
+            (assets, "resource_pack"),
+            (data, "data_pack"),
+        ]:
+            if not self.pack_filter(pack):
+                continue
+
+            result.append(self.serialize_pack(pack, extra_directive, mapping))
+
+            if pack.overlay_parent is None:
+                should_end = False
+                for overlay in pack.overlays.values():
+                    if overlay:
+                        should_end = True
+                        result.append(
+                            self.serialize_pack(overlay, extra_directive, mapping)
+                        )
+                if should_end:
+                    result.append("@endoverlay\n")
+
+        return "\n".join(result)
+
+    def serialize_pack(
+        self,
+        pack: Union[DataPack, ResourcePack],
+        extra_directive: str,
+        mapping: Mapping[Type[NamespaceFile], str],
+    ) -> str:
         escaped_regex = self.get_escaped_regex(mapping)
 
         return "\n".join(
@@ -176,15 +207,19 @@ class TextSerializer:
                 + b64encode(content).decode()
                 + "\n"
             )
-            for pack, extra_directive in [
-                (assets, "resource_pack"),
-                (data, "data_pack"),
-            ]
-            if self.pack_filter(pack)
             for directive_name, argument, file_instance in chain(
+                (
+                    [("overlay", pack.overlay_name, TextFile())]
+                    if pack.overlay_name is not None
+                    else []
+                ),
                 (
                     (extra_directive, path, file_instance)
                     for path, file_instance in pack.extra.items()
+                    if not (
+                        pack.overlay_parent is not None
+                        and path in ("pack.mcmeta", "pack.png")
+                    )
                 ),
                 (
                     (
@@ -286,7 +321,12 @@ class MarkdownSerializer:
         """Yield markdown chunks for the given pack."""
         yield f"## {title}"
 
+        if pack.overlay_name is not None:
+            yield f"\n`@overlay {pack.overlay_name}`"
+
         for path, file_instance in pack.extra.items():
+            if pack.overlay_parent is not None and path in ("pack.mcmeta", "pack.png"):
+                continue
             yield from self.format_serialized_file(
                 self.serialize_file_instance(
                     pack_directive,
@@ -337,6 +377,22 @@ class MarkdownSerializer:
                             )
                         )
         yield ""
+
+        if pack.overlay_parent is None:
+            should_end = False
+            for directory, overlay in pack.overlays.items():
+                if overlay:
+                    should_end = True
+                    yield from self.serialize_pack(
+                        f"Overlay `{directory}`",
+                        pack_directive,
+                        overlay,
+                        mapping,
+                        external_files,
+                        external_prefix,
+                    )
+            if should_end:
+                yield "`@endoverlay`\n"
 
     def format_serialized_file(self, chunks: Iterable[str]) -> Iterator[str]:
         """Format the markdown chunks for serializing file instances."""

@@ -9,6 +9,17 @@
   "pack": {
     "pack_format": 18,
     "description": ""
+  },
+  "overlays": {
+    "entries": [
+      {
+        "formats": {
+          "min_inclusive": 16,
+          "max_inclusive": 17
+        },
+        "directory": "dummy_overlay"
+      }
+    ]
   }
 }
 ```
@@ -203,3 +214,17 @@ say foo
 ```mcfunction
 say foo
 ```
+
+## Overlay `dummy_overlay`
+
+`@overlay dummy_overlay`
+
+### tutorial
+
+`@function tutorial:greeting`
+
+```mcfunction
+say Hello from overlay!
+```
+
+`@endoverlay`

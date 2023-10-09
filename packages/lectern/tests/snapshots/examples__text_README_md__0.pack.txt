@@ -3,6 +3,17 @@
   "pack": {
     "pack_format": 18,
     "description": ""
+  },
+  "overlays": {
+    "entries": [
+      {
+        "formats": {
+          "min_inclusive": 16,
+          "max_inclusive": 17
+        },
+        "directory": "dummy_overlay"
+      }
+    ]
   }
 }
 
@@ -151,3 +162,10 @@ say foo
 
 @function text_in_block:foo
 say foo
+
+@overlay dummy_overlay
+
+@function tutorial:greeting
+say Hello from overlay!
+
+@endoverlay

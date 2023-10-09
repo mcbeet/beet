@@ -378,6 +378,24 @@ Finally, there's a `strip_final_newline` modifier that removes the final newline
 say This function doesn't have a final newline.
 ```
 
+## Overlays
+
+You can use the `@overlay` directive to make the following directives apply to a specific pack overlay (introduced in [Java Edition 1.20.2](https://minecraft.wiki/w/Java_Edition_1.20.2)).
+
+`@overlay({"min_inclusive": 16, "max_inclusive": 17}) dummy_overlay`
+
+You can specify the `formats` supported by this overlay as a modifier. From now, on all the directives will apply to the overlay `dummy_overlay`.
+
+`@function tutorial:greeting`
+
+```mcfunction
+say Hello from overlay!
+```
+
+You can switch to another overlay at any time by using the `@overlay` directive again. To go back to the main pack, use the `@endoverlay` directive.
+
+`@endoverlay`
+
 ## Command-line utility
 
 ```bash

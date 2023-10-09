@@ -8,6 +8,7 @@ __all__ = [
 ]
 
 
+import json
 import re
 from dataclasses import replace
 from itertools import islice
@@ -21,6 +22,7 @@ from typing import (
     List,
     Mapping,
     Optional,
+    Set,
     Tuple,
     Union,
 )
@@ -54,16 +56,22 @@ class Extractor:
         self.escaped_regex = None
         self.cache = cache
 
+    def generate_directives(self) -> str:
+        names = list(self.directives)
+        names.append("overlay")
+        names.append("endoverlay")
+        return "|".join(names)
+
     def generate_regex(self) -> str:
         """Return a regex that can match the current directives."""
-        names = "|".join(self.directives)
+        names = self.generate_directives()
         modifier = r"(?:\((?P<modifier>[^)]*)\)|\b)"
         arguments = r"(?P<arguments>.*)"
         return f"@(?P<name>{names}){modifier}{arguments}"
 
     def generate_escaped_regex(self) -> str:
         """Return a regex that can match escaped fragments."""
-        names = "|".join(self.directives)
+        names = self.generate_directives()
         return rf"(@@+(?:{names})\b.*)"
 
     def compile_regex(self, regex: str) -> "re.Pattern[str]":
@@ -121,13 +129,36 @@ class Extractor:
         loaders: Iterable[FragmentLoader] = (),
     ):
         """Apply directives into a blank data pack and a blank resource pack."""
+        original_packs = assets, data
+        added_overlays: Set[str] = set()
+
         for fragment in fragments:
             for loader in loaders:
                 fragment = loader(fragment, directives)
                 if not fragment:
                     break
             if fragment:
-                directives[fragment.directive](fragment, assets, data)
+                if fragment.directive == "overlay":
+                    directory = fragment.expect("directory")
+                    formats: Any = (
+                        json.loads(fragment.modifier) if fragment.modifier else None
+                    )
+                    assets = assets.overlays.setdefault(
+                        directory, supported_formats=formats
+                    )
+                    data = data.overlays.setdefault(
+                        directory, supported_formats=formats
+                    )
+                    added_overlays.add(directory)
+                elif fragment.directive == "endoverlay":
+                    assets, data = original_packs
+                else:
+                    directives[fragment.directive](fragment, assets, data)
+
+        for pack in original_packs:
+            for directory in added_overlays:
+                if not pack.overlays[directory]:
+                    del pack.overlays[directory]
 
     def parse_fragments(
         self,
