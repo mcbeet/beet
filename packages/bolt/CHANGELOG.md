@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.38.0 (2023-10-09)
+
+### Feature
+
+* Update deps ([`9a42907`](https://github.com/mcbeet/bolt/commit/9a42907cfad7fb5ed4eec202acd0e53f29c93e43))
+
 ## v0.37.0 (2023-08-03)
 
 ### Feature
