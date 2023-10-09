@@ -810,6 +810,11 @@ class OverlayContainer(MatchMixin, MergeMixin, Container[str, PackType]):
             for i, entry in enumerate(entries):
                 if entry.get("directory") == key:
                     del entries[i]
+                    if not entries:
+                        del overlays["entries"]
+                        if not overlays:
+                            del self.pack.mcmeta.data["overlays"]
+                    break
 
     def missing(self, key: str) -> PackType:
         if self.pack is None:
