@@ -1093,7 +1093,6 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
         return (
             any(self.values())
             or self.extra.keys() > {"pack.mcmeta"}
-            or (self.overlay_parent is not None and self.supported_formats is not None)
             or (self.overlay_parent is None and bool(self.overlays))
         )
 

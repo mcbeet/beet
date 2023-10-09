@@ -603,6 +603,7 @@ def test_overlay():
     b = p.overlays.setdefault(
         "b", supported_formats={"min_inclusive": 16, "max_inclusive": 17}
     )
+    assert not b
     assert b.supported_formats == {"min_inclusive": 16, "max_inclusive": 17}
     assert p.mcmeta.data == {
         "pack": {"pack_format": 18, "description": ""},
@@ -627,6 +628,7 @@ def test_overlay():
     c["demo:thing"] = Function()
     p.overlays["c"] = c
 
+    assert c
     assert c.overlay_name == "c"
     assert c.overlay_parent is p
     assert dict(p.list_files()) == {
