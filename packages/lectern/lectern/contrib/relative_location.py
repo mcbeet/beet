@@ -30,7 +30,7 @@ class RelativeNamespacedResourceLoader:
         fragment: Fragment,
         directives: Mapping[str, Directive],
     ) -> Fragment:
-        if isinstance(directives[fragment.directive], NamespacedResourceDirective):
+        if isinstance(directives.get(fragment.directive), NamespacedResourceDirective):
             name = fragment.expect("name")
             if ":" not in name:
                 fragment = replace(fragment, arguments=[self.ctx.generate.path(name)])

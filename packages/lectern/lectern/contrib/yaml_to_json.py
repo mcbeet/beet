@@ -29,7 +29,7 @@ def beet_default(ctx: Context):
 
 def handle_yaml(fragment: Fragment, directives: Mapping[str, Directive]) -> Fragment:
     """Loader that converts yaml to json."""
-    directive = directives[fragment.directive]
+    directive = directives.get(fragment.directive)
     is_yaml = False
 
     if isinstance(directive, NamespacedResourceDirective):
