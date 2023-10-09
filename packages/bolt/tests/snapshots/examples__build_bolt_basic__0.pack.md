@@ -7,7 +7,7 @@
 ```json
 {
   "pack": {
-    "pack_format": 12,
+    "pack_format": 18,
     "description": ""
   }
 }
@@ -643,7 +643,7 @@ say json loaded!
 ```json
 {
   "pack": {
-    "pack_format": 13,
+    "pack_format": 18,
     "description": ""
   }
 }

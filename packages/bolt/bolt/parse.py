@@ -7,7 +7,7 @@ __all__ = [
     "create_bolt_root_parser",
     "create_bolt_command_parser",
     "UndefinedIdentifier",
-    "UndefinedIdentifierErrorHandler",
+    "ImprovedErrorHandler",
     "BranchScopeManager",
     "FinalExpressionParser",
     "InterpolationParser",
@@ -97,7 +97,14 @@ from mecha.utils import (
     normalize_whitespace,
     string_to_number,
 )
-from tokenstream import InvalidSyntax, Token, TokenStream, set_location
+from tokenstream import (
+    InvalidSyntax,
+    Token,
+    TokenStream,
+    UnexpectedEOF,
+    UnexpectedToken,
+    set_location,
+)
 
 from .ast import (
     AstAssignment,
@@ -178,7 +185,6 @@ from .semantics import (
     LexicalScope,
     MacroScope,
     ProcMacroScope,
-    UnboundLocalIdentifier,
     UndefinedIdentifier,
 )
 from .utils import internal
@@ -211,6 +217,7 @@ def get_bolt_parsers(
             macro_handler=macro_handler,
         ),
         "nested_root": create_bolt_root_parser(parsers["nested_root"], macro_handler),
+        "root_item": ImprovedErrorHandler(parsers["root_item"]),
         "command": create_bolt_command_parser(macro_handler, modules, bolt_prototypes),
         "command:argument:bolt:if_block": delegate("bolt:if_block"),
         "command:argument:bolt:elif_condition": delegate("bolt:elif_condition"),
@@ -662,14 +669,13 @@ def create_bolt_command_parser(
     parser = MemoHandler(parser)
     parser = BindingStorageHandler(parser)
     parser = ImportStatementHandler(parser, modules)
-    parser = UndefinedIdentifierErrorHandler(parser)
     parser = SubcommandConstraint(parser, command_identifiers=bolt_prototypes)
     return parser
 
 
 @dataclass
-class UndefinedIdentifierErrorHandler:
-    """Parser that provides hints for errors involving undefined identifiers."""
+class ImprovedErrorHandler:
+    """Parser that tries to recover more specific error alternatives."""
 
     parser: Parser
 
@@ -678,13 +684,14 @@ class UndefinedIdentifierErrorHandler:
             return self.parser(stream)
         except UndefinedIdentifier:
             raise
-        except InvalidSyntax as exc:
-            alts = list(exc.alternatives.get(UnboundLocalIdentifier, []))
-            alts += exc.alternatives.get(UndefinedIdentifier, [])
-            for alt in alts:
-                if alt.end_location.pos + 1 >= exc.location.pos:  # kind of a cheat
-                    alt.notes.append(str(exc))
-                    raise alt from None
+        except (UnexpectedToken, UnexpectedEOF) as exc:
+            for exc_type, alts in exc.alternatives.items():
+                if not issubclass(exc_type, (UnexpectedToken, UnexpectedEOF)):
+                    for alt in alts:
+                        if alt.end_location.pos + 1 >= exc.location.pos:
+                            if isinstance(alt, UndefinedIdentifier):
+                                alt.notes.append(str(exc))
+                            raise alt from None
             raise
 
 

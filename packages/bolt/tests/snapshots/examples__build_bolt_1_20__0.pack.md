@@ -7,7 +7,7 @@
 ```json
 {
   "pack": {
-    "pack_format": 14,
+    "pack_format": 18,
     "description": ""
   }
 }
@@ -29,17 +29,4 @@ return 0
 
 ```mcfunction
 return 42
-```
-
-## Resource pack
-
-`@resource_pack pack.mcmeta`
-
-```json
-{
-  "pack": {
-    "pack_format": 14,
-    "description": ""
-  }
-}
 ```

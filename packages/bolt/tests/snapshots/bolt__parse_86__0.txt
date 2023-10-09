@@ -2,4 +2,6 @@
 # line 1, column 8
 #      1 |  return foo
 #        :         ^^^
+# Notes:
+#   - Expected eof, newline or number but got literal 'foo'.
 return foo

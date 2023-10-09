@@ -1,4 +1,4 @@
-#>ERROR  Expected literal 'day', literal 'midnight', literal 'night', literal 'noon' or time but got literal 'hex.time'.
+#>ERROR  Expected call expression on builtin "hex".
 # line 1, column 10
 #      1 |  time set hex.time
 #        :           ^^^^^^^^
