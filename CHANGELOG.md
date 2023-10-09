@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.95.2 (2023-10-09)
+
+### Fix
+
+* Don't make overlays truthy when they just contain formats declaration ([`1c98097`](https://github.com/mcbeet/beet/commit/1c98097e0c05de51282b628693ad443ba74d28ca))
+
 ## v0.95.1 (2023-10-07)
 
 ### Fix
