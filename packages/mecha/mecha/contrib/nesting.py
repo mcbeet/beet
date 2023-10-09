@@ -40,6 +40,7 @@ from mecha.contrib.nested_location import NestedLocationResolver
 
 class NestingOptions(BaseModel):
     generate_execute: str = "nested_execute_{incr}"
+    generate_macro: str = "nested_macro_{incr}"
 
 
 def beet_default(ctx: Context):
@@ -63,6 +64,7 @@ def nesting(ctx: Context, opts: NestingOptions):
             generate=ctx.generate,
             database=mc.database,
             generate_execute_template=opts.generate_execute,
+            generate_macro_template=opts.generate_macro,
             nested_location_resolver=ctx.inject(NestedLocationResolver),
             inplace_nesting_predicate=ctx.inject(InplaceNestingPredicate),
         )
@@ -119,6 +121,7 @@ class NestedCommandsTransformer(MutatingReducer):
     generate: BeetGenerator = required_field()
     database: CompilationDatabase = required_field()
     generate_execute_template: str = required_field()
+    generate_macro_template: str = required_field()
     nested_location_resolver: NestedLocationResolver = required_field()
     inplace_nesting_predicate: InplaceNestingPredicate = required_field()
 
@@ -150,7 +153,7 @@ class NestedCommandsTransformer(MutatingReducer):
 
     @rule(AstCommand, identifier="execute:subcommand")
     def nesting_execute_run(self, node: AstCommand):
-        if isinstance(command := node.arguments[0], AstCommand):
+        if node.arguments and isinstance(command := node.arguments[0], AstCommand):
             if command.identifier == "execute:run:subcommand":
                 return command.arguments[0]
         return node
@@ -206,6 +209,44 @@ class NestedCommandsTransformer(MutatingReducer):
             identifier="execute:run:subcommand",
             arguments=AstChildren([subcommand]),
         )
+
+    @rule(AstCommand, identifier="with:block:sourcePos:commands")
+    @rule(AstCommand, identifier="with:block:sourcePos")
+    @rule(AstCommand, identifier="with:block:sourcePos:path:commands")
+    @rule(AstCommand, identifier="with:block:sourcePos:path")
+    @rule(AstCommand, identifier="with:entity:source:commands")
+    @rule(AstCommand, identifier="with:entity:source")
+    @rule(AstCommand, identifier="with:entity:source:path:commands")
+    @rule(AstCommand, identifier="with:entity:source:path")
+    @rule(AstCommand, identifier="with:storage:source:commands")
+    @rule(AstCommand, identifier="with:storage:source")
+    @rule(AstCommand, identifier="with:storage:source:path:commands")
+    @rule(AstCommand, identifier="with:storage:source:path")
+    def nesting_macro_commands(self, node: AstCommand):
+        identifier = node.identifier.split(":")
+        if not identifier[-1] == "commands":
+            d = Diagnostic(
+                "error", "Anonymous macro invocation requires nested commands."
+            )
+            return set_location(d, node)
+
+        if isinstance(root := node.arguments[-1], AstRoot):
+            namespace, resolved = self.nested_location_resolver.resolve()
+            path = self.generate.format(
+                f"{namespace}:{resolved}/{self.generate_macro_template}"
+            )
+
+            self.emit_function(path, root)
+
+            command = AstCommand(
+                identifier=":".join(["function", "name"] + identifier[:-1]),
+                arguments=AstChildren(
+                    [AstResourceLocation.from_value(path), *node.arguments[:-1]]
+                ),
+            )
+            return set_location(command, node)
+
+        return node
 
     @rule(AstCommand, identifier="schedule:function:function:time:commands")
     @rule(AstCommand, identifier="schedule:function:function:time:append:commands")

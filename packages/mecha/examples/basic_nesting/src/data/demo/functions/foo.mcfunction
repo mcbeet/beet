@@ -169,4 +169,20 @@ execute run function demo:bar7 with storage demo:temp:
 execute run function demo:bar8 with storage demo:temp args:
     say nested definition 8
 
-
+say anonymous nested_macro
+with entity @s:
+    say anonymous definition 1
+with entity @s Inventory:
+    say anonymous definition 2
+with storage demo:temp:
+    say anonymous definition 3
+with storage demo:temp args:
+    say anonymous definition 4
+with block ~ ~ ~:
+    say anonymous definition 5
+with block ~ ~ ~ Items:
+    say anonymous definition 6
+with storage demo:temp:
+    say anonymous definition 7
+with storage demo:temp args:
+    say anonymous definition 8

@@ -193,6 +193,10 @@
         }
       }
     },
+    "with": {
+      "type": "literal",
+      "redirect": ["function", "name", "with"]
+    },
     "append": {
       "type": "literal",
       "children": {

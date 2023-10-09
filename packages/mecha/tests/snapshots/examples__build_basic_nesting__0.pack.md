@@ -59,6 +59,15 @@ function demo:bar5 with block ~ ~ ~
 function demo:bar6 with block ~ ~ ~ Items
 function demo:bar7 with storage demo:temp
 function demo:bar8 with storage demo:temp args
+say anonymous nested_macro
+function demo:foo/nested_macro_0 with entity @s
+function demo:foo/nested_macro_1 with entity @s Inventory
+function demo:foo/nested_macro_2 with storage demo:temp
+function demo:foo/nested_macro_3 with storage demo:temp args
+function demo:foo/nested_macro_4 with block ~ ~ ~
+function demo:foo/nested_macro_5 with block ~ ~ ~ Items
+function demo:foo/nested_macro_6 with storage demo:temp
+function demo:foo/nested_macro_7 with storage demo:temp args
 ```
 
 `@function demo:wat`
@@ -194,6 +203,54 @@ say nested definition 7
 
 ```mcfunction
 say nested definition 8
+```
+
+`@function demo:foo/nested_macro_0`
+
+```mcfunction
+say anonymous definition 1
+```
+
+`@function demo:foo/nested_macro_1`
+
+```mcfunction
+say anonymous definition 2
+```
+
+`@function demo:foo/nested_macro_2`
+
+```mcfunction
+say anonymous definition 3
+```
+
+`@function demo:foo/nested_macro_3`
+
+```mcfunction
+say anonymous definition 4
+```
+
+`@function demo:foo/nested_macro_4`
+
+```mcfunction
+say anonymous definition 5
+```
+
+`@function demo:foo/nested_macro_5`
+
+```mcfunction
+say anonymous definition 6
+```
+
+`@function demo:foo/nested_macro_6`
+
+```mcfunction
+say anonymous definition 7
+```
+
+`@function demo:foo/nested_macro_7`
+
+```mcfunction
+say anonymous definition 8
 ```
 
 `@function demo:thing1`
