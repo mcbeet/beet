@@ -320,6 +320,23 @@ class PackExtraContainer(ExtraContainer, Generic[PackType]):
             )
         return super().merge(other)
 
+    def __eq__(self, other: Any) -> bool:
+        left, right = dict(self), dict(other)
+
+        left_mcmeta = left.pop("pack.mcmeta", None)
+        right_mcmeta = right.pop("pack.mcmeta", None)
+
+        if left != right:
+            return False
+
+        if left_mcmeta != right_mcmeta:
+            if self.pack is not None and (left_mcmeta is None or right_mcmeta is None):
+                default_mcmeta = type(self.pack)().mcmeta
+                return left_mcmeta == default_mcmeta or right_mcmeta == default_mcmeta
+            return False
+
+        return True
+
 
 class NamespaceContainer(MatchMixin, MergeMixin, Container[str, NamespaceFileType]):
     """Container that stores one type of files in a namespace."""
@@ -786,6 +803,11 @@ class OverlayContainer(MatchMixin, MergeMixin, Container[str, PackType]):
 
         value.extend_extra["pack.mcmeta"] = None
         value.extend_extra["pack.png"] = None
+
+        if "pack.mcmeta" in value.extra:
+            del value.extra["pack.mcmeta"]
+        if "pack.png" in value.extra:
+            del value.extra["pack.png"]
 
         if supported_formats is not None:
             value.supported_formats = supported_formats
