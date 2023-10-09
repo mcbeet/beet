@@ -2,6 +2,13 @@
 
 <!--next-version-placeholder-->
 
+## v0.78.1 (2023-10-09)
+
+### Fix
+
+* Forbid braces in player name ([`cfda4b6`](https://github.com/mcbeet/mecha/commit/cfda4b6abc38f80ae2b2b1af6e92478bdb8abca7))
+* Anonymous macros command tree conflict with bolt ([`7244c8c`](https://github.com/mcbeet/mecha/commit/7244c8c3820b93b61e1c3108267476f651a3f1f6))
+
 ## v0.78.0 (2023-10-09)
 
 ### Feature
