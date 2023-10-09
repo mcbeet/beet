@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.29.0 (2023-10-09)
+
+### Feature
+
+* Support overlays ([`518f3c9`](https://github.com/mcbeet/lectern/commit/518f3c993046fef9f9c35cb7e8fa7d23757ff949))
+
 ## v0.28.0 (2023-08-07)
 
 ### Feature
