@@ -57,8 +57,8 @@ from typing import (
     runtime_checkable,
 )
 
-from pydantic import PydanticTypeError, ValidationError
-from pydantic.validators import _VALIDATORS  # type: ignore
+from pydantic.v1 import PydanticTypeError, ValidationError
+from pydantic.v1.validators import _VALIDATORS  # type: ignore
 
 T = TypeVar("T")
 

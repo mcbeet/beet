@@ -10,7 +10,7 @@ __all__ = [
 import subprocess
 from typing import Optional
 
-from pydantic import BaseModel
+from pydantic.v1 import BaseModel
 
 from beet import Context, configurable
 from beet.core.utils import FileSystemPath

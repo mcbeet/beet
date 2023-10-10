@@ -1,6 +1,6 @@
 from typing import ClassVar, Tuple, cast
 
-from pydantic import BaseModel
+from pydantic.v1 import BaseModel
 
 from beet import Context, FileDeserialize, JsonFile, JsonFileBase, TextFile, YamlFile
 

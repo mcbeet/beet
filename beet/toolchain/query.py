@@ -46,7 +46,7 @@ from typing import (
 from git import Sequence
 from pathspec import PathSpec
 from pathspec.patterns.gitwildmatch import GitWildMatchPattern
-from pydantic import BaseModel, validator
+from pydantic.v1 import BaseModel, validator
 
 from beet.core.file import File
 from beet.library.base import NamespaceFile, Pack, create_group_map

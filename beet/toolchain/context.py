@@ -28,6 +28,7 @@ from typing import (
     List,
     Optional,
     Protocol,
+    Sequence,
     Set,
     Tuple,
     Type,
@@ -36,8 +37,7 @@ from typing import (
     overload,
 )
 
-from git import Sequence
-from pydantic import BaseModel, ValidationError
+from pydantic.v1 import BaseModel, ValidationError
 
 from beet.core.cache import Cache, MultiCache
 from beet.core.container import Container

@@ -15,7 +15,7 @@ import logging
 from dataclasses import dataclass
 from typing import Any, Callable, List, Optional, Type, Union, cast
 
-from pydantic import BaseModel
+from pydantic.v1 import BaseModel
 
 from beet import (
     Context,
