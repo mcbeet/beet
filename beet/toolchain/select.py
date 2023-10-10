@@ -26,7 +26,7 @@ from typing import (
 )
 
 from pathspec import PathSpec
-from pydantic import BaseModel
+from pydantic.v1 import BaseModel
 
 from beet.core.file import File
 from beet.core.utils import snake_case

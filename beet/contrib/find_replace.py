@@ -14,7 +14,7 @@ __all__ = [
 from dataclasses import dataclass
 from typing import Any, Callable, Generic, Sequence, Tuple, TypeVar, Union
 
-from pydantic import BaseModel
+from pydantic.v1 import BaseModel
 
 from beet import (
     Context,

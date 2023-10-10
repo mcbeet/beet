@@ -41,7 +41,7 @@ from typing import (
 from zipfile import ZipFile
 
 import yaml
-from pydantic import BaseModel, ValidationError
+from pydantic.v1 import BaseModel, ValidationError
 
 from .error import BubbleException, WrappedException
 
