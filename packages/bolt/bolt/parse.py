@@ -669,6 +669,7 @@ def create_bolt_command_parser(
     parser = MemoHandler(parser)
     parser = BindingStorageHandler(parser)
     parser = ImportStatementHandler(parser, modules)
+    parser = ContextManagerHandler(parser)
     parser = SubcommandConstraint(parser, command_identifiers=bolt_prototypes)
     return parser
 
@@ -2040,6 +2041,23 @@ class DocstringHandler:
 
         if changed:
             node = replace(node, commands=AstChildren(result))
+
+        return node
+
+
+@dataclass
+class ContextManagerHandler:
+    """Handle context managers."""
+
+    parser: Parser
+
+    def __call__(self, stream: TokenStream) -> Any:
+        node = self.parser(stream)
+
+        if isinstance(node, AstCommand) and node.identifier == "with:subcommand":
+            if node.arguments and isinstance(command := node.arguments[0], AstCommand):
+                if not command.identifier.startswith("with:expression"):
+                    return command
 
         return node
 

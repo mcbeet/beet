@@ -1339,3 +1339,6 @@ predicate x[]
 ###
 x = ./foo
 predicate x []
+###
+with storage ./args:
+    $say $(message)
