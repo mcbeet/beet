@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.38.1 (2023-10-10)
+
+### Fix
+
+* Handle anonymous macro invocations ([`6d4d5c0`](https://github.com/mcbeet/bolt/commit/6d4d5c094caeae4fae79445fc5106cafea968a0d))
+
 ## v0.38.0 (2023-10-09)
 
 ### Feature
