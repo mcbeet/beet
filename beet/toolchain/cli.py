@@ -274,7 +274,7 @@ def beet(
         project_obj.config_path = project
 
     if not ctx.invoked_subcommand:
-        if build := beet.get_command(ctx, "build"):
+        if build := beet.get_command(ctx, "build"):  # type: ignore
             ctx.invoke(build)
 
 

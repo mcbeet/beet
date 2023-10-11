@@ -31,7 +31,6 @@ from beet import (
     configurable,
 )
 from beet.contrib.find_replace import RenderSubstitutionOption, TextSubstitutionOption
-from beet.core.utils import snake_case
 
 logger = logging.getLogger(__name__)
 
@@ -125,7 +124,7 @@ class RenameFilesHandler:
 
         logger.warning(
             'Invalid %s destination "%s".',
-            snake_case(file_type.__name__),
+            file_type.snake_name,
             dest,
             extra={"annotate": filename},
         )

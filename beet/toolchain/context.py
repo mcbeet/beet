@@ -24,6 +24,7 @@ from pathlib import Path
 from typing import (
     Any,
     Callable,
+    Iterable,
     List,
     Optional,
     Protocol,
@@ -54,7 +55,7 @@ from beet.library.resource_pack import ResourcePack
 
 from .generator import Generator
 from .pipeline import GenericPipeline, GenericPlugin, GenericPluginSpec
-from .select import PackSelection, select_files
+from .select import PackSelection, select_all, select_files
 from .template import TemplateManager
 from .tree import generate_tree
 from .worker import WorkerPoolHandle
@@ -364,6 +365,10 @@ class Context:
             )
 
         return result
+
+    def __getitem__(self, extend: Type[T]) -> Iterable[Tuple[str, T]]:
+        for pack in self.packs:
+            yield from select_all(pack, extend)
 
 
 @overload

@@ -2,6 +2,56 @@
 
 <!--next-version-placeholder-->
 
+## v0.95.4 (2023-10-09)
+
+### Fix
+
+* Default pack.mcmeta should compare equal to no pack.mcmeta ([`6898d99`](https://github.com/mcbeet/beet/commit/6898d99df0bbe4e335079539087eba34698e4ac7))
+
+## v0.95.3 (2023-10-09)
+
+### Fix
+
+* Clean up pack.mcmeta when deleting overlays ([`2f6d346`](https://github.com/mcbeet/beet/commit/2f6d346aa5f5eae6f193e7e1554efd46df460602))
+
+## v0.95.2 (2023-10-09)
+
+### Fix
+
+* Don't make overlays truthy when they just contain formats declaration ([`1c98097`](https://github.com/mcbeet/beet/commit/1c98097e0c05de51282b628693ad443ba74d28ca))
+
+## v0.95.1 (2023-10-07)
+
+### Fix
+
+* Only diff overlays in pytest plugin if root pack ([`ce6d7f0`](https://github.com/mcbeet/beet/commit/ce6d7f0811d9c143769db5435d32408fc45302af))
+
+## v0.95.0 (2023-10-07)
+
+### Feature
+
+* Add ctx[Function] and refactor contrib to take into account overlays ([`6f0cec4`](https://github.com/mcbeet/beet/commit/6f0cec4b8de5af78358e9ed81b8b73caaf3b6a66))
+
+### Fix
+
+* Support overlays in select_files ([`1297472`](https://github.com/mcbeet/beet/commit/12974727631509d22fa97f9252c15f4ebb4d4ca0))
+
+## v0.94.0 (2023-10-07)
+
+### Feature
+
+* Support overlays ([#434](https://github.com/mcbeet/beet/issues/434)) ([`951764f`](https://github.com/mcbeet/beet/commit/951764f32a74c7d1794729cf470515cedec18dd6))
+
+## v0.93.0 (2023-10-05)
+
+### Feature
+
+* Use None in extend extra to remove expected file from schema ([`cbd8b02`](https://github.com/mcbeet/beet/commit/cbd8b02aff0c7172d5a4831e0c64552422618bb4))
+
+### Fix
+
+* Pack typing ([`0659752`](https://github.com/mcbeet/beet/commit/06597528948e47d03463a0cf34cb05331e942329))
+
 ## v0.92.0 (2023-08-06)
 
 ### Feature

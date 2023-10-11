@@ -97,6 +97,12 @@ class File(Generic[ValueType, SerializeType]):
 
     original: "File[ValueType, SerializeType]" = extra_field(default=None)
 
+    snake_name: ClassVar[str] = "file"
+
+    def __init_subclass__(cls):
+        super().__init_subclass__()
+        cls.snake_name = snake_case(cls.__name__)
+
     def __post_init__(self):
         if self._content is self.source_path is None:
             self._content = self.default()
