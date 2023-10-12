@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.95.5 (2023-10-12)
+
+### Fix
+
+* Ignore directories from zipfile ([`546f1a8`](https://github.com/mcbeet/beet/commit/546f1a8f539d6767e3b818e2362c8ebad9352c3f))
+
 ## v0.95.4 (2023-10-09)
 
 ### Fix
