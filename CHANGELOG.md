@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.95.6 (2023-10-12)
+
+### Fix
+
+* Don't load __MACOSX as an overlay ([`f7cc711`](https://github.com/mcbeet/beet/commit/f7cc711762fe0b843b67dcd40440785b019aa034))
+
 ## v0.95.5 (2023-10-12)
 
 ### Fix
