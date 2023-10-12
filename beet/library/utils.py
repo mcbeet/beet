@@ -53,6 +53,8 @@ def list_origin_folders(prefix: str, origin: FileOrigin) -> Dict[str, List[PureP
             name = parts[0]
 
             if name != current_name:
+                if name == "__MACOSX":
+                    continue
                 current_name = name
                 current_folder = folders.setdefault(name, [])
 
