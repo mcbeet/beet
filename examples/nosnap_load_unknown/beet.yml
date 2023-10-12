@@ -1,5 +1,7 @@
 require:
   - beet.contrib.unknown_files
 data_pack:
-  load: "src"
+  load:
+    - "src"
+    - "bop.zip"
 output: "out"

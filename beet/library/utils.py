@@ -24,7 +24,11 @@ def list_files(directory: FileSystemPath) -> Iterator[Path]:
 
 def list_origin(origin: FileOrigin) -> List[PurePath]:
     if isinstance(origin, ZipFile):
-        filenames = map(PurePosixPath, origin.namelist())
+        filenames = (
+            PurePosixPath(file_info.filename)
+            for file_info in origin.infolist()
+            if not file_info.is_dir()
+        )
     elif isinstance(origin, Mapping):
         filenames = map(PurePosixPath, origin)
     elif Path(origin).is_file():
