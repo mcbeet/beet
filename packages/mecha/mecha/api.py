@@ -38,7 +38,6 @@ from beet import (
     Function,
     NamespaceFile,
     TextFileBase,
-    select_files,
 )
 from beet.core.utils import (
     FileSystemPath,
@@ -201,6 +200,8 @@ class Mecha:
             self.transform = MutatingReducer(levels=opts.rules)
             self.optimize = MutatingReducer(levels=opts.rules)
             self.check = Reducer(levels=opts.rules)
+
+            self.database.generate = ctx.generate
 
             if not self.cache and opts.cache:
                 self.cache = ctx.cache["mecha"]
@@ -442,20 +443,26 @@ class Mecha:
             if match is None:
                 match = self.match
 
+            packs = [source]
+            if source.overlay_parent is None:
+                packs.extend(source.overlays.values())
+
             for file_type in self.providers:
                 if not issubclass(file_type, TextFileBase):
                     continue
-                sources = select_files(source, extend=file_type, match=match or "*")
-                for file_instance, (_, path) in sources.items():
-                    self.database[file_instance] = CompilationUnit(
-                        resource_location=path,
-                        filename=(
-                            os.path.relpath(file_instance.source_path, self.directory)
-                            if file_instance.source_path
-                            else None
-                        ),
-                    )
-                    self.database.enqueue(file_instance)
+                for pack in packs:
+                    for key in pack[file_type].match(*match or ["*"]):
+                        value = pack[file_type][key]
+                        self.database[value] = CompilationUnit(
+                            resource_location=key,
+                            filename=(
+                                os.path.relpath(value.source_path, self.directory)
+                                if value.source_path
+                                else None
+                            ),
+                            pack=pack,
+                        )
+                        self.database.enqueue(value)
         else:
             if isinstance(source, (list, str)):
                 source = Function(source)

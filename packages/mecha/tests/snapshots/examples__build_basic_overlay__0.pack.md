@@ -19,6 +19,15 @@
 
 ```mcfunction
 say hello
+execute as @a run function demo:stuff
+```
+
+`@function demo:stuff`
+
+```mcfunction
+say a
+say b
+say c
 ```
 
 ## Overlay `dummy_overlay`
@@ -31,6 +40,15 @@ say hello
 
 ```mcfunction
 say hello from overlay
+execute as @a run function demo:stuff
+```
+
+`@function demo:stuff`
+
+```mcfunction
+say 1
+say 2
+say 3
 ```
 
 `@endoverlay`

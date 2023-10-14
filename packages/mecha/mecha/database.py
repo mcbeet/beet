@@ -4,11 +4,13 @@ __all__ = [
 ]
 
 
+from collections import defaultdict
+from contextlib import contextmanager
 from dataclasses import dataclass
 from heapq import heappop, heappush
-from typing import Any, Dict, Iterator, List, Optional, Set, Tuple
+from typing import Any, DefaultDict, Dict, Iterator, List, Optional, Set, Tuple
 
-from beet import Container, TextFile, TextFileBase
+from beet import Container, DataPack, Generator, TextFile, TextFileBase
 from beet.core.utils import extra_field
 
 from .ast import AstRoot
@@ -23,6 +25,7 @@ class CompilationUnit:
     source: Optional[str] = None
     filename: Optional[str] = None
     resource_location: Optional[str] = None
+    pack: Optional[DataPack] = None
     priority: int = 0
 
     diagnostics: DiagnosticCollection = extra_field(init=False)
@@ -39,16 +42,18 @@ class CompilationUnit:
 class CompilationDatabase(Container[TextFileBase[Any], CompilationUnit]):
     """Compilation database."""
 
-    index: Dict[str, TextFileBase[Any]]
+    indices: DefaultDict[Optional[DataPack], Dict[str, TextFileBase[Any]]]
     session: Set[TextFileBase[Any]]
     queue: List[Tuple[int, int, str, int, TextFileBase[Any]]]
     step: int
     current: TextFileBase[Any]
     count: int
 
+    generate: Optional[Generator] = None
+
     def __init__(self):
         super().__init__()
-        self.index = {}
+        self.indices = defaultdict(dict)
         self.session = set()
         self.queue = []
         self.step = -1
@@ -56,21 +61,29 @@ class CompilationDatabase(Container[TextFileBase[Any], CompilationUnit]):
         self[self.current] = CompilationUnit()
         self.count = 0
 
+        self.generate = None
+
+    @property
+    def index(self) -> Dict[str, TextFileBase[Any]]:
+        return self.indices[self[self.current].pack]
+
     def process(
         self,
         key: TextFileBase[Any],
         value: CompilationUnit,
     ) -> CompilationUnit:
+        pack_index = self.indices[value.pack]
         for index in [value.filename, value.resource_location]:
             if index:
-                self.index[index] = key
+                pack_index[index] = key
         value.diagnostics.file = key
         return value
 
     def __delitem__(self, key: TextFileBase[Any]):
+        pack_index = self.indices[self[key].pack]
         for index in [self[key].filename, self[key].resource_location]:
             if index:
-                del self.index[index]
+                del pack_index[index]
         super().__delitem__(key)
 
     def setup_compilation(self):
@@ -102,4 +115,15 @@ class CompilationDatabase(Container[TextFileBase[Any], CompilationUnit]):
         """Yield database entries from the queue."""
         while self.queue:
             self.step, self.current = self.dequeue()
-            yield self.step, self.current
+            with self.process_context(self.current):
+                yield self.step, self.current
+
+    @contextmanager
+    def process_context(self, file_instance: TextFileBase[Any]):
+        if self.generate is not None:
+            compilation_unit = self[file_instance]
+            if compilation_unit.pack is not None:
+                with self.generate.overlays[compilation_unit.pack.overlay_name].push():
+                    yield
+                    return
+        yield
