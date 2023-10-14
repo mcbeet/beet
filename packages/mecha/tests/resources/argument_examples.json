@@ -539,7 +539,7 @@
   ],
   "minecraft:scoreboard_slot": [
     {
-      "examples": ["sidebar", "list", "sidebar.team.red", "belowName"]
+      "examples": ["sidebar", "list", "sidebar.team.red", "below_name"]
     },
     {
       "invalid": true,

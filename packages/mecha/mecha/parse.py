@@ -116,6 +116,7 @@ from .ast import (
     AstJsonObjectEntry,
     AstJsonObjectKey,
     AstJsonValue,
+    AstLegacyScoreboardSlot,
     AstLiteral,
     AstMacroLine,
     AstMacroLineText,
@@ -496,6 +497,9 @@ def get_parsers(version: VersionNumber = LATEST_MINECRAFT_VERSION) -> Dict[str, 
     if version < (1, 18):
         parsers["objective"] = LengthConstraint(parsers["objective"], 16)
         parsers["player_name"] = LengthConstraint(parsers["player_name"], 40)
+
+    if version < (1, 20):
+        parsers["scoreboard_slot"] = BasicLiteralParser(AstLegacyScoreboardSlot)
 
     return parsers
 

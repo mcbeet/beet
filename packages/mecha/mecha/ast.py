@@ -20,6 +20,7 @@ __all__ = [
     "AstScoreboardOperation",
     "AstTeam",
     "AstPlayerName",
+    "AstLegacyScoreboardSlot",
     "AstScoreboardSlot",
     "AstSwizzle",
     "AstAdvancementPredicate",
@@ -481,6 +482,18 @@ class AstPlayerName(AstLiteral):
 
 
 @dataclass(frozen=True, slots=True)
+class AstLegacyScoreboardSlot(AstOption):
+    """Ast legacy scoreboard slot node."""
+
+    parser = "scoreboard_slot"
+    options = {f"sidebar.team.{color}" for color in COLORS} | {
+        "list",
+        "sidebar",
+        "belowName",
+    }
+
+
+@dataclass(frozen=True, slots=True)
 class AstScoreboardSlot(AstOption):
     """Ast scoreboard slot node."""
 
@@ -488,7 +501,7 @@ class AstScoreboardSlot(AstOption):
     options = {f"sidebar.team.{color}" for color in COLORS} | {
         "list",
         "sidebar",
-        "belowName",
+        "below_name",
     }
 
 

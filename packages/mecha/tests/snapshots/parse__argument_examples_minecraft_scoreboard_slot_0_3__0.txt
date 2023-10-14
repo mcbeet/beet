@@ -2,11 +2,11 @@ minecraft:scoreboard_slot 0 3
 ---
 {}
 ---
-belowName
+below_name
 ---
-belowName
+below_name
 ---
 <class 'mecha.ast.AstScoreboardSlot'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
-  end_location: SourceLocation(pos=9, lineno=1, colno=10)
-  value: 'belowName'
+  end_location: SourceLocation(pos=10, lineno=1, colno=11)
+  value: 'below_name'

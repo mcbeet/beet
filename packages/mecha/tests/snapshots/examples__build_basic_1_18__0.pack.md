@@ -19,6 +19,7 @@
 
 ```mcfunction
 locate endcity
+scoreboard objectives setdisplay belowName foo
 ```
 
 ## Resource pack
