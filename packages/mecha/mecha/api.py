@@ -393,6 +393,7 @@ class Mecha:
         *,
         filename: Optional[FileSystemPath] = None,
         resource_location: Optional[str] = None,
+        within: Optional[DataPack] = None,
         multiline: Optional[bool] = None,
         formatting: Optional[JsonDict] = None,
         readonly: Optional[bool] = None,
@@ -408,6 +409,7 @@ class Mecha:
         *,
         filename: Optional[FileSystemPath] = None,
         resource_location: Optional[str] = None,
+        within: Optional[DataPack] = None,
         multiline: Optional[bool] = None,
         formatting: Optional[JsonDict] = None,
         readonly: Optional[bool] = None,
@@ -423,6 +425,7 @@ class Mecha:
         match: Optional[List[str]] = None,
         filename: Optional[FileSystemPath] = None,
         resource_location: Optional[str] = None,
+        within: Optional[DataPack] = None,
         multiline: Optional[bool] = None,
         formatting: Optional[JsonDict] = None,
         readonly: Optional[bool] = None,
@@ -478,6 +481,7 @@ class Mecha:
                 ast=source if isinstance(source, AstRoot) else None,
                 resource_location=resource_location,
                 filename=str(filename) if filename else None,
+                pack=within,
             )
             self.database.enqueue(result)
 
