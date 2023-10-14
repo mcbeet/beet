@@ -282,6 +282,14 @@ say stack1
 say hello
 ```
 
+`@function demo:blob`
+
+```mcfunction
+say before
+say aaaaa
+say after
+```
+
 `@function demo:wat/nested_execute_0`
 
 ```mcfunction

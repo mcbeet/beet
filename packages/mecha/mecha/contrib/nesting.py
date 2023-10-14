@@ -3,7 +3,6 @@
 
 __all__ = [
     "NestedCommandsTransformer",
-    "InplaceNestingPredicate",
     "NestingOptions",
     "nesting",
     "parse_nested_root",
@@ -12,11 +11,11 @@ __all__ = [
 
 from dataclasses import dataclass, field, replace
 from importlib.resources import files
-from typing import Any, Callable, Generator, List, cast
+from typing import Generator, List, cast
 
 from beet import Context, Function
 from beet import Generator as BeetGenerator
-from beet import TextFileBase, configurable
+from beet import configurable
 from beet.core.utils import required_field
 from pydantic import BaseModel
 from tokenstream import InvalidSyntax, TokenStream, set_location
@@ -66,7 +65,6 @@ def nesting(ctx: Context, opts: NestingOptions):
             generate_execute_template=opts.generate_execute,
             generate_macro_template=opts.generate_macro,
             nested_location_resolver=ctx.inject(NestedLocationResolver),
-            inplace_nesting_predicate=ctx.inject(InplaceNestingPredicate),
         )
     )
 
@@ -104,16 +102,6 @@ def parse_nested_root(stream: TokenStream) -> AstRoot:
     return set_location(node, commands[0], commands[-1])
 
 
-class InplaceNestingPredicate:
-    """Overridable predicate for enabling inplace nesting."""
-
-    callback: Callable[[TextFileBase[Any]], bool]
-
-    def __init__(self, ctx: Context):
-        mc = ctx.inject(Mecha)
-        self.callback = lambda target: target is mc.database.current
-
-
 @dataclass
 class NestedCommandsTransformer(MutatingReducer):
     """Transformer that handles nested commands."""
@@ -123,7 +111,6 @@ class NestedCommandsTransformer(MutatingReducer):
     generate_execute_template: str = required_field()
     generate_macro_template: str = required_field()
     nested_location_resolver: NestedLocationResolver = required_field()
-    inplace_nesting_predicate: InplaceNestingPredicate = required_field()
 
     identifier_map: dict[str, str] = field(
         default_factory=lambda: {
@@ -356,39 +343,24 @@ class NestedCommandsTransformer(MutatingReducer):
 
             target = self.database.index.get(path)
 
-            if not target:
-                self.emit_function(path, root)
-
-            elif node.identifier in (
-                "function:name:commands",
-                "function:name:arguments:commands",
-                "function:name:with:block:sourcePos:commands",
-                "function:name:with:block:sourcePos:path:commands",
-                "function:name:with:entity:source:commands",
-                "function:name:with:entity:source:path:commands",
-                "function:name:with:storage:source:commands",
-                "function:name:with:storage:source:path:commands",
+            if node.identifier in (
+                "append:function:name:commands",
+                "prepend:function:name:commands",
             ):
-                if self.database[target].ast != root:
-                    d = Diagnostic(
-                        "error",
-                        f'Redefinition of function "{path}" doesn\'t match existing implementation.',
-                    )
-                    yield set_location(d, name)
+                if ":".join(self.nested_location_resolver.resolve()) == path:
+                    if node.identifier == "prepend:function:name:commands":
+                        d = Diagnostic(
+                            "error",
+                            f'Can\'t prepend commands to the current function "{path}".',
+                        )
+                        yield set_location(d, node, name)
+                        return []
+                    return list(root.commands)
+
+                if not target:
+                    self.emit_function(path, root)
                     return []
 
-            elif self.inplace_nesting_predicate.callback(target):
-                if node.identifier == "prepend:function:name:commands":
-                    d = Diagnostic(
-                        "error",
-                        f'Can\'t prepend commands to the current function "{path}".',
-                    )
-                    yield set_location(d, node, name)
-                    return []
-
-                return list(root.commands)
-
-            else:
                 compilation_unit = self.database[target]
 
                 if compilation_unit.ast:
@@ -403,7 +375,22 @@ class NestedCommandsTransformer(MutatingReducer):
                 else:
                     compilation_unit.ast = root
 
-            return []
+                return []
+
+            elif not target:
+                self.emit_function(path, root)
+                return []
+
+            elif self.database[target].ast != root:
+                d = Diagnostic(
+                    "error",
+                    f'Redefinition of function "{path}" doesn\'t match existing implementation.',
+                )
+                yield set_location(d, name)
+                return []
+
+            else:
+                return []
 
         else:
             return [node]

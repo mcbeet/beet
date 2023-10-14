@@ -186,3 +186,9 @@ with storage demo:temp:
     say anonymous definition 7
 with storage demo:temp args:
     say anonymous definition 8
+
+function demo:blob:
+    say before
+    append function demo:blob:
+        say aaaaa
+    say after
