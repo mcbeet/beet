@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.80.0 (2023-10-14)
+
+### Feature
+
+* Nested inplace append ([`cf1dd65`](https://github.com/mcbeet/mecha/commit/cf1dd6539396f35da032021000d853aa86dbb541))
+
 ## v0.79.0 (2023-10-14)
 
 ### Feature
