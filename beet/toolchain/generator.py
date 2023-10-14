@@ -349,7 +349,6 @@ class Generator:
                 registry=self.registry,
                 assets=assets,
                 data=data,
-                overlays=self.overlays,
                 exit_stack=exit_stack,
             )
 
