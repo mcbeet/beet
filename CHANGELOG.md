@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.96.1 (2023-10-14)
+
+### Fix
+
+* Draft should have its own overlays ([`351dea6`](https://github.com/mcbeet/beet/commit/351dea618f0d889f2d3f8e80119ff74b90aa8b85))
+
 ## v0.96.0 (2023-10-14)
 
 ### Feature
