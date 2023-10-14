@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.96.0 (2023-10-14)
+
+### Feature
+
+* Add ctx.generate.overlays ([`87c3f27`](https://github.com/mcbeet/beet/commit/87c3f270770a14db791054e52461897d27d656a3))
+
 ## v0.95.6 (2023-10-12)
 
 ### Fix
