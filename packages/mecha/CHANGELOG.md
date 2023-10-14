@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.79.0 (2023-10-14)
+
+### Feature
+
+* Compile within ([`41c7ff2`](https://github.com/mcbeet/mecha/commit/41c7ff2d2070227e0e97fe5f63eeb3b10f638079))
+
 ## v0.78.3 (2023-10-14)
 
 ### Fix
