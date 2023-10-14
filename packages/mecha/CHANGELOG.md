@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.78.3 (2023-10-14)
+
+### Fix
+
+* Distinct overlays index and generation ([`6227b6d`](https://github.com/mcbeet/mecha/commit/6227b6d6d09445000db718775b207a53cb2986b5))
+
 ## v0.78.2 (2023-10-14)
 
 ### Fix
