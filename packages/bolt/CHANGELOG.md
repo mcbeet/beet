@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.38.2 (2023-10-14)
+
+### Fix
+
+* Compile memo with proper nesting ([`a88de67`](https://github.com/mcbeet/bolt/commit/a88de679eb307d9595366a2104ae659652cd70ed))
+
 ## v0.38.1 (2023-10-10)
 
 ### Fix
