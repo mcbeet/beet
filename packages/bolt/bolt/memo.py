@@ -40,7 +40,6 @@ from beet import (
 )
 from beet.core.utils import log_time, remove_path
 from mecha import AstChildren, AstRoot, DiagnosticCollection, Mecha, rule
-from mecha.contrib.nesting import InplaceNestingPredicate
 
 from .ast import AstMemo, AstMemoResult
 from .emit import CommandEmitter
@@ -302,13 +301,12 @@ class MemoHandler:
     mc: Mecha
     registry: MemoRegistry
     generate: Optional[Generator] = None
-    inplace_nesting_predicate: Optional[InplaceNestingPredicate] = None
 
     def __post_init__(self):
         self.mc.serialize.extend(serialize_memo_result)
 
     def restore(self, emit: CommandEmitter, invocation: MemoInvocation):
-        if not self.generate or not self.inplace_nesting_predicate:
+        if self.generate is None:
             return
 
         invocation.epoch = self.registry.epoch_counter
@@ -324,9 +322,10 @@ class MemoHandler:
         self,
         emit: CommandEmitter,
         invocation: MemoInvocation,
+        invocation_path: str,
         name: Optional[str] = None,
     ):
-        if not self.generate or not self.inplace_nesting_predicate or not name:
+        if self.generate is None or name is None:
             yield
             return
 
@@ -346,16 +345,14 @@ class MemoHandler:
             previous_queue = database.queue
             previous_step = database.step
             previous_current = database.current
-            previous_callback = self.inplace_nesting_predicate.callback
             try:
                 database.session = set()
                 database.queue = []
-                self.inplace_nesting_predicate.callback = (
-                    lambda target: previous_callback(target)
-                    or target is previous_current
-                )
                 function = self.mc.compile(
                     root,
+                    filename=compilation_unit.filename,
+                    resource_location=invocation_path,
+                    within=draft.data,
                     report=diagnostics,
                     initial_step=database.step + 1,
                 )
@@ -365,7 +362,6 @@ class MemoHandler:
                 database.queue = previous_queue
                 database.step = previous_step
                 database.current = previous_current
-                self.inplace_nesting_predicate.callback = previous_callback
 
             if output := function.text.rstrip():
                 emit.commands.append(AstMemoResult(serialized=output))

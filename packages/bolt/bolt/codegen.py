@@ -585,8 +585,11 @@ class Codegen(Visitor):
                 f"{storage} = _bolt_runtime.memo.registry[__file__][{acc.make_ref(node)}, {file_index}]"
             )
 
+        path = f"_bolt_memo_invocation_path_{node.persistent_id.hex}"
+        acc.statement(f"{path} = _bolt_runtime.get_nested_location()")
+
         invocation = f"_bolt_memo_invocation_{node.persistent_id.hex}"
-        acc.statement(f"{invocation} = {storage}[({' '.join(keys)})]")
+        acc.statement(f"{invocation} = {storage}[({path}, {' '.join(keys)})]")
 
         acc.statement(f"if {invocation}.cached:")
         with acc.block():
@@ -597,7 +600,7 @@ class Codegen(Visitor):
         acc.statement("else:")
         with acc.block():
             acc.statement(
-                f"with _bolt_runtime.memo.record(_bolt_runtime, {invocation}, __name__):"
+                f"with _bolt_runtime.memo.record(_bolt_runtime, {invocation}, {path}, __name__):"
             )
             with acc.block():
                 yield from visit_body(cast(AstRoot, body), acc)

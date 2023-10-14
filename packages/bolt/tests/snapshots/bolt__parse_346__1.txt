@@ -1,4 +1,4 @@
-_bolt_lineno = [1, 10, 20, 26, 30], [1, 2, 3, 4, 5]
+_bolt_lineno = [1, 10, 21, 27, 31], [1, 2, 3, 4, 5]
 _bolt_memo_storage_bdd640fb06671ad11c80317fa3b1799d = None
 _bolt_helper_get_rebind = _bolt_runtime.helpers['get_rebind']
 _bolt_helper_children = _bolt_runtime.helpers['children']
@@ -10,12 +10,13 @@ with _bolt_runtime.scope() as _bolt_var5:
     _bolt_var1 = thing
     if _bolt_memo_storage_bdd640fb06671ad11c80317fa3b1799d is None:
         _bolt_memo_storage_bdd640fb06671ad11c80317fa3b1799d = _bolt_runtime.memo.registry[__file__][_bolt_refs[0], 0]
-    _bolt_memo_invocation_bdd640fb06671ad11c80317fa3b1799d = _bolt_memo_storage_bdd640fb06671ad11c80317fa3b1799d[(_bolt_var1,)]
+    _bolt_memo_invocation_path_bdd640fb06671ad11c80317fa3b1799d = _bolt_runtime.get_nested_location()
+    _bolt_memo_invocation_bdd640fb06671ad11c80317fa3b1799d = _bolt_memo_storage_bdd640fb06671ad11c80317fa3b1799d[(_bolt_memo_invocation_path_bdd640fb06671ad11c80317fa3b1799d, _bolt_var1,)]
     if _bolt_memo_invocation_bdd640fb06671ad11c80317fa3b1799d.cached:
         _bolt_runtime.memo.restore(_bolt_runtime, _bolt_memo_invocation_bdd640fb06671ad11c80317fa3b1799d)
         (thing,) = _bolt_memo_invocation_bdd640fb06671ad11c80317fa3b1799d.bindings
     else:
-        with _bolt_runtime.memo.record(_bolt_runtime, _bolt_memo_invocation_bdd640fb06671ad11c80317fa3b1799d, __name__):
+        with _bolt_runtime.memo.record(_bolt_runtime, _bolt_memo_invocation_bdd640fb06671ad11c80317fa3b1799d, _bolt_memo_invocation_path_bdd640fb06671ad11c80317fa3b1799d, __name__):
             _bolt_var2 = 1
             _bolt_rebind = _bolt_helper_get_rebind(thing)
             thing += _bolt_var2

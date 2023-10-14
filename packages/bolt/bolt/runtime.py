@@ -24,7 +24,6 @@ from mecha import (
     rule,
 )
 from mecha.contrib.nested_location import NestedLocationResolver
-from mecha.contrib.nesting import InplaceNestingPredicate
 from mecha.contrib.relative_location import resolve_relative_location
 from pathspec import PathSpec
 from tokenstream import set_location
@@ -84,9 +83,11 @@ class Runtime(CommandEmitter):
                 "generate_tree",
                 lambda *args, **kwargs: generate_tree(
                     (
-                        root := kwargs.pop("root")
-                        if "root" in kwargs
-                        else self.modules.current_path
+                        root := (
+                            kwargs.pop("root")
+                            if "root" in kwargs
+                            else self.get_nested_location()
+                        )
                     ),
                     *args,
                     name=(
@@ -103,7 +104,6 @@ class Runtime(CommandEmitter):
                 mc,
                 registry=ctx.inject(MemoRegistry),
                 generate=ctx.generate,
-                inplace_nesting_predicate=ctx.inject(InplaceNestingPredicate),
             )
 
         else:
