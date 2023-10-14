@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.78.2 (2023-10-14)
+
+### Fix
+
+* Below_name in 1.20 ([`b6f9153`](https://github.com/mcbeet/mecha/commit/b6f9153afb250b4cd4df234e56951001712ab712))
+
 ## v0.78.1 (2023-10-09)
 
 ### Fix
