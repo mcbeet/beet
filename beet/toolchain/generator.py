@@ -25,6 +25,7 @@ from typing import (
     overload,
 )
 
+from beet.core.container import Container
 from beet.core.file import TextFileBase
 from beet.core.utils import TextComponent, log_time, required_field
 from beet.library.base import NamespaceFile
@@ -55,6 +56,10 @@ class Generator:
 
     assets: ResourcePack = field(default_factory=ResourcePack)
     data: DataPack = field(default_factory=DataPack)
+    overlays: "GeneratorOverlays" = field(default_factory=lambda: GeneratorOverlays())
+
+    def __post_init__(self):
+        self.overlays.setdefault(None, self)
 
     def __getitem__(self: GeneratorType, key: Any) -> GeneratorType:
         return replace(self, scope=self.scope + (key,))
@@ -67,10 +72,12 @@ class Generator:
         previous_scope = root.scope
         previous_assets = root.assets
         previous_data = root.data
+        previous_overlays = root.overlays
 
         root.scope = self.scope
         root.assets = self.assets
         root.data = self.data
+        root.overlays = self.overlays
 
         try:
             yield
@@ -78,6 +85,7 @@ class Generator:
             root.scope = previous_scope
             root.assets = previous_assets
             root.data = previous_data
+            root.overlays = previous_overlays
 
     def get_prefix(self, separator: str = ".") -> str:
         """Join the serializable parts of the scope into a key prefix."""
@@ -341,6 +349,7 @@ class Generator:
                 registry=self.registry,
                 assets=assets,
                 data=data,
+                overlays=self.overlays,
                 exit_stack=exit_stack,
             )
 
@@ -351,6 +360,21 @@ class Generator:
 
         self.assets.merge(assets)
         self.data.merge(data)
+
+
+class GeneratorOverlays(Container[Optional[str], Generator]):
+    """Generator overlays."""
+
+    def missing(self, key: Optional[str]) -> Generator:
+        if key is None:
+            raise KeyError(key)
+        base = self[None]
+        return replace(
+            base,
+            registry=base.registry.copy(),
+            assets=base.assets.overlays[key],
+            data=base.data.overlays[key],
+        )
 
 
 class DraftCacheSignal(Exception):
