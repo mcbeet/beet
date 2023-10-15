@@ -203,7 +203,8 @@ class Runtime(CommandEmitter):
         try:
             yield
         finally:
-            ctx.data[Module].clear()
+            for pack in [ctx.data, *ctx.data.overlays.values()]:
+                pack[Module].clear()
             self.memo.finalize()
 
 
