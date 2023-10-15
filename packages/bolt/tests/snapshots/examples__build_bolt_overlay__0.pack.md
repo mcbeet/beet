@@ -18,7 +18,7 @@
 `@function demo:foo`
 
 ```mcfunction
-say mystuff
+say my 123
 ```
 
 ## Overlay `dummy_overlay`
@@ -31,6 +31,7 @@ say mystuff
 
 ```mcfunction
 say 3
+say 123
 ```
 
 `@endoverlay`

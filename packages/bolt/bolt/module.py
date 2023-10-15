@@ -174,6 +174,21 @@ class ModuleManager(Mapping[TextFileBase[Any], CompiledModule]):
             "Currently executing module has no associated resource location."
         )
 
+    def lookup(self, path: str) -> TextFileBase[Any]:
+        """Lookup the associated source file in the compilation database.
+
+        If we're currently in an overlay, fall back to the source file in the main
+        data pack.
+        """
+        if current := self.database.index.get(path):
+            return current
+
+        current_pack = self.database[self.database.current].pack
+        if current_pack is None or current_pack.overlay_parent is None:
+            raise KeyError(path)
+
+        return self.database.indices[current_pack.overlay_parent][path]
+
     def match_ast(
         self,
         node: AstRoot,
@@ -183,7 +198,7 @@ class ModuleManager(Mapping[TextFileBase[Any], CompiledModule]):
         if not current:
             current = self.database.current
         elif isinstance(current, str):
-            current = self.database.index[current]
+            current = self.lookup(current)
 
         compilation_unit = self.database[current]
         compilation_unit.ast = node
@@ -192,7 +207,7 @@ class ModuleManager(Mapping[TextFileBase[Any], CompiledModule]):
 
     def __getitem__(self, current: Union[TextFileBase[Any], str]) -> CompiledModule:
         if isinstance(current, str):
-            current = self.database.index[current]
+            current = self.lookup(current)
 
         compilation_unit = self.database[current]
         name = compilation_unit.resource_location or "<unknown>"
@@ -267,9 +282,10 @@ class ModuleManager(Mapping[TextFileBase[Any], CompiledModule]):
     def get(self, current: Union[TextFileBase[Any], str]) -> Optional[CompiledModule]:
         """Return executable module if exists."""
         if isinstance(current, str):
-            if current not in self.database.index:
+            try:
+                current = self.lookup(current)
+            except KeyError:
                 return None
-            current = self.database.index[current]
 
         if current not in self.database:
             return None

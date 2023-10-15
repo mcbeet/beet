@@ -1,1 +1,2 @@
-say ("my" + "stuff")
+from ./vars import stuff
+say f"my {stuff}"
