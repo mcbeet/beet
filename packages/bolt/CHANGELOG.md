@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.38.3 (2023-10-15)
+
+### Fix
+
+* Clear modules from overlays ([`b98f18d`](https://github.com/mcbeet/bolt/commit/b98f18d1401392d22b807eef1695f9b94db885f8))
+
 ## v0.38.2 (2023-10-14)
 
 ### Fix
