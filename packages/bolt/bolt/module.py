@@ -34,7 +34,7 @@ from typing import (
     cast,
 )
 
-from beet import BubbleException, Cache, TextFile, TextFileBase
+from beet import BubbleException, Cache, DataPack, TextFile, TextFileBase
 from beet.core.utils import JsonDict, extra_field, import_from_string, required_field
 from mecha import (
     AstCacheBackend,
@@ -152,7 +152,9 @@ class ModuleManager(Mapping[TextFileBase[Any], CompiledModule]):
     )
     globals: JsonDict = extra_field(default_factory=dict)
     builtins: Set[str] = extra_field(default_factory=set)
-    prelude: Dict[str, Optional[AstPrelude]] = extra_field(default_factory=dict)
+    prelude: Dict[str, Dict[Optional[DataPack], AstPrelude]] = extra_field(
+        default_factory=dict
+    )
 
     execution_count: int = 0
 
@@ -356,7 +358,7 @@ class ModuleManager(Mapping[TextFileBase[Any], CompiledModule]):
             if isinstance(arg, str):
                 arg = [arg]
             for resource_location in arg:
-                self.prelude.setdefault(resource_location, None)
+                self.prelude.setdefault(resource_location, {})
 
     def export_prelude(self, module: CompiledModule) -> Optional[AstPrelude]:
         """Export local variables and macros from a given module into a prelude import."""
@@ -379,11 +381,13 @@ class ModuleManager(Mapping[TextFileBase[Any], CompiledModule]):
 
     def load_prelude(self) -> List[AstPrelude]:
         """Load the prelude imports."""
+        current_pack = self.database[self.database.current].pack
         current_prelude = self.prelude
 
         prelude_imports: List[AstPrelude] = []
 
-        for resource_location, prelude in list(current_prelude.items()):
+        for resource_location, pack_prelude in list(current_prelude.items()):
+            prelude = pack_prelude.get(current_pack)
             if not prelude:
                 self.prelude = {}
                 try:
@@ -398,7 +402,7 @@ class ModuleManager(Mapping[TextFileBase[Any], CompiledModule]):
             if not prelude:
                 prelude = AstPrelude.placeholder(resource_location)
 
-            current_prelude[resource_location] = prelude
+            pack_prelude[current_pack] = prelude
             prelude_imports.append(prelude)
 
         return prelude_imports
