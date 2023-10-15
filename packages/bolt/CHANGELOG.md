@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.38.4 (2023-10-15)
+
+### Fix
+
+* Distinct preludes for overlays ([`5f858e5`](https://github.com/mcbeet/bolt/commit/5f858e558fec97d12fbf9436f1ac81006e1deb1a))
+
 ## v0.38.3 (2023-10-15)
 
 ### Fix
