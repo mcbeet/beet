@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.38.5 (2023-10-15)
+
+### Fix
+
+* Import from overlay fall back to main pack ([`ebe2434`](https://github.com/mcbeet/bolt/commit/ebe243453c108ac315b9c5cdd7fa0e14c9b3e2fa))
+
 ## v0.38.4 (2023-10-15)
 
 ### Fix
