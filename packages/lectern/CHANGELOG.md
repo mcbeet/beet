@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.29.2 (2023-10-24)
+
+### Fix
+
+* Extract overlay with relative path ([`e7be328`](https://github.com/mcbeet/lectern/commit/e7be328fd19e1a6f2e03f2d3498cd6375363404a))
+
 ## v0.29.1 (2023-10-09)
 
 ### Fix
