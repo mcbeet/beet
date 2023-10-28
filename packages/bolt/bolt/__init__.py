@@ -1,4 +1,4 @@
-__version__ = "0.38.5"
+__version__ = "0.39.0"
 
 
 from .ast import *

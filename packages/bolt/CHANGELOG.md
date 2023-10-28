@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.39.0 (2023-10-28)
+
+### Feature
+
+* Refactor non-function root ([`b74f756`](https://github.com/mcbeet/bolt/commit/b74f756229f2ba4f22a09c00caa512aebf810a1e))
+
 ## v0.38.5 (2023-10-15)
 
 ### Fix
