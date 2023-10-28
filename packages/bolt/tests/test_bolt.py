@@ -30,7 +30,8 @@ def test_parse(snapshot: SnapshotFixture, ctx: Context, source: Function):
     ast = None
     diagnostics = None
 
-    mc.database[mc.database.current] = CompilationUnit(resource_location="demo:test")
+    mc.database.current = source
+    mc.database[source] = CompilationUnit(resource_location="demo:test")
 
     rand = Random()
     rand.seed(42)

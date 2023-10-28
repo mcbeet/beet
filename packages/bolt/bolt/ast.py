@@ -1,5 +1,5 @@
 __all__ = [
-    "AstModuleRoot",
+    "AstNonFunctionRoot",
     "AstExpression",
     "AstExpressionBinary",
     "AstExpressionUnary",
@@ -83,8 +83,8 @@ from .semantics import Binding
 
 
 @dataclass(frozen=True, slots=True)
-class AstModuleRoot(AstRoot):
-    """Module root ast node."""
+class AstNonFunctionRoot(AstRoot):
+    """Non-function root ast node."""
 
 
 @dataclass(frozen=True, slots=True)

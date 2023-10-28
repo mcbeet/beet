@@ -1,7 +1,7 @@
 __all__ = [
     "Runtime",
     "Evaluator",
-    "check_toplevel_commands",
+    "NonFunctionSerializer",
 ]
 
 
@@ -18,6 +18,7 @@ from mecha import (
     AstRoot,
     CommandSpec,
     CommandTree,
+    CompilationDatabase,
     Diagnostic,
     Mecha,
     Visitor,
@@ -28,7 +29,7 @@ from mecha.contrib.relative_location import resolve_relative_location
 from pathspec import PathSpec
 from tokenstream import set_location
 
-from .ast import AstModuleRoot
+from .ast import AstNonFunctionRoot, AstRoot
 from .codegen import Codegen
 from .emit import CommandEmitter
 from .helpers import get_bolt_helpers
@@ -136,7 +137,7 @@ class Runtime(CommandEmitter):
 
         mc.steps.insert(0, self.evaluate)
 
-        mc.serialize.extend(check_toplevel_commands)
+        mc.serialize.extend(NonFunctionSerializer(database=mc.database))
         mc.cache_backend = ModuleCacheBackend(modules=self.modules)
 
     def expose(self, name: str, function: Callable[..., Any]):
@@ -235,7 +236,7 @@ class Evaluator(Visitor):
         compilation_unit, module = self.modules.match_ast(node)
 
         if (
-            isinstance(node, AstModuleRoot)
+            isinstance(self.modules.database.current, Module)
             and not module.executed
             and module.resource_location
             and not self.entrypoint_spec.match_file(module.resource_location)
@@ -257,20 +258,28 @@ class Evaluator(Visitor):
             compilation_unit.priority = module.execution_index
             return node
 
-    def restore_module(self, key: TextFileBase[Any], node: AstModuleRoot, step: int):
+    def restore_module(self, key: TextFileBase[Any], node: AstRoot, step: int):
         compilation_unit = self.modules.database[key]
         compilation_unit.ast = node
         self.modules.database.enqueue(key, step, compilation_unit.priority)
 
 
-@rule(AstModuleRoot)
-def check_toplevel_commands(node: AstModuleRoot, result: List[str]):
-    """Emit diagnostic if module has toplevel commands."""
-    if node.commands:
-        command = node.commands[0]
-        name = command.identifier.partition(":")[0]
-        raise set_location(
-            Diagnostic("warn", f'Standalone "{name}" command in module.'),
-            command,
-            command.arguments[0] if command.arguments else command,
-        )
+@dataclass
+class NonFunctionSerializer(Visitor):
+    """Serializer that preserves the original source of non-function files."""
+
+    database: CompilationDatabase = required_field()
+
+    @rule(AstNonFunctionRoot)
+    def non_function_root(self, node: AstNonFunctionRoot, result: List[str]):
+        if source := self.database[self.database.current].source:
+            result.append(source)
+        if node.commands:
+            command = node.commands[0]
+            name = command.identifier.partition(":")[0]
+            d = Diagnostic(
+                "warn", f'Ignored top-level "{name}" command outside function.'
+            )
+            return set_location(
+                d, command, command.arguments[0] if command.arguments else command
+            )

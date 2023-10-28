@@ -21,7 +21,6 @@ def process_files(ctx: Context):
         mc.compile(
             patcher,
             resource_location=patcher_name,
-            readonly=True,
             report=mc.diagnostics,
         )
 

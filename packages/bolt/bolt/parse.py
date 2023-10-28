@@ -66,6 +66,7 @@ from dataclasses import dataclass, field, replace
 from typing import Any, Dict, FrozenSet, List, Literal, Optional, Set, Tuple, Type, cast
 from uuid import UUID, uuid4
 
+from beet import Function
 from beet.core.utils import extra_field
 from mecha import (
     AdjacentConstraint,
@@ -149,7 +150,7 @@ from .ast import (
     AstMacroMatchArgument,
     AstMacroMatchLiteral,
     AstMemo,
-    AstModuleRoot,
+    AstNonFunctionRoot,
     AstProcMacro,
     AstProcMacroMarker,
     AstProcMacroResult,
@@ -165,7 +166,7 @@ from .ast import (
     AstValue,
 )
 from .emit import CommandEmitter
-from .module import Module, ModuleManager, UnusableCompilationUnit
+from .module import ModuleManager, UnusableCompilationUnit
 from .pattern import (
     DOCSTRING_PATTERN,
     FALSE_PATTERN,
@@ -621,8 +622,8 @@ class ToplevelHandler:
 
         self.macro_handler.cache_local_spec(stream)
 
-        if isinstance(node, AstRoot) and isinstance(current, Module):
-            node = set_location(AstModuleRoot(commands=node.commands), node)
+        if isinstance(node, AstRoot) and not isinstance(current, Function):
+            node = set_location(AstNonFunctionRoot(commands=node.commands), node)
 
         return node
 
