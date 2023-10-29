@@ -363,6 +363,13 @@ class ProjectBuilder:
                 pack.mcmeta.merge(
                     Mcmeta({"filter": config.filter.dict(exclude_none=True)})
                 )
+            if config.supported_formats:
+                pack.supported_formats = config.supported_formats
+            if config.overlays:
+                for overlay in config.overlays.entries():
+                    pack.overlays[overlay.directory].supported_formats = deepcopy(
+                        overlay.formats
+                    )
             pack.zipped = bool(config.zipped)
             pack.compression = config.compression
             pack.compression_level = config.compression_level

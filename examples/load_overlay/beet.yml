@@ -1,2 +1,9 @@
 data_pack:
   load: "src"
+  pack_format: 20
+  supported_formats: [18, 19, 20]
+  overlays:
+    - formats:
+        min_inclusive: 18
+        max_inclusive: 19
+      directory: "creeper"

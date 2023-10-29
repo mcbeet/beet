@@ -115,7 +115,7 @@ class File(Generic[ValueType, SerializeType]):
         """Merge the given file or return False to indicate no special handling."""
         return False
 
-    def bind(self, pack: Any, path: str) -> Any:
+    def bind(self, pack: Any, path: str):
         """Handle file binding."""
         if self.on_bind:
             self.on_bind(self, pack, path)

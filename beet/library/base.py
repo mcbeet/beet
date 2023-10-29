@@ -28,6 +28,7 @@ __all__ = [
 import shutil
 from collections import defaultdict
 from contextlib import nullcontext
+from copy import deepcopy
 from dataclasses import dataclass, field
 from functools import partial
 from itertools import count
@@ -120,7 +121,7 @@ class NamespaceFile(Protocol):
     def merge(self, other: Any) -> bool:
         ...
 
-    def bind(self, pack: Any, path: str) -> Any:
+    def bind(self, pack: Any, path: str):
         ...
 
     def set_content(self, content: Any):
@@ -153,6 +154,9 @@ class NamespaceFile(Protocol):
         ...
 
     def dump(self, origin: FileOrigin, path: FileSystemPath):
+        ...
+
+    def convert(self, file_type: Type[PackFileType]) -> PackFileType:
         ...
 
 
@@ -764,6 +768,15 @@ class Mcmeta(JsonFile):
                 for item in value.get("block", []):
                     if item not in block:
                         block.append(item)
+            elif key == "overlays":
+                for other_entry in value.get("entries"):
+                    overlays: Any = self.data.setdefault("overlays", {})
+                    for entry in overlays.setdefault("entries", []):
+                        if entry.get("directory") == other_entry.get("directory"):
+                            entry["formats"] = deepcopy(other_entry.get("formats"))
+                            break
+                    else:
+                        overlays["entries"].append(deepcopy(other_entry))
             else:
                 self.data[key] = value
         return True

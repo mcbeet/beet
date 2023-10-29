@@ -5,9 +5,31 @@
   "templates": ["thing"],
   "data_pack": {
     "name": "thing",
+    "supported_formats": 18,
+    "overlays": [
+      {
+        "directory": "abc",
+        "formats": {
+          "min_inclusive": 18,
+          "max_inclusive": 18
+        }
+      }
+    ],
+    "compression": "none",
     "load": ["thing"]
   },
   "resource_pack": {
+    "overlays": [
+      {
+        "directory": "123",
+        "formats": {
+          "min_inclusive": 18,
+          "max_inclusive": 18
+        }
+      }
+    ],
+    "compression": "bzip2",
+    "compression_level": 9,
     "load": ["thing"]
   },
   "pipeline": ["thing"],

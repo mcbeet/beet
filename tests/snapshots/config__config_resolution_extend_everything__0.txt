@@ -29,9 +29,26 @@
     "name": "thing",
     "description": "base",
     "pack_format": 4,
-    "filter": null,
+    "filter": {
+      "block": [
+        {
+          "namespace": "base",
+          "path": "base"
+        }
+      ]
+    },
+    "supported_formats": 18,
+    "overlays": [
+      {
+        "formats": {
+          "min_inclusive": 18,
+          "max_inclusive": 18
+        },
+        "directory": "abc"
+      }
+    ],
     "zipped": false,
-    "compression": null,
+    "compression": "none",
     "compression_level": null,
     "load": [
       "tests/config_examples/extend_everything/subdir/base",
@@ -44,9 +61,29 @@
     "description": "base",
     "pack_format": 88,
     "filter": null,
+    "supported_formats": {
+      "min_inclusive": 88,
+      "max_inclusive": 99
+    },
+    "overlays": [
+      {
+        "formats": {
+          "min_inclusive": 88,
+          "max_inclusive": 99
+        },
+        "directory": "base"
+      },
+      {
+        "formats": {
+          "min_inclusive": 18,
+          "max_inclusive": 18
+        },
+        "directory": "123"
+      }
+    ],
     "zipped": true,
-    "compression": null,
-    "compression_level": null,
+    "compression": "bzip2",
+    "compression_level": 9,
     "load": [
       "tests/config_examples/extend_everything/subdir/base",
       "tests/config_examples/extend_everything/thing"

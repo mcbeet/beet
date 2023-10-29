@@ -701,3 +701,46 @@ def test_overlay():
     f2 = set(select_files(p, match="*"))
     assert f1 == f2
     assert len(f1) == 6
+
+
+def test_merge_overlays():
+    m = Mcmeta()
+
+    m.merge(Mcmeta({"overlays": {"entries": [{"directory": "a", "formats": 18}]}}))
+    assert m.data == {"overlays": {"entries": [{"directory": "a", "formats": 18}]}}
+
+    m.merge(Mcmeta({"overlays": {"entries": [{"directory": "b", "formats": 19}]}}))
+    assert m.data == {
+        "overlays": {
+            "entries": [
+                {"directory": "a", "formats": 18},
+                {"directory": "b", "formats": 19},
+            ]
+        }
+    }
+
+    m.merge(
+        Mcmeta(
+            {
+                "overlays": {
+                    "entries": [
+                        {
+                            "directory": "a",
+                            "formats": {"min_inclusive": 18, "max_inclusive": 19},
+                        }
+                    ]
+                }
+            }
+        )
+    )
+    assert m.data == {
+        "overlays": {
+            "entries": [
+                {
+                    "directory": "a",
+                    "formats": {"min_inclusive": 18, "max_inclusive": 19},
+                },
+                {"directory": "b", "formats": 19},
+            ]
+        }
+    }

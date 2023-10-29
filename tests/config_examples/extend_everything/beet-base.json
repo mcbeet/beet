@@ -7,6 +7,14 @@
   "data_pack": {
     "name": "base",
     "description": "base",
+    "filter": {
+      "block": [
+        {
+          "namespace": "base",
+          "path": "base"
+        }
+      ]
+    },
     "zipped": false,
     "load": ["base"]
   },
@@ -14,6 +22,19 @@
     "name": "base",
     "description": "base",
     "pack_format": 88,
+    "supported_formats": {
+      "min_inclusive": 88,
+      "max_inclusive": 99
+    },
+    "overlays": [
+      {
+        "directory": "base",
+        "formats": {
+          "min_inclusive": 88,
+          "max_inclusive": 99
+        }
+      }
+    ],
     "load": ["base"]
   },
   "pipeline": ["base"],

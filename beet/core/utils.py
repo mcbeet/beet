@@ -2,6 +2,7 @@ __all__ = [
     "JsonDict",
     "FileSystemPath",
     "TextComponent",
+    "FormatsRangeDict",
     "SupportedFormats",
     "Sentinel",
     "SENTINEL_OBJ",
@@ -50,6 +51,7 @@ from typing import (
     Optional,
     Protocol,
     Tuple,
+    TypedDict,
     TypeVar,
     Union,
     runtime_checkable,
@@ -70,7 +72,14 @@ class PathLikeFallback(Protocol):
 JsonDict = Dict[str, Any]
 FileSystemPath = Union[str, PathLikeFallback]
 TextComponent = Union[str, List[Any], JsonDict]
-SupportedFormats = Union[int, List[int], JsonDict]
+
+
+class FormatsRangeDict(TypedDict):
+    min_inclusive: int
+    max_inclusive: int
+
+
+SupportedFormats = Union[int, List[int], FormatsRangeDict]
 
 
 class Sentinel:

@@ -30,7 +30,9 @@ from pydantic.generics import GenericModel
 from beet.core.error import BubbleException
 from beet.core.utils import (
     FileSystemPath,
+    FormatsRangeDict,
     JsonDict,
+    SupportedFormats,
     TextComponent,
     format_validation_error,
     local_import_path,
@@ -151,6 +153,13 @@ class PackFilterConfig(BaseModel):
         )
 
 
+class PackOverlayConfig(BaseModel):
+    """Overlay entry configuration."""
+
+    formats: FormatsRangeDict
+    directory: str
+
+
 class PackConfig(BaseModel):
     """Data pack and resource pack configuration."""
 
@@ -158,6 +167,8 @@ class PackConfig(BaseModel):
     description: TextComponent = ""
     pack_format: int = 0
     filter: Optional[PackFilterConfig] = None
+    supported_formats: Optional[SupportedFormats] = None
+    overlays: Optional[ListOption[PackOverlayConfig]] = None
     zipped: Optional[bool] = None
     compression: Optional[Literal["none", "deflate", "bzip2", "lzma"]] = None
     compression_level: Optional[int] = None
@@ -179,6 +190,18 @@ class PackConfig(BaseModel):
                     self.filter.with_defaults(other.filter)
                     if self.filter and other.filter
                     else self.filter or other.filter
+                ),
+                "supported_formats": (
+                    other.supported_formats
+                    if self.supported_formats is None
+                    else self.supported_formats
+                ),
+                "overlays": (
+                    other.overlays
+                    if self.overlays is None
+                    else self.overlays
+                    if other.overlays is None
+                    else other.overlays.entries() + self.overlays.entries()
                 ),
                 "zipped": other.zipped if self.zipped is None else self.zipped,
                 "compression": (

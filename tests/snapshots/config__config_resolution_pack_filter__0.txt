@@ -29,6 +29,8 @@
         }
       ]
     },
+    "supported_formats": null,
+    "overlays": null,
     "zipped": null,
     "compression": null,
     "compression_level": null,
@@ -40,6 +42,8 @@
     "description": "",
     "pack_format": 0,
     "filter": null,
+    "supported_formats": null,
+    "overlays": null,
     "zipped": null,
     "compression": null,
     "compression_level": null,

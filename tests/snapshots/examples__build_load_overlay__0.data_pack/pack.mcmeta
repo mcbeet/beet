@@ -1,7 +1,12 @@
 {
   "pack": {
-    "pack_format": 18,
-    "description": ""
+    "pack_format": 20,
+    "description": "",
+    "supported_formats": [
+      18,
+      19,
+      20
+    ]
   },
   "overlays": {
     "entries": [
@@ -22,6 +27,13 @@
       {
         "formats": 19,
         "directory": "overlay_missing"
+      },
+      {
+        "formats": {
+          "min_inclusive": 18,
+          "max_inclusive": 19
+        },
+        "directory": "creeper"
       }
     ]
   }
