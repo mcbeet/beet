@@ -2,6 +2,13 @@
 
 <!--next-version-placeholder-->
 
+## v0.97.0 (2023-10-29)
+
+### Feature
+
+* Supported_formats and overlays in config ([`e879c64`](https://github.com/mcbeet/beet/commit/e879c64cf0e43edc504ddb973f9b1eb2d5a5ff42))
+* Add convert ([`51772a6`](https://github.com/mcbeet/beet/commit/51772a63004d1c819b00f188a60c5f589259be6f))
+
 ## v0.96.1 (2023-10-14)
 
 ### Fix
