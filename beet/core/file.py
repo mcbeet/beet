@@ -295,6 +295,15 @@ class File(Generic[ValueType, SerializeType]):
             else:
                 self.dump_path(Path(origin, path), raw)
 
+    def convert(self, file_type: Type[FileType]) -> FileType:
+        if self.source_path:
+            return file_type(
+                source_path=self.source_path,
+                source_start=self.source_start,
+                source_stop=self.source_stop,
+            )
+        raise ValueError("File already loaded.")
+
     def __repr__(self) -> str:
         content = (
             repr(self._content)
@@ -438,6 +447,13 @@ class TextFileBase(File[ValueType, str]):
         """Convert string to content."""
         raise NotImplementedError()
 
+    def convert(self, file_type: Type[FileType]) -> FileType:
+        if not issubclass(file_type, TextFileBase):
+            raise TypeError("Incompatible file type.")
+        if self.source_path:
+            return super().convert(file_type)
+        return file_type(self.text)
+
 
 class TextFile(TextFileBase[str]):
     """Class representing a text file."""
@@ -508,6 +524,13 @@ class BinaryFileBase(File[ValueType, bytes]):
     def from_bytes(self, content: bytes) -> ValueType:
         """Convert bytes to content."""
         raise NotImplementedError()
+
+    def convert(self, file_type: Type[FileType]) -> FileType:
+        if not issubclass(file_type, BinaryFileBase):
+            raise TypeError("Incompatible file type.")
+        if self.source_path:
+            return super().convert(file_type)
+        return file_type(self.blob)
 
 
 class BinaryFile(BinaryFileBase[bytes]):
