@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.39.1 (2023-10-30)
+
+### Fix
+
+* Update deps ([`3a160b1`](https://github.com/mcbeet/bolt/commit/3a160b1418f7c004b16516008cc000a9234933f0))
+
 ## v0.39.0 (2023-10-28)
 
 ### Feature
