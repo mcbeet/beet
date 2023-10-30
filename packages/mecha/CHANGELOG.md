@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.81.0 (2023-10-30)
+
+### Feature
+
+* Compilation unit provider ([`2738c9b`](https://github.com/mcbeet/mecha/commit/2738c9bbc19988ce1f7cb1b00b9c2e012d4302b5))
+
 ## v0.80.0 (2023-10-14)
 
 ### Feature
