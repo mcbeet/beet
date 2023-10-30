@@ -126,7 +126,7 @@ class Runtime(CommandEmitter):
 
         self.spec = mc.spec
 
-        mc.providers.append(FileTypeCompilationUnitProvider([Module], mc.directory))
+        mc.providers.append(FileTypeCompilationUnitProvider([Module]))
 
         commands_json = files("bolt.resources").joinpath("commands.json").read_text()
         command_tree = CommandTree.parse_raw(commands_json)
