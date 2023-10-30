@@ -20,6 +20,7 @@ from mecha import (
     CommandTree,
     CompilationDatabase,
     Diagnostic,
+    FileTypeCompilationUnitProvider,
     Mecha,
     Visitor,
     rule,
@@ -125,7 +126,7 @@ class Runtime(CommandEmitter):
 
         self.spec = mc.spec
 
-        mc.providers.append(Module)
+        mc.providers.append(FileTypeCompilationUnitProvider([Module], mc.directory))
 
         commands_json = files("bolt.resources").joinpath("commands.json").read_text()
         command_tree = CommandTree.parse_raw(commands_json)

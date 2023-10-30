@@ -34,7 +34,7 @@ from typing import (
     cast,
 )
 
-from beet import BubbleException, Cache, DataPack, TextFile, TextFileBase
+from beet import BubbleException, Cache, DataPack, ResourcePack, TextFile, TextFileBase
 from beet.core.utils import JsonDict, extra_field, import_from_string, required_field
 from mecha import (
     AstCacheBackend,
@@ -152,9 +152,9 @@ class ModuleManager(Mapping[TextFileBase[Any], CompiledModule]):
     )
     globals: JsonDict = extra_field(default_factory=dict)
     builtins: Set[str] = extra_field(default_factory=set)
-    prelude: Dict[str, Dict[Optional[DataPack], AstPrelude]] = extra_field(
-        default_factory=dict
-    )
+    prelude: Dict[
+        str, Dict[Optional[Union[ResourcePack, DataPack]], AstPrelude]
+    ] = extra_field(default_factory=dict)
 
     execution_count: int = 0
 
