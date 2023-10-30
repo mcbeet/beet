@@ -228,6 +228,8 @@ class Mecha:
         self.steps.append(self.optimize)
         self.steps.append(self.check)
 
+        self.database.directory = self.directory
+
         if self.perf_report is None and self.output_perf:
             self.perf_report = []
 
@@ -238,7 +240,7 @@ class Mecha:
                 parsers=get_parsers(version),
             )
 
-        self.providers = [FileTypeCompilationUnitProvider([Function], self.directory)]
+        self.providers = [FileTypeCompilationUnitProvider([Function])]
 
         self.serialize = Serializer(
             spec=self.spec,

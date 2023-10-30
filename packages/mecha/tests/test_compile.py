@@ -192,7 +192,7 @@ class DummySourceFile(TextFile):
 @pytest.fixture
 def dummy_source_file_provider(mc: Mecha):
     previous_providers = mc.providers
-    mc.providers = [FileTypeCompilationUnitProvider([DummySourceFile], mc.directory)]
+    mc.providers = [FileTypeCompilationUnitProvider([DummySourceFile])]
     yield
     mc.providers = previous_providers
 

@@ -75,7 +75,8 @@ class CompilationDatabase(Container[TextFileBase[Any], CompilationUnit]):
     current: TextFileBase[Any]
     count: int
 
-    generate: Optional[Generator] = None
+    generate: Optional[Generator]
+    directory: Optional[FileSystemPath]
 
     def __init__(self):
         super().__init__()
@@ -88,6 +89,7 @@ class CompilationDatabase(Container[TextFileBase[Any], CompilationUnit]):
         self.count = 0
 
         self.generate = None
+        self.directory = None
 
     @property
     def index(self) -> Dict[str, TextFileBase[Any]]:
@@ -102,7 +104,14 @@ class CompilationDatabase(Container[TextFileBase[Any], CompilationUnit]):
         for index in [value.filename, value.resource_location]:
             if index:
                 pack_index[index] = key
+
         value.diagnostics.file = key
+
+        if not value.filename and key.source_path and self.directory:
+            value.filename = os.path.relpath(key.source_path, self.directory)
+        if not value.diagnostics.filename and value.filename:
+            value.diagnostics.filename = value.filename
+
         return value
 
     def __delitem__(self, key: TextFileBase[Any]):
@@ -171,7 +180,6 @@ class FileTypeCompilationUnitProvider:
     """Provide source files based on their type."""
 
     file_types: List[Type[NamespaceFile]]
-    directory: FileSystemPath
 
     def __call__(
         self,
@@ -192,10 +200,5 @@ class FileTypeCompilationUnitProvider:
 
                     yield file_instance, CompilationUnit(
                         resource_location=resource_location,
-                        filename=(
-                            os.path.relpath(file_instance.source_path, self.directory)
-                            if file_instance.source_path
-                            else None
-                        ),
                         pack=pack,
                     )
