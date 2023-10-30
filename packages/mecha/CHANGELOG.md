@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.81.1 (2023-10-30)
+
+### Fix
+
+* Don't resolve filename in compilation unit provider ([`7c32194`](https://github.com/mcbeet/mecha/commit/7c321949c80e2c4567c8bf1810ca2f14551302c5))
+
 ## v0.81.0 (2023-10-30)
 
 ### Feature
