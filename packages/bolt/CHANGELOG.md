@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.39.2 (2023-10-30)
+
+### Fix
+
+* Update mecha ([`5bac0ec`](https://github.com/mcbeet/bolt/commit/5bac0ec7539a1e85884d92e42db85b56447be09a))
+
 ## v0.39.1 (2023-10-30)
 
 ### Fix
