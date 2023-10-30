@@ -36,7 +36,7 @@ from beet import (
     Context,
     DataPack,
     Function,
-    NamespaceFile,
+    ResourcePack,
     TextFileBase,
 )
 from beet.core.utils import (
@@ -51,7 +51,12 @@ from tokenstream import InvalidSyntax, Preprocessor, TokenStream, set_location
 
 from .ast import AstLiteral, AstNode, AstRoot
 from .config import CommandTree
-from .database import CompilationDatabase, CompilationUnit
+from .database import (
+    CompilationDatabase,
+    CompilationUnit,
+    CompilationUnitProvider,
+    FileTypeCompilationUnitProvider,
+)
 from .diagnostic import (
     Diagnostic,
     DiagnosticCollection,
@@ -66,6 +71,7 @@ from .spec import CommandSpec
 
 AstNodeType = TypeVar("AstNodeType", bound=AstNode)
 TextFileType = TypeVar("TextFileType", bound=TextFileBase[Any])
+PackType = TypeVar("PackType", bound=Union[ResourcePack, DataPack])
 
 
 logger = logging.getLogger("mecha")
@@ -156,9 +162,7 @@ class Mecha:
 
     spec: CommandSpec = extra_field(default=None)
 
-    providers: List[Type[NamespaceFile]] = extra_field(
-        default_factory=lambda: [Function]
-    )
+    providers: List[CompilationUnitProvider] = extra_field(init=False)
 
     preprocessor: Preprocessor = extra_field(default=wrap_backslash_continuation)
 
@@ -233,6 +237,8 @@ class Mecha:
                 tree=CommandTree.load_from(version=version),
                 parsers=get_parsers(version),
             )
+
+        self.providers = [FileTypeCompilationUnitProvider([Function], self.directory)]
 
         self.serialize = Serializer(
             spec=self.spec,
@@ -375,7 +381,7 @@ class Mecha:
     @overload
     def compile(
         self,
-        source: DataPack,
+        source: PackType,
         *,
         match: Optional[List[str]] = None,
         multiline: Optional[bool] = None,
@@ -383,7 +389,7 @@ class Mecha:
         readonly: Optional[bool] = None,
         initial_step: int = 0,
         report: Optional[DiagnosticCollection] = None,
-    ) -> DataPack:
+    ) -> PackType:
         ...
 
     @overload
@@ -393,7 +399,7 @@ class Mecha:
         *,
         filename: Optional[FileSystemPath] = None,
         resource_location: Optional[str] = None,
-        within: Optional[DataPack] = None,
+        within: Optional[Union[ResourcePack, DataPack]] = None,
         multiline: Optional[bool] = None,
         formatting: Optional[JsonDict] = None,
         readonly: Optional[bool] = None,
@@ -409,7 +415,7 @@ class Mecha:
         *,
         filename: Optional[FileSystemPath] = None,
         resource_location: Optional[str] = None,
-        within: Optional[DataPack] = None,
+        within: Optional[Union[ResourcePack, DataPack]] = None,
         multiline: Optional[bool] = None,
         formatting: Optional[JsonDict] = None,
         readonly: Optional[bool] = None,
@@ -420,18 +426,20 @@ class Mecha:
 
     def compile(
         self,
-        source: Union[DataPack, TextFileBase[Any], List[str], str, AstRoot],
+        source: Union[
+            Union[ResourcePack, DataPack], TextFileBase[Any], List[str], str, AstRoot
+        ],
         *,
         match: Optional[List[str]] = None,
         filename: Optional[FileSystemPath] = None,
         resource_location: Optional[str] = None,
-        within: Optional[DataPack] = None,
+        within: Optional[Union[ResourcePack, DataPack]] = None,
         multiline: Optional[bool] = None,
         formatting: Optional[JsonDict] = None,
         readonly: Optional[bool] = None,
         initial_step: int = 0,
         report: Optional[DiagnosticCollection] = None,
-    ) -> Union[DataPack, TextFileBase[Any]]:
+    ) -> Union[Union[ResourcePack, DataPack], TextFileBase[Any]]:
         """Apply all compilation steps."""
         self.database.setup_compilation()
 
@@ -440,32 +448,16 @@ class Mecha:
         if readonly is None:
             readonly = self.readonly
 
-        if isinstance(source, DataPack):
+        if isinstance(source, (ResourcePack, DataPack)):
             result = source
 
             if match is None:
                 match = self.match
 
-            packs = [source]
-            if source.overlay_parent is None:
-                packs.extend(source.overlays.values())
-
-            for file_type in self.providers:
-                if not issubclass(file_type, TextFileBase):
-                    continue
-                for pack in packs:
-                    for key in pack[file_type].match(*match or ["*"]):
-                        value = pack[file_type][key]
-                        self.database[value] = CompilationUnit(
-                            resource_location=key,
-                            filename=(
-                                os.path.relpath(value.source_path, self.directory)
-                                if value.source_path
-                                else None
-                            ),
-                            pack=pack,
-                        )
-                        self.database.enqueue(value)
+            for provider in self.providers:
+                for file_instance, compilation_unit in provider(source, match):
+                    self.database[file_instance] = compilation_unit
+                    self.database.enqueue(file_instance)
         else:
             if isinstance(source, (list, str)):
                 source = Function(source)
@@ -477,31 +469,35 @@ class Mecha:
             else:
                 result = Function()
 
-            self.database[result] = CompilationUnit(
-                ast=source if isinstance(source, AstRoot) else None,
+            compilation_unit = CompilationUnit(
                 resource_location=resource_location,
                 filename=str(filename) if filename else None,
                 pack=within,
             )
+
+            if isinstance(source, AstRoot):
+                compilation_unit.ast = source
+
+            self.database[result] = compilation_unit
             self.database.enqueue(result)
 
-        for step, function in self.database.process_queue():
-            compilation_unit = self.database[function]
+        for step, file_instance in self.database.process_queue():
+            compilation_unit = self.database[file_instance]
             start_time = perf_counter_ns()
 
             if step < 0:
                 if compilation_unit.ast:
-                    self.database.enqueue(function, initial_step)
+                    self.database.enqueue(file_instance, initial_step)
                     continue
                 try:
-                    compilation_unit.source = function.text
+                    compilation_unit.source = file_instance.text
                     compilation_unit.ast = self.parse(
-                        function,
+                        file_instance,
                         filename=compilation_unit.filename,
                         resource_location=compilation_unit.resource_location,
                         multiline=multiline,
                     )
-                    self.database.enqueue(function, initial_step)
+                    self.database.enqueue(file_instance, initial_step)
                 except DiagnosticError as exc:
                     compilation_unit.diagnostics.extend(exc.diagnostics)
 
@@ -513,27 +509,30 @@ class Mecha:
                         if not compilation_unit.diagnostics.error:
                             compilation_unit.ast = ast
                             self.database.enqueue(
-                                key=function,
+                                key=file_instance,
                                 step=step + 1,
                                 priority=compilation_unit.priority,
                             )
-
-            elif not readonly:
+            else:
+                if readonly:
+                    continue
                 if not compilation_unit.ast:
                     continue
                 with self.serialize.use_diagnostics(compilation_unit.diagnostics):
-                    function.text = self.serialize(compilation_unit.ast, **formatting)
+                    file_instance.text = self.serialize(
+                        compilation_unit.ast, **formatting
+                    )
 
             compilation_unit.perf[step] = (perf_counter_ns() - start_time) * 1e-06
 
-        sorted_functions = sorted(
+        sorted_source_files = sorted(
             self.database.session,
             key=lambda f: self.database[f].resource_location or "<unknown>",
         )
 
         if self.perf_report is not None:
-            for function in sorted_functions:
-                compilation_unit = self.database[function]
+            for file_instance in sorted_source_files:
+                compilation_unit = self.database[file_instance]
                 self.perf_report.append(
                     (
                         compilation_unit.filename or "",
@@ -549,8 +548,8 @@ class Mecha:
         diagnostics = DiagnosticCollection(
             [
                 exc
-                for function in sorted_functions
-                for exc in self.database[function].diagnostics.exceptions
+                for file_instance in sorted_source_files
+                for exc in self.database[file_instance].diagnostics.exceptions
             ]
         )
 

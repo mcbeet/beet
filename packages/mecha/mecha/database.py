@@ -1,17 +1,41 @@
 __all__ = [
     "CompilationDatabase",
     "CompilationUnit",
+    "CompilationUnitProvider",
+    "FileTypeCompilationUnitProvider",
 ]
 
 
+import os
 from collections import defaultdict
 from contextlib import contextmanager
 from dataclasses import dataclass
 from heapq import heappop, heappush
-from typing import Any, DefaultDict, Dict, Iterator, List, Optional, Set, Tuple
+from typing import (
+    Any,
+    DefaultDict,
+    Dict,
+    Iterable,
+    Iterator,
+    List,
+    Optional,
+    Protocol,
+    Set,
+    Tuple,
+    Type,
+    Union,
+)
 
-from beet import Container, DataPack, Generator, TextFile, TextFileBase
-from beet.core.utils import extra_field
+from beet import (
+    Container,
+    DataPack,
+    Generator,
+    NamespaceFile,
+    ResourcePack,
+    TextFile,
+    TextFileBase,
+)
+from beet.core.utils import FileSystemPath, extra_field
 
 from .ast import AstRoot
 from .diagnostic import DiagnosticCollection
@@ -25,7 +49,7 @@ class CompilationUnit:
     source: Optional[str] = None
     filename: Optional[str] = None
     resource_location: Optional[str] = None
-    pack: Optional[DataPack] = None
+    pack: Optional[Union[ResourcePack, DataPack]] = None
     priority: int = 0
 
     diagnostics: DiagnosticCollection = extra_field(init=False)
@@ -42,7 +66,9 @@ class CompilationUnit:
 class CompilationDatabase(Container[TextFileBase[Any], CompilationUnit]):
     """Compilation database."""
 
-    indices: DefaultDict[Optional[DataPack], Dict[str, TextFileBase[Any]]]
+    indices: DefaultDict[
+        Optional[Union[ResourcePack, DataPack]], Dict[str, TextFileBase[Any]]
+    ]
     session: Set[TextFileBase[Any]]
     queue: List[Tuple[int, int, str, int, TextFileBase[Any]]]
     step: int
@@ -127,3 +153,49 @@ class CompilationDatabase(Container[TextFileBase[Any], CompilationUnit]):
                     yield
                     return
         yield
+
+
+class CompilationUnitProvider(Protocol):
+    """Provide source files for compilation."""
+
+    def __call__(
+        self,
+        pack: Union[ResourcePack, DataPack],
+        match: Optional[List[str]] = None,
+    ) -> Iterable[Tuple[TextFileBase[Any], CompilationUnit]]:
+        ...
+
+
+@dataclass
+class FileTypeCompilationUnitProvider:
+    """Provide source files based on their type."""
+
+    file_types: List[Type[NamespaceFile]]
+    directory: FileSystemPath
+
+    def __call__(
+        self,
+        pack: Union[ResourcePack, DataPack],
+        match: Optional[List[str]] = None,
+    ) -> Iterable[Tuple[TextFileBase[Any], CompilationUnit]]:
+        packs = [pack]
+        if pack.overlay_parent is None:
+            packs.extend(pack.overlays.values())
+
+        for file_type in self.file_types:
+            if not issubclass(file_type, TextFileBase):
+                continue
+
+            for pack in packs:
+                for resource_location in pack[file_type].match(*match or ["*"]):
+                    file_instance = pack[file_type][resource_location]
+
+                    yield file_instance, CompilationUnit(
+                        resource_location=resource_location,
+                        filename=(
+                            os.path.relpath(file_instance.source_path, self.directory)
+                            if file_instance.source_path
+                            else None
+                        ),
+                        pack=pack,
+                    )

@@ -1,19 +1,22 @@
 from dataclasses import replace
-from typing import Any
+from typing import Any, ClassVar, Tuple
 
 import pytest
-from beet import DataPack, Function, TextFile
+from beet import DataPack, Function, ResourcePack, TextFile
 
 from mecha import (
+    AstBool,
     AstChildren,
     AstCommand,
     AstJsonValue,
     AstMessage,
     AstMessageText,
+    AstRoot,
     AstSelector,
     Diagnostic,
     DiagnosticCollection,
     DiagnosticError,
+    FileTypeCompilationUnitProvider,
     Mecha,
     rule,
 )
@@ -179,3 +182,72 @@ def test_lint_error_report(mc: Mecha, dummy_transform: Any, dummy_lint_error: An
     d = mc.database[function].diagnostics.exceptions[0]
     assert d.level == "error"
     assert d.format_message() == "Really don't. (really_do_not_use_say)"
+
+
+class DummySourceFile(TextFile):
+    scope: ClassVar[Tuple[str, ...]] = ("dummy",)
+    extension: ClassVar[str] = ".txt"
+
+
+@pytest.fixture
+def dummy_source_file_provider(mc: Mecha):
+    previous_providers = mc.providers
+    mc.providers = [FileTypeCompilationUnitProvider([DummySourceFile], mc.directory)]
+    yield
+    mc.providers = previous_providers
+
+
+def test_dummy_source_file_provider(mc: Mecha, dummy_source_file_provider: Any):
+    p = DataPack()
+    p.extend_namespace.append(DummySourceFile)
+
+    a = Function("say fold \\\n this")
+    b = DummySourceFile("# some comment")
+    c = DummySourceFile("gamerule keepInventory true")
+
+    p["demo:a"] = a
+    p["demo:b"] = b
+    p["demo:c"] = c
+
+    diagnostics = DiagnosticCollection()
+    mc.compile(p, report=diagnostics)
+
+    assert a == Function("say fold \\\n this")
+    assert b == DummySourceFile("")
+    assert c == DummySourceFile("gamerule keepInventory true\n")
+
+    assert a not in mc.database
+    assert mc.database[b].ast == AstRoot(commands=AstChildren())
+    assert mc.database[c].ast == AstRoot(
+        commands=AstChildren(
+            [
+                AstCommand(
+                    identifier="gamerule:keepInventory:value",
+                    arguments=AstChildren([AstBool(value=True)]),
+                )
+            ]
+        )
+    )
+
+
+def test_assets_dummy_source_file_provider(mc: Mecha, dummy_source_file_provider: Any):
+    r = ResourcePack()
+    r.extend_namespace.append(DummySourceFile)
+
+    a = DummySourceFile("gamerule keep\\\nInventory true")
+    r["demo:a"] = a
+
+    diagnostics = DiagnosticCollection()
+    mc.compile(r, report=diagnostics)
+
+    assert a == DummySourceFile("gamerule keepInventory true\n")
+    assert mc.database[a].ast == AstRoot(
+        commands=AstChildren(
+            [
+                AstCommand(
+                    identifier="gamerule:keepInventory:value",
+                    arguments=AstChildren([AstBool(value=True)]),
+                )
+            ]
+        )
+    )
