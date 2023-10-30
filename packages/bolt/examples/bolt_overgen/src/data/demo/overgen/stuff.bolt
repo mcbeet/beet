@@ -1,0 +1,7 @@
+declare_overlay_formats(
+    min_inclusive=18,
+    max_inclusive=19,
+)
+
+function ./foo:
+    say stuff
