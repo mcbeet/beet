@@ -254,7 +254,7 @@ class ProjectConfig(BaseModel):
         """Apply config overrides."""
         for option in iter_options(values):
             try:
-                values = apply_option(values, eval_option(option))
+                values = apply_option(values, cls.apply_overrides(eval_option(option)))
             except Exception:
                 raise InvalidProjectConfig(
                     f"Couldn't apply override {option!r}."
