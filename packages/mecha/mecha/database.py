@@ -110,17 +110,17 @@ class CompilationDatabase(Container[TextFileBase[Any], CompilationUnit]):
         key: TextFileBase[Any],
         value: CompilationUnit,
     ) -> CompilationUnit:
-        pack_index = self.indices[value.pack]
-        for index in [value.filename, value.resource_location]:
-            if index:
-                pack_index[index] = key
-
-        value.diagnostics.file = key
-
         if not value.filename:
             value.filename = resolve_source_filename(key, self.directory)
         if not value.diagnostics.filename and value.filename:
             value.diagnostics.filename = value.filename
+
+        value.diagnostics.file = key
+
+        pack_index = self.indices[value.pack]
+        for index in [value.filename, value.resource_location]:
+            if index:
+                pack_index[index] = key
 
         return value
 
