@@ -68,6 +68,7 @@ from .parse import delegate, get_parsers
 from .preprocess import wrap_backslash_continuation
 from .serialize import FormattingOptions, Serializer
 from .spec import CommandSpec
+from .utils import resolve_source_filename
 
 AstNodeType = TypeVar("AstNodeType", bound=AstNode)
 TextFileType = TypeVar("TextFileType", bound=TextFileBase[Any])
@@ -200,13 +201,12 @@ class Mecha:
                 self.match = opts.match
 
             self.directory = ctx.directory
+            self.database.configure(generate=ctx.generate, directory=self.directory)
 
             self.lint = Reducer(levels=opts.rules)
             self.transform = MutatingReducer(levels=opts.rules)
             self.optimize = MutatingReducer(levels=opts.rules)
             self.check = Reducer(levels=opts.rules)
-
-            self.database.generate = ctx.generate
 
             if not self.cache and opts.cache:
                 self.cache = ctx.cache["mecha"]
@@ -218,6 +218,7 @@ class Mecha:
 
         else:
             self.directory = Path.cwd()
+            self.database.configure(directory=self.directory)
 
             self.lint = Reducer()
             self.transform = MutatingReducer()
@@ -228,8 +229,6 @@ class Mecha:
         self.steps.append(self.transform)
         self.steps.append(self.optimize)
         self.steps.append(self.check)
-
-        self.database.directory = self.directory
 
         if self.perf_report is None and self.output_perf:
             self.perf_report = []
@@ -332,8 +331,8 @@ class Mecha:
         if isinstance(source, (list, str)):
             source = Function(source)
 
-        if not filename and source.source_path:
-            filename = os.path.relpath(source.source_path, self.directory)
+        if not filename:
+            filename = resolve_source_filename(source, self.directory)
 
         cache_miss = None
 
@@ -468,8 +467,8 @@ class Mecha:
 
             if isinstance(source, TextFileBase):
                 result = source
-                if not filename and source.source_path:
-                    filename = os.path.relpath(source.source_path, self.directory)
+                if not filename:
+                    filename = resolve_source_filename(source, self.directory)
             else:
                 result = Function()
 

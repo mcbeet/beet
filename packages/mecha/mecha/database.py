@@ -6,7 +6,6 @@ __all__ = [
 ]
 
 
-import os
 from collections import defaultdict
 from contextlib import contextmanager
 from dataclasses import dataclass
@@ -39,6 +38,7 @@ from beet.core.utils import FileSystemPath, extra_field
 
 from .ast import AstRoot
 from .diagnostic import DiagnosticCollection
+from .utils import resolve_source_filename
 
 
 @dataclass
@@ -85,11 +85,19 @@ class CompilationDatabase(Container[TextFileBase[Any], CompilationUnit]):
         self.queue = []
         self.step = -1
         self.current = TextFile()
-        self[self.current] = CompilationUnit()
         self.count = 0
 
         self.generate = None
         self.directory = None
+
+    def configure(
+        self,
+        generate: Optional[Generator] = None,
+        directory: Optional[FileSystemPath] = None,
+    ):
+        self.generate = generate
+        self.directory = directory
+        self[self.current] = CompilationUnit()
 
     @property
     def index(self) -> Dict[str, TextFileBase[Any]]:
@@ -107,8 +115,8 @@ class CompilationDatabase(Container[TextFileBase[Any], CompilationUnit]):
 
         value.diagnostics.file = key
 
-        if not value.filename and key.source_path and self.directory:
-            value.filename = os.path.relpath(key.source_path, self.directory)
+        if not value.filename:
+            value.filename = resolve_source_filename(key, self.directory)
         if not value.diagnostics.filename and value.filename:
             value.diagnostics.filename = value.filename
 

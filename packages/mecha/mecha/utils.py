@@ -7,13 +7,17 @@ __all__ = [
     "string_to_number",
     "number_to_string",
     "underline_code",
+    "resolve_source_filename",
 ]
 
 
 import re
 from dataclasses import dataclass, field
-from typing import Dict, Union
+from pathlib import Path
+from typing import Any, Dict, Optional, Union
 
+from beet import File
+from beet.core.utils import FileSystemPath
 from tokenstream import InvalidSyntax, SourceLocation, Token, set_location
 
 from .error import MechaError
@@ -179,3 +183,17 @@ def underline_code(
 
     gutter_size = max(max(len(g) for g in gutter), 8)
     return "\n".join(f"{g.rjust(gutter_size)}  {text}" for g, text in zip(gutter, view))
+
+
+def resolve_source_filename(
+    file_instance: File[Any, Any],
+    directory: Optional[FileSystemPath] = None,
+) -> Optional[str]:
+    if file_instance.source_path:
+        if directory:
+            try:
+                return str(Path(file_instance.source_path).relative_to(directory))
+            except ValueError:
+                pass
+        return str(Path(file_instance.source_path).resolve())
+    return None
