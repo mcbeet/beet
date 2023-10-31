@@ -11,4 +11,4 @@ from .api import Mecha
 def beet_default(ctx: Context):
     mc = ctx.inject(Mecha)
 
-    mc.compile(ctx.data, report=mc.diagnostics)
+    mc.compile(together=ctx.packs, report=mc.diagnostics)

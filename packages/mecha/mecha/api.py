@@ -19,6 +19,7 @@ from time import perf_counter_ns
 from typing import (
     Any,
     Dict,
+    Iterable,
     Iterator,
     List,
     Literal,
@@ -398,6 +399,20 @@ class Mecha:
     @overload
     def compile(
         self,
+        *,
+        together: Iterable[Union[ResourcePack, DataPack]],
+        match: Optional[List[str]] = None,
+        multiline: Optional[bool] = None,
+        formatting: Optional[JsonDict] = None,
+        readonly: Optional[bool] = None,
+        initial_step: int = 0,
+        report: Optional[DiagnosticCollection] = None,
+    ) -> None:
+        ...
+
+    @overload
+    def compile(
+        self,
         source: TextFileType,
         *,
         filename: Optional[FileSystemPath] = None,
@@ -429,10 +444,17 @@ class Mecha:
 
     def compile(
         self,
-        source: Union[
-            Union[ResourcePack, DataPack], TextFileBase[Any], List[str], str, AstRoot
-        ],
+        source: Optional[
+            Union[
+                Union[ResourcePack, DataPack],
+                TextFileBase[Any],
+                List[str],
+                str,
+                AstRoot,
+            ]
+        ] = None,
         *,
+        together: Optional[Iterable[Union[ResourcePack, DataPack]]] = None,
         match: Optional[List[str]] = None,
         filename: Optional[FileSystemPath] = None,
         resource_location: Optional[str] = None,
@@ -442,7 +464,7 @@ class Mecha:
         readonly: Optional[bool] = None,
         initial_step: int = 0,
         report: Optional[DiagnosticCollection] = None,
-    ) -> Union[Union[ResourcePack, DataPack], TextFileBase[Any]]:
+    ) -> Optional[Union[Union[ResourcePack, DataPack], TextFileBase[Any]]]:
         """Apply all compilation steps."""
         self.database.setup_compilation()
 
@@ -451,16 +473,21 @@ class Mecha:
         if readonly is None:
             readonly = self.readonly
 
+        result = None
+
         if isinstance(source, (ResourcePack, DataPack)):
             result = source
+            together = [source]
 
+        if together is not None:
             if match is None:
                 match = self.match
 
-            for provider in self.providers:
-                for file_instance, compilation_unit in provider(source, match):
-                    self.database[file_instance] = compilation_unit
-                    self.database.enqueue(file_instance)
+            for pack in together:
+                for provider in self.providers:
+                    for file_instance, compilation_unit in provider(pack, match):
+                        self.database[file_instance] = compilation_unit
+                        self.database.enqueue(file_instance)
         else:
             if isinstance(source, (list, str)):
                 source = Function(source)
