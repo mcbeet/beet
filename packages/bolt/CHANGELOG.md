@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.40.0 (2023-10-31)
+
+### Feature
+
+* Asset module ([`3e3fa7d`](https://github.com/mcbeet/bolt/commit/3e3fa7d810595f7bc0dc8c1691e54d31c7ecc5aa))
+
 ## v0.39.2 (2023-10-30)
 
 ### Fix
