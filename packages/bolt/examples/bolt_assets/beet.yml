@@ -1,0 +1,9 @@
+require:
+  - bolt
+resource_pack:
+  load: "src"
+pipeline:
+  - mecha
+meta:
+  bolt:
+    entrypoint: "*"

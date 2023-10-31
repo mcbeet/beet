@@ -706,14 +706,14 @@ files = [
 
 [[package]]
 name = "mecha"
-version = "0.81.1"
+version = "0.83.0"
 description = "A powerful Minecraft command library"
 category = "main"
 optional = false
 python-versions = ">=3.10,<4.0"
 files = [
-    {file = "mecha-0.81.1-py3-none-any.whl", hash = "sha256:0a461428881fba0b12d0b610e3b1a3e2b7f768c315474e0ec80f313f35539758"},
-    {file = "mecha-0.81.1.tar.gz", hash = "sha256:fb14f61676eb506bd2f72038368be24ae3d1edee84af109f616f15529daa7471"},
+    {file = "mecha-0.83.0-py3-none-any.whl", hash = "sha256:eb51a7af975cc81221f625ef24a90db041f2fcc96d6e85cb92385b33272b949c"},
+    {file = "mecha-0.83.0.tar.gz", hash = "sha256:639a7bb1b11b7fc5b501ac2b0f7f7a9b2475898c11ea2d028e543e019cadb932"},
 ]
 
 [package.dependencies]
@@ -1488,4 +1488,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "f3a0dae896acc9385475ff31afa5e91fd139beb49f0c3d15ff1c283dd89803bb"
+content-hash = "b3b95e7ad92fb54dc71f0da8d57e8fec9dd025f497458519c8c0fce4f3ee6714"

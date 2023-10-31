@@ -19,6 +19,7 @@ from mecha import (
     CommandSpec,
     CommandTree,
     CompilationDatabase,
+    CompilationUnitProvider,
     Diagnostic,
     FileTypeCompilationUnitProvider,
     Mecha,
@@ -36,7 +37,13 @@ from .emit import CommandEmitter
 from .helpers import get_bolt_helpers
 from .loop_info import loop_info
 from .memo import MemoHandler, MemoRegistry
-from .module import CompiledModule, Module, ModuleCacheBackend, ModuleManager
+from .module import (
+    AssetModule,
+    CompiledModule,
+    Module,
+    ModuleCacheBackend,
+    ModuleManager,
+)
 from .parse import get_bolt_parsers
 from .utils import internal
 
@@ -54,6 +61,7 @@ class Runtime(CommandEmitter):
     evaluate: "Evaluator"
 
     spec: CommandSpec
+    module_provider: CompilationUnitProvider
 
     def __init__(self, ctx: Union[Context, Mecha]):
         super().__init__()
@@ -74,6 +82,7 @@ class Runtime(CommandEmitter):
             )
 
             ctx.data.extend_namespace.append(Module)
+            ctx.assets.extend_namespace.append(AssetModule)
 
             self.globals["ctx"] = ctx
 
@@ -126,7 +135,8 @@ class Runtime(CommandEmitter):
 
         self.spec = mc.spec
 
-        mc.providers.append(FileTypeCompilationUnitProvider([Module]))
+        self.module_provider = FileTypeCompilationUnitProvider([Module, AssetModule])
+        mc.providers.append(self.module_provider)
 
         commands_json = files("bolt.resources").joinpath("commands.json").read_text()
         command_tree = CommandTree.parse_raw(commands_json)
@@ -207,6 +217,8 @@ class Runtime(CommandEmitter):
         finally:
             for pack in [ctx.data, *ctx.data.overlays.values()]:
                 pack[Module].clear()
+            for pack in [ctx.assets, *ctx.assets.overlays.values()]:
+                pack[AssetModule].clear()
             self.memo.finalize()
 
 
@@ -237,7 +249,7 @@ class Evaluator(Visitor):
         compilation_unit, module = self.modules.match_ast(node)
 
         if (
-            isinstance(self.modules.database.current, Module)
+            isinstance(self.modules.database.current, (Module, AssetModule))
             and not module.executed
             and module.resource_location
             and not self.entrypoint_spec.match_file(module.resource_location)

@@ -1,5 +1,6 @@
 __all__ = [
     "Module",
+    "AssetModule",
     "CompiledModule",
     "ModuleManager",
     "ModuleCacheBackend",
@@ -80,6 +81,13 @@ class SilentCompilationInterrupt(DiagnosticCollection):
 
 class Module(TextFile):
     """Class representing a bolt module."""
+
+    scope: ClassVar[Tuple[str, ...]] = ("modules",)
+    extension: ClassVar[str] = ".bolt"
+
+
+class AssetModule(TextFile):
+    """Class representing a bolt module in a resource pack."""
 
     scope: ClassVar[Tuple[str, ...]] = ("modules",)
     extension: ClassVar[str] = ".bolt"
