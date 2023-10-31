@@ -2,6 +2,13 @@
 
 <!--next-version-placeholder-->
 
+## v0.83.1 (2023-10-31)
+
+### Fix
+
+* Remove additional compilation unit provider ([`c905b22`](https://github.com/mcbeet/mecha/commit/c905b227fb97ef921fe70476f6d4e9be76d43594))
+* Patch compilation unit before indexing ([`4100cdf`](https://github.com/mcbeet/mecha/commit/4100cdff8f4fad08bd7ff1169ca0ec564b0d81e0))
+
 ## v0.83.0 (2023-10-31)
 
 ### Feature
