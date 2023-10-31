@@ -3,6 +3,7 @@ __all__ = [
     "CompilationUnit",
     "CompilationUnitProvider",
     "FileTypeCompilationUnitProvider",
+    "AdditionalCompilationUnitProvider",
 ]
 
 
@@ -12,6 +13,7 @@ from dataclasses import dataclass
 from heapq import heappop, heappush
 from typing import (
     Any,
+    Callable,
     DefaultDict,
     Dict,
     Iterable,
@@ -210,3 +212,21 @@ class FileTypeCompilationUnitProvider:
                         resource_location=resource_location,
                         pack=pack,
                     )
+
+
+@dataclass
+class AdditionalCompilationUnitProvider:
+    """Provide additional source files."""
+
+    load: Callable[[], Iterable[Union[ResourcePack, DataPack]]]
+    providers: List[CompilationUnitProvider]
+
+    def __call__(
+        self,
+        pack: Union[ResourcePack, DataPack],
+        match: Optional[List[str]] = None,
+    ) -> Iterable[Tuple[TextFileBase[Any], CompilationUnit]]:
+        for pack in self.load():
+            for provider in self.providers:
+                if not isinstance(provider, AdditionalCompilationUnitProvider):
+                    yield from provider(pack, match)
