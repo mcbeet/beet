@@ -2,6 +2,17 @@
 
 <!--next-version-placeholder-->
 
+## v0.82.0 (2023-10-31)
+
+### Feature
+
+* Additional compilation unit provider ([`c0fc09b`](https://github.com/mcbeet/mecha/commit/c0fc09b164253ef8d550f37c3b5a5d40ff7ea39f))
+
+### Fix
+
+* Refactor filename resolution ([`d73ba6f`](https://github.com/mcbeet/mecha/commit/d73ba6f505723e8826cd669cc6ff5c3b19f59520))
+* Expose function provider ([`620c11a`](https://github.com/mcbeet/mecha/commit/620c11af4fc50c9d3924a0742aecaaac9de302e6))
+
 ## v0.81.1 (2023-10-30)
 
 ### Fix
