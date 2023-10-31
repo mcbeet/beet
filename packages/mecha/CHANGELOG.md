@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.83.0 (2023-10-31)
+
+### Feature
+
+* Add compile together ([`e204cae`](https://github.com/mcbeet/mecha/commit/e204caeb33e295fe5a8693f0c3ebd10b1e4b2dad))
+
 ## v0.82.0 (2023-10-31)
 
 ### Feature
