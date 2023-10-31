@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.97.1 (2023-10-31)
+
+### Fix
+
+* Recursive overrides ([`2e575ca`](https://github.com/mcbeet/beet/commit/2e575ca014ff754b1377d6e52eb3dcf96d5a760e))
+
 ## v0.97.0 (2023-10-29)
 
 ### Feature
