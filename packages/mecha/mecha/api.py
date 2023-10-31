@@ -162,6 +162,7 @@ class Mecha:
 
     spec: CommandSpec = extra_field(default=None)
 
+    function_provider: CompilationUnitProvider = extra_field(init=False)
     providers: List[CompilationUnitProvider] = extra_field(init=False)
 
     preprocessor: Preprocessor = extra_field(default=wrap_backslash_continuation)
@@ -240,7 +241,8 @@ class Mecha:
                 parsers=get_parsers(version),
             )
 
-        self.providers = [FileTypeCompilationUnitProvider([Function])]
+        self.function_provider = FileTypeCompilationUnitProvider([Function])
+        self.providers = [self.function_provider]
 
         self.serialize = Serializer(
             spec=self.spec,
