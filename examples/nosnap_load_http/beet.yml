@@ -1,0 +1,4 @@
+data_pack:
+  load: "https://raw.githubusercontent.com/Gamemode4Dev/GM4_Datapacks/release/1.20/gm4_double_doors_1_20.zip"
+  zipped: false
+output: "out"

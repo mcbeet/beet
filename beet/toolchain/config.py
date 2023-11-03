@@ -6,6 +6,7 @@ __all__ = [
     "PackLoadOptions",
     "ListOption",
     "PackageablePath",
+    "PackLoadUrl",
     "InvalidProjectConfig",
     "locate_config",
     "load_config",
@@ -24,7 +25,7 @@ from typing import Any, Dict, Generic, List, Literal, Optional, Tuple, TypeVar, 
 
 import toml
 import yaml
-from pydantic import BaseModel, ValidationError, root_validator, validator
+from pydantic import BaseModel, HttpUrl, ValidationError, root_validator, validator
 from pydantic.generics import GenericModel
 
 from beet.core.error import BubbleException
@@ -106,8 +107,19 @@ class PackageablePath(BaseModel):
         return str(self.__root__)
 
 
+class PackLoadUrl(BaseModel):
+    """Url to load pack resources."""
+
+    __root__: HttpUrl
+
+
 class PackLoadOptions(
-    ListOption[Union[PackageablePath, Dict[str, ListOption[PackageablePath]]]]
+    ListOption[
+        Union[
+            Union[PackLoadUrl, PackageablePath],
+            Dict[str, ListOption[Union[PackLoadUrl, PackageablePath]]],
+        ]
+    ]
 ):
     """Options for loading data packs and resource packs."""
 
@@ -120,6 +132,8 @@ class PackLoadOptions(
                         prefix: ListOption.parse_obj(
                             [
                                 pattern.resolve(directory)
+                                if isinstance(pattern, PackageablePath)
+                                else pattern
                                 for pattern in mount_options.entries()
                             ]
                         )
@@ -127,6 +141,8 @@ class PackLoadOptions(
                     }
                     if isinstance(load_entry, dict)
                     else load_entry.resolve(directory)
+                    if isinstance(load_entry, PackageablePath)
+                    else load_entry
                 )
                 for load_entry in self.entries()
             ]
