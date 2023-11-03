@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.98.0 (2023-11-03)
+
+### Feature
+
+* Add url load ([`e08d5cd`](https://github.com/mcbeet/beet/commit/e08d5cd9cfd014c16197a7b21e0c2fec57765624))
+
 ## v0.97.1 (2023-10-31)
 
 ### Fix
