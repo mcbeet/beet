@@ -1342,3 +1342,16 @@ predicate x []
 ###
 with storage ./args:
     $say $(message)
+###
+class A(foo=True, bar=1 + 2):
+    pass
+###
+class A:
+    pass
+class B(foo=True, A):
+    pass
+###
+class A:
+    pass
+class B(A, foo=True):
+    pass

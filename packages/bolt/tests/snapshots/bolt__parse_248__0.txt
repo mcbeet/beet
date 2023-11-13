@@ -74,6 +74,8 @@ class Foo(A, B):
               location: SourceLocation(pos=49, lineno=5, colno=14)
               end_location: SourceLocation(pos=50, lineno=5, colno=15)
               value: 'B'
+          kwargs:
+            <empty>
         <class 'bolt.ast.AstClassRoot'>
           location: SourceLocation(pos=57, lineno=6, colno=5)
           end_location: SourceLocation(pos=61, lineno=6, colno=9)

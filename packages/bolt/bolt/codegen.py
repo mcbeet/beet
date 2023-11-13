@@ -780,15 +780,18 @@ class Codegen(Visitor):
             value = yield from visit_single(decorator.expression, required=True)
             decorators.append(value)
 
-        inherit: List[str] = []
+        class_args: List[str] = []
 
         if isinstance(bases := node.arguments[1], AstClassBases):
             for base in bases.inherit:
                 result = yield from visit_single(base, required=True)
-                inherit.append(result)
+                class_args.append(result)
+            for kwarg in bases.kwargs:
+                result = yield from visit_single(kwarg, required=True)
+                class_args.append(result)
 
-        joined_bases = f"({', '.join(inherit)})" if inherit else ""
-        acc.statement(f"class {name.value}{joined_bases}:", lineno=node)
+        joined_args = f"({', '.join(class_args)})" if class_args else ""
+        acc.statement(f"class {name.value}{joined_args}:", lineno=node)
 
         with acc.block():
             temp_start = acc.counter

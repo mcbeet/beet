@@ -31,3 +31,9 @@ say a
 say a
 say b
 ```
+
+`@function demo:pydantic`
+
+```mcfunction
+say {"a": 123, "b": "123"}
+```

@@ -31,7 +31,7 @@ __all__ = [
     "ProcMacroParser",
     "ProcMacroExpansion",
     "parse_class_name",
-    "parse_class_bases",
+    "ClassBasesParser",
     "parse_class_root",
     "parse_del_target",
     "parse_identifier",
@@ -316,7 +316,14 @@ def get_bolt_parsers(
         ),
         "bolt:proc_macro": ProcMacroParser(modules),
         "bolt:class_name": parse_class_name,
-        "bolt:class_bases": parse_class_bases,
+        "bolt:class_bases": ClassBasesParser(
+            AlternativeParser(
+                [
+                    KeywordParser(delegate("bolt:expression")),
+                    delegate("bolt:expression"),
+                ]
+            )
+        ),
         "bolt:class_root": FlushPendingBindingsParser(parse_class_root, after=True),
         "bolt:memo_variable": TrailingCommaParser(
             AlternativeParser(
@@ -1771,23 +1778,39 @@ def parse_class_name(stream: TokenStream) -> AstClassName:
     return node
 
 
-def parse_class_bases(stream: TokenStream) -> AstClassBases:
-    """Parse class bases."""
-    inherit: List[AstExpression] = []
+@dataclass
+class ClassBasesParser:
+    """Parser for class bases."""
 
-    with stream.syntax(brace=r"\(|\)", comma=","):
-        token = stream.expect(("brace", "("))
+    parser: Parser
 
-        with stream.ignore("newline"):
-            for _ in stream.peek_until(("brace", ")")):
-                inherit.append(delegate("bolt:expression", stream))
+    def __call__(self, stream: TokenStream) -> AstClassBases:
+        inherit: List[AstExpression] = []
+        kwargs: List[AstKeyword] = []
 
-                if not stream.get("comma"):
-                    stream.expect(("brace", ")"))
-                    break
+        with stream.syntax(brace=r"\(|\)", comma=","):
+            token = stream.expect(("brace", "("))
 
-    node = AstClassBases(inherit=AstChildren(inherit))
-    return set_location(node, token, stream.current)
+            with stream.ignore("newline"):
+                for _ in stream.peek_until(("brace", ")")):
+                    arg = self.parser(stream)
+
+                    if isinstance(arg, AstKeyword):
+                        kwargs.append(arg)
+                    else:
+                        if kwargs:
+                            exc = InvalidSyntax(
+                                f'Base class not allowed after keyword argument "{kwargs[-1].name}".'
+                            )
+                            raise set_location(exc, arg)
+                        inherit.append(arg)
+
+                    if not stream.get("comma"):
+                        stream.expect(("brace", ")"))
+                        break
+
+        node = AstClassBases(inherit=AstChildren(inherit), kwargs=AstChildren(kwargs))
+        return set_location(node, token, stream.current)
 
 
 def parse_class_root(stream: TokenStream) -> AstClassRoot:

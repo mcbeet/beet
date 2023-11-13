@@ -468,6 +468,7 @@ class AstClassBases(AstNode):
     """Ast class bases node."""
 
     inherit: AstChildren[AstExpression] = AstChildren()
+    kwargs: AstChildren[AstKeyword] = AstChildren()
 
 
 @dataclass(frozen=True, slots=True)
