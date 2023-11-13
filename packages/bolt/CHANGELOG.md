@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.41.0 (2023-11-13)
+
+### Feature
+
+* Class kwargs ([`c6d6c94`](https://github.com/mcbeet/bolt/commit/c6d6c94591322807b8fea6233e785b0f05666c6a))
+
 ## v0.40.0 (2023-10-31)
 
 ### Feature
