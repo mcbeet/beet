@@ -453,7 +453,9 @@
         "falling_dust minecraft:grass_block[snowy=true]{hello: world}",
         "item minecraft:apple",
         "item minecraft:apple{foo: bar}",
-        "vibration 0.0 64.0 0.0 5.0 64.0 0.0 200"
+        "vibration 5.0 64.0 0.0 200",
+        "sculk_charge 1.5707",
+        "shriek 100"
       ]
     },
     {
@@ -464,8 +466,10 @@
         "block minecraft:grass_block[snowy=]",
         "falling_dust grass_block[snowy=true]{hello: world wat}",
         "item minecraft:apple{",
-        "vibration 0.0 64.0 0.0 5.0 thing",
-        "vibration 0.0 64.0"
+        "vibration 5.0 64.0 0.0 ~ ~ ~",
+        "vibration 5.0 64.0",
+        "sculk_charge ~ ~ ~",
+        "shriek ~ ~ ~"
       ]
     }
   ],

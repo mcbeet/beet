@@ -91,8 +91,10 @@ particle dust_color_transition 1.0 0.0 0.0 1.0 0.0 0.0 1.0
 particle block minecraft:grass_block[snowy=true]
 particle falling_dust minecraft:grass_block[snowy=true]
 particle item minecraft:apple
-particle vibration 0.0 64.0 0.0 5.0 64.0 0.0 200
-particle vibration 0.0 64.0 0.0 5.0 64.0 0.0 200 ^ ^ ^3
+particle vibration 5.0 64.0 0.0 200
+particle vibration 5.0 64.0 0.0 200 ^ ^ ^3
+particle sculk_charge 1.5707
+particle shriek 100
 setblock ~ ~ ~ chest[facing=east]
 setblock ~ ~ ~-1 birch_sign{Text1: '"My chest"', Text2: '"Do not open!"'}
 setblock ~ ~2 ~ quartz_slab[type=top]

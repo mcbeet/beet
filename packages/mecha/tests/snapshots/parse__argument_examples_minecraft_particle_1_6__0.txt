@@ -2,7 +2,7 @@ minecraft:particle 1 6
 ---
 {}
 ---
-vibration 0.0 64.0
+vibration 5.0 64.0
 ---
 Reported 1 error.
 

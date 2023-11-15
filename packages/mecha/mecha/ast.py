@@ -1206,12 +1206,9 @@ class AstItemParticleParameters(AstParticleParameters):
 class AstVibrationParticleParameters(AstParticleParameters):
     """Ast vibration particle parameters node."""
 
-    x1: AstNumber = required_field()
-    y1: AstNumber = required_field()
-    z1: AstNumber = required_field()
-    x2: AstNumber = required_field()
-    y2: AstNumber = required_field()
-    z2: AstNumber = required_field()
+    destination_x: AstNumber = required_field()
+    destination_y: AstNumber = required_field()
+    destination_z: AstNumber = required_field()
     duration: AstNumber = required_field()
 
 
@@ -1220,6 +1217,20 @@ class AstBlockMarkerParticleParameters(AstParticleParameters):
     """Ast block marker particle parameters node."""
 
     block: AstBlock = required_field()
+
+
+@dataclass(frozen=True, slots=True)
+class AstSculkChargeParticleParameters(AstParticleParameters):
+    """Ast sculk charge particle parameters node."""
+
+    angle: AstNumber = required_field()
+
+
+@dataclass(frozen=True, slots=True)
+class AstShriekParticleParameters(AstParticleParameters):
+    """Ast shriek particle parameters node."""
+
+    delay: AstNumber = required_field()
 
 
 @dataclass(frozen=True, slots=True)

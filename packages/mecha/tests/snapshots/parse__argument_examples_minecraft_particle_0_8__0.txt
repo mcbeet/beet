@@ -2,13 +2,13 @@ minecraft:particle 0 8
 ---
 {}
 ---
-vibration 0.0 64.0 0.0 5.0 64.0 0.0 200
+vibration 5.0 64.0 0.0 200
 ---
-vibration 0.0 64.0 0.0 5.0 64.0 0.0 200
+vibration 5.0 64.0 0.0 200
 ---
 <class 'mecha.ast.AstParticle'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
-  end_location: SourceLocation(pos=39, lineno=1, colno=40)
+  end_location: SourceLocation(pos=26, lineno=1, colno=27)
   name:
     <class 'mecha.ast.AstResourceLocation'>
       location: SourceLocation(pos=0, lineno=1, colno=1)
@@ -19,39 +19,24 @@ vibration 0.0 64.0 0.0 5.0 64.0 0.0 200
   parameters:
     <class 'mecha.ast.AstVibrationParticleParameters'>
       location: SourceLocation(pos=10, lineno=1, colno=11)
-      end_location: SourceLocation(pos=39, lineno=1, colno=40)
-      x1:
+      end_location: SourceLocation(pos=26, lineno=1, colno=27)
+      destination_x:
         <class 'mecha.ast.AstNumber'>
           location: SourceLocation(pos=10, lineno=1, colno=11)
           end_location: SourceLocation(pos=13, lineno=1, colno=14)
-          value: 0.0
-      y1:
+          value: 5.0
+      destination_y:
         <class 'mecha.ast.AstNumber'>
           location: SourceLocation(pos=14, lineno=1, colno=15)
           end_location: SourceLocation(pos=18, lineno=1, colno=19)
           value: 64.0
-      z1:
+      destination_z:
         <class 'mecha.ast.AstNumber'>
           location: SourceLocation(pos=19, lineno=1, colno=20)
           end_location: SourceLocation(pos=22, lineno=1, colno=23)
           value: 0.0
-      x2:
+      duration:
         <class 'mecha.ast.AstNumber'>
           location: SourceLocation(pos=23, lineno=1, colno=24)
           end_location: SourceLocation(pos=26, lineno=1, colno=27)
-          value: 5.0
-      y2:
-        <class 'mecha.ast.AstNumber'>
-          location: SourceLocation(pos=27, lineno=1, colno=28)
-          end_location: SourceLocation(pos=31, lineno=1, colno=32)
-          value: 64.0
-      z2:
-        <class 'mecha.ast.AstNumber'>
-          location: SourceLocation(pos=32, lineno=1, colno=33)
-          end_location: SourceLocation(pos=35, lineno=1, colno=36)
-          value: 0.0
-      duration:
-        <class 'mecha.ast.AstNumber'>
-          location: SourceLocation(pos=36, lineno=1, colno=37)
-          end_location: SourceLocation(pos=39, lineno=1, colno=40)
           value: 200

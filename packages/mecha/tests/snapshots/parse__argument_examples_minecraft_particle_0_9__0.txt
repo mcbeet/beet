@@ -1,0 +1,27 @@
+minecraft:particle 0 9
+---
+{}
+---
+sculk_charge 1.5707
+---
+sculk_charge 1.5707
+---
+<class 'mecha.ast.AstParticle'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=19, lineno=1, colno=20)
+  name:
+    <class 'mecha.ast.AstResourceLocation'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=12, lineno=1, colno=13)
+      is_tag: False
+      namespace: None
+      path: 'sculk_charge'
+  parameters:
+    <class 'mecha.ast.AstSculkChargeParticleParameters'>
+      location: SourceLocation(pos=13, lineno=1, colno=14)
+      end_location: SourceLocation(pos=19, lineno=1, colno=20)
+      angle:
+        <class 'mecha.ast.AstNumber'>
+          location: SourceLocation(pos=13, lineno=1, colno=14)
+          end_location: SourceLocation(pos=19, lineno=1, colno=20)
+          value: 1.5707

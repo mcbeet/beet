@@ -146,6 +146,7 @@ from .ast import (
     AstRoot,
     AstScoreboardOperation,
     AstScoreboardSlot,
+    AstSculkChargeParticleParameters,
     AstSelector,
     AstSelectorAdvancementMatch,
     AstSelectorAdvancementPredicateMatch,
@@ -153,6 +154,7 @@ from .ast import (
     AstSelectorArgument,
     AstSelectorScoreMatch,
     AstSelectorScores,
+    AstShriekParticleParameters,
     AstSortOrder,
     AstString,
     AstSwizzle,
@@ -340,18 +342,23 @@ def get_default_parsers() -> Dict[str, Parser]:
         "particle:minecraft:vibration": AggregateParser(
             type=AstVibrationParticleParameters,
             fields={
-                "x1": delegate("numeric"),
-                "y1": delegate("numeric"),
-                "z1": delegate("numeric"),
-                "x2": delegate("numeric"),
-                "y2": delegate("numeric"),
-                "z2": delegate("numeric"),
+                "destination_x": delegate("numeric"),
+                "destination_y": delegate("numeric"),
+                "destination_z": delegate("numeric"),
                 "duration": delegate("integer"),
             },
         ),
         "particle:minecraft:block_marker": AggregateParser(
             type=AstBlockMarkerParticleParameters,
             fields={"block": delegate("block_state")},
+        ),
+        "particle:minecraft:sculk_charge": AggregateParser(
+            type=AstSculkChargeParticleParameters,
+            fields={"angle": delegate("numeric")},
+        ),
+        "particle:minecraft:shriek": AggregateParser(
+            type=AstShriekParticleParameters,
+            fields={"delay": delegate("integer")},
         ),
         ################################################################################
         # Selector
