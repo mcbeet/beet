@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.83.2 (2023-11-15)
+
+### Fix
+
+* Parameters for vibration, sculk_charge, and shriek particles ([`3528612`](https://github.com/mcbeet/mecha/commit/3528612c59229864698a25593bf546b31bbb0149))
+
 ## v0.83.1 (2023-10-31)
 
 ### Fix
