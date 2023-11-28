@@ -1,14 +1,15 @@
-_bolt_lineno = [1, 10, 11, 15, 23, 27], [1, 2, 3, 4, 6, 7]
+_bolt_lineno = [1, 10, 11, 16, 23, 27], [1, 2, 3, 4, 6, 7]
+_bolt_helper_operator_not = _bolt_runtime.helpers['operator_not']
 _bolt_helper_branch = _bolt_runtime.helpers['branch']
 _bolt_helper_get_rebind = _bolt_runtime.helpers['get_rebind']
 _bolt_helper_children = _bolt_runtime.helpers['children']
-_bolt_helper_operator_not = _bolt_runtime.helpers['operator_not']
 _bolt_helper_replace = _bolt_runtime.helpers['replace']
 with _bolt_runtime.scope() as _bolt_var0:
     def foo(value):
         _bolt_var0 = 'init'
         result = _bolt_var0
         _bolt_var1 = value
+        _bolt_var1_inverse = _bolt_helper_operator_not(_bolt_var1)
         with _bolt_helper_branch(_bolt_var1) as _bolt_condition:
             if _bolt_condition:
                 _bolt_var2 = 1
@@ -16,8 +17,7 @@ with _bolt_runtime.scope() as _bolt_var0:
                 result = _bolt_var2
                 if _bolt_rebind is not None:
                     result = _bolt_rebind(result)
-        _bolt_var1 = _bolt_helper_operator_not(_bolt_var1)
-        with _bolt_helper_branch(_bolt_var1) as _bolt_condition:
+        with _bolt_helper_branch(_bolt_var1_inverse) as _bolt_condition:
             if _bolt_condition:
                 _bolt_var3 = 0
                 _bolt_rebind = _bolt_helper_get_rebind(result)

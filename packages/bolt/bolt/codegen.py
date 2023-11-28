@@ -104,7 +104,9 @@ class Accumulator:
     header: Dict[str, str] = field(default_factory=dict)
     root_scope: bool = True
 
-    last_condition: str = "_bolt_error_last_condition"
+    current_siblings: Tuple[AstNode, ...] = ()
+    current_sibling_index: int = 0
+    condition_inverse: Optional[str] = None
 
     def get_source(self) -> str:
         """Return the source code."""
@@ -240,7 +242,7 @@ class Accumulator:
             self.root_scope = previous_root
 
     @contextmanager
-    def if_statement(self, condition: str):
+    def if_statement(self, condition: str, inverse: Optional[str] = None):
         """Emit if statement."""
         branch = self.helper("branch", condition)
         self.statement(f"with {branch} as _bolt_condition:")
@@ -248,14 +250,14 @@ class Accumulator:
             self.statement(f"if _bolt_condition:")
             with self.block():
                 yield
-        self.last_condition = condition
+        self.condition_inverse = inverse
 
     @contextmanager
     def else_statement(self):
         """Emit else statement."""
-        negated_value = self.helper("operator_not", self.last_condition)
-        self.statement(f"{self.last_condition} = {negated_value}")
-        with self.if_statement(self.last_condition):
+        if not self.condition_inverse:
+            raise ValueError("Condition inverse unavailable.")
+        with self.if_statement(self.condition_inverse):
             yield
 
     def enclose(self, code: str, from_index: int):
@@ -362,7 +364,13 @@ def visit_multiple(
     collector: Optional[ChildrenCollector] = None
     index = len(acc.lines)
 
+    previous_siblings = acc.current_siblings
+    previous_sibling_index = acc.current_sibling_index
+    acc.current_siblings = children
+
     for i, child in enumerate(children):
+        acc.current_sibling_index = i
+
         result = yield child
         if result is None:
             continue
@@ -377,6 +385,9 @@ def visit_multiple(
 
         current_count = i + 1
         index = len(acc.lines)
+
+    acc.current_siblings = previous_siblings
+    acc.current_sibling_index = previous_sibling_index
 
     if collector:
         collector.add_static(*children[current_count:])
@@ -838,7 +849,19 @@ class Codegen(Visitor):
         acc: Accumulator,
     ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
         condition = yield from visit_single(node.arguments[0], required=True)
-        with acc.if_statement(condition):
+        inverse = None
+
+        else_index = acc.current_sibling_index + 1
+        if (
+            else_index < len(acc.current_siblings)
+            and isinstance(else_node := acc.current_siblings[else_index], AstCommand)
+            and else_node.identifier == "else:body"
+        ):
+            inverse = f"{condition}_inverse"
+            value = acc.helper("operator_not", condition)
+            acc.statement(f"{inverse} = {value}", lineno=node.arguments[0])
+
+        with acc.if_statement(condition, inverse):
             yield from visit_body(cast(AstRoot, node.arguments[1]), acc)
         return []
 
