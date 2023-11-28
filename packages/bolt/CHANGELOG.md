@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.41.1 (2023-11-28)
+
+### Fix
+
+* Early inverse binding for else condition ([`44a6dbf`](https://github.com/mcbeet/bolt/commit/44a6dbf3bdda67288c00417d364e3384e92d26b3))
+
 ## v0.41.0 (2023-11-13)
 
 ### Feature
