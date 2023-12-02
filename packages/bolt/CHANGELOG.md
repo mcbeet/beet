@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.42.0 (2023-12-02)
+
+### Feature
+
+* Update deps ([`fcc4bde`](https://github.com/mcbeet/bolt/commit/fcc4bdea6c582933e905f4e3ee30c394eb607d1b))
+
 ## v0.41.1 (2023-11-28)
 
 ### Fix
