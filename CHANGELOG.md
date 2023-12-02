@@ -2,6 +2,13 @@
 
 <!--next-version-placeholder-->
 
+## v0.99.0 (2023-12-02)
+
+### Feature
+
+* Rename pack query ([`93d80af`](https://github.com/mcbeet/beet/commit/93d80af70b996d02e70439a5b7787ef85ae703fd))
+* Revamp select and add load_vanilla ([`5d003d3`](https://github.com/mcbeet/beet/commit/5d003d352e4c2560e74090825bf0dc897b23b0d1))
+
 ## v0.98.0 (2023-11-03)
 
 ### Feature
