@@ -34,6 +34,7 @@ from typing import (
     Literal,
     Mapping,
     Optional,
+    Sequence,
     Set,
     Tuple,
     Type,
@@ -43,7 +44,6 @@ from typing import (
     overload,
 )
 
-from git import Sequence
 from pathspec import PathSpec
 from pathspec.patterns.gitwildmatch import GitWildMatchPattern
 from pydantic.v1 import BaseModel, validator
