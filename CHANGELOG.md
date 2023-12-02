@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.99.2 (2023-12-02)
+
+### Fix
+
+* Typing ([`3e2200d`](https://github.com/mcbeet/beet/commit/3e2200dafa902a5c228fd6d27ad95098c85f89af))
+
 ## v0.99.1 (2023-12-02)
 
 ### Fix
