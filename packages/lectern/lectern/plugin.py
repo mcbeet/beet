@@ -9,7 +9,7 @@ from glob import glob
 from typing import List, Literal, Optional
 
 from beet import Context, ListOption, PackageablePath, configurable
-from pydantic import BaseModel
+from pydantic.v1 import BaseModel
 
 from .document import Document
 from .loaders import LinkFragmentLoader
