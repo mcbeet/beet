@@ -10,7 +10,7 @@ __all__ = [
 from typing import Any
 
 from beet import Context, PluginOptions, TextFileBase, configurable
-from beet.toolchain.select import PackMatchOption
+from beet.toolchain.query import PackMatchOption
 
 
 class RenderOptions(PluginOptions):
@@ -27,9 +27,9 @@ def render(ctx: Context, opts: RenderOptions):
     """Plugin that processes the data pack and the resource pack with Jinja."""
     for match_option, pack in zip([opts.resource_pack, opts.data_pack], ctx.packs):
         for file_type, selection in (
-            ctx.select.from_pack(pack)
+            ctx.query.from_pack(pack)
             .prepare(match_option)
-            .gather(extend=TextFileBase[Any])
+            .select(extend=TextFileBase[Any])
             .items()
         ):
             for path, file_instance in selection:

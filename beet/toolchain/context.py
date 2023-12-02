@@ -57,7 +57,7 @@ from beet.library.resource_pack import ResourcePack
 
 from .generator import Generator
 from .pipeline import GenericPipeline, GenericPlugin, GenericPluginSpec
-from .select import PackSelector
+from .query import PackQuery
 from .template import TemplateManager
 from .tree import generate_tree
 from .worker import WorkerPoolHandle
@@ -320,8 +320,8 @@ class Context:
         self.inject(Pipeline).require(*args)
 
     @property
-    def select(self) -> PackSelector[Union[ResourcePack, DataPack]]:
-        return PackSelector(self.packs, self.template)
+    def query(self) -> PackQuery[Union[ResourcePack, DataPack]]:
+        return PackQuery(self.packs, self.template)
 
     def __getitem__(
         self, extend: Type[NamespaceFileType]

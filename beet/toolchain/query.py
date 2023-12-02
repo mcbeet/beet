@@ -1,12 +1,12 @@
 __all__ = [
-    "PackSelector",
-    "PackSelectOption",
-    "PreparedPackSelector",
+    "PackQuery",
+    "PackQueryOption",
+    "PreparedPackQuery",
     "PackSelection",
     "PackMatchOption",
     "ResolvedPackMatchOption",
     "CompiledPackMatchOption",
-    "PreparedPackMatchSelector",
+    "PreparedPackMatchQuery",
     "PackMatchSelection",
     "PathSpecOption",
     "ResolvedPathSpecOption",
@@ -14,7 +14,7 @@ __all__ = [
     "PackFilesOption",
     "ResolvedPackFilesOption",
     "CompiledPackFilesOption",
-    "PreparedPackFilesSelector",
+    "PreparedPackFilesQuery",
     "PackFilesSelection",
     "RegexOption",
     "ResolvedRegexOption",
@@ -125,7 +125,7 @@ class PackFilesOption(BaseModel):
         }
 
     @staticmethod
-    def compute_base_paths(resolved: ResolvedRegexOption) -> List[str]:
+    def analyze_base_paths(resolved: ResolvedRegexOption) -> List[str]:
         base_paths: Set[str] = set()
 
         for pattern in resolved[0]:
@@ -206,7 +206,7 @@ class PackMatchOption(BaseModel):
         return result
 
     @staticmethod
-    def compute_base_paths(
+    def analyze_base_paths(
         resolved: Mapping[str, ResolvedPathSpecOption],
         group_map: Mapping[str, Tuple[Sequence[Pack[Any]], Type[NamespaceFile]]],
     ) -> List[str]:
@@ -255,7 +255,7 @@ class PackMatchOption(BaseModel):
         }
 
 
-class PackSelectOption(BaseModel):
+class PackQueryOption(BaseModel):
     files: PackFilesOption = PackFilesOption()
     match: PackMatchOption = PackMatchOption()
 
@@ -267,34 +267,34 @@ PackFilesSelection = Mapping[Tuple[str, T], Tuple[PackType, str]]
 
 
 @dataclass(frozen=True, slots=True)
-class PreparedPackFilesSelector(Generic[PackType]):
+class PreparedPackFilesQuery(Generic[PackType]):
     packs: Sequence[PackType]
     files: ResolvedPackFilesOption
     files_regex: CompiledPackFilesOption
 
-    def compute_base_paths(self) -> Sequence[str]:
+    def analyze_base_paths(self) -> Sequence[str]:
         return [
             base_path
             for resolved in self.files.values()
-            for base_path in PackFilesOption.compute_base_paths(resolved)
+            for base_path in PackFilesOption.analyze_base_paths(resolved)
         ]
 
     @overload
-    def gather(
+    def select(
         self,
         *extensions: str,
     ) -> PackFilesSelection[File[Any, Any], PackType]:
         ...
 
     @overload
-    def gather(
+    def select(
         self,
         *extensions: str,
         extend: Type[T],
     ) -> PackFilesSelection[T, PackType]:
         ...
 
-    def gather(
+    def select(
         self,
         *extensions: str,
         extend: Optional[Any] = None,
@@ -340,7 +340,7 @@ class PreparedPackFilesSelector(Generic[PackType]):
     def copy_to(self, *args: Union[PackType, Sequence[PackType]]):
         packs = [p for arg in args for p in ([arg] if isinstance(arg, Pack) else arg)]
 
-        result = self.gather()
+        result = self.select()
 
         while result:
             pack_origin: Dict[Type[Pack[Any]], Dict[str, File[Any, Any]]] = {}
@@ -360,8 +360,8 @@ class PreparedPackFilesSelector(Generic[PackType]):
 
             result = remaining
 
-    def distinct(self) -> "PreparedPackSelector[PackType]":
-        return PreparedPackSelector([self])
+    def distinct(self) -> "PreparedPackQuery[PackType]":
+        return PreparedPackQuery([self])
 
 
 PackMatchSelection = Mapping[
@@ -370,12 +370,12 @@ PackMatchSelection = Mapping[
 
 
 @dataclass(frozen=True, slots=True)
-class PreparedPackMatchSelector(Generic[PackType]):
+class PreparedPackMatchQuery(Generic[PackType]):
     packs: Sequence[PackType]
     match: ResolvedPackMatchOption
     match_spec: CompiledPackMatchOption
 
-    def compute_base_paths(self) -> Sequence[str]:
+    def analyze_base_paths(self) -> Sequence[str]:
         group_map = create_group_map(
             {pack: pack.get_file_types() for pack in self.packs},
             plural=True,
@@ -383,25 +383,25 @@ class PreparedPackMatchSelector(Generic[PackType]):
         return [
             base_path
             for resolved in self.match.values()
-            for base_path in PackMatchOption.compute_base_paths(resolved, group_map)
+            for base_path in PackMatchOption.analyze_base_paths(resolved, group_map)
         ]
 
     @overload
-    def gather(
+    def select(
         self,
         *extensions: str,
     ) -> PackMatchSelection[File[Any, Any], PackType]:
         ...
 
     @overload
-    def gather(
+    def select(
         self,
         *extensions: str,
         extend: Type[T],
     ) -> PackMatchSelection[T, PackType]:
         ...
 
-    def gather(
+    def select(
         self,
         *extensions: str,
         extend: Optional[Any] = None,
@@ -464,7 +464,7 @@ class PreparedPackMatchSelector(Generic[PackType]):
     def copy_to(self, *args: Union[PackType, Sequence[PackType]]):
         packs = [p for arg in args for p in ([arg] if isinstance(arg, Pack) else arg)]
 
-        result = self.gather()
+        result = self.select()
 
         for file_type, selection in result.items():
             pack_type = None
@@ -487,125 +487,125 @@ class PreparedPackMatchSelector(Generic[PackType]):
 
                 selection = remaining
 
-    def distinct(self) -> "PreparedPackSelector[PackType]":
-        return PreparedPackSelector([self])
+    def distinct(self) -> "PreparedPackQuery[PackType]":
+        return PreparedPackQuery([self])
 
 
 PackSelection = Mapping[T, PackType]
 
 
 @dataclass(frozen=True, slots=True)
-class PreparedPackSelector(Generic[PackType]):
-    selectors: Sequence[
+class PreparedPackQuery(Generic[PackType]):
+    queries: Sequence[
         Union[
-            PreparedPackFilesSelector[PackType],
-            PreparedPackMatchSelector[PackType],
-            "PreparedPackSelector[PackType]",
+            PreparedPackFilesQuery[PackType],
+            PreparedPackMatchQuery[PackType],
+            "PreparedPackQuery[PackType]",
         ]
     ]
 
-    def compute_base_paths(self) -> Sequence[str]:
+    def analyze_base_paths(self) -> Sequence[str]:
         return [
             base_path
-            for selector in self.selectors
-            for base_path in selector.compute_base_paths()
+            for query in self.queries
+            for base_path in query.analyze_base_paths()
         ]
 
     @overload
-    def gather(
+    def select(
         self,
         *extensions: str,
     ) -> PackSelection[File[Any, Any], PackType]:
         ...
 
     @overload
-    def gather(
+    def select(
         self,
         *extensions: str,
         extend: Type[T],
     ) -> PackSelection[T, PackType]:
         ...
 
-    def gather(
+    def select(
         self,
         *extensions: str,
         extend: Optional[Any] = None,
     ) -> PackSelection[Any, PackType]:
         result: Dict[Any, PackType] = {}
 
-        for selector in self.selectors:
-            if isinstance(selector, PreparedPackFilesSelector):
+        for query in self.queries:
+            if isinstance(query, PreparedPackFilesQuery):
                 for (_, file_instance), (pack, _) in (
-                    selector.gather(*extensions, extend=extend)
+                    query.select(*extensions, extend=extend)
                     if extend
-                    else selector.gather(*extensions)
+                    else query.select(*extensions)
                 ).items():
                     result[file_instance] = pack
-            elif isinstance(selector, PreparedPackMatchSelector):
+            elif isinstance(query, PreparedPackMatchQuery):
                 for _, entries in (
-                    selector.gather(*extensions, extend=extend)
+                    query.select(*extensions, extend=extend)
                     if extend
-                    else selector.gather(*extensions)
+                    else query.select(*extensions)
                 ).items():
                     for (_, file_instance), (pack, _) in entries.items():
                         result[file_instance] = pack
             else:
                 result.update(
-                    selector.gather(*extensions, extend=extend)
+                    query.select(*extensions, extend=extend)
                     if extend
-                    else selector.gather(*extensions)
+                    else query.select(*extensions)
                 )
 
         return result
 
     def copy_to(self, *args: Union[PackType, Sequence[PackType]]):
-        for selector in self.selectors:
-            selector.copy_to(*args)
+        for query in self.queries:
+            query.copy_to(*args)
 
-    def distinct(self) -> "PreparedPackSelector[PackType]":
+    def distinct(self) -> "PreparedPackQuery[PackType]":
         return self
 
 
 @dataclass(frozen=True, slots=True)
-class PackSelector(Generic[PackType]):
+class PackQuery(Generic[PackType]):
     packs: Sequence[PackType]
     template: Optional[TemplateManager] = None
 
     def from_pack(
         self,
         *args: Union[FromPackType, Sequence[FromPackType]],
-    ) -> "PackSelector[FromPackType]":
+    ) -> "PackQuery[FromPackType]":
         packs = [p for arg in args for p in ([arg] if isinstance(arg, Pack) else arg)]
         return replace(self, packs=packs)  # type: ignore
 
     @overload
     def prepare(
         self, pack_options: PackFilesOption
-    ) -> PreparedPackFilesSelector[PackType]:
+    ) -> PreparedPackFilesQuery[PackType]:
         ...
 
     @overload
-    def prepare(self, *, files: Any) -> PreparedPackFilesSelector[PackType]:
+    def prepare(self, *, files: Any) -> PreparedPackFilesQuery[PackType]:
         ...
 
     @overload
     def prepare(
         self, pack_options: PackMatchOption
-    ) -> PreparedPackMatchSelector[PackType]:
+    ) -> PreparedPackMatchQuery[PackType]:
         ...
 
     @overload
-    def prepare(self, *, match: Any) -> PreparedPackMatchSelector[PackType]:
+    def prepare(self, *, match: Any) -> PreparedPackMatchQuery[PackType]:
         ...
 
     @overload
     def prepare(
         self,
         pack_options: Union[
-            PackSelectOption,
-            Sequence[Union[PackFilesOption, PackMatchOption, PackSelectOption]],
+            PackQueryOption,
+            Sequence[Union[PackFilesOption, PackMatchOption, PackQueryOption]],
         ],
-    ) -> PreparedPackSelector[PackType]:
+    ) -> PreparedPackQuery[PackType]:
         ...
 
     @overload
@@ -615,14 +615,14 @@ class PackSelector(Generic[PackType]):
             Union[
                 PackFilesOption,
                 PackMatchOption,
-                PackSelectOption,
-                Sequence[Union[PackFilesOption, PackMatchOption, PackSelectOption]],
+                PackQueryOption,
+                Sequence[Union[PackFilesOption, PackMatchOption, PackQueryOption]],
             ]
         ] = None,
         *,
         files: Any,
         match: Any,
-    ) -> PreparedPackSelector[PackType]:
+    ) -> PreparedPackQuery[PackType]:
         ...
 
     def prepare(
@@ -631,21 +631,21 @@ class PackSelector(Generic[PackType]):
             Union[
                 PackFilesOption,
                 PackMatchOption,
-                PackSelectOption,
-                Sequence[Union[PackFilesOption, PackMatchOption, PackSelectOption]],
+                PackQueryOption,
+                Sequence[Union[PackFilesOption, PackMatchOption, PackQueryOption]],
             ]
         ] = None,
         *,
         files: Optional[Any] = None,
         match: Optional[Any] = None,
     ) -> Union[
-        PreparedPackFilesSelector[PackType],
-        PreparedPackMatchSelector[PackType],
-        PreparedPackSelector[PackType],
+        PreparedPackFilesQuery[PackType],
+        PreparedPackMatchQuery[PackType],
+        PreparedPackQuery[PackType],
     ]:
         if files:
             if match:
-                return PreparedPackSelector(
+                return PreparedPackQuery(
                     [
                         *([self.prepare(pack_options)] if pack_options else []),
                         self.prepare(files=files),
@@ -657,7 +657,7 @@ class PackSelector(Generic[PackType]):
             return self.prepare(PackMatchOption.parse_obj(match))
         if isinstance(pack_options, PackFilesOption):
             resolved = pack_options.resolve(self.template)
-            return PreparedPackFilesSelector(
+            return PreparedPackFilesQuery(
                 self.packs,
                 resolved,
                 PackFilesOption.compile(resolved),
@@ -670,7 +670,7 @@ class PackSelector(Generic[PackType]):
                 ),
                 self.template,
             )
-            return PreparedPackMatchSelector(
+            return PreparedPackMatchQuery(
                 self.packs,
                 resolved,
                 PackMatchOption.compile(resolved),
@@ -678,10 +678,10 @@ class PackSelector(Generic[PackType]):
         if pack_options:
             options = (
                 (pack_options.files, pack_options.match)
-                if isinstance(pack_options, PackSelectOption)
+                if isinstance(pack_options, PackQueryOption)
                 else pack_options
             )
-            return PreparedPackSelector([self.prepare(opts) for opts in options])
+            return PreparedPackQuery([self.prepare(opts) for opts in options])
         raise ValueError("Invalid arguments")
 
     @property
@@ -729,15 +729,15 @@ class PackSelector(Generic[PackType]):
         files: Optional[Any] = None,
         match: Optional[Any] = None,
     ) -> Union[PackFilesSelection[Any, PackType], PackMatchSelection[Any, PackType]]:
-        selector = (
+        query = (
             self.prepare(files=files)
             if files is not None
             else self.prepare(match=match)
         )
         return (
-            selector.gather(*extensions, extend=extend)
+            query.select(*extensions, extend=extend)
             if extend
-            else selector.gather(*extensions)
+            else query.select(*extensions)
         )
 
     @overload
@@ -747,8 +747,8 @@ class PackSelector(Generic[PackType]):
             str,
             PackFilesOption,
             PackMatchOption,
-            PackSelectOption,
-            Sequence[Union[PackFilesOption, PackMatchOption, PackSelectOption]],
+            PackQueryOption,
+            Sequence[Union[PackFilesOption, PackMatchOption, PackQueryOption]],
         ],
         files: Optional[Any] = None,
         match: Optional[Any] = None,
@@ -762,8 +762,8 @@ class PackSelector(Generic[PackType]):
             str,
             PackFilesOption,
             PackMatchOption,
-            PackSelectOption,
-            Sequence[Union[PackFilesOption, PackMatchOption, PackSelectOption]],
+            PackQueryOption,
+            Sequence[Union[PackFilesOption, PackMatchOption, PackQueryOption]],
         ],
         extend: Type[T],
         files: Optional[Any] = None,
@@ -777,27 +777,27 @@ class PackSelector(Generic[PackType]):
             str,
             PackFilesOption,
             PackMatchOption,
-            PackSelectOption,
-            Sequence[Union[PackFilesOption, PackMatchOption, PackSelectOption]],
+            PackQueryOption,
+            Sequence[Union[PackFilesOption, PackMatchOption, PackQueryOption]],
         ],
         extend: Optional[Any] = None,
         files: Optional[Any] = None,
         match: Optional[Any] = None,
     ) -> PackSelection[Any, PackType]:
         extensions: List[str] = []
-        selectors: List[PreparedPackSelector[PackType]] = []
+        queries: List[PreparedPackQuery[PackType]] = []
 
         for arg in args:
             if isinstance(arg, str):
                 extensions.append(arg)
             else:
-                selectors.append(self.prepare(arg).distinct())
+                queries.append(self.prepare(arg).distinct())
 
         if files or match:
-            selectors.append(self.prepare(files=files, match=match).distinct())
+            queries.append(self.prepare(files=files, match=match).distinct())
 
         return (
-            PreparedPackSelector(selectors).gather(*extensions, extend=extend)
+            PreparedPackQuery(queries).select(*extensions, extend=extend)
             if extend
-            else PreparedPackSelector(selectors).gather(*extensions)
+            else PreparedPackQuery(queries).select(*extensions)
         )

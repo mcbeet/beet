@@ -23,19 +23,17 @@ from beet import (
     File,
     ListOption,
     NamespaceFile,
-    PackSelector,
+    PackFilesOption,
+    PackMatchOption,
+    PackQuery,
     PluginOptions,
+    PreparedPackFilesQuery,
+    PreparedPackMatchQuery,
     ResourcePack,
     TemplateManager,
     configurable,
 )
 from beet.contrib.find_replace import RenderSubstitutionOption, TextSubstitutionOption
-from beet.toolchain.select import (
-    PackFilesOption,
-    PackMatchOption,
-    PreparedPackFilesSelector,
-    PreparedPackMatchSelector,
-)
 
 logger = logging.getLogger(__name__)
 
@@ -53,15 +51,15 @@ class RenameOption(BaseModel):
 
     def compile(
         self,
-        select: PackSelector[Union[ResourcePack, DataPack]],
+        query: PackQuery[Union[ResourcePack, DataPack]],
         template: TemplateManager,
     ) -> List["RenameFilesHandler"]:
         return [
             RenameFilesHandler(
                 (
-                    select.prepare(opts.match)
+                    query.prepare(opts.match)
                     if opts.match is not None
-                    else select.prepare(PackFilesOption.parse_obj({"": opts.find}))
+                    else query.prepare(PackFilesOption.parse_obj({"": opts.find}))
                 ),
                 opts.compile(template),
             )
@@ -76,24 +74,24 @@ class RenameFilesOptions(PluginOptions):
 
 @dataclass
 class RenameFilesHandler:
-    selector: Union[
-        PreparedPackFilesSelector[Union[ResourcePack, DataPack]],
-        PreparedPackMatchSelector[Union[ResourcePack, DataPack]],
+    query: Union[
+        PreparedPackFilesQuery[Union[ResourcePack, DataPack]],
+        PreparedPackMatchQuery[Union[ResourcePack, DataPack]],
     ]
     substitute: Callable[[str], str]
 
     def __call__(self):
-        if isinstance(self.selector, PreparedPackMatchSelector):
-            for entries in self.selector.gather().values():
+        if isinstance(self.query, PreparedPackMatchQuery):
+            for entries in self.query.select().values():
                 for (path, file_instance), (pack, _) in entries.items():
                     self.handle_path_for_namespace_file(pack, file_instance, path)  # type: ignore
         else:
             file_types = tuple(
                 cast(Type[File[Any, Any]], file_type)
-                for pack in self.selector.packs
+                for pack in self.query.packs
                 for file_type in pack.get_file_types()
             )
-            for (filename, file_instance), (pack, _) in self.selector.gather().items():
+            for (filename, file_instance), (pack, _) in self.query.select().items():
                 if isinstance(file_instance, file_types):
                     self.handle_filename_for_namespace_file(pack, file_instance, filename)  # type: ignore
                 else:
@@ -177,5 +175,5 @@ def beet_default(ctx: Context):
 def rename_files(ctx: Context, opts: RenameFilesOptions):
     """Plugin for renaming files."""
     for pack, rename_option in zip(ctx.packs, [opts.resource_pack, opts.data_pack]):
-        for handler in rename_option.compile(ctx.select.from_pack(pack), ctx.template):
+        for handler in rename_option.compile(ctx.query.from_pack(pack), ctx.template):
             handler()

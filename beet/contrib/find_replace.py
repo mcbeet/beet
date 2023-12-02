@@ -21,10 +21,10 @@ from beet import (
     DataPack,
     ListOption,
     Pack,
-    PackSelectOption,
-    PackSelector,
+    PackQuery,
+    PackQueryOption,
     PluginOptions,
-    PreparedPackSelector,
+    PreparedPackQuery,
     RegexOption,
     ResourcePack,
     TemplateManager,
@@ -83,19 +83,19 @@ class SubstitutionOption(BaseModel):
 
 
 class FindReplaceOptions(PluginOptions):
-    resource_pack: PackSelectOption = PackSelectOption()
-    data_pack: PackSelectOption = PackSelectOption()
+    resource_pack: PackQueryOption = PackQueryOption()
+    data_pack: PackQueryOption = PackQueryOption()
     substitute: ListOption[Union[SubstitutionOption, "FindReplaceOptions"]]
 
     def compile(
         self,
-        select_assets: PackSelector[ResourcePack],
-        select_data: PackSelector[DataPack],
+        assets_query: PackQuery[ResourcePack],
+        data_query: PackQuery[DataPack],
         template: TemplateManager,
     ) -> Tuple["FindReplaceHandler[ResourcePack]", "FindReplaceHandler[DataPack]"]:
         substitute = [
             (
-                sub.compile(select_assets, select_data, template)
+                sub.compile(assets_query, data_query, template)
                 if isinstance(sub, FindReplaceOptions)
                 else sub.compile(template)
             )
@@ -103,11 +103,11 @@ class FindReplaceOptions(PluginOptions):
         ]
         return (
             FindReplaceHandler(
-                select_assets.prepare(self.resource_pack),
+                assets_query.prepare(self.resource_pack),
                 [sub if callable(sub) else sub[0] for sub in substitute],
             ),
             FindReplaceHandler(
-                select_data.prepare(self.data_pack),
+                data_query.prepare(self.data_pack),
                 [sub if callable(sub) else sub[1] for sub in substitute],
             ),
         )
@@ -118,11 +118,11 @@ ListOption[Union[SubstitutionOption, "FindReplaceOptions"]].update_forward_refs(
 
 @dataclass(frozen=True)
 class FindReplaceHandler(Generic[PackType]):
-    pack_selector: PreparedPackSelector[PackType]
+    pack_query: PreparedPackQuery[PackType]
     substitute: Sequence[Union[Callable[[str], str], "FindReplaceHandler[PackType]"]]
 
     def __call__(self):
-        text_files = self.pack_selector.gather(extend=TextFileBase[Any])
+        text_files = self.pack_query.select(extend=TextFileBase[Any])
         for find_replace in self.substitute:
             if isinstance(find_replace, FindReplaceHandler):
                 find_replace()
@@ -139,7 +139,7 @@ def beet_default(ctx: Context):
 def find_replace(ctx: Context, opts: FindReplaceOptions):
     """Plugin for performing basic substitutions."""
     resource_pack_handler, data_pack_handler = opts.compile(
-        ctx.select.from_pack(ctx.assets), ctx.select.from_pack(ctx.data), ctx.template
+        ctx.query.from_pack(ctx.assets), ctx.query.from_pack(ctx.data), ctx.template
     )
     resource_pack_handler()
     data_pack_handler()

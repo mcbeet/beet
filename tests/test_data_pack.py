@@ -13,7 +13,7 @@ from beet import (
     LootTable,
     Mcmeta,
     MergePolicy,
-    PackSelector,
+    PackQuery,
     Structure,
 )
 
@@ -477,7 +477,7 @@ def test_select():
     p["minecraft:load"] = FunctionTag()
     p["other_namespace:what/is/that"] = BlockTag()
 
-    select = PackSelector([p])
+    select = PackQuery([p])
 
     selection = {
         (k := "data/demo/functions/foo.mcfunction", p.functions["demo:foo"]): (p, k),
@@ -567,7 +567,7 @@ def test_select_rename():
     p["demo:foo"] = Function(["say foo"])
     p["demo:bar"] = Function(["say bar"])
 
-    select = PackSelector([p])
+    select = PackQuery([p])
 
     assert select(match={"function": {"demo:nested": ["demo:foo", "demo:bar"]}}) == {
         Function: {
@@ -582,7 +582,7 @@ def test_select_copy():
     p["demo:foo"] = Function(["say foo"], tags=["demo:my_foo"])
     p["demo:bar"] = Function(["say bar"], tags=["demo:my_bar"])
 
-    select = PackSelector([p])
+    select = PackQuery([p])
 
     target1 = DataPack()
     target2 = DataPack()
@@ -730,7 +730,7 @@ def test_overlay():
     assert p.overlays["bop"].functions["demo:init"] == Function(["say init"])
     assert p.overlays["bop2"].functions["demo:init"] == Function()
 
-    select = PackSelector([p])
+    select = PackQuery([p])
 
     assert select(match={"function": "*"}) == {
         Function: {

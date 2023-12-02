@@ -281,11 +281,11 @@ def load_vanilla(ctx: Context, opts: LoadVanillaOptions):
     release = vanilla.releases[opts.version or vanilla.minecraft_version]
     client_jar = release.client_jar
 
-    selector = ctx.select.from_pack(client_jar.assets, client_jar.data).prepare(
+    query = ctx.query.from_pack(client_jar.assets, client_jar.data).prepare(
         [opts.files, opts.match]
     )
 
-    for base_path in selector.compute_base_paths():
+    for base_path in query.analyze_base_paths():
         release.mount(base_path, fetch_objects=True)
 
-    selector.copy_to(ctx.packs)
+    query.copy_to(ctx.packs)
