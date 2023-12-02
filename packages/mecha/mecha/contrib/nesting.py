@@ -17,7 +17,7 @@ from beet import Context, Function
 from beet import Generator as BeetGenerator
 from beet import configurable
 from beet.core.utils import required_field
-from pydantic import BaseModel
+from pydantic.v1 import BaseModel
 from tokenstream import InvalidSyntax, TokenStream, set_location
 
 from mecha import (

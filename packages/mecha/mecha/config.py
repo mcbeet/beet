@@ -10,7 +10,7 @@ from typing import Dict, Iterator, List, Literal, Optional, Set, Tuple, Union
 
 from beet import ErrorMessage
 from beet.core.utils import FileSystemPath, JsonDict, VersionNumber, split_version
-from pydantic import BaseModel
+from pydantic.v1 import BaseModel
 
 
 class CommandTree(BaseModel):

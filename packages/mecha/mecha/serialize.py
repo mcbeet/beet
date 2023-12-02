@@ -10,7 +10,7 @@ from dataclasses import dataclass, field
 from typing import Any, Iterable, Iterator, List, Literal
 
 from beet.core.utils import required_field
-from pydantic import BaseModel
+from pydantic.v1 import BaseModel
 
 from .ast import (
     AstBlock,

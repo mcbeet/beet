@@ -15,7 +15,7 @@ from typing import DefaultDict, Dict, Iterator, List, Optional, Tuple, Union
 
 from beet import Context
 from beet.core.utils import dump_json
-from pydantic import BaseModel
+from pydantic.v1 import BaseModel
 
 from mecha import (
     AstCommand,

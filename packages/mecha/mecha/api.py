@@ -47,7 +47,7 @@ from beet.core.utils import (
     extra_field,
     import_from_string,
 )
-from pydantic import BaseModel, validator
+from pydantic.v1 import BaseModel, validator
 from tokenstream import InvalidSyntax, Preprocessor, TokenStream, set_location
 
 from .ast import AstLiteral, AstNode, AstRoot

@@ -16,7 +16,7 @@ from typing import List
 from beet import Context, configurable
 from beet.core.utils import required_field
 from jinja2 import Template
-from pydantic import BaseModel
+from pydantic.v1 import BaseModel
 
 from mecha import (
     AstChildren,
