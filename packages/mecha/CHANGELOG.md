@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.84.0 (2023-12-02)
+
+### Feature
+
+* Update deps ([`3f1c685`](https://github.com/mcbeet/mecha/commit/3f1c6851d871fd983d711f6a58bfa3407edcf6a2))
+
 ## v0.83.2 (2023-11-15)
 
 ### Fix
