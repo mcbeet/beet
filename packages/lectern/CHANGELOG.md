@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.30.0 (2023-12-02)
+
+### Feature
+
+* Add lectern.contrib.vanilla ([`c21e95d`](https://github.com/mcbeet/lectern/commit/c21e95d53be51cc4ba8b34922d581270570ca245))
+
 ## v0.29.2 (2023-10-24)
 
 ### Fix
