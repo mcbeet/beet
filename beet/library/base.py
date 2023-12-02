@@ -49,6 +49,7 @@ from typing import (
     MutableMapping,
     Optional,
     Protocol,
+    Sequence,
     Set,
     Tuple,
     Type,
@@ -60,7 +61,6 @@ from typing import (
 )
 from zipfile import ZIP_BZIP2, ZIP_DEFLATED, ZIP_LZMA, ZIP_STORED, ZipFile
 
-from git import Sequence
 from typing_extensions import Self
 
 from beet.core.container import (
