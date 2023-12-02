@@ -20,3 +20,5 @@ meta:
         - minecraft:aquifer*
         - minecraft:noodle
       textures: minecraft:block/stone
+      language:
+        foo: minecraft:fr_*
