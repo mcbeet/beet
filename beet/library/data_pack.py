@@ -120,10 +120,12 @@ class Function(TextFileBase[List[str]]):
 
         for tag_name in self.tags or ():
             pack.function_tags.merge({tag_name: FunctionTag({"values": [path]})})
+        self.tags = None
 
         for tag_name in self.prepend_tags or ():
             function_tag = pack.function_tags.setdefault(tag_name, FunctionTag())
             function_tag.prepend(FunctionTag({"values": [path]}))
+        self.prepend_tags = None
 
 
 class ItemModifier(JsonFile):

@@ -2,6 +2,8 @@
 
 
 __all__ = [
+    "LoadVanillaOptions",
+    "load_vanilla",
     "Vanilla",
     "VanillaOptions",
     "ReleaseRegistry",
@@ -24,9 +26,12 @@ from beet import (
     Context,
     DataPack,
     JsonFile,
+    PackFilesOption,
+    PackMatchOption,
     PluginOptions,
     ResourcePack,
     UnveilMapping,
+    configurable,
 )
 from beet.contrib.worldgen import worldgen
 from beet.core.utils import FileSystemPath, log_time
@@ -262,3 +267,25 @@ class Vanilla:
     @property
     def data(self) -> DataPack:
         return self.releases[self.minecraft_version].data
+
+
+class LoadVanillaOptions(PluginOptions):
+    version: Optional[str] = None
+    files: PackFilesOption = PackFilesOption()
+    match: PackMatchOption = PackMatchOption()
+
+
+@configurable(validator=LoadVanillaOptions)
+def load_vanilla(ctx: Context, opts: LoadVanillaOptions):
+    vanilla = ctx.inject(Vanilla)
+    release = vanilla.releases[opts.version or vanilla.minecraft_version]
+    client_jar = release.client_jar
+
+    selector = ctx.select.from_pack(client_jar.assets, client_jar.data).prepare(
+        [opts.files, opts.match]
+    )
+
+    for base_path in selector.compute_base_paths():
+        release.mount(base_path, fetch_objects=True)
+
+    selector.copy_to(ctx.packs)

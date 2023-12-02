@@ -1,25 +1,40 @@
 __all__ = [
-    "select_files",
-    "select_all",
     "PackSelector",
-    "PackSelection",
     "PackSelectOption",
+    "PreparedPackSelector",
+    "PackSelection",
     "PackMatchOption",
+    "ResolvedPackMatchOption",
+    "CompiledPackMatchOption",
+    "PreparedPackMatchSelector",
+    "PackMatchSelection",
     "PathSpecOption",
+    "ResolvedPathSpecOption",
+    "CompiledPathSpecOption",
+    "PackFilesOption",
+    "ResolvedPackFilesOption",
+    "CompiledPackFilesOption",
+    "PreparedPackFilesSelector",
+    "PackFilesSelection",
     "RegexOption",
+    "ResolvedRegexOption",
+    "CompiledRegexOption",
     "RegexFlagsOption",
     "RegexFlags",
 ]
 
 
 import re
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from typing import (
     Any,
     Dict,
-    Iterable,
+    Generic,
+    List,
     Literal,
+    Mapping,
     Optional,
+    Set,
     Tuple,
     Type,
     TypeVar,
@@ -28,19 +43,21 @@ from typing import (
     overload,
 )
 
+from git import Sequence
 from pathspec import PathSpec
-from pydantic import BaseModel
+from pathspec.patterns.gitwildmatch import GitWildMatchPattern
+from pydantic import BaseModel, validator
 
 from beet.core.file import File
-from beet.library.base import NamespaceFile, Pack
+from beet.library.base import NamespaceFile, Pack, create_group_map
 
 from .config import ListOption
 from .template import TemplateManager
 
 T = TypeVar("T")
 PackType = TypeVar("PackType", bound=Pack[Any])
+FromPackType = TypeVar("FromPackType", bound=Pack[Any])
 
-PackSelection = Dict[T, Tuple[Optional[str], Optional[str]]]
 
 RegexFlags = Literal["ASCII", "IGNORECASE", "MULTILINE", "DOTALL", "VERBOSE"]
 
@@ -53,227 +70,734 @@ class RegexFlagsOption(BaseModel):
         extra = "forbid"
 
 
+ResolvedRegexOption = Tuple[Sequence[str], int]
+CompiledRegexOption = Optional["re.Pattern[str]"]
+
+
 class RegexOption(BaseModel):
-    __root__: Union[ListOption[str], RegexFlagsOption] = ListOption()
+    __root__: RegexFlagsOption = RegexFlagsOption()
 
-    def compile_regex(
-        self,
-        template: Optional[TemplateManager] = None,
-    ) -> Optional["re.Pattern[str]"]:
-        flags = 0
+    @validator("__root__", pre=True)
+    def validate_root(cls, value: Any) -> Any:
+        if not isinstance(value, Mapping):
+            return {"regex": value}
+        return value  # type: ignore
 
-        if isinstance(self.__root__, RegexFlagsOption):
-            patterns = self.__root__.regex.entries()
-            for flag in self.__root__.flags.entries():
-                flags |= getattr(re, flag)
-        else:
-            patterns = self.__root__.entries()
+    def resolve(
+        self, template: Optional[TemplateManager] = None
+    ) -> ResolvedRegexOption:
+        patterns = self.__root__.regex.entries()
+        flags = self.__root__.flags.entries()
 
-        if not patterns:
-            return None
-        source = "|".join(patterns)
         if template:
-            source = template.render_string(source)
+            patterns = template.render_json(patterns)
+            flags = template.render_json(flags)
 
-        return re.compile(source, flags)
+        combined_flags = 0
+        for flag in flags:
+            combined_flags |= getattr(re, flag)
+
+        return patterns, combined_flags
+
+    @staticmethod
+    def compile(resolved: ResolvedRegexOption) -> CompiledRegexOption:
+        if not resolved[0]:
+            return None
+        return re.compile("|".join(resolved[0]), resolved[1])
+
+
+ResolvedPackFilesOption = Mapping[str, ResolvedRegexOption]
+CompiledPackFilesOption = Mapping[str, CompiledRegexOption]
+
+
+class PackFilesOption(BaseModel):
+    __root__: Union[RegexOption, Dict[str, RegexOption]] = RegexOption()
+
+    def resolve(
+        self, template: Optional[TemplateManager] = None
+    ) -> ResolvedPackFilesOption:
+        option = self.__root__
+        if isinstance(option, RegexOption):
+            option = {"": option}
+        return {
+            prefix: regex_option.resolve(template)
+            for prefix, regex_option in option.items()
+        }
+
+    @staticmethod
+    def compute_base_paths(resolved: ResolvedRegexOption) -> List[str]:
+        base_paths: Set[str] = set()
+
+        for pattern in resolved[0]:
+            escaped = re.escape(pattern).replace(r"\.", ".")
+            if pattern == escaped:
+                base_paths.add(pattern)
+                continue
+
+            common: List[str] = []
+            for part, escaped_part in zip(pattern.split("/"), escaped.split("/")):
+                if not part or part != escaped_part:
+                    break
+                common.append(part)
+
+            base_paths.add("/".join(common))
+
+        return sorted(base_paths)
+
+    @staticmethod
+    def compile(resolved: ResolvedPackFilesOption) -> CompiledPackFilesOption:
+        return {
+            prefix: RegexOption.compile(resolved_regex)
+            for prefix, resolved_regex in resolved.items()
+        }
+
+
+ResolvedPathSpecOption = Sequence[str]
+CompiledPathSpecOption = Optional[PathSpec]
 
 
 class PathSpecOption(BaseModel):
     __root__: ListOption[str] = ListOption()
 
-    def compile_spec(
+    def resolve(
         self, template: Optional[TemplateManager] = None
-    ) -> Optional[PathSpec]:
+    ) -> ResolvedPathSpecOption:
         patterns = self.__root__.entries()
-
-        if not patterns:
-            return None
         if template:
             patterns = template.render_json(patterns)
+        return patterns
 
+    @staticmethod
+    def compile(patterns: ResolvedPathSpecOption) -> CompiledPathSpecOption:
+        if not patterns:
+            return None
         return PathSpec.from_lines("gitwildmatch", patterns)
 
 
-class PackMatchOption(BaseModel):
-    __root__: Union[PathSpecOption, Dict[str, PathSpecOption]] = PathSpecOption()
+ResolvedPackMatchOption = Mapping[str, Mapping[str, ResolvedPathSpecOption]]
+CompiledPackMatchOption = Mapping[str, Mapping[str, CompiledPathSpecOption]]
 
-    def compile_match(
+
+class PackMatchOption(BaseModel):
+    __root__: Union[
+        PathSpecOption, Dict[str, Union[PathSpecOption, Dict[str, PathSpecOption]]]
+    ] = PathSpecOption()
+
+    def resolve(
         self,
+        file_types: Sequence[Type[NamespaceFile]],
         template: Optional[TemplateManager] = None,
-    ) -> Optional[Union[PathSpec, Dict[str, PathSpec]]]:
-        if isinstance(self.__root__, PathSpecOption):
-            return self.__root__.compile_spec(template)
-        else:
-            return {
-                group_name: spec
-                for group_name, match in self.__root__.items()
-                if (spec := match.compile_spec(template))
+    ) -> ResolvedPackMatchOption:
+        option = self.__root__
+        if isinstance(option, PathSpecOption):
+            option = option.resolve(template)
+            return {"": {t.snake_name: list(option) for t in file_types}}
+
+        result: Dict[str, Dict[str, List[str]]] = {}
+
+        for group_name, value in option.items():
+            if isinstance(value, PathSpecOption):
+                value = {"": value}
+            for prefix, pathspec_option in value.items():
+                result.setdefault(prefix, {}).setdefault(group_name, []).extend(
+                    pathspec_option.resolve(template)
+                )
+
+        return result
+
+    @staticmethod
+    def compute_base_paths(
+        resolved: Mapping[str, ResolvedPathSpecOption],
+        group_map: Mapping[str, Tuple[Sequence[Pack[Any]], Type[NamespaceFile]]],
+    ) -> List[str]:
+        base_paths: Set[str] = set()
+
+        for group_name, patterns in resolved.items():
+            packs, file_type = group_map[group_name]
+
+            for pack in packs:
+                overlay = "" if pack.overlay_name is None else f"{pack.overlay_name}/"
+                directory = pack.namespace_type.directory
+
+                for pattern in patterns:
+                    namespace, _, path = pattern.partition(":")
+
+                    escaped = GitWildMatchPattern.escape(namespace)
+                    if namespace != escaped:
+                        base_paths.add(f"{overlay}{directory}")
+                        continue
+
+                    escaped = GitWildMatchPattern.escape(path)
+                    if path == escaped:
+                        prefix = "/".join([directory, namespace, *file_type.scope])
+                        base_paths.add(f"{overlay}{prefix}/{path}{file_type.extension}")
+                        continue
+
+                    common: List[str] = []
+                    for part, escaped_part in zip(path.split("/"), escaped.split("/")):
+                        if not part or part != escaped_part:
+                            break
+                        common.append(part)
+
+                    prefix = "/".join([directory, namespace, *file_type.scope, *common])
+                    base_paths.add(f"{overlay}{prefix}")
+
+        return sorted(base_paths)
+
+    @staticmethod
+    def compile(resolved: ResolvedPackMatchOption) -> CompiledPackMatchOption:
+        return {
+            prefix: {
+                group_name: PathSpecOption.compile(pathspec_option)
+                for group_name, pathspec_option in groups.items()
             }
+            for prefix, groups in resolved.items()
+        }
 
 
 class PackSelectOption(BaseModel):
-    files: RegexOption = RegexOption()
+    files: PackFilesOption = PackFilesOption()
     match: PackMatchOption = PackMatchOption()
 
     class Config:
         extra = "forbid"
 
-    def compile(
-        self,
-        template: Optional[TemplateManager] = None,
-    ) -> Tuple[
-        Optional["re.Pattern[str]"],
-        Optional[Union[PathSpec, Dict[str, PathSpec]]],
-    ]:
-        return self.files.compile_regex(template), self.match.compile_match(template)
+
+PackFilesSelection = Mapping[Tuple[str, T], Tuple[PackType, str]]
 
 
-@dataclass(frozen=True)
-class PackSelector:
-    files_regex: Optional["re.Pattern[str]"] = None
-    match_spec: Optional[Union[PathSpec, Dict[str, PathSpec]]] = None
+@dataclass(frozen=True, slots=True)
+class PreparedPackFilesSelector(Generic[PackType]):
+    packs: Sequence[PackType]
+    files: ResolvedPackFilesOption
+    files_regex: CompiledPackFilesOption
 
-    @classmethod
-    def from_options(
-        cls,
-        select_options: Optional[
-            Union[PackSelectOption, RegexOption, PackMatchOption]
-        ] = None,
-        *,
-        files: Optional[Any] = None,
-        match: Optional[Any] = None,
-        template: Optional[TemplateManager] = None,
-    ) -> "PackSelector":
-        if isinstance(select_options, PackSelectOption):
-            return PackSelector(*select_options.compile(template))
-        if isinstance(select_options, RegexOption):
-            return cls.from_options(PackSelectOption(files=select_options))
-        if isinstance(select_options, PackMatchOption):
-            return cls.from_options(PackSelectOption(match=select_options))
-        values = {}
-        if files:
-            values["files"] = files
-        if match:
-            values["match"] = match
-        return PackSelector(*PackSelectOption.parse_obj(values).compile(template))
+    def compute_base_paths(self) -> Sequence[str]:
+        return [
+            base_path
+            for resolved in self.files.values()
+            for base_path in PackFilesOption.compute_base_paths(resolved)
+        ]
 
     @overload
-    def select_files(
+    def gather(
         self,
-        pack: Pack[Any],
         *extensions: str,
-    ) -> PackSelection[File[Any, Any]]:
+    ) -> PackFilesSelection[File[Any, Any], PackType]:
         ...
 
     @overload
-    def select_files(
+    def gather(
         self,
-        pack: Pack[Any],
         *extensions: str,
         extend: Type[T],
-    ) -> PackSelection[T]:
+    ) -> PackFilesSelection[T, PackType]:
         ...
 
-    def select_files(
+    def gather(
         self,
-        pack: Pack[Any],
         *extensions: str,
         extend: Optional[Any] = None,
-    ) -> PackSelection[Any]:
+    ) -> PackFilesSelection[Any, PackType]:
+        if not any(self.files_regex.values()):
+            return {}
+
         if extend and (origin := get_origin(extend)):
             extend = origin
 
-        result: PackSelection[Any] = {}
+        selected: Dict[str, List[Tuple[PackType, Any, str]]] = {}
 
-        if self.files_regex:
+        for pack in self.packs:
             for filename, file_instance in (
                 pack.list_files(*extensions, extend=extend)
                 if extend
                 else pack.list_files(*extensions)
             ):
-                if self.files_regex.fullmatch(filename):
-                    result[file_instance] = filename, None
+                for prefix, regex in self.files_regex.items():
+                    if (
+                        regex
+                        and (m := regex.match(filename))
+                        and (m.endpos == len(filename) or filename[m.endpos] == "/")
+                    ):
+                        selected.setdefault(regex.sub(prefix, filename), []).append(
+                            (pack, file_instance, filename)
+                        )
 
-        if self.match_spec:
-            file_types = set(pack.resolve_scope_map().values())
+        result: Dict[Tuple[str, Any], Tuple[PackType, str]] = {}
 
-            if extensions:
-                file_types = {t for t in file_types if t.extension in extensions}
-            if extend:
-                file_types = {t for t in file_types if issubclass(t, extend)}
-
-            if isinstance(self.match_spec, dict):
-                group_map = {t.snake_name: t for t in file_types}
-                for singular in list(group_map):
-                    group_map.setdefault(f"{singular}s", group_map[singular])
-
-                for group, spec in self.match_spec.items():
-                    if file_type := group_map.get(group):
-                        result.update(_gather_from_pack(pack, file_type, spec))
-
-            else:
-                for file_type in file_types:
-                    result.update(_gather_from_pack(pack, file_type, self.match_spec))
+        for prefix, entries in selected.items():
+            for pack, file_instance, filename in entries:
+                if not prefix:
+                    dst = filename
+                elif len(entries) > 1:
+                    dst = "/".join([prefix, filename.rpartition("/")[-1]])
+                else:
+                    dst = prefix
+                result[dst, file_instance] = (pack, filename)
 
         return result
 
+    def copy_to(self, *args: Union[PackType, Sequence[PackType]]):
+        packs = [p for arg in args for p in ([arg] if isinstance(arg, Pack) else arg)]
 
-@overload
-def select_files(
-    pack: Pack[Any],
-    *extensions: str,
-    files: Optional[Any] = None,
-    match: Optional[Any] = None,
-    template: Optional[TemplateManager] = None,
-) -> PackSelection[File[Any, Any]]:
-    ...
+        result = self.gather()
 
+        while result:
+            pack_origin: Dict[Type[Pack[Any]], Dict[str, File[Any, Any]]] = {}
+            remaining: Dict[Tuple[str, File[Any, Any]], Tuple[PackType, str]] = dict(
+                result
+            )
 
-@overload
-def select_files(
-    pack: Pack[Any],
-    *extensions: str,
-    extend: Type[T],
-    files: Optional[Any] = None,
-    match: Optional[Any] = None,
-    template: Optional[TemplateManager] = None,
-) -> PackSelection[T]:
-    ...
+            for (filename, file_instance), (pack, _) in result.items():
+                origin = pack_origin.setdefault(type(pack), {})
+                if filename not in origin:
+                    remaining.pop((filename, file_instance))
+                    origin[filename] = file_instance
 
+            for pack in packs:
+                if origin := pack_origin.get(type(pack)):
+                    pack.load(origin)
 
-def select_files(
-    pack: Pack[Any],
-    *extensions: str,
-    extend: Optional[Any] = None,
-    files: Optional[Any] = None,
-    match: Optional[Any] = None,
-    template: Optional[TemplateManager] = None,
-) -> PackSelection[Any]:
-    selector = PackSelector.from_options(files=files, match=match, template=template)
-    return (
-        selector.select_files(pack, *extensions, extend=extend)
-        if extend
-        else selector.select_files(pack, *extensions)
-    )
+            result = remaining
+
+    def distinct(self) -> "PreparedPackSelector[PackType]":
+        return PreparedPackSelector([self])
 
 
-def select_all(pack: Pack[Any], extend: Type[T]) -> Iterable[Tuple[str, T]]:
-    file_types = set(pack.resolve_scope_map().values())
-    if extend:
-        file_types = {t for t in file_types if issubclass(t, extend)}
-    for file_type in file_types:
-        yield from pack[file_type].items()  # type: ignore
-        if pack.overlay_parent is None:
-            for overlay in pack.overlays.values():
-                yield from overlay[file_type].items()  # type: ignore
+PackMatchSelection = Mapping[
+    Type[NamespaceFile], Mapping[Tuple[str, T], Tuple[PackType, str]]
+]
 
 
-def _gather_from_pack(
-    pack: Pack[Any], file_type: Type[NamespaceFile], spec: PathSpec
-) -> Iterable[Tuple[NamespaceFile, Tuple[Optional[str], Optional[str]]]]:
-    for path, file_instance in pack[file_type].items():
-        if spec.match_file(path):
-            yield file_instance, (None, path)
-    if pack.overlay_parent is None:
-        for overlay in pack.overlays.values():
-            yield from _gather_from_pack(overlay, file_type, spec)
+@dataclass(frozen=True, slots=True)
+class PreparedPackMatchSelector(Generic[PackType]):
+    packs: Sequence[PackType]
+    match: ResolvedPackMatchOption
+    match_spec: CompiledPackMatchOption
+
+    def compute_base_paths(self) -> Sequence[str]:
+        group_map = create_group_map(
+            {pack: pack.get_file_types() for pack in self.packs},
+            plural=True,
+        )
+        return [
+            base_path
+            for resolved in self.match.values()
+            for base_path in PackMatchOption.compute_base_paths(resolved, group_map)
+        ]
+
+    @overload
+    def gather(
+        self,
+        *extensions: str,
+    ) -> PackMatchSelection[File[Any, Any], PackType]:
+        ...
+
+    @overload
+    def gather(
+        self,
+        *extensions: str,
+        extend: Type[T],
+    ) -> PackMatchSelection[T, PackType]:
+        ...
+
+    def gather(
+        self,
+        *extensions: str,
+        extend: Optional[Any] = None,
+    ) -> PackMatchSelection[Any, PackType]:
+        if not any(self.match_spec.values()):
+            return {}
+
+        if extend and (origin := get_origin(extend)):
+            extend = origin
+
+        selected: Dict[
+            Type[NamespaceFile], Dict[str, List[Tuple[PackType, Any, str]]]
+        ] = {}
+
+        group_map = create_group_map(
+            {
+                pack: pack.get_file_types(*extensions, extend=extend)
+                for pack in self.packs
+            },
+            plural=True,
+        )
+
+        for prefix, value in self.match_spec.items():
+            for group_name, pathspec in value.items():
+                if pathspec and group_name in group_map:
+                    packs, file_type = group_map[group_name]
+
+                    for pack in packs:
+                        pack_and_overlays = [pack]
+                        if pack.overlay_parent is None:
+                            pack_and_overlays.extend(pack.overlays.values())  # type: ignore
+
+                        for p in pack_and_overlays:
+                            for path, file_instance in p[file_type].items():
+                                if pathspec.match_file(path):
+                                    selected.setdefault(file_type, {}).setdefault(
+                                        prefix, []
+                                    ).append((p, file_instance, path))
+
+        result: Dict[
+            Type[NamespaceFile], Dict[Tuple[str, Any], Tuple[PackType, str]]
+        ] = {}
+
+        for file_type, value in selected.items():
+            file_type_result = result.setdefault(file_type, {})
+            for prefix, entries in value.items():
+                for pack, file_instance, path in entries:
+                    if not prefix:
+                        dst = path
+                    elif len(entries) > 1:
+                        dst = ("/" if ":" in prefix else ":").join(
+                            [prefix, path.partition(":")[-1].rpartition("/")[-1]]
+                        )
+                    else:
+                        dst = prefix
+                    file_type_result[dst, file_instance] = (pack, path)
+
+        return result
+
+    def copy_to(self, *args: Union[PackType, Sequence[PackType]]):
+        packs = [p for arg in args for p in ([arg] if isinstance(arg, Pack) else arg)]
+
+        result = self.gather()
+
+        for file_type, selection in result.items():
+            pack_type = None
+
+            while selection:
+                content: Dict[str, File[Any, Any]] = {}
+                remaining: Dict[
+                    Tuple[str, File[Any, Any]], Tuple[PackType, str]
+                ] = dict(selection)
+
+                for (path, file_instance), (pack, _) in selection.items():
+                    if path not in content:
+                        pack_type = type(pack)
+                        remaining.pop((path, file_instance))
+                        content[path] = file_instance
+
+                for pack in packs:
+                    if type(pack) is pack_type:
+                        pack[file_type].merge({k: v.copy() for k, v in content.items()})
+
+                selection = remaining
+
+    def distinct(self) -> "PreparedPackSelector[PackType]":
+        return PreparedPackSelector([self])
+
+
+PackSelection = Mapping[T, PackType]
+
+
+@dataclass(frozen=True, slots=True)
+class PreparedPackSelector(Generic[PackType]):
+    selectors: Sequence[
+        Union[
+            PreparedPackFilesSelector[PackType],
+            PreparedPackMatchSelector[PackType],
+            "PreparedPackSelector[PackType]",
+        ]
+    ]
+
+    def compute_base_paths(self) -> Sequence[str]:
+        return [
+            base_path
+            for selector in self.selectors
+            for base_path in selector.compute_base_paths()
+        ]
+
+    @overload
+    def gather(
+        self,
+        *extensions: str,
+    ) -> PackSelection[File[Any, Any], PackType]:
+        ...
+
+    @overload
+    def gather(
+        self,
+        *extensions: str,
+        extend: Type[T],
+    ) -> PackSelection[T, PackType]:
+        ...
+
+    def gather(
+        self,
+        *extensions: str,
+        extend: Optional[Any] = None,
+    ) -> PackSelection[Any, PackType]:
+        result: Dict[Any, PackType] = {}
+
+        for selector in self.selectors:
+            if isinstance(selector, PreparedPackFilesSelector):
+                for (_, file_instance), (pack, _) in (
+                    selector.gather(*extensions, extend=extend)
+                    if extend
+                    else selector.gather(*extensions)
+                ).items():
+                    result[file_instance] = pack
+            elif isinstance(selector, PreparedPackMatchSelector):
+                for _, entries in (
+                    selector.gather(*extensions, extend=extend)
+                    if extend
+                    else selector.gather(*extensions)
+                ).items():
+                    for (_, file_instance), (pack, _) in entries.items():
+                        result[file_instance] = pack
+            else:
+                result.update(
+                    selector.gather(*extensions, extend=extend)
+                    if extend
+                    else selector.gather(*extensions)
+                )
+
+        return result
+
+    def copy_to(self, *args: Union[PackType, Sequence[PackType]]):
+        for selector in self.selectors:
+            selector.copy_to(*args)
+
+    def distinct(self) -> "PreparedPackSelector[PackType]":
+        return self
+
+
+@dataclass(frozen=True, slots=True)
+class PackSelector(Generic[PackType]):
+    packs: Sequence[PackType]
+    template: Optional[TemplateManager] = None
+
+    def from_pack(
+        self,
+        *args: Union[FromPackType, Sequence[FromPackType]],
+    ) -> "PackSelector[FromPackType]":
+        packs = [p for arg in args for p in ([arg] if isinstance(arg, Pack) else arg)]
+        return replace(self, packs=packs)  # type: ignore
+
+    @overload
+    def prepare(
+        self, pack_options: PackFilesOption
+    ) -> PreparedPackFilesSelector[PackType]:
+        ...
+
+    @overload
+    def prepare(self, *, files: Any) -> PreparedPackFilesSelector[PackType]:
+        ...
+
+    @overload
+    def prepare(
+        self, pack_options: PackMatchOption
+    ) -> PreparedPackMatchSelector[PackType]:
+        ...
+
+    @overload
+    def prepare(self, *, match: Any) -> PreparedPackMatchSelector[PackType]:
+        ...
+
+    @overload
+    def prepare(
+        self,
+        pack_options: Union[
+            PackSelectOption,
+            Sequence[Union[PackFilesOption, PackMatchOption, PackSelectOption]],
+        ],
+    ) -> PreparedPackSelector[PackType]:
+        ...
+
+    @overload
+    def prepare(
+        self,
+        pack_options: Optional[
+            Union[
+                PackFilesOption,
+                PackMatchOption,
+                PackSelectOption,
+                Sequence[Union[PackFilesOption, PackMatchOption, PackSelectOption]],
+            ]
+        ] = None,
+        *,
+        files: Any,
+        match: Any,
+    ) -> PreparedPackSelector[PackType]:
+        ...
+
+    def prepare(
+        self,
+        pack_options: Optional[
+            Union[
+                PackFilesOption,
+                PackMatchOption,
+                PackSelectOption,
+                Sequence[Union[PackFilesOption, PackMatchOption, PackSelectOption]],
+            ]
+        ] = None,
+        *,
+        files: Optional[Any] = None,
+        match: Optional[Any] = None,
+    ) -> Union[
+        PreparedPackFilesSelector[PackType],
+        PreparedPackMatchSelector[PackType],
+        PreparedPackSelector[PackType],
+    ]:
+        if files:
+            if match:
+                return PreparedPackSelector(
+                    [
+                        *([self.prepare(pack_options)] if pack_options else []),
+                        self.prepare(files=files),
+                        self.prepare(match=match),
+                    ]
+                )
+            return self.prepare(PackFilesOption.parse_obj(files))
+        if match:
+            return self.prepare(PackMatchOption.parse_obj(match))
+        if isinstance(pack_options, PackFilesOption):
+            resolved = pack_options.resolve(self.template)
+            return PreparedPackFilesSelector(
+                self.packs,
+                resolved,
+                PackFilesOption.compile(resolved),
+            )
+        if isinstance(pack_options, PackMatchOption):
+            resolved = pack_options.resolve(
+                sorted(
+                    {t for p in self.packs for t in p.get_file_types()},
+                    key=lambda t: t.snake_name,
+                ),
+                self.template,
+            )
+            return PreparedPackMatchSelector(
+                self.packs,
+                resolved,
+                PackMatchOption.compile(resolved),
+            )
+        if pack_options:
+            options = (
+                (pack_options.files, pack_options.match)
+                if isinstance(pack_options, PackSelectOption)
+                else pack_options
+            )
+            return PreparedPackSelector([self.prepare(opts) for opts in options])
+        raise ValueError("Invalid arguments")
+
+    @property
+    def select(self: T) -> T:
+        return self
+
+    @overload
+    def __call__(
+        self,
+        *extensions: str,
+        files: Any,
+    ) -> PackFilesSelection[File[Any, Any], PackType]:
+        ...
+
+    @overload
+    def __call__(
+        self,
+        *extensions: str,
+        extend: Type[T],
+        files: Any,
+    ) -> PackFilesSelection[T, PackType]:
+        ...
+
+    @overload
+    def __call__(
+        self,
+        *extensions: str,
+        match: Any,
+    ) -> PackMatchSelection[File[Any, Any], PackType]:
+        ...
+
+    @overload
+    def __call__(
+        self,
+        *extensions: str,
+        extend: Type[T],
+        match: Any,
+    ) -> PackMatchSelection[T, PackType]:
+        ...
+
+    def __call__(
+        self,
+        *extensions: str,
+        extend: Optional[Any] = None,
+        files: Optional[Any] = None,
+        match: Optional[Any] = None,
+    ) -> Union[PackFilesSelection[Any, PackType], PackMatchSelection[Any, PackType]]:
+        selector = (
+            self.prepare(files=files)
+            if files is not None
+            else self.prepare(match=match)
+        )
+        return (
+            selector.gather(*extensions, extend=extend)
+            if extend
+            else selector.gather(*extensions)
+        )
+
+    @overload
+    def distinct(
+        self,
+        *args: Union[
+            str,
+            PackFilesOption,
+            PackMatchOption,
+            PackSelectOption,
+            Sequence[Union[PackFilesOption, PackMatchOption, PackSelectOption]],
+        ],
+        files: Optional[Any] = None,
+        match: Optional[Any] = None,
+    ) -> PackSelection[File[Any, Any], PackType]:
+        ...
+
+    @overload
+    def distinct(
+        self,
+        *args: Union[
+            str,
+            PackFilesOption,
+            PackMatchOption,
+            PackSelectOption,
+            Sequence[Union[PackFilesOption, PackMatchOption, PackSelectOption]],
+        ],
+        extend: Type[T],
+        files: Optional[Any] = None,
+        match: Optional[Any] = None,
+    ) -> PackSelection[T, PackType]:
+        ...
+
+    def distinct(
+        self,
+        *args: Union[
+            str,
+            PackFilesOption,
+            PackMatchOption,
+            PackSelectOption,
+            Sequence[Union[PackFilesOption, PackMatchOption, PackSelectOption]],
+        ],
+        extend: Optional[Any] = None,
+        files: Optional[Any] = None,
+        match: Optional[Any] = None,
+    ) -> PackSelection[Any, PackType]:
+        extensions: List[str] = []
+        selectors: List[PreparedPackSelector[PackType]] = []
+
+        for arg in args:
+            if isinstance(arg, str):
+                extensions.append(arg)
+            else:
+                selectors.append(self.prepare(arg).distinct())
+
+        if files or match:
+            selectors.append(self.prepare(files=files, match=match).distinct())
+
+        return (
+            PreparedPackSelector(selectors).gather(*extensions, extend=extend)
+            if extend
+            else PreparedPackSelector(selectors).gather(*extensions)
+        )

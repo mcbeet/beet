@@ -1,3 +1,22 @@
 output: "out"
 pipeline:
   - demo
+  - beet.contrib.vanilla.load_vanilla
+meta:
+  load_vanilla:
+    files:
+      assets/foo/lang/en_us.json: assets/minecraft/lang/en_us.json
+      assets/minecraft/lang:
+        - assets/minecraft/lang/fr.*
+      data/foo/recipes:
+        - data/minecraft/recipes/.*bee.*
+      assets/foo/models/\1: assets/minecraft/models/(block|item)/.+_sapling.json
+      assets/foo/textures/map: assets/minecraft/textures/map
+    match:
+      shader:
+        minecraft:core/blit_screen1: minecraft:core/blit_screen
+        minecraft:core/blit_screen2: minecraft:core/blit_screen
+      worldgen_noise:
+        - minecraft:aquifer*
+        - minecraft:noodle
+      textures: minecraft:block/stone

@@ -10,7 +10,7 @@ __all__ = [
 from typing import Any
 
 from beet import Context, PluginOptions, TextFileBase, configurable
-from beet.toolchain.select import PackMatchOption, PackSelector
+from beet.toolchain.select import PackMatchOption
 
 
 class RenderOptions(PluginOptions):
@@ -25,14 +25,16 @@ def beet_default(ctx: Context):
 @configurable(validator=RenderOptions)
 def render(ctx: Context, opts: RenderOptions):
     """Plugin that processes the data pack and the resource pack with Jinja."""
-    for groups, pack in zip([opts.resource_pack, opts.data_pack], ctx.packs):
-        for file_instance, (_, path) in (
-            PackSelector.from_options(groups, template=ctx.template)
-            .select_files(pack, extend=TextFileBase[Any])
+    for match_option, pack in zip([opts.resource_pack, opts.data_pack], ctx.packs):
+        for file_type, selection in (
+            ctx.select.from_pack(pack)
+            .prepare(match_option)
+            .gather(extend=TextFileBase[Any])
             .items()
         ):
-            with ctx.override(
-                render_path=path,
-                render_group=f"{file_instance.snake_name}s",
-            ):
-                ctx.template.render_file(file_instance)
+            for path, file_instance in selection:
+                with ctx.override(
+                    render_path=path,
+                    render_group=f"{file_type.snake_name}s",
+                ):
+                    ctx.template.render_file(file_instance)

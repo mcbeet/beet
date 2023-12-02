@@ -24,6 +24,7 @@ from beet import (
     PackSelectOption,
     PackSelector,
     PluginOptions,
+    PreparedPackSelector,
     RegexOption,
     ResourcePack,
     TemplateManager,
@@ -42,7 +43,7 @@ class TextSubstitutionOption(BaseModel):
         extra = "forbid"
 
     def compile(self, template: TemplateManager) -> Callable[[str], str]:
-        regex = self.find.compile_regex(template)
+        regex = RegexOption.compile(self.find.resolve(template))
         if not regex:
             return lambda value: value
         replacement = template.render_string(self.replace)
@@ -57,7 +58,7 @@ class RenderSubstitutionOption(BaseModel):
         extra = "forbid"
 
     def compile(self, template: TemplateManager) -> Callable[[str], str]:
-        regex = self.find.compile_regex(template)
+        regex = RegexOption.compile(self.find.resolve(template))
         if not regex:
             return lambda value: value
         compiled_template = template.compile(self.render)
@@ -88,16 +89,25 @@ class FindReplaceOptions(PluginOptions):
 
     def compile(
         self,
+        select_assets: PackSelector[ResourcePack],
+        select_data: PackSelector[DataPack],
         template: TemplateManager,
     ) -> Tuple["FindReplaceHandler[ResourcePack]", "FindReplaceHandler[DataPack]"]:
-        substitute = [sub.compile(template) for sub in self.substitute.entries()]
+        substitute = [
+            (
+                sub.compile(select_assets, select_data, template)
+                if isinstance(sub, FindReplaceOptions)
+                else sub.compile(template)
+            )
+            for sub in self.substitute.entries()
+        ]
         return (
             FindReplaceHandler(
-                PackSelector.from_options(self.resource_pack, template=template),
+                select_assets.prepare(self.resource_pack),
                 [sub if callable(sub) else sub[0] for sub in substitute],
             ),
             FindReplaceHandler(
-                PackSelector.from_options(self.data_pack, template=template),
+                select_data.prepare(self.data_pack),
                 [sub if callable(sub) else sub[1] for sub in substitute],
             ),
         )
@@ -108,14 +118,14 @@ ListOption[Union[SubstitutionOption, "FindReplaceOptions"]].update_forward_refs(
 
 @dataclass(frozen=True)
 class FindReplaceHandler(Generic[PackType]):
-    pack_selector: PackSelector
+    pack_selector: PreparedPackSelector[PackType]
     substitute: Sequence[Union[Callable[[str], str], "FindReplaceHandler[PackType]"]]
 
-    def __call__(self, pack: PackType):
-        text_files = self.pack_selector.select_files(pack, extend=TextFileBase[Any])
+    def __call__(self):
+        text_files = self.pack_selector.gather(extend=TextFileBase[Any])
         for find_replace in self.substitute:
             if isinstance(find_replace, FindReplaceHandler):
-                find_replace(pack)
+                find_replace()
             else:
                 for file_instance in text_files:
                     file_instance.text = find_replace(file_instance.text)
@@ -128,6 +138,8 @@ def beet_default(ctx: Context):
 @configurable(validator=FindReplaceOptions)
 def find_replace(ctx: Context, opts: FindReplaceOptions):
     """Plugin for performing basic substitutions."""
-    resource_pack_handler, data_pack_handler = opts.compile(ctx.template)
-    resource_pack_handler(ctx.assets)
-    data_pack_handler(ctx.data)
+    resource_pack_handler, data_pack_handler = opts.compile(
+        ctx.select.from_pack(ctx.assets), ctx.select.from_pack(ctx.data), ctx.template
+    )
+    resource_pack_handler()
+    data_pack_handler()

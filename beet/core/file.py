@@ -72,7 +72,9 @@ ValueType = TypeVar("ValueType", bound=Any)
 SerializeType = TypeVar("SerializeType", bound=Any)
 FileType = TypeVar("FileType", bound="File[Any, Any]")
 
-FileOrigin = Union[FileSystemPath, ZipFile, Mapping[str, FileSystemPath]]
+FileOrigin = Union[
+    FileSystemPath, ZipFile, Mapping[str, Union[FileSystemPath, "File[Any, Any]"]]
+]
 TextFileContent = Union[ValueType, str, None]
 BinaryFileContent = Union[ValueType, bytes, None]
 
@@ -119,6 +121,22 @@ class File(Generic[ValueType, SerializeType]):
         """Handle file binding."""
         if self.on_bind:
             self.on_bind(self, pack, path)
+
+    def add_bind_callback(
+        self: FileType, callback: Callable[[Any, Any, str], Any]
+    ) -> FileType:
+        if previous_callback := self.on_bind:
+
+            def wrapper(file_instance: Any, pack: Any, path: str):
+                previous_callback(file_instance, pack, path)
+                callback(file_instance, pack, path)
+
+            self.on_bind = wrapper
+
+        else:
+            self.on_bind = callback
+
+        return self
 
     def set_content(self, content: Union[ValueType, SerializeType]):
         """Update the internal content."""
@@ -265,9 +283,14 @@ class File(Generic[ValueType, SerializeType]):
         elif isinstance(origin, Mapping):
             try:
                 path = "" if path == Path() else str(path)
-                origin, path = origin[path], ""
+                value, path = origin[path], ""
             except KeyError:
                 return None
+            if isinstance(value, File):
+                if isinstance(value, cls):
+                    return value.copy()
+                return None
+            origin = value
         path = Path(origin, path)
         return cls(source_path=path) if path.is_file() else None
 

@@ -1,5 +1,5 @@
 from beet import Context
-from beet.contrib.vanilla import Vanilla
+from beet.contrib.vanilla import Vanilla, load_vanilla
 
 
 def beet_default(ctx: Context):
@@ -7,7 +7,9 @@ def beet_default(ctx: Context):
 
     assert vanilla.releases["22w11a"].type == "snapshot"
 
-    ctx.data.merge(vanilla.mount("data/minecraft/loot_tables").data)
+    ctx.data.loot_tables.merge(
+        vanilla.mount("data/minecraft/loot_tables").data.loot_tables
+    )
     ctx.data["demo"].recipes.merge(
         vanilla.mount("data/minecraft/recipes").data["minecraft"].recipes
     )
@@ -28,3 +30,13 @@ def beet_default(ctx: Context):
     assert minecraft.sounds.keys() == {"ui/toast/in"}
     vanilla.mount("assets/minecraft/sounds/records", fetch_objects=True)
     assert len(minecraft.sounds) > 10
+
+    ctx.require(
+        load_vanilla(
+            files=[
+                "data/minecraft/tags/items/anvil.json",
+                "assets/minecraft/blockstates/anvil.json",
+            ],
+            match="minecraft:entity/axolotl/*",
+        )
+    )

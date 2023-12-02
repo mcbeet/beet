@@ -13,7 +13,7 @@ __all__ = [
 
 import logging
 from dataclasses import dataclass
-from typing import Any, Callable, Dict, List, Optional, Type, Union, cast
+from typing import Any, Callable, List, Optional, Type, Union, cast
 
 from pydantic import BaseModel
 
@@ -24,35 +24,44 @@ from beet import (
     ListOption,
     NamespaceFile,
     PackSelector,
-    PathSpecOption,
     PluginOptions,
     ResourcePack,
     TemplateManager,
     configurable,
 )
 from beet.contrib.find_replace import RenderSubstitutionOption, TextSubstitutionOption
+from beet.toolchain.select import (
+    PackFilesOption,
+    PackMatchOption,
+    PreparedPackFilesSelector,
+    PreparedPackMatchSelector,
+)
 
 logger = logging.getLogger(__name__)
 
 
 class TextRenameOption(TextSubstitutionOption):
-    match: Optional[Union[PathSpecOption, Dict[str, PathSpecOption]]] = None
+    match: Optional[PackMatchOption] = None
 
 
 class RenderRenameOption(RenderSubstitutionOption):
-    match: Optional[Union[PathSpecOption, Dict[str, PathSpecOption]]] = None
+    match: Optional[PackMatchOption] = None
 
 
 class RenameOption(BaseModel):
     __root__: ListOption[Union[TextRenameOption, RenderRenameOption]] = ListOption()
 
-    def compile(self, template: TemplateManager) -> List["RenameFilesHandler"]:
+    def compile(
+        self,
+        select: PackSelector[Union[ResourcePack, DataPack]],
+        template: TemplateManager,
+    ) -> List["RenameFilesHandler"]:
         return [
             RenameFilesHandler(
                 (
-                    PackSelector.from_options(match=opts.match, template=template)
-                    if opts.match
-                    else PackSelector.from_options(files=opts.find, template=template)
+                    select.prepare(opts.match)
+                    if opts.match is not None
+                    else select.prepare(PackFilesOption.parse_obj({"": opts.find}))
                 ),
                 opts.compile(template),
             )
@@ -67,25 +76,28 @@ class RenameFilesOptions(PluginOptions):
 
 @dataclass
 class RenameFilesHandler:
-    pack_selector: PackSelector
+    selector: Union[
+        PreparedPackFilesSelector[Union[ResourcePack, DataPack]],
+        PreparedPackMatchSelector[Union[ResourcePack, DataPack]],
+    ]
     substitute: Callable[[str], str]
 
-    def __call__(self, pack: Union[ResourcePack, DataPack]):
-        namespace_file_types = {
-            cast(Type[File[Any, Any]], file_type)
-            for file_type in pack.resolve_scope_map().values()
-        }
-
-        files = self.pack_selector.select_files(pack)
-
-        for file_instance, (filename, path) in files.items():
-            if type(file_instance) in namespace_file_types:
-                if path:
+    def __call__(self):
+        if isinstance(self.selector, PreparedPackMatchSelector):
+            for entries in self.selector.gather().values():
+                for (path, file_instance), (pack, _) in entries.items():
                     self.handle_path_for_namespace_file(pack, file_instance, path)  # type: ignore
-                elif filename:
+        else:
+            file_types = tuple(
+                cast(Type[File[Any, Any]], file_type)
+                for pack in self.selector.packs
+                for file_type in pack.get_file_types()
+            )
+            for (filename, file_instance), (pack, _) in self.selector.gather().items():
+                if isinstance(file_instance, file_types):
                     self.handle_filename_for_namespace_file(pack, file_instance, filename)  # type: ignore
-            elif filename:
-                self.handle_filename(pack, file_instance, filename)
+                else:
+                    self.handle_filename(pack, file_instance, filename)
 
     def handle_path_for_namespace_file(
         self,
@@ -165,5 +177,5 @@ def beet_default(ctx: Context):
 def rename_files(ctx: Context, opts: RenameFilesOptions):
     """Plugin for renaming files."""
     for pack, rename_option in zip(ctx.packs, [opts.resource_pack, opts.data_pack]):
-        for handler in rename_option.compile(ctx.template):
-            handler(pack)
+        for handler in rename_option.compile(ctx.select.from_pack(pack), ctx.template):
+            handler()

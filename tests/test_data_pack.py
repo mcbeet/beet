@@ -13,8 +13,8 @@ from beet import (
     LootTable,
     Mcmeta,
     MergePolicy,
+    PackSelector,
     Structure,
-    select_files,
 )
 
 
@@ -157,7 +157,7 @@ def test_vanilla_zip(minecraft_data_pack: Path, tmp_path: Path):
 
 def test_vanilla_content(minecraft_data_pack: Path):
     pack = DataPack(path=minecraft_data_pack)
-    assert len(list(pack.content)) > 3000
+    assert len(list(pack.all())) > 3000
 
 
 def test_vanilla_igloo(minecraft_data_pack: Path):
@@ -167,7 +167,7 @@ def test_vanilla_igloo(minecraft_data_pack: Path):
 
 def test_vanilla_igloo_content(minecraft_data_pack: Path):
     pack = DataPack(path=minecraft_data_pack)
-    content = dict(pack.content)
+    content = dict(pack.all())
     igloo_structure = content["minecraft:igloo/top"]
     assert isinstance(igloo_structure, Structure)
     assert igloo_structure.data["size"] == [7, 5, 8]
@@ -477,43 +477,36 @@ def test_select():
     p["minecraft:load"] = FunctionTag()
     p["other_namespace:what/is/that"] = BlockTag()
 
-    assert select_files(p, ".mcfunction", files=r".*") == {
-        p.functions["demo:foo"]: ("data/demo/functions/foo.mcfunction", None),
-        p.functions["demo:bar"]: ("data/demo/functions/bar.mcfunction", None),
-    }
-    assert select_files(p, extend=Function, files=r".*") == {
-        p.functions["demo:foo"]: ("data/demo/functions/foo.mcfunction", None),
-        p.functions["demo:bar"]: ("data/demo/functions/bar.mcfunction", None),
-    }
-    assert select_files(p, ".mcfunction", match="*") == {
-        p.functions["demo:foo"]: (None, "demo:foo"),
-        p.functions["demo:bar"]: (None, "demo:bar"),
-    }
-    assert select_files(p, extend=Function, match="*") == {
-        p.functions["demo:foo"]: (None, "demo:foo"),
-        p.functions["demo:bar"]: (None, "demo:bar"),
-    }
-    assert select_files(p, match={"function": "*"}) == {
-        p.functions["demo:foo"]: (None, "demo:foo"),
-        p.functions["demo:bar"]: (None, "demo:bar"),
-    }
-    assert select_files(p, match={"functions": "*"}) == {
-        p.functions["demo:foo"]: (None, "demo:foo"),
-        p.functions["demo:bar"]: (None, "demo:bar"),
-    }
+    select = PackSelector([p])
 
-    assert select_files(p, files=r"^pack\.mcmeta$") == {
-        p.mcmeta: ("pack.mcmeta", None),
+    selection = {
+        (k := "data/demo/functions/foo.mcfunction", p.functions["demo:foo"]): (p, k),
+        (k := "data/demo/functions/bar.mcfunction", p.functions["demo:bar"]): (p, k),
     }
-    assert select_files(p, ".mcmeta", files=r".*") == {
-        p.mcmeta: ("pack.mcmeta", None),
-    }
-    assert select_files(p, extend=Mcmeta, files=r".*") == {
-        p.mcmeta: ("pack.mcmeta", None),
-    }
-    assert select_files(p, extend=Mcmeta, match="*") == {}
+    assert select(".mcfunction", files=r".*") == selection
+    assert select(extend=Function, files=r".*") == selection
 
-    assert set(select_files(p, files=r".*\.json")) == {
+    selection = {
+        Function: {
+            (k := "demo:foo", p.functions["demo:foo"]): (p, k),
+            (k := "demo:bar", p.functions["demo:bar"]): (p, k),
+        }
+    }
+    assert select(".mcfunction", match="*") == selection
+    assert select(extend=Function, match="*") == selection
+    assert select(match={"function": "*"}) == selection
+    assert select(match={"functions": "*"}) == selection
+
+    selection = {
+        (k := "pack.mcmeta", p.mcmeta): (p, k),
+    }
+    assert select(files=r"^pack\.mcmeta$") == selection
+    assert select(".mcmeta", files=r".*") == selection
+    assert select(extend=Mcmeta, files=r".*") == selection
+
+    assert select(extend=Mcmeta, match="*") == {}
+
+    assert set(select.distinct(files=r".*\.json")) == {
         p.loot_tables["demo:some_loot"],
         p.loot_tables["demo:some_other_loot"],
         p.loot_tables["minecraft:default_loot"],
@@ -521,22 +514,22 @@ def test_select():
         p.function_tags["minecraft:load"],
         p.block_tags["other_namespace:what/is/that"],
     }
-    assert set(select_files(p, files=r"data/minecraft/.*\.json")) == {
+    assert set(select.distinct(files=r"data/minecraft/.*\.json")) == {
         p.loot_tables["minecraft:default_loot"],
         p.function_tags["minecraft:tick"],
         p.function_tags["minecraft:load"],
     }
-    assert set(select_files(p, ".json", match=r"minecraft:*")) == {
+    assert set(select.distinct(".json", match=r"minecraft:*")) == {
         p.loot_tables["minecraft:default_loot"],
         p.function_tags["minecraft:tick"],
         p.function_tags["minecraft:load"],
     }
-    assert set(select_files(p, extend=JsonFileBase[Any], match=r"minecraft:*")) == {
+    assert set(select.distinct(extend=JsonFileBase[Any], match=r"minecraft:*")) == {
         p.loot_tables["minecraft:default_loot"],
         p.function_tags["minecraft:tick"],
         p.function_tags["minecraft:load"],
     }
-    assert set(select_files(p, extend=JsonFileBase[Any], files=r".*")) == {
+    assert set(select.distinct(extend=JsonFileBase[Any], files=r".*")) == {
         p.mcmeta,
         p.loot_tables["demo:some_loot"],
         p.loot_tables["demo:some_other_loot"],
@@ -546,20 +539,20 @@ def test_select():
         p.block_tags["other_namespace:what/is/that"],
     }
 
-    assert set(select_files(p, files=[r".*loot\.json", r"pack\.mcmeta"])) == {
+    assert set(select.distinct(files=[r".*loot\.json", r"pack\.mcmeta"])) == {
         p.mcmeta,
         p.loot_tables["demo:some_loot"],
         p.loot_tables["demo:some_other_loot"],
         p.loot_tables["minecraft:default_loot"],
     }
     assert set(
-        select_files(p, files={"regex": r".*LoOt.*", "flags": "IGNORECASE"})
+        select.distinct(files={"regex": r".*LoOt.*", "flags": "IGNORECASE"})
     ) == {
         p.loot_tables["demo:some_loot"],
         p.loot_tables["demo:some_other_loot"],
         p.loot_tables["minecraft:default_loot"],
     }
-    assert set(select_files(p, match=["minecraft:*", "demo:*", "!*other*"])) == {
+    assert set(select.distinct(match=["minecraft:*", "demo:*", "!*other*"])) == {
         p.functions["demo:foo"],
         p.functions["demo:bar"],
         p.loot_tables["demo:some_loot"],
@@ -567,6 +560,46 @@ def test_select():
         p.function_tags["minecraft:tick"],
         p.function_tags["minecraft:load"],
     }
+
+
+def test_select_rename():
+    p = DataPack()
+    p["demo:foo"] = Function(["say foo"])
+    p["demo:bar"] = Function(["say bar"])
+
+    select = PackSelector([p])
+
+    assert select(match={"function": {"demo:nested": ["demo:foo", "demo:bar"]}}) == {
+        Function: {
+            ("demo:nested/foo", p.functions["demo:foo"]): (p, "demo:foo"),
+            ("demo:nested/bar", p.functions["demo:bar"]): (p, "demo:bar"),
+        }
+    }
+
+
+def test_select_copy():
+    p = DataPack()
+    p["demo:foo"] = Function(["say foo"], tags=["demo:my_foo"])
+    p["demo:bar"] = Function(["say bar"], tags=["demo:my_bar"])
+
+    select = PackSelector([p])
+
+    target1 = DataPack()
+    target2 = DataPack()
+    select.prepare(
+        files={r"data/stuff/\1foo.\2": r"data/demo/(.+)foo\.(mcfunction|json)"}
+    ).copy_to(target1, target2)
+
+    assert target1 == target2
+
+    assert target1 == {
+        "stuff": {
+            Function: {"foo": Function(["say foo"])},
+            FunctionTag: {"my_foo": FunctionTag({"values": ["demo:foo"]})},
+        }
+    }
+    assert p.functions["demo:foo"] == target1.functions["stuff:foo"]
+    assert p.function_tags["demo:my_foo"] == target1.function_tags["stuff:my_foo"]
 
 
 def test_overlay():
@@ -697,10 +730,32 @@ def test_overlay():
     assert p.overlays["bop"].functions["demo:init"] == Function(["say init"])
     assert p.overlays["bop2"].functions["demo:init"] == Function()
 
-    f1 = set(select_files(p, files=r".*", extend=Function))
-    f2 = set(select_files(p, match="*"))
-    assert f1 == f2
-    assert len(f1) == 6
+    select = PackSelector([p])
+
+    assert select(match={"function": "*"}) == {
+        Function: {
+            (k := "demo:foo", a.functions["demo:foo"]): (a, k),
+            (k := "demo:init", d.functions["demo:init"]): (d, k),
+            (k := "demo:init", p.overlays["bop"].functions["demo:init"]): (
+                p.overlays["bop"],
+                k,
+            ),
+            (k := "demo:init", p.overlays["bop2"].functions["demo:init"]): (
+                p.overlays["bop2"],
+                k,
+            ),
+            (k := "demo:stuff", p.overlays["stuff"].functions["demo:stuff"]): (
+                p.overlays["stuff"],
+                k,
+            ),
+            (k := "demo:thing", c.functions["demo:thing"]): (c, k),
+        }
+    }
+
+    s1 = set(select.distinct(files=r".*", extend=Function))
+    s2 = set(select.distinct(match="*"))
+    assert s1 == s2
+    assert len(s1) == 6
 
 
 def test_merge_overlays():

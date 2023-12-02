@@ -20,6 +20,7 @@ __all__ = [
     "OverlayContainer",
     "UnveilMapping",
     "PackOverwrite",
+    "create_group_map",
     "PACK_COMPRESSION",
     "LATEST_MINECRAFT_VERSION",
 ]
@@ -59,6 +60,7 @@ from typing import (
 )
 from zipfile import ZIP_BZIP2, ZIP_DEFLATED, ZIP_LZMA, ZIP_STORED, ZipFile
 
+from git import Sequence
 from typing_extensions import Self
 
 from beet.core.container import (
@@ -499,7 +501,9 @@ class Namespace(
             return False
         if isinstance(other, Mapping):
             rhs: Mapping[Type[NamespaceFile], NamespaceContainer[NamespaceFile]] = other
-            return all(self[key] == rhs[key] for key in self.keys() | rhs.keys())
+            return all(
+                self[key] == rhs.get(key, {}) for key in self.keys() | rhs.keys()
+            )
         return NotImplemented
 
     def __bool__(self) -> bool:
@@ -1123,7 +1127,9 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
             return False
         if isinstance(other, Mapping):
             rhs: Mapping[str, Namespace] = other
-            return all(self[key] == rhs[key] for key in self.keys() | rhs.keys())
+            return all(
+                self[key] == rhs.get(key, {}) for key in self.keys() | rhs.keys()
+            )
         return NotImplemented
 
     def __hash__(self) -> int:
@@ -1163,12 +1169,6 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
             del self[namespace]  # type: ignore
 
         return True
-
-    @property
-    def content(self) -> Iterator[Tuple[str, NamespaceFile]]:
-        """Iterator that yields all the files stored in the pack."""
-        for file_type in self.resolve_scope_map().values():
-            yield from NamespaceProxy[NamespaceFile](self, file_type).items()
 
     def clear(self):
         self.extra.clear()
@@ -1220,6 +1220,31 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
             for overlay in self.overlays.values():
                 yield from overlay.list_files(*extensions, extend=extend)  # type: ignore
 
+    @overload
+    def all(self, *match: str) -> Iterable[Tuple[str, NamespaceFile]]:
+        ...
+
+    @overload
+    def all(
+        self, *match: str, extend: Type[NamespaceFileType]
+    ) -> Iterable[Tuple[str, NamespaceFileType]]:
+        ...
+
+    def all(
+        self, *match: str, extend: Optional[Type[NamespaceFile]] = None
+    ) -> Iterable[Tuple[str, NamespaceFile]]:
+        """List all the namespaced resources of a specific type, even from overlays."""
+        for file_type in self.get_file_types(extend=extend):
+            proxy = self[file_type]
+            for path in proxy.match(*match or ["*"]):
+                yield path, proxy[path]
+            if self.overlay_parent is None:
+                for overlay in self.overlays.values():
+                    if extend:
+                        yield from overlay.all(*match, extend=extend)
+                    else:
+                        yield from overlay.all(*match)
+
     @property
     def supported_formats(self) -> Optional[SupportedFormats]:
         if self.overlay_parent is not None:
@@ -1268,6 +1293,20 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
         if self.extend_namespace_extra:
             _update_with_none(namespace_extra_info, self.extend_namespace_extra)
         return namespace_extra_info
+
+    def get_file_types(
+        self,
+        *extensions: str,
+        extend: Optional[Any] = None,
+    ) -> Sequence[Type[NamespaceFile]]:
+        file_types = set(self.resolve_scope_map().values())
+
+        if extensions:
+            file_types = {t for t in file_types if t.extension in extensions}
+        if extend:
+            file_types = {t for t in file_types if issubclass(t, extend)}
+
+        return sorted(file_types, key=lambda t: t.snake_name)
 
     def load(
         self,
@@ -1502,3 +1541,17 @@ def _update_with_none(dst: MutableMapping[K, V], src: Mapping[K, Optional[V]]):
             dst.pop(k, None)
         else:
             dst[k] = v
+
+
+def create_group_map(
+    file_types: Mapping[PackType, Iterable[Type[NamespaceFile]]],
+    plural: bool = False,
+) -> Dict[str, Tuple[List[PackType], Type[NamespaceFile]]]:
+    group_map: Dict[str, Tuple[List[PackType], Type[NamespaceFile]]] = {}
+    for pack, types in file_types.items():
+        for t in types:
+            group_map.setdefault(t.snake_name, ([], t))[0].append(pack)
+    if plural:
+        for singular in list(group_map):
+            group_map.setdefault(f"{singular}s", group_map[singular])
+    return group_map

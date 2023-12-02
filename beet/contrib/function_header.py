@@ -27,7 +27,7 @@ def function_header(ctx: Context, opts: FunctionHeaderOptions):
     if not opts.template:
         return
 
-    for function, (_, path) in ctx.select(match=opts.match, extend=Function).items():
+    for path, function in ctx.data.all(*opts.match, extend=Function):
         with ctx.override(render_path=path, render_group="functions"):
             header = ctx.template.render(opts.template)
         function.text = header + function.text

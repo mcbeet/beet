@@ -32,15 +32,16 @@ from typing import (
     Tuple,
     Type,
     TypeVar,
+    Union,
     overload,
 )
 
+from git import Sequence
 from pydantic import BaseModel, ValidationError
 
 from beet.core.cache import Cache, MultiCache
 from beet.core.container import Container
 from beet.core.error import BubbleException, WrappedException
-from beet.core.file import File
 from beet.core.utils import (
     FileSystemPath,
     JsonDict,
@@ -50,18 +51,20 @@ from beet.core.utils import (
     import_from_string,
     local_import_path,
 )
+from beet.library.base import NamespaceFile
 from beet.library.data_pack import DataPack
 from beet.library.resource_pack import ResourcePack
 
 from .generator import Generator
 from .pipeline import GenericPipeline, GenericPlugin, GenericPluginSpec
-from .select import PackSelection, select_all, select_files
+from .select import PackSelector
 from .template import TemplateManager
 from .tree import generate_tree
 from .worker import WorkerPoolHandle
 
 T = TypeVar("T")
 OptionsType = TypeVar("OptionsType", contravariant=True)
+NamespaceFileType = TypeVar("NamespaceFileType", bound=NamespaceFile)
 
 Plugin = GenericPlugin["Context"]
 PluginSpec = GenericPluginSpec["Context"]
@@ -316,59 +319,18 @@ class Context:
         """Execute the specified plugin."""
         self.inject(Pipeline).require(*args)
 
-    @overload
-    def select(
-        self,
-        *extensions: str,
-        files: Optional[Any] = None,
-        match: Optional[Any] = None,
-    ) -> PackSelection[File[Any, Any]]:
-        ...
+    @property
+    def select(self) -> PackSelector[Union[ResourcePack, DataPack]]:
+        return PackSelector(self.packs, self.template)
 
-    @overload
-    def select(
-        self,
-        *extensions: str,
-        extend: Type[T],
-        files: Optional[Any] = None,
-        match: Optional[Any] = None,
-    ) -> PackSelection[T]:
-        ...
-
-    def select(
-        self,
-        *extensions: str,
-        extend: Optional[Any] = None,
-        files: Optional[Any] = None,
-        match: Optional[Any] = None,
-    ) -> PackSelection[Any]:
-        result: PackSelection[Any] = {}
-
+    def __getitem__(
+        self, extend: Type[NamespaceFileType]
+    ) -> Iterable[Tuple[str, NamespaceFileType]]:
         for pack in self.packs:
-            result.update(
-                select_files(
-                    pack,
-                    *extensions,
-                    extend=extend,
-                    files=files,
-                    match=match,
-                    template=self.template,
-                )
-                if extend
-                else select_files(
-                    pack,
-                    *extensions,
-                    files=files,
-                    match=match,
-                    template=self.template,
-                )
-            )
+            yield from pack.all(extend=extend)
 
-        return result
-
-    def __getitem__(self, extend: Type[T]) -> Iterable[Tuple[str, T]]:
-        for pack in self.packs:
-            yield from select_all(pack, extend)
+    def get_file_types(self) -> Sequence[Type[NamespaceFile]]:
+        return [t for pack in self.packs for t in pack.get_file_types()]
 
 
 @overload
