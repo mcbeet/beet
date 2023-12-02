@@ -34,10 +34,11 @@ def process_files(ctx: Context):
             resource_location=patcher_name,
         ):
             impl = runtime.modules[patcher].namespace
-            for file_instance, (_, name) in ctx.select(match=impl["targets"]).items():
-                result = impl["patch"](name, file_instance.ensure_deserialized())
-                if result is not None:
-                    file_instance.set_content(result)
+            for entries in ctx.query(match=impl["targets"]).values():
+                for name, file_instance in entries:
+                    result = impl["patch"](name, file_instance.ensure_deserialized())
+                    if result is not None:
+                        file_instance.set_content(result)
 
     for pack in [ctx.data, *ctx.data.overlays.values()]:
         pack[Patcher].clear()

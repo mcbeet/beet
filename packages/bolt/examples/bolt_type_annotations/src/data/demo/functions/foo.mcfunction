@@ -1,6 +1,6 @@
 from beet import ListOption
 from dataclasses import dataclass
-from pydantic import BaseModel
+from pydantic.v1 import BaseModel
 
 thing: str
 thing = "hey"
