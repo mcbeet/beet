@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.99.1 (2023-12-02)
+
+### Fix
+
+* Bump pydantic to v2 and preserve v1 api internally ([`5e9df76`](https://github.com/mcbeet/beet/commit/5e9df76a51571f61de8fea3c08aba228604e61b9))
+
 ## v0.99.0 (2023-12-02)
 
 ### Feature
