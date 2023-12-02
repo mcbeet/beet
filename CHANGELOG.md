@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.99.3 (2023-12-02)
+
+### Fix
+
+* Vscode import completion moment ([`4533ea9`](https://github.com/mcbeet/beet/commit/4533ea9df99cf6d8f217622d04163b1e456d6288))
+
 ## v0.99.2 (2023-12-02)
 
 ### Fix
