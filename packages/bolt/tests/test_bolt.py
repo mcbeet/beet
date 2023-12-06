@@ -13,7 +13,7 @@ from bolt import Runtime
 BOLT_EXAMPLES = [
     Function(source)
     for source in Path("tests/resources/bolt_examples.mcfunction")
-    .read_text()
+    .read_text("utf-8")
     .split("###\n")
 ]
 
