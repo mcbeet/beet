@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.31.0 (2023-12-06)
+
+### Feature
+
+* Bump pack format ([`5d1818b`](https://github.com/mcbeet/lectern/commit/5d1818bf1f747745d94f0379ca86126bc887aa44))
+
 ## v0.30.0 (2023-12-02)
 
 ### Feature
