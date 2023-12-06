@@ -1,5 +1,5 @@
-say ctx.project_id
+say ctx.data.functions.setdefault("demo:foo")
 ---
 Traceback (most recent call last):
   File "demo:foo", line 1, in demo:foo
-AttributeError: 'NoneType' object has no attribute 'project_id'
+bolt.contrib.sandbox.SecurityError: Access forbidden attribute 'data' of <class 'beet.toolchain.context.Context'>.

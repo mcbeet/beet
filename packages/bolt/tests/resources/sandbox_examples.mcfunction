@@ -8,7 +8,7 @@ def hello():
     return "world"
 say hello.__name__.capitalize()
 ###
-say ctx.project_id
+say ctx.data.functions.setdefault("demo:foo")
 ###
 print(f'foo {str.__name__} bar')
 ###

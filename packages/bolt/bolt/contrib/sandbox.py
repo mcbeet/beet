@@ -20,7 +20,7 @@ import math
 import random
 from collections import defaultdict, deque
 from dataclasses import dataclass, fields, is_dataclass
-from typing import Any, Callable, Dict, Set, Type, Union
+from typing import Any, Callable, DefaultDict, Set, Type, Union, get_type_hints
 
 from beet import Context, TreeData, TreeNode
 from mecha import MechaError
@@ -34,14 +34,21 @@ class SecurityError(MechaError):
 
 
 def beet_default(ctx: Context):
-    ctx.inject(Sandbox).activate()
+    ctx.require("beet.contrib.template_sandbox")
+    sandbox = ctx.inject(Sandbox)
+    sandbox.allow_basics()
+    sandbox.allow_pipeline_context()
+    sandbox.activate()
 
 
 def public_attrs(obj: Any) -> Set[str]:
     """List public object attributes."""
     attrs = dir(obj)
-    if is_dataclass(obj):
-        attrs.extend(f.name for f in fields(obj))
+    obj_type = obj if isinstance(obj, type) else type(obj)
+    if is_dataclass(obj_type):
+        attrs.extend(f.name for f in fields(obj_type))
+    else:
+        attrs.extend(k for t in type.mro(obj_type) for k in get_type_hints(t))
     return {name for name in attrs if not name.startswith("_")}
 
 
@@ -53,8 +60,8 @@ class Sandbox:
 
     allowed_builtins: Set[str]
     allowed_imports: Set[str]
-    allowed_obj_attrs: Dict[Any, Set[str]]
-    allowed_type_attrs: Dict[Type[Any], Set[str]]
+    allowed_obj_attrs: DefaultDict[Any, Set[str]]
+    allowed_type_attrs: DefaultDict[Type[Any], Set[str]]
 
     def __init__(self, ctx: Union[Context, Runtime]):
         if isinstance(ctx, Context):
@@ -64,7 +71,13 @@ class Sandbox:
 
         self.active = False
 
-        self.allowed_builtins = {
+        self.allowed_builtins = set()
+        self.allowed_imports = set()
+        self.allowed_obj_attrs = defaultdict(set)
+        self.allowed_type_attrs = defaultdict(set)
+
+    def allow_basics(self):
+        self.allowed_builtins |= {
             "abs",
             "all",
             "any",
@@ -110,7 +123,8 @@ class Sandbox:
             "type",
             "zip",
         }
-        self.allowed_imports = {
+
+        self.allowed_imports |= {
             "json",
             "math",
             "collections",
@@ -120,7 +134,8 @@ class Sandbox:
             "copy",
             "random",
         }
-        self.allowed_obj_attrs = {
+
+        self.allowed_obj_attrs |= {
             dict: {"fromkeys"},
             defaultdict: {"fromkeys"},
             json: {"loads", "dumps"},
@@ -132,7 +147,8 @@ class Sandbox:
             copy: {"copy", "deepcopy"},
             random: public_attrs(random),
         }
-        self.allowed_type_attrs = {
+
+        self.allowed_type_attrs |= {
             str: public_attrs(str)
             ^ {
                 "maketrans",
@@ -152,13 +168,23 @@ class Sandbox:
             defaultdict: public_attrs(defaultdict),
         }
 
+    def allow_pipeline_context(self):
+        self.allowed_type_attrs[Context] |= {
+            "project_id",
+            "project_name",
+            "project_description",
+            "project_author",
+            "project_version",
+            "project_root",
+            "minecraft_version",
+        }
+
     def activate(self):
         """Activate the sandbox."""
         if self.active:
             return
         self.active = True
         self.runtime.builtins &= self.allowed_builtins
-        self.runtime.globals["ctx"] = None
         self.runtime.helpers.update(
             get_attribute=SandboxedGetAttribute(
                 sandbox=self,
