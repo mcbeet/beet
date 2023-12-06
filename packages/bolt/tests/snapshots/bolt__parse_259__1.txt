@@ -1,4 +1,5 @@
-_bolt_lineno = [1, 7], [1, 3]
+_bolt_lineno = [1, 8], [1, 3]
+_bolt_helper_get_attribute_handler = _bolt_runtime.helpers['get_attribute_handler']
 _bolt_helper_children = _bolt_runtime.helpers['children']
 _bolt_helper_replace = _bolt_runtime.helpers['replace']
 with _bolt_runtime.scope() as _bolt_var0:
@@ -6,7 +7,7 @@ with _bolt_runtime.scope() as _bolt_var0:
         def __init__(self, name):
             _bolt_var0 = name
             _bolt_var1 = self
-            _bolt_var1.name = _bolt_var0
+            _bolt_helper_get_attribute_handler(_bolt_var1)["name"] = _bolt_var0
 _bolt_var1 = _bolt_helper_replace(_bolt_refs[0], commands=_bolt_helper_children(_bolt_var0))
 ---
 output = _bolt_var1

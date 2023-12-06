@@ -2,7 +2,7 @@ _bolt_lineno = [1, 11], [1, 2]
 _bolt_helper_interpolate_json = _bolt_runtime.helpers['interpolate_json']
 _bolt_helper_children = _bolt_runtime.helpers['children']
 _bolt_helper_replace = _bolt_runtime.helpers['replace']
-_bolt_helper_get_attribute = _bolt_runtime.helpers['get_attribute']
+_bolt_helper_get_attribute_handler = _bolt_runtime.helpers['get_attribute_handler']
 with _bolt_runtime.scope() as _bolt_var5:
     _bolt_var0 = 'color'
     _bolt_var1 = 'red'
@@ -11,7 +11,7 @@ with _bolt_runtime.scope() as _bolt_var5:
     _bolt_var3 = red
     _bolt_var3 = _bolt_helper_interpolate_json({**_bolt_var3}, _bolt_refs[0])
     _bolt_var4 = red
-    _bolt_var4 = _bolt_helper_get_attribute(_bolt_var4, 'color')
+    _bolt_var4 = _bolt_helper_get_attribute_handler(_bolt_var4)["color"]
     _bolt_var4 = _bolt_helper_interpolate_json([*_bolt_var4], _bolt_refs[4])
     _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[7], arguments=_bolt_helper_children([_bolt_refs[6], _bolt_helper_replace(_bolt_refs[5], elements=_bolt_helper_children([_bolt_refs[3], _bolt_helper_replace(_bolt_refs[2], entries=_bolt_helper_children([_bolt_refs[1], *_bolt_var3])), *_bolt_var4]))])))
 _bolt_var6 = _bolt_helper_replace(_bolt_refs[8], commands=_bolt_helper_children(_bolt_var5))

@@ -62,7 +62,7 @@ def get_bolt_helpers() -> Dict[str, Any]:
         "branch": BranchDriver,
         "get_dup": get_dup,
         "get_rebind": get_rebind,
-        "get_attribute": get_attribute,
+        "get_attribute_handler": AttributeHandler,
         "import_module": python_import_module,
         "macro_call": macro_call,
         "resolve_formatted_location": resolve_formatted_location,
@@ -166,15 +166,47 @@ def get_rebind(obj: Any):
     return None
 
 
-@internal
-def get_attribute(obj: Any, attr: str):
-    try:
-        return getattr(obj, attr)
-    except AttributeError as exc:
+@dataclass
+class AttributeHandler:
+    obj: Any
+    item: bool = False
+
+    @internal
+    def __getitem__(self, attr: str) -> Any:
         try:
-            return obj[attr]
-        except (TypeError, LookupError):
-            raise exc from None
+            return getattr(self.obj, attr)
+        except AttributeError as exc:
+            try:
+                result = self.obj[attr]
+                self.item = True
+                return result
+            except (TypeError, LookupError):
+                raise exc from None
+
+    @internal
+    def __setitem__(self, attr: str, value: Any):
+        try:
+            current = self.__getitem__(attr)
+        except AttributeError:
+            pass
+        else:
+            if func := getattr(type(current), "__rebind__", None):
+                value = func(current, value)
+        if self.item:
+            self.obj[attr] = value
+        else:
+            setattr(self.obj, attr, value)
+
+    @internal
+    def __delitem__(self, attr: str):
+        try:
+            self.__getitem__(attr)
+        except AttributeError:
+            pass
+        if self.item:
+            del self.obj[attr]
+        else:
+            delattr(self.obj, attr)
 
 
 @internal

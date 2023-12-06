@@ -15,6 +15,46 @@
 
 ### demo
 
+`@function demo:attribute_rebind`
+
+```mcfunction
+say foo bar
+say foo = 123
+say foo_plus_456 = foo + 456
+say foo = foo_plus_456
+say bar_plus_789 = bar + 789
+say foo = bar_plus_789
+say bar_plus_999 = bar + 999
+say foo_plus_bar_plus_999 = foo + bar_plus_999
+say foo = foo_plus_bar_plus_999
+say 123 456
+say A(foo=Var(name='foo'), bar=Var(name='bar'))
+say foo = 123
+say foo_plus_456 = foo + 456
+say foo = foo_plus_456
+say bar_plus_789 = bar + 789
+say foo = bar_plus_789
+say bar_plus_999 = bar + 999
+say foo_plus_bar_plus_999 = foo + bar_plus_999
+say foo = foo_plus_bar_plus_999
+say A(foo=123, bar=456)
+say {'ayy': Var(name='ayy'), 'yoo': Var(name='yoo')}
+say ayy = 123
+say ayy_plus_456 = ayy + 456
+say ayy = ayy_plus_456
+say yoo_plus_789 = yoo + 789
+say ayy = yoo_plus_789
+say yoo_plus_999 = yoo + 999
+say ayy_plus_yoo_plus_999 = ayy + yoo_plus_999
+say ayy = ayy_plus_yoo_plus_999
+say {'ayy': 123, 'yoo': 456}
+say {'ayy': Var(name='ayy'), 'yoo': Var(name='yoo')}
+say yoo_plus_789 = yoo + 789
+say yoo_plus_999 = yoo + 999
+say yoo_plus_789_plus_yoo_plus_999 = yoo_plus_789 + yoo_plus_999
+say {'ayy': 123, 'yoo': 456}
+```
+
 `@function demo:foo`
 
 ```mcfunction

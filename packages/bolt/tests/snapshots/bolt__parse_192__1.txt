@@ -3,7 +3,7 @@ _bolt_helper_interpolate_message = _bolt_runtime.helpers['interpolate_message']
 _bolt_helper_children = _bolt_runtime.helpers['children']
 _bolt_helper_replace = _bolt_runtime.helpers['replace']
 _bolt_helper_import_module = _bolt_runtime.helpers['import_module']
-_bolt_helper_get_attribute = _bolt_runtime.helpers['get_attribute']
+_bolt_helper_get_attribute_handler = _bolt_runtime.helpers['get_attribute_handler']
 with _bolt_runtime.scope() as _bolt_var5:
     _bolt_var0 = 0
     math = _bolt_var0
@@ -16,7 +16,7 @@ with _bolt_runtime.scope() as _bolt_var5:
     _bolt_var2 = wat
     _bolt_var2 = _bolt_var2()
     _bolt_var3 = math
-    _bolt_var3 = _bolt_helper_get_attribute(_bolt_var3, 'ceil')
+    _bolt_var3 = _bolt_helper_get_attribute_handler(_bolt_var3)["ceil"]
     _bolt_var4 = 0.1
     _bolt_var3 = _bolt_var3(_bolt_var4)
     _bolt_var3 = _bolt_helper_interpolate_message(_bolt_var3, _bolt_refs[2])

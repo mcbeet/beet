@@ -1,5 +1,5 @@
 _bolt_lineno = [1, 9], [1, 2]
-_bolt_helper_get_attribute = _bolt_runtime.helpers['get_attribute']
+_bolt_helper_get_attribute_handler = _bolt_runtime.helpers['get_attribute_handler']
 _bolt_helper_interpolate_time = _bolt_runtime.helpers['interpolate_time']
 _bolt_helper_children = _bolt_runtime.helpers['children']
 _bolt_helper_replace = _bolt_runtime.helpers['replace']
@@ -7,7 +7,7 @@ with _bolt_runtime.scope() as _bolt_var2:
     _bolt_var0 = 123
     hex = _bolt_var0
     _bolt_var1 = hex
-    _bolt_var1 = _bolt_helper_get_attribute(_bolt_var1, 'time')
+    _bolt_var1 = _bolt_helper_get_attribute_handler(_bolt_var1)["time"]
     _bolt_var1 = _bolt_helper_interpolate_time(_bolt_var1, _bolt_refs[0])
     _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[1], arguments=_bolt_helper_children([_bolt_var1])))
 _bolt_var3 = _bolt_helper_replace(_bolt_refs[2], commands=_bolt_helper_children(_bolt_var2))

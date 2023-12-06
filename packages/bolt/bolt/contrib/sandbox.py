@@ -3,7 +3,7 @@
 
 __all__ = [
     "Sandbox",
-    "SandboxedGetAttribute",
+    "SandboxedAttributeHandler",
     "SandboxedImportModule",
     "SecurityError",
     "public_attrs",
@@ -184,11 +184,16 @@ class Sandbox:
         if self.active:
             return
         self.active = True
+
         self.runtime.builtins &= self.allowed_builtins
+
+        get_attribute_handler = self.runtime.helpers["get_attribute_handler"]
+
         self.runtime.helpers.update(
-            get_attribute=SandboxedGetAttribute(
+            get_attribute_handler=lambda obj: SandboxedAttributeHandler(  # type: ignore
+                obj=obj,
+                handler=get_attribute_handler(obj),
                 sandbox=self,
-                get_attribute=self.runtime.helpers["get_attribute"],
             ),
             import_module=SandboxedImportModule(
                 sandbox=self,
@@ -198,30 +203,31 @@ class Sandbox:
 
 
 @dataclass
-class SandboxedGetAttribute:
-    """Sandboxed get_attribute helper."""
+class SandboxedAttributeHandler:
+    """Sandboxed attribute handler helper."""
 
+    obj: Any
+    handler: Any
     sandbox: Sandbox
-    get_attribute: Callable[[Any, str], Any]
 
     @internal
-    def __call__(self, obj: Any, attr: str) -> Any:
-        if not hasattr(obj, attr):
-            return self.get_attribute(obj, attr)
+    def __getitem__(self, attr: str) -> Any:
+        if not hasattr(self.obj, attr):
+            return self.handler[attr]
 
         try:
-            if allowed := self.sandbox.allowed_obj_attrs.get(obj):
+            if allowed := self.sandbox.allowed_obj_attrs.get(self.obj):
                 if attr in allowed:
-                    return self.get_attribute(obj, attr)
+                    return self.handler[attr]
         except TypeError:
             pass
 
-        for cls in type.mro(type(obj)):
+        for cls in type.mro(type(self.obj)):
             if allowed := self.sandbox.allowed_type_attrs.get(cls):
                 if attr in allowed:
-                    return self.get_attribute(obj, attr)
+                    return self.handler[attr]
 
-        raise SecurityError(f"Access forbidden attribute {attr!r} of {type(obj)}.")
+        raise SecurityError(f"Access forbidden attribute {attr!r} of {type(self.obj)}.")
 
 
 @dataclass

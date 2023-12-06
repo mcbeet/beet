@@ -1,10 +1,10 @@
 _bolt_lineno = [1], [1]
-_bolt_helper_get_attribute = _bolt_runtime.helpers['get_attribute']
+_bolt_helper_get_attribute_handler = _bolt_runtime.helpers['get_attribute_handler']
 _bolt_helper_children = _bolt_runtime.helpers['children']
 _bolt_helper_replace = _bolt_runtime.helpers['replace']
 with _bolt_runtime.scope() as _bolt_var2:
     _bolt_var0 = 'foo'
-    _bolt_var0 = _bolt_helper_get_attribute(_bolt_var0, 'bar')
+    _bolt_var0 = _bolt_helper_get_attribute_handler(_bolt_var0)["bar"]
     _bolt_var0 = _bolt_var0()
     _bolt_var1 = 0
     _bolt_var0 = _bolt_var0[_bolt_var1]

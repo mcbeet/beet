@@ -155,9 +155,10 @@ class Accumulator:
         """Emit children helper."""
         return self.helper("children", f"[{', '.join(nodes)}]")
 
-    def get_attribute(self, obj: str, name: str) -> str:
-        """Emit get_attribute helper."""
-        return self.helper("get_attribute", obj, repr(name))
+    def get_attribute_handler(self, obj: str, name: str) -> str:
+        """Emit get_attribute_handler helper."""
+        attribute_handler = self.helper("get_attribute_handler", obj)
+        return f'{attribute_handler}["{name}"]'
 
     def import_module(self, name: str) -> str:
         """Emit import_module helper."""
@@ -1025,7 +1026,7 @@ class Codegen(Visitor):
             stmt = f"_bolt_from_import = {acc.import_module(module.path)}"
             acc.statement(stmt, lineno=node)
             for name in names:
-                rhs = acc.get_attribute("_bolt_from_import", name)
+                rhs = acc.get_attribute_handler("_bolt_from_import", name)
                 acc.statement(f"{name} = {rhs}", lineno=node)
 
         return []
@@ -1303,7 +1304,7 @@ class Codegen(Visitor):
         acc: Accumulator,
     ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
         value = yield from visit_single(node.value, required=True)
-        rhs = acc.get_attribute(value, node.name)
+        rhs = acc.get_attribute_handler(value, node.name)
         acc.statement(f"{value} = {rhs}", lineno=node)
         return [value]
 
@@ -1389,7 +1390,8 @@ class Codegen(Visitor):
         acc: Accumulator,
     ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
         value = yield from visit_single(node.value, required=True)
-        return [f"{value}.{node.name}"]
+        target = acc.get_attribute_handler(value, node.name)
+        return [target]
 
     @rule(AstTargetItem)
     def target_item(

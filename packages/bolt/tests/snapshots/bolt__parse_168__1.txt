@@ -1,5 +1,5 @@
 _bolt_lineno = [1, 13], [1, 2]
-_bolt_helper_get_attribute = _bolt_runtime.helpers['get_attribute']
+_bolt_helper_get_attribute_handler = _bolt_runtime.helpers['get_attribute_handler']
 _bolt_helper_interpolate_item_slot = _bolt_runtime.helpers['interpolate_item_slot']
 _bolt_helper_children = _bolt_runtime.helpers['children']
 _bolt_helper_replace = _bolt_runtime.helpers['replace']
@@ -11,10 +11,10 @@ with _bolt_runtime.scope() as _bolt_var7:
     _bolt_var4 = {_bolt_var0: _bolt_var1, _bolt_var2: _bolt_var3}
     my_weapon = _bolt_var4
     _bolt_var5 = my_weapon
-    _bolt_var5 = _bolt_helper_get_attribute(_bolt_var5, 'offhand')
+    _bolt_var5 = _bolt_helper_get_attribute_handler(_bolt_var5)["offhand"]
     _bolt_var5 = _bolt_helper_interpolate_item_slot(_bolt_var5, _bolt_refs[0])
     _bolt_var6 = my_weapon
-    _bolt_var6 = _bolt_helper_get_attribute(_bolt_var6, 'mainhand')
+    _bolt_var6 = _bolt_helper_get_attribute_handler(_bolt_var6)["mainhand"]
     _bolt_var6 = _bolt_helper_interpolate_item_slot(_bolt_var6, _bolt_refs[2])
     _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[4], arguments=_bolt_helper_children([_bolt_refs[1], _bolt_var5, _bolt_refs[3], _bolt_var6])))
 _bolt_var8 = _bolt_helper_replace(_bolt_refs[5], commands=_bolt_helper_children(_bolt_var7))

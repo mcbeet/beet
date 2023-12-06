@@ -1,12 +1,12 @@
 _bolt_lineno = [1, 8], [1, 2]
 _bolt_helper_import_module = _bolt_runtime.helpers['import_module']
-_bolt_helper_get_attribute = _bolt_runtime.helpers['get_attribute']
+_bolt_helper_get_attribute_handler = _bolt_runtime.helpers['get_attribute_handler']
 _bolt_helper_children = _bolt_runtime.helpers['children']
 _bolt_helper_replace = _bolt_runtime.helpers['replace']
 with _bolt_runtime.scope() as _bolt_var2:
     math = _bolt_helper_import_module('math')
     _bolt_var0 = math
-    _bolt_var0 = _bolt_helper_get_attribute(_bolt_var0, 'sin')
+    _bolt_var0 = _bolt_helper_get_attribute_handler(_bolt_var0)["sin"]
     _bolt_var1 = 1
     _bolt_var0 = _bolt_var0(_bolt_var1)
 _bolt_var3 = _bolt_helper_replace(_bolt_refs[0], commands=_bolt_helper_children(_bolt_var2))
