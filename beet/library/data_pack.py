@@ -335,7 +335,7 @@ class DataPack(Pack[DataPackNamespace]):
         (1, 17): 7,
         (1, 18): 9,
         (1, 19): 12,
-        (1, 20): 18,
+        (1, 20): 26,
     }
     latest_pack_format = pack_format_registry[split_version(LATEST_MINECRAFT_VERSION)]
 
