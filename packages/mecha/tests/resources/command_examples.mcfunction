@@ -204,3 +204,8 @@ e\
 l\
 l\
 o
+execute if function demo:foo run return run function demo:bar
+execute store result score @s foo run return run data get entity @s foodSaturationLevel
+gamerule maxCommandForkCount 9999
+scoreboard objectives modify foo displayautoupdate true
+scoreboard objectives modify foo numberformat styled {"bold": true}

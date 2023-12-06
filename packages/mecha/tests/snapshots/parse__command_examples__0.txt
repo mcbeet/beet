@@ -1,6 +1,6 @@
 <class 'mecha.ast.AstRoot'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
-  end_location: SourceLocation(pos=8295, lineno=207, colno=1)
+  end_location: SourceLocation(pos=8603, lineno=212, colno=1)
   commands:
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=14, lineno=2, colno=1)
@@ -7134,3 +7134,137 @@
               location: SourceLocation(pos=8281, lineno=202, colno=1)
               end_location: SourceLocation(pos=8294, lineno=206, colno=2)
               value: 'hello'
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=8295, lineno=207, colno=1)
+      end_location: SourceLocation(pos=8356, lineno=207, colno=62)
+      identifier: 'execute:subcommand'
+      arguments:
+        <class 'mecha.ast.AstCommand'>
+          location: SourceLocation(pos=8303, lineno=207, colno=9)
+          end_location: SourceLocation(pos=8356, lineno=207, colno=62)
+          identifier: 'execute:if:function:name:subcommand'
+          arguments:
+            <class 'mecha.ast.AstResourceLocation'>
+              location: SourceLocation(pos=8315, lineno=207, colno=21)
+              end_location: SourceLocation(pos=8323, lineno=207, colno=29)
+              is_tag: False
+              namespace: 'demo'
+              path: 'foo'
+            <class 'mecha.ast.AstCommand'>
+              location: SourceLocation(pos=8324, lineno=207, colno=30)
+              end_location: SourceLocation(pos=8356, lineno=207, colno=62)
+              identifier: 'execute:run:subcommand'
+              arguments:
+                <class 'mecha.ast.AstCommand'>
+                  location: SourceLocation(pos=8328, lineno=207, colno=34)
+                  end_location: SourceLocation(pos=8356, lineno=207, colno=62)
+                  identifier: 'return:run:subcommand'
+                  arguments:
+                    <class 'mecha.ast.AstCommand'>
+                      location: SourceLocation(pos=8339, lineno=207, colno=45)
+                      end_location: SourceLocation(pos=8356, lineno=207, colno=62)
+                      identifier: 'function:name'
+                      arguments:
+                        <class 'mecha.ast.AstResourceLocation'>
+                          location: SourceLocation(pos=8348, lineno=207, colno=54)
+                          end_location: SourceLocation(pos=8356, lineno=207, colno=62)
+                          is_tag: False
+                          namespace: 'demo'
+                          path: 'bar'
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=8357, lineno=208, colno=1)
+      end_location: SourceLocation(pos=8444, lineno=208, colno=88)
+      identifier: 'execute:subcommand'
+      arguments:
+        <class 'mecha.ast.AstCommand'>
+          location: SourceLocation(pos=8365, lineno=208, colno=9)
+          end_location: SourceLocation(pos=8444, lineno=208, colno=88)
+          identifier: 'execute:store:result:score:targets:objective:subcommand'
+          arguments:
+            <class 'mecha.ast.AstSelector'>
+              location: SourceLocation(pos=8384, lineno=208, colno=28)
+              end_location: SourceLocation(pos=8386, lineno=208, colno=30)
+              variable: 's'
+              arguments:
+                <empty>
+            <class 'mecha.ast.AstObjective'>
+              location: SourceLocation(pos=8387, lineno=208, colno=31)
+              end_location: SourceLocation(pos=8390, lineno=208, colno=34)
+              value: 'foo'
+            <class 'mecha.ast.AstCommand'>
+              location: SourceLocation(pos=8391, lineno=208, colno=35)
+              end_location: SourceLocation(pos=8444, lineno=208, colno=88)
+              identifier: 'execute:run:subcommand'
+              arguments:
+                <class 'mecha.ast.AstCommand'>
+                  location: SourceLocation(pos=8395, lineno=208, colno=39)
+                  end_location: SourceLocation(pos=8444, lineno=208, colno=88)
+                  identifier: 'return:run:subcommand'
+                  arguments:
+                    <class 'mecha.ast.AstCommand'>
+                      location: SourceLocation(pos=8406, lineno=208, colno=50)
+                      end_location: SourceLocation(pos=8444, lineno=208, colno=88)
+                      identifier: 'data:get:entity:target:path'
+                      arguments:
+                        <class 'mecha.ast.AstSelector'>
+                          location: SourceLocation(pos=8422, lineno=208, colno=66)
+                          end_location: SourceLocation(pos=8424, lineno=208, colno=68)
+                          variable: 's'
+                          arguments:
+                            <empty>
+                        <class 'mecha.ast.AstNbtPath'>
+                          location: SourceLocation(pos=8425, lineno=208, colno=69)
+                          end_location: SourceLocation(pos=8444, lineno=208, colno=88)
+                          components:
+                            <class 'mecha.ast.AstNbtPathKey'>
+                              location: SourceLocation(pos=8425, lineno=208, colno=69)
+                              end_location: SourceLocation(pos=8444, lineno=208, colno=88)
+                              value: 'foodSaturationLevel'
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=8445, lineno=209, colno=1)
+      end_location: SourceLocation(pos=8478, lineno=209, colno=34)
+      identifier: 'gamerule:maxCommandForkCount:value'
+      arguments:
+        <class 'mecha.ast.AstNumber'>
+          location: SourceLocation(pos=8474, lineno=209, colno=30)
+          end_location: SourceLocation(pos=8478, lineno=209, colno=34)
+          value: 9999
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=8479, lineno=210, colno=1)
+      end_location: SourceLocation(pos=8534, lineno=210, colno=56)
+      identifier: 'scoreboard:objectives:modify:objective:displayautoupdate:value'
+      arguments:
+        <class 'mecha.ast.AstObjective'>
+          location: SourceLocation(pos=8508, lineno=210, colno=30)
+          end_location: SourceLocation(pos=8511, lineno=210, colno=33)
+          value: 'foo'
+        <class 'mecha.ast.AstBool'>
+          location: SourceLocation(pos=8530, lineno=210, colno=52)
+          end_location: SourceLocation(pos=8534, lineno=210, colno=56)
+          value: True
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=8535, lineno=211, colno=1)
+      end_location: SourceLocation(pos=8602, lineno=211, colno=68)
+      identifier: 'scoreboard:objectives:modify:objective:numberformat:styled:style'
+      arguments:
+        <class 'mecha.ast.AstObjective'>
+          location: SourceLocation(pos=8564, lineno=211, colno=30)
+          end_location: SourceLocation(pos=8567, lineno=211, colno=33)
+          value: 'foo'
+        <class 'mecha.ast.AstJsonObject'>
+          location: SourceLocation(pos=8588, lineno=211, colno=54)
+          end_location: SourceLocation(pos=8602, lineno=211, colno=68)
+          entries:
+            <class 'mecha.ast.AstJsonObjectEntry'>
+              location: SourceLocation(pos=8589, lineno=211, colno=55)
+              end_location: SourceLocation(pos=8601, lineno=211, colno=67)
+              key:
+                <class 'mecha.ast.AstJsonObjectKey'>
+                  location: SourceLocation(pos=8589, lineno=211, colno=55)
+                  end_location: SourceLocation(pos=8595, lineno=211, colno=61)
+                  value: 'bold'
+              value:
+                <class 'mecha.ast.AstJsonValue'>
+                  location: SourceLocation(pos=8597, lineno=211, colno=63)
+                  end_location: SourceLocation(pos=8601, lineno=211, colno=67)
+                  value: True

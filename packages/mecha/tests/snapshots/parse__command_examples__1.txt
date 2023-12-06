@@ -163,3 +163,8 @@ execute if score @s abc matches 0 run ride @s dismount
 execute positioned over ocean_floor run summon skeleton
 execute as @a[tag=blob] run function demo:foo
 say hello
+execute if function demo:foo run return run function demo:bar
+execute store result score @s foo run return run data get entity @s foodSaturationLevel
+gamerule maxCommandForkCount 9999
+scoreboard objectives modify foo displayautoupdate true
+scoreboard objectives modify foo numberformat styled {"bold": true}

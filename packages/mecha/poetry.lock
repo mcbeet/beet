@@ -14,14 +14,14 @@ files = [
 
 [[package]]
 name = "beet"
-version = "0.99.1"
+version = "0.100.0"
 description = "The Minecraft pack development kit"
 category = "main"
 optional = false
 python-versions = ">=3.10,<4.0"
 files = [
-    {file = "beet-0.99.1-py3-none-any.whl", hash = "sha256:ba2ada74f00f6631a6e018884a490525845c092d8b25526b9bfa00d365e6ec7e"},
-    {file = "beet-0.99.1.tar.gz", hash = "sha256:eb904688f925c3c639f1b599e156dca7574dfd6ceb11315095418b0173964a33"},
+    {file = "beet-0.100.0-py3-none-any.whl", hash = "sha256:fe690659d461b9210cd810c8f7851bf32a7b74ceacaaadf8ae48aad5108f4759"},
+    {file = "beet-0.100.0.tar.gz", hash = "sha256:1c7bd7a0583f64b07babfb66200028bd6e1974fa02806bd4e406809d91738bd3"},
 ]
 
 [package.dependencies]
@@ -590,18 +590,18 @@ testing = ["pytest (>=6)", "pytest-black (>=0.3.7)", "pytest-checkdocs (>=2.4)",
 
 [[package]]
 name = "lectern"
-version = "0.30.0"
+version = "0.31.0"
 description = "Literate Minecraft data packs and resource packs."
 category = "dev"
 optional = false
 python-versions = ">=3.10,<4.0"
 files = [
-    {file = "lectern-0.30.0-py3-none-any.whl", hash = "sha256:8d7f918a5fcae3aa06a1ca343c7e0c336997ef40eb7e0ba71225b81651c9dc77"},
-    {file = "lectern-0.30.0.tar.gz", hash = "sha256:d9c7cc10201649c8131448ec029a5cb71f48364a74645cf1701d0f616c2cb129"},
+    {file = "lectern-0.31.0-py3-none-any.whl", hash = "sha256:7cc669dab4dcb0eac0fd6afa317bfeddbf3203804e1e304ad0e17ec79d4ac388"},
+    {file = "lectern-0.31.0.tar.gz", hash = "sha256:5d2daf299883ad4bbe6f115d2585c0c1067bda599c6c21d9e17f7ac3ca22f354"},
 ]
 
 [package.dependencies]
-beet = ">=0.99.1"
+beet = ">=0.100.0"
 click = ">=8.1.7,<9.0.0"
 markdown-it-py = ">=3.0.0,<4.0.0"
 
@@ -1565,4 +1565,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "c34ea1529c79f2c7761d6d9a50499c1377cff172ceb65bb0d2a2327d63faf599"
+content-hash = "9052030970b734bb2470a86c27ba0e83295d0d6d4c963d33f0f5f67584943c6e"

@@ -432,6 +432,7 @@ def get_default_parsers() -> Dict[str, Parser]:
         ),
         "command:argument:minecraft:column_pos": delegate("column_pos"),
         "command:argument:minecraft:component": MultilineParser(delegate("json")),
+        "command:argument:minecraft:style": MultilineParser(delegate("json")),
         "command:argument:minecraft:dimension": delegate("resource_location"),
         "command:argument:minecraft:entity": delegate("entity"),
         "command:argument:minecraft:entity_anchor": delegate("entity_anchor"),
