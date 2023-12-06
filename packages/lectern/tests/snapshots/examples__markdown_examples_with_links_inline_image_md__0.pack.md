@@ -7,7 +7,7 @@
 ```json
 {
   "pack": {
-    "pack_format": 18,
+    "pack_format": 26,
     "description": ""
   }
 }
@@ -24,7 +24,7 @@
 ```json
 {
   "pack": {
-    "pack_format": 18,
+    "pack_format": 22,
     "description": ""
   }
 }

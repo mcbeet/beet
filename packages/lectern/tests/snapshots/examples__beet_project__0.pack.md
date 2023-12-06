@@ -7,7 +7,7 @@
 ```json
 {
   "pack": {
-    "pack_format": 18,
+    "pack_format": 26,
     "description": ""
   }
 }
@@ -362,7 +362,7 @@ tellraw @a ["", {"text": "hello", "color": "red"}]
 ```json
 {
   "pack": {
-    "pack_format": 18,
+    "pack_format": 22,
     "description": ""
   }
 }
