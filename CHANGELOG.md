@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.100.0 (2023-12-06)
+
+### Feature
+
+* Bump pack format ([`c71f965`](https://github.com/mcbeet/beet/commit/c71f965554352a11abdf4dfe9881eac0cee526e6))
+
 ## v0.99.3 (2023-12-02)
 
 ### Fix
