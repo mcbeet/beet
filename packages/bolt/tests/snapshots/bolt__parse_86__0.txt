@@ -3,5 +3,5 @@
 #      1 |  return foo
 #        :         ^^^
 # Notes:
-#   - Expected eof, newline or number but got literal 'foo'.
+#   - Expected eof, literal 'fail', literal 'run', newline or number but got literal 'foo'.
 return foo
