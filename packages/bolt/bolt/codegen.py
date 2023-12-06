@@ -98,6 +98,32 @@ class CodegenStatement:
     lineno: Optional[int] = None
     children: List["CodegenStatement"] = field(default_factory=list)
 
+    def is_with_statement(self) -> bool:
+        """Check if the statement is a with statement."""
+        return (
+            self.code.startswith("with ")
+            and self.code.endswith(":")
+            and bool(self.children)
+        )
+
+    def fuse_with_statements(self) -> "CodegenStatement":
+        """Fuse nested with statements."""
+        if (
+            self.is_with_statement()
+            and len(self.children) == 1
+            and self.children[0].is_with_statement()
+        ):
+            outer = self.code[5:-1]
+            inner = self.children[0].code[5:-1]
+            return replace(
+                self.children[0],
+                code=f"with {outer}, {inner}:",
+                lineno=self.lineno or self.children[0].lineno,
+            ).fuse_with_statements()
+        return replace(
+            self, children=[child.fuse_with_statements() for child in self.children]
+        )
+
     def flatten(self, indent: str = "") -> Iterable[Tuple[str, Optional[int]]]:
         """Yield the indented statements with their associated line number."""
         yield f"{indent}{self.code}", self.lineno
@@ -138,7 +164,7 @@ class Accumulator:
         numbers2: List[int] = [1]
 
         for statement in header + self.statements:
-            for code, lineno in statement.flatten():
+            for code, lineno in statement.fuse_with_statements().flatten():
                 if lineno and numbers2[-1] != lineno:
                     numbers1.append(len(lines) + 1)
                     numbers2.append(lineno)
