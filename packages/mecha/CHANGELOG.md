@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.85.1 (2023-12-06)
+
+### Fix
+
+* Inspect ast should handle cache invalidation exceptions ([`0546429`](https://github.com/mcbeet/mecha/commit/0546429dba6d2a33163cfdf8b58083c39c07e17f))
+
 ## v0.85.0 (2023-12-06)
 
 ### Feature
