@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.85.0 (2023-12-06)
+
+### Feature
+
+* Update for 1.20.3 ([`26ab5bb`](https://github.com/mcbeet/mecha/commit/26ab5bb8c3175823f8e4f3eb736edb7a91a36d50))
+
 ## v0.84.0 (2023-12-02)
 
 ### Feature
