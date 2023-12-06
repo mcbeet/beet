@@ -20,5 +20,5 @@ def ast(project: Project, filename: str):
     try:
         with ast_path.open("rb") as f:
             click.echo(AstCacheBackend().load(f).dump())
-    except FileNotFoundError as exc:
+    except Exception as exc:
         raise ErrorMessage(f'No cached ast for "{filename}".') from exc
