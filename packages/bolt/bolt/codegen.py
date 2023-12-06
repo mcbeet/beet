@@ -16,6 +16,7 @@ from contextlib import contextmanager
 from dataclasses import dataclass, field, fields, replace
 from typing import (
     Any,
+    Callable,
     Dict,
     Generator,
     Iterable,
@@ -466,11 +467,14 @@ def visit_binding(
             acc.statement(f"{target} {op} {value}", lineno=node)
 
 
+@dataclass(eq=False)
 class Codegen(Visitor):
     """Code generator."""
 
+    accumulator_factory: Callable[[], Accumulator] = Accumulator
+
     def __call__(self, node: AstRoot) -> CodegenResult:  # type: ignore
-        acc = Accumulator()
+        acc = self.accumulator_factory()
         result = self.invoke(node, acc)
 
         if result is None:
