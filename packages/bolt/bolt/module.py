@@ -102,6 +102,7 @@ class CompiledModule:
 
     ast: AstRoot
     code: Optional[CodeType]
+    python: Optional[str]
     refs: List[Any]
     dependencies: Set[str]
     prelude_imports: List[AstPrelude]
@@ -268,6 +269,7 @@ class ModuleManager(Mapping[TextFileBase[Any], CompiledModule]):
         module = CompiledModule(
             ast=compilation_unit.ast,
             code=code,
+            python=result.source,
             refs=result.refs,
             dependencies=result.dependencies,
             prelude_imports=result.prelude_imports,
@@ -470,6 +472,7 @@ class ModuleCacheBackend(AstCacheBackend):
         self.modules.registry[self.modules.database.current] = CompiledModule(
             ast=data["ast"],
             code=marshal.load(f),
+            python=data["codegen"],
             refs=data["refs"],
             dependencies=data["dependencies"],
             prelude_imports=data["prelude_imports"],
@@ -491,6 +494,7 @@ class ModuleCacheBackend(AstCacheBackend):
         self.dump_data(
             {
                 "ast": module.ast,
+                "codegen": module.python,
                 "refs": module.refs,
                 "dependencies": module.dependencies,
                 "prelude_imports": module.prelude_imports,
