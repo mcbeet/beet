@@ -2,6 +2,13 @@
 
 <!--next-version-placeholder-->
 
+## v0.43.0 (2023-12-06)
+
+### Feature
+
+* Add codegen cli command ([`4e7db00`](https://github.com/mcbeet/bolt/commit/4e7db009930e93596d6ceea327e417cb60998c58))
+* Update to 1.20.3 ([`e0c2f11`](https://github.com/mcbeet/bolt/commit/e0c2f117905f3c126a3df920ceb06d3b7c66c059))
+
 ## v0.42.0 (2023-12-02)
 
 ### Feature
