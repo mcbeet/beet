@@ -51,8 +51,8 @@ def beet_default(ctx: Context):
 
 class NestedResources:
     mc: Mecha
-    json_resources: Dict[str, Type[NamespaceFile]]
     text_resources: Dict[str, Type[NamespaceFile]]
+    json_resources: Dict[str, Type[NamespaceFile]]
 
     def __init__(
         self,
@@ -65,33 +65,32 @@ class NestedResources:
         else:
             self.mc = arg
 
-        nested_resources = {
-            snake_case(file_type.__name__): file_type
-            for pack in packs
-            for file_type in pack.resolve_scope_map().values()
+        should_disambiguate = {
+            name
+            for name, tree in self.mc.spec.tree.get_all_literals()
+            if any(tree.get_all_arguments())
         }
 
-        # Make sure there's no confusion between nested resources and existing commands.
-        for name, tree in self.mc.spec.tree.get_all_literals():
-            if name in nested_resources and any(tree.get_all_arguments()):
-                nested_resources[f"{name}_file"] = nested_resources.pop(name)
+        self.text_resources = {
+            f"{file_type.snake_name}_file"
+            if file_type.snake_name in should_disambiguate
+            else file_type.snake_name: file_type
+            for pack in packs
+            for file_type in pack.get_file_types(extend=TextFileBase)
+        }
 
         self.json_resources = {
-            name: file_type
-            for name, file_type in nested_resources.items()
+            name: self.text_resources.pop(name)
+            for name, file_type in list(self.text_resources.items())
             if issubclass(file_type, DataModelBase)
         }
 
-        for name in self.json_resources:
-            del nested_resources[name]
-
-        self.text_resources = {
-            name: file_type
-            for name, file_type in nested_resources.items()
-            if issubclass(file_type, TextFileBase)
+    def prepare(self, generate: Generator):
+        text_commands = {
+            name: self.create_command_tree_fragment("mecha:nested_text")
+            for name in self.text_resources
         }
 
-    def prepare(self, generate: Generator):
         json_commands = {
             name: self.create_command_tree_fragment("mecha:nested_json")
             for name in self.json_resources
@@ -103,32 +102,27 @@ class NestedResources:
             if issubclass(file_type, TagFile)
         }
 
-        text_commands = {
-            name: self.create_command_tree_fragment("mecha:nested_text")
-            for name in self.text_resources
-        }
-
         self.mc.spec.add_commands(
             {
                 "type": "root",
                 "children": {
+                    **text_commands,
                     **json_commands,
                     "merge": {"type": "literal", "children": json_commands},
                     "append": {"type": "literal", "children": tag_commands},
                     "prepend": {"type": "literal", "children": tag_commands},
-                    **text_commands,
                 },
             }
-        )
-
-        self.mc.spec.parsers["nested_json"] = delegate("json")
-        self.mc.spec.parsers["command:argument:mecha:nested_json"] = MultilineParser(
-            delegate("nested_json")
         )
 
         self.mc.spec.parsers["nested_text"] = parse_nested_text
         self.mc.spec.parsers["command:argument:mecha:nested_text"] = MultilineParser(
             delegate("nested_text")
+        )
+
+        self.mc.spec.parsers["nested_json"] = delegate("json")
+        self.mc.spec.parsers["command:argument:mecha:nested_json"] = MultilineParser(
+            delegate("nested_json")
         )
 
         self.mc.transform.extend(
@@ -137,8 +131,8 @@ class NestedResources:
                 database=self.mc.database,
                 nested_resource_identifiers={
                     f"{prefix}{name}:name:content": file_type
-                    for name, file_type in self.json_resources.items()
-                    | self.text_resources.items()
+                    for name, file_type in self.text_resources.items()
+                    | self.json_resources.items()
                     for prefix in [""]
                     + ["merge:"] * issubclass(file_type, DataModelBase)
                     + ["append:", "prepend:"] * issubclass(file_type, TagFile)
