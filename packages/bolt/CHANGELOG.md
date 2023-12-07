@@ -2,6 +2,19 @@
 
 <!--next-version-placeholder-->
 
+## v0.44.0 (2023-12-07)
+
+### Feature
+
+* Trigger rebind on set attribute ([`ed97089`](https://github.com/mcbeet/bolt/commit/ed9708942c23448c3e3297e19a48230f827d58ec))
+* Expose minimal context info in sandbox ([`3c839a0`](https://github.com/mcbeet/bolt/commit/3c839a0b5f32e60dac774ac81ae851202ded6d73))
+
+### Fix
+
+* Fuse with statements in codegen ([`a7e9edf`](https://github.com/mcbeet/bolt/commit/a7e9edf1a6a2d1a86e76de49aca3908cfd9987df))
+* Refactor codegen to use a statement tree ([`53a4ba9`](https://github.com/mcbeet/bolt/commit/53a4ba9b8bb4a46173246d0f26d551277f8a3989))
+* Allow accumulator override ([`493c371`](https://github.com/mcbeet/bolt/commit/493c37169065694bbf62c69702ff5e50c86d08f1))
+
 ## v0.43.0 (2023-12-06)
 
 ### Feature
