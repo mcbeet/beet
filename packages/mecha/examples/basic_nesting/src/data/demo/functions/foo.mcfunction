@@ -192,3 +192,13 @@ function demo:blob:
     append function demo:blob:
         say aaaaa
     say after
+
+function demo:ret1:
+    execute if score some score matches 0 run return run execute run function demo:ret1/cond:
+        say hi
+        return 0
+
+function demo:ret2:
+    execute if score some score matches 0 run return run function demo:ret2/cond:
+        say hi
+        return 0

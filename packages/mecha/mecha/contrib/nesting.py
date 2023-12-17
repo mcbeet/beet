@@ -146,7 +146,8 @@ class NestedCommandsTransformer(MutatingReducer):
         return node
 
     @rule(AstCommand, identifier="execute:run:subcommand")
-    def nesting_execute_function(self, node: AstCommand):
+    @rule(AstCommand, identifier="return:run:subcommand")
+    def nesting_run_function(self, node: AstCommand):
         if isinstance(command := node.arguments[0], AstCommand):
             if command.identifier in self.identifier_map:
                 yield from self.handle_function(command)

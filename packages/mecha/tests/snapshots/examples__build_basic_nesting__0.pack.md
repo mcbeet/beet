@@ -253,6 +253,20 @@ say anonymous definition 7
 say anonymous definition 8
 ```
 
+`@function demo:ret1/cond`
+
+```mcfunction
+say hi
+return 0
+```
+
+`@function demo:ret2/cond`
+
+```mcfunction
+say hi
+return 0
+```
+
 `@function demo:thing1`
 
 ```mcfunction
@@ -288,6 +302,18 @@ say hello
 say before
 say aaaaa
 say after
+```
+
+`@function demo:ret1`
+
+```mcfunction
+execute if score some score matches 0 run return run function demo:ret1/cond
+```
+
+`@function demo:ret2`
+
+```mcfunction
+execute if score some score matches 0 run return run function demo:ret2/cond
 ```
 
 `@function demo:wat/nested_execute_0`
