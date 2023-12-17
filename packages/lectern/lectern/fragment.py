@@ -5,8 +5,10 @@ __all__ = [
 
 
 from base64 import b64decode
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
+from pathlib import Path
 from typing import Any, Optional, Sequence, Type, TypeVar, overload
+from urllib.parse import urlparse
 from urllib.request import urlopen
 
 from beet import BinaryFile, BinaryFileBase, BubbleException, Cache, File
@@ -45,8 +47,28 @@ class Fragment:
     file: Optional[File[Any, Any]] = None
     cache: Optional[Cache] = None
 
+    def with_content(self, content: str) -> "Fragment":
+        """Replace content."""
+        return replace(self, content=content)
+
+    def with_link(
+        self,
+        link: Any,
+        external_files: Optional[FileSystemPath] = None,
+    ) -> "Fragment":
+        """Replace linked content."""
+        url = str(link)
+        path = None
+
+        if urlparse(url).path == url:
+            if external_files:
+                path = Path(external_files, url).resolve()
+            url = None
+
+        return replace(self, url=url, path=path)
+
     @overload
-    def expect(self):
+    def expect(self) -> None:
         ...
 
     @overload

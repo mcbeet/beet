@@ -63,6 +63,20 @@ def test_text_tricky():
     assert len(doc.data.functions) == 2
 
 
+def test_markdown_breaks():
+    doc = Document()
+    doc.directives["dummy"] = lambda fragment, _, data: data.functions.update(
+        {fragment.expect("full_name"): Function(["say dummy"])}
+    )
+    doc.add(
+        "same paragraph\n`@dummy demo:dummy`\n`@function demo:foo`\n```\nsay foo\n```\n"
+    )
+    assert doc.data.functions == {
+        "demo:dummy": Function(["say dummy"]),
+        "demo:foo": Function(["say foo"]),
+    }
+
+
 def test_missing_argument():
     with pytest.raises(
         InvalidFragment, match="Missing argument 'full_name' for directive @function."

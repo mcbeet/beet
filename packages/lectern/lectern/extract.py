@@ -12,7 +12,6 @@ import json
 import re
 from dataclasses import replace
 from itertools import islice
-from pathlib import Path
 from typing import (
     Any,
     Callable,
@@ -26,7 +25,6 @@ from typing import (
     Tuple,
     Union,
 )
-from urllib.parse import urlparse
 
 from beet import Cache, DataPack, ResourcePack
 from beet.core.utils import FileSystemPath
@@ -175,9 +173,6 @@ class Extractor:
         start_line: int,
         end_line: int,
         match: "re.Match[str]",
-        content: Optional[str] = None,
-        url: Optional[str] = None,
-        path: Optional[FileSystemPath] = None,
     ):
         """Helper for creating a fragment from a matched pattern."""
         directive, modifier, arguments = match.groups()
@@ -187,9 +182,6 @@ class Extractor:
             directive=directive,
             modifier=modifier,
             arguments=arguments.split(),
-            content=content,
-            url=url,
-            path=path,
             cache=self.cache,
         )
 
@@ -319,33 +311,21 @@ class MarkdownExtractor(Extractor):
             # ```
             #
             if (
-                (
-                    skip_to := self.match_tokens(
-                        tokens[i : i + 4],
-                        "paragraph_open",
-                        "inline",
-                        "paragraph_close",
-                        ["fence", "code_block"],
-                    )
+                skip_to := self.match_tokens(
+                    tokens[i : i + 4],
+                    "paragraph_open",
+                    "inline",
+                    "paragraph_close",
+                    ["fence", "code_block"],
                 )
-                and (inline := tokens[i + 1])
-                and inline.children
-                and self.match_tokens(inline.children, "code_inline")
-                and (
-                    match := regex.match(inline := inline.children[0].content)
-                    or (
-                        (directory := RELATIVE_PATH_REGEX.match(inline))
-                        and (
-                            directive := "@resource_pack"
-                            if directory[0] == "assets"
-                            else "@data_pack"
-                        )
-                        and regex.match(f"{directive} {inline}")
-                    )
+            ) and (
+                fragments := list(
+                    self.parse_inline(tokens[i + 1], directives, external_files)
                 )
             ):
-                yield self.create_fragment(
-                    current_line, skip_to, match, content=tokens[i + 3].content
+                yield from fragments[:-1]
+                yield replace(
+                    fragments[-1].with_content(tokens[i + 3].content), end_line=skip_to
                 )
 
             #
@@ -365,17 +345,19 @@ class MarkdownExtractor(Extractor):
                         "paragraph_close",
                     )
                 )
-                and (inline := tokens[i + 1])
-                and inline.children
-                and self.match_tokens(inline.children, "code_inline")
                 and (image := tokens[i + 4])
                 and image.children
                 and self.match_tokens(image.children, "image")
                 and (link := image.children[0].attrGet("src"))
-                and (match := regex.match(inline.children[0].content))
+                and (
+                    fragments := list(
+                        self.parse_inline(tokens[i + 1], directives, external_files)
+                    )
+                )
             ):
-                yield self.create_link_fragment(
-                    current_line, skip_to, match, link, external_files
+                yield from fragments[:-1]
+                yield replace(
+                    fragments[-1].with_link(link, external_files), end_line=skip_to
                 )
 
             #
@@ -401,15 +383,17 @@ class MarkdownExtractor(Extractor):
                         "html_block",
                     )
                 )
-                and (inline := tokens[i + 1])
-                and inline.children
-                and self.match_tokens(inline.children, "code_inline")
                 and tokens[i + 3].content == "<details>\n"
                 and tokens[i + 5].content == "</details>\n"
-                and (match := regex.match(inline.children[0].content))
+                and (
+                    fragments := list(
+                        self.parse_inline(tokens[i + 1], directives, external_files)
+                    )
+                )
             ):
-                yield self.create_fragment(
-                    current_line, skip_to, match, content=tokens[i + 4].content
+                yield from fragments[:-1]
+                yield replace(
+                    fragments[-1].with_content(tokens[i + 4].content), end_line=skip_to
                 )
 
             #
@@ -435,46 +419,21 @@ class MarkdownExtractor(Extractor):
                         "html_block",
                     )
                 )
-                and (inline := tokens[i + 1])
-                and inline.children
-                and self.match_tokens(inline.children, "code_inline")
                 and tokens[i + 3].content == "<details>\n"
                 and tokens[i + 7].content == "</details>\n"
                 and (image := tokens[i + 5])
                 and image.children
                 and self.match_tokens(image.children, "image")
                 and (link := image.children[0].attrGet("src"))
-                and (match := regex.match(inline.children[0].content))
-            ):
-                yield self.create_link_fragment(
-                    current_line, skip_to, match, link, external_files
-                )
-
-            #
-            # [`@directive args...`](path/to/content)
-            #
-            elif (
-                (
-                    skip_to := self.match_tokens(
-                        tokens[i : i + 3],
-                        "paragraph_open",
-                        "inline",
-                        "paragraph_close",
+                and (
+                    fragments := list(
+                        self.parse_inline(tokens[i + 1], directives, external_files)
                     )
                 )
-                and (inline := tokens[i + 1])
-                and inline.children
-                and self.match_tokens(
-                    inline.children,
-                    "link_open",
-                    "code_inline",
-                    "link_close",
-                )
-                and (link := inline.children[0].attrGet("href"))
-                and (match := regex.match(inline.children[1].content))
             ):
-                yield self.create_link_fragment(
-                    current_line, skip_to, match, link, external_files
+                yield from fragments[:-1]
+                yield replace(
+                    fragments[-1].with_link(link, external_files), end_line=skip_to
                 )
 
             #
@@ -495,8 +454,8 @@ class MarkdownExtractor(Extractor):
                 and (comment := self.html_comment_regex.match(token.content))
                 and (match := regex.match(comment.group(1)))
             ):
-                yield self.create_fragment(
-                    current_line, skip_to, match, content=tokens[i + 1].content
+                yield self.create_fragment(current_line, skip_to, match).with_content(
+                    tokens[i + 1].content
                 )
 
             #
@@ -521,28 +480,18 @@ class MarkdownExtractor(Extractor):
                 and (link := image.children[0].attrGet("src"))
                 and (match := regex.match(comment.group(1)))
             ):
-                yield self.create_link_fragment(
-                    current_line, skip_to, match, link, external_files
+                yield self.create_fragment(current_line, skip_to, match).with_link(
+                    link, external_files
                 )
 
             #
+            # [`@directive args...`](path/to/content)
             # `@directive args...`
             #
-            elif (
-                (
-                    skip_to := self.match_tokens(
-                        tokens[i : i + 3],
-                        "paragraph_open",
-                        "inline",
-                        "paragraph_close",
-                    )
-                )
-                and (inline := tokens[i + 1])
-                and inline.children
-                and self.match_tokens(inline.children, "code_inline")
-                and (match := regex.match(inline.children[0].content))
+            elif (skip_to := self.match_tokens([token], "inline")) and (
+                fragments := list(self.parse_inline(token, directives, external_files))
             ):
-                yield self.create_fragment(current_line, skip_to, match)
+                yield from fragments
 
             #
             # <!-- @directive args... -->
@@ -598,6 +547,58 @@ class MarkdownExtractor(Extractor):
                         end_line=(skip_to := fragment.end_line + current_line),
                     )
 
+    def parse_inline(
+        self,
+        token: Token,
+        directives: Mapping[str, Directive],
+        external_files: Optional[FileSystemPath] = None,
+    ) -> Iterator[Fragment]:
+        if token.type == "inline" and token.children and token.map:
+            regex = self.get_regex(directives)
+
+            it = iter(enumerate(token.children))
+
+            for i, child in it:
+                if (
+                    self.match_newline(token.children, i - 1)
+                    and self.match_newline(token.children, i + 1)
+                    and child.type == "code_inline"
+                ):
+                    code = child
+                elif (
+                    self.match_newline(token.children, i - 1)
+                    and self.match_newline(token.children, i + 3)
+                    and self.match_tokens(
+                        token.children[i : i + 3],
+                        "link_open",
+                        "code_inline",
+                        "link_close",
+                    )
+                ):
+                    code = token.children[i + 1]
+                    next(it)
+                    next(it)
+                else:
+                    continue
+
+                if match := (
+                    regex.match(code.content)
+                    or (
+                        (directory := RELATIVE_PATH_REGEX.match(code.content))
+                        and (
+                            directive := "@resource_pack"
+                            if directory[0] == "assets"
+                            else "@data_pack"
+                        )
+                        and regex.match(f"{directive} {code.content}")
+                    )
+                ):
+                    start_line, end_line = token.map
+                    fragment = self.create_fragment(start_line, end_line, match)
+                    if child.type == "link_open" and (link := child.attrGet("href")):
+                        fragment = fragment.with_link(link, external_files)
+                    yield fragment
+
     def match_tokens(
         self,
         tokens: Optional[List[Token]],
@@ -618,21 +619,10 @@ class MarkdownExtractor(Extractor):
             and next((token.map[-1] for token in reversed(tokens) if token.map), 1)  # type: ignore
         )
 
-    def create_link_fragment(
-        self,
-        start_line: int,
-        end_line: int,
-        match: "re.Match[str]",
-        link: Any,
-        external_files: Optional[FileSystemPath] = None,
-    ) -> Fragment:
-        """Helper for creating a fragment from a link."""
-        url = str(link)
-        path = None
-
-        if urlparse(url).path == url:
-            if external_files:
-                path = Path(external_files, url).resolve()
-            url = None
-
-        return self.create_fragment(start_line, end_line, match, url=url, path=path)
+    def match_newline(self, tokens: Optional[List[Token]], index: int) -> bool:
+        return (
+            not tokens
+            or index < 0
+            or index >= len(tokens)
+            or tokens[index].type in ("softbreak", "hardbreak")
+        )
