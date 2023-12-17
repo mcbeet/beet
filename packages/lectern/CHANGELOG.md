@@ -2,6 +2,17 @@
 
 <!--next-version-placeholder-->
 
+## v0.32.0 (2023-12-17)
+
+### Feature
+
+* Add error message when detecting badly formatted code blocks ([`025f4bb`](https://github.com/mcbeet/lectern/commit/025f4bb246b934978e9631d741df5f000654525c))
+* Allow multiple directives in a paragraph ([`d43f32e`](https://github.com/mcbeet/lectern/commit/d43f32e83e090a012075cb11d434016251f720bb))
+
+### Fix
+
+* Don't enforce argument names for directive protocol ([`a62a015`](https://github.com/mcbeet/lectern/commit/a62a015072eebe400a54482aa3c8a6bcb3418c40))
+
 ## v0.31.0 (2023-12-06)
 
 ### Feature
