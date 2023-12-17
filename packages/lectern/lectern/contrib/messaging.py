@@ -52,5 +52,9 @@ def messaging(ctx: Context, opts: MessagingOptions):
             if token.type in ["fence", "code_block"]
         ]:
             ctx.generate("default", Function("\n".join(code_blocks)))
+        elif "```" in message:
+            raise ErrorMessage(
+                "Couldn't parse code block. Make sure the triple backticks are on their own line."
+            )
         elif opts.nothing_error:
             raise ErrorMessage(opts.nothing_error)
