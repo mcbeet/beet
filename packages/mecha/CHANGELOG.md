@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.85.2 (2023-12-17)
+
+### Fix
+
+* Allow nesting for return run function ([`21f542c`](https://github.com/mcbeet/mecha/commit/21f542cbbad2ebd72572446cb29f368821ce1a91))
+
 ## v0.85.1 (2023-12-06)
 
 ### Fix
