@@ -19,6 +19,7 @@ from typing import (
     List,
     Optional,
     Protocol,
+    Sequence,
     Set,
     Tuple,
     Type,
@@ -49,6 +50,7 @@ class CompilationUnit:
     source: Optional[str] = None
     filename: Optional[str] = None
     resource_location: Optional[str] = None
+    no_index: bool = False
     pack: Optional[Union[ResourcePack, DataPack]] = None
     priority: int = 0
 
@@ -115,10 +117,11 @@ class CompilationDatabase(Container[TextFileBase[Any], CompilationUnit]):
 
         value.diagnostics.file = key
 
-        pack_index = self.indices[value.pack]
-        for index in [value.filename, value.resource_location]:
-            if index:
-                pack_index[index] = key
+        if not value.no_index:
+            pack_index = self.indices[value.pack]
+            for index in [value.filename, value.resource_location]:
+                if index:
+                    pack_index[index] = key
 
         return value
 
@@ -187,7 +190,8 @@ class CompilationUnitProvider(Protocol):
 class FileTypeCompilationUnitProvider:
     """Provide source files based on their type."""
 
-    file_types: List[Type[NamespaceFile]]
+    file_types: Sequence[Type[NamespaceFile]]
+    no_index: bool = False
 
     def __call__(
         self,
@@ -208,5 +212,6 @@ class FileTypeCompilationUnitProvider:
 
                     yield file_instance, CompilationUnit(
                         resource_location=resource_location,
+                        no_index=self.no_index,
                         pack=pack,
                     )

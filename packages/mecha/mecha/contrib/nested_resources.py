@@ -11,13 +11,14 @@ __all__ = [
 
 from dataclasses import dataclass, replace
 from textwrap import dedent
-from typing import Dict, List, Type, Union
+from typing import Any, Dict, List, Type, Union, cast
 
 from beet import (
     Context,
     DataModelBase,
     DataPack,
     Generator,
+    JsonFileBase,
     NamespaceFile,
     ResourcePack,
     TagFile,
@@ -42,11 +43,18 @@ from mecha import (
     delegate,
     rule,
 )
+from mecha.contrib.json_files import (
+    AstAppendJsonContent,
+    AstJsonContent,
+    AstMergeJsonContent,
+    AstPrependJsonContent,
+    JsonFileCompilation,
+)
 
 
 def beet_default(ctx: Context):
     ctx.require("mecha.contrib.nesting")
-    ctx.inject(NestedResources).prepare(ctx.generate)
+    ctx.inject(NestedResources).prepare(ctx.generate, ctx.inject(JsonFileCompilation))
 
 
 class NestedResources:
@@ -85,7 +93,7 @@ class NestedResources:
             if issubclass(file_type, DataModelBase)
         }
 
-    def prepare(self, generate: Generator):
+    def prepare(self, generate: Generator, json_file_compilation: JsonFileCompilation):
         text_commands = {
             name: self.create_command_tree_fragment("mecha:nested_text")
             for name in self.text_resources
@@ -137,6 +145,7 @@ class NestedResources:
                     + ["merge:"] * issubclass(file_type, DataModelBase)
                     + ["append:", "prepend:"] * issubclass(file_type, TagFile)
                 },
+                json_file_compilation=json_file_compilation,
             )
         )
 
@@ -202,6 +211,7 @@ class NestedResourcesTransformer(MutatingReducer):
     database: CompilationDatabase = required_field()
 
     nested_resource_identifiers: Dict[str, Type[NamespaceFile]] = required_field()
+    json_file_compilation: JsonFileCompilation = required_field()
 
     @rule(AstRoot)
     def nested_resources(self, node: AstRoot):
@@ -216,6 +226,71 @@ class NestedResourcesTransformer(MutatingReducer):
                     content, (AstJson, AstNestedText)
                 ):
                     full_name = name.get_canonical_value()
+
+                    if isinstance(content, AstJson) and (
+                        cast(Type[JsonFileBase[Any]], file_type)
+                        in self.json_file_compilation.file_types
+                    ):
+                        if command.identifier.startswith("merge:"):
+                            content_type = AstMergeJsonContent
+                        elif command.identifier.startswith("append:"):
+                            content_type = AstAppendJsonContent
+                        elif command.identifier.startswith("prepend:"):
+                            content_type = AstPrependJsonContent
+                        else:
+                            content_type = AstJsonContent
+
+                        root = content_type.create_root_node(content)
+
+                        file_instance = file_type(
+                            original=self.database.current.original
+                        )
+                        target = cast(
+                            JsonFileBase[Any],
+                            self.generate(full_name, default=file_instance),
+                        )
+
+                        compilation_unit = self.database.get(target)
+                        if not compilation_unit:
+                            compilation_unit = replace(
+                                self.database[self.database.current],
+                                ast=(
+                                    root
+                                    if target is file_instance
+                                    else AstJsonContent.create_root_node(
+                                        AstJson.from_value(target.data)
+                                    )
+                                ),
+                                resource_location=full_name,
+                                no_index=True,
+                            )
+                            self.database[target] = compilation_unit
+                            self.database.enqueue(target, self.database.step + 1)
+
+                        if compilation_unit.ast:
+                            if content_type is AstJsonContent:
+                                for command in compilation_unit.ast.commands:
+                                    if isinstance(command, AstJsonContent):
+                                        if command != root.commands[0]:
+                                            d = Diagnostic(
+                                                level="error",
+                                                message=f'Redefinition of {snake_case(file_type.__name__)} "{full_name}" doesn\'t match existing file.',
+                                            )
+                                            yield set_location(d, name)
+                                        break
+                            else:
+                                compilation_unit.ast = replace(
+                                    compilation_unit.ast,
+                                    commands=AstChildren(
+                                        compilation_unit.ast.commands + root.commands
+                                    ),
+                                )
+                        else:
+                            compilation_unit.ast = root
+
+                        changed = True
+                        continue
+
                     file_instance = file_type(
                         content.evaluate()
                         if isinstance(content, AstJson)
@@ -223,14 +298,12 @@ class NestedResourcesTransformer(MutatingReducer):
                         original=self.database.current.original,
                     )
 
-                    if command.identifier.startswith("merge:"):
-                        self.generate(full_name, merge=file_instance)
-                        changed = True
-                        continue
-
                     target = self.generate(full_name, default=file_instance)
                     if target is not file_instance:
-                        if command.identifier.startswith("append:"):
+                        if command.identifier.startswith("merge:"):
+                            if not target.merge(file_instance):
+                                target.set_content(file_instance.get_content())
+                        elif command.identifier.startswith("append:"):
                             target.append(file_instance)  # type: ignore
                         elif command.identifier.startswith("prepend:"):
                             target.prepend(file_instance)  # type: ignore

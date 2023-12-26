@@ -346,8 +346,12 @@ class Dispatcher(Generic[T]):
             tb = exc.__traceback__ and exc.__traceback__.tb_next
             raise CompilationError(msg) from exc.with_traceback(tb)
 
+    def filter(self, node: AbstractNode) -> bool:
+        """Determine if the dispatcher should apply rules for the given root node."""
+        return True
+
     def __call__(self, node: AbstractNode, *args: Any, **kwargs: Any) -> T:
-        if not self.count:
+        if not self.filter(node) or not self.count:
             return node  # type: ignore
         self.stack.clear()
         result = self.invoke(node, *args, **kwargs)
