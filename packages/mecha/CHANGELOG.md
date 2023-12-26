@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.86.0 (2023-12-26)
+
+### Feature
+
+* Add mecha.contrib.json_files ([`3fe1cae`](https://github.com/mcbeet/mecha/commit/3fe1caea587b81c87ad8034c975a0766938a8256))
+
 ## v0.85.2 (2023-12-17)
 
 ### Fix
