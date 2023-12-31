@@ -1,0 +1,8 @@
+name = demo:foo
+
+{
+  "values": [name]
+}
+
+function name:
+    say hello

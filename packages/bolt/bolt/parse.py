@@ -629,7 +629,7 @@ class ToplevelHandler:
 
         self.macro_handler.cache_local_spec(stream)
 
-        if isinstance(node, AstRoot) and not isinstance(current, Function):
+        if type(node) is AstRoot and not isinstance(current, Function):
             node = set_location(AstNonFunctionRoot(commands=node.commands), node)
 
         return node
