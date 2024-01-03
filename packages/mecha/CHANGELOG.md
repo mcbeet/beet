@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.86.1 (2024-01-03)
+
+### Fix
+
+* Missing stack pop in dispatch ([`ffb5a8e`](https://github.com/mcbeet/mecha/commit/ffb5a8e8773d30987459bc79524c0b73bcbd7dbc))
+
 ## v0.86.0 (2023-12-26)
 
 ### Feature
