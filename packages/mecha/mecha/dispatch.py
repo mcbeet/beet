@@ -418,6 +418,7 @@ class MutatingReducer(Dispatcher[Any]):
                         node = result
                         break
                     elif result is None or isinstance(result, AbstractChildren):
+                        self.stack.pop()
                         return result  # type: ignore
                     else:
                         msg = f"Invalid node of type {type(result)}."
