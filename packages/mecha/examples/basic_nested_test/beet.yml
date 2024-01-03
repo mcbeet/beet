@@ -1,0 +1,10 @@
+require:
+  - mecha.contrib.nesting
+  - mecha.contrib.nested_location
+  - mecha.contrib.implicit_execute
+  - demo
+data_pack:
+  load: "src"
+pipeline:
+  - mecha
+  - demo.convert_tests
