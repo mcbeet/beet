@@ -62,7 +62,6 @@ def beet_default(ctx: Context):
     mc.spec.parsers["root"] = TestRootParser(mc.database, mc.spec.parsers["root"])
     mc.transform.extend(
         NestedTestTransformer(
-            transform=mc.transform,
             database=mc.database,
             generate=ctx.generate,
             nested_location_resolver=ctx.inject(NestedLocationResolver),
@@ -102,7 +101,6 @@ class TestRootParser:
 class NestedTestTransformer(MutatingReducer):
     """Emit actual test files from nested test definitions."""
 
-    transform: object = required_field()
     database: CompilationDatabase = required_field()
     generate: Generator = required_field()
     nested_location_resolver: NestedLocationResolver = required_field()
