@@ -67,7 +67,7 @@ def load_languages(
     prefix: str = "",
 ) -> Dict[str, Language]:
     """Return a dictionnary mapping each column to a language file."""
-    with open(path, newline="") as csv_file:
+    with open(path, encoding="utf-8", newline="") as csv_file:
         if not dialect:
             dialect = Sniffer().sniff(csv_file.read(1024))
             csv_file.seek(0)
