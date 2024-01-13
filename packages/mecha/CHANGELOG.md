@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.86.2 (2024-01-13)
+
+### Fix
+
+* Scientific notation without period should convert to float ([`5bc14d3`](https://github.com/mcbeet/mecha/commit/5bc14d35236951bbf9975416492138e48faa6ec8))
+
 ## v0.86.1 (2024-01-03)
 
 ### Fix
