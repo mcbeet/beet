@@ -2,6 +2,16 @@
 
 <!--next-version-placeholder-->
 
+## v0.102.0 (2024-01-13)
+
+### Feature
+
+* Add unicode_escape option to babelbox ([`bed6a0e`](https://github.com/mcbeet/beet/commit/bed6a0eab43d5a96e0aa4821a7cea5a37c0926f9))
+
+### Fix
+
+* Force utf-8 for babelbox ([`cb69414`](https://github.com/mcbeet/beet/commit/cb694145c16f66aa7b18f4a68220ccdac293021c))
+
 ## v0.101.0 (2024-01-13)
 
 ### Feature
