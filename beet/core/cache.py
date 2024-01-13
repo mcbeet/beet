@@ -15,8 +15,8 @@ from contextlib import closing, contextmanager
 from datetime import datetime, timedelta
 from pathlib import Path
 from textwrap import indent
-from typing import Any, BinaryIO, ClassVar, Optional, Set, Type, TypeVar
-from urllib.request import urlopen
+from typing import Any, BinaryIO, ClassVar, Mapping, Optional, Set, Type, TypeVar, Union
+from urllib.request import Request, urlopen
 
 from .container import Container, MatchMixin, Pin
 from .utils import (
@@ -128,11 +128,26 @@ class Cache:
             finally:
                 self.download_manager = previous_manager
 
-    def download(self, url: str, path: Optional[FileSystemPath] = None) -> Path:
+    def download(
+        self,
+        arg: Union[str, Request],
+        path: Optional[FileSystemPath] = None,
+        *,
+        headers: Mapping[str, str] = {},
+    ) -> Path:
         """Download and cache a given url."""
+        if headers:
+            if not isinstance(arg, Request):
+                arg = Request(arg)
+            for key, value in headers.items():
+                arg.add_header(key, value)
+
         if not path:
-            path = self.get_path(url)
-        return self.download_manager.download(url, path)
+            path = self.get_path(
+                arg.get_full_url() if isinstance(arg, Request) else arg
+            )
+
+        return self.download_manager.download(arg, path)
 
     def has_changed(self, *filenames: Optional[FileSystemPath]) -> bool:
         """Return whether any of the given files changed since the last check."""
@@ -359,20 +374,21 @@ class DownloadManager:
         with ThreadPoolExecutor(max_workers) as executor:
             yield cls(executor)
 
-    def download(self, url: str, path: FileSystemPath) -> Path:
+    def download(self, arg: Union[str, Request], path: FileSystemPath) -> Path:
         """Download and cache a given url."""
         path = Path(path)
 
         if not path.is_file():
             fileobj = path.open("wb")
             if self.executor:
-                self.executor.submit(self.retrieve, url, fileobj)
+                self.executor.submit(self.retrieve, arg, fileobj)
             else:
-                self.retrieve(url, fileobj)
+                self.retrieve(arg, fileobj)
 
         return path
 
-    def retrieve(self, url: str, fileobj: BinaryIO):
+    def retrieve(self, arg: Union[str, Request], fileobj: BinaryIO):
         """Retrieve file from url."""
-        with log_time('Download "%s".', url), closing(fileobj), urlopen(url) as f:
+        url = arg.get_full_url() if isinstance(arg, Request) else arg
+        with log_time('Download "%s".', url), closing(fileobj), urlopen(arg) as f:
             fileobj.write(f.read())
