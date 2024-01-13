@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.103.1 (2024-01-13)
+
+### Fix
+
+* Babelbox unicode_escape should first encode with raw_unicode_escape not utf-8 ([`1f1dc87`](https://github.com/mcbeet/beet/commit/1f1dc870a0214c71b873bdac0010607b2c8e04c1))
+
 ## v0.103.0 (2024-01-13)
 
 ### Feature
