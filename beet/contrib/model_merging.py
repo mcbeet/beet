@@ -2,32 +2,63 @@
 
 
 __all__ = [
+    "ModelMergingOptions",
+    "ModelOverridesMergePolicy",
     "model_merging",
     "merge_model_overrides",
 ]
 
 
 from copy import deepcopy
-from typing import Dict, List, Tuple, Union
+from dataclasses import dataclass
+from typing import Dict, Sequence, Tuple, Union
 
-from beet import Context, Model, ResourcePack
+from beet import Context, Model, PluginOptions, ResourcePack
 from beet.core.utils import JsonDict
+
+
+class ModelMergingOptions(PluginOptions):
+    predicate_order: Sequence[str] = ()
 
 
 def beet_default(ctx: Context):
     ctx.require(model_merging)
 
 
-def model_merging(ctx: Union[Context, ResourcePack]):
-    pack = ctx.assets if isinstance(ctx, Context) else ctx
-    pack.merge_policy.extend_namespace(Model, merge_model_overrides)
+def model_merging(
+    arg: Union[Context, ResourcePack],
+    *,
+    predicate_order: Sequence[str] = (),
+):
+    if isinstance(arg, Context):
+        pack = arg.assets
+        opts = arg.validate("model_merging", ModelMergingOptions)
+        if not predicate_order:
+            predicate_order = opts.predicate_order
+    else:
+        pack = arg
+
+    pack.merge_policy.extend_namespace(
+        Model, ModelOverridesMergePolicy(predicate_order)
+    )
+
+
+@dataclass
+class ModelOverridesMergePolicy:
+    predicate_order: Sequence[str] = ()
+
+    def __call__(
+        self,
+        pack: ResourcePack,
+        path: str,
+        current: Model,
+        conflict: Model,
+    ) -> bool:
+        return merge_model_overrides(current, conflict, self.predicate_order)
 
 
 def merge_model_overrides(
-    pack: ResourcePack,
-    path: str,
-    current: Model,
-    conflict: Model,
+    current: Model, conflict: Model, predicate_order: Sequence[str] = ()
 ) -> bool:
     merged = deepcopy(conflict.data)
 
@@ -35,7 +66,7 @@ def merge_model_overrides(
     other_overrides = merged.pop("overrides", [])
     concatenated_overrides = overrides + other_overrides
 
-    predicate_cases: List[str] = []
+    predicate_cases = list(predicate_order)
     for override in concatenated_overrides:
         for predicate in override.get("predicate", {}):
             if predicate not in predicate_cases:

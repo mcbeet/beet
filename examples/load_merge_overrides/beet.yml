@@ -2,6 +2,20 @@ require:
   - beet.contrib.model_merging
 resource_pack:
   load:
+    - assets/minecraft/models/item/elytra.json: elytra1.json
+    - assets/minecraft/models/item/elytra.json: elytra2.json
     - assets/minecraft/models/item/furnace.json: furnace1.json
     - assets/minecraft/models/item/furnace.json: furnace2.json
     - assets/minecraft/models/item/furnace.json: furnace3.json
+pipeline:
+  - require:
+      - beet.contrib.model_merging
+    resource_pack:
+      load:
+        - assets/minecraft/models/item/elytra_custom_predicate_order.json: elytra1.json
+        - assets/minecraft/models/item/elytra_custom_predicate_order.json: elytra2.json
+    meta:
+      model_merging:
+        predicate_order:
+          - custom_model_data
+          - broken

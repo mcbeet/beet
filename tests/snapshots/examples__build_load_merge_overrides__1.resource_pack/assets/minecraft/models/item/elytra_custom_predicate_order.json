@@ -1,0 +1,40 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "item/elytra"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "broken": 1
+      },
+      "model": "minecraft:item/broken_elytra"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3420113
+      },
+      "model": "gm4_metallurgy:shamir/moneo/elytra"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3420113,
+        "broken": 1
+      },
+      "model": "gm4_metallurgy:shamir/moneo/broken_elytra"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3420124
+      },
+      "model": "gm4_animi_shamir:shamir/animi/elytra"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3420124,
+        "broken": 1
+      },
+      "model": "gm4_animi_shamir:shamir/animi/broken_elytra"
+    }
+  ]
+}
