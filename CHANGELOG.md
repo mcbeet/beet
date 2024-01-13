@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.101.0 (2024-01-13)
+
+### Feature
+
+* Provide custom Request object and headers to cache.download() ([`36995ee`](https://github.com/mcbeet/beet/commit/36995eeae90bec93cc6d6d066fcf0fcc9b75b69d))
+
 ## v0.100.0 (2023-12-06)
 
 ### Feature
