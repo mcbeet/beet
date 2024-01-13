@@ -39,6 +39,7 @@ class BabelboxOptions(PluginOptions):
     dialect: Optional[str] = None
     namespace: str = "minecraft"
     filename_prefix: bool = False
+    unicode_escape: bool = False
 
 
 def beet_default(ctx: Context):
@@ -57,6 +58,7 @@ def babelbox(ctx: Context, opts: BabelboxOptions):
                     path=path,
                     dialect=opts.dialect,
                     prefix=Path(path).stem + "." if opts.filename_prefix else "",
+                    unicode_escape=opts.unicode_escape,
                 )
             )
 
@@ -65,6 +67,7 @@ def load_languages(
     path: FileSystemPath,
     dialect: Optional[DialectLike] = None,
     prefix: str = "",
+    unicode_escape: bool = False,
 ) -> Dict[str, Language]:
     """Return a dictionnary mapping each column to a language file."""
     with open(path, encoding="utf-8", newline="") as csv_file:
@@ -85,6 +88,8 @@ def load_languages(
 
             for code in language_codes:
                 if value := row[code]:
+                    if unicode_escape:
+                        value = value.encode("utf-8").decode("unicode_escape")
                     languages[code].data[identifier] = value
                 else:
                     logger.warning(

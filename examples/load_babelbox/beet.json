@@ -25,6 +25,15 @@
           "namespace": "demo"
         }
       }
+    },
+    {
+      "pipeline": ["beet.contrib.babelbox"],
+      "meta": {
+        "babelbox": {
+          "load": ["unicode_escape.csv"],
+          "unicode_escape": true
+        }
+      }
     }
   ]
 }
