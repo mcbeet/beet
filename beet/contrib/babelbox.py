@@ -89,7 +89,9 @@ def load_languages(
             for code in language_codes:
                 if value := row[code]:
                     if unicode_escape:
-                        value = value.encode("utf-8").decode("unicode_escape")
+                        value = value.encode("raw_unicode_escape").decode(
+                            "unicode_escape"
+                        )
                     languages[code].data[identifier] = value
                 else:
                     logger.warning(

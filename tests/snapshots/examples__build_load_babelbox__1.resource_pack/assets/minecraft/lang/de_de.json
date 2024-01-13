@@ -3,5 +3,6 @@
   "other.prefix.bar": "u3",
   "other.prefix.baz": "v3",
   "foo.hello": "3",
-  "foo.world": "6"
+  "foo.world": "6",
+  "test": "W\u00fcrde eine ziemlich merkw\u00fcrde"
 }
