@@ -38,7 +38,7 @@ def normalize_whitespace(op: str) -> str:
 
 def string_to_number(string: str) -> Union[int, float]:
     """Helper for converting numbers to string and keeping their original type."""
-    return float(string) if "." in string else int(string)
+    return float(string) if "." in string or "e" in string else int(string)
 
 
 def number_to_string(number: Union[int, float]) -> str:
