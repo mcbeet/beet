@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.103.0 (2024-01-13)
+
+### Feature
+
+* Make it possible to specify predicate order explicitly when merging model overrides ([`4eb346d`](https://github.com/mcbeet/beet/commit/4eb346d9efb242b5fa9c6dc1b326ded4c042e440))
+
 ## v0.102.0 (2024-01-13)
 
 ### Feature
