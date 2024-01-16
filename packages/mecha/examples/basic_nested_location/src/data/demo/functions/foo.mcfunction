@@ -33,3 +33,5 @@ function ~/../upthis:
 
     append function ~/thing:
         function #~/ddd
+
+execute if function ~/condition run function ~/action

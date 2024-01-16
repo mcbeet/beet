@@ -152,6 +152,8 @@ class NestedLocationResolver:
                 if (
                     node
                     and node.parser == "minecraft:function"
+                    and (tail := self.spec.tree.get(*command.identifier.split(":")))
+                    and tail.redirect != ("execute",)
                     and isinstance(argument_node, AstResourceLocation)
                 ):
                     if argument_node is not last:

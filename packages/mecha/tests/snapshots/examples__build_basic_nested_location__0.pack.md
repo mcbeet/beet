@@ -21,6 +21,7 @@
 function demo:foo
 function demo:foo/thing
 function demo:thing
+execute if function demo:foo/condition run function demo:foo/action
 ```
 
 `@function demo:bar/thing`
