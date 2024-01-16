@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.86.3 (2024-01-16)
+
+### Fix
+
+* Don't nest location when the subcommand redirects to execute ([`adcaf9c`](https://github.com/mcbeet/mecha/commit/adcaf9c4802928d3f403781d72fcb5f13ae10ca1))
+
 ## v0.86.2 (2024-01-13)
 
 ### Fix
