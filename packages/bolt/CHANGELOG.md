@@ -2,6 +2,13 @@
 
 <!--next-version-placeholder-->
 
+## v0.44.1 (2024-01-17)
+
+### Fix
+
+* Share walk_location_hierarchy with mecha ([`973f3c1`](https://github.com/mcbeet/bolt/commit/973f3c136ce3d7cf0a27c0c3e98a54fb69b82c9f))
+* Compat with mecha.contrib.json_files when it comes before bolt ([`430d488`](https://github.com/mcbeet/bolt/commit/430d4881812237ff797fe7d4499a008a9c65cb3c))
+
 ## v0.44.0 (2023-12-07)
 
 ### Feature
