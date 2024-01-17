@@ -52,10 +52,10 @@ def f():
                           location: SourceLocation(pos=37, lineno=3, colno=16)
                           end_location: SourceLocation(pos=40, lineno=3, colno=19)
                           value: 'foo'
-            <class 'mecha.ast.AstCommand'>
+            <class 'bolt.ast.AstStatement'>
               location: SourceLocation(pos=45, lineno=4, colno=5)
               end_location: SourceLocation(pos=52, lineno=4, colno=12)
-              identifier: 'statement'
+              identifier: 'mecha:sentinel'
               arguments:
                 <class 'bolt.ast.AstAssignment'>
                   location: SourceLocation(pos=45, lineno=4, colno=5)

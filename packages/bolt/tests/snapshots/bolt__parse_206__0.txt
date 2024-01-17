@@ -6,10 +6,10 @@ give @s stone{CanPlaceOn: [*stone_can_place_on], **custom_model_data}
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=150, lineno=3, colno=70)
   commands:
-    <class 'mecha.ast.AstCommand'>
+    <class 'bolt.ast.AstStatement'>
       location: SourceLocation(pos=0, lineno=1, colno=1)
       end_location: SourceLocation(pos=40, lineno=1, colno=41)
-      identifier: 'statement'
+      identifier: 'mecha:sentinel'
       arguments:
         <class 'bolt.ast.AstAssignment'>
           location: SourceLocation(pos=0, lineno=1, colno=1)
@@ -40,10 +40,10 @@ give @s stone{CanPlaceOn: [*stone_can_place_on], **custom_model_data}
                       end_location: SourceLocation(pos=39, lineno=1, colno=40)
                       value: 7
           type_annotation: None
-    <class 'mecha.ast.AstCommand'>
+    <class 'bolt.ast.AstStatement'>
       location: SourceLocation(pos=41, lineno=2, colno=1)
       end_location: SourceLocation(pos=80, lineno=2, colno=40)
-      identifier: 'statement'
+      identifier: 'mecha:sentinel'
       arguments:
         <class 'bolt.ast.AstAssignment'>
           location: SourceLocation(pos=41, lineno=2, colno=1)

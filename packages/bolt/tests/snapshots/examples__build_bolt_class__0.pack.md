@@ -30,6 +30,8 @@ say b
 say a
 say a
 say b
+say PreviouslyNotPossible(text='no', data='conflict')
+setblock 0 0 0 air
 ```
 
 `@function demo:pydantic`

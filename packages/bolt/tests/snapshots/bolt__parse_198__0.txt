@@ -5,10 +5,10 @@ function #tag_name
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=38, lineno=3, colno=1)
   commands:
-    <class 'mecha.ast.AstCommand'>
+    <class 'bolt.ast.AstStatement'>
       location: SourceLocation(pos=0, lineno=1, colno=1)
       end_location: SourceLocation(pos=18, lineno=1, colno=19)
-      identifier: 'statement'
+      identifier: 'mecha:sentinel'
       arguments:
         <class 'bolt.ast.AstAssignment'>
           location: SourceLocation(pos=0, lineno=1, colno=1)

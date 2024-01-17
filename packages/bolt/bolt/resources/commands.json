@@ -1,11 +1,6 @@
 {
   "type": "root",
   "children": {
-    "statement": {
-      "type": "argument",
-      "parser": "bolt:statement",
-      "executable": true
-    },
     "def": {
       "type": "literal",
       "children": {

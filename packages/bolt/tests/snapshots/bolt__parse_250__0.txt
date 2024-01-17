@@ -27,10 +27,10 @@ Foo()
               identifier: 'pass'
               arguments:
                 <empty>
-    <class 'mecha.ast.AstCommand'>
+    <class 'bolt.ast.AstStatement'>
       location: SourceLocation(pos=20, lineno=3, colno=1)
       end_location: SourceLocation(pos=25, lineno=3, colno=6)
-      identifier: 'statement'
+      identifier: 'mecha:sentinel'
       arguments:
         <class 'bolt.ast.AstCall'>
           location: SourceLocation(pos=20, lineno=3, colno=1)

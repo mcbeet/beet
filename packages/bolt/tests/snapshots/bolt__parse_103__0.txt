@@ -12,10 +12,10 @@ as @a at @s if block ~ ~-1 ~ #wool give @s stone{
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=210, lineno=9, colno=2)
   commands:
-    <class 'mecha.ast.AstCommand'>
+    <class 'bolt.ast.AstStatement'>
       location: SourceLocation(pos=0, lineno=1, colno=1)
       end_location: SourceLocation(pos=41, lineno=1, colno=42)
-      identifier: 'statement'
+      identifier: 'mecha:sentinel'
       arguments:
         <class 'bolt.ast.AstAssignment'>
           location: SourceLocation(pos=0, lineno=1, colno=1)

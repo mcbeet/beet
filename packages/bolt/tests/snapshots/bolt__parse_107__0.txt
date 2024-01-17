@@ -5,10 +5,10 @@ f"hello {foo!r}"
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=31, lineno=3, colno=1)
   commands:
-    <class 'mecha.ast.AstCommand'>
+    <class 'bolt.ast.AstStatement'>
       location: SourceLocation(pos=0, lineno=1, colno=1)
       end_location: SourceLocation(pos=13, lineno=1, colno=14)
-      identifier: 'statement'
+      identifier: 'mecha:sentinel'
       arguments:
         <class 'bolt.ast.AstAssignment'>
           location: SourceLocation(pos=0, lineno=1, colno=1)
@@ -26,10 +26,10 @@ f"hello {foo!r}"
               end_location: SourceLocation(pos=13, lineno=1, colno=14)
               value: 'world'
           type_annotation: None
-    <class 'mecha.ast.AstCommand'>
+    <class 'bolt.ast.AstStatement'>
       location: SourceLocation(pos=14, lineno=2, colno=1)
       end_location: SourceLocation(pos=30, lineno=2, colno=17)
-      identifier: 'statement'
+      identifier: 'mecha:sentinel'
       arguments:
         <class 'bolt.ast.AstFormatString'>
           location: SourceLocation(pos=14, lineno=2, colno=1)

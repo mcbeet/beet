@@ -37,10 +37,10 @@ foo()
                       location: SourceLocation(pos=19, lineno=2, colno=9)
                       end_location: SourceLocation(pos=24, lineno=2, colno=14)
                       value: 'hello'
-    <class 'mecha.ast.AstCommand'>
+    <class 'bolt.ast.AstStatement'>
       location: SourceLocation(pos=25, lineno=3, colno=1)
       end_location: SourceLocation(pos=30, lineno=3, colno=6)
-      identifier: 'statement'
+      identifier: 'mecha:sentinel'
       arguments:
         <class 'bolt.ast.AstCall'>
           location: SourceLocation(pos=25, lineno=3, colno=1)

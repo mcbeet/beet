@@ -7,10 +7,10 @@ foo = (
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=32, lineno=5, colno=1)
   commands:
-    <class 'mecha.ast.AstCommand'>
+    <class 'bolt.ast.AstStatement'>
       location: SourceLocation(pos=0, lineno=1, colno=1)
       end_location: SourceLocation(pos=29, lineno=3, colno=12)
-      identifier: 'statement'
+      identifier: 'mecha:sentinel'
       arguments:
         <class 'bolt.ast.AstAssignment'>
           location: SourceLocation(pos=0, lineno=1, colno=1)

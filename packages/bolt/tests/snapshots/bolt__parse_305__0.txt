@@ -1,7 +1,7 @@
-#>ERROR  Can't use statement as a subcommand.
+#>ERROR  Expected literal 'advancement', literal 'align', literal 'anchored', literal 'append', literal 'as', literal 'at' or 162 other tokens but got literal 'foo'.
 # line 1, column 11
 #      1 |  as @a run foo = "bar"
-#        :            ^^^^^^^^^^^
+#        :            ^^^
 #      2 |  say foo
 as @a run foo = "bar"
 say foo

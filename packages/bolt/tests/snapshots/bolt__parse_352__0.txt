@@ -1,6 +1,6 @@
 macro hello thing=subcommand:
     pass
-#>ERROR  Can't use statement as a subcommand.
+#>ERROR  Expected assignment, literal 'advancement', literal 'align', literal 'anchored', literal 'append', literal 'as' or 164 other tokens but got literal 'print(123)'.
 # line 3, column 7
 #      2 |      pass
 #      3 |  hello print(123)

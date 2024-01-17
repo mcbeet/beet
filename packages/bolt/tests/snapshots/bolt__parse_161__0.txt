@@ -6,10 +6,10 @@ d[1][2] = "foo"
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=33, lineno=4, colno=1)
   commands:
-    <class 'mecha.ast.AstCommand'>
+    <class 'bolt.ast.AstStatement'>
       location: SourceLocation(pos=0, lineno=1, colno=1)
       end_location: SourceLocation(pos=6, lineno=1, colno=7)
-      identifier: 'statement'
+      identifier: 'mecha:sentinel'
       arguments:
         <class 'bolt.ast.AstAssignment'>
           location: SourceLocation(pos=0, lineno=1, colno=1)
@@ -28,10 +28,10 @@ d[1][2] = "foo"
               items:
                 <empty>
           type_annotation: None
-    <class 'mecha.ast.AstCommand'>
+    <class 'bolt.ast.AstStatement'>
       location: SourceLocation(pos=7, lineno=2, colno=1)
       end_location: SourceLocation(pos=16, lineno=2, colno=10)
-      identifier: 'statement'
+      identifier: 'mecha:sentinel'
       arguments:
         <class 'bolt.ast.AstAssignment'>
           location: SourceLocation(pos=7, lineno=2, colno=1)
@@ -58,10 +58,10 @@ d[1][2] = "foo"
               items:
                 <empty>
           type_annotation: None
-    <class 'mecha.ast.AstCommand'>
+    <class 'bolt.ast.AstStatement'>
       location: SourceLocation(pos=17, lineno=3, colno=1)
       end_location: SourceLocation(pos=32, lineno=3, colno=16)
-      identifier: 'statement'
+      identifier: 'mecha:sentinel'
       arguments:
         <class 'bolt.ast.AstAssignment'>
           location: SourceLocation(pos=17, lineno=3, colno=1)

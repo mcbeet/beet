@@ -162,10 +162,10 @@ _bolt_refs[10]
   commands:
     <class 'mecha.ast.AstCommand'>
     <class 'mecha.ast.AstCommand'>
-    <class 'mecha.ast.AstCommand'>
-    <class 'mecha.ast.AstCommand'>
-    <class 'mecha.ast.AstCommand'>
-    <class 'mecha.ast.AstCommand'>
-    <class 'mecha.ast.AstCommand'>
-    <class 'mecha.ast.AstCommand'>
-    <class 'mecha.ast.AstCommand'>
+    <class 'bolt.ast.AstStatement'>
+    <class 'bolt.ast.AstStatement'>
+    <class 'bolt.ast.AstStatement'>
+    <class 'bolt.ast.AstStatement'>
+    <class 'bolt.ast.AstStatement'>
+    <class 'bolt.ast.AstStatement'>
+    <class 'bolt.ast.AstStatement'>

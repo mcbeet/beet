@@ -21,10 +21,10 @@ class A:
           location: SourceLocation(pos=13, lineno=2, colno=5)
           end_location: SourceLocation(pos=44, lineno=3, colno=23)
           commands:
-            <class 'mecha.ast.AstCommand'>
+            <class 'bolt.ast.AstStatement'>
               location: SourceLocation(pos=13, lineno=2, colno=5)
               end_location: SourceLocation(pos=21, lineno=2, colno=13)
-              identifier: 'statement'
+              identifier: 'mecha:sentinel'
               arguments:
                 <class 'bolt.ast.AstTypeDeclaration'>
                   location: SourceLocation(pos=13, lineno=2, colno=5)
@@ -40,10 +40,10 @@ class A:
                       location: SourceLocation(pos=18, lineno=2, colno=10)
                       end_location: SourceLocation(pos=21, lineno=2, colno=13)
                       value: 'int'
-            <class 'mecha.ast.AstCommand'>
+            <class 'bolt.ast.AstStatement'>
               location: SourceLocation(pos=26, lineno=3, colno=5)
               end_location: SourceLocation(pos=44, lineno=3, colno=23)
-              identifier: 'statement'
+              identifier: 'mecha:sentinel'
               arguments:
                 <class 'bolt.ast.AstAssignment'>
                   location: SourceLocation(pos=26, lineno=3, colno=5)

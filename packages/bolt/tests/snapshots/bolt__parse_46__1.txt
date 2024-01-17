@@ -37,7 +37,7 @@ _bolt_refs[1]
   location: SourceLocation(pos=32, lineno=2, colno=5)
   end_location: SourceLocation(pos=107, lineno=5, colno=26)
   commands:
-    <class 'mecha.ast.AstCommand'>
+    <class 'bolt.ast.AstStatement'>
     <class 'mecha.ast.AstCommand'>
 _bolt_refs[2]
 <class 'mecha.ast.AstCommand'>

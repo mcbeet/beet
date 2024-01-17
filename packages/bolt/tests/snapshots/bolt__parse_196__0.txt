@@ -45,10 +45,10 @@ def foo(value):
                   location: SourceLocation(pos=38, lineno=3, colno=9)
                   end_location: SourceLocation(pos=48, lineno=3, colno=19)
                   commands:
-                    <class 'mecha.ast.AstCommand'>
+                    <class 'bolt.ast.AstStatement'>
                       location: SourceLocation(pos=38, lineno=3, colno=9)
                       end_location: SourceLocation(pos=48, lineno=3, colno=19)
-                      identifier: 'statement'
+                      identifier: 'mecha:sentinel'
                       arguments:
                         <class 'bolt.ast.AstAssignment'>
                           location: SourceLocation(pos=38, lineno=3, colno=9)
@@ -75,10 +75,10 @@ def foo(value):
                   location: SourceLocation(pos=67, lineno=5, colno=9)
                   end_location: SourceLocation(pos=77, lineno=5, colno=19)
                   commands:
-                    <class 'mecha.ast.AstCommand'>
+                    <class 'bolt.ast.AstStatement'>
                       location: SourceLocation(pos=67, lineno=5, colno=9)
                       end_location: SourceLocation(pos=77, lineno=5, colno=19)
-                      identifier: 'statement'
+                      identifier: 'mecha:sentinel'
                       arguments:
                         <class 'bolt.ast.AstAssignment'>
                           location: SourceLocation(pos=67, lineno=5, colno=9)

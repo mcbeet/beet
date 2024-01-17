@@ -9,10 +9,10 @@ memo a, b:
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=65, lineno=7, colno=1)
   commands:
-    <class 'mecha.ast.AstCommand'>
+    <class 'bolt.ast.AstStatement'>
       location: SourceLocation(pos=0, lineno=1, colno=1)
       end_location: SourceLocation(pos=5, lineno=1, colno=6)
-      identifier: 'statement'
+      identifier: 'mecha:sentinel'
       arguments:
         <class 'bolt.ast.AstAssignment'>
           location: SourceLocation(pos=0, lineno=1, colno=1)
@@ -30,10 +30,10 @@ memo a, b:
               end_location: SourceLocation(pos=5, lineno=1, colno=6)
               value: 1
           type_annotation: None
-    <class 'mecha.ast.AstCommand'>
+    <class 'bolt.ast.AstStatement'>
       location: SourceLocation(pos=6, lineno=2, colno=1)
       end_location: SourceLocation(pos=11, lineno=2, colno=6)
-      identifier: 'statement'
+      identifier: 'mecha:sentinel'
       arguments:
         <class 'bolt.ast.AstAssignment'>
           location: SourceLocation(pos=6, lineno=2, colno=1)

@@ -43,10 +43,10 @@ def foo():
                   location: SourceLocation(pos=34, lineno=3, colno=9)
                   end_location: SourceLocation(pos=39, lineno=3, colno=14)
                   commands:
-                    <class 'mecha.ast.AstCommand'>
+                    <class 'bolt.ast.AstStatement'>
                       location: SourceLocation(pos=34, lineno=3, colno=9)
                       end_location: SourceLocation(pos=39, lineno=3, colno=14)
-                      identifier: 'statement'
+                      identifier: 'mecha:sentinel'
                       arguments:
                         <class 'bolt.ast.AstCall'>
                           location: SourceLocation(pos=34, lineno=3, colno=9)
@@ -58,10 +58,10 @@ def foo():
                               value: 'foo'
                           arguments:
                             <empty>
-            <class 'mecha.ast.AstCommand'>
+            <class 'bolt.ast.AstStatement'>
               location: SourceLocation(pos=44, lineno=4, colno=5)
               end_location: SourceLocation(pos=49, lineno=4, colno=10)
-              identifier: 'statement'
+              identifier: 'mecha:sentinel'
               arguments:
                 <class 'bolt.ast.AstCall'>
                   location: SourceLocation(pos=44, lineno=4, colno=5)

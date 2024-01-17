@@ -5,10 +5,10 @@ if data storage some:path/to/storage f'some.{mykey}.path{{my: "compound"}}' run 
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=100, lineno=2, colno=87)
   commands:
-    <class 'mecha.ast.AstCommand'>
+    <class 'bolt.ast.AstStatement'>
       location: SourceLocation(pos=0, lineno=1, colno=1)
       end_location: SourceLocation(pos=13, lineno=1, colno=14)
-      identifier: 'statement'
+      identifier: 'mecha:sentinel'
       arguments:
         <class 'bolt.ast.AstAssignment'>
           location: SourceLocation(pos=0, lineno=1, colno=1)

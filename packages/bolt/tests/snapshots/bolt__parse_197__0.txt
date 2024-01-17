@@ -33,10 +33,10 @@ def foo(value):
           location: SourceLocation(pos=20, lineno=2, colno=5)
           end_location: SourceLocation(pos=115, lineno=7, colno=18)
           commands:
-            <class 'mecha.ast.AstCommand'>
+            <class 'bolt.ast.AstStatement'>
               location: SourceLocation(pos=20, lineno=2, colno=5)
               end_location: SourceLocation(pos=35, lineno=2, colno=20)
-              identifier: 'statement'
+              identifier: 'mecha:sentinel'
               arguments:
                 <class 'bolt.ast.AstAssignment'>
                   location: SourceLocation(pos=20, lineno=2, colno=5)
@@ -67,10 +67,10 @@ def foo(value):
                   location: SourceLocation(pos=58, lineno=4, colno=9)
                   end_location: SourceLocation(pos=68, lineno=4, colno=19)
                   commands:
-                    <class 'mecha.ast.AstCommand'>
+                    <class 'bolt.ast.AstStatement'>
                       location: SourceLocation(pos=58, lineno=4, colno=9)
                       end_location: SourceLocation(pos=68, lineno=4, colno=19)
-                      identifier: 'statement'
+                      identifier: 'mecha:sentinel'
                       arguments:
                         <class 'bolt.ast.AstAssignment'>
                           location: SourceLocation(pos=58, lineno=4, colno=9)
@@ -97,10 +97,10 @@ def foo(value):
                   location: SourceLocation(pos=87, lineno=6, colno=9)
                   end_location: SourceLocation(pos=97, lineno=6, colno=19)
                   commands:
-                    <class 'mecha.ast.AstCommand'>
+                    <class 'bolt.ast.AstStatement'>
                       location: SourceLocation(pos=87, lineno=6, colno=9)
                       end_location: SourceLocation(pos=97, lineno=6, colno=19)
-                      identifier: 'statement'
+                      identifier: 'mecha:sentinel'
                       arguments:
                         <class 'bolt.ast.AstAssignment'>
                           location: SourceLocation(pos=87, lineno=6, colno=9)

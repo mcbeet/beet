@@ -112,10 +112,10 @@ for a in [False, True]:
                                   location: SourceLocation(pos=136, lineno=5, colno=17)
                                   end_location: SourceLocation(pos=192, lineno=5, colno=73)
                                   commands:
-                                    <class 'mecha.ast.AstCommand'>
+                                    <class 'bolt.ast.AstStatement'>
                                       location: SourceLocation(pos=136, lineno=5, colno=17)
                                       end_location: SourceLocation(pos=192, lineno=5, colno=73)
-                                      identifier: 'statement'
+                                      identifier: 'mecha:sentinel'
                                       arguments:
                                         <class 'bolt.ast.AstCall'>
                                           location: SourceLocation(pos=136, lineno=5, colno=17)

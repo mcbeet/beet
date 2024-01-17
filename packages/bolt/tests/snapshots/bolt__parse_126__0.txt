@@ -16,10 +16,10 @@ math.sin(1)
           is_tag: False
           namespace: None
           path: 'math'
-    <class 'mecha.ast.AstCommand'>
+    <class 'bolt.ast.AstStatement'>
       location: SourceLocation(pos=12, lineno=2, colno=1)
       end_location: SourceLocation(pos=23, lineno=2, colno=12)
-      identifier: 'statement'
+      identifier: 'mecha:sentinel'
       arguments:
         <class 'bolt.ast.AstCall'>
           location: SourceLocation(pos=12, lineno=2, colno=1)

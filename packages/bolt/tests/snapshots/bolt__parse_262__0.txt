@@ -20,10 +20,10 @@ class Foo:
           location: SourceLocation(pos=15, lineno=2, colno=5)
           end_location: SourceLocation(pos=26, lineno=2, colno=16)
           commands:
-            <class 'mecha.ast.AstCommand'>
+            <class 'bolt.ast.AstStatement'>
               location: SourceLocation(pos=15, lineno=2, colno=5)
               end_location: SourceLocation(pos=26, lineno=2, colno=16)
-              identifier: 'statement'
+              identifier: 'mecha:sentinel'
               arguments:
                 <class 'bolt.ast.AstAssignment'>
                   location: SourceLocation(pos=15, lineno=2, colno=5)

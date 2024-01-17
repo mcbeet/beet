@@ -1,5 +1,6 @@
 __all__ = [
     "AstNonFunctionRoot",
+    "AstStatement",
     "AstExpression",
     "AstExpressionBinary",
     "AstExpressionUnary",
@@ -85,6 +86,11 @@ from .semantics import Binding
 @dataclass(frozen=True, slots=True)
 class AstNonFunctionRoot(AstRoot):
     """Non-function root ast node."""
+
+
+@dataclass(frozen=True, slots=True)
+class AstStatement(AstCommandSentinel):
+    """Ast statement node."""
 
 
 @dataclass(frozen=True, slots=True)

@@ -287,10 +287,10 @@ say !!!
 #                               location: SourceLocation(pos=-1, lineno=0, colno=0)
 #                               end_location: SourceLocation(pos=-1, lineno=0, colno=0)
 #                               value: 'what:about:proc_macro_overload0'
-#     <class 'mecha.ast.AstCommand'>
+#     <class 'bolt.ast.AstStatement'>
 #       location: SourceLocation(pos=0, lineno=1, colno=1)
 #       end_location: SourceLocation(pos=10, lineno=1, colno=11)
-#       identifier: 'statement'
+#       identifier: 'mecha:sentinel'
 #       arguments:
 #         <class 'bolt.ast.AstCall'>
 #           location: SourceLocation(pos=0, lineno=1, colno=1)
@@ -526,10 +526,10 @@ say !!!
 #               location: SourceLocation(pos=29, lineno=3, colno=8)
 #               end_location: SourceLocation(pos=36, lineno=3, colno=15)
 #               value: 'CALAMAR'
-#     <class 'mecha.ast.AstCommand'>
+#     <class 'bolt.ast.AstStatement'>
 #       location: SourceLocation(pos=37, lineno=4, colno=1)
 #       end_location: SourceLocation(pos=51, lineno=4, colno=15)
-#       identifier: 'statement'
+#       identifier: 'mecha:sentinel'
 #       arguments:
 #         <class 'bolt.ast.AstAssignment'>
 #           location: SourceLocation(pos=37, lineno=4, colno=1)
@@ -553,10 +553,10 @@ say !!!
 #       identifier: '!!!'
 #       arguments:
 #         <empty>
-#     <class 'mecha.ast.AstCommand'>
+#     <class 'bolt.ast.AstStatement'>
 #       location: SourceLocation(pos=57, lineno=7, colno=1)
 #       end_location: SourceLocation(pos=71, lineno=7, colno=15)
-#       identifier: 'statement'
+#       identifier: 'mecha:sentinel'
 #       arguments:
 #         <class 'bolt.ast.AstCall'>
 #           location: SourceLocation(pos=57, lineno=7, colno=1)
@@ -587,10 +587,10 @@ say !!!
 #       identifier: '!!!'
 #       arguments:
 #         <empty>
-#     <class 'mecha.ast.AstCommand'>
+#     <class 'bolt.ast.AstStatement'>
 #       location: SourceLocation(pos=109, lineno=11, colno=1)
 #       end_location: SourceLocation(pos=119, lineno=11, colno=11)
-#       identifier: 'statement'
+#       identifier: 'mecha:sentinel'
 #       arguments:
 #         <class 'bolt.ast.AstCall'>
 #           location: SourceLocation(pos=109, lineno=11, colno=1)

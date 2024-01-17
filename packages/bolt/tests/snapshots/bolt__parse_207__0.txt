@@ -5,10 +5,10 @@ tellraw @p ["", {"text": "hey", **red}, *red.color]
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=75, lineno=3, colno=1)
   commands:
-    <class 'mecha.ast.AstCommand'>
+    <class 'bolt.ast.AstStatement'>
       location: SourceLocation(pos=0, lineno=1, colno=1)
       end_location: SourceLocation(pos=22, lineno=1, colno=23)
-      identifier: 'statement'
+      identifier: 'mecha:sentinel'
       arguments:
         <class 'bolt.ast.AstAssignment'>
           location: SourceLocation(pos=0, lineno=1, colno=1)

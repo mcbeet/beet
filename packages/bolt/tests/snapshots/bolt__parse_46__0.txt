@@ -42,10 +42,10 @@ if score @s tmp matches 42:
                   location: SourceLocation(pos=32, lineno=2, colno=5)
                   end_location: SourceLocation(pos=107, lineno=5, colno=26)
                   commands:
-                    <class 'mecha.ast.AstCommand'>
+                    <class 'bolt.ast.AstStatement'>
                       location: SourceLocation(pos=32, lineno=2, colno=5)
                       end_location: SourceLocation(pos=42, lineno=2, colno=15)
-                      identifier: 'statement'
+                      identifier: 'mecha:sentinel'
                       arguments:
                         <class 'bolt.ast.AstAssignment'>
                           location: SourceLocation(pos=32, lineno=2, colno=5)
@@ -99,10 +99,10 @@ if score @s tmp matches 42:
                                       location: SourceLocation(pos=76, lineno=4, colno=13)
                                       end_location: SourceLocation(pos=81, lineno=4, colno=18)
                                       value: 'hello'
-                            <class 'mecha.ast.AstCommand'>
+                            <class 'bolt.ast.AstStatement'>
                               location: SourceLocation(pos=90, lineno=5, colno=9)
                               end_location: SourceLocation(pos=107, lineno=5, colno=26)
-                              identifier: 'statement'
+                              identifier: 'mecha:sentinel'
                               arguments:
                                 <class 'bolt.ast.AstAssignment'>
                                   location: SourceLocation(pos=90, lineno=5, colno=9)

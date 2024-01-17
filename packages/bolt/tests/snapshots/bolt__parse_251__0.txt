@@ -21,10 +21,10 @@ print(Foo.bar)
           location: SourceLocation(pos=15, lineno=2, colno=5)
           end_location: SourceLocation(pos=22, lineno=2, colno=12)
           commands:
-            <class 'mecha.ast.AstCommand'>
+            <class 'bolt.ast.AstStatement'>
               location: SourceLocation(pos=15, lineno=2, colno=5)
               end_location: SourceLocation(pos=22, lineno=2, colno=12)
-              identifier: 'statement'
+              identifier: 'mecha:sentinel'
               arguments:
                 <class 'bolt.ast.AstAssignment'>
                   location: SourceLocation(pos=15, lineno=2, colno=5)
@@ -42,10 +42,10 @@ print(Foo.bar)
                       end_location: SourceLocation(pos=22, lineno=2, colno=12)
                       value: 2
                   type_annotation: None
-    <class 'mecha.ast.AstCommand'>
+    <class 'bolt.ast.AstStatement'>
       location: SourceLocation(pos=23, lineno=3, colno=1)
       end_location: SourceLocation(pos=37, lineno=3, colno=15)
-      identifier: 'statement'
+      identifier: 'mecha:sentinel'
       arguments:
         <class 'bolt.ast.AstCall'>
           location: SourceLocation(pos=23, lineno=3, colno=1)

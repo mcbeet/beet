@@ -5,10 +5,10 @@ scoreboard objectives setdisplay my_team some_score_name
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=86, lineno=3, colno=1)
   commands:
-    <class 'mecha.ast.AstCommand'>
+    <class 'bolt.ast.AstStatement'>
       location: SourceLocation(pos=0, lineno=1, colno=1)
       end_location: SourceLocation(pos=28, lineno=1, colno=29)
-      identifier: 'statement'
+      identifier: 'mecha:sentinel'
       arguments:
         <class 'bolt.ast.AstAssignment'>
           location: SourceLocation(pos=0, lineno=1, colno=1)

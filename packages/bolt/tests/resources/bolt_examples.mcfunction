@@ -1355,3 +1355,12 @@ class A:
     pass
 class B(A, foo=True):
     pass
+###
+setblock = 0
+setblock setblock setblock setblock air
+###
+text = "demo:foo"
+###
+class A:
+    text: str
+    data: str

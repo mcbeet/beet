@@ -95,10 +95,10 @@ def foo(something):
                               location: SourceLocation(pos=105, lineno=7, colno=13)
                               end_location: SourceLocation(pos=108, lineno=7, colno=16)
                               value: 'dat'
-                    <class 'mecha.ast.AstCommand'>
+                    <class 'bolt.ast.AstStatement'>
                       location: SourceLocation(pos=137, lineno=9, colno=9)
                       end_location: SourceLocation(pos=148, lineno=9, colno=20)
-                      identifier: 'statement'
+                      identifier: 'mecha:sentinel'
                       arguments:
                         <class 'bolt.ast.AstAssignment'>
                           location: SourceLocation(pos=137, lineno=9, colno=9)
@@ -134,10 +134,10 @@ def foo(something):
                           location: SourceLocation(pos=189, lineno=11, colno=13)
                           end_location: SourceLocation(pos=199, lineno=11, colno=23)
                           commands:
-                            <class 'mecha.ast.AstCommand'>
+                            <class 'bolt.ast.AstStatement'>
                               location: SourceLocation(pos=189, lineno=11, colno=13)
                               end_location: SourceLocation(pos=199, lineno=11, colno=23)
-                              identifier: 'statement'
+                              identifier: 'mecha:sentinel'
                               arguments:
                                 <class 'bolt.ast.AstAssignment'>
                                   location: SourceLocation(pos=189, lineno=11, colno=13)
@@ -178,10 +178,10 @@ def foo(something):
                               location: SourceLocation(pos=213, lineno=13, colno=13)
                               end_location: SourceLocation(pos=216, lineno=13, colno=16)
                               value: 'wow'
-            <class 'mecha.ast.AstCommand'>
+            <class 'bolt.ast.AstStatement'>
               location: SourceLocation(pos=221, lineno=14, colno=5)
               end_location: SourceLocation(pos=226, lineno=14, colno=10)
-              identifier: 'statement'
+              identifier: 'mecha:sentinel'
               arguments:
                 <class 'bolt.ast.AstCall'>
                   location: SourceLocation(pos=221, lineno=14, colno=5)

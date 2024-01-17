@@ -6,10 +6,10 @@ x = 2
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=18, lineno=4, colno=1)
   commands:
-    <class 'mecha.ast.AstCommand'>
+    <class 'bolt.ast.AstStatement'>
       location: SourceLocation(pos=0, lineno=1, colno=1)
       end_location: SourceLocation(pos=5, lineno=1, colno=6)
-      identifier: 'statement'
+      identifier: 'mecha:sentinel'
       arguments:
         <class 'bolt.ast.AstAssignment'>
           location: SourceLocation(pos=0, lineno=1, colno=1)
@@ -37,10 +37,10 @@ x = 2
           end_location: SourceLocation(pos=11, lineno=2, colno=6)
           value: 'x'
           rebind: False
-    <class 'mecha.ast.AstCommand'>
+    <class 'bolt.ast.AstStatement'>
       location: SourceLocation(pos=12, lineno=3, colno=1)
       end_location: SourceLocation(pos=17, lineno=3, colno=6)
-      identifier: 'statement'
+      identifier: 'mecha:sentinel'
       arguments:
         <class 'bolt.ast.AstAssignment'>
           location: SourceLocation(pos=12, lineno=3, colno=1)

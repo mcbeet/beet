@@ -5,10 +5,10 @@ numbers[3:] = []
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=43, lineno=3, colno=1)
   commands:
-    <class 'mecha.ast.AstCommand'>
+    <class 'bolt.ast.AstStatement'>
       location: SourceLocation(pos=0, lineno=1, colno=1)
       end_location: SourceLocation(pos=25, lineno=1, colno=26)
-      identifier: 'statement'
+      identifier: 'mecha:sentinel'
       arguments:
         <class 'bolt.ast.AstAssignment'>
           location: SourceLocation(pos=0, lineno=1, colno=1)
@@ -44,10 +44,10 @@ numbers[3:] = []
                       end_location: SourceLocation(pos=23, lineno=1, colno=24)
                       value: 12
           type_annotation: None
-    <class 'mecha.ast.AstCommand'>
+    <class 'bolt.ast.AstStatement'>
       location: SourceLocation(pos=26, lineno=2, colno=1)
       end_location: SourceLocation(pos=42, lineno=2, colno=17)
-      identifier: 'statement'
+      identifier: 'mecha:sentinel'
       arguments:
         <class 'bolt.ast.AstAssignment'>
           location: SourceLocation(pos=26, lineno=2, colno=1)

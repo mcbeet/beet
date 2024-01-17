@@ -5,10 +5,10 @@ setblock a 2 3 stone
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=26, lineno=2, colno=21)
   commands:
-    <class 'mecha.ast.AstCommand'>
+    <class 'bolt.ast.AstStatement'>
       location: SourceLocation(pos=0, lineno=1, colno=1)
       end_location: SourceLocation(pos=5, lineno=1, colno=6)
-      identifier: 'statement'
+      identifier: 'mecha:sentinel'
       arguments:
         <class 'bolt.ast.AstAssignment'>
           location: SourceLocation(pos=0, lineno=1, colno=1)

@@ -113,10 +113,10 @@ def f(a: str, /, b: int, c: list[int] | None = None, *d: float, **kwargs: object
           location: SourceLocation(pos=106, lineno=2, colno=5)
           end_location: SourceLocation(pos=109, lineno=2, colno=8)
           commands:
-            <class 'mecha.ast.AstCommand'>
+            <class 'bolt.ast.AstStatement'>
               location: SourceLocation(pos=106, lineno=2, colno=5)
               end_location: SourceLocation(pos=109, lineno=2, colno=8)
-              identifier: 'statement'
+              identifier: 'mecha:sentinel'
               arguments:
                 <class 'bolt.ast.AstValue'>
                   location: SourceLocation(pos=106, lineno=2, colno=5)

@@ -1,3 +1,5 @@
+from dataclasses import dataclass
+
 class Foo:
     def __init__(self, name):
         self.name = name
@@ -73,3 +75,16 @@ class B:
 
 A().b().a()
 B().a().b()
+
+@dataclass
+class PreviouslyNotPossible:
+    text: str
+    data: str
+
+    @staticmethod
+    def you_can_do_this():
+        setblock = 0
+        setblock setblock setblock setblock air
+
+say PreviouslyNotPossible("no", "conflict")
+PreviouslyNotPossible.you_can_do_this()

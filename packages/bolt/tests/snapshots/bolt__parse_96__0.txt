@@ -17,10 +17,10 @@ my_predicate = {
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=233, lineno=15, colno=1)
   commands:
-    <class 'mecha.ast.AstCommand'>
+    <class 'bolt.ast.AstStatement'>
       location: SourceLocation(pos=0, lineno=1, colno=1)
       end_location: SourceLocation(pos=232, lineno=14, colno=2)
-      identifier: 'statement'
+      identifier: 'mecha:sentinel'
       arguments:
         <class 'bolt.ast.AstAssignment'>
           location: SourceLocation(pos=0, lineno=1, colno=1)

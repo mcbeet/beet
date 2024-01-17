@@ -112,10 +112,10 @@ macro foo(stream):
                       location: SourceLocation(pos=79, lineno=3, colno=9)
                       end_location: SourceLocation(pos=132, lineno=4, colno=30)
                       commands:
-                        <class 'mecha.ast.AstCommand'>
+                        <class 'bolt.ast.AstStatement'>
                           location: SourceLocation(pos=79, lineno=3, colno=9)
                           end_location: SourceLocation(pos=102, lineno=3, colno=32)
-                          identifier: 'statement'
+                          identifier: 'mecha:sentinel'
                           arguments:
                             <class 'bolt.ast.AstCall'>
                               location: SourceLocation(pos=79, lineno=3, colno=9)
@@ -135,10 +135,10 @@ macro foo(stream):
                                   location: SourceLocation(pos=93, lineno=3, colno=23)
                                   end_location: SourceLocation(pos=101, lineno=3, colno=31)
                                   value: 'number'
-                        <class 'mecha.ast.AstCommand'>
+                        <class 'bolt.ast.AstStatement'>
                           location: SourceLocation(pos=111, lineno=4, colno=9)
                           end_location: SourceLocation(pos=132, lineno=4, colno=30)
-                          identifier: 'statement'
+                          identifier: 'mecha:sentinel'
                           arguments:
                             <class 'bolt.ast.AstCall'>
                               location: SourceLocation(pos=111, lineno=4, colno=9)

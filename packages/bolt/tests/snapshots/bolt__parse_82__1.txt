@@ -33,4 +33,4 @@ _bolt_refs[0]
   commands:
     <class 'mecha.ast.AstCommand'>
     <class 'mecha.ast.AstCommand'>
-    <class 'mecha.ast.AstCommand'>
+    <class 'bolt.ast.AstStatement'>

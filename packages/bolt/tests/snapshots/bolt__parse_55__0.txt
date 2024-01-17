@@ -23,10 +23,10 @@ for foo in "foo":
           location: SourceLocation(pos=22, lineno=2, colno=5)
           end_location: SourceLocation(pos=31, lineno=2, colno=14)
           commands:
-            <class 'mecha.ast.AstCommand'>
+            <class 'bolt.ast.AstStatement'>
               location: SourceLocation(pos=22, lineno=2, colno=5)
               end_location: SourceLocation(pos=31, lineno=2, colno=14)
-              identifier: 'statement'
+              identifier: 'mecha:sentinel'
               arguments:
                 <class 'bolt.ast.AstAssignment'>
                   location: SourceLocation(pos=22, lineno=2, colno=5)

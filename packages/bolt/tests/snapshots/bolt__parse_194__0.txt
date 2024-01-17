@@ -73,10 +73,10 @@ say Counter(9).incr()
                               location: SourceLocation(pos=51, lineno=3, colno=18)
                               end_location: SourceLocation(pos=52, lineno=3, colno=19)
                               value: 'x'
-                    <class 'mecha.ast.AstCommand'>
+                    <class 'bolt.ast.AstStatement'>
                       location: SourceLocation(pos=61, lineno=4, colno=9)
                       end_location: SourceLocation(pos=67, lineno=4, colno=15)
-                      identifier: 'statement'
+                      identifier: 'mecha:sentinel'
                       arguments:
                         <class 'bolt.ast.AstAssignment'>
                           location: SourceLocation(pos=61, lineno=4, colno=9)
@@ -125,10 +125,10 @@ say Counter(9).incr()
                           location: SourceLocation(pos=105, lineno=6, colno=21)
                           end_location: SourceLocation(pos=109, lineno=6, colno=25)
                           value: 'incr'
-    <class 'mecha.ast.AstCommand'>
+    <class 'bolt.ast.AstStatement'>
       location: SourceLocation(pos=112, lineno=8, colno=1)
       end_location: SourceLocation(pos=131, lineno=8, colno=20)
-      identifier: 'statement'
+      identifier: 'mecha:sentinel'
       arguments:
         <class 'bolt.ast.AstAssignment'>
           location: SourceLocation(pos=112, lineno=8, colno=1)

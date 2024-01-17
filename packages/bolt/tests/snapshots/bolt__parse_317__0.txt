@@ -34,10 +34,10 @@ memo foo=42:
           location: SourceLocation(pos=17, lineno=2, colno=5)
           end_location: SourceLocation(pos=27, lineno=2, colno=15)
           commands:
-            <class 'mecha.ast.AstCommand'>
+            <class 'bolt.ast.AstStatement'>
               location: SourceLocation(pos=17, lineno=2, colno=5)
               end_location: SourceLocation(pos=27, lineno=2, colno=15)
-              identifier: 'statement'
+              identifier: 'mecha:sentinel'
               arguments:
                 <class 'bolt.ast.AstCall'>
                   location: SourceLocation(pos=17, lineno=2, colno=5)
@@ -78,10 +78,10 @@ memo foo=42:
           location: SourceLocation(pos=45, lineno=4, colno=5)
           end_location: SourceLocation(pos=55, lineno=4, colno=15)
           commands:
-            <class 'mecha.ast.AstCommand'>
+            <class 'bolt.ast.AstStatement'>
               location: SourceLocation(pos=45, lineno=4, colno=5)
               end_location: SourceLocation(pos=55, lineno=4, colno=15)
-              identifier: 'statement'
+              identifier: 'mecha:sentinel'
               arguments:
                 <class 'bolt.ast.AstCall'>
                   location: SourceLocation(pos=45, lineno=4, colno=5)
@@ -122,10 +122,10 @@ memo foo=42:
           location: SourceLocation(pos=73, lineno=6, colno=5)
           end_location: SourceLocation(pos=83, lineno=6, colno=15)
           commands:
-            <class 'mecha.ast.AstCommand'>
+            <class 'bolt.ast.AstStatement'>
               location: SourceLocation(pos=73, lineno=6, colno=5)
               end_location: SourceLocation(pos=83, lineno=6, colno=15)
-              identifier: 'statement'
+              identifier: 'mecha:sentinel'
               arguments:
                 <class 'bolt.ast.AstCall'>
                   location: SourceLocation(pos=73, lineno=6, colno=5)

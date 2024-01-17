@@ -5,10 +5,10 @@ ingredients = [{id: "minecraft:blaze_powder"}, {id: "minecraft:furnace"}]
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=82, lineno=3, colno=1)
   commands:
-    <class 'mecha.ast.AstCommand'>
+    <class 'bolt.ast.AstStatement'>
       location: SourceLocation(pos=0, lineno=1, colno=1)
       end_location: SourceLocation(pos=7, lineno=1, colno=8)
-      identifier: 'statement'
+      identifier: 'mecha:sentinel'
       arguments:
         <class 'bolt.ast.AstAssignment'>
           location: SourceLocation(pos=0, lineno=1, colno=1)
@@ -26,10 +26,10 @@ ingredients = [{id: "minecraft:blaze_powder"}, {id: "minecraft:furnace"}]
               end_location: SourceLocation(pos=7, lineno=1, colno=8)
               value: 42
           type_annotation: None
-    <class 'mecha.ast.AstCommand'>
+    <class 'bolt.ast.AstStatement'>
       location: SourceLocation(pos=8, lineno=2, colno=1)
       end_location: SourceLocation(pos=81, lineno=2, colno=74)
-      identifier: 'statement'
+      identifier: 'mecha:sentinel'
       arguments:
         <class 'bolt.ast.AstAssignment'>
           location: SourceLocation(pos=8, lineno=2, colno=1)

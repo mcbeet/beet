@@ -8,6 +8,7 @@ __all__ = [
     "create_bolt_command_parser",
     "UndefinedIdentifier",
     "ImprovedErrorHandler",
+    "parse_statement",
     "BranchScopeManager",
     "FinalExpressionParser",
     "InterpolationParser",
@@ -155,6 +156,7 @@ from .ast import (
     AstProcMacroMarker,
     AstProcMacroResult,
     AstSlice,
+    AstStatement,
     AstTarget,
     AstTargetAttribute,
     AstTargetIdentifier,
@@ -218,13 +220,14 @@ def get_bolt_parsers(
             macro_handler=macro_handler,
         ),
         "nested_root": create_bolt_root_parser(parsers["nested_root"], macro_handler),
-        "root_item": ImprovedErrorHandler(parsers["root_item"]),
+        "root_item": ImprovedErrorHandler(
+            AlternativeParser([parsers["root_item"], parse_statement])
+        ),
         "command": create_bolt_command_parser(macro_handler, modules, bolt_prototypes),
         "command:argument:bolt:if_block": delegate("bolt:if_block"),
         "command:argument:bolt:elif_condition": delegate("bolt:elif_condition"),
         "command:argument:bolt:elif_block": delegate("bolt:elif_block"),
         "command:argument:bolt:else_block": delegate("bolt:else_block"),
-        "command:argument:bolt:statement": delegate("bolt:statement"),
         "command:argument:bolt:assignment_target": delegate("bolt:assignment_target"),
         "command:argument:bolt:with_expression": delegate("bolt:with_expression"),
         "command:argument:bolt:with_target": delegate("bolt:with_target"),
@@ -704,6 +707,12 @@ class ImprovedErrorHandler:
             raise
 
 
+def parse_statement(stream: TokenStream) -> AstStatement:
+    """Parse statement."""
+    node = delegate("bolt:statement", stream)
+    return set_location(AstStatement(arguments=AstChildren([node])), node)
+
+
 @dataclass
 class BranchScopeManager:
     """Parser that manages accessible identifiers for conditional branches."""
@@ -1076,7 +1085,7 @@ class DecoratorResolver:
         result: List[AstCommand] = []
 
         for command in node.commands:
-            if command.identifier == "statement" and isinstance(
+            if isinstance(command, AstStatement) and isinstance(
                 decorator := command.arguments[0], AstDecorator
             ):
                 changed = True
@@ -2051,7 +2060,7 @@ class DocstringHandler:
 
         for command in node.commands:
             if (
-                command.identifier == "statement"
+                isinstance(command, AstStatement)
                 and command.arguments
                 and isinstance(literal := command.arguments[0], AstValue)
                 and isinstance(literal.value, str)

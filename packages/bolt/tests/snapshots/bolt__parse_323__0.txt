@@ -10,10 +10,10 @@ print(
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=67, lineno=8, colno=1)
   commands:
-    <class 'mecha.ast.AstCommand'>
+    <class 'bolt.ast.AstStatement'>
       location: SourceLocation(pos=0, lineno=1, colno=1)
       end_location: SourceLocation(pos=66, lineno=7, colno=2)
-      identifier: 'statement'
+      identifier: 'mecha:sentinel'
       arguments:
         <class 'bolt.ast.AstCall'>
           location: SourceLocation(pos=0, lineno=1, colno=1)

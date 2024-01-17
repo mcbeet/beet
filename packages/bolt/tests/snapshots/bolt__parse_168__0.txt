@@ -5,10 +5,10 @@ item replace entity @s my_weapon.offhand from entity @s my_weapon.mainhand
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=144, lineno=3, colno=1)
   commands:
-    <class 'mecha.ast.AstCommand'>
+    <class 'bolt.ast.AstStatement'>
       location: SourceLocation(pos=0, lineno=1, colno=1)
       end_location: SourceLocation(pos=68, lineno=1, colno=69)
-      identifier: 'statement'
+      identifier: 'mecha:sentinel'
       arguments:
         <class 'bolt.ast.AstAssignment'>
           location: SourceLocation(pos=0, lineno=1, colno=1)

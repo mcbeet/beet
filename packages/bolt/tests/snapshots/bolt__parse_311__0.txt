@@ -1,4 +1,4 @@
-#>ERROR  Expected colon or identifier but got literal '{}'.
+#>ERROR  Expected assignment, colon or identifier but got literal '{}'.
 # line 1, column 6
 #      1 |  memo {}:
 #        :       ^^

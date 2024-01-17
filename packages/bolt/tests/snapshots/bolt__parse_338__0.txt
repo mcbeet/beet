@@ -5,10 +5,10 @@ foo = 123
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=19, lineno=3, colno=1)
   commands:
-    <class 'mecha.ast.AstCommand'>
+    <class 'bolt.ast.AstStatement'>
       location: SourceLocation(pos=0, lineno=1, colno=1)
       end_location: SourceLocation(pos=8, lineno=1, colno=9)
-      identifier: 'statement'
+      identifier: 'mecha:sentinel'
       arguments:
         <class 'bolt.ast.AstTypeDeclaration'>
           location: SourceLocation(pos=0, lineno=1, colno=1)
@@ -24,10 +24,10 @@ foo = 123
               location: SourceLocation(pos=5, lineno=1, colno=6)
               end_location: SourceLocation(pos=8, lineno=1, colno=9)
               value: 'int'
-    <class 'mecha.ast.AstCommand'>
+    <class 'bolt.ast.AstStatement'>
       location: SourceLocation(pos=9, lineno=2, colno=1)
       end_location: SourceLocation(pos=18, lineno=2, colno=10)
-      identifier: 'statement'
+      identifier: 'mecha:sentinel'
       arguments:
         <class 'bolt.ast.AstAssignment'>
           location: SourceLocation(pos=9, lineno=2, colno=1)

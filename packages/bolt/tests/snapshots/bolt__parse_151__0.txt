@@ -30,10 +30,10 @@ f(1, 2, **{"thing": 3})
               identifier: 'pass'
               arguments:
                 <empty>
-    <class 'mecha.ast.AstCommand'>
+    <class 'bolt.ast.AstStatement'>
       location: SourceLocation(pos=18, lineno=3, colno=1)
       end_location: SourceLocation(pos=41, lineno=3, colno=24)
-      identifier: 'statement'
+      identifier: 'mecha:sentinel'
       arguments:
         <class 'bolt.ast.AstCall'>
           location: SourceLocation(pos=18, lineno=3, colno=1)

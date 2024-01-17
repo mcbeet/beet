@@ -8,10 +8,10 @@ say thing
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=58, lineno=6, colno=1)
   commands:
-    <class 'mecha.ast.AstCommand'>
+    <class 'bolt.ast.AstStatement'>
       location: SourceLocation(pos=0, lineno=1, colno=1)
       end_location: SourceLocation(pos=9, lineno=1, colno=10)
-      identifier: 'statement'
+      identifier: 'mecha:sentinel'
       arguments:
         <class 'bolt.ast.AstAssignment'>
           location: SourceLocation(pos=0, lineno=1, colno=1)
@@ -42,10 +42,10 @@ say thing
           location: SourceLocation(pos=26, lineno=3, colno=5)
           end_location: SourceLocation(pos=36, lineno=3, colno=15)
           commands:
-            <class 'mecha.ast.AstCommand'>
+            <class 'bolt.ast.AstStatement'>
               location: SourceLocation(pos=26, lineno=3, colno=5)
               end_location: SourceLocation(pos=36, lineno=3, colno=15)
-              identifier: 'statement'
+              identifier: 'mecha:sentinel'
               arguments:
                 <class 'bolt.ast.AstAssignment'>
                   location: SourceLocation(pos=26, lineno=3, colno=5)
@@ -65,10 +65,10 @@ say thing
                   type_annotation: None
           identifiers: ('thing',)
       persistent_id: UUID('bdd640fb-0667-1ad1-1c80-317fa3b1799d')
-    <class 'mecha.ast.AstCommand'>
+    <class 'bolt.ast.AstStatement'>
       location: SourceLocation(pos=37, lineno=4, colno=1)
       end_location: SourceLocation(pos=47, lineno=4, colno=11)
-      identifier: 'statement'
+      identifier: 'mecha:sentinel'
       arguments:
         <class 'bolt.ast.AstAssignment'>
           location: SourceLocation(pos=37, lineno=4, colno=1)

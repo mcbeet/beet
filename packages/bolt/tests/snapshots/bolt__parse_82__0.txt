@@ -42,10 +42,10 @@ thing = bar()
                       location: SourceLocation(pos=22, lineno=2, colno=12)
                       end_location: SourceLocation(pos=27, lineno=2, colno=17)
                       value: 'thing'
-            <class 'mecha.ast.AstCommand'>
+            <class 'bolt.ast.AstStatement'>
               location: SourceLocation(pos=32, lineno=3, colno=5)
               end_location: SourceLocation(pos=46, lineno=3, colno=19)
-              identifier: 'statement'
+              identifier: 'mecha:sentinel'
               arguments:
                 <class 'bolt.ast.AstAssignment'>
                   location: SourceLocation(pos=32, lineno=3, colno=5)
@@ -101,10 +101,10 @@ thing = bar()
                       location: SourceLocation(pos=69, lineno=5, colno=12)
                       end_location: SourceLocation(pos=74, lineno=5, colno=17)
                       value: 'thing'
-            <class 'mecha.ast.AstCommand'>
+            <class 'bolt.ast.AstStatement'>
               location: SourceLocation(pos=79, lineno=6, colno=5)
               end_location: SourceLocation(pos=93, lineno=6, colno=19)
-              identifier: 'statement'
+              identifier: 'mecha:sentinel'
               arguments:
                 <class 'bolt.ast.AstAssignment'>
                   location: SourceLocation(pos=79, lineno=6, colno=5)
@@ -128,10 +128,10 @@ thing = bar()
                       arguments:
                         <empty>
                   type_annotation: None
-    <class 'mecha.ast.AstCommand'>
+    <class 'bolt.ast.AstStatement'>
       location: SourceLocation(pos=94, lineno=7, colno=1)
       end_location: SourceLocation(pos=107, lineno=7, colno=14)
-      identifier: 'statement'
+      identifier: 'mecha:sentinel'
       arguments:
         <class 'bolt.ast.AstAssignment'>
           location: SourceLocation(pos=94, lineno=7, colno=1)

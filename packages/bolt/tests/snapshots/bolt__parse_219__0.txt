@@ -68,10 +68,10 @@ foo 42 this is fine really
           location: SourceLocation(pos=80, lineno=2, colno=5)
           end_location: SourceLocation(pos=99, lineno=2, colno=24)
           commands:
-            <class 'mecha.ast.AstCommand'>
+            <class 'bolt.ast.AstStatement'>
               location: SourceLocation(pos=80, lineno=2, colno=5)
               end_location: SourceLocation(pos=99, lineno=2, colno=24)
-              identifier: 'statement'
+              identifier: 'mecha:sentinel'
               arguments:
                 <class 'bolt.ast.AstCall'>
                   location: SourceLocation(pos=80, lineno=2, colno=5)

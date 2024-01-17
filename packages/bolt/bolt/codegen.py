@@ -77,6 +77,7 @@ from .ast import (
     AstPrelude,
     AstProcMacro,
     AstSlice,
+    AstStatement,
     AstTarget,
     AstTargetAttribute,
     AstTargetIdentifier,
@@ -596,7 +597,7 @@ class Codegen(Visitor):
         arguments = acc.children([f"*{arguments}", nesting] if arguments else [nesting])
         return [acc.replace(acc.make_ref(node), arguments=arguments)]
 
-    @rule(AstCommand, identifier="statement")
+    @rule(AstStatement)
     def statement(
         self,
         node: AstCommand,

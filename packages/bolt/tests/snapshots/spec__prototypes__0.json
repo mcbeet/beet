@@ -2275,7 +2275,6 @@
   "spectate:target:player",
   "spreadplayers:center:spreadDistance:maxRange:respectTeams:targets",
   "spreadplayers:center:spreadDistance:maxRange:under:maxHeight:respectTeams:targets",
-  "statement",
   "stop",
   "stopsound:targets",
   "stopsound:targets:*:sound",
