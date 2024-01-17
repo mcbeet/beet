@@ -12,7 +12,7 @@ __all__ = [
 
 
 from dataclasses import dataclass
-from typing import Iterable, Iterator, List, Optional, Tuple
+from typing import Iterable, Iterator, List, Optional, Tuple, Union
 
 from beet import Context, Generator
 from beet.core.utils import required_field
@@ -21,6 +21,7 @@ from tokenstream import InvalidSyntax, TokenStream, set_location
 from mecha import (
     AlternativeParser,
     AstCommand,
+    AstNode,
     AstResourceLocation,
     AstRoot,
     CommandSpec,
@@ -116,7 +117,17 @@ class NestedLocationResolver:
         nested_location: AstNestedLocation = AstNestedLocation(path=""),
     ) -> Tuple[str, str]:
         root, relative_path = self.concat_nested_path(
-            self.walk_location_hierarchy(nested_location)
+            nested_location,
+            self.walk_location_hierarchy(
+                (command.identifier, command.arguments)
+                for command in reversed(self.steps[self.database.step].stack)
+                if (
+                    isinstance(command, AstCommand)
+                    and command.arguments
+                    and isinstance(command.arguments[-1], (AstCommand, AstRoot))
+                    and all(nested_location is not arg for arg in command.arguments)
+                )
+            ),
         )
 
         if not root:
@@ -130,50 +141,46 @@ class NestedLocationResolver:
 
     def walk_location_hierarchy(
         self,
-        nested_location: AstNestedLocation,
+        stack: Iterable[Tuple[str, Tuple[AstNode, ...]]],
     ) -> Iterator[AstResourceLocation]:
-        yield nested_location
-        last = nested_location
+        for identifier, arguments in stack:
+            prototype = self.spec.prototypes[identifier]
 
-        step = self.steps[self.database.step]
-
-        for command in reversed(step.stack):
-            if (
-                not isinstance(command, AstCommand)
-                or not command.arguments
-                or not isinstance(command.arguments[-1], (AstCommand, AstRoot))
-            ):
-                continue
-
-            prototype = self.spec.prototypes[command.identifier]
-
-            for i, argument_node in enumerate(command.arguments):
+            for i, argument_node in enumerate(arguments):
                 node = self.spec.tree.get(prototype.get_argument(i).scope)
                 if (
                     node
                     and node.parser == "minecraft:function"
-                    and (tail := self.spec.tree.get(*command.identifier.split(":")))
+                    and (tail := self.spec.tree.get(*identifier.split(":")))
                     and tail.redirect != ("execute",)
                     and isinstance(argument_node, AstResourceLocation)
                 ):
-                    if argument_node is not last:
-                        yield argument_node
-                        last = argument_node
+                    yield argument_node
                     break
 
     @staticmethod
     def concat_nested_path(
-        nodes: Iterable[AstResourceLocation],
+        *args: Union[
+            Iterable[Union[AstResourceLocation, str]], AstResourceLocation, str
+        ],
     ) -> Tuple[Optional[str], str]:
         root = None
         fragments: List[str] = []
 
-        for node in nodes:
-            if isinstance(node, AstNestedLocation):
-                fragments.append(node.path)
-            else:
-                root = node.get_canonical_value()
-                break
+        for segments in args:
+            if isinstance(segments, (AstResourceLocation, str)):
+                segments = [segments]
+            for segment in segments:
+                if isinstance(segment, AstNestedLocation):
+                    value = segment.path
+                elif isinstance(segment, AstResourceLocation):
+                    value = segment.get_canonical_value()
+                else:
+                    value = segment
+                if ":" in value:
+                    root = value
+                    break
+                fragments.append(value)
 
         return root, "/".join(reversed(fragments))
 
