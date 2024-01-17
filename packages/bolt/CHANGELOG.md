@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.45.0 (2024-01-17)
+
+### Feature
+
+* Make it possible to use variable names that conflict with commands ([`f19ae15`](https://github.com/mcbeet/bolt/commit/f19ae159e3d47e33d1bff89f40828167c7ad726c))
+
 ## v0.44.1 (2024-01-17)
 
 ### Fix
