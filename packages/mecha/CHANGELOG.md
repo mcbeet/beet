@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.86.4 (2024-01-17)
+
+### Fix
+
+* Better nested location resolution ([`a33289d`](https://github.com/mcbeet/mecha/commit/a33289db40b22f68cfa3c291c73a130be7de4c01))
+
 ## v0.86.3 (2024-01-16)
 
 ### Fix
