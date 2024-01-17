@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.86.5 (2024-01-17)
+
+### Fix
+
+* Make walk_location_hierarchy static ([`175dfff`](https://github.com/mcbeet/mecha/commit/175dfff714d4d3ce2c3b1d22bad4c3898731815b))
+
 ## v0.86.4 (2024-01-17)
 
 ### Fix
