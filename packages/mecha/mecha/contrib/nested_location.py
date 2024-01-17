@@ -119,14 +119,17 @@ class NestedLocationResolver:
         root, relative_path = self.concat_nested_path(
             nested_location,
             self.walk_location_hierarchy(
-                (command.identifier, command.arguments)
-                for command in reversed(self.steps[self.database.step].stack)
-                if (
-                    isinstance(command, AstCommand)
-                    and command.arguments
-                    and isinstance(command.arguments[-1], (AstCommand, AstRoot))
-                    and all(nested_location is not arg for arg in command.arguments)
-                )
+                self.spec,
+                (
+                    (command.identifier, command.arguments)
+                    for command in reversed(self.steps[self.database.step].stack)
+                    if (
+                        isinstance(command, AstCommand)
+                        and command.arguments
+                        and isinstance(command.arguments[-1], (AstCommand, AstRoot))
+                        and all(nested_location is not arg for arg in command.arguments)
+                    )
+                ),
             ),
         )
 
@@ -139,19 +142,20 @@ class NestedLocationResolver:
 
         return resolve_relative_location(relative_path, root, include_root_file=True)
 
+    @staticmethod
     def walk_location_hierarchy(
-        self,
+        spec: CommandSpec,
         stack: Iterable[Tuple[str, Tuple[AstNode, ...]]],
     ) -> Iterator[AstResourceLocation]:
         for identifier, arguments in stack:
-            prototype = self.spec.prototypes[identifier]
+            prototype = spec.prototypes[identifier]
 
             for i, argument_node in enumerate(arguments):
-                node = self.spec.tree.get(prototype.get_argument(i).scope)
+                node = spec.tree.get(prototype.get_argument(i).scope)
                 if (
                     node
                     and node.parser == "minecraft:function"
-                    and (tail := self.spec.tree.get(*identifier.split(":")))
+                    and (tail := spec.tree.get(*identifier.split(":")))
                     and tail.redirect != ("execute",)
                     and isinstance(argument_node, AstResourceLocation)
                 ):
