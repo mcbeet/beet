@@ -9,12 +9,11 @@ import builtins
 from dataclasses import dataclass, field
 from functools import partial
 from importlib.resources import files
-from typing import Any, Callable, Dict, Iterable, Iterator, List, Optional, Set, Union
+from typing import Any, Callable, Dict, Iterable, List, Optional, Set, Union
 
 from beet import Context, TextFileBase, generate_tree
 from beet.core.utils import JsonDict, extra_field, required_field
 from mecha import (
-    AstResourceLocation,
     AstRoot,
     CommandSpec,
     CommandTree,
@@ -182,7 +181,9 @@ class Runtime(CommandEmitter):
     def get_nested_location(self) -> str:
         """Return the resource location associated with the current level of nesting."""
         root, relative_path = NestedLocationResolver.concat_nested_path(
-            self.walk_location_hierarchy()
+            NestedLocationResolver.walk_location_hierarchy(
+                self.spec, reversed(self.nesting)
+            )
         )
 
         if not root:
@@ -194,21 +195,6 @@ class Runtime(CommandEmitter):
             include_root_file=True,
         )
         return f"{namespace}:{resolved}"
-
-    def walk_location_hierarchy(self) -> Iterator[AstResourceLocation]:
-        """Yield resource locations contributing to the current nested context."""
-        for identifier, arguments in reversed(self.nesting):
-            prototype = self.spec.prototypes[identifier]
-
-            for i, argument_node in enumerate(arguments):
-                node = self.spec.tree.get(prototype.get_argument(i).scope)
-                if (
-                    node
-                    and node.parser == "minecraft:function"
-                    and isinstance(argument_node, AstResourceLocation)
-                ):
-                    yield argument_node
-                    break
 
     def finalize(self, ctx: Context):
         """Plugin that runs at the end of the build."""
