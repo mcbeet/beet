@@ -62,6 +62,8 @@ __all__ = [
     "SingleLineConstraint",
     "AlternativeParser",
     "NUMBER_PATTERN",
+    "JSON_STRING_PATTERN",
+    "NBT_QUOTED_STRING_PATTERN",
 ]
 
 
@@ -175,6 +177,9 @@ from .spec import CommandSpec, Parser
 from .utils import JsonQuoteHelper, QuoteHelper, string_to_number
 
 NUMBER_PATTERN: str = r"-?(?:\d+\.?\d*|\.\d+)"
+
+JSON_STRING_PATTERN: str = r'"(?:\\.|[^\\\n])*?"'
+NBT_QUOTED_STRING_PATTERN: str = r'"(?:\\.|[^\\\n])*?"' "|" r"'(?:\\.|[^\\\n])*?'"
 
 
 def get_default_parsers() -> Dict[str, Parser]:
@@ -947,7 +952,7 @@ class JsonParser:
 
     curly_pattern: str = r"\{|\}"
     bracket_pattern: str = r"\[|\]"
-    string_pattern: str = r'"(?:\\.|[^\\\n])*?"'
+    string_pattern: str = JSON_STRING_PATTERN
     number_pattern: str = r"-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?\b"
     colon_pattern: str = r":"
     comma_pattern: str = r","
@@ -1058,7 +1063,7 @@ class NbtParser:
     array_pattern: str = r"\[[BIL];"
     curly_pattern: str = r"\{|\}"
     bracket_pattern: str = r"\[|\]"
-    quoted_string_pattern: str = r'"(?:\\.|[^\\\n])*?"' "|" r"'(?:\\.|[^\\\n])*?'"
+    quoted_string_pattern: str = NBT_QUOTED_STRING_PATTERN
     number_pattern: str = r"[+-]?(?:[0-9]*?\.[0-9]+|[0-9]+\.[0-9]*?|[1-9][0-9]*|0)(?:[eE][+-]?[0-9]+)?[bslfdBSLFD]?\b"
     string_pattern: str = r"[a-zA-Z0-9._+-]+"
     colon_pattern: str = r":"
