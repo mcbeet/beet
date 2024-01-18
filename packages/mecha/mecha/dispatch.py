@@ -258,6 +258,8 @@ class Dispatcher(Generic[T]):
             result = rule(node, *args, **kwargs) if rule else (child for child in node)
 
         if isinstance(result, Generator):
+            child = None
+
             try:
                 with self.use_rule(node, name):
                     child = next(result)
