@@ -2,6 +2,16 @@
 
 <!--next-version-placeholder-->
 
+## v0.87.0 (2024-01-18)
+
+### Feature
+
+* Add mecha.contrib.embed ([`80193eb`](https://github.com/mcbeet/mecha/commit/80193eba14c7dfd25f75a176247b3eecd456c01f))
+
+### Fix
+
+* Child yielded from rule can be unbound ([`3297142`](https://github.com/mcbeet/mecha/commit/32971429bf7c036386a3fe8eda3b487d9f399de1))
+
 ## v0.86.5 (2024-01-17)
 
 ### Fix
