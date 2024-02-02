@@ -211,7 +211,7 @@
     },
     {
       "properties": { "type": "players", "amount": "single" },
-      "examples": ["#foo", "$foo", "%foo"]
+      "examples": ["#foo", "$foo", "%foo", "#exp(-0.1)*65536"]
     }
   ],
   "minecraft:entity_anchor": [
