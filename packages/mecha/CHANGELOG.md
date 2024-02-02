@@ -2,6 +2,16 @@
 
 <!--next-version-placeholder-->
 
+## v0.88.0 (2024-02-02)
+
+### Feature
+
+* Update command tree for 24w05b ([`a3bdd3c`](https://github.com/mcbeet/mecha/commit/a3bdd3c99f95ff19b528ef24038fb643a844e1a8))
+
+### Fix
+
+* Improve player name regex ([`b652194`](https://github.com/mcbeet/mecha/commit/b652194c057bf7844d837440725cd259f7cd5af2))
+
 ## v0.87.0 (2024-01-18)
 
 ### Feature
