@@ -1,6 +1,5 @@
 """Plugin that minifies function files."""
 
-
 from beet import Context, Function
 
 

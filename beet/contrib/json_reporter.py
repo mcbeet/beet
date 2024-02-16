@@ -1,6 +1,5 @@
 """Plugin for reporting the result of the build as json."""
 
-
 __all__ = [
     "JsonReporter",
     "stdout",

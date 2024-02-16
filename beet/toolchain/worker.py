@@ -49,8 +49,7 @@ class Worker(Protocol[SendType, RecvType]):
     clients.
     """
 
-    def __call__(self, connection: "Connection[SendType, RecvType]") -> Any:
-        ...
+    def __call__(self, connection: "Connection[SendType, RecvType]") -> Any: ...
 
 
 class WorkerError(WrappedException):

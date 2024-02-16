@@ -4,7 +4,6 @@ Adapted from https://github.com/OrangeUtan/babelbox
 Credit: Oran9eUtan <Oran9eUtan@gmail.com>
 """
 
-
 __all__ = [
     "BabelboxOptions",
     "babelbox",

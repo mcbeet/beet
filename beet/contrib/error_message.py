@@ -1,6 +1,5 @@
 """Plugin for raising an error message."""
 
-
 __all__ = [
     "error_message",
     "ErrorMessageOptions",

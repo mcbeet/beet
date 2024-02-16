@@ -1,6 +1,5 @@
 """Plugin that implements Lantern Load runtime dependencies."""
 
-
 from typing import cast
 
 from beet import Context, Function, FunctionTag

@@ -1,6 +1,5 @@
 """Plugin for copying files into the output resource pack and data pack."""
 
-
 __all__ = [
     "CopyFilesOptions",
     "copy_files",

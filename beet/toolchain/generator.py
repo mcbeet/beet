@@ -129,8 +129,7 @@ class Generator:
         file_instance: NamespaceFile,
         *,
         hash: Any = None,
-    ) -> str:
-        ...
+    ) -> str: ...
 
     @overload
     def __call__(
@@ -140,8 +139,7 @@ class Generator:
         render: TextFileBase[Any],
         hash: Any = None,
         **kwargs: Any,
-    ) -> str:
-        ...
+    ) -> str: ...
 
     @overload
     def __call__(
@@ -150,8 +148,7 @@ class Generator:
         *,
         merge: NamespaceFile,
         hash: Any = None,
-    ) -> str:
-        ...
+    ) -> str: ...
 
     @overload
     def __call__(
@@ -160,8 +157,7 @@ class Generator:
         *,
         default: Union[Type[NamespaceFileType], NamespaceFileType],
         hash: Any = None,
-    ) -> NamespaceFileType:
-        ...
+    ) -> NamespaceFileType: ...
 
     @overload
     def __call__(
@@ -169,8 +165,7 @@ class Generator:
         file_instance: NamespaceFile,
         *,
         hash: Any = None,
-    ) -> str:
-        ...
+    ) -> str: ...
 
     @overload
     def __call__(
@@ -179,8 +174,7 @@ class Generator:
         render: TextFileBase[Any],
         hash: Any = None,
         **kwargs: Any,
-    ) -> str:
-        ...
+    ) -> str: ...
 
     def __call__(
         self,
@@ -299,8 +293,7 @@ class Generator:
         key: Optional[Callable[[T], int]] = None,
         hash: Any = None,
         name: Optional[str] = None,
-    ) -> Iterator[Tuple[TreeNode[T], Function]]:
-        ...
+    ) -> Iterator[Tuple[TreeNode[T], Function]]: ...
 
     @overload
     def function_tree(
@@ -311,8 +304,7 @@ class Generator:
         key: Optional[Callable[[T], int]] = None,
         hash: Any = None,
         name: Optional[str] = None,
-    ) -> Iterator[Tuple[TreeNode[T], Function]]:
-        ...
+    ) -> Iterator[Tuple[TreeNode[T], Function]]: ...
 
     def function_tree(
         self,

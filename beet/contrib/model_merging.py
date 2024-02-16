@@ -1,6 +1,5 @@
 """Plugin for setting up a merge policy that merges model overrides."""
 
-
 __all__ = [
     "ModelMergingOptions",
     "ModelOverridesMergePolicy",

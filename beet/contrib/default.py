@@ -1,6 +1,5 @@
 """Autoload default plugins."""
 
-
 from beet import Context
 
 

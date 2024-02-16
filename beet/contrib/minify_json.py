@@ -1,6 +1,5 @@
 """Plugin that minifies json files."""
 
-
 from beet import Context
 from beet.contrib.format_json import format_json
 

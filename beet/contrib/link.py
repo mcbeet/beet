@@ -1,6 +1,5 @@
 """Service for linking the project to Minecraft."""
 
-
 __all__ = [
     "LinkManager",
 ]

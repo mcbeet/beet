@@ -1,6 +1,5 @@
 """Plugin for experimental worldgen."""
 
-
 __all__ = [
     "worldgen",
     "Dimension",

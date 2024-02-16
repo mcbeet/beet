@@ -1,6 +1,5 @@
 """Plugin for handling data pack messages."""
 
-
 __all__ = [
     "Message",
     "MessageManager",

@@ -1,6 +1,5 @@
 """Plugin that registers extra files to be loaded in the data pack and the resource pack."""
 
-
 __all__ = [
     "ExtraFilesOptions",
     "extra_files",

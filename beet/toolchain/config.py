@@ -131,18 +131,22 @@ class PackLoadOptions(
                     {
                         prefix: ListOption.parse_obj(
                             [
-                                pattern.resolve(directory)
-                                if isinstance(pattern, PackageablePath)
-                                else pattern
+                                (
+                                    pattern.resolve(directory)
+                                    if isinstance(pattern, PackageablePath)
+                                    else pattern
+                                )
                                 for pattern in mount_options.entries()
                             ]
                         )
                         for prefix, mount_options in load_entry.items()
                     }
                     if isinstance(load_entry, dict)
-                    else load_entry.resolve(directory)
-                    if isinstance(load_entry, PackageablePath)
-                    else load_entry
+                    else (
+                        load_entry.resolve(directory)
+                        if isinstance(load_entry, PackageablePath)
+                        else load_entry
+                    )
                 )
                 for load_entry in self.entries()
             ]
@@ -215,9 +219,11 @@ class PackConfig(BaseModel):
                 "overlays": (
                     other.overlays
                     if self.overlays is None
-                    else self.overlays
-                    if other.overlays is None
-                    else other.overlays.entries() + self.overlays.entries()
+                    else (
+                        self.overlays
+                        if other.overlays is None
+                        else other.overlays.entries() + self.overlays.entries()
+                    )
                 ),
                 "zipped": other.zipped if self.zipped is None else self.zipped,
                 "compression": (

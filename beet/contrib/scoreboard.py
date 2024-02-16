@@ -1,6 +1,5 @@
 """Plugin that adds generated scoreboards to the data pack."""
 
-
 __all__ = [
     "ScoreboardOptions",
     "scoreboard",

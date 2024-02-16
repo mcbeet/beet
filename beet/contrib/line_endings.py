@@ -1,6 +1,5 @@
 """Plugin that configures line endings before writing out files."""
 
-
 __all__ = [
     "LineEndingsOptions",
     "line_endings",

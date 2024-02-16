@@ -9,7 +9,6 @@ The plugin also supports the "run commands" syntax suggested here:
 https://feedback.minecraft.net/hc/en-us/community/posts/360077450811-In-line-functions-in-mcfunction-files
 """
 
-
 __all__ = [
     "HangmanOptions",
     "hangman",
@@ -98,9 +97,11 @@ def fold_hanging_commands(
                 elif match[2] == "sequentially":
                     for nested_command in nested_commands:
                         yield REGEX_EXECUTE_RUN.sub(
-                            rf"\1{nested_command[8:]}\4"
-                            if nested_command.startswith("execute")
-                            else rf"\1run {nested_command}\4",
+                            (
+                                rf"\1{nested_command[8:]}\4"
+                                if nested_command.startswith("execute")
+                                else rf"\1run {nested_command}\4"
+                            ),
                             current,
                         )
                     current = ""

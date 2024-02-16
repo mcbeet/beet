@@ -1,6 +1,5 @@
 """Plugin for clearing the resource pack and the data pack."""
 
-
 __all__ = [
     "ClearOptions",
     "clear",

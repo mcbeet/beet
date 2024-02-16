@@ -109,18 +109,15 @@ class Pipeline(GenericPipeline["Context"]):
 
 
 class PluginWithOptions(Protocol[OptionsType]):
-    def __call__(self, ctx: "Context", opts: OptionsType, /) -> Any:
-        ...
+    def __call__(self, ctx: "Context", opts: OptionsType, /) -> Any: ...
 
 
 class ConfigurablePlugin(Protocol):
     @overload
-    def __call__(self, ctx: "Context", /) -> Any:
-        ...
+    def __call__(self, ctx: "Context", /) -> Any: ...
 
     @overload
-    def __call__(self, **kwds: Any) -> "ConfigurablePlugin":
-        ...
+    def __call__(self, **kwds: Any) -> "ConfigurablePlugin": ...
 
 
 class PluginOptions(BaseModel):
@@ -231,12 +228,10 @@ class Context:
         self.template.expose("parse_json", lambda string: json.loads(string))
 
     @overload
-    def inject(self, cls: ServiceFactory[T]) -> T:
-        ...
+    def inject(self, cls: ServiceFactory[T]) -> T: ...
 
     @overload
-    def inject(self, cls: str) -> Any:
-        ...
+    def inject(self, cls: str) -> Any: ...
 
     def inject(self, cls: Any) -> Any:
         """Retrieve the instance provided by the specified service factory."""
@@ -339,21 +334,18 @@ def configurable(
     /,
     *,
     validator: Validator[OptionsType],
-) -> Callable[[PluginWithOptions[OptionsType]], ConfigurablePlugin]:
-    ...
+) -> Callable[[PluginWithOptions[OptionsType]], ConfigurablePlugin]: ...
 
 
 @overload
 def configurable(
     name: Optional[str] = None,
     /,
-) -> Callable[[PluginWithOptions[JsonDict]], ConfigurablePlugin]:
-    ...
+) -> Callable[[PluginWithOptions[JsonDict]], ConfigurablePlugin]: ...
 
 
 @overload
-def configurable(plugin: PluginWithOptions[JsonDict]) -> ConfigurablePlugin:
-    ...
+def configurable(plugin: PluginWithOptions[JsonDict]) -> ConfigurablePlugin: ...
 
 
 def configurable(

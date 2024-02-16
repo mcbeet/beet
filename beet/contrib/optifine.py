@@ -1,6 +1,5 @@
 """Plugin for supporting optifine resources."""
 
-
 __all__ = [
     "optifine",
     "JsonEntityModel",

@@ -117,56 +117,45 @@ class NamespaceFile(Protocol):
         source_stop: Optional[int] = None,
         on_bind: Optional[Callable[[Any, Any, str], Any]] = None,
         original: Any = None,
-    ) -> None:
-        ...
+    ) -> None: ...
 
-    def merge(self, other: Any) -> bool:
-        ...
+    def merge(self, other: Any) -> bool: ...
 
-    def bind(self, pack: Any, path: str):
-        ...
+    def bind(self, pack: Any, path: str): ...
 
-    def set_content(self, content: Any):
-        ...
+    def set_content(self, content: Any): ...
 
-    def get_content(self) -> Any:
-        ...
+    def get_content(self) -> Any: ...
 
-    def ensure_source_path(self) -> FileSystemPath:
-        ...
+    def ensure_source_path(self) -> FileSystemPath: ...
 
     def ensure_serialized(
         self,
         serializer: Optional[Callable[[Any], Any]] = None,
-    ) -> Any:
-        ...
+    ) -> Any: ...
 
     def ensure_deserialized(
         self,
         deserializer: Optional[Callable[[Any], Any]] = None,
-    ) -> Any:
-        ...
+    ) -> Any: ...
 
     @classmethod
-    def default(cls) -> Any:
-        ...
+    def default(cls) -> Any: ...
 
     @classmethod
-    def load(cls: Type[T], origin: FileOrigin, path: FileSystemPath) -> T:
-        ...
+    def load(cls: Type[T], origin: FileOrigin, path: FileSystemPath) -> T: ...
 
-    def dump(self, origin: FileOrigin, path: FileSystemPath):
-        ...
+    def dump(self, origin: FileOrigin, path: FileSystemPath): ...
 
-    def convert(self, file_type: Type[PackFileType]) -> PackFileType:
-        ...
+    def convert(self, file_type: Type[PackFileType]) -> PackFileType: ...
 
 
 class MergeCallback(Protocol):
     """Protocol for detecting merge callbacks."""
 
-    def __call__(self, pack: Any, path: str, current: Any, conflict: Any, /) -> bool:
-        ...
+    def __call__(
+        self, pack: Any, path: str, current: Any, conflict: Any, /
+    ) -> bool: ...
 
 
 @dataclass
@@ -481,12 +470,10 @@ class Namespace(
         self,
         key: Type[NamespaceFile],
         value: NamespaceContainer[NamespaceFile],
-    ) -> None:
-        ...
+    ) -> None: ...
 
     @overload
-    def __setitem__(self, key: str, value: NamespaceFile) -> None:
-        ...
+    def __setitem__(self, key: str, value: NamespaceFile) -> None: ...
 
     def __setitem__(self, key: Any, value: Any):
         if isinstance(key, type):
@@ -542,8 +529,7 @@ class Namespace(
         self,
         namespace: str,
         *extensions: str,
-    ) -> Iterator[Tuple[str, PackFile]]:
-        ...
+    ) -> Iterator[Tuple[str, PackFile]]: ...
 
     @overload
     def list_files(
@@ -551,8 +537,7 @@ class Namespace(
         namespace: str,
         *extensions: str,
         extend: Type[T],
-    ) -> Iterator[Tuple[str, T]]:
-        ...
+    ) -> Iterator[Tuple[str, T]]: ...
 
     def list_files(
         self,
@@ -1084,14 +1069,12 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
         return self
 
     @overload
-    def __getitem__(self, key: str) -> NamespaceType:
-        ...
+    def __getitem__(self, key: str) -> NamespaceType: ...
 
     @overload
     def __getitem__(
         self, key: Type[NamespaceFileType]
-    ) -> NamespaceProxy[NamespaceFileType]:
-        ...
+    ) -> NamespaceProxy[NamespaceFileType]: ...
 
     def __getitem__(self, key: Any) -> Any:
         if isinstance(key, str):
@@ -1099,12 +1082,10 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
         return NamespaceProxy(self, key)
 
     @overload
-    def __setitem__(self, key: str, value: NamespaceType) -> None:
-        ...
+    def __setitem__(self, key: str, value: NamespaceType) -> None: ...
 
     @overload
-    def __setitem__(self, key: str, value: NamespaceFile) -> None:
-        ...
+    def __setitem__(self, key: str, value: NamespaceFile) -> None: ...
 
     def __setitem__(self, key: str, value: Any):
         if isinstance(value, Namespace):
@@ -1182,16 +1163,14 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
     def list_files(
         self,
         *extensions: str,
-    ) -> Iterator[Tuple[str, PackFile]]:
-        ...
+    ) -> Iterator[Tuple[str, PackFile]]: ...
 
     @overload
     def list_files(
         self,
         *extensions: str,
         extend: Type[T],
-    ) -> Iterator[Tuple[str, T]]:
-        ...
+    ) -> Iterator[Tuple[str, T]]: ...
 
     def list_files(
         self,
@@ -1221,14 +1200,12 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
                 yield from overlay.list_files(*extensions, extend=extend)  # type: ignore
 
     @overload
-    def all(self, *match: str) -> Iterable[Tuple[str, NamespaceFile]]:
-        ...
+    def all(self, *match: str) -> Iterable[Tuple[str, NamespaceFile]]: ...
 
     @overload
     def all(
         self, *match: str, extend: Type[NamespaceFileType]
-    ) -> Iterable[Tuple[str, NamespaceFileType]]:
-        ...
+    ) -> Iterable[Tuple[str, NamespaceFileType]]: ...
 
     def all(
         self, *match: str, extend: Optional[Type[NamespaceFile]] = None

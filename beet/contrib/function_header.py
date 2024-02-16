@@ -1,6 +1,5 @@
 """Plugin that adds a header to functions automatically."""
 
-
 __all__ = [
     "FunctionHeaderOptions",
     "function_header",

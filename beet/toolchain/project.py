@@ -54,9 +54,11 @@ class Project:
     def config(self) -> ProjectConfig:
         if self.resolved_config is None:
             self.resolved_config = load_config(
-                self.config_path
-                if self.config_path
-                else locate_config(Path.cwd(), parents=True),
+                (
+                    self.config_path
+                    if self.config_path
+                    else locate_config(Path.cwd(), parents=True)
+                ),
                 self.config_overrides,
             )
         return self.resolved_config
@@ -274,13 +276,15 @@ class ProjectBuilder:
 
             plugins: List[PluginSpec] = [self.bootstrap]
             plugins.extend(
-                item
-                if isinstance(item, str)
-                else ProjectBuilder(
-                    Project(
-                        resolved_config=item,
-                        resolved_cache=ctx.cache,
-                        resolved_worker_pool=self.project.worker_pool,
+                (
+                    item
+                    if isinstance(item, str)
+                    else ProjectBuilder(
+                        Project(
+                            resolved_config=item,
+                            resolved_cache=ctx.cache,
+                            resolved_worker_pool=self.project.worker_pool,
+                        )
                     )
                 )
                 for item in self.config.pipeline

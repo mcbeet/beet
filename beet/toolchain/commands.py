@@ -97,8 +97,9 @@ def watch(
             change_time = click.style(now, fg="green", bold=True)
             click.echo(f"{change_time} {text}")
 
-            with error_handler(format_padding=1), project.override(
-                reload and "require[] = beet.contrib.livereload"
+            with (
+                error_handler(format_padding=1),
+                project.override(reload and "require[] = beet.contrib.livereload"),
             ):
                 project.build()
 

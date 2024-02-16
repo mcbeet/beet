@@ -1,6 +1,5 @@
 """Plugin that loads data packs and resource packs."""
 
-
 __all__ = [
     "LoadOptions",
     "load",

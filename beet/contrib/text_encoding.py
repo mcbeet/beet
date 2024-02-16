@@ -1,6 +1,5 @@
 """Plugin that configures text encoding before writing out files."""
 
-
 __all__ = [
     "TextEncodingOptions",
     "text_encoding",

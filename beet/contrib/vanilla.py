@@ -1,6 +1,5 @@
 """Service for fetching and unpacking vanilla resources."""
 
-
 __all__ = [
     "LoadVanillaOptions",
     "load_vanilla",

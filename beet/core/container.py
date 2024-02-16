@@ -49,8 +49,7 @@ class Drop(Exception):
 class SupportsMerge(Protocol):
     """Protocol for detecting mergeable types."""
 
-    def merge(self, other: Any) -> bool:
-        ...
+    def merge(self, other: Any) -> bool: ...
 
 
 class MergeMixin:

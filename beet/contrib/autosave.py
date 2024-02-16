@@ -1,6 +1,5 @@
 """Service for saving the data pack and resource pack at the end of the build."""
 
-
 __all__ = [
     "Autosave",
     "AutosaveOptions",

@@ -1,6 +1,5 @@
 """Plugin that builds a sandstone project."""
 
-
 __all__ = [
     "SandstoneOption",
     "sandstone",

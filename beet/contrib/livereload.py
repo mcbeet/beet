@@ -1,6 +1,5 @@
 """Plugin for automatically reloading the data pack after the build."""
 
-
 __all__ = [
     "livereload",
     "create_livereload_data_pack",
@@ -136,12 +135,10 @@ class LogWatcher:
         self.thread = None
 
     @overload
-    def tail(self, path: FileSystemPath) -> Callable[[LogCallback], None]:
-        ...
+    def tail(self, path: FileSystemPath) -> Callable[[LogCallback], None]: ...
 
     @overload
-    def tail(self, path: FileSystemPath, callback: LogCallback):
-        ...
+    def tail(self, path: FileSystemPath, callback: LogCallback): ...
 
     def tail(
         self,

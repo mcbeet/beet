@@ -1,6 +1,5 @@
 """Plugin that installs a Jinja extension for turning __foo__ into {{ foo }}."""
 
-
 __all__ = [
     "DundervarExtension",
 ]

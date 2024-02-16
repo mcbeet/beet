@@ -1,6 +1,5 @@
 """Plugin that resolves relative function paths within a namespace."""
 
-
 import re
 from pathlib import PurePosixPath
 

@@ -1,6 +1,5 @@
 """Plugin that loads yaml resources for data packs and resource packs."""
 
-
 __all__ = [
     "LoadYamlOptions",
     "YamlPackLoader",

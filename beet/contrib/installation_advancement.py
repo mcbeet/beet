@@ -6,7 +6,6 @@ and non-obstructive way by putting them on a single advancement page.
 Reference: https://mc-datapacks.github.io/en/conventions/datapack_advancement.html
 """
 
-
 __all__ = [
     "InstallationAdvancementOptions",
     "installation_advancement",

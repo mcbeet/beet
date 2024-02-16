@@ -1,6 +1,5 @@
 """Plugin that builds a project from standard input."""
 
-
 import json
 import sys
 

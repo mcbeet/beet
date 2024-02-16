@@ -1,6 +1,5 @@
 """Plugin that formats json files."""
 
-
 __all__ = [
     "FormatJsonOptions",
     "format_json",

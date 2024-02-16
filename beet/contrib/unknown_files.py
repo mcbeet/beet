@@ -1,6 +1,5 @@
 """Plugin to load unknown files."""
 
-
 __all__ = [
     "UnknownAsset",
     "UnknownData",

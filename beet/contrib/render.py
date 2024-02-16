@@ -1,6 +1,5 @@
 """Plugin that invokes the built-in template renderer."""
 
-
 __all__ = [
     "RenderOptions",
     "render",

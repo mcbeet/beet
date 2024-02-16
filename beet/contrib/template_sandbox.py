@@ -1,6 +1,5 @@
 """Plugin that configures the sandboxed jinja environment."""
 
-
 from jinja2.sandbox import SandboxedEnvironment
 
 from beet import Context

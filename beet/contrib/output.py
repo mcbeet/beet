@@ -1,6 +1,5 @@
 """Plugin that outputs the data pack and the resource pack in a local directory."""
 
-
 __all__ = [
     "OutputOptions",
     "output",

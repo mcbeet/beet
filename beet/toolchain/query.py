@@ -283,16 +283,14 @@ class PreparedPackFilesQuery(Generic[PackType]):
     def select(
         self,
         *extensions: str,
-    ) -> PackFilesSelection[File[Any, Any], PackType]:
-        ...
+    ) -> PackFilesSelection[File[Any, Any], PackType]: ...
 
     @overload
     def select(
         self,
         *extensions: str,
         extend: Type[T],
-    ) -> PackFilesSelection[T, PackType]:
-        ...
+    ) -> PackFilesSelection[T, PackType]: ...
 
     def select(
         self,
@@ -390,16 +388,14 @@ class PreparedPackMatchQuery(Generic[PackType]):
     def select(
         self,
         *extensions: str,
-    ) -> PackMatchSelection[File[Any, Any], PackType]:
-        ...
+    ) -> PackMatchSelection[File[Any, Any], PackType]: ...
 
     @overload
     def select(
         self,
         *extensions: str,
         extend: Type[T],
-    ) -> PackMatchSelection[T, PackType]:
-        ...
+    ) -> PackMatchSelection[T, PackType]: ...
 
     def select(
         self,
@@ -471,9 +467,9 @@ class PreparedPackMatchQuery(Generic[PackType]):
 
             while selection:
                 content: Dict[str, File[Any, Any]] = {}
-                remaining: Dict[
-                    Tuple[str, File[Any, Any]], Tuple[PackType, str]
-                ] = dict(selection)
+                remaining: Dict[Tuple[str, File[Any, Any]], Tuple[PackType, str]] = (
+                    dict(selection)
+                )
 
                 for (path, file_instance), (pack, _) in selection.items():
                     if path not in content:
@@ -515,16 +511,14 @@ class PreparedPackQuery(Generic[PackType]):
     def select(
         self,
         *extensions: str,
-    ) -> PackSelection[File[Any, Any], PackType]:
-        ...
+    ) -> PackSelection[File[Any, Any], PackType]: ...
 
     @overload
     def select(
         self,
         *extensions: str,
         extend: Type[T],
-    ) -> PackSelection[T, PackType]:
-        ...
+    ) -> PackSelection[T, PackType]: ...
 
     def select(
         self,
@@ -581,22 +575,18 @@ class PackQuery(Generic[PackType]):
     @overload
     def prepare(
         self, pack_options: PackFilesOption
-    ) -> PreparedPackFilesQuery[PackType]:
-        ...
+    ) -> PreparedPackFilesQuery[PackType]: ...
 
     @overload
-    def prepare(self, *, files: Any) -> PreparedPackFilesQuery[PackType]:
-        ...
+    def prepare(self, *, files: Any) -> PreparedPackFilesQuery[PackType]: ...
 
     @overload
     def prepare(
         self, pack_options: PackMatchOption
-    ) -> PreparedPackMatchQuery[PackType]:
-        ...
+    ) -> PreparedPackMatchQuery[PackType]: ...
 
     @overload
-    def prepare(self, *, match: Any) -> PreparedPackMatchQuery[PackType]:
-        ...
+    def prepare(self, *, match: Any) -> PreparedPackMatchQuery[PackType]: ...
 
     @overload
     def prepare(
@@ -605,8 +595,7 @@ class PackQuery(Generic[PackType]):
             PackQueryOption,
             Sequence[Union[PackFilesOption, PackMatchOption, PackQueryOption]],
         ],
-    ) -> PreparedPackQuery[PackType]:
-        ...
+    ) -> PreparedPackQuery[PackType]: ...
 
     @overload
     def prepare(
@@ -622,8 +611,7 @@ class PackQuery(Generic[PackType]):
         *,
         files: Any,
         match: Any,
-    ) -> PreparedPackQuery[PackType]:
-        ...
+    ) -> PreparedPackQuery[PackType]: ...
 
     def prepare(
         self,
@@ -693,8 +681,7 @@ class PackQuery(Generic[PackType]):
         self,
         *extensions: str,
         files: Any,
-    ) -> PackFilesSelection[File[Any, Any], PackType]:
-        ...
+    ) -> PackFilesSelection[File[Any, Any], PackType]: ...
 
     @overload
     def __call__(
@@ -702,16 +689,14 @@ class PackQuery(Generic[PackType]):
         *extensions: str,
         extend: Type[T],
         files: Any,
-    ) -> PackFilesSelection[T, PackType]:
-        ...
+    ) -> PackFilesSelection[T, PackType]: ...
 
     @overload
     def __call__(
         self,
         *extensions: str,
         match: Any,
-    ) -> PackMatchSelection[File[Any, Any], PackType]:
-        ...
+    ) -> PackMatchSelection[File[Any, Any], PackType]: ...
 
     @overload
     def __call__(
@@ -719,8 +704,7 @@ class PackQuery(Generic[PackType]):
         *extensions: str,
         extend: Type[T],
         match: Any,
-    ) -> PackMatchSelection[T, PackType]:
-        ...
+    ) -> PackMatchSelection[T, PackType]: ...
 
     def __call__(
         self,
@@ -752,8 +736,7 @@ class PackQuery(Generic[PackType]):
         ],
         files: Optional[Any] = None,
         match: Optional[Any] = None,
-    ) -> PackSelection[File[Any, Any], PackType]:
-        ...
+    ) -> PackSelection[File[Any, Any], PackType]: ...
 
     @overload
     def distinct(
@@ -768,8 +751,7 @@ class PackQuery(Generic[PackType]):
         extend: Type[T],
         files: Optional[Any] = None,
         match: Optional[Any] = None,
-    ) -> PackSelection[T, PackType]:
-        ...
+    ) -> PackSelection[T, PackType]: ...
 
     def distinct(
         self,

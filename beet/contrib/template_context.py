@@ -1,6 +1,5 @@
 """Plugin that exposes the beet context in templates"""
 
-
 from beet import Context
 
 

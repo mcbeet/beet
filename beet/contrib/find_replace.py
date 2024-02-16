@@ -1,6 +1,5 @@
 """Plugin for performing basic substitutions."""
 
-
 __all__ = [
     "find_replace",
     "FindReplaceHandler",

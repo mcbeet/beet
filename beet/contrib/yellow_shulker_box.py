@@ -1,6 +1,5 @@
 """Plugin that includes the yellow shulker box loot table."""
 
-
 from beet import Context, LootTable
 
 

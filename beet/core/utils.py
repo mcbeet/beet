@@ -65,8 +65,7 @@ T = TypeVar("T")
 
 @runtime_checkable
 class PathLikeFallback(Protocol):
-    def __fspath__(self) -> str:
-        ...
+    def __fspath__(self) -> str: ...
 
 
 JsonDict = Dict[str, Any]
@@ -260,9 +259,11 @@ def format_validation_error(prefix: str, exc: ValidationError) -> str:
             + "".join(
                 json.dumps([item]) for item in error["loc"] if item != "__root__"
             ),
-            error["msg"]
-            if error["msg"][0].isupper()
-            else error["msg"][0].capitalize() + error["msg"][1:],
+            (
+                error["msg"]
+                if error["msg"][0].isupper()
+                else error["msg"][0].capitalize() + error["msg"][1:]
+            ),
         )
         for error in exc.errors()
     ]

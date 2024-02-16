@@ -1,6 +1,5 @@
 """Plugin that installs a Jinja extension for easily logging things."""
 
-
 __all__ = [
     "DbgOptions",
     "DbgRenderer",
