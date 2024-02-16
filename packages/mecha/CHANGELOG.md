@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.89.1 (2024-02-16)
+
+### Fix
+
+* Update beet ([`51e9920`](https://github.com/mcbeet/mecha/commit/51e9920dcefd83fb52910a490e32924d5845838c))
+
 ## v0.89.0 (2024-02-16)
 
 ### Feature
