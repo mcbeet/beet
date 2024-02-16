@@ -466,7 +466,7 @@ def test_merge_filter():
     }
 
 
-def test_select():
+def test_query():
     p = DataPack()
     p["demo:foo"] = Function()
     p["demo:bar"] = Function()
@@ -477,14 +477,14 @@ def test_select():
     p["minecraft:load"] = FunctionTag()
     p["other_namespace:what/is/that"] = BlockTag()
 
-    select = PackQuery([p])
+    query = PackQuery([p])
 
     selection = {
         (k := "data/demo/functions/foo.mcfunction", p.functions["demo:foo"]): (p, k),
         (k := "data/demo/functions/bar.mcfunction", p.functions["demo:bar"]): (p, k),
     }
-    assert select(".mcfunction", files=r".*") == selection
-    assert select(extend=Function, files=r".*") == selection
+    assert query(".mcfunction", files=r".*") == selection
+    assert query(extend=Function, files=r".*") == selection
 
     selection = {
         Function: {
@@ -492,21 +492,21 @@ def test_select():
             (k := "demo:bar", p.functions["demo:bar"]): (p, k),
         }
     }
-    assert select(".mcfunction", match="*") == selection
-    assert select(extend=Function, match="*") == selection
-    assert select(match={"function": "*"}) == selection
-    assert select(match={"functions": "*"}) == selection
+    assert query(".mcfunction", match="*") == selection
+    assert query(extend=Function, match="*") == selection
+    assert query(match={"function": "*"}) == selection
+    assert query(match={"functions": "*"}) == selection
 
     selection = {
         (k := "pack.mcmeta", p.mcmeta): (p, k),
     }
-    assert select(files=r"^pack\.mcmeta$") == selection
-    assert select(".mcmeta", files=r".*") == selection
-    assert select(extend=Mcmeta, files=r".*") == selection
+    assert query(files=r"^pack\.mcmeta$") == selection
+    assert query(".mcmeta", files=r".*") == selection
+    assert query(extend=Mcmeta, files=r".*") == selection
 
-    assert select(extend=Mcmeta, match="*") == {}
+    assert query(extend=Mcmeta, match="*") == {}
 
-    assert set(select.distinct(files=r".*\.json")) == {
+    assert set(query.distinct(files=r".*\.json")) == {
         p.loot_tables["demo:some_loot"],
         p.loot_tables["demo:some_other_loot"],
         p.loot_tables["minecraft:default_loot"],
@@ -514,22 +514,22 @@ def test_select():
         p.function_tags["minecraft:load"],
         p.block_tags["other_namespace:what/is/that"],
     }
-    assert set(select.distinct(files=r"data/minecraft/.*\.json")) == {
+    assert set(query.distinct(files=r"data/minecraft/.*\.json")) == {
         p.loot_tables["minecraft:default_loot"],
         p.function_tags["minecraft:tick"],
         p.function_tags["minecraft:load"],
     }
-    assert set(select.distinct(".json", match=r"minecraft:*")) == {
+    assert set(query.distinct(".json", match=r"minecraft:*")) == {
         p.loot_tables["minecraft:default_loot"],
         p.function_tags["minecraft:tick"],
         p.function_tags["minecraft:load"],
     }
-    assert set(select.distinct(extend=JsonFileBase[Any], match=r"minecraft:*")) == {
+    assert set(query.distinct(extend=JsonFileBase[Any], match=r"minecraft:*")) == {
         p.loot_tables["minecraft:default_loot"],
         p.function_tags["minecraft:tick"],
         p.function_tags["minecraft:load"],
     }
-    assert set(select.distinct(extend=JsonFileBase[Any], files=r".*")) == {
+    assert set(query.distinct(extend=JsonFileBase[Any], files=r".*")) == {
         p.mcmeta,
         p.loot_tables["demo:some_loot"],
         p.loot_tables["demo:some_other_loot"],
@@ -539,20 +539,18 @@ def test_select():
         p.block_tags["other_namespace:what/is/that"],
     }
 
-    assert set(select.distinct(files=[r".*loot\.json", r"pack\.mcmeta"])) == {
+    assert set(query.distinct(files=[r".*loot\.json", r"pack\.mcmeta"])) == {
         p.mcmeta,
         p.loot_tables["demo:some_loot"],
         p.loot_tables["demo:some_other_loot"],
         p.loot_tables["minecraft:default_loot"],
     }
-    assert set(
-        select.distinct(files={"regex": r".*LoOt.*", "flags": "IGNORECASE"})
-    ) == {
+    assert set(query.distinct(files={"regex": r".*LoOt.*", "flags": "IGNORECASE"})) == {
         p.loot_tables["demo:some_loot"],
         p.loot_tables["demo:some_other_loot"],
         p.loot_tables["minecraft:default_loot"],
     }
-    assert set(select.distinct(match=["minecraft:*", "demo:*", "!*other*"])) == {
+    assert set(query.distinct(match=["minecraft:*", "demo:*", "!*other*"])) == {
         p.functions["demo:foo"],
         p.functions["demo:bar"],
         p.loot_tables["demo:some_loot"],
@@ -562,14 +560,14 @@ def test_select():
     }
 
 
-def test_select_rename():
+def test_query_rename():
     p = DataPack()
     p["demo:foo"] = Function(["say foo"])
     p["demo:bar"] = Function(["say bar"])
 
-    select = PackQuery([p])
+    query = PackQuery([p])
 
-    assert select(match={"function": {"demo:nested": ["demo:foo", "demo:bar"]}}) == {
+    assert query(match={"function": {"demo:nested": ["demo:foo", "demo:bar"]}}) == {
         Function: {
             ("demo:nested/foo", p.functions["demo:foo"]): (p, "demo:foo"),
             ("demo:nested/bar", p.functions["demo:bar"]): (p, "demo:bar"),
@@ -577,16 +575,16 @@ def test_select_rename():
     }
 
 
-def test_select_copy():
+def test_query_copy():
     p = DataPack()
     p["demo:foo"] = Function(["say foo"], tags=["demo:my_foo"])
     p["demo:bar"] = Function(["say bar"], tags=["demo:my_bar"])
 
-    select = PackQuery([p])
+    query = PackQuery([p])
 
     target1 = DataPack()
     target2 = DataPack()
-    select.prepare(
+    query.prepare(
         files={r"data/stuff/\1foo.\2": r"data/demo/(.+)foo\.(mcfunction|json)"}
     ).copy_to(target1, target2)
 
