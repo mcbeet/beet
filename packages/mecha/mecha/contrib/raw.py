@@ -1,6 +1,5 @@
 """Plugin for inserting raw commands."""
 
-
 __all__ = [
     "RawCommandSerializer",
 ]

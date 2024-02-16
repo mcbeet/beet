@@ -182,8 +182,7 @@ class CompilationUnitProvider(Protocol):
         self,
         pack: Union[ResourcePack, DataPack],
         match: Optional[List[str]] = None,
-    ) -> Iterable[Tuple[TextFileBase[Any], CompilationUnit]]:
-        ...
+    ) -> Iterable[Tuple[TextFileBase[Any], CompilationUnit]]: ...
 
 
 @dataclass

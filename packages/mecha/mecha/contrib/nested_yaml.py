@@ -1,6 +1,5 @@
 """Plugin for handling nested yaml."""
 
-
 __all__ = [
     "BaseYamlObjectCollector",
     "BaseYamlArrayCollector",
@@ -243,16 +242,22 @@ class NestedYamlParser:
                     with stream.reset("nested_yaml"):
                         return self.original_parser(stream)
 
-        with stream.intercept("newline"), stream.syntax(
-            colon=r":",
-            dash=r"\-",
-            key=r"[a-zA-Z0-9._+-]+",
+        with (
+            stream.intercept("newline"),
+            stream.syntax(
+                colon=r":",
+                dash=r"\-",
+                key=r"[a-zA-Z0-9._+-]+",
+            ),
         ):
             if consume_line_continuation(stream):
                 return self.parse_yaml(stream)
 
-        with stream.ignore("newline"), stream.syntax(
-            string=r'"(?:\\.|[^\\\n])*?"' "|" r"'(?:\\.|[^\\\n])*?'",
+        with (
+            stream.ignore("newline"),
+            stream.syntax(
+                string=r'"(?:\\.|[^\\\n])*?"' "|" r"'(?:\\.|[^\\\n])*?'",
+            ),
         ):
             if token := stream.get("string"):
                 return self.string_collector(

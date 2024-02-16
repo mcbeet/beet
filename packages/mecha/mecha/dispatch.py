@@ -94,15 +94,13 @@ class Rule:
 
 
 @overload
-def rule(func: Callable[..., Any]) -> Rule:
-    ...
+def rule(func: Callable[..., Any]) -> Rule: ...
 
 
 @overload
 def rule(
     *args: Type[AbstractNode], **kwargs: Any
-) -> Callable[[Callable[..., Any]], Rule]:
-    ...
+) -> Callable[[Callable[..., Any]], Rule]: ...
 
 
 def rule(*args: Any, **kwargs: Any) -> Any:
@@ -217,9 +215,11 @@ class Dispatcher(Generic[T]):
             if value := self.rules.get(node_type):
                 for match_fields, callbacks in value.items():
                     if all(
-                        node == value
-                        if name == "self"
-                        else hasattr(node, name) and getattr(node, name) == value
+                        (
+                            node == value
+                            if name == "self"
+                            else hasattr(node, name) and getattr(node, name) == value
+                        )
                         for name, value in match_fields
                     ):
                         for priority, name, callback in callbacks:

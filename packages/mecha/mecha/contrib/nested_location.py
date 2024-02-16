@@ -1,6 +1,5 @@
 """Plugin for handling lexically nested resource locations."""
 
-
 __all__ = [
     "AstNestedLocation",
     "UnresolvedNestedLocation",

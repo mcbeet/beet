@@ -1,6 +1,5 @@
 """Plugin for declaring function tags inline."""
 
-
 __all__ = [
     "InlineFunctionTagHandler",
 ]

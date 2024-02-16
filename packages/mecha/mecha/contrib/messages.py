@@ -1,6 +1,5 @@
 """Plugin for handling message references in commands."""
 
-
 __all__ = [
     "AstMessageReference",
     "AstMessageReferencePath",

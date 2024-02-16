@@ -1,6 +1,5 @@
 """Plugin for baking static macro invocations."""
 
-
 __all__ = [
     "bake_macros",
     "BakeMacrosOptions",
@@ -85,8 +84,7 @@ class MacroBakerParseCallback(Protocol):
         source: TextFileBase[Any],
         *,
         preprocessor: Preprocessor,
-    ) -> AstRoot:
-        ...
+    ) -> AstRoot: ...
 
 
 @dataclass

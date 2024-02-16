@@ -1,6 +1,5 @@
 """Plugin that clears diagnostics."""
 
-
 from beet import Context
 
 from mecha import Mecha

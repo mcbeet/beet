@@ -1,6 +1,5 @@
 """Plugin that emits source mapping information."""
 
-
 __all__ = [
     "AstSourceMap",
     "SourceMapOptions",
@@ -31,7 +30,9 @@ from mecha import (
 
 
 class SourceMapOptions(BaseModel):
-    header: str = "# [source_map] {{ compilation_unit.filename or compilation_unit.resource_location }}"
+    header: str = (
+        "# [source_map] {{ compilation_unit.filename or compilation_unit.resource_location }}"
+    )
 
     class Config:
         extra = "forbid"

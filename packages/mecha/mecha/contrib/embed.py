@@ -1,6 +1,5 @@
 """Plugin for parsing and resolving embeds in json and nbt strings."""
 
-
 __all__ = [
     "AstJsonValueEmbed",
     "AstNbtValueEmbed",
@@ -64,15 +63,13 @@ class EmbedParseCallback(Protocol):
         *,
         using: str,
         preprocessor: Preprocessor,
-    ) -> AstNode:
-        ...
+    ) -> AstNode: ...
 
 
 class EmbedSerializeCallback(Protocol):
     """Callback required for serializing embed."""
 
-    def __call__(self, node: AstNode) -> str:
-        ...
+    def __call__(self, node: AstNode) -> str: ...
 
 
 class EmbedHandler:

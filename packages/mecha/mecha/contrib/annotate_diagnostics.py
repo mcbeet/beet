@@ -1,6 +1,5 @@
 """Plugin that inserts comments containing mecha diagnostics."""
 
-
 __all__ = [
     "annotate_diagnostics",
 ]

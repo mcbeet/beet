@@ -183,14 +183,16 @@ class AbstractNode:
             + (
                 "\n" + ("\n".join((f"{prefix}    {type(child)}" if shallow else child.dump(prefix + "    ", shallow, exclude)) for child in attribute) if attribute else prefix + "    <empty>")  # type: ignore
                 if isinstance(attribute := getattr(self, f.name), AbstractChildren)
-                else "\n"
-                + (
-                    f"{prefix}    {type(attribute)}"
-                    if shallow
-                    else attribute.dump(prefix + "    ", shallow, exclude)
+                else (
+                    "\n"
+                    + (
+                        f"{prefix}    {type(attribute)}"
+                        if shallow
+                        else attribute.dump(prefix + "    ", shallow, exclude)
+                    )
+                    if isinstance(attribute, AbstractNode)
+                    else f" {attribute!r}"
                 )
-                if isinstance(attribute, AbstractNode)
-                else f" {attribute!r}"
             )
             for f in fields(self)
             if not exclude or f.name not in exclude
@@ -700,23 +702,19 @@ class AstNbt(AstNode):
 
     @overload
     @classmethod
-    def from_value(cls, value: Union[bool, int, float, str]) -> "AstNbtValue":
-        ...
+    def from_value(cls, value: Union[bool, int, float, str]) -> "AstNbtValue": ...
 
     @overload
     @classmethod
-    def from_value(cls, value: Mapping[Any, Any]) -> "AstNbtCompound":
-        ...
+    def from_value(cls, value: Mapping[Any, Any]) -> "AstNbtCompound": ...
 
     @overload
     @classmethod
-    def from_value(cls, value: Sequence[Any]) -> "AstNbtList":
-        ...
+    def from_value(cls, value: Sequence[Any]) -> "AstNbtList": ...
 
     @overload
     @classmethod
-    def from_value(cls, value: Any) -> "AstNbt":
-        ...
+    def from_value(cls, value: Any) -> "AstNbt": ...
 
     @classmethod
     def from_value(cls, value: Any) -> "AstNbt":
@@ -1039,9 +1037,9 @@ class AstSelectorAdvancementMatch(AstNode):
     """Ast selector advancement match node."""
 
     key: AstResourceLocation = required_field()
-    value: Union[
-        AstBool, AstChildren[AstSelectorAdvancementPredicateMatch]
-    ] = required_field()
+    value: Union[AstBool, AstChildren[AstSelectorAdvancementPredicateMatch]] = (
+        required_field()
+    )
 
 
 @dataclass(frozen=True, slots=True)

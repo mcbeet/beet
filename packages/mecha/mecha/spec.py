@@ -18,8 +18,7 @@ from .prototype import CommandArgument, CommandPrototype, CommandSignature
 class Parser(Protocol):
     """Protocol describing parser signature."""
 
-    def __call__(self, stream: TokenStream) -> Any:
-        ...
+    def __call__(self, stream: TokenStream) -> Any: ...
 
 
 @dataclass

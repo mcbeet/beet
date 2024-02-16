@@ -1,6 +1,5 @@
 """Plugin for emitting ast."""
 
-
 __all__ = [
     "DebugAstOptions",
     "DebugAstEmitter",

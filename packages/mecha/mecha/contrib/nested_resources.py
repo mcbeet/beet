@@ -1,6 +1,5 @@
 """Plugin for handling nested resources."""
 
-
 __all__ = [
     "NestedResources",
     "NestedResourcesTransformer",
@@ -80,9 +79,11 @@ class NestedResources:
         }
 
         self.text_resources = {
-            f"{file_type.snake_name}_file"
-            if file_type.snake_name in should_disambiguate
-            else file_type.snake_name: file_type
+            (
+                f"{file_type.snake_name}_file"
+                if file_type.snake_name in should_disambiguate
+                else file_type.snake_name
+            ): file_type
             for pack in packs
             for file_type in pack.get_file_types(extend=TextFileBase)
         }
@@ -292,9 +293,11 @@ class NestedResourcesTransformer(MutatingReducer):
                         continue
 
                     file_instance = file_type(
-                        content.evaluate()
-                        if isinstance(content, AstJson)
-                        else content.value,
+                        (
+                            content.evaluate()
+                            if isinstance(content, AstJson)
+                            else content.value
+                        ),
                         original=self.database.current.original,
                     )
 

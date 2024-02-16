@@ -1,6 +1,5 @@
 """Plugin that handles implicit execute commands."""
 
-
 __all__ = [
     "ImplicitExecuteParser",
 ]

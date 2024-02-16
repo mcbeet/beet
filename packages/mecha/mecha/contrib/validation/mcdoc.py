@@ -86,8 +86,12 @@ PATTERN_INTEGER: str = r"[-+]?[1-9][0-9]*|0"
 PATTERN_FLOAT: str = r"[-+]?(?:[0-9]*\.[0-9]+|[0-9]+)(?:[eE][-+]?[0-9]+)?"
 PATTERN_TYPED_NUMBER: str = rf"{PATTERN_FLOAT}[bBdDfFlLsS]?"
 PATTERN_RANGE_DELIMITER: str = r"<?\.\.<?"
-PATTERN_INTEGER_RANGE: str = rf"(?:{PATTERN_INTEGER})(?:{PATTERN_RANGE_DELIMITER})(?:{PATTERN_INTEGER})?|(?:{PATTERN_RANGE_DELIMITER})?(?:{PATTERN_INTEGER})"
-PATTERN_FLOAT_RANGE: str = rf"(?:{PATTERN_FLOAT})(?:{PATTERN_RANGE_DELIMITER})(?:{PATTERN_FLOAT})?|(?:{PATTERN_RANGE_DELIMITER})?(?:{PATTERN_FLOAT})"
+PATTERN_INTEGER_RANGE: str = (
+    rf"(?:{PATTERN_INTEGER})(?:{PATTERN_RANGE_DELIMITER})(?:{PATTERN_INTEGER})?|(?:{PATTERN_RANGE_DELIMITER})?(?:{PATTERN_INTEGER})"
+)
+PATTERN_FLOAT_RANGE: str = (
+    rf"(?:{PATTERN_FLOAT})(?:{PATTERN_RANGE_DELIMITER})(?:{PATTERN_FLOAT})?|(?:{PATTERN_RANGE_DELIMITER})?(?:{PATTERN_FLOAT})"
+)
 PATTERN_STRING: str = r'"(?:[^"\\]|\\[bfnrt\\"])*"'
 PATTERN_RESOURCE_LOCATION: str = r"[a-z0-9_.-]*:(?!:)[a-z0-9_.-]*(?:/[a-z0-9_.-]*)*"
 PATTERN_IDENTIFIER: str = r"[a-zA-Z0-9_]+"
@@ -1220,9 +1224,7 @@ def parse_attribute_tree(stream: TokenStream) -> McdocAttributeTree:
         close_pattern = (
             ("brace", ")")
             if open_tree.match("brace")
-            else ("bracket", "]")
-            if open_tree.match("bracket")
-            else ("curly", "}")
+            else ("bracket", "]") if open_tree.match("bracket") else ("curly", "}")
         )
 
         positional_values: List[McdocAttributeValue] = []

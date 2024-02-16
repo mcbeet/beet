@@ -553,13 +553,11 @@ class UnrecognizedParser(MechaError):
 
 
 @overload
-def delegate(parser: str) -> Parser:
-    ...
+def delegate(parser: str) -> Parser: ...
 
 
 @overload
-def delegate(parser: str, stream: TokenStream) -> Any:
-    ...
+def delegate(parser: str, stream: TokenStream) -> Any: ...
 
 
 def delegate(parser: str, stream: Optional[TokenStream] = None) -> Any:
@@ -659,9 +657,12 @@ def parse_command(stream: TokenStream) -> AstCommand:
                 choices.append(("", tree))
 
             for (name, child), alternative in stream.choose(*choices):
-                with alternative, stream.provide(
-                    scope=scope + (name,),
-                    line_indentation=level,
+                with (
+                    alternative,
+                    stream.provide(
+                        scope=scope + (name,),
+                        line_indentation=level,
+                    ),
                 ):
                     literal = None
                     argument = None
@@ -709,9 +710,12 @@ def parse_command(stream: TokenStream) -> AstCommand:
             if tree.executable and (not stream.peek() or stream.get("newline", "eof")):
                 break
             subcommand_scope = tree.redirect if tree.redirect is not None else scope
-            with stream.alternative(bool(target and target.children)), stream.provide(
-                scope=subcommand_scope,
-                line_indentation=level,
+            with (
+                stream.alternative(bool(target and target.children)),
+                stream.provide(
+                    scope=subcommand_scope,
+                    line_indentation=level,
+                ),
             ):
                 node = delegate("command", stream)
                 arguments.append(node)
@@ -1064,7 +1068,9 @@ class NbtParser:
     curly_pattern: str = r"\{|\}"
     bracket_pattern: str = r"\[|\]"
     quoted_string_pattern: str = NBT_QUOTED_STRING_PATTERN
-    number_pattern: str = r"[+-]?(?:[0-9]*?\.[0-9]+|[0-9]+\.[0-9]*?|[1-9][0-9]*|0)(?:[eE][+-]?[0-9]+)?[bslfdBSLFD]?\b"
+    number_pattern: str = (
+        r"[+-]?(?:[0-9]*?\.[0-9]+|[0-9]+\.[0-9]*?|[1-9][0-9]*|0)(?:[eE][+-]?[0-9]+)?[bslfdBSLFD]?\b"
+    )
     string_pattern: str = r"[a-zA-Z0-9._+-]+"
     colon_pattern: str = r":"
     comma_pattern: str = r","
@@ -1446,7 +1452,9 @@ class BasicLiteralParser:
 class RangeParser:
     """Parser for ranges."""
 
-    pattern: str = rf"\.\.{NUMBER_PATTERN}|{NUMBER_PATTERN}\.\.(?:{NUMBER_PATTERN})?|{NUMBER_PATTERN}"
+    pattern: str = (
+        rf"\.\.{NUMBER_PATTERN}|{NUMBER_PATTERN}\.\.(?:{NUMBER_PATTERN})?|{NUMBER_PATTERN}"
+    )
 
     def __call__(self, stream: TokenStream) -> AstRange:
         with stream.syntax(range=self.pattern):
@@ -1806,9 +1814,12 @@ def parse_message(stream: TokenStream) -> AstMessage:
     with stream.intercept("whitespace"):
         stream.get("whitespace")
 
-    with stream.intercept("newline"), stream.syntax(
-        selector=r"@[praes]",
-        text=r"[^\n@]+",
+    with (
+        stream.intercept("newline"),
+        stream.syntax(
+            selector=r"@[praes]",
+            text=r"[^\n@]+",
+        ),
     ):
         fragments: List[Any] = []
 
@@ -1938,8 +1949,9 @@ def parse_macro_line(stream: TokenStream) -> AstMacroLine:
     has_variable = False
     arguments: List[AstNode] = []
 
-    with stream.intercept("newline", "whitespace"), stream.syntax(
-        open_variable=r"\$\("
+    with (
+        stream.intercept("newline", "whitespace"),
+        stream.syntax(open_variable=r"\$\("),
     ):
         for _ in stream.peek_until("newline", "eof"):
             if open_variable := stream.get("open_variable"):

@@ -1,6 +1,5 @@
 """Plugin that gathers statistics."""
 
-
 __all__ = [
     "Analyzer",
     "Summary",
@@ -51,9 +50,9 @@ class Statistics(BaseModel):
         lambda: defaultdict(int)
     )
     scoreboard_references: DefaultDict[str, int] = defaultdict(int)
-    scoreboard_fake_player_references: DefaultDict[
-        str, DefaultDict[str, int]
-    ] = defaultdict(lambda: defaultdict(int))
+    scoreboard_fake_player_references: DefaultDict[str, DefaultDict[str, int]] = (
+        defaultdict(lambda: defaultdict(int))
+    )
     scoreboard_objectives: Dict[str, str] = {}
 
 
@@ -214,15 +213,19 @@ class Summary:
 
         return {
             (
-                f"Total commands ({total_commands_behind_execute} behind execute)"
-                if total_commands_behind_execute
-                else "Total commands",
+                (
+                    f"Total commands ({total_commands_behind_execute} behind execute)"
+                    if total_commands_behind_execute
+                    else "Total commands"
+                ),
                 str(total_commands),
             ): [
                 (
-                    f"{label} ({behind_execute} behind execute)"
-                    if behind_execute
-                    else label,
+                    (
+                        f"{label} ({behind_execute} behind execute)"
+                        if behind_execute
+                        else label
+                    ),
                     str(count),
                 )
                 for command, stats in sorted(
@@ -280,9 +283,11 @@ class Summary:
     def format_scoreboard(self) -> Dict[Tuple[str, ...], List[Tuple[str, ...]]]:
         objectives = {
             (
-                f"{objective} ({criteria})"
-                if (criteria := self.stats.scoreboard_objectives.get(objective))
-                else objective,
+                (
+                    f"{objective} ({criteria})"
+                    if (criteria := self.stats.scoreboard_objectives.get(objective))
+                    else objective
+                ),
                 count,
             ): [
                 (f"{' ' * len(objective)} {fake_player}", fake_player_count)
@@ -328,9 +333,11 @@ class Summary:
     ) -> str:
         row = ((not header) * self.indent + row[0],) + row[1:]
         return " | ".join(
-            (h.rjust(col) if h.isnumeric() else h.ljust(col))
-            if len(h) < col
-            else h[: col - 3] + "..."
+            (
+                (h.rjust(col) if h.isnumeric() else h.ljust(col))
+                if len(h) < col
+                else h[: col - 3] + "..."
+            )
             for h, col in zip(row, cols)
         )
 

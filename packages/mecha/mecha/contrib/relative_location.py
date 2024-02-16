@@ -1,6 +1,5 @@
 """Plugin that resolves relative resource locations."""
 
-
 __all__ = [
     "RelativeResourceLocationParser",
     "resolve_using_database",

@@ -257,9 +257,12 @@ class Mecha:
         multiline: Optional[bool] = None,
     ) -> Iterator[TokenStream]:
         """Prepare the token stream for parsing."""
-        with stream.reset(*stream.data), stream.provide(
-            spec=self.spec,
-            multiline=self.spec.multiline if multiline is None else multiline,
+        with (
+            stream.reset(*stream.data),
+            stream.provide(
+                spec=self.spec,
+                multiline=self.spec.multiline if multiline is None else multiline,
+            ),
         ):
             with stream.reset_syntax(comment=r"#.*$", literal=AstLiteral.regex.pattern):
                 with stream.indent(skip=["comment"]), stream.ignore("indent", "dedent"):
@@ -276,8 +279,7 @@ class Mecha:
         multiline: Optional[bool] = None,
         provide: Optional[JsonDict] = None,
         preprocessor: Optional[Preprocessor] = None,
-    ) -> AstRoot:
-        ...
+    ) -> AstRoot: ...
 
     @overload
     def parse(
@@ -290,8 +292,7 @@ class Mecha:
         multiline: Optional[bool] = None,
         provide: Optional[JsonDict] = None,
         preprocessor: Optional[Preprocessor] = None,
-    ) -> AstNodeType:
-        ...
+    ) -> AstNodeType: ...
 
     @overload
     def parse(
@@ -304,8 +305,7 @@ class Mecha:
         multiline: Optional[bool] = None,
         provide: Optional[JsonDict] = None,
         preprocessor: Optional[Preprocessor] = None,
-    ) -> Any:
-        ...
+    ) -> Any: ...
 
     def parse(
         self,
@@ -393,8 +393,7 @@ class Mecha:
         readonly: Optional[bool] = None,
         initial_step: int = 0,
         report: Optional[DiagnosticCollection] = None,
-    ) -> PackType:
-        ...
+    ) -> PackType: ...
 
     @overload
     def compile(
@@ -407,8 +406,7 @@ class Mecha:
         readonly: Optional[bool] = None,
         initial_step: int = 0,
         report: Optional[DiagnosticCollection] = None,
-    ) -> None:
-        ...
+    ) -> None: ...
 
     @overload
     def compile(
@@ -423,8 +421,7 @@ class Mecha:
         readonly: Optional[bool] = None,
         initial_step: int = 0,
         report: Optional[DiagnosticCollection] = None,
-    ) -> TextFileType:
-        ...
+    ) -> TextFileType: ...
 
     @overload
     def compile(
@@ -439,8 +436,7 @@ class Mecha:
         readonly: Optional[bool] = None,
         initial_step: int = 0,
         report: Optional[DiagnosticCollection] = None,
-    ) -> Function:
-        ...
+    ) -> Function: ...
 
     def compile(
         self,
@@ -616,15 +612,19 @@ class Mecha:
     def format_perf(self) -> List[List[str]]:
         """Format perf report."""
         step_headers = [
-            "Lint"
-            if step is self.lint
-            else "Transform"
-            if step is self.transform
-            else "Optimize"
-            if step is self.optimize
-            else "Check"
-            if step is self.check
-            else repr(step)
+            (
+                "Lint"
+                if step is self.lint
+                else (
+                    "Transform"
+                    if step is self.transform
+                    else (
+                        "Optimize"
+                        if step is self.optimize
+                        else "Check" if step is self.check else repr(step)
+                    )
+                )
+            )
             for step in self.steps
         ]
 

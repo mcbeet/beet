@@ -1,6 +1,5 @@
 """Plugin for compiling json files with mecha."""
 
-
 __all__ = [
     "JsonFileCompilation",
     "AstJsonRoot",
