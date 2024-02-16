@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.104.0 (2024-02-16)
+
+### Feature
+
+* Add pack copy ([`8f380d5`](https://github.com/mcbeet/beet/commit/8f380d5760ca2bdde59f47d24d93d9c6de247e47))
+
 ## v0.103.1 (2024-01-13)
 
 ### Fix
