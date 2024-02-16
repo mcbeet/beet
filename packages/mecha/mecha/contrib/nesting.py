@@ -1,6 +1,5 @@
 """Plugin for handling nested commands."""
 
-
 __all__ = [
     "NestedCommandsTransformer",
     "NestingOptions",
@@ -40,6 +39,7 @@ from mecha.contrib.nested_location import NestedLocationResolver
 class NestingOptions(BaseModel):
     generate_execute: str = "nested_execute_{incr}"
     generate_macro: str = "nested_macro_{incr}"
+    generate_return: str = "nested_return_{incr}"
 
 
 def beet_default(ctx: Context):
@@ -64,6 +64,7 @@ def nesting(ctx: Context, opts: NestingOptions):
             database=mc.database,
             generate_execute_template=opts.generate_execute,
             generate_macro_template=opts.generate_macro,
+            generate_return_template=opts.generate_return,
             nested_location_resolver=ctx.inject(NestedLocationResolver),
         )
     )
@@ -82,9 +83,12 @@ def parse_nested_root(stream: TokenStream) -> AstRoot:
 
     commands: List[AstCommand] = []
 
-    with stream.intercept("newline"), stream.provide(
-        scope=(),
-        line_indentation=command_level,
+    with (
+        stream.intercept("newline"),
+        stream.provide(
+            scope=(),
+            line_indentation=command_level,
+        ),
     ):
         while True:
             commands.append(delegate("root_item", stream))
@@ -110,6 +114,7 @@ class NestedCommandsTransformer(MutatingReducer):
     database: CompilationDatabase = required_field()
     generate_execute_template: str = required_field()
     generate_macro_template: str = required_field()
+    generate_return_template: str = required_field()
     nested_location_resolver: NestedLocationResolver = required_field()
 
     identifier_map: dict[str, str] = field(
@@ -161,8 +166,16 @@ class NestedCommandsTransformer(MutatingReducer):
         return node
 
     @rule(AstCommand, identifier="execute:commands")
+    @rule(AstCommand, identifier="return:commands")
     def nesting_execute_commands(self, node: AstCommand):
         root = cast(AstRoot, node.arguments[0])
+
+        if node.identifier == "execute:commands":
+            generate_template = self.generate_execute_template
+            identifier = "execute:run:subcommand"
+        else:
+            generate_template = self.generate_return_template
+            identifier = "return:run:subcommand"
 
         single_command = None
         for command in root.commands:
@@ -177,14 +190,15 @@ class NestedCommandsTransformer(MutatingReducer):
         if single_command:
             subcommand = single_command
 
-            if subcommand.identifier == "execute:subcommand":
+            if (
+                node.identifier == "execute:commands"
+                and subcommand.identifier == "execute:subcommand"
+            ):
                 return subcommand.arguments[0]
 
         else:
             namespace, resolved = self.nested_location_resolver.resolve()
-            path = self.generate.format(
-                f"{namespace}:{resolved}/{self.generate_execute_template}"
-            )
+            path = self.generate.format(f"{namespace}:{resolved}/{generate_template}")
 
             self.emit_function(path, root)
 
@@ -194,7 +208,7 @@ class NestedCommandsTransformer(MutatingReducer):
             )
 
         return AstCommand(
-            identifier="execute:run:subcommand",
+            identifier=identifier,
             arguments=AstChildren([subcommand]),
         )
 

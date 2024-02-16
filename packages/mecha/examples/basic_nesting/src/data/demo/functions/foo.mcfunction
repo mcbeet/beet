@@ -202,3 +202,13 @@ function demo:ret2:
     execute if score some score matches 0 run return run function demo:ret2/cond:
         say hi
         return 0
+
+
+return run say inline by default
+return run function demo:named_return_run:
+    say named function
+return:
+    say inlined command
+return:
+    say anonymous function 1
+    say anonymous function 2

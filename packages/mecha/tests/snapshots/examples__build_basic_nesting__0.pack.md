@@ -68,6 +68,10 @@ function demo:foo/nested_macro_4 with block ~ ~ ~
 function demo:foo/nested_macro_5 with block ~ ~ ~ Items
 function demo:foo/nested_macro_6 with storage demo:temp
 function demo:foo/nested_macro_7 with storage demo:temp args
+return run say inline by default
+return run function demo:named_return_run
+return run say inlined command
+return run function demo:foo/nested_return_0
 ```
 
 `@function demo:wat`
@@ -265,6 +269,19 @@ return 0
 ```mcfunction
 say hi
 return 0
+```
+
+`@function demo:named_return_run`
+
+```mcfunction
+say named function
+```
+
+`@function demo:foo/nested_return_0`
+
+```mcfunction
+say anonymous function 1
+say anonymous function 2
 ```
 
 `@function demo:thing1`

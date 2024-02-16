@@ -251,6 +251,16 @@
           }
         }
       }
+    },
+    "return": {
+      "type": "literal",
+      "children": {
+        "commands": {
+          "type": "argument",
+          "parser": "mecha:nested_root",
+          "executable": true
+        }
+      }
     }
   }
 }
