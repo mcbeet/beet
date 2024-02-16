@@ -16,6 +16,7 @@ from beet import (
     PackQuery,
     Structure,
 )
+from beet.core.file import TextFile
 
 
 def test_equality():
@@ -799,3 +800,47 @@ def test_merge_overlays():
             ]
         }
     }
+
+
+def test_copy():
+    p = DataPack()
+    p.extra["thing.txt"] = TextFile("wow")
+    p.overlays["a"]["demo:foo"] = Function(["say 1"])
+    p["demo:foo"] = Function(["say 2"])
+    p["demo"].extra["dank.txt"] = TextFile("ok")
+
+    p_copy = p.copy()
+    assert p_copy == p
+    assert p_copy.extra["thing.txt"] is not p.extra["thing.txt"]
+    assert (
+        p_copy.overlays["a"].functions["demo:foo"]
+        is not p.overlays["a"].functions["demo:foo"]
+    )
+    assert p_copy.functions["demo:foo"] is not p.functions["demo:foo"]
+    assert p_copy["demo"].extra["dank.txt"] is not p["demo"].extra["dank.txt"]
+
+    p.clear()
+    assert not p
+
+    assert p_copy.extra["thing.txt"] == TextFile("wow")
+    assert p_copy.overlays["a"].functions["demo:foo"] == Function(["say 1"])
+    assert p_copy.functions["demo:foo"] == Function(["say 2"])
+    assert p_copy["demo"].extra["dank.txt"] == TextFile("ok")
+
+    p_shallow = p_copy.copy(shallow=True)
+    assert p_shallow == p_copy
+    assert p_shallow.extra["thing.txt"] is p_copy.extra["thing.txt"]
+    assert (
+        p_shallow.overlays["a"].functions["demo:foo"]
+        is p_copy.overlays["a"].functions["demo:foo"]
+    )
+    assert p_shallow.functions["demo:foo"] is p_copy.functions["demo:foo"]
+    assert p_shallow["demo"].extra["dank.txt"] is p_copy["demo"].extra["dank.txt"]
+
+    p_copy.clear()
+    assert not p_copy
+
+    assert p_shallow.extra["thing.txt"] == TextFile("wow")
+    assert p_shallow.overlays["a"].functions["demo:foo"] == Function(["say 1"])
+    assert p_shallow.functions["demo:foo"] == Function(["say 2"])
+    assert p_shallow["demo"].extra["dank.txt"] == TextFile("ok")

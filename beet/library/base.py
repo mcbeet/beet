@@ -142,6 +142,8 @@ class NamespaceFile(Protocol):
     @classmethod
     def default(cls) -> Any: ...
 
+    def copy(self: T) -> T: ...
+
     @classmethod
     def load(cls: Type[T], origin: FileOrigin, path: FileSystemPath) -> T: ...
 
@@ -1151,8 +1153,29 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
 
         return True
 
+    def copy(self, *, shallow: bool = False) -> Self:
+        pack_copy = type(self)().configure(self)
+
+        for key, f in self.extra.items():
+            pack_copy.extra[key] = f if shallow else f.copy()
+
+        if self.overlay_parent is None:
+            for key, value in self.overlays.items():
+                pack_copy.overlays[key] = value.copy(shallow=shallow)
+
+        for key, namespace in self.items():
+            namespace_copy = pack_copy[key]
+            for key, f in namespace.extra.items():
+                namespace_copy.extra[key] = f if shallow else f.copy()
+            for key, f in namespace.content:
+                namespace_copy[key] = f if shallow else f.copy()
+
+        return pack_copy
+
     def clear(self):
         self.extra.clear()
+        if self.overlay_parent is None:
+            self.overlays.clear()
         super().clear()
         if not self.pack_format:
             self.pack_format = self.latest_pack_format
