@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.89.0 (2024-02-16)
+
+### Feature
+
+* Add nested commands for return ([#295](https://github.com/mcbeet/mecha/issues/295)) ([`15e1731`](https://github.com/mcbeet/mecha/commit/15e17313a5255145607635e760ef90e1e627d505))
+
 ## v0.88.0 (2024-02-02)
 
 ### Feature
