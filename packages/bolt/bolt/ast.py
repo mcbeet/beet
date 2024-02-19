@@ -229,9 +229,9 @@ class AstCall(AstExpression):
     """Ast call node."""
 
     value: AstExpression = required_field()
-    arguments: AstChildren[
-        Union[AstExpression, AstUnpack, AstKeyword]
-    ] = required_field()
+    arguments: AstChildren[Union[AstExpression, AstUnpack, AstKeyword]] = (
+        required_field()
+    )
 
 
 @dataclass(frozen=True, slots=True)

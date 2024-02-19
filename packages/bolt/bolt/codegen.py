@@ -364,16 +364,14 @@ class RootCommandCollector(CommandCollector):
 @overload
 def visit_single(
     node: AstNode,
-) -> Generator[AstNode, Optional[List[str]], Optional[str]]:
-    ...
+) -> Generator[AstNode, Optional[List[str]], Optional[str]]: ...
 
 
 @overload
 def visit_single(
     node: AstNode,
     required: Literal[True],
-) -> Generator[AstNode, Optional[List[str]], str]:
-    ...
+) -> Generator[AstNode, Optional[List[str]], str]: ...
 
 
 def visit_single(

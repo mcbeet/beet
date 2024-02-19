@@ -137,8 +137,7 @@ class ModuleParseCallback(Protocol):
         *,
         filename: Optional[str],
         resource_location: Optional[str],
-    ) -> AstRoot:
-        ...
+    ) -> AstRoot: ...
 
 
 @dataclass
@@ -161,9 +160,9 @@ class ModuleManager(Mapping[TextFileBase[Any], CompiledModule]):
     )
     globals: JsonDict = extra_field(default_factory=dict)
     builtins: Set[str] = extra_field(default_factory=set)
-    prelude: Dict[
-        str, Dict[Optional[Union[ResourcePack, DataPack]], AstPrelude]
-    ] = extra_field(default_factory=dict)
+    prelude: Dict[str, Dict[Optional[Union[ResourcePack, DataPack]], AstPrelude]] = (
+        extra_field(default_factory=dict)
+    )
 
     execution_count: int = 0
 

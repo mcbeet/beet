@@ -94,9 +94,7 @@ def memo(
     with message_fence(
         "Clearing memo..."
         if clear
-        else "Running garbage collection..."
-        if gc
-        else "Inspecting memo..."
+        else "Running garbage collection..." if gc else "Inspecting memo..."
     ):
         if not keys:
             click.echo("The memo registry is empty.\n")

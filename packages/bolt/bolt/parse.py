@@ -621,9 +621,12 @@ class ToplevelHandler:
                 elif isinstance(item, AstImportedItem):
                     lexical_scope.bind_variable(item.name, item)
 
-        with self.modules.parse_push(current), stream.provide(
-            resource_location=resource_location,
-            lexical_scope=lexical_scope,
+        with (
+            self.modules.parse_push(current),
+            stream.provide(
+                resource_location=resource_location,
+                lexical_scope=lexical_scope,
+            ),
         ):
             node = self.parser(stream)
 
@@ -996,9 +999,13 @@ class EscapeAnalysisResolver:
                 if len(binding.references) > refcount
             )
             node = set_location(
-                AstEscapeRoot(commands=AstChildren(commands), identifiers=identifiers)
-                if identifiers
-                else AstRoot(commands=AstChildren(commands)),
+                (
+                    AstEscapeRoot(
+                        commands=AstChildren(commands), identifiers=identifiers
+                    )
+                    if identifiers
+                    else AstRoot(commands=AstChildren(commands))
+                ),
                 node,
             )
         elif should_replace:
@@ -2377,10 +2384,13 @@ class LookupParser:
         stop = None
         step = None
 
-        with stream.provide(bolt_lookup=True), stream.syntax(
-            colon=r":",
-            comma=r",",
-            bracket=r"\]",
+        with (
+            stream.provide(bolt_lookup=True),
+            stream.syntax(
+                colon=r":",
+                comma=r",",
+                bracket=r"\]",
+            ),
         ):
             colon1 = stream.get("colon")
 
@@ -2455,12 +2465,15 @@ class PrimaryParser:
             elif token and token.match("format_string"):
                 quote = token.value[-1]
 
-                with stream.provide(bolt_format_string=True), stream.syntax(
-                    escape=rf"\\.",
-                    double_brace=r"\{\{|\}\}",
-                    brace=r"\{|\}",
-                    quote=quote,
-                    text=r"[^\\]+?",
+                with (
+                    stream.provide(bolt_format_string=True),
+                    stream.syntax(
+                        escape=rf"\\.",
+                        double_brace=r"\{\{|\}\}",
+                        brace=r"\{|\}",
+                        quote=quote,
+                        text=r"[^\\]+?",
+                    ),
                 ):
                     fmt = quote
                     values: List[AstExpression] = []
@@ -2506,11 +2519,13 @@ class PrimaryParser:
                     return node
 
             elif token and token.match("nested_location"):
-                with stream.intercept("whitespace"), stream.provide(
-                    bolt_nested_location=True
-                ), stream.syntax(
-                    path=r"[0-9a-z_./-]+",
-                    curly=r"\{|\}",
+                with (
+                    stream.intercept("whitespace"),
+                    stream.provide(bolt_nested_location=True),
+                    stream.syntax(
+                        path=r"[0-9a-z_./-]+",
+                        curly=r"\{|\}",
+                    ),
                 ):
                     fmt = ""
                     values: List[AstExpression] = []
@@ -2540,14 +2555,17 @@ class PrimaryParser:
             else:
                 node = self.parser(stream)
 
-        with stream.intercept(*["whitespace"] * self.truncate), stream.syntax(
-            dot=r"\.",
-            comma=r",",
-            brace=r"\(|\)",
-            bracket=r"\[|\]",
-            identifier=IDENTIFIER_PATTERN,
-            string=STRING_PATTERN,
-            number=r"(?:0|[1-9][0-9]*)",
+        with (
+            stream.intercept(*["whitespace"] * self.truncate),
+            stream.syntax(
+                dot=r"\.",
+                comma=r",",
+                brace=r"\(|\)",
+                bracket=r"\[|\]",
+                identifier=IDENTIFIER_PATTERN,
+                string=STRING_PATTERN,
+                number=r"(?:0|[1-9][0-9]*)",
+            ),
         ):
             while token := stream.get("dot", ("brace", "("), ("bracket", "[")):
                 arguments: List[Any] = []

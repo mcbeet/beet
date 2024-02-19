@@ -1,6 +1,5 @@
 """Plugin that sandboxes the bolt runtime."""
 
-
 __all__ = [
     "Sandbox",
     "SandboxedAttributeHandler",

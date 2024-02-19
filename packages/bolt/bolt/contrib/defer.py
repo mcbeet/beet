@@ -1,6 +1,5 @@
 """Run deferred callbacks."""
 
-
 __all__ = [
     "Defer",
     "DeferHandler",

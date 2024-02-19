@@ -46,12 +46,10 @@ class LoopInfo(Generic[T]):
         return self, self.current
 
     @overload
-    def peek(self, offset: int) -> Optional[T]:
-        ...
+    def peek(self, offset: int) -> Optional[T]: ...
 
     @overload
-    def peek(self, offset: int, default: U) -> Union[T, U]:
-        ...
+    def peek(self, offset: int, default: U) -> Union[T, U]: ...
 
     def peek(self, offset: int, default: Any = None) -> Any:
         index = self.index + offset

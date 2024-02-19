@@ -1,6 +1,5 @@
 """Plugin for emitting generated code."""
 
-
 __all__ = [
     "DebugCodegenEmitter",
 ]
