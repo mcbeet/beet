@@ -743,7 +743,7 @@ for a in [False, True]:
     for b in [False, True]:
         for c in [False, True]:
             for d in [False, True]:
-                print((a and b or c and not d) in [True] not in [False])
+                print(((a and b or c and not d) in [True]) not in [False])
 ###
 a = 1
 def f():
@@ -1364,3 +1364,22 @@ text = "demo:foo"
 class A:
     text: str
     data: str
+###
+1 == 2 == 3
+###
+if 1 < 2 < 3 < 4:
+    pass
+###
+print(123 == 123 == 123 == 123)
+###
+if 7 == 7 and 7 == 7 and 7 == 7:
+    say yep
+###
+if 7 == 7 == 7 == 7:
+    say 2
+###
+if 7 == (7 == 7) == 7:
+    say 2
+###
+if (7 == 7) == (7 == 7):
+    say 2

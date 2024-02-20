@@ -51,6 +51,7 @@ __all__ = [
     "RootScopeHandler",
     "BinaryParser",
     "UnaryParser",
+    "ChainedComparisonParser",
     "UnpackParser",
     "UnpackConstraint",
     "KeywordParser",
@@ -112,6 +113,7 @@ from .ast import (
     AstAssignment,
     AstAttribute,
     AstCall,
+    AstChainedComparison,
     AstClassBases,
     AstClassName,
     AstClassRoot,
@@ -380,7 +382,7 @@ def get_bolt_parsers(
             operators=[r"\bnot\b"],
             parser=delegate("bolt:comparison"),
         ),
-        "bolt:comparison": BinaryParser(
+        "bolt:comparison": ChainedComparisonParser(
             operators=[
                 "==",
                 "!=",
@@ -2283,7 +2285,9 @@ class BinaryParser:
     parser: Parser
     right_associative: bool = False
 
-    def __call__(self, stream: TokenStream) -> Any:
+    def parse_operands(
+        self, stream: TokenStream
+    ) -> Tuple[List[AstExpression], List[str]]:
         with stream.syntax(operator="|".join(self.operators)):
             nodes = [self.parser(stream)]
             operations: List[str] = []
@@ -2291,6 +2295,11 @@ class BinaryParser:
             for op in stream.collect("operator"):
                 nodes.append(self.parser(stream))
                 operations.append(normalize_whitespace(op.value))
+
+        return nodes, operations
+
+    def __call__(self, stream: TokenStream) -> Any:
+        nodes, operations = self.parse_operands(stream)
 
         if self.right_associative:
             result = nodes[-1]
@@ -2323,6 +2332,28 @@ class UnaryParser:
                 node = AstExpressionUnary(operator=operator, value=self(stream))
                 return set_location(node, op, node.value)
             return self.parser(stream)
+
+
+@dataclass
+class ChainedComparisonParser(BinaryParser):
+    """Parser for chained comparisons."""
+
+    def __call__(self, stream: TokenStream) -> Any:
+        nodes, operations = self.parse_operands(stream)
+
+        if len(nodes) == 1:
+            return nodes[0]
+
+        if len(operations) == 1:
+            node = AstExpressionBinary(
+                operator=operations[0], left=nodes[0], right=nodes[1]
+            )
+            return set_location(node, node.left, node.right)
+
+        node = AstChainedComparison(
+            operators=tuple(operations), operands=AstChildren(nodes)
+        )
+        return set_location(node, nodes[0], nodes[-1])
 
 
 @dataclass

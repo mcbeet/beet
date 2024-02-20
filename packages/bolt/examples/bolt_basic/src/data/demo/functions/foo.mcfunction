@@ -521,7 +521,7 @@ def thing_equal(self, item):
     return f"thing == {item}"
 
 Thing = type("Thing", (), {"__within__": thing_within, "__contains__": thing_contains, "__eq__": thing_equal})
-Thing() in [1, 2, 3] in [99]
+(Thing() in [1, 2, 3]) in [99]
 "world" in ("hello" in Thing())
 
 from contextlib import contextmanager

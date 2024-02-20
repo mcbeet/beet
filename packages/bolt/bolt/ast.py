@@ -4,6 +4,7 @@ __all__ = [
     "AstExpression",
     "AstExpressionBinary",
     "AstExpressionUnary",
+    "AstChainedComparison",
     "AstValue",
     "AstIdentifier",
     "AstFormatString",
@@ -113,6 +114,14 @@ class AstExpressionUnary(AstExpression):
 
     operator: str = required_field()
     value: AstExpression = required_field()
+
+
+@dataclass(frozen=True, slots=True)
+class AstChainedComparison(AstExpression):
+    """Ast chained comparison node."""
+
+    operators: Tuple[str, ...] = required_field()
+    operands: AstChildren[AstExpression] = required_field()
 
 
 @dataclass(frozen=True, slots=True)

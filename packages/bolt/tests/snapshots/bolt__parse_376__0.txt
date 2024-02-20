@@ -1,0 +1,83 @@
+if 7 == 7 and 7 == 7 and 7 == 7:
+    say yep
+---
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=44, lineno=2, colno=12)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=44, lineno=2, colno=12)
+      identifier: 'if:condition:body'
+      arguments:
+        <class 'bolt.ast.AstExpressionBinary'>
+          location: SourceLocation(pos=3, lineno=1, colno=4)
+          end_location: SourceLocation(pos=31, lineno=1, colno=32)
+          operator: 'and'
+          left:
+            <class 'bolt.ast.AstExpressionBinary'>
+              location: SourceLocation(pos=3, lineno=1, colno=4)
+              end_location: SourceLocation(pos=20, lineno=1, colno=21)
+              operator: 'and'
+              left:
+                <class 'bolt.ast.AstExpressionBinary'>
+                  location: SourceLocation(pos=3, lineno=1, colno=4)
+                  end_location: SourceLocation(pos=9, lineno=1, colno=10)
+                  operator: '=='
+                  left:
+                    <class 'bolt.ast.AstValue'>
+                      location: SourceLocation(pos=3, lineno=1, colno=4)
+                      end_location: SourceLocation(pos=4, lineno=1, colno=5)
+                      value: 7
+                  right:
+                    <class 'bolt.ast.AstValue'>
+                      location: SourceLocation(pos=8, lineno=1, colno=9)
+                      end_location: SourceLocation(pos=9, lineno=1, colno=10)
+                      value: 7
+              right:
+                <class 'bolt.ast.AstExpressionBinary'>
+                  location: SourceLocation(pos=14, lineno=1, colno=15)
+                  end_location: SourceLocation(pos=20, lineno=1, colno=21)
+                  operator: '=='
+                  left:
+                    <class 'bolt.ast.AstValue'>
+                      location: SourceLocation(pos=14, lineno=1, colno=15)
+                      end_location: SourceLocation(pos=15, lineno=1, colno=16)
+                      value: 7
+                  right:
+                    <class 'bolt.ast.AstValue'>
+                      location: SourceLocation(pos=19, lineno=1, colno=20)
+                      end_location: SourceLocation(pos=20, lineno=1, colno=21)
+                      value: 7
+          right:
+            <class 'bolt.ast.AstExpressionBinary'>
+              location: SourceLocation(pos=25, lineno=1, colno=26)
+              end_location: SourceLocation(pos=31, lineno=1, colno=32)
+              operator: '=='
+              left:
+                <class 'bolt.ast.AstValue'>
+                  location: SourceLocation(pos=25, lineno=1, colno=26)
+                  end_location: SourceLocation(pos=26, lineno=1, colno=27)
+                  value: 7
+              right:
+                <class 'bolt.ast.AstValue'>
+                  location: SourceLocation(pos=30, lineno=1, colno=31)
+                  end_location: SourceLocation(pos=31, lineno=1, colno=32)
+                  value: 7
+        <class 'mecha.ast.AstRoot'>
+          location: SourceLocation(pos=37, lineno=2, colno=5)
+          end_location: SourceLocation(pos=44, lineno=2, colno=12)
+          commands:
+            <class 'mecha.ast.AstCommand'>
+              location: SourceLocation(pos=37, lineno=2, colno=5)
+              end_location: SourceLocation(pos=44, lineno=2, colno=12)
+              identifier: 'say:message'
+              arguments:
+                <class 'mecha.ast.AstMessage'>
+                  location: SourceLocation(pos=41, lineno=2, colno=9)
+                  end_location: SourceLocation(pos=44, lineno=2, colno=12)
+                  fragments:
+                    <class 'mecha.ast.AstMessageText'>
+                      location: SourceLocation(pos=41, lineno=2, colno=9)
+                      end_location: SourceLocation(pos=44, lineno=2, colno=12)
+                      value: 'yep'

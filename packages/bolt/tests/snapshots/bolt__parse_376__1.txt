@@ -1,0 +1,61 @@
+_bolt_lineno = [1], [1]
+_bolt_helper_get_dup = _bolt_runtime.helpers['get_dup']
+_bolt_helper_branch = _bolt_runtime.helpers['branch']
+_bolt_helper_get_rebind = _bolt_runtime.helpers['get_rebind']
+_bolt_helper_children = _bolt_runtime.helpers['children']
+_bolt_helper_replace = _bolt_runtime.helpers['replace']
+with _bolt_runtime.scope() as _bolt_var10:
+    _bolt_var0 = 7
+    _bolt_var1 = 7
+    _bolt_var0 = _bolt_var0 == _bolt_var1
+    _bolt_var2 = _bolt_var0
+    _bolt_var3 = _bolt_helper_get_dup(_bolt_var0)
+    if _bolt_var3 is not None:
+        _bolt_var0 = _bolt_var3()
+    with _bolt_helper_branch(_bolt_var2) as _bolt_condition:
+        if _bolt_condition:
+            _bolt_var4 = 7
+            _bolt_var5 = 7
+            _bolt_var4 = _bolt_var4 == _bolt_var5
+            if _bolt_var3 is not None:
+                _bolt_rebind = _bolt_helper_get_rebind(_bolt_var0)
+                _bolt_var0 = _bolt_var4
+                if _bolt_rebind is not None:
+                    _bolt_var0 = _bolt_rebind(_bolt_var0)
+            else:
+                _bolt_var0 = _bolt_var4
+    _bolt_var6 = _bolt_var0
+    _bolt_var7 = _bolt_helper_get_dup(_bolt_var0)
+    if _bolt_var7 is not None:
+        _bolt_var0 = _bolt_var7()
+    with _bolt_helper_branch(_bolt_var6) as _bolt_condition:
+        if _bolt_condition:
+            _bolt_var8 = 7
+            _bolt_var9 = 7
+            _bolt_var8 = _bolt_var8 == _bolt_var9
+            if _bolt_var7 is not None:
+                _bolt_rebind = _bolt_helper_get_rebind(_bolt_var0)
+                _bolt_var0 = _bolt_var8
+                if _bolt_rebind is not None:
+                    _bolt_var0 = _bolt_rebind(_bolt_var0)
+            else:
+                _bolt_var0 = _bolt_var8
+    with _bolt_helper_branch(_bolt_var0) as _bolt_condition:
+        if _bolt_condition:
+            _bolt_runtime.commands.extend(_bolt_refs[0].commands)
+_bolt_var11 = _bolt_helper_replace(_bolt_refs[1], commands=_bolt_helper_children(_bolt_var10))
+---
+output = _bolt_var11
+---
+_bolt_refs[0]
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=37, lineno=2, colno=5)
+  end_location: SourceLocation(pos=44, lineno=2, colno=12)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+_bolt_refs[1]
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=44, lineno=2, colno=12)
+  commands:
+    <class 'mecha.ast.AstCommand'>

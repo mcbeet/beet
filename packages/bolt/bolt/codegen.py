@@ -46,6 +46,7 @@ from .ast import (
     AstAssignment,
     AstAttribute,
     AstCall,
+    AstChainedComparison,
     AstClassBases,
     AstClassName,
     AstDict,
@@ -304,6 +305,43 @@ class Accumulator:
         with self.if_statement(self.condition_inverse):
             yield
 
+    def binary(self, left: str, op: str, right: str, *, lineno: Any = None):
+        """Emit binary operator."""
+        if op in ["in", "not_in"]:
+            value = self.helper(f"operator_{op}", left, right)
+            self.statement(f"{left} = {value}", lineno=lineno)
+        else:
+            op = op.replace("_", " ")
+            self.statement(f"{left} = {left} {op} {right}", lineno=lineno)
+
+    def dup(self, target: str, *, lineno: Any = None) -> str:
+        """Emit __dup__()."""
+        dup = self.make_variable()
+        value = self.helper("get_dup", target)
+        self.statement(f"{dup} = {value}", lineno=lineno)
+        self.statement(f"if {dup} is not None:")
+        with self.block():
+            self.statement(f"{target} = {dup}()")
+        return dup
+
+    def rebind(self, target: str, op: str, value: str, *, lineno: Any = None):
+        """Emit __rebind__()."""
+        rebind = self.helper("get_rebind", target)
+        self.statement(f"_bolt_rebind = {rebind}", lineno=lineno)
+        self.statement(f"{target} {op} {value}")
+        self.statement(f"if _bolt_rebind is not None:")
+        with self.block():
+            self.statement(f"{target} = _bolt_rebind({target})")
+
+    def rebind_dup(self, target: str, dup: str, value: str, *, lineno: Any = None):
+        """Emit __rebind__() if target was __dup__()."""
+        self.statement(f"if {dup} is not None:")
+        with self.block():
+            self.rebind(target, "=", value, lineno=lineno)
+        self.statement("else:")
+        with self.block():
+            self.statement(f"{target} = {value}")
+
     def enclose(self, code: str, from_index: int, *, lineno: Any = None):
         """Enclose statements starting from the given index."""
         self.statements[from_index:] = [
@@ -498,12 +536,7 @@ def visit_binding(
 
     for node, target, value in zip(nodes, targets, values):
         if isinstance(node, AstTargetIdentifier) and node.rebind:
-            rebind = acc.helper("get_rebind", target)
-            acc.statement(f"_bolt_rebind = {rebind}", lineno=node)
-            acc.statement(f"{target} {op} {value}")
-            acc.statement(f"if _bolt_rebind is not None:")
-            with acc.block():
-                acc.statement(f"{target} = _bolt_rebind({target})")
+            acc.rebind(target, op, value, lineno=node)
         else:
             acc.statement(f"{target} {op} {value}", lineno=node)
 
@@ -1125,12 +1158,7 @@ class Codegen(Visitor):
     ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
         left = yield from visit_single(node.left, required=True)
         right = yield from visit_single(node.right, required=True)
-        if node.operator in ["in", "not_in"]:
-            value = acc.helper(f"operator_{node.operator}", left, right)
-            acc.statement(f"{left} = {value}", lineno=node)
-        else:
-            op = node.operator.replace("_", " ")
-            acc.statement(f"{left} = {left} {op} {right}", lineno=node)
+        acc.binary(left, node.operator, right, lineno=node)
         return [left]
 
     @rule(AstExpressionBinary, operator="and")
@@ -1146,28 +1174,11 @@ class Codegen(Visitor):
         value = acc.helper("operator_not", left) if node.operator == "or" else left
         acc.statement(f"{condition} = {value}", lineno=node.left)
 
-        dup = acc.make_variable()
-        value = acc.helper("get_dup", left)
-        acc.statement(f"{dup} = {value}")
-        acc.statement(f"if {dup} is not None:")
-        with acc.block():
-            acc.statement(f"{left} = {dup}()")
+        dup = acc.dup(left)
 
         with acc.if_statement(condition):
             right = yield from visit_single(node.right, required=True)
-
-            acc.statement(f"if {dup} is not None:")
-            with acc.block():
-                rebind = acc.helper("get_rebind", left)
-                acc.statement(f"_bolt_rebind = {rebind}", lineno=node.right)
-                acc.statement(f"{left} = {right}")
-                acc.statement(f"if _bolt_rebind is not None:")
-                with acc.block():
-                    acc.statement(f"{left} = _bolt_rebind({left})")
-
-            acc.statement("else:")
-            with acc.block():
-                acc.statement(f"{left} = {right}")
+            acc.rebind_dup(left, dup, right, lineno=node.right)
 
         return [left]
 
@@ -1185,6 +1196,31 @@ class Codegen(Visitor):
             op = node.operator.replace("_", " ")
             acc.statement(f"{result} = {op} {result}", lineno=node)
         return [result]
+
+    @rule(AstChainedComparison)
+    def chained_comparison(
+        self,
+        node: AstChainedComparison,
+        acc: Accumulator,
+    ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
+        left = yield from visit_single(node.operands[0], required=True)
+        right = yield from visit_single(node.operands[1], required=True)
+        acc.binary(left, node.operators[0], right, lineno=node)
+
+        condition = acc.make_variable()
+
+        for op, operand in zip(node.operators[1:], node.operands[2:]):
+            acc.statement(f"{condition} = {left}")
+
+            dup = acc.dup(left)
+
+            with acc.if_statement(condition):
+                current = right
+                right = yield from visit_single(operand, required=True)
+                acc.binary(current, op, right, lineno=node)
+                acc.rebind_dup(left, dup, current, lineno=operand)
+
+        return [left]
 
     @rule(AstValue)
     def value(self, node: AstValue, acc: Accumulator) -> Optional[List[str]]:
