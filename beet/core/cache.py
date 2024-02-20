@@ -74,7 +74,7 @@ class Cache:
         self.directory = Path(directory).resolve()
         self.index_path = self.directory / self.index_file
         self.index = (
-            json.loads(self.index_path.read_text())
+            json.loads(self.index_path.read_text("utf-8"))
             if self.index_path.is_file()
             else self.get_initial_index()
         )

@@ -46,7 +46,7 @@ class DirectoryWatcher:
             if ignore_file.is_file():
                 self.ignore_patterns += [
                     pattern
-                    for line in ignore_file.read_text().splitlines()
+                    for line in ignore_file.read_text("utf-8").splitlines()
                     if not line.startswith("#") and (pattern := line.strip())
                 ]
 

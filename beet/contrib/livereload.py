@@ -161,7 +161,7 @@ class LogWatcher:
     def target(self, path: FileSystemPath, callback: LogCallback):
         queue: List[str] = []
 
-        with open(path, "r", errors="ignore") as f:
+        with open(path, "r", encoding="utf-8", errors="ignore") as f:
             f.seek(0, 2)
 
             while not self.event.is_set():

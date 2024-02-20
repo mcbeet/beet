@@ -403,11 +403,11 @@ def load_config(
         if not path:
             config: Any = {}
         elif path.suffix == ".toml":
-            config = toml.loads(path.read_text())
+            config = toml.loads(path.read_text("utf-8"))
         elif path.suffix in [".yml", ".yaml"]:
-            config = yaml.safe_load(path.read_text())
+            config = yaml.safe_load(path.read_text("utf-8"))
         else:
-            config = json.loads(path.read_text())
+            config = json.loads(path.read_text("utf-8"))
 
         if not config:
             config = {}
