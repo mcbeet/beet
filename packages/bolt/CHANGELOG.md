@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.46.0 (2024-02-20)
+
+### Feature
+
+* Add chained comparison ([`0cc5da8`](https://github.com/mcbeet/bolt/commit/0cc5da8369b5774bd73cb6d249c5545cc95b0a13))
+
 ## v0.45.0 (2024-01-17)
 
 ### Feature
