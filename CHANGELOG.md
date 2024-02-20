@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.104.1 (2024-02-20)
+
+### Fix
+
+* Utf8 everywhere ([`3897b0d`](https://github.com/mcbeet/beet/commit/3897b0d5729dfd9fe2201ea3a383757ba9f76450))
+
 ## v0.104.0 (2024-02-16)
 
 ### Feature
