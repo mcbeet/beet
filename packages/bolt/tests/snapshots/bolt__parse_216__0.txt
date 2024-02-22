@@ -8,52 +8,56 @@ with None as x, None, None as y:
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=0, lineno=1, colno=1)
       end_location: SourceLocation(pos=41, lineno=2, colno=9)
-      identifier: 'with:subcommand'
+      identifier: 'with:context:body'
       arguments:
-        <class 'mecha.ast.AstCommand'>
+        <class 'bolt.ast.AstWithContext'>
           location: SourceLocation(pos=5, lineno=1, colno=6)
-          end_location: SourceLocation(pos=41, lineno=2, colno=9)
-          identifier: 'with:expression:as:target:subcommand'
-          arguments:
-            <class 'bolt.ast.AstValue'>
+          end_location: SourceLocation(pos=31, lineno=1, colno=32)
+          clauses:
+            <class 'bolt.ast.AstWithClause'>
               location: SourceLocation(pos=5, lineno=1, colno=6)
-              end_location: SourceLocation(pos=9, lineno=1, colno=10)
-              value: None
-            <class 'bolt.ast.AstTargetIdentifier'>
-              location: SourceLocation(pos=13, lineno=1, colno=14)
               end_location: SourceLocation(pos=14, lineno=1, colno=15)
-              value: 'x'
-              rebind: False
-            <class 'mecha.ast.AstCommand'>
+              value:
+                <class 'bolt.ast.AstValue'>
+                  location: SourceLocation(pos=5, lineno=1, colno=6)
+                  end_location: SourceLocation(pos=9, lineno=1, colno=10)
+                  value: None
+              target:
+                <class 'bolt.ast.AstTargetIdentifier'>
+                  location: SourceLocation(pos=13, lineno=1, colno=14)
+                  end_location: SourceLocation(pos=14, lineno=1, colno=15)
+                  value: 'x'
+                  rebind: False
+            <class 'bolt.ast.AstWithClause'>
               location: SourceLocation(pos=16, lineno=1, colno=17)
-              end_location: SourceLocation(pos=41, lineno=2, colno=9)
-              identifier: 'with:expression:subcommand'
-              arguments:
+              end_location: SourceLocation(pos=20, lineno=1, colno=21)
+              value:
                 <class 'bolt.ast.AstValue'>
                   location: SourceLocation(pos=16, lineno=1, colno=17)
                   end_location: SourceLocation(pos=20, lineno=1, colno=21)
                   value: None
-                <class 'mecha.ast.AstCommand'>
+              target: None
+            <class 'bolt.ast.AstWithClause'>
+              location: SourceLocation(pos=22, lineno=1, colno=23)
+              end_location: SourceLocation(pos=31, lineno=1, colno=32)
+              value:
+                <class 'bolt.ast.AstValue'>
                   location: SourceLocation(pos=22, lineno=1, colno=23)
-                  end_location: SourceLocation(pos=41, lineno=2, colno=9)
-                  identifier: 'with:expression:as:target:body'
-                  arguments:
-                    <class 'bolt.ast.AstValue'>
-                      location: SourceLocation(pos=22, lineno=1, colno=23)
-                      end_location: SourceLocation(pos=26, lineno=1, colno=27)
-                      value: None
-                    <class 'bolt.ast.AstTargetIdentifier'>
-                      location: SourceLocation(pos=30, lineno=1, colno=31)
-                      end_location: SourceLocation(pos=31, lineno=1, colno=32)
-                      value: 'y'
-                      rebind: False
-                    <class 'mecha.ast.AstRoot'>
-                      location: SourceLocation(pos=37, lineno=2, colno=5)
-                      end_location: SourceLocation(pos=41, lineno=2, colno=9)
-                      commands:
-                        <class 'mecha.ast.AstCommand'>
-                          location: SourceLocation(pos=37, lineno=2, colno=5)
-                          end_location: SourceLocation(pos=41, lineno=2, colno=9)
-                          identifier: 'pass'
-                          arguments:
-                            <empty>
+                  end_location: SourceLocation(pos=26, lineno=1, colno=27)
+                  value: None
+              target:
+                <class 'bolt.ast.AstTargetIdentifier'>
+                  location: SourceLocation(pos=30, lineno=1, colno=31)
+                  end_location: SourceLocation(pos=31, lineno=1, colno=32)
+                  value: 'y'
+                  rebind: False
+        <class 'mecha.ast.AstRoot'>
+          location: SourceLocation(pos=37, lineno=2, colno=5)
+          end_location: SourceLocation(pos=41, lineno=2, colno=9)
+          commands:
+            <class 'mecha.ast.AstCommand'>
+              location: SourceLocation(pos=37, lineno=2, colno=5)
+              end_location: SourceLocation(pos=41, lineno=2, colno=9)
+              identifier: 'pass'
+              arguments:
+                <empty>

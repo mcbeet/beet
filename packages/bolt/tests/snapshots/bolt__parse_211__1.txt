@@ -7,8 +7,8 @@ with _bolt_runtime.scope() as _bolt_var3:
     _bolt_var0 = open
     _bolt_var1 = 'README.md'
     _bolt_var0 = _bolt_var0(_bolt_var1)
-    with _bolt_var0 as _bolt_with0:
-        f = _bolt_with0
+    with _bolt_var0 as _bolt_with:
+        f = _bolt_with
         _bolt_var2 = f
         _bolt_var2 = _bolt_helper_get_attribute_handler(_bolt_var2)["readline"]
         _bolt_var2 = _bolt_var2()

@@ -69,92 +69,96 @@ macro foo(stream):
             <class 'mecha.ast.AstCommand'>
               location: SourceLocation(pos=23, lineno=2, colno=5)
               end_location: SourceLocation(pos=132, lineno=4, colno=30)
-              identifier: 'with:subcommand'
+              identifier: 'with:context:body'
               arguments:
-                <class 'mecha.ast.AstCommand'>
+                <class 'bolt.ast.AstWithContext'>
                   location: SourceLocation(pos=28, lineno=2, colno=10)
-                  end_location: SourceLocation(pos=132, lineno=4, colno=30)
-                  identifier: 'with:expression:body'
-                  arguments:
-                    <class 'bolt.ast.AstCall'>
+                  end_location: SourceLocation(pos=69, lineno=2, colno=51)
+                  clauses:
+                    <class 'bolt.ast.AstWithClause'>
                       location: SourceLocation(pos=28, lineno=2, colno=10)
                       end_location: SourceLocation(pos=69, lineno=2, colno=51)
                       value:
-                        <class 'bolt.ast.AstAttribute'>
+                        <class 'bolt.ast.AstCall'>
                           location: SourceLocation(pos=28, lineno=2, colno=10)
-                          end_location: SourceLocation(pos=41, lineno=2, colno=23)
-                          name: 'syntax'
+                          end_location: SourceLocation(pos=69, lineno=2, colno=51)
                           value:
-                            <class 'bolt.ast.AstIdentifier'>
+                            <class 'bolt.ast.AstAttribute'>
                               location: SourceLocation(pos=28, lineno=2, colno=10)
-                              end_location: SourceLocation(pos=34, lineno=2, colno=16)
-                              value: 'stream'
-                      arguments:
-                        <class 'bolt.ast.AstKeyword'>
-                          location: SourceLocation(pos=42, lineno=2, colno=24)
-                          end_location: SourceLocation(pos=55, lineno=2, colno=37)
-                          name: 'number'
-                          value:
-                            <class 'bolt.ast.AstValue'>
-                              location: SourceLocation(pos=49, lineno=2, colno=31)
+                              end_location: SourceLocation(pos=41, lineno=2, colno=23)
+                              name: 'syntax'
+                              value:
+                                <class 'bolt.ast.AstIdentifier'>
+                                  location: SourceLocation(pos=28, lineno=2, colno=10)
+                                  end_location: SourceLocation(pos=34, lineno=2, colno=16)
+                                  value: 'stream'
+                          arguments:
+                            <class 'bolt.ast.AstKeyword'>
+                              location: SourceLocation(pos=42, lineno=2, colno=24)
                               end_location: SourceLocation(pos=55, lineno=2, colno=37)
-                              value: '\\d+'
-                        <class 'bolt.ast.AstKeyword'>
-                          location: SourceLocation(pos=57, lineno=2, colno=39)
-                          end_location: SourceLocation(pos=68, lineno=2, colno=50)
-                          name: 'name'
-                          value:
-                            <class 'bolt.ast.AstValue'>
-                              location: SourceLocation(pos=62, lineno=2, colno=44)
+                              name: 'number'
+                              value:
+                                <class 'bolt.ast.AstValue'>
+                                  location: SourceLocation(pos=49, lineno=2, colno=31)
+                                  end_location: SourceLocation(pos=55, lineno=2, colno=37)
+                                  value: '\\d+'
+                            <class 'bolt.ast.AstKeyword'>
+                              location: SourceLocation(pos=57, lineno=2, colno=39)
                               end_location: SourceLocation(pos=68, lineno=2, colno=50)
-                              value: '\\w+'
-                    <class 'mecha.ast.AstRoot'>
+                              name: 'name'
+                              value:
+                                <class 'bolt.ast.AstValue'>
+                                  location: SourceLocation(pos=62, lineno=2, colno=44)
+                                  end_location: SourceLocation(pos=68, lineno=2, colno=50)
+                                  value: '\\w+'
+                      target: None
+                <class 'mecha.ast.AstRoot'>
+                  location: SourceLocation(pos=79, lineno=3, colno=9)
+                  end_location: SourceLocation(pos=132, lineno=4, colno=30)
+                  commands:
+                    <class 'bolt.ast.AstStatement'>
                       location: SourceLocation(pos=79, lineno=3, colno=9)
-                      end_location: SourceLocation(pos=132, lineno=4, colno=30)
-                      commands:
-                        <class 'bolt.ast.AstStatement'>
+                      end_location: SourceLocation(pos=102, lineno=3, colno=32)
+                      identifier: 'mecha:sentinel'
+                      arguments:
+                        <class 'bolt.ast.AstCall'>
                           location: SourceLocation(pos=79, lineno=3, colno=9)
                           end_location: SourceLocation(pos=102, lineno=3, colno=32)
-                          identifier: 'mecha:sentinel'
-                          arguments:
-                            <class 'bolt.ast.AstCall'>
+                          value:
+                            <class 'bolt.ast.AstAttribute'>
                               location: SourceLocation(pos=79, lineno=3, colno=9)
-                              end_location: SourceLocation(pos=102, lineno=3, colno=32)
+                              end_location: SourceLocation(pos=92, lineno=3, colno=22)
+                              name: 'expect'
                               value:
-                                <class 'bolt.ast.AstAttribute'>
+                                <class 'bolt.ast.AstIdentifier'>
                                   location: SourceLocation(pos=79, lineno=3, colno=9)
-                                  end_location: SourceLocation(pos=92, lineno=3, colno=22)
-                                  name: 'expect'
-                                  value:
-                                    <class 'bolt.ast.AstIdentifier'>
-                                      location: SourceLocation(pos=79, lineno=3, colno=9)
-                                      end_location: SourceLocation(pos=85, lineno=3, colno=15)
-                                      value: 'stream'
-                              arguments:
-                                <class 'bolt.ast.AstValue'>
-                                  location: SourceLocation(pos=93, lineno=3, colno=23)
-                                  end_location: SourceLocation(pos=101, lineno=3, colno=31)
-                                  value: 'number'
-                        <class 'bolt.ast.AstStatement'>
+                                  end_location: SourceLocation(pos=85, lineno=3, colno=15)
+                                  value: 'stream'
+                          arguments:
+                            <class 'bolt.ast.AstValue'>
+                              location: SourceLocation(pos=93, lineno=3, colno=23)
+                              end_location: SourceLocation(pos=101, lineno=3, colno=31)
+                              value: 'number'
+                    <class 'bolt.ast.AstStatement'>
+                      location: SourceLocation(pos=111, lineno=4, colno=9)
+                      end_location: SourceLocation(pos=132, lineno=4, colno=30)
+                      identifier: 'mecha:sentinel'
+                      arguments:
+                        <class 'bolt.ast.AstCall'>
                           location: SourceLocation(pos=111, lineno=4, colno=9)
                           end_location: SourceLocation(pos=132, lineno=4, colno=30)
-                          identifier: 'mecha:sentinel'
-                          arguments:
-                            <class 'bolt.ast.AstCall'>
+                          value:
+                            <class 'bolt.ast.AstAttribute'>
                               location: SourceLocation(pos=111, lineno=4, colno=9)
-                              end_location: SourceLocation(pos=132, lineno=4, colno=30)
+                              end_location: SourceLocation(pos=124, lineno=4, colno=22)
+                              name: 'expect'
                               value:
-                                <class 'bolt.ast.AstAttribute'>
+                                <class 'bolt.ast.AstIdentifier'>
                                   location: SourceLocation(pos=111, lineno=4, colno=9)
-                                  end_location: SourceLocation(pos=124, lineno=4, colno=22)
-                                  name: 'expect'
-                                  value:
-                                    <class 'bolt.ast.AstIdentifier'>
-                                      location: SourceLocation(pos=111, lineno=4, colno=9)
-                                      end_location: SourceLocation(pos=117, lineno=4, colno=15)
-                                      value: 'stream'
-                              arguments:
-                                <class 'bolt.ast.AstValue'>
-                                  location: SourceLocation(pos=125, lineno=4, colno=23)
-                                  end_location: SourceLocation(pos=131, lineno=4, colno=29)
-                                  value: 'name'
+                                  end_location: SourceLocation(pos=117, lineno=4, colno=15)
+                                  value: 'stream'
+                          arguments:
+                            <class 'bolt.ast.AstValue'>
+                              location: SourceLocation(pos=125, lineno=4, colno=23)
+                              end_location: SourceLocation(pos=131, lineno=4, colno=29)
+                              value: 'name'

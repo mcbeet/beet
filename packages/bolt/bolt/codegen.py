@@ -13,7 +13,7 @@ __all__ = [
 ]
 
 
-from contextlib import contextmanager
+from contextlib import ExitStack, contextmanager
 from dataclasses import dataclass, field, fields, replace
 from typing import (
     Any,
@@ -79,7 +79,6 @@ from .ast import (
     AstProcMacro,
     AstSlice,
     AstStatement,
-    AstTarget,
     AstTargetAttribute,
     AstTargetIdentifier,
     AstTargetItem,
@@ -88,6 +87,7 @@ from .ast import (
     AstTypeDeclaration,
     AstUnpack,
     AstValue,
+    AstWithContext,
 )
 from .module import CodegenResult, MacroLibrary
 
@@ -96,39 +96,17 @@ from .module import CodegenResult, MacroLibrary
 class CodegenStatement:
     """Python statement emitted by the codegen, which can recursively contain other statements."""
 
-    code: str
+    code: Tuple[str, ...]
     lineno: Optional[int] = None
     children: List["CodegenStatement"] = field(default_factory=list)
 
-    def is_with_statement(self) -> bool:
-        """Check if the statement is a with statement."""
-        return (
-            self.code.startswith("with ")
-            and self.code.endswith(":")
-            and bool(self.children)
-        )
-
-    def fuse_with_statements(self) -> "CodegenStatement":
-        """Fuse nested with statements."""
-        if (
-            self.is_with_statement()
-            and len(self.children) == 1
-            and self.children[0].is_with_statement()
-        ):
-            outer = self.code[5:-1]
-            inner = self.children[0].code[5:-1]
-            return replace(
-                self.children[0],
-                code=f"with {outer}, {inner}:",
-                lineno=self.lineno or self.children[0].lineno,
-            ).fuse_with_statements()
-        return replace(
-            self, children=[child.fuse_with_statements() for child in self.children]
-        )
-
     def flatten(self, indent: str = "") -> Iterable[Tuple[str, Optional[int]]]:
         """Yield the indented statements with their associated line number."""
-        yield f"{indent}{self.code}", self.lineno
+        if self.code:
+            statement = " ".join(self.code)
+            if self.children:
+                statement += ":"
+            yield f"{indent}{statement}", self.lineno
         if self.children:
             indent += 4 * " "
             for child_statement in self.children:
@@ -157,7 +135,7 @@ class Accumulator:
     def get_source(self) -> str:
         """Return the source code."""
         header = [
-            CodegenStatement(f"{variable} = {expression}")
+            CodegenStatement((variable, "=", expression))
             for variable, expression in self.header.items()
         ]
 
@@ -166,7 +144,7 @@ class Accumulator:
         numbers2: List[int] = [1]
 
         for statement in header + self.statements:
-            for code, lineno in statement.fuse_with_statements().flatten():
+            for code, lineno in statement.flatten():
                 if lineno and numbers2[-1] != lineno:
                     numbers1.append(len(lines) + 1)
                     numbers2.append(lineno)
@@ -269,7 +247,7 @@ class Accumulator:
         finally:
             self.statements = previous_statements
 
-    def statement(self, code: str, *, lineno: Any = None):
+    def statement(self, *code: str, lineno: Any = None):
         """Emit statement."""
         self.statements.append(CodegenStatement(code, self.extract_lineno(lineno)))
 
@@ -277,7 +255,7 @@ class Accumulator:
     def function(self, name: str, *args: str, return_type: str = ""):
         """Emit function."""
         return_type_annotation = return_type and f" -> {return_type}"
-        self.statement(f"def {name}({', '.join(args)}){return_type_annotation}:")
+        self.statement(f"def {name}({', '.join(args)}){return_type_annotation}")
         with self.block():
             previous_root = self.root_scope
             self.root_scope = False
@@ -290,9 +268,9 @@ class Accumulator:
     def if_statement(self, condition: str, inverse: Optional[str] = None):
         """Emit if statement."""
         branch = self.helper("branch", condition)
-        self.statement(f"with {branch} as _bolt_condition:")
+        self.statement("with", branch, "as", "_bolt_condition")
         with self.block():
-            self.statement(f"if _bolt_condition:")
+            self.statement(f"if _bolt_condition")
             with self.block():
                 yield
         self.condition_inverse = inverse
@@ -319,7 +297,7 @@ class Accumulator:
         dup = self.make_variable()
         value = self.helper("get_dup", target)
         self.statement(f"{dup} = {value}", lineno=lineno)
-        self.statement(f"if {dup} is not None:")
+        self.statement(f"if {dup} is not None")
         with self.block():
             self.statement(f"{target} = {dup}()")
         return dup
@@ -329,20 +307,20 @@ class Accumulator:
         rebind = self.helper("get_rebind", target)
         self.statement(f"_bolt_rebind = {rebind}", lineno=lineno)
         self.statement(f"{target} {op} {value}")
-        self.statement(f"if _bolt_rebind is not None:")
+        self.statement(f"if _bolt_rebind is not None")
         with self.block():
             self.statement(f"{target} = _bolt_rebind({target})")
 
     def rebind_dup(self, target: str, dup: str, value: str, *, lineno: Any = None):
         """Emit __rebind__() if target was __dup__()."""
-        self.statement(f"if {dup} is not None:")
+        self.statement(f"if {dup} is not None")
         with self.block():
             self.rebind(target, "=", value, lineno=lineno)
-        self.statement("else:")
+        self.statement("else")
         with self.block():
             self.statement(f"{target} = {value}")
 
-    def enclose(self, code: str, from_index: int, *, lineno: Any = None):
+    def enclose(self, *code: str, from_index: int, lineno: Any = None):
         """Enclose statements starting from the given index."""
         self.statements[from_index:] = [
             CodegenStatement(
@@ -395,7 +373,13 @@ class RootCommandCollector(CommandCollector):
 
     def flush(self) -> str:
         commands = self.acc.make_variable()
-        self.acc.enclose(f"with _bolt_runtime.scope() as {commands}:", self.start_index)
+        self.acc.enclose(
+            "with",
+            "_bolt_runtime.scope()",
+            "as",
+            commands,
+            from_index=self.start_index,
+        )
         return self.acc.helper("children", commands)
 
 
@@ -546,6 +530,7 @@ class Codegen(Visitor):
     """Code generator."""
 
     accumulator_factory: Callable[[], Accumulator] = Accumulator
+    finalizers: List[Callable[[Accumulator], None]] = field(default_factory=lambda: [])
 
     def __call__(self, node: AstRoot) -> CodegenResult:  # type: ignore
         acc = self.accumulator_factory()
@@ -561,6 +546,9 @@ class Codegen(Visitor):
 
         output = acc.make_variable()
         acc.statement(f"{output} = {result[0]}")
+
+        for finalizer in self.finalizers:
+            finalizer(acc)
 
         return CodegenResult(
             source=acc.get_source(),
@@ -621,8 +609,9 @@ class Codegen(Visitor):
                 arguments = acc.make_ref_slice(node.arguments[:-1])
             push_arguments = f", *{arguments}" if arguments else ""
             acc.enclose(
-                f"with _bolt_runtime.push_nesting({node.identifier!r}{push_arguments}):",
-                nesting_index,
+                "with",
+                f"_bolt_runtime.push_nesting({node.identifier!r}{push_arguments})",
+                from_index=nesting_index,
             )
 
         arguments = acc.children([f"*{arguments}", nesting] if arguments else [nesting])
@@ -668,7 +657,7 @@ class Codegen(Visitor):
         acc.header[storage] = "None"
         if not acc.root_scope:
             acc.statement(f"global {storage}", lineno=node)
-        acc.statement(f"if {storage} is None:")
+        acc.statement(f"if {storage} is None")
         with acc.block():
             acc.statement(
                 f"{storage} = _bolt_runtime.memo.registry[__file__][{acc.make_ref(node)}, {file_index}]"
@@ -680,16 +669,17 @@ class Codegen(Visitor):
         invocation = f"_bolt_memo_invocation_{node.persistent_id.hex}"
         acc.statement(f"{invocation} = {storage}[({path}, {' '.join(keys)})]")
 
-        acc.statement(f"if {invocation}.cached:")
+        acc.statement(f"if {invocation}.cached")
         with acc.block():
             acc.statement(f"_bolt_runtime.memo.restore(_bolt_runtime, {invocation})")
             if cached_identifiers:
                 acc.statement(f"({cached_identifiers}) = {invocation}.bindings")
 
-        acc.statement("else:")
+        acc.statement("else")
         with acc.block():
             acc.statement(
-                f"with _bolt_runtime.memo.record(_bolt_runtime, {invocation}, {path}, __name__):"
+                "with",
+                f"_bolt_runtime.memo.record(_bolt_runtime, {invocation}, {path}, __name__)",
             )
             with acc.block():
                 yield from visit_body(cast(AstRoot, body), acc)
@@ -754,7 +744,7 @@ class Codegen(Visitor):
 
             for arg in signature.arguments:
                 if isinstance(arg, AstFunctionSignatureArgument) and arg.default:
-                    acc.statement(f"if {arg.name} is {acc.missing()}:")
+                    acc.statement(f"if {arg.name} is {acc.missing()}")
                     with acc.block():
                         value = yield from visit_single(arg.default, required=True)
                         acc.statement(f"{arg.name} = {value}")
@@ -880,7 +870,7 @@ class Codegen(Visitor):
                 class_args.append(result)
 
         joined_args = f"({', '.join(class_args)})" if class_args else ""
-        acc.statement(f"class {name.value}{joined_args}:", lineno=node)
+        acc.statement(f"class {name.value}{joined_args}", lineno=node)
 
         with acc.block():
             temp_start = acc.counter
@@ -959,26 +949,28 @@ class Codegen(Visitor):
         node: AstCommand,
         acc: Accumulator,
     ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
-        acc.statement(f"while True:")
+        acc.statement(f"while True")
         with acc.block():
-            acc.statement(f"with _bolt_runtime.scope() as _bolt_condition_commands:")
+            acc.statement(
+                "with", "_bolt_runtime.scope()", "as", "_bolt_condition_commands"
+            )
             with acc.block():
                 condition = yield from visit_single(node.arguments[0], required=True)
 
             again = acc.make_variable()
             loop = acc.helper("loop", condition)
-            acc.statement(f"with {loop} as (_bolt_loop_overridden, {again}):")
+            acc.statement("with", loop, "as", f"(_bolt_loop_overridden, {again})")
             with acc.block():
                 acc.statement("_bolt_runtime.commands.extend(_bolt_condition_commands)")
 
-                acc.statement("if not _bolt_loop_overridden:")
+                acc.statement("if not _bolt_loop_overridden")
                 with acc.block():
                     acc.statement(f"{condition} = bool({condition})")
 
                 with acc.if_statement(condition):
                     yield from visit_body(cast(AstRoot, node.arguments[1]), acc)
 
-                    acc.statement(f"if {again}:", lineno=node.arguments[0])
+                    acc.statement(f"if {again}", lineno=node.arguments[0])
                     with acc.block():
                         acc.statement("continue")
 
@@ -994,7 +986,7 @@ class Codegen(Visitor):
     ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
         iterable = yield from visit_single(node.arguments[1], required=True)
         targets = yield node.arguments[0]
-        acc.statement(f"for {', '.join(targets or ['_'])} in {iterable}:")
+        acc.statement(f"for {', '.join(targets or ['_'])} in {iterable}")
         with acc.block():
             yield from visit_body(cast(AstRoot, node.arguments[2]), acc)
         return []
@@ -1017,38 +1009,27 @@ class Codegen(Visitor):
         acc.statement("continue")
         return []
 
-    @rule(AstCommand, identifier="with:subcommand")
+    @rule(AstCommand, identifier="with:context:body")
     def with_statement(
         self,
         node: AstCommand,
         acc: Accumulator,
     ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
-        clauses: List[str] = []
-        bindings: List[Tuple[str, AstTarget]] = []
+        context = cast(AstWithContext, node.arguments[0])
+        body = cast(AstRoot, node.arguments[1])
 
-        subcommand = cast(AstCommand, node.arguments[0])
-        body: Optional[AstNode] = None
+        with ExitStack() as exit_stack:
+            for clause in context.clauses:
+                value = yield from visit_single(clause.value, required=True)
 
-        while not body:
-            value = yield from visit_single(subcommand.arguments[0], required=True)
+                if clause.target:
+                    acc.statement("with", value, "as", "_bolt_with", lineno=clause)
+                    exit_stack.enter_context(acc.block())
+                    yield from visit_binding(clause.target, "=", "_bolt_with", acc)
+                else:
+                    acc.statement("with", value, lineno=clause)
+                    exit_stack.enter_context(acc.block())
 
-            if isinstance(target := subcommand.arguments[1], AstTarget):
-                tmp = f"_bolt_with{len(bindings)}"
-                clauses.append(f"{value} as {tmp}")
-                bindings.append((tmp, target))
-            else:
-                clauses.append(value)
-
-            last_arg = subcommand.arguments[-1]
-            if isinstance(last_arg, AstRoot):
-                body = last_arg
-            elif isinstance(last_arg, AstCommand):
-                subcommand = last_arg
-
-        acc.statement(f"with {', '.join(clauses)}:", lineno=node)
-        with acc.block():
-            for tmp, target in bindings:
-                yield from visit_binding(target, "=", tmp, acc)
             yield from visit_body(body, acc)
 
         return []

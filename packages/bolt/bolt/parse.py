@@ -44,6 +44,7 @@ __all__ = [
     "parse_name_list",
     "BindingStorageHandler",
     "DocstringHandler",
+    "WithContextParser",
     "FlushPendingBindingsParser",
     "SubcommandConstraint",
     "DeferredRootBacktracker",
@@ -168,6 +169,8 @@ from .ast import (
     AstTypeDeclaration,
     AstUnpack,
     AstValue,
+    AstWithClause,
+    AstWithContext,
 )
 from .emit import CommandEmitter
 from .module import ModuleManager, UnusableCompilationUnit
@@ -231,8 +234,7 @@ def get_bolt_parsers(
         "command:argument:bolt:elif_block": delegate("bolt:elif_block"),
         "command:argument:bolt:else_block": delegate("bolt:else_block"),
         "command:argument:bolt:assignment_target": delegate("bolt:assignment_target"),
-        "command:argument:bolt:with_expression": delegate("bolt:with_expression"),
-        "command:argument:bolt:with_target": delegate("bolt:with_target"),
+        "command:argument:bolt:with_context": delegate("bolt:with_context"),
         "command:argument:bolt:import": delegate("bolt:import"),
         "command:argument:bolt:import_name": delegate("bolt:import_name"),
         "command:argument:bolt:global_name": delegate("bolt:global_name"),
@@ -353,9 +355,12 @@ def get_bolt_parsers(
             builtins=modules.builtins,
         ),
         "bolt:identifier": parse_identifier,
-        "bolt:with_expression": TrailingCommaParser(delegate("bolt:expression")),
-        "bolt:with_target": TrailingCommaParser(
-            AssignmentTargetParser(require_single=True)
+        "bolt:with_context": WithContextParser(
+            expression_parser=delegate("bolt:expression"),
+            target_parser=FlushPendingBindingsParser(
+                AssignmentTargetParser(require_single=True),
+                after=True,
+            ),
         ),
         "bolt:import": AlternativeParser(
             [
@@ -685,7 +690,6 @@ def create_bolt_command_parser(
     parser = MemoHandler(parser)
     parser = BindingStorageHandler(parser)
     parser = ImportStatementHandler(parser, modules)
-    parser = ContextManagerHandler(parser)
     parser = SubcommandConstraint(parser, command_identifiers=bolt_prototypes)
     return parser
 
@@ -2088,20 +2092,42 @@ class DocstringHandler:
 
 
 @dataclass
-class ContextManagerHandler:
-    """Handle context managers."""
+class WithContextParser:
+    """Parser for with context."""
 
-    parser: Parser
+    expression_parser: Parser
+    target_parser: Parser
 
-    def __call__(self, stream: TokenStream) -> Any:
-        node = self.parser(stream)
+    def __call__(self, stream: TokenStream) -> AstWithContext:
+        clauses: List[AstWithClause] = []
 
-        if isinstance(node, AstCommand) and node.identifier == "with:subcommand":
-            if node.arguments and isinstance(command := node.arguments[0], AstCommand):
-                if not command.identifier.startswith("with:expression"):
-                    return command
+        with stream.syntax(
+            brace=r"\(|\)",
+            comma=r",",
+            target=r"\bas\b",
+        ):
+            open_brace = stream.get(("brace", "("))
 
-        return node
+            while True:
+                value = self.expression_parser(stream)
+
+                target = None
+                if stream.get("target"):
+                    target = self.target_parser(stream)
+
+                node = AstWithClause(value=value, target=target)
+                clauses.append(set_location(node, value, target))
+
+                if stream.get("comma"):
+                    if open_brace and stream.get(("brace", ")")):
+                        break
+                else:
+                    if open_brace:
+                        stream.expect(("brace", ")"))
+                    break
+
+        node = AstWithContext(clauses=AstChildren(clauses))
+        return set_location(node, open_brace or clauses[0], clauses[-1])
 
 
 @dataclass

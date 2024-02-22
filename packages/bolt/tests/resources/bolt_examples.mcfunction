@@ -1383,3 +1383,13 @@ if 7 == (7 == 7) == 7:
 ###
 if (7 == 7) == (7 == 7):
     say 2
+###
+from contextlib import contextmanager
+
+@contextmanager
+def a(v):
+    yield v
+
+x = None
+with a(1) as x, a(x) as y:
+    say y

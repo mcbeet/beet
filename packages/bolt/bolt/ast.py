@@ -29,6 +29,8 @@ __all__ = [
     "AstTypeDeclaration",
     "AstDecorator",
     "AstDocstring",
+    "AstWithClause",
+    "AstWithContext",
     "AstFunctionSignature",
     "AstFunctionSignatureElement",
     "AstFunctionSignatureArgument",
@@ -307,6 +309,21 @@ class AstDecorator(AstNode):
 @dataclass(frozen=True, slots=True)
 class AstDocstring(AstCommandSentinel):
     """Ast docstring node."""
+
+
+@dataclass(frozen=True, slots=True)
+class AstWithClause(AstNode):
+    """Ast with clause node."""
+
+    value: AstExpression = required_field()
+    target: Optional[AstTarget] = None
+
+
+@dataclass(frozen=True, slots=True)
+class AstWithContext(AstNode):
+    """Ast with context node."""
+
+    clauses: AstChildren[AstWithClause] = required_field()
 
 
 @dataclass(frozen=True, slots=True)
