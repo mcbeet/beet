@@ -1,29 +1,39 @@
-_bolt_lineno = [1, 8, 10, 16], [1, 2, 3, 5]
+_bolt_lineno = [1, 10, 13, 23, 30], [1, 2, 3, 5, 3]
+_bolt_helper_loop = _bolt_runtime.helpers['loop']
+_bolt_helper_branch = _bolt_runtime.helpers['branch']
 _bolt_helper_get_rebind = _bolt_runtime.helpers['get_rebind']
 _bolt_helper_children = _bolt_runtime.helpers['children']
 _bolt_helper_replace = _bolt_runtime.helpers['replace']
-with _bolt_runtime.scope() as _bolt_var6:
-    with _bolt_runtime.push_nesting('execute:subcommand'), _bolt_runtime.push_nesting('execute:if:score:target:targetObjective:matches:range:subcommand', *_bolt_refs[3:6]), _bolt_runtime.push_nesting('execute:commands'), _bolt_runtime.scope() as _bolt_var5:
+with _bolt_runtime.scope() as _bolt_var7:
+    with _bolt_runtime.push_nesting('execute:subcommand'), _bolt_runtime.push_nesting('execute:if:score:target:targetObjective:matches:range:subcommand', *_bolt_refs[3:6]), _bolt_runtime.push_nesting('execute:commands'), _bolt_runtime.scope() as _bolt_var6:
         _bolt_var0 = 42
         count = _bolt_var0
         while True:
-            _bolt_var1 = count
-            _bolt_var2 = 0
-            _bolt_var1 = _bolt_var1 > _bolt_var2
-            if not _bolt_var1:
-                break
-            _bolt_runtime.commands.append(_bolt_refs[0])
-            _bolt_var3 = count
-            _bolt_var4 = 1
-            _bolt_var3 = _bolt_var3 - _bolt_var4
-            _bolt_rebind = _bolt_helper_get_rebind(count)
-            count = _bolt_var3
-            if _bolt_rebind is not None:
-                count = _bolt_rebind(count)
-    _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[7], arguments=_bolt_helper_children([_bolt_helper_replace(_bolt_refs[6], arguments=_bolt_helper_children([*_bolt_refs[3:6], _bolt_helper_replace(_bolt_refs[2], arguments=_bolt_helper_children([_bolt_helper_replace(_bolt_refs[1], commands=_bolt_helper_children(_bolt_var5))]))]))])))
-_bolt_var7 = _bolt_helper_replace(_bolt_refs[8], commands=_bolt_helper_children(_bolt_var6))
+            with _bolt_runtime.scope() as _bolt_condition_commands:
+                _bolt_var1 = count
+                _bolt_var2 = 0
+                _bolt_var1 = _bolt_var1 > _bolt_var2
+            with _bolt_helper_loop(_bolt_var1) as (_bolt_loop_overridden, _bolt_var3):
+                _bolt_runtime.commands.extend(_bolt_condition_commands)
+                if not _bolt_loop_overridden:
+                    _bolt_var1 = bool(_bolt_var1)
+                with _bolt_helper_branch(_bolt_var1) as _bolt_condition:
+                    if _bolt_condition:
+                        _bolt_runtime.commands.append(_bolt_refs[0])
+                        _bolt_var4 = count
+                        _bolt_var5 = 1
+                        _bolt_var4 = _bolt_var4 - _bolt_var5
+                        _bolt_rebind = _bolt_helper_get_rebind(count)
+                        count = _bolt_var4
+                        if _bolt_rebind is not None:
+                            count = _bolt_rebind(count)
+                        if _bolt_var3:
+                            continue
+            break
+    _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[7], arguments=_bolt_helper_children([_bolt_helper_replace(_bolt_refs[6], arguments=_bolt_helper_children([*_bolt_refs[3:6], _bolt_helper_replace(_bolt_refs[2], arguments=_bolt_helper_children([_bolt_helper_replace(_bolt_refs[1], commands=_bolt_helper_children(_bolt_var6))]))]))])))
+_bolt_var8 = _bolt_helper_replace(_bolt_refs[8], commands=_bolt_helper_children(_bolt_var7))
 ---
-output = _bolt_var7
+output = _bolt_var8
 ---
 _bolt_refs[0]
 <class 'mecha.ast.AstCommand'>

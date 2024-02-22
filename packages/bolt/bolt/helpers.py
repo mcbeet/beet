@@ -3,11 +3,11 @@ __all__ = [
 ]
 
 
+from contextlib import contextmanager
 from dataclasses import dataclass, replace
 from functools import partial, wraps
 from importlib import import_module
-from types import TracebackType
-from typing import Any, Callable, ContextManager, Dict, Optional, Type
+from typing import Any, Callable, Dict
 from uuid import UUID
 
 from mecha import (
@@ -59,7 +59,8 @@ def get_bolt_helpers() -> Dict[str, Any]:
         "operator_not": operator_not,
         "operator_in": operator_in,
         "operator_not_in": operator_not_in,
-        "branch": BranchDriver,
+        "branch": branch_driver,
+        "loop": loop_driver,
         "get_dup": get_dup,
         "get_rebind": get_rebind,
         "get_attribute_handler": AttributeHandler,
@@ -124,32 +125,24 @@ def operator_not_in(item: Any, container: Any):
     return operator_not(operator_in(item, container))
 
 
-class BranchDriver:
-    obj: Any
-    context_manager: Optional[ContextManager[Any]]
+@contextmanager
+@internal
+def branch_driver(obj: Any):
+    if func := getattr(type(obj), "__branch__", None):
+        with func(obj) as condition:
+            yield condition
+    else:
+        yield obj
 
-    @internal
-    def __init__(self, obj: Any):
-        self.obj = obj
-        self.context_manager = None
-        if func := getattr(type(obj), "__branch__", None):
-            self.context_manager = func(obj)
 
-    @internal
-    def __enter__(self) -> Any:
-        if self.context_manager is not None:
-            return self.context_manager.__enter__()
-        return self.obj
-
-    @internal
-    def __exit__(
-        self,
-        exc_type: Optional[Type[BaseException]],
-        exc: Optional[BaseException],
-        traceback: Optional[TracebackType],
-    ) -> Optional[bool]:
-        if self.context_manager is not None:
-            return self.context_manager.__exit__(exc_type, exc, traceback)
+@contextmanager
+@internal
+def loop_driver(obj: Any):
+    if func := getattr(type(obj), "__loop__", None):
+        with func(obj) as cont:
+            yield True, cont
+    else:
+        yield False, True
 
 
 @internal

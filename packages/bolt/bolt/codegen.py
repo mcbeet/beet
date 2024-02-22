@@ -961,11 +961,29 @@ class Codegen(Visitor):
     ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
         acc.statement(f"while True:")
         with acc.block():
-            condition = yield from visit_single(node.arguments[0], required=True)
-            acc.statement(f"if not {condition}:")
+            acc.statement(f"with _bolt_runtime.scope() as _bolt_condition_commands:")
             with acc.block():
-                acc.statement("break")
-            yield from visit_body(cast(AstRoot, node.arguments[1]), acc)
+                condition = yield from visit_single(node.arguments[0], required=True)
+
+            again = acc.make_variable()
+            loop = acc.helper("loop", condition)
+            acc.statement(f"with {loop} as (_bolt_loop_overridden, {again}):")
+            with acc.block():
+                acc.statement("_bolt_runtime.commands.extend(_bolt_condition_commands)")
+
+                acc.statement("if not _bolt_loop_overridden:")
+                with acc.block():
+                    acc.statement(f"{condition} = bool({condition})")
+
+                with acc.if_statement(condition):
+                    yield from visit_body(cast(AstRoot, node.arguments[1]), acc)
+
+                    acc.statement(f"if {again}:", lineno=node.arguments[0])
+                    with acc.block():
+                        acc.statement("continue")
+
+            acc.statement("break")
+
         return []
 
     @rule(AstCommand, identifier="for:target:in:iterable:body")
