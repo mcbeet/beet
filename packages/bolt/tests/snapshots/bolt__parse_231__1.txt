@@ -1,13 +1,15 @@
-_bolt_lineno = [1, 10], [1, 3]
+_bolt_lineno = [1, 12], [1, 3]
 _bolt_helper_children = _bolt_runtime.helpers['children']
 _bolt_helper_macro_call = _bolt_runtime.helpers['macro_call']
 _bolt_helper_replace = _bolt_runtime.helpers['replace']
+_bolt_helper_exit_stack = _bolt_runtime.helpers['exit_stack']
 with _bolt_runtime.scope() as _bolt_var1:
     def _bolt_macro0():
         pass
-    with _bolt_runtime.push_nesting('execute:subcommand'):
-        with _bolt_runtime.push_nesting('execute:as:targets:subcommand', *_bolt_refs[1:2]):
-            _bolt_var0 = _bolt_helper_macro_call(_bolt_runtime, _bolt_macro0, _bolt_refs[0])
+    with _bolt_helper_exit_stack() as _bolt_fused_with_statement0:
+        _bolt_fused_with_statement0.enter_context(_bolt_runtime.push_nesting('execute:subcommand'))
+        _bolt_fused_with_statement0.enter_context(_bolt_runtime.push_nesting('execute:as:targets:subcommand', *_bolt_refs[1:2]))
+        _bolt_var0 = _bolt_helper_macro_call(_bolt_runtime, _bolt_macro0, _bolt_refs[0])
     _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[3], arguments=_bolt_helper_children([_bolt_helper_replace(_bolt_refs[2], arguments=_bolt_helper_children([*_bolt_refs[1:2], *_bolt_var0]))])))
 _bolt_var2 = _bolt_helper_replace(_bolt_refs[4], commands=_bolt_helper_children(_bolt_var1))
 ---

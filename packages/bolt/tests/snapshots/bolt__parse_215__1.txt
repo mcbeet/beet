@@ -1,14 +1,16 @@
 _bolt_lineno = [1], [1]
 _bolt_helper_children = _bolt_runtime.helpers['children']
 _bolt_helper_replace = _bolt_runtime.helpers['replace']
-with _bolt_runtime.scope() as _bolt_var3:
+_bolt_helper_exit_stack = _bolt_runtime.helpers['exit_stack']
+with _bolt_helper_exit_stack() as _bolt_fused_with_statement0:
+    _bolt_var3 = _bolt_fused_with_statement0.enter_context(_bolt_runtime.scope())
     _bolt_var0 = None
-    with _bolt_var0:
-        _bolt_var1 = None
-        with _bolt_var1:
-            _bolt_var2 = None
-            with _bolt_var2:
-                pass
+    _bolt_fused_with_statement0.enter_context(_bolt_var0)
+    _bolt_var1 = None
+    _bolt_fused_with_statement0.enter_context(_bolt_var1)
+    _bolt_var2 = None
+    _bolt_fused_with_statement0.enter_context(_bolt_var2)
+    pass
 _bolt_var4 = _bolt_helper_replace(_bolt_refs[0], commands=_bolt_helper_children(_bolt_var3))
 ---
 output = _bolt_var4

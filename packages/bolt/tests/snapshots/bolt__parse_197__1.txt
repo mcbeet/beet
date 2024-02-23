@@ -1,4 +1,4 @@
-_bolt_lineno = [1, 10, 11, 16, 23, 27], [1, 2, 3, 4, 6, 7]
+_bolt_lineno = [1, 10, 11, 16, 20, 23, 27], [1, 2, 3, 4, 5, 6, 7]
 _bolt_helper_operator_not = _bolt_runtime.helpers['operator_not']
 _bolt_helper_branch = _bolt_runtime.helpers['branch']
 _bolt_helper_get_rebind = _bolt_runtime.helpers['get_rebind']

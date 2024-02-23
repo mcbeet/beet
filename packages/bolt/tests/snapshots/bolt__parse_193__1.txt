@@ -1,4 +1,4 @@
-_bolt_lineno = [1, 12, 16, 23, 32, 38, 40, 50, 55, 60, 64, 69, 73], [1, 2, 5, 6, 8, 9, 11, 13, 14, 15, 17, 18, 19]
+_bolt_lineno = [1, 12, 16, 23, 30, 32, 38, 40, 50, 55, 60, 64, 69, 73], [1, 2, 5, 6, 7, 8, 9, 11, 13, 14, 15, 17, 18, 19]
 _bolt_helper_get_attribute_handler = _bolt_runtime.helpers['get_attribute_handler']
 _bolt_helper_children = _bolt_runtime.helpers['children']
 _bolt_helper_operator_not = _bolt_runtime.helpers['operator_not']

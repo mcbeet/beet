@@ -3,7 +3,7 @@ __all__ = [
 ]
 
 
-from contextlib import contextmanager
+from contextlib import ExitStack, contextmanager
 from dataclasses import dataclass, replace
 from functools import partial, wraps
 from importlib import import_module
@@ -55,6 +55,7 @@ def get_bolt_helpers() -> Dict[str, Any]:
     return {
         "replace": replace,
         "missing": object(),
+        "exit_stack": ExitStack,
         "children": AstChildren,
         "operator_not": operator_not,
         "operator_in": operator_in,

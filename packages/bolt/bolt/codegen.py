@@ -2,6 +2,7 @@ __all__ = [
     "Codegen",
     "Accumulator",
     "CodegenStatement",
+    "WithStatementFusion",
     "ChildrenCollector",
     "CommandCollector",
     "RootCommandCollector",
@@ -265,10 +266,16 @@ class Accumulator:
             self.root_scope = previous_root
 
     @contextmanager
-    def if_statement(self, condition: str, inverse: Optional[str] = None):
+    def if_statement(
+        self,
+        condition: str,
+        inverse: Optional[str] = None,
+        *,
+        lineno: Any = None,
+    ):
         """Emit if statement."""
         branch = self.helper("branch", condition)
-        self.statement("with", branch, "as", "_bolt_condition")
+        self.statement("with", branch, "as", "_bolt_condition", lineno=lineno)
         with self.block():
             self.statement(f"if _bolt_condition")
             with self.block():
@@ -276,11 +283,11 @@ class Accumulator:
         self.condition_inverse = inverse
 
     @contextmanager
-    def else_statement(self):
+    def else_statement(self, *, lineno: Any = None):
         """Emit else statement."""
         if not self.condition_inverse:
             raise ValueError("Condition inverse unavailable.")
-        with self.if_statement(self.condition_inverse):
+        with self.if_statement(self.condition_inverse, lineno=lineno):
             yield
 
     def binary(self, left: str, op: str, right: str, *, lineno: Any = None):
@@ -327,6 +334,51 @@ class Accumulator:
                 code, self.extract_lineno(lineno), self.statements[from_index:]
             )
         ]
+
+
+@dataclass
+class WithStatementFusion:
+    """Finalizer for fusing nested with statements."""
+
+    counter: int = 0
+
+    @classmethod
+    def finalize(cls, acc: Accumulator):
+        with_statement_fusion = cls()
+        acc.statements = [with_statement_fusion.fuse(statement, acc) for statement in acc.statements]
+
+    def convert(self, statement: CodegenStatement, exit_stack: str) -> CodegenStatement:
+        code = (f"{exit_stack}.enter_context({statement.code[1]})",)
+        if len(statement.code) > 2:
+            code = (statement.code[3], "=", *code)
+        return replace(statement, code=code, children=[])
+
+    def fuse(self, statement: CodegenStatement, acc: Accumulator) -> CodegenStatement:
+        children = [self.fuse(child, acc) for child in statement.children]
+
+        if statement.code[0] == "with" and children[-1].code[0] == "with":
+            nested_statement = children.pop()
+
+            if nested_statement.code[1] == acc.helper("exit_stack"):
+                exit_stack = nested_statement.code[3]
+                code = nested_statement.code
+            else:
+                exit_stack = f"_bolt_fused_with_statement{self.counter}"
+                self.counter += 1
+                code = ("with", acc.helper("exit_stack"), "as", exit_stack)
+                children.append(self.convert(nested_statement, exit_stack))
+
+            return replace(
+                statement,
+                code=code,
+                children=[
+                    self.convert(statement, exit_stack),
+                    *children,
+                    *nested_statement.children,
+                ],
+            )
+
+        return replace(statement, children=children)
 
 
 @dataclass
@@ -530,7 +582,9 @@ class Codegen(Visitor):
     """Code generator."""
 
     accumulator_factory: Callable[[], Accumulator] = Accumulator
-    finalizers: List[Callable[[Accumulator], None]] = field(default_factory=lambda: [])
+    finalizers: List[Callable[[Accumulator], None]] = field(
+        default_factory=lambda: [WithStatementFusion.finalize]
+    )
 
     def __call__(self, node: AstRoot) -> CodegenResult:  # type: ignore
         acc = self.accumulator_factory()
@@ -929,7 +983,7 @@ class Codegen(Visitor):
             value = acc.helper("operator_not", condition)
             acc.statement(f"{inverse} = {value}", lineno=node.arguments[0])
 
-        with acc.if_statement(condition, inverse):
+        with acc.if_statement(condition, inverse, lineno=node):
             yield from visit_body(cast(AstRoot, node.arguments[1]), acc)
         return []
 
@@ -939,7 +993,7 @@ class Codegen(Visitor):
         node: AstCommand,
         acc: Accumulator,
     ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
-        with acc.else_statement():
+        with acc.else_statement(lineno=node):
             yield from visit_body(cast(AstRoot, node.arguments[0]), acc)
         return []
 
@@ -949,7 +1003,7 @@ class Codegen(Visitor):
         node: AstCommand,
         acc: Accumulator,
     ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
-        acc.statement(f"while True")
+        acc.statement(f"while True", lineno=node)
         with acc.block():
             acc.statement(
                 "with", "_bolt_runtime.scope()", "as", "_bolt_condition_commands"
@@ -959,18 +1013,24 @@ class Codegen(Visitor):
 
             again = acc.make_variable()
             loop = acc.helper("loop", condition)
-            acc.statement("with", loop, "as", f"(_bolt_loop_overridden, {again})")
+            acc.statement(
+                "with",
+                loop,
+                "as",
+                f"(_bolt_loop_overridden, {again})",
+                lineno=node.arguments[0],
+            )
             with acc.block():
                 acc.statement("_bolt_runtime.commands.extend(_bolt_condition_commands)")
 
-                acc.statement("if not _bolt_loop_overridden")
+                acc.statement("if not _bolt_loop_overridden", lineno=node.arguments[0])
                 with acc.block():
                     acc.statement(f"{condition} = bool({condition})")
 
-                with acc.if_statement(condition):
+                with acc.if_statement(condition, lineno=node.arguments[0]):
                     yield from visit_body(cast(AstRoot, node.arguments[1]), acc)
 
-                    acc.statement(f"if {again}", lineno=node.arguments[0])
+                    acc.statement("if", again, lineno=node.arguments[0])
                     with acc.block():
                         acc.statement("continue")
 
@@ -1173,9 +1233,9 @@ class Codegen(Visitor):
         value = acc.helper("operator_not", left) if node.operator == "or" else left
         acc.statement(f"{condition} = {value}", lineno=node.left)
 
-        dup = acc.dup(left)
+        dup = acc.dup(left, lineno=node)
 
-        with acc.if_statement(condition):
+        with acc.if_statement(condition, lineno=node):
             right = yield from visit_single(node.right, required=True)
             acc.rebind_dup(left, dup, right, lineno=node.right)
 
@@ -1211,9 +1271,9 @@ class Codegen(Visitor):
         for op, operand in zip(node.operators[1:], node.operands[2:]):
             acc.statement(f"{condition} = {left}")
 
-            dup = acc.dup(left)
+            dup = acc.dup(left, lineno=node)
 
-            with acc.if_statement(condition):
+            with acc.if_statement(condition, lineno=node):
                 current = right
                 right = yield from visit_single(operand, required=True)
                 acc.binary(current, op, right, lineno=node)
