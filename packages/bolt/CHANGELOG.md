@@ -2,6 +2,15 @@
 
 <!--next-version-placeholder-->
 
+## v0.47.0 (2024-02-23)
+
+### Feature
+
+* Fuse with statements across if statements ([`d93140a`](https://github.com/mcbeet/bolt/commit/d93140a587eb504bf99a3a5dac44dd7694edec70))
+* Fuse with statements ([`d60f460`](https://github.com/mcbeet/bolt/commit/d60f460298955b17ab33efa6e3a17551bd401178))
+* Refactor with statements ([`6770dc9`](https://github.com/mcbeet/bolt/commit/6770dc95bf76ad35dbbc8a7d89d80695282c70ea))
+* Add basic loop overloading ([`497502a`](https://github.com/mcbeet/bolt/commit/497502a1fac66306313d8cb51d802214f4bcd0b2))
+
 ## v0.46.0 (2024-02-20)
 
 ### Feature
