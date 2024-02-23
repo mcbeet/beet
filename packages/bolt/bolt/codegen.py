@@ -277,7 +277,7 @@ class Accumulator:
         branch = self.helper("branch", condition)
         self.statement("with", branch, "as", "_bolt_condition", lineno=lineno)
         with self.block():
-            self.statement(f"if _bolt_condition")
+            self.statement("if", "_bolt_condition")
             with self.block():
                 yield
         self.condition_inverse = inverse
@@ -304,7 +304,7 @@ class Accumulator:
         dup = self.make_variable()
         value = self.helper("get_dup", target)
         self.statement(f"{dup} = {value}", lineno=lineno)
-        self.statement(f"if {dup} is not None")
+        self.statement("if", f"{dup} is not None")
         with self.block():
             self.statement(f"{target} = {dup}()")
         return dup
@@ -314,13 +314,13 @@ class Accumulator:
         rebind = self.helper("get_rebind", target)
         self.statement(f"_bolt_rebind = {rebind}", lineno=lineno)
         self.statement(f"{target} {op} {value}")
-        self.statement(f"if _bolt_rebind is not None")
+        self.statement("if", "_bolt_rebind is not None")
         with self.block():
             self.statement(f"{target} = _bolt_rebind({target})")
 
     def rebind_dup(self, target: str, dup: str, value: str, *, lineno: Any = None):
         """Emit __rebind__() if target was __dup__()."""
-        self.statement(f"if {dup} is not None")
+        self.statement("if", f"{dup} is not None")
         with self.block():
             self.rebind(target, "=", value, lineno=lineno)
         self.statement("else")
@@ -345,7 +345,9 @@ class WithStatementFusion:
     @classmethod
     def finalize(cls, acc: Accumulator):
         with_statement_fusion = cls()
-        acc.statements = [with_statement_fusion.fuse(statement, acc) for statement in acc.statements]
+        acc.statements = [
+            with_statement_fusion.fuse(statement, acc) for statement in acc.statements
+        ]
 
     def convert(self, statement: CodegenStatement, exit_stack: str) -> CodegenStatement:
         code = (f"{exit_stack}.enter_context({statement.code[1]})",)
@@ -356,29 +358,31 @@ class WithStatementFusion:
     def fuse(self, statement: CodegenStatement, acc: Accumulator) -> CodegenStatement:
         children = [self.fuse(child, acc) for child in statement.children]
 
-        if statement.code[0] == "with" and children[-1].code[0] == "with":
-            nested_statement = children.pop()
+        if statement.code[0] != "with":
+            return replace(statement, children=children)
 
-            if nested_statement.code[1] == acc.helper("exit_stack"):
-                exit_stack = nested_statement.code[3]
-                code = nested_statement.code
-            else:
-                exit_stack = f"_bolt_fused_with_statement{self.counter}"
-                self.counter += 1
-                code = ("with", acc.helper("exit_stack"), "as", exit_stack)
-                children.append(self.convert(nested_statement, exit_stack))
+        nested_children = children
+        while nested_children[-1].code[0] == "if":
+            nested_children = nested_children[-1].children
 
-            return replace(
-                statement,
-                code=code,
-                children=[
-                    self.convert(statement, exit_stack),
-                    *children,
-                    *nested_statement.children,
-                ],
-            )
+        if nested_children[-1].code[0] != "with":
+            return replace(statement, children=children)
 
-        return replace(statement, children=children)
+        nested_statement = nested_children.pop()
+
+        if nested_statement.code[1] == acc.helper("exit_stack"):
+            exit_stack = nested_statement.code[3]
+            code = nested_statement.code
+        else:
+            exit_stack = f"_bolt_fused_with_statement{self.counter}"
+            self.counter += 1
+            code = ("with", acc.helper("exit_stack"), "as", exit_stack)
+            nested_children.append(self.convert(nested_statement, exit_stack))
+
+        children.insert(0, self.convert(statement, exit_stack))
+        nested_children.extend(nested_statement.children)
+
+        return replace(statement, code=code, children=children)
 
 
 @dataclass
@@ -711,7 +715,7 @@ class Codegen(Visitor):
         acc.header[storage] = "None"
         if not acc.root_scope:
             acc.statement(f"global {storage}", lineno=node)
-        acc.statement(f"if {storage} is None")
+        acc.statement("if", f"{storage} is None")
         with acc.block():
             acc.statement(
                 f"{storage} = _bolt_runtime.memo.registry[__file__][{acc.make_ref(node)}, {file_index}]"
@@ -723,7 +727,7 @@ class Codegen(Visitor):
         invocation = f"_bolt_memo_invocation_{node.persistent_id.hex}"
         acc.statement(f"{invocation} = {storage}[({path}, {' '.join(keys)})]")
 
-        acc.statement(f"if {invocation}.cached")
+        acc.statement("if", f"{invocation}.cached")
         with acc.block():
             acc.statement(f"_bolt_runtime.memo.restore(_bolt_runtime, {invocation})")
             if cached_identifiers:
@@ -798,7 +802,7 @@ class Codegen(Visitor):
 
             for arg in signature.arguments:
                 if isinstance(arg, AstFunctionSignatureArgument) and arg.default:
-                    acc.statement(f"if {arg.name} is {acc.missing()}")
+                    acc.statement("if", f"{arg.name} is {acc.missing()}")
                     with acc.block():
                         value = yield from visit_single(arg.default, required=True)
                         acc.statement(f"{arg.name} = {value}")
@@ -1023,7 +1027,9 @@ class Codegen(Visitor):
             with acc.block():
                 acc.statement("_bolt_runtime.commands.extend(_bolt_condition_commands)")
 
-                acc.statement("if not _bolt_loop_overridden", lineno=node.arguments[0])
+                acc.statement(
+                    "if", "not _bolt_loop_overridden", lineno=node.arguments[0]
+                )
                 with acc.block():
                     acc.statement(f"{condition} = bool({condition})")
 
