@@ -43,6 +43,7 @@ __all__ = [
     "AstJsonObject",
     "AstNbt",
     "AstNbtValue",
+    "AstNbtBool",
     "AstNbtList",
     "AstNbtCompoundKey",
     "AstNbtCompoundEntry",
@@ -53,6 +54,7 @@ __all__ = [
     "AstResourceLocation",
     "AstBlockState",
     "AstBlock",
+    "AstItemComponent",
     "AstItem",
     "AstItemSlot",
     "AstRange",
@@ -722,7 +724,7 @@ class AstNbt(AstNode):
         if isinstance(value, (Numeric, String)):
             return AstNbtValue(value=value)
         elif isinstance(value, bool):
-            return AstNbtValue(value=Byte(1 if value else 0))
+            return AstNbtBool(value=Byte(1 if value else 0))
         elif isinstance(value, int):
             return AstNbtValue(value=Int(value))
         elif isinstance(value, float):
@@ -769,6 +771,11 @@ class AstNbtValue(AstNbt):
 
     def evaluate(self) -> Any:
         return self.value
+
+
+@dataclass(frozen=True, slots=True)
+class AstNbtBool(AstNbtValue):
+    """Ast nbt bool node."""
 
 
 @dataclass(frozen=True, slots=True)
@@ -898,10 +905,19 @@ class AstBlock(AstNode):
 
 
 @dataclass(frozen=True, slots=True)
+class AstItemComponent(AstNode):
+    """Ast item component node."""
+
+    key: AstResourceLocation = required_field()
+    value: AstNbt = required_field()
+
+
+@dataclass(frozen=True, slots=True)
 class AstItem(AstNode):
     """Ast item node."""
 
     identifier: AstResourceLocation = required_field()
+    components: AstChildren[AstItemComponent] = AstChildren()
     data_tags: Optional[AstNbt] = None
 
 

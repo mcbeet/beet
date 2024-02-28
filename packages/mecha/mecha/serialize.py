@@ -20,6 +20,7 @@ from .ast import (
     AstCommand,
     AstCoordinate,
     AstItem,
+    AstItemComponent,
     AstJson,
     AstLiteral,
     AstMacroLine,
@@ -27,6 +28,7 @@ from .ast import (
     AstMacroLineVariable,
     AstMessage,
     AstNbt,
+    AstNbtBool,
     AstNbtPath,
     AstNbtPathKey,
     AstNbtPathSubscript,
@@ -234,6 +236,10 @@ class Serializer(Visitor):
     def nbt(self, node: AstNbt, result: List[str]):
         result.append(node.evaluate().snbt(compact=self.formatting.nbt_compact))
 
+    @rule(AstNbtBool)
+    def nbt_bool(self, node: AstNbtBool, result: List[str]):
+        result.append("true" if node.value else "false")
+
     @rule(AstResourceLocation)
     def resource_location(self, node: AstResourceLocation, result: List[str]):
         result.append(node.get_value())
@@ -250,9 +256,15 @@ class Serializer(Visitor):
         if node.data_tags:
             yield node.data_tags
 
+    @rule(AstItemComponent)
+    def item_component(self, node: AstItem, result: List[str]):
+        yield from self.key_value(node, "=", result)
+
     @rule(AstItem)
     def item(self, node: AstItem, result: List[str]):
         yield node.identifier
+        if node.components:
+            yield from self.collection(node.components, "[]", result)
         if node.data_tags:
             yield node.data_tags
 

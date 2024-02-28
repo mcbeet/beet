@@ -31,6 +31,8 @@ item minecraft:apple{foo: "bar"}
               is_tag: False
               namespace: 'minecraft'
               path: 'apple'
+          components:
+            <empty>
           data_tags:
             <class 'mecha.ast.AstNbtCompound'>
               location: SourceLocation(pos=20, lineno=1, colno=21)

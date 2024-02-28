@@ -16,6 +16,8 @@ stick{foo: "bar"}
       is_tag: False
       namespace: None
       path: 'stick'
+  components:
+    <empty>
   data_tags:
     <class 'mecha.ast.AstNbtCompound'>
       location: SourceLocation(pos=5, lineno=1, colno=6)

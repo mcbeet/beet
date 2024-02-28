@@ -16,4 +16,6 @@ minecraft:item_predicate 0 2
       is_tag: True
       namespace: None
       path: 'stick'
+  components:
+    <empty>
   data_tags: None

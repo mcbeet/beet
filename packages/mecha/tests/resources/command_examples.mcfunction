@@ -209,3 +209,10 @@ execute store result score @s foo run return run data get entity @s foodSaturati
 gamerule maxCommandForkCount 9999
 scoreboard objectives modify foo displayautoupdate true
 scoreboard objectives modify foo numberformat styled {"bold": true}
+give @s wooden_pickaxe[damage=23]
+give @s wooden_pickaxe[damage=23]{foo: 123}
+give @s netherite_hoe[damage=5,repair_cost=2]
+give @s stick{foo:'bar'}
+give @s stick[custom_data={foo:'bar'}]
+clear @s diamond_pickaxe[damage=0]
+give @s diamond_sword[enchantment_glint_override=true]

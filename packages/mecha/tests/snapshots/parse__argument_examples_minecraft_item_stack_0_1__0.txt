@@ -16,4 +16,6 @@ minecraft:stick
       is_tag: False
       namespace: 'minecraft'
       path: 'stick'
+  components:
+    <empty>
   data_tags: None

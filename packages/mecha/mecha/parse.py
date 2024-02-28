@@ -32,9 +32,8 @@ __all__ = [
     "ResourceLocationParser",
     "NoTagConstraint",
     "BlockParser",
-    "BlockStatesParser",
+    "BracketedKeyValuePairsParser",
     "ItemParser",
-    "NoBlockStatesConstraint",
     "NoDataTagsConstraint",
     "BasicLiteralParser",
     "RangeParser",
@@ -110,6 +109,7 @@ from .ast import (
     AstGreedy,
     AstHeightmap,
     AstItem,
+    AstItemComponent,
     AstItemParticleParameters,
     AstItemSlot,
     AstJson,
@@ -126,6 +126,7 @@ from .ast import (
     AstMessage,
     AstMessageText,
     AstNbt,
+    AstNbtBool,
     AstNbtByteArray,
     AstNbtCompound,
     AstNbtCompoundEntry,
@@ -246,7 +247,8 @@ def get_default_parsers() -> Dict[str, Parser]:
             resource_location_parser=delegate("resource_location_or_tag"),
             block_states_parser=AdjacentConstraint(
                 parser=MultilineParser(
-                    BlockStatesParser(
+                    BracketedKeyValuePairsParser(
+                        node_type=AstBlockState,
                         key_parser=StringParser(type="phrase"),
                         value_parser=delegate("phrase"),
                     )
@@ -259,7 +261,8 @@ def get_default_parsers() -> Dict[str, Parser]:
             resource_location_parser=delegate("resource_location"),
             block_states_parser=AdjacentConstraint(
                 parser=MultilineParser(
-                    BlockStatesParser(
+                    BracketedKeyValuePairsParser(
+                        node_type=AstBlockState,
                         key_parser=StringParser(type="phrase"),
                         value_parser=delegate("phrase"),
                     )
@@ -270,11 +273,31 @@ def get_default_parsers() -> Dict[str, Parser]:
         ),
         "item_predicate": ItemParser(
             resource_location_parser=delegate("resource_location_or_tag"),
+            components_parser=AdjacentConstraint(
+                parser=MultilineParser(
+                    BracketedKeyValuePairsParser(
+                        node_type=AstItemComponent,
+                        key_parser=delegate("resource_location"),
+                        value_parser=delegate("nbt"),
+                    )
+                ),
+                hint=r"\[",
+            ),
             data_tags_parser=delegate("adjacent_nbt_compound"),
         ),
         "item_slot": BasicLiteralParser(AstItemSlot),
         "item_stack": ItemParser(
             resource_location_parser=delegate("resource_location"),
+            components_parser=AdjacentConstraint(
+                parser=MultilineParser(
+                    BracketedKeyValuePairsParser(
+                        node_type=AstItemComponent,
+                        key_parser=delegate("resource_location"),
+                        value_parser=delegate("nbt"),
+                    )
+                ),
+                hint=r"\[",
+            ),
             data_tags_parser=delegate("adjacent_nbt_compound"),
         ),
         "message": parse_message,
@@ -1089,10 +1112,10 @@ class NbtParser:
         }
     )
 
-    literal_aliases: Dict[str, Any] = field(
+    literal_aliases: Dict[str, AstNbtValue] = field(
         default_factory=lambda: {  # type: ignore
-            "true": Byte(1),
-            "false": Byte(0),
+            "true": AstNbtBool(value=Byte(1)),
+            "false": AstNbtBool(value=Byte(0)),
         }
     )
 
@@ -1204,8 +1227,8 @@ class NbtParser:
             elif string:
                 alias = string.value.lower()
 
-                if alias in self.literal_aliases:
-                    value = self.literal_aliases[alias]
+                if node := self.literal_aliases.get(alias):
+                    return set_location(node, stream.current)
                 else:
                     value = String(string.value)  # type: ignore
 
@@ -1353,14 +1376,15 @@ class BlockParser:
 
 
 @dataclass
-class BlockStatesParser:
-    """Parser for minecraft block state."""
+class BracketedKeyValuePairsParser:
+    """Parser for bracketed key-value pairs."""
 
+    node_type: Type[AstNode]
     key_parser: Parser
     value_parser: Parser
 
-    def __call__(self, stream: TokenStream) -> AstChildren[AstBlockState]:
-        block_states: List[AstBlockState] = []
+    def __call__(self, stream: TokenStream) -> AstChildren[AstNode]:
+        pairs: List[AstNode] = []
 
         with stream.syntax(
             bracket=r"\[|\]",
@@ -1374,15 +1398,15 @@ class BlockStatesParser:
                 stream.expect("equal")
                 value_node = self.value_parser(stream)
 
-                entry_node = AstBlockState(key=key_node, value=value_node)
+                entry_node = self.node_type(key=key_node, value=value_node)  # type: ignore
                 entry_node = set_location(entry_node, key_node, value_node)
-                block_states.append(entry_node)
+                pairs.append(entry_node)
 
                 if not stream.get("comma"):
                     stream.expect(("bracket", "]"))
                     break
 
-        return AstChildren(block_states)
+        return AstChildren(pairs)
 
 
 @dataclass
@@ -1390,6 +1414,7 @@ class ItemParser:
     """Parser for minecraft items."""
 
     resource_location_parser: Parser
+    components_parser: Parser
     data_tags_parser: Parser
 
     def __call__(self, stream: TokenStream) -> AstItem:
@@ -1397,24 +1422,19 @@ class ItemParser:
         location = identifier.location
         end_location = identifier.end_location
 
+        if components := self.components_parser(stream):
+            end_location = stream.current.end_location
+        else:
+            components = AstChildren[AstItemComponent]()
+
         data_tags = self.data_tags_parser(stream)
 
-        node = AstItem(identifier=identifier, data_tags=data_tags)
+        node = AstItem(
+            identifier=identifier,
+            components=components,
+            data_tags=data_tags,
+        )
         return set_location(node, location, data_tags if data_tags else end_location)
-
-
-@dataclass
-class NoBlockStatesConstraint:
-    """Constraint that disallows block states."""
-
-    parser: Parser
-
-    def __call__(self, stream: TokenStream) -> Any:
-        if isinstance(node := self.parser(stream), AstBlock):
-            if node.block_states:
-                exc = InvalidSyntax("Specifying block states not allowed.")
-                raise node.emit_error(exc)
-        return node
 
 
 @dataclass

@@ -31,4 +31,6 @@ item minecraft:apple
               is_tag: False
               namespace: 'minecraft'
               path: 'apple'
+          components:
+            <empty>
           data_tags: None

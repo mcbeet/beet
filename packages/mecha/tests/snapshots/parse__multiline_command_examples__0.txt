@@ -556,6 +556,8 @@
                                   is_tag: False
                                   namespace: None
                                   path: 'stone'
+                              components:
+                                <empty>
                               data_tags:
                                 <class 'mecha.ast.AstNbtCompound'>
                                   location: SourceLocation(pos=795, lineno=44, colno=22)
@@ -1056,6 +1058,8 @@
                           is_tag: True
                           namespace: 'smithed'
                           path: 'crafter/all'
+                      components:
+                        <empty>
                       data_tags: None
                     <class 'mecha.ast.AstNumber'>
                       location: SourceLocation(pos=2005, lineno=108, colno=78)

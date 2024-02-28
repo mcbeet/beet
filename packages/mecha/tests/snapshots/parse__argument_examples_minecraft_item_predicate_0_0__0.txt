@@ -16,4 +16,6 @@ stick
       is_tag: False
       namespace: None
       path: 'stick'
+  components:
+    <empty>
   data_tags: None

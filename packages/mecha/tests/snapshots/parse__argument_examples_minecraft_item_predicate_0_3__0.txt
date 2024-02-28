@@ -16,6 +16,8 @@ minecraft:item_predicate 0 3
       is_tag: True
       namespace: None
       path: 'stick'
+  components:
+    <empty>
   data_tags:
     <class 'mecha.ast.AstNbtCompound'>
       location: SourceLocation(pos=6, lineno=1, colno=7)
