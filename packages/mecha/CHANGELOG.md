@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.89.2 (2024-02-28)
+
+### Fix
+
+* Merge policies were not taken into account anymore ([`c67401e`](https://github.com/mcbeet/mecha/commit/c67401e91413ed9a8c20a0a113046d8736a27e0c))
+
 ## v0.89.1 (2024-02-16)
 
 ### Fix
