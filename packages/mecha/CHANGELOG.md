@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.90.0 (2024-02-28)
+
+### Feature
+
+* Support item components ([`150d936`](https://github.com/mcbeet/mecha/commit/150d936ed8885d02ba7d7a4c8535474e05bccf1e))
+
 ## v0.89.2 (2024-02-28)
 
 ### Fix
