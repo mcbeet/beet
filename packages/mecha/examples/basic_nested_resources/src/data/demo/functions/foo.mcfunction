@@ -88,3 +88,12 @@ vertex_shader minecraft:core/blit_screen:
         texCoord = UV;
         vertexColor = Color;
     }
+
+merge model minecraft:item/bow {
+  "overrides":[
+    {"predicate": {"custom_model_data": 1}, "model": "demo:item/cool_bow"},
+    {"predicate": {"custom_model_data": 1, "pulling": 1}, "model": "demo:item/cool_bow_pulling_0"},
+    {"predicate": {"custom_model_data": 1, "pulling": 1, "pull": 0.65}, "model": "demo:item/cool_bow_pulling_1"},
+    {"predicate": {"custom_model_data": 1, "pulling": 1, "pull": 0.9}, "model": "demo:item/cool_bow_pulling_2"}
+  ]
+}

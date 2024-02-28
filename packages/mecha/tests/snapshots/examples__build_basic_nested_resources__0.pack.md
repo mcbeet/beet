@@ -67,6 +67,138 @@ say world
 
 ### minecraft
 
+`@model minecraft:item/bow`
+
+```json
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "item/bow"
+  },
+  "display": {
+    "thirdperson_righthand": {
+      "rotation": [
+        -80,
+        260,
+        -40
+      ],
+      "translation": [
+        -1,
+        -2,
+        2.5
+      ],
+      "scale": [
+        0.9,
+        0.9,
+        0.9
+      ]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [
+        -80,
+        -280,
+        40
+      ],
+      "translation": [
+        -1,
+        -2,
+        2.5
+      ],
+      "scale": [
+        0.9,
+        0.9,
+        0.9
+      ]
+    },
+    "firstperson_righthand": {
+      "rotation": [
+        0,
+        -90,
+        25
+      ],
+      "translation": [
+        1.13,
+        3.2,
+        1.13
+      ],
+      "scale": [
+        0.68,
+        0.68,
+        0.68
+      ]
+    },
+    "firstperson_lefthand": {
+      "rotation": [
+        0,
+        90,
+        -25
+      ],
+      "translation": [
+        1.13,
+        3.2,
+        1.13
+      ],
+      "scale": [
+        0.68,
+        0.68,
+        0.68
+      ]
+    }
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 1
+      },
+      "model": "demo:item/cool_bow"
+    },
+    {
+      "predicate": {
+        "pulling": 1
+      },
+      "model": "item/bow_pulling_0"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 1,
+        "pulling": 1
+      },
+      "model": "demo:item/cool_bow_pulling_0"
+    },
+    {
+      "predicate": {
+        "pulling": 1,
+        "pull": 0.65
+      },
+      "model": "item/bow_pulling_1"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 1,
+        "pulling": 1,
+        "pull": 0.65
+      },
+      "model": "demo:item/cool_bow_pulling_1"
+    },
+    {
+      "predicate": {
+        "pulling": 1,
+        "pull": 0.9
+      },
+      "model": "item/bow_pulling_2"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 1,
+        "pulling": 1,
+        "pull": 0.9
+      },
+      "model": "demo:item/cool_bow_pulling_2"
+    }
+  ]
+}
+```
+
 `@glsl_shader minecraft:include/matrix`
 
 ```glsl

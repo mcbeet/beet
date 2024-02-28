@@ -199,13 +199,21 @@ class JsonFileHandler(Visitor):
         if node.arguments and isinstance(content := node.arguments[0], AstJson):
             target = self.database.current
             if isinstance(target, JsonFileBase):
-                file_instance = type(target)(content.evaluate())
+                target_type = type(target)
+                file_instance = target_type(content.evaluate())
+
                 if isinstance(node, AstMergeJsonContent):
-                    if not target.merge(file_instance):
+                    compilation_unit = self.database[target]
+                    if compilation_unit.pack and compilation_unit.resource_location:
+                        compilation_unit.pack[target_type].merge({compilation_unit.resource_location: file_instance})  # type: ignore
+                    elif not target.merge(file_instance):
                         target.data = file_instance.data
+
                 elif isinstance(node, AstAppendJsonContent):
                     target.append(file_instance)  # type: ignore
+
                 elif isinstance(node, AstPrependJsonContent):
                     target.prepend(file_instance)  # type: ignore
+
                 else:
                     target.data = file_instance.data

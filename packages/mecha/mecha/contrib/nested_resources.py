@@ -264,6 +264,12 @@ class NestedResourcesTransformer(MutatingReducer):
                                 ),
                                 resource_location=full_name,
                                 no_index=True,
+                                pack=(
+                                    self.generate.data
+                                    if file_type
+                                    in self.generate.data.resolve_scope_map().values()
+                                    else self.generate.assets
+                                ),
                             )
                             self.database[target] = compilation_unit
                             self.database.enqueue(target, self.database.step + 1)
@@ -301,12 +307,14 @@ class NestedResourcesTransformer(MutatingReducer):
                         original=self.database.current.original,
                     )
 
+                    if command.identifier.startswith("merge:"):
+                        self.generate(full_name, merge=file_instance)
+                        changed = True
+                        continue
+
                     target = self.generate(full_name, default=file_instance)
                     if target is not file_instance:
-                        if command.identifier.startswith("merge:"):
-                            if not target.merge(file_instance):
-                                target.set_content(file_instance.get_content())
-                        elif command.identifier.startswith("append:"):
+                        if command.identifier.startswith("append:"):
                             target.append(file_instance)  # type: ignore
                         elif command.identifier.startswith("prepend:"):
                             target.prepend(file_instance)  # type: ignore
