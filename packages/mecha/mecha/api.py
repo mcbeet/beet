@@ -13,6 +13,7 @@ import pickle
 import sys
 from contextlib import contextmanager
 from dataclasses import InitVar, dataclass
+from glob import glob
 from io import BufferedReader, BufferedWriter
 from pathlib import Path
 from time import perf_counter_ns
@@ -37,6 +38,8 @@ from beet import (
     Context,
     DataPack,
     Function,
+    ListOption,
+    PackageablePath,
     ResourcePack,
     TextFileBase,
 )
@@ -47,7 +50,7 @@ from beet.core.utils import (
     extra_field,
     import_from_string,
 )
-from pydantic.v1 import BaseModel, validator
+from pydantic.v1 import BaseModel, HttpUrl, validator
 from tokenstream import InvalidSyntax, Preprocessor, TokenStream, set_location
 
 from .ast import AstLiteral, AstNode, AstRoot
@@ -123,10 +126,17 @@ FORMATTING_PRESETS: Dict[str, JsonDict] = {
 }
 
 
+class CommandsUrl(BaseModel):
+    """Url to load commands."""
+
+    __root__: HttpUrl
+
+
 class MechaOptions(BaseModel):
     """Mecha options."""
 
     version: str = ""
+    commands: Optional[ListOption[Union[CommandsUrl, PackageablePath]]] = None
     multiline: bool = False
     formatting: FormattingOptions = FormattingOptions()
     readonly: Optional[bool] = None
@@ -214,6 +224,26 @@ class Mecha:
 
             if opts.output_perf:
                 self.output_perf = ctx.directory / opts.output_perf
+
+            if opts.commands is not None:
+                commands = [
+                    p
+                    for entry in opts.commands.entries()
+                    for p in (
+                        [ctx.cache["commands"].download(entry.__root__)]
+                        if isinstance(entry, CommandsUrl)
+                        else glob(str(ctx.directory / entry))
+                    )
+                ]
+                self.spec = CommandSpec(
+                    multiline=multiline,
+                    tree=CommandTree.load_from(
+                        *commands,
+                        version=version,
+                        patch_only=True,
+                    ),
+                    parsers=get_parsers(version),
+                )
 
             ctx.require(self.finalize)
 

@@ -30,6 +30,7 @@ class CommandTree(BaseModel):
         *args: FileSystemPath,
         version: Optional[VersionNumber] = None,
         unpatched: bool = False,
+        patch_only: bool = False,
     ) -> "CommandTree":
         """Load the command tree from a file."""
         sources: List[str] = []
@@ -39,7 +40,7 @@ class CommandTree(BaseModel):
 
         version = split_version(version) if version is not None else None
 
-        if version:
+        if version and not patch_only:
             version_name = "_".join(map(str, version))
             try:
                 sources.append(
