@@ -901,7 +901,7 @@ class AstBlock(AstNode):
 
     identifier: AstResourceLocation = required_field()
     block_states: AstChildren[AstBlockState] = AstChildren()
-    data_tags: Optional[AstNbt] = None
+    data_tags: Optional[AstNbtCompound] = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -918,7 +918,7 @@ class AstItem(AstNode):
 
     identifier: AstResourceLocation = required_field()
     components: AstChildren[AstItemComponent] = AstChildren()
-    data_tags: Optional[AstNbt] = None
+    data_tags: Optional[AstNbtCompound] = None
 
 
 @dataclass(frozen=True, slots=True)
