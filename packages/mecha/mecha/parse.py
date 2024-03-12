@@ -112,6 +112,7 @@ from .ast import (
     AstItemComponent,
     AstItemParticleParameters,
     AstItemSlot,
+    AstItemSlots,
     AstJson,
     AstJsonArray,
     AstJsonObject,
@@ -286,6 +287,7 @@ def get_default_parsers() -> Dict[str, Parser]:
             data_tags_parser=delegate("adjacent_nbt_compound"),
         ),
         "item_slot": BasicLiteralParser(AstItemSlot),
+        "item_slots": BasicLiteralParser(AstItemSlots),
         "item_stack": ItemParser(
             resource_location_parser=delegate("resource_location"),
             components_parser=AdjacentConstraint(
@@ -478,6 +480,7 @@ def get_default_parsers() -> Dict[str, Parser]:
             delegate("item_predicate")
         ),
         "command:argument:minecraft:item_slot": delegate("item_slot"),
+        "command:argument:minecraft:item_slots": delegate("item_slots"),
         "command:argument:minecraft:item_stack": MultilineParser(
             delegate("item_stack")
         ),

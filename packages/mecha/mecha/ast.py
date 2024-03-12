@@ -57,6 +57,7 @@ __all__ = [
     "AstItemComponent",
     "AstItem",
     "AstItemSlot",
+    "AstItemSlots",
     "AstRange",
     "AstTime",
     "AstSelectorScoreMatch",
@@ -944,6 +945,29 @@ class AstItemSlot(AstOption):
         | {f"horse.{n}" for n in range(15)}
         | {f"villager.{n}" for n in range(8)}
     )
+
+
+@dataclass(frozen=True, slots=True)
+class AstItemSlots(AstOption):
+    """Ast item slots node."""
+
+    parser = "item_slots"
+    options = AstItemSlot.options | {
+        "container.*",
+        "hotbar.*",
+        "inventory.*",
+        "enderchest.*",
+        "villager.*",
+        "horse.*",
+        "weapon.*",
+        "armor.*",
+        "player.cursor",
+        "player.crafting.0",
+        "player.crafting.1",
+        "player.crafting.2",
+        "player.crafting.3",
+        "player.crafting.*",
+    }
 
 
 @dataclass(frozen=True, slots=True)
