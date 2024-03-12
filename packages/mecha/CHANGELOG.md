@@ -2,6 +2,17 @@
 
 <!--next-version-placeholder-->
 
+## v0.91.0 (2024-03-12)
+
+### Feature
+
+* Add commands option ([`a14e829`](https://github.com/mcbeet/mecha/commit/a14e8299c01f460032a16eab3d4c3c115c393782))
+* Add item_slots ([`ef0dca0`](https://github.com/mcbeet/mecha/commit/ef0dca0a1561720cd2d2192ee596d3772c1e4c3b))
+
+### Fix
+
+* Nbt tags typing ([`9dda49a`](https://github.com/mcbeet/mecha/commit/9dda49acab0931aa7d08abb0983737b3a9b8a3bd))
+
 ## v0.90.0 (2024-02-28)
 
 ### Feature
