@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.47.2 (2024-03-29)
+
+### Fix
+
+* Missed a file in previous commit ([`d9f27f5`](https://github.com/mcbeet/bolt/commit/d9f27f53bb7358cb59b9a37dc59e242efa550eeb))
+
 ## v0.47.1 (2024-03-29)
 
 ### Fix
