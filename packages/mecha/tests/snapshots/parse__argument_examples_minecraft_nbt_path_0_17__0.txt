@@ -1,0 +1,32 @@
+minecraft:nbt_path 0 17
+---
+{}
+---
+Items[0].components.minecraft:potion_contents
+---
+Items[0].components."minecraft:potion_contents"
+---
+<class 'mecha.ast.AstNbtPath'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=45, lineno=1, colno=46)
+  components:
+    <class 'mecha.ast.AstNbtPathKey'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=5, lineno=1, colno=6)
+      value: 'Items'
+    <class 'mecha.ast.AstNbtPathSubscript'>
+      location: SourceLocation(pos=5, lineno=1, colno=6)
+      end_location: SourceLocation(pos=8, lineno=1, colno=9)
+      index:
+        <class 'mecha.ast.AstNumber'>
+          location: SourceLocation(pos=6, lineno=1, colno=7)
+          end_location: SourceLocation(pos=7, lineno=1, colno=8)
+          value: 0
+    <class 'mecha.ast.AstNbtPathKey'>
+      location: SourceLocation(pos=9, lineno=1, colno=10)
+      end_location: SourceLocation(pos=19, lineno=1, colno=20)
+      value: 'components'
+    <class 'mecha.ast.AstNbtPathKey'>
+      location: SourceLocation(pos=20, lineno=1, colno=21)
+      end_location: SourceLocation(pos=45, lineno=1, colno=46)
+      value: 'minecraft:potion_contents'

@@ -366,7 +366,8 @@
         "foo.bar[].baz",
         "foo.bar[{baz:5b}]",
         "foo{bar:\"baz\"}",
-        "foo{bar:\"baz\"}.bar"
+        "foo{bar:\"baz\"}.bar",
+        "Items[0].components.minecraft:potion_contents"
       ]
     },
     {

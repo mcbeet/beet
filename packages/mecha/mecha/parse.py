@@ -1905,7 +1905,7 @@ class NbtPathParser:
             curly=r"\{|\}",
             bracket=r"\[|\]",
             quoted_string=r'"(?:\\.|[^\\\n])*?"' "|" r"'(?:\\.|[^\\\n])*?'",
-            string=r"[a-zA-Z0-9_+-]+",
+            string=r"(?:[0-9a-z_\-]+:)?[a-zA-Z0-9_+-]+",
         ):
             components.extend(self.parse_modifiers(stream))
 
