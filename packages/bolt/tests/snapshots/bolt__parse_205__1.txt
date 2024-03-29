@@ -35,6 +35,8 @@ _bolt_refs[2]
   end_location: SourceLocation(pos=55, lineno=2, colno=24)
   identifier:
     <class 'mecha.ast.AstResourceLocation'>
+  components:
+    <empty>
   data_tags:
     <class 'mecha.ast.AstNbtCompound'>
 _bolt_refs[3]

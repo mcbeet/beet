@@ -524,6 +524,9 @@ def get_bolt_parsers(
         "item_slot": AlternativeParser(
             [parsers["item_slot"], InterpolationParser("item_slot")]
         ),
+        "item_slots": AlternativeParser(
+            [parsers["item_slots"], InterpolationParser("item_slots")]
+        ),
         "uuid": AlternativeParser([InterpolationParser("uuid"), parsers["uuid"]]),
         "objective": AlternativeParser(
             [InterpolationParser("objective"), parsers["objective"]]

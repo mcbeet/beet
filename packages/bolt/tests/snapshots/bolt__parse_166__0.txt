@@ -44,6 +44,8 @@ item replace block ~ ~2 ~ container.26 with minecraft:spruce_sapling 4
               is_tag: False
               namespace: 'minecraft'
               path: 'spruce_sapling'
+          components:
+            <empty>
           data_tags: None
         <class 'mecha.ast.AstNumber'>
           location: SourceLocation(pos=69, lineno=1, colno=70)

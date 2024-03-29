@@ -60,6 +60,8 @@ give @s bow{**bow_data}
               is_tag: False
               namespace: None
               path: 'bow'
+          components:
+            <empty>
           data_tags:
             <class 'mecha.ast.AstNbtCompound'>
               location: SourceLocation(pos=43, lineno=2, colno=12)

@@ -125,6 +125,8 @@ as @a at @s if block ~ ~-1 ~ #wool give @s stone{
                                   is_tag: False
                                   namespace: None
                                   path: 'stone'
+                              components:
+                                <empty>
                               data_tags:
                                 <class 'mecha.ast.AstNbtCompound'>
                                   location: SourceLocation(pos=90, lineno=2, colno=49)
