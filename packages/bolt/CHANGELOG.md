@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.47.1 (2024-03-29)
+
+### Fix
+
+* Interpolation for item_slots ([`2a8f9e0`](https://github.com/mcbeet/bolt/commit/2a8f9e0de038829fafdad234d44713db39fa0286))
+
 ## v0.47.0 (2024-02-23)
 
 ### Feature
