@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.91.3 (2024-03-29)
+
+### Fix
+
+* Allow nbt path keys that look like resource locations ([`05e7cc6`](https://github.com/mcbeet/mecha/commit/05e7cc6e70ab96c98adc163f10a84174ea45b045))
+
 ## v0.91.2 (2024-03-29)
 
 ### Fix
