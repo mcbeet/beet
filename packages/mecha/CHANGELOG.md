@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.91.1 (2024-03-29)
+
+### Fix
+
+* Add loot table, predicate, modifier, parsers ([`a3a991e`](https://github.com/mcbeet/mecha/commit/a3a991ecf340753769c80ce390931b54be71817b))
+
 ## v0.91.0 (2024-03-12)
 
 ### Feature
