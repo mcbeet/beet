@@ -46,6 +46,26 @@
           }
         }
       }
+    },
+    {
+      "require": [
+        "lectern.contrib.relative_location",
+        "lectern.contrib.tagged_function_shorthand"
+      ],
+      "pipeline": ["lectern"],
+      "meta": {
+        "lectern": {
+          "load": "tagged.txt"
+        },
+        "tagged_function_shorthand": {
+          "tags": {
+            "load": "minecraft:load",
+            "tick": "minecraft:tick",
+            "foo": "demo:foo",
+            "bar": ["demo:abc", "demo:123"]
+          }
+        }
+      }
     }
   ],
   "meta": {

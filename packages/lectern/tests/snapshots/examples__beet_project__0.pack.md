@@ -27,6 +27,37 @@ function with_beet:def
 say relative
 ```
 
+`@function with_beet:a_relative`
+
+```mcfunction
+say tagged a_relative
+```
+
+`@function with_beet:load`
+
+```mcfunction
+say before
+say tagged load
+```
+
+`@function with_beet:wow`
+
+```mcfunction
+say tagged wow
+```
+
+`@function with_beet:foo`
+
+```mcfunction
+say tagged foo
+```
+
+`@function with_beet:bar`
+
+```mcfunction
+say tagged bar
+```
+
 ### demo
 
 `@function demo:foo`
@@ -137,6 +168,48 @@ say azertyuiopqsdfghjklm
 
 ```mcfunction
 say 2 + 2 is 4 (end of citation)
+```
+
+`@function demo:a`
+
+```mcfunction
+say tagged a
+```
+
+`@function demo:b`
+
+```mcfunction
+say tagged b
+```
+
+`@function_tag demo:foo`
+
+```json
+{
+  "values": [
+    "with_beet:foo"
+  ]
+}
+```
+
+`@function_tag demo:abc`
+
+```json
+{
+  "values": [
+    "with_beet:bar"
+  ]
+}
+```
+
+`@function_tag demo:123`
+
+```json
+{
+  "values": [
+    "with_beet:bar"
+  ]
+}
 ```
 
 ### embedded
@@ -322,7 +395,21 @@ say 9
 ```json
 {
   "values": [
-    "isolated:thing"
+    "isolated:thing",
+    "with_beet:wow"
+  ]
+}
+```
+
+`@function_tag minecraft:load`
+
+```json
+{
+  "values": [
+    "demo:a",
+    "demo:b",
+    "with_beet:a_relative",
+    "with_beet:load"
   ]
 }
 ```
