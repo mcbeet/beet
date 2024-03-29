@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.91.2 (2024-03-29)
+
+### Fix
+
+* Singular player slots ([`4e8a479`](https://github.com/mcbeet/mecha/commit/4e8a47924e6c9ab51e24616f70c4e9cfa661f175))
+
 ## v0.91.1 (2024-03-29)
 
 ### Fix
