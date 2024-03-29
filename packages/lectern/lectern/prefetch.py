@@ -66,15 +66,17 @@ class MarkdownPrefetcher:
     ) -> str:
         """Replace remote urls in the input by data urls or links to local files."""
         return "".join(
-            self.rewrite_fragment(
-                text,
-                fragment.url,
-                fragment,
-                external_files,
-                external_prefix,
+            (
+                self.rewrite_fragment(
+                    text,
+                    fragment.url,
+                    fragment,
+                    external_files,
+                    external_prefix,
+                )
+                if fragment and fragment.url
+                else text
             )
-            if fragment and fragment.url
-            else text
             for text, fragment in self.extractor.split(source, directives)
         )
 

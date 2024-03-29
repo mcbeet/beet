@@ -1,6 +1,5 @@
 """Plugin that adds a directive for interpreting lectern text templates."""
 
-
 __all__ = [
     "ScriptDirective",
 ]

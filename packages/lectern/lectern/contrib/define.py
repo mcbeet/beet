@@ -1,6 +1,5 @@
 """Plugin that adds a directive for rendering a fragment and storing the output."""
 
-
 __all__ = [
     "DefineDirective",
 ]

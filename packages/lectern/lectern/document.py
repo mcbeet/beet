@@ -146,12 +146,10 @@ class Document:
         self,
         emit_external_files: Literal[True],
         prefix: str = "",
-    ) -> Tuple[str, Dict[str, File[Any, Any]]]:
-        ...
+    ) -> Tuple[str, Dict[str, File[Any, Any]]]: ...
 
     @overload
-    def get_markdown(self, emit_external_files: Literal[False] = False) -> str:
-        ...
+    def get_markdown(self, emit_external_files: Literal[False] = False) -> str: ...
 
     def get_markdown(
         self,

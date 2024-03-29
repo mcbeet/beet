@@ -68,16 +68,13 @@ class Fragment:
         return replace(self, url=url, path=path)
 
     @overload
-    def expect(self) -> None:
-        ...
+    def expect(self) -> None: ...
 
     @overload
-    def expect(self, name1: str, /) -> str:
-        ...
+    def expect(self, name1: str, /) -> str: ...
 
     @overload
-    def expect(self, name1: str, name2: str, /, *names: str) -> Sequence[str]:
-        ...
+    def expect(self, name1: str, name2: str, /, *names: str) -> Sequence[str]: ...
 
     def expect(self, *names: str):
         """Check directive arguments."""
@@ -94,12 +91,10 @@ class Fragment:
         return self.arguments
 
     @overload
-    def as_file(self) -> BinaryFile:
-        ...
+    def as_file(self) -> BinaryFile: ...
 
     @overload
-    def as_file(self, file_type: Type[FileType]) -> FileType:
-        ...
+    def as_file(self, file_type: Type[FileType]) -> FileType: ...
 
     def as_file(self, file_type: Type[File[Any, Any]] = BinaryFile) -> File[Any, Any]:
         """Retrieve the content of the fragment as a file."""

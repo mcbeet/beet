@@ -1,6 +1,5 @@
 """Plugin that handles relative resource locations."""
 
-
 __all__ = [
     "RelativeNamespacedResourceLoader",
 ]

@@ -1,6 +1,5 @@
 """Plugin that handles yaml fragments for json files."""
 
-
 __all__ = [
     "handle_yaml",
 ]

@@ -586,9 +586,11 @@ class MarkdownExtractor(Extractor):
                     or (
                         (directory := RELATIVE_PATH_REGEX.match(code.content))
                         and (
-                            directive := "@resource_pack"
-                            if directory[0] == "assets"
-                            else "@data_pack"
+                            directive := (
+                                "@resource_pack"
+                                if directory[0] == "assets"
+                                else "@data_pack"
+                            )
                         )
                         and regex.match(f"{directive} {code.content}")
                     )

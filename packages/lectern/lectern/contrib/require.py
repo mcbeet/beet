@@ -1,6 +1,5 @@
 """Plugin that adds a directive for requiring plugins dynamically."""
 
-
 __all__ = [
     "RequireDirective",
 ]

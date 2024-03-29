@@ -24,8 +24,7 @@ from .fragment import Fragment
 class Directive(Protocol):
     """Protocol for detecting directives."""
 
-    def __call__(self, fragment: Fragment, assets: ResourcePack, data: DataPack, /):
-        ...
+    def __call__(self, fragment: Fragment, assets: ResourcePack, data: DataPack, /): ...
 
 
 class DirectiveRegistry(Container[str, Directive]):

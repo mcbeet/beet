@@ -1,6 +1,5 @@
 """Plugin for handling markdown coming from messaging apps."""
 
-
 __all__ = [
     "MessagingOptions",
     "messaging",

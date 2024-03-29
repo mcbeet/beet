@@ -1,6 +1,5 @@
 """Plugin that adds a directive for running plugin code in a document."""
 
-
 __all__ = [
     "PluginDirective",
 ]
