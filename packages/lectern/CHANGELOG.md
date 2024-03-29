@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.33.0 (2024-03-29)
+
+### Feature
+
+* Add lectern.contrib.tagged_function_shorthand ([`3ea2017`](https://github.com/mcbeet/lectern/commit/3ea201743f48b0614a9c5de2d7af5b91e0ca3995))
+
 ## v0.32.0 (2023-12-17)
 
 ### Feature
