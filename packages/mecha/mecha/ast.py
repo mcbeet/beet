@@ -936,6 +936,11 @@ class AstItemSlot(AstOption):
             "weapon",
             "weapon.mainhand",
             "weapon.offhand",
+            "player.cursor",
+            "player.crafting.0",
+            "player.crafting.1",
+            "player.crafting.2",
+            "player.crafting.3",
         }
         | {f"container.{n}" for n in range(54)}
         | {f"enderchest.{n}" for n in range(27)}
@@ -961,11 +966,6 @@ class AstItemSlots(AstOption):
         "horse.*",
         "weapon.*",
         "armor.*",
-        "player.cursor",
-        "player.crafting.0",
-        "player.crafting.1",
-        "player.crafting.2",
-        "player.crafting.3",
         "player.crafting.*",
     }
 
