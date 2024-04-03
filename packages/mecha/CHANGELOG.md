@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.92.0 (2024-04-03)
+
+### Feature
+
+* Add contents item slot ([#296](https://github.com/mcbeet/mecha/issues/296)) ([`82e08e5`](https://github.com/mcbeet/mecha/commit/82e08e52b21669c77af6d4ff80d2a2ad2a36c1e5))
+
 ## v0.91.3 (2024-03-29)
 
 ### Fix
