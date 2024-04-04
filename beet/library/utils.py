@@ -62,10 +62,17 @@ def list_origin_folders(prefix: str, origin: FileOrigin) -> Dict[str, List[PureP
 
     return folders
 
+def modified_suffixes(path: PurePath) -> List[str]:
+    name = path.name
+    if name.endswith('.'):
+        return []
+    name = name.lstrip('.')
+    return ['.' + suffix for suffix in name.split('.')]
+
 
 def list_extensions(path: PurePath) -> List[str]:
     extensions: List[str] = list(
-        accumulate(reversed(path.suffixes), lambda a, b: b + a)  # type: ignore
+        accumulate(reversed(modified_suffixes(path)), lambda a, b: b + a)  # type: ignore
     )
     extensions.reverse()
     extensions.append("")

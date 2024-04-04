@@ -679,8 +679,6 @@ class NamespaceProxy(
 
     def split_key(self, key: str) -> Tuple[str, str]:
         namespace, _, file_path = key.partition(":")
-        if not file_path:
-            raise KeyError(key)
         return namespace, file_path
 
     def join_key(self, key1: str, key2: str) -> str:
