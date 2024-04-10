@@ -232,6 +232,9 @@ def get_default_parsers() -> Dict[str, Parser]:
         "integer_range": IntegerRangeConstraint(delegate("range")),
         "resource_location_or_tag": CommentDisambiguation(ResourceLocationParser()),
         "resource_location": NoTagConstraint(delegate("resource_location_or_tag")),
+        "resource_location_or_nbt": AlternativeParser(
+            [delegate("resource_location"), delegate("nbt_compound")]
+        ),
         "uuid": parse_uuid,
         "objective": BasicLiteralParser(AstObjective),
         "objective_criteria": BasicLiteralParser(AstObjectiveCriteria),
@@ -488,9 +491,13 @@ def get_default_parsers() -> Dict[str, Parser]:
         "command:argument:minecraft:template_mirror": delegate("template_mirror"),
         "command:argument:minecraft:float_range": delegate("range"),
         "command:argument:minecraft:function": delegate("resource_location_or_tag"),
-        "command:argument:minecraft:loot_table": delegate("resource_location"),
-        "command:argument:minecraft:loot_predicate": delegate("resource_location"),
-        "command:argument:minecraft:loot_modifier": delegate("resource_location"),
+        "command:argument:minecraft:loot_table": delegate("resource_location_or_nbt"),
+        "command:argument:minecraft:loot_predicate": delegate(
+            "resource_location_or_nbt"
+        ),
+        "command:argument:minecraft:loot_modifier": delegate(
+            "resource_location_or_nbt"
+        ),
         "command:argument:minecraft:game_profile": delegate("game_profile"),
         "command:argument:minecraft:gamemode": delegate("gamemode"),
         "command:argument:minecraft:heightmap": delegate("heightmap"),

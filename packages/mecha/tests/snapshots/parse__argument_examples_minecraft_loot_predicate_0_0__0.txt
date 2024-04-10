@@ -1,0 +1,14 @@
+minecraft:loot_predicate 0 0
+---
+{}
+---
+demo:my_predicate
+---
+demo:my_predicate
+---
+<class 'mecha.ast.AstResourceLocation'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=17, lineno=1, colno=18)
+  is_tag: False
+  namespace: 'demo'
+  path: 'my_predicate'

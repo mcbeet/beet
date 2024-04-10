@@ -252,6 +252,14 @@
       "examples": ["foo", "foo:bar", "#foo"]
     }
   ],
+  "minecraft:loot_predicate": [
+    {
+      "examples": [
+        "demo:my_predicate",
+        "{condition:weather_check, raining:true}"
+      ]
+    }
+  ],
   "minecraft:game_profile": [
     {
       "examples": [

@@ -1,0 +1,38 @@
+minecraft:loot_predicate 0 1
+---
+{}
+---
+{condition:weather_check, raining:true}
+---
+{condition: "weather_check", raining: 1b}
+---
+<class 'mecha.ast.AstNbtCompound'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=39, lineno=1, colno=40)
+  entries:
+    <class 'mecha.ast.AstNbtCompoundEntry'>
+      location: SourceLocation(pos=1, lineno=1, colno=2)
+      end_location: SourceLocation(pos=24, lineno=1, colno=25)
+      key:
+        <class 'mecha.ast.AstNbtCompoundKey'>
+          location: SourceLocation(pos=1, lineno=1, colno=2)
+          end_location: SourceLocation(pos=10, lineno=1, colno=11)
+          value: 'condition'
+      value:
+        <class 'mecha.ast.AstNbtValue'>
+          location: SourceLocation(pos=11, lineno=1, colno=12)
+          end_location: SourceLocation(pos=24, lineno=1, colno=25)
+          value: String('weather_check')
+    <class 'mecha.ast.AstNbtCompoundEntry'>
+      location: SourceLocation(pos=26, lineno=1, colno=27)
+      end_location: SourceLocation(pos=38, lineno=1, colno=39)
+      key:
+        <class 'mecha.ast.AstNbtCompoundKey'>
+          location: SourceLocation(pos=26, lineno=1, colno=27)
+          end_location: SourceLocation(pos=33, lineno=1, colno=34)
+          value: 'raining'
+      value:
+        <class 'mecha.ast.AstNbtBool'>
+          location: SourceLocation(pos=34, lineno=1, colno=35)
+          end_location: SourceLocation(pos=38, lineno=1, colno=39)
+          value: Byte(1)
