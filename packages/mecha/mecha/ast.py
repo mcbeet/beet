@@ -1233,7 +1233,7 @@ class AstNbtPath(AstNode):
 
 
 @dataclass(frozen=True, slots=True)
-class AstParticleParameters(AstNode):
+class AstParticleParameters(AstNode):  # legacy compat
     """Base ast node for particle parameters."""
 
 
@@ -1317,7 +1317,7 @@ class AstParticle(AstNode):
     """Ast particle node."""
 
     name: AstResourceLocation = required_field()
-    parameters: Optional[AstParticleParameters] = None
+    parameters: Optional[Union[AstParticleParameters, AstNbtCompound]] = None
 
     parser = "particle"
 

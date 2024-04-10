@@ -482,7 +482,9 @@
         "item minecraft:apple{foo: bar}",
         "vibration 5.0 64.0 0.0 200",
         "sculk_charge 1.5707",
-        "shriek 100"
+        "shriek 100",
+        "minecraft:dust_color_transition{from_color: [1.0f, 0.0f, 0.0f], scale: 0.5f, to_color: [0.0f, 1.0f, 0.5f]}",
+        "minecraft:block{block_state: {Name: 'minecraft:redstone_lamp', Properties: {lit: 'true'}}}"
       ]
     },
     {

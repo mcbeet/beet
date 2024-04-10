@@ -33,6 +33,7 @@ from .ast import (
     AstMessage,
     AstNbt,
     AstNbtBool,
+    AstNbtCompound,
     AstNbtPath,
     AstNbtPathKey,
     AstNbtPathSubscript,
@@ -142,7 +143,6 @@ class Serializer(Visitor):
     @rule(AstVector2)
     @rule(AstVector3)
     @rule(AstParticleParameters)
-    @rule(AstParticle)
     def aggregate(self, node: AstNode, result: List[str]):
         sep = ""
         for child in node:
@@ -388,6 +388,14 @@ class Serializer(Visitor):
                 result.append(sep)
             sep = "."
             yield component
+
+    @rule(AstParticle)
+    def particle(self, node: AstParticle, result: List[str]):
+        yield node.name
+        if node.parameters:
+            if not isinstance(node.parameters, AstNbtCompound):
+                result.append(" ")
+            yield node.parameters
 
     @rule(AstMacroLine)
     def macro_line(self, node: AstMacroLine, result: List[str]):

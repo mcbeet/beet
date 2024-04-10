@@ -1,0 +1,86 @@
+minecraft:particle 0 11
+---
+{}
+---
+minecraft:dust_color_transition{from_color: [1.0f, 0.0f, 0.0f], scale: 0.5f, to_color: [0.0f, 1.0f, 0.5f]}
+---
+minecraft:dust_color_transition{from_color: [1.0f, 0.0f, 0.0f], scale: 0.5f, to_color: [0.0f, 1.0f, 0.5f]}
+---
+<class 'mecha.ast.AstParticle'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=106, lineno=1, colno=107)
+  name:
+    <class 'mecha.ast.AstResourceLocation'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=31, lineno=1, colno=32)
+      is_tag: False
+      namespace: 'minecraft'
+      path: 'dust_color_transition'
+  parameters:
+    <class 'mecha.ast.AstNbtCompound'>
+      location: SourceLocation(pos=31, lineno=1, colno=32)
+      end_location: SourceLocation(pos=106, lineno=1, colno=107)
+      entries:
+        <class 'mecha.ast.AstNbtCompoundEntry'>
+          location: SourceLocation(pos=32, lineno=1, colno=33)
+          end_location: SourceLocation(pos=62, lineno=1, colno=63)
+          key:
+            <class 'mecha.ast.AstNbtCompoundKey'>
+              location: SourceLocation(pos=32, lineno=1, colno=33)
+              end_location: SourceLocation(pos=42, lineno=1, colno=43)
+              value: 'from_color'
+          value:
+            <class 'mecha.ast.AstNbtList'>
+              location: SourceLocation(pos=44, lineno=1, colno=45)
+              end_location: SourceLocation(pos=62, lineno=1, colno=63)
+              elements:
+                <class 'mecha.ast.AstNbtValue'>
+                  location: SourceLocation(pos=45, lineno=1, colno=46)
+                  end_location: SourceLocation(pos=49, lineno=1, colno=50)
+                  value: Float(1.0)
+                <class 'mecha.ast.AstNbtValue'>
+                  location: SourceLocation(pos=51, lineno=1, colno=52)
+                  end_location: SourceLocation(pos=55, lineno=1, colno=56)
+                  value: Float(0.0)
+                <class 'mecha.ast.AstNbtValue'>
+                  location: SourceLocation(pos=57, lineno=1, colno=58)
+                  end_location: SourceLocation(pos=61, lineno=1, colno=62)
+                  value: Float(0.0)
+        <class 'mecha.ast.AstNbtCompoundEntry'>
+          location: SourceLocation(pos=64, lineno=1, colno=65)
+          end_location: SourceLocation(pos=75, lineno=1, colno=76)
+          key:
+            <class 'mecha.ast.AstNbtCompoundKey'>
+              location: SourceLocation(pos=64, lineno=1, colno=65)
+              end_location: SourceLocation(pos=69, lineno=1, colno=70)
+              value: 'scale'
+          value:
+            <class 'mecha.ast.AstNbtValue'>
+              location: SourceLocation(pos=71, lineno=1, colno=72)
+              end_location: SourceLocation(pos=75, lineno=1, colno=76)
+              value: Float(0.5)
+        <class 'mecha.ast.AstNbtCompoundEntry'>
+          location: SourceLocation(pos=77, lineno=1, colno=78)
+          end_location: SourceLocation(pos=105, lineno=1, colno=106)
+          key:
+            <class 'mecha.ast.AstNbtCompoundKey'>
+              location: SourceLocation(pos=77, lineno=1, colno=78)
+              end_location: SourceLocation(pos=85, lineno=1, colno=86)
+              value: 'to_color'
+          value:
+            <class 'mecha.ast.AstNbtList'>
+              location: SourceLocation(pos=87, lineno=1, colno=88)
+              end_location: SourceLocation(pos=105, lineno=1, colno=106)
+              elements:
+                <class 'mecha.ast.AstNbtValue'>
+                  location: SourceLocation(pos=88, lineno=1, colno=89)
+                  end_location: SourceLocation(pos=92, lineno=1, colno=93)
+                  value: Float(0.0)
+                <class 'mecha.ast.AstNbtValue'>
+                  location: SourceLocation(pos=94, lineno=1, colno=95)
+                  end_location: SourceLocation(pos=98, lineno=1, colno=99)
+                  value: Float(1.0)
+                <class 'mecha.ast.AstNbtValue'>
+                  location: SourceLocation(pos=100, lineno=1, colno=101)
+                  end_location: SourceLocation(pos=104, lineno=1, colno=105)
+                  value: Float(0.5)

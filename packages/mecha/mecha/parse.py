@@ -58,7 +58,7 @@ __all__ = [
     "parse_wildcard",
     "parse_message",
     "NbtPathParser",
-    "parse_particle",
+    "ParticleParser",
     "AggregateParser",
     "SingleLineConstraint",
     "AlternativeParser",
@@ -355,7 +355,10 @@ def get_default_parsers() -> Dict[str, Parser]:
         ################################################################################
         # Particle
         ################################################################################
-        "particle": parse_particle,
+        "particle": ParticleParser(
+            resource_location_parser=delegate("resource_location"),
+            generic_parameters_parser=delegate("nbt_compound"),
+        ),
         "particle:minecraft:dust": AggregateParser(
             type=AstDustParticleParameters,
             fields={
@@ -2034,19 +2037,34 @@ class NbtPathParser:
             yield set_location(subscript_node, bracket, close_bracket)
 
 
-def parse_particle(stream: TokenStream) -> AstParticle:
-    """Parse particle."""
-    parameters = None
+@dataclass
+class ParticleParser:
+    resource_location_parser: Parser
+    generic_parameters_parser: Parser
 
-    if isinstance(name := delegate("resource_location", stream), AstResourceLocation):
-        try:
-            parameters = delegate(f"particle:{name.get_canonical_value()}", stream)
-        except UnrecognizedParser as exc:
-            if not exc.parser.startswith("particle:"):
-                raise
+    def __call__(self, stream: TokenStream) -> AstParticle:
+        """Parse particle."""
+        parameters = None
 
-    node = AstParticle(name=name, parameters=parameters)
-    return set_location(node, name, parameters if parameters else name)
+        if isinstance(
+            name := self.resource_location_parser(stream), AstResourceLocation
+        ):
+            with stream.syntax(hint=r"\{"), stream.intercept("whitespace"):
+                token = stream.peek()
+
+            if token and token.match("hint"):
+                parameters = self.generic_parameters_parser(stream)
+            else:
+                try:
+                    parameters = delegate(
+                        f"particle:{name.get_canonical_value()}", stream
+                    )
+                except UnrecognizedParser as exc:
+                    if not exc.parser.startswith("particle:"):
+                        raise
+
+        node = AstParticle(name=name, parameters=parameters)
+        return set_location(node, name, parameters if parameters else name)
 
 
 def parse_macro_line(stream: TokenStream) -> AstMacroLine:
