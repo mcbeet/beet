@@ -2,6 +2,14 @@
 
 <!--next-version-placeholder-->
 
+## v0.93.0 (2024-04-10)
+
+### Feature
+
+* Support new particle representation ([`23c576a`](https://github.com/mcbeet/mecha/commit/23c576a816904b9d023357619e8be013116ca6d2))
+* Support inline loot arguments ([`156b8e6`](https://github.com/mcbeet/mecha/commit/156b8e61b1b3b699e28170064ea65975b6c5bab9))
+* New item predicates syntax ([`1cb0b8e`](https://github.com/mcbeet/mecha/commit/1cb0b8e2e4850e36bd08627c369b7af067af539d))
+
 ## v0.92.0 (2024-04-03)
 
 ### Feature
