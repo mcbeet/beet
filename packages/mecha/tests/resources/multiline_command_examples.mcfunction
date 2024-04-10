@@ -138,3 +138,12 @@ data modify entity @s
     }]
     .Modifiers
     append from storage demo:foo bar
+
+clear @s *[
+    custom_data~{
+        gm4_metallurgy: {
+            stored_shamir: "lumos"
+        }
+    },
+    damage | !max_item_stack=1,
+]

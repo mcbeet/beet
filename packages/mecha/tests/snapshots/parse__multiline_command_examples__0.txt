@@ -1,6 +1,6 @@
 <class 'mecha.ast.AstRoot'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
-  end_location: SourceLocation(pos=2636, lineno=140, colno=37)
+  end_location: SourceLocation(pos=2779, lineno=149, colno=2)
   commands:
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=0, lineno=1, colno=1)
@@ -1373,3 +1373,102 @@
               location: SourceLocation(pos=2633, lineno=140, colno=34)
               end_location: SourceLocation(pos=2636, lineno=140, colno=37)
               value: 'bar'
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=2638, lineno=142, colno=1)
+      end_location: SourceLocation(pos=2779, lineno=149, colno=2)
+      identifier: 'clear:targets:item'
+      arguments:
+        <class 'mecha.ast.AstSelector'>
+          location: SourceLocation(pos=2644, lineno=142, colno=7)
+          end_location: SourceLocation(pos=2646, lineno=142, colno=9)
+          variable: 's'
+          arguments:
+            <empty>
+        <class 'mecha.ast.AstItemPredicate'>
+          location: SourceLocation(pos=2647, lineno=142, colno=10)
+          end_location: SourceLocation(pos=2779, lineno=149, colno=2)
+          identifier:
+            <class 'mecha.ast.AstWildcard'>
+              location: SourceLocation(pos=2647, lineno=142, colno=10)
+              end_location: SourceLocation(pos=2648, lineno=142, colno=11)
+              value: '*'
+          arguments:
+            <class 'mecha.ast.AstItemPredicateAlternatives'>
+              location: SourceLocation(pos=2654, lineno=143, colno=5)
+              end_location: SourceLocation(pos=2744, lineno=147, colno=6)
+              alternatives:
+                <class 'mecha.ast.AstItemPredicateTestPredicate'>
+                  location: SourceLocation(pos=2654, lineno=143, colno=5)
+                  end_location: SourceLocation(pos=2744, lineno=147, colno=6)
+                  inverted: False
+                  key:
+                    <class 'mecha.ast.AstResourceLocation'>
+                      location: SourceLocation(pos=2654, lineno=143, colno=5)
+                      end_location: SourceLocation(pos=2665, lineno=143, colno=16)
+                      is_tag: False
+                      namespace: None
+                      path: 'custom_data'
+                  value:
+                    <class 'mecha.ast.AstNbtCompound'>
+                      location: SourceLocation(pos=2666, lineno=143, colno=17)
+                      end_location: SourceLocation(pos=2744, lineno=147, colno=6)
+                      entries:
+                        <class 'mecha.ast.AstNbtCompoundEntry'>
+                          location: SourceLocation(pos=2676, lineno=144, colno=9)
+                          end_location: SourceLocation(pos=2738, lineno=146, colno=10)
+                          key:
+                            <class 'mecha.ast.AstNbtCompoundKey'>
+                              location: SourceLocation(pos=2676, lineno=144, colno=9)
+                              end_location: SourceLocation(pos=2690, lineno=144, colno=23)
+                              value: 'gm4_metallurgy'
+                          value:
+                            <class 'mecha.ast.AstNbtCompound'>
+                              location: SourceLocation(pos=2692, lineno=144, colno=25)
+                              end_location: SourceLocation(pos=2738, lineno=146, colno=10)
+                              entries:
+                                <class 'mecha.ast.AstNbtCompoundEntry'>
+                                  location: SourceLocation(pos=2706, lineno=145, colno=13)
+                                  end_location: SourceLocation(pos=2728, lineno=145, colno=35)
+                                  key:
+                                    <class 'mecha.ast.AstNbtCompoundKey'>
+                                      location: SourceLocation(pos=2706, lineno=145, colno=13)
+                                      end_location: SourceLocation(pos=2719, lineno=145, colno=26)
+                                      value: 'stored_shamir'
+                                  value:
+                                    <class 'mecha.ast.AstNbtValue'>
+                                      location: SourceLocation(pos=2721, lineno=145, colno=28)
+                                      end_location: SourceLocation(pos=2728, lineno=145, colno=35)
+                                      value: String('lumos')
+            <class 'mecha.ast.AstItemPredicateAlternatives'>
+              location: SourceLocation(pos=2750, lineno=148, colno=5)
+              end_location: SourceLocation(pos=2776, lineno=148, colno=31)
+              alternatives:
+                <class 'mecha.ast.AstItemPredicateTestComponent'>
+                  location: SourceLocation(pos=2750, lineno=148, colno=5)
+                  end_location: SourceLocation(pos=2756, lineno=148, colno=11)
+                  inverted: False
+                  key:
+                    <class 'mecha.ast.AstResourceLocation'>
+                      location: SourceLocation(pos=2750, lineno=148, colno=5)
+                      end_location: SourceLocation(pos=2756, lineno=148, colno=11)
+                      is_tag: False
+                      namespace: None
+                      path: 'damage'
+                  value: None
+                <class 'mecha.ast.AstItemPredicateTestComponent'>
+                  location: SourceLocation(pos=2759, lineno=148, colno=14)
+                  end_location: SourceLocation(pos=2776, lineno=148, colno=31)
+                  inverted: True
+                  key:
+                    <class 'mecha.ast.AstResourceLocation'>
+                      location: SourceLocation(pos=2760, lineno=148, colno=15)
+                      end_location: SourceLocation(pos=2774, lineno=148, colno=29)
+                      is_tag: False
+                      namespace: None
+                      path: 'max_item_stack'
+                  value:
+                    <class 'mecha.ast.AstNbtValue'>
+                      location: SourceLocation(pos=2775, lineno=148, colno=30)
+                      end_location: SourceLocation(pos=2776, lineno=148, colno=31)
+                      value: Int(1)
+          data_tags: None
