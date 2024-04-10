@@ -6,7 +6,7 @@ stick{foo:bar}
 ---
 stick{foo: "bar"}
 ---
-<class 'mecha.ast.AstItem'>
+<class 'mecha.ast.AstItemStack'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=14, lineno=1, colno=15)
   identifier:
@@ -16,7 +16,7 @@ stick{foo: "bar"}
       is_tag: False
       namespace: None
       path: 'stick'
-  components:
+  arguments:
     <empty>
   data_tags:
     <class 'mecha.ast.AstNbtCompound'>

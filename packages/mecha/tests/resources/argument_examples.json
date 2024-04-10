@@ -297,7 +297,20 @@
   ],
   "minecraft:item_predicate": [
     {
-      "examples": ["stick", "minecraft:stick", "#stick", "#stick{foo:bar}"]
+      "examples": [
+        "stick",
+        "minecraft:stick",
+        "#stick",
+        "#stick{foo:bar}",
+        "stick[custom_data={foo:bar}]",
+        "stick[custom_data~{foo:bar}]",
+        "stick[count~{max:2}]",
+        "*",
+        "*[damage~{durability:{min:3}}]",
+        "*[!count=1]",
+        "*[!damage|damage=0]",
+        "*[!damage|damage=0|custom_data~{a:123},count~{min:5}]"
+      ]
     }
   ],
   "minecraft:item_slot": [
@@ -311,11 +324,16 @@
   ],
   "minecraft:item_stack": [
     {
-      "examples": ["stick", "minecraft:stick", "stick{foo:bar}"]
+      "examples": [
+        "stick",
+        "minecraft:stick",
+        "stick{foo:bar}",
+        "stick[custom_data={foo: bar}]"
+      ]
     },
     {
       "invalid": true,
-      "examples": ["#minecraft:stone"]
+      "examples": ["#minecraft:stone", "stick[custom_data~{foo: bar}]", "*"]
     }
   ],
   "minecraft:message": [

@@ -32,8 +32,10 @@ __all__ = [
     "ResourceLocationParser",
     "NoTagConstraint",
     "BlockParser",
-    "BracketedKeyValuePairsParser",
+    "BracketedListParser",
+    "KeyValuePairParser",
     "ItemParser",
+    "ItemPredicateAlternativesParser",
     "NoDataTagsConstraint",
     "BasicLiteralParser",
     "RangeParser",
@@ -108,11 +110,15 @@ from .ast import (
     AstGamemode,
     AstGreedy,
     AstHeightmap,
-    AstItem,
     AstItemComponent,
     AstItemParticleParameters,
+    AstItemPredicate,
+    AstItemPredicateAlternatives,
+    AstItemPredicateTestComponent,
+    AstItemPredicateTestPredicate,
     AstItemSlot,
     AstItemSlots,
+    AstItemStack,
     AstJson,
     AstJsonArray,
     AstJsonObject,
@@ -248,10 +254,12 @@ def get_default_parsers() -> Dict[str, Parser]:
             resource_location_parser=delegate("resource_location_or_tag"),
             block_states_parser=AdjacentConstraint(
                 parser=MultilineParser(
-                    BracketedKeyValuePairsParser(
-                        node_type=AstBlockState,
-                        key_parser=StringParser(type="phrase"),
-                        value_parser=delegate("phrase"),
+                    BracketedListParser(
+                        KeyValuePairParser(
+                            node_type=AstBlockState,
+                            key_parser=StringParser(type="phrase"),
+                            value_parser=delegate("phrase"),
+                        )
                     )
                 ),
                 hint=r"\[",
@@ -262,10 +270,12 @@ def get_default_parsers() -> Dict[str, Parser]:
             resource_location_parser=delegate("resource_location"),
             block_states_parser=AdjacentConstraint(
                 parser=MultilineParser(
-                    BracketedKeyValuePairsParser(
-                        node_type=AstBlockState,
-                        key_parser=StringParser(type="phrase"),
-                        value_parser=delegate("phrase"),
+                    BracketedListParser(
+                        KeyValuePairParser(
+                            node_type=AstBlockState,
+                            key_parser=StringParser(type="phrase"),
+                            value_parser=delegate("phrase"),
+                        )
                     )
                 ),
                 hint=r"\[",
@@ -273,13 +283,17 @@ def get_default_parsers() -> Dict[str, Parser]:
             data_tags_parser=delegate("adjacent_nbt_compound"),
         ),
         "item_predicate": ItemParser(
-            resource_location_parser=delegate("resource_location_or_tag"),
-            components_parser=AdjacentConstraint(
+            node_type=AstItemPredicate,
+            identifier_parser=AlternativeParser(
+                [delegate("resource_location_or_tag"), delegate("wildcard")]
+            ),
+            arguments_parser=AdjacentConstraint(
                 parser=MultilineParser(
-                    BracketedKeyValuePairsParser(
-                        node_type=AstItemComponent,
-                        key_parser=delegate("resource_location"),
-                        value_parser=delegate("nbt"),
+                    BracketedListParser(
+                        ItemPredicateAlternativesParser(
+                            key_parser=delegate("resource_location"),
+                            value_parser=delegate("nbt"),
+                        )
                     )
                 ),
                 hint=r"\[",
@@ -289,13 +303,16 @@ def get_default_parsers() -> Dict[str, Parser]:
         "item_slot": BasicLiteralParser(AstItemSlot),
         "item_slots": BasicLiteralParser(AstItemSlots),
         "item_stack": ItemParser(
-            resource_location_parser=delegate("resource_location"),
-            components_parser=AdjacentConstraint(
+            node_type=AstItemStack,
+            identifier_parser=delegate("resource_location"),
+            arguments_parser=AdjacentConstraint(
                 parser=MultilineParser(
-                    BracketedKeyValuePairsParser(
-                        node_type=AstItemComponent,
-                        key_parser=delegate("resource_location"),
-                        value_parser=delegate("nbt"),
+                    BracketedListParser(
+                        KeyValuePairParser(
+                            node_type=AstItemComponent,
+                            key_parser=delegate("resource_location"),
+                            value_parser=delegate("nbt"),
+                        )
                     )
                 ),
                 hint=r"\[",
@@ -1382,65 +1399,123 @@ class BlockParser:
 
 
 @dataclass
-class BracketedKeyValuePairsParser:
+class BracketedListParser:
+    """Parser for bracketed list."""
+
+    element_parser: Parser
+
+    def __call__(self, stream: TokenStream) -> AstChildren[AstNode]:
+        elements: List[AstNode] = []
+
+        with stream.syntax(
+            bracket=r"\[|\]",
+            comma=r",",
+        ):
+            stream.expect(("bracket", "["))
+
+            for _ in stream.peek_until(("bracket", "]")):
+                elements.append(self.element_parser(stream))
+
+                if not stream.get("comma"):
+                    stream.expect(("bracket", "]"))
+                    break
+
+        return AstChildren(elements)
+
+
+@dataclass
+class KeyValuePairParser:
     """Parser for bracketed key-value pairs."""
 
     node_type: Type[AstNode]
     key_parser: Parser
     value_parser: Parser
 
-    def __call__(self, stream: TokenStream) -> AstChildren[AstNode]:
-        pairs: List[AstNode] = []
+    def __call__(self, stream: TokenStream) -> AstNode:
+        with stream.syntax(equal=r"="):
+            key_node = self.key_parser(stream)
+            stream.expect("equal")
+            value_node = self.value_parser(stream)
 
-        with stream.syntax(
-            bracket=r"\[|\]",
-            equal=r"=",
-            comma=r",",
-        ):
-            stream.expect(("bracket", "["))
-
-            for _ in stream.peek_until(("bracket", "]")):
-                key_node = self.key_parser(stream)
-                stream.expect("equal")
-                value_node = self.value_parser(stream)
-
-                entry_node = self.node_type(key=key_node, value=value_node)  # type: ignore
-                entry_node = set_location(entry_node, key_node, value_node)
-                pairs.append(entry_node)
-
-                if not stream.get("comma"):
-                    stream.expect(("bracket", "]"))
-                    break
-
-        return AstChildren(pairs)
+            entry_node = self.node_type(key=key_node, value=value_node)  # type: ignore
+            return set_location(entry_node, key_node, value_node)
 
 
 @dataclass
 class ItemParser:
     """Parser for minecraft items."""
 
-    resource_location_parser: Parser
-    components_parser: Parser
+    node_type: Type[Any]
+    identifier_parser: Parser
+    arguments_parser: Parser
     data_tags_parser: Parser
 
-    def __call__(self, stream: TokenStream) -> AstItem:
-        identifier = self.resource_location_parser(stream)
+    def __call__(self, stream: TokenStream) -> AstNode:
+        identifier = self.identifier_parser(stream)
         location = identifier.location
         end_location = identifier.end_location
 
-        if components := self.components_parser(stream):
+        if arguments := self.arguments_parser(stream):
             end_location = stream.current.end_location
         else:
-            components = AstChildren[AstItemComponent]()
+            arguments = AstChildren[AstNode]()
 
         data_tags = self.data_tags_parser(stream)
 
-        node = AstItem(
+        node = self.node_type(
             identifier=identifier,
-            components=components,
+            arguments=arguments,
             data_tags=data_tags,
         )
         return set_location(node, location, data_tags if data_tags else end_location)
+
+
+@dataclass
+class ItemPredicateAlternativesParser:
+    """Parser for item predicate alternatives."""
+
+    key_parser: Parser
+    value_parser: Parser
+
+    def __call__(self, stream: TokenStream) -> AstItemPredicateAlternatives:
+        alternatives: List[
+            Union[AstItemPredicateTestComponent, AstItemPredicateTestPredicate]
+        ] = []
+
+        with stream.syntax(
+            pipe=r"\|",
+            equal=r"=",
+            tilde=r"~",
+            exclamation=r"!",
+        ):
+            while True:
+                exclamation = stream.get("exclamation")
+                key_node = self.key_parser(stream)
+
+                if stream.get("tilde"):
+                    test_node = AstItemPredicateTestPredicate(
+                        inverted=exclamation is not None,
+                        key=key_node,
+                        value=self.value_parser(stream),
+                    )
+                else:
+                    test_node = AstItemPredicateTestComponent(
+                        inverted=exclamation is not None,
+                        key=key_node,
+                        value=(
+                            self.value_parser(stream) if stream.get("equal") else None
+                        ),
+                    )
+
+                alternatives.append(
+                    set_location(test_node, exclamation or key_node, test_node.value)
+                )
+
+                if not stream.get("pipe"):
+                    break
+
+        node = AstItemPredicateAlternatives(alternatives=AstChildren(alternatives))
+        return set_location(node, alternatives[0], alternatives[-1])
 
 
 @dataclass

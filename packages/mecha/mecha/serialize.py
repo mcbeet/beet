@@ -7,7 +7,7 @@ __all__ = [
 import json
 import re
 from dataclasses import dataclass, field
-from typing import Any, Iterable, Iterator, List, Literal
+from typing import Any, Iterable, Iterator, List, Literal, Union
 
 from beet.core.utils import required_field
 from pydantic.v1 import BaseModel
@@ -19,8 +19,12 @@ from .ast import (
     AstChildren,
     AstCommand,
     AstCoordinate,
-    AstItem,
     AstItemComponent,
+    AstItemPredicate,
+    AstItemPredicateAlternatives,
+    AstItemPredicateTestComponent,
+    AstItemPredicateTestPredicate,
+    AstItemStack,
     AstJson,
     AstLiteral,
     AstMacroLine,
@@ -257,14 +261,42 @@ class Serializer(Visitor):
             yield node.data_tags
 
     @rule(AstItemComponent)
-    def item_component(self, node: AstItem, result: List[str]):
+    def item_component(self, node: AstItemComponent, result: List[str]):
         yield from self.key_value(node, "=", result)
 
-    @rule(AstItem)
-    def item(self, node: AstItem, result: List[str]):
+    @rule(AstItemPredicateTestComponent)
+    @rule(AstItemPredicateTestPredicate)
+    def item_test(
+        self,
+        node: Union[AstItemPredicateTestComponent, AstItemPredicateTestPredicate],
+        result: List[str],
+    ):
+        if node.inverted:
+            result.append("!")
+
+        yield node.key
+
+        if node.value:
+            result.append(
+                "~" if isinstance(node, AstItemPredicateTestPredicate) else "="
+            )
+            yield node.value
+
+    @rule(AstItemPredicateAlternatives)
+    def item_alternatives(self, node: AstItemPredicateAlternatives, result: List[str]):
+        pipe = "|" if self.formatting.cmd_compact else " | "
+        sep = ""
+        for test_node in node.alternatives:
+            result.append(sep)
+            sep = pipe
+            yield test_node
+
+    @rule(AstItemStack)
+    @rule(AstItemPredicate)
+    def item(self, node: Union[AstItemStack, AstItemPredicate], result: List[str]):
         yield node.identifier
-        if node.components:
-            yield from self.collection(node.components, "[]", result)
+        if node.arguments:
+            yield from self.collection(node.arguments, "[]", result)
         if node.data_tags:
             yield node.data_tags
 

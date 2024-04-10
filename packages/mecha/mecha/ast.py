@@ -55,7 +55,11 @@ __all__ = [
     "AstBlockState",
     "AstBlock",
     "AstItemComponent",
-    "AstItem",
+    "AstItemStack",
+    "AstItemPredicateTestComponent",
+    "AstItemPredicateTestPredicate",
+    "AstItemPredicateAlternatives",
+    "AstItemPredicate",
     "AstItemSlot",
     "AstItemSlots",
     "AstRange",
@@ -914,12 +918,48 @@ class AstItemComponent(AstNode):
 
 
 @dataclass(frozen=True, slots=True)
-class AstItem(AstNode):
-    """Ast item node."""
+class AstItemStack(AstNode):
+    """Ast item stack node."""
 
     identifier: AstResourceLocation = required_field()
-    components: AstChildren[AstItemComponent] = AstChildren()
-    data_tags: Optional[AstNbtCompound] = None
+    arguments: AstChildren[AstItemComponent] = AstChildren()
+    data_tags: Optional[AstNbtCompound] = None  # legacy compat
+
+
+@dataclass(frozen=True, slots=True)
+class AstItemPredicateTestComponent(AstNode):
+    """Ast item predicate test component node."""
+
+    inverted: bool = False
+    key: AstResourceLocation = required_field()
+    value: Optional[AstNbt] = None
+
+
+@dataclass(frozen=True, slots=True)
+class AstItemPredicateTestPredicate(AstNode):
+    """Ast item predicate test predicate node."""
+
+    inverted: bool = False
+    key: AstResourceLocation = required_field()
+    value: AstNbt = required_field()
+
+
+@dataclass(frozen=True, slots=True)
+class AstItemPredicateAlternatives(AstNode):
+    """Ast item predicate alternatives node."""
+
+    alternatives: AstChildren[
+        Union[AstItemPredicateTestComponent, AstItemPredicateTestPredicate]
+    ] = required_field()
+
+
+@dataclass(frozen=True, slots=True)
+class AstItemPredicate(AstNode):
+    """Ast item predicate node."""
+
+    identifier: Union[AstResourceLocation, AstWildcard] = required_field()
+    arguments: AstChildren[AstItemPredicateAlternatives] = AstChildren()
+    data_tags: Optional[AstNbtCompound] = None  # legacy compat
 
 
 @dataclass(frozen=True, slots=True)
@@ -1238,7 +1278,7 @@ class AstFallingDustParticleParameters(AstParticleParameters):
 class AstItemParticleParameters(AstParticleParameters):
     """Ast item particle parameters node."""
 
-    item: AstItem = required_field()
+    item: AstItemStack = required_field()
 
 
 @dataclass(frozen=True, slots=True)

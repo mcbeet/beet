@@ -6,7 +6,7 @@ minecraft:item_predicate 0 3
 ---
 #stick{foo: "bar"}
 ---
-<class 'mecha.ast.AstItem'>
+<class 'mecha.ast.AstItemPredicate'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=15, lineno=1, colno=16)
   identifier:
@@ -16,7 +16,7 @@ minecraft:item_predicate 0 3
       is_tag: True
       namespace: None
       path: 'stick'
-  components:
+  arguments:
     <empty>
   data_tags:
     <class 'mecha.ast.AstNbtCompound'>

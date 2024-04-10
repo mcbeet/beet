@@ -21,7 +21,7 @@ item minecraft:apple
       location: SourceLocation(pos=5, lineno=1, colno=6)
       end_location: SourceLocation(pos=20, lineno=1, colno=21)
       item:
-        <class 'mecha.ast.AstItem'>
+        <class 'mecha.ast.AstItemStack'>
           location: SourceLocation(pos=5, lineno=1, colno=6)
           end_location: SourceLocation(pos=20, lineno=1, colno=21)
           identifier:
@@ -31,6 +31,6 @@ item minecraft:apple
               is_tag: False
               namespace: 'minecraft'
               path: 'apple'
-          components:
+          arguments:
             <empty>
           data_tags: None

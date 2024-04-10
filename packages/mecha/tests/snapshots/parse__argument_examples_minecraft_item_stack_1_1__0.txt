@@ -1,0 +1,9 @@
+minecraft:item_stack 1 1
+---
+{}
+---
+stick[custom_data~{foo: bar}]
+---
+Reported 1 error.
+
+line 1, column 18: Expected equal but got literal '~{foo'.

@@ -1,0 +1,38 @@
+minecraft:item_predicate 0 9
+---
+{}
+---
+*[!count=1]
+---
+*[!count=1]
+---
+<class 'mecha.ast.AstItemPredicate'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=11, lineno=1, colno=12)
+  identifier:
+    <class 'mecha.ast.AstWildcard'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=1, lineno=1, colno=2)
+      value: '*'
+  arguments:
+    <class 'mecha.ast.AstItemPredicateAlternatives'>
+      location: SourceLocation(pos=2, lineno=1, colno=3)
+      end_location: SourceLocation(pos=10, lineno=1, colno=11)
+      alternatives:
+        <class 'mecha.ast.AstItemPredicateTestComponent'>
+          location: SourceLocation(pos=2, lineno=1, colno=3)
+          end_location: SourceLocation(pos=10, lineno=1, colno=11)
+          inverted: True
+          key:
+            <class 'mecha.ast.AstResourceLocation'>
+              location: SourceLocation(pos=3, lineno=1, colno=4)
+              end_location: SourceLocation(pos=8, lineno=1, colno=9)
+              is_tag: False
+              namespace: None
+              path: 'count'
+          value:
+            <class 'mecha.ast.AstNbtValue'>
+              location: SourceLocation(pos=9, lineno=1, colno=10)
+              end_location: SourceLocation(pos=10, lineno=1, colno=11)
+              value: Int(1)
+  data_tags: None

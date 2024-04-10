@@ -546,7 +546,7 @@
                               variable: 's'
                               arguments:
                                 <empty>
-                            <class 'mecha.ast.AstItem'>
+                            <class 'mecha.ast.AstItemStack'>
                               location: SourceLocation(pos=790, lineno=44, colno=17)
                               end_location: SourceLocation(pos=975, lineno=51, colno=6)
                               identifier:
@@ -556,7 +556,7 @@
                                   is_tag: False
                                   namespace: None
                                   path: 'stone'
-                              components:
+                              arguments:
                                 <empty>
                               data_tags:
                                 <class 'mecha.ast.AstNbtCompound'>
@@ -1048,7 +1048,7 @@
                       variable: 's'
                       arguments:
                         <empty>
-                    <class 'mecha.ast.AstItem'>
+                    <class 'mecha.ast.AstItemPredicate'>
                       location: SourceLocation(pos=1984, lineno=108, colno=57)
                       end_location: SourceLocation(pos=2004, lineno=108, colno=77)
                       identifier:
@@ -1058,7 +1058,7 @@
                           is_tag: True
                           namespace: 'smithed'
                           path: 'crafter/all'
-                      components:
+                      arguments:
                         <empty>
                       data_tags: None
                     <class 'mecha.ast.AstNumber'>
