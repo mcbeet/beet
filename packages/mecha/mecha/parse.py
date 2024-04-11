@@ -357,7 +357,7 @@ def get_default_parsers() -> Dict[str, Parser]:
         ################################################################################
         "particle": ParticleParser(
             resource_location_parser=delegate("resource_location"),
-            generic_parameters_parser=delegate("nbt_compound"),
+            generic_parameters_parser=MultilineParser(delegate("nbt_compound")),
         ),
         "particle:minecraft:dust": AggregateParser(
             type=AstDustParticleParameters,
@@ -494,12 +494,14 @@ def get_default_parsers() -> Dict[str, Parser]:
         "command:argument:minecraft:template_mirror": delegate("template_mirror"),
         "command:argument:minecraft:float_range": delegate("range"),
         "command:argument:minecraft:function": delegate("resource_location_or_tag"),
-        "command:argument:minecraft:loot_table": delegate("resource_location_or_nbt"),
-        "command:argument:minecraft:loot_predicate": delegate(
-            "resource_location_or_nbt"
+        "command:argument:minecraft:loot_table": MultilineParser(
+            delegate("resource_location_or_nbt")
         ),
-        "command:argument:minecraft:loot_modifier": delegate(
-            "resource_location_or_nbt"
+        "command:argument:minecraft:loot_predicate": MultilineParser(
+            delegate("resource_location_or_nbt")
+        ),
+        "command:argument:minecraft:loot_modifier": MultilineParser(
+            delegate("resource_location_or_nbt")
         ),
         "command:argument:minecraft:game_profile": delegate("game_profile"),
         "command:argument:minecraft:gamemode": delegate("gamemode"),
