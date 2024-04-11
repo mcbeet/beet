@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.93.1 (2024-04-11)
+
+### Fix
+
+* Forgot about multiline mode for inline predicates and generic particle parameters ([`ee43596`](https://github.com/mcbeet/mecha/commit/ee4359664287c7d97875451d24b808c5ddd6b052))
+
 ## v0.93.0 (2024-04-10)
 
 ### Feature
