@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.105.0 (2024-04-28)
+
+### Feature
+
+* Version 1.20.5 ([`2fd518d`](https://github.com/mcbeet/beet/commit/2fd518dec1614f12e3798c8d43c9d6baf8f80443))
+
 ## v0.104.1 (2024-02-20)
 
 ### Fix
