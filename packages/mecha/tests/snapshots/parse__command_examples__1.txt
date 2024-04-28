@@ -175,3 +175,16 @@ give @s stick{foo: "bar"}
 give @s stick[custom_data={foo: "bar"}]
 clear @s diamond_pickaxe[damage=0]
 give @s diamond_sword[enchantment_glint_override=true]
+execute as @a if items entity @s weapon.mainhand potion run item modify entity @s weapon.mainhand betterpotions:stack_4
+execute as @a if items entity @s player.cursor potion run item modify entity @s player.cursor betterpotions:stack_4
+clear @s stick{a: 2}
+clear @s stick[custom_data~{a: 2}]
+clear @s *[!damage | damage=0]
+clear @s *[count~{max: 2}]
+clear @s *[damage~{durability: {min: 3}}]
+clear @s *[custom_data~{gm4_metallurgy: {stored_shamir: "lumos"}}, damage | !max_item_stack=1]
+execute if predicate {condition: "weather_check", raining: 1b}
+particle minecraft:block{block_state: {Name: "minecraft:redstone_lamp", Properties: {lit: "true"}}}
+clear @s *[custom_data~{gm4_metallurgy: {stored_shamir: "lumos"}}, damage | !max_item_stack=1]
+execute if predicate {condition: "weather_check", raining: 1b}
+particle minecraft:block{block_state: {Name: "minecraft:redstone_lamp", Properties: {lit: "true"}}}

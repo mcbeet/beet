@@ -147,3 +147,17 @@ clear @s *[
     },
     damage | !max_item_stack=1,
 ]
+
+execute if predicate {
+  condition: weather_check,
+  raining: true
+}
+
+particle minecraft:block{
+  block_state: {
+    Name: "minecraft:redstone_lamp",
+    Properties: {
+      lit: "true"
+    }
+  }
+}

@@ -7,7 +7,7 @@
 ```json
 {
   "pack": {
-    "pack_format": 26,
+    "pack_format": 41,
     "description": ""
   }
 }
@@ -59,7 +59,7 @@ say world
 ```json
 {
   "pack": {
-    "pack_format": 22,
+    "pack_format": 32,
     "description": ""
   }
 }

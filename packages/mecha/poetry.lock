@@ -14,14 +14,14 @@ files = [
 
 [[package]]
 name = "beet"
-version = "0.104.0"
+version = "0.105.0"
 description = "The Minecraft pack development kit"
 category = "main"
 optional = false
-python-versions = ">=3.10,<4.0"
+python-versions = "<4.0,>=3.10"
 files = [
-    {file = "beet-0.104.0-py3-none-any.whl", hash = "sha256:32c84891e37038155efb9cce7e14c139f568ea773ebc4ee637cce443b7afc899"},
-    {file = "beet-0.104.0.tar.gz", hash = "sha256:d1334a3ae09659aa61156d68f04c10ff5fe735fa08f42817d0c76d4bb7874a9c"},
+    {file = "beet-0.105.0-py3-none-any.whl", hash = "sha256:7a0597568b9dc902d2ac7662ba464e8b925b9055037562687d7a3b8245ea7387"},
+    {file = "beet-0.105.0.tar.gz", hash = "sha256:928e3adcb8ea750af50f1b0d27a3476d4fb74310807c8544f2c966e450ad4cdc"},
 ]
 
 [package.dependencies]
@@ -1569,4 +1569,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "6374080887c1969c975eee2d3f7ab3fe9405d38f866b8b9f670adfc31095d5db"
+content-hash = "b27bb047c6636e2d7b826b540c21e7dc3bee02782ac7dabc62709ea324b871d5"

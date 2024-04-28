@@ -8,7 +8,12 @@ from mecha.contrib.statistics import Analyzer, Summary
 
 @pytest.fixture(scope="session")
 def ctx_stats():
-    with run_beet({"require": ["mecha.contrib.statistics"]}) as ctx:
+    with run_beet(
+        {
+            "minecraft": "1.19",
+            "require": ["mecha.contrib.statistics"],
+        }
+    ) as ctx:
         yield ctx
 
 

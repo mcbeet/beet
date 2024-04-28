@@ -29,3 +29,5 @@ execute if data storage demo:foo thing1.thing2{foo: 1, bar: [1, 2, 3]}.something
 data modify entity @s Attributes[{Name: "minecraft:generic.movement_speed"}].Modifiers append from storage demo:foo bar
 data modify entity @s Attributes[{Name: "minecraft:generic.movement_speed"}].Modifiers append from storage demo:foo bar
 clear @s *[custom_data~{gm4_metallurgy: {stored_shamir: "lumos"}}, damage | !max_item_stack=1]
+execute if predicate {condition: "weather_check", raining: 1b}
+particle minecraft:block{block_state: {Name: "minecraft:redstone_lamp", Properties: {lit: "true"}}}
