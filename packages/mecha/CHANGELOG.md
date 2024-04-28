@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.94.0 (2024-04-28)
+
+### Feature
+
+* Version 1.20.5 ([`3d09de1`](https://github.com/mcbeet/mecha/commit/3d09de1ee6bfffc6efa6434bc85e0ff31dd6aed8))
+
 ## v0.93.1 (2024-04-11)
 
 ### Fix
