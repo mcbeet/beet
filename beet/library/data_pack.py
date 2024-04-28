@@ -4,6 +4,7 @@ __all__ = [
     "Advancement",
     "DamageType",
     "ChatType",
+    "BannerPattern",
     "Function",
     "ItemModifier",
     "LootTable",
@@ -69,6 +70,13 @@ class ChatType(JsonFile):
     """Class representing a chat type."""
 
     scope: ClassVar[Tuple[str, ...]] = ("chat_type",)
+    extension: ClassVar[str] = ".json"
+
+
+class BannerPattern(JsonFile):
+    """Class representing a banner pattern."""
+
+    scope: ClassVar[Tuple[str, ...]] = ("banner_pattern",)
     extension: ClassVar[str] = ".json"
 
 
@@ -307,6 +315,7 @@ class DataPackNamespace(Namespace):
     structures:       NamespacePin[Structure]     = NamespacePin(Structure)
     chat_type:        NamespacePin[ChatType]      = NamespacePin(ChatType)
     damage_type:      NamespacePin[DamageType]    = NamespacePin(DamageType)
+    banner_patterns:  NamespacePin[BannerPattern] = NamespacePin(BannerPattern)
     block_tags:       NamespacePin[BlockTag]      = NamespacePin(BlockTag)
     entity_type_tags: NamespacePin[EntityTypeTag] = NamespacePin(EntityTypeTag)
     fluid_tags:       NamespacePin[FluidTag]      = NamespacePin(FluidTag)
@@ -331,7 +340,7 @@ class DataPack(Pack[DataPackNamespace]):
         (1, 17): 7,
         (1, 18): 9,
         (1, 19): 12,
-        (1, 20): 26,
+        (1, 20): 41,
     }
     latest_pack_format = pack_format_registry[split_version(LATEST_MINECRAFT_VERSION)]
 
@@ -347,6 +356,7 @@ class DataPack(Pack[DataPackNamespace]):
     structures:       NamespaceProxyDescriptor[Structure]     = NamespaceProxyDescriptor(Structure)
     chat_type:        NamespaceProxyDescriptor[ChatType]      = NamespaceProxyDescriptor(ChatType)
     damage_type:      NamespaceProxyDescriptor[DamageType]    = NamespaceProxyDescriptor(DamageType)
+    banner_patterns:  NamespaceProxyDescriptor[BannerPattern] = NamespaceProxyDescriptor(BannerPattern)
     block_tags:       NamespaceProxyDescriptor[BlockTag]      = NamespaceProxyDescriptor(BlockTag)
     entity_type_tags: NamespaceProxyDescriptor[EntityTypeTag] = NamespaceProxyDescriptor(EntityTypeTag)
     fluid_tags:       NamespaceProxyDescriptor[FluidTag]      = NamespaceProxyDescriptor(FluidTag)
