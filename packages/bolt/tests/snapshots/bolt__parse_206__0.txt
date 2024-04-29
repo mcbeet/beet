@@ -76,7 +76,7 @@ give @s stone{CanPlaceOn: [*stone_can_place_on], **custom_model_data}
           variable: 's'
           arguments:
             <empty>
-        <class 'mecha.ast.AstItem'>
+        <class 'mecha.ast.AstItemStack'>
           location: SourceLocation(pos=89, lineno=3, colno=9)
           end_location: SourceLocation(pos=150, lineno=3, colno=70)
           identifier:
@@ -86,7 +86,7 @@ give @s stone{CanPlaceOn: [*stone_can_place_on], **custom_model_data}
               is_tag: False
               namespace: None
               path: 'stone'
-          components:
+          arguments:
             <empty>
           data_tags:
             <class 'mecha.ast.AstNbtCompound'>

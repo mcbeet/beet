@@ -30,12 +30,12 @@ _bolt_refs[1]
   entries:
     <class 'bolt.ast.AstInterpolation'>
 _bolt_refs[2]
-<class 'mecha.ast.AstItem'>
+<class 'mecha.ast.AstItemStack'>
   location: SourceLocation(pos=40, lineno=2, colno=9)
   end_location: SourceLocation(pos=55, lineno=2, colno=24)
   identifier:
     <class 'mecha.ast.AstResourceLocation'>
-  components:
+  arguments:
     <empty>
   data_tags:
     <class 'mecha.ast.AstNbtCompound'>
@@ -53,7 +53,7 @@ _bolt_refs[4]
   identifier: 'give:targets:item'
   arguments:
     <class 'mecha.ast.AstSelector'>
-    <class 'mecha.ast.AstItem'>
+    <class 'mecha.ast.AstItemStack'>
 _bolt_refs[5]
 <class 'mecha.ast.AstRoot'>
   location: SourceLocation(pos=0, lineno=1, colno=1)

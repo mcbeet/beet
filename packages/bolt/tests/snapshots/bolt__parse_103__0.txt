@@ -115,7 +115,7 @@ as @a at @s if block ~ ~-1 ~ #wool give @s stone{
                               variable: 's'
                               arguments:
                                 <empty>
-                            <class 'mecha.ast.AstItem'>
+                            <class 'mecha.ast.AstItemStack'>
                               location: SourceLocation(pos=85, lineno=2, colno=44)
                               end_location: SourceLocation(pos=210, lineno=9, colno=2)
                               identifier:
@@ -125,7 +125,7 @@ as @a at @s if block ~ ~-1 ~ #wool give @s stone{
                                   is_tag: False
                                   namespace: None
                                   path: 'stone'
-                              components:
+                              arguments:
                                 <empty>
                               data_tags:
                                 <class 'mecha.ast.AstNbtCompound'>

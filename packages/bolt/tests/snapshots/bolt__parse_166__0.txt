@@ -34,7 +34,7 @@ item replace block ~ ~2 ~ container.26 with minecraft:spruce_sapling 4
           location: SourceLocation(pos=26, lineno=1, colno=27)
           end_location: SourceLocation(pos=38, lineno=1, colno=39)
           value: 'container.26'
-        <class 'mecha.ast.AstItem'>
+        <class 'mecha.ast.AstItemStack'>
           location: SourceLocation(pos=44, lineno=1, colno=45)
           end_location: SourceLocation(pos=68, lineno=1, colno=69)
           identifier:
@@ -44,7 +44,7 @@ item replace block ~ ~2 ~ container.26 with minecraft:spruce_sapling 4
               is_tag: False
               namespace: 'minecraft'
               path: 'spruce_sapling'
-          components:
+          arguments:
             <empty>
           data_tags: None
         <class 'mecha.ast.AstNumber'>

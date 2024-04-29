@@ -1,4 +1,4 @@
-#>ERROR  Expected literal 'biome', literal 'block', literal 'blocks', literal 'data', literal 'dimension', literal 'entity' or 4 other tokens but got literal '"foo"'.
+#>ERROR  Expected literal 'biome', literal 'block', literal 'blocks', literal 'data', literal 'dimension', literal 'entity' or 5 other tokens but got literal '"foo"'.
 # line 1, column 10
 #      1 |  at @s if "foo" == "bar":
 #        :           ^^^^^

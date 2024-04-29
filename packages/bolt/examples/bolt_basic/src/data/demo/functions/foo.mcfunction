@@ -664,7 +664,7 @@ random_id = UUID(int=rd.getrandbits(128))
 whitelist add random_id
 
 other_id = UUID(int=rd.getrandbits(128))
-attribute @s minecraft:generic.attack_speed modifier add other_id "double" 0.5 multiply
+attribute @s minecraft:generic.attack_speed modifier add other_id "double" 0.5 add_multiplied_total
 
 x = 1
 del x

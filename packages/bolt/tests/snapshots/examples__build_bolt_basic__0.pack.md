@@ -7,7 +7,7 @@
 ```json
 {
   "pack": {
-    "pack_format": 26,
+    "pack_format": 41,
     "description": ""
   }
 }
@@ -310,7 +310,7 @@ say AstCommand(identifier='tellraw:targets:message', arguments=AstChildren((AstS
 say tellraw @p "hello"
 execute as 00000001-0002-0003-0405-000000000006 run function test:test
 whitelist add bdd640fb-0667-1ad1-1c80-317fa3b1799d
-attribute @s minecraft:generic.attack_speed modifier add 23b8c1e9-3924-56de-3eb1-3b9046685257 double 0.5 multiply
+attribute @s minecraft:generic.attack_speed modifier add 23b8c1e9-3924-56de-3eb1-3b9046685257 double 0.5 add_multiplied_total
 ```
 
 `@function demo:import_a`
@@ -683,7 +683,7 @@ say json loaded!
 ```json
 {
   "pack": {
-    "pack_format": 22,
+    "pack_format": 32,
     "description": ""
   }
 }

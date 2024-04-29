@@ -50,7 +50,7 @@ give @s bow{**bow_data}
           variable: 's'
           arguments:
             <empty>
-        <class 'mecha.ast.AstItem'>
+        <class 'mecha.ast.AstItemStack'>
           location: SourceLocation(pos=40, lineno=2, colno=9)
           end_location: SourceLocation(pos=55, lineno=2, colno=24)
           identifier:
@@ -60,7 +60,7 @@ give @s bow{**bow_data}
               is_tag: False
               namespace: None
               path: 'bow'
-          components:
+          arguments:
             <empty>
           data_tags:
             <class 'mecha.ast.AstNbtCompound'>
