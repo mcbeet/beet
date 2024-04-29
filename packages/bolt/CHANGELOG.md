@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.48.0 (2024-04-29)
+
+### Feature
+
+* Version 1.20.5 ([`959af66`](https://github.com/mcbeet/bolt/commit/959af66694d73442ce84a420d314b81720526716))
+
 ## v0.47.2 (2024-03-29)
 
 ### Fix
