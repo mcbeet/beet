@@ -5,6 +5,7 @@ __all__ = [
     "DamageType",
     "ChatType",
     "BannerPattern",
+    "WolfVariant",
     "Function",
     "ItemModifier",
     "LootTable",
@@ -77,6 +78,13 @@ class BannerPattern(JsonFile):
     """Class representing a banner pattern."""
 
     scope: ClassVar[Tuple[str, ...]] = ("banner_pattern",)
+    extension: ClassVar[str] = ".json"
+
+
+class WolfVariant(JsonFile):
+    """Class representing a wolf variant."""
+
+    scope: ClassVar[Tuple[str, ...]] = ("wolf_variant",)
     extension: ClassVar[str] = ".json"
 
 
@@ -316,6 +324,7 @@ class DataPackNamespace(Namespace):
     chat_type:        NamespacePin[ChatType]      = NamespacePin(ChatType)
     damage_type:      NamespacePin[DamageType]    = NamespacePin(DamageType)
     banner_patterns:  NamespacePin[BannerPattern] = NamespacePin(BannerPattern)
+    wolf_variants:    NamespacePin[WolfVariant]   = NamespacePin(WolfVariant)
     block_tags:       NamespacePin[BlockTag]      = NamespacePin(BlockTag)
     entity_type_tags: NamespacePin[EntityTypeTag] = NamespacePin(EntityTypeTag)
     fluid_tags:       NamespacePin[FluidTag]      = NamespacePin(FluidTag)
@@ -357,6 +366,7 @@ class DataPack(Pack[DataPackNamespace]):
     chat_type:        NamespaceProxyDescriptor[ChatType]      = NamespaceProxyDescriptor(ChatType)
     damage_type:      NamespaceProxyDescriptor[DamageType]    = NamespaceProxyDescriptor(DamageType)
     banner_patterns:  NamespaceProxyDescriptor[BannerPattern] = NamespaceProxyDescriptor(BannerPattern)
+    wolf_variants:    NamespaceProxyDescriptor[WolfVariant]   = NamespaceProxyDescriptor(WolfVariant)
     block_tags:       NamespaceProxyDescriptor[BlockTag]      = NamespaceProxyDescriptor(BlockTag)
     entity_type_tags: NamespaceProxyDescriptor[EntityTypeTag] = NamespaceProxyDescriptor(EntityTypeTag)
     fluid_tags:       NamespaceProxyDescriptor[FluidTag]      = NamespaceProxyDescriptor(FluidTag)
