@@ -14,6 +14,7 @@ __all__ = [
 ]
 
 
+import re
 from pathlib import Path
 from typing import Iterator, Optional, Union
 from zipfile import ZipFile
@@ -210,8 +211,9 @@ class ReleaseRegistry(Container[str, Release]):
         self.manifest = manifest
 
     def missing(self, key: str) -> Release:
+        pattern = re.compile("^" + r"\d+".join(map(re.escape, key.split("*"))) + "$")
         for version in self.manifest.data["versions"]:
-            if version["id"] == key:
+            if pattern.match(version["id"]):
                 info = JsonFile(source_path=self.cache.download(version["url"]))
                 return Release(self.cache, info)
         raise KeyError(key)
@@ -248,9 +250,9 @@ class Vanilla:
         elif opts and opts.version:
             self.minecraft_version = opts.version
         elif ctx:
-            self.minecraft_version = ctx.minecraft_version
+            self.minecraft_version = f"{ctx.minecraft_version}.*"
         else:
-            self.minecraft_version = LATEST_MINECRAFT_VERSION
+            self.minecraft_version = f"{LATEST_MINECRAFT_VERSION}.*"
 
     def mount(
         self,
