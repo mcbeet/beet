@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.106.0 (2024-05-04)
+
+### Feature
+
+* Make beet.contrib.vanilla resolve the latest patch ([`e65fb10`](https://github.com/mcbeet/beet/commit/e65fb1051c953aee6121bbbe4394f15b25f72af6))
+
 ## v0.105.0 (2024-04-28)
 
 ### Feature
