@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.107.0 (2024-05-04)
+
+### Feature
+
+* Add support for wolf variants ([`f12de06`](https://github.com/mcbeet/beet/commit/f12de06a2d6aee804da62b9272cae2d490b3a1da))
+
 ## v0.106.0 (2024-05-04)
 
 ### Feature
