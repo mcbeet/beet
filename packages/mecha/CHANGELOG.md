@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.94.1 (2024-05-07)
+
+### Fix
+
+* Avoid truncation when serializing floats ([`c7d8570`](https://github.com/mcbeet/mecha/commit/c7d8570a629ac1225a3ee47ffe5efcf1d87729c5))
+
 ## v0.94.0 (2024-04-28)
 
 ### Feature
