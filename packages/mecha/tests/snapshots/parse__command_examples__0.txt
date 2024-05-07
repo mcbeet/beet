@@ -1,6 +1,6 @@
 <class 'mecha.ast.AstRoot'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
-  end_location: SourceLocation(pos=9780, lineno=232, colno=1)
+  end_location: SourceLocation(pos=9876, lineno=233, colno=1)
   commands:
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=14, lineno=2, colno=1)
@@ -8442,3 +8442,49 @@
                                       location: SourceLocation(pos=9770, lineno=231, colno=90)
                                       end_location: SourceLocation(pos=9776, lineno=231, colno=96)
                                       value: String('true')
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=9780, lineno=232, colno=1)
+      end_location: SourceLocation(pos=9875, lineno=232, colno=96)
+      identifier: 'execute:subcommand'
+      arguments:
+        <class 'mecha.ast.AstCommand'>
+          location: SourceLocation(pos=9788, lineno=232, colno=9)
+          end_location: SourceLocation(pos=9875, lineno=232, colno=96)
+          identifier: 'execute:store:result:storage:target:path:double:scale:subcommand'
+          arguments:
+            <class 'mecha.ast.AstResourceLocation'>
+              location: SourceLocation(pos=9809, lineno=232, colno=30)
+              end_location: SourceLocation(pos=9818, lineno=232, colno=39)
+              is_tag: False
+              namespace: 'test'
+              path: 'test'
+            <class 'mecha.ast.AstNbtPath'>
+              location: SourceLocation(pos=9819, lineno=232, colno=40)
+              end_location: SourceLocation(pos=9823, lineno=232, colno=44)
+              components:
+                <class 'mecha.ast.AstNbtPathKey'>
+                  location: SourceLocation(pos=9819, lineno=232, colno=40)
+                  end_location: SourceLocation(pos=9823, lineno=232, colno=44)
+                  value: 'path'
+            <class 'mecha.ast.AstNumber'>
+              location: SourceLocation(pos=9831, lineno=232, colno=52)
+              end_location: SourceLocation(pos=9861, lineno=232, colno=82)
+              value: 9.094947017729282e-13
+            <class 'mecha.ast.AstCommand'>
+              location: SourceLocation(pos=9862, lineno=232, colno=83)
+              end_location: SourceLocation(pos=9875, lineno=232, colno=96)
+              identifier: 'execute:run:subcommand'
+              arguments:
+                <class 'mecha.ast.AstCommand'>
+                  location: SourceLocation(pos=9866, lineno=232, colno=87)
+                  end_location: SourceLocation(pos=9875, lineno=232, colno=96)
+                  identifier: 'say:message'
+                  arguments:
+                    <class 'mecha.ast.AstMessage'>
+                      location: SourceLocation(pos=9870, lineno=232, colno=91)
+                      end_location: SourceLocation(pos=9875, lineno=232, colno=96)
+                      fragments:
+                        <class 'mecha.ast.AstMessageText'>
+                          location: SourceLocation(pos=9870, lineno=232, colno=91)
+                          end_location: SourceLocation(pos=9875, lineno=232, colno=96)
+                          value: 'hello'

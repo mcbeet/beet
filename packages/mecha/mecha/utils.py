@@ -44,8 +44,9 @@ def string_to_number(string: str) -> Union[int, float]:
 def number_to_string(number: Union[int, float]) -> str:
     """Helper for converting numbers to string and removing scientific notation."""
     value = str(number)
-    if "e" in value:
-        value = f"{number:.20f}".rstrip("0")
+    if (index := value.find("e")) != -1:
+        exponent = int(value[index + 1 :])
+        value = f"{number:.{max(index - 1 - (value[1] == '.') - exponent, 1)}f}"
     return value
 
 
