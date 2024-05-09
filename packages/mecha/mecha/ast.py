@@ -969,6 +969,7 @@ class AstItemSlot(AstOption):
     parser = "item_slot"
     options = (
         {
+            "armor.body",
             "armor.chest",
             "armor.feet",
             "armor.head",
