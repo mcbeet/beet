@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.94.2 (2024-05-13)
+
+### Fix
+
+* Add armor.body item slot ([`55ecece`](https://github.com/mcbeet/mecha/commit/55ecece1a601ac1bf9e27f868af8c012a4ca0dad))
+
 ## v0.94.1 (2024-05-07)
 
 ### Fix
