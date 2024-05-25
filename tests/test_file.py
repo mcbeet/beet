@@ -6,7 +6,7 @@ import pytest
 from pydantic.v1 import BaseModel, Field
 from typing_extensions import Annotated
 
-from beet import BinaryFile, JsonFileBase, TextFile
+from beet import BinaryFile, JsonFileBase, TextFile, JsonFile
 
 
 def test_text_range(tmp_path: Path):
@@ -16,7 +16,13 @@ def test_text_range(tmp_path: Path):
     assert TextFile(source_path=p1, source_stop=2).text == "ab"
     assert TextFile(source_path=p1, source_start=1, source_stop=2).text == "b"
 
-
+def test_json(tmp_path: Path):
+    p1 = tmp_path / "p1"
+    p1.write_text('{\n// bar\n"test": "foo",\n}')
+    assert JsonFile(source_path=p1).data == {"test": "foo"}
+    p1.write_text('{\n// bar\n"test": "foo",\n}', encoding='utf-16')
+    assert JsonFile(source_path=p1).data == {"test": "foo"}
+    
 def test_binary_range(tmp_path: Path):
     p1 = tmp_path / "p1"
     p1.write_bytes(b"abc")
