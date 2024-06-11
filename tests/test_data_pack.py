@@ -163,7 +163,7 @@ def test_vanilla_content(minecraft_data_pack: Path):
 
 def test_vanilla_igloo(minecraft_data_pack: Path):
     pack = DataPack(path=minecraft_data_pack)
-    assert pack.structures["minecraft:igloo/top"].data["size"] == [7, 5, 8]
+    assert pack.structure["minecraft:igloo/top"].data["size"] == [7, 5, 8]
 
 
 def test_vanilla_igloo_content(minecraft_data_pack: Path):

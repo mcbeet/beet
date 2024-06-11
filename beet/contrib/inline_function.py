@@ -59,8 +59,8 @@ class InlineFunctions(JinjaExtension):
         if op == "replace":
             self.ctx.data[path] = function
         elif op == "append":
-            self.ctx.data.functions.setdefault(path, Function()).append(function)
+            self.ctx.data.function.setdefault(path, Function()).append(function)
         elif op == "prepend":
-            self.ctx.data.functions.setdefault(path, Function()).prepend(function)
+            self.ctx.data.function.setdefault(path, Function()).prepend(function)
 
         return ""
