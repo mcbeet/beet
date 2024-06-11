@@ -8,7 +8,7 @@ def beet_default(ctx: Context):
     assert vanilla.releases["22w11a"].type == "snapshot"
 
     ctx.data.loot_table.merge(
-        vanilla.mount("data/minecraft/loot_tables").data.loot_table
+        vanilla.mount("data/minecraft/loot_table").data.loot_table
     )
     ctx.data["demo"].recipe.merge(
         vanilla.mount("data/minecraft/recipe").data["minecraft"].recipe

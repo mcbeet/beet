@@ -8,8 +8,8 @@ meta:
       assets/foo/lang/en_us.json: assets/minecraft/lang/en_us.json
       assets/minecraft/lang:
         - assets/minecraft/lang/fr.*
-      data/foo/recipes:
-        - data/minecraft/recipes/.*bee.*
+      data/foo/recipe:
+        - data/minecraft/recipe/.*bee.*
       assets/foo/models/\1: assets/minecraft/models/(block|item)/.+_sapling.json
       assets/foo/textures/map: assets/minecraft/textures/map
     match:

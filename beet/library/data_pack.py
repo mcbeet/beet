@@ -362,7 +362,7 @@ class DataPack(Pack[DataPackNamespace]):
     recipe:           NamespaceProxyDescriptor[Recipe]        = NamespaceProxyDescriptor(Recipe)
     trim_pattern:     NamespaceProxyDescriptor[TrimPattern]   = NamespaceProxyDescriptor(TrimPattern)
     trim_material:    NamespaceProxyDescriptor[TrimMaterial]  = NamespaceProxyDescriptor(TrimMaterial)
-    structures:       NamespaceProxyDescriptor[Structure]     = NamespaceProxyDescriptor(Structure)
+    structure:       NamespaceProxyDescriptor[Structure]     = NamespaceProxyDescriptor(Structure)
     chat_type:        NamespaceProxyDescriptor[ChatType]      = NamespaceProxyDescriptor(ChatType)
     damage_type:      NamespaceProxyDescriptor[DamageType]    = NamespaceProxyDescriptor(DamageType)
     banner_patterns:  NamespaceProxyDescriptor[BannerPattern] = NamespaceProxyDescriptor(BannerPattern)
