@@ -11,4 +11,4 @@ def beet_default(ctx: Context):
         draft.cache("demo", f"{message=}", zipped=True)
         draft.data["demo:message"] = Function([f"say {message}"])
 
-    ctx.data.functions["demo:message"].lines *= 2
+    ctx.data.function["demo:message"].lines *= 2

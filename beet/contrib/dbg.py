@@ -119,7 +119,7 @@ class DbgRenderer:
 
     def render_preview(self, path: str, lineno: int) -> TextComponent:
         """Render the preview as a text component."""
-        function = self.ctx.data.functions[path]
+        function = self.ctx.data.function[path]
         lines = function.text.splitlines()
 
         preview_start = max(lineno - 1 - self.opts.preview_padding, 0)

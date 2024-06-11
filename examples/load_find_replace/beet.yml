@@ -1,7 +1,7 @@
 pipeline:
   - data_pack:
       load:
-        data/demo/functions/thing1.mcfunction: "thing1.mcfunction"
+        data/demo/function/thing1.mcfunction: "thing1.mcfunction"
     pipeline:
       - beet.contrib.find_replace
     meta:

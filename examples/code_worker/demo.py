@@ -20,7 +20,7 @@ def other(ctx: Context):
 
     yield
 
-    ctx.data["demo:function_count"] = Function([f"say {len(ctx.data.functions)}"])
+    ctx.data["demo:function_count"] = Function([f"say {len(ctx.data.function)}"])
 
     for name, function in channel:
         ctx.data[name] = function

@@ -59,8 +59,8 @@ def hangman(ctx: Context, opts: HangmanOptions):
     """Plugin that provides indentation-based syntactic extensions for functions."""
     logger.warning("Deprecated in favor of mecha (https://github.com/mcbeet/mecha).")
 
-    for path in ctx.data.functions.match(*opts.match):
-        function = ctx.data.functions[path]
+    for path in ctx.data.function.match(*opts.match):
+        function = ctx.data.function[path]
         function.lines = list(
             fold_hanging_commands(ctx, parse_lines(function.lines), path)
         )

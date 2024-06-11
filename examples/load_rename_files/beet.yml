@@ -2,7 +2,7 @@ pipeline:
   - name: Demo
     data_pack:
       load:
-        data/demo/functions/foo1.mcfunction: "foo1.mcfunction"
+        data/demo/function/foo1.mcfunction: "foo1.mcfunction"
     pipeline:
       - beet.contrib.rename_files
     meta:

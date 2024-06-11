@@ -63,15 +63,15 @@ def test_namespaces():
     assert p1 == p2
     assert p1["hello"] == p2["hello"]
 
-    p2.functions["hello:world"].lines.append("say world")
+    p2.function["hello:world"].lines.append("say world")
 
-    assert p1.functions["hello:world"] != p2.functions["hello:world"]
+    assert p1.function["hello:world"] != p2.function["hello:world"]
     assert p1["hello"] != p2["hello"]
     assert p1 != p2
 
-    p1["hello"].functions["world"].lines.append("say world")  # type: ignore
+    p1["hello"].function["world"].lines.append("say world")  # type: ignore
 
-    assert p1.functions["hello:world"] == p2.functions["hello:world"]
+    assert p1.function["hello:world"] == p2.function["hello:world"]
     assert p1["hello"] == p2["hello"]
     assert p1 == p2
 
@@ -115,7 +115,7 @@ def test_context_manager(tmp_path: Path):
     p2 = DataPack(path=tmp_path / "foobar")
     assert p2 == p1
 
-    assert p2.functions["hello:world"].lines == ["say hello"]
+    assert p2.function["hello:world"].lines == ["say hello"]
     assert p2.function_tags["minecraft:load"].data == {"values": ["hello:world"]}
     assert p2 == p1
 
@@ -135,14 +135,14 @@ def test_context_manager_zipped(tmp_path: Path):
 
     p2 = DataPack(path=tmp_path / "foobar.zip")
 
-    assert p2.functions["hello:world"].lines == ["say hello"]
+    assert p2.function["hello:world"].lines == ["say hello"]
     assert p2.function_tags["minecraft:load"].data == {"values": ["hello:world"]}
     assert p2 == p1
 
-    p1.functions["hello:world"].lines.append("say world")
+    p1.function["hello:world"].lines.append("say world")
     assert p2 != p1
 
-    p2["hello"].functions["world"].lines.append("say world")
+    p2["hello"].function["world"].lines.append("say world")
     assert p2 == p1
 
 
@@ -199,7 +199,7 @@ def test_merge_tags():
 
     p1.merge(p2)
 
-    assert len(p1.functions) == 2
+    assert len(p1.function) == 2
     assert len(p1.function_tags) == 1
     assert p1.function_tags["minecraft:tick"].data == {
         "values": ["hello:func1", "hello:func2"]
@@ -250,26 +250,26 @@ def test_match():
 
     funcs = [f"path/to/func_{i:02d}" for i in range(100)]
 
-    assert custom.functions.match() == set()
+    assert custom.function.match() == set()
 
-    assert custom.functions.match("*") == set(funcs) | {
+    assert custom.function.match("*") == set(funcs) | {
         "path/to/end",
         "other/subdir/hello",
         "other/subdir/world",
         "other/thing",
     }
 
-    assert custom.functions.match("path/to/func_0*") == set(funcs[:10])
-    assert custom.functions.match("path/to/func_*") == set(funcs)
+    assert custom.function.match("path/to/func_0*") == set(funcs[:10])
+    assert custom.function.match("path/to/func_*") == set(funcs)
 
-    assert custom.functions.match("path/to") == set(funcs) | {"path/to/end"}
-    assert custom.functions.match("path/to/func_*", "other") == set(funcs) | {
+    assert custom.function.match("path/to") == set(funcs) | {"path/to/end"}
+    assert custom.function.match("path/to/func_*", "other") == set(funcs) | {
         "other/subdir/hello",
         "other/subdir/world",
         "other/thing",
     }
 
-    assert custom.functions.match("other/subdir") == {
+    assert custom.function.match("other/subdir") == {
         "other/subdir/hello",
         "other/subdir/world",
     }
@@ -295,9 +295,9 @@ def test_proxy_match():
     custom_funcs = [f"custom:path/to/func_{i:02d}" for i in range(100)]
     hey_funcs = [f"hey:path/to/func_{i:02d}" for i in range(100)]
 
-    assert pack.functions.match() == set()
+    assert pack.function.match() == set()
 
-    assert pack.functions.match("*") == set(custom_funcs) | set(hey_funcs) | {
+    assert pack.function.match("*") == set(custom_funcs) | set(hey_funcs) | {
         "custom:path/to/end",
         "custom:other/subdir/hello",
         "custom:other/subdir/world",
@@ -305,20 +305,20 @@ def test_proxy_match():
         "hey:other/subdir/hello",
     }
 
-    assert pack.functions.match("custom:*") == set(custom_funcs) | {
+    assert pack.function.match("custom:*") == set(custom_funcs) | {
         "custom:path/to/end",
         "custom:other/subdir/hello",
         "custom:other/subdir/world",
         "custom:other/thing",
     }
 
-    assert pack.functions.match("*:other/subdir") == {
+    assert pack.function.match("*:other/subdir") == {
         "custom:other/subdir/hello",
         "custom:other/subdir/world",
         "hey:other/subdir/hello",
     }
 
-    assert pack.functions.match(
+    assert pack.function.match(
         "*:path/to/func_0*", "*:path/to/end", "hey:other"
     ) == set(custom_funcs[:10]) | set(hey_funcs[:10]) | {
         "custom:path/to/end",
@@ -329,7 +329,7 @@ def test_proxy_match():
 def test_overload_proxy():
     pack = DataPack()
     pack["demo:foo"] = Function(["say foo"])
-    assert pack[Function]["demo:foo"] is pack.functions["demo:foo"]
+    assert pack[Function]["demo:foo"] is pack.function["demo:foo"]
 
 
 def test_accessors_with_function(tmp_path: Path):
@@ -369,7 +369,7 @@ def test_on_bind():
         ["say hello"], tags=["minecraft:load"], on_bind=on_bind_callback
     )
 
-    assert pack.functions == {
+    assert pack.function == {
         "hello:world": Function(["say hello"]),
         "hello:world_alias": Function(["function hello:world"]),
     }
@@ -442,7 +442,7 @@ def test_merge_nuke():
     p1.merge(p2)
 
     assert p1.description == ""
-    assert list(p1.functions) == ["demo:bar"]
+    assert list(p1.function) == ["demo:bar"]
     assert list(p1["demo"].extra) == []
     assert p1["thing"].extra["foo.json"] == JsonFile()
 
@@ -481,16 +481,16 @@ def test_query():
     query = PackQuery([p])
 
     selection = {
-        (k := "data/demo/functions/foo.mcfunction", p.functions["demo:foo"]): (p, k),
-        (k := "data/demo/functions/bar.mcfunction", p.functions["demo:bar"]): (p, k),
+        (k := "data/demo/function/foo.mcfunction", p.function["demo:foo"]): (p, k),
+        (k := "data/demo/function/bar.mcfunction", p.function["demo:bar"]): (p, k),
     }
     assert query(".mcfunction", files=r".*") == selection
     assert query(extend=Function, files=r".*") == selection
 
     selection = {
         Function: {
-            (k := "demo:foo", p.functions["demo:foo"]): (p, k),
-            (k := "demo:bar", p.functions["demo:bar"]): (p, k),
+            (k := "demo:foo", p.function["demo:foo"]): (p, k),
+            (k := "demo:bar", p.function["demo:bar"]): (p, k),
         }
     }
     assert query(".mcfunction", match="*") == selection
@@ -508,33 +508,33 @@ def test_query():
     assert query(extend=Mcmeta, match="*") == {}
 
     assert set(query.distinct(files=r".*\.json")) == {
-        p.loot_tables["demo:some_loot"],
-        p.loot_tables["demo:some_other_loot"],
-        p.loot_tables["minecraft:default_loot"],
+        p.loot_table["demo:some_loot"],
+        p.loot_table["demo:some_other_loot"],
+        p.loot_table["minecraft:default_loot"],
         p.function_tags["minecraft:tick"],
         p.function_tags["minecraft:load"],
         p.block_tags["other_namespace:what/is/that"],
     }
     assert set(query.distinct(files=r"data/minecraft/.*\.json")) == {
-        p.loot_tables["minecraft:default_loot"],
+        p.loot_table["minecraft:default_loot"],
         p.function_tags["minecraft:tick"],
         p.function_tags["minecraft:load"],
     }
     assert set(query.distinct(".json", match=r"minecraft:*")) == {
-        p.loot_tables["minecraft:default_loot"],
+        p.loot_table["minecraft:default_loot"],
         p.function_tags["minecraft:tick"],
         p.function_tags["minecraft:load"],
     }
     assert set(query.distinct(extend=JsonFileBase[Any], match=r"minecraft:*")) == {
-        p.loot_tables["minecraft:default_loot"],
+        p.loot_table["minecraft:default_loot"],
         p.function_tags["minecraft:tick"],
         p.function_tags["minecraft:load"],
     }
     assert set(query.distinct(extend=JsonFileBase[Any], files=r".*")) == {
         p.mcmeta,
-        p.loot_tables["demo:some_loot"],
-        p.loot_tables["demo:some_other_loot"],
-        p.loot_tables["minecraft:default_loot"],
+        p.loot_table["demo:some_loot"],
+        p.loot_table["demo:some_other_loot"],
+        p.loot_table["minecraft:default_loot"],
         p.function_tags["minecraft:tick"],
         p.function_tags["minecraft:load"],
         p.block_tags["other_namespace:what/is/that"],
@@ -542,20 +542,20 @@ def test_query():
 
     assert set(query.distinct(files=[r".*loot\.json", r"pack\.mcmeta"])) == {
         p.mcmeta,
-        p.loot_tables["demo:some_loot"],
-        p.loot_tables["demo:some_other_loot"],
-        p.loot_tables["minecraft:default_loot"],
+        p.loot_table["demo:some_loot"],
+        p.loot_table["demo:some_other_loot"],
+        p.loot_table["minecraft:default_loot"],
     }
     assert set(query.distinct(files={"regex": r".*LoOt.*", "flags": "IGNORECASE"})) == {
-        p.loot_tables["demo:some_loot"],
-        p.loot_tables["demo:some_other_loot"],
-        p.loot_tables["minecraft:default_loot"],
+        p.loot_table["demo:some_loot"],
+        p.loot_table["demo:some_other_loot"],
+        p.loot_table["minecraft:default_loot"],
     }
     assert set(query.distinct(match=["minecraft:*", "demo:*", "!*other*"])) == {
-        p.functions["demo:foo"],
-        p.functions["demo:bar"],
-        p.loot_tables["demo:some_loot"],
-        p.loot_tables["minecraft:default_loot"],
+        p.function["demo:foo"],
+        p.function["demo:bar"],
+        p.loot_table["demo:some_loot"],
+        p.loot_table["minecraft:default_loot"],
         p.function_tags["minecraft:tick"],
         p.function_tags["minecraft:load"],
     }
@@ -570,8 +570,8 @@ def test_query_rename():
 
     assert query(match={"function": {"demo:nested": ["demo:foo", "demo:bar"]}}) == {
         Function: {
-            ("demo:nested/foo", p.functions["demo:foo"]): (p, "demo:foo"),
-            ("demo:nested/bar", p.functions["demo:bar"]): (p, "demo:bar"),
+            ("demo:nested/foo", p.function["demo:foo"]): (p, "demo:foo"),
+            ("demo:nested/bar", p.function["demo:bar"]): (p, "demo:bar"),
         }
     }
 
@@ -597,7 +597,7 @@ def test_query_copy():
             FunctionTag: {"my_foo": FunctionTag({"values": ["demo:foo"]})},
         }
     }
-    assert p.functions["demo:foo"] == target1.functions["stuff:foo"]
+    assert p.function["demo:foo"] == target1.function["stuff:foo"]
     assert p.function_tags["demo:my_foo"] == target1.function_tags["stuff:my_foo"]
 
 
@@ -666,8 +666,8 @@ def test_overlay():
     assert c.overlay_name == "c"
     assert c.overlay_parent is p
     assert dict(p.list_files()) == {
-        "a/data/demo/functions/foo.mcfunction": Function(["say hello"]),
-        "c/data/demo/functions/thing.mcfunction": Function([]),
+        "a/data/demo/function/foo.mcfunction": Function(["say hello"]),
+        "c/data/demo/function/thing.mcfunction": Function([]),
         "pack.mcmeta": Mcmeta(
             {
                 "pack": {"pack_format": DataPack.latest_pack_format, "description": ""},
@@ -713,7 +713,7 @@ def test_overlay():
     p.merge(q)
 
     assert p.overlays["stuff"].overlay_parent is p
-    assert p.overlays["stuff"].functions["demo:stuff"] == Function(["say stuff"])
+    assert p.overlays["stuff"].function["demo:stuff"] == Function(["say stuff"])
     assert p.overlays["stuff"].supported_formats is None
 
     assert p.overlays["bingo"].overlays is p.overlays
@@ -727,29 +727,29 @@ def test_overlay():
     assert p.overlays["d"].overlays is p.overlays
     assert p.overlays["bop"].overlays is p.overlays
     assert p.overlays["bop2"].overlays is p.overlays
-    assert p.overlays["d"].functions["demo:init"] == Function(["say original init"])
-    assert p.overlays["bop"].functions["demo:init"] == Function(["say init"])
-    assert p.overlays["bop2"].functions["demo:init"] == Function()
+    assert p.overlays["d"].function["demo:init"] == Function(["say original init"])
+    assert p.overlays["bop"].function["demo:init"] == Function(["say init"])
+    assert p.overlays["bop2"].function["demo:init"] == Function()
 
     select = PackQuery([p])
 
     assert select(match={"function": "*"}) == {
         Function: {
-            (k := "demo:foo", a.functions["demo:foo"]): (a, k),
-            (k := "demo:init", d.functions["demo:init"]): (d, k),
-            (k := "demo:init", p.overlays["bop"].functions["demo:init"]): (
+            (k := "demo:foo", a.function["demo:foo"]): (a, k),
+            (k := "demo:init", d.function["demo:init"]): (d, k),
+            (k := "demo:init", p.overlays["bop"].function["demo:init"]): (
                 p.overlays["bop"],
                 k,
             ),
-            (k := "demo:init", p.overlays["bop2"].functions["demo:init"]): (
+            (k := "demo:init", p.overlays["bop2"].function["demo:init"]): (
                 p.overlays["bop2"],
                 k,
             ),
-            (k := "demo:stuff", p.overlays["stuff"].functions["demo:stuff"]): (
+            (k := "demo:stuff", p.overlays["stuff"].function["demo:stuff"]): (
                 p.overlays["stuff"],
                 k,
             ),
-            (k := "demo:thing", c.functions["demo:thing"]): (c, k),
+            (k := "demo:thing", c.function["demo:thing"]): (c, k),
         }
     }
 
@@ -813,34 +813,34 @@ def test_copy():
     assert p_copy == p
     assert p_copy.extra["thing.txt"] is not p.extra["thing.txt"]
     assert (
-        p_copy.overlays["a"].functions["demo:foo"]
-        is not p.overlays["a"].functions["demo:foo"]
+        p_copy.overlays["a"].function["demo:foo"]
+        is not p.overlays["a"].function["demo:foo"]
     )
-    assert p_copy.functions["demo:foo"] is not p.functions["demo:foo"]
+    assert p_copy.function["demo:foo"] is not p.function["demo:foo"]
     assert p_copy["demo"].extra["dank.txt"] is not p["demo"].extra["dank.txt"]
 
     p.clear()
     assert not p
 
     assert p_copy.extra["thing.txt"] == TextFile("wow")
-    assert p_copy.overlays["a"].functions["demo:foo"] == Function(["say 1"])
-    assert p_copy.functions["demo:foo"] == Function(["say 2"])
+    assert p_copy.overlays["a"].function["demo:foo"] == Function(["say 1"])
+    assert p_copy.function["demo:foo"] == Function(["say 2"])
     assert p_copy["demo"].extra["dank.txt"] == TextFile("ok")
 
     p_shallow = p_copy.copy(shallow=True)
     assert p_shallow == p_copy
     assert p_shallow.extra["thing.txt"] is p_copy.extra["thing.txt"]
     assert (
-        p_shallow.overlays["a"].functions["demo:foo"]
-        is p_copy.overlays["a"].functions["demo:foo"]
+        p_shallow.overlays["a"].function["demo:foo"]
+        is p_copy.overlays["a"].function["demo:foo"]
     )
-    assert p_shallow.functions["demo:foo"] is p_copy.functions["demo:foo"]
+    assert p_shallow.function["demo:foo"] is p_copy.function["demo:foo"]
     assert p_shallow["demo"].extra["dank.txt"] is p_copy["demo"].extra["dank.txt"]
 
     p_copy.clear()
     assert not p_copy
 
     assert p_shallow.extra["thing.txt"] == TextFile("wow")
-    assert p_shallow.overlays["a"].functions["demo:foo"] == Function(["say 1"])
-    assert p_shallow.functions["demo:foo"] == Function(["say 2"])
+    assert p_shallow.overlays["a"].function["demo:foo"] == Function(["say 1"])
+    assert p_shallow.function["demo:foo"] == Function(["say 2"])
     assert p_shallow["demo"].extra["dank.txt"] == TextFile("ok")

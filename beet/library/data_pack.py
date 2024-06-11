@@ -56,7 +56,7 @@ TagFileType = TypeVar("TagFileType", bound="TagFile")
 class Advancement(JsonFile):
     """Class representing an advancement."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("advancements",)
+    scope: ClassVar[Tuple[str, ...]] = ("advancement",)
     extension: ClassVar[str] = ".json"
 
 
@@ -96,7 +96,7 @@ class Function(TextFileBase[List[str]]):
     tags: Optional[List[str]] = extra_field(default=None)
     prepend_tags: Optional[List[str]] = extra_field(default=None)
 
-    scope: ClassVar[Tuple[str, ...]] = ("functions",)
+    scope: ClassVar[Tuple[str, ...]] = ("function",)
     extension: ClassVar[str] = ".mcfunction"
 
     lines: ClassVar[FileDeserialize[List[str]]] = FileDeserialize()
@@ -143,28 +143,28 @@ class Function(TextFileBase[List[str]]):
 class ItemModifier(JsonFile):
     """Class representing an item modifier."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("item_modifiers",)
+    scope: ClassVar[Tuple[str, ...]] = ("item_modifier",)
     extension: ClassVar[str] = ".json"
 
 
 class LootTable(JsonFile):
     """Class representing a loot table."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("loot_tables",)
+    scope: ClassVar[Tuple[str, ...]] = ("loot_table",)
     extension: ClassVar[str] = ".json"
 
 
 class Predicate(JsonFile):
     """Class representing a predicate."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("predicates",)
+    scope: ClassVar[Tuple[str, ...]] = ("predicate",)
     extension: ClassVar[str] = ".json"
 
 
 class Recipe(JsonFile):
     """Class representing a recipe."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("recipes",)
+    scope: ClassVar[Tuple[str, ...]] = ("recipe",)
     extension: ClassVar[str] = ".json"
 
 
@@ -174,19 +174,19 @@ class Structure(BinaryFileBase[StructureFileData]):
 
     content: BinaryFileContent[StructureFileData] = None
 
-    scope: ClassVar[Tuple[str, ...]] = ("structures",)
+    scope: ClassVar[Tuple[str, ...]] = ("structure",)
     extension: ClassVar[str] = ".nbt"
 
     data: ClassVar[FileDeserialize[StructureFileData]] = FileDeserialize()
 
     def from_bytes(self, content: bytes) -> StructureFileData:
         with GzipFile(fileobj=io.BytesIO(content)) as fileobj:
-            return StructureFile.parse(fileobj).root
+            return StructureFile.parse(fileobj).root  # type: ignore
 
     def to_bytes(self, content: StructureFileData) -> bytes:
         dst = io.BytesIO()
         with GzipFile(fileobj=dst, mode="wb") as fileobj:
-            StructureFile(content).write(fileobj)
+            StructureFile(content).write(fileobj)  # type: ignore
         return dst.getvalue()
 
 
@@ -261,37 +261,37 @@ class TagFile(JsonFile):
 class BlockTag(TagFile):
     """Class representing a block tag."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("tags", "blocks")
+    scope: ClassVar[Tuple[str, ...]] = ("tags", "block")
 
 
 class EntityTypeTag(TagFile):
     """Class representing an entity tag."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("tags", "entity_types")
+    scope: ClassVar[Tuple[str, ...]] = ("tags", "entity_type")
 
 
 class FluidTag(TagFile):
     """Class representing a fluid tag."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("tags", "fluids")
+    scope: ClassVar[Tuple[str, ...]] = ("tags", "fluid")
 
 
 class FunctionTag(TagFile):
     """Class representing a function tag."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("tags", "functions")
+    scope: ClassVar[Tuple[str, ...]] = ("tags", "function")
 
 
 class GameEventTag(TagFile):
     """Class representing a game event tag."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("tags", "game_events")
+    scope: ClassVar[Tuple[str, ...]] = ("tags", "game_event")
 
 
 class ItemTag(TagFile):
     """Class representing an item tag."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("tags", "items")
+    scope: ClassVar[Tuple[str, ...]] = ("tags", "item")
 
 
 class ChatTypeTag(TagFile):
@@ -312,15 +312,15 @@ class DataPackNamespace(Namespace):
     directory = "data"
 
     # fmt: off
-    advancements:     NamespacePin[Advancement]   = NamespacePin(Advancement)
-    functions:        NamespacePin[Function]      = NamespacePin(Function)
-    item_modifiers:   NamespacePin[ItemModifier]  = NamespacePin(ItemModifier)
-    loot_tables:      NamespacePin[LootTable]     = NamespacePin(LootTable)
-    predicates:       NamespacePin[Predicate]     = NamespacePin(Predicate)
-    recipes:          NamespacePin[Recipe]        = NamespacePin(Recipe)
+    advancement:      NamespacePin[Advancement]   = NamespacePin(Advancement)
+    function:         NamespacePin[Function]      = NamespacePin(Function)
+    item_modifier:    NamespacePin[ItemModifier]  = NamespacePin(ItemModifier)
+    loot_table:       NamespacePin[LootTable]     = NamespacePin(LootTable)
+    predicate:        NamespacePin[Predicate]     = NamespacePin(Predicate)
+    recipe:           NamespacePin[Recipe]        = NamespacePin(Recipe)
     trim_pattern:     NamespacePin[TrimPattern]   = NamespacePin(TrimPattern)
     trim_material:    NamespacePin[TrimMaterial]  = NamespacePin(TrimMaterial)
-    structures:       NamespacePin[Structure]     = NamespacePin(Structure)
+    structure:        NamespacePin[Structure]     = NamespacePin(Structure)
     chat_type:        NamespacePin[ChatType]      = NamespacePin(ChatType)
     damage_type:      NamespacePin[DamageType]    = NamespacePin(DamageType)
     banner_patterns:  NamespacePin[BannerPattern] = NamespacePin(BannerPattern)
@@ -354,12 +354,12 @@ class DataPack(Pack[DataPackNamespace]):
     latest_pack_format = pack_format_registry[split_version(LATEST_MINECRAFT_VERSION)]
 
     # fmt: off
-    advancements:     NamespaceProxyDescriptor[Advancement]   = NamespaceProxyDescriptor(Advancement)
-    functions:        NamespaceProxyDescriptor[Function]      = NamespaceProxyDescriptor(Function)
-    item_modifiers:   NamespaceProxyDescriptor[ItemModifier]  = NamespaceProxyDescriptor(ItemModifier)
-    loot_tables:      NamespaceProxyDescriptor[LootTable]     = NamespaceProxyDescriptor(LootTable)
-    predicates:       NamespaceProxyDescriptor[Predicate]     = NamespaceProxyDescriptor(Predicate)
-    recipes:          NamespaceProxyDescriptor[Recipe]        = NamespaceProxyDescriptor(Recipe)
+    advancement:      NamespaceProxyDescriptor[Advancement]   = NamespaceProxyDescriptor(Advancement)
+    function:         NamespaceProxyDescriptor[Function]      = NamespaceProxyDescriptor(Function)
+    item_modifier:    NamespaceProxyDescriptor[ItemModifier]  = NamespaceProxyDescriptor(ItemModifier)
+    loot_table:       NamespaceProxyDescriptor[LootTable]     = NamespaceProxyDescriptor(LootTable)
+    predicate:        NamespaceProxyDescriptor[Predicate]     = NamespaceProxyDescriptor(Predicate)
+    recipe:           NamespaceProxyDescriptor[Recipe]        = NamespaceProxyDescriptor(Recipe)
     trim_pattern:     NamespaceProxyDescriptor[TrimPattern]   = NamespaceProxyDescriptor(TrimPattern)
     trim_material:    NamespaceProxyDescriptor[TrimMaterial]  = NamespaceProxyDescriptor(TrimMaterial)
     structures:       NamespaceProxyDescriptor[Structure]     = NamespaceProxyDescriptor(Structure)
