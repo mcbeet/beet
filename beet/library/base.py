@@ -102,7 +102,7 @@ PACK_COMPRESSION: Dict[str, int] = {
 class NamespaceFile(Protocol):
     """Protocol for detecting files that belong in pack namespaces."""
 
-    scope: ClassVar[Tuple[str, ...]]
+    scope: ClassVar[list[Tuple[str, ...]]]
     extension: ClassVar[str]
 
     snake_name: ClassVar[str]
@@ -150,7 +150,6 @@ class NamespaceFile(Protocol):
     def dump(self, origin: FileOrigin, path: FileSystemPath): ...
 
     def convert(self, file_type: Type[PackFileType]) -> PackFileType: ...
-
 
 class MergeCallback(Protocol):
     """Protocol for detecting merge callbacks."""
@@ -424,6 +423,17 @@ class NamespacePin(Pin[Type[NamespaceFileType], NamespaceContainer[NamespaceFile
     """Descriptor for accessing namespace containers by attribute lookup."""
 
 
+def create_scope_map(
+    pins: Dict[str, Pin[type[NamespaceFile], NamespaceContainer[NamespaceFile]]]
+):
+    scope_map: Mapping[Tuple[Tuple[str, ...], str], Type[NamespaceFile]] = {}
+    for pin in pins.values():
+        for scope in pin.key.scope:
+            scope_map[(scope, pin.key.extension)] = pin.key
+
+    return scope_map
+
+
 class Namespace(
     MergeMixin,
     Container[Type[NamespaceFile], NamespaceContainer[NamespaceFile]],
@@ -441,9 +451,7 @@ class Namespace(
     def __init_subclass__(cls):
         pins = NamespacePin[NamespaceFile].collect_from(cls)
         cls.field_map = {pin.key: attr for attr, pin in pins.items()}
-        cls.scope_map = {
-            (pin.key.scope, pin.key.extension): pin.key for pin in pins.values()
-        }
+        cls.scope_map = create_scope_map(pins)
 
     def __init__(self):
         super().__init__()
@@ -526,6 +534,9 @@ class Namespace(
         for container in self.values():
             yield from container.items()
 
+    def get_output_scope(self, content_type: type[NamespaceFile]):
+        return content_type.scope[0]
+
     @overload
     def list_files(
         self,
@@ -571,7 +582,9 @@ class Namespace(
                 continue
             if extend and not issubclass(content_type, extend):
                 continue
-            prefix = "/".join((self.directory, namespace) + content_type.scope)
+
+            scope = self.get_output_scope(content_type)
+            prefix = "/".join((self.directory, namespace) + scope)
             for name, item in container.items():
                 yield f"{overlay}{prefix}/{name}{content_type.extension}", item
 
@@ -601,8 +614,10 @@ class Namespace(
             _update_with_none(extra_info, extend_namespace_extra)
 
         scope_map = dict(cls.scope_map)
+
         for file_type in extend_namespace:
-            scope_map[file_type.scope, file_type.extension] = file_type
+            for scope in file_type.scope:
+                scope_map[scope, file_type.extension] = file_type
 
         name = None
         namespace = None
@@ -1285,7 +1300,9 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
     ) -> Dict[Tuple[Tuple[str, ...], str], Type[NamespaceFile]]:
         scope_map = dict(self.namespace_type.scope_map)
         for file_type in self.extend_namespace:
-            scope_map[file_type.scope, file_type.extension] = file_type
+            for scope in file_type.scope:
+                scope_map[scope, file_type.extension] = file_type
+
         return scope_map
 
     def resolve_namespace_extra_info(self) -> Dict[str, Type[PackFile]]:

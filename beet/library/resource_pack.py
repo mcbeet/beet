@@ -50,21 +50,21 @@ from .base import (
 class Blockstate(JsonFile):
     """Class representing a blockstate."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("blockstates",)
+    scope: ClassVar[list[Tuple[str, ...]]] = [("blockstates",)]
     extension: ClassVar[str] = ".json"
 
 
 class Model(JsonFile):
     """Class representing a model."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("models",)
+    scope: ClassVar[list[Tuple[str, ...]]] = [("models",)]
     extension: ClassVar[str] = ".json"
 
 
 class Language(JsonFile):
     """Class representing a language file."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("lang",)
+    scope: ClassVar[list[Tuple[str, ...]]] = [("lang",)]
     extension: ClassVar[str] = ".json"
 
     def merge(self, other: "Language") -> bool:  # type: ignore
@@ -75,7 +75,7 @@ class Language(JsonFile):
 class Font(JsonFile):
     """Class representing a font configuration file."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("font",)
+    scope: ClassVar[list[Tuple[str, ...]]] = [("font",)]
     extension: ClassVar[str] = ".json"
 
     def merge(self, other: "Font") -> bool:  # type: ignore
@@ -89,63 +89,63 @@ class Font(JsonFile):
 class GlyphSizes(BinaryFile):
     """Class representing a legacy unicode glyph size file."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("font",)
+    scope: ClassVar[list[Tuple[str, ...]]] = [("font",)]
     extension: ClassVar[str] = ".bin"
 
 
 class TrueTypeFont(BinaryFile):
     """Class representing a TrueType font."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("font",)
+    scope: ClassVar[list[Tuple[str, ...]]] = [("font",)]
     extension: ClassVar[str] = ".ttf"
 
 
 class ShaderPost(JsonFile):
     """Class representing a shader post-processing pipeline."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("shaders", "post")
+    scope: ClassVar[list[Tuple[str, ...]]] = [("shaders", "post")]
     extension: ClassVar[str] = ".json"
 
 
 class Shader(JsonFile):
     """Class representing a shader."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("shaders",)
+    scope: ClassVar[list[Tuple[str, ...]]] = [("shaders",)]
     extension: ClassVar[str] = ".json"
 
 
 class FragmentShader(TextFile):
     """Class representing a fragment shader."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("shaders",)
+    scope: ClassVar[list[Tuple[str, ...]]] = [("shaders",)]
     extension: ClassVar[str] = ".fsh"
 
 
 class VertexShader(TextFile):
     """Class representing a vertex shader."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("shaders",)
+    scope: ClassVar[list[Tuple[str, ...]]] = [("shaders",)]
     extension: ClassVar[str] = ".vsh"
 
 
 class GlslShader(TextFile):
     """Class representing a glsl shader."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("shaders",)
+    scope: ClassVar[list[Tuple[str, ...]]] = [("shaders",)]
     extension: ClassVar[str] = ".glsl"
 
 
 class Text(TextFile):
     """Class representing a text file."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("texts",)
+    scope: ClassVar[list[Tuple[str, ...]]] = [("texts",)]
     extension: ClassVar[str] = ".txt"
 
 
 class TextureMcmeta(JsonFile):
     """Class representing a texture mcmeta."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("textures",)
+    scope: ClassVar[list[Tuple[str, ...]]] = [("textures",)]
     extension: ClassVar[str] = ".png.mcmeta"
 
 
@@ -156,7 +156,7 @@ class Texture(PngFile):
     content: BinaryFileContent[Image] = None
     mcmeta: Optional[JsonDict] = extra_field(default=None)
 
-    scope: ClassVar[Tuple[str, ...]] = ("textures",)
+    scope: ClassVar[list[Tuple[str, ...]]] = [("textures",)]
     extension: ClassVar[str] = ".png"
 
     def bind(self, pack: "ResourcePack", path: str):
@@ -180,7 +180,7 @@ class Sound(BinaryFile):
     attenuation_distance: Optional[int] = extra_field(default=None)
     preload: Optional[bool] = extra_field(default=None)
 
-    scope: ClassVar[Tuple[str, ...]] = ("sounds",)
+    scope: ClassVar[list[Tuple[str, ...]]] = [("sounds",)]
     extension: ClassVar[str] = ".ogg"
 
     def bind(self, pack: "ResourcePack", path: str):
@@ -238,14 +238,14 @@ class SoundConfig(JsonFile):
 class Particle(JsonFile):
     """Class representing a particle configuration file."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("particles",)
+    scope: ClassVar[list[Tuple[str, ...]]] = [("particles",)]
     extension: ClassVar[str] = ".json"
 
 
 class Atlas(JsonFile):
     """Class representing an atlas configuration file."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("atlases",)
+    scope: ClassVar[list[Tuple[str, ...]]] = [("atlases",)]
     extension: ClassVar[str] = ".json"
 
     def merge(self, other: "Atlas") -> bool:  # type: ignore
@@ -340,6 +340,7 @@ class ResourcePack(Pack[ResourcePackNamespace]):
         (1, 18): 8,
         (1, 19): 13,
         (1, 20): 32,
+        (1, 21): 34
     }
     latest_pack_format = pack_format_registry[split_version(LATEST_MINECRAFT_VERSION)]
 

@@ -480,7 +480,6 @@ class TextFileBase(File[ValueType, str]):
             return super().convert(file_type)
         return file_type(self.text)
 
-
 class TextFile(TextFileBase[str]):
     """Class representing a text file."""
 
