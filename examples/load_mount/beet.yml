@@ -1,7 +1,7 @@
 data_pack:
   load:
-    data/demo/functions: "src"
-    data/owo/functions/foo.mcfunction: "src/thing.txt"
+    data/demo/function: "src"
+    data/owo/function/foo.mcfunction: "src/thing.txt"
     pack.mcmeta: "pack.mcmeta"
 resource_pack:
   load:

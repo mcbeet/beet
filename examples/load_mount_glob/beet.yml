@@ -1,4 +1,4 @@
 data_pack:
   load:
-    data/demo/functions:
+    data/demo/function:
       - "src/*.mcfunction"

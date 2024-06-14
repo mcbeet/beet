@@ -62,14 +62,14 @@ pack == {
 Namespace containers are also available through attribute access. This is usually the syntax you'll be looking for as it's a bit more readable and provides better autocompletion.
 
 ```{code-cell}
-demo_namespace.functions["foo"] is demo_namespace[Function]["foo"]
+demo_namespace.function["foo"] is demo_namespace[Function]["foo"]
 ```
 
 You can even omit the container entirely when adding files to the namespace. The namespace will dispatch the file to the appropriate container automatically depending on its type.
 
 ```{code-cell}
 demo_namespace["bar"] = Function(["say world"])
-demo_namespace.functions
+demo_namespace.function
 ```
 
 ### Resource locations
@@ -81,15 +81,15 @@ Data pack objects let you access files in a single lookup with proxies that expo
 ```{code-cell}
 pack = DataPack()
 
-pack.functions["demo:foo"] = Function()
-pack.functions["demo:foo"] is pack["demo"].functions["foo"]
+pack.function["demo:foo"] = Function()
+pack.function["demo:foo"] is pack["demo"].function["foo"]
 ```
 
 Proxy attributes are always in sync with the underlying namespaces. You can also omit the attribute when adding files to data packs. The data pack object will dispatch the file to the appropriate proxy depending on its type.
 
 ```{code-cell}
 pack["demo:bar"] = Function()
-pack.functions == {
+pack.function == {
     "demo:foo": Function(),
     "demo:bar": Function(),
 }
@@ -272,17 +272,17 @@ pack.match("d*")
 ```
 
 ```{code-cell}
-pack["demo"].functions.match("f*")
+pack["demo"].function.match("f*")
 ```
 
 ```{code-cell}
-pack.functions.match("demo:*")
+pack.function.match("demo:*")
 ```
 
 You can specify multiple patterns. The exclamation mark lets you invert a pattern.
 
 ```{code-cell}
-pack.functions.match("demo:*", "!demo:foo")
+pack.function.match("demo:*", "!demo:foo")
 ```
 
 ## File handles
@@ -420,14 +420,14 @@ The files used in data packs and resource packs are derived from the core file h
 
 ```{code-cell}
 pack = DataPack(path="../examples/load_basic/src")
-pack.functions["demo:foo"]
+pack.function["demo:foo"]
 ```
 
 As you can see, when we load an unzipped data pack all the files remain in their unloaded state. The moment we start interacting with the content of the function `beet` will load the file automatically.
 
 ```{code-cell}
-pack.functions["demo:foo"].lines.append("say bar")
-pack.functions["demo:foo"]
+pack.function["demo:foo"].lines.append("say bar")
+pack.function["demo:foo"]
 ```
 
 ## The toolchain
@@ -457,11 +457,11 @@ out
 └── greeting_data_pack
     ├── data
     │   ├── greeting
-    │   │   └── functions
+    │   │   └── function
     │   │       └── hello.mcfunction
     │   └── minecraft
     │       └── tags
-    │           └── functions
+    │           └── function
     │               └── load.json
     └── pack.mcmeta
 
@@ -518,11 +518,11 @@ out
 └── greeting_data_pack
     ├── data
     │   ├── greeting
-    │   │   └── functions
+    │   │   └── function
     │   │       └── hello.mcfunction
     │   └── minecraft
     │       └── tags
-    │           └── functions
+    │           └── function
     │               └── load.json
     └── pack.mcmeta
 
@@ -558,11 +558,11 @@ out
 ├── greeting_data_pack
 │   ├── data
 │   │   ├── greeting
-│   │   │   └── functions
+│   │   │   └── function
 │   │   │       └── hello.mcfunction
 │   │   └── minecraft
 │   │       └── tags
-│   │           └── functions
+│   │           └── function
 │   │               └── load.json
 │   └── pack.mcmeta
 └── greeting_resource_pack

@@ -340,6 +340,7 @@ class ResourcePack(Pack[ResourcePackNamespace]):
         (1, 18): 8,
         (1, 19): 13,
         (1, 20): 32,
+        (1, 21): 34,
     }
     latest_pack_format = pack_format_registry[split_version(LATEST_MINECRAFT_VERSION)]
 

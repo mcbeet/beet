@@ -250,9 +250,9 @@ class Vanilla:
         elif opts and opts.version:
             self.minecraft_version = opts.version
         elif ctx:
-            self.minecraft_version = f"{ctx.minecraft_version}.*"
+            self.minecraft_version = ctx.minecraft_version
         else:
-            self.minecraft_version = f"{LATEST_MINECRAFT_VERSION}.*"
+            self.minecraft_version = LATEST_MINECRAFT_VERSION
 
     def mount(
         self,

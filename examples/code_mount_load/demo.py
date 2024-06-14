@@ -6,8 +6,8 @@ def beet_default(ctx: Context):
     ctx.require(
         load(
             data_pack={
-                "data/demo/functions": ctx.directory / "src",
-                "data/owo/functions/foo.mcfunction": ctx.directory / "src/thing.txt",
+                "data/demo/function": ctx.directory / "src",
+                "data/owo/function/foo.mcfunction": ctx.directory / "src/thing.txt",
                 "pack.mcmeta": ctx.directory / "pack.mcmeta",
             },
             resource_pack={

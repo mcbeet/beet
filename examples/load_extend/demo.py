@@ -33,7 +33,7 @@ def extend_data_pack(ctx: Context):
 def process_functions(ctx: Context):
     project_data = cast(JsonFile, ctx.data.extra["myproject.json"]).data
 
-    for prefix, dirs, functions in ctx.data.functions.walk():
+    for prefix, dirs, functions in ctx.data.function.walk():
         dirs.discard("zprivate")
 
         namespace = ctx.data[prefix.partition(":")[0]]
