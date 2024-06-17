@@ -77,7 +77,7 @@ from beet.core.utils import FileSystemPath, JsonDict, SupportedFormats, TextComp
 
 from .utils import list_extensions, list_origin_folders
 
-LATEST_MINECRAFT_VERSION: str = "1.20"
+LATEST_MINECRAFT_VERSION: str = "1.21"
 
 
 T = TypeVar("T")
@@ -1093,7 +1093,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
         if isinstance(value, Namespace):
             super().__setitem__(key, value)  # type: ignore
         else:
-            NamespaceProxy[NamespaceFile](self, type(value))[key] = value
+            NamespaceProxy[NamespaceFile](self, type(value))[key] = value  # type: ignore
 
     def __eq__(self, other: Any) -> bool:
         if self is other:
