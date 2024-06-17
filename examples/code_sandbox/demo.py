@@ -11,7 +11,7 @@ def beet_default(ctx: Context):
 
 def add_function(name: str):
     def plugin(ctx: Context):
-        function_count = len(ctx.data.functions)
+        function_count = len(ctx.data.function)
         last_function = ctx.meta.get("last_function")
         ctx.data[name] = Function([f"say {function_count=} {last_function=}"])
         ctx.meta["last_function"] = name

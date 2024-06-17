@@ -1,6 +1,6 @@
 data_pack:
   load:
     - "https://raw.githubusercontent.com/Gamemode4Dev/GM4_Datapacks/release/1.20/gm4_double_doors_1_20.zip"
-    - data/demo/functions/foo.mcfunction: "https://gist.githubusercontent.com/vberlier/acee1bf5193fc885141dab652fa3bad5/raw/0c338576e32554fffdab9d7f483147bb3234aac1/foo.mcfunction"
+    - data/demo/function/foo.mcfunction: "https://gist.githubusercontent.com/vberlier/acee1bf5193fc885141dab652fa3bad5/raw/0c338576e32554fffdab9d7f483147bb3234aac1/foo.mcfunction"
   zipped: false
 output: "out"

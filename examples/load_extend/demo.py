@@ -6,7 +6,7 @@ from beet import Context, FileDeserialize, JsonFile, JsonFileBase, TextFile, Yam
 
 
 class FunctionConfig(YamlFile):
-    scope: ClassVar[Tuple[str, ...]] = ("functions",)
+    scope: ClassVar[list[Tuple[str, ...]]] = ("functions",)
     extension: ClassVar[str] = ".yml"
 
 
@@ -17,7 +17,7 @@ class BlueprintData(BaseModel):
 class Blueprint(JsonFileBase[BlueprintData]):
     model = BlueprintData
 
-    scope: ClassVar[Tuple[str, ...]] = ("blueprints",)
+    scope: ClassVar[list[Tuple[str, ...]]] = ("blueprints",)
     extension: ClassVar[str] = ".json"
 
     data: ClassVar[FileDeserialize[BlueprintData]] = FileDeserialize()
@@ -33,7 +33,7 @@ def extend_data_pack(ctx: Context):
 def process_functions(ctx: Context):
     project_data = cast(JsonFile, ctx.data.extra["myproject.json"]).data
 
-    for prefix, dirs, functions in ctx.data.functions.walk():
+    for prefix, dirs, functions in ctx.data.function.walk():
         dirs.discard("zprivate")
 
         namespace = ctx.data[prefix.partition(":")[0]]

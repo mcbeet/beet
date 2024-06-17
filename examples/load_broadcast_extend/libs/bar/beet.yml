@@ -1,3 +1,3 @@
 data_pack:
   load:
-    data/bar/functions: "src"
+    data/bar/function: "src"
