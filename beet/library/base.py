@@ -102,7 +102,7 @@ PACK_COMPRESSION: Dict[str, int] = {
 class NamespaceFile(Protocol):
     """Protocol for detecting files that belong in pack namespaces."""
 
-    scope: ClassVar[Tuple[str, ...]]
+    scope: ClassVar[List[Tuple[str, ...]]]
     extension: ClassVar[str]
 
     snake_name: ClassVar[str]
@@ -441,8 +441,10 @@ class Namespace(
     def __init_subclass__(cls):
         pins = NamespacePin[NamespaceFile].collect_from(cls)
         cls.field_map = {pin.key: attr for attr, pin in pins.items()}
-        cls.scope_map = {
-            (pin.key.scope, pin.key.extension): pin.key for pin in pins.values()
+        cls.scope_map = {  # type: ignore
+            (scope, pin.key.extension): pin
+            for pin in pins.values()
+            for scope in pin.key.scope
         }
 
     def __init__(self):
@@ -571,7 +573,7 @@ class Namespace(
                 continue
             if extend and not issubclass(content_type, extend):
                 continue
-            prefix = "/".join((self.directory, namespace) + content_type.scope)
+            prefix = "/".join((self.directory, namespace) + content_type.scope[0])
             for name, item in container.items():
                 yield f"{overlay}{prefix}/{name}{content_type.extension}", item
 
@@ -602,7 +604,7 @@ class Namespace(
 
         scope_map = dict(cls.scope_map)
         for file_type in extend_namespace:
-            scope_map[file_type.scope, file_type.extension] = file_type
+            scope_map[file_type.scope[0], file_type.extension] = file_type
 
         name = None
         namespace = None
@@ -1285,7 +1287,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
     ) -> Dict[Tuple[Tuple[str, ...], str], Type[NamespaceFile]]:
         scope_map = dict(self.namespace_type.scope_map)
         for file_type in self.extend_namespace:
-            scope_map[file_type.scope, file_type.extension] = file_type
+            scope_map[file_type.scope[0], file_type.extension] = file_type
         return scope_map
 
     def resolve_namespace_extra_info(self) -> Dict[str, Type[PackFile]]:

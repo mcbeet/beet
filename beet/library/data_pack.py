@@ -56,35 +56,35 @@ TagFileType = TypeVar("TagFileType", bound="TagFile")
 class Advancement(JsonFile):
     """Class representing an advancement."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("advancement",)
+    scope: ClassVar[list[Tuple[str, ...]]] = [("advancement",), ("advancements",)]
     extension: ClassVar[str] = ".json"
 
 
 class DamageType(JsonFile):
     """Class representing a damage type."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("damage_type",)
+    scope: ClassVar[list[Tuple[str, ...]]] = [("damage_type",)]
     extension: ClassVar[str] = ".json"
 
 
 class ChatType(JsonFile):
     """Class representing a chat type."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("chat_type",)
+    scope: ClassVar[list[Tuple[str, ...]]] = [("chat_type",)]
     extension: ClassVar[str] = ".json"
 
 
 class BannerPattern(JsonFile):
     """Class representing a banner pattern."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("banner_pattern",)
+    scope: ClassVar[list[Tuple[str, ...]]] = [("banner_pattern",)]
     extension: ClassVar[str] = ".json"
 
 
 class WolfVariant(JsonFile):
     """Class representing a wolf variant."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("wolf_variant",)
+    scope: ClassVar[list[Tuple[str, ...]]] = [("wolf_variant",)]
     extension: ClassVar[str] = ".json"
 
 
@@ -96,7 +96,7 @@ class Function(TextFileBase[List[str]]):
     tags: Optional[List[str]] = extra_field(default=None)
     prepend_tags: Optional[List[str]] = extra_field(default=None)
 
-    scope: ClassVar[Tuple[str, ...]] = ("function",)
+    scope: ClassVar[list[Tuple[str, ...]]] = [("function",), ("functions",)]
     extension: ClassVar[str] = ".mcfunction"
 
     lines: ClassVar[FileDeserialize[List[str]]] = FileDeserialize()
@@ -143,28 +143,28 @@ class Function(TextFileBase[List[str]]):
 class ItemModifier(JsonFile):
     """Class representing an item modifier."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("item_modifier",)
+    scope: ClassVar[list[Tuple[str, ...]]] = [("item_modifier",), ("item_modifiers",)]
     extension: ClassVar[str] = ".json"
 
 
 class LootTable(JsonFile):
     """Class representing a loot table."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("loot_table",)
+    scope: ClassVar[list[Tuple[str, ...]]] = [("loot_table",), ("loot_tables",)]
     extension: ClassVar[str] = ".json"
 
 
 class Predicate(JsonFile):
     """Class representing a predicate."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("predicate",)
+    scope: ClassVar[list[Tuple[str, ...]]] = [("predicate",), ("predicates",)]
     extension: ClassVar[str] = ".json"
 
 
 class Recipe(JsonFile):
     """Class representing a recipe."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("recipe",)
+    scope: ClassVar[list[Tuple[str, ...]]] = [("recipe",), ("recipes",)]
     extension: ClassVar[str] = ".json"
 
 
@@ -174,7 +174,7 @@ class Structure(BinaryFileBase[StructureFileData]):
 
     content: BinaryFileContent[StructureFileData] = None
 
-    scope: ClassVar[Tuple[str, ...]] = ("structure",)
+    scope: ClassVar[list[Tuple[str, ...]]] = [("structure",), ("structures",)]
     extension: ClassVar[str] = ".nbt"
 
     data: ClassVar[FileDeserialize[StructureFileData]] = FileDeserialize()
@@ -193,14 +193,14 @@ class Structure(BinaryFileBase[StructureFileData]):
 class TrimPattern(JsonFile):
     """Class representing a trim pattern."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("trim_pattern",)
+    scope: ClassVar[list[Tuple[str, ...]]] = [("trim_pattern",)]
     extension: ClassVar[str] = ".json"
 
 
 class TrimMaterial(JsonFile):
     """Class representing a trim material."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("trim_material",)
+    scope: ClassVar[list[Tuple[str, ...]]] = [("trim_material",)]
     extension: ClassVar[str] = ".json"
 
 
@@ -261,49 +261,58 @@ class TagFile(JsonFile):
 class BlockTag(TagFile):
     """Class representing a block tag."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("tags", "block")
+    scope: ClassVar[list[Tuple[str, ...]]] = [("tags", "block"), ("tags", "blocks")]
 
 
 class EntityTypeTag(TagFile):
     """Class representing an entity tag."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("tags", "entity_type")
+    scope: ClassVar[list[Tuple[str, ...]]] = [
+        ("tags", "entity_type"),
+        ("tags", "entity_types"),
+    ]
 
 
 class FluidTag(TagFile):
     """Class representing a fluid tag."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("tags", "fluid")
+    scope: ClassVar[list[Tuple[str, ...]]] = [("tags", "fluid"), ("tags", "fluids")]
 
 
 class FunctionTag(TagFile):
     """Class representing a function tag."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("tags", "function")
+    scope: ClassVar[list[Tuple[str, ...]]] = [
+        ("tags", "function"),
+        ("tags", "functions"),
+    ]
 
 
 class GameEventTag(TagFile):
     """Class representing a game event tag."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("tags", "game_event")
+    scope: ClassVar[list[Tuple[str, ...]]] = [
+        ("tags", "game_event"),
+        ("tags", "game_events"),
+    ]
 
 
 class ItemTag(TagFile):
     """Class representing an item tag."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("tags", "item")
+    scope: ClassVar[list[Tuple[str, ...]]] = [("tags", "item"), ("tags", "items")]
 
 
 class ChatTypeTag(TagFile):
     """Class representing a chat type tag."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("tags", "chat_type")
+    scope: ClassVar[list[Tuple[str, ...]]] = [("tags", "chat_type")]
 
 
 class DamageTypeTag(TagFile):
     """Class representing a damage type tag."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("tags", "damage_type")
+    scope: ClassVar[list[Tuple[str, ...]]] = [("tags", "damage_type")]
 
 
 class DataPackNamespace(Namespace):
