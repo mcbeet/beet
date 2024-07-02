@@ -323,8 +323,8 @@ class BlockTag(TagFile):
     """Class representing a block tag."""
 
     scope: ClassVar[Tuple[Tuple[str, ...], ...]] = (
-        ("tags", "blocks"),
         ("tags", "block"),
+        ("tags", "blocks"),
     )
 
 
@@ -332,8 +332,8 @@ class EntityTypeTag(TagFile):
     """Class representing an entity tag."""
 
     scope: ClassVar[Tuple[Tuple[str, ...], ...]] = (
-        ("tags", "entity_types"),
         ("tags", "entity_type"),
+        ("tags", "entity_types"),
     )
 
 
@@ -341,8 +341,8 @@ class FluidTag(TagFile):
     """Class representing a fluid tag."""
 
     scope: ClassVar[Tuple[Tuple[str, ...], ...]] = (
-        ("tags", "fluids"),
         ("tags", "fluid"),
+        ("tags", "fluids"),
     )
 
 
@@ -359,8 +359,8 @@ class GameEventTag(TagFile):
     """Class representing a game event tag."""
 
     scope: ClassVar[Tuple[Tuple[str, ...], ...]] = (
-        ("tags", "game_events"),
         ("tags", "game_event"),
+        ("tags", "game_events"),
     )
 
 
@@ -368,8 +368,8 @@ class ItemTag(TagFile):
     """Class representing an item tag."""
 
     scope: ClassVar[Tuple[Tuple[str, ...], ...]] = (
-        ("tags", "items"),
         ("tags", "item"),
+        ("tags", "items"),
     )
 
 
