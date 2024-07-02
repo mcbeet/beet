@@ -22,6 +22,20 @@ __all__ = [
     "FunctionTag",
     "GameEventTag",
     "ItemTag",
+    "ChatTypeTag",
+    "DamageTypeTag",
+    "BannerPattern",
+    "Enchantment",
+    "EnchantmentProvider",
+    "JukeboxSong",
+    "PaintingVariant",
+    "WolfVariant",
+    "BannerPatternTag",
+    "CatVariantTag",
+    "EnchantmentTag",
+    "InstrumentTag",
+    "PaintingVariantTag",
+    "PointOfInterestTypeTag",
 ]
 
 
@@ -97,6 +111,26 @@ class Enchantment(JsonFile):
     """Class representing an enchantment"""
 
     scope: ClassVar[Tuple[Tuple[str, ...], ...]] = (("enchantment",),)
+    extension: ClassVar[str] = ".json"
+
+
+class EnchantmentProvider(JsonFile):
+    """Class representing an enchantment provider."""
+
+    scope: ClassVar[Tuple[Tuple[str, ...], ...]] = (("enchantment_provider",),)
+    extension: ClassVar[str] = ".json"
+
+class JukeboxSong(JsonFile):
+    """Class representing a jukebox song."""
+
+    scope: ClassVar[Tuple[Tuple[str, ...], ...]] = (("jukebox_song",),)
+    extension: ClassVar[str] = ".json"
+
+
+class PaintingVariant(JsonFile):
+    """Class representing a painting variant."""
+
+    scope: ClassVar[Tuple[Tuple[str, ...], ...]] = (("painting_variant",),)
     extension: ClassVar[str] = ".json"
 
 
@@ -350,6 +384,36 @@ class DamageTypeTag(TagFile):
 
     scope: ClassVar[Tuple[Tuple[str, ...], ...]] = (("tags", "damage_type"),)
 
+class BannerPatternTag(TagFile):
+    """Class representing a banner pattern tag."""
+
+    scope: ClassVar[Tuple[Tuple[str, ...], ...]] = (("tags", "banner_pattern"),)
+
+class CatVariantTag(TagFile):
+    """Class representing a cat variant tag."""
+
+    scope: ClassVar[Tuple[Tuple[str, ...], ...]] = (("tags", "cat_variant"),)
+
+class EnchantmentTag(TagFile):
+    """Class representing an enchantment tag."""
+
+    scope: ClassVar[Tuple[Tuple[str, ...], ...]] = (("tags", "enchantment"),)
+
+class InstrumentTag(TagFile):
+    """Class representing an instrument tag."""
+
+    scope: ClassVar[Tuple[Tuple[str, ...], ...]] = (("tags", "instrument"),)
+
+class PaintingVariantTag(TagFile):
+    """Class representing a painting variant tag."""
+
+    scope: ClassVar[Tuple[Tuple[str, ...], ...]] = (("tags", "painting_variant"),)
+
+class PointOfInterestTypeTag(TagFile):
+    """Class representing a point of interest type tag."""
+
+    scope: ClassVar[Tuple[Tuple[str, ...], ...]] = (("tags", "point_of_interest_type"),)
+
 
 class DataPackNamespace(Namespace):
     """Class representing a data pack namespace."""
@@ -371,6 +435,10 @@ class DataPackNamespace(Namespace):
     banner_patterns:  NamespacePin[BannerPattern] = NamespacePin(BannerPattern)
     wolf_variants:    NamespacePin[WolfVariant]   = NamespacePin(WolfVariant)
     enchantments:     NamespacePin[Enchantment]   = NamespacePin(Enchantment)
+    enchantment_providers: NamespacePin[EnchantmentProvider] = NamespacePin(EnchantmentProvider)
+    jukebox_songs:    NamespacePin[JukeboxSong]   = NamespacePin(JukeboxSong)
+    painting_variants: NamespacePin[PaintingVariant] = NamespacePin(PaintingVariant)
+
     block_tags:       NamespacePin[BlockTag]      = NamespacePin(BlockTag)
     entity_type_tags: NamespacePin[EntityTypeTag] = NamespacePin(EntityTypeTag)
     fluid_tags:       NamespacePin[FluidTag]      = NamespacePin(FluidTag)
@@ -379,6 +447,13 @@ class DataPackNamespace(Namespace):
     item_tags:        NamespacePin[ItemTag]       = NamespacePin(ItemTag)
     chat_type_tags:   NamespacePin[ChatTypeTag]   = NamespacePin(ChatTypeTag)
     damage_type_tags: NamespacePin[DamageTypeTag] = NamespacePin(DamageTypeTag)
+    banner_pattern_tags: NamespacePin[BannerPatternTag] = NamespacePin(BannerPatternTag)
+    cat_variant_tags: NamespacePin[CatVariantTag] = NamespacePin(CatVariantTag)
+    enchantment_tags: NamespacePin[EnchantmentTag] = NamespacePin(EnchantmentTag)
+    instrument_tags: NamespacePin[InstrumentTag] = NamespacePin(InstrumentTag)
+    painting_variant_tags: NamespacePin[PaintingVariantTag] = NamespacePin(PaintingVariantTag)
+    point_of_interest_type_tags: NamespacePin[PointOfInterestTypeTag] = NamespacePin(PointOfInterestTypeTag)
+    
 
     # fmt: on
 
@@ -421,6 +496,10 @@ class DataPack(Pack[DataPackNamespace]):
     banner_patterns:  NamespaceProxyDescriptor[BannerPattern] = NamespaceProxyDescriptor(BannerPattern)
     wolf_variants:    NamespaceProxyDescriptor[WolfVariant]   = NamespaceProxyDescriptor(WolfVariant)
     enchantments:     NamespaceProxyDescriptor[Enchantment]   = NamespaceProxyDescriptor(Enchantment)
+    enchantment_providers: NamespaceProxyDescriptor[EnchantmentProvider] = NamespaceProxyDescriptor(EnchantmentProvider)
+    jukebox_songs:    NamespaceProxyDescriptor[JukeboxSong]   = NamespaceProxyDescriptor(JukeboxSong)
+    painting_variants: NamespaceProxyDescriptor[PaintingVariant] = NamespaceProxyDescriptor(PaintingVariant)
+
     block_tags:       NamespaceProxyDescriptor[BlockTag]      = NamespaceProxyDescriptor(BlockTag)
     entity_type_tags: NamespaceProxyDescriptor[EntityTypeTag] = NamespaceProxyDescriptor(EntityTypeTag)
     fluid_tags:       NamespaceProxyDescriptor[FluidTag]      = NamespaceProxyDescriptor(FluidTag)
@@ -429,4 +508,10 @@ class DataPack(Pack[DataPackNamespace]):
     item_tags:        NamespaceProxyDescriptor[ItemTag]       = NamespaceProxyDescriptor(ItemTag)
     chat_type_tags:   NamespaceProxyDescriptor[ChatTypeTag]   = NamespaceProxyDescriptor(ChatTypeTag)
     damage_type_tags: NamespaceProxyDescriptor[DamageTypeTag] = NamespaceProxyDescriptor(DamageTypeTag)
+    banner_pattern_tags: NamespaceProxyDescriptor[BannerPatternTag] = NamespaceProxyDescriptor(BannerPatternTag)
+    cat_variant_tags: NamespaceProxyDescriptor[CatVariantTag] = NamespaceProxyDescriptor(CatVariantTag)
+    enchantment_tags: NamespaceProxyDescriptor[EnchantmentTag] = NamespaceProxyDescriptor(EnchantmentTag)
+    instrument_tags: NamespaceProxyDescriptor[InstrumentTag] = NamespaceProxyDescriptor(InstrumentTag)
+    painting_variant_tags: NamespaceProxyDescriptor[PaintingVariantTag] = NamespaceProxyDescriptor(PaintingVariantTag)
+    point_of_interest_type_tags: NamespaceProxyDescriptor[PointOfInterestTypeTag] = NamespaceProxyDescriptor(PointOfInterestTypeTag)
     # fmt: on
