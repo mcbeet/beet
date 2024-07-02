@@ -102,7 +102,7 @@ PACK_COMPRESSION: Dict[str, int] = {
 class NamespaceFile(Protocol):
     """Protocol for detecting files that belong in pack namespaces."""
 
-    scope: ClassVar[list[Tuple[str, ...]]]
+    scope: ClassVar[Tuple[Tuple[str, ...], ...]]
     extension: ClassVar[str]
 
     snake_name: ClassVar[str]
@@ -150,6 +150,7 @@ class NamespaceFile(Protocol):
     def dump(self, origin: FileOrigin, path: FileSystemPath): ...
 
     def convert(self, file_type: Type[PackFileType]) -> PackFileType: ...
+
 
 class MergeCallback(Protocol):
     """Protocol for detecting merge callbacks."""
