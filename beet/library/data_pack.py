@@ -6,6 +6,7 @@ __all__ = [
     "ChatType",
     "BannerPattern",
     "WolfVariant",
+    "Enchantment",
     "Function",
     "ItemModifier",
     "LootTable",
@@ -57,7 +58,10 @@ TagFileType = TypeVar("TagFileType", bound="TagFile")
 class Advancement(JsonFile):
     """Class representing an advancement."""
 
-    scope: ClassVar[Tuple[Tuple[str, ...], ...]] = (("advancement",), ("advancements",),)
+    scope: ClassVar[Tuple[Tuple[str, ...], ...]] = (
+        ("advancement",),
+        ("advancements",),
+    )
     extension: ClassVar[str] = ".json"
 
 
@@ -88,10 +92,12 @@ class WolfVariant(JsonFile):
     scope: ClassVar[Tuple[Tuple[str, ...], ...]] = (("wolf_variant",),)
     extension: ClassVar[str] = ".json"
 
+
 class Enchantment(JsonFile):
     """Class representing an enchantment"""
 
     scope: ClassVar[Tuple[Tuple[str, ...], ...]] = (("enchantment",),)
+    extension: ClassVar[str] = ".json"
 
 
 @dataclass(eq=False, repr=False)
@@ -149,28 +155,40 @@ class Function(TextFileBase[List[str]]):
 class ItemModifier(JsonFile):
     """Class representing an item modifier."""
 
-    scope: ClassVar[Tuple[Tuple[str, ...], ...]] = (("item_modifier",), ("item_modifiers",),)
+    scope: ClassVar[Tuple[Tuple[str, ...], ...]] = (
+        ("item_modifier",),
+        ("item_modifiers",),
+    )
     extension: ClassVar[str] = ".json"
 
 
 class LootTable(JsonFile):
     """Class representing a loot table."""
 
-    scope: ClassVar[Tuple[Tuple[str, ...], ...]] = (("loot_table",), ("loot_tables",),)
+    scope: ClassVar[Tuple[Tuple[str, ...], ...]] = (
+        ("loot_table",),
+        ("loot_tables",),
+    )
     extension: ClassVar[str] = ".json"
 
 
 class Predicate(JsonFile):
     """Class representing a predicate."""
 
-    scope: ClassVar[Tuple[Tuple[str, ...], ...]] = (("predicate",), ("predicates",),)
+    scope: ClassVar[Tuple[Tuple[str, ...], ...]] = (
+        ("predicate",),
+        ("predicates",),
+    )
     extension: ClassVar[str] = ".json"
 
 
 class Recipe(JsonFile):
     """Class representing a recipe."""
 
-    scope: ClassVar[Tuple[Tuple[str, ...], ...]] = (("recipe",), ("recipes",),)
+    scope: ClassVar[Tuple[Tuple[str, ...], ...]] = (
+        ("recipe",),
+        ("recipes",),
+    )
     extension: ClassVar[str] = ".json"
 
 
@@ -180,7 +198,10 @@ class Structure(BinaryFileBase[StructureFileData]):
 
     content: BinaryFileContent[StructureFileData] = None
 
-    scope: ClassVar[Tuple[Tuple[str, ...], ...]] = (("structure",), ("structures",),)
+    scope: ClassVar[Tuple[Tuple[str, ...], ...]] = (
+        ("structure",),
+        ("structures",),
+    )
     extension: ClassVar[str] = ".nbt"
 
     data: ClassVar[FileDeserialize[StructureFileData]] = FileDeserialize()
@@ -267,19 +288,28 @@ class TagFile(JsonFile):
 class BlockTag(TagFile):
     """Class representing a block tag."""
 
-    scope: ClassVar[Tuple[Tuple[str, ...], ...]] = (("tags", "blocks"), ("tags", "block"),)
+    scope: ClassVar[Tuple[Tuple[str, ...], ...]] = (
+        ("tags", "blocks"),
+        ("tags", "block"),
+    )
 
 
 class EntityTypeTag(TagFile):
     """Class representing an entity tag."""
 
-    scope: ClassVar[Tuple[Tuple[str, ...], ...]] = (("tags", "entity_types"), ("tags", "entity_type"),)
+    scope: ClassVar[Tuple[Tuple[str, ...], ...]] = (
+        ("tags", "entity_types"),
+        ("tags", "entity_type"),
+    )
 
 
 class FluidTag(TagFile):
     """Class representing a fluid tag."""
 
-    scope: ClassVar[Tuple[Tuple[str, ...], ...]] = (("tags", "fluids"), ("tags", "fluid"),)
+    scope: ClassVar[Tuple[Tuple[str, ...], ...]] = (
+        ("tags", "fluids"),
+        ("tags", "fluid"),
+    )
 
 
 class FunctionTag(TagFile):
@@ -294,13 +324,19 @@ class FunctionTag(TagFile):
 class GameEventTag(TagFile):
     """Class representing a game event tag."""
 
-    scope: ClassVar[Tuple[Tuple[str, ...], ...]] = (("tags", "game_events"), ("tags", "game_event"),)
+    scope: ClassVar[Tuple[Tuple[str, ...], ...]] = (
+        ("tags", "game_events"),
+        ("tags", "game_event"),
+    )
 
 
 class ItemTag(TagFile):
     """Class representing an item tag."""
 
-    scope: ClassVar[Tuple[Tuple[str, ...], ...]] = (("tags", "items"), ("tags", "item"),)
+    scope: ClassVar[Tuple[Tuple[str, ...], ...]] = (
+        ("tags", "items"),
+        ("tags", "item"),
+    )
 
 
 class ChatTypeTag(TagFile):
@@ -313,6 +349,7 @@ class DamageTypeTag(TagFile):
     """Class representing a damage type tag."""
 
     scope: ClassVar[Tuple[Tuple[str, ...], ...]] = (("tags", "damage_type"),)
+
 
 class DataPackNamespace(Namespace):
     """Class representing a data pack namespace."""
@@ -333,6 +370,7 @@ class DataPackNamespace(Namespace):
     damage_type:      NamespacePin[DamageType]    = NamespacePin(DamageType)
     banner_patterns:  NamespacePin[BannerPattern] = NamespacePin(BannerPattern)
     wolf_variants:    NamespacePin[WolfVariant]   = NamespacePin(WolfVariant)
+    enchantments:     NamespacePin[Enchantment]   = NamespacePin(Enchantment)
     block_tags:       NamespacePin[BlockTag]      = NamespacePin(BlockTag)
     entity_type_tags: NamespacePin[EntityTypeTag] = NamespacePin(EntityTypeTag)
     fluid_tags:       NamespacePin[FluidTag]      = NamespacePin(FluidTag)
@@ -341,6 +379,7 @@ class DataPackNamespace(Namespace):
     item_tags:        NamespacePin[ItemTag]       = NamespacePin(ItemTag)
     chat_type_tags:   NamespacePin[ChatTypeTag]   = NamespacePin(ChatTypeTag)
     damage_type_tags: NamespacePin[DamageTypeTag] = NamespacePin(DamageTypeTag)
+
     # fmt: on
 
     def get_output_scope(self, content_type: type[NamespaceFile]) -> Tuple[str, ...]:
@@ -381,6 +420,7 @@ class DataPack(Pack[DataPackNamespace]):
     damage_type:      NamespaceProxyDescriptor[DamageType]    = NamespaceProxyDescriptor(DamageType)
     banner_patterns:  NamespaceProxyDescriptor[BannerPattern] = NamespaceProxyDescriptor(BannerPattern)
     wolf_variants:    NamespaceProxyDescriptor[WolfVariant]   = NamespaceProxyDescriptor(WolfVariant)
+    enchantments:     NamespaceProxyDescriptor[Enchantment]   = NamespaceProxyDescriptor(Enchantment)
     block_tags:       NamespaceProxyDescriptor[BlockTag]      = NamespaceProxyDescriptor(BlockTag)
     entity_type_tags: NamespaceProxyDescriptor[EntityTypeTag] = NamespaceProxyDescriptor(EntityTypeTag)
     fluid_tags:       NamespaceProxyDescriptor[FluidTag]      = NamespaceProxyDescriptor(FluidTag)
