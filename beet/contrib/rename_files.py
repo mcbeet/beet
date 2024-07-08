@@ -12,7 +12,7 @@ __all__ = [
 
 import logging
 from dataclasses import dataclass
-from typing import Any, Callable, List, Optional, Type, Union, cast
+from typing import Any, Callable, List, Optional, Type, Union, cast, Tuple
 
 from pydantic.v1 import BaseModel
 
@@ -107,6 +107,18 @@ class RenameFilesHandler:
         del pack[file_type][path]
         pack[file_type][dest] = file_instance
 
+    def get_output_scope(self, content_type: type[NamespaceFile], pack: Union[ResourcePack, DataPack]) -> Tuple[str, ...]:
+        scope = content_type.scope
+        if isinstance(scope, tuple):
+            return scope
+        else:
+            keys = sorted(scope.keys())
+            if not pack:
+                return scope[keys[-1]]
+            keys = [key for key in keys if key <= pack.pack_format]
+            return scope[keys[-1]]
+
+
     def handle_filename_for_namespace_file(
         self,
         pack: Union[ResourcePack, DataPack],
@@ -115,7 +127,8 @@ class RenameFilesHandler:
     ):
         dest = self.substitute(filename)
         file_type = type(file_instance)
-        prefix = "".join(f"{d}/" for d in file_type.scope)
+        scope = self.get_output_scope(file_type, pack)
+        prefix = "".join(f"{d}/" for d in scope)
 
         _, namespace, path = filename.split("/", 2)
 
