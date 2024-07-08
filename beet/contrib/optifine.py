@@ -35,14 +35,14 @@ def optifine(pack: Union[Context, ResourcePack]):
 class JsonEntityModel(JsonFile):
     """Class representing a json entity model."""
 
-    scope: ClassVar[Tuple[str, ...] | Dict[int, Tuple[str, ...]]] = ("optifine","cem")
+    scope: ClassVar[Tuple[str, ...] | Dict[int, Tuple[str, ...]]] = ("optifine", "cem")
     extension: ClassVar[str] = ".jem"
 
 
 class JsonPartModel(JsonFile):
     """Class representing a json part model."""
 
-    scope: ClassVar[Tuple[str, ...] | Dict[int, Tuple[str, ...]]] = ("optifine","cem")
+    scope: ClassVar[Tuple[str, ...] | Dict[int, Tuple[str, ...]]] = ("optifine", "cem")
     extension: ClassVar[str] = ".jpm"
 
 

@@ -107,7 +107,9 @@ class RenameFilesHandler:
         del pack[file_type][path]
         pack[file_type][dest] = file_instance
 
-    def get_output_scope(self, content_type: type[NamespaceFile], pack: Union[ResourcePack, DataPack]) -> Tuple[str, ...]:
+    def get_output_scope(
+        self, content_type: type[NamespaceFile], pack: Union[ResourcePack, DataPack]
+    ) -> Tuple[str, ...]:
         scope = content_type.scope
         if isinstance(scope, tuple):
             return scope
@@ -117,7 +119,6 @@ class RenameFilesHandler:
                 return scope[keys[-1]]
             keys = [key for key in keys if key <= pack.pack_format]
             return scope[keys[-1]]
-
 
     def handle_filename_for_namespace_file(
         self,
