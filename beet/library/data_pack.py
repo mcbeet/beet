@@ -42,7 +42,7 @@ import io
 from copy import deepcopy
 from dataclasses import dataclass
 from gzip import GzipFile
-from typing import ClassVar, Iterable, List, Optional, Tuple, TypeVar, Union
+from typing import ClassVar, Iterable, List, Optional, Tuple, TypeVar, Union, Dict
 
 from nbtlib.contrib.minecraft import StructureFile, StructureFileData
 
@@ -59,7 +59,6 @@ from beet.core.utils import JsonDict, extra_field, split_version
 from .base import (
     LATEST_MINECRAFT_VERSION,
     Namespace,
-    NamespaceFile,
     NamespacePin,
     NamespaceProxyDescriptor,
     Pack,
@@ -71,65 +70,70 @@ TagFileType = TypeVar("TagFileType", bound="TagFile")
 class Advancement(JsonFile):
     """Class representing an advancement."""
 
-    scope: ClassVar[Tuple[Tuple[str, ...], ...]] = (
-        ("advancement",),
-        ("advancements",),
-    )
+    scope: ClassVar[Tuple[str, ...] | Dict[int, Tuple[str, ...]]] = {
+        0: ("advancements",),
+        45: ("advancement",),
+    }
     extension: ClassVar[str] = ".json"
 
 
 class DamageType(JsonFile):
     """Class representing a damage type."""
 
-    scope: ClassVar[Tuple[Tuple[str, ...], ...]] = (("damage_type",),)
+    scope: ClassVar[Tuple[str, ...] | Dict[int, Tuple[str, ...]]] = ("damage_type",)
     extension: ClassVar[str] = ".json"
 
 
 class ChatType(JsonFile):
     """Class representing a chat type."""
 
-    scope: ClassVar[Tuple[Tuple[str, ...], ...]] = (("chat_type",),)
+    scope: ClassVar[Tuple[str, ...] | Dict[int, Tuple[str, ...]]] = ("chat_type",)
     extension: ClassVar[str] = ".json"
 
 
 class BannerPattern(JsonFile):
     """Class representing a banner pattern."""
 
-    scope: ClassVar[Tuple[Tuple[str, ...], ...]] = (("banner_pattern",),)
+    scope: ClassVar[Tuple[str, ...] | Dict[int, Tuple[str, ...]]] = ("banner_pattern",)
     extension: ClassVar[str] = ".json"
 
 
 class WolfVariant(JsonFile):
     """Class representing a wolf variant."""
 
-    scope: ClassVar[Tuple[Tuple[str, ...], ...]] = (("wolf_variant",),)
+    scope: ClassVar[Tuple[str, ...] | Dict[int, Tuple[str, ...]]] = ("wolf_variant",)
     extension: ClassVar[str] = ".json"
 
 
 class Enchantment(JsonFile):
     """Class representing an enchantment"""
 
-    scope: ClassVar[Tuple[Tuple[str, ...], ...]] = (("enchantment",),)
+    scope: ClassVar[Tuple[str, ...] | Dict[int, Tuple[str, ...]]] = ("enchantment",)
     extension: ClassVar[str] = ".json"
 
 
 class EnchantmentProvider(JsonFile):
     """Class representing an enchantment provider."""
 
-    scope: ClassVar[Tuple[Tuple[str, ...], ...]] = (("enchantment_provider",),)
+    scope: ClassVar[Tuple[str, ...] | Dict[int, Tuple[str, ...]]] = (
+        "enchantment_provider",
+    )
     extension: ClassVar[str] = ".json"
+
 
 class JukeboxSong(JsonFile):
     """Class representing a jukebox song."""
 
-    scope: ClassVar[Tuple[Tuple[str, ...], ...]] = (("jukebox_song",),)
+    scope: ClassVar[Tuple[str, ...] | Dict[int, Tuple[str, ...]]] = ("jukebox_song",)
     extension: ClassVar[str] = ".json"
 
 
 class PaintingVariant(JsonFile):
     """Class representing a painting variant."""
 
-    scope: ClassVar[Tuple[Tuple[str, ...], ...]] = (("painting_variant",),)
+    scope: ClassVar[Tuple[str, ...] | Dict[int, Tuple[str, ...]]] = (
+        "painting_variant",
+    )
     extension: ClassVar[str] = ".json"
 
 
@@ -141,7 +145,10 @@ class Function(TextFileBase[List[str]]):
     tags: Optional[List[str]] = extra_field(default=None)
     prepend_tags: Optional[List[str]] = extra_field(default=None)
 
-    scope: ClassVar[Tuple[Tuple[str, ...], ...]] = (("function",), ("functions",))
+    scope: ClassVar[Tuple[str, ...] | Dict[int, Tuple[str, ...]]] = {
+        0: ("functions",),
+        45: ("function",),
+    }
     extension: ClassVar[str] = ".mcfunction"
 
     lines: ClassVar[FileDeserialize[List[str]]] = FileDeserialize()
@@ -188,40 +195,40 @@ class Function(TextFileBase[List[str]]):
 class ItemModifier(JsonFile):
     """Class representing an item modifier."""
 
-    scope: ClassVar[Tuple[Tuple[str, ...], ...]] = (
-        ("item_modifier",),
-        ("item_modifiers",),
-    )
+    scope: ClassVar[Tuple[str, ...] | Dict[int, Tuple[str, ...]]] = {
+        0: ("item_modifiers",),
+        45: ("item_modifier",),
+    }
     extension: ClassVar[str] = ".json"
 
 
 class LootTable(JsonFile):
     """Class representing a loot table."""
 
-    scope: ClassVar[Tuple[Tuple[str, ...], ...]] = (
-        ("loot_table",),
-        ("loot_tables",),
-    )
+    scope: ClassVar[Tuple[str, ...] | Dict[int, Tuple[str, ...]]] = {
+        0: ("loot_tables",),
+        45: ("loot_table",),
+    }
     extension: ClassVar[str] = ".json"
 
 
 class Predicate(JsonFile):
     """Class representing a predicate."""
 
-    scope: ClassVar[Tuple[Tuple[str, ...], ...]] = (
-        ("predicate",),
-        ("predicates",),
-    )
+    scope: ClassVar[Tuple[str, ...] | Dict[int, Tuple[str, ...]]] = {
+        0: ("predicates",),
+        45: ("predicate",),
+    }
     extension: ClassVar[str] = ".json"
 
 
 class Recipe(JsonFile):
     """Class representing a recipe."""
 
-    scope: ClassVar[Tuple[Tuple[str, ...], ...]] = (
-        ("recipe",),
-        ("recipes",),
-    )
+    scope: ClassVar[Tuple[str, ...] | Dict[int, Tuple[str, ...]]] = {
+        0: ("recipes",),
+        45: ("recipe",),
+    }
     extension: ClassVar[str] = ".json"
 
 
@@ -231,10 +238,10 @@ class Structure(BinaryFileBase[StructureFileData]):
 
     content: BinaryFileContent[StructureFileData] = None
 
-    scope: ClassVar[Tuple[Tuple[str, ...], ...]] = (
-        ("structure",),
-        ("structures",),
-    )
+    scope: ClassVar[Tuple[str, ...] | Dict[int, Tuple[str, ...]]] = {
+        0: ("structures",),
+        45: ("structure",),
+    }
     extension: ClassVar[str] = ".nbt"
 
     data: ClassVar[FileDeserialize[StructureFileData]] = FileDeserialize()
@@ -253,14 +260,14 @@ class Structure(BinaryFileBase[StructureFileData]):
 class TrimPattern(JsonFile):
     """Class representing a trim pattern."""
 
-    scope: ClassVar[Tuple[Tuple[str, ...], ...]] = (("trim_pattern",),)
+    scope: ClassVar[Tuple[str, ...] | Dict[int, Tuple[str, ...]]] = ("trim_pattern",)
     extension: ClassVar[str] = ".json"
 
 
 class TrimMaterial(JsonFile):
     """Class representing a trim material."""
 
-    scope: ClassVar[Tuple[Tuple[str, ...], ...]] = (("trim_material",),)
+    scope: ClassVar[Tuple[str, ...] | Dict[int, Tuple[str, ...]]] = ("trim_material",)
     extension: ClassVar[str] = ".json"
 
 
@@ -321,97 +328,127 @@ class TagFile(JsonFile):
 class BlockTag(TagFile):
     """Class representing a block tag."""
 
-    scope: ClassVar[Tuple[Tuple[str, ...], ...]] = (
-        ("tags", "block"),
-        ("tags", "blocks"),
-    )
+    scope: ClassVar[Tuple[str, ...] | Dict[int, Tuple[str, ...]]] = {
+        0: ("tags", "blocks"),
+        45: ("tags", "block"),
+    }
 
 
 class EntityTypeTag(TagFile):
     """Class representing an entity tag."""
 
-    scope: ClassVar[Tuple[Tuple[str, ...], ...]] = (
-        ("tags", "entity_type"),
-        ("tags", "entity_types"),
-    )
+    scope: ClassVar[Tuple[str, ...] | Dict[int, Tuple[str, ...]]] = {
+        0: ("tags", "entity_types"),
+        45: ("tags", "entity_type"),
+    }
 
 
 class FluidTag(TagFile):
     """Class representing a fluid tag."""
 
-    scope: ClassVar[Tuple[Tuple[str, ...], ...]] = (
-        ("tags", "fluid"),
-        ("tags", "fluids"),
-    )
+    scope: ClassVar[Tuple[str, ...] | Dict[int, Tuple[str, ...]]] = {
+        0: ("tags", "fluids"),
+        45: ("tags", "fluid"),
+    }
 
 
 class FunctionTag(TagFile):
     """Class representing a function tag."""
 
-    scope: ClassVar[Tuple[Tuple[str, ...], ...]] = (
-        ("tags", "function"),
-        ("tags", "functions"),
-    )
+    scope: ClassVar[Tuple[str, ...] | Dict[int, Tuple[str, ...]]] = {
+        0: ("tags", "functions"),
+        45: ("tags", "function"),
+    }
 
 
 class GameEventTag(TagFile):
     """Class representing a game event tag."""
 
-    scope: ClassVar[Tuple[Tuple[str, ...], ...]] = (
-        ("tags", "game_event"),
-        ("tags", "game_events"),
-    )
+    scope: ClassVar[Tuple[str, ...] | Dict[int, Tuple[str, ...]]] = {
+        0: ("tags", "game_events"),
+        45: ("tags", "game_event"),
+    }
 
 
 class ItemTag(TagFile):
     """Class representing an item tag."""
 
-    scope: ClassVar[Tuple[Tuple[str, ...], ...]] = (
-        ("tags", "item"),
-        ("tags", "items"),
-    )
+    scope: ClassVar[Tuple[str, ...] | Dict[int, Tuple[str, ...]]] = {
+        0: ("tags", "items"),
+        45: ("tags", "item"),
+    }
 
 
 class ChatTypeTag(TagFile):
     """Class representing a chat type tag."""
 
-    scope: ClassVar[Tuple[Tuple[str, ...], ...]] = (("tags", "chat_type"),)
+    scope: ClassVar[Tuple[str, ...] | Dict[int, Tuple[str, ...]]] = (
+        "tags",
+        "chat_type",
+    )
 
 
 class DamageTypeTag(TagFile):
     """Class representing a damage type tag."""
 
-    scope: ClassVar[Tuple[Tuple[str, ...], ...]] = (("tags", "damage_type"),)
+    scope: ClassVar[Tuple[str, ...] | Dict[int, Tuple[str, ...]]] = (
+        "tags",
+        "damage_type",
+    )
+
 
 class BannerPatternTag(TagFile):
     """Class representing a banner pattern tag."""
 
-    scope: ClassVar[Tuple[Tuple[str, ...], ...]] = (("tags", "banner_pattern"),)
+    scope: ClassVar[Tuple[str, ...] | Dict[int, Tuple[str, ...]]] = (
+        "tags",
+        "banner_pattern",
+    )
+
 
 class CatVariantTag(TagFile):
     """Class representing a cat variant tag."""
 
-    scope: ClassVar[Tuple[Tuple[str, ...], ...]] = (("tags", "cat_variant"),)
+    scope: ClassVar[Tuple[str, ...] | Dict[int, Tuple[str, ...]]] = (
+        "tags",
+        "cat_variant",
+    )
+
 
 class EnchantmentTag(TagFile):
     """Class representing an enchantment tag."""
 
-    scope: ClassVar[Tuple[Tuple[str, ...], ...]] = (("tags", "enchantment"),)
+    scope: ClassVar[Tuple[str, ...] | Dict[int, Tuple[str, ...]]] = (
+        "tags",
+        "enchantment",
+    )
+
 
 class InstrumentTag(TagFile):
     """Class representing an instrument tag."""
 
-    scope: ClassVar[Tuple[Tuple[str, ...], ...]] = (("tags", "instrument"),)
+    scope: ClassVar[Tuple[str, ...] | Dict[int, Tuple[str, ...]]] = (
+        "tags",
+        "instrument",
+    )
+
 
 class PaintingVariantTag(TagFile):
     """Class representing a painting variant tag."""
 
-    scope: ClassVar[Tuple[Tuple[str, ...], ...]] = (("tags", "painting_variant"),)
+    scope: ClassVar[Tuple[str, ...] | Dict[int, Tuple[str, ...]]] = (
+        "tags",
+        "painting_variant",
+    )
+
 
 class PointOfInterestTypeTag(TagFile):
     """Class representing a point of interest type tag."""
 
-    scope: ClassVar[Tuple[Tuple[str, ...], ...]] = (("tags", "point_of_interest_type"),)
+    scope: ClassVar[Tuple[str, ...] | Dict[int, Tuple[str, ...]]] = (
+        "tags",
+        "point_of_interest_type",
+    )
 
 
 class DataPackNamespace(Namespace):
@@ -451,14 +488,8 @@ class DataPackNamespace(Namespace):
     instrument_tags:                    NamespacePin[InstrumentTag]             = NamespacePin(InstrumentTag)
     painting_variant_tags:              NamespacePin[PaintingVariantTag]        = NamespacePin(PaintingVariantTag)
     point_of_interest_type_tags:        NamespacePin[PointOfInterestTypeTag]    = NamespacePin(PointOfInterestTypeTag)
-    
 
     # fmt: on
-
-    def get_output_scope(self, content_type: type[NamespaceFile]) -> Tuple[str, ...]:
-        if not self.pack or self.pack.pack_format >= 45:
-            return content_type.scope[0]
-        return content_type.scope[-1]
 
 
 class DataPack(Pack[DataPackNamespace]):

@@ -102,7 +102,7 @@ PACK_COMPRESSION: Dict[str, int] = {
 class NamespaceFile(Protocol):
     """Protocol for detecting files that belong in pack namespaces."""
 
-    scope: ClassVar[Tuple[Tuple[str, ...], ...]]
+    scope: ClassVar[Tuple[str, ...] | Dict[int, Tuple[str, ...]]]
     extension: ClassVar[str]
 
     snake_name: ClassVar[str]
@@ -429,8 +429,11 @@ def create_scope_map(
 ):
     scope_map: Mapping[Tuple[Tuple[str, ...], str], Type[NamespaceFile]] = {}
     for pin in pins.values():
-        for scope in pin.key.scope:
-            scope_map[(scope, pin.key.extension)] = pin.key
+        if isinstance(scopes := pin.key.scope, tuple):
+            scope_map[(scopes, pin.key.extension)] = pin.key
+        else:
+            for scope in scopes.values():
+                scope_map[(scope, pin.key.extension)] = pin.key
 
     return scope_map
 
@@ -535,8 +538,16 @@ class Namespace(
         for container in self.values():
             yield from container.items()
 
-    def get_output_scope(self, content_type: type[NamespaceFile]):
-        return content_type.scope[0]
+    def get_output_scope(self, content_type: type[NamespaceFile]) -> Tuple[str, ...]:
+        scope = content_type.scope
+        if isinstance(scope, tuple):
+            return scope
+        else:
+            keys = sorted(scope.keys())
+            if not self.pack:
+                return scope[keys[-1]]
+            keys = [key for key in keys if key <= self.pack.pack_format]
+            return scope[keys[-1]]
 
     @overload
     def list_files(
@@ -617,8 +628,11 @@ class Namespace(
         scope_map = dict(cls.scope_map)
 
         for file_type in extend_namespace:
-            for scope in file_type.scope:
-                scope_map[scope, file_type.extension] = file_type
+            if isinstance(file_type.scope, tuple):
+                scope_map[file_type.scope, file_type.extension] = file_type
+            else:
+                for scope in file_type.scope.values():
+                    scope_map[scope, file_type.extension] = file_type
 
         name = None
         namespace = None
@@ -1109,7 +1123,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
         if isinstance(value, Namespace):
             super().__setitem__(key, value)  # type: ignore
         else:
-            NamespaceProxy[NamespaceFile](self, type(value))[key] = value
+            NamespaceProxy[NamespaceFile](self, type(value))[key] = value  # type: ignore
 
     def __eq__(self, other: Any) -> bool:
         if self is other:
@@ -1301,8 +1315,11 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
     ) -> Dict[Tuple[Tuple[str, ...], str], Type[NamespaceFile]]:
         scope_map = dict(self.namespace_type.scope_map)
         for file_type in self.extend_namespace:
-            for scope in file_type.scope:
-                scope_map[scope, file_type.extension] = file_type
+            if isinstance(file_type.scope, tuple):
+                scope_map[file_type.scope, file_type.extension] = file_type
+            else:
+                for scope in file_type.scope.values():
+                    scope_map[scope, file_type.extension] = file_type
 
         return scope_map
 
