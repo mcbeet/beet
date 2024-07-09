@@ -10,9 +10,10 @@ __all__ = [
 ]
 
 
-from typing import ClassVar, Tuple, Union, Dict
+from typing import ClassVar, Union
 
 from beet import Context, JsonFile, PngFile, ResourcePack, TextFile
+from beet.library.base import NamespaceFileScope
 
 
 def beet_default(ctx: Context):
@@ -35,33 +36,33 @@ def optifine(pack: Union[Context, ResourcePack]):
 class JsonEntityModel(JsonFile):
     """Class representing a json entity model."""
 
-    scope: ClassVar[Tuple[str, ...] | Dict[int, Tuple[str, ...]]] = ("optifine", "cem")
+    scope: ClassVar[NamespaceFileScope] = ("optifine", "cem")
     extension: ClassVar[str] = ".jem"
 
 
 class JsonPartModel(JsonFile):
     """Class representing a json part model."""
 
-    scope: ClassVar[Tuple[str, ...] | Dict[int, Tuple[str, ...]]] = ("optifine", "cem")
+    scope: ClassVar[NamespaceFileScope] = ("optifine", "cem")
     extension: ClassVar[str] = ".jpm"
 
 
 class OptifineProperties(TextFile):
     """Class representing optifine properties."""
 
-    scope: ClassVar[Tuple[str, ...] | Dict[int, Tuple[str, ...]]] = ("optifine",)
+    scope: ClassVar[NamespaceFileScope] = ("optifine",)
     extension: ClassVar[str] = ".properties"
 
 
 class OptifineTexture(PngFile):
     """Class representing an optifine texture."""
 
-    scope: ClassVar[Tuple[str, ...] | Dict[int, Tuple[str, ...]]] = ("optifine",)
+    scope: ClassVar[NamespaceFileScope] = ("optifine",)
     extension: ClassVar[str] = ".png"
 
 
 class ShaderProperties(TextFile):
     """Class representing shader properties."""
 
-    scope: ClassVar[Tuple[str, ...] | Dict[int, Tuple[str, ...]]] = ("shaders",)
+    scope: ClassVar[NamespaceFileScope] = ("shaders",)
     extension: ClassVar[str] = ".properties"

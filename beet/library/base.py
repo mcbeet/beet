@@ -23,6 +23,7 @@ __all__ = [
     "create_group_map",
     "PACK_COMPRESSION",
     "LATEST_MINECRAFT_VERSION",
+    "NamespaceFileScope",
 ]
 
 
@@ -98,11 +99,13 @@ PACK_COMPRESSION: Dict[str, int] = {
     "lzma": ZIP_LZMA,
 }
 
+NamespaceFileScope = Union[Tuple[str, ...], Mapping[int, Tuple[str, ...]]]
+
 
 class NamespaceFile(Protocol):
     """Protocol for detecting files that belong in pack namespaces."""
 
-    scope: ClassVar[Tuple[str, ...] | Dict[int, Tuple[str, ...]]]
+    scope: ClassVar[NamespaceFileScope]
     extension: ClassVar[str]
 
     snake_name: ClassVar[str]
