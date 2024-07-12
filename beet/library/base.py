@@ -1591,9 +1591,11 @@ def get_output_scope(scope: NamespaceFileScope, pack_format: int) -> Tuple[str, 
     if isinstance(scope, tuple):
         return scope
     result: Tuple[str, ...] | None = None
+    result_format : int | None = None
     for key, value in scope.items():
-        if key <= pack_format:
+        if key <= pack_format and (result_format is None or key > result_format):
             result = value
+            result_format = key
     if result is None:
         raise ValueError(f"No scope found for pack format {pack_format} in {scope}")
     return result
