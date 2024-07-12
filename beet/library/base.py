@@ -24,6 +24,7 @@ __all__ = [
     "PACK_COMPRESSION",
     "LATEST_MINECRAFT_VERSION",
     "NamespaceFileScope",
+    "get_output_scope",
 ]
 
 
@@ -541,17 +542,6 @@ class Namespace(
         for container in self.values():
             yield from container.items()
 
-    def get_output_scope(self, content_type: type[NamespaceFile]) -> Tuple[str, ...]:
-        scope = content_type.scope
-        if isinstance(scope, tuple):
-            return scope
-        else:
-            keys = sorted(scope.keys())
-            if not self.pack:
-                return scope[keys[-1]]
-            keys = [key for key in keys if key <= self.pack.pack_format]
-            return scope[keys[-1]]
-
     @overload
     def list_files(
         self,
@@ -598,7 +588,9 @@ class Namespace(
             if extend and not issubclass(content_type, extend):
                 continue
 
-            scope = self.get_output_scope(content_type)
+            scope = get_output_scope(
+                content_type.scope, self.pack.pack_format if self.pack else 0
+            )
             prefix = "/".join((self.directory, namespace) + scope)
             for name, item in container.items():
                 yield f"{overlay}{prefix}/{name}{content_type.extension}", item
@@ -1593,3 +1585,15 @@ def create_group_map(
         for singular in list(group_map):
             group_map.setdefault(f"{singular}s", group_map[singular])
     return group_map
+
+
+def get_output_scope(scope: NamespaceFileScope, pack_format: int) -> Tuple[str, ...]:
+    if isinstance(scope, tuple):
+        return scope
+    result: Tuple[str, ...] | None = None
+    for key, value in scope.items():
+        if key <= pack_format:
+            result = value
+    if result is None:
+        raise ValueError(f"No scope found for pack format {pack_format} in {scope}")
+    return result
