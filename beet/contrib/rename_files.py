@@ -12,7 +12,7 @@ __all__ = [
 
 import logging
 from dataclasses import dataclass
-from typing import Any, Callable, List, Optional, Tuple, Type, Union, cast
+from typing import Any, Callable, List, Optional, Type, Union, cast
 
 from pydantic.v1 import BaseModel
 
