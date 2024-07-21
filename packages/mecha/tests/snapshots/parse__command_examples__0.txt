@@ -1,6 +1,6 @@
 <class 'mecha.ast.AstRoot'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
-  end_location: SourceLocation(pos=9876, lineno=233, colno=1)
+  end_location: SourceLocation(pos=9903, lineno=234, colno=1)
   commands:
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=14, lineno=2, colno=1)
@@ -8488,3 +8488,36 @@
                           location: SourceLocation(pos=9870, lineno=232, colno=91)
                           end_location: SourceLocation(pos=9875, lineno=232, colno=96)
                           value: 'hello'
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=9876, lineno=233, colno=1)
+      end_location: SourceLocation(pos=9902, lineno=233, colno=27)
+      identifier: 'give:targets:item'
+      arguments:
+        <class 'mecha.ast.AstSelector'>
+          location: SourceLocation(pos=9881, lineno=233, colno=6)
+          end_location: SourceLocation(pos=9883, lineno=233, colno=8)
+          variable: 'p'
+          arguments:
+            <empty>
+        <class 'mecha.ast.AstItemStack'>
+          location: SourceLocation(pos=9884, lineno=233, colno=9)
+          end_location: SourceLocation(pos=9902, lineno=233, colno=27)
+          identifier:
+            <class 'mecha.ast.AstResourceLocation'>
+              location: SourceLocation(pos=9884, lineno=233, colno=9)
+              end_location: SourceLocation(pos=9895, lineno=233, colno=20)
+              is_tag: False
+              namespace: None
+              path: 'diamond_axe'
+          arguments:
+            <class 'mecha.ast.AstItemRemovedDefaultComponent'>
+              location: SourceLocation(pos=9896, lineno=233, colno=21)
+              end_location: SourceLocation(pos=9901, lineno=233, colno=26)
+              key:
+                <class 'mecha.ast.AstResourceLocation'>
+                  location: SourceLocation(pos=9897, lineno=233, colno=22)
+                  end_location: SourceLocation(pos=9901, lineno=233, colno=26)
+                  is_tag: False
+                  namespace: None
+                  path: 'tool'
+          data_tags: None

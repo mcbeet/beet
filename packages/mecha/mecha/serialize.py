@@ -24,6 +24,7 @@ from .ast import (
     AstItemPredicateAlternatives,
     AstItemPredicateTestComponent,
     AstItemPredicateTestPredicate,
+    AstItemRemovedDefaultComponent,
     AstItemStack,
     AstJson,
     AstLiteral,
@@ -263,6 +264,13 @@ class Serializer(Visitor):
     @rule(AstItemComponent)
     def item_component(self, node: AstItemComponent, result: List[str]):
         yield from self.key_value(node, "=", result)
+
+    @rule(AstItemRemovedDefaultComponent)
+    def item_removed_default_component(
+        self, node: AstItemRemovedDefaultComponent, result: List[str]
+    ):
+        result.append("!")
+        yield node.key
 
     @rule(AstItemPredicateTestComponent)
     @rule(AstItemPredicateTestPredicate)
