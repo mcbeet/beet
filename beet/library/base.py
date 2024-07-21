@@ -23,6 +23,8 @@ __all__ = [
     "create_group_map",
     "PACK_COMPRESSION",
     "LATEST_MINECRAFT_VERSION",
+    "NamespaceFileScope",
+    "get_output_scope",
 ]
 
 
@@ -98,11 +100,13 @@ PACK_COMPRESSION: Dict[str, int] = {
     "lzma": ZIP_LZMA,
 }
 
+NamespaceFileScope = Union[Tuple[str, ...], Mapping[int, Tuple[str, ...]]]
+
 
 class NamespaceFile(Protocol):
     """Protocol for detecting files that belong in pack namespaces."""
 
-    scope: ClassVar[Tuple[Tuple[str, ...], ...]]
+    scope: ClassVar[NamespaceFileScope]
     extension: ClassVar[str]
 
     snake_name: ClassVar[str]
@@ -429,8 +433,11 @@ def create_scope_map(
 ):
     scope_map: Mapping[Tuple[Tuple[str, ...], str], Type[NamespaceFile]] = {}
     for pin in pins.values():
-        for scope in pin.key.scope:
-            scope_map[(scope, pin.key.extension)] = pin.key
+        if isinstance(scopes := pin.key.scope, tuple):
+            scope_map[(scopes, pin.key.extension)] = pin.key
+        else:
+            for scope in scopes.values():
+                scope_map[(scope, pin.key.extension)] = pin.key
 
     return scope_map
 
@@ -535,9 +542,6 @@ class Namespace(
         for container in self.values():
             yield from container.items()
 
-    def get_output_scope(self, content_type: type[NamespaceFile]):
-        return content_type.scope[0]
-
     @overload
     def list_files(
         self,
@@ -584,7 +588,9 @@ class Namespace(
             if extend and not issubclass(content_type, extend):
                 continue
 
-            scope = self.get_output_scope(content_type)
+            scope = get_output_scope(
+                content_type.scope, self.pack.pack_format if self.pack else 0
+            )
             prefix = "/".join((self.directory, namespace) + scope)
             for name, item in container.items():
                 yield f"{overlay}{prefix}/{name}{content_type.extension}", item
@@ -617,8 +623,11 @@ class Namespace(
         scope_map = dict(cls.scope_map)
 
         for file_type in extend_namespace:
-            for scope in file_type.scope:
-                scope_map[scope, file_type.extension] = file_type
+            if isinstance(file_type.scope, tuple):
+                scope_map[file_type.scope, file_type.extension] = file_type
+            else:
+                for scope in file_type.scope.values():
+                    scope_map[scope, file_type.extension] = file_type
 
         name = None
         namespace = None
@@ -1109,7 +1118,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
         if isinstance(value, Namespace):
             super().__setitem__(key, value)  # type: ignore
         else:
-            NamespaceProxy[NamespaceFile](self, type(value))[key] = value
+            NamespaceProxy[NamespaceFile](self, type(value))[key] = value  # type: ignore
 
     def __eq__(self, other: Any) -> bool:
         if self is other:
@@ -1301,8 +1310,11 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
     ) -> Dict[Tuple[Tuple[str, ...], str], Type[NamespaceFile]]:
         scope_map = dict(self.namespace_type.scope_map)
         for file_type in self.extend_namespace:
-            for scope in file_type.scope:
-                scope_map[scope, file_type.extension] = file_type
+            if isinstance(file_type.scope, tuple):
+                scope_map[file_type.scope, file_type.extension] = file_type
+            else:
+                for scope in file_type.scope.values():
+                    scope_map[scope, file_type.extension] = file_type
 
         return scope_map
 
@@ -1573,3 +1585,17 @@ def create_group_map(
         for singular in list(group_map):
             group_map.setdefault(f"{singular}s", group_map[singular])
     return group_map
+
+
+def get_output_scope(scope: NamespaceFileScope, pack_format: int) -> Tuple[str, ...]:
+    if isinstance(scope, tuple):
+        return scope
+    result: Tuple[str, ...] | None = None
+    result_format: int | None = None
+    for key, value in scope.items():
+        if key <= pack_format and (result_format is None or key > result_format):
+            result = value
+            result_format = key
+    if result is None:
+        raise ValueError(f"No scope found for pack format {pack_format} in {scope}")
+    return result

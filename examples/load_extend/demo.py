@@ -1,12 +1,12 @@
-from typing import ClassVar, Tuple, cast
+from typing import ClassVar, cast
 
 from pydantic.v1 import BaseModel
 
-from beet import Context, FileDeserialize, JsonFile, JsonFileBase, TextFile, YamlFile
+from beet import Context, FileDeserialize, JsonFile, JsonFileBase, TextFile, YamlFile, NamespaceFileScope
 
 
 class FunctionConfig(YamlFile):
-    scope: ClassVar[Tuple[str, ...]] = ("functions",)
+    scope: ClassVar[NamespaceFileScope] = ("functions",)
     extension: ClassVar[str] = ".yml"
 
 
@@ -17,7 +17,7 @@ class BlueprintData(BaseModel):
 class Blueprint(JsonFileBase[BlueprintData]):
     model = BlueprintData
 
-    scope: ClassVar[Tuple[str, ...]] = ("blueprints",)
+    scope: ClassVar[NamespaceFileScope] = ("blueprints",)
     extension: ClassVar[str] = ".json"
 
     data: ClassVar[FileDeserialize[BlueprintData]] = FileDeserialize()

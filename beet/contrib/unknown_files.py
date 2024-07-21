@@ -7,22 +7,22 @@ __all__ = [
 ]
 
 
-from typing import ClassVar, Tuple
+from typing import ClassVar
 
-from beet import BinaryFile, Context
+from beet import BinaryFile, Context, NamespaceFileScope
 
 
 class UnknownAsset(BinaryFile):
     """Class representing an unknown file in resource packs."""
 
-    scope: ClassVar[Tuple[str, ...]] = ()
+    scope: ClassVar[NamespaceFileScope] = ()
     extension: ClassVar[str] = ""
 
 
 class UnknownData(BinaryFile):
     """Class representing an unknown file in data packs."""
 
-    scope: ClassVar[Tuple[str, ...]] = ()
+    scope: ClassVar[NamespaceFileScope] = ()
     extension: ClassVar[str] = ""
 
 

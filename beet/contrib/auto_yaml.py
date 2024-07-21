@@ -10,7 +10,7 @@ __all__ = [
 
 from typing import Any, ClassVar, Tuple, Type
 
-from beet import Context, Drop, JsonFileBase, NamespaceFile, Pack, YamlFile
+from beet import Context, Drop, JsonFileBase, NamespaceFile, Pack, YamlFile, NamespaceFileScope
 
 
 def beet_default(ctx: Context):
@@ -54,7 +54,7 @@ def create_namespace_handler(
     """Create handler that turns yaml namespace files into json."""
 
     class AutoYamlNamespaceHandler(YamlFile):
-        scope: ClassVar[Tuple[str, ...]] = namespace_scope
+        scope: ClassVar[NamespaceFileScope] = namespace_scope
         extension: ClassVar[str] = namespace_extension
 
         model = file_type.model

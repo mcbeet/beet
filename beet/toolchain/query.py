@@ -49,7 +49,7 @@ from pathspec.patterns.gitwildmatch import GitWildMatchPattern
 from pydantic.v1 import BaseModel, validator
 
 from beet.core.file import File
-from beet.library.base import NamespaceFile, Pack, create_group_map
+from beet.library.base import NamespaceFile, Pack, create_group_map, get_output_scope
 
 from .config import ListOption
 from .template import TemplateManager
@@ -229,7 +229,8 @@ class PackMatchOption(BaseModel):
 
                     escaped = GitWildMatchPattern.escape(path)
                     if path == escaped:
-                        prefix = "/".join([directory, namespace, *file_type.scope])
+                        scope = get_output_scope(file_type.scope, pack.pack_format)
+                        prefix = "/".join([directory, namespace, *scope])
                         base_paths.add(f"{overlay}{prefix}/{path}{file_type.extension}")
                         continue
 
@@ -239,7 +240,8 @@ class PackMatchOption(BaseModel):
                             break
                         common.append(part)
 
-                    prefix = "/".join([directory, namespace, *file_type.scope, *common])
+                    scope = get_output_scope(file_type.scope, pack.pack_format)
+                    prefix = "/".join([directory, namespace, *scope, *common])
                     base_paths.add(f"{overlay}{prefix}")
 
         return sorted(base_paths)
