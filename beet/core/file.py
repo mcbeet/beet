@@ -23,6 +23,9 @@ __all__ = [
 
 import io
 import json
+
+import chardet
+import pyjson5
 import shutil
 from copy import deepcopy
 from dataclasses import dataclass, replace
@@ -436,14 +439,41 @@ class TextFileBase(File[ValueType, str]):
 
     @classmethod
     def from_path(cls, path: FileSystemPath, start: int, stop: int) -> str:
-        with open(path, "r", encoding="utf-8") as f:
-            if start > 0:
-                f.seek(start)
-            return f.read(stop - start) if stop >= -1 else f.read()
+        # We assume that the file is utf-8 since its most common
+        # In the event the file fails to be parsed in utf-8, we'll attempt to detect
+        # the correct encoding and retry. If that fails than another exception will be raised
+        try:
+            with open(path, "r", encoding="utf-8") as f:
+                if start > 0:
+                    f.seek(start)
+                return f.read(stop - start) if stop >= -1 else f.read()
+        except ValueError:
+            with open(path, "rb") as f:
+                if start > 0:
+                    f.seek(start)
+                file_bytes = f.read(stop - start) if stop >= -1 else f.read()
+                
+                encoding = chardet.detect(file_bytes)["encoding"]
+
+                if encoding == None:
+                    encoding = "utf-8"
+
+                return file_bytes.decode(encoding=encoding)
+                
 
     @classmethod
     def from_zip(cls, origin: ZipFile, name: str) -> str:
-        return origin.read(name).decode()
+        file_bytes = origin.read(name)
+
+        try:
+            return file_bytes.decode()
+        except UnicodeDecodeError:
+            encoding = chardet.detect(file_bytes)["encoding"]
+            
+            if encoding == None:
+                encoding = "utf-8"
+
+            return file_bytes.decode(encoding=encoding)
 
     def dump_path(self, path: FileSystemPath, raw: str) -> None:
         with open(
@@ -634,7 +664,7 @@ class JsonFileBase(DataModelBase[ValueType]):
         if not self.encoder:  # type: ignore
             self.encoder = dump_json
         if not self.decoder:  # type: ignore
-            self.decoder = json.loads
+            self.decoder = pyjson5.loads
 
 
 @dataclass(eq=False, repr=False)

@@ -9,9 +9,9 @@ __all__ = [
 import json
 import re
 from dataclasses import dataclass
-from typing import Any, ClassVar, Optional, Tuple, cast
+from typing import Any, ClassVar, Optional, cast
 
-from beet import Context, JsonFile
+from beet import Context, JsonFile, NamespaceFileScope
 from beet.core.utils import TextComponent
 
 PATH_REGEX = re.compile(r"\w+")
@@ -20,7 +20,7 @@ PATH_REGEX = re.compile(r"\w+")
 class Message(JsonFile):
     """Class representing a message file."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("messages",)
+    scope: ClassVar[NamespaceFileScope] = ("messages",)
     extension: ClassVar[str] = ".json"
 
 

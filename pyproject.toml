@@ -34,6 +34,8 @@ PyYAML = "^6.0.1"
 Pillow = {version = "*", optional = true}
 colorama = {version = "*", markers = 'sys_platform == "win32"'}
 typing-extensions = "^4.8.0"
+pyjson5 = "^1.6.6"
+chardet = "^5.2.0"
 
 [tool.poetry.extras]
 image = ["Pillow"]
