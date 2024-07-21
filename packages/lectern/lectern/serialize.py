@@ -30,7 +30,15 @@ from typing import (
 )
 from urllib.parse import urlparse
 
-from beet import DataPack, File, NamespaceFile, ResourcePack, TextFile, TextFileBase
+from beet import (
+    DataPack,
+    File,
+    NamespaceFile,
+    ResourcePack,
+    TextFile,
+    TextFileBase,
+    get_output_scope,
+)
 from beet.core.utils import normalize_string
 
 EXTENSION_HIGHLIGHTING = {
@@ -240,7 +248,7 @@ class TextSerializer:
                         if file_type in mapping
                         else (
                             extra_directive,
-                            f"{namespace.directory}/{name}/{'/'.join(file_type.scope)}/{path}{file_type.extension}",
+                            f"{namespace.directory}/{name}/{'/'.join(get_output_scope(file_type.scope, pack.pack_format))}/{path}{file_type.extension}",
                             file_instance,
                         )
                     )
@@ -370,7 +378,7 @@ class MarkdownSerializer:
                         yield from self.format_serialized_file(
                             self.serialize_file_instance(
                                 pack_directive,
-                                f"{namespace.directory}/{name}/{'/'.join(file_type.scope)}/{path}{file_type.extension}",
+                                f"{namespace.directory}/{name}/{'/'.join(get_output_scope(file_type.scope, pack.pack_format))}/{path}{file_type.extension}",
                                 file_instance,  # type: ignore
                                 external_files,
                                 external_prefix,

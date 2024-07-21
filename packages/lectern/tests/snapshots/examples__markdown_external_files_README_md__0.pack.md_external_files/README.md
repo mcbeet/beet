@@ -7,7 +7,7 @@
 ```json
 {
   "pack": {
-    "pack_format": 26,
+    "pack_format": 48,
     "description": ""
   },
   "overlays": {
