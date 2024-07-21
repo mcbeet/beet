@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.108.0 (2024-07-21)
+
+### Feature
+
+* 1.21 ([#442](https://github.com/mcbeet/beet/issues/442)) ([`df8f013`](https://github.com/mcbeet/beet/commit/df8f013a31d993654c2dd7842c8f4d1fa03a715f))
+
 ## v0.107.0 (2024-05-04)
 
 ### Feature

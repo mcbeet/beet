@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "beet"
-version = "0.107.0"
+version = "0.108.0"
 description = "The Minecraft pack development kit"
 authors = ["Valentin Berlier <berlier.v@gmail.com>"]
 license = "MIT"
