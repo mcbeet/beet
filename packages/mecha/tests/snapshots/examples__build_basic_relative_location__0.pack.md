@@ -7,7 +7,7 @@
 ```json
 {
   "pack": {
-    "pack_format": 41,
+    "pack_format": 48,
     "description": ""
   }
 }
@@ -33,7 +33,7 @@ function demo:bar
 function demo:folder/wat
 function demo:bar
 schedule function demo:other 1s
-schedule clear demo:other
+schedule clear ./other
 ```
 
 `@function demo:other`
