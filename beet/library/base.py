@@ -80,7 +80,7 @@ from beet.core.utils import FileSystemPath, JsonDict, SupportedFormats, TextComp
 
 from .utils import list_extensions, list_origin_folders
 
-LATEST_MINECRAFT_VERSION: str = "1.20"
+LATEST_MINECRAFT_VERSION: str = "1.21"
 
 
 T = TypeVar("T")
