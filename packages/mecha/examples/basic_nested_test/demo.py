@@ -1,7 +1,7 @@
 from dataclasses import dataclass, replace
 from typing import ClassVar
 
-from beet import Context, Function, Generator, TextFile
+from beet import Context, Function, Generator, NamespaceFileScope, TextFile
 from beet.core.utils import required_field
 from tokenstream import TokenStream, set_location
 
@@ -21,7 +21,7 @@ from mecha.contrib.nested_location import NestedLocationResolver
 
 
 class Test(TextFile):
-    scope: ClassVar[tuple[str, ...]] = ("tests",)
+    scope: ClassVar[NamespaceFileScope] = ("tests",)
     extension: ClassVar[str] = ".mcfunction"
 
 

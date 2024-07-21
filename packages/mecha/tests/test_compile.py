@@ -1,8 +1,8 @@
 from dataclasses import replace
-from typing import Any, ClassVar, Tuple
+from typing import Any, ClassVar
 
 import pytest
-from beet import DataPack, Function, ResourcePack, TextFile
+from beet import DataPack, Function, NamespaceFileScope, ResourcePack, TextFile
 
 from mecha import (
     AstBool,
@@ -185,7 +185,7 @@ def test_lint_error_report(mc: Mecha, dummy_transform: Any, dummy_lint_error: An
 
 
 class DummySourceFile(TextFile):
-    scope: ClassVar[Tuple[str, ...]] = ("dummy",)
+    scope: ClassVar[NamespaceFileScope] = ("dummy",)
     extension: ClassVar[str] = ".txt"
 
 
