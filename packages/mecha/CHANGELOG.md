@@ -2,6 +2,14 @@
 
 <!--next-version-placeholder-->
 
+## v0.95.0 (2024-07-21)
+
+### Feature
+
+* Add n selector variable ([`40e9991`](https://github.com/mcbeet/mecha/commit/40e999186b5c45b8cd0ca39d82bc17e190caef55))
+* Support removed default component syntax ([`3b34357`](https://github.com/mcbeet/mecha/commit/3b3435798b15de8bd0f5fa3012569ca50d37bd7b))
+* Update beet ([`f300406`](https://github.com/mcbeet/mecha/commit/f3004062c671e973adaee0584286da5b341c3534))
+
 ## v0.94.2 (2024-05-13)
 
 ### Fix
