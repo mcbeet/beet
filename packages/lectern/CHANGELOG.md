@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.34.0 (2024-07-21)
+
+### Feature
+
+* Update beet ([`a5e7980`](https://github.com/mcbeet/lectern/commit/a5e798066aef91937b31d89d1e2ff365acd06dcf))
+
 ## v0.33.0 (2024-03-29)
 
 ### Feature
