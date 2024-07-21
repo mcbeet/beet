@@ -1154,7 +1154,7 @@ class AstSelectorArgument(AstNode):
 class AstSelector(AstNode):
     """Ast selector node."""
 
-    variable: Literal["p", "r", "a", "e", "s"] = required_field()
+    variable: Literal["p", "r", "a", "e", "s", "n"] = required_field()
     arguments: AstChildren[AstSelectorArgument] = AstChildren()
 
     parser = "selector"

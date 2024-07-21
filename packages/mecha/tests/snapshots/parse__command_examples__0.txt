@@ -1,6 +1,6 @@
 <class 'mecha.ast.AstRoot'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
-  end_location: SourceLocation(pos=9903, lineno=234, colno=1)
+  end_location: SourceLocation(pos=9921, lineno=235, colno=1)
   commands:
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=14, lineno=2, colno=1)
@@ -8521,3 +8521,29 @@
                   namespace: None
                   path: 'tool'
           data_tags: None
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=9903, lineno=234, colno=1)
+      end_location: SourceLocation(pos=9920, lineno=234, colno=18)
+      identifier: 'kill:targets'
+      arguments:
+        <class 'mecha.ast.AstSelector'>
+          location: SourceLocation(pos=9908, lineno=234, colno=6)
+          end_location: SourceLocation(pos=9920, lineno=234, colno=18)
+          variable: 'n'
+          arguments:
+            <class 'mecha.ast.AstSelectorArgument'>
+              location: SourceLocation(pos=9911, lineno=234, colno=9)
+              end_location: SourceLocation(pos=9919, lineno=234, colno=17)
+              inverted: False
+              key:
+                <class 'mecha.ast.AstString'>
+                  location: SourceLocation(pos=9911, lineno=234, colno=9)
+                  end_location: SourceLocation(pos=9915, lineno=234, colno=13)
+                  value: 'type'
+              value:
+                <class 'mecha.ast.AstResourceLocation'>
+                  location: SourceLocation(pos=9916, lineno=234, colno=14)
+                  end_location: SourceLocation(pos=9919, lineno=234, colno=17)
+                  is_tag: False
+                  namespace: None
+                  path: 'pig'

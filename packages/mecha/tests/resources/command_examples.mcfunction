@@ -231,3 +231,4 @@ execute if predicate {condition: weather_check,raining: true}
 particle minecraft:block{block_state: {Name: "minecraft:redstone_lamp",Properties: {lit: "true"}}}
 execute store result storage test:test path double 0.0000000000009094947017729282 run say hello
 give @p diamond_axe[!tool]
+kill @n[type=pig]

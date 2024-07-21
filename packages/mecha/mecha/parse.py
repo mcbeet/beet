@@ -1652,7 +1652,7 @@ class SelectorParser:
 
     def __call__(self, stream: TokenStream) -> AstSelector:
         with stream.syntax(
-            selector=r"@[praes]\[?",
+            selector=r"@[praesn]\[?",
             bracket=r"\[|\]",
             comma=r",",
         ):
@@ -1881,7 +1881,7 @@ class SelectorSingleConstraint:
         if not isinstance(node, AstSelector):
             return node
 
-        is_single = node.variable in "prs"
+        is_single = node.variable in "prsn"
 
         for arg in node.arguments:
             if arg.key.value == "limit":
