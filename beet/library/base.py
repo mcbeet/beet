@@ -11,6 +11,7 @@ __all__ = [
     "PackPin",
     "Namespace",
     "NamespaceFile",
+    "NamespaceFileScope",
     "NamespaceContainer",
     "NamespacePin",
     "NamespaceProxy",
@@ -21,10 +22,10 @@ __all__ = [
     "UnveilMapping",
     "PackOverwrite",
     "create_group_map",
+    "list_input_scopes",
+    "get_output_scope",
     "PACK_COMPRESSION",
     "LATEST_MINECRAFT_VERSION",
-    "NamespaceFileScope",
-    "get_output_scope",
 ]
 
 
@@ -428,20 +429,6 @@ class NamespacePin(Pin[Type[NamespaceFileType], NamespaceContainer[NamespaceFile
     """Descriptor for accessing namespace containers by attribute lookup."""
 
 
-def create_scope_map(
-    pins: Dict[str, Pin[type[NamespaceFile], NamespaceContainer[NamespaceFile]]]
-):
-    scope_map: Mapping[Tuple[Tuple[str, ...], str], Type[NamespaceFile]] = {}
-    for pin in pins.values():
-        if isinstance(scopes := pin.key.scope, tuple):
-            scope_map[(scopes, pin.key.extension)] = pin.key
-        else:
-            for scope in scopes.values():
-                scope_map[(scope, pin.key.extension)] = pin.key
-
-    return scope_map
-
-
 class Namespace(
     MergeMixin,
     Container[Type[NamespaceFile], NamespaceContainer[NamespaceFile]],
@@ -459,7 +446,11 @@ class Namespace(
     def __init_subclass__(cls):
         pins = NamespacePin[NamespaceFile].collect_from(cls)
         cls.field_map = {pin.key: attr for attr, pin in pins.items()}
-        cls.scope_map = create_scope_map(pins)
+        cls.scope_map = {
+            (scope, pin.key.extension): pin.key
+            for pin in pins.values()
+            for scope in list_input_scopes(pin.key.scope)
+        }
 
     def __init__(self):
         super().__init__()
@@ -621,13 +612,9 @@ class Namespace(
             _update_with_none(extra_info, extend_namespace_extra)
 
         scope_map = dict(cls.scope_map)
-
         for file_type in extend_namespace:
-            if isinstance(file_type.scope, tuple):
-                scope_map[file_type.scope, file_type.extension] = file_type
-            else:
-                for scope in file_type.scope.values():
-                    scope_map[scope, file_type.extension] = file_type
+            for scope in list_input_scopes(file_type.scope):
+                scope_map[scope, file_type.extension] = file_type
 
         name = None
         namespace = None
@@ -1310,11 +1297,8 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
     ) -> Dict[Tuple[Tuple[str, ...], str], Type[NamespaceFile]]:
         scope_map = dict(self.namespace_type.scope_map)
         for file_type in self.extend_namespace:
-            if isinstance(file_type.scope, tuple):
-                scope_map[file_type.scope, file_type.extension] = file_type
-            else:
-                for scope in file_type.scope.values():
-                    scope_map[scope, file_type.extension] = file_type
+            for scope in list_input_scopes(file_type.scope):
+                scope_map[scope, file_type.extension] = file_type
 
         return scope_map
 
@@ -1585,6 +1569,10 @@ def create_group_map(
         for singular in list(group_map):
             group_map.setdefault(f"{singular}s", group_map[singular])
     return group_map
+
+
+def list_input_scopes(scope: NamespaceFileScope) -> Iterable[Tuple[str, ...]]:
+    return [scope] if isinstance(scope, tuple) else scope.values()
 
 
 def get_output_scope(scope: NamespaceFileScope, pack_format: int) -> Tuple[str, ...]:
