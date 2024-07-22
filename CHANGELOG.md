@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.108.1 (2024-07-22)
+
+### Fix
+
+* Match default vanilla release without patch ([`87189c4`](https://github.com/mcbeet/beet/commit/87189c44e8989f8288984a9c740af7eec29dc2be))
+
 ## v0.108.0 (2024-07-21)
 
 ### Feature
