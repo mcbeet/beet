@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.49.0 (2024-07-22)
+
+### Feature
+
+* Update beet and mecha ([`d55c37d`](https://github.com/mcbeet/bolt/commit/d55c37d6b1de4d997d2481f89c08d85f240695f4))
+
 ## v0.48.0 (2024-04-29)
 
 ### Feature
