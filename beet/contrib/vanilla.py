@@ -211,7 +211,14 @@ class ReleaseRegistry(Container[str, Release]):
         self.manifest = manifest
 
     def missing(self, key: str) -> Release:
-        pattern = re.compile("^" + r"\d+".join(map(re.escape, key.split("*"))) + "$")
+        pattern = re.compile(
+            "^"
+            "|".join(
+                r"\d+".join(map(re.escape, k.split("*")))
+                for k in {key, key.removesuffix(".*")}
+            )
+            + "$"
+        )
         for version in self.manifest.data["versions"]:
             if pattern.match(version["id"]):
                 info = JsonFile(source_path=self.cache.download(version["url"]))
