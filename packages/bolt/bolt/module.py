@@ -90,14 +90,20 @@ class SilentCompilationInterrupt(DiagnosticCollection):
 class Module(TextFile):
     """Class representing a bolt module."""
 
-    scope: ClassVar[NamespaceFileScope] = ("modules",)
+    scope: ClassVar[NamespaceFileScope] = {
+        0: ("modules",),
+        48: ("module",),
+    }
     extension: ClassVar[str] = ".bolt"
 
 
 class AssetModule(TextFile):
     """Class representing a bolt module in a resource pack."""
 
-    scope: ClassVar[NamespaceFileScope] = ("modules",)
+    scope: ClassVar[NamespaceFileScope] = {
+        0: ("modules",),
+        34: ("module",),
+    }
     extension: ClassVar[str] = ".bolt"
 
 
