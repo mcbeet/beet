@@ -23,8 +23,8 @@ include = ["bolt/py.typed"]
 
 [tool.poetry.dependencies]
 python = "^3.10"
-beet = ">=0.105.0"
-mecha = ">=0.94.0"
+beet = ">=0.108.0"
+mecha = ">=0.95.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.0.1"
@@ -32,7 +32,7 @@ black = "^24.2.0"
 isort = "^5.13.2"
 python-semantic-release = "^7.33.3"
 pytest-insta = "^0.3.0"
-lectern = ">=0.31.0"
+lectern = ">=0.34.0"
 
 [tool.poetry.plugins.beet]
 commands = "bolt.commands"

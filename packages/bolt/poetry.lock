@@ -14,14 +14,14 @@ files = [
 
 [[package]]
 name = "beet"
-version = "0.105.0"
+version = "0.108.0"
 description = "The Minecraft pack development kit"
 category = "main"
 optional = false
 python-versions = "<4.0,>=3.10"
 files = [
-    {file = "beet-0.105.0-py3-none-any.whl", hash = "sha256:7a0597568b9dc902d2ac7662ba464e8b925b9055037562687d7a3b8245ea7387"},
-    {file = "beet-0.105.0.tar.gz", hash = "sha256:928e3adcb8ea750af50f1b0d27a3476d4fb74310807c8544f2c966e450ad4cdc"},
+    {file = "beet-0.108.0-py3-none-any.whl", hash = "sha256:1ca37bd0d116d13681a099e1633c87b6d66d27f89cad4dbd6d8eb12030849de4"},
+    {file = "beet-0.108.0.tar.gz", hash = "sha256:ec4a444e45716328500174eaa5bf931946ec387e59172fa68e1e70682d4ff5c6"},
 ]
 
 [package.dependencies]
@@ -591,18 +591,18 @@ testing = ["pytest (>=6)", "pytest-black (>=0.3.7)", "pytest-checkdocs (>=2.4)",
 
 [[package]]
 name = "lectern"
-version = "0.31.0"
+version = "0.34.0"
 description = "Literate Minecraft data packs and resource packs."
 category = "dev"
 optional = false
-python-versions = ">=3.10,<4.0"
+python-versions = "<4.0,>=3.10"
 files = [
-    {file = "lectern-0.31.0-py3-none-any.whl", hash = "sha256:7cc669dab4dcb0eac0fd6afa317bfeddbf3203804e1e304ad0e17ec79d4ac388"},
-    {file = "lectern-0.31.0.tar.gz", hash = "sha256:5d2daf299883ad4bbe6f115d2585c0c1067bda599c6c21d9e17f7ac3ca22f354"},
+    {file = "lectern-0.34.0-py3-none-any.whl", hash = "sha256:e649d6c58c5e5ef56b2fe9e9acee1738e330d45ea0a7ddca3ec557f444f80f3a"},
+    {file = "lectern-0.34.0.tar.gz", hash = "sha256:33bef09e0d1625a56459e8badfba51e0d493ad822fa119a0b630539d8faa0f49"},
 ]
 
 [package.dependencies]
-beet = ">=0.100.0"
+beet = ">=0.108.0"
 click = ">=8.1.7,<9.0.0"
 markdown-it-py = ">=3.0.0,<4.0.0"
 
@@ -715,18 +715,18 @@ files = [
 
 [[package]]
 name = "mecha"
-version = "0.94.0"
+version = "0.95.0"
 description = "A powerful Minecraft command library"
 category = "main"
 optional = false
 python-versions = "<4.0,>=3.10"
 files = [
-    {file = "mecha-0.94.0-py3-none-any.whl", hash = "sha256:955f4d3aa0adc72b6b79517b6dab3e0d05eac07026a8eefaeba1cfd208584272"},
-    {file = "mecha-0.94.0.tar.gz", hash = "sha256:8da3adab7548798228852c1f8c88b5751bd537baef5eeb1b247526b9c3411f34"},
+    {file = "mecha-0.95.0-py3-none-any.whl", hash = "sha256:15e88c7c0bc534526d9576c8d36cc7e463a20b54bbc8768cf77a21cd5435099e"},
+    {file = "mecha-0.95.0.tar.gz", hash = "sha256:097f501c44743bb17651ceb9c85d57734c3717bca49ea792905a80d66f13a117"},
 ]
 
 [package.dependencies]
-beet = ">=0.105.0"
+beet = ">=0.108.0"
 tokenstream = ">=1.7.0,<2.0.0"
 
 [[package]]
@@ -1582,4 +1582,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "a8fe2ff5e17dda4c0dbfd0a7cb4a0234ea7790784b1f375fe78640ef0f93aa74"
+content-hash = "33d6073a4d6ccd8c3c97f8e63aeed7d0d32415bdbacfa21668b7ce501ac2c5b7"

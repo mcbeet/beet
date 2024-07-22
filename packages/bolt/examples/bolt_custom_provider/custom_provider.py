@@ -1,11 +1,11 @@
 from typing import ClassVar
 
-from beet import Context, TextFile
+from beet import Context, NamespaceFileScope, TextFile
 from mecha import FileTypeCompilationUnitProvider, Mecha
 
 
 class Custom(TextFile):
-    scope: ClassVar[tuple[str, ...]] = ("custom",)
+    scope: ClassVar[NamespaceFileScope] = ("custom",)
     extension: ClassVar[str] = ".bolt"
 
 

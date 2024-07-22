@@ -1,13 +1,13 @@
 from typing import ClassVar
 
-from beet import Context, TextFile
+from beet import Context, NamespaceFileScope, TextFile
 from mecha import Mecha
 
 from bolt import Runtime
 
 
 class Patcher(TextFile):
-    scope: ClassVar[tuple[str, ...]] = ("patchers",)
+    scope: ClassVar[NamespaceFileScope] = ("patchers",)
     extension: ClassVar[str] = ".bolt"
 
 

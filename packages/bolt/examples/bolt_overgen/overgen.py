@@ -1,7 +1,14 @@
 from dataclasses import dataclass
 from typing import Any, ClassVar, Iterable, List, Optional, Tuple, Union
 
-from beet import Context, DataPack, ResourcePack, TextFile, TextFileBase
+from beet import (
+    Context,
+    DataPack,
+    NamespaceFileScope,
+    ResourcePack,
+    TextFile,
+    TextFileBase,
+)
 from beet.core.utils import FormatsRangeDict, normalize_string
 from mecha import CompilationDatabase, CompilationUnit, Mecha
 
@@ -9,7 +16,7 @@ from bolt import Runtime
 
 
 class Overgen(TextFile):
-    scope: ClassVar[tuple[str, ...]] = ("overgen",)
+    scope: ClassVar[NamespaceFileScope] = ("overgen",)
     extension: ClassVar[str] = ".bolt"
 
 

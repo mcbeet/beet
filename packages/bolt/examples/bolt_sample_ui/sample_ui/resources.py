@@ -1,10 +1,10 @@
 from typing import ClassVar
 
-from beet import Context, TextFileBase
+from beet import Context, NamespaceFileScope, TextFileBase
 
 
 class UiScreen(TextFileBase[str]):
-    scope: ClassVar[tuple[str, ...]] = ("ui_screens",)
+    scope: ClassVar[NamespaceFileScope] = ("ui_screens",)
     extension: ClassVar[str] = ".xml"
 
 
