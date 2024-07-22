@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.49.1 (2024-07-22)
+
+### Fix
+
+* Allow singular module folder ([`8e7de60`](https://github.com/mcbeet/bolt/commit/8e7de601a355cd76af46873d6f8db0317f2ecacb))
+
 ## v0.49.0 (2024-07-22)
 
 ### Feature
