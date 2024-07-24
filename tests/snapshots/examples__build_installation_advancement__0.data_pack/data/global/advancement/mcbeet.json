@@ -3,8 +3,12 @@
     "title": "mcbeet",
     "description": "Organization behind the beet project",
     "icon": {
-      "item": "minecraft:player_head",
-      "nbt": "{'SkullOwner': 'mcbeet'}"
+      "id": "minecraft:player_head",
+      "components": {
+        "minecraft:profile": {
+          "name": "mcbeet"
+        }
+      }
     },
     "show_toast": false,
     "announce_to_chat": false
