@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.108.2 (2024-07-24)
+
+### Fix
+
+* Bad manifest version pattern ([`8e7c813`](https://github.com/mcbeet/beet/commit/8e7c8135c73c3247802d6e395105202540c2276c))
+
 ## v0.108.1 (2024-07-22)
 
 ### Fix
