@@ -3,8 +3,12 @@
     "title": "Example",
     "description": "An example project",
     "icon": {
-      "item": "minecraft:red_mushroom",
-      "nbt": "{Enchantments:[{}]}"
+      "id": "minecraft:red_mushroom",
+      "components": {
+        "enchantments": {
+          "protection": 1
+        }
+      }
     },
     "announce_to_chat": false,
     "show_toast": false
