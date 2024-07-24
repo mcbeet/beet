@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.108.3 (2024-07-24)
+
+### Fix
+
+* Update beet.contrib.installation_advancement to work in 1.20.5+ ([#445](https://github.com/mcbeet/beet/issues/445)) ([`afa3f46`](https://github.com/mcbeet/beet/commit/afa3f46206c71726411a46c90b3c86d4ded57132))
+
 ## v0.108.2 (2024-07-24)
 
 ### Fix
