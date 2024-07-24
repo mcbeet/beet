@@ -212,9 +212,8 @@ class ReleaseRegistry(Container[str, Release]):
 
     def missing(self, key: str) -> Release:
         pattern = re.compile(
-            "^"
             "|".join(
-                r"\d+".join(map(re.escape, k.split("*")))
+                "^" + r"\d+".join(map(re.escape, k.split("*")))
                 for k in {key, key.removesuffix(".*")}
             )
             + "$"
