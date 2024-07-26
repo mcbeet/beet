@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.95.2 (2024-07-26)
+
+### Fix
+
+* Schedule clear patch for 1.21 ([`79b9790`](https://github.com/mcbeet/mecha/commit/79b97906079b9b0897e4bf745bee186391426cb0))
+
 ## v0.95.1 (2024-07-26)
 
 ### Fix
