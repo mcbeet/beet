@@ -11,6 +11,7 @@ __all__ = [
     "NestedYamlContextProvider",
     "collect_json_string",
     "collect_nbt_string",
+    "YAML_STRING_PATTERN",
 ]
 
 
@@ -45,6 +46,9 @@ from mecha.utils import JsonQuoteHelper, QuoteHelper
 
 EntryType = TypeVar("EntryType")
 ValueType = TypeVar("ValueType")
+
+
+YAML_STRING_PATTERN = r'"(?:\\.|[^\\\n])*?"' "|" r"'(?:\\.|[^\\\n])*?'"
 
 
 def beet_default(ctx: Context):
@@ -247,7 +251,7 @@ class NestedYamlParser:
             stream.syntax(
                 colon=r":",
                 dash=r"\-",
-                key=r"[a-zA-Z0-9._+-]+",
+                key=rf"[a-zA-Z0-9._+-]+|{YAML_STRING_PATTERN}",
             ),
         ):
             if consume_line_continuation(stream):
@@ -255,9 +259,7 @@ class NestedYamlParser:
 
         with (
             stream.ignore("newline"),
-            stream.syntax(
-                string=r'"(?:\\.|[^\\\n])*?"' "|" r"'(?:\\.|[^\\\n])*?'",
-            ),
+            stream.syntax(string=YAML_STRING_PATTERN),
         ):
             if token := stream.get("string"):
                 return self.string_collector(
@@ -291,7 +293,7 @@ class NestedYamlParser:
             while True:
                 with stream.provide(line_indentation=key.location.colno - 1):
                     self.object_collector.emit(
-                        key=key.value,
+                        key=self.quote_helper.unquote_string(key),
                         value=self.parser(stream),
                         location=key.location,
                         end_location=key.end_location,

@@ -52,3 +52,13 @@ data merge storage demo:foo:
         -   type: "bar"
             bar: 99
     byte_array: [B; 1b, 1b, 0b, 1b]
+    item1:
+        id: player_head
+        count:1b
+        components:
+            "minecraft:profile": "herobrine"
+    item2:
+        id: player_head
+        count:1b
+        components:
+            'minecraft:profile': "herobrine"
