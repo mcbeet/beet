@@ -33,7 +33,7 @@ function demo:bar
 function demo:folder/wat
 function demo:bar
 schedule function demo:other 1s
-schedule clear ./other
+schedule clear demo:other
 ```
 
 `@function demo:other`
