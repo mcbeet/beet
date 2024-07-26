@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.95.1 (2024-07-26)
+
+### Fix
+
+* Handle quoted yaml object keys ([`dea0a91`](https://github.com/mcbeet/mecha/commit/dea0a914d485434e87c604d73ac3b5bf07c834da))
+
 ## v0.95.0 (2024-07-21)
 
 ### Feature
