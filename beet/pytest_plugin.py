@@ -24,7 +24,12 @@ else:
         extension = ".resource_pack"
 
         def load(self, path: Path) -> ResourcePack:
-            return ignore_name(ResourcePack(path=path))
+            return ignore_name(
+                ResourcePack(
+                    path=path,
+                    **self.load_params_spec.kwargs if self.load_params_spec else {},
+                )
+            )
 
         def dump(self, path: Path, value: ResourcePack):
             value.save(path=path, overwrite=True)
@@ -33,7 +38,12 @@ else:
         extension = ".data_pack"
 
         def load(self, path: Path) -> DataPack:
-            return ignore_name(DataPack(path=path))
+            return ignore_name(
+                DataPack(
+                    path=path,
+                    **self.load_params_spec.kwargs if self.load_params_spec else {},
+                )
+            )
 
         def dump(self, path: Path, value: DataPack):
             value.save(path=path, overwrite=True)
