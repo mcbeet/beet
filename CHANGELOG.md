@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.108.4 (2024-08-08)
+
+### Fix
+
+* Enable worldgen for data pack snapshots ([`699c4c3`](https://github.com/mcbeet/beet/commit/699c4c3b6909b883946c4456fd41f29398600bcf))
+
 ## v0.108.3 (2024-07-24)
 
 ### Fix
