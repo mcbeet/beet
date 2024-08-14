@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.108.5 (2024-08-14)
+
+### Fix
+
+* Update beet.contrib.livereload to work in 1.19+ ([#447](https://github.com/mcbeet/beet/issues/447)) ([`d37faf3`](https://github.com/mcbeet/beet/commit/d37faf3b2fdf2540c9a65f1766247fe68bdcee63))
+
 ## v0.108.4 (2024-08-08)
 
 ### Fix
