@@ -119,7 +119,7 @@ def livereload_server(connection: Connection[Tuple[Optional[str], Path], None]):
 
                 @log_watcher.tail(log_file_path)
                 def _(args: JsonDict):
-                    if LIVERELOAD_REGEX.match(args["message"]) and livereload_path:
+                    if LIVERELOAD_REGEX.search(args["message"]) and livereload_path:
                         remove_path(livereload_path)
 
 
@@ -138,7 +138,7 @@ class LogWatcher:
     def tail(self, path: FileSystemPath) -> Callable[[LogCallback], None]: ...
 
     @overload
-    def tail(self, path: FileSystemPath, callback: LogCallback): ...
+    def tail(self, path: FileSystemPath, callback: LogCallback) -> None: ...
 
     def tail(
         self,
