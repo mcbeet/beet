@@ -1,7 +1,7 @@
 data_pack:
   load: "src"
-  pack_format: 20
-  supported_formats: [18, 19, 20]
+  pack_format: 50
+  supported_formats: [50, 50]
   overlays:
     - formats:
         min_inclusive: 18

@@ -76,7 +76,7 @@ from beet.core.container import (
     SupportsMerge,
 )
 from beet.core.file import File, FileOrigin, JsonFile, PngFile
-from beet.core.utils import FileSystemPath, JsonDict, SupportedFormats, TextComponent
+from beet.core.utils import FileSystemPath, FormatsRangeDict, JsonDict, SupportedFormats, TextComponent
 
 from .utils import list_extensions, list_origin_folders
 
@@ -579,9 +579,21 @@ class Namespace(
             if extend and not issubclass(content_type, extend):
                 continue
 
-            scope = get_output_scope(
-                content_type.scope, self.pack.pack_format if self.pack else 0
-            )
+            # We grab the pack format from the pack's overlay parent if it exists
+            # Otherwise, grab it from the pack itself
+            pack_format = 0
+            if self.pack:
+                if self.pack.overlay_parent:
+                    if type(self.pack.overlay_parent.supported_formats) is int:
+                        pack_format = self.pack.overlay_parent.supported_formats
+                    elif type(self.pack.overlay_parent.supported_formats) is list[int]:
+                        pack_format = self.pack.overlay_parent.supported_formats[1]
+                    elif type(self.pack.overlay_parent.supported_formats) is FormatsRangeDict:
+                        pack_format = self.pack.overlay_parent.supported_formats["max_inclusive"]
+                else:
+                    pack_format = self.pack.pack_format
+            scope = get_output_scope(content_type.scope, pack_format)
+
             prefix = "/".join((self.directory, namespace) + scope)
             for name, item in container.items():
                 yield f"{overlay}{prefix}/{name}{content_type.extension}", item
