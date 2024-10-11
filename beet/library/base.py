@@ -583,17 +583,16 @@ class Namespace(
             # Otherwise, grab it from the pack itself
             pack_format = 0
             if self.pack:
+                pack_format = self.pack.pack_format
                 if self.pack.overlay_parent:
+                    pack_format = self.pack.pack_format
                     supported_formats = self.pack.supported_formats
-
                     if type(supported_formats) is int:
                         pack_format = supported_formats
                     elif type(supported_formats) is list[int]:
                         pack_format = supported_formats[1]
                     elif type(supported_formats) is FormatsRangeDict:
                         pack_format = supported_formats["max_inclusive"]
-                else:
-                    pack_format = self.pack.pack_format
             scope = get_output_scope(content_type.scope, pack_format)
 
             prefix = "/".join((self.directory, namespace) + scope)
