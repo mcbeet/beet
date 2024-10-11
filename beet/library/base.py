@@ -585,14 +585,14 @@ class Namespace(
             if self.pack:
                 pack_format = self.pack.pack_format
                 if self.pack.overlay_parent:
-                    pack_format = self.pack.pack_format
-                    supported_formats = self.pack.supported_formats
-                    if type(supported_formats) is int:
-                        pack_format = supported_formats
-                    elif type(supported_formats) is list[int]:
-                        pack_format = supported_formats[1]
-                    elif type(supported_formats) is FormatsRangeDict:
-                        pack_format = supported_formats["max_inclusive"]
+                    parent = self.pack.overlay_parent
+                    pack_format = parent.pack_format
+                    if type(parent.supported_formats) is int:
+                        pack_format = parent.supported_formats
+                    elif type(parent.supported_formats) is list[int]:
+                        pack_format = parent.supported_formats[1]
+                    elif type(parent.supported_formats) is FormatsRangeDict:
+                        pack_format = parent.supported_formats["max_inclusive"]
             scope = get_output_scope(content_type.scope, pack_format)
 
             prefix = "/".join((self.directory, namespace) + scope)
