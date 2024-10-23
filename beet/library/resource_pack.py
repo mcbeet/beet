@@ -62,6 +62,13 @@ class Model(JsonFile):
     extension: ClassVar[str] = ".json"
 
 
+class EquipmentModel(JsonFile):
+    """Class representing an equipment model."""
+
+    scope: ClassVar[NamespaceFileScope] = ("models", "equipment")
+    extension: ClassVar[str] = ".json"
+
+
 class Language(JsonFile):
     """Class representing a language file."""
 
@@ -99,6 +106,13 @@ class TrueTypeFont(BinaryFile):
 
     scope: ClassVar[NamespaceFileScope] = ("font",)
     extension: ClassVar[str] = ".ttf"
+
+
+class PostEffect(JsonFile):
+    """Class representing a post effect pipeline."""
+
+    scope: ClassVar[NamespaceFileScope] = ("post_effect",)
+    extension: ClassVar[str] = ".json"
 
 
 class ShaderPost(JsonFile):
@@ -298,10 +312,12 @@ class ResourcePackNamespace(Namespace):
     # fmt: off
     blockstates:      NamespacePin[Blockstate]     = NamespacePin(Blockstate)
     models:           NamespacePin[Model]          = NamespacePin(Model)
+    equipment_models: NamespacePin[EquipmentModel] = NamespacePin(EquipmentModel)
     languages:        NamespacePin[Language]       = NamespacePin(Language)
     fonts:            NamespacePin[Font]           = NamespacePin(Font)
     glyph_sizes:      NamespacePin[GlyphSizes]     = NamespacePin(GlyphSizes)
     true_type_fonts:  NamespacePin[TrueTypeFont]   = NamespacePin(TrueTypeFont)
+    post_effects:     NamespacePin[PostEffect]     = NamespacePin(PostEffect)
     shader_posts:     NamespacePin[ShaderPost]     = NamespacePin(ShaderPost)
     shaders:          NamespacePin[Shader]         = NamespacePin(Shader)
     fragment_shaders: NamespacePin[FragmentShader] = NamespacePin(FragmentShader)
@@ -350,10 +366,12 @@ class ResourcePack(Pack[ResourcePackNamespace]):
     # fmt: off
     blockstates:      NamespaceProxyDescriptor[Blockstate]     = NamespaceProxyDescriptor(Blockstate)
     models:           NamespaceProxyDescriptor[Model]          = NamespaceProxyDescriptor(Model)
+    equipment_Models: NamespaceProxyDescriptor[EquipmentModel] = NamespaceProxyDescriptor(EquipmentModel)
     languages:        NamespaceProxyDescriptor[Language]       = NamespaceProxyDescriptor(Language)
     fonts:            NamespaceProxyDescriptor[Font]           = NamespaceProxyDescriptor(Font)
     glyph_sizes:      NamespaceProxyDescriptor[GlyphSizes]     = NamespaceProxyDescriptor(GlyphSizes)
     true_type_fonts:  NamespaceProxyDescriptor[TrueTypeFont]   = NamespaceProxyDescriptor(TrueTypeFont)
+    post_effects:     NamespaceProxyDescriptor[PostEffect]     = NamespaceProxyDescriptor(PostEffect)
     shader_posts:     NamespaceProxyDescriptor[ShaderPost]     = NamespaceProxyDescriptor(ShaderPost)
     shaders:          NamespaceProxyDescriptor[Shader]         = NamespaceProxyDescriptor(Shader)
     fragment_shaders: NamespaceProxyDescriptor[FragmentShader] = NamespaceProxyDescriptor(FragmentShader)
