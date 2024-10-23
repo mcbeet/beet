@@ -1,6 +1,6 @@
 {
   "pack": {
-    "pack_format": 34,
+    "pack_format": 42,
     "description": "The description of my project\nAuthor: Example\nVersion: 1.7.4"
   }
 }
