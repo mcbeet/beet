@@ -1,0 +1,2 @@
+{'pack': {'pack_format': 6, 'description': 'a data pack', 'supported_formats': [0, 6]}}
+{'pack': {'pack_format': 10, 'description': 'a resource pack', 'supported_formats': {'min_inclusive': 10, 'max_inclusive': 20}}}

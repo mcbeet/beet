@@ -1,0 +1,9 @@
+{
+  "author": "somebody",
+  "version": "1.2.3",
+  "name": "BEET",
+  "id": "beet",
+  "description": "a beet project",
+  "minecraft": "1.19",
+  "pipeline": ["project_info"]
+}
