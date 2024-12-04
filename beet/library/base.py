@@ -1250,12 +1250,12 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
             proxy = self[file_type]
             for path in proxy.match(*match or ["*"]):
                 yield path, proxy[path]
-            if self.overlay_parent is None:
-                for overlay in self.overlays.values():
-                    if extend:
-                        yield from overlay.all(*match, extend=extend)
-                    else:
-                        yield from overlay.all(*match)
+        if self.overlay_parent is None:
+            for overlay in self.overlays.values():
+                if extend:
+                    yield from overlay.all(*match, extend=extend)
+                else:
+                    yield from overlay.all(*match)
 
     @property
     def supported_formats(self) -> Optional[SupportedFormats]:
