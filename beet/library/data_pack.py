@@ -134,6 +134,20 @@ class PaintingVariant(JsonFile):
     extension: ClassVar[str] = ".json"
 
 
+class Instrument(JsonFile):
+    """Class representing an instrument."""
+
+    scope: ClassVar[NamespaceFileScope] = ("instrument",)
+    extension: ClassVar[str] = ".json"
+
+
+class TrialSpawner(JsonFile):
+    """Class representing a trial spawner config."""
+
+    scope: ClassVar[NamespaceFileScope] = ("trial_spawner",)
+    extension: ClassVar[str] = ".json"
+
+
 @dataclass(eq=False, repr=False)
 class Function(TextFileBase[List[str]]):
     """Class representing a function."""
@@ -471,6 +485,8 @@ class DataPackNamespace(Namespace):
     enchantment_providers:              NamespacePin[EnchantmentProvider]       = NamespacePin(EnchantmentProvider)
     jukebox_songs:                      NamespacePin[JukeboxSong]               = NamespacePin(JukeboxSong)
     painting_variants:                  NamespacePin[PaintingVariant]           = NamespacePin(PaintingVariant)
+    instruments:                        NamespacePin[Instrument]                = NamespacePin(Instrument)
+    trial_spawners:                     NamespacePin[TrialSpawner]              = NamespacePin(TrialSpawner)
     block_tags:                         NamespacePin[BlockTag]                  = NamespacePin(BlockTag)
     entity_type_tags:                   NamespacePin[EntityTypeTag]             = NamespacePin(EntityTypeTag)
     fluid_tags:                         NamespacePin[FluidTag]                  = NamespacePin(FluidTag)
@@ -525,6 +541,8 @@ class DataPack(Pack[DataPackNamespace]):
     enchantment_providers:              NamespaceProxyDescriptor[EnchantmentProvider]       = NamespaceProxyDescriptor(EnchantmentProvider)
     jukebox_songs:                      NamespaceProxyDescriptor[JukeboxSong]               = NamespaceProxyDescriptor(JukeboxSong)
     painting_variants:                  NamespaceProxyDescriptor[PaintingVariant]           = NamespaceProxyDescriptor(PaintingVariant)
+    instruments:                        NamespaceProxyDescriptor[Instrument]                = NamespaceProxyDescriptor(Instrument)
+    trial_spawners:                     NamespaceProxyDescriptor[TrialSpawner]              = NamespaceProxyDescriptor(TrialSpawner)
     block_tags:                         NamespaceProxyDescriptor[BlockTag]                  = NamespaceProxyDescriptor(BlockTag)
     entity_type_tags:                   NamespaceProxyDescriptor[EntityTypeTag]             = NamespaceProxyDescriptor(EntityTypeTag)
     fluid_tags:                         NamespaceProxyDescriptor[FluidTag]                  = NamespaceProxyDescriptor(FluidTag)
