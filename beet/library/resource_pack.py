@@ -62,10 +62,13 @@ class Model(JsonFile):
     extension: ClassVar[str] = ".json"
 
 
-class EquipmentModel(JsonFile):
-    """Class representing an equipment model."""
+class Equipment(JsonFile):
+    """Class representing an equipment."""
 
-    scope: ClassVar[NamespaceFileScope] = ("models", "equipment")
+    scope: ClassVar[NamespaceFileScope] = {
+        0: ("models", "equipment"),
+        59: ("equipment",)
+    }
     extension: ClassVar[str] = ".json"
 
 
@@ -312,7 +315,7 @@ class ResourcePackNamespace(Namespace):
     # fmt: off
     blockstates:      NamespacePin[Blockstate]     = NamespacePin(Blockstate)
     models:           NamespacePin[Model]          = NamespacePin(Model)
-    equipment_models: NamespacePin[EquipmentModel] = NamespacePin(EquipmentModel)
+    equipments:       NamespacePin[Equipment] = NamespacePin(Equipment)
     languages:        NamespacePin[Language]       = NamespacePin(Language)
     fonts:            NamespacePin[Font]           = NamespacePin(Font)
     glyph_sizes:      NamespacePin[GlyphSizes]     = NamespacePin(GlyphSizes)
@@ -366,7 +369,7 @@ class ResourcePack(Pack[ResourcePackNamespace]):
     # fmt: off
     blockstates:      NamespaceProxyDescriptor[Blockstate]     = NamespaceProxyDescriptor(Blockstate)
     models:           NamespaceProxyDescriptor[Model]          = NamespaceProxyDescriptor(Model)
-    equipment_Models: NamespaceProxyDescriptor[EquipmentModel] = NamespaceProxyDescriptor(EquipmentModel)
+    equipments:       NamespaceProxyDescriptor[Equipment]      = NamespaceProxyDescriptor(Equipment)
     languages:        NamespaceProxyDescriptor[Language]       = NamespaceProxyDescriptor(Language)
     fonts:            NamespaceProxyDescriptor[Font]           = NamespaceProxyDescriptor(Font)
     glyph_sizes:      NamespaceProxyDescriptor[GlyphSizes]     = NamespaceProxyDescriptor(GlyphSizes)
