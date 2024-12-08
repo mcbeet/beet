@@ -67,7 +67,7 @@ class Equipment(JsonFile):
 
     scope: ClassVar[NamespaceFileScope] = {
         0: ("models", "equipment"),
-        59: ("equipment",)
+        59: ("equipment",),
     }
     extension: ClassVar[str] = ".json"
 
