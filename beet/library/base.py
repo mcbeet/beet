@@ -585,20 +585,19 @@ class Namespace(
             if extend and not issubclass(content_type, extend):
                 continue
 
-            # We grab the pack format from the pack's overlay parent if it exists
-            # Otherwise, grab it from the pack itself
+            # Use the pack format from the pack's supported_formats.
+            # Otherwise, use the pack_format itself
             pack_format = 0
             if self.pack:
-                pack_format = self.pack.pack_format
-                if self.pack.overlay_parent:
+                supported_formats = self.pack.supported_formats
+                if type(supported_formats) is int:
+                    pack_format = supported_formats
+                elif type(supported_formats) is list[int]:
+                    pack_format = supported_formats[1]
+                elif type(supported_formats) is FormatsRangeDict:
+                    pack_format = supported_formats["max_inclusive"]
+                else:
                     pack_format = self.pack.pack_format
-                    supported_formats = self.pack.supported_formats
-                    if type(supported_formats) is int:
-                        pack_format = supported_formats
-                    elif type(supported_formats) is list[int]:
-                        pack_format = supported_formats[1]
-                    elif type(supported_formats) is FormatsRangeDict:
-                        pack_format = supported_formats["max_inclusive"]
             scope = get_output_scope(content_type.scope, pack_format)
 
             prefix = "/".join((self.directory, namespace) + scope)
