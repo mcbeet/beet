@@ -76,7 +76,13 @@ from beet.core.container import (
     SupportsMerge,
 )
 from beet.core.file import File, FileOrigin, JsonFile, PngFile
-from beet.core.utils import FileSystemPath, FormatsRangeDict, JsonDict, SupportedFormats, TextComponent
+from beet.core.utils import (
+    FileSystemPath,
+    FormatsRangeDict,
+    JsonDict,
+    SupportedFormats,
+    TextComponent,
+)
 
 from .utils import list_extensions, list_origin_folders
 
