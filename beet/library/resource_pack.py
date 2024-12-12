@@ -62,6 +62,16 @@ class Model(JsonFile):
     extension: ClassVar[str] = ".json"
 
 
+class Equipment(JsonFile):
+    """Class representing an equipment."""
+
+    scope: ClassVar[NamespaceFileScope] = {
+        0: ("models", "equipment"),
+        59: ("equipment",),
+    }
+    extension: ClassVar[str] = ".json"
+
+
 class Language(JsonFile):
     """Class representing a language file."""
 
@@ -99,6 +109,13 @@ class TrueTypeFont(BinaryFile):
 
     scope: ClassVar[NamespaceFileScope] = ("font",)
     extension: ClassVar[str] = ".ttf"
+
+
+class PostEffect(JsonFile):
+    """Class representing a post effect pipeline."""
+
+    scope: ClassVar[NamespaceFileScope] = ("post_effect",)
+    extension: ClassVar[str] = ".json"
 
 
 class ShaderPost(JsonFile):
@@ -298,10 +315,12 @@ class ResourcePackNamespace(Namespace):
     # fmt: off
     blockstates:      NamespacePin[Blockstate]     = NamespacePin(Blockstate)
     models:           NamespacePin[Model]          = NamespacePin(Model)
+    equipments:       NamespacePin[Equipment] = NamespacePin(Equipment)
     languages:        NamespacePin[Language]       = NamespacePin(Language)
     fonts:            NamespacePin[Font]           = NamespacePin(Font)
     glyph_sizes:      NamespacePin[GlyphSizes]     = NamespacePin(GlyphSizes)
     true_type_fonts:  NamespacePin[TrueTypeFont]   = NamespacePin(TrueTypeFont)
+    post_effects:     NamespacePin[PostEffect]     = NamespacePin(PostEffect)
     shader_posts:     NamespacePin[ShaderPost]     = NamespacePin(ShaderPost)
     shaders:          NamespacePin[Shader]         = NamespacePin(Shader)
     fragment_shaders: NamespacePin[FragmentShader] = NamespacePin(FragmentShader)
@@ -341,7 +360,7 @@ class ResourcePack(Pack[ResourcePackNamespace]):
         (1, 18): 8,
         (1, 19): 13,
         (1, 20): 32,
-        (1, 21): 34,
+        (1, 21): 46,
     }
     latest_pack_format = pack_format_registry[split_version(LATEST_MINECRAFT_VERSION)]
 
@@ -350,10 +369,12 @@ class ResourcePack(Pack[ResourcePackNamespace]):
     # fmt: off
     blockstates:      NamespaceProxyDescriptor[Blockstate]     = NamespaceProxyDescriptor(Blockstate)
     models:           NamespaceProxyDescriptor[Model]          = NamespaceProxyDescriptor(Model)
+    equipments:       NamespaceProxyDescriptor[Equipment]      = NamespaceProxyDescriptor(Equipment)
     languages:        NamespaceProxyDescriptor[Language]       = NamespaceProxyDescriptor(Language)
     fonts:            NamespaceProxyDescriptor[Font]           = NamespaceProxyDescriptor(Font)
     glyph_sizes:      NamespaceProxyDescriptor[GlyphSizes]     = NamespaceProxyDescriptor(GlyphSizes)
     true_type_fonts:  NamespaceProxyDescriptor[TrueTypeFont]   = NamespaceProxyDescriptor(TrueTypeFont)
+    post_effects:     NamespaceProxyDescriptor[PostEffect]     = NamespaceProxyDescriptor(PostEffect)
     shader_posts:     NamespaceProxyDescriptor[ShaderPost]     = NamespaceProxyDescriptor(ShaderPost)
     shaders:          NamespaceProxyDescriptor[Shader]         = NamespaceProxyDescriptor(Shader)
     fragment_shaders: NamespaceProxyDescriptor[FragmentShader] = NamespaceProxyDescriptor(FragmentShader)
