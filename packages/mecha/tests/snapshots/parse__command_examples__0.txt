@@ -2930,7 +2930,7 @@
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=3022, lineno=64, colno=1)
       end_location: SourceLocation(pos=3051, lineno=64, colno=30)
-      identifier: 'experience:query:targets:levels'
+      identifier: 'experience:query:target:levels'
       arguments:
         <class 'mecha.ast.AstPlayerName'>
           location: SourceLocation(pos=3039, lineno=64, colno=18)
