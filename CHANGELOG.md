@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.109.0 (2024-12-12)
+
+### Feature
+
+* Add new 1.21.2+ folders and bump pack formats ([#449](https://github.com/mcbeet/beet/issues/449)) ([`9ba853e`](https://github.com/mcbeet/beet/commit/9ba853e6a47d476dda54cd1d514e0293000d30f7))
+
 ## v0.108.5 (2024-08-14)
 
 ### Fix
