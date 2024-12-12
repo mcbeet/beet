@@ -35,6 +35,8 @@ __all__ = [
     "InstrumentTag",
     "PaintingVariantTag",
     "PointOfInterestTypeTag",
+    "Instrument",
+    "TrialSpawner",
 ]
 
 
