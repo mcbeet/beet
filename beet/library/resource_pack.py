@@ -19,6 +19,9 @@ __all__ = [
     "Sound",
     "SoundConfig",
     "Particle",
+    "ItemModel",
+    "PostEffect",
+    "Equipment",
 ]
 
 
@@ -302,6 +305,12 @@ class Atlas(JsonFile):
     def default(cls) -> JsonDict:
         return {"sources": []}
 
+class ItemModel(JsonFile):
+    """Class representing a texture mcmeta."""
+
+    scope: ClassVar[NamespaceFileScope] = ("items",)
+    extension: ClassVar[str] = ".json"
+
 
 class ResourcePackNamespace(Namespace):
     """Class representing a resource pack namespace."""
@@ -315,7 +324,7 @@ class ResourcePackNamespace(Namespace):
     # fmt: off
     blockstates:      NamespacePin[Blockstate]     = NamespacePin(Blockstate)
     models:           NamespacePin[Model]          = NamespacePin(Model)
-    equipments:       NamespacePin[Equipment] = NamespacePin(Equipment)
+    equipments:       NamespacePin[Equipment]      = NamespacePin(Equipment)
     languages:        NamespacePin[Language]       = NamespacePin(Language)
     fonts:            NamespacePin[Font]           = NamespacePin(Font)
     glyph_sizes:      NamespacePin[GlyphSizes]     = NamespacePin(GlyphSizes)
@@ -332,6 +341,7 @@ class ResourcePackNamespace(Namespace):
     sounds:           NamespacePin[Sound]          = NamespacePin(Sound)
     particles:        NamespacePin[Particle]       = NamespacePin(Particle)
     atlases:          NamespacePin[Atlas]          = NamespacePin(Atlas)
+    item_models:      NamespacePin[ItemModel]      = NamespacePin(ItemModel)
     # fmt: on
 
     @classmethod
@@ -386,4 +396,5 @@ class ResourcePack(Pack[ResourcePackNamespace]):
     sounds:           NamespaceProxyDescriptor[Sound]          = NamespaceProxyDescriptor(Sound)
     particles:        NamespaceProxyDescriptor[Particle]       = NamespaceProxyDescriptor(Particle)
     atlases:          NamespaceProxyDescriptor[Atlas]          = NamespaceProxyDescriptor(Atlas)
+    item_models:      NamespaceProxyDescriptor[ItemModel]      = NamespaceProxyDescriptor(ItemModel)
     # fmt: on
