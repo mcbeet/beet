@@ -307,7 +307,7 @@ class Atlas(JsonFile):
 
 
 class ItemModel(JsonFile):
-    """Class representing a texture mcmeta."""
+    """Class representing an item model."""
 
     scope: ClassVar[NamespaceFileScope] = ("items",)
     extension: ClassVar[str] = ".json"
