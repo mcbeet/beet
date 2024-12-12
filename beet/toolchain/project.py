@@ -274,6 +274,26 @@ class ProjectBuilder:
                 whitelist=self.config.whitelist,
             )
 
+            # populate ctx.pack with config info
+            if self.config.data_pack.pack_format:
+                ctx.data.pack_format = self.config.data_pack.pack_format
+            if self.config.data_pack.name:
+                ctx.data.name = self.config.data_pack.name
+            if self.config.data_pack.description:
+                ctx.data.description = self.config.data_pack.description
+            if self.config.data_pack.supported_formats:
+                ctx.data.supported_formats = self.config.data_pack.supported_formats
+            if self.config.resource_pack.pack_format:
+                ctx.assets.pack_format = self.config.resource_pack.pack_format
+            if self.config.resource_pack.name:
+                ctx.assets.name = self.config.resource_pack.name
+            if self.config.resource_pack.description:
+                ctx.assets.description = self.config.resource_pack.description
+            if self.config.resource_pack.supported_formats:
+                ctx.assets.supported_formats = (
+                    self.config.resource_pack.supported_formats
+                )
+
             plugins: List[PluginSpec] = [self.bootstrap]
             plugins.extend(
                 (
