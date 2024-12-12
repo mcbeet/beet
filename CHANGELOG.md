@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.109.1 (2024-12-12)
+
+### Fix
+
+* Add items directory + __all__ to be importable ([#456](https://github.com/mcbeet/beet/issues/456)) ([`a834328`](https://github.com/mcbeet/beet/commit/a834328deda59cdd77c843fb1dc5a346ff969561))
+
 ## v0.109.0 (2024-12-12)
 
 ### Feature
