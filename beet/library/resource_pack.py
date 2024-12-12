@@ -305,6 +305,7 @@ class Atlas(JsonFile):
     def default(cls) -> JsonDict:
         return {"sources": []}
 
+
 class ItemModel(JsonFile):
     """Class representing a texture mcmeta."""
 
