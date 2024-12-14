@@ -18,11 +18,14 @@ __all__ = [
     "WorldgenTemplatePool",
     "WorldgenWorldPreset",
     "WorldgenFlatLevelGeneratorPreset",
+    "WorldgenMultiNoiseBiomeSourceParameterList",
     "WorldgenBiomeTag",
     "WorldgenStructureSetTag",
     "WorldgenStructureTag",
     "WorldgenConfiguredCarverTag",
     "WorldgenPlacedFeatureTag",
+    "WorldgenFlatLevelGeneratorPresetTag",
+    "WorldgenWorldPresetTag",
 ]
 
 
