@@ -163,6 +163,13 @@ class Text(TextFile):
     extension: ClassVar[str] = ".txt"
 
 
+class TextJson(JsonFile):
+    """Class representing a json file in the texts folder (only used for credits.json)."""
+
+    scope: ClassVar[NamespaceFileScope] = ("texts",)
+    extension: ClassVar[str] = ".json"
+
+
 class TextureMcmeta(JsonFile):
     """Class representing a texture mcmeta."""
 
@@ -337,6 +344,7 @@ class ResourcePackNamespace(Namespace):
     vertex_shaders:   NamespacePin[VertexShader]   = NamespacePin(VertexShader)
     glsl_shaders:     NamespacePin[GlslShader]     = NamespacePin(GlslShader)
     texts:            NamespacePin[Text]           = NamespacePin(Text)
+    texts_json:       NamespacePin[TextJson]       = NamespacePin(TextJson)
     textures_mcmeta:  NamespacePin[TextureMcmeta]  = NamespacePin(TextureMcmeta)
     textures:         NamespacePin[Texture]        = NamespacePin(Texture)
     sounds:           NamespacePin[Sound]          = NamespacePin(Sound)
@@ -392,6 +400,7 @@ class ResourcePack(Pack[ResourcePackNamespace]):
     vertex_shaders:   NamespaceProxyDescriptor[VertexShader]   = NamespaceProxyDescriptor(VertexShader)
     glsl_shaders:     NamespaceProxyDescriptor[GlslShader]     = NamespaceProxyDescriptor(GlslShader)
     texts:            NamespaceProxyDescriptor[Text]           = NamespaceProxyDescriptor(Text)
+    texts_json:       NamespaceProxyDescriptor[TextJson]       = NamespaceProxyDescriptor(TextJson)
     textures_mcmeta:  NamespaceProxyDescriptor[TextureMcmeta]  = NamespaceProxyDescriptor(TextureMcmeta)
     textures:         NamespaceProxyDescriptor[Texture]        = NamespaceProxyDescriptor(Texture)
     sounds:           NamespaceProxyDescriptor[Sound]          = NamespaceProxyDescriptor(Sound)
