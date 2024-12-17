@@ -14,6 +14,8 @@ __all__ = [
     "JsonFile",
     "YamlFileBase",
     "YamlFile",
+    "TomlFileBase",
+    "TomlFile",
     "PngFile",
     "SerializationError",
     "DeserializationError",
@@ -40,6 +42,7 @@ from typing import (
 )
 from zipfile import ZipFile
 
+import toml
 import yaml
 from pydantic.v1 import BaseModel, ValidationError
 
@@ -662,6 +665,28 @@ class YamlFileBase(DataModelBase[ValueType]):
 @dataclass(eq=False, repr=False)
 class YamlFile(YamlFileBase[JsonDict]):
     """Class representing a yaml file."""
+
+    data: ClassVar[FileDeserialize[JsonDict]] = FileDeserialize()
+
+    @classmethod
+    def default(cls) -> JsonDict:
+        return {}
+
+
+class TomlFileBase(DataModelBase[ValueType]):
+    """Base class for toml files."""
+
+    def __post_init__(self):
+        super().__post_init__()
+        if not self.encoder:  # type: ignore
+            self.encoder = toml.dumps
+        if not self.decoder:  # type: ignore
+            self.decoder = toml.loads
+
+
+@dataclass(eq=False, repr=False)
+class TomlFile(TomlFileBase[JsonDict]):
+    """Class representing a toml file."""
 
     data: ClassVar[FileDeserialize[JsonDict]] = FileDeserialize()
 
