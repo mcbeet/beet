@@ -10,7 +10,7 @@ class ModExportOptions(PluginOptions):
     neoforge: bool = True
     mcforge: bool = False
 
-    # Human readable name of the datapack
+    # Filename of the resulting jar, without extension
     name: str | None = None
     # License of the datapack, or list of licenses. Recommended to use SPDX Licence identifiers, see https://spdx.org/licenses/
     license: str | List[str] | None = None
