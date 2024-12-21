@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.109.2 (2024-12-21)
+
+### Fix
+
+* Pack_format for equipment is wrong ([#459](https://github.com/mcbeet/beet/issues/459)) ([`dc44f01`](https://github.com/mcbeet/beet/commit/dc44f01855b0be257b4dd6d0b31c7a8cf76051ae))
+
 ## v0.109.1 (2024-12-12)
 
 ### Fix
