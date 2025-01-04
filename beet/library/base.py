@@ -1573,7 +1573,9 @@ def list_input_scopes(scope: NamespaceFileScope) -> Iterable[Tuple[str, ...]]:
     return [scope] if isinstance(scope, tuple) else scope.values()
 
 
-def get_output_scope(scope: NamespaceFileScope, pack: Optional[int | Pack[Any]]) -> Tuple[str, ...]:
+def get_output_scope(
+    scope: NamespaceFileScope, pack: Optional[int | Pack[Any]]
+) -> Tuple[str, ...]:
     if isinstance(scope, tuple):
         return scope
 
