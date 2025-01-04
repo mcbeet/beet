@@ -78,7 +78,6 @@ from beet.core.container import (
 from beet.core.file import File, FileOrigin, JsonFile, PngFile
 from beet.core.utils import (
     FileSystemPath,
-    FormatsRangeDict,
     JsonDict,
     SupportedFormats,
     TextComponent,
@@ -590,11 +589,11 @@ class Namespace(
             pack_format = 0
             if self.pack:
                 supported_formats = self.pack.supported_formats
-                if type(supported_formats) is int:
+                if isinstance(supported_formats, int):
                     pack_format = supported_formats
-                elif type(supported_formats) is list[int]:
+                elif isinstance(supported_formats, list):
                     pack_format = supported_formats[1]
-                elif type(supported_formats) is FormatsRangeDict:
+                elif isinstance(supported_formats, dict):
                     pack_format = supported_formats["max_inclusive"]
                 else:
                     pack_format = self.pack.pack_format
