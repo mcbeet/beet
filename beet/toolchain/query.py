@@ -229,7 +229,7 @@ class PackMatchOption(BaseModel):
 
                     escaped = GitWildMatchPattern.escape(path)
                     if path == escaped:
-                        scope = get_output_scope(file_type.scope, pack.pack_format)
+                        scope = get_output_scope(file_type.scope, pack)
                         prefix = "/".join([directory, namespace, *scope])
                         base_paths.add(f"{overlay}{prefix}/{path}{file_type.extension}")
                         continue
@@ -240,7 +240,7 @@ class PackMatchOption(BaseModel):
                             break
                         common.append(part)
 
-                    scope = get_output_scope(file_type.scope, pack.pack_format)
+                    scope = get_output_scope(file_type.scope, pack)
                     prefix = "/".join([directory, namespace, *scope, *common])
                     base_paths.add(f"{overlay}{prefix}")
 

@@ -584,20 +584,7 @@ class Namespace(
             if extend and not issubclass(content_type, extend):
                 continue
 
-            # Use the pack format from the pack's supported_formats.
-            # Otherwise, use the pack_format itself
-            pack_format = 0
-            if self.pack:
-                supported_formats = self.pack.supported_formats
-                if isinstance(supported_formats, int):
-                    pack_format = supported_formats
-                elif isinstance(supported_formats, list):
-                    pack_format = supported_formats[1]
-                elif isinstance(supported_formats, dict):
-                    pack_format = supported_formats["max_inclusive"]
-                else:
-                    pack_format = self.pack.pack_format
-            scope = get_output_scope(content_type.scope, pack_format)
+            scope = get_output_scope(content_type.scope, self.pack)
 
             prefix = "/".join((self.directory, namespace) + scope)
             for name, item in container.items():
@@ -1592,9 +1579,25 @@ def list_input_scopes(scope: NamespaceFileScope) -> Iterable[Tuple[str, ...]]:
     return [scope] if isinstance(scope, tuple) else scope.values()
 
 
-def get_output_scope(scope: NamespaceFileScope, pack_format: int) -> Tuple[str, ...]:
+def get_output_scope(scope: NamespaceFileScope, pack: Optional[int | Pack[Any]]) -> Tuple[str, ...]:
     if isinstance(scope, tuple):
         return scope
+    # Use the pack format from the pack's supported_formats.
+    # Otherwise, use the pack_format itself
+    if pack is None:
+        # Fall back to the most recent scope
+        pack_format = 9999
+    elif isinstance(pack, int):
+        pack_format = pack
+    else:
+        if isinstance(pack.supported_formats, int):
+            pack_format = pack.supported_formats
+        elif isinstance(pack.supported_formats, list):
+            pack_format = pack.supported_formats[1]
+        elif isinstance(pack.supported_formats, dict):
+            pack_format = pack.supported_formats["max_inclusive"]
+        else:
+            pack_format = pack.pack_format
     result: Tuple[str, ...] | None = None
     result_format: int | None = None
     for key, value in scope.items():
