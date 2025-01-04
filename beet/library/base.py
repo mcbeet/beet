@@ -76,12 +76,7 @@ from beet.core.container import (
     SupportsMerge,
 )
 from beet.core.file import File, FileOrigin, JsonFile, PngFile
-from beet.core.utils import (
-    FileSystemPath,
-    JsonDict,
-    SupportedFormats,
-    TextComponent,
-)
+from beet.core.utils import FileSystemPath, JsonDict, SupportedFormats, TextComponent
 
 from .utils import list_extensions, list_origin_folders
 
@@ -585,7 +580,6 @@ class Namespace(
                 continue
 
             scope = get_output_scope(content_type.scope, self.pack)
-
             prefix = "/".join((self.directory, namespace) + scope)
             for name, item in container.items():
                 yield f"{overlay}{prefix}/{name}{content_type.extension}", item
@@ -1582,14 +1576,15 @@ def list_input_scopes(scope: NamespaceFileScope) -> Iterable[Tuple[str, ...]]:
 def get_output_scope(scope: NamespaceFileScope, pack: Optional[int | Pack[Any]]) -> Tuple[str, ...]:
     if isinstance(scope, tuple):
         return scope
-    # Use the pack format from the pack's supported_formats.
-    # Otherwise, use the pack_format itself
+
     if pack is None:
         # Fall back to the most recent scope
         pack_format = 9999
     elif isinstance(pack, int):
         pack_format = pack
     else:
+        # Use the pack format from the pack's supported_formats.
+        # Otherwise, use the pack_format itself
         if isinstance(pack.supported_formats, int):
             pack_format = pack.supported_formats
         elif isinstance(pack.supported_formats, list):
