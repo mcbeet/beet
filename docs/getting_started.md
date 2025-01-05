@@ -8,7 +8,7 @@ pip install beet
 ```
 
 ## Creating a project
-Beet projects start with a configuration file, like `beet.json`, in the root of your project.
+Beet projects start with a configuration file, `beet.json`, in the root of your project.
 
 ```{tab} beet.json
 ```json
@@ -31,7 +31,21 @@ This beet config describes a basic data pack which has a name, description, wher
 say hello beet
 ```
 
+## Building the pack
 Now, navigating back to the root directory, you can invoke the build process and your pack will build, check it out in the output directory!
 ```bash
 beet build
 ```
+
+Alternatively, beet can watch the source files and automatically build the pack when it detects changes:
+```bash
+beet watch
+```
+
+## Linking to a world
+It is possible to automatically link the output pack to a world in your saves folder.
+```bash
+beet build --link "My World"
+```
+
+This will automatically look for the minecraft folder. If you are using a third party launcher, you can override this with the `MINECRAFT_PATH` environment variable.
