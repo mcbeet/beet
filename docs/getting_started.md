@@ -8,7 +8,7 @@ pip install beet
 ```
 
 ## Creating a project
-Beet projects start with a configuration file, like `beet.json`, in the root of your project.
+Beet projects start with a configuration file, like `beet.json`, in the root of your project. You can choose in what format to write your beet config:
 
 ```{tab} beet.json
 ```json
@@ -17,7 +17,7 @@ Beet projects start with a configuration file, like `beet.json`, in the root of 
   "description": "Learning beet!",
 
   "data_pack": {
-    "load": ["."]
+    "load": ["src"]
   },
 
   "output": "build"
@@ -31,16 +31,38 @@ description: 'Learning beet!'
 
 data_pack:
   load:
-    - '.'
+    - 'src'
 
 output: 'build'
 ```
 
-This beet config describes a basic data pack which has a name, description, where to load in the data pack, and finally, where the output pack will be produced. To test it out, you can create a normal `data` folder with a function.
+```{tab} beet.toml
+```toml
+name = "My First Pack"
+description = "Learning beet!"
+output = "build"
 
-```{tab} data/example/function/hello.mcfunction
+[data_pack]
+load = [ "src" ]
+```
+
+This beet config describes a basic data pack which has a name, description, where to load in the data pack, and finally, where the output pack will be produced. To test it out, you can create some data pack files inside the `src` folder.
+
+```{tab} src/data/example/function/hello.mcfunction
 ```mcfunction
 say hello beet
 ```
 
-Now, navigating back to the root directory, you can invoke the build process by running `beet` and your pack will build, check it out in the output directory!
+```{tab} src/data/minecraft/tags/function/load.json
+```json
+{
+  "values": [
+    "example:hello"
+  ]
+}
+```
+
+Now, navigating back to the root directory, you can invoke the build process and your pack will build, check it out in the output directory!
+```bash
+beet build
+```
