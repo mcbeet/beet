@@ -15,6 +15,7 @@ You can follow the development of the project, discuss ideas, get help, and hang
 ```{toctree}
 :hidden:
 
+getting_started
 rationale
 overview
 changelog
@@ -26,6 +27,7 @@ changelog
 
 GitHub Repository <https://github.com/mcbeet/beet>
 PyPI Package <https://pypi.org/project/beet>
+Beet Discord <https://discord.gg/98MdSGMm8j>
 ```
 
 ```{include} ../README.md
