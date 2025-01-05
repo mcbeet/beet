@@ -14,8 +14,9 @@ You can follow the development of the project, discuss ideas, get help, and hang
 
 ```{toctree}
 :hidden:
+:maxdepth: 2
 
-getting_started
+getting_started/index
 rationale
 overview
 changelog

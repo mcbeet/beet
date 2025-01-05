@@ -1,4 +1,9 @@
 # Getting Started
+```{toctree}
+:hidden:
+
+plugins
+```
 Beet is a development toolkit for working with Minecraft data and resource packs. This section will explain how to install beet and get started with a first project.
 
 ## Installation
