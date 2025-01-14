@@ -2,6 +2,84 @@
 
 <!--next-version-placeholder-->
 
+## v0.109.3 (2025-01-10)
+
+### Fix
+
+* Use supported_formats to determine scope ([#455](https://github.com/mcbeet/beet/issues/455)) ([`533368c`](https://github.com/mcbeet/beet/commit/533368cce71c44eeb9f294551d94a2127dff4a78))
+
+## v0.109.2 (2024-12-21)
+
+### Fix
+
+* Pack_format for equipment is wrong ([#459](https://github.com/mcbeet/beet/issues/459)) ([`dc44f01`](https://github.com/mcbeet/beet/commit/dc44f01855b0be257b4dd6d0b31c7a8cf76051ae))
+
+## v0.109.1 (2024-12-12)
+
+### Fix
+
+* Add items directory + __all__ to be importable ([#456](https://github.com/mcbeet/beet/issues/456)) ([`a834328`](https://github.com/mcbeet/beet/commit/a834328deda59cdd77c843fb1dc5a346ff969561))
+
+## v0.109.0 (2024-12-12)
+
+### Feature
+
+* Add new 1.21.2+ folders and bump pack formats ([#449](https://github.com/mcbeet/beet/issues/449)) ([`9ba853e`](https://github.com/mcbeet/beet/commit/9ba853e6a47d476dda54cd1d514e0293000d30f7))
+
+## v0.108.5 (2024-08-14)
+
+### Fix
+
+* Update beet.contrib.livereload to work in 1.19+ ([#447](https://github.com/mcbeet/beet/issues/447)) ([`d37faf3`](https://github.com/mcbeet/beet/commit/d37faf3b2fdf2540c9a65f1766247fe68bdcee63))
+
+## v0.108.4 (2024-08-08)
+
+### Fix
+
+* Enable worldgen for data pack snapshots ([`699c4c3`](https://github.com/mcbeet/beet/commit/699c4c3b6909b883946c4456fd41f29398600bcf))
+
+## v0.108.3 (2024-07-24)
+
+### Fix
+
+* Update beet.contrib.installation_advancement to work in 1.20.5+ ([#445](https://github.com/mcbeet/beet/issues/445)) ([`afa3f46`](https://github.com/mcbeet/beet/commit/afa3f46206c71726411a46c90b3c86d4ded57132))
+
+## v0.108.2 (2024-07-24)
+
+### Fix
+
+* Bad manifest version pattern ([`8e7c813`](https://github.com/mcbeet/beet/commit/8e7c8135c73c3247802d6e395105202540c2276c))
+
+## v0.108.1 (2024-07-22)
+
+### Fix
+
+* Match default vanilla release without patch ([`87189c4`](https://github.com/mcbeet/beet/commit/87189c44e8989f8288984a9c740af7eec29dc2be))
+
+## v0.108.0 (2024-07-21)
+
+### Feature
+
+* 1.21 ([#442](https://github.com/mcbeet/beet/issues/442)) ([`df8f013`](https://github.com/mcbeet/beet/commit/df8f013a31d993654c2dd7842c8f4d1fa03a715f))
+
+## v0.107.0 (2024-05-04)
+
+### Feature
+
+* Add support for wolf variants ([`f12de06`](https://github.com/mcbeet/beet/commit/f12de06a2d6aee804da62b9272cae2d490b3a1da))
+
+## v0.106.0 (2024-05-04)
+
+### Feature
+
+* Make beet.contrib.vanilla resolve the latest patch ([`e65fb10`](https://github.com/mcbeet/beet/commit/e65fb1051c953aee6121bbbe4394f15b25f72af6))
+
+## v0.105.0 (2024-04-28)
+
+### Feature
+
+* Version 1.20.5 ([`2fd518d`](https://github.com/mcbeet/beet/commit/2fd518dec1614f12e3798c8d43c9d6baf8f80443))
+
 ## v0.104.1 (2024-02-20)
 
 ### Fix

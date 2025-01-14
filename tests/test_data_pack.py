@@ -481,8 +481,8 @@ def test_query():
     query = PackQuery([p])
 
     selection = {
-        (k := "data/demo/functions/foo.mcfunction", p.functions["demo:foo"]): (p, k),
-        (k := "data/demo/functions/bar.mcfunction", p.functions["demo:bar"]): (p, k),
+        (k := "data/demo/function/foo.mcfunction", p.functions["demo:foo"]): (p, k),
+        (k := "data/demo/function/bar.mcfunction", p.functions["demo:bar"]): (p, k),
     }
     assert query(".mcfunction", files=r".*") == selection
     assert query(extend=Function, files=r".*") == selection

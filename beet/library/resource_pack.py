@@ -19,13 +19,16 @@ __all__ = [
     "Sound",
     "SoundConfig",
     "Particle",
+    "ItemModel",
+    "PostEffect",
+    "Equipment",
 ]
 
 
 from contextlib import suppress
 from copy import deepcopy
 from dataclasses import dataclass
-from typing import Any, ClassVar, Dict, Optional, Tuple, Type
+from typing import Any, ClassVar, Dict, Optional, Type
 
 try:
     from PIL.Image import Image
@@ -40,6 +43,7 @@ from .base import (
     ExtraPin,
     McmetaPin,
     Namespace,
+    NamespaceFileScope,
     NamespacePin,
     NamespaceProxyDescriptor,
     Pack,
@@ -50,21 +54,31 @@ from .base import (
 class Blockstate(JsonFile):
     """Class representing a blockstate."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("blockstates",)
+    scope: ClassVar[NamespaceFileScope] = ("blockstates",)
     extension: ClassVar[str] = ".json"
 
 
 class Model(JsonFile):
     """Class representing a model."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("models",)
+    scope: ClassVar[NamespaceFileScope] = ("models",)
+    extension: ClassVar[str] = ".json"
+
+
+class Equipment(JsonFile):
+    """Class representing an equipment."""
+
+    scope: ClassVar[NamespaceFileScope] = {
+        0: ("models", "equipment"),
+        46: ("equipment",),
+    }
     extension: ClassVar[str] = ".json"
 
 
 class Language(JsonFile):
     """Class representing a language file."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("lang",)
+    scope: ClassVar[NamespaceFileScope] = ("lang",)
     extension: ClassVar[str] = ".json"
 
     def merge(self, other: "Language") -> bool:  # type: ignore
@@ -75,7 +89,7 @@ class Language(JsonFile):
 class Font(JsonFile):
     """Class representing a font configuration file."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("font",)
+    scope: ClassVar[NamespaceFileScope] = ("font",)
     extension: ClassVar[str] = ".json"
 
     def merge(self, other: "Font") -> bool:  # type: ignore
@@ -89,63 +103,70 @@ class Font(JsonFile):
 class GlyphSizes(BinaryFile):
     """Class representing a legacy unicode glyph size file."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("font",)
+    scope: ClassVar[NamespaceFileScope] = ("font",)
     extension: ClassVar[str] = ".bin"
 
 
 class TrueTypeFont(BinaryFile):
     """Class representing a TrueType font."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("font",)
+    scope: ClassVar[NamespaceFileScope] = ("font",)
     extension: ClassVar[str] = ".ttf"
+
+
+class PostEffect(JsonFile):
+    """Class representing a post effect pipeline."""
+
+    scope: ClassVar[NamespaceFileScope] = ("post_effect",)
+    extension: ClassVar[str] = ".json"
 
 
 class ShaderPost(JsonFile):
     """Class representing a shader post-processing pipeline."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("shaders", "post")
+    scope: ClassVar[NamespaceFileScope] = ("shaders", "post")
     extension: ClassVar[str] = ".json"
 
 
 class Shader(JsonFile):
     """Class representing a shader."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("shaders",)
+    scope: ClassVar[NamespaceFileScope] = ("shaders",)
     extension: ClassVar[str] = ".json"
 
 
 class FragmentShader(TextFile):
     """Class representing a fragment shader."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("shaders",)
+    scope: ClassVar[NamespaceFileScope] = ("shaders",)
     extension: ClassVar[str] = ".fsh"
 
 
 class VertexShader(TextFile):
     """Class representing a vertex shader."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("shaders",)
+    scope: ClassVar[NamespaceFileScope] = ("shaders",)
     extension: ClassVar[str] = ".vsh"
 
 
 class GlslShader(TextFile):
     """Class representing a glsl shader."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("shaders",)
+    scope: ClassVar[NamespaceFileScope] = ("shaders",)
     extension: ClassVar[str] = ".glsl"
 
 
 class Text(TextFile):
     """Class representing a text file."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("texts",)
+    scope: ClassVar[NamespaceFileScope] = ("texts",)
     extension: ClassVar[str] = ".txt"
 
 
 class TextureMcmeta(JsonFile):
     """Class representing a texture mcmeta."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("textures",)
+    scope: ClassVar[NamespaceFileScope] = ("textures",)
     extension: ClassVar[str] = ".png.mcmeta"
 
 
@@ -156,7 +177,7 @@ class Texture(PngFile):
     content: BinaryFileContent[Image] = None
     mcmeta: Optional[JsonDict] = extra_field(default=None)
 
-    scope: ClassVar[Tuple[str, ...]] = ("textures",)
+    scope: ClassVar[NamespaceFileScope] = ("textures",)
     extension: ClassVar[str] = ".png"
 
     def bind(self, pack: "ResourcePack", path: str):
@@ -180,7 +201,7 @@ class Sound(BinaryFile):
     attenuation_distance: Optional[int] = extra_field(default=None)
     preload: Optional[bool] = extra_field(default=None)
 
-    scope: ClassVar[Tuple[str, ...]] = ("sounds",)
+    scope: ClassVar[NamespaceFileScope] = ("sounds",)
     extension: ClassVar[str] = ".ogg"
 
     def bind(self, pack: "ResourcePack", path: str):
@@ -238,14 +259,14 @@ class SoundConfig(JsonFile):
 class Particle(JsonFile):
     """Class representing a particle configuration file."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("particles",)
+    scope: ClassVar[NamespaceFileScope] = ("particles",)
     extension: ClassVar[str] = ".json"
 
 
 class Atlas(JsonFile):
     """Class representing an atlas configuration file."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("atlases",)
+    scope: ClassVar[NamespaceFileScope] = ("atlases",)
     extension: ClassVar[str] = ".json"
 
     def merge(self, other: "Atlas") -> bool:  # type: ignore
@@ -285,6 +306,13 @@ class Atlas(JsonFile):
         return {"sources": []}
 
 
+class ItemModel(JsonFile):
+    """Class representing an item model."""
+
+    scope: ClassVar[NamespaceFileScope] = ("items",)
+    extension: ClassVar[str] = ".json"
+
+
 class ResourcePackNamespace(Namespace):
     """Class representing a resource pack namespace."""
 
@@ -297,10 +325,12 @@ class ResourcePackNamespace(Namespace):
     # fmt: off
     blockstates:      NamespacePin[Blockstate]     = NamespacePin(Blockstate)
     models:           NamespacePin[Model]          = NamespacePin(Model)
+    equipments:       NamespacePin[Equipment]      = NamespacePin(Equipment)
     languages:        NamespacePin[Language]       = NamespacePin(Language)
     fonts:            NamespacePin[Font]           = NamespacePin(Font)
     glyph_sizes:      NamespacePin[GlyphSizes]     = NamespacePin(GlyphSizes)
     true_type_fonts:  NamespacePin[TrueTypeFont]   = NamespacePin(TrueTypeFont)
+    post_effects:     NamespacePin[PostEffect]     = NamespacePin(PostEffect)
     shader_posts:     NamespacePin[ShaderPost]     = NamespacePin(ShaderPost)
     shaders:          NamespacePin[Shader]         = NamespacePin(Shader)
     fragment_shaders: NamespacePin[FragmentShader] = NamespacePin(FragmentShader)
@@ -312,6 +342,7 @@ class ResourcePackNamespace(Namespace):
     sounds:           NamespacePin[Sound]          = NamespacePin(Sound)
     particles:        NamespacePin[Particle]       = NamespacePin(Particle)
     atlases:          NamespacePin[Atlas]          = NamespacePin(Atlas)
+    item_models:      NamespacePin[ItemModel]      = NamespacePin(ItemModel)
     # fmt: on
 
     @classmethod
@@ -339,7 +370,8 @@ class ResourcePack(Pack[ResourcePackNamespace]):
         (1, 17): 7,
         (1, 18): 8,
         (1, 19): 13,
-        (1, 20): 22,
+        (1, 20): 32,
+        (1, 21): 46,
     }
     latest_pack_format = pack_format_registry[split_version(LATEST_MINECRAFT_VERSION)]
 
@@ -348,10 +380,12 @@ class ResourcePack(Pack[ResourcePackNamespace]):
     # fmt: off
     blockstates:      NamespaceProxyDescriptor[Blockstate]     = NamespaceProxyDescriptor(Blockstate)
     models:           NamespaceProxyDescriptor[Model]          = NamespaceProxyDescriptor(Model)
+    equipments:       NamespaceProxyDescriptor[Equipment]      = NamespaceProxyDescriptor(Equipment)
     languages:        NamespaceProxyDescriptor[Language]       = NamespaceProxyDescriptor(Language)
     fonts:            NamespaceProxyDescriptor[Font]           = NamespaceProxyDescriptor(Font)
     glyph_sizes:      NamespaceProxyDescriptor[GlyphSizes]     = NamespaceProxyDescriptor(GlyphSizes)
     true_type_fonts:  NamespaceProxyDescriptor[TrueTypeFont]   = NamespaceProxyDescriptor(TrueTypeFont)
+    post_effects:     NamespaceProxyDescriptor[PostEffect]     = NamespaceProxyDescriptor(PostEffect)
     shader_posts:     NamespaceProxyDescriptor[ShaderPost]     = NamespaceProxyDescriptor(ShaderPost)
     shaders:          NamespaceProxyDescriptor[Shader]         = NamespaceProxyDescriptor(Shader)
     fragment_shaders: NamespaceProxyDescriptor[FragmentShader] = NamespaceProxyDescriptor(FragmentShader)
@@ -363,4 +397,5 @@ class ResourcePack(Pack[ResourcePackNamespace]):
     sounds:           NamespaceProxyDescriptor[Sound]          = NamespaceProxyDescriptor(Sound)
     particles:        NamespaceProxyDescriptor[Particle]       = NamespaceProxyDescriptor(Particle)
     atlases:          NamespaceProxyDescriptor[Atlas]          = NamespaceProxyDescriptor(Atlas)
+    item_models:      NamespaceProxyDescriptor[ItemModel]      = NamespaceProxyDescriptor(ItemModel)
     # fmt: on

@@ -4,6 +4,13 @@ __all__ = [
     "Advancement",
     "DamageType",
     "ChatType",
+    "BannerPattern",
+    "WolfVariant",
+    "Enchantment",
+    "EnchantmentProvider",
+    "JukeboxSong",
+    "PaintingVariant",
+    "WolfVariant",
     "Function",
     "ItemModifier",
     "LootTable",
@@ -19,6 +26,17 @@ __all__ = [
     "FunctionTag",
     "GameEventTag",
     "ItemTag",
+    "ChatTypeTag",
+    "DamageTypeTag",
+    "BannerPattern",
+    "BannerPatternTag",
+    "CatVariantTag",
+    "EnchantmentTag",
+    "InstrumentTag",
+    "PaintingVariantTag",
+    "PointOfInterestTypeTag",
+    "Instrument",
+    "TrialSpawner",
 ]
 
 
@@ -26,7 +44,7 @@ import io
 from copy import deepcopy
 from dataclasses import dataclass
 from gzip import GzipFile
-from typing import ClassVar, Iterable, List, Optional, Tuple, TypeVar, Union
+from typing import ClassVar, Iterable, List, Optional, TypeVar, Union
 
 from nbtlib.contrib.minecraft import StructureFile, StructureFileData
 
@@ -43,6 +61,7 @@ from beet.core.utils import JsonDict, extra_field, split_version
 from .base import (
     LATEST_MINECRAFT_VERSION,
     Namespace,
+    NamespaceFileScope,
     NamespacePin,
     NamespaceProxyDescriptor,
     Pack,
@@ -54,21 +73,80 @@ TagFileType = TypeVar("TagFileType", bound="TagFile")
 class Advancement(JsonFile):
     """Class representing an advancement."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("advancements",)
+    scope: ClassVar[NamespaceFileScope] = {
+        0: ("advancements",),
+        45: ("advancement",),
+    }
     extension: ClassVar[str] = ".json"
 
 
 class DamageType(JsonFile):
     """Class representing a damage type."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("damage_type",)
+    scope: ClassVar[NamespaceFileScope] = ("damage_type",)
     extension: ClassVar[str] = ".json"
 
 
 class ChatType(JsonFile):
     """Class representing a chat type."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("chat_type",)
+    scope: ClassVar[NamespaceFileScope] = ("chat_type",)
+    extension: ClassVar[str] = ".json"
+
+
+class BannerPattern(JsonFile):
+    """Class representing a banner pattern."""
+
+    scope: ClassVar[NamespaceFileScope] = ("banner_pattern",)
+    extension: ClassVar[str] = ".json"
+
+
+class WolfVariant(JsonFile):
+    """Class representing a wolf variant."""
+
+    scope: ClassVar[NamespaceFileScope] = ("wolf_variant",)
+    extension: ClassVar[str] = ".json"
+
+
+class Enchantment(JsonFile):
+    """Class representing an enchantment"""
+
+    scope: ClassVar[NamespaceFileScope] = ("enchantment",)
+    extension: ClassVar[str] = ".json"
+
+
+class EnchantmentProvider(JsonFile):
+    """Class representing an enchantment provider."""
+
+    scope: ClassVar[NamespaceFileScope] = ("enchantment_provider",)
+    extension: ClassVar[str] = ".json"
+
+
+class JukeboxSong(JsonFile):
+    """Class representing a jukebox song."""
+
+    scope: ClassVar[NamespaceFileScope] = ("jukebox_song",)
+    extension: ClassVar[str] = ".json"
+
+
+class PaintingVariant(JsonFile):
+    """Class representing a painting variant."""
+
+    scope: ClassVar[NamespaceFileScope] = ("painting_variant",)
+    extension: ClassVar[str] = ".json"
+
+
+class Instrument(JsonFile):
+    """Class representing an instrument."""
+
+    scope: ClassVar[NamespaceFileScope] = ("instrument",)
+    extension: ClassVar[str] = ".json"
+
+
+class TrialSpawner(JsonFile):
+    """Class representing a trial spawner config."""
+
+    scope: ClassVar[NamespaceFileScope] = ("trial_spawner",)
     extension: ClassVar[str] = ".json"
 
 
@@ -80,7 +158,10 @@ class Function(TextFileBase[List[str]]):
     tags: Optional[List[str]] = extra_field(default=None)
     prepend_tags: Optional[List[str]] = extra_field(default=None)
 
-    scope: ClassVar[Tuple[str, ...]] = ("functions",)
+    scope: ClassVar[NamespaceFileScope] = {
+        0: ("functions",),
+        45: ("function",),
+    }
     extension: ClassVar[str] = ".mcfunction"
 
     lines: ClassVar[FileDeserialize[List[str]]] = FileDeserialize()
@@ -127,28 +208,40 @@ class Function(TextFileBase[List[str]]):
 class ItemModifier(JsonFile):
     """Class representing an item modifier."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("item_modifiers",)
+    scope: ClassVar[NamespaceFileScope] = {
+        0: ("item_modifiers",),
+        45: ("item_modifier",),
+    }
     extension: ClassVar[str] = ".json"
 
 
 class LootTable(JsonFile):
     """Class representing a loot table."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("loot_tables",)
+    scope: ClassVar[NamespaceFileScope] = {
+        0: ("loot_tables",),
+        45: ("loot_table",),
+    }
     extension: ClassVar[str] = ".json"
 
 
 class Predicate(JsonFile):
     """Class representing a predicate."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("predicates",)
+    scope: ClassVar[NamespaceFileScope] = {
+        0: ("predicates",),
+        45: ("predicate",),
+    }
     extension: ClassVar[str] = ".json"
 
 
 class Recipe(JsonFile):
     """Class representing a recipe."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("recipes",)
+    scope: ClassVar[NamespaceFileScope] = {
+        0: ("recipes",),
+        45: ("recipe",),
+    }
     extension: ClassVar[str] = ".json"
 
 
@@ -158,7 +251,10 @@ class Structure(BinaryFileBase[StructureFileData]):
 
     content: BinaryFileContent[StructureFileData] = None
 
-    scope: ClassVar[Tuple[str, ...]] = ("structures",)
+    scope: ClassVar[NamespaceFileScope] = {
+        0: ("structures",),
+        45: ("structure",),
+    }
     extension: ClassVar[str] = ".nbt"
 
     data: ClassVar[FileDeserialize[StructureFileData]] = FileDeserialize()
@@ -177,14 +273,14 @@ class Structure(BinaryFileBase[StructureFileData]):
 class TrimPattern(JsonFile):
     """Class representing a trim pattern."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("trim_pattern",)
+    scope: ClassVar[NamespaceFileScope] = ("trim_pattern",)
     extension: ClassVar[str] = ".json"
 
 
 class TrimMaterial(JsonFile):
     """Class representing a trim material."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("trim_material",)
+    scope: ClassVar[NamespaceFileScope] = ("trim_material",)
     extension: ClassVar[str] = ".json"
 
 
@@ -245,49 +341,127 @@ class TagFile(JsonFile):
 class BlockTag(TagFile):
     """Class representing a block tag."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("tags", "blocks")
+    scope: ClassVar[NamespaceFileScope] = {
+        0: ("tags", "blocks"),
+        45: ("tags", "block"),
+    }
 
 
 class EntityTypeTag(TagFile):
     """Class representing an entity tag."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("tags", "entity_types")
+    scope: ClassVar[NamespaceFileScope] = {
+        0: ("tags", "entity_types"),
+        45: ("tags", "entity_type"),
+    }
 
 
 class FluidTag(TagFile):
     """Class representing a fluid tag."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("tags", "fluids")
+    scope: ClassVar[NamespaceFileScope] = {
+        0: ("tags", "fluids"),
+        45: ("tags", "fluid"),
+    }
 
 
 class FunctionTag(TagFile):
     """Class representing a function tag."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("tags", "functions")
+    scope: ClassVar[NamespaceFileScope] = {
+        0: ("tags", "functions"),
+        45: ("tags", "function"),
+    }
 
 
 class GameEventTag(TagFile):
     """Class representing a game event tag."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("tags", "game_events")
+    scope: ClassVar[NamespaceFileScope] = {
+        0: ("tags", "game_events"),
+        45: ("tags", "game_event"),
+    }
 
 
 class ItemTag(TagFile):
     """Class representing an item tag."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("tags", "items")
+    scope: ClassVar[NamespaceFileScope] = {
+        0: ("tags", "items"),
+        45: ("tags", "item"),
+    }
 
 
 class ChatTypeTag(TagFile):
     """Class representing a chat type tag."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("tags", "chat_type")
+    scope: ClassVar[NamespaceFileScope] = (
+        "tags",
+        "chat_type",
+    )
 
 
 class DamageTypeTag(TagFile):
     """Class representing a damage type tag."""
 
-    scope: ClassVar[Tuple[str, ...]] = ("tags", "damage_type")
+    scope: ClassVar[NamespaceFileScope] = (
+        "tags",
+        "damage_type",
+    )
+
+
+class BannerPatternTag(TagFile):
+    """Class representing a banner pattern tag."""
+
+    scope: ClassVar[NamespaceFileScope] = (
+        "tags",
+        "banner_pattern",
+    )
+
+
+class CatVariantTag(TagFile):
+    """Class representing a cat variant tag."""
+
+    scope: ClassVar[NamespaceFileScope] = (
+        "tags",
+        "cat_variant",
+    )
+
+
+class EnchantmentTag(TagFile):
+    """Class representing an enchantment tag."""
+
+    scope: ClassVar[NamespaceFileScope] = (
+        "tags",
+        "enchantment",
+    )
+
+
+class InstrumentTag(TagFile):
+    """Class representing an instrument tag."""
+
+    scope: ClassVar[NamespaceFileScope] = (
+        "tags",
+        "instrument",
+    )
+
+
+class PaintingVariantTag(TagFile):
+    """Class representing a painting variant tag."""
+
+    scope: ClassVar[NamespaceFileScope] = (
+        "tags",
+        "painting_variant",
+    )
+
+
+class PointOfInterestTypeTag(TagFile):
+    """Class representing a point of interest type tag."""
+
+    scope: ClassVar[NamespaceFileScope] = (
+        "tags",
+        "point_of_interest_type",
+    )
 
 
 class DataPackNamespace(Namespace):
@@ -296,25 +470,40 @@ class DataPackNamespace(Namespace):
     directory = "data"
 
     # fmt: off
-    advancements:     NamespacePin[Advancement]   = NamespacePin(Advancement)
-    functions:        NamespacePin[Function]      = NamespacePin(Function)
-    item_modifiers:   NamespacePin[ItemModifier]  = NamespacePin(ItemModifier)
-    loot_tables:      NamespacePin[LootTable]     = NamespacePin(LootTable)
-    predicates:       NamespacePin[Predicate]     = NamespacePin(Predicate)
-    recipes:          NamespacePin[Recipe]        = NamespacePin(Recipe)
-    trim_pattern:     NamespacePin[TrimPattern]   = NamespacePin(TrimPattern)
-    trim_material:    NamespacePin[TrimMaterial]  = NamespacePin(TrimMaterial)
-    structures:       NamespacePin[Structure]     = NamespacePin(Structure)
-    chat_type:        NamespacePin[ChatType]      = NamespacePin(ChatType)
-    damage_type:      NamespacePin[DamageType]    = NamespacePin(DamageType)
-    block_tags:       NamespacePin[BlockTag]      = NamespacePin(BlockTag)
-    entity_type_tags: NamespacePin[EntityTypeTag] = NamespacePin(EntityTypeTag)
-    fluid_tags:       NamespacePin[FluidTag]      = NamespacePin(FluidTag)
-    function_tags:    NamespacePin[FunctionTag]   = NamespacePin(FunctionTag)
-    game_event_tags:  NamespacePin[GameEventTag]  = NamespacePin(GameEventTag)
-    item_tags:        NamespacePin[ItemTag]       = NamespacePin(ItemTag)
-    chat_type_tags:   NamespacePin[ChatTypeTag]   = NamespacePin(ChatTypeTag)
-    damage_type_tags: NamespacePin[DamageTypeTag] = NamespacePin(DamageTypeTag)
+    advancements:                       NamespacePin[Advancement]               = NamespacePin(Advancement)
+    functions:                          NamespacePin[Function]                  = NamespacePin(Function)
+    item_modifiers:                     NamespacePin[ItemModifier]              = NamespacePin(ItemModifier)
+    loot_tables:                        NamespacePin[LootTable]                 = NamespacePin(LootTable)
+    predicates:                         NamespacePin[Predicate]                 = NamespacePin(Predicate)
+    recipes:                            NamespacePin[Recipe]                    = NamespacePin(Recipe)
+    trim_pattern:                       NamespacePin[TrimPattern]               = NamespacePin(TrimPattern)
+    trim_material:                      NamespacePin[TrimMaterial]              = NamespacePin(TrimMaterial)
+    structures:                         NamespacePin[Structure]                 = NamespacePin(Structure)
+    chat_type:                          NamespacePin[ChatType]                  = NamespacePin(ChatType)
+    damage_type:                        NamespacePin[DamageType]                = NamespacePin(DamageType)
+    banner_patterns:                    NamespacePin[BannerPattern]             = NamespacePin(BannerPattern)
+    wolf_variants:                      NamespacePin[WolfVariant]               = NamespacePin(WolfVariant)
+    enchantments:                       NamespacePin[Enchantment]               = NamespacePin(Enchantment)
+    enchantment_providers:              NamespacePin[EnchantmentProvider]       = NamespacePin(EnchantmentProvider)
+    jukebox_songs:                      NamespacePin[JukeboxSong]               = NamespacePin(JukeboxSong)
+    painting_variants:                  NamespacePin[PaintingVariant]           = NamespacePin(PaintingVariant)
+    instruments:                        NamespacePin[Instrument]                = NamespacePin(Instrument)
+    trial_spawners:                     NamespacePin[TrialSpawner]              = NamespacePin(TrialSpawner)
+    block_tags:                         NamespacePin[BlockTag]                  = NamespacePin(BlockTag)
+    entity_type_tags:                   NamespacePin[EntityTypeTag]             = NamespacePin(EntityTypeTag)
+    fluid_tags:                         NamespacePin[FluidTag]                  = NamespacePin(FluidTag)
+    function_tags:                      NamespacePin[FunctionTag]               = NamespacePin(FunctionTag)
+    game_event_tags:                    NamespacePin[GameEventTag]              = NamespacePin(GameEventTag)
+    item_tags:                          NamespacePin[ItemTag]                   = NamespacePin(ItemTag)
+    chat_type_tags:                     NamespacePin[ChatTypeTag]               = NamespacePin(ChatTypeTag)
+    damage_type_tags:                   NamespacePin[DamageTypeTag]             = NamespacePin(DamageTypeTag)
+    banner_pattern_tags:                NamespacePin[BannerPatternTag]          = NamespacePin(BannerPatternTag)
+    cat_variant_tags:                   NamespacePin[CatVariantTag]             = NamespacePin(CatVariantTag)
+    enchantment_tags:                   NamespacePin[EnchantmentTag]            = NamespacePin(EnchantmentTag)
+    instrument_tags:                    NamespacePin[InstrumentTag]             = NamespacePin(InstrumentTag)
+    painting_variant_tags:              NamespacePin[PaintingVariantTag]        = NamespacePin(PaintingVariantTag)
+    point_of_interest_type_tags:        NamespacePin[PointOfInterestTypeTag]    = NamespacePin(PointOfInterestTypeTag)
+
     # fmt: on
 
 
@@ -331,28 +520,43 @@ class DataPack(Pack[DataPackNamespace]):
         (1, 17): 7,
         (1, 18): 9,
         (1, 19): 12,
-        (1, 20): 26,
+        (1, 20): 41,
+        (1, 21): 61,
     }
     latest_pack_format = pack_format_registry[split_version(LATEST_MINECRAFT_VERSION)]
 
     # fmt: off
-    advancements:     NamespaceProxyDescriptor[Advancement]   = NamespaceProxyDescriptor(Advancement)
-    functions:        NamespaceProxyDescriptor[Function]      = NamespaceProxyDescriptor(Function)
-    item_modifiers:   NamespaceProxyDescriptor[ItemModifier]  = NamespaceProxyDescriptor(ItemModifier)
-    loot_tables:      NamespaceProxyDescriptor[LootTable]     = NamespaceProxyDescriptor(LootTable)
-    predicates:       NamespaceProxyDescriptor[Predicate]     = NamespaceProxyDescriptor(Predicate)
-    recipes:          NamespaceProxyDescriptor[Recipe]        = NamespaceProxyDescriptor(Recipe)
-    trim_pattern:     NamespaceProxyDescriptor[TrimPattern]   = NamespaceProxyDescriptor(TrimPattern)
-    trim_material:    NamespaceProxyDescriptor[TrimMaterial]  = NamespaceProxyDescriptor(TrimMaterial)
-    structures:       NamespaceProxyDescriptor[Structure]     = NamespaceProxyDescriptor(Structure)
-    chat_type:        NamespaceProxyDescriptor[ChatType]      = NamespaceProxyDescriptor(ChatType)
-    damage_type:      NamespaceProxyDescriptor[DamageType]    = NamespaceProxyDescriptor(DamageType)
-    block_tags:       NamespaceProxyDescriptor[BlockTag]      = NamespaceProxyDescriptor(BlockTag)
-    entity_type_tags: NamespaceProxyDescriptor[EntityTypeTag] = NamespaceProxyDescriptor(EntityTypeTag)
-    fluid_tags:       NamespaceProxyDescriptor[FluidTag]      = NamespaceProxyDescriptor(FluidTag)
-    function_tags:    NamespaceProxyDescriptor[FunctionTag]   = NamespaceProxyDescriptor(FunctionTag)
-    game_event_tags:  NamespaceProxyDescriptor[GameEventTag]  = NamespaceProxyDescriptor(GameEventTag)
-    item_tags:        NamespaceProxyDescriptor[ItemTag]       = NamespaceProxyDescriptor(ItemTag)
-    chat_type_tags:   NamespaceProxyDescriptor[ChatTypeTag]   = NamespaceProxyDescriptor(ChatTypeTag)
-    damage_type_tags: NamespaceProxyDescriptor[DamageTypeTag] = NamespaceProxyDescriptor(DamageTypeTag)
+    advancements:                       NamespaceProxyDescriptor[Advancement]               = NamespaceProxyDescriptor(Advancement)
+    functions:                          NamespaceProxyDescriptor[Function]                  = NamespaceProxyDescriptor(Function)
+    item_modifiers:                     NamespaceProxyDescriptor[ItemModifier]              = NamespaceProxyDescriptor(ItemModifier)
+    loot_tables:                        NamespaceProxyDescriptor[LootTable]                 = NamespaceProxyDescriptor(LootTable)
+    predicates:                         NamespaceProxyDescriptor[Predicate]                 = NamespaceProxyDescriptor(Predicate)
+    recipes:                            NamespaceProxyDescriptor[Recipe]                    = NamespaceProxyDescriptor(Recipe)
+    trim_pattern:                       NamespaceProxyDescriptor[TrimPattern]               = NamespaceProxyDescriptor(TrimPattern)
+    trim_material:                      NamespaceProxyDescriptor[TrimMaterial]              = NamespaceProxyDescriptor(TrimMaterial)
+    structures:                         NamespaceProxyDescriptor[Structure]                 = NamespaceProxyDescriptor(Structure)
+    chat_type:                          NamespaceProxyDescriptor[ChatType]                  = NamespaceProxyDescriptor(ChatType)
+    damage_type:                        NamespaceProxyDescriptor[DamageType]                = NamespaceProxyDescriptor(DamageType)
+    banner_patterns:                    NamespaceProxyDescriptor[BannerPattern]             = NamespaceProxyDescriptor(BannerPattern)
+    wolf_variants:                      NamespaceProxyDescriptor[WolfVariant]               = NamespaceProxyDescriptor(WolfVariant)
+    enchantments:                       NamespaceProxyDescriptor[Enchantment]               = NamespaceProxyDescriptor(Enchantment)
+    enchantment_providers:              NamespaceProxyDescriptor[EnchantmentProvider]       = NamespaceProxyDescriptor(EnchantmentProvider)
+    jukebox_songs:                      NamespaceProxyDescriptor[JukeboxSong]               = NamespaceProxyDescriptor(JukeboxSong)
+    painting_variants:                  NamespaceProxyDescriptor[PaintingVariant]           = NamespaceProxyDescriptor(PaintingVariant)
+    instruments:                        NamespaceProxyDescriptor[Instrument]                = NamespaceProxyDescriptor(Instrument)
+    trial_spawners:                     NamespaceProxyDescriptor[TrialSpawner]              = NamespaceProxyDescriptor(TrialSpawner)
+    block_tags:                         NamespaceProxyDescriptor[BlockTag]                  = NamespaceProxyDescriptor(BlockTag)
+    entity_type_tags:                   NamespaceProxyDescriptor[EntityTypeTag]             = NamespaceProxyDescriptor(EntityTypeTag)
+    fluid_tags:                         NamespaceProxyDescriptor[FluidTag]                  = NamespaceProxyDescriptor(FluidTag)
+    function_tags:                      NamespaceProxyDescriptor[FunctionTag]               = NamespaceProxyDescriptor(FunctionTag)
+    game_event_tags:                    NamespaceProxyDescriptor[GameEventTag]              = NamespaceProxyDescriptor(GameEventTag)
+    item_tags:                          NamespaceProxyDescriptor[ItemTag]                   = NamespaceProxyDescriptor(ItemTag)
+    chat_type_tags:                     NamespaceProxyDescriptor[ChatTypeTag]               = NamespaceProxyDescriptor(ChatTypeTag)
+    damage_type_tags:                   NamespaceProxyDescriptor[DamageTypeTag]             = NamespaceProxyDescriptor(DamageTypeTag)
+    banner_pattern_tags:                NamespaceProxyDescriptor[BannerPatternTag]          = NamespaceProxyDescriptor(BannerPatternTag)
+    cat_variant_tags:                   NamespaceProxyDescriptor[CatVariantTag]             = NamespaceProxyDescriptor(CatVariantTag)
+    enchantment_tags:                   NamespaceProxyDescriptor[EnchantmentTag]            = NamespaceProxyDescriptor(EnchantmentTag)
+    instrument_tags:                    NamespaceProxyDescriptor[InstrumentTag]             = NamespaceProxyDescriptor(InstrumentTag)
+    painting_variant_tags:              NamespaceProxyDescriptor[PaintingVariantTag]        = NamespaceProxyDescriptor(PaintingVariantTag)
+    point_of_interest_type_tags:        NamespaceProxyDescriptor[PointOfInterestTypeTag]    = NamespaceProxyDescriptor(PointOfInterestTypeTag)
     # fmt: on

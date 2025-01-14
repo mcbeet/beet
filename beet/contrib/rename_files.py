@@ -31,6 +31,7 @@ from beet import (
     ResourcePack,
     TemplateManager,
     configurable,
+    get_output_scope,
 )
 from beet.contrib.find_replace import RenderSubstitutionOption, TextSubstitutionOption
 
@@ -115,7 +116,8 @@ class RenameFilesHandler:
     ):
         dest = self.substitute(filename)
         file_type = type(file_instance)
-        prefix = "".join(f"{d}/" for d in file_type.scope)
+        scope = get_output_scope(file_type.scope, pack)
+        prefix = "".join(f"{d}/" for d in scope)
 
         _, namespace, path = filename.split("/", 2)
 
