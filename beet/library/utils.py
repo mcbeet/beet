@@ -65,15 +65,6 @@ def list_origin_folders(prefix: str, origin: FileOrigin) -> Dict[str, List[PureP
 def modified_suffixes(path: PurePath) -> List[str]:
     """
     Equivalent to path.suffixes but support file with empty name
-    filename                | filename.suffixes                 | modified_suffixes(filename)
-
-    load.mcfunction         | ['.mcfunction']                   | ['.mcfunction']
-    .mcfunction             | []                                | ['.mcfunction']
-    ..mcfunction            | []                                | ['.mcfunction']
-    load.py.mcfunction      | ['.py', '.mcfunction']            | ['.py', '.mcfunction']
-    .py.mcfunction          | ['.mcfunction']                   | ['.py', '.mcfunction']
-    aaa...mcfunction        | ['.', '.', '.mcfunction']         | ['.', '.', '.mcfunction']
-    ...mcfunction           | []                                | ['.', '.', '.mcfunction']
     """
     name = path.name
     if name.endswith('.'):
