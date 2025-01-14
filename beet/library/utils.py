@@ -62,16 +62,17 @@ def list_origin_folders(prefix: str, origin: FileOrigin) -> Dict[str, List[PureP
 
     return folders
 
+
 def modified_suffixes(path: PurePath) -> List[str]:
     """
     Equivalent to path.suffixes but support file with empty name
     """
     name = path.name
-    if name.endswith('.'):
+    if name.endswith("."):
         return []
-    if name.startswith('.'):
+    if name.startswith("."):
         name = name[1:]
-        return ['.' + suffix for suffix in name.split('.')]
+        return ["." + suffix for suffix in name.split(".")]
     return path.suffixes
 
 
