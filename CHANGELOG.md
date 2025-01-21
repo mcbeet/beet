@@ -2,6 +2,16 @@
 
 <!--next-version-placeholder-->
 
+## v0.109.4 (2025-01-21)
+
+### Fix
+
+* Pack.all returning duplicate files in overlays ([#453](https://github.com/mcbeet/beet/issues/453)) ([`9223640`](https://github.com/mcbeet/beet/commit/9223640c34a282dd27c9d8f6eb6e173173ea834d))
+
+### Documentation
+
+* Getting started ([#461](https://github.com/mcbeet/beet/issues/461)) ([`28a4f2f`](https://github.com/mcbeet/beet/commit/28a4f2f41e58ff81494f105b1b92a40d76592d93))
+
 ## v0.109.3 (2025-01-10)
 
 ### Fix
