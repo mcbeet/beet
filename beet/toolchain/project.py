@@ -274,26 +274,6 @@ class ProjectBuilder:
                 whitelist=self.config.whitelist,
             )
 
-            # populate ctx.pack with config info
-            if self.config.data_pack.pack_format:
-                ctx.data.pack_format = self.config.data_pack.pack_format
-            if self.config.data_pack.name:
-                ctx.data.name = self.config.data_pack.name
-            if self.config.data_pack.description:
-                ctx.data.description = self.config.data_pack.description
-            if self.config.data_pack.supported_formats:
-                ctx.data.supported_formats = self.config.data_pack.supported_formats
-            if self.config.resource_pack.pack_format:
-                ctx.assets.pack_format = self.config.resource_pack.pack_format
-            if self.config.resource_pack.name:
-                ctx.assets.name = self.config.resource_pack.name
-            if self.config.resource_pack.description:
-                ctx.assets.description = self.config.resource_pack.description
-            if self.config.resource_pack.supported_formats:
-                ctx.assets.supported_formats = (
-                    self.config.resource_pack.supported_formats
-                )
-
             plugins: List[PluginSpec] = [self.bootstrap]
             plugins.extend(
                 (
@@ -329,6 +309,16 @@ class ProjectBuilder:
 
         pack_configs = [self.config.resource_pack, self.config.data_pack]
         pack_suffixes = ["_resource_pack", "_data_pack"]
+
+        for config, pack in zip(pack_configs, ctx.packs):
+            if config.name:
+                pack.name = config.name
+            if config.description:
+                pack.description = config.description
+            if config.pack_format:
+                pack.pack_format = config.pack_format
+            if config.supported_formats:
+                pack.supported_formats = config.supported_formats
 
         ctx.require(
             load(
