@@ -116,7 +116,7 @@ class RenameFilesHandler:
     ):
         dest = self.substitute(filename)
         file_type = type(file_instance)
-        scope = get_output_scope(file_type.scope, pack.pack_format)
+        scope = get_output_scope(file_type.scope, pack)
         prefix = "".join(f"{d}/" for d in scope)
 
         _, namespace, path = filename.split("/", 2)

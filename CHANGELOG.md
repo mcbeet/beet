@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.109.3 (2025-01-10)
+
+### Fix
+
+* Use supported_formats to determine scope ([#455](https://github.com/mcbeet/beet/issues/455)) ([`533368c`](https://github.com/mcbeet/beet/commit/533368cce71c44eeb9f294551d94a2127dff4a78))
+
 ## v0.109.2 (2024-12-21)
 
 ### Fix
