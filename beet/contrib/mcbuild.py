@@ -86,8 +86,11 @@ def mcbuild(ctx: Context, opts: MCBuildOptions):
 
     # Check if source has changed
     if not opts.force_rebuild and source_hash == previous_source_hash:
-        # log("Source has not changed, skipping build.")
-        return
+        # If the build directory doesn't exist, then somehow the cache was lost. We need to rebuild.
+        if (build_dir / "data").exists():
+            # Load the cached datapack
+            ctx.data.load(build_dir)
+            return
 
     # Clear previous build
     shutil.rmtree(build_dir, ignore_errors=True)
