@@ -77,6 +77,8 @@ def filter_stdout_for_soft_errors(stdout: str) -> Optional[str]:
     for line in lines:
         if line.startswith("[MCB] Parser Error:"):
             return capture_error("Parser Error:", lines.index(line))
+        elif line.startswith("[MCB] Compiler Error:"):
+            return capture_error("Compiler Error:", lines.index(line))
 
 
 class MCBuildOptions(BaseModel):
