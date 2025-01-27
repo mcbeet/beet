@@ -62,7 +62,7 @@ def create_source_hash(source: Path, config: Path) -> str:
 
 
 class MCBuildOptions(BaseModel):
-    forced_update: bool = False
+    force_rebuild: bool = False
     source: FileSystemPath = "./mcbuild"
 
 
@@ -85,7 +85,7 @@ def mcbuild(ctx: Context, opts: MCBuildOptions):
     source_hash = create_source_hash(source, config)
 
     # Check if source has changed
-    if not opts.forced_update and source_hash == previous_source_hash:
+    if not opts.force_rebuild and source_hash == previous_source_hash:
         # log("Source has not changed, skipping build.")
         return
 
