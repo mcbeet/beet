@@ -13,12 +13,11 @@ from pathlib import Path
 
 DEFAULT_CONFIG_URL = "https://raw.githubusercontent.com/mc-build/mcb/refs/heads/main/template/mcb.config.js"
 CONFIG_FILE = "mcb.config.js"
-OG_PRINT = print
 
 
 def log(message: str) -> None:
     """Print with a custom prefix."""
-    OG_PRINT(
+    print(
         f"{colorama.Fore.LIGHTBLACK_EX}[{colorama.Fore.GREEN}MCB{colorama.Fore.WHITE}-{colorama.Fore.LIGHTRED_EX}BEET{colorama.Fore.LIGHTBLACK_EX}]{colorama.Fore.RESET}",
         message,
     )
