@@ -60,6 +60,25 @@ def create_source_hash(source: Path, config: Path) -> str:
     return hasher.hexdigest()
 
 
+def filter_stdout_for_soft_errors(stdout: str) -> Optional[str]:
+    lines = stdout.split("\n")
+
+    def capture_error(errorTitle: str, index: int):
+        error = colorama.Fore.RED + errorTitle
+        for i in range(index + 1, len(lines)):
+            if not lines[i][0] in ["\t", " "]:
+                return error
+            if len(error) == 0:
+                error = lines[i].strip()
+            else:
+                error += "\n" + lines[i]
+        return error + colorama.Fore.RESET
+
+    for line in lines:
+        if line.startswith("[MCB] Parser Error:"):
+            return capture_error("Parser Error:", lines.index(line))
+
+
 class MCBuildOptions(BaseModel):
     force_rebuild: bool = False
     source: FileSystemPath = "./mcbuild"
@@ -104,9 +123,18 @@ def mcbuild(ctx: Context, opts: MCBuildOptions):
     # Run mcb
     command = ["mcb", "build"]
     try:
-        subprocess.run(
-            command, cwd=build_dir, check=True, capture_output=True, shell=True
+        app = subprocess.run(
+            command,
+            cwd=build_dir,
+            check=True,
+            shell=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            universal_newlines=True,
         )
+        errors = filter_stdout_for_soft_errors(app.stdout)
+        if errors:
+            log(errors)
     except subprocess.CalledProcessError as e:
         log(f"Error while running MCB: {e.stderr.decode()}")
 
