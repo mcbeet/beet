@@ -3,7 +3,7 @@
 __all__ = ["beet_default", "MCBuildOptions"]
 
 
-from typing import Optional, Any
+from typing import Optional
 from beet import Context, configurable
 from pydantic.v1 import BaseModel
 from beet.core.utils import FileSystemPath
