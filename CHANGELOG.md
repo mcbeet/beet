@@ -2,6 +2,28 @@
 
 <!--next-version-placeholder-->
 
+## v0.109.4 (2025-01-21)
+
+### Fix
+
+* Pack.all returning duplicate files in overlays ([#453](https://github.com/mcbeet/beet/issues/453)) ([`9223640`](https://github.com/mcbeet/beet/commit/9223640c34a282dd27c9d8f6eb6e173173ea834d))
+
+### Documentation
+
+* Getting started ([#461](https://github.com/mcbeet/beet/issues/461)) ([`28a4f2f`](https://github.com/mcbeet/beet/commit/28a4f2f41e58ff81494f105b1b92a40d76592d93))
+
+## v0.109.3 (2025-01-10)
+
+### Fix
+
+* Use supported_formats to determine scope ([#455](https://github.com/mcbeet/beet/issues/455)) ([`533368c`](https://github.com/mcbeet/beet/commit/533368cce71c44eeb9f294551d94a2127dff4a78))
+
+## v0.109.2 (2024-12-21)
+
+### Fix
+
+* Pack_format for equipment is wrong ([#459](https://github.com/mcbeet/beet/issues/459)) ([`dc44f01`](https://github.com/mcbeet/beet/commit/dc44f01855b0be257b4dd6d0b31c7a8cf76051ae))
+
 ## v0.109.1 (2024-12-12)
 
 ### Fix

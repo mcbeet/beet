@@ -1,11 +1,10 @@
 {
   "pack": {
-    "pack_format": 20,
+    "pack_format": 50,
     "description": "",
     "supported_formats": [
-      18,
-      19,
-      20
+      50,
+      50
     ]
   },
   "overlays": {
