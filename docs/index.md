@@ -17,6 +17,7 @@ You can follow the development of the project, discuss ideas, get help, and hang
 :maxdepth: 2
 
 getting_started/index
+update_guide
 rationale
 overview
 changelog
