@@ -6,15 +6,16 @@ from beet.core.cache import Cache
 from beet.library.base import LATEST_MINECRAFT_VERSION
 from beet.toolchain.helpers import run_beet
 from zipfile import ZipFile
+import sys
 
 
-def test_namespaces():
+def main(version: str = LATEST_MINECRAFT_VERSION):
     # Test that all namespaces are known
     # It loads the vanilla jar and checks
     # that there are no unknown namespaces
     with tempfile.TemporaryDirectory() as dir:
         cache = Cache(dir)
-        vanilla = Vanilla(cache=cache, minecraft_version=LATEST_MINECRAFT_VERSION)
+        vanilla = Vanilla(cache=cache, minecraft_version=version)
         client_jar = vanilla.mount()
         with run_beet(
             {
@@ -53,3 +54,10 @@ def test_namespaces():
                 raise ValueError(
                     f"An unknown data has no NamespaceFileType: {unknown_data}"
                 )
+
+
+if __name__ == "__main__":
+    if len(sys.argv) == 2:
+        main(sys.argv[1])
+    else:
+        print("Usage : `python tests/test_scopes.py 1.21.4`")
