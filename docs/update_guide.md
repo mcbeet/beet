@@ -31,5 +31,7 @@ poetry run python tests/test_scopes.py <minecraft_version>
 ```
 
 
+## Follow Contributing rules in the Readme
+Running the test suite, code formatter and type checker.
 
 
