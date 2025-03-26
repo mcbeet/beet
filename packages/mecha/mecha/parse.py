@@ -550,6 +550,8 @@ def get_default_parsers() -> Dict[str, Parser]:
         "command:argument:minecraft:resource_or_tag_key": delegate(
             "resource_location_or_tag"
         ),
+        # TODO: support wildcards
+        "command:argument:minecraft:resource_selector": delegate("resource_location"),
         "command:argument:minecraft:rotation": delegate("rotation"),
         "command:argument:minecraft:score_holder": delegate("score_holder"),
         "command:argument:minecraft:scoreboard_slot": delegate("scoreboard_slot"),
