@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.97.0 (2025-03-26)
+
+### Feature
+
+* Add commands.json changes for 1.21.5 ([#304](https://github.com/mcbeet/mecha/issues/304)) ([`f37b310`](https://github.com/mcbeet/mecha/commit/f37b3106643f0133e3ead54371f946d40fec0b48))
+
 ## v0.96.0 (2024-12-12)
 
 ### Feature
