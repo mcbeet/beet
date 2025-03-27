@@ -1955,7 +1955,7 @@ def parse_message(stream: TokenStream) -> AstMessage:
     with (
         stream.intercept("newline"),
         stream.syntax(
-            selector=r"@[praes]",
+            selector=r"@[praesn]",
             text=r"[^\n@]+",
         ),
     ):
