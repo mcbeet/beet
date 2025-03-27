@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.97.1 (2025-03-27)
+
+### Fix
+
+* Support @n in message command argument ([#305](https://github.com/mcbeet/mecha/issues/305)) ([`e4aaa82`](https://github.com/mcbeet/mecha/commit/e4aaa820196ff640ab79b6fd25f4d19eb5ca6e52))
+
 ## v0.97.0 (2025-03-26)
 
 ### Feature
