@@ -186,7 +186,7 @@ class ChickenVariant(JsonFile):
 class WolfSoundVariant(JsonFile):
     """Class representing a wolf sound variant."""
 
-    scope: ClassVar[NamespaceFileScope] = ("wofl_sound_variant",)
+    scope: ClassVar[NamespaceFileScope] = ("wolf_sound_variant",)
     extension: ClassVar[str] = ".json"
 
 
