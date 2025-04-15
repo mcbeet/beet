@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.98.0 (2025-04-15)
+
+### Feature
+
+* 1.21.5 text component and SNBT changes ([#306](https://github.com/mcbeet/mecha/issues/306)) ([`6002605`](https://github.com/mcbeet/mecha/commit/60026053abc33e2f3e31d110d42121da1e06dfc9))
+
 ## v0.97.1 (2025-03-27)
 
 ### Fix
