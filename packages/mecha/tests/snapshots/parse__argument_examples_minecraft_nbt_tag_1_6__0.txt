@@ -2,8 +2,8 @@ minecraft:nbt_tag 1 6
 ---
 {}
 ---
-[B;5l,4l,3]
+{hello,world}
 ---
 Reported 1 error.
 
-line 1, column 4: Expected all elements to be bytes.
+line 1, column 7: Expected colon but got comma ','.

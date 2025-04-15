@@ -2,8 +2,8 @@ minecraft:nbt_tag 1 12
 ---
 {}
 ---
-{foo: [1,2}
+"\'"
 ---
 Reported 1 error.
 
-line 1, column 11: Expected bracket ']' but got curly '}'.
+line 1, column 2: Invalid escape sequence \'.

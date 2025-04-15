@@ -184,7 +184,7 @@ from .ast import (
 from .config import CommandTree
 from .error import MechaError
 from .spec import CommandSpec, Parser
-from .utils import JsonQuoteHelper, QuoteHelper, string_to_number
+from .utils import JsonQuoteHelper, NbtQuoteHelper, QuoteHelper, string_to_number
 
 NUMBER_PATTERN: str = r"-?(?:\d+\.?\d*|\.\d+)"
 
@@ -493,8 +493,8 @@ def get_default_parsers() -> Dict[str, Parser]:
             ]
         ),
         "command:argument:minecraft:column_pos": delegate("column_pos"),
-        "command:argument:minecraft:component": MultilineParser(delegate("json")),
-        "command:argument:minecraft:style": MultilineParser(delegate("json")),
+        "command:argument:minecraft:component": MultilineParser(delegate("nbt")),
+        "command:argument:minecraft:style": MultilineParser(delegate("nbt")),
         "command:argument:minecraft:dimension": delegate("resource_location"),
         "command:argument:minecraft:entity": delegate("entity"),
         "command:argument:minecraft:entity_anchor": delegate("entity_anchor"),
@@ -582,6 +582,12 @@ def get_parsers(version: VersionNumber = LATEST_MINECRAFT_VERSION) -> Dict[str, 
 
     if version < (1, 20):
         parsers["scoreboard_slot"] = BasicLiteralParser(AstLegacyScoreboardSlot)
+
+    if version < (1, 21):
+        parsers["command:argument:minecraft:component"] = MultilineParser(
+            delegate("json")
+        )
+        parsers["command:argument:minecraft:style"] = MultilineParser(delegate("json"))
 
     return parsers
 
@@ -1165,13 +1171,7 @@ class NbtParser:
         }
     )
 
-    quote_helper: QuoteHelper = field(
-        default_factory=lambda: QuoteHelper(
-            escape_sequences={
-                r"\\": "\\",
-            }
-        )
-    )
+    quote_helper: QuoteHelper = field(default_factory=NbtQuoteHelper)
 
     def __post_init__(self):
         self.compound_entry_parser = self.parse_compound_entry
@@ -1234,24 +1234,16 @@ class NbtParser:
                         node = AstNbtLongArray(elements=AstChildren(elements))
                         element_type = Long  # type: ignore
                         msg = "Expected all elements to be long integers."
+
+                    node = set_location(node, array, stream.current)
+
+                    for element in node.elements:
+                        if isinstance(element, AstNbtValue):
+                            if type(element.value) is not element_type:
+                                raise element.emit_error(InvalidSyntax(msg))
                 else:
                     node = AstNbtList(elements=AstChildren(elements))
-                    element_type = None
-                    msg = "Expected all elements to have the same type."
-
-                node = set_location(node, bracket or array, stream.current)
-
-                for element in node.elements:
-                    if isinstance(element, AstNbtValue):
-                        if not element_type:
-                            element_type = type(element.value)
-                        elif type(element.value) is not element_type:
-                            raise element.emit_error(InvalidSyntax(msg))
-                    elif isinstance(element, AstNbt):  # type: ignore
-                        if not element_type:
-                            element_type = type(element)
-                        elif type(element) is not element_type:
-                            raise element.emit_error(InvalidSyntax(msg))
+                    node = set_location(node, bracket, stream.current)
 
                 return node
 

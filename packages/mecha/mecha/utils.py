@@ -2,6 +2,7 @@ __all__ = [
     "QuoteHelper",
     "QuoteHelperWithUnicode",
     "JsonQuoteHelper",
+    "NbtQuoteHelper",
     "InvalidEscapeSequence",
     "normalize_whitespace",
     "string_to_number",
@@ -14,7 +15,7 @@ __all__ = [
 import re
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Dict, Optional, Union
+from typing import Any, Dict, List, Optional, Union
 
 from beet import File
 from beet.core.utils import FileSystemPath
@@ -25,6 +26,7 @@ from .error import MechaError
 ESCAPE_REGEX = re.compile(r"\\.")
 UNICODE_ESCAPE_REGEX = re.compile(r"\\(?:u([0-9a-fA-F]{4})|.)")
 AVOID_QUOTES_REGEX = re.compile(r"^[0-9A-Za-z_\.\+\-]+$")
+QUOTE_REGEX = re.compile(r"\"|'")
 
 WHITESPACE_REGEX = re.compile(r"\s+")
 
@@ -70,10 +72,15 @@ class QuoteHelper:
     avoid_quotes_regex: "re.Pattern[str]" = AVOID_QUOTES_REGEX
 
     escape_sequences: Dict[str, str] = field(default_factory=dict)
+    unquote_only_escape_characters: List[str] = field(default_factory=list)
     escape_characters: Dict[str, str] = field(init=False)
 
     def __post_init__(self):
-        self.escape_characters = {v: k for k, v in self.escape_sequences.items()}
+        self.escape_characters = {
+            v: k
+            for k, v in self.escape_sequences.items()
+            if not k in self.unquote_only_escape_characters
+        }
 
     def unquote_string(self, token: Token) -> str:
         """Remove quotes and substitute escaped characters."""
@@ -106,9 +113,14 @@ class QuoteHelper:
         """Wrap the string in quotes if it can't be represented unquoted."""
         if self.avoid_quotes_regex.match(value):
             return value
+        value = self.handle_quoting(value)
+        return quote + value.replace(quote, "\\" + quote) + quote
+
+    def handle_quoting(self, value: str) -> str:
+        """Handle escape characters during quoting."""
         for match, seq in self.escape_characters.items():
             value = value.replace(match, seq)
-        return quote + value.replace(quote, "\\" + quote) + quote
+        return value
 
 
 @dataclass
@@ -121,6 +133,17 @@ class QuoteHelperWithUnicode(QuoteHelper):
         if unicode_hex := match[1]:
             return chr(int(unicode_hex, 16))
         return super().handle_substitution(token, match)
+
+    def handle_quoting(self, value: str) -> str:
+        value = super().handle_quoting(value)
+
+        def escape_char(char: str) -> str:
+            codepoint = ord(char)
+            if codepoint < 128:
+                return char
+            return f"\\u{codepoint:04x}"
+
+        return "".join(escape_char(c) for c in value)
 
 
 @dataclass
@@ -136,6 +159,31 @@ class JsonQuoteHelper(QuoteHelperWithUnicode):
             r"\t": "\t",
         }
     )
+
+
+@dataclass
+class NbtQuoteHelper(QuoteHelperWithUnicode):
+    """Quote helper used for snbt."""
+
+    escape_sequences: Dict[str, str] = field(
+        default_factory=lambda: {
+            r"\\": "\\",
+            r"\b": "\b",
+            r"\f": "\f",
+            r"\n": "\n",
+            r"\r": "\r",
+            r"\s": " ",
+            r"\t": "\t",
+        }
+    )
+    unquote_only_escape_characters: List[str] = field(default_factory=lambda: [r"\s"])
+
+    def quote_string(self, value: str, quote: Optional[str] = None) -> str:
+        if not quote:
+            found = QUOTE_REGEX.search(value)
+            quote = "'" if found and found.group() == '"' else '"'
+        value = super().handle_quoting(value)
+        return quote + value.replace(quote, "\\" + quote) + quote
 
 
 def underline_code(

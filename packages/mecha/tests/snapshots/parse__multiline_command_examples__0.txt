@@ -408,62 +408,62 @@
           variable: 's'
           arguments:
             <empty>
-        <class 'mecha.ast.AstJsonObject'>
+        <class 'mecha.ast.AstNbtCompound'>
           location: SourceLocation(pos=542, lineno=29, colno=12)
           end_location: SourceLocation(pos=650, lineno=35, colno=2)
           entries:
-            <class 'mecha.ast.AstJsonObjectEntry'>
+            <class 'mecha.ast.AstNbtCompoundEntry'>
               location: SourceLocation(pos=548, lineno=30, colno=5)
               end_location: SourceLocation(pos=567, lineno=30, colno=24)
               key:
-                <class 'mecha.ast.AstJsonObjectKey'>
+                <class 'mecha.ast.AstNbtCompoundKey'>
                   location: SourceLocation(pos=548, lineno=30, colno=5)
                   end_location: SourceLocation(pos=554, lineno=30, colno=11)
                   value: 'text'
               value:
-                <class 'mecha.ast.AstJsonValue'>
+                <class 'mecha.ast.AstNbtValue'>
                   location: SourceLocation(pos=556, lineno=30, colno=13)
                   end_location: SourceLocation(pos=567, lineno=30, colno=24)
-                  value: 'Hover me!'
-            <class 'mecha.ast.AstJsonObjectEntry'>
+                  value: String('Hover me!')
+            <class 'mecha.ast.AstNbtCompoundEntry'>
               location: SourceLocation(pos=573, lineno=31, colno=5)
               end_location: SourceLocation(pos=648, lineno=34, colno=6)
               key:
-                <class 'mecha.ast.AstJsonObjectKey'>
+                <class 'mecha.ast.AstNbtCompoundKey'>
                   location: SourceLocation(pos=573, lineno=31, colno=5)
                   end_location: SourceLocation(pos=585, lineno=31, colno=17)
                   value: 'hoverEvent'
               value:
-                <class 'mecha.ast.AstJsonObject'>
+                <class 'mecha.ast.AstNbtCompound'>
                   location: SourceLocation(pos=587, lineno=31, colno=19)
                   end_location: SourceLocation(pos=648, lineno=34, colno=6)
                   entries:
-                    <class 'mecha.ast.AstJsonObjectEntry'>
+                    <class 'mecha.ast.AstNbtCompoundEntry'>
                       location: SourceLocation(pos=597, lineno=32, colno=9)
                       end_location: SourceLocation(pos=618, lineno=32, colno=30)
                       key:
-                        <class 'mecha.ast.AstJsonObjectKey'>
+                        <class 'mecha.ast.AstNbtCompoundKey'>
                           location: SourceLocation(pos=597, lineno=32, colno=9)
                           end_location: SourceLocation(pos=605, lineno=32, colno=17)
                           value: 'action'
                       value:
-                        <class 'mecha.ast.AstJsonValue'>
+                        <class 'mecha.ast.AstNbtValue'>
                           location: SourceLocation(pos=607, lineno=32, colno=19)
                           end_location: SourceLocation(pos=618, lineno=32, colno=30)
-                          value: 'show_text'
-                    <class 'mecha.ast.AstJsonObjectEntry'>
+                          value: String('show_text')
+                    <class 'mecha.ast.AstNbtCompoundEntry'>
                       location: SourceLocation(pos=628, lineno=33, colno=9)
                       end_location: SourceLocation(pos=642, lineno=33, colno=23)
                       key:
-                        <class 'mecha.ast.AstJsonObjectKey'>
+                        <class 'mecha.ast.AstNbtCompoundKey'>
                           location: SourceLocation(pos=628, lineno=33, colno=9)
                           end_location: SourceLocation(pos=635, lineno=33, colno=16)
                           value: 'value'
                       value:
-                        <class 'mecha.ast.AstJsonValue'>
+                        <class 'mecha.ast.AstNbtValue'>
                           location: SourceLocation(pos=637, lineno=33, colno=18)
                           end_location: SourceLocation(pos=642, lineno=33, colno=23)
-                          value: 'Hi!'
+                          value: String('Hi!')
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=652, lineno=37, colno=1)
       end_location: SourceLocation(pos=975, lineno=51, colno=6)
@@ -685,23 +685,23 @@
           variable: 'a'
           arguments:
             <empty>
-        <class 'mecha.ast.AstJsonObject'>
+        <class 'mecha.ast.AstNbtCompound'>
           location: SourceLocation(pos=1115, lineno=57, colno=12)
           end_location: SourceLocation(pos=1146, lineno=59, colno=2)
           entries:
-            <class 'mecha.ast.AstJsonObjectEntry'>
+            <class 'mecha.ast.AstNbtCompoundEntry'>
               location: SourceLocation(pos=1121, lineno=58, colno=5)
               end_location: SourceLocation(pos=1144, lineno=58, colno=28)
               key:
-                <class 'mecha.ast.AstJsonObjectKey'>
+                <class 'mecha.ast.AstNbtCompoundKey'>
                   location: SourceLocation(pos=1121, lineno=58, colno=5)
                   end_location: SourceLocation(pos=1127, lineno=58, colno=11)
                   value: 'text'
               value:
-                <class 'mecha.ast.AstJsonValue'>
+                <class 'mecha.ast.AstNbtValue'>
                   location: SourceLocation(pos=1129, lineno=58, colno=13)
                   end_location: SourceLocation(pos=1144, lineno=58, colno=28)
-                  value: 'Hello # there'
+                  value: String('Hello # there')
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=1148, lineno=61, colno=1)
       end_location: SourceLocation(pos=1214, lineno=64, colno=6)
@@ -713,23 +713,23 @@
           variable: 'a'
           arguments:
             <empty>
-        <class 'mecha.ast.AstJsonObject'>
+        <class 'mecha.ast.AstNbtCompound'>
           location: SourceLocation(pos=1171, lineno=62, colno=5)
           end_location: SourceLocation(pos=1214, lineno=64, colno=6)
           entries:
-            <class 'mecha.ast.AstJsonObjectEntry'>
+            <class 'mecha.ast.AstNbtCompoundEntry'>
               location: SourceLocation(pos=1181, lineno=63, colno=9)
               end_location: SourceLocation(pos=1208, lineno=63, colno=36)
               key:
-                <class 'mecha.ast.AstJsonObjectKey'>
+                <class 'mecha.ast.AstNbtCompoundKey'>
                   location: SourceLocation(pos=1181, lineno=63, colno=9)
                   end_location: SourceLocation(pos=1187, lineno=63, colno=15)
                   value: 'text'
               value:
-                <class 'mecha.ast.AstJsonValue'>
+                <class 'mecha.ast.AstNbtValue'>
                   location: SourceLocation(pos=1189, lineno=63, colno=17)
                   end_location: SourceLocation(pos=1208, lineno=63, colno=36)
-                  value: 'Hello" # "there'
+                  value: String('Hello" # "there')
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=1216, lineno=66, colno=1)
       end_location: SourceLocation(pos=1234, lineno=66, colno=19)
@@ -741,14 +741,14 @@
           variable: 's'
           arguments:
             <empty>
-        <class 'mecha.ast.AstJsonArray'>
+        <class 'mecha.ast.AstNbtList'>
           location: SourceLocation(pos=1227, lineno=66, colno=12)
           end_location: SourceLocation(pos=1234, lineno=66, colno=19)
           elements:
-            <class 'mecha.ast.AstJsonValue'>
+            <class 'mecha.ast.AstNbtValue'>
               location: SourceLocation(pos=1228, lineno=66, colno=13)
               end_location: SourceLocation(pos=1233, lineno=66, colno=18)
-              value: 'foo'
+              value: String('foo')
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=1245, lineno=68, colno=1)
       end_location: SourceLocation(pos=1288, lineno=73, colno=9)

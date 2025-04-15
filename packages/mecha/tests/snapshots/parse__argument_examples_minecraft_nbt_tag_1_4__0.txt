@@ -2,8 +2,8 @@ minecraft:nbt_tag 1 4
 ---
 {}
 ---
-[a,1]
+[I;5l,4l,3]
 ---
 Reported 1 error.
 
-line 1, column 4: Expected all elements to have the same type.
+line 1, column 4: Expected all elements to be integers.

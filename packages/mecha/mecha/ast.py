@@ -832,6 +832,7 @@ class AstNbtByteArray(AstNbt):
     elements: AstChildren[AstNbt] = required_field()
 
     parser = None
+    array_prefix = "B"
 
     def evaluate(self) -> Any:
         return ByteArray([element.evaluate() for element in self.elements])  # type: ignore
@@ -844,6 +845,7 @@ class AstNbtIntArray(AstNbt):
     elements: AstChildren[AstNbt] = required_field()
 
     parser = None
+    array_prefix = "I"
 
     def evaluate(self) -> Any:
         return IntArray([element.evaluate() for element in self.elements])  # type: ignore
@@ -856,6 +858,7 @@ class AstNbtLongArray(AstNbt):
     elements: AstChildren[AstNbt] = required_field()
 
     parser = None
+    array_prefix = "L"
 
     def evaluate(self) -> Any:
         return LongArray([element.evaluate() for element in self.elements])  # type: ignore

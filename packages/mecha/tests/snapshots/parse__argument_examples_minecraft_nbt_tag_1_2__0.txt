@@ -2,8 +2,8 @@ minecraft:nbt_tag 1 2
 ---
 {}
 ---
-"\\\"
+{"\":1}
 ---
 Reported 1 error.
 
-line 1, column 1: Expected array, bracket '[', curly '{', number, quoted_string or string but got literal '"\\\\\\"'.
+line 1, column 2: Expected number, quoted_string or string but got literal '"\\"'.

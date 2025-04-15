@@ -2,8 +2,8 @@ minecraft:nbt_tag 1 7
 ---
 {}
 ---
-[I;5l,4l,3]
+{with space: 5}
 ---
 Reported 1 error.
 
-line 1, column 4: Expected all elements to be integers.
+line 1, column 7: Expected colon but got string 'space'.

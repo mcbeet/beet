@@ -18,7 +18,7 @@
 `@function demo:foo`
 
 ```mcfunction
-tellraw @p {"text": "empty"}
+tellraw @p {text: "empty"}
 ```
 
 `@loot_table demo:foo`

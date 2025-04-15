@@ -20,7 +20,7 @@
 ```mcfunction
 say this is a test
 execute as @a[nbt={SelectedItem:{id:"minecraft:diamond",Count:64b}}] at @s run setblock ~ ~ ~ repeater[delay=3,facing=south]
-tellraw @a ["",{"text":"hello","color":"red"},"not ascii: \u00b6"]
+tellraw @a ["",{text:"hello",color:"red"},"not ascii: \u00b6"]
 say goodbye
 ```
 
@@ -29,7 +29,7 @@ say goodbye
 ```mcfunction
 say this is a test
 execute as @a[nbt={SelectedItem: {id: "minecraft:diamond", Count: 64b}}] at @s run setblock ~ ~ ~ repeater[delay=3, facing=south]
-tellraw @a ["", {"text": "hello", "color": "red"}, "not ascii: \u00b6"]
+tellraw @a ["", {text: "hello", color: "red"}, "not ascii: \u00b6"]
 say goodbye
 ```
 
@@ -44,7 +44,7 @@ execute as @a[nbt={SelectedItem: {id: "minecraft:diamond", Count: 64b}}] at @s r
 
 
 
-tellraw @a ["", {"text": "hello", "color": "red"}, "not ascii: \u00b6"]
+tellraw @a ["", {text: "hello", color: "red"}, "not ascii: \u00b6"]
 
 
 
@@ -63,7 +63,7 @@ execute as @a[nbt={SelectedItem:{id:"minecraft:diamond",Count:64b}}] at @s run s
 
 
 
-tellraw @a ["", {"color": "red", "text": "hello"}, "not ascii: ¶"]
+tellraw @a ["",{text:"hello",color:"red"},"not ascii: \u00b6"]
 
 
 

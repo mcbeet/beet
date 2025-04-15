@@ -4,7 +4,7 @@ minecraft:loot_predicate 0 1
 ---
 {condition:weather_check, raining:true}
 ---
-{condition: "weather_check", raining: 1b}
+{condition: "weather_check", raining: true}
 ---
 <class 'mecha.ast.AstNbtCompound'>
   location: SourceLocation(pos=0, lineno=1, colno=1)

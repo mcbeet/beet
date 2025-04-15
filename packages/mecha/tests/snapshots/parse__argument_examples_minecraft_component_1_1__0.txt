@@ -1,9 +1,0 @@
-minecraft:component 1 1
----
-{}
----
-{"hey": ]}
----
-Reported 1 error.
-
-line 1, column 9: Expected bracket '[', curly '{', false, null, number, string or true but got bracket ']'.

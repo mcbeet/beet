@@ -50,7 +50,7 @@ execute as @a at @s align xyz if block ~ ~ ~ wool[foo=bar] run summon armor_stan
 # consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
 # cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
 # non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-tellraw @s {"text": "Hover me!", "hoverEvent": {"action": "show_text", "value": "Hi!"}}
+tellraw @s {text: "Hover me!", hoverEvent: {action: "show_text", value: "Hi!"}}
 
     # The hover event is cool
 
@@ -84,7 +84,7 @@ execute as @a at @s if block ~ ~-1 ~ #wool run give @s stone{display: {Name: '[{
 execute if block ~ ~ ~ #namespace:tag if entity @s[tag=foo]
 
 
-tellraw @a {"text": "Hello # there"}
+tellraw @a {text: "Hello # there"}
 
 
 

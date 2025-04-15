@@ -2,8 +2,8 @@ minecraft:component 1 0
 ---
 {}
 ---
-wat
+{"hey": ]}
 ---
 Reported 1 error.
 
-line 1, column 1: Expected bracket '[', curly '{', false, null, number, string or true but got literal 'wat'.
+line 1, column 9: Expected array, bracket '[', curly '{', number, quoted_string or string but got bracket ']'.

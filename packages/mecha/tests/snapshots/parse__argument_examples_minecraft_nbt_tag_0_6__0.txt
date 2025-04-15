@@ -4,7 +4,7 @@ minecraft:nbt_tag 0 6
 ---
 [B; 1b]
 ---
-[B; 1B]
+[B; 1b]
 ---
 <class 'mecha.ast.AstNbtByteArray'>
   location: SourceLocation(pos=0, lineno=1, colno=1)

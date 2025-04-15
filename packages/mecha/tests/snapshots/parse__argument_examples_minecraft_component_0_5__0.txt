@@ -4,26 +4,26 @@ minecraft:component 0 5
 ---
 {"\u2588\"\n":[123]}
 ---
-{"\u2588\"\n": [123]}
+{'\u2588"\n': [123]}
 ---
-<class 'mecha.ast.AstJsonObject'>
+<class 'mecha.ast.AstNbtCompound'>
   location: SourceLocation(pos=0, lineno=1, colno=1)
   end_location: SourceLocation(pos=20, lineno=1, colno=21)
   entries:
-    <class 'mecha.ast.AstJsonObjectEntry'>
+    <class 'mecha.ast.AstNbtCompoundEntry'>
       location: SourceLocation(pos=1, lineno=1, colno=2)
       end_location: SourceLocation(pos=19, lineno=1, colno=20)
       key:
-        <class 'mecha.ast.AstJsonObjectKey'>
+        <class 'mecha.ast.AstNbtCompoundKey'>
           location: SourceLocation(pos=1, lineno=1, colno=2)
           end_location: SourceLocation(pos=13, lineno=1, colno=14)
           value: '█"\n'
       value:
-        <class 'mecha.ast.AstJsonArray'>
+        <class 'mecha.ast.AstNbtList'>
           location: SourceLocation(pos=14, lineno=1, colno=15)
           end_location: SourceLocation(pos=19, lineno=1, colno=20)
           elements:
-            <class 'mecha.ast.AstJsonValue'>
+            <class 'mecha.ast.AstNbtValue'>
               location: SourceLocation(pos=15, lineno=1, colno=16)
               end_location: SourceLocation(pos=18, lineno=1, colno=19)
-              value: 123
+              value: Int(123)

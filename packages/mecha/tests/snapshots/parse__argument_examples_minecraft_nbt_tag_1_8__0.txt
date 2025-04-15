@@ -2,8 +2,8 @@ minecraft:nbt_tag 1 8
 ---
 {}
 ---
-[L;5l,4l,3]
+{\": no}
 ---
 Reported 1 error.
 
-line 1, column 10: Expected all elements to be long integers.
+line 1, column 2: Expected number, quoted_string or string but got literal '\\"'.
