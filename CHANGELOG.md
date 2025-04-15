@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.110.0 (2025-04-15)
+
+### Feature
+
+* Add new data pack folders from 1.21.5 ([#467](https://github.com/mcbeet/beet/issues/467)) ([`5be347d`](https://github.com/mcbeet/beet/commit/5be347d9f443ce3f2b2584cb86cba2c1026727d2))
+
 ## v0.109.4 (2025-01-21)
 
 ### Fix
