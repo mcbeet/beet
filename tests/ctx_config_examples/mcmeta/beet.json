@@ -1,0 +1,18 @@
+{
+  "data_pack": {
+    "name": "My Data Pack",
+    "description": "a data pack",
+    "pack_format": 6,
+    "supported_formats": [0,6]
+  },
+  "resource_pack": {
+    "name": "My Resource Pack",
+    "description": "a resource pack",
+    "pack_format": 10,
+    "supported_formats": {
+      "min_inclusive": 10,
+      "max_inclusive": 20
+    }
+  },
+  "pipeline": ["mcmeta"]
+}

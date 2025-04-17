@@ -11,6 +11,13 @@
     "entries": [
       {
         "formats": {
+          "min_inclusive": 18,
+          "max_inclusive": 19
+        },
+        "directory": "creeper"
+      },
+      {
+        "formats": {
           "min_inclusive": 17,
           "max_inclusive": 18
         },
@@ -26,13 +33,6 @@
       {
         "formats": 19,
         "directory": "overlay_missing"
-      },
-      {
-        "formats": {
-          "min_inclusive": 18,
-          "max_inclusive": 19
-        },
-        "directory": "creeper"
       }
     ]
   }
