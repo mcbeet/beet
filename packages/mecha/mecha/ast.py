@@ -988,6 +988,7 @@ class AstItemSlot(AstOption):
             "armor.head",
             "armor.legs",
             "contents",
+            "saddle",
             "weapon",
             "weapon.mainhand",
             "weapon.offhand",
