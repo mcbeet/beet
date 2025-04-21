@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.98.1 (2025-04-21)
+
+### Fix
+
+* Add saddle item slot ([#308](https://github.com/mcbeet/mecha/issues/308)) ([`fc15cd0`](https://github.com/mcbeet/mecha/commit/fc15cd0842ceb5681838f209a3d1ac64bbf5fdbd))
+
 ## v0.98.0 (2025-04-15)
 
 ### Feature
