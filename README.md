@@ -137,4 +137,11 @@ $ poetry run black --check beet tests
 
 ---
 
+The documentation is build with [mudkip](https://github.com/vberlier/mudkip).
+
+```bash
+poetry run mudkip develop
+
+```
+
 License - [MIT](https://github.com/mcbeet/beet/blob/main/LICENSE)
