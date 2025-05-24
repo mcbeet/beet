@@ -1,9 +1,9 @@
 {
-  "some.prefix.foo": "hello",
-  "some.prefix.bar": "egg",
   "other.prefix.foo": "t1",
   "other.prefix.bar": "u1",
   "other.prefix.baz": "v1",
+  "some.prefix.foo": "hello",
+  "some.prefix.bar": "egg",
   "foo.hello": "1",
   "foo.world": "4",
   "entity.gm4.congealed_shard": "Congealed Soul Shard\u00a7",

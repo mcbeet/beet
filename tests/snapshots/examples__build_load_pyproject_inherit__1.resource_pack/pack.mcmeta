@@ -1,6 +1,6 @@
 {
     "pack": {
-        "pack_format": 46,
+        "pack_format": 55,
         "description": "Demo project\nAuthor: Valentin Berlier <berlier.v@gmail.com>\nVersion: 0.1.0"
     }
 }
