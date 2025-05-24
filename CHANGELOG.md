@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.110.1 (2025-05-24)
+
+### Fix
+
+* Pack_format for 1.21.5 ([#469](https://github.com/mcbeet/beet/issues/469)) ([`e3db62d`](https://github.com/mcbeet/beet/commit/e3db62df83bb30bf7144b2518e841076f4d2e6a9))
+
 ## v0.110.0 (2025-04-15)
 
 ### Feature
