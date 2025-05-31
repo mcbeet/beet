@@ -1,0 +1,21 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug Beet CLI",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/beet/__main__.py",
+      "args": ["build"],
+      "console": "integratedTerminal",
+      "cwd": "${input:cwd}"
+    }
+  ],
+  "inputs": [
+    {
+      "id": "cwd",
+      "type": "promptString",
+      "description": "Enter the working directory to run beet in"
+    }
+  ]
+}
