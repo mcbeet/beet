@@ -64,6 +64,7 @@ from typing import (
 )
 from zipfile import ZIP_BZIP2, ZIP_DEFLATED, ZIP_LZMA, ZIP_STORED, ZipFile
 
+from beet.resources.pack_format_registry import pack_format_registry
 from typing_extensions import Self
 
 from beet.core.container import (
@@ -76,11 +77,17 @@ from beet.core.container import (
     SupportsMerge,
 )
 from beet.core.file import File, FileOrigin, JsonFile, PngFile
-from beet.core.utils import FileSystemPath, JsonDict, SupportedFormats, TextComponent
+from beet.core.utils import (
+    FileSystemPath,
+    JsonDict,
+    SupportedFormats,
+    TextComponent,
+    split_version,
+)
 
 from .utils import list_extensions, list_origin_folders
 
-LATEST_MINECRAFT_VERSION: str = "1.21"
+LATEST_MINECRAFT_VERSION: str = "1.21.5"
 
 
 T = TypeVar("T")
@@ -989,8 +996,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
 
     namespace_type: ClassVar[Type[Namespace]]
     default_name: ClassVar[str]
-    pack_format_registry: ClassVar[Dict[Tuple[int, ...], int]]
-    latest_pack_format: ClassVar[int]
+    pack_format_key: ClassVar[str]
 
     def __init_subclass__(cls):
         cls.namespace_type = get_args(getattr(cls, "__orig_bases__")[0])[0]
@@ -1054,6 +1060,18 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
             self.filter = filter
 
         self.load(path or zipfile or mapping)
+
+    @property
+    def pack_format_registry(self) -> Dict[Tuple[int, ...], int]:
+        return {
+            split_version(x.id): getattr(x, self.pack_format_key)
+            for x in pack_format_registry
+            if x.type == "release"
+        }
+
+    @property
+    def latest_pack_format(self) -> int:
+        return self.pack_format_registry[split_version(LATEST_MINECRAFT_VERSION)]
 
     def configure(
         self: PackType,
