@@ -9,6 +9,7 @@ from importlib.resources import files
 import json
 from pydantic import BaseModel
 
+
 class PackFormatRegistry(BaseModel):
     id: str
     name: str
@@ -24,9 +25,9 @@ class PackFormatRegistry(BaseModel):
     sha1: str
 
 
-data = json.loads(files("beet.resources").joinpath(f"pack_format_registry.json").read_text())
+data = json.loads(
+    files("beet.resources").joinpath(f"pack_format_registry.json").read_text()
+)
 pack_format_registry: list[PackFormatRegistry] = []
 for item in data:
     pack_format_registry.append(PackFormatRegistry.model_validate(item))
-
-
