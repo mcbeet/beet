@@ -64,7 +64,10 @@ from typing import (
 )
 from zipfile import ZIP_BZIP2, ZIP_DEFLATED, ZIP_LZMA, ZIP_STORED, ZipFile
 
-from beet.resources.pack_format_registry import pack_format_registry
+from beet.resources.pack_format_registry import (
+    data_pack_format_registry,
+    resource_pack_format_registry,
+)
 from typing_extensions import Self
 
 from beet.core.container import (
@@ -996,7 +999,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
 
     namespace_type: ClassVar[Type[Namespace]]
     default_name: ClassVar[str]
-    pack_format_key: ClassVar[str]
+    pack_format_key: ClassVar[Literal["data_pack_version", "resource_pack_version"]]
 
     def __init_subclass__(cls):
         cls.namespace_type = get_args(getattr(cls, "__orig_bases__")[0])[0]
@@ -1063,11 +1066,14 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
 
     @property
     def pack_format_registry(self) -> Dict[Tuple[int, ...], int]:
-        return {
-            split_version(x.id): getattr(x, self.pack_format_key)
-            for x in pack_format_registry
-            if x.type == "release"
-        }
+        if self.pack_format_key == "data_pack_version":
+            return data_pack_format_registry
+        elif self.pack_format_key == "resource_pack_version":
+            return resource_pack_format_registry
+        raise ValueError(
+            f"Unknown pack format key: {self.pack_format_key!r}. "
+            "Expected 'data_pack_version' or 'resource_pack_version'."
+        )
 
     @property
     def latest_pack_format(self) -> int:

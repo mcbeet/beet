@@ -49,7 +49,7 @@ import io
 from copy import deepcopy
 from dataclasses import dataclass
 from gzip import GzipFile
-from typing import ClassVar, Iterable, List, Optional, TypeVar, Union
+from typing import ClassVar, Iterable, List, Literal, Optional, TypeVar, Union
 
 from nbtlib.contrib.minecraft import StructureFile, StructureFileData
 
@@ -596,7 +596,9 @@ class DataPack(Pack[DataPackNamespace]):
 
     default_name = "untitled_data_pack"
 
-    pack_format_key: ClassVar[str] = "data_pack_version"
+    pack_format_key: ClassVar[Literal["data_pack_version", "resource_pack_version"]] = (
+        "data_pack_version"
+    )
 
     # fmt: off
     advancements:                       NamespaceProxyDescriptor[Advancement]               = NamespaceProxyDescriptor(Advancement)

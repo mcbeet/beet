@@ -4,10 +4,13 @@ Pack format registry resource from https://raw.githubusercontent.com/misode/mcme
 
 __all__ = [
     "pack_format_registry",
+    "data_pack_format_registry",
+    "resource_pack_format_registry",
 ]
 from importlib.resources import files
 import json
 from pydantic import BaseModel
+from beet.core.utils import split_version
 
 
 class PackFormatRegistry(BaseModel):
@@ -31,3 +34,15 @@ data = json.loads(
 pack_format_registry: list[PackFormatRegistry] = []
 for item in data:
     pack_format_registry.append(PackFormatRegistry.model_validate(item))
+
+
+data_pack_format_registry = {
+    split_version(x.id): x.data_pack_version
+    for x in pack_format_registry
+    if x.type == "release"
+}
+resource_pack_format_registry = {
+    split_version(x.id): x.resource_pack_version
+    for x in pack_format_registry
+    if x.type == "release"
+}

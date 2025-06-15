@@ -28,7 +28,7 @@ __all__ = [
 from contextlib import suppress
 from copy import deepcopy
 from dataclasses import dataclass
-from typing import Any, ClassVar, Dict, Optional, Type
+from typing import Any, ClassVar, Dict, Literal, Optional, Type
 
 try:
     from PIL.Image import Image
@@ -354,7 +354,9 @@ class ResourcePack(Pack[ResourcePackNamespace]):
 
     default_name = "untitled_resource_pack"
 
-    pack_format_key: ClassVar[str] = "resource_pack_version"
+    pack_format_key: ClassVar[Literal["data_pack_version", "resource_pack_version"]] = (
+        "resource_pack_version"
+    )
 
     language_config = McmetaPin[Dict[str, JsonDict]]("language", default_factory=dict)
 
