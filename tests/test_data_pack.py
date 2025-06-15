@@ -670,10 +670,7 @@ def test_overlay():
         "c/data/demo/functions/thing.mcfunction": Function([]),
         "pack.mcmeta": Mcmeta(
             {
-                "pack": {
-                    "pack_format": DataPack.latest_pack_format,
-                    "description": "",
-                },
+                "pack": {"pack_format": DataPack.latest_pack_format, "description": ""},
                 "overlays": {
                     "entries": [
                         {
