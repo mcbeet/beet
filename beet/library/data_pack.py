@@ -49,7 +49,7 @@ import io
 from copy import deepcopy
 from dataclasses import dataclass
 from gzip import GzipFile
-from typing import ClassVar, Iterable, List, Literal, Optional, TypeVar, Union
+from typing import ClassVar, Iterable, List, Optional, TypeVar, Union
 
 from nbtlib.contrib.minecraft import StructureFile, StructureFileData
 
@@ -61,9 +61,11 @@ from beet.core.file import (
     TextFileBase,
     TextFileContent,
 )
-from beet.core.utils import JsonDict, extra_field
+from beet.core.utils import JsonDict, extra_field, split_version
+from beet.resources.pack_format_registry import data_pack_format_registry
 
 from .base import (
+    LATEST_MINECRAFT_VERSION,
     Namespace,
     NamespaceFileScope,
     NamespacePin,
@@ -596,9 +598,8 @@ class DataPack(Pack[DataPackNamespace]):
 
     default_name = "untitled_data_pack"
 
-    pack_format_key: ClassVar[Literal["data_pack_version", "resource_pack_version"]] = (
-        "data_pack_version"
-    )
+    pack_format_registry = data_pack_format_registry
+    latest_pack_format = pack_format_registry[split_version(LATEST_MINECRAFT_VERSION)]
 
     # fmt: off
     advancements:                       NamespaceProxyDescriptor[Advancement]               = NamespaceProxyDescriptor(Advancement)

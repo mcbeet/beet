@@ -28,7 +28,9 @@ __all__ = [
 from contextlib import suppress
 from copy import deepcopy
 from dataclasses import dataclass
-from typing import Any, ClassVar, Dict, Literal, Optional, Type
+from typing import Any, ClassVar, Dict, Optional, Type
+
+from beet.resources.pack_format_registry import resource_pack_format_registry
 
 try:
     from PIL.Image import Image
@@ -36,9 +38,10 @@ except ImportError:
     Image = Any
 
 from beet.core.file import BinaryFile, BinaryFileContent, JsonFile, PngFile, TextFile
-from beet.core.utils import JsonDict, extra_field
+from beet.core.utils import JsonDict, extra_field, split_version
 
 from .base import (
+    LATEST_MINECRAFT_VERSION,
     ExtraPin,
     McmetaPin,
     Namespace,
@@ -354,9 +357,8 @@ class ResourcePack(Pack[ResourcePackNamespace]):
 
     default_name = "untitled_resource_pack"
 
-    pack_format_key: ClassVar[Literal["data_pack_version", "resource_pack_version"]] = (
-        "resource_pack_version"
-    )
+    pack_format_registry = resource_pack_format_registry
+    latest_pack_format = pack_format_registry[split_version(LATEST_MINECRAFT_VERSION)]
 
     language_config = McmetaPin[Dict[str, JsonDict]]("language", default_factory=dict)
 

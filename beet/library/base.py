@@ -64,10 +64,6 @@ from typing import (
 )
 from zipfile import ZIP_BZIP2, ZIP_DEFLATED, ZIP_LZMA, ZIP_STORED, ZipFile
 
-from beet.resources.pack_format_registry import (
-    data_pack_format_registry,
-    resource_pack_format_registry,
-)
 from typing_extensions import Self
 
 from beet.core.container import (
@@ -85,7 +81,6 @@ from beet.core.utils import (
     JsonDict,
     SupportedFormats,
     TextComponent,
-    split_version,
 )
 
 from .utils import list_extensions, list_origin_folders
@@ -999,7 +994,8 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
 
     namespace_type: ClassVar[Type[Namespace]]
     default_name: ClassVar[str]
-    pack_format_key: ClassVar[Literal["data_pack_version", "resource_pack_version"]]
+    pack_format_registry: ClassVar[Dict[Tuple[int, ...], int]]
+    latest_pack_format: ClassVar[int]
 
     def __init_subclass__(cls):
         cls.namespace_type = get_args(getattr(cls, "__orig_bases__")[0])[0]
@@ -1063,21 +1059,6 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
             self.filter = filter
 
         self.load(path or zipfile or mapping)
-
-    @property
-    def pack_format_registry(self) -> Dict[Tuple[int, ...], int]:
-        if self.pack_format_key == "data_pack_version":
-            return data_pack_format_registry
-        elif self.pack_format_key == "resource_pack_version":
-            return resource_pack_format_registry
-        raise ValueError(
-            f"Unknown pack format key: {self.pack_format_key!r}. "
-            "Expected 'data_pack_version' or 'resource_pack_version'."
-        )
-
-    @property
-    def latest_pack_format(self) -> int:
-        return self.pack_format_registry[split_version(LATEST_MINECRAFT_VERSION)]
 
     def configure(
         self: PackType,
