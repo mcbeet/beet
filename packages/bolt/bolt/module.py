@@ -119,7 +119,7 @@ class CompiledModule:
     python: Optional[str]
     refs: List[Any]
     dependencies: Set[str]
-    prelude_imports: List[AstPrelude]
+    prelude_imports: Tuple[AstPrelude, ...]
     macros: MacroLibrary
     lexical_scope: LexicalScope
     output: Optional[str]
@@ -138,7 +138,7 @@ class CodegenResult:
     output: Optional[str] = None
     refs: List[Any] = field(default_factory=list)
     dependencies: Set[str] = field(default_factory=set)
-    prelude_imports: List[AstPrelude] = field(default_factory=list)
+    prelude_imports: Tuple[AstPrelude, ...] = ()
     macros: MacroLibrary = field(default_factory=dict)
 
 
@@ -176,6 +176,9 @@ class ModuleManager(Mapping[TextFileBase[Any], CompiledModule]):
     builtins: Set[str] = extra_field(default_factory=set)
     prelude: Dict[str, Dict[Optional[Union[ResourcePack, DataPack]], AstPrelude]] = (
         extra_field(default_factory=dict)
+    )
+    prelude_cache: Dict[TextFileBase[Any], Tuple[AstPrelude, ...]] = extra_field(
+        default_factory=dict
     )
 
     execution_count: int = 0
@@ -418,8 +421,12 @@ class ModuleManager(Mapping[TextFileBase[Any], CompiledModule]):
 
         return AstPrelude(arguments=AstChildren(arguments))
 
-    def load_prelude(self) -> List[AstPrelude]:
-        """Load the prelude imports."""
+    def load_prelude(self) -> Tuple[AstPrelude, ...]:
+        """Load the prelude imports for the current file."""
+        cached = self.prelude_cache.get(self.database.current)
+        if cached is not None:
+            return cached
+
         current_pack = self.database[self.database.current].pack
         current_prelude = self.prelude
 
@@ -444,7 +451,9 @@ class ModuleManager(Mapping[TextFileBase[Any], CompiledModule]):
             pack_prelude[current_pack] = prelude
             prelude_imports.append(prelude)
 
-        return prelude_imports
+        result = tuple(prelude_imports)
+        self.prelude_cache[self.database.current] = result
+        return result
 
 
 @dataclass

@@ -613,7 +613,7 @@ class Codegen(Visitor):
             output=output,
             refs=acc.refs,
             dependencies=acc.dependencies,
-            prelude_imports=acc.prelude_imports,
+            prelude_imports=tuple(acc.prelude_imports),
             macros=acc.macros,
         )
 
