@@ -181,6 +181,7 @@ class WorldgenFlatLevelGeneratorPreset(JsonFile):
     scope: ClassVar[NamespaceFileScope] = ("worldgen", "flat_level_generator_preset")
     extension: ClassVar[str] = ".json"
 
+
 class WorldgenMultiNoiseBiomeSourceParameterList(JsonFile):
     """Class representing a worldgen multi noise biome source parameter list."""
 
@@ -189,7 +190,6 @@ class WorldgenMultiNoiseBiomeSourceParameterList(JsonFile):
         "multi_noise_biome_source_parameter_list",
     )
     extension: ClassVar[str] = ".json"
-
 
 
 class WorldgenBiomeTag(TagFile):

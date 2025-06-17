@@ -164,6 +164,7 @@ class Text(TextFile):
     scope: ClassVar[NamespaceFileScope] = ("texts",)
     extension: ClassVar[str] = ".txt"
 
+
 class TextJson(TextFile):
     """Class representing a text file."""
 
@@ -326,7 +327,6 @@ class WaypointStyle(JsonFile):
 
     scope: ClassVar[NamespaceFileScope] = ("waypoint_style",)
     extension: ClassVar[str] = ".json"
-
 
 
 class ResourcePackNamespace(Namespace):

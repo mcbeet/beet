@@ -205,12 +205,12 @@ class WolfSoundVariant(JsonFile):
     scope: ClassVar[NamespaceFileScope] = ("wolf_sound_variant",)
     extension: ClassVar[str] = ".json"
 
+
 class PigVariant(JsonFile):
     """Class representing a pig variant."""
 
     scope: ClassVar[NamespaceFileScope] = ("pig_variant",)
     extension: ClassVar[str] = ".json"
-
 
 
 @dataclass(eq=False, repr=False)
@@ -353,11 +353,13 @@ class TestInstance(JsonFile):
     scope: ClassVar[NamespaceFileScope] = ("test_instance",)
     extension: ClassVar[str] = ".json"
 
+
 class TestEnvironment(JsonFile):
     """Class representing a test environment."""
 
     scope: ClassVar[NamespaceFileScope] = ("test_environment",)
     extension: ClassVar[str] = ".json"
+
 
 class TagFile(JsonFile):
     """Base class for tag files."""
@@ -573,6 +575,7 @@ class WolfSoundVariantTag(TagFile):
         "tags",
         "wolf_sound_variant",
     )
+
 
 class DialogTag(TagFile):
     """Class representing a dialog tag."""
