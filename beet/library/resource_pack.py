@@ -14,12 +14,14 @@ __all__ = [
     "VertexShader",
     "GlslShader",
     "Text",
+    "TextJson",
     "TextureMcmeta",
     "Texture",
     "Sound",
     "SoundConfig",
     "Particle",
     "ItemModel",
+    "WaypointStyle",
     "PostEffect",
     "Equipment",
 ]
@@ -161,6 +163,13 @@ class Text(TextFile):
 
     scope: ClassVar[NamespaceFileScope] = ("texts",)
     extension: ClassVar[str] = ".txt"
+
+
+class TextJson(TextFile):
+    """Class representing a text file."""
+
+    scope: ClassVar[NamespaceFileScope] = ("texts",)
+    extension: ClassVar[str] = ".json"
 
 
 class TextureMcmeta(JsonFile):
@@ -313,6 +322,13 @@ class ItemModel(JsonFile):
     extension: ClassVar[str] = ".json"
 
 
+class WaypointStyle(JsonFile):
+    """Class representing a waypoint style."""
+
+    scope: ClassVar[NamespaceFileScope] = ("waypoint_style",)
+    extension: ClassVar[str] = ".json"
+
+
 class ResourcePackNamespace(Namespace):
     """Class representing a resource pack namespace."""
 
@@ -343,6 +359,8 @@ class ResourcePackNamespace(Namespace):
     particles:        NamespacePin[Particle]       = NamespacePin(Particle)
     atlases:          NamespacePin[Atlas]          = NamespacePin(Atlas)
     item_models:      NamespacePin[ItemModel]      = NamespacePin(ItemModel)
+    waypoint_styles:  NamespacePin[WaypointStyle]  = NamespacePin(WaypointStyle)
+    text_json:        NamespacePin[TextJson]       = NamespacePin(TextJson)
     # fmt: on
 
     @classmethod
@@ -371,7 +389,7 @@ class ResourcePack(Pack[ResourcePackNamespace]):
         (1, 18): 8,
         (1, 19): 13,
         (1, 20): 32,
-        (1, 21): 55,
+        (1, 21): 63,
     }
     latest_pack_format = pack_format_registry[split_version(LATEST_MINECRAFT_VERSION)]
 
@@ -398,4 +416,6 @@ class ResourcePack(Pack[ResourcePackNamespace]):
     particles:        NamespaceProxyDescriptor[Particle]       = NamespaceProxyDescriptor(Particle)
     atlases:          NamespaceProxyDescriptor[Atlas]          = NamespaceProxyDescriptor(Atlas)
     item_models:      NamespaceProxyDescriptor[ItemModel]      = NamespaceProxyDescriptor(ItemModel)
+    waypoint_styles:  NamespaceProxyDescriptor[WaypointStyle]  = NamespaceProxyDescriptor(WaypointStyle)
+    text_json:        NamespaceProxyDescriptor[TextJson]       = NamespaceProxyDescriptor(TextJson)
     # fmt: on
