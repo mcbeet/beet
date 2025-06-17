@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.49.2 (2025-06-17)
+
+### Fix
+
+* Make sure that load_prelude() keeps returning the same thing for the same file ([`e0bb5b8`](https://github.com/mcbeet/bolt/commit/e0bb5b820c2d364db04480b2fb9a6539b4302f77))
+
 ## v0.49.1 (2024-07-22)
 
 ### Fix
