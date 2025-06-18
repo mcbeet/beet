@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.111.0 (2025-06-17)
+
+### Feature
+
+* Update 1.21.6 ([#473](https://github.com/mcbeet/beet/issues/473)) ([`95fe22f`](https://github.com/mcbeet/beet/commit/95fe22f20f336f910f6d197bbf9cd987b2ddf16c))
+
 ## v0.110.1 (2025-05-24)
 
 ### Fix
