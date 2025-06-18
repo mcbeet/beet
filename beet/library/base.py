@@ -85,7 +85,7 @@ from beet.core.utils import (
 
 from .utils import list_extensions, list_origin_folders
 
-LATEST_MINECRAFT_VERSION: str = "1.21.5"
+LATEST_MINECRAFT_VERSION: str = "1.21.6"
 
 
 T = TypeVar("T")
