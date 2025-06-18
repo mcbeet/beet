@@ -76,11 +76,16 @@ from beet.core.container import (
     SupportsMerge,
 )
 from beet.core.file import File, FileOrigin, JsonFile, PngFile
-from beet.core.utils import FileSystemPath, JsonDict, SupportedFormats, TextComponent
+from beet.core.utils import (
+    FileSystemPath,
+    JsonDict,
+    SupportedFormats,
+    TextComponent,
+)
 
 from .utils import list_extensions, list_origin_folders
 
-LATEST_MINECRAFT_VERSION: str = "1.21"
+LATEST_MINECRAFT_VERSION: str = "1.21.6"
 
 
 T = TypeVar("T")

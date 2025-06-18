@@ -71,6 +71,7 @@ from beet.core.file import (
     TextFileContent,
 )
 from beet.core.utils import JsonDict, extra_field, split_version
+from beet.resources.pack_format_registry import data_pack_format_registry
 
 from .base import (
     LATEST_MINECRAFT_VERSION,
@@ -648,17 +649,7 @@ class DataPack(Pack[DataPackNamespace]):
 
     default_name = "untitled_data_pack"
 
-    pack_format_registry = {
-        (1, 13): 4,
-        (1, 14): 4,
-        (1, 15): 5,
-        (1, 16): 6,
-        (1, 17): 7,
-        (1, 18): 9,
-        (1, 19): 12,
-        (1, 20): 41,
-        (1, 21): 80,
-    }
+    pack_format_registry = data_pack_format_registry
     latest_pack_format = pack_format_registry[split_version(LATEST_MINECRAFT_VERSION)]
 
     # fmt: off
