@@ -1,0 +1,8 @@
+My Data Pack
+a data pack
+6
+[0, 6]
+My Resource Pack
+a resource pack
+10
+{'min_inclusive': 10, 'max_inclusive': 20}
