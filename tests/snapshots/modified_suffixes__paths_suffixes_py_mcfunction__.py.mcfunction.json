@@ -1,0 +1,10 @@
+{
+  "path": ".py.mcfunction",
+  "suffixes": [
+    ".mcfunction"
+  ],
+  "modified_suffixes": [
+    ".py",
+    ".mcfunction"
+  ]
+}
