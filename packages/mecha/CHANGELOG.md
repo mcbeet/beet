@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.99.0 (2025-07-18)
+
+### Feature
+
+* Update to 1.21.8 ([#315](https://github.com/mcbeet/mecha/issues/315)) ([`749ab63`](https://github.com/mcbeet/mecha/commit/749ab63d1e05a460b13391c2852f6639d3d5cd01))
+
 ## v0.98.1 (2025-04-21)
 
 ### Fix
