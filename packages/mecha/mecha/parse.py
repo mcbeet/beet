@@ -111,6 +111,7 @@ from .ast import (
     AstGamemode,
     AstGreedy,
     AstHeightmap,
+    AstHexColor,
     AstItemComponent,
     AstItemParticleParameters,
     AstItemPredicate,
@@ -249,6 +250,7 @@ def get_default_parsers() -> Dict[str, Parser]:
         "wildcard": parse_wildcard,
         "color": BasicLiteralParser(AstColor),
         "color_reset": BasicLiteralParser(AstColorReset),
+        "hex_color": HexColorParser(),
         "sort_order": BasicLiteralParser(AstSortOrder),
         "gamemode": BasicLiteralParser(AstGamemode),
         "heightmap": BasicLiteralParser(AstHeightmap),
@@ -492,10 +494,14 @@ def get_default_parsers() -> Dict[str, Parser]:
                 delegate("color_reset"),
             ]
         ),
+        "command:argument:minecraft:hex_color": delegate("hex_color"),
         "command:argument:minecraft:column_pos": delegate("column_pos"),
         "command:argument:minecraft:component": MultilineParser(delegate("nbt")),
         "command:argument:minecraft:style": MultilineParser(delegate("nbt")),
         "command:argument:minecraft:dimension": delegate("resource_location"),
+        "command:argument:minecraft:dialog": MultilineParser(
+            delegate("resource_location_or_nbt")
+        ),
         "command:argument:minecraft:entity": delegate("entity"),
         "command:argument:minecraft:entity_anchor": delegate("entity_anchor"),
         "command:argument:minecraft:entity_summon": delegate("resource_location"),
@@ -857,6 +863,25 @@ class NumericParser:
         """Create the ast node."""
         token = stream.current
         node = AstNumber(value=string_to_number(token.value))
+        return set_location(node, token)
+
+
+@dataclass
+class HexColorParser:
+    """Parser for hex color values."""
+
+    name: str = "hex_color"
+    pattern: str = r"[0-9a-fA-F]{6}|[0-9a-fA-F]{3}"
+
+    def __call__(self, stream: TokenStream) -> Any:
+        with stream.syntax(**{self.name: self.pattern}):
+            stream.expect(self.name)
+        return self.create_node(stream)
+
+    def create_node(self, stream: TokenStream) -> Any:
+        """Create the ast node."""
+        token = stream.current
+        node = AstHexColor(value=token.value)
         return set_location(node, token)
 
 
