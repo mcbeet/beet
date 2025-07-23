@@ -35,6 +35,7 @@ class PackFormatRegistry(BaseModel):
     release_time: str
     sha1: str
 
+
 class PackFormatRegistryContainer(Container[VersionNumber, int]):
     """Container for pack format registry data."""
 
@@ -73,23 +74,19 @@ class PackFormatRegistryContainer(Container[VersionNumber, int]):
         raise KeyError(key)
 
 
-pack_format_registry_path = files("beet.resources").joinpath(f"pack_format_registry.json")
-
-data = json.loads(
-    pack_format_registry_path.read_text()
+pack_format_registry_path = files("beet.resources").joinpath(
+    f"pack_format_registry.json"
 )
+
+data = json.loads(pack_format_registry_path.read_text())
 pack_format_registry: list[PackFormatRegistry] = []
 for item in data:
     pack_format_registry.append(PackFormatRegistry.model_validate(item))
 
 
-data_pack_format_registry = PackFormatRegistryContainer({
-    x.id: x.data_pack_version
-    for x in pack_format_registry
-    if x.type == "release"
-})
-resource_pack_format_registry = PackFormatRegistryContainer({
-    x.id: x.resource_pack_version
-    for x in pack_format_registry
-    if x.type == "release"
-})
+data_pack_format_registry = PackFormatRegistryContainer(
+    {x.id: x.data_pack_version for x in pack_format_registry if x.type == "release"}
+)
+resource_pack_format_registry = PackFormatRegistryContainer(
+    {x.id: x.resource_pack_version for x in pack_format_registry if x.type == "release"}
+)

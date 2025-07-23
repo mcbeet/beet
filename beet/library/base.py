@@ -82,6 +82,7 @@ from beet.core.utils import (
     SupportedFormats,
     TextComponent,
 )
+from beet.resources.pack_format_registry import PackFormatRegistryContainer
 
 from .utils import list_extensions, list_origin_folders
 
@@ -994,7 +995,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
 
     namespace_type: ClassVar[Type[Namespace]]
     default_name: ClassVar[str]
-    pack_format_registry: ClassVar[Dict[Tuple[int, ...], int]]
+    pack_format_registry: ClassVar[PackFormatRegistryContainer]
     latest_pack_format: ClassVar[int]
 
     def __init_subclass__(cls):
