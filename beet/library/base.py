@@ -76,11 +76,17 @@ from beet.core.container import (
     SupportsMerge,
 )
 from beet.core.file import File, FileOrigin, JsonFile, PngFile
-from beet.core.utils import FileSystemPath, JsonDict, SupportedFormats, TextComponent
+from beet.core.utils import (
+    FileSystemPath,
+    JsonDict,
+    SupportedFormats,
+    TextComponent,
+)
+from beet.resources.pack_format_registry import PackFormatRegistryContainer
 
 from .utils import list_extensions, list_origin_folders
 
-LATEST_MINECRAFT_VERSION: str = "1.21"
+LATEST_MINECRAFT_VERSION: str = "1.21.8"
 
 
 T = TypeVar("T")
@@ -989,7 +995,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
 
     namespace_type: ClassVar[Type[Namespace]]
     default_name: ClassVar[str]
-    pack_format_registry: ClassVar[Dict[Tuple[int, ...], int]]
+    pack_format_registry: ClassVar[PackFormatRegistryContainer]
     latest_pack_format: ClassVar[int]
 
     def __init_subclass__(cls):
