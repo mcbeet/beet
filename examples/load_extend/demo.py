@@ -2,7 +2,15 @@ from typing import ClassVar, cast
 
 from pydantic.v1 import BaseModel
 
-from beet import Context, FileDeserialize, JsonFile, JsonFileBase, TextFile, YamlFile, NamespaceFileScope
+from beet import (
+    Context,
+    FileDeserialize,
+    JsonFile,
+    JsonFileBase,
+    TextFile,
+    YamlFile,
+    NamespaceFileScope,
+)
 
 
 class FunctionConfig(YamlFile):

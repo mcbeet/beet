@@ -972,9 +972,15 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
     icon: ExtraPin[Optional[PngFile]] = ExtraPin("pack.png", default=None)
 
     description: PackPin[TextComponent] = PackPin("description", default="")
-    pack_format: PackPin[Optional[int]] = PackPin("pack_format", default=None, delete_default=True)
-    min_format: PackPin[Optional[FormatSpecifier]] = PackPin("min_format", default=None, delete_default=True)
-    max_format: PackPin[Optional[FormatSpecifier]] = PackPin("max_format", default=None, delete_default=True)
+    pack_format: PackPin[Optional[int]] = PackPin(
+        "pack_format", default=None, delete_default=True
+    )
+    min_format: PackPin[Optional[FormatSpecifier]] = PackPin(
+        "min_format", default=None, delete_default=True
+    )
+    max_format: PackPin[Optional[FormatSpecifier]] = PackPin(
+        "max_format", default=None, delete_default=True
+    )
     filter: McmetaPin[JsonDict] = McmetaPin(
         "filter", default_factory=lambda: {"block": []}
     )
@@ -1187,7 +1193,11 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
         return pack_copy
 
     def assign_format(self):
-        if self.pack_format is None and self.min_format is None and self.max_format is None:
+        if (
+            self.pack_format is None
+            and self.min_format is None
+            and self.max_format is None
+        ):
             if isinstance(self.latest_pack_format, int):
                 if self.latest_pack_format < self.pack_format_switch_format:
                     self.pack_format = self.latest_pack_format
@@ -1198,7 +1208,6 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
                     self.min_format = self.max_format = self.latest_pack_format
             else:
                 self.min_format = self.max_format = self.latest_pack_format
-
 
     def clear(self):
         self.extra.clear()

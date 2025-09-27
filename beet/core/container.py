@@ -87,7 +87,7 @@ class Pin(Generic[K, CV]):
 
         try:
             value = mapping[self.key]
-            
+
             # Si delete_default est activé, vérifier si la valeur stockée est égale à la valeur par défaut
             if self.delete_default:
                 default_value = (
@@ -95,11 +95,11 @@ class Pin(Generic[K, CV]):
                     if isinstance(self.default_factory, Sentinel)
                     else self.default_factory()
                 )
-                
+
                 # Si la valeur est égale à la valeur par défaut, la supprimer du mapping
                 if value == default_value:
                     mapping.pop(self.key, None)
-            
+
             return value
         except KeyError:
             value = (
@@ -116,7 +116,7 @@ class Pin(Generic[K, CV]):
 
     def __set__(self: "Pin[K, V]", obj: Any, value: V):
         mapping = self.forward(obj)
-        
+
         # Si delete_default est activé, vérifier si la valeur est égale à la valeur par défaut
         if self.delete_default:
             default_value = (
@@ -124,12 +124,12 @@ class Pin(Generic[K, CV]):
                 if isinstance(self.default_factory, Sentinel)
                 else self.default_factory()
             )
-            
+
             # Si la valeur est égale à la valeur par défaut, supprimer la clé
             if value == default_value:
                 mapping.pop(self.key, None)
                 return
-        
+
         mapping[self.key] = value
 
     def __delete__(self, obj: Any):

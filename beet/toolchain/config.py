@@ -12,6 +12,7 @@ __all__ = [
     "load_config",
     "config_error_handler",
     "DETECT_CONFIG_FILES",
+    "FormatSpecifier",
 ]
 
 
@@ -178,6 +179,7 @@ class PackOverlayConfig(BaseModel):
 
     formats: FormatsRangeDict
     directory: str
+
 
 FormatSpecifier = Union[int, tuple[int], tuple[int, int]]
 

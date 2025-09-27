@@ -31,7 +31,13 @@ from beet.core.utils import (
 from beet.core.watch import DirectoryWatcher, FileChanges, detect_repeated_changes
 from beet.library.base import LATEST_MINECRAFT_VERSION, Mcmeta
 
-from .config import FormatSpecifier, PackConfig, ProjectConfig, load_config, locate_config
+from .config import (
+    FormatSpecifier,
+    PackConfig,
+    ProjectConfig,
+    load_config,
+    locate_config,
+)
 from .context import Context, PluginSpec, ProjectCache
 from .template import TemplateManager
 from .worker import WorkerPool
