@@ -77,6 +77,7 @@ from beet.core.container import (
 )
 from beet.core.file import File, FileOrigin, JsonFile, PngFile
 from beet.core.utils import FileSystemPath, JsonDict, SupportedFormats, TextComponent
+from beet.toolchain.config import FormatSpecifier
 
 from .utils import list_extensions, list_origin_folders
 
@@ -971,7 +972,9 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
     icon: ExtraPin[Optional[PngFile]] = ExtraPin("pack.png", default=None)
 
     description: PackPin[TextComponent] = PackPin("description", default="")
-    pack_format: PackPin[int] = PackPin("pack_format", default=0)
+    pack_format: PackPin[Optional[int]] = PackPin("pack_format", default=0)
+    min_format: PackPin[Optional[FormatSpecifier]] = PackPin("min_format", default=None)
+    max_format: PackPin[Optional[FormatSpecifier]] = PackPin("max_format", default=None)
     filter: McmetaPin[JsonDict] = McmetaPin(
         "filter", default_factory=lambda: {"block": []}
     )
@@ -989,8 +992,9 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
 
     namespace_type: ClassVar[Type[Namespace]]
     default_name: ClassVar[str]
-    pack_format_registry: ClassVar[Dict[Tuple[int, ...], int]]
-    latest_pack_format: ClassVar[int]
+    pack_format_registry: ClassVar[Dict[Tuple[int, ...], int | FormatSpecifier]]
+    latest_pack_format: ClassVar[int | FormatSpecifier]
+    pack_format_switch_format: ClassVar[int]
 
     def __init_subclass__(cls):
         cls.namespace_type = get_args(getattr(cls, "__orig_bases__")[0])[0]
@@ -1182,13 +1186,26 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
 
         return pack_copy
 
+    def assign_format(self):
+        if self.pack_format is None and self.min_format is None and self.max_format is None:
+            if isinstance(self.latest_pack_format, int):
+                if self.latest_pack_format < self.pack_format_switch_format:
+                    self.pack_format = self.latest_pack_format
+                    self.min_format = None
+                    self.max_format = None
+                else:
+                    self.pack_format = None
+                    self.min_format = self.max_format = self.latest_pack_format
+            else:
+                self.min_format = self.max_format = self.latest_pack_format
+
+
     def clear(self):
         self.extra.clear()
         if self.overlay_parent is None:
             self.overlays.clear()
         super().clear()
-        if not self.pack_format:
-            self.pack_format = self.latest_pack_format
+        self.assign_format()
         if not self.description:
             self.description = ""
 
@@ -1358,8 +1375,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
         if origin:
             self.mount("", origin)
 
-        if not self.pack_format:
-            self.pack_format = self.latest_pack_format
+        self.assign_format()
         if not self.description:
             self.description = ""
 
@@ -1595,6 +1611,8 @@ def get_output_scope(
             pack_format = pack.supported_formats["max_inclusive"]
         else:
             pack_format = pack.pack_format
+    if pack_format is None:
+        pack_format = 9999
     result: Tuple[str, ...] | None = None
     result_format: int | None = None
     for key, value in scope.items():

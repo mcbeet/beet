@@ -345,14 +345,30 @@ class ProjectBuilder:
                 default_name += "_" + ctx.project_version
             default_name += suffix
 
+            pack_format_default = None
+            if self.config.minecraft:
+                pack_format_default = pack.pack_format_registry.get(
+                    split_version(self.config.minecraft), pack.latest_pack_format
+                )
+            if config.min_format is not None or config.max_format is not None:
+                pack_format_default = None
+            if isinstance(pack_format_default, tuple):
+                pack_format_default = None
+
             config = config.with_defaults(
                 PackConfig(
                     name=default_name,
                     description=pack.description or description,
-                    pack_format=(
+                    pack_format=pack_format_default,
+                    min_format=(
                         pack.pack_format_registry[split_version(self.config.minecraft)]
                         if self.config.minecraft
-                        else pack.pack_format
+                        else pack.min_format
+                    ),
+                    max_format=(
+                        pack.pack_format_registry[split_version(self.config.minecraft)]
+                        if self.config.minecraft
+                        else pack.max_format
                     ),
                     zipped=pack.zipped,
                     compression=pack.compression,
@@ -363,6 +379,8 @@ class ProjectBuilder:
             pack.name = ctx.template.render_string(config.name)
             pack.description = ctx.template.render_json(config.description)
             pack.pack_format = config.pack_format
+            pack.min_format = config.min_format
+            pack.max_format = config.max_format
             if config.filter:
                 pack.mcmeta.merge(
                     Mcmeta({"filter": config.filter.dict(exclude_none=True)})
