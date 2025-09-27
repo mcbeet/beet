@@ -1,6 +1,14 @@
 {
   "pack": {
-    "pack_format": 63,
-    "description": "An example project\nAuthor: mcbeet"
+    "pack_format": null,
+    "description": "An example project\nAuthor: mcbeet",
+    "min_format": [
+      69,
+      0
+    ],
+    "max_format": [
+      69,
+      0
+    ]
   }
 }

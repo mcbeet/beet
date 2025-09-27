@@ -1,6 +1,6 @@
 {
     "pack": {
-        "pack_format": 80,
+        "pack_format": null,
         "description": [
             {
                 "text": "Demo ",
@@ -14,6 +14,14 @@
                 "text": "Demo project",
                 "color": "#00aced"
             }
+        ],
+        "min_format": [
+            88,
+            0
+        ],
+        "max_format": [
+            88,
+            0
         ]
     }
 }

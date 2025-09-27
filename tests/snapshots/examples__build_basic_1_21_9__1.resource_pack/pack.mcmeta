@@ -1,0 +1,14 @@
+{
+  "pack": {
+    "pack_format": null,
+    "description": "",
+    "min_format": [
+      68,
+      0
+    ],
+    "max_format": [
+      100,
+      1
+    ]
+  }
+}

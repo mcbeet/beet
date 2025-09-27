@@ -19,7 +19,9 @@
   "data_pack": {
     "name": "",
     "description": "",
-    "pack_format": 0,
+    "pack_format": null,
+    "min_format": null,
+    "max_format": null,
     "filter": null,
     "supported_formats": null,
     "overlays": null,
@@ -32,7 +34,9 @@
   "resource_pack": {
     "name": "",
     "description": "",
-    "pack_format": 0,
+    "pack_format": null,
+    "min_format": null,
+    "max_format": null,
     "filter": null,
     "supported_formats": null,
     "overlays": null,

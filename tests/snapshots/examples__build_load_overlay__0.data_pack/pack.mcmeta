@@ -2,6 +2,14 @@
   "pack": {
     "pack_format": 50,
     "description": "",
+    "min_format": [
+      88,
+      0
+    ],
+    "max_format": [
+      88,
+      0
+    ],
     "supported_formats": [
       50,
       50
