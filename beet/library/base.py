@@ -972,9 +972,9 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
     icon: ExtraPin[Optional[PngFile]] = ExtraPin("pack.png", default=None)
 
     description: PackPin[TextComponent] = PackPin("description", default="")
-    pack_format: PackPin[Optional[int]] = PackPin("pack_format", default=0)
-    min_format: PackPin[Optional[FormatSpecifier]] = PackPin("min_format", default=None)
-    max_format: PackPin[Optional[FormatSpecifier]] = PackPin("max_format", default=None)
+    pack_format: PackPin[Optional[int]] = PackPin("pack_format", default=None, delete_default=True)
+    min_format: PackPin[Optional[FormatSpecifier]] = PackPin("min_format", default=None, delete_default=True)
+    max_format: PackPin[Optional[FormatSpecifier]] = PackPin("max_format", default=None, delete_default=True)
     filter: McmetaPin[JsonDict] = McmetaPin(
         "filter", default_factory=lambda: {"block": []}
     )
