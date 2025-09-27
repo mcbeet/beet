@@ -31,7 +31,7 @@ from beet.core.utils import (
 from beet.core.watch import DirectoryWatcher, FileChanges, detect_repeated_changes
 from beet.library.base import LATEST_MINECRAFT_VERSION, Mcmeta
 
-from .config import PackConfig, ProjectConfig, load_config, locate_config
+from .config import FormatSpecifier, PackConfig, ProjectConfig, load_config, locate_config
 from .context import Context, PluginSpec, ProjectCache
 from .template import TemplateManager
 from .worker import WorkerPool
@@ -345,31 +345,33 @@ class ProjectBuilder:
                 default_name += "_" + ctx.project_version
             default_name += suffix
 
-            pack_format_default = None
+            pack_format_default: int | None = None
+            min_format_default: FormatSpecifier | None = None
+            max_format_default: FormatSpecifier | None = None
             if self.config.minecraft:
-                pack_format_default = pack.pack_format_registry.get(
+                format = pack.pack_format_registry.get(
                     split_version(self.config.minecraft), pack.latest_pack_format
                 )
-            if config.min_format is not None or config.max_format is not None:
-                pack_format_default = None
-            if isinstance(pack_format_default, tuple):
-                pack_format_default = None
+            else:
+                format = pack.latest_pack_format
+            if isinstance(format, int):
+                if format < pack.pack_format_switch_format:
+                    pack_format_default = format
+                    min_format_default = None
+                    max_format_default = None
+                else:
+                    pack_format_default = None
+                    min_format_default = max_format_default = format
+            else:
+                min_format_default = max_format_default = format
 
             config = config.with_defaults(
                 PackConfig(
                     name=default_name,
                     description=pack.description or description,
                     pack_format=pack_format_default,
-                    min_format=(
-                        pack.pack_format_registry[split_version(self.config.minecraft)]
-                        if self.config.minecraft
-                        else pack.min_format
-                    ),
-                    max_format=(
-                        pack.pack_format_registry[split_version(self.config.minecraft)]
-                        if self.config.minecraft
-                        else pack.max_format
-                    ),
+                    min_format=min_format_default,
+                    max_format=max_format_default,
                     zipped=pack.zipped,
                     compression=pack.compression,
                     compression_level=pack.compression_level,
