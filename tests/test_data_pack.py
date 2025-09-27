@@ -625,12 +625,17 @@ def test_overlay():
 
     assert a.supported_formats is None
     assert p.mcmeta.data == {
-        "pack": {"pack_format": DataPack.latest_pack_format, "description": ""}
+        "pack": {
+            "min_format": DataPack.latest_pack_format, 
+            "max_format": DataPack.latest_pack_format, 
+            "description": ""
+        }
     }
 
     a.supported_formats = [17, 18]
     assert p.mcmeta.data == {
-        "pack": {"pack_format": DataPack.latest_pack_format, "description": ""},
+        "pack": {"min_format": DataPack.latest_pack_format, 
+            "max_format": DataPack.latest_pack_format, "description": ""},
         "overlays": {"entries": [{"formats": [17, 18], "directory": "a"}]},
     }
 
@@ -640,7 +645,8 @@ def test_overlay():
     assert not b
     assert b.supported_formats == {"min_inclusive": 16, "max_inclusive": 17}
     assert p.mcmeta.data == {
-        "pack": {"pack_format": DataPack.latest_pack_format, "description": ""},
+        "pack": {"min_format": DataPack.latest_pack_format, 
+            "max_format": DataPack.latest_pack_format, "description": ""},
         "overlays": {
             "entries": [
                 {
@@ -670,7 +676,8 @@ def test_overlay():
         "c/data/demo/functions/thing.mcfunction": Function([]),
         "pack.mcmeta": Mcmeta(
             {
-                "pack": {"pack_format": DataPack.latest_pack_format, "description": ""},
+                "pack": {"min_format": DataPack.latest_pack_format, 
+            "max_format": DataPack.latest_pack_format, "description": ""},
                 "overlays": {
                     "entries": [
                         {
@@ -693,7 +700,8 @@ def test_overlay():
 
     del p.overlays["b"]
     assert p.mcmeta.data == {
-        "pack": {"pack_format": DataPack.latest_pack_format, "description": ""},
+        "pack": {"min_format": DataPack.latest_pack_format, 
+            "max_format": DataPack.latest_pack_format, "description": ""},
         "overlays": {
             "entries": [
                 {

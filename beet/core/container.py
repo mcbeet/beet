@@ -86,7 +86,21 @@ class Pin(Generic[K, CV]):
         mapping = self.forward(obj)
 
         try:
-            return mapping[self.key]
+            value = mapping[self.key]
+            
+            # Si delete_default est activé, vérifier si la valeur stockée est égale à la valeur par défaut
+            if self.delete_default:
+                default_value = (
+                    self.default
+                    if isinstance(self.default_factory, Sentinel)
+                    else self.default_factory()
+                )
+                
+                # Si la valeur est égale à la valeur par défaut, la supprimer du mapping
+                if value == default_value:
+                    mapping.pop(self.key, None)
+            
+            return value
         except KeyError:
             value = (
                 self.default
