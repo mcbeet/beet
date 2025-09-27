@@ -1,14 +1,5 @@
 {
   "pack": {
-    "pack_format": null,
-    "description": [
-      {
-        "text": "bold description",
-        "bold": true
-      },
-      "\n",
-      "Author: Fizzy\nVersion: 1.2.3"
-    ],
     "min_format": [
       69,
       0
@@ -16,6 +7,14 @@
     "max_format": [
       69,
       0
+    ],
+    "description": [
+      {
+        "text": "bold description",
+        "bold": true
+      },
+      "\n",
+      "Author: Fizzy\nVersion: 1.2.3"
     ]
   }
 }

@@ -1,13 +1,5 @@
 {
   "pack": {
-    "pack_format": null,
-    "description": [
-      "override for ",
-      {
-        "text": "data pack",
-        "color": "red"
-      }
-    ],
     "min_format": [
       88,
       0
@@ -15,6 +7,13 @@
     "max_format": [
       88,
       0
+    ],
+    "description": [
+      "override for ",
+      {
+        "text": "data pack",
+        "color": "red"
+      }
     ]
   }
 }

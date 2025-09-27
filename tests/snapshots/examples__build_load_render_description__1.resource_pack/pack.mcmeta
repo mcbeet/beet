@@ -1,7 +1,5 @@
 {
   "pack": {
-    "pack_format": null,
-    "description": "Something cool\nVersion: 1.2.3",
     "min_format": [
       69,
       0
@@ -9,6 +7,7 @@
     "max_format": [
       69,
       0
-    ]
+    ],
+    "description": "Something cool\nVersion: 1.2.3"
   }
 }

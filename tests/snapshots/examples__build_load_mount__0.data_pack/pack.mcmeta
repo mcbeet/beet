@@ -1,6 +1,5 @@
 {
   "pack": {
-    "pack_format": null,
     "description": "aaaaaa",
     "min_format": [
       88,
@@ -9,6 +8,7 @@
     "max_format": [
       88,
       0
-    ]
+    ],
+    "pack_format": null
   }
 }

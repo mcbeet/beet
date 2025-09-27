@@ -1,6 +1,13 @@
 {
   "pack": {
-    "pack_format": null,
+    "min_format": [
+      88,
+      0
+    ],
+    "max_format": [
+      88,
+      0
+    ],
     "description": [
       {
         "text": "Thing ",
@@ -15,13 +22,6 @@
         "color": "#00aced"
       }
     ],
-    "min_format": [
-      88,
-      0
-    ],
-    "max_format": [
-      88,
-      0
-    ]
+    "pack_format": null
   }
 }

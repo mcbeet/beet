@@ -1,6 +1,5 @@
 {
   "pack": {
-    "pack_format": null,
     "description": "This is the root",
     "min_format": [
       88,
@@ -9,13 +8,13 @@
     "max_format": [
       88,
       0
-    ]
+    ],
+    "pack_format": null
   },
   "custom_data": 579,
   "libs": [
     {
       "pack": {
-        "pack_format": null,
         "description": "This is library bar",
         "min_format": [
           88,
@@ -30,7 +29,6 @@
     },
     {
       "pack": {
-        "pack_format": null,
         "description": "This is library foo",
         "min_format": [
           88,

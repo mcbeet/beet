@@ -1,7 +1,5 @@
 {
   "pack": {
-    "pack_format": null,
-    "description": "The description of my project\nAuthor: Example\nVersion: 1.7.4",
     "min_format": [
       88,
       0
@@ -9,6 +7,8 @@
     "max_format": [
       88,
       0
-    ]
+    ],
+    "description": "The description of my project\nAuthor: Example\nVersion: 1.7.4",
+    "pack_format": null
   }
 }
