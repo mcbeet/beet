@@ -8,8 +8,7 @@
       88,
       0
     ],
-    "description": "",
-    "pack_format": null
+    "description": ""
   },
   "blueprints": {
     "demo:hello": {
