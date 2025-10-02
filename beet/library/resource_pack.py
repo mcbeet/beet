@@ -392,7 +392,7 @@ class ResourcePack(Pack[ResourcePackNamespace]):
         (1, 21): (69, 0),
     }
     latest_pack_format = pack_format_registry[split_version(LATEST_MINECRAFT_VERSION)]
-    pack_format_switch_format = 82
+    pack_format_switch_format = 65
 
     language_config = McmetaPin[Dict[str, JsonDict]]("language", default_factory=dict)
 
