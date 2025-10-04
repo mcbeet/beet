@@ -173,15 +173,18 @@ class PackFilterConfig(BaseModel):
             }
         )
 
+FormatSpecifier = Union[int, tuple[int], tuple[int, int]]
+
 
 class PackOverlayConfig(BaseModel):
     """Overlay entry configuration."""
 
-    formats: FormatsRangeDict
+    formats: Optional[FormatsRangeDict] = None
     directory: str
+    min_format: Optional[FormatSpecifier] = None
+    max_format: Optional[FormatSpecifier] = None
 
 
-FormatSpecifier = Union[int, tuple[int], tuple[int, int]]
 
 
 class PackConfig(BaseModel):

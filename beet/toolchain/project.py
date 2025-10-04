@@ -395,11 +395,24 @@ class ProjectBuilder:
                 )
             if config.supported_formats:
                 pack.supported_formats = config.supported_formats
+            if config.min_format:
+                pack.min_format = config.min_format
+            if config.max_format:
+                pack.max_format = config.max_format
             if config.overlays:
                 for overlay in config.overlays.entries():
-                    pack.overlays[overlay.directory].supported_formats = deepcopy(
-                        overlay.formats
-                    )
+                    if overlay.formats is not None:
+                        pack.overlays[overlay.directory].supported_formats = deepcopy(
+                            overlay.formats
+                        )
+                    if overlay.min_format:
+                        pack.overlays[overlay.directory].min_format = deepcopy(
+                            overlay.min_format
+                        )
+                    if overlay.max_format:
+                        pack.overlays[overlay.directory].max_format = deepcopy(
+                            overlay.max_format
+                        )
             pack.zipped = bool(config.zipped)
             pack.compression = config.compression
             pack.compression_level = config.compression_level

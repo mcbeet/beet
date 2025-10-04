@@ -807,6 +807,9 @@ class OverlayContainer(MatchMixin, MergeMixin, Container[str, PackType]):
 
     def process(self, key: str, value: PackType) -> PackType:
         supported_formats = value.supported_formats
+        min_format = value.min_format
+        max_format = value.max_format
+        description = value.description
 
         value.overlay_name = key
         value.overlay_parent = self.pack
@@ -826,6 +829,11 @@ class OverlayContainer(MatchMixin, MergeMixin, Container[str, PackType]):
 
         if supported_formats is not None:
             value.supported_formats = supported_formats
+        if min_format is not None:
+            value.min_format = min_format
+        if max_format is not None:
+            value.max_format = max_format
+        value.description = description
 
         return value
 
@@ -864,6 +872,8 @@ class OverlayContainer(MatchMixin, MergeMixin, Container[str, PackType]):
         default: Optional[PackType] = None,
         *,
         supported_formats: Optional[SupportedFormats] = None,
+        min_format: Optional[FormatSpecifier] = None,
+        max_format: Optional[FormatSpecifier] = None,
     ) -> PackType:
         value = self._wrapped.get(key)
         if value is not None:
@@ -872,6 +882,10 @@ class OverlayContainer(MatchMixin, MergeMixin, Container[str, PackType]):
             default = self.missing(key)
         if supported_formats is not None:
             default.supported_formats = supported_formats
+        if min_format is not None:
+            default.min_format = min_format
+        if max_format is not None:
+            default.max_format = max_format
         self[key] = default
         return default
 
@@ -1019,6 +1033,8 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
         description: Optional[str] = None,
         pack_format: Optional[int] = None,
         supported_formats: Optional[SupportedFormats] = None,
+        min_format: Optional[FormatSpecifier] = None,
+        max_format: Optional[FormatSpecifier] = None,
         filter: Optional[JsonDict] = None,
         extend_extra: Optional[Mapping[str, Type[PackFile]]] = None,
         extend_namespace: Iterable[Type[NamespaceFile]] = (),
@@ -1060,6 +1076,10 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
             self.pack_format = pack_format
         if supported_formats is not None:
             self.supported_formats = supported_formats
+        if min_format is not None:
+            self.min_format = min_format
+        if max_format is not None:
+            self.max_format = max_format
         if filter is not None:
             self.filter = filter
 
@@ -1292,7 +1312,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
             return self.mcmeta.data.get("pack", {}).get("supported_formats")
 
     @supported_formats.setter
-    def supported_formats(self, value: SupportedFormats):
+    def supported_formats(self, value: Optional[SupportedFormats]):
         if self.overlay_parent is not None:
             overlays: Any = self.overlay_parent.mcmeta.data.setdefault("overlays", {})
             for entry in overlays.setdefault("entries", []):
