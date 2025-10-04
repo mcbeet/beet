@@ -173,6 +173,7 @@ class PackFilterConfig(BaseModel):
             }
         )
 
+
 FormatSpecifier = Union[int, tuple[int], tuple[int, int]]
 
 
@@ -183,8 +184,6 @@ class PackOverlayConfig(BaseModel):
     directory: str
     min_format: Optional[FormatSpecifier] = None
     max_format: Optional[FormatSpecifier] = None
-
-
 
 
 class PackConfig(BaseModel):
