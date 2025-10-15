@@ -1,0 +1,10 @@
+resource_pack:
+  load: "."
+data_pack:
+  load: "."
+
+
+pipeline:
+  - pipeline
+
+output: dist

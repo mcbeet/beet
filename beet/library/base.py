@@ -77,6 +77,7 @@ from beet.core.container import (
 )
 from beet.core.file import File, FileOrigin, JsonFile, PngFile
 from beet.core.utils import FileSystemPath, JsonDict, SupportedFormats, TextComponent
+from beet.toolchain.config import FormatSpecifier
 
 from .utils import list_extensions, list_origin_folders
 
@@ -806,6 +807,9 @@ class OverlayContainer(MatchMixin, MergeMixin, Container[str, PackType]):
 
     def process(self, key: str, value: PackType) -> PackType:
         supported_formats = value.supported_formats
+        min_format = value.min_format
+        max_format = value.max_format
+        description = value.description
 
         value.overlay_name = key
         value.overlay_parent = self.pack
@@ -825,6 +829,11 @@ class OverlayContainer(MatchMixin, MergeMixin, Container[str, PackType]):
 
         if supported_formats is not None:
             value.supported_formats = supported_formats
+        if min_format is not None:
+            value.min_format = min_format
+        if max_format is not None:
+            value.max_format = max_format
+        value.description = description
 
         return value
 
@@ -863,6 +872,8 @@ class OverlayContainer(MatchMixin, MergeMixin, Container[str, PackType]):
         default: Optional[PackType] = None,
         *,
         supported_formats: Optional[SupportedFormats] = None,
+        min_format: Optional[FormatSpecifier] = None,
+        max_format: Optional[FormatSpecifier] = None,
     ) -> PackType:
         value = self._wrapped.get(key)
         if value is not None:
@@ -871,6 +882,10 @@ class OverlayContainer(MatchMixin, MergeMixin, Container[str, PackType]):
             default = self.missing(key)
         if supported_formats is not None:
             default.supported_formats = supported_formats
+        if min_format is not None:
+            default.min_format = min_format
+        if max_format is not None:
+            default.max_format = max_format
         self[key] = default
         return default
 
@@ -971,7 +986,15 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
     icon: ExtraPin[Optional[PngFile]] = ExtraPin("pack.png", default=None)
 
     description: PackPin[TextComponent] = PackPin("description", default="")
-    pack_format: PackPin[int] = PackPin("pack_format", default=0)
+    pack_format: PackPin[Optional[int]] = PackPin(
+        "pack_format", default=None, delete_default=True
+    )
+    min_format: PackPin[Optional[FormatSpecifier]] = PackPin(
+        "min_format", default=None, delete_default=True
+    )
+    max_format: PackPin[Optional[FormatSpecifier]] = PackPin(
+        "max_format", default=None, delete_default=True
+    )
     filter: McmetaPin[JsonDict] = McmetaPin(
         "filter", default_factory=lambda: {"block": []}
     )
@@ -989,8 +1012,9 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
 
     namespace_type: ClassVar[Type[Namespace]]
     default_name: ClassVar[str]
-    pack_format_registry: ClassVar[Dict[Tuple[int, ...], int]]
-    latest_pack_format: ClassVar[int]
+    pack_format_registry: ClassVar[Dict[Tuple[int, ...], int | FormatSpecifier]]
+    latest_pack_format: ClassVar[int | FormatSpecifier]
+    pack_format_switch_format: ClassVar[int]
 
     def __init_subclass__(cls):
         cls.namespace_type = get_args(getattr(cls, "__orig_bases__")[0])[0]
@@ -1009,6 +1033,8 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
         description: Optional[str] = None,
         pack_format: Optional[int] = None,
         supported_formats: Optional[SupportedFormats] = None,
+        min_format: Optional[FormatSpecifier] = None,
+        max_format: Optional[FormatSpecifier] = None,
         filter: Optional[JsonDict] = None,
         extend_extra: Optional[Mapping[str, Type[PackFile]]] = None,
         extend_namespace: Iterable[Type[NamespaceFile]] = (),
@@ -1050,6 +1076,10 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
             self.pack_format = pack_format
         if supported_formats is not None:
             self.supported_formats = supported_formats
+        if min_format is not None:
+            self.min_format = min_format
+        if max_format is not None:
+            self.max_format = max_format
         if filter is not None:
             self.filter = filter
 
@@ -1182,13 +1212,29 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
 
         return pack_copy
 
+    def assign_format(self):
+        if (
+            self.pack_format is None
+            and self.min_format is None
+            and self.max_format is None
+        ):
+            if isinstance(self.latest_pack_format, int):
+                if self.latest_pack_format < self.pack_format_switch_format:
+                    self.pack_format = self.latest_pack_format
+                    self.min_format = None
+                    self.max_format = None
+                else:
+                    self.pack_format = None
+                    self.min_format = self.max_format = self.latest_pack_format
+            else:
+                self.min_format = self.max_format = self.latest_pack_format
+
     def clear(self):
         self.extra.clear()
         if self.overlay_parent is None:
             self.overlays.clear()
         super().clear()
-        if not self.pack_format:
-            self.pack_format = self.latest_pack_format
+        self.assign_format()
         if not self.description:
             self.description = ""
 
@@ -1266,7 +1312,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
             return self.mcmeta.data.get("pack", {}).get("supported_formats")
 
     @supported_formats.setter
-    def supported_formats(self, value: SupportedFormats):
+    def supported_formats(self, value: Optional[SupportedFormats]):
         if self.overlay_parent is not None:
             overlays: Any = self.overlay_parent.mcmeta.data.setdefault("overlays", {})
             for entry in overlays.setdefault("entries", []):
@@ -1358,8 +1404,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
         if origin:
             self.mount("", origin)
 
-        if not self.pack_format:
-            self.pack_format = self.latest_pack_format
+        self.assign_format()
         if not self.description:
             self.description = ""
 
@@ -1579,6 +1624,7 @@ def get_output_scope(
     if isinstance(scope, tuple):
         return scope
 
+    pack_format: None | int | tuple[int] | tuple[int, int] = None
     if pack is None:
         # Fall back to the most recent scope
         pack_format = 9999
@@ -1587,14 +1633,24 @@ def get_output_scope(
     else:
         # Use the pack format from the pack's supported_formats.
         # Otherwise, use the pack_format itself
-        if isinstance(pack.supported_formats, int):
-            pack_format = pack.supported_formats
-        elif isinstance(pack.supported_formats, list):
-            pack_format = pack.supported_formats[1]
-        elif isinstance(pack.supported_formats, dict):
-            pack_format = pack.supported_formats["max_inclusive"]
+        if pack.max_format:
+            if isinstance(pack.max_format, int):
+                pack_format = pack.pack_format
+            else:
+                pack_format = pack.max_format[0]
+        elif pack.supported_formats:
+            if isinstance(pack.supported_formats, int):
+                pack_format = pack.supported_formats
+            elif isinstance(pack.supported_formats, list):
+                pack_format = pack.supported_formats[1]
+            else:
+                pack_format = pack.supported_formats["max_inclusive"]
         else:
             pack_format = pack.pack_format
+    if pack_format is None:
+        # Fall back to the most recent scope
+        pack_format = 9999
+
     result: Tuple[str, ...] | None = None
     result_format: int | None = None
     for key, value in scope.items():

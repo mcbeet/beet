@@ -1,6 +1,13 @@
 {
   "pack": {
-    "pack_format": 63,
+    "min_format": [
+      69,
+      0
+    ],
+    "max_format": [
+      69,
+      0
+    ],
     "description": "The description of my project\nAuthor: Example\nVersion: 1.7.4"
   }
 }

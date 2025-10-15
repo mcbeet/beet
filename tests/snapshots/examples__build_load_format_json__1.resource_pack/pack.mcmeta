@@ -1,6 +1,13 @@
 {
     "pack": {
         "description": "",
-        "pack_format": 63
+        "max_format": [
+            69,
+            0
+        ],
+        "min_format": [
+            69,
+            0
+        ]
     }
 }

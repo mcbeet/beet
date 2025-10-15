@@ -49,6 +49,8 @@ def test_mcmeta_properties():
     pack = ResourcePack()
     pack.description = "Something"
     pack.pack_format = 1
+    pack.min_format = None
+    pack.max_format = None
 
     assert pack.mcmeta._content == {  # type: ignore
         "pack": {"description": "Something", "pack_format": 1}

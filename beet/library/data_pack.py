@@ -657,9 +657,10 @@ class DataPack(Pack[DataPackNamespace]):
         (1, 18): 9,
         (1, 19): 12,
         (1, 20): 41,
-        (1, 21): 80,
+        (1, 21): (88, 0),
     }
     latest_pack_format = pack_format_registry[split_version(LATEST_MINECRAFT_VERSION)]
+    pack_format_switch_format = 82
 
     # fmt: off
     advancements:                       NamespaceProxyDescriptor[Advancement]               = NamespaceProxyDescriptor(Advancement)

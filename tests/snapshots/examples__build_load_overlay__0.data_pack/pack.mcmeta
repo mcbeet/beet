@@ -1,7 +1,15 @@
 {
   "pack": {
-    "pack_format": 50,
+    "min_format": [
+      88,
+      0
+    ],
+    "max_format": [
+      88,
+      0
+    ],
     "description": "",
+    "pack_format": 50,
     "supported_formats": [
       50,
       50
