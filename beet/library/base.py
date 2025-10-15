@@ -1624,6 +1624,7 @@ def get_output_scope(
     if isinstance(scope, tuple):
         return scope
 
+    pack_format: None | int | tuple[int] | tuple[int, int] = None
     if pack is None:
         # Fall back to the most recent scope
         pack_format = 9999
@@ -1632,16 +1633,24 @@ def get_output_scope(
     else:
         # Use the pack format from the pack's supported_formats.
         # Otherwise, use the pack_format itself
-        if isinstance(pack.supported_formats, int):
-            pack_format = pack.supported_formats
-        elif isinstance(pack.supported_formats, list):
-            pack_format = pack.supported_formats[1]
-        elif isinstance(pack.supported_formats, dict):
-            pack_format = pack.supported_formats["max_inclusive"]
+        if pack.max_format:
+            if isinstance(pack.max_format, int):
+                pack_format = pack.pack_format
+            else:
+                pack_format = pack.max_format[0]
+        elif pack.supported_formats:
+            if isinstance(pack.supported_formats, int):
+                pack_format = pack.supported_formats
+            elif isinstance(pack.supported_formats, list):
+                pack_format = pack.supported_formats[1]
+            else:
+                pack_format = pack.supported_formats["max_inclusive"]
         else:
             pack_format = pack.pack_format
     if pack_format is None:
+        # Fall back to the most recent scope
         pack_format = 9999
+
     result: Tuple[str, ...] | None = None
     result_format: int | None = None
     for key, value in scope.items():

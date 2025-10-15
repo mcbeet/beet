@@ -678,8 +678,8 @@ def test_overlay():
     assert c.overlay_name == "c"
     assert c.overlay_parent is p
     assert dict(p.list_files()) == {
-        "a/data/demo/functions/foo.mcfunction": Function(["say hello"]),
-        "c/data/demo/functions/thing.mcfunction": Function([]),
+        "a/data/demo/function/foo.mcfunction": Function(["say hello"]),
+        "c/data/demo/function/thing.mcfunction": Function([]),
         "pack.mcmeta": Mcmeta(
             {
                 "pack": {

@@ -32,7 +32,6 @@ from pydantic.v1.generics import GenericModel
 from beet.core.error import BubbleException
 from beet.core.utils import (
     FileSystemPath,
-    FormatsRangeDict,
     JsonDict,
     SupportedFormats,
     TextComponent,
@@ -180,7 +179,7 @@ FormatSpecifier = Union[int, tuple[int], tuple[int, int]]
 class PackOverlayConfig(BaseModel):
     """Overlay entry configuration."""
 
-    formats: Optional[FormatsRangeDict] = None
+    formats: Optional[SupportedFormats] = None
     directory: str
     min_format: Optional[FormatSpecifier] = None
     max_format: Optional[FormatSpecifier] = None
