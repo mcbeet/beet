@@ -1,6 +1,17 @@
 {
   "pack": {
+<<<<<<< HEAD
     "pack_format": 81,
+=======
+    "min_format": [
+      88,
+      0
+    ],
+    "max_format": [
+      88,
+      0
+    ],
+>>>>>>> beet/main
     "description": "Version: 1.2.3"
   }
 }

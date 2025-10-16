@@ -29,6 +29,8 @@
     "name": "thing",
     "description": "base",
     "pack_format": 4,
+    "min_format": null,
+    "max_format": null,
     "filter": {
       "block": [
         {
@@ -44,7 +46,9 @@
           "min_inclusive": 18,
           "max_inclusive": 18
         },
-        "directory": "abc"
+        "directory": "abc",
+        "min_format": null,
+        "max_format": null
       }
     ],
     "zipped": false,
@@ -60,6 +64,8 @@
     "name": "base",
     "description": "base",
     "pack_format": 88,
+    "min_format": null,
+    "max_format": null,
     "filter": null,
     "supported_formats": {
       "min_inclusive": 88,
@@ -71,14 +77,18 @@
           "min_inclusive": 88,
           "max_inclusive": 99
         },
-        "directory": "base"
+        "directory": "base",
+        "min_format": null,
+        "max_format": null
       },
       {
         "formats": {
           "min_inclusive": 18,
           "max_inclusive": 18
         },
-        "directory": "123"
+        "directory": "123",
+        "min_format": null,
+        "max_format": null
       }
     ],
     "zipped": true,

@@ -12,6 +12,7 @@ __all__ = [
     "load_config",
     "config_error_handler",
     "DETECT_CONFIG_FILES",
+    "FormatSpecifier",
 ]
 
 
@@ -31,7 +32,6 @@ from pydantic.v1.generics import GenericModel
 from beet.core.error import BubbleException
 from beet.core.utils import (
     FileSystemPath,
-    FormatsRangeDict,
     JsonDict,
     SupportedFormats,
     TextComponent,
@@ -173,11 +173,16 @@ class PackFilterConfig(BaseModel):
         )
 
 
+FormatSpecifier = Union[int, tuple[int], tuple[int, int]]
+
+
 class PackOverlayConfig(BaseModel):
     """Overlay entry configuration."""
 
-    formats: FormatsRangeDict
+    formats: Optional[SupportedFormats] = None
     directory: str
+    min_format: Optional[FormatSpecifier] = None
+    max_format: Optional[FormatSpecifier] = None
 
 
 class PackConfig(BaseModel):
@@ -185,7 +190,9 @@ class PackConfig(BaseModel):
 
     name: str = ""
     description: TextComponent = ""
-    pack_format: int = 0
+    pack_format: Optional[int] = None
+    min_format: Optional[FormatSpecifier] = None
+    max_format: Optional[FormatSpecifier] = None
     filter: Optional[PackFilterConfig] = None
     supported_formats: Optional[SupportedFormats] = None
     overlays: Optional[ListOption[PackOverlayConfig]] = None
@@ -206,6 +213,8 @@ class PackConfig(BaseModel):
                 "name": self.name or other.name,
                 "description": self.description or other.description,
                 "pack_format": self.pack_format or other.pack_format,
+                "min_format": self.min_format or other.min_format,
+                "max_format": self.max_format or other.max_format,
                 "filter": (
                     self.filter.with_defaults(other.filter)
                     if self.filter and other.filter

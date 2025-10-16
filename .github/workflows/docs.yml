@@ -8,6 +8,7 @@ on:
       - "docs/**"
       - "README.md"
       - "pyproject.toml"
+      - "CHANGELOG.md"
 
 env:
   PYTHON_VERSION: "3.10"

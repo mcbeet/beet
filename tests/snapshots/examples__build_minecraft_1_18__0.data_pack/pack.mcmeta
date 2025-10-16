@@ -1,6 +1,11 @@
 {
   "pack": {
+<<<<<<< HEAD
     "pack_format": 8,
     "description": ""
+=======
+    "description": "",
+    "pack_format": 9
+>>>>>>> beet/main
   }
 }

@@ -1,21 +1,42 @@
 {
   "pack": {
-    "pack_format": 7,
-    "description": "This is the root"
+    "description": "This is the root",
+    "min_format": [
+      88,
+      0
+    ],
+    "max_format": [
+      88,
+      0
+    ]
   },
   "custom_data": 579,
   "libs": [
     {
       "pack": {
-        "pack_format": 7,
-        "description": "This is library bar"
+        "description": "This is library bar",
+        "min_format": [
+          88,
+          0
+        ],
+        "max_format": [
+          88,
+          0
+        ]
       },
       "custom_data": 456
     },
     {
       "pack": {
-        "pack_format": 7,
-        "description": "This is library foo"
+        "description": "This is library foo",
+        "min_format": [
+          88,
+          0
+        ],
+        "max_format": [
+          88,
+          0
+        ]
       },
       "custom_data": 123
     }
