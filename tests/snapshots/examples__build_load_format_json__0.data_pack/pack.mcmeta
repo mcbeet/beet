@@ -1,9 +1,6 @@
 {
     "pack": {
         "description": "",
-<<<<<<< HEAD
-        "pack_format": 81
-=======
         "max_format": [
             88,
             0
@@ -12,6 +9,5 @@
             88,
             0
         ]
->>>>>>> beet/main
     }
 }

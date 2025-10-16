@@ -1,5 +1,37 @@
 [
   {
+    "id": "1.21.10",
+    "name": "1.21.10",
+    "release_target": null,
+    "type": "release",
+    "stable": true,
+    "data_version": 4556,
+    "protocol_version": 773,
+    "data_pack_version": 88,
+    "data_pack_version_minor": 0,
+    "resource_pack_version": 69,
+    "resource_pack_version_minor": 0,
+    "build_time": "2025-10-07T09:14:11+00:00",
+    "release_time": "2025-10-07T09:17:23+00:00",
+    "sha1": "38c873e1339f6a8b4dfbe4df66e355b989371838"
+  },
+  {
+    "id": "1.21.9",
+    "name": "1.21.9",
+    "release_target": null,
+    "type": "release",
+    "stable": true,
+    "data_version": 4554,
+    "protocol_version": 773,
+    "data_pack_version": 88,
+    "data_pack_version_minor": 0,
+    "resource_pack_version": 69,
+    "resource_pack_version_minor": 0,
+    "build_time": "2025-09-30T11:55:33+00:00",
+    "release_time": "2025-09-30T11:58:43+00:00",
+    "sha1": "53f9bec2722de5b22b1ab8c393f2b0f6cb3f8a5a"
+  },
+  {
     "id": "1.21.8",
     "name": "1.21.8",
     "release_target": null,
@@ -8,10 +40,12 @@
     "data_version": 4440,
     "protocol_version": 772,
     "data_pack_version": 81,
+    "data_pack_version_minor": 0,
     "resource_pack_version": 64,
+    "resource_pack_version_minor": 0,
     "build_time": "2025-07-17T12:00:57+00:00",
     "release_time": "2025-07-17T12:04:02+00:00",
-    "sha1": "24b08e167c6611f7ad895ae1e8b5258f819184aa"
+    "sha1": "e9c00d989d7155786eaa748bc39d05d8b54c3653"
   },
   {
     "id": "1.21.7",
@@ -22,10 +56,12 @@
     "data_version": 4438,
     "protocol_version": 772,
     "data_pack_version": 81,
+    "data_pack_version_minor": 0,
     "resource_pack_version": 64,
+    "resource_pack_version_minor": 0,
     "build_time": "2025-06-30T09:29:28+00:00",
     "release_time": "2025-06-30T09:32:16+00:00",
-    "sha1": "cd36d4744092cc0cca8d3fbf8e9222b0fdc00541"
+    "sha1": "bcda77b19adb67bd7d45fc1732f68b01b6badff4"
   },
   {
     "id": "1.21.6",
@@ -36,10 +72,12 @@
     "data_version": 4435,
     "protocol_version": 771,
     "data_pack_version": 80,
+    "data_pack_version_minor": 0,
     "resource_pack_version": 63,
+    "resource_pack_version_minor": 0,
     "build_time": "2025-06-17T11:07:28+00:00",
     "release_time": "2025-06-17T11:10:28+00:00",
-    "sha1": "e2a26a825f525a8cc72066d632d07aa8af67b19a"
+    "sha1": "41274623de4d69a25108d5fa7e26a687ec48919c"
   },
   {
     "id": "1.21.5",
@@ -50,10 +88,12 @@
     "data_version": 4325,
     "protocol_version": 770,
     "data_pack_version": 71,
+    "data_pack_version_minor": 0,
     "resource_pack_version": 55,
+    "resource_pack_version_minor": 0,
     "build_time": "2025-03-25T12:11:48+00:00",
     "release_time": "2025-03-25T12:14:58+00:00",
-    "sha1": "fc896031b408c1ee710fe12376cb3d6f95c38a87"
+    "sha1": "6bb02a747dc11046591135ce8925abf59bd30ce4"
   },
   {
     "id": "1.21.4",
@@ -64,10 +104,12 @@
     "data_version": 4189,
     "protocol_version": 769,
     "data_pack_version": 61,
+    "data_pack_version_minor": 0,
     "resource_pack_version": 46,
+    "resource_pack_version_minor": 0,
     "build_time": "2024-12-03T10:09:48+00:00",
     "release_time": "2024-12-03T10:12:57+00:00",
-    "sha1": "78a0238b302d49892d6b8f07d93f9035909ac74f"
+    "sha1": "992fb09b7aa463bdb2a0dde747d36b7bad6c5450"
   },
   {
     "id": "1.21.3",
@@ -78,10 +120,12 @@
     "data_version": 4082,
     "protocol_version": 768,
     "data_pack_version": 57,
+    "data_pack_version_minor": 0,
     "resource_pack_version": 42,
+    "resource_pack_version_minor": 0,
     "build_time": "2024-10-23T12:25:27+00:00",
     "release_time": "2024-10-23T12:28:15+00:00",
-    "sha1": "934b0a2ed84ef4e93f09b89d0615fab666d74f43"
+    "sha1": "a301715a43c3378db022a7e44d9fbe9376fce272"
   },
   {
     "id": "1.21.2",
@@ -92,10 +136,12 @@
     "data_version": 4080,
     "protocol_version": 768,
     "data_pack_version": 57,
+    "data_pack_version_minor": 0,
     "resource_pack_version": 42,
+    "resource_pack_version_minor": 0,
     "build_time": "2024-10-22T09:55:49+00:00",
     "release_time": "2024-10-22T09:58:55+00:00",
-    "sha1": "1197451f6ca6f9c07b919ec0e67adac09ee5df8a"
+    "sha1": "e458f13189c0b36a211d461edd6ac0a8771c68dc"
   },
   {
     "id": "1.21.1",
@@ -106,10 +152,12 @@
     "data_version": 3955,
     "protocol_version": 767,
     "data_pack_version": 48,
+    "data_pack_version_minor": 0,
     "resource_pack_version": 34,
+    "resource_pack_version_minor": 0,
     "build_time": "2024-08-08T12:21:55+00:00",
     "release_time": "2024-08-08T12:24:45+00:00",
-    "sha1": "c4c37a8abcbab7fb31031acfb19b9a3a34efb1ec"
+    "sha1": "54b81cc79bc61af0adcc39a0b592ae333cc1e6fc"
   },
   {
     "id": "1.21",
@@ -120,10 +168,12 @@
     "data_version": 3953,
     "protocol_version": 767,
     "data_pack_version": 48,
+    "data_pack_version_minor": 0,
     "resource_pack_version": 34,
+    "resource_pack_version_minor": 0,
     "build_time": "2024-06-13T08:21:21+00:00",
     "release_time": "2024-06-13T08:24:03+00:00",
-    "sha1": "5a3daa441ef8606123ca41626037120e1d30008a"
+    "sha1": "6debfc864b9e5f728d54e34a0faf2740262036b6"
   },
   {
     "id": "1.20.6",
@@ -134,10 +184,12 @@
     "data_version": 3839,
     "protocol_version": 766,
     "data_pack_version": 41,
+    "data_pack_version_minor": 0,
     "resource_pack_version": 32,
+    "resource_pack_version_minor": 0,
     "build_time": "2024-04-29T12:38:06+00:00",
     "release_time": "2024-04-29T12:40:45+00:00",
-    "sha1": "3df872b5d1318c5d59579011560e92f4571a0923"
+    "sha1": "36ead78d35bc5ed318f21c74ed4fea68dcd8c238"
   },
   {
     "id": "1.20.5",
@@ -148,10 +200,12 @@
     "data_version": 3837,
     "protocol_version": 766,
     "data_pack_version": 41,
+    "data_pack_version_minor": 0,
     "resource_pack_version": 32,
+    "resource_pack_version_minor": 0,
     "build_time": "2024-04-23T11:51:33+00:00",
     "release_time": "2024-04-23T11:54:12+00:00",
-    "sha1": "4ec4396662daf6e37e6a3b5432b5def9d9a803fe"
+    "sha1": "0799fcddd411365f4ca3aa6cd035bad867acef74"
   },
   {
     "id": "1.20.4",
@@ -162,10 +216,12 @@
     "data_version": 3700,
     "protocol_version": 765,
     "data_pack_version": 26,
+    "data_pack_version_minor": 0,
     "resource_pack_version": 22,
+    "resource_pack_version_minor": 0,
     "build_time": "2023-12-07T12:53:30+00:00",
     "release_time": "2023-12-07T12:56:20+00:00",
-    "sha1": "ebbad0bb70bcee8aa33a6e7fa617b31bab292ae3"
+    "sha1": "04fe402f585253eaeed600a845d9b6598ac65255"
   },
   {
     "id": "1.20.3",
@@ -176,10 +232,12 @@
     "data_version": 3698,
     "protocol_version": 765,
     "data_pack_version": 26,
+    "data_pack_version_minor": 0,
     "resource_pack_version": 22,
+    "resource_pack_version_minor": 0,
     "build_time": "2023-12-04T12:04:50+00:00",
     "release_time": "2023-12-04T12:10:32+00:00",
-    "sha1": "13422bf91e003da13f595afe8de8e6eba29c9b85"
+    "sha1": "fe266a6ddac0bd30f06c02592531f718b61ce637"
   },
   {
     "id": "1.20.2",
@@ -190,10 +248,12 @@
     "data_version": 3578,
     "protocol_version": 764,
     "data_pack_version": 18,
+    "data_pack_version_minor": 0,
     "resource_pack_version": 18,
+    "resource_pack_version_minor": 0,
     "build_time": "2023-09-20T09:00:26+00:00",
     "release_time": "2023-09-20T09:02:57+00:00",
-    "sha1": "4336ab06e3c317504e7fe8261c77df67b8da69bd"
+    "sha1": "d5ec7c4199a80a0ef1c5e9998f168afb9a932c82"
   },
   {
     "id": "1.20.1",
@@ -204,10 +264,12 @@
     "data_version": 3465,
     "protocol_version": 763,
     "data_pack_version": 15,
+    "data_pack_version_minor": 0,
     "resource_pack_version": 15,
+    "resource_pack_version_minor": 0,
     "build_time": "2023-06-12T13:23:26+00:00",
     "release_time": "2023-06-12T13:25:51+00:00",
-    "sha1": "b6984e182a774302e33dc52757c32938830fb546"
+    "sha1": "662fac49fa7b30e4ee73810fef9e243c0ba9ffa4"
   },
   {
     "id": "1.20",
@@ -218,10 +280,12 @@
     "data_version": 3463,
     "protocol_version": 763,
     "data_pack_version": 15,
+    "data_pack_version_minor": 0,
     "resource_pack_version": 15,
+    "resource_pack_version_minor": 0,
     "build_time": "2023-06-02T08:33:51+00:00",
     "release_time": "2023-06-02T08:36:17+00:00",
-    "sha1": "ef5bedfe62d81371ee52ec274b29f172ac634f9e"
+    "sha1": "91cdd1a81e87029684bbfe0edff2abf519a21570"
   },
   {
     "id": "1.19.4",
@@ -232,10 +296,12 @@
     "data_version": 3337,
     "protocol_version": 762,
     "data_pack_version": 12,
+    "data_pack_version_minor": 0,
     "resource_pack_version": 13,
+    "resource_pack_version_minor": 0,
     "build_time": "2023-03-14T12:53:56+00:00",
     "release_time": "2023-03-14T12:56:18+00:00",
-    "sha1": "854b10c060be537b68aebee414e1618686bc3c57"
+    "sha1": "cbb0d6a006f0dd923e3410961dd1ca95e7511519"
   },
   {
     "id": "1.19.3",
@@ -246,10 +312,12 @@
     "data_version": 3218,
     "protocol_version": 761,
     "data_pack_version": 10,
+    "data_pack_version_minor": 0,
     "resource_pack_version": 12,
+    "resource_pack_version_minor": 0,
     "build_time": "2022-12-07T08:14:04+00:00",
     "release_time": "2022-12-07T08:17:18+00:00",
-    "sha1": "dafb169ab882f6a1fda7e8acac80e9ed747762ad"
+    "sha1": "e274ba748b662e7475bd3b4eac2d094719f5547d"
   },
   {
     "id": "1.19.2",
@@ -260,7 +328,9 @@
     "data_version": 3120,
     "protocol_version": 760,
     "data_pack_version": 10,
+    "data_pack_version_minor": 0,
     "resource_pack_version": 9,
+    "resource_pack_version_minor": 0,
     "build_time": "2022-08-05T11:55:20+00:00",
     "release_time": "2022-08-05T11:57:05+00:00",
     "sha1": "ed548106acf3ac7e8205a6ee8fd2710facfa164f"
@@ -274,7 +344,9 @@
     "data_version": 3117,
     "protocol_version": 760,
     "data_pack_version": 10,
+    "data_pack_version_minor": 0,
     "resource_pack_version": 9,
+    "resource_pack_version_minor": 0,
     "build_time": "2022-07-27T09:23:42+00:00",
     "release_time": "2022-07-27T09:25:33+00:00",
     "sha1": "39d5e8925d37490c6f2abb2e02b8c6f1b35719df"
@@ -288,7 +360,9 @@
     "data_version": 3105,
     "protocol_version": 759,
     "data_pack_version": 10,
+    "data_pack_version_minor": 0,
     "resource_pack_version": 9,
+    "resource_pack_version_minor": 0,
     "build_time": "2022-06-07T09:40:26+00:00",
     "release_time": "2022-06-07T09:42:18+00:00",
     "sha1": "14bbfb25fb1c1c798e3c9b9482b081a78d1f3a9d"
@@ -302,7 +376,9 @@
     "data_version": 2975,
     "protocol_version": 758,
     "data_pack_version": 9,
+    "data_pack_version_minor": 0,
     "resource_pack_version": 8,
+    "resource_pack_version_minor": 0,
     "build_time": "2022-02-28T10:40:37+00:00",
     "release_time": "2022-02-28T10:42:45+00:00",
     "sha1": "334b33fcba3c9be4b7514624c965256535bd7eba"
@@ -316,7 +392,9 @@
     "data_version": 2865,
     "protocol_version": 757,
     "data_pack_version": 8,
+    "data_pack_version_minor": 0,
     "resource_pack_version": 8,
+    "resource_pack_version_minor": 0,
     "build_time": "2021-12-10T08:21:01+00:00",
     "release_time": "2021-12-10T08:23:00+00:00",
     "sha1": "7ff864e988a2c29907154d5f9701e87e5d5e554a"
@@ -330,7 +408,9 @@
     "data_version": 2860,
     "protocol_version": 757,
     "data_pack_version": 8,
+    "data_pack_version_minor": 0,
     "resource_pack_version": 8,
+    "resource_pack_version_minor": 0,
     "build_time": "2021-11-30T09:14:30+00:00",
     "release_time": "2021-11-30T09:16:29+00:00",
     "sha1": "7367ea8b7cad7c7830192441bb2846be0d2ceeac"
@@ -344,7 +424,9 @@
     "data_version": 2730,
     "protocol_version": 756,
     "data_pack_version": 7,
+    "data_pack_version_minor": 0,
     "resource_pack_version": 7,
+    "resource_pack_version_minor": 0,
     "build_time": "2021-07-06T11:59:45+00:00",
     "release_time": "2021-07-06T12:01:34+00:00",
     "sha1": "e0e7ab5ed6f55bbd874ef95be3c9356d67e64b57"
@@ -358,7 +440,9 @@
     "data_version": 2724,
     "protocol_version": 755,
     "data_pack_version": 7,
+    "data_pack_version_minor": 0,
     "resource_pack_version": 7,
+    "resource_pack_version_minor": 0,
     "build_time": "2021-06-08T10:58:54+00:00",
     "release_time": "2021-06-08T11:00:40+00:00",
     "sha1": "0d9ace8a2ecfd1f4c782786f4b985a499240ff12"
@@ -372,7 +456,9 @@
     "data_version": 2586,
     "protocol_version": 754,
     "data_pack_version": 6,
+    "data_pack_version_minor": 0,
     "resource_pack_version": 6,
+    "resource_pack_version_minor": 0,
     "build_time": "2021-01-14T16:03:41+00:00",
     "release_time": "2021-01-14T16:05:32+00:00",
     "sha1": "fba9f7833e858a1257d810d21a3a9e3c967f9077"
@@ -386,7 +472,9 @@
     "data_version": 2584,
     "protocol_version": 754,
     "data_pack_version": 6,
+    "data_pack_version_minor": 0,
     "resource_pack_version": 6,
+    "resource_pack_version_minor": 0,
     "build_time": "2020-10-29T15:47:51+00:00",
     "release_time": "2020-10-29T15:49:37+00:00",
     "sha1": "596ad61fda7612d9edf8881cf81869276bdb7f82"
@@ -400,7 +488,9 @@
     "data_version": 2580,
     "protocol_version": 753,
     "data_pack_version": 6,
+    "data_pack_version_minor": 0,
     "resource_pack_version": 6,
+    "resource_pack_version_minor": 0,
     "build_time": "2020-09-10T13:40:50+00:00",
     "release_time": "2020-09-10T13:42:37+00:00",
     "sha1": "6485dd131ef68c968041a9f6fd73094b027e42e1"
@@ -414,7 +504,9 @@
     "data_version": 2578,
     "protocol_version": 751,
     "data_pack_version": 6,
+    "data_pack_version_minor": 0,
     "resource_pack_version": 6,
+    "resource_pack_version_minor": 0,
     "build_time": "2020-08-11T10:11:57+00:00",
     "release_time": "2020-08-11T10:13:46+00:00",
     "sha1": "998d9ef5770d05c20d760dc16cf85151f35009f2"
@@ -428,7 +520,9 @@
     "data_version": 2567,
     "protocol_version": 736,
     "data_pack_version": 5,
+    "data_pack_version_minor": 0,
     "resource_pack_version": 5,
+    "resource_pack_version_minor": 0,
     "build_time": "2020-06-24T10:29:54+00:00",
     "release_time": "2020-06-24T10:31:40+00:00",
     "sha1": "54fa3af57d041d2771e66d390197b2c0288e697c"
@@ -442,7 +536,9 @@
     "data_version": 2566,
     "protocol_version": 735,
     "data_pack_version": 5,
+    "data_pack_version_minor": 0,
     "resource_pack_version": 5,
+    "resource_pack_version_minor": 0,
     "build_time": "2020-06-23T16:19:09+00:00",
     "release_time": "2020-06-23T16:20:52+00:00",
     "sha1": "e9d21d375f9c961f0e9731d4e463306d76e77c48"
@@ -456,7 +552,9 @@
     "data_version": 2230,
     "protocol_version": 578,
     "data_pack_version": 5,
+    "data_pack_version_minor": 0,
     "resource_pack_version": 5,
+    "resource_pack_version_minor": 0,
     "build_time": "2020-01-17T10:02:11+00:00",
     "release_time": "2020-01-17T10:03:52+00:00",
     "sha1": "e9d0adb8f642abe422909ede50f651b2b58a3573"
@@ -470,7 +568,9 @@
     "data_version": 2227,
     "protocol_version": 575,
     "data_pack_version": 5,
+    "data_pack_version_minor": 0,
     "resource_pack_version": 5,
+    "resource_pack_version_minor": 0,
     "build_time": "2019-12-16T10:28:09+00:00",
     "release_time": "2019-12-16T10:29:47+00:00",
     "sha1": "18c3063de87ae126b4e017121219ba802be0755b"
@@ -484,7 +584,9 @@
     "data_version": 2225,
     "protocol_version": 573,
     "data_pack_version": 5,
+    "data_pack_version_minor": 0,
     "resource_pack_version": 5,
+    "resource_pack_version_minor": 0,
     "build_time": "2019-12-09T13:11:56+00:00",
     "release_time": "2019-12-09T13:13:38+00:00",
     "sha1": "833322370ab320e77717097082effe1d124d48bd"
@@ -498,7 +600,9 @@
     "data_version": 1976,
     "protocol_version": 498,
     "data_pack_version": 4,
+    "data_pack_version_minor": 0,
     "resource_pack_version": 4,
+    "resource_pack_version_minor": 0,
     "build_time": "2019-07-19T09:24:08+00:00",
     "release_time": "2019-07-19T09:25:47+00:00",
     "sha1": "be146d5f66a3627ed0a87c234c4d8dde8ab35098"
@@ -512,7 +616,9 @@
     "data_version": 1968,
     "protocol_version": 490,
     "data_pack_version": 4,
+    "data_pack_version_minor": 0,
     "resource_pack_version": 4,
+    "resource_pack_version_minor": 0,
     "build_time": "2019-06-24T12:51:13+00:00",
     "release_time": "2019-06-24T12:52:52+00:00",
     "sha1": "e21618620e02be5a14543d1d17ffdba941d09aa8"
@@ -526,7 +632,9 @@
     "data_version": 1963,
     "protocol_version": 485,
     "data_pack_version": 4,
+    "data_pack_version_minor": 0,
     "resource_pack_version": 4,
+    "resource_pack_version_minor": 0,
     "build_time": "2019-05-27T11:46:41+00:00",
     "release_time": "2019-05-27T11:48:25+00:00",
     "sha1": "83299b3bf3139ebd9ae5547b3144dcf68d4cb1fd"
@@ -540,7 +648,9 @@
     "data_version": 1957,
     "protocol_version": 480,
     "data_pack_version": 4,
+    "data_pack_version_minor": 0,
     "resource_pack_version": 4,
+    "resource_pack_version_minor": 0,
     "build_time": "2019-05-13T11:08:37+00:00",
     "release_time": "2019-05-13T11:10:12+00:00",
     "sha1": "183e49ba0fabb5ef8a304f8f5907fa887f40c466"
@@ -554,7 +664,9 @@
     "data_version": 1952,
     "protocol_version": 477,
     "data_pack_version": 4,
+    "data_pack_version_minor": 0,
     "resource_pack_version": 4,
+    "resource_pack_version_minor": 0,
     "build_time": "2019-04-23T14:51:09+00:00",
     "release_time": "2019-04-23T14:52:44+00:00",
     "sha1": "0fd01dd81eaa451d3130b1cf025a10f129585b10"

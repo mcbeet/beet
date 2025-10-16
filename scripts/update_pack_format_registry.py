@@ -1,7 +1,9 @@
+#!
 import json
 from typing import Any
-from beet.resources.pack_format_registry import PackFormatRegistry, pack_format_registry_path
 import requests
+from importlib.resources import files
+from beet.resources.pack_format_registry import pack_format_registry_path
 
 URL = "https://raw.githubusercontent.com/misode/mcmeta/refs/heads/summary/versions/data.json"
 
@@ -11,12 +13,9 @@ r.raise_for_status()
 
 pack_format_registry: list[dict[str, Any]] = []
 for item in r.json():
-    value = PackFormatRegistry.model_validate(item)
-    if value.type == "release":
-        pack_format_registry.append(value.model_dump())
+    if item["type"] == "release":
+        pack_format_registry.append(item)
 
 
 with open(str(pack_format_registry_path), "w") as f:
     json.dump(pack_format_registry, f, indent=2)
-    
-

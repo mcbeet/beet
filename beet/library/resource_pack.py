@@ -32,7 +32,7 @@ from copy import deepcopy
 from dataclasses import dataclass
 from typing import Any, ClassVar, Dict, Optional, Type
 
-from beet.resources.pack_format_registry import resource_pack_format_registry
+from beet.resources.pack_format_registry import PackFormatRegistryContainer
 
 try:
     from PIL.Image import Image
@@ -375,9 +375,11 @@ class ResourcePack(Pack[ResourcePackNamespace]):
 
     default_name = "untitled_resource_pack"
 
-    pack_format_registry = resource_pack_format_registry
-    latest_pack_format = pack_format_registry[split_version(LATEST_MINECRAFT_VERSION)]
     pack_format_switch_format = 65
+    pack_format_registry = PackFormatRegistryContainer(
+        pack_format_switch_format, "resource_pack"
+    )
+    latest_pack_format = pack_format_registry[split_version(LATEST_MINECRAFT_VERSION)]
 
     language_config = McmetaPin[Dict[str, JsonDict]]("language", default_factory=dict)
 

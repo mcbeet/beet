@@ -1,8 +1,5 @@
 {
   "pack": {
-<<<<<<< HEAD
-    "pack_format": 64,
-=======
     "min_format": [
       69,
       0
@@ -11,7 +8,6 @@
       69,
       0
     ],
->>>>>>> beet/main
     "description": "Something cool\nVersion: 1.2.3"
   }
 }

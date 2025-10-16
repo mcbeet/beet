@@ -1,9 +1,6 @@
 {
   "pack": {
     "description": "world",
-<<<<<<< HEAD
-    "pack_format": 64
-=======
     "min_format": [
       69,
       0
@@ -12,6 +9,5 @@
       69,
       0
     ]
->>>>>>> beet/main
   }
 }
