@@ -13,14 +13,14 @@
   "filter": {
     "block": [
       {
+        "namespace": "minecraft"
+      },
+      {
         "namespace": "foo",
         "path": "bar"
       },
       {
         "namespace": "thing"
-      },
-      {
-        "namespace": "minecraft"
       }
     ]
   }

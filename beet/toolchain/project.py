@@ -313,26 +313,6 @@ class ProjectBuilder:
         for plugin in plugins:
             ctx.require(plugin)
 
-        pack_configs = [self.config.resource_pack, self.config.data_pack]
-        pack_suffixes = ["_resource_pack", "_data_pack"]
-
-        ctx.require(
-            load(
-                resource_pack=self.config.resource_pack.load,
-                data_pack=self.config.data_pack.load,
-            )
-        )
-
-        ctx.require(
-            render(
-                resource_pack=self.config.resource_pack.render,
-                data_pack=self.config.data_pack.render,
-            )
-        )
-
-        with log_time("Run pipeline."):
-            yield
-
         description_parts = [
             ctx.project_description if isinstance(ctx.project_description, str) else "",
             ctx.project_author and f"Author: {ctx.project_author}",
@@ -344,6 +324,9 @@ class ProjectBuilder:
             description = list(
                 intersperse(filter(None, [ctx.project_description, description]), "\n")
             )
+
+        pack_configs = [self.config.resource_pack, self.config.data_pack]
+        pack_suffixes = ["_resource_pack", "_data_pack"]
 
         for config, suffix, pack in zip(pack_configs, pack_suffixes, ctx.packs):
             default_name = ctx.project_id
@@ -416,6 +399,23 @@ class ProjectBuilder:
             pack.zipped = bool(config.zipped)
             pack.compression = config.compression
             pack.compression_level = config.compression_level
+
+        ctx.require(
+            load(
+                resource_pack=self.config.resource_pack.load,
+                data_pack=self.config.data_pack.load,
+            )
+        )
+
+        ctx.require(
+            render(
+                resource_pack=self.config.resource_pack.render,
+                data_pack=self.config.data_pack.render,
+            )
+        )
+
+        with log_time("Run pipeline."):
+            yield
 
     def __call__(self, ctx: Context):
         """The builder instance is itself a plugin used for merging subpipelines."""
