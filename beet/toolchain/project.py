@@ -32,7 +32,6 @@ from beet.core.watch import DirectoryWatcher, FileChanges, detect_repeated_chang
 from beet.library.base import LATEST_MINECRAFT_VERSION, Mcmeta
 
 from .config import (
-    FormatSpecifier,
     PackConfig,
     ProjectConfig,
     load_config,
@@ -308,14 +307,22 @@ class ProjectBuilder:
         autosave.add_output(output(directory=ctx.output_directory))
         autosave.add_link(ctx.inject(LinkManager).autosave_handler)
 
-
         pack_configs = [self.config.resource_pack, self.config.data_pack]
         pack_suffixes = ["_resource_pack", "_data_pack"]
 
         for config, pack in zip(pack_configs, ctx.packs):
             # if any of the config is None, overwrite others values
             if not self.config.minecraft:
-                if any([x is not None for x in [config.pack_format, config.min_format, config.max_format]]):
+                if any(
+                    [
+                        x is not None
+                        for x in [
+                            config.pack_format,
+                            config.min_format,
+                            config.max_format,
+                        ]
+                    ]
+                ):
                     pack.pack_format = None
                     pack.min_format = None
                     pack.max_format = None
