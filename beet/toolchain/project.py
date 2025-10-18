@@ -308,10 +308,6 @@ class ProjectBuilder:
         autosave.add_output(output(directory=ctx.output_directory))
         autosave.add_link(ctx.inject(LinkManager).autosave_handler)
 
-        plugins = (self.autoload or []) + self.config.require
-
-        for plugin in plugins:
-            ctx.require(plugin)
 
         pack_configs = [self.config.resource_pack, self.config.data_pack]
         pack_suffixes = ["_resource_pack", "_data_pack"]
@@ -343,6 +339,11 @@ class ProjectBuilder:
                         pack.min_format = pack.max_format = format
                 else:
                     pack.min_format = pack.max_format = format
+
+        plugins = (self.autoload or []) + self.config.require
+
+        for plugin in plugins:
+            ctx.require(plugin)
 
         ctx.require(
             load(
