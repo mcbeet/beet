@@ -1570,7 +1570,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
     def __repr__(self) -> str:
         return (
             f"{self.__class__.__name__}(name={self.name!r}, "
-            f"description={self.description!r}, pack_format={self.pack_format!r})"
+            f"description={self.description!r}, pack_format={self.pack_format!r}, min_format={self.min_format!r}, max_format={self.max_format!r})"
         )
 
 
