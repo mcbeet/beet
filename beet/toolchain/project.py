@@ -316,6 +316,34 @@ class ProjectBuilder:
         pack_configs = [self.config.resource_pack, self.config.data_pack]
         pack_suffixes = ["_resource_pack", "_data_pack"]
 
+        for config, pack in zip(pack_configs, ctx.packs):
+            # if any of the config is None, overwrite others values
+            if not self.config.minecraft:
+                if any([x is not None for x in [config.pack_format, config.min_format, config.max_format]]):
+                    pack.pack_format = None
+                    pack.min_format = None
+                    pack.max_format = None
+                if config.pack_format is not None:
+                    pack.pack_format = config.pack_format
+                if config.min_format is not None:
+                    pack.min_format = config.min_format
+                if config.max_format is not None:
+                    pack.max_format = config.max_format
+            else:
+                format = pack.pack_format_registry.get(
+                    split_version(self.config.minecraft), pack.latest_pack_format
+                )
+                if isinstance(format, int):
+                    if format < pack.pack_format_switch_format:
+                        pack.pack_format = format
+                        pack.min_format = None
+                        pack.max_format = None
+                    else:
+                        pack.pack_format = None
+                        pack.min_format = pack.max_format = format
+                else:
+                    pack.min_format = pack.max_format = format
+
         ctx.require(
             load(
                 resource_pack=self.config.resource_pack.load,
@@ -351,33 +379,10 @@ class ProjectBuilder:
                 default_name += "_" + ctx.project_version
             default_name += suffix
 
-            pack_format_default: int | None = None
-            min_format_default: FormatSpecifier | None = None
-            max_format_default: FormatSpecifier | None = None
-            if self.config.minecraft:
-                format = pack.pack_format_registry.get(
-                    split_version(self.config.minecraft), pack.latest_pack_format
-                )
-            else:
-                format = pack.latest_pack_format
-            if isinstance(format, int):
-                if format < pack.pack_format_switch_format:
-                    pack_format_default = format
-                    min_format_default = None
-                    max_format_default = None
-                else:
-                    pack_format_default = None
-                    min_format_default = max_format_default = format
-            else:
-                min_format_default = max_format_default = format
-
             config = config.with_defaults(
                 PackConfig(
                     name=default_name,
                     description=pack.description or description,
-                    pack_format=pack_format_default,
-                    min_format=min_format_default,
-                    max_format=max_format_default,
                     zipped=pack.zipped,
                     compression=pack.compression,
                     compression_level=pack.compression_level,
@@ -386,19 +391,12 @@ class ProjectBuilder:
 
             pack.name = ctx.template.render_string(config.name)
             pack.description = ctx.template.render_json(config.description)
-            pack.pack_format = config.pack_format
-            pack.min_format = config.min_format
-            pack.max_format = config.max_format
             if config.filter:
                 pack.mcmeta.merge(
                     Mcmeta({"filter": config.filter.dict(exclude_none=True)})
                 )
             if config.supported_formats:
                 pack.supported_formats = config.supported_formats
-            if config.min_format:
-                pack.min_format = config.min_format
-            if config.max_format:
-                pack.max_format = config.max_format
             if config.overlays:
                 for overlay in config.overlays.entries():
                     if overlay.formats is not None:
