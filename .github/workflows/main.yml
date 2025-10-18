@@ -35,7 +35,7 @@ jobs:
           path: ~/.local
           key: poetry-${{ runner.os }}-${{ env.PYTHON_VERSION }}-${{ env.POETRY_VERSION }}
       - name: Install poetry
-        if: steps.cache-poetry.outputs.cache-hit != 'true'
+        if: steps.cache-poetry.outputs.cache-hit != 'false'
         uses: snok/install-poetry@v1
         with:
           version: ${{ env.POETRY_VERSION }}
@@ -49,7 +49,7 @@ jobs:
           restore-keys: |
             venv-${{ runner.os }}-${{ env.PYTHON_VERSION }}-${{ env.POETRY_VERSION }}-
       - name: Install dependencies
-        if: steps.cache-venv.outputs.cache-hit != 'true'
+        if: steps.cache-venv.outputs.cache-hit != 'false'
         run: poetry install -E image
       - name: Setup npm cache
         id: cache-npm
