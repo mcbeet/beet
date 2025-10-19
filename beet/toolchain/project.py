@@ -347,6 +347,23 @@ class ProjectBuilder:
                 else:
                     pack.min_format = pack.max_format = format
 
+            if config.supported_formats:
+                pack.supported_formats = config.supported_formats
+            if config.overlays:
+                for overlay in config.overlays.entries():
+                    if overlay.formats is not None:
+                        pack.overlays[overlay.directory].supported_formats = deepcopy(
+                            overlay.formats
+                        )
+                    if overlay.min_format:
+                        pack.overlays[overlay.directory].min_format = deepcopy(
+                            overlay.min_format
+                        )
+                    if overlay.max_format:
+                        pack.overlays[overlay.directory].max_format = deepcopy(
+                            overlay.max_format
+                        )
+
         plugins = (self.autoload or []) + self.config.require
 
         for plugin in plugins:
@@ -403,22 +420,6 @@ class ProjectBuilder:
                 pack.mcmeta.merge(
                     Mcmeta({"filter": config.filter.dict(exclude_none=True)})
                 )
-            if config.supported_formats:
-                pack.supported_formats = config.supported_formats
-            if config.overlays:
-                for overlay in config.overlays.entries():
-                    if overlay.formats is not None:
-                        pack.overlays[overlay.directory].supported_formats = deepcopy(
-                            overlay.formats
-                        )
-                    if overlay.min_format:
-                        pack.overlays[overlay.directory].min_format = deepcopy(
-                            overlay.min_format
-                        )
-                    if overlay.max_format:
-                        pack.overlays[overlay.directory].max_format = deepcopy(
-                            overlay.max_format
-                        )
             pack.zipped = bool(config.zipped)
             pack.compression = config.compression
             pack.compression_level = config.compression_level
