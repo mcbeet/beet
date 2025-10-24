@@ -26,7 +26,6 @@ from beet.core.utils import (
     intersperse,
     log_time,
     normalize_string,
-    split_version,
 )
 from beet.core.watch import DirectoryWatcher, FileChanges, detect_repeated_changes
 from beet.library.base import LATEST_MINECRAFT_VERSION, Mcmeta
@@ -356,7 +355,7 @@ class ProjectBuilder:
             max_format_default: FormatSpecifier | None = None
             if self.config.minecraft:
                 format = pack.pack_format_registry.get(
-                    split_version(self.config.minecraft), pack.latest_pack_format
+                    self.config.minecraft, pack.latest_pack_format
                 )
             else:
                 format = pack.latest_pack_format

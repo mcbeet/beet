@@ -108,19 +108,21 @@ class PackFormatRegistryContainer(Container[VersionNumber, FormatSpecifier]):
         """
         Implement the missing method to return a default value.
         """
-        if key[-1] == "x":
-            max_patch = 0
-            for version in self.keys():
-                normalized_version = self.normalize_key(version)
-                if key[0] != normalized_version[0] or key[1] != normalized_version[1]:
-                    continue
-                if len(normalized_version) == 2:
-                    # The maximum is 0
-                    continue
-                patch = normalized_version[2]
-                if isinstance(patch, int) and patch > max_patch:
-                    max_patch = patch
-            if max_patch == 0:
-                return self[key[0], key[1]]
-            return self[key[0], key[1], max_patch]
-        raise KeyError(key)
+        if not isinstance(key[-1], str):
+            raise KeyError(key)
+        if key[-1] != "x":
+            raise KeyError(f'Version must end with "x", got {key}')
+        max_patch = 0
+        for version in self.keys():
+            normalized_version = self.normalize_key(version)
+            if key[0] != normalized_version[0] or key[1] != normalized_version[1]:
+                continue
+            if len(normalized_version) == 2:
+                # The maximum is 0
+                continue
+            patch = normalized_version[2]
+            if isinstance(patch, int) and patch > max_patch:
+                max_patch = patch
+        if max_patch == 0:
+            return self[key[0], key[1]]
+        return self[key[0], key[1], max_patch]

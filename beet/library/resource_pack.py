@@ -40,7 +40,7 @@ except ImportError:
     Image = Any
 
 from beet.core.file import BinaryFile, BinaryFileContent, JsonFile, PngFile, TextFile
-from beet.core.utils import JsonDict, extra_field, split_version
+from beet.core.utils import JsonDict, extra_field
 
 from .base import (
     LATEST_MINECRAFT_VERSION,
@@ -379,7 +379,7 @@ class ResourcePack(Pack[ResourcePackNamespace]):
     pack_format_registry = PackFormatRegistryContainer(
         pack_format_switch_format, "resource_pack"
     )
-    latest_pack_format = pack_format_registry[split_version(LATEST_MINECRAFT_VERSION)]
+    latest_pack_format = pack_format_registry[LATEST_MINECRAFT_VERSION]
 
     language_config = McmetaPin[Dict[str, JsonDict]]("language", default_factory=dict)
 

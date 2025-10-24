@@ -70,7 +70,7 @@ from beet.core.file import (
     TextFileBase,
     TextFileContent,
 )
-from beet.core.utils import JsonDict, extra_field, split_version
+from beet.core.utils import JsonDict, extra_field
 from beet.resources.pack_format_registry import PackFormatRegistryContainer
 
 from .base import (
@@ -653,7 +653,7 @@ class DataPack(Pack[DataPackNamespace]):
     pack_format_registry = PackFormatRegistryContainer(
         pack_format_switch_format, "data_pack"
     )
-    latest_pack_format = pack_format_registry[split_version(LATEST_MINECRAFT_VERSION)]
+    latest_pack_format = pack_format_registry[LATEST_MINECRAFT_VERSION]
 
     # fmt: off
     advancements:                       NamespaceProxyDescriptor[Advancement]               = NamespaceProxyDescriptor(Advancement)
