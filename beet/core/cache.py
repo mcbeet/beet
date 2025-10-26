@@ -380,10 +380,19 @@ class DownloadManager:
 
         if not path.is_file():
             fileobj = path.open("wb")
-            if self.executor:
-                self.executor.submit(self.retrieve, arg, fileobj)
-            else:
-                self.retrieve(arg, fileobj)
+            try:
+                if self.executor:
+                    future = self.executor.submit(self.retrieve, arg, fileobj)
+                    future.result()
+                else:
+                    self.retrieve(arg, fileobj)
+            except Exception as e:
+                try:
+                    fileobj.close()
+                    path.unlink()
+                except Exception:
+                    pass
+                raise e
 
         return path
 

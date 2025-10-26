@@ -1,0 +1,6 @@
+meta:
+  vanilla:
+    version: "1.21.8"
+
+pipeline:
+  - mre
