@@ -18,7 +18,6 @@ from beet import (
     ErrorMessage,
     PackageablePath,
     PackLoadOptions,
-    PackLoadUrl,
     PluginOptions,
     configurable,
 )
@@ -64,9 +63,9 @@ def load(ctx: Context, opts: LoadOptions):
 def evaluate_pattern(
     cache: Cache,
     directory: Path,
-    pattern: Union[PackLoadUrl, PackageablePath],
+    pattern: PackageablePath,
 ) -> List[Path]:
-    if isinstance(pattern, PackLoadUrl):
-        return [cache.download(pattern.root)]
+    if url := pattern.http_url:
+        return [cache.download(url)]
     else:
         return [Path(entry) for entry in glob(str(directory / pattern))]

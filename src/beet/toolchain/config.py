@@ -6,7 +6,6 @@ __all__ = [
     "PackLoadOptions",
     "ListOption",
     "PackageablePath",
-    "PackLoadUrl",
     "InvalidProjectConfig",
     "locate_config",
     "load_config",
@@ -26,7 +25,7 @@ from typing import Any, Dict, Generic, List, Literal, Optional, Tuple, TypeVar, 
 
 import toml
 import yaml
-from pydantic import BaseModel, RootModel, HttpUrl, ValidationError, root_validator, validator, field_validator, model_validator, BaseModel, ConfigDict
+from pydantic import BaseModel, RootModel, ValidationError, root_validator, validator, field_validator, model_validator, BaseModel, ConfigDict
 
 from beet.core.error import BubbleException
 from beet.core.utils import (
@@ -99,7 +98,15 @@ class PackageablePath(RootModel[FileSystemPath]):
 
     def resolve(self, directory: FileSystemPath) -> "PackageablePath":
         """Resolve path relative to the given directory."""
-        return PackageablePath.model_validate(Path(directory) / self.root)
+        return PackageablePath.model_validate(
+            self.root if self.http_url else Path(directory) / self.root
+        )
+
+    @property
+    def http_url(self) -> str | None:
+        if isinstance(self.root, str) and self.root.startswith(("http://", "https://")):
+            return self.root
+        return None
 
     def __fspath__(self) -> str:
         return str(self)
@@ -108,17 +115,11 @@ class PackageablePath(RootModel[FileSystemPath]):
         return str(self.root)
 
 
-class PackLoadUrl(RootModel[HttpUrl]):
-    """Url to load pack resources."""
-
-    root: HttpUrl
-
-
 class PackLoadOptions(
     ListOption[
         Union[
-            Union[PackLoadUrl, PackageablePath],
-            Dict[str, ListOption[Union[PackLoadUrl, PackageablePath]]],
+            PackageablePath,
+            Dict[str, ListOption[PackageablePath]],
         ]
     ]
 ):
