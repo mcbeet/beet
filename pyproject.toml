@@ -20,7 +20,7 @@ dependencies = [
 ]
 
 [project.scripts]
-beet = "beet:main"
+beet = "beet.toolchain.cli:main"
 
 [project.entry-points."pytest11"]
 beet = "beet.pytest_plugin"
