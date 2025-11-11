@@ -1,0 +1,10 @@
+@data_pack pack.mcmeta
+{
+  "pack": {
+    "pack_format": 10,
+    "description": ""
+  }
+}
+
+@function beet:default
+say hello

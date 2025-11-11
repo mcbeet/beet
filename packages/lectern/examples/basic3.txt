@@ -1,0 +1,12 @@
+Directives are applied to to a blank data pack and a blank resource pack
+in the order the appear in the document. This means that redefinitions will
+overwrite previous directives.
+
+@function demo:foo
+say foo
+
+@function demo:bar
+say bar
+
+@function demo:foo
+say overwrite

@@ -1,0 +1,25 @@
+@data_pack pack.mcmeta
+{
+  "pack": {
+    "pack_format": 48,
+    "description": ""
+  }
+}
+
+@function demo:foo
+say foo
+
+@function demo:bar
+say bar
+
+@function demo:hidden_foo
+say hidden foo
+
+@function demo:hidden_bar
+say hidden bar
+
+@function demo:embedded_foo
+say embedded foo
+
+@function demo:embedded_bar
+say embedded bar

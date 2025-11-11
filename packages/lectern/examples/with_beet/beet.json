@@ -1,0 +1,80 @@
+{
+  "require": [
+    "lectern.contrib.require",
+    "lectern.contrib.script",
+    "lectern.contrib.define",
+    "lectern.contrib.relative_location",
+    "custom_directive",
+    "hello_directive"
+  ],
+  "pipeline": [
+    "lectern",
+    "beet.contrib.relative_function_path",
+    {
+      "require": ["lectern.contrib.yaml_to_json"],
+      "pipeline": ["lectern"],
+      "meta": {
+        "lectern": {
+          "load": ["isolated/yaml_test.md"]
+        }
+      }
+    },
+    {
+      "require": [
+        "lectern.contrib.plugin",
+        "lectern.contrib.relative_location"
+      ],
+      "pipeline": ["lectern"],
+      "meta": {
+        "generate_namespace": "isolated",
+        "generate_prefix": "plugin_test",
+        "lectern": {
+          "load": ["isolated/plugin_test.md"]
+        }
+      }
+    },
+    {
+      "require": ["beet.contrib.messages"],
+      "pipeline": ["lectern", "beet.contrib.render"],
+      "meta": {
+        "lectern": {
+          "load": ["isolated/message_test.md"]
+        },
+        "render": {
+          "data_pack": {
+            "functions": ["*"]
+          }
+        }
+      }
+    },
+    {
+      "require": [
+        "lectern.contrib.relative_location",
+        "lectern.contrib.tagged_function_shorthand"
+      ],
+      "pipeline": ["lectern"],
+      "meta": {
+        "lectern": {
+          "load": "tagged.txt"
+        },
+        "tagged_function_shorthand": {
+          "tags": {
+            "load": "minecraft:load",
+            "tick": "minecraft:tick",
+            "foo": "demo:foo",
+            "bar": ["demo:abc", "demo:123"]
+          }
+        }
+      }
+    }
+  ],
+  "meta": {
+    "lectern": {
+      "load": ["*.md"],
+      "scripts": [
+        ["python", "some_script.py"],
+        ["python", "other_script.py"]
+      ]
+    }
+  }
+}

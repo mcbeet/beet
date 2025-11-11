@@ -1,0 +1,8 @@
+@function demo:foo
+@@function demo:foo
+@@blah demo:foo
+
+@function(append) demo:foo
+@@function(@@) demo:bar
+@@@function(@@@) demo:bar
+@@function demo:bar

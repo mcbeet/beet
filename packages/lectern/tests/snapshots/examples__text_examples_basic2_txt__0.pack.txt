@@ -1,0 +1,21 @@
+@data_pack pack.mcmeta
+{
+  "pack": {
+    "pack_format": 48,
+    "description": ""
+  }
+}
+
+@function demo:foo
+say foo
+@functionn demo:foo
+say still in the same function
+@@@@
+@ @ @
+
+@function demo:bar
+say bar
+ @function demo:bar
+ say hello
+  @function demo:bar
+  say world

@@ -1,0 +1,66 @@
+[tool.poetry]
+name = "lectern"
+version = "0.34.0"
+description = "Literate Minecraft data packs and resource packs."
+authors = ["Valentin Berlier <berlier.v@gmail.com>"]
+license = "MIT"
+
+homepage = "https://github.com/mcbeet/lectern"
+repository = "https://github.com/mcbeet/lectern"
+documentation = "https://github.com/mcbeet/lectern"
+
+readme = "README.md"
+
+keywords = [
+  "literate-programming",
+  "beet",
+  "resourcepack",
+  "minecraft",
+  "datapack"
+]
+
+classifiers = ["Framework :: Pytest"]
+
+include = ["lectern/py.typed"]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+beet = ">=0.108.0"
+markdown-it-py = "^3.0.0"
+click = "^8.1.7"
+
+[tool.poetry.group.dev.dependencies]
+black = "^24.3.0"
+pytest = "^8.1.1"
+isort = "^5.13.2"
+python-semantic-release = "^7.32.2"
+pytest-insta = "^0.3.0"
+
+[tool.poetry.scripts]
+lectern = "lectern.cli:main"
+
+[tool.poetry.plugins.pytest11]
+lectern = "lectern.pytest_plugin"
+
+[tool.pytest.ini_options]
+addopts = "tests --import-mode=importlib"
+
+[tool.pyright]
+typeCheckingMode = "strict"
+
+[tool.black]
+target-version = ["py310"]
+
+[tool.isort]
+profile = "black"
+
+[tool.semantic_release]
+branch = "main"
+version_variable = ["lectern/__init__.py:__version__"]
+version_toml = "pyproject.toml:tool.poetry.version"
+major_on_zero = false
+build_command = "poetry build"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

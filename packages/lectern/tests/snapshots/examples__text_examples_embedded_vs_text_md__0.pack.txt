@@ -1,0 +1,13 @@
+@data_pack pack.mcmeta
+{
+  "pack": {
+    "pack_format": 48,
+    "description": ""
+  }
+}
+
+@function evst:thing1
+@@function this is invalid
+
+@function evst:thing2
+@@function this is invalid
