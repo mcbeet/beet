@@ -60,7 +60,7 @@ def test_mcmeta_properties():
 def test_texture(snapshot: SnapshotFixture):
     image = Image.new("RGB", (64, 64))
     d = ImageDraw.Draw(image)
-    d.text((10, 10), "hello", fill="white")
+    d.rectangle([0, 0, 64, 64], fill="green")
 
     pack = ResourcePack("custom")
     pack["custom:hello"] = Texture(image)
@@ -71,8 +71,8 @@ def test_texture(snapshot: SnapshotFixture):
 def test_texture_mcmeta(snapshot: SnapshotFixture):
     image = Image.new("RGB", (64, 128))
     d = ImageDraw.Draw(image)
-    d.text((10, 10), "hello", fill="white")
-    d.text((10, 74), "world", fill="white")
+    d.rectangle([0, 0, 64, 64], fill="green")
+    d.rectangle([0, 64, 64, 128], fill="red")
 
     pack = ResourcePack("custom")
     pack["custom:hello"] = Texture(image, mcmeta={"animation": {"frametime": 20}})
