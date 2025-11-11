@@ -282,7 +282,7 @@ class File(Generic[ValueType, SerializeType]):
                 return None
         elif isinstance(origin, Mapping):
             try:
-                path = "" if path == Path() else str(path)
+                path = "" if Path(path) == Path() else str(path)
                 value, path = origin[path], ""
             except KeyError:
                 return None
