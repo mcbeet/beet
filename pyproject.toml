@@ -1,107 +1,17 @@
-[tool.poetry]
+[project]
 name = "beet"
 version = "0.112.0"
 description = "The Minecraft pack development kit"
-authors = ["Valentin Berlier <berlier.v@gmail.com>"]
-license = "MIT"
-
-homepage = "https://github.com/mcbeet/beet"
-repository = "https://github.com/mcbeet/beet"
-documentation = "https://github.com/mcbeet/beet"
-
 readme = "README.md"
-
-keywords = [
-  "beet",
-  "minecraft",
-  "datapack",
-  "resourcepack",
-  "mcfunction",
+authors = [
+    { name = "Valentin Berlier", email = "berlier.v@gmail.com" }
 ]
+requires-python = ">=3.14"
+dependencies = []
 
-include = ["beet/py.typed"]
-
-[tool.poetry.dependencies]
-python = "^3.10"
-nbtlib = "^1.12.1"
-pathspec = "^0.11.2"
-pydantic = "^2.5.2"
-click = "^8.1.7"
-click-help-colors = "^0.9.2"
-Jinja2 = "^3.1.2"
-toml = "^0.10.2"
-PyYAML = "^6.0.1"
-Pillow = {version = "*", optional = true}
-colorama = {version = "*", markers = 'sys_platform == "win32"'}
-typing-extensions = "^4.8.0"
-
-[tool.poetry.extras]
-image = ["Pillow"]
-
-[tool.poetry.group.dev.dependencies]
-black = "^24.2.0"
-pytest = "^7.4.3"
-pytest-minecraft = "^0.2.0"
-isort = "^5.12.0"
-pytest-insta = "^0.2.0"
-python-semantic-release = "^7.33.3"
-mudkip = "^0.8.0"
-sphinx-inline-tabs = "^2023.4.21"
-
-[tool.poetry.scripts]
-beet = "beet.toolchain.cli:main"
-
-[tool.poetry.plugins.beet]
-commands = "beet.toolchain.commands"
-autoload = "beet.contrib.default"
-
-[tool.poetry.plugins.pytest11]
-beet = "beet.pytest_plugin"
-
-[tool.pytest.ini_options]
-addopts = "tests beet --ignore beet/__main__.py --doctest-modules"
-doctest_optionflags = "NORMALIZE_WHITESPACE IGNORE_EXCEPTION_DETAIL ELLIPSIS"
-
-[tool.pyright]
-typeCheckingMode = "basic"
-ignore = ["docs", "setup.py"]
-strict = [
-  "beet/contrib",
-  "beet/core",
-  "beet/library",
-  "beet/toolchain",
-  "examples",
-  "tests",
-]
-
-[tool.black]
-target-version = ["py310"]
-
-[tool.isort]
-profile = "black"
-
-[tool.semantic_release]
-branch = "main"
-version_variable = ["beet/__init__.py:__version__"]
-version_toml = "pyproject.toml:tool.poetry.version"
-major_on_zero = false
-build_command = "poetry build"
-
-[tool.mudkip]
-base_url = "https://mcbeet.dev"
-preset = "furo"
-
-[tool.mudkip.override]
-html_title = "Beet documentation"
-html_logo = "assets/beet_logo.png"
-html_favicon = "assets/favicon.png"
-suppress_warnings = ["myst.header"]
-linkcheck_ignore = ['https://github\.com/mcbeet/beet/commit/.+']
-extensions = ["sphinx_inline_tabs"]
-
-[tool.mudkip.override.html_theme_options]
-sidebar_hide_name = true
+[project.scripts]
+beet = "beet:main"
 
 [build-system]
-requires = ["poetry>=0.12"]
-build-backend = "poetry.masonry.api"
+requires = ["uv_build>=0.9.8,<0.10.0"]
+build-backend = "uv_build"
