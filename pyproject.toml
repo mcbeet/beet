@@ -40,3 +40,6 @@ dev = [
     "pytest-minecraft>=0.2.0",
     "ruff>=0.14.4",
 ]
+
+[tool.uv.workspace]
+members = ["packages/*"]
