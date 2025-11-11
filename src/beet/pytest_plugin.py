@@ -44,7 +44,7 @@ else:
 
 
 def pytest_assertrepr_compare(config, op, left, right):
-    if type(left) != type(right) or op != "==":
+    if type(left) is not type(right) or op != "==":
         return
 
     explanation = []

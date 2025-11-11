@@ -211,7 +211,7 @@ class Generator:
                 fmt = None
 
             if hash is None and not render:
-                hash = lambda: file_instance.ensure_serialized()
+                hash = lambda: file_instance.ensure_serialized()  # noqa: E731
 
             file_type = type(file_instance)
 
@@ -321,7 +321,7 @@ class Generator:
             fmt = None
 
         if hash is None:
-            hash = lambda: str(items)
+            hash = lambda: str(items)  # noqa: E731
 
         root = self[Function].path(fmt, hash) if fmt else self[Function].path(hash=hash)
 

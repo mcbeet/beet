@@ -97,9 +97,7 @@ class LinkManager:
         if data_pack:
             data_pack = Path(data_pack).resolve()
             if not data_pack.is_dir():
-                raise ErrorMessage(
-                    "The specified data packs directory does not exist."
-                )
+                raise ErrorMessage("The specified data packs directory does not exist.")
         elif world:
             data_pack = world / "datapacks"
         else:

@@ -494,7 +494,7 @@ class Namespace(
     def __eq__(self, other: Any) -> bool:
         if self is other:
             return True
-        if type(self) == type(other) and not self.extra == other.extra:
+        if type(self) is type(other) and not self.extra == other.extra:
             return False
         if isinstance(other, Mapping):
             rhs: Mapping[Type[NamespaceFile], NamespaceContainer[NamespaceFile]] = other
@@ -1138,7 +1138,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
     def __eq__(self, other: Any) -> bool:
         if self is other:
             return True
-        if type(self) == type(other) and not (
+        if type(self) is type(other) and not (
             self.name == other.name
             and self.extra == other.extra
             and (

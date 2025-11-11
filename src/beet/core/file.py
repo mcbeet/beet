@@ -206,7 +206,7 @@ class File(Generic[ValueType, SerializeType]):
         if self is other:
             return True
 
-        if type(self) != type(other):
+        if type(self) is not type(other):
             return NotImplemented
 
         return (
