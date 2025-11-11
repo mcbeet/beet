@@ -67,6 +67,6 @@ def evaluate_pattern(
     pattern: Union[PackLoadUrl, PackageablePath],
 ) -> List[Path]:
     if isinstance(pattern, PackLoadUrl):
-        return [cache.download(pattern.__root__)]
+        return [cache.download(pattern.root)]
     else:
         return [Path(entry) for entry in glob(str(directory / pattern))]

@@ -14,7 +14,7 @@ import logging
 from dataclasses import dataclass
 from typing import Any, Callable, List, Optional, Type, Union, cast
 
-from pydantic.v1 import BaseModel
+from pydantic import BaseModel, RootModel
 
 from beet import (
     Context,
@@ -46,8 +46,8 @@ class RenderRenameOption(RenderSubstitutionOption):
     match: Optional[PackMatchOption] = None
 
 
-class RenameOption(BaseModel):
-    __root__: ListOption[Union[TextRenameOption, RenderRenameOption]] = ListOption()
+class RenameOption(RootModel[ListOption[Union[TextRenameOption, RenderRenameOption]]]):
+    root: ListOption[Union[TextRenameOption, RenderRenameOption]] = ListOption()
 
     def compile(
         self,
@@ -63,7 +63,7 @@ class RenameOption(BaseModel):
                 ),
                 opts.compile(template),
             )
-            for opts in self.__root__.entries()
+            for opts in self.root.entries()
         ]
 
 

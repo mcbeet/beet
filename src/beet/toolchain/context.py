@@ -37,7 +37,7 @@ from typing import (
     overload,
 )
 
-from pydantic.v1 import BaseModel, ValidationError
+from pydantic import BaseModel, ValidationError, ConfigDict
 
 from beet.core.cache import Cache, MultiCache
 from beet.core.container import Container
@@ -122,9 +122,7 @@ class ConfigurablePlugin(Protocol):
 
 class PluginOptions(BaseModel):
     """Base pydantic model for plugin options."""
-
-    class Config:
-        extra = "forbid"
+    model_config = ConfigDict(extra="forbid")
 
 
 class ContextContainer(Container[Callable[["Context"], Any], Any]):

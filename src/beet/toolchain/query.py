@@ -46,7 +46,7 @@ from typing import (
 
 from pathspec import PathSpec
 from pathspec.patterns.gitwildmatch import GitWildMatchPattern
-from pydantic.v1 import BaseModel, validator
+from pydantic import BaseModel, RootModel, validator, field_validator, ConfigDict
 
 from beet.core.file import File
 from beet.library.base import NamespaceFile, Pack, create_group_map, get_output_scope
@@ -65,19 +65,18 @@ RegexFlags = Literal["ASCII", "IGNORECASE", "MULTILINE", "DOTALL", "VERBOSE"]
 class RegexFlagsOption(BaseModel):
     regex: ListOption[str] = ListOption()
     flags: ListOption[RegexFlags] = ListOption()
-
-    class Config:
-        extra = "forbid"
+    model_config = ConfigDict(extra="forbid")
 
 
 ResolvedRegexOption = Tuple[Sequence[str], int]
 CompiledRegexOption = Optional["re.Pattern[str]"]
 
 
-class RegexOption(BaseModel):
-    __root__: RegexFlagsOption = RegexFlagsOption()
+class RegexOption(RootModel[RegexFlagsOption]):
+    root: RegexFlagsOption = RegexFlagsOption()
 
-    @validator("__root__", pre=True)
+    @field_validator("root", mode="before")
+    @classmethod
     def validate_root(cls, value: Any) -> Any:
         if not isinstance(value, Mapping):
             return {"regex": value}
@@ -86,8 +85,8 @@ class RegexOption(BaseModel):
     def resolve(
         self, template: Optional[TemplateManager] = None
     ) -> ResolvedRegexOption:
-        patterns = self.__root__.regex.entries()
-        flags = self.__root__.flags.entries()
+        patterns = self.root.regex.entries()
+        flags = self.root.flags.entries()
 
         if template:
             patterns = template.render_json(patterns)
@@ -110,13 +109,13 @@ ResolvedPackFilesOption = Mapping[str, ResolvedRegexOption]
 CompiledPackFilesOption = Mapping[str, CompiledRegexOption]
 
 
-class PackFilesOption(BaseModel):
-    __root__: Union[RegexOption, Dict[str, RegexOption]] = RegexOption()
+class PackFilesOption(RootModel[Union[RegexOption, Dict[str, RegexOption]]]):
+    root: Union[RegexOption, Dict[str, RegexOption]] = RegexOption()
 
     def resolve(
         self, template: Optional[TemplateManager] = None
     ) -> ResolvedPackFilesOption:
-        option = self.__root__
+        option = self.root
         if isinstance(option, RegexOption):
             option = {"": option}
         return {
@@ -156,13 +155,13 @@ ResolvedPathSpecOption = Sequence[str]
 CompiledPathSpecOption = Optional[PathSpec]
 
 
-class PathSpecOption(BaseModel):
-    __root__: ListOption[str] = ListOption()
+class PathSpecOption(RootModel[ListOption[str]]):
+    root: ListOption[str] = ListOption()
 
     def resolve(
         self, template: Optional[TemplateManager] = None
     ) -> ResolvedPathSpecOption:
-        patterns = self.__root__.entries()
+        patterns = self.root.entries()
         if template:
             patterns = template.render_json(patterns)
         return patterns
@@ -178,8 +177,10 @@ ResolvedPackMatchOption = Mapping[str, Mapping[str, ResolvedPathSpecOption]]
 CompiledPackMatchOption = Mapping[str, Mapping[str, CompiledPathSpecOption]]
 
 
-class PackMatchOption(BaseModel):
-    __root__: Union[
+class PackMatchOption(RootModel[Union[
+        PathSpecOption, Dict[str, Union[PathSpecOption, Dict[str, PathSpecOption]]]
+    ]]):
+    root: Union[
         PathSpecOption, Dict[str, Union[PathSpecOption, Dict[str, PathSpecOption]]]
     ] = PathSpecOption()
 
@@ -188,7 +189,7 @@ class PackMatchOption(BaseModel):
         file_types: Sequence[Type[NamespaceFile]],
         template: Optional[TemplateManager] = None,
     ) -> ResolvedPackMatchOption:
-        option = self.__root__
+        option = self.root
         if isinstance(option, PathSpecOption):
             option = option.resolve(template)
             return {"": {t.snake_name: list(option) for t in file_types}}
@@ -260,9 +261,7 @@ class PackMatchOption(BaseModel):
 class PackQueryOption(BaseModel):
     files: PackFilesOption = PackFilesOption()
     match: PackMatchOption = PackMatchOption()
-
-    class Config:
-        extra = "forbid"
+    model_config = ConfigDict(extra="forbid")
 
 
 PackFilesSelection = Mapping[Tuple[str, T], Tuple[PackType, str]]

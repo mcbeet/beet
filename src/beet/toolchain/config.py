@@ -26,8 +26,7 @@ from typing import Any, Dict, Generic, List, Literal, Optional, Tuple, TypeVar, 
 
 import toml
 import yaml
-from pydantic.v1 import BaseModel, HttpUrl, ValidationError, root_validator, validator
-from pydantic.v1.generics import GenericModel
+from pydantic import BaseModel, RootModel, HttpUrl, ValidationError, root_validator, validator, field_validator, model_validator, BaseModel, ConfigDict
 
 from beet.core.error import BubbleException
 from beet.core.utils import (
@@ -67,12 +66,13 @@ class InvalidProjectConfig(BubbleException):
 ItemType = TypeVar("ItemType")
 
 
-class ListOption(GenericModel, Generic[ItemType]):
+class ListOption(RootModel[List[ItemType]], Generic[ItemType]):
     """List that transparently wraps single values."""
 
-    __root__: List[ItemType] = []
+    root: List[ItemType] = []
 
-    @validator("__root__", pre=True)
+    @field_validator("root", mode="before")
+    @classmethod
     def validate_root(cls, value: Any) -> Any:
         if value is None:
             value = []
@@ -84,33 +84,34 @@ class ListOption(GenericModel, Generic[ItemType]):
 
     def entries(self) -> List[ItemType]:
         """Return the internal list."""
-        return self.__root__
+        return self.root
 
 
-class PackageablePath(BaseModel):
+class PackageablePath(RootModel[FileSystemPath]):
     """Path that can be resolved from a python package."""
 
-    __root__: FileSystemPath
+    root: FileSystemPath
 
-    @validator("__root__")
+    @field_validator("root")
+    @classmethod
     def validate_root(cls, value: Any):
         return resolve_packageable_path(value)
 
     def resolve(self, directory: FileSystemPath) -> "PackageablePath":
         """Resolve path relative to the given directory."""
-        return PackageablePath.parse_obj(Path(directory) / self.__root__)
+        return PackageablePath.parse_obj(Path(directory) / self.root)
 
     def __fspath__(self) -> str:
         return str(self)
 
     def __str__(self) -> str:
-        return str(self.__root__)
+        return str(self.root)
 
 
-class PackLoadUrl(BaseModel):
+class PackLoadUrl(RootModel[HttpUrl]):
     """Url to load pack resources."""
 
-    __root__: HttpUrl
+    root: HttpUrl
 
 
 class PackLoadOptions(
@@ -202,9 +203,7 @@ class PackConfig(BaseModel):
 
     load: PackLoadOptions = PackLoadOptions()
     render: Dict[str, ListOption[str]] = {}
-
-    class Config:
-        extra = "forbid"
+    model_config = ConfigDict(extra="forbid")
 
     def with_defaults(self, other: "PackConfig") -> "PackConfig":
         """Combine the current pack config with another one."""
@@ -276,11 +275,10 @@ class ProjectConfig(BaseModel):
     resource_pack: PackConfig = PackConfig()
     pipeline: List[Union[str, "ProjectConfig"]] = []
     meta: JsonDict = {}
+    model_config = ConfigDict(extra="forbid")
 
-    class Config:
-        extra = "forbid"
-
-    @root_validator(pre=True)
+    @model_validator(mode="before")
+    @classmethod
     def apply_overrides(cls, values: JsonDict):
         """Apply config overrides."""
         for option in iter_options(values):

@@ -41,7 +41,7 @@ from typing import (
 from zipfile import ZipFile
 
 import yaml
-from pydantic.v1 import BaseModel, ValidationError
+from pydantic import BaseModel, RootModel, ValidationError
 
 from .error import BubbleException, WrappedException
 
@@ -606,9 +606,10 @@ class DataModelBase(TextFileBase[ValueType]):
             and issubclass(self.model, BaseModel)
             and isinstance(content, self.model)
         ):
-            content = content.dict()  # type: ignore
-            if self.model.__custom_root_type__:
-                content = content["__root__"]
+            if isinstance(content, RootModel):
+                content = content.root.dict()
+            else:
+                content = content.dict()  # type: ignore
         return self.encoder(content)
 
     def from_str(self, content: str) -> ValueType:

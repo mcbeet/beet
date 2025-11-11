@@ -57,19 +57,12 @@ from typing import (
     runtime_checkable,
 )
 
-from pydantic.v1 import PydanticTypeError, ValidationError
-from pydantic.v1.validators import _VALIDATORS  # type: ignore
+from pydantic import ValidationError
 
 T = TypeVar("T")
 
-
-@runtime_checkable
-class PathLikeFallback(Protocol):
-    def __fspath__(self) -> str: ...
-
-
 JsonDict = Dict[str, Any]
-FileSystemPath = Union[str, PathLikeFallback]
+FileSystemPath = str
 TextComponent = Union[str, List[Any], JsonDict]
 
 
@@ -257,7 +250,7 @@ def format_validation_error(prefix: str, exc: ValidationError) -> str:
         (
             prefix
             + "".join(
-                json.dumps([item]) for item in error["loc"] if item != "__root__"
+                json.dumps([item]) for item in error["loc"]
             ),
             (
                 error["msg"]
@@ -326,16 +319,3 @@ def change_directory(directory: Optional[FileSystemPath] = None):
         yield
     finally:
         os.chdir(cwd)
-
-
-class PathObjectError(PydanticTypeError):
-    msg_template = "value is not a valid path object"
-
-
-def path_like_fallback_validator(v: Any) -> PathLikeFallback:
-    if isinstance(v, PathLikeFallback):
-        return v
-    raise PathObjectError()
-
-
-_VALIDATORS.append((PathLikeFallback, [path_like_fallback_validator]))

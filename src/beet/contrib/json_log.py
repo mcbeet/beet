@@ -11,7 +11,7 @@ import logging
 from contextlib import contextmanager
 from typing import List, Optional
 
-from pydantic.v1 import BaseModel
+from pydantic import BaseModel
 
 from beet import Context
 from beet.contrib.json_reporter import JsonReporter

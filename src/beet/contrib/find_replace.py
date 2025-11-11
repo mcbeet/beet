@@ -13,7 +13,7 @@ __all__ = [
 from dataclasses import dataclass
 from typing import Any, Callable, Generic, Sequence, Tuple, TypeVar, Union
 
-from pydantic.v1 import BaseModel
+from pydantic import BaseModel, RootModel, ConfigDict
 
 from beet import (
     Context,
@@ -37,9 +37,7 @@ PackType = TypeVar("PackType", bound=Pack[Any])
 class TextSubstitutionOption(BaseModel):
     find: RegexOption
     replace: str
-
-    class Config:
-        extra = "forbid"
+    model_config = ConfigDict(extra="forbid")
 
     def compile(self, template: TemplateManager) -> Callable[[str], str]:
         regex = RegexOption.compile(self.find.resolve(template))
@@ -52,9 +50,7 @@ class TextSubstitutionOption(BaseModel):
 class RenderSubstitutionOption(BaseModel):
     find: RegexOption
     render: str
-
-    class Config:
-        extra = "forbid"
+    model_config = ConfigDict(extra="forbid")
 
     def compile(self, template: TemplateManager) -> Callable[[str], str]:
         regex = RegexOption.compile(self.find.resolve(template))
@@ -67,11 +63,11 @@ class RenderSubstitutionOption(BaseModel):
         )
 
 
-class SubstitutionOption(BaseModel):
-    __root__: ListOption[Union[TextSubstitutionOption, RenderSubstitutionOption]]
+class SubstitutionOption(RootModel[ListOption[Union[TextSubstitutionOption, RenderSubstitutionOption]]]):
+    root: ListOption[Union[TextSubstitutionOption, RenderSubstitutionOption]]
 
     def compile(self, template: TemplateManager) -> Callable[[str], str]:
-        substitutions = [sub.compile(template) for sub in self.__root__.entries()]
+        substitutions = [sub.compile(template) for sub in self.root.entries()]
 
         def apply(value: str) -> str:
             for substitute in substitutions:
