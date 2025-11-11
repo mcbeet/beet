@@ -24,3 +24,6 @@ build-backend = "uv_build"
 
 [tool.uv.sources]
 beet = { workspace = true }
+
+[tool.pytest.ini_options]
+addopts = "tests --import-mode=importlib"
