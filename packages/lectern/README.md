@@ -1,11 +1,10 @@
-<img align="right" src="https://raw.githubusercontent.com/mcbeet/lectern/main/logo.png?sanitize=true" alt="logo" width="76">
+<img align="right" src="https://raw.githubusercontent.com/mcbeet/lectern/main/packages/lectern/logo.png?sanitize=true" alt="logo" width="76">
 
 # Lectern
 
-[![GitHub Actions](https://github.com/mcbeet/lectern/workflows/CI/badge.svg)](https://github.com/mcbeet/lectern/actions)
+[![GitHub Actions](https://github.com/mcbeet/beet/workflows/CI/badge.svg)](https://github.com/mcbeet/beet/actions)
 [![PyPI](https://img.shields.io/pypi/v/lectern.svg)](https://pypi.org/project/lectern/)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/lectern.svg)](https://pypi.org/project/lectern/)
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
 [![Discord](https://img.shields.io/discord/900530660677156924?color=7289DA&label=discord&logo=discord&logoColor=fff)](https://discord.gg/98MdSGMm8j)
 
 > Literate Minecraft data packs and resource packs.
@@ -29,7 +28,7 @@ This markdown file is interspersed with code fragments describing the content of
 - Highly extensible with custom directives
 - Automatically integrates with [`pytest-insta`](https://github.com/vberlier/pytest-insta)
 
-**Hmmkay but why?**
+**Rationale**
 
 - Editing data packs involves a lot of jumping around between files, for simple use-cases a single file is a lot easier to work with
 - Minecraft packs aggregate various types of files that can have complex interactions with each other, a literate style allows you to document these interactions fluently
