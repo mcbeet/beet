@@ -1,0 +1,18 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "pytest",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "pytest",
+        },
+        {
+            "name": "nosnap_vanilla",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "beet",
+            "args": ["-p", "examples/nosnap_vanilla"]
+        }
+    ]
+}
