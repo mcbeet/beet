@@ -13,6 +13,7 @@ dependencies = [
     "jinja2>=3.1.6",
     "nbtlib==1.12.1",
     "pathspec>=0.12.1",
+    "pillow>=12.0.0",
     "pydantic>=2.12.4",
     "pyyaml>=6.0.3",
     "toml>=0.10.2",
