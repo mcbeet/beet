@@ -147,7 +147,7 @@ def generate_explanation(config, left, right, item_name):
             right=right[k],
         ):
             summary, *explanation = result[0]
-            yield f"  assert " + summary
+            yield "  assert " + summary
             for line in explanation:
                 yield "  " + line
         else:

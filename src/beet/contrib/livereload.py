@@ -62,8 +62,8 @@ def create_livereload_data_pack() -> DataPack:
 
     prefix = {"text": "livereload -", "color": "gray"}
     ready = ["", prefix, " ", {"text": "Ready", "color": "aqua"}]
-    changes = ["", prefix, " ", {"text": f"Changes detected", "color": "aqua"}]
-    reloaded = ["", prefix, " ", {"text": f"Reloaded", "color": "aqua"}]
+    changes = ["", prefix, " ", {"text": "Changes detected", "color": "aqua"}]
+    reloaded = ["", prefix, " ", {"text": "Reloaded", "color": "aqua"}]
 
     data["livereload:load"] = Function(
         [

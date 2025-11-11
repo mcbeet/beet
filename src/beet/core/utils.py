@@ -49,12 +49,10 @@ from typing import (
     Iterator,
     List,
     Optional,
-    Protocol,
     Tuple,
     TypedDict,
     TypeVar,
     Union,
-    runtime_checkable,
 )
 
 from pydantic import ValidationError

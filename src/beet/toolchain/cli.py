@@ -112,7 +112,7 @@ class LogHandler(logging.Handler):
         level = self.abbreviations.get(record.levelname, record.levelname)
         style = self.style[record.levelname]
 
-        line_prefix = click.style(f"       |", **style)
+        line_prefix = click.style("       |", **style)
 
         leading_line, *lines = self.format(record).splitlines()
         if record.levelname in ["ERROR", "CRITICAL"]:

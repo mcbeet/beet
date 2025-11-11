@@ -74,7 +74,7 @@ class LinkManager:
         if minecraft:
             minecraft = Path(minecraft).resolve()
             if not minecraft.is_dir():
-                raise ErrorMessage(f"The specified Minecraft folder does not exist.")
+                raise ErrorMessage("The specified Minecraft folder does not exist.")
         else:
             self.locate_minecraft()
             minecraft = Path(self.minecraft) if self.minecraft else None
@@ -90,7 +90,7 @@ class LinkManager:
                             f"Couldn't find {str(world_name)!r} in the Minecraft save folder."
                         )
                 else:
-                    raise ErrorMessage(f"The specified world folder is invalid.")
+                    raise ErrorMessage("The specified world folder is invalid.")
         else:
             world = None
 
@@ -98,7 +98,7 @@ class LinkManager:
             data_pack = Path(data_pack).resolve()
             if not data_pack.is_dir():
                 raise ErrorMessage(
-                    f"The specified data packs directory does not exist."
+                    "The specified data packs directory does not exist."
                 )
         elif world:
             data_pack = world / "datapacks"
@@ -114,7 +114,7 @@ class LinkManager:
             resource_pack = Path(resource_pack).resolve()
             if not resource_pack.is_dir():
                 raise ErrorMessage(
-                    f"The specified resource packs directory does not exist."
+                    "The specified resource packs directory does not exist."
                 )
         elif minecraft:
             resource_pack = minecraft / "resourcepacks"

@@ -9,7 +9,7 @@ __all__ = [
 
 from glob import glob
 from pathlib import Path
-from typing import List, Union
+from typing import List
 from zipfile import ZipFile
 
 from beet import (
