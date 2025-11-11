@@ -93,7 +93,9 @@ class RenameFilesHandler:
             )
             for (filename, file_instance), (pack, _) in self.query.select().items():
                 if isinstance(file_instance, file_types):
-                    self.handle_filename_for_namespace_file(pack, file_instance, filename)  # type: ignore
+                    self.handle_filename_for_namespace_file(
+                        pack, file_instance, filename
+                    )  # type: ignore
                 else:
                     self.handle_filename(pack, file_instance, filename)
 

@@ -63,7 +63,9 @@ class RenderSubstitutionOption(BaseModel):
         )
 
 
-class SubstitutionOption(RootModel[ListOption[Union[TextSubstitutionOption, RenderSubstitutionOption]]]):
+class SubstitutionOption(
+    RootModel[ListOption[Union[TextSubstitutionOption, RenderSubstitutionOption]]]
+):
     root: ListOption[Union[TextSubstitutionOption, RenderSubstitutionOption]]
 
     def compile(self, template: TemplateManager) -> Callable[[str], str]:

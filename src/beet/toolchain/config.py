@@ -25,7 +25,17 @@ from typing import Any, Dict, Generic, List, Literal, Optional, Tuple, TypeVar, 
 
 import toml
 import yaml
-from pydantic import BaseModel, RootModel, ValidationError, root_validator, validator, field_validator, model_validator, BaseModel, ConfigDict
+from pydantic import (
+    BaseModel,
+    RootModel,
+    ValidationError,
+    root_validator,
+    validator,
+    field_validator,
+    model_validator,
+    BaseModel,
+    ConfigDict,
+)
 
 from beet.core.error import BubbleException
 from beet.core.utils import (

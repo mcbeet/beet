@@ -248,10 +248,7 @@ def format_obj(obj: Any) -> str:
 def format_validation_error(prefix: str, exc: ValidationError) -> str:
     errors = [
         (
-            prefix
-            + "".join(
-                json.dumps([item]) for item in error["loc"]
-            ),
+            prefix + "".join(json.dumps([item]) for item in error["loc"]),
             (
                 error["msg"]
                 if error["msg"][0].isupper()

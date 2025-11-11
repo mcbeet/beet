@@ -122,6 +122,7 @@ class ConfigurablePlugin(Protocol):
 
 class PluginOptions(BaseModel):
     """Base pydantic model for plugin options."""
+
     model_config = ConfigDict(extra="forbid")
 
 

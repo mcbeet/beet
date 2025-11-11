@@ -180,7 +180,9 @@ class TemplateManager:
         elif isinstance(data, list):
             return [self.render_json(element, **kwargs) for element in data]  # type: ignore
         elif isinstance(data, dict):
-            return {key: self.render_json(value, **kwargs) for key, value in data.items()}  # type: ignore
+            return {
+                key: self.render_json(value, **kwargs) for key, value in data.items()
+            }  # type: ignore
         else:
             return data
 

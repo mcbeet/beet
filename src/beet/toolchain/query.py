@@ -177,9 +177,13 @@ ResolvedPackMatchOption = Mapping[str, Mapping[str, ResolvedPathSpecOption]]
 CompiledPackMatchOption = Mapping[str, Mapping[str, CompiledPathSpecOption]]
 
 
-class PackMatchOption(RootModel[Union[
-        PathSpecOption, Dict[str, Union[PathSpecOption, Dict[str, PathSpecOption]]]
-    ]]):
+class PackMatchOption(
+    RootModel[
+        Union[
+            PathSpecOption, Dict[str, Union[PathSpecOption, Dict[str, PathSpecOption]]]
+        ]
+    ]
+):
     root: Union[
         PathSpecOption, Dict[str, Union[PathSpecOption, Dict[str, PathSpecOption]]]
     ] = PathSpecOption()

@@ -234,7 +234,9 @@ class Function(TextFileBase[List[str]]):
         self.lines.extend(
             other.lines
             if isinstance(other, Function)
-            else [other] if isinstance(other, str) else other
+            else [other]
+            if isinstance(other, str)
+            else other
         )
 
     def prepend(self, other: Union["Function", Iterable[str], str]):
@@ -242,7 +244,9 @@ class Function(TextFileBase[List[str]]):
         self.lines[0:0] = (
             other.lines
             if isinstance(other, Function)
-            else [other] if isinstance(other, str) else other
+            else [other]
+            if isinstance(other, str)
+            else other
         )
 
     @classmethod
