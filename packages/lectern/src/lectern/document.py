@@ -182,7 +182,9 @@ class Document:
     ):
         """Save the serialized document at the specified location."""
         if snapshot:
+            self.text_serializer.sort = True
             self.text_serializer.pack_filter = snapshot_serialization_filter
+            self.markdown_serializer.sort = True
             self.markdown_serializer.flat = True
             self.markdown_serializer.pack_filter = snapshot_serialization_filter
 

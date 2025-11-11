@@ -20,7 +20,80 @@
 }
 ```
 
+### custom
+
+`@function custom:hello`
+
+```mcfunction
+say hello
+say bye
+say hello
+say bye
+say hello
+say bye
+say hello
+say bye
+say hello
+say bye
+say hello
+say bye
+say hello
+say bye
+say hello
+say bye
+say hello
+say bye
+say hello
+say bye
+say hello
+say bye
+say hello
+say bye
+say hello
+say bye
+say hello
+say bye
+say hello
+say bye
+say hello
+say bye
+say hello
+say bye
+say hello
+say bye
+say hello
+say bye
+say hello
+say bye
+say hello
+say bye
+say hello
+say bye
+say hello
+say bye
+say hello
+say bye
+```
+
 ### demo
+
+`@function demo:a`
+
+```mcfunction
+say tagged a
+```
+
+`@function demo:b`
+
+```mcfunction
+say tagged b
+```
+
+`@function demo:bar`
+
+```mcfunction
+say bar
+```
 
 `@function demo:define_1`
 
@@ -44,19 +117,6 @@ say 2 + 2 is 4 (end of citation)
 
 ```mcfunction
 say foo
-```
-
-`@function demo:bar`
-
-```mcfunction
-say bar
-```
-
-`@function demo:script_foo`
-
-```mcfunction
-say something
-
 ```
 
 `@function demo:script_0`
@@ -120,6 +180,13 @@ say 9
 
 ```
 
+`@function demo:script_foo`
+
+```mcfunction
+say something
+
+```
+
 `@function demo:script_nested`
 
 ```mcfunction
@@ -132,24 +199,12 @@ say wow
 say no
 ```
 
-`@function demo:a`
-
-```mcfunction
-say tagged a
-```
-
-`@function demo:b`
-
-```mcfunction
-say tagged b
-```
-
-`@function_tag demo:foo`
+`@function_tag demo:123`
 
 ```json
 {
   "values": [
-    "with_beet:foo"
+    "with_beet:bar"
   ]
 }
 ```
@@ -164,87 +219,17 @@ say tagged b
 }
 ```
 
-`@function_tag demo:123`
+`@function_tag demo:foo`
 
 ```json
 {
   "values": [
-    "with_beet:bar"
+    "with_beet:foo"
   ]
 }
 ```
 
-### custom
-
-`@function custom:hello`
-
-```mcfunction
-say hello
-say bye
-say hello
-say bye
-say hello
-say bye
-say hello
-say bye
-say hello
-say bye
-say hello
-say bye
-say hello
-say bye
-say hello
-say bye
-say hello
-say bye
-say hello
-say bye
-say hello
-say bye
-say hello
-say bye
-say hello
-say bye
-say hello
-say bye
-say hello
-say bye
-say hello
-say bye
-say hello
-say bye
-say hello
-say bye
-say hello
-say bye
-say hello
-say bye
-say hello
-say bye
-say hello
-say bye
-say hello
-say bye
-say hello
-say bye
-```
-
-### hello
-
-`@function hello:greetings`
-
-```mcfunction
-say Hello, Alice!
-say Hello, Bob!
-```
-
 ### embedded
-
-`@function embedded:foo`
-
-```mcfunction
-say foo
-```
 
 `@function embedded:bar`
 
@@ -252,49 +237,10 @@ say foo
 say bar
 ```
 
-### with_beet
-
-`@function with_beet:abc`
+`@function embedded:foo`
 
 ```mcfunction
-function with_beet:def
-```
-
-`@function with_beet:def`
-
-```mcfunction
-say relative
-```
-
-`@function with_beet:a_relative`
-
-```mcfunction
-say tagged a_relative
-```
-
-`@function with_beet:load`
-
-```mcfunction
-say before
-say tagged load
-```
-
-`@function with_beet:wow`
-
-```mcfunction
-say tagged wow
-```
-
-`@function with_beet:foo`
-
-```mcfunction
-say tagged foo
-```
-
-`@function with_beet:bar`
-
-```mcfunction
-say tagged bar
+say foo
 ```
 
 ### from_script
@@ -320,7 +266,68 @@ say 8
 say 9
 ```
 
+### hello
+
+`@function hello:greetings`
+
+```mcfunction
+say Hello, Alice!
+say Hello, Bob!
+```
+
+### isolated
+
+`@function isolated:message_demo`
+
+```mcfunction
+tellraw @a ["", {"text": "hello", "color": "red"}]
+```
+
+`@function isolated:plugin_test/foo`
+
+```mcfunction
+say running isolated:plugin_test/foo
+say hello
+```
+
+`@function isolated:plugin_test/foo_copy`
+
+```mcfunction
+say running isolated:plugin_test/foo
+say hello
+```
+
+`@function isolated:thing`
+
+```mcfunction
+say this is not affected
+```
+
 ### minecraft
+
+`@function_tag minecraft:load`
+
+```json
+{
+  "values": [
+    "demo:a",
+    "demo:b",
+    "with_beet:a_relative",
+    "with_beet:load"
+  ]
+}
+```
+
+`@function_tag minecraft:tick`
+
+```json
+{
+  "values": [
+    "isolated:thing",
+    "with_beet:wow"
+  ]
+}
+```
 
 `@loot_table minecraft:blocks/yellow_shulker_box`
 
@@ -397,56 +404,49 @@ say 9
 }
 ```
 
-`@function_tag minecraft:tick`
+### with_beet
 
-```json
-{
-  "values": [
-    "isolated:thing",
-    "with_beet:wow"
-  ]
-}
-```
-
-`@function_tag minecraft:load`
-
-```json
-{
-  "values": [
-    "demo:a",
-    "demo:b",
-    "with_beet:a_relative",
-    "with_beet:load"
-  ]
-}
-```
-
-### isolated
-
-`@function isolated:thing`
+`@function with_beet:a_relative`
 
 ```mcfunction
-say this is not affected
+say tagged a_relative
 ```
 
-`@function isolated:plugin_test/foo`
+`@function with_beet:abc`
 
 ```mcfunction
-say running isolated:plugin_test/foo
-say hello
+function with_beet:def
 ```
 
-`@function isolated:plugin_test/foo_copy`
+`@function with_beet:bar`
 
 ```mcfunction
-say running isolated:plugin_test/foo
-say hello
+say tagged bar
 ```
 
-`@function isolated:message_demo`
+`@function with_beet:def`
 
 ```mcfunction
-tellraw @a ["", {"text": "hello", "color": "red"}]
+say relative
+```
+
+`@function with_beet:foo`
+
+```mcfunction
+say tagged foo
+```
+
+`@function with_beet:load`
+
+```mcfunction
+say before
+say tagged load
+```
+
+`@function with_beet:wow`
+
+```mcfunction
+say tagged wow
 ```
 
 ## Resource pack

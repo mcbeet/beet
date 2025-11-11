@@ -22,28 +22,16 @@
 
 ### demo
 
-`@function demo:foo`
-
-```mcfunction
-say foo
-```
-
 `@function demo:bar`
 
 ```mcfunction
 say bar
 ```
 
-`@function demo:hidden_foo`
+`@function demo:embedded_bar`
 
 ```mcfunction
-say hidden foo
-```
-
-`@function demo:hidden_bar`
-
-```mcfunction
-say hidden bar
+say embedded bar
 ```
 
 `@function demo:embedded_foo`
@@ -52,8 +40,20 @@ say hidden bar
 say embedded foo
 ```
 
-`@function demo:embedded_bar`
+`@function demo:foo`
 
 ```mcfunction
-say embedded bar
+say foo
+```
+
+`@function demo:hidden_bar`
+
+```mcfunction
+say hidden bar
+```
+
+`@function demo:hidden_foo`
+
+```mcfunction
+say hidden foo
 ```

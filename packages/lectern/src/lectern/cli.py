@@ -43,6 +43,12 @@ from .prefetch import MarkdownPrefetcher
     help="Prefetch markdown links.",
 )
 @click.option(
+    "-s",
+    "--sort",
+    is_flag=True,
+    help="Output sorted items.",
+)
+@click.option(
     "-f",
     "--flat",
     is_flag=True,
@@ -68,6 +74,7 @@ def lectern(
     resource_pack: Optional[str],
     external_files: Optional[str],
     prefetch_urls: Optional[str],
+    sort: bool,
     flat: bool,
     overwrite: bool,
 ):
@@ -108,6 +115,7 @@ def lectern(
             "meta": {
                 "lectern": {
                     "snapshot": dest,
+                    "snapshot_sort": sort,
                     "snapshot_flat": flat,
                     "external_files": external_files,
                 },

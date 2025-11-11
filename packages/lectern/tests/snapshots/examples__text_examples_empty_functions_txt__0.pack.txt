@@ -13,8 +13,8 @@
   }
 }
 
-@function demo:foo
-
 @function demo:bar
+
+@function demo:foo
 
 @function demo:thing

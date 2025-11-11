@@ -19,6 +19,7 @@ class LecternOptions(BaseModel):
     load: ListOption[PackageablePath] = ListOption()
     links: Literal["enable", "ignore", "disable"] = "enable"
     snapshot: Optional[str] = None
+    snapshot_sort: bool = False
     snapshot_flat: bool = False
     external_files: Optional[PackageablePath] = None
     scripts: List[List[str]] = []
@@ -50,7 +51,11 @@ def lectern(ctx: Context, opts: LecternOptions):
     yield
 
     if opts.snapshot:
-        with document.markdown_serializer.use_flat_format(opts.snapshot_flat):
+        with (
+            document.text_serializer.use_sorted_items(opts.snapshot_sort),
+            document.markdown_serializer.use_sorted_items(opts.snapshot_sort),
+            document.markdown_serializer.use_flat_format(opts.snapshot_flat),
+        ):
             document.save(
                 ctx.directory / opts.snapshot,
                 ctx.directory / opts.external_files if opts.external_files else None,

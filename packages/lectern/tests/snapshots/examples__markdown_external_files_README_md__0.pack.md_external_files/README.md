@@ -35,81 +35,6 @@
 
 ![data_pack.png](pack.png)
 
-### tutorial
-
-`@function tutorial:greeting`
-
-```mcfunction
-say This is added before.
-say Hello, world!
-say This is added afterwards.
-```
-
-`@function tutorial:obtained_dead_bush`
-
-```mcfunction
-say You obtained a dead bush!
-```
-
-`@function tutorial:hidden`
-
-```mcfunction
-say This will not appear in the rendered markdown.
-```
-
-`@function tutorial:also_hidden`
-
-```mcfunction
-say This is also hidden.
-```
-
-`@function(strip_final_newline) tutorial:stripped`
-
-```mcfunction
-say This function doesn't have a final newline.
-```
-
-`@advancement tutorial:obtained_dead_bush`
-
-```json
-{
-  "criteria": {
-    "dead_bush": {
-      "trigger": "minecraft:inventory_changed",
-      "conditions": {
-        "items": [
-          {
-            "item": "minecraft:dead_bush"
-          }
-        ]
-      }
-    }
-  },
-  "requirements": [
-    [
-      "dead_bush"
-    ]
-  ],
-  "rewards": {
-    "function": "tutorial:obtained_dead_bush"
-  }
-}
-```
-
-`@function_tag(strip_final_newline) tutorial:something_else`
-
-```json
-{
-  "values": ["tutorial:stripped"]
-}
-```
-
-`@function_tag tutorial:from_github`
-
-```json
-say foo
-```
-
 ### minecraft
 
 `@function_tag minecraft:load`
@@ -220,6 +145,81 @@ say foo
 
 ```mcfunction
 say foo
+```
+
+### tutorial
+
+`@advancement tutorial:obtained_dead_bush`
+
+```json
+{
+  "criteria": {
+    "dead_bush": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:dead_bush"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "dead_bush"
+    ]
+  ],
+  "rewards": {
+    "function": "tutorial:obtained_dead_bush"
+  }
+}
+```
+
+`@function tutorial:also_hidden`
+
+```mcfunction
+say This is also hidden.
+```
+
+`@function tutorial:greeting`
+
+```mcfunction
+say This is added before.
+say Hello, world!
+say This is added afterwards.
+```
+
+`@function tutorial:hidden`
+
+```mcfunction
+say This will not appear in the rendered markdown.
+```
+
+`@function tutorial:obtained_dead_bush`
+
+```mcfunction
+say You obtained a dead bush!
+```
+
+`@function(strip_final_newline) tutorial:stripped`
+
+```mcfunction
+say This function doesn't have a final newline.
+```
+
+`@function_tag tutorial:from_github`
+
+```json
+say foo
+```
+
+`@function_tag(strip_final_newline) tutorial:something_else`
+
+```json
+{
+  "values": ["tutorial:stripped"]
+}
 ```
 
 ## Overlay `dummy_overlay`

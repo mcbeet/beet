@@ -149,12 +149,28 @@ class SerializedFile:
 class TextSerializer:
     """Document serializer that outputs plain text."""
 
+    sort: bool
     escaped_regex: Optional["re.Pattern[str]"]
     pack_filter: Callable[[Union[ResourcePack, DataPack]], bool]
 
-    def __init__(self):
+    def __init__(self, *, sort: bool = False):
+        self.sort = sort
         self.escaped_regex = None
         self.pack_filter = bool
+
+    def sort_items[K, V](self, obj: Mapping[K, V]) -> Iterable[tuple[K, V]]:
+        return sorted(obj.items(), key=lambda p: str(p[0])) if self.sort else obj.items()
+
+    @contextmanager
+    def use_sorted_items(self, sort: bool = True):
+        """Context manager for sorting items."""
+        previous = self.sort
+        self.sort = sort
+
+        try:
+            yield
+        finally:
+            self.sort = previous
 
     def get_escaped_regex(
         self, mapping: Mapping[Type[NamespaceFile], str]
@@ -223,7 +239,7 @@ class TextSerializer:
                 ),
                 (
                     (extra_directive, path, file_instance)
-                    for path, file_instance in pack.extra.items()
+                    for path, file_instance in self.sort_items(pack.extra)
                     if not (
                         pack.overlay_parent is not None
                         and path in ("pack.mcmeta", "pack.png")
@@ -235,8 +251,8 @@ class TextSerializer:
                         f"{namespace.directory}/{name}/{path}",
                         file_instance,
                     )
-                    for name, namespace in pack.items()
-                    for path, file_instance in namespace.extra.items()
+                    for name, namespace in self.sort_items(pack)
+                    for path, file_instance in self.sort_items(namespace.extra)
                 ),
                 (
                     (
@@ -252,9 +268,9 @@ class TextSerializer:
                             file_instance,
                         )
                     )
-                    for name, namespace in pack.items()
-                    for file_type, container in namespace.items()
-                    for path, file_instance in container.items()
+                    for name, namespace in self.sort_items(pack)
+                    for file_type, container in self.sort_items(namespace)
+                    for path, file_instance in self.sort_items(container)
                 ),
             )
         )
@@ -270,12 +286,28 @@ class TextSerializer:
 class MarkdownSerializer:
     """Document serializer that outputs markdown and emits associated files."""
 
+    sort: bool
     flat: bool
     pack_filter: Callable[[Union[ResourcePack, DataPack]], bool]
 
-    def __init__(self, flat: bool = False):
+    def __init__(self, *, sort: bool = False, flat: bool = False):
+        self.sort = sort
         self.flat = flat
         self.pack_filter = bool
+
+    def sort_items[K, V](self, obj: Mapping[K, V]) -> Iterable[tuple[K, V]]:
+        return sorted(obj.items(), key=lambda p: str(p[0])) if self.sort else obj.items()
+
+    @contextmanager
+    def use_sorted_items(self, sort: bool = True):
+        """Context manager for sorting items."""
+        previous = self.sort
+        self.sort = sort
+
+        try:
+            yield
+        finally:
+            self.sort = previous
 
     @contextmanager
     def use_flat_format(self, flat: bool = True):
@@ -332,7 +364,7 @@ class MarkdownSerializer:
         if pack.overlay_name is not None:
             yield f"\n`@overlay {pack.overlay_name}`"
 
-        for path, file_instance in pack.extra.items():
+        for path, file_instance in self.sort_items(pack.extra):
             if pack.overlay_parent is not None and path in ("pack.mcmeta", "pack.png"):
                 continue
             yield from self.format_serialized_file(
@@ -345,13 +377,13 @@ class MarkdownSerializer:
                 )
             )
 
-        for name, namespace in pack.items():
+        for name, namespace in self.sort_items(pack):
             if not namespace:
                 continue
 
             yield f"\n### {name}"
 
-            for path, file_instance in namespace.extra.items():
+            for path, file_instance in self.sort_items(namespace.extra):
                 yield from self.format_serialized_file(
                     self.serialize_file_instance(
                         pack_directive,
@@ -362,8 +394,8 @@ class MarkdownSerializer:
                     )
                 )
 
-            for file_type, container in namespace.items():
-                for path, file_instance in container.items():
+            for file_type, container in self.sort_items(namespace):
+                for path, file_instance in self.sort_items(container):
                     if file_type in mapping:
                         yield from self.format_serialized_file(
                             self.serialize_file_instance(
@@ -388,7 +420,7 @@ class MarkdownSerializer:
 
         if pack.overlay_parent is None:
             should_end = False
-            for directory, overlay in pack.overlays.items():
+            for directory, overlay in self.sort_items(pack.overlays):
                 if overlay:
                     should_end = True
                     yield from self.serialize_pack(

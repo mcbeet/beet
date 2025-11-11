@@ -22,14 +22,14 @@
 
 ### demo
 
-`@function demo:foo`
-
-```mcfunction
-say overwrite
-```
-
 `@function demo:bar`
 
 ```mcfunction
 say bar
+```
+
+`@function demo:foo`
+
+```mcfunction
+say overwrite
 ```
