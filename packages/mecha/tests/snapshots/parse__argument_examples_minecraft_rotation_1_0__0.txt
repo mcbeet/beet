@@ -1,0 +1,9 @@
+minecraft:rotation 1 0
+---
+{}
+---
+-5 ^5
+---
+Reported 1 error.
+
+line 1, column 4: Specifying local coordinates not allowed.

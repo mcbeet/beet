@@ -1,0 +1,29 @@
+minecraft:entity 3 1
+---
+{'type': 'entities', 'amount': 'single'}
+---
+@s[type=player]
+---
+@s[type=player]
+---
+<class 'mecha.ast.AstSelector'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=15, lineno=1, colno=16)
+  variable: 's'
+  arguments:
+    <class 'mecha.ast.AstSelectorArgument'>
+      location: SourceLocation(pos=3, lineno=1, colno=4)
+      end_location: SourceLocation(pos=14, lineno=1, colno=15)
+      inverted: False
+      key:
+        <class 'mecha.ast.AstString'>
+          location: SourceLocation(pos=3, lineno=1, colno=4)
+          end_location: SourceLocation(pos=7, lineno=1, colno=8)
+          value: 'type'
+      value:
+        <class 'mecha.ast.AstResourceLocation'>
+          location: SourceLocation(pos=8, lineno=1, colno=9)
+          end_location: SourceLocation(pos=14, lineno=1, colno=15)
+          is_tag: False
+          namespace: None
+          path: 'player'

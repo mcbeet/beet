@@ -1,0 +1,146 @@
+type List<T> = [T]
+
+type Struct<T> = struct { value: T }
+---
+<class 'mecha.contrib.validation.mcdoc.Mcdoc'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=56, lineno=3, colno=37)
+  items:
+    <class 'mecha.contrib.validation.mcdoc.McdocTypeAlias'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=18, lineno=1, colno=19)
+      prelim:
+        <class 'mecha.contrib.validation.mcdoc.McdocPrelim'>
+          location: SourceLocation(pos=0, lineno=1, colno=1)
+          end_location: SourceLocation(pos=4, lineno=1, colno=5)
+          doc_comments:
+            <empty>
+          attributes:
+            <empty>
+      identifier:
+        <class 'mecha.contrib.validation.mcdoc.McdocIdentifier'>
+          location: SourceLocation(pos=5, lineno=1, colno=6)
+          end_location: SourceLocation(pos=9, lineno=1, colno=10)
+          name: 'List'
+      parameters:
+        <class 'mecha.contrib.validation.mcdoc.McdocIdentifier'>
+          location: SourceLocation(pos=10, lineno=1, colno=11)
+          end_location: SourceLocation(pos=11, lineno=1, colno=12)
+          name: 'T'
+      type:
+        <class 'mecha.contrib.validation.mcdoc.McdocType'>
+          location: SourceLocation(pos=15, lineno=1, colno=16)
+          end_location: SourceLocation(pos=18, lineno=1, colno=19)
+          attributes:
+            <empty>
+          unattributed_type:
+            <class 'mecha.contrib.validation.mcdoc.McdocListType'>
+              location: SourceLocation(pos=15, lineno=1, colno=16)
+              end_location: SourceLocation(pos=18, lineno=1, colno=19)
+              element:
+                <class 'mecha.contrib.validation.mcdoc.McdocType'>
+                  location: SourceLocation(pos=16, lineno=1, colno=17)
+                  end_location: SourceLocation(pos=17, lineno=1, colno=18)
+                  attributes:
+                    <empty>
+                  unattributed_type:
+                    <class 'mecha.contrib.validation.mcdoc.McdocReferenceType'>
+                      location: SourceLocation(pos=16, lineno=1, colno=17)
+                      end_location: SourceLocation(pos=17, lineno=1, colno=18)
+                      path:
+                        <class 'mecha.contrib.validation.mcdoc.McdocPath'>
+                          location: SourceLocation(pos=16, lineno=1, colno=17)
+                          end_location: SourceLocation(pos=17, lineno=1, colno=18)
+                          absolute: False
+                          segments:
+                            <class 'mecha.contrib.validation.mcdoc.McdocIdentifier'>
+                              location: SourceLocation(pos=16, lineno=1, colno=17)
+                              end_location: SourceLocation(pos=17, lineno=1, colno=18)
+                              name: 'T'
+                  modifiers:
+                    <empty>
+              length: None
+          modifiers:
+            <empty>
+    <class 'mecha.contrib.validation.mcdoc.McdocTypeAlias'>
+      location: SourceLocation(pos=20, lineno=3, colno=1)
+      end_location: SourceLocation(pos=56, lineno=3, colno=37)
+      prelim:
+        <class 'mecha.contrib.validation.mcdoc.McdocPrelim'>
+          location: SourceLocation(pos=20, lineno=3, colno=1)
+          end_location: SourceLocation(pos=24, lineno=3, colno=5)
+          doc_comments:
+            <empty>
+          attributes:
+            <empty>
+      identifier:
+        <class 'mecha.contrib.validation.mcdoc.McdocIdentifier'>
+          location: SourceLocation(pos=25, lineno=3, colno=6)
+          end_location: SourceLocation(pos=31, lineno=3, colno=12)
+          name: 'Struct'
+      parameters:
+        <class 'mecha.contrib.validation.mcdoc.McdocIdentifier'>
+          location: SourceLocation(pos=32, lineno=3, colno=13)
+          end_location: SourceLocation(pos=33, lineno=3, colno=14)
+          name: 'T'
+      type:
+        <class 'mecha.contrib.validation.mcdoc.McdocType'>
+          location: SourceLocation(pos=37, lineno=3, colno=18)
+          end_location: SourceLocation(pos=56, lineno=3, colno=37)
+          attributes:
+            <empty>
+          unattributed_type:
+            <class 'mecha.contrib.validation.mcdoc.McdocStruct'>
+              location: SourceLocation(pos=37, lineno=3, colno=18)
+              end_location: SourceLocation(pos=56, lineno=3, colno=37)
+              prelim:
+                <class 'mecha.contrib.validation.mcdoc.McdocPrelim'>
+                  location: SourceLocation(pos=37, lineno=3, colno=18)
+                  end_location: SourceLocation(pos=43, lineno=3, colno=24)
+                  doc_comments:
+                    <empty>
+                  attributes:
+                    <empty>
+              identifier: None
+              fields:
+                <class 'mecha.contrib.validation.mcdoc.McdocStructField'>
+                  location: SourceLocation(pos=46, lineno=3, colno=27)
+                  end_location: SourceLocation(pos=54, lineno=3, colno=35)
+                  prelim:
+                    <class 'mecha.contrib.validation.mcdoc.McdocPrelim'>
+                      location: SourceLocation(pos=46, lineno=3, colno=27)
+                      end_location: SourceLocation(pos=56, lineno=3, colno=37)
+                      doc_comments:
+                        <empty>
+                      attributes:
+                        <empty>
+                  key:
+                    <class 'mecha.contrib.validation.mcdoc.McdocIdentifier'>
+                      location: SourceLocation(pos=46, lineno=3, colno=27)
+                      end_location: SourceLocation(pos=51, lineno=3, colno=32)
+                      name: 'value'
+                  optional: False
+                  type:
+                    <class 'mecha.contrib.validation.mcdoc.McdocType'>
+                      location: SourceLocation(pos=53, lineno=3, colno=34)
+                      end_location: SourceLocation(pos=54, lineno=3, colno=35)
+                      attributes:
+                        <empty>
+                      unattributed_type:
+                        <class 'mecha.contrib.validation.mcdoc.McdocReferenceType'>
+                          location: SourceLocation(pos=53, lineno=3, colno=34)
+                          end_location: SourceLocation(pos=54, lineno=3, colno=35)
+                          path:
+                            <class 'mecha.contrib.validation.mcdoc.McdocPath'>
+                              location: SourceLocation(pos=53, lineno=3, colno=34)
+                              end_location: SourceLocation(pos=54, lineno=3, colno=35)
+                              absolute: False
+                              segments:
+                                <class 'mecha.contrib.validation.mcdoc.McdocIdentifier'>
+                                  location: SourceLocation(pos=53, lineno=3, colno=34)
+                                  end_location: SourceLocation(pos=54, lineno=3, colno=35)
+                                  name: 'T'
+                      modifiers:
+                        <empty>
+          modifiers:
+            <empty>

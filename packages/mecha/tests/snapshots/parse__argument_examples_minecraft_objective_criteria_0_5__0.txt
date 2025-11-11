@@ -1,0 +1,12 @@
+minecraft:objective_criteria 0 5
+---
+{}
+---
+deathCount
+---
+deathCount
+---
+<class 'mecha.ast.AstObjectiveCriteria'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=10, lineno=1, colno=11)
+  value: 'deathCount'

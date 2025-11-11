@@ -1,0 +1,12 @@
+minecraft:template_rotation 0 0
+---
+{}
+---
+180
+---
+180
+---
+<class 'mecha.ast.AstTemplateRotation'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=3, lineno=1, colno=4)
+  value: '180'

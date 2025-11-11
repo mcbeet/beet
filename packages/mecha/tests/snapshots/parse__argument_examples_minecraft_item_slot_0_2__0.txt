@@ -1,0 +1,12 @@
+minecraft:item_slot 0 2
+---
+{}
+---
+weapon.mainhand
+---
+weapon.mainhand
+---
+<class 'mecha.ast.AstItemSlot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=15, lineno=1, colno=16)
+  value: 'weapon.mainhand'

@@ -1,0 +1,55 @@
+// This is a comment.
+struct Foo {
+	Bar: boolean, // This is another one.
+}
+---
+<class 'mecha.contrib.validation.mcdoc.Mcdoc'>
+  location: SourceLocation(pos=22, lineno=2, colno=1)
+  end_location: SourceLocation(pos=75, lineno=4, colno=2)
+  items:
+    <class 'mecha.contrib.validation.mcdoc.McdocStruct'>
+      location: SourceLocation(pos=22, lineno=2, colno=1)
+      end_location: SourceLocation(pos=75, lineno=4, colno=2)
+      prelim:
+        <class 'mecha.contrib.validation.mcdoc.McdocPrelim'>
+          location: SourceLocation(pos=22, lineno=2, colno=1)
+          end_location: SourceLocation(pos=28, lineno=2, colno=7)
+          doc_comments:
+            <empty>
+          attributes:
+            <empty>
+      identifier:
+        <class 'mecha.contrib.validation.mcdoc.McdocIdentifier'>
+          location: SourceLocation(pos=29, lineno=2, colno=8)
+          end_location: SourceLocation(pos=32, lineno=2, colno=11)
+          name: 'Foo'
+      fields:
+        <class 'mecha.contrib.validation.mcdoc.McdocStructField'>
+          location: SourceLocation(pos=36, lineno=3, colno=2)
+          end_location: SourceLocation(pos=48, lineno=3, colno=14)
+          prelim:
+            <class 'mecha.contrib.validation.mcdoc.McdocPrelim'>
+              location: SourceLocation(pos=36, lineno=3, colno=2)
+              end_location: SourceLocation(pos=73, lineno=3, colno=39)
+              doc_comments:
+                <empty>
+              attributes:
+                <empty>
+          key:
+            <class 'mecha.contrib.validation.mcdoc.McdocIdentifier'>
+              location: SourceLocation(pos=36, lineno=3, colno=2)
+              end_location: SourceLocation(pos=39, lineno=3, colno=5)
+              name: 'Bar'
+          optional: False
+          type:
+            <class 'mecha.contrib.validation.mcdoc.McdocType'>
+              location: SourceLocation(pos=41, lineno=3, colno=7)
+              end_location: SourceLocation(pos=48, lineno=3, colno=14)
+              attributes:
+                <empty>
+              unattributed_type:
+                <class 'mecha.contrib.validation.mcdoc.McdocBooleanType'>
+                  location: SourceLocation(pos=41, lineno=3, colno=7)
+                  end_location: SourceLocation(pos=48, lineno=3, colno=14)
+              modifiers:
+                <empty>

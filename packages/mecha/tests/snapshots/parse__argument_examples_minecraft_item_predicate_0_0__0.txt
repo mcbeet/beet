@@ -1,0 +1,21 @@
+minecraft:item_predicate 0 0
+---
+{}
+---
+stick
+---
+stick
+---
+<class 'mecha.ast.AstItemPredicate'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=5, lineno=1, colno=6)
+  identifier:
+    <class 'mecha.ast.AstResourceLocation'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=5, lineno=1, colno=6)
+      is_tag: False
+      namespace: None
+      path: 'stick'
+  arguments:
+    <empty>
+  data_tags: None

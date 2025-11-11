@@ -1,0 +1,9 @@
+minecraft:nbt_tag 1 6
+---
+{}
+---
+{hello,world}
+---
+Reported 1 error.
+
+line 1, column 7: Expected colon but got comma ','.

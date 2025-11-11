@@ -1,0 +1,12 @@
+minecraft:nbt_tag 0 4
+---
+{}
+---
+"foo"
+---
+"foo"
+---
+<class 'mecha.ast.AstNbtValue'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=5, lineno=1, colno=6)
+  value: String('foo')

@@ -1,0 +1,9 @@
+minecraft:particle 1 7
+---
+{}
+---
+sculk_charge ~ ~ ~
+---
+Reported 1 error.
+
+line 1, column 14: Expected number but got literal '~'.

@@ -1,0 +1,14 @@
+minecraft:function 0 1
+---
+{}
+---
+foo:bar
+---
+foo:bar
+---
+<class 'mecha.ast.AstResourceLocation'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=7, lineno=1, colno=8)
+  is_tag: False
+  namespace: 'foo'
+  path: 'bar'

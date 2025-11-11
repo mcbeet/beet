@@ -1,0 +1,9 @@
+minecraft:particle 1 6
+---
+{}
+---
+vibration 5.0 64.0
+---
+Reported 1 error.
+
+line 1, column 19: Expected number but got eof.

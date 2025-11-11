@@ -1,0 +1,9 @@
+brigadier:integer 1 4
+---
+{'min': 7, 'max': 15}
+---
+11.1
+---
+Reported 1 error.
+
+line 1, column 1: Expected integer value.

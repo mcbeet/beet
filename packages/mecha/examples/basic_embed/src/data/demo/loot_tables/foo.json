@@ -1,0 +1,19 @@
+{
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "item",
+          "name": "minecraft:diamond",
+          "functions": [
+            {
+              "function": "minecraft:set_nbt",
+              "tag": "{custom: {value: '$PLACEHOLDER'}}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

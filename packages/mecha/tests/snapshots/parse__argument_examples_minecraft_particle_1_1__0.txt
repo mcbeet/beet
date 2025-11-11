@@ -1,0 +1,9 @@
+minecraft:particle 1 1
+---
+{}
+---
+minecraft:dust_color_transition 1.0 0.0 0.0 hello
+---
+Reported 1 error.
+
+line 1, column 45: Expected number but got literal 'hello'.

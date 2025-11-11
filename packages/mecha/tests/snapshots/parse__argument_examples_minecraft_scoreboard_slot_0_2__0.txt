@@ -1,0 +1,12 @@
+minecraft:scoreboard_slot 0 2
+---
+{}
+---
+sidebar.team.red
+---
+sidebar.team.red
+---
+<class 'mecha.ast.AstScoreboardSlot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=16, lineno=1, colno=17)
+  value: 'sidebar.team.red'

@@ -1,0 +1,10 @@
+require:
+  - beet.contrib.model_merging
+  - mecha.contrib.nesting
+  - mecha.contrib.nested_resources
+resource_pack:
+  load: "src"
+data_pack:
+  load: "src"
+pipeline:
+  - mecha

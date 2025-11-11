@@ -1,0 +1,12 @@
+minecraft:swizzle 0 0
+---
+{}
+---
+xyz
+---
+xyz
+---
+<class 'mecha.ast.AstSwizzle'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=3, lineno=1, colno=4)
+  value: 'xyz'

@@ -1,0 +1,14 @@
+minecraft:mob_effect 0 0
+---
+{}
+---
+spooky
+---
+spooky
+---
+<class 'mecha.ast.AstResourceLocation'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=6, lineno=1, colno=7)
+  is_tag: False
+  namespace: None
+  path: 'spooky'

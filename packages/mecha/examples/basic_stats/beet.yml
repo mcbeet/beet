@@ -1,0 +1,7 @@
+require:
+  - mecha.contrib.statistics
+data_pack:
+  load: [src]
+pipeline:
+  - mecha
+  - demo

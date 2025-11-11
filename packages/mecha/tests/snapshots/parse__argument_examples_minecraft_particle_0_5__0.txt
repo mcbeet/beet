@@ -1,0 +1,65 @@
+minecraft:particle 0 5
+---
+{}
+---
+falling_dust minecraft:grass_block[snowy=true]{hello: world}
+---
+falling_dust minecraft:grass_block[snowy=true]{hello: "world"}
+---
+<class 'mecha.ast.AstParticle'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=60, lineno=1, colno=61)
+  name:
+    <class 'mecha.ast.AstResourceLocation'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=12, lineno=1, colno=13)
+      is_tag: False
+      namespace: None
+      path: 'falling_dust'
+  parameters:
+    <class 'mecha.ast.AstFallingDustParticleParameters'>
+      location: SourceLocation(pos=13, lineno=1, colno=14)
+      end_location: SourceLocation(pos=60, lineno=1, colno=61)
+      block:
+        <class 'mecha.ast.AstBlock'>
+          location: SourceLocation(pos=13, lineno=1, colno=14)
+          end_location: SourceLocation(pos=60, lineno=1, colno=61)
+          identifier:
+            <class 'mecha.ast.AstResourceLocation'>
+              location: SourceLocation(pos=13, lineno=1, colno=14)
+              end_location: SourceLocation(pos=34, lineno=1, colno=35)
+              is_tag: False
+              namespace: 'minecraft'
+              path: 'grass_block'
+          block_states:
+            <class 'mecha.ast.AstBlockState'>
+              location: SourceLocation(pos=35, lineno=1, colno=36)
+              end_location: SourceLocation(pos=45, lineno=1, colno=46)
+              key:
+                <class 'mecha.ast.AstString'>
+                  location: SourceLocation(pos=35, lineno=1, colno=36)
+                  end_location: SourceLocation(pos=40, lineno=1, colno=41)
+                  value: 'snowy'
+              value:
+                <class 'mecha.ast.AstString'>
+                  location: SourceLocation(pos=41, lineno=1, colno=42)
+                  end_location: SourceLocation(pos=45, lineno=1, colno=46)
+                  value: 'true'
+          data_tags:
+            <class 'mecha.ast.AstNbtCompound'>
+              location: SourceLocation(pos=46, lineno=1, colno=47)
+              end_location: SourceLocation(pos=60, lineno=1, colno=61)
+              entries:
+                <class 'mecha.ast.AstNbtCompoundEntry'>
+                  location: SourceLocation(pos=47, lineno=1, colno=48)
+                  end_location: SourceLocation(pos=59, lineno=1, colno=60)
+                  key:
+                    <class 'mecha.ast.AstNbtCompoundKey'>
+                      location: SourceLocation(pos=47, lineno=1, colno=48)
+                      end_location: SourceLocation(pos=52, lineno=1, colno=53)
+                      value: 'hello'
+                  value:
+                    <class 'mecha.ast.AstNbtValue'>
+                      location: SourceLocation(pos=54, lineno=1, colno=55)
+                      end_location: SourceLocation(pos=59, lineno=1, colno=60)
+                      value: String('world')

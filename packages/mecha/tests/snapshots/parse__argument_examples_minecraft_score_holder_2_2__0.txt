@@ -1,0 +1,9 @@
+minecraft:score_holder 2 2
+---
+{'amount': 'single'}
+---
+@e[tag=foo, sort=nearest]
+---
+Reported 1 error.
+
+line 1, column 1: Expected entity selector targeting a single entity.

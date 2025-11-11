@@ -1,0 +1,28 @@
+minecraft:nbt_path 0 9
+---
+{}
+---
+foo.bar[-1]
+---
+foo.bar[-1]
+---
+<class 'mecha.ast.AstNbtPath'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=11, lineno=1, colno=12)
+  components:
+    <class 'mecha.ast.AstNbtPathKey'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=3, lineno=1, colno=4)
+      value: 'foo'
+    <class 'mecha.ast.AstNbtPathKey'>
+      location: SourceLocation(pos=4, lineno=1, colno=5)
+      end_location: SourceLocation(pos=7, lineno=1, colno=8)
+      value: 'bar'
+    <class 'mecha.ast.AstNbtPathSubscript'>
+      location: SourceLocation(pos=7, lineno=1, colno=8)
+      end_location: SourceLocation(pos=11, lineno=1, colno=12)
+      index:
+        <class 'mecha.ast.AstNumber'>
+          location: SourceLocation(pos=8, lineno=1, colno=9)
+          end_location: SourceLocation(pos=10, lineno=1, colno=11)
+          value: -1

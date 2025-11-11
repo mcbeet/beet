@@ -1,0 +1,48 @@
+minecraft:particle 0 4
+---
+{}
+---
+block minecraft:grass_block[snowy=true]
+---
+block minecraft:grass_block[snowy=true]
+---
+<class 'mecha.ast.AstParticle'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=39, lineno=1, colno=40)
+  name:
+    <class 'mecha.ast.AstResourceLocation'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=5, lineno=1, colno=6)
+      is_tag: False
+      namespace: None
+      path: 'block'
+  parameters:
+    <class 'mecha.ast.AstBlockParticleParameters'>
+      location: SourceLocation(pos=6, lineno=1, colno=7)
+      end_location: SourceLocation(pos=39, lineno=1, colno=40)
+      block:
+        <class 'mecha.ast.AstBlock'>
+          location: SourceLocation(pos=6, lineno=1, colno=7)
+          end_location: SourceLocation(pos=39, lineno=1, colno=40)
+          identifier:
+            <class 'mecha.ast.AstResourceLocation'>
+              location: SourceLocation(pos=6, lineno=1, colno=7)
+              end_location: SourceLocation(pos=27, lineno=1, colno=28)
+              is_tag: False
+              namespace: 'minecraft'
+              path: 'grass_block'
+          block_states:
+            <class 'mecha.ast.AstBlockState'>
+              location: SourceLocation(pos=28, lineno=1, colno=29)
+              end_location: SourceLocation(pos=38, lineno=1, colno=39)
+              key:
+                <class 'mecha.ast.AstString'>
+                  location: SourceLocation(pos=28, lineno=1, colno=29)
+                  end_location: SourceLocation(pos=33, lineno=1, colno=34)
+                  value: 'snowy'
+              value:
+                <class 'mecha.ast.AstString'>
+                  location: SourceLocation(pos=34, lineno=1, colno=35)
+                  end_location: SourceLocation(pos=38, lineno=1, colno=39)
+                  value: 'true'
+          data_tags: None

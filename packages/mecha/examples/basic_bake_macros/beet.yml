@@ -1,0 +1,7 @@
+require:
+  - mecha.contrib.nesting
+  - mecha.contrib.bake_macros
+data_pack:
+  load: "src"
+pipeline:
+  - mecha

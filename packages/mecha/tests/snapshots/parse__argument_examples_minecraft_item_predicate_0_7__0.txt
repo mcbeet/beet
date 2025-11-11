@@ -1,0 +1,19 @@
+minecraft:item_predicate 0 7
+---
+{}
+---
+*
+---
+*
+---
+<class 'mecha.ast.AstItemPredicate'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=1, lineno=1, colno=2)
+  identifier:
+    <class 'mecha.ast.AstWildcard'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=1, lineno=1, colno=2)
+      value: '*'
+  arguments:
+    <empty>
+  data_tags: None

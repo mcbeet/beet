@@ -1,0 +1,9 @@
+minecraft:particle 1 4
+---
+{}
+---
+item minecraft:apple{
+---
+Reported 1 error.
+
+line 1, column 22: Expected number, quoted_string or string but got eof.

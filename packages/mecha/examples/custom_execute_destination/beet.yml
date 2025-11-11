@@ -1,0 +1,9 @@
+require:
+  - mecha.contrib.nesting
+data_pack:
+  load: "src"
+pipeline:
+  - mecha
+meta:
+  nesting:
+    generate_execute: generated/{incr:#x}

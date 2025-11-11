@@ -1,0 +1,9 @@
+minecraft:block_predicate 1 4
+---
+{}
+---
+#stone[thing=hello]{
+---
+Reported 1 error.
+
+line 1, column 21: Expected number, quoted_string or string but got eof.

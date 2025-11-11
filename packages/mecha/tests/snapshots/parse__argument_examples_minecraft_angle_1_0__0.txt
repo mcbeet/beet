@@ -1,0 +1,9 @@
+minecraft:angle 1 0
+---
+{}
+---
+^-3
+---
+Reported 1 error.
+
+line 1, column 1: Specifying local coordinates not allowed.

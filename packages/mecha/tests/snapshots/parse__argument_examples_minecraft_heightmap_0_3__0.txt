@@ -1,0 +1,12 @@
+minecraft:heightmap 0 3
+---
+{}
+---
+ocean_floor
+---
+ocean_floor
+---
+<class 'mecha.ast.AstHeightmap'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=11, lineno=1, colno=12)
+  value: 'ocean_floor'

@@ -1,0 +1,9 @@
+minecraft:item_stack 1 2
+---
+{}
+---
+*
+---
+Reported 1 error.
+
+line 1, column 1: Expected resource_location but got literal '*'.

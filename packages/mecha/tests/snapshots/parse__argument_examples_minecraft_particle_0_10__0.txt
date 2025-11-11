@@ -1,0 +1,27 @@
+minecraft:particle 0 10
+---
+{}
+---
+shriek 100
+---
+shriek 100
+---
+<class 'mecha.ast.AstParticle'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=10, lineno=1, colno=11)
+  name:
+    <class 'mecha.ast.AstResourceLocation'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=6, lineno=1, colno=7)
+      is_tag: False
+      namespace: None
+      path: 'shriek'
+  parameters:
+    <class 'mecha.ast.AstShriekParticleParameters'>
+      location: SourceLocation(pos=7, lineno=1, colno=8)
+      end_location: SourceLocation(pos=10, lineno=1, colno=11)
+      delay:
+        <class 'mecha.ast.AstNumber'>
+          location: SourceLocation(pos=7, lineno=1, colno=8)
+          end_location: SourceLocation(pos=10, lineno=1, colno=11)
+          value: 100

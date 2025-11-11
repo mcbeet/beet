@@ -1,0 +1,9 @@
+minecraft:message 1 0
+---
+{}
+---
+Hello @p[team=winner :)
+---
+Reported 1 error.
+
+line 1, column 22: Expected bracket ']' but got invalid ':)'.

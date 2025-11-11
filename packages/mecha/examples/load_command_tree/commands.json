@@ -1,0 +1,9 @@
+{
+  "type": "root",
+  "children": {
+    "this_is_valid_now": {
+      "type": "literal",
+      "executable": true
+    }
+  }
+}

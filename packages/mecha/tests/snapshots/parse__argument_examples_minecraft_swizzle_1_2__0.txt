@@ -1,0 +1,9 @@
+minecraft:swizzle 1 2
+---
+{}
+---
+xx
+---
+Reported 1 error.
+
+line 1, column 1: Expected swizzle but got literal 'xx'.

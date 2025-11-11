@@ -1,0 +1,9 @@
+brigadier:float 1 2
+---
+{'min': 7, 'max': 15}
+---
+0.5
+---
+Reported 1 error.
+
+line 1, column 1: Expected value to be at least 7.

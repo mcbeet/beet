@@ -1,0 +1,67 @@
+/// This doc comment describes the struct Foo.
+/// External tools, like VS Code, may show this block of text when the user hovers over the name "Foo".
+struct Foo {
+	/// This is another doc comment describing the field "Bar".
+	Bar: boolean, // This is just a regular comment because it only starts with two slashes.
+}
+---
+<class 'mecha.contrib.validation.mcdoc.Mcdoc'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=316, lineno=6, colno=2)
+  items:
+    <class 'mecha.contrib.validation.mcdoc.McdocStruct'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=316, lineno=6, colno=2)
+      prelim:
+        <class 'mecha.contrib.validation.mcdoc.McdocPrelim'>
+          location: SourceLocation(pos=0, lineno=1, colno=1)
+          end_location: SourceLocation(pos=151, lineno=3, colno=1)
+          doc_comments:
+            <class 'mecha.contrib.validation.mcdoc.McdocDocComment'>
+              location: SourceLocation(pos=0, lineno=1, colno=1)
+              end_location: SourceLocation(pos=47, lineno=2, colno=1)
+              text: '/// This doc comment describes the struct Foo.\n'
+            <class 'mecha.contrib.validation.mcdoc.McdocDocComment'>
+              location: SourceLocation(pos=47, lineno=2, colno=1)
+              end_location: SourceLocation(pos=151, lineno=3, colno=1)
+              text: '/// External tools, like VS Code, may show this block of text when the user hovers over the name "Foo".\n'
+          attributes:
+            <empty>
+      identifier:
+        <class 'mecha.contrib.validation.mcdoc.McdocIdentifier'>
+          location: SourceLocation(pos=158, lineno=3, colno=8)
+          end_location: SourceLocation(pos=161, lineno=3, colno=11)
+          name: 'Foo'
+      fields:
+        <class 'mecha.contrib.validation.mcdoc.McdocStructField'>
+          location: SourceLocation(pos=165, lineno=4, colno=2)
+          end_location: SourceLocation(pos=238, lineno=5, colno=14)
+          prelim:
+            <class 'mecha.contrib.validation.mcdoc.McdocPrelim'>
+              location: SourceLocation(pos=165, lineno=4, colno=2)
+              end_location: SourceLocation(pos=225, lineno=5, colno=1)
+              doc_comments:
+                <class 'mecha.contrib.validation.mcdoc.McdocDocComment'>
+                  location: SourceLocation(pos=165, lineno=4, colno=2)
+                  end_location: SourceLocation(pos=225, lineno=5, colno=1)
+                  text: '/// This is another doc comment describing the field "Bar".\n'
+              attributes:
+                <empty>
+          key:
+            <class 'mecha.contrib.validation.mcdoc.McdocIdentifier'>
+              location: SourceLocation(pos=226, lineno=5, colno=2)
+              end_location: SourceLocation(pos=229, lineno=5, colno=5)
+              name: 'Bar'
+          optional: False
+          type:
+            <class 'mecha.contrib.validation.mcdoc.McdocType'>
+              location: SourceLocation(pos=231, lineno=5, colno=7)
+              end_location: SourceLocation(pos=238, lineno=5, colno=14)
+              attributes:
+                <empty>
+              unattributed_type:
+                <class 'mecha.contrib.validation.mcdoc.McdocBooleanType'>
+                  location: SourceLocation(pos=231, lineno=5, colno=7)
+                  end_location: SourceLocation(pos=238, lineno=5, colno=14)
+              modifiers:
+                <empty>

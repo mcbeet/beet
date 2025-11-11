@@ -1,0 +1,9 @@
+minecraft:score_holder 2 1
+---
+{'amount': 'single'}
+---
+@e[type=minecraft:marker, sort=wat, limit=1]
+---
+Reported 1 error.
+
+line 1, column 32: Expected sort_order but got literal 'wat,'.

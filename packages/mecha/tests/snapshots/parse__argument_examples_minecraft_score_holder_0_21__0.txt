@@ -1,0 +1,23 @@
+minecraft:score_holder 0 21
+---
+{'amount': 'multiple'}
+---
+@a[tag=!]
+---
+@a[tag=!]
+---
+<class 'mecha.ast.AstSelector'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=9, lineno=1, colno=10)
+  variable: 'a'
+  arguments:
+    <class 'mecha.ast.AstSelectorArgument'>
+      location: SourceLocation(pos=3, lineno=1, colno=4)
+      end_location: SourceLocation(pos=6, lineno=1, colno=7)
+      inverted: True
+      key:
+        <class 'mecha.ast.AstString'>
+          location: SourceLocation(pos=3, lineno=1, colno=4)
+          end_location: SourceLocation(pos=6, lineno=1, colno=7)
+          value: 'tag'
+      value: None

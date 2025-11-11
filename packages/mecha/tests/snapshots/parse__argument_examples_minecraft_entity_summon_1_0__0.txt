@@ -1,0 +1,9 @@
+minecraft:entity_summon 1 0
+---
+{}
+---
+#minecraft:pig
+---
+Reported 1 error.
+
+line 1, column 1: Specifying a tag is not allowed '#minecraft:pig'.

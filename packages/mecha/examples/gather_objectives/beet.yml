@@ -1,0 +1,6 @@
+require:
+  - demo
+data_pack:
+  load: [src]
+pipeline:
+  - mecha

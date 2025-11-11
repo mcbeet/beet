@@ -1,0 +1,12 @@
+minecraft:score_holder 0 2
+---
+{'amount': 'multiple'}
+---
+*
+---
+*
+---
+<class 'mecha.ast.AstWildcard'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=1, lineno=1, colno=2)
+  value: '*'

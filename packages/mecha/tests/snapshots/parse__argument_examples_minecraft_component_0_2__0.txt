@@ -1,0 +1,25 @@
+minecraft:component 0 2
+---
+{}
+---
+{"text":"hello world"}
+---
+{text: "hello world"}
+---
+<class 'mecha.ast.AstNbtCompound'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=22, lineno=1, colno=23)
+  entries:
+    <class 'mecha.ast.AstNbtCompoundEntry'>
+      location: SourceLocation(pos=1, lineno=1, colno=2)
+      end_location: SourceLocation(pos=21, lineno=1, colno=22)
+      key:
+        <class 'mecha.ast.AstNbtCompoundKey'>
+          location: SourceLocation(pos=1, lineno=1, colno=2)
+          end_location: SourceLocation(pos=7, lineno=1, colno=8)
+          value: 'text'
+      value:
+        <class 'mecha.ast.AstNbtValue'>
+          location: SourceLocation(pos=8, lineno=1, colno=9)
+          end_location: SourceLocation(pos=21, lineno=1, colno=22)
+          value: String('hello world')

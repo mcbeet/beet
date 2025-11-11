@@ -1,0 +1,20 @@
+minecraft:nbt_tag 0 8
+---
+{}
+---
+[L;1l,2l]
+---
+[L; 1L, 2L]
+---
+<class 'mecha.ast.AstNbtLongArray'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=9, lineno=1, colno=10)
+  elements:
+    <class 'mecha.ast.AstNbtValue'>
+      location: SourceLocation(pos=3, lineno=1, colno=4)
+      end_location: SourceLocation(pos=5, lineno=1, colno=6)
+      value: Long(1)
+    <class 'mecha.ast.AstNbtValue'>
+      location: SourceLocation(pos=6, lineno=1, colno=7)
+      end_location: SourceLocation(pos=8, lineno=1, colno=9)
+      value: Long(2)

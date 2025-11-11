@@ -1,0 +1,6 @@
+require:
+  - mecha.contrib.messages
+data_pack:
+  load: [src]
+pipeline:
+  - mecha

@@ -1,0 +1,8 @@
+require:
+  - mecha.contrib.nesting
+  - mecha.contrib.source_map
+data_pack:
+  load: "src"
+pipeline:
+  - demo
+  - mecha

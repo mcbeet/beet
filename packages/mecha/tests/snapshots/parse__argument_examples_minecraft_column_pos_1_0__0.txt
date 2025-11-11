@@ -1,0 +1,9 @@
+minecraft:column_pos 1 0
+---
+{}
+---
+7
+---
+Reported 1 error.
+
+line 1, column 2: Expected coordinate but got eof.

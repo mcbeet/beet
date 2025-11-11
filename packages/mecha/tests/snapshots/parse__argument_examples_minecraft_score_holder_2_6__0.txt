@@ -1,0 +1,9 @@
+minecraft:score_holder 2 6
+---
+{'amount': 'single'}
+---
+@a[name=]
+---
+Reported 1 error.
+
+line 1, column 4: Argument 'name' must have a value.

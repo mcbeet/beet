@@ -1,0 +1,9 @@
+minecraft:particle 1 5
+---
+{}
+---
+vibration 5.0 64.0 0.0 ~ ~ ~
+---
+Reported 1 error.
+
+line 1, column 24: Expected number but got literal '~'.
