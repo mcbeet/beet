@@ -42,7 +42,10 @@ dev = [
 ]
 
 [tool.uv.workspace]
-members = [".", "packages/*"]
+members = [
+    "packages/*",
+    ".",
+]
 
 [tool.pytest.ini_options]
 addopts = "tests --import-mode=importlib"

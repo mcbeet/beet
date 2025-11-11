@@ -6,6 +6,7 @@ requires-python = ">=3.14"
 members = [
     "beet",
     "lectern",
+    "mecha",
 ]
 
 [[package]]
@@ -223,6 +224,21 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/d6/54/cfe61301667036ec958cb99bd3efefba235e65cdeb9c84d24a8293ba1d90/mdurl-0.1.2.tar.gz", hash = "sha256:bb413d29f5eea38f31dd4754dd7377d4465116fb207585f97bf925588687c1ba", size = 8729, upload-time = "2022-08-14T12:40:10.846Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/b3/38/89ba8ad64ae25be8de66a6d463314cf1eb366222074cfda9ee839c56a4b4/mdurl-0.1.2-py3-none-any.whl", hash = "sha256:84008a41e51615a49fc9966191ff91509e3c40b939176e643fd50a5c2196b8f8", size = 9979, upload-time = "2022-08-14T12:40:09.779Z" },
+]
+
+[[package]]
+name = "mecha"
+version = "0.99.0"
+source = { editable = "packages/mecha" }
+dependencies = [
+    { name = "beet" },
+    { name = "tokenstream" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "beet", editable = "." },
+    { name = "tokenstream", specifier = ">=1.7.0" },
 ]
 
 [[package]]
@@ -497,6 +513,15 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/54/1a/a49f071f04c42345c793d22f6cf5e0920095e286119ee53a64a3a3004825/ruff-0.14.4-py3-none-win32.whl", hash = "sha256:643b69cb63cd996f1fc7229da726d07ac307eae442dd8974dbc7cf22c1e18fff", size = 12493429, upload-time = "2025-11-06T22:07:38.43Z" },
     { url = "https://files.pythonhosted.org/packages/bc/22/e58c43e641145a2b670328fb98bc384e20679b5774258b1e540207580266/ruff-0.14.4-py3-none-win_amd64.whl", hash = "sha256:26673da283b96fe35fa0c939bf8411abec47111644aa9f7cfbd3c573fb125d2c", size = 13635380, upload-time = "2025-11-06T22:07:40.496Z" },
     { url = "https://files.pythonhosted.org/packages/30/bd/4168a751ddbbf43e86544b4de8b5c3b7be8d7167a2a5cb977d274e04f0a1/ruff-0.14.4-py3-none-win_arm64.whl", hash = "sha256:dd09c292479596b0e6fec8cd95c65c3a6dc68e9ad17b8f2382130f87ff6a75bb", size = 12663065, upload-time = "2025-11-06T22:07:42.603Z" },
+]
+
+[[package]]
+name = "tokenstream"
+version = "1.7.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/83/33/0874abc08b5811aab60818b4596ab3463a4044e59061fa5b8bb8cca53b59/tokenstream-1.7.0.tar.gz", hash = "sha256:9f98387c7e74d224f7cca874ce77bb775ece6cb585e9ba18441960e2b35fae61", size = 17012, upload-time = "2023-08-03T00:21:02.4Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/40/e3/ed2623ff7a54bbd45f59c536f9b8923cc797a1125d9d087ea51cc9424e99/tokenstream-1.7.0-py3-none-any.whl", hash = "sha256:fdbb20e8a99b07e94ce88016e5f243a1582630a7459bd2e7a1c786f33543fcf9", size = 16857, upload-time = "2023-08-03T00:21:00.394Z" },
 ]
 
 [[package]]

@@ -1,0 +1,64 @@
+[tool.poetry]
+name = "mecha"
+version = "0.99.0"
+description = "A powerful Minecraft command library"
+authors = ["Valentin Berlier <berlier.v@gmail.com>"]
+license = "MIT"
+
+homepage = "https://github.com/mcbeet/mecha"
+repository = "https://github.com/mcbeet/mecha"
+documentation = "https://github.com/mcbeet/mecha"
+
+readme = "README.md"
+
+keywords = [
+  "beet",
+  "minecraft",
+  "datapack",
+  "minecraft-commands",
+  "mcfunction"
+]
+
+include = ["mecha/py.typed"]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+beet = ">=0.108.0"
+tokenstream = "^1.7.0"
+
+[tool.poetry.group.dev.dependencies]
+black = "^24.2.0"
+pytest = "^7.4.3"
+isort = "^5.12.0"
+python-semantic-release = "^7.33.3"
+pytest-insta = "^0.2.0"
+lectern = ">=0.34.0"
+
+[tool.poetry.scripts]
+mecha = "mecha.cli:main"
+
+[tool.poetry.plugins.beet]
+commands = "mecha.commands"
+
+[tool.pytest.ini_options]
+addopts = "tests --import-mode=importlib"
+
+[tool.pyright]
+typeCheckingMode = "strict"
+
+[tool.black]
+target-version = ["py310"]
+
+[tool.isort]
+profile = "black"
+
+[tool.semantic_release]
+branch = "main"
+version_variable = ["mecha/__init__.py:__version__"]
+version_toml = "pyproject.toml:tool.poetry.version"
+major_on_zero = false
+build_command = "poetry build"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
