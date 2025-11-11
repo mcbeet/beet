@@ -7,5 +7,6 @@
   "foo.hello": "1",
   "foo.world": "4",
   "entity.gm4.congealed_shard": "Congealed Soul Shard\u00a7",
-  "entity.gm4.fire_sprite": "Fire Sprite \"named bob\""
+  "entity.gm4.fire_sprite": "Fire Sprite \"named bob\"",
+  "test": "x"
 }
