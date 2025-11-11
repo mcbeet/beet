@@ -9,7 +9,7 @@ __all__ = [
 from typing import Literal, Optional
 
 from beet import Context, ErrorMessage, Function, ListOption, configurable
-from pydantic.v1 import BaseModel
+from pydantic import BaseModel
 
 from lectern import Document, LinkFragmentLoader
 

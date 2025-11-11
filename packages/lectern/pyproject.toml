@@ -7,11 +7,20 @@ authors = [
     { name = "Valentin Berlier", email = "berlier.v@gmail.com" }
 ]
 requires-python = ">=3.14"
-dependencies = []
+dependencies = [
+    "beet",
+    "markdown-it-py>=4.0.0",
+]
 
 [project.scripts]
 lectern = "lectern.cli:main"
 
+[project.entry-points."pytest11"]
+lectern = "lectern.pytest_plugin"
+
 [build-system]
 requires = ["uv_build>=0.9.8,<0.10.0"]
 build-backend = "uv_build"
+
+[tool.uv.sources]
+beet = { workspace = true }

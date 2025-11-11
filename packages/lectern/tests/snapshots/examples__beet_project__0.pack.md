@@ -7,58 +7,38 @@
 ```json
 {
   "pack": {
-    "pack_format": 48,
+    "min_format": [
+      88,
+      0
+    ],
+    "max_format": [
+      88,
+      0
+    ],
     "description": ""
   }
 }
 ```
 
-### with_beet
-
-`@function with_beet:abc`
-
-```mcfunction
-function with_beet:def
-```
-
-`@function with_beet:def`
-
-```mcfunction
-say relative
-```
-
-`@function with_beet:a_relative`
-
-```mcfunction
-say tagged a_relative
-```
-
-`@function with_beet:load`
-
-```mcfunction
-say before
-say tagged load
-```
-
-`@function with_beet:wow`
-
-```mcfunction
-say tagged wow
-```
-
-`@function with_beet:foo`
-
-```mcfunction
-say tagged foo
-```
-
-`@function with_beet:bar`
-
-```mcfunction
-say tagged bar
-```
-
 ### demo
+
+`@function demo:define_1`
+
+```mcfunction
+say azertyuiop
+```
+
+`@function demo:define_2`
+
+```mcfunction
+say azertyuiopqsdfghjklm
+```
+
+`@function demo:define_3`
+
+```mcfunction
+say 2 + 2 is 4 (end of citation)
+```
 
 `@function demo:foo`
 
@@ -152,24 +132,6 @@ say wow
 say no
 ```
 
-`@function demo:define_1`
-
-```mcfunction
-say azertyuiop
-```
-
-`@function demo:define_2`
-
-```mcfunction
-say azertyuiopqsdfghjklm
-```
-
-`@function demo:define_3`
-
-```mcfunction
-say 2 + 2 is 4 (end of citation)
-```
-
 `@function demo:a`
 
 ```mcfunction
@@ -210,20 +172,6 @@ say tagged b
     "with_beet:bar"
   ]
 }
-```
-
-### embedded
-
-`@function embedded:foo`
-
-```mcfunction
-say foo
-```
-
-`@function embedded:bar`
-
-```mcfunction
-say bar
 ```
 
 ### custom
@@ -288,6 +236,65 @@ say bye
 ```mcfunction
 say Hello, Alice!
 say Hello, Bob!
+```
+
+### embedded
+
+`@function embedded:foo`
+
+```mcfunction
+say foo
+```
+
+`@function embedded:bar`
+
+```mcfunction
+say bar
+```
+
+### with_beet
+
+`@function with_beet:abc`
+
+```mcfunction
+function with_beet:def
+```
+
+`@function with_beet:def`
+
+```mcfunction
+say relative
+```
+
+`@function with_beet:a_relative`
+
+```mcfunction
+say tagged a_relative
+```
+
+`@function with_beet:load`
+
+```mcfunction
+say before
+say tagged load
+```
+
+`@function with_beet:wow`
+
+```mcfunction
+say tagged wow
+```
+
+`@function with_beet:foo`
+
+```mcfunction
+say tagged foo
+```
+
+`@function with_beet:bar`
+
+```mcfunction
+say tagged bar
 ```
 
 ### from_script
@@ -449,7 +456,14 @@ tellraw @a ["", {"text": "hello", "color": "red"}]
 ```json
 {
   "pack": {
-    "pack_format": 34,
+    "min_format": [
+      69,
+      0
+    ],
+    "max_format": [
+      69,
+      0
+    ],
     "description": ""
   }
 }

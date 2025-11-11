@@ -7,7 +7,14 @@
 ```json
 {
   "pack": {
-    "pack_format": 48,
+    "min_format": [
+      88,
+      0
+    ],
+    "max_format": [
+      88,
+      0
+    ],
     "description": ""
   }
 }
@@ -24,7 +31,14 @@
 ```json
 {
   "pack": {
-    "pack_format": 34,
+    "min_format": [
+      69,
+      0
+    ],
+    "max_format": [
+      69,
+      0
+    ],
     "description": ""
   }
 }
