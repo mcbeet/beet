@@ -136,9 +136,9 @@ def test_vanilla_zip(minecraft_resource_pack: Path, tmp_path: Path):
 
 def test_vanilla_shaders(snapshot: SnapshotFixture, minecraft_resource_pack: Path):
     pack = ResourcePack(path=minecraft_resource_pack)
-    assert snapshot("json") == pack.shader_posts["minecraft:spider"].data
-    assert snapshot("json") == pack.shaders["minecraft:program/entity_outline"].data
-    assert snapshot() == pack.vertex_shaders["minecraft:program/sobel"].text
+    assert snapshot("json") == pack.post_effects["minecraft:spider"].data
+    assert snapshot("json") == pack.post_effects["minecraft:entity_outline"].data
+    assert snapshot() == pack.fragment_shaders["minecraft:post/entity_sobel"].text
 
 
 def test_vanilla_particles(snapshot: SnapshotFixture, minecraft_resource_pack: Path):
