@@ -7,7 +7,16 @@ authors = [
     { name = "Valentin Berlier", email = "berlier.v@gmail.com" }
 ]
 requires-python = ">=3.14"
-dependencies = []
+dependencies = [
+    "click==8.1.7",
+    "click-help-colors>=0.9.4",
+    "jinja2>=3.1.6",
+    "nbtlib==1.12.1",
+    "pathspec>=0.12.1",
+    "pydantic>=2.12.4",
+    "pyyaml>=6.0.3",
+    "toml>=0.10.2",
+]
 
 [project.scripts]
 beet = "beet:main"
@@ -15,3 +24,9 @@ beet = "beet:main"
 [build-system]
 requires = ["uv_build>=0.9.8,<0.10.0"]
 build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.0",
+    "pytest-insta>=0.1.11",
+]
