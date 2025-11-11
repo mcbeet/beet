@@ -1,4 +1,4 @@
-<img align="right" src="https://raw.githubusercontent.com/mcbeet/lectern/main/packages/lectern/logo.png?sanitize=true" alt="logo" width="76">
+<img align="right" src="https://raw.githubusercontent.com/mcbeet/beet/main/packages/lectern/logo.png?sanitize=true" alt="logo" width="76">
 
 # Lectern
 
@@ -36,10 +36,32 @@ This markdown file is interspersed with code fragments describing the content of
 
 ## Installation
 
-The package can be installed with `pip`.
+We recommend `uv` (https://github.com/astral-sh/uv#installation). With `uv` installed, you can try `lectern` by running `uvx lectern`. You can also install `lectern` as a global tool on your machine.
 
-```bash
-$ pip install lectern
+```console
+$ uv tool install lectern
+```
+
+> If you see the message `warning: ... is not on your PATH`, you'll need to add the specified directory to your global path to invoke `lectern` directly instead of using `uvx lectern`.
+
+You can make sure that `lectern` was successfully installed by trying to use the command-line utility.
+
+```console
+$ lectern --help
+Usage: lectern [OPTIONS] [PATH]...
+
+  Literate Minecraft data packs and resource packs.
+
+Options:
+  -d, --data-pack <path>       Extract data pack.
+  -r, --resource-pack <path>   Extract resource pack.
+  -e, --external-files <path>  Emit external files.
+  -p, --prefetch-urls <path>   Prefetch markdown links.
+  -s, --sort                   Output sorted items.
+  -f, --flat                   Use the flat markdown format.
+  -o, --overwrite              Overwrite the output pack.
+  -v, --version                Show the version and exit.
+  -h, --help                   Show this message and exit.
 ```
 
 ## Getting started
@@ -68,7 +90,7 @@ This is an example of a markdown file that can be turned into a data pack:
 
 You can use the `lectern` command-line utility to turn the markdown file into a data pack.
 
-```bash
+```console
 $ lectern tutorial.md --data-pack path/to/tutorial_data_pack
 ```
 
@@ -397,7 +419,7 @@ You can switch to another overlay at any time by using the `@overlay` directive 
 
 ## Command-line utility
 
-```bash
+```console
 $ lectern --help
 Usage: lectern [OPTIONS] [PATH]...
 
@@ -408,6 +430,7 @@ Options:
   -r, --resource-pack <path>   Extract resource pack.
   -e, --external-files <path>  Emit external files.
   -p, --prefetch-urls <path>   Prefetch markdown links.
+  -s, --sort                   Output sorted items.
   -f, --flat                   Use the flat markdown format.
   -o, --overwrite              Overwrite the output pack.
   -v, --version                Show the version and exit.
@@ -416,7 +439,7 @@ Options:
 
 You can extract data packs from markdown files with the `-d/--data-pack` option. If the name ends with `.zip` the generated data pack will be zipped. Multiple markdown files can be merged together into a single data pack.
 
-```bash
+```console
 $ lectern demo.md --data-pack demo_data_pack
 $ lectern demo.md -d demo_data_pack
 $ lectern demo.md -d demo_data_pack.zip
@@ -425,7 +448,7 @@ $ lectern foo.md bar.md -d demo_data_pack
 
 The `-r/--resource-pack` option lets you do exactly the same thing but with resource packs. The two options can be combined to extract a data packs and a resource pack at the same time.
 
-```bash
+```console
 $ lectern demo.md --resource-pack demo_resource_pack
 $ lectern demo.md -r demo_resource_pack
 $ lectern demo.md -d demo_data_pack -r demo_resource_pack
@@ -433,13 +456,13 @@ $ lectern demo.md -d demo_data_pack -r demo_resource_pack
 
 If you want to overwrite an existing data pack or resource pack you need to specify the `-o/--overwrite` option explicitly.
 
-```bash
+```console
 $ lectern demo.md --overwrite --data-pack demo_data_pack
 ```
 
 You can also convert a combination of data packs and resource packs into a single markdown file.
 
-```bash
+```console
 $ lectern demo_data_pack demo.md
 $ lectern demo_data_pack.zip demo.md
 $ lectern demo_data_pack demo_resource_pack demo.md
@@ -448,7 +471,7 @@ $ lectern foo_data_pack bar_data_pack demo.md
 
 The last argument is the name of the generated markdown file. By default, the `lectern` utility will bundle binary files into the markdown file as data urls. You can use the `-e/--external-files` option to dump the binary files in a given directory instead.
 
-```bash
+```console
 $ lectern demo_data_pack demo.md --external-files files
 $ lectern demo_data_pack demo.md -e files
 $ lectern demo_data_pack demo.md -e .
@@ -458,7 +481,7 @@ All these commands also work with plain text files. `lectern` will only use the 
 
 Finally, you can also use the command-line utility to prefetch markdown urls. The `-p/--prefetch-urls` option can replace the urls in-place or in a copy.
 
-```bash
+```console
 $ lectern --prefetch-urls demo.md
 $ lectern --prefetch-urls demo.md demo_prefetched.md
 $ lectern -p demo.md demo_prefetched.md
@@ -467,7 +490,7 @@ $ lectern -p demo.md
 
 By default, the remote files will be bundled as data urls but you can use the `-e/--external-files` option to dump everything in a given directory.
 
-```bash
+```console
 $ lectern --prefetch-urls demo.md --external-files files
 $ lectern --prefetch-urls demo.md demo_prefetched.md --external-files files
 $ lectern -p demo.md demo_prefetched.md -e files
@@ -649,7 +672,7 @@ def hello(fragment: Fragment, assets: ResourcePack, data: DataPack):
 
 It's worth mentioning that `lectern` uses the `beet` cache to avoid downloading link fragments repeatedly and keeping your build snappy, especially in watch mode. If you need to re-download link fragments you can clear the `lectern` cache.
 
-```bash
+```console
 $ beet cache --clear lectern
 ```
 
@@ -733,7 +756,7 @@ for i in range(10):
     print(f"say {i}")
 ```
 
-```bash
+```console
 $ python my_script.py > output.txt
 $ lectern output.txt -d my_data_pack
 ```
@@ -867,33 +890,25 @@ This will save the entire data pack and resource pack in the snapshot. For more 
 
 ## Contributing
 
-Contributions are welcome. Make sure to first open an issue discussing the problem or the new feature before creating a pull request. The project uses [`poetry`](https://python-poetry.org).
+Contributions are welcome. Make sure to first open an issue discussing the problem or the new feature before creating a pull request. The project uses [`uv`](https://github.com/astral-sh/uv).
 
-```bash
-$ poetry install
+```console
+$ uv sync
 ```
 
-You can run the tests with `poetry run pytest`.
+You can run the tests with `uv run pytest`.
 
-```bash
-$ poetry run pytest
+```console
+$ uv run pytest
 ```
 
-The project must type-check with [`pyright`](https://github.com/microsoft/pyright). If you're using VSCode the [`pylance`](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) extension should report diagnostics automatically. You can also install the type-checker locally with `npm install` and run it from the command-line.
+The code is formatted and checked with [`ruff`](https://github.com/astral-sh/ruff).
 
-```bash
-$ npm run watch
-$ npm run check
-```
-
-The code follows the [`black`](https://github.com/psf/black) code style. Import statements are sorted with [`isort`](https://pycqa.github.io/isort/).
-
-```bash
-$ poetry run isort lectern tests
-$ poetry run black lectern tests
-$ poetry run black --check lectern tests
+```console
+$ uv run ruff format src tests
+$ uv run ruff check src tests
 ```
 
 ---
 
-License - [MIT](https://github.com/mcbeet/lectern/blob/main/LICENSE)
+License - [MIT](https://github.com/mcbeet/beet/blob/main/packages/lectern/LICENSE)

@@ -50,7 +50,7 @@ else:
 
 
 def pytest_assertrepr_compare(config, op, left, right):
-    if type(left) != type(right) or op != "==":
+    if type(left) is not type(right) or op != "==":
         return
 
     explanation = []
@@ -72,6 +72,6 @@ def generate_explanation(config, left, right):
         config=config, op="==", left=left, right=right
     )[0]
 
-    yield f"  assert " + summary
+    yield "  assert " + summary
     for line in explanation:
         yield "  " + line

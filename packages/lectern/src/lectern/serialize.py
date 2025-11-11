@@ -159,7 +159,9 @@ class TextSerializer:
         self.pack_filter = bool
 
     def sort_items[K, V](self, obj: Mapping[K, V]) -> Iterable[tuple[K, V]]:
-        return sorted(obj.items(), key=lambda p: str(p[0])) if self.sort else obj.items()
+        return (
+            sorted(obj.items(), key=lambda p: str(p[0])) if self.sort else obj.items()
+        )
 
     @contextmanager
     def use_sorted_items(self, sort: bool = True):
@@ -296,7 +298,9 @@ class MarkdownSerializer:
         self.pack_filter = bool
 
     def sort_items[K, V](self, obj: Mapping[K, V]) -> Iterable[tuple[K, V]]:
-        return sorted(obj.items(), key=lambda p: str(p[0])) if self.sort else obj.items()
+        return (
+            sorted(obj.items(), key=lambda p: str(p[0])) if self.sort else obj.items()
+        )
 
     @contextmanager
     def use_sorted_items(self, sort: bool = True):
