@@ -99,7 +99,7 @@ class PackageablePath(RootModel[FileSystemPath]):
 
     def resolve(self, directory: FileSystemPath) -> "PackageablePath":
         """Resolve path relative to the given directory."""
-        return PackageablePath.parse_obj(Path(directory) / self.root)
+        return PackageablePath.model_validate(Path(directory) / self.root)
 
     def __fspath__(self) -> str:
         return str(self)
@@ -126,11 +126,11 @@ class PackLoadOptions(
 
     def resolve(self, directory: FileSystemPath) -> "PackLoadOptions":
         """Resolve load options relative to the given directory."""
-        return PackLoadOptions.parse_obj(
+        return PackLoadOptions.model_validate(
             [
                 (
                     {
-                        prefix: ListOption.parse_obj(
+                        prefix: ListOption.model_validate(
                             [
                                 (
                                     pattern.resolve(directory)
@@ -167,7 +167,7 @@ class PackFilterConfig(BaseModel):
     block: ListOption[PackFilterBlockConfig] = ListOption()
 
     def with_defaults(self, other: "PackFilterConfig") -> "PackFilterConfig":
-        return PackFilterConfig.parse_obj(
+        return PackFilterConfig.model_validate(
             {
                 "block": other.block.entries() + self.block.entries(),
             }
@@ -207,7 +207,7 @@ class PackConfig(BaseModel):
 
     def with_defaults(self, other: "PackConfig") -> "PackConfig":
         """Combine the current pack config with another one."""
-        return PackConfig.parse_obj(
+        return PackConfig.model_validate(
             {
                 "name": self.name or other.name,
                 "description": self.description or other.description,
@@ -306,7 +306,7 @@ class ProjectConfig(BaseModel):
             for broadcast_entry in broadcast:
                 if dirs := glob(str(path / broadcast_entry)):
                     for dirname in dirs:
-                        config = self.copy(
+                        config = self.model_copy(
                             update={"directory": dirname, "broadcast": ListOption()},
                             deep=True,
                         )
@@ -322,7 +322,7 @@ class ProjectConfig(BaseModel):
         if self.output:
             self.output = path / self.output
 
-        self.templates = ListOption.parse_obj(
+        self.templates = ListOption.model_validate(
             [template_path.resolve(path) for template_path in self.templates.entries()]
         )
 
@@ -341,7 +341,7 @@ class ProjectConfig(BaseModel):
 
     def with_defaults(self, other: "ProjectConfig") -> "ProjectConfig":
         """Combine the current project config with another one."""
-        return ProjectConfig.parse_obj(
+        return ProjectConfig.model_validate(
             {
                 "id": self.id or other.id,
                 "name": self.name or other.name,
@@ -368,7 +368,7 @@ class ProjectConfig(BaseModel):
         )
 
 
-ProjectConfig.update_forward_refs()
+ProjectConfig.model_rebuild()
 
 
 def locate_config(directory: FileSystemPath, parents: bool = False) -> Optional[Path]:

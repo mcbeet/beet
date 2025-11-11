@@ -290,7 +290,7 @@ class Context:
 
         try:
             if isinstance(validator, type) and issubclass(validator, BaseModel):
-                return validator.parse_obj(options)  # type: ignore
+                return validator.model_validate(options)  # type: ignore
             return validator(**options)
         except BubbleException:
             raise

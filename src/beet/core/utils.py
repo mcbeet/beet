@@ -40,7 +40,7 @@ from contextlib import contextmanager
 from dataclasses import field
 from importlib import import_module
 from importlib.util import find_spec
-from pathlib import Path
+from pathlib import Path, PurePath
 from traceback import format_exception
 from typing import (
     Any,
@@ -62,7 +62,7 @@ from pydantic import ValidationError
 T = TypeVar("T")
 
 JsonDict = Dict[str, Any]
-FileSystemPath = str
+FileSystemPath = str | PurePath
 TextComponent = Union[str, List[Any], JsonDict]
 
 

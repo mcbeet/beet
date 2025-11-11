@@ -22,7 +22,7 @@ def beet_default(ctx: Context):
 
     with config_error_handler("(stdin)"):
         data = json.load(sys.stdin)
-        config = ProjectConfig.parse_obj(data).resolve(ctx.directory)
+        config = ProjectConfig.model_validate(data).resolve(ctx.directory)
 
     ctx.require(
         ProjectBuilder(

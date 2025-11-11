@@ -391,7 +391,7 @@ class ProjectBuilder:
             pack.max_format = config.max_format
             if config.filter:
                 pack.mcmeta.merge(
-                    Mcmeta({"filter": config.filter.dict(exclude_none=True)})
+                    Mcmeta({"filter": config.filter.model_dump(exclude_none=True)})
                 )
             if config.supported_formats:
                 pack.supported_formats = config.supported_formats

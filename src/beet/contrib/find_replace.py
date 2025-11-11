@@ -108,7 +108,7 @@ class FindReplaceOptions(PluginOptions):
         )
 
 
-ListOption[Union[SubstitutionOption, "FindReplaceOptions"]].update_forward_refs()
+ListOption[Union[SubstitutionOption, "FindReplaceOptions"]].model_rebuild()
 
 
 @dataclass(frozen=True)

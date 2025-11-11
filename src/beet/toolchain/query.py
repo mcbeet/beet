@@ -641,9 +641,9 @@ class PackQuery(Generic[PackType]):
                         self.prepare(match=match),
                     ]
                 )
-            return self.prepare(PackFilesOption.parse_obj(files))
+            return self.prepare(PackFilesOption.model_validate(files))
         if match:
-            return self.prepare(PackMatchOption.parse_obj(match))
+            return self.prepare(PackMatchOption.model_validate(match))
         if isinstance(pack_options, PackFilesOption):
             resolved = pack_options.resolve(self.template)
             return PreparedPackFilesQuery(

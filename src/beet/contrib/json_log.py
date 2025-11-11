@@ -34,7 +34,7 @@ def activate_json_log(ctx: Context):
 def beet_default(ctx: Context):
     json_reporter = ctx.inject(JsonReporter)
     json_reporter.data["log"] = [
-        entry.dict() for entry in ctx.inject(JsonLogHandler).entries
+        entry.model_dump() for entry in ctx.inject(JsonLogHandler).entries
     ]
 
 

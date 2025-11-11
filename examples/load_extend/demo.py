@@ -64,7 +64,7 @@ def process_functions(ctx: Context):
         del namespace[FunctionConfig]
 
     ctx.data.mcmeta.data["blueprints"] = {
-        k: v.data.dict() for k, v in ctx.data[Blueprint].items()
+        k: v.data.model_dump() for k, v in ctx.data[Blueprint].items()
     }
 
     ctx.data[Blueprint].clear()

@@ -59,7 +59,7 @@ class RenameOption(RootModel[ListOption[Union[TextRenameOption, RenderRenameOpti
                 (
                     query.prepare(opts.match)
                     if opts.match is not None
-                    else query.prepare(PackFilesOption.parse_obj({"": opts.find}))
+                    else query.prepare(PackFilesOption.model_validate({"": opts.find}))
                 ),
                 opts.compile(template),
             )
