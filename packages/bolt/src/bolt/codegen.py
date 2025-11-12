@@ -765,8 +765,7 @@ class Codegen(Visitor):
             if isinstance(arg, AstFunctionSignatureArgument):
                 a = arg.name
                 if arg.type_annotation:
-                    value = yield from visit_single(arg.type_annotation, required=True)
-                    a = f"{a}: {value}"
+                    a = f"{a}: {arg.type_annotation.string}"
                 if arg.default:
                     padding = " " * bool(arg.type_annotation)
                     a = f"{a}{padding}={padding}{acc.missing()}"
@@ -777,23 +776,19 @@ class Codegen(Visitor):
             elif isinstance(arg, AstFunctionSignatureVariadicArgument):
                 a = f"*{arg.name}"
                 if arg.type_annotation:
-                    value = yield from visit_single(arg.type_annotation, required=True)
-                    a = f"{a}: {value}"
+                    a = f"{a}: {arg.type_annotation.string}"
                 arguments.append(a)
             elif isinstance(arg, AstFunctionSignatureVariadicMarker):
                 arguments.append("*")
             elif isinstance(arg, AstFunctionSignatureVariadicKeywordArgument):
                 a = f"**{arg.name}"
                 if arg.type_annotation:
-                    value = yield from visit_single(arg.type_annotation, required=True)
-                    a = f"{a}: {value}"
+                    a = f"{a}: {arg.type_annotation.string}"
                 arguments.append(a)
 
         return_type = ""
         if signature.return_type_annotation:
-            return_type = yield from visit_single(
-                signature.return_type_annotation, required=True
-            )
+            return_type = signature.return_type_annotation.string
 
         with acc.function(signature.name, *arguments, return_type=return_type):
             if body.commands and isinstance(body.commands[0], AstDocstring):
@@ -1490,7 +1485,7 @@ class Codegen(Visitor):
         value = yield from visit_single(node.value, required=True)
         yield from visit_binding(node.target, node.operator, value, acc)
         if node.type_annotation and isinstance(node.target, AstTargetIdentifier):
-            value = yield from visit_single(node.type_annotation, required=True)
+            value = node.type_annotation.string
             acc.statement(f"{node.target.value}: {value}")
         return []
 
@@ -1500,7 +1495,7 @@ class Codegen(Visitor):
         node: AstTypeDeclaration,
         acc: Accumulator,
     ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
-        value = yield from visit_single(node.type_annotation, required=True)
+        value = node.type_annotation.string
         acc.statement(f"{node.identifier.value}: {value}")
         return []
 

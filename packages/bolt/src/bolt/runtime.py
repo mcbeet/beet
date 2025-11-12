@@ -138,7 +138,7 @@ class Runtime(CommandEmitter):
         mc.providers.append(self.module_provider)
 
         commands_json = files("bolt.resources").joinpath("commands.json").read_text()
-        command_tree = CommandTree.parse_raw(commands_json)
+        command_tree = CommandTree.model_validate_json(commands_json)
         bolt_prototypes = set(CommandSpec(tree=command_tree).prototypes)
         mc.spec.add_commands(command_tree)
         mc.spec.parsers.update(

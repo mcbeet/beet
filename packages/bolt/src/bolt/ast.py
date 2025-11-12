@@ -20,6 +20,7 @@ __all__ = [
     "AstAttribute",
     "AstLookup",
     "AstCall",
+    "AstTypeAnnotation",
     "AstTarget",
     "AstTargetIdentifier",
     "AstTargetUnpack",
@@ -246,6 +247,14 @@ class AstCall(AstExpression):
 
 
 @dataclass(frozen=True, slots=True)
+class AstTypeAnnotation(AstNode):
+    """Ast type annotation node."""
+
+    string: str = required_field()
+    value: AstExpression = required_field()
+
+
+@dataclass(frozen=True, slots=True)
 class AstTarget(AstNode):
     """Base node for targets."""
 
@@ -288,7 +297,7 @@ class AstAssignment(AstNode):
     operator: str = required_field()
     target: AstTarget = required_field()
     value: AstExpression = required_field()
-    type_annotation: Optional[AstExpression] = None
+    type_annotation: Optional[AstTypeAnnotation] = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -296,7 +305,7 @@ class AstTypeDeclaration(AstNode):
     """Ast type declaration node."""
 
     identifier: AstTargetIdentifier = required_field()
-    type_annotation: AstExpression = required_field()
+    type_annotation: AstTypeAnnotation = required_field()
 
 
 @dataclass(frozen=True, slots=True)
@@ -336,7 +345,7 @@ class AstFunctionSignatureArgument(AstFunctionSignatureElement):
     """Ast function signature argument node."""
 
     name: str = required_field()
-    type_annotation: Optional[AstExpression] = None
+    type_annotation: Optional[AstTypeAnnotation] = None
     default: Optional[AstExpression] = None
 
 
@@ -350,7 +359,7 @@ class AstFunctionSignatureVariadicArgument(AstFunctionSignatureElement):
     """Ast function signature variadic argument node."""
 
     name: str = required_field()
-    type_annotation: Optional[AstExpression] = None
+    type_annotation: Optional[AstTypeAnnotation] = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -363,7 +372,7 @@ class AstFunctionSignatureVariadicKeywordArgument(AstFunctionSignatureElement):
     """Ast function signature variadic keyword argument node."""
 
     name: str = required_field()
-    type_annotation: Optional[AstExpression] = None
+    type_annotation: Optional[AstTypeAnnotation] = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -373,7 +382,7 @@ class AstFunctionSignature(AstNode):
     decorators: AstChildren[AstDecorator] = AstChildren()
     name: str = required_field()
     arguments: AstChildren[AstFunctionSignatureElement] = AstChildren()
-    return_type_annotation: Optional[AstExpression] = None
+    return_type_annotation: Optional[AstTypeAnnotation] = None
 
 
 @dataclass(frozen=True, slots=True)

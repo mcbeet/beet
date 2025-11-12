@@ -61,6 +61,7 @@ __all__ = [
     "BuiltinCallRestriction",
     "parse_dict_item",
     "LiteralParser",
+    "TypeAnnotationParser",
 ]
 
 
@@ -166,6 +167,7 @@ from .ast import (
     AstTargetItem,
     AstTargetUnpack,
     AstTuple,
+    AstTypeAnnotation,
     AstTypeDeclaration,
     AstUnpack,
     AstValue,
@@ -373,7 +375,7 @@ def get_bolt_parsers(
         "bolt:import_name": TrailingCommaParser(parse_import_name),
         "bolt:global_name": parse_name_list,
         "bolt:nonlocal_name": parse_name_list,
-        "bolt:type_annotation": delegate("bolt:expression"),
+        "bolt:type_annotation": TypeAnnotationParser(delegate("bolt:expression")),
         "bolt:expression": delegate("bolt:disjunction"),
         "bolt:disjunction": BinaryParser(
             operators=[r"\bor\b"],
@@ -1701,13 +1703,13 @@ class MacroHandler:
 
         if not stream.data.get("local_spec"):
             stream.data["local_spec"] = True
-            spec = replace(spec, tree=spec.tree.copy(deep=True), prototypes={})
+            spec = replace(spec, tree=spec.tree.model_copy(deep=True), prototypes={})
             stream.data["spec"] = spec
             macro_scope = macro_scope.copy()
             stream.data["macro_scope"] = macro_scope
 
         for macro in macros:
-            spec.tree.extend(CommandTree.parse_obj(macro.get_command_tree()))
+            spec.tree.extend(CommandTree.model_validate(macro.get_command_tree()))
             macro_scope[macro.identifier] = macro
 
         spec.update()
@@ -2899,3 +2901,16 @@ class LiteralParser:
 
             node = AstValue(value=value)  # type: ignore
             return set_location(node, stream.current)
+
+
+@dataclass
+class TypeAnnotationParser:
+    """Parser for type annotations."""
+
+    parser: Parser
+
+    def __call__(self, stream: TokenStream) -> Any:
+        value = self.parser(stream)
+        string = stream.source[value.location.pos:value.end_location.pos]
+        node = AstTypeAnnotation(string=string, value=value)
+        return set_location(node, value)

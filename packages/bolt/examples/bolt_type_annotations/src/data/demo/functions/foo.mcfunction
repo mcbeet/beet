@@ -1,6 +1,6 @@
 from beet import ListOption
 from dataclasses import dataclass
-from pydantic.v1 import BaseModel
+from pydantic import BaseModel
 
 thing: str
 thing = "hey"
@@ -33,5 +33,5 @@ say B([1, 2], "three")
 class C(BaseModel):
     foo: ListOption[str] = []
 
-for c in [C.parse_obj({"foo": "hello"}), C.parse_obj({"foo": ["hello", "world"]})]:
+for c in [C.model_validate({"foo": "hello"}), C.model_validate({"foo": ["hello", "world"]})]:
     say c.foo.entries()
