@@ -22,7 +22,7 @@ def encode_path(obj: Any) -> Any:
         return obj
 
 
-@pytest.mark.parametrize("directory", os.listdir("tests/config_examples"))
+@pytest.mark.parametrize("directory", sorted(os.listdir("tests/config_examples")))
 def test_config_resolution(snapshot: SnapshotFixture, directory: str):
     project_config = load_config(f"tests/config_examples/{directory}/beet.json")
     d = encode_path(project_config.model_dump(warnings="none"))
