@@ -36,10 +36,15 @@ class A:
                       value: 'foo'
                       rebind: False
                   type_annotation:
-                    <class 'bolt.ast.AstIdentifier'>
+                    <class 'bolt.ast.AstTypeAnnotation'>
                       location: SourceLocation(pos=18, lineno=2, colno=10)
                       end_location: SourceLocation(pos=21, lineno=2, colno=13)
-                      value: 'int'
+                      string: 'int'
+                      value:
+                        <class 'bolt.ast.AstIdentifier'>
+                          location: SourceLocation(pos=18, lineno=2, colno=10)
+                          end_location: SourceLocation(pos=21, lineno=2, colno=13)
+                          value: 'int'
             <class 'bolt.ast.AstStatement'>
               location: SourceLocation(pos=26, lineno=3, colno=5)
               end_location: SourceLocation(pos=44, lineno=3, colno=23)
@@ -61,7 +66,12 @@ class A:
                       end_location: SourceLocation(pos=44, lineno=3, colno=23)
                       value: 'hello'
                   type_annotation:
-                    <class 'bolt.ast.AstIdentifier'>
+                    <class 'bolt.ast.AstTypeAnnotation'>
                       location: SourceLocation(pos=31, lineno=3, colno=10)
                       end_location: SourceLocation(pos=34, lineno=3, colno=13)
-                      value: 'str'
+                      string: 'str'
+                      value:
+                        <class 'bolt.ast.AstIdentifier'>
+                          location: SourceLocation(pos=31, lineno=3, colno=10)
+                          end_location: SourceLocation(pos=34, lineno=3, colno=13)
+                          value: 'str'

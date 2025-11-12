@@ -1,17 +1,13 @@
-_bolt_lineno = [1, 6, 9], [1, 2, 3]
+_bolt_lineno = [1, 9], [1, 3]
 _bolt_helper_children = _bolt_runtime.helpers['children']
 _bolt_helper_replace = _bolt_runtime.helpers['replace']
 with _bolt_runtime.scope() as _bolt_var0:
     class A:
-        _bolt_var0 = int
-        foo: _bolt_var0
-        _bolt_var1 = 'hello'
-        bar = _bolt_var1
-        _bolt_var2 = str
-        bar: _bolt_var2
+        foo: int
+        bar: str
+        _bolt_var0 = 'hello'
+        bar = _bolt_var0
         del _bolt_var0
-        del _bolt_var1
-        del _bolt_var2
 _bolt_var1 = _bolt_helper_replace(_bolt_refs[0], commands=_bolt_helper_children(_bolt_var0))
 ---
 output = _bolt_var1

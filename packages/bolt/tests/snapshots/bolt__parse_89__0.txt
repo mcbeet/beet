@@ -45,7 +45,7 @@ f("thing")
                   end_location: SourceLocation(pos=26, lineno=2, colno=17)
                   prefix: None
                   unpack: None
-                  converter: 'json'
+                  converter: 'nbt'
                   value:
                     <class 'bolt.ast.AstIdentifier'>
                       location: SourceLocation(pos=25, lineno=2, colno=16)

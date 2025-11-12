@@ -1,9 +1,64 @@
 def f(x):
-#>ERROR  Identifier "xx" is not defined. Did you mean "x"?
-# line 2, column 16
-#      1 |  def f(x):
-#      2 |      tellraw @a xx
-#        :                 ^^
-#      3 |  f("thing")
     tellraw @a xx
 f("thing")
+---
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=39, lineno=4, colno=1)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=27, lineno=2, colno=18)
+      identifier: 'def:function:body'
+      arguments:
+        <class 'bolt.ast.AstFunctionSignature'>
+          location: SourceLocation(pos=4, lineno=1, colno=5)
+          end_location: SourceLocation(pos=8, lineno=1, colno=9)
+          decorators:
+            <empty>
+          name: 'f'
+          arguments:
+            <class 'bolt.ast.AstFunctionSignatureArgument'>
+              location: SourceLocation(pos=6, lineno=1, colno=7)
+              end_location: SourceLocation(pos=7, lineno=1, colno=8)
+              name: 'x'
+              type_annotation: None
+              default: None
+          return_type_annotation: None
+        <class 'mecha.ast.AstRoot'>
+          location: SourceLocation(pos=14, lineno=2, colno=5)
+          end_location: SourceLocation(pos=27, lineno=2, colno=18)
+          commands:
+            <class 'mecha.ast.AstCommand'>
+              location: SourceLocation(pos=14, lineno=2, colno=5)
+              end_location: SourceLocation(pos=27, lineno=2, colno=18)
+              identifier: 'tellraw:targets:message'
+              arguments:
+                <class 'mecha.ast.AstSelector'>
+                  location: SourceLocation(pos=22, lineno=2, colno=13)
+                  end_location: SourceLocation(pos=24, lineno=2, colno=15)
+                  variable: 'a'
+                  arguments:
+                    <empty>
+                <class 'mecha.ast.AstNbtValue'>
+                  location: SourceLocation(pos=25, lineno=2, colno=16)
+                  end_location: SourceLocation(pos=27, lineno=2, colno=18)
+                  value: String('xx')
+    <class 'bolt.ast.AstStatement'>
+      location: SourceLocation(pos=28, lineno=3, colno=1)
+      end_location: SourceLocation(pos=38, lineno=3, colno=11)
+      identifier: 'mecha:sentinel'
+      arguments:
+        <class 'bolt.ast.AstCall'>
+          location: SourceLocation(pos=28, lineno=3, colno=1)
+          end_location: SourceLocation(pos=38, lineno=3, colno=11)
+          value:
+            <class 'bolt.ast.AstIdentifier'>
+              location: SourceLocation(pos=28, lineno=3, colno=1)
+              end_location: SourceLocation(pos=29, lineno=3, colno=2)
+              value: 'f'
+          arguments:
+            <class 'bolt.ast.AstValue'>
+              location: SourceLocation(pos=30, lineno=3, colno=3)
+              end_location: SourceLocation(pos=37, lineno=3, colno=10)
+              value: 'thing'

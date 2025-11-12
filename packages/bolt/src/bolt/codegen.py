@@ -1482,11 +1482,11 @@ class Codegen(Visitor):
         node: AstAssignment,
         acc: Accumulator,
     ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
-        value = yield from visit_single(node.value, required=True)
-        yield from visit_binding(node.target, node.operator, value, acc)
         if node.type_annotation and isinstance(node.target, AstTargetIdentifier):
             value = node.type_annotation.string
             acc.statement(f"{node.target.value}: {value}")
+        value = yield from visit_single(node.value, required=True)
+        yield from visit_binding(node.target, node.operator, value, acc)
         return []
 
     @rule(AstTypeDeclaration)

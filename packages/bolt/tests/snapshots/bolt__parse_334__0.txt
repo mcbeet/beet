@@ -22,10 +22,15 @@ def f(a: str, /, b: int, c: list[int] | None = None, *d: float, **kwargs: object
               end_location: SourceLocation(pos=12, lineno=1, colno=13)
               name: 'a'
               type_annotation:
-                <class 'bolt.ast.AstIdentifier'>
+                <class 'bolt.ast.AstTypeAnnotation'>
                   location: SourceLocation(pos=9, lineno=1, colno=10)
                   end_location: SourceLocation(pos=12, lineno=1, colno=13)
-                  value: 'str'
+                  string: 'str'
+                  value:
+                    <class 'bolt.ast.AstIdentifier'>
+                      location: SourceLocation(pos=9, lineno=1, colno=10)
+                      end_location: SourceLocation(pos=12, lineno=1, colno=13)
+                      value: 'str'
               default: None
             <class 'bolt.ast.AstFunctionSignaturePositionalMarker'>
               location: SourceLocation(pos=14, lineno=1, colno=15)
@@ -35,39 +40,49 @@ def f(a: str, /, b: int, c: list[int] | None = None, *d: float, **kwargs: object
               end_location: SourceLocation(pos=23, lineno=1, colno=24)
               name: 'b'
               type_annotation:
-                <class 'bolt.ast.AstIdentifier'>
+                <class 'bolt.ast.AstTypeAnnotation'>
                   location: SourceLocation(pos=20, lineno=1, colno=21)
                   end_location: SourceLocation(pos=23, lineno=1, colno=24)
-                  value: 'int'
+                  string: 'int'
+                  value:
+                    <class 'bolt.ast.AstIdentifier'>
+                      location: SourceLocation(pos=20, lineno=1, colno=21)
+                      end_location: SourceLocation(pos=23, lineno=1, colno=24)
+                      value: 'int'
               default: None
             <class 'bolt.ast.AstFunctionSignatureArgument'>
               location: SourceLocation(pos=25, lineno=1, colno=26)
               end_location: SourceLocation(pos=51, lineno=1, colno=52)
               name: 'c'
               type_annotation:
-                <class 'bolt.ast.AstExpressionBinary'>
+                <class 'bolt.ast.AstTypeAnnotation'>
                   location: SourceLocation(pos=28, lineno=1, colno=29)
                   end_location: SourceLocation(pos=44, lineno=1, colno=45)
-                  operator: '|'
-                  left:
-                    <class 'bolt.ast.AstLookup'>
+                  string: 'list[int] | None'
+                  value:
+                    <class 'bolt.ast.AstExpressionBinary'>
                       location: SourceLocation(pos=28, lineno=1, colno=29)
-                      end_location: SourceLocation(pos=37, lineno=1, colno=38)
-                      value:
-                        <class 'bolt.ast.AstIdentifier'>
-                          location: SourceLocation(pos=28, lineno=1, colno=29)
-                          end_location: SourceLocation(pos=32, lineno=1, colno=33)
-                          value: 'list'
-                      arguments:
-                        <class 'bolt.ast.AstIdentifier'>
-                          location: SourceLocation(pos=33, lineno=1, colno=34)
-                          end_location: SourceLocation(pos=36, lineno=1, colno=37)
-                          value: 'int'
-                  right:
-                    <class 'bolt.ast.AstValue'>
-                      location: SourceLocation(pos=40, lineno=1, colno=41)
                       end_location: SourceLocation(pos=44, lineno=1, colno=45)
-                      value: None
+                      operator: '|'
+                      left:
+                        <class 'bolt.ast.AstLookup'>
+                          location: SourceLocation(pos=28, lineno=1, colno=29)
+                          end_location: SourceLocation(pos=37, lineno=1, colno=38)
+                          value:
+                            <class 'bolt.ast.AstIdentifier'>
+                              location: SourceLocation(pos=28, lineno=1, colno=29)
+                              end_location: SourceLocation(pos=32, lineno=1, colno=33)
+                              value: 'list'
+                          arguments:
+                            <class 'bolt.ast.AstIdentifier'>
+                              location: SourceLocation(pos=33, lineno=1, colno=34)
+                              end_location: SourceLocation(pos=36, lineno=1, colno=37)
+                              value: 'int'
+                      right:
+                        <class 'bolt.ast.AstValue'>
+                          location: SourceLocation(pos=40, lineno=1, colno=41)
+                          end_location: SourceLocation(pos=44, lineno=1, colno=45)
+                          value: None
               default:
                 <class 'bolt.ast.AstValue'>
                   location: SourceLocation(pos=47, lineno=1, colno=48)
@@ -78,37 +93,52 @@ def f(a: str, /, b: int, c: list[int] | None = None, *d: float, **kwargs: object
               end_location: SourceLocation(pos=55, lineno=1, colno=56)
               name: 'd'
               type_annotation:
-                <class 'bolt.ast.AstIdentifier'>
+                <class 'bolt.ast.AstTypeAnnotation'>
                   location: SourceLocation(pos=57, lineno=1, colno=58)
                   end_location: SourceLocation(pos=62, lineno=1, colno=63)
-                  value: 'float'
+                  string: 'float'
+                  value:
+                    <class 'bolt.ast.AstIdentifier'>
+                      location: SourceLocation(pos=57, lineno=1, colno=58)
+                      end_location: SourceLocation(pos=62, lineno=1, colno=63)
+                      value: 'float'
             <class 'bolt.ast.AstFunctionSignatureVariadicKeywordArgument'>
               location: SourceLocation(pos=64, lineno=1, colno=65)
               end_location: SourceLocation(pos=72, lineno=1, colno=73)
               name: 'kwargs'
               type_annotation:
-                <class 'bolt.ast.AstIdentifier'>
+                <class 'bolt.ast.AstTypeAnnotation'>
                   location: SourceLocation(pos=74, lineno=1, colno=75)
                   end_location: SourceLocation(pos=80, lineno=1, colno=81)
-                  value: 'object'
+                  string: 'object'
+                  value:
+                    <class 'bolt.ast.AstIdentifier'>
+                      location: SourceLocation(pos=74, lineno=1, colno=75)
+                      end_location: SourceLocation(pos=80, lineno=1, colno=81)
+                      value: 'object'
           return_type_annotation:
-            <class 'bolt.ast.AstLookup'>
+            <class 'bolt.ast.AstTypeAnnotation'>
               location: SourceLocation(pos=85, lineno=1, colno=86)
               end_location: SourceLocation(pos=100, lineno=1, colno=101)
+              string: 'tuple[int, ...]'
               value:
-                <class 'bolt.ast.AstIdentifier'>
+                <class 'bolt.ast.AstLookup'>
                   location: SourceLocation(pos=85, lineno=1, colno=86)
-                  end_location: SourceLocation(pos=90, lineno=1, colno=91)
-                  value: 'tuple'
-              arguments:
-                <class 'bolt.ast.AstIdentifier'>
-                  location: SourceLocation(pos=91, lineno=1, colno=92)
-                  end_location: SourceLocation(pos=94, lineno=1, colno=95)
-                  value: 'int'
-                <class 'bolt.ast.AstValue'>
-                  location: SourceLocation(pos=96, lineno=1, colno=97)
-                  end_location: SourceLocation(pos=99, lineno=1, colno=100)
-                  value: Ellipsis
+                  end_location: SourceLocation(pos=100, lineno=1, colno=101)
+                  value:
+                    <class 'bolt.ast.AstIdentifier'>
+                      location: SourceLocation(pos=85, lineno=1, colno=86)
+                      end_location: SourceLocation(pos=90, lineno=1, colno=91)
+                      value: 'tuple'
+                  arguments:
+                    <class 'bolt.ast.AstIdentifier'>
+                      location: SourceLocation(pos=91, lineno=1, colno=92)
+                      end_location: SourceLocation(pos=94, lineno=1, colno=95)
+                      value: 'int'
+                    <class 'bolt.ast.AstValue'>
+                      location: SourceLocation(pos=96, lineno=1, colno=97)
+                      end_location: SourceLocation(pos=99, lineno=1, colno=100)
+                      value: Ellipsis
         <class 'mecha.ast.AstRoot'>
           location: SourceLocation(pos=106, lineno=2, colno=5)
           end_location: SourceLocation(pos=109, lineno=2, colno=8)

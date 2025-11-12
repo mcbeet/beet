@@ -19,10 +19,15 @@ def f() -> int:
           arguments:
             <empty>
           return_type_annotation:
-            <class 'bolt.ast.AstIdentifier'>
+            <class 'bolt.ast.AstTypeAnnotation'>
               location: SourceLocation(pos=11, lineno=1, colno=12)
               end_location: SourceLocation(pos=14, lineno=1, colno=15)
-              value: 'int'
+              string: 'int'
+              value:
+                <class 'bolt.ast.AstIdentifier'>
+                  location: SourceLocation(pos=11, lineno=1, colno=12)
+                  end_location: SourceLocation(pos=14, lineno=1, colno=15)
+                  value: 'int'
         <class 'mecha.ast.AstRoot'>
           location: SourceLocation(pos=20, lineno=2, colno=5)
           end_location: SourceLocation(pos=24, lineno=2, colno=9)

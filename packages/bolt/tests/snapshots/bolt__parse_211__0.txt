@@ -57,7 +57,7 @@ with open("README.md") as f:
                   end_location: SourceLocation(pos=56, lineno=2, colno=28)
                   prefix: None
                   unpack: None
-                  converter: 'json'
+                  converter: 'nbt'
                   value:
                     <class 'bolt.ast.AstCall'>
                       location: SourceLocation(pos=44, lineno=2, colno=16)

@@ -19,7 +19,12 @@ foo: int
               value: 'foo'
               rebind: False
           type_annotation:
-            <class 'bolt.ast.AstIdentifier'>
+            <class 'bolt.ast.AstTypeAnnotation'>
               location: SourceLocation(pos=5, lineno=1, colno=6)
               end_location: SourceLocation(pos=8, lineno=1, colno=9)
-              value: 'int'
+              string: 'int'
+              value:
+                <class 'bolt.ast.AstIdentifier'>
+                  location: SourceLocation(pos=5, lineno=1, colno=6)
+                  end_location: SourceLocation(pos=8, lineno=1, colno=9)
+                  value: 'int'
