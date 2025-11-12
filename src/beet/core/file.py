@@ -37,26 +37,15 @@ from typing import (
     Type,
     TypeVar,
     Union,
+    Self,
 )
 from zipfile import ZipFile
 
 import yaml
+from PIL import Image, ImageChops
 from pydantic import BaseModel, ValidationError
 
 from .error import BubbleException, WrappedException
-
-try:
-    from PIL.Image import Image
-    from PIL.Image import new as new_image
-    from PIL.Image import open as open_image
-except ImportError:
-    Image = Any
-
-    def new_image(*args: Any, **kwargs: Any) -> Any:
-        raise RuntimeError("Please install Pillow to create images programmatically")
-
-    def open_image(*args: Any, **kwargs: Any) -> Any:
-        raise RuntimeError("Please install Pillow to edit images programmatically")
 
 
 from .utils import (
@@ -218,13 +207,19 @@ class File(Generic[ValueType, SerializeType]):
                 and (-1 if self.source_stop is None else self.source_stop)
                 == (-1 if other.source_stop is None else other.source_stop)
             )
-            or self.get_content() == other.get_content()
-            or self.ensure_serialized() == other.ensure_serialized()
-            or self.ensure_deserialized() == other.ensure_deserialized()
+            or self.content_equal(other)
         )
 
     def __hash__(self) -> int:
         return id(self)
+
+    def content_equal(self, other: Self) -> bool:
+        """Compare file contents."""
+        return (
+            self.get_content() == other.get_content()
+            or self.ensure_serialized() == other.ensure_serialized()
+            or self.ensure_deserialized() == other.ensure_deserialized()
+        )
 
     @classmethod
     def default(cls) -> ValueType:
@@ -669,19 +664,28 @@ class YamlFile(YamlFileBase[JsonDict]):
 
 
 @dataclass(eq=False, repr=False)
-class PngFile(BinaryFileBase[Image]):
+class PngFile(BinaryFileBase[Image.Image]):
     """Class representing a png file."""
 
-    image: ClassVar[FileDeserialize[Image]] = FileDeserialize()
+    image: ClassVar[FileDeserialize[Image.Image]] = FileDeserialize()
 
-    def to_bytes(self, content: Image) -> bytes:
+    def to_bytes(self, content: Image.Image) -> bytes:
         dst = io.BytesIO()
         content.save(dst, format="png")
         return dst.getvalue()
 
-    def from_bytes(self, content: bytes) -> Image:
-        return open_image(io.BytesIO(content))
+    def from_bytes(self, content: bytes) -> Image.Image:
+        return Image.open(io.BytesIO(content))
+
+    def content_equal(self, other: Self) -> bool:
+        left, right = self.image, other.image
+        if left.size != right.size:
+            return False
+        if left.mode != right.mode:
+            left = left.convert("RGBA")
+            right = right.convert("RGBA")
+        return not ImageChops.difference(left, right).getbbox()
 
     @classmethod
     def default(cls) -> Image:
-        return new_image("RGBA", (16, 16), "magenta")
+        return Image.new("RGBA", (16, 16), "magenta")
