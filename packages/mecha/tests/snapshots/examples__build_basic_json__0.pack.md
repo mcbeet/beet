@@ -7,7 +7,14 @@
 ```json
 {
   "pack": {
-    "pack_format": 48,
+    "min_format": [
+      88,
+      0
+    ],
+    "max_format": [
+      88,
+      0
+    ],
     "description": ""
   }
 }
@@ -19,6 +26,14 @@
 
 ```mcfunction
 tellraw @p {text: "empty"}
+```
+
+`@loot_table demo:bar`
+
+```json
+{
+  "pools": []
+}
 ```
 
 `@loot_table demo:foo`
@@ -148,13 +163,5 @@ tellraw @p {text: "empty"}
       ]
     }
   ]
-}
-```
-
-`@loot_table demo:bar`
-
-```json
-{
-  "pools": []
 }
 ```

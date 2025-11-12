@@ -50,7 +50,7 @@ from beet.core.utils import (
     extra_field,
     import_from_string,
 )
-from pydantic.v1 import BaseModel, HttpUrl, validator
+from pydantic import BaseModel, field_validator
 from tokenstream import InvalidSyntax, Preprocessor, TokenStream, set_location
 
 from .ast import AstLiteral, AstNode, AstRoot
@@ -126,17 +126,11 @@ FORMATTING_PRESETS: Dict[str, JsonDict] = {
 }
 
 
-class CommandsUrl(BaseModel):
-    """Url to load commands."""
-
-    __root__: HttpUrl
-
-
 class MechaOptions(BaseModel):
     """Mecha options."""
 
     version: str = ""
-    commands: Optional[ListOption[Union[CommandsUrl, PackageablePath]]] = None
+    commands: Optional[ListOption[PackageablePath]] = None
     multiline: bool = False
     formatting: FormattingOptions = FormattingOptions()
     readonly: Optional[bool] = None
@@ -145,7 +139,8 @@ class MechaOptions(BaseModel):
     cache: bool = True
     output_perf: Optional[FileSystemPath] = None
 
-    @validator("formatting", pre=True)
+    @field_validator("formatting", mode="before")
+    @classmethod
     def formatting_preset(cls, value: Any):
         if isinstance(value, str):
             assert value in FORMATTING_PRESETS, "invalid formatting preset"
@@ -230,8 +225,8 @@ class Mecha:
                     p
                     for entry in opts.commands.entries()
                     for p in (
-                        [ctx.cache["commands"].download(entry.__root__)]
-                        if isinstance(entry, CommandsUrl)
+                        [ctx.cache["commands"].download(entry.http_url)]
+                        if entry.http_url
                         else glob(str(ctx.directory / entry))
                     )
                 ]
@@ -651,7 +646,9 @@ class Mecha:
                     else (
                         "Optimize"
                         if step is self.optimize
-                        else "Check" if step is self.check else repr(step)
+                        else "Check"
+                        if step is self.check
+                        else repr(step)
                     )
                 )
             )

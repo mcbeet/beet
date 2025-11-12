@@ -7,8 +7,8 @@
 ```json
 {
   "pack": {
-    "pack_format": 9,
-    "description": ""
+    "description": "",
+    "pack_format": 9
   }
 }
 ```
@@ -29,8 +29,8 @@ scoreboard objectives setdisplay belowName foo
 ```json
 {
   "pack": {
-    "pack_format": 8,
-    "description": ""
+    "description": "",
+    "pack_format": 8
   }
 }
 ```

@@ -1,5 +1,7 @@
 """Plugin that emits source mapping information."""
 
+from pydantic import ConfigDict
+
 __all__ = [
     "AstSourceMap",
     "SourceMapOptions",
@@ -15,7 +17,7 @@ from typing import List
 from beet import Context, configurable
 from beet.core.utils import required_field
 from jinja2 import Template
-from pydantic.v1 import BaseModel
+from pydantic import BaseModel
 
 from mecha import (
     AstChildren,
@@ -30,12 +32,8 @@ from mecha import (
 
 
 class SourceMapOptions(BaseModel):
-    header: str = (
-        "# [source_map] {{ compilation_unit.filename or compilation_unit.resource_location }}"
-    )
-
-    class Config:
-        extra = "forbid"
+    header: str = "# [source_map] {{ compilation_unit.filename or compilation_unit.resource_location }}"
+    model_config = ConfigDict(extra="forbid")
 
 
 def beet_default(ctx: Context):

@@ -1168,9 +1168,7 @@ class NbtParser:
     curly_pattern: str = r"\{|\}"
     bracket_pattern: str = r"\[|\]"
     quoted_string_pattern: str = NBT_QUOTED_STRING_PATTERN
-    number_pattern: str = (
-        r"[+-]?(?:[0-9]*?\.[0-9]+|[0-9]+\.[0-9]*?|[1-9][0-9]*|0)(?:[eE][+-]?[0-9]+)?[bslfdBSLFD]?\b"
-    )
+    number_pattern: str = r"[+-]?(?:[0-9]*?\.[0-9]+|[0-9]+\.[0-9]*?|[1-9][0-9]*|0)(?:[eE][+-]?[0-9]+)?[bslfdBSLFD]?\b"
     string_pattern: str = r"[a-zA-Z0-9._+-]+"
     colon_pattern: str = r":"
     comma_pattern: str = r","
@@ -1607,9 +1605,7 @@ class BasicLiteralParser:
 class RangeParser:
     """Parser for ranges."""
 
-    pattern: str = (
-        rf"\.\.{NUMBER_PATTERN}|{NUMBER_PATTERN}\.\.(?:{NUMBER_PATTERN})?|{NUMBER_PATTERN}"
-    )
+    pattern: str = rf"\.\.{NUMBER_PATTERN}|{NUMBER_PATTERN}\.\.(?:{NUMBER_PATTERN})?|{NUMBER_PATTERN}"
 
     def __call__(self, stream: TokenStream) -> AstRange:
         with stream.syntax(range=self.pattern):

@@ -209,8 +209,11 @@ class FileTypeCompilationUnitProvider:
                 for resource_location in pack[file_type].match(*match or ["*"]):
                     file_instance = pack[file_type][resource_location]
 
-                    yield file_instance, CompilationUnit(
-                        resource_location=resource_location,
-                        no_index=self.no_index,
-                        pack=pack,
+                    yield (
+                        file_instance,
+                        CompilationUnit(
+                            resource_location=resource_location,
+                            no_index=self.no_index,
+                            pack=pack,
+                        ),
                     )

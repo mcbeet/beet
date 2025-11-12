@@ -157,8 +157,10 @@ class Dispatcher(Generic[T]):
             return
 
         for match_type in rule.match_types or [AbstractNode]:
-            l = self.rules.setdefault(match_type, {}).setdefault(rule.match_fields, [])
-            l.append((self.count, rule.name, rule.callback))
+            rule_callbacks = self.rules.setdefault(match_type, {}).setdefault(
+                rule.match_fields, []
+            )
+            rule_callbacks.append((self.count, rule.name, rule.callback))
             self.count += 1
 
         if rule.next:
@@ -181,13 +183,13 @@ class Dispatcher(Generic[T]):
                     current = self.rules.setdefault(key, {})
 
                     for match_fields, callbacks in value.items():
-                        l = current.setdefault(match_fields, [])
+                        rule_callbacks = current.setdefault(match_fields, [])
 
                         for priority, name, callback in callbacks:
                             if name and self.levels.get(name) == "ignore":
                                 continue
                             priority += offset
-                            l.append((priority, name, callback))
+                            rule_callbacks.append((priority, name, callback))
                             self.count = max(self.count, priority) + 1
 
             elif callable(arg):
@@ -395,8 +397,12 @@ class MutatingReducer(Dispatcher[Any]):
         for f in fields(node):
             attribute = getattr(node, f.name)
             if isinstance(attribute, AbstractChildren):
-                result = type(attribute)(self.invoke(child, *args, **kwargs) for child in attribute)  # type: ignore
-                if len(result) != len(attribute) or any(child is not original for child, original in zip(result, attribute)):  # type: ignore
+                result = type(attribute)(
+                    self.invoke(child, *args, **kwargs) for child in attribute
+                )  # type: ignore
+                if len(result) != len(attribute) or any(
+                    child is not original for child, original in zip(result, attribute)
+                ):  # type: ignore
                     to_replace[f.name] = result
             elif isinstance(attribute, AbstractNode):
                 result = self.invoke(attribute, *args, **kwargs)

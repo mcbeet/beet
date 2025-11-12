@@ -190,7 +190,19 @@ class AbstractNode:
         return f"{prefix}{self.__class__}\n" + "\n".join(
             f"{prefix}  {f.name}:"
             + (
-                "\n" + ("\n".join((f"{prefix}    {type(child)}" if shallow else child.dump(prefix + "    ", shallow, exclude)) for child in attribute) if attribute else prefix + "    <empty>")  # type: ignore
+                "\n"
+                + (
+                    "\n".join(
+                        (
+                            f"{prefix}    {type(child)}"
+                            if shallow
+                            else child.dump(prefix + "    ", shallow, exclude)
+                        )
+                        for child in attribute
+                    )
+                    if attribute
+                    else prefix + "    <empty>"
+                )  # type: ignore
                 if isinstance(attribute := getattr(self, f.name), AbstractChildren)
                 else (
                     "\n"

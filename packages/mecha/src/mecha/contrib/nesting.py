@@ -16,7 +16,7 @@ from beet import Context, Function
 from beet import Generator as BeetGenerator
 from beet import configurable
 from beet.core.utils import required_field
-from pydantic.v1 import BaseModel
+from pydantic import BaseModel
 from tokenstream import InvalidSyntax, TokenStream, set_location
 
 from mecha import (
@@ -53,7 +53,7 @@ def nesting(ctx: Context, opts: NestingOptions):
     mc.spec.multiline = True
 
     commands_json = files("mecha.resources").joinpath("nesting.json").read_text()
-    mc.spec.add_commands(CommandTree.parse_raw(commands_json))
+    mc.spec.add_commands(CommandTree.model_validate_json(commands_json))
 
     mc.spec.parsers["nested_root"] = parse_nested_root
     mc.spec.parsers["command:argument:mecha:nested_root"] = delegate("nested_root")
@@ -339,7 +339,7 @@ class NestedCommandsTransformer(MutatingReducer):
                 ):
                     d = Diagnostic(
                         "error",
-                        f"Nested function definition can not include arguments.",
+                        "Nested function definition can not include arguments.",
                     )
                     d.notes.append(
                         'Prefix with "execute" to invoke the nested function.'
@@ -348,11 +348,11 @@ class NestedCommandsTransformer(MutatingReducer):
                     return []
             else:
                 if node.identifier == "append:function:name:commands":
-                    d = Diagnostic("error", f"Can't append commands with execute.")
+                    d = Diagnostic("error", "Can't append commands with execute.")
                     yield set_location(d, node, name)
                     return []
                 if node.identifier == "prepend:function:name:commands":
-                    d = Diagnostic("error", f"Can't prepend commands with execute.")
+                    d = Diagnostic("error", "Can't prepend commands with execute.")
                     yield set_location(d, node, name)
                     return []
 

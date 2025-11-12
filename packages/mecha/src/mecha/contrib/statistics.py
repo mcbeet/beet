@@ -10,11 +10,11 @@ __all__ = [
 import logging
 from collections import defaultdict
 from dataclasses import dataclass
-from typing import DefaultDict, Dict, Iterator, List, Optional, Tuple, Union
+from typing import Dict, Iterator, List, Optional, Tuple, Union, Annotated
 
 from beet import Context
 from beet.core.utils import dump_json
-from pydantic.v1 import BaseModel
+from pydantic import BaseModel, Field
 
 from mecha import (
     AstCommand,
@@ -38,21 +38,34 @@ class Statistics(BaseModel):
     """Class holding all the stats gathered from the analysis."""
 
     function_count: int = 0
-    command_count: DefaultDict[str, DefaultDict[str, int]] = defaultdict(
-        lambda: defaultdict(int)
-    )
-    command_behind_execute_count: DefaultDict[str, int] = defaultdict(int)
+    command_count: Annotated[
+        dict[str, dict[str, int]],
+        Field(default_factory=lambda: defaultdict(lambda: defaultdict(int))),
+    ]
+    command_behind_execute_count: Annotated[
+        dict[str, int], Field(default_factory=lambda: defaultdict(int))
+    ]
     execute_count: int = 0
-    execute_clause_count: DefaultDict[str, int] = defaultdict(int)
-    selector_count: DefaultDict[str, int] = defaultdict(int)
-    selector_entity_type_count: DefaultDict[str, int] = defaultdict(int)
-    selector_argument_count: DefaultDict[str, DefaultDict[str, int]] = defaultdict(
-        lambda: defaultdict(int)
-    )
-    scoreboard_references: DefaultDict[str, int] = defaultdict(int)
-    scoreboard_fake_player_references: DefaultDict[str, DefaultDict[str, int]] = (
-        defaultdict(lambda: defaultdict(int))
-    )
+    execute_clause_count: Annotated[
+        dict[str, int], Field(default_factory=lambda: defaultdict(int))
+    ]
+    selector_count: Annotated[
+        dict[str, int], Field(default_factory=lambda: defaultdict(int))
+    ]
+    selector_entity_type_count: Annotated[
+        dict[str, int], Field(default_factory=lambda: defaultdict(int))
+    ]
+    selector_argument_count: Annotated[
+        dict[str, dict[str, int]],
+        Field(default_factory=lambda: defaultdict(lambda: defaultdict(int))),
+    ]
+    scoreboard_references: Annotated[
+        dict[str, int], Field(default_factory=lambda: defaultdict(int))
+    ]
+    scoreboard_fake_player_references: Annotated[
+        dict[str, dict[str, int]],
+        Field(default_factory=lambda: defaultdict(lambda: defaultdict(int))),
+    ]
     scoreboard_objectives: Dict[str, str] = {}
 
 
@@ -186,7 +199,7 @@ class Summary:
                 self.stats.command_behind_execute_count[prefix],
             ): [
                 (
-                    f" {' ' * len(prefix)}{self.spec.prototypes[identifier].usage()[len(prefix):]}",
+                    f" {' ' * len(prefix)}{self.spec.prototypes[identifier].usage()[len(prefix) :]}",
                     count,
                     0,
                 )
@@ -196,7 +209,7 @@ class Summary:
         }
 
         if self.stats.execute_count:
-            command_stats[f"/execute", self.stats.execute_count, 0] = [
+            command_stats["/execute", self.stats.execute_count, 0] = [
                 (
                     f"         {self.spec.prototypes[clause].usage()}",
                     count,
@@ -251,7 +264,7 @@ class Summary:
 
         if no_type_count := (self.stats.selector_count["e"] - total_selector_types):
             selector_types.insert(
-                0, (f"@e with missing or inverted type", no_type_count)
+                0, ("@e with missing or inverted type", no_type_count)
             )
 
         selector_args = {

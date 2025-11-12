@@ -205,7 +205,9 @@ class JsonFileHandler(Visitor):
                 if isinstance(node, AstMergeJsonContent):
                     compilation_unit = self.database[target]
                     if compilation_unit.pack and compilation_unit.resource_location:
-                        compilation_unit.pack[target_type].merge({compilation_unit.resource_location: file_instance})  # type: ignore
+                        compilation_unit.pack[target_type].merge(
+                            {compilation_unit.resource_location: file_instance}
+                        )  # type: ignore
                     elif not target.merge(file_instance):
                         target.data = file_instance.data
 

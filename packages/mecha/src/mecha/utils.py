@@ -79,7 +79,7 @@ class QuoteHelper:
         self.escape_characters = {
             v: k
             for k, v in self.escape_sequences.items()
-            if not k in self.unquote_only_escape_characters
+            if k not in self.unquote_only_escape_characters
         }
 
     def unquote_string(self, token: Token) -> str:
@@ -211,7 +211,7 @@ def underline_code(
 
     view = source[view_begin:view_end].splitlines()
     view_start_line = lineno - source[view_begin:pos].count("\n")
-    gutter = [f"{l + view_start_line} |" for l in range(len(view))]
+    gutter = [f"{i + view_start_line} |" for i in range(len(view))]
 
     for line in reversed(range(lineno, end_lineno + 1)):
         index = line - view_start_line
@@ -241,8 +241,8 @@ def resolve_source_filename(
     if file_instance.source_path:
         if directory:
             try:
-                return str(Path(file_instance.source_path).relative_to(directory))
+                return Path(file_instance.source_path).relative_to(directory).as_posix()
             except ValueError:
                 pass
-        return str(Path(file_instance.source_path).resolve())
+        return Path(file_instance.source_path).resolve().as_posix()
     return None

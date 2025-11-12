@@ -11,7 +11,7 @@ from dataclasses import dataclass
 
 from beet import Context, configurable
 from beet.core.utils import required_field
-from pydantic.v1 import BaseModel
+from pydantic import BaseModel
 
 from mecha import AstRoot, CompilationDatabase, Mecha, Visitor, rule
 

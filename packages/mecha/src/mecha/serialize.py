@@ -10,7 +10,7 @@ from dataclasses import dataclass, field
 from typing import Any, Iterable, Iterator, List, Literal, Union
 
 from beet.core.utils import required_field
-from pydantic.v1 import BaseModel
+from pydantic import BaseModel
 
 from .ast import (
     AstBlock,
@@ -112,7 +112,7 @@ class Serializer(Visitor):
         if previous_formatting:
             options = previous_formatting.dict()
             options.update(kwargs)
-            self.formatting = FormattingOptions.parse_obj(options)
+            self.formatting = FormattingOptions.model_validate(options)
 
         try:
             self.invoke(node, result)

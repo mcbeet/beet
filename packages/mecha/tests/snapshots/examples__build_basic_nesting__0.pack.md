@@ -7,13 +7,88 @@
 ```json
 {
   "pack": {
-    "pack_format": 48,
+    "min_format": [
+      88,
+      0
+    ],
+    "max_format": [
+      88,
+      0
+    ],
     "description": ""
   }
 }
 ```
 
 ### demo
+
+`@function demo:abc`
+
+```mcfunction
+say hello
+```
+
+`@function demo:bar0`
+
+```mcfunction
+say nested definition 0
+```
+
+`@function demo:bar1`
+
+```mcfunction
+say nested definition 1
+```
+
+`@function demo:bar2`
+
+```mcfunction
+say nested definition 2
+```
+
+`@function demo:bar3`
+
+```mcfunction
+say nested definition 3
+```
+
+`@function demo:bar4`
+
+```mcfunction
+say nested definition 4
+```
+
+`@function demo:bar5`
+
+```mcfunction
+say nested definition 5
+```
+
+`@function demo:bar6`
+
+```mcfunction
+say nested definition 6
+```
+
+`@function demo:bar7`
+
+```mcfunction
+say nested definition 7
+```
+
+`@function demo:bar8`
+
+```mcfunction
+say nested definition 8
+```
+
+`@function demo:blob`
+
+```mcfunction
+say before
+say aaaaa
+say after
+```
 
 `@function demo:foo`
 
@@ -74,46 +149,6 @@ return run say inlined command
 return run function demo:foo/nested_return_0
 ```
 
-`@function demo:wat`
-
-```mcfunction
-function demo:wat/nested_execute_0
-```
-
-`@function demo:xct`
-
-```mcfunction
-function demo:xct/inner
-```
-
-`@function demo:thing2`
-
-```mcfunction
-say this is a test
-```
-
-`@function demo:thing3`
-
-```mcfunction
-say this is a test
-```
-
-`@function demo:thing4`
-
-```mcfunction
-setblock ~ ~ ~ stone_pressure_plate
-setblock ~ ~-1 ~ tnt
-setblock ~ ~-2 ~ stone
-```
-
-`@function demo:thing5`
-
-```mcfunction
-setblock ~ ~ ~ stone_pressure_plate
-setblock ~ ~-1 ~ tnt
-setblock ~ ~-2 ~ stone
-```
-
 `@function demo:foo/nested_execute_0`
 
 ```mcfunction
@@ -135,78 +170,6 @@ setblock ~ ~-2 ~ stone
 ```mcfunction
 say foo
 say bar
-```
-
-`@function demo:schedule1`
-
-```mcfunction
-say hello1
-```
-
-`@function demo:schedule2`
-
-```mcfunction
-say hello2
-```
-
-`@function demo:schedule3`
-
-```mcfunction
-say hello3
-```
-
-`@function demo:bar0`
-
-```mcfunction
-say nested definition 0
-```
-
-`@function demo:bar1`
-
-```mcfunction
-say nested definition 1
-```
-
-`@function demo:bar2`
-
-```mcfunction
-say nested definition 2
-```
-
-`@function demo:bar3`
-
-```mcfunction
-say nested definition 3
-```
-
-`@function demo:bar4`
-
-```mcfunction
-say nested definition 4
-```
-
-`@function demo:bar5`
-
-```mcfunction
-say nested definition 5
-```
-
-`@function demo:bar6`
-
-```mcfunction
-say nested definition 6
-```
-
-`@function demo:bar7`
-
-```mcfunction
-say nested definition 7
-```
-
-`@function demo:bar8`
-
-```mcfunction
-say nested definition 8
 ```
 
 `@function demo:foo/nested_macro_0`
@@ -257,26 +220,6 @@ say anonymous definition 7
 say anonymous definition 8
 ```
 
-`@function demo:ret1/cond`
-
-```mcfunction
-say hi
-return 0
-```
-
-`@function demo:ret2/cond`
-
-```mcfunction
-say hi
-return 0
-```
-
-`@function demo:named_return_run`
-
-```mcfunction
-say named function
-```
-
 `@function demo:foo/nested_return_0`
 
 ```mcfunction
@@ -284,11 +227,10 @@ say anonymous function 1
 say anonymous function 2
 ```
 
-`@function demo:thing1`
+`@function demo:named_return_run`
 
 ```mcfunction
-say hello
-say world
+say named function
 ```
 
 `@function demo:queue`
@@ -299,32 +241,17 @@ say queue2
 say queue3
 ```
 
-`@function demo:stack`
-
-```mcfunction
-say stack3
-say stack2
-say stack1
-```
-
-`@function demo:abc`
-
-```mcfunction
-say hello
-```
-
-`@function demo:blob`
-
-```mcfunction
-say before
-say aaaaa
-say after
-```
-
 `@function demo:ret1`
 
 ```mcfunction
 execute if score some score matches 0 run return run function demo:ret1/cond
+```
+
+`@function demo:ret1/cond`
+
+```mcfunction
+say hi
+return 0
 ```
 
 `@function demo:ret2`
@@ -333,11 +260,97 @@ execute if score some score matches 0 run return run function demo:ret1/cond
 execute if score some score matches 0 run return run function demo:ret2/cond
 ```
 
+`@function demo:ret2/cond`
+
+```mcfunction
+say hi
+return 0
+```
+
+`@function demo:schedule1`
+
+```mcfunction
+say hello1
+```
+
+`@function demo:schedule2`
+
+```mcfunction
+say hello2
+```
+
+`@function demo:schedule3`
+
+```mcfunction
+say hello3
+```
+
+`@function demo:stack`
+
+```mcfunction
+say stack3
+say stack2
+say stack1
+```
+
+`@function demo:thing1`
+
+```mcfunction
+say hello
+say world
+```
+
+`@function demo:thing2`
+
+```mcfunction
+say this is a test
+```
+
+`@function demo:thing3`
+
+```mcfunction
+say this is a test
+```
+
+`@function demo:thing4`
+
+```mcfunction
+setblock ~ ~ ~ stone_pressure_plate
+setblock ~ ~-1 ~ tnt
+setblock ~ ~-2 ~ stone
+```
+
+`@function demo:thing5`
+
+```mcfunction
+setblock ~ ~ ~ stone_pressure_plate
+setblock ~ ~-1 ~ tnt
+setblock ~ ~-2 ~ stone
+```
+
+`@function demo:wat`
+
+```mcfunction
+function demo:wat/nested_execute_0
+```
+
 `@function demo:wat/nested_execute_0`
 
 ```mcfunction
 say 1
 say 2
+```
+
+`@function demo:xct`
+
+```mcfunction
+function demo:xct/inner
+```
+
+`@function demo:xct/inner`
+
+```mcfunction
+execute as @p run function demo:xct/inner/nested_execute_1
 ```
 
 `@function demo:xct/inner/nested_execute_0`
@@ -353,10 +366,4 @@ say bar
 say hello
 say world
 execute at @s run function demo:xct/inner/nested_execute_0
-```
-
-`@function demo:xct/inner`
-
-```mcfunction
-execute as @p run function demo:xct/inner/nested_execute_1
 ```

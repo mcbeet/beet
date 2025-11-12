@@ -10,7 +10,7 @@ from typing import Dict, Iterator, List, Literal, Optional, Set, Tuple, Union
 
 from beet import ErrorMessage
 from beet.core.utils import FileSystemPath, JsonDict, VersionNumber, split_version
-from pydantic.v1 import BaseModel
+from pydantic import BaseModel
 
 
 class CommandTree(BaseModel):
@@ -51,10 +51,10 @@ class CommandTree(BaseModel):
             except FileNotFoundError as exc:
                 raise ErrorMessage(f"Invalid minecraft version {version!r}.") from exc
 
-        tree = cls.parse_raw(sources[0])
+        tree = cls.model_validate_json(sources[0])
 
         for source in sources[1:]:
-            tree.extend(cls.parse_raw(source))
+            tree.extend(cls.model_validate_json(source))
 
         if version and not unpatched:
             for patch in json.loads(
@@ -177,7 +177,7 @@ class CommandTree(BaseModel):
                 if name == "children"
                 else repr(value)
             )
-            for name in self.__class__.__fields__
+            for name in self.__class__.model_fields
             if (value := getattr(self, name))
         )
         return f"{self.__class__.__name__}({args})"
@@ -186,4 +186,4 @@ class CommandTree(BaseModel):
         return self.__repr__()
 
 
-CommandTree.update_forward_refs()
+CommandTree.model_rebuild()

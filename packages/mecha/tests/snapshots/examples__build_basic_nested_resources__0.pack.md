@@ -7,7 +7,14 @@
 ```json
 {
   "pack": {
-    "pack_format": 48,
+    "min_format": [
+      88,
+      0
+    ],
+    "max_format": [
+      88,
+      0
+    ],
     "description": ""
   }
 }
@@ -15,16 +22,16 @@
 
 ### demo
 
-`@function demo:foo`
-
-```mcfunction
-say hello
-```
-
 `@function demo:bar`
 
 ```mcfunction
 say world
+```
+
+`@function demo:foo`
+
+```mcfunction
+say hello
 ```
 
 `@function_tag demo:abc`
@@ -59,13 +66,55 @@ say world
 ```json
 {
   "pack": {
-    "pack_format": 34,
+    "min_format": [
+      69,
+      0
+    ],
+    "max_format": [
+      69,
+      0
+    ],
     "description": ""
   }
 }
 ```
 
 ### minecraft
+
+`@fragment_shader minecraft:core/blit_screen`
+
+```glsl
+#version 150
+
+uniform sampler2D DiffuseSampler;
+
+uniform vec4 ColorModulator;
+
+in vec2 texCoord;
+in vec4 vertexColor;
+
+out vec4 fragColor;
+
+void main() {
+    vec4 color = texture(DiffuseSampler, texCoord) * vertexColor;
+
+    // blit final output of compositor into displayed back buffer
+    fragColor = color * ColorModulator;
+}
+```
+
+`@glsl_shader minecraft:include/matrix`
+
+```glsl
+#version 150
+
+mat2 mat2_rotate_z(float radians) {
+    return mat2(
+        cos(radians), -sin(radians),
+        sin(radians), cos(radians)
+    );
+}
+```
 
 `@model minecraft:item/bow`
 
@@ -196,41 +245,6 @@ say world
       "model": "demo:item/cool_bow_pulling_2"
     }
   ]
-}
-```
-
-`@glsl_shader minecraft:include/matrix`
-
-```glsl
-#version 150
-
-mat2 mat2_rotate_z(float radians) {
-    return mat2(
-        cos(radians), -sin(radians),
-        sin(radians), cos(radians)
-    );
-}
-```
-
-`@fragment_shader minecraft:core/blit_screen`
-
-```glsl
-#version 150
-
-uniform sampler2D DiffuseSampler;
-
-uniform vec4 ColorModulator;
-
-in vec2 texCoord;
-in vec4 vertexColor;
-
-out vec4 fragColor;
-
-void main() {
-    vec4 color = texture(DiffuseSampler, texCoord) * vertexColor;
-
-    // blit final output of compositor into displayed back buffer
-    fragColor = color * ColorModulator;
 }
 ```
 

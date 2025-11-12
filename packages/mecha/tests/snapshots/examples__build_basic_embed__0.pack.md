@@ -7,7 +7,14 @@
 ```json
 {
   "pack": {
-    "pack_format": 48,
+    "min_format": [
+      88,
+      0
+    ],
+    "max_format": [
+      88,
+      0
+    ],
     "description": ""
   }
 }
@@ -19,30 +26,6 @@
 
 ```mcfunction
 
-```
-
-`@loot_table demo:foo`
-
-```json
-{
-  "pools": [
-    {
-      "rolls": 1,
-      "entries": [
-        {
-          "type": "item",
-          "name": "minecraft:diamond",
-          "functions": [
-            {
-              "function": "minecraft:set_nbt",
-              "tag": "{custom: {value: \"owo\"}}"
-            }
-          ]
-        }
-      ]
-    }
-  ]
-}
 ```
 
 `@loot_table demo:bar`
@@ -60,6 +43,30 @@
             {
               "function": "minecraft:set_nbt",
               "tag": "{custom: {item: \"owo\", json_text_component: '{\"function\": \"minecraft:set_nbt\", \"tag\": \"{who_cares: \\\\\"owo\\\\\"}\", \"text\": \"nonsense\", \"color\": \"red\"}'}}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+```
+
+`@loot_table demo:foo`
+
+```json
+{
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "item",
+          "name": "minecraft:diamond",
+          "functions": [
+            {
+              "function": "minecraft:set_nbt",
+              "tag": "{custom: {value: \"owo\"}}"
             }
           ]
         }

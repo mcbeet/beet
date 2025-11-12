@@ -1,1 +1,1 @@
-from .mcdoc import *
+from .mcdoc import *  # noqa: F403

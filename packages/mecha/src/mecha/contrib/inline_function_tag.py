@@ -38,7 +38,7 @@ def beet_default(ctx: Context):
     commands_json = (
         files("mecha.resources").joinpath("inline_function_tag.json").read_text()
     )
-    mc.spec.add_commands(CommandTree.parse_raw(commands_json))
+    mc.spec.add_commands(CommandTree.model_validate_json(commands_json))
 
     mc.transform.extend(inline_execute_function_tag)
     mc.steps.insert(

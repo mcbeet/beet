@@ -36,7 +36,7 @@ build-backend = "uv_build"
 [dependency-groups]
 dev = [
     "pytest>=9.0.0",
-    "pytest-insta>=0.1.11",
+    "pytest-insta>=0.4.0",
     "pytest-minecraft>=0.2.0",
     "ruff>=0.14.4",
 ]

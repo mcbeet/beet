@@ -51,8 +51,8 @@ from mecha import (
 
 
 class BakeMacrosOptions(PluginOptions):
-    match: ListOption[str] = ListOption.parse_obj(["*"])
-    macro: ListOption[str] = ListOption.parse_obj(["*"])
+    match: ListOption[str] = ListOption.model_validate(["*"])
+    macro: ListOption[str] = ListOption.model_validate(["*"])
 
 
 def beet_default(ctx: Context):

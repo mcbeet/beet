@@ -7,7 +7,14 @@
 ```json
 {
   "pack": {
-    "pack_format": 48,
+    "min_format": [
+      88,
+      0
+    ],
+    "max_format": [
+      88,
+      0
+    ],
     "description": ""
   }
 }
@@ -15,40 +22,12 @@
 
 ### demo
 
-`@function demo:minify`
-
-```mcfunction
-say this is a test
-execute as @a[nbt={SelectedItem:{id:"minecraft:diamond",Count:64b}}] at @s run setblock ~ ~ ~ repeater[delay=3,facing=south]
-tellraw @a ["",{text:"hello",color:"red"},"not ascii: \u00b6"]
-say goodbye
-```
-
 `@function demo:dense`
 
 ```mcfunction
 say this is a test
 execute as @a[nbt={SelectedItem: {id: "minecraft:diamond", Count: 64b}}] at @s run setblock ~ ~ ~ repeater[delay=3, facing=south]
 tellraw @a ["", {text: "hello", color: "red"}, "not ascii: \u00b6"]
-say goodbye
-```
-
-`@function demo:preserve`
-
-```mcfunction
-say this is a test
-
-# Random stuff
-execute as @a[nbt={SelectedItem: {id: "minecraft:diamond", Count: 64b}}] at @s run setblock ~ ~ ~ repeater[delay=3, facing=south]
-
-
-
-
-tellraw @a ["", {text: "hello", color: "red"}, "not ascii: \u00b6"]
-
-
-
-
 say goodbye
 ```
 
@@ -64,6 +43,34 @@ execute as @a[nbt={SelectedItem:{id:"minecraft:diamond",Count:64b}}] at @s run s
 
 
 tellraw @a ["",{text:"hello",color:"red"},"not ascii: \u00b6"]
+
+
+
+
+say goodbye
+```
+
+`@function demo:minify`
+
+```mcfunction
+say this is a test
+execute as @a[nbt={SelectedItem:{id:"minecraft:diamond",Count:64b}}] at @s run setblock ~ ~ ~ repeater[delay=3,facing=south]
+tellraw @a ["",{text:"hello",color:"red"},"not ascii: \u00b6"]
+say goodbye
+```
+
+`@function demo:preserve`
+
+```mcfunction
+say this is a test
+
+# Random stuff
+execute as @a[nbt={SelectedItem: {id: "minecraft:diamond", Count: 64b}}] at @s run setblock ~ ~ ~ repeater[delay=3, facing=south]
+
+
+
+
+tellraw @a ["", {text: "hello", color: "red"}, "not ascii: \u00b6"]
 
 
 

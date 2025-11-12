@@ -7,13 +7,34 @@
 ```json
 {
   "pack": {
-    "pack_format": 48,
+    "min_format": [
+      88,
+      0
+    ],
+    "max_format": [
+      88,
+      0
+    ],
     "description": ""
   }
 }
 ```
 
 ### demo
+
+`@function demo:bar`
+
+```mcfunction
+function demo:bar
+function demo:bar/thing
+function demo:thing
+```
+
+`@function demo:bar/thing`
+
+```mcfunction
+function #demo:bar/thing/aaa
+```
 
 `@function demo:foo`
 
@@ -24,16 +45,12 @@ function demo:thing
 execute if function demo:foo/condition run function demo:foo/action
 ```
 
-`@function demo:bar/thing`
+`@function demo:foo/this`
 
 ```mcfunction
-function #demo:bar/thing/aaa
-```
-
-`@function demo:wat/thing`
-
-```mcfunction
-function #demo:wat/thing/bbb
+function demo:foo/this
+function demo:foo/this/thing
+function demo:foo/thing
 ```
 
 `@function demo:foo/this/thing`
@@ -42,18 +59,18 @@ function #demo:wat/thing/bbb
 function #demo:foo/this/thing/ccc
 ```
 
+`@function demo:upthis`
+
+```mcfunction
+function demo:upthis
+function demo:upthis/thing
+function demo:thing
+```
+
 `@function demo:upthis/thing`
 
 ```mcfunction
 function #demo:upthis/thing/ddd
-```
-
-`@function demo:bar`
-
-```mcfunction
-function demo:bar
-function demo:bar/thing
-function demo:thing
 ```
 
 `@function demo:wat`
@@ -64,18 +81,8 @@ function demo:wat/thing
 function demo:thing
 ```
 
-`@function demo:foo/this`
+`@function demo:wat/thing`
 
 ```mcfunction
-function demo:foo/this
-function demo:foo/this/thing
-function demo:foo/thing
-```
-
-`@function demo:upthis`
-
-```mcfunction
-function demo:upthis
-function demo:upthis/thing
-function demo:thing
+function #demo:wat/thing/bbb
 ```

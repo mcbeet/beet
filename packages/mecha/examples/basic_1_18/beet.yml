@@ -1,4 +1,4 @@
-minecraft: 1.18
+minecraft: "1.18"
 data_pack:
   load: "src"
 pipeline:
