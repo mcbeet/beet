@@ -8,7 +8,7 @@ authors = [
 ]
 requires-python = ">=3.14"
 dependencies = [
-    "beet",
+    "beet>=0.112.0",
     "tokenstream>=1.7.0",
 ]
 
