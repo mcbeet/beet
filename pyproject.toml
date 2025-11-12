@@ -1,11 +1,22 @@
+[build-system]
+requires = ["uv_build>=0.9.8,<0.10.0"]
+build-backend = "uv_build"
+
 [project]
 name = "beet"
 version = "0.112.0"
 description = "The Minecraft pack development kit"
+authors = [{ name = "Valentin Berlier", email = "berlier.v@gmail.com" }]
 readme = "README.md"
-authors = [
-    { name = "Valentin Berlier", email = "berlier.v@gmail.com" }
+license = { file = "LICENSE" }
+keywords = [
+  "beet",
+  "minecraft",
+  "datapack",
+  "resourcepack",
+  "mcfunction",
 ]
+
 requires-python = ">=3.14"
 dependencies = [
     "click==8.1.7",
@@ -19,33 +30,50 @@ dependencies = [
     "toml>=0.10.2",
 ]
 
+[project.urls]
+Repository = "https://github.com/mcbeet/beet"
+
 [project.scripts]
 beet = "beet.toolchain.cli:main"
 
-[project.entry-points."beet"]
+[project.entry-points.beet]
 commands = "beet.toolchain.commands"
 autoload = "beet.contrib.default"
 
-[project.entry-points."pytest11"]
+[project.entry-points.pytest11]
 beet = "beet.pytest_plugin"
-
-[build-system]
-requires = ["uv_build>=0.9.8,<0.10.0"]
-build-backend = "uv_build"
 
 [dependency-groups]
 dev = [
     "pytest>=9.0.0",
     "pytest-insta>=0.4.0",
     "pytest-minecraft>=0.2.0",
+    "python-semantic-release>=10.5.2",
     "ruff>=0.14.4",
 ]
 
 [tool.uv.workspace]
-members = [
-    "packages/*",
-    ".",
-]
+members = ["packages/*"]
 
 [tool.pytest.ini_options]
 addopts = "tests --import-mode=importlib"
+
+[tool.semantic_release]
+commit_parser = "conventional-monorepo"
+commit_message = "chore(release): v{version}"
+tag_format = "v{version}"
+version_toml = ["pyproject.toml:project.version"]
+version_variables = ["src/beet/__init__.py:__version__"]
+major_on_zero = false
+allow_zero_version = true
+
+[tool.semantic_release.commit_parser_options]
+path_filters = ["src", "pyproject.toml", "README.md", "LICENSE"]
+
+[tool.semantic_release.changelog]
+exclude_commit_patterns = ["(?!feat|fix).+"]
+
+[tool.semantic_release.branches.beta]
+match = "beta"
+prerelease = true
+prerelease_token = "beta"

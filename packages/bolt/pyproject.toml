@@ -1,23 +1,33 @@
+[build-system]
+requires = ["uv_build>=0.9.8,<0.10.0"]
+build-backend = "uv_build"
+
 [project]
 name = "bolt"
 version = "0.49.2"
 description = "Supercharge Minecraft commands with Python"
+authors = [{ name = "Valentin Berlier", email = "berlier.v@gmail.com" }]
 readme = "README.md"
-authors = [
-    { name = "Valentin Berlier", email = "berlier.v@gmail.com" }
+license = { file = "LICENSE" }
+keywords = [
+  "beet",
+  "minecraft",
+  "minecraft-commands",
+  "scripting-language",
+  "mcfunction"
 ]
+
 requires-python = ">=3.14"
 dependencies = [
     "beet>=0.112.0",
     "mecha>=0.99.0",
 ]
 
-[project.entry-points."beet"]
-commands = "bolt.commands"
+[project.urls]
+Repository = "https://github.com/mcbeet/beet/blob/main/packages/bolt"
 
-[build-system]
-requires = ["uv_build>=0.9.8,<0.10.0"]
-build-backend = "uv_build"
+[project.entry-points.beet]
+commands = "bolt.commands"
 
 [tool.uv.sources]
 beet = { workspace = true }
@@ -25,3 +35,23 @@ mecha = { workspace = true }
 
 [tool.pytest.ini_options]
 addopts = "tests --import-mode=importlib"
+
+[tool.semantic_release]
+commit_parser = "conventional-monorepo"
+commit_message = "chore(release): bolt-v{version}"
+tag_format = "bolt-v{version}"
+version_toml = ["pyproject.toml:project.version"]
+version_variables = ["src/bolt/__init__.py:__version__"]
+major_on_zero = false
+allow_zero_version = true
+
+[tool.semantic_release.commit_parser_options]
+path_filters = ["src", "pyproject.toml", "README.md", "LICENSE"]
+
+[tool.semantic_release.changelog]
+exclude_commit_patterns = ["(?!feat|fix).+"]
+
+[tool.semantic_release.branches.beta]
+match = "beta"
+prerelease = true
+prerelease_token = "beta"

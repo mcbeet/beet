@@ -2,47 +2,74 @@ name: CI
 
 on:
   push:
-    branches: [monorepo]
+    branches: [main, beta]
   pull_request:
-    branches: [monorepo]
+    branches: [main, beta]
 
 env:
-  PYTHON_VERSION: "3.14"
+  PACKAGES: |
+    .
+    packages/lectern
+    packages/mecha
+    packages/bolt
 
 jobs:
-  pytest:
+  main:
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref_name }}
+      cancel-in-progress: false
+    environment:
+      name: pypi
+    permissions:
+      id-token: write
+      contents: write
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        package:
-          - .
-          - packages/lectern
-          - packages/mecha
-          - packages/bolt
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
+      - name: Reset workflow sha
+        run: git reset --hard ${{ github.sha }}
       - name: Set up Python
         uses: actions/setup-python@v6
-        with:
-          python-version: ${{ env.PYTHON_VERSION }}
-      - name: Install uv
+      - name: Set up uv
         uses: astral-sh/setup-uv@v6
       - name: Install dependencies
         run: uv sync --all-packages --locked --all-extras --dev
-      - name: Run tests
-        working-directory: ${{ matrix.package }}
-        run: uv run pytest -v
-
-  ruff:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v5
+      - name: Tests
+        run: |
+          status=0
+          for p in $PACKAGES; do
+            if ! (uv run --directory "$p" pytest -v); then
+              status=1
+            fi
+          done
+          exit $status
       - name: Ruff
-        uses: astral-sh/ruff-action@v3
+        run: uv run ruff check
       - name: Ruff format
-        uses: astral-sh/ruff-action@v3
-        with:
-          args: "format --check --diff"
+        run: uv run ruff format --check --diff
+      - name: Release
+        if: github.event_name == 'push' && github.repository == 'mcbeet/beet'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          for p in $PACKAGES; do
+          uv run --directory "$p" bash -e <<"EOF"
+            if semantic-release -v --strict version --no-commit --no-tag; then
+              uv lock --upgrade-package $(basename "$PWD")
+              git add "$GITHUB_WORKSPACE/uv.lock"
+              grep "workspace = true" pyproject.toml | {
+                while read dep _; do
+                  uv add "$dep>=$(uv version --package $dep --short)"
+                done
+              }
+              uv build
+              semantic-release -v --strict version
+              semantic-release publish
+              uv publish
+            fi
+          EOF
+          done
