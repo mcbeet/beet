@@ -1002,7 +1002,7 @@ class Codegen(Visitor):
         node: AstCommand,
         acc: Accumulator,
     ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
-        acc.statement(f"while True", lineno=node)
+        acc.statement("while True", lineno=node)
         with acc.block():
             acc.statement(
                 "with", "_bolt_runtime.scope()", "as", "_bolt_condition_commands"

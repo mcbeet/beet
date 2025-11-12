@@ -30,7 +30,7 @@ from mecha.contrib.relative_location import resolve_relative_location
 from pathspec import PathSpec
 from tokenstream import set_location
 
-from .ast import AstNonFunctionRoot, AstRoot
+from .ast import AstNonFunctionRoot
 from .codegen import Codegen
 from .emit import CommandEmitter
 from .helpers import get_bolt_helpers

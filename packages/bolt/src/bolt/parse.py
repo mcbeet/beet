@@ -2530,7 +2530,7 @@ class PrimaryParser:
                 with (
                     stream.provide(bolt_format_string=True),
                     stream.syntax(
-                        escape=rf"\\.",
+                        escape=r"\\.",
                         double_brace=r"\{\{|\}\}",
                         brace=r"\{|\}",
                         quote=quote,
@@ -2653,7 +2653,9 @@ class PrimaryParser:
                     elif number:
                         value = int(number.value)
 
-                    arguments.append(set_location(AstValue(value=value), stream.current))  # type: ignore
+                    arguments.append(
+                        set_location(AstValue(value=value), stream.current)
+                    )  # type: ignore
 
                 else:
                     if token.match("brace"):
@@ -2911,6 +2913,6 @@ class TypeAnnotationParser:
 
     def __call__(self, stream: TokenStream) -> Any:
         value = self.parser(stream)
-        string = stream.source[value.location.pos:value.end_location.pos]
+        string = stream.source[value.location.pos : value.end_location.pos]
         node = AstTypeAnnotation(string=string, value=value)
         return set_location(node, value)
