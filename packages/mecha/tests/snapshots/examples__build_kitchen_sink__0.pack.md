@@ -22,12 +22,6 @@
 
 ### demo
 
-`@function demo:also_with_tag`
-
-```mcfunction
-say foo
-```
-
 `@function demo:function_tag`
 
 ```mcfunction
@@ -49,12 +43,6 @@ tellraw @p {"text": "hello", "color": "red"}
 data modify storage imp:io words set value ["alpha", "beta", "gamma", "delta"]
 ```
 
-`@function demo:my_load`
-
-```mcfunction
-say loaded
-```
-
 `@function demo:nesting`
 
 ```mcfunction
@@ -69,17 +57,22 @@ execute if score @s tmp matches 0 run function demo:nesting/nested_execute_2
 execute if score @s tmp matches 0 at @e[type=pig] unless entity @e[type=sheep] run setblock ~ ~ ~ dirt
 ```
 
-`@function demo:nesting/foo`
+`@function demo:with_tag`
 
 ```mcfunction
-say this is a test
+say world
 ```
 
-`@function demo:nesting/loop`
+`@function demo:my_load`
 
 ```mcfunction
-say wow
-execute if data storage imp:temp iter.words.remaining[] run function demo:nesting/loop
+say loaded
+```
+
+`@function demo:also_with_tag`
+
+```mcfunction
+say foo
 ```
 
 `@function demo:nesting/nested_execute_0`
@@ -96,6 +89,13 @@ say hello
 say world
 ```
 
+`@function demo:nesting/loop`
+
+```mcfunction
+say wow
+execute if data storage imp:temp iter.words.remaining[] run function demo:nesting/loop
+```
+
 `@function demo:nesting/nested_execute_2`
 
 ```mcfunction
@@ -103,10 +103,10 @@ execute at @e[type=pig] run setblock ~ ~ ~ stone
 execute at @e[type=sheep] run setblock ~ ~ ~ dirt
 ```
 
-`@function demo:with_tag`
+`@function demo:nesting/foo`
 
 ```mcfunction
-say world
+say this is a test
 ```
 
 `@function_tag demo:abc`
@@ -132,22 +132,22 @@ say world
 
 ### minecraft
 
-`@function_tag minecraft:load`
-
-```json
-{
-  "values": [
-    "demo:my_load"
-  ]
-}
-```
-
 `@function_tag minecraft:tick`
 
 ```json
 {
   "values": [
     "demo:function_tag"
+  ]
+}
+```
+
+`@function_tag minecraft:load`
+
+```json
+{
+  "values": [
+    "demo:my_load"
   ]
 }
 ```

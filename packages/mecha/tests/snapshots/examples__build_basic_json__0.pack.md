@@ -28,14 +28,6 @@
 tellraw @p {text: "empty"}
 ```
 
-`@loot_table demo:bar`
-
-```json
-{
-  "pools": []
-}
-```
-
 `@loot_table demo:foo`
 
 ```json
@@ -163,5 +155,13 @@ tellraw @p {text: "empty"}
       ]
     }
   ]
+}
+```
+
+`@loot_table demo:bar`
+
+```json
+{
+  "pools": []
 }
 ```

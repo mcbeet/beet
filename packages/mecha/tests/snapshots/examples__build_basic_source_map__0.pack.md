@@ -20,23 +20,7 @@
 }
 ```
 
-### basic_source_map
-
-`@function basic_source_map:generated_0`
-
-```mcfunction
-# [source_map] basic_source_map:generated_0
-say 123
-```
-
 ### demo
-
-`@function demo:bar`
-
-```mcfunction
-# [source_map] src/data/demo/functions/foo.mcfunction
-say def
-```
 
 `@function demo:foo`
 
@@ -47,6 +31,13 @@ execute as @p run say something
 execute as @p run function demo:foo/nested_execute_0
 ```
 
+`@function demo:thing`
+
+```mcfunction
+# [source_map] basic_source_map:generated_0
+say 456
+```
+
 `@function demo:foo/nested_execute_0`
 
 ```mcfunction
@@ -55,9 +46,18 @@ say foo
 say bar
 ```
 
-`@function demo:thing`
+`@function demo:bar`
+
+```mcfunction
+# [source_map] src/data/demo/functions/foo.mcfunction
+say def
+```
+
+### basic_source_map
+
+`@function basic_source_map:generated_0`
 
 ```mcfunction
 # [source_map] basic_source_map:generated_0
-say 456
+say 123
 ```

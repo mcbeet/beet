@@ -22,13 +22,13 @@
 
 ### minecraft
 
-`@texture minecraft:block/green_concrete`
-
-![texture.png](green_concrete.png)
-
 `@texture minecraft:block/green_concrete_powder`
 
 ![texture.png](green_concrete_powder.png)
+
+`@texture minecraft:block/green_concrete`
+
+![texture.png](green_concrete.png)
 
 `@texture minecraft:block/green_glazed_terracotta`
 
@@ -38,13 +38,13 @@
 
 ![texture.png](green_shulker_box.png)
 
-`@texture minecraft:block/green_stained_glass`
-
-![texture.png](green_stained_glass.png)
-
 `@texture minecraft:block/green_stained_glass_pane_top`
 
 ![texture.png](green_stained_glass_pane_top.png)
+
+`@texture minecraft:block/green_stained_glass`
+
+![texture.png](green_stained_glass.png)
 
 `@texture minecraft:block/green_terracotta`
 
@@ -102,10 +102,6 @@
 
 ![texture.png](hopper_top.png)
 
-`@texture minecraft:block/horn_coral`
-
-![texture.png](horn_coral.png)
-
 `@texture minecraft:block/horn_coral_block`
 
 ![texture.png](horn_coral_block.png)
@@ -113,6 +109,10 @@
 `@texture minecraft:block/horn_coral_fan`
 
 ![texture.png](horn_coral_fan.png)
+
+`@texture minecraft:block/horn_coral`
+
+![texture.png](horn_coral.png)
 
 `@texture minecraft:block/ice`
 

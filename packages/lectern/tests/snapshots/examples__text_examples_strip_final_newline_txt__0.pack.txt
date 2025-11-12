@@ -13,9 +13,9 @@
   }
 }
 
-@function demo:bar
-say bar
-@function demo:foo
-say foo
 @function demo:hello
 say hello
+@function demo:foo
+say foo
+@function demo:bar
+say bar

@@ -15,14 +15,14 @@
 
 ### demo
 
-`@function demo:bar`
-
-```mcfunction
-say bar
-```
-
 `@function demo:foo`
 
 ```mcfunction
 say foo
+```
+
+`@function demo:bar`
+
+```mcfunction
+say bar
 ```

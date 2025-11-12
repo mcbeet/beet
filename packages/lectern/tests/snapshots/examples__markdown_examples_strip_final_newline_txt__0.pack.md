@@ -22,10 +22,10 @@
 
 ### demo
 
-`@function(strip_final_newline) demo:bar`
+`@function(strip_final_newline) demo:hello`
 
 ```mcfunction
-say bar
+say hello
 ```
 
 `@function(strip_final_newline) demo:foo`
@@ -34,8 +34,8 @@ say bar
 say foo
 ```
 
-`@function(strip_final_newline) demo:hello`
+`@function(strip_final_newline) demo:bar`
 
 ```mcfunction
-say hello
+say bar
 ```

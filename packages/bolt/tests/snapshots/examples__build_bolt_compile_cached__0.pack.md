@@ -22,6 +22,12 @@
 
 ### demo
 
+`@function demo:foo`
+
+```mcfunction
+say hello
+```
+
 `@function demo:cached/slow`
 
 ```mcfunction
@@ -35,10 +41,4 @@ say something slow 6
 say something slow 7
 say something slow 8
 say something slow 9
-```
-
-`@function demo:foo`
-
-```mcfunction
-say hello
 ```

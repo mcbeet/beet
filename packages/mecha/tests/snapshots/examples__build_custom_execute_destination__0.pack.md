@@ -28,6 +28,12 @@
 execute as @a run function demo:bar/generated/0x0
 ```
 
+`@function demo:foo`
+
+```mcfunction
+execute as @a run function demo:foo/generated/0x0
+```
+
 `@function demo:bar/generated/0x0`
 
 ```mcfunction
@@ -35,13 +41,14 @@ say test
 say bar
 ```
 
-`@function demo:foo`
+`@function demo:foo/generated/0x0`
 
 ```mcfunction
-execute as @a run function demo:foo/generated/0x0
+say test
+say foo
 ```
 
-`@function demo:foo/generated/0x0`
+`@function demo:foo/stuff/generated/0x0`
 
 ```mcfunction
 say test
@@ -52,11 +59,4 @@ say foo
 
 ```mcfunction
 execute as @a run function demo:foo/stuff/generated/0x0
-```
-
-`@function demo:foo/stuff/generated/0x0`
-
-```mcfunction
-say test
-say foo
 ```

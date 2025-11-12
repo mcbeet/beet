@@ -20,14 +20,6 @@
 }
 ```
 
-### demo
-
-`@function demo:foo`
-
-```mcfunction
-say hello
-```
-
 ### minecraft
 
 `@function_tag minecraft:load`
@@ -38,4 +30,12 @@ say hello
     "demo:foo"
   ]
 }
+```
+
+### demo
+
+`@function demo:foo`
+
+```mcfunction
+say hello
 ```

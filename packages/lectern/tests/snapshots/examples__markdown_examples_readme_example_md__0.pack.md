@@ -20,6 +20,14 @@
 }
 ```
 
+### tutorial
+
+`@function tutorial:greeting`
+
+```mcfunction
+say Hello, world!
+```
+
 ### minecraft
 
 `@function_tag minecraft:load`
@@ -28,12 +36,4 @@
 {
   "values": ["tutorial:greeting"]
 }
-```
-
-### tutorial
-
-`@function tutorial:greeting`
-
-```mcfunction
-say Hello, world!
 ```

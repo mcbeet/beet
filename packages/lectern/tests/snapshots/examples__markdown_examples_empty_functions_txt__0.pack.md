@@ -22,13 +22,13 @@
 
 ### demo
 
-`@function(strip_final_newline) demo:bar`
+`@function(strip_final_newline) demo:foo`
 
 ```mcfunction
 
 ```
 
-`@function(strip_final_newline) demo:foo`
+`@function(strip_final_newline) demo:bar`
 
 ```mcfunction
 

@@ -22,14 +22,14 @@
 
 ### demo
 
-`@function demo:bar`
-
-```mcfunction
-say bar
-```
-
 `@function(strip_final_newline) demo:foo`
 
 ```mcfunction
 say foo
+```
+
+`@function demo:bar`
+
+```mcfunction
+say bar
 ```

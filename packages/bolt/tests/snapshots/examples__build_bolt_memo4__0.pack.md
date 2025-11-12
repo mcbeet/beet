@@ -22,14 +22,14 @@
 
 ### demo
 
-`@function demo:bar`
-
-```mcfunction
-say bop
-```
-
 `@function demo:foo`
 
 ```mcfunction
 say something
+```
+
+`@function demo:bar`
+
+```mcfunction
+say bop
 ```

@@ -13,10 +13,10 @@
   }
 }
 
+@function tutorial:greeting
+say Hello, world!
+
 @function_tag minecraft:load
 {
   "values": ["tutorial:greeting"]
 }
-
-@function tutorial:greeting
-say Hello, world!

@@ -20,6 +20,100 @@
 }
 ```
 
+### demo
+
+`@function(strip_final_newline) demo:ref/bar`
+
+```mcfunction
+
+```
+
+`@function demo:ref/foo`
+
+```mcfunction
+say !!!
+say hello anonymous
+summon minecraft:squid
+say !!!
+say ok ok
+say hello steve
+say AstResourceLocation(is_tag=False, namespace='minecraft', path='becomeduck')
+say !!!
+```
+
+`@function demo:codegen/bar`
+
+```mcfunction
+_bolt_lineno = [1], [1]
+_bolt_helper_children = _bolt_runtime.helpers['children']
+_bolt_helper_replace = _bolt_runtime.helpers['replace']
+with _bolt_runtime.scope() as _bolt_var1:
+    CALAMAR, dump_ast, anonymous, _bolt_macro0, _bolt_macro1 = _bolt_runtime.from_module_import('demo:codegen/prelude', 'CALAMAR', 'dump_ast', 'anonymous', '_bolt_macro0', '_bolt_macro1')
+    alright_then, _bolt_macro2 = _bolt_runtime.from_module_import('no_idea:prelude', 'alright_then', '_bolt_macro0')
+    _bolt_var0 = dump_ast
+    _bolt_var0 = _bolt_var0()
+_bolt_var2 = _bolt_helper_replace(_bolt_refs[0], commands=_bolt_helper_children(_bolt_var1))
+```
+
+`@function demo:codegen/foo`
+
+```mcfunction
+_bolt_lineno = [1, 13, 18, 22, 26, 28, 31, 33], [1, 2, 3, 4, 6, 7, 10, 11]
+_bolt_helper_macro_call = _bolt_runtime.helpers['macro_call']
+_bolt_helper_interpolate_word = _bolt_runtime.helpers['interpolate_word']
+_bolt_helper_children = _bolt_runtime.helpers['children']
+_bolt_helper_replace = _bolt_runtime.helpers['replace']
+_bolt_helper_interpolate_resource_location = _bolt_runtime.helpers['interpolate_resource_location']
+_bolt_helper_get_rebind = _bolt_runtime.helpers['get_rebind']
+with _bolt_runtime.scope() as _bolt_var9:
+    CALAMAR, dump_ast, anonymous, _bolt_macro0, _bolt_macro1 = _bolt_runtime.from_module_import('demo:codegen/prelude', 'CALAMAR', 'dump_ast', 'anonymous', '_bolt_macro0', '_bolt_macro1')
+    alright_then, _bolt_macro2 = _bolt_runtime.from_module_import('no_idea:prelude', 'alright_then', '_bolt_macro0')
+    _bolt_var0 = _bolt_helper_macro_call(_bolt_runtime, _bolt_macro1, _bolt_refs[0])
+    _bolt_runtime.commands.extend(_bolt_var0)
+    _bolt_var1 = anonymous
+    _bolt_var1 = _bolt_var1()
+    _bolt_var1 = _bolt_helper_interpolate_word(_bolt_var1, _bolt_refs[1])
+    _bolt_var2 = _bolt_helper_macro_call(_bolt_runtime, _bolt_macro0, _bolt_helper_replace(_bolt_refs[2], arguments=_bolt_helper_children([_bolt_var1])))
+    _bolt_runtime.commands.extend(_bolt_var2)
+    _bolt_var3 = CALAMAR
+    _bolt_var3 = _bolt_helper_interpolate_resource_location(_bolt_var3, _bolt_refs[3])
+    _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[4], arguments=_bolt_helper_children([_bolt_var3])))
+    _bolt_var4 = None
+    _bolt_rebind = _bolt_helper_get_rebind(CALAMAR)
+    CALAMAR = _bolt_var4
+    if _bolt_rebind is not None:
+        CALAMAR = _bolt_rebind(CALAMAR)
+    _bolt_var5 = _bolt_helper_macro_call(_bolt_runtime, _bolt_macro1, _bolt_refs[5])
+    _bolt_runtime.commands.extend(_bolt_var5)
+    _bolt_var6 = alright_then
+    _bolt_var6 = _bolt_var6()
+    _bolt_runtime.commands.append(_bolt_refs[7])
+    _bolt_var7 = _bolt_helper_macro_call(_bolt_runtime, _bolt_macro1, _bolt_refs[6])
+    _bolt_runtime.commands.extend(_bolt_var7)
+    _bolt_var8 = dump_ast
+    _bolt_var8 = _bolt_var8()
+_bolt_var10 = _bolt_helper_replace(_bolt_refs[8], commands=_bolt_helper_children(_bolt_var9))
+```
+
+`@function(strip_final_newline) demo:bar`
+
+```mcfunction
+
+```
+
+`@function demo:foo`
+
+```mcfunction
+say !!!
+say hello anonymous
+summon minecraft:squid
+say !!!
+say ok ok
+say hello steve
+say AstResourceLocation(is_tag=False, namespace='minecraft', path='becomeduck')
+say !!!
+```
+
 ### bolt_prelude
 
 `@function bolt_prelude:generated_0`
@@ -515,98 +609,4 @@
 #               value: 'dump_ast'
 #           arguments:
 #             <empty>
-```
-
-### demo
-
-`@function(strip_final_newline) demo:bar`
-
-```mcfunction
-
-```
-
-`@function demo:codegen/bar`
-
-```mcfunction
-_bolt_lineno = [1], [1]
-_bolt_helper_children = _bolt_runtime.helpers['children']
-_bolt_helper_replace = _bolt_runtime.helpers['replace']
-with _bolt_runtime.scope() as _bolt_var1:
-    CALAMAR, dump_ast, anonymous, _bolt_macro0, _bolt_macro1 = _bolt_runtime.from_module_import('demo:codegen/prelude', 'CALAMAR', 'dump_ast', 'anonymous', '_bolt_macro0', '_bolt_macro1')
-    alright_then, _bolt_macro2 = _bolt_runtime.from_module_import('no_idea:prelude', 'alright_then', '_bolt_macro0')
-    _bolt_var0 = dump_ast
-    _bolt_var0 = _bolt_var0()
-_bolt_var2 = _bolt_helper_replace(_bolt_refs[0], commands=_bolt_helper_children(_bolt_var1))
-```
-
-`@function demo:codegen/foo`
-
-```mcfunction
-_bolt_lineno = [1, 13, 18, 22, 26, 28, 31, 33], [1, 2, 3, 4, 6, 7, 10, 11]
-_bolt_helper_macro_call = _bolt_runtime.helpers['macro_call']
-_bolt_helper_interpolate_word = _bolt_runtime.helpers['interpolate_word']
-_bolt_helper_children = _bolt_runtime.helpers['children']
-_bolt_helper_replace = _bolt_runtime.helpers['replace']
-_bolt_helper_interpolate_resource_location = _bolt_runtime.helpers['interpolate_resource_location']
-_bolt_helper_get_rebind = _bolt_runtime.helpers['get_rebind']
-with _bolt_runtime.scope() as _bolt_var9:
-    CALAMAR, dump_ast, anonymous, _bolt_macro0, _bolt_macro1 = _bolt_runtime.from_module_import('demo:codegen/prelude', 'CALAMAR', 'dump_ast', 'anonymous', '_bolt_macro0', '_bolt_macro1')
-    alright_then, _bolt_macro2 = _bolt_runtime.from_module_import('no_idea:prelude', 'alright_then', '_bolt_macro0')
-    _bolt_var0 = _bolt_helper_macro_call(_bolt_runtime, _bolt_macro1, _bolt_refs[0])
-    _bolt_runtime.commands.extend(_bolt_var0)
-    _bolt_var1 = anonymous
-    _bolt_var1 = _bolt_var1()
-    _bolt_var1 = _bolt_helper_interpolate_word(_bolt_var1, _bolt_refs[1])
-    _bolt_var2 = _bolt_helper_macro_call(_bolt_runtime, _bolt_macro0, _bolt_helper_replace(_bolt_refs[2], arguments=_bolt_helper_children([_bolt_var1])))
-    _bolt_runtime.commands.extend(_bolt_var2)
-    _bolt_var3 = CALAMAR
-    _bolt_var3 = _bolt_helper_interpolate_resource_location(_bolt_var3, _bolt_refs[3])
-    _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[4], arguments=_bolt_helper_children([_bolt_var3])))
-    _bolt_var4 = None
-    _bolt_rebind = _bolt_helper_get_rebind(CALAMAR)
-    CALAMAR = _bolt_var4
-    if _bolt_rebind is not None:
-        CALAMAR = _bolt_rebind(CALAMAR)
-    _bolt_var5 = _bolt_helper_macro_call(_bolt_runtime, _bolt_macro1, _bolt_refs[5])
-    _bolt_runtime.commands.extend(_bolt_var5)
-    _bolt_var6 = alright_then
-    _bolt_var6 = _bolt_var6()
-    _bolt_runtime.commands.append(_bolt_refs[7])
-    _bolt_var7 = _bolt_helper_macro_call(_bolt_runtime, _bolt_macro1, _bolt_refs[6])
-    _bolt_runtime.commands.extend(_bolt_var7)
-    _bolt_var8 = dump_ast
-    _bolt_var8 = _bolt_var8()
-_bolt_var10 = _bolt_helper_replace(_bolt_refs[8], commands=_bolt_helper_children(_bolt_var9))
-```
-
-`@function demo:foo`
-
-```mcfunction
-say !!!
-say hello anonymous
-summon minecraft:squid
-say !!!
-say ok ok
-say hello steve
-say AstResourceLocation(is_tag=False, namespace='minecraft', path='becomeduck')
-say !!!
-```
-
-`@function(strip_final_newline) demo:ref/bar`
-
-```mcfunction
-
-```
-
-`@function demo:ref/foo`
-
-```mcfunction
-say !!!
-say hello anonymous
-summon minecraft:squid
-say !!!
-say ok ok
-say hello steve
-say AstResourceLocation(is_tag=False, namespace='minecraft', path='becomeduck')
-say !!!
 ```

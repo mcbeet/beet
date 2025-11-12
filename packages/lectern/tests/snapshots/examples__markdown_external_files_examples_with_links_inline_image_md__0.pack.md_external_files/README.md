@@ -44,20 +44,20 @@
 }
 ```
 
+### foo
+
+`@texture foo:hello`
+
+![texture.png](hello.png)
+
 ### bar
 
 `@texture bar:hello`
 
-![texture.png](hello.png)
+![texture.png](hello_1.png)
 
 ### baz
 
 `@texture baz:hello`
-
-![texture.png](hello_1.png)
-
-### foo
-
-`@texture foo:hello`
 
 ![texture.png](hello_2.png)

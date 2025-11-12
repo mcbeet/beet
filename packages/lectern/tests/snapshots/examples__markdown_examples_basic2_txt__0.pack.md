@@ -22,16 +22,6 @@
 
 ### demo
 
-`@function demo:bar`
-
-```mcfunction
-say bar
- @function demo:bar
- say hello
-  @function demo:bar
-  say world
-```
-
 `@function demo:foo`
 
 ```mcfunction
@@ -40,4 +30,14 @@ say foo
 say still in the same function
 @@@@
 @ @ @
+```
+
+`@function demo:bar`
+
+```mcfunction
+say bar
+ @function demo:bar
+ say hello
+  @function demo:bar
+  say world
 ```

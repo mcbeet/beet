@@ -22,16 +22,16 @@
 
 ### demo
 
-`@function demo:bar`
-
-```mcfunction
-say world
-```
-
 `@function demo:foo`
 
 ```mcfunction
 say hello
+```
+
+`@function demo:bar`
+
+```mcfunction
+say world
 ```
 
 `@function_tag demo:abc`
@@ -80,41 +80,6 @@ say hello
 ```
 
 ### minecraft
-
-`@fragment_shader minecraft:core/blit_screen`
-
-```glsl
-#version 150
-
-uniform sampler2D DiffuseSampler;
-
-uniform vec4 ColorModulator;
-
-in vec2 texCoord;
-in vec4 vertexColor;
-
-out vec4 fragColor;
-
-void main() {
-    vec4 color = texture(DiffuseSampler, texCoord) * vertexColor;
-
-    // blit final output of compositor into displayed back buffer
-    fragColor = color * ColorModulator;
-}
-```
-
-`@glsl_shader minecraft:include/matrix`
-
-```glsl
-#version 150
-
-mat2 mat2_rotate_z(float radians) {
-    return mat2(
-        cos(radians), -sin(radians),
-        sin(radians), cos(radians)
-    );
-}
-```
 
 `@model minecraft:item/bow`
 
@@ -245,6 +210,41 @@ mat2 mat2_rotate_z(float radians) {
       "model": "demo:item/cool_bow_pulling_2"
     }
   ]
+}
+```
+
+`@glsl_shader minecraft:include/matrix`
+
+```glsl
+#version 150
+
+mat2 mat2_rotate_z(float radians) {
+    return mat2(
+        cos(radians), -sin(radians),
+        sin(radians), cos(radians)
+    );
+}
+```
+
+`@fragment_shader minecraft:core/blit_screen`
+
+```glsl
+#version 150
+
+uniform sampler2D DiffuseSampler;
+
+uniform vec4 ColorModulator;
+
+in vec2 texCoord;
+in vec4 vertexColor;
+
+out vec4 fragColor;
+
+void main() {
+    vec4 color = texture(DiffuseSampler, texCoord) * vertexColor;
+
+    // blit final output of compositor into displayed back buffer
+    fragColor = color * ColorModulator;
 }
 ```
 
