@@ -31,9 +31,12 @@ def provide_compilation_units(
     for resource_location in pack[Overgen].match(*match or ["*"]):
         file_instance = pack[Overgen][resource_location]
 
-        yield file_instance, CompilationUnit(
-            resource_location=resource_location,
-            pack=pack.overlays[normalize_string(resource_location)],
+        yield (
+            file_instance,
+            CompilationUnit(
+                resource_location=resource_location,
+                pack=pack.overlays[normalize_string(resource_location)],
+            ),
         )
 
 

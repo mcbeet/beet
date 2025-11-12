@@ -1,5 +1,4 @@
-""""Plugin that defines the `@hello <name>` directive."""
-
+""" "Plugin that defines the `@hello <name>` directive."""
 
 from beet import Context, DataPack, Function, ResourcePack
 

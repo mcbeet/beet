@@ -199,16 +199,13 @@ class File(Generic[ValueType, SerializeType]):
             return NotImplemented
 
         return (
-            (
-                self.source_path is not None
-                and self.source_path == other.source_path
-                and (0 if self.source_start is None else self.source_start)
-                == (0 if other.source_start is None else other.source_start)
-                and (-1 if self.source_stop is None else self.source_stop)
-                == (-1 if other.source_stop is None else other.source_stop)
-            )
-            or self.content_equal(other)
-        )
+            self.source_path is not None
+            and self.source_path == other.source_path
+            and (0 if self.source_start is None else self.source_start)
+            == (0 if other.source_start is None else other.source_start)
+            and (-1 if self.source_stop is None else self.source_stop)
+            == (-1 if other.source_stop is None else other.source_stop)
+        ) or self.content_equal(other)
 
     def __hash__(self) -> int:
         return id(self)

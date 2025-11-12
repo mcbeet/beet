@@ -49,7 +49,9 @@ def beet_default(ctx: Context):
     for i in range(3):
         ctx.generate("hoisted:foo", merge=FunctionTag({"values": [f"demo:foo{i}"]}))
         ctx.generate("hoisted:abc", default=Function).append(f"function {func}")
-        ctx.generate("hoisted:def", default=Function("say init")).prepend(f"say {i+1}")
+        ctx.generate("hoisted:def", default=Function("say init")).prepend(
+            f"say {i + 1}"
+        )
 
     with ctx.generate.overlays["foo"].push():
         ctx.generate("bop{incr}", Function(["say hello"]))

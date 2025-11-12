@@ -7,7 +7,9 @@ from beet import run_beet
 from lectern import Document
 
 EXAMPLES_LINKS = sorted(glob("examples/with_links/*.md")) + ["README.md"]
-EXAMPLES = sorted(glob("examples/*.txt")) + sorted(glob("examples/*.md")) + EXAMPLES_LINKS
+EXAMPLES = (
+    sorted(glob("examples/*.txt")) + sorted(glob("examples/*.md")) + EXAMPLES_LINKS
+)
 
 
 @pytest.mark.parametrize("path", EXAMPLES)

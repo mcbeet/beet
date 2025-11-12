@@ -20,7 +20,9 @@ def handle_content(ctx: Context, node: TreeNode[str], function: Function, n: int
         ctx.generate(Function([f"function {node.parent}"], tags=["minecraft:tick"]))
         function.lines.append("scoreboard players add #index temp 1")
     if node.partition(n):
-        function.lines.append(f"execute if score #index temp matches {node.range} run function {node.children}")
+        function.lines.append(
+            f"execute if score #index temp matches {node.range} run function {node.children}"
+        )
     else:
         function.lines.append(
             f"execute if score #index temp matches {node.range} run say {node.value}"
