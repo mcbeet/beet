@@ -1,0 +1,7 @@
+require:
+  - mecha.contrib.json_files
+  - bolt
+data_pack:
+  load: "src"
+pipeline:
+  - mecha

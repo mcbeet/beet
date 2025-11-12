@@ -1,0 +1,11 @@
+import json
+
+def something():
+    say f"this is from {__name__}"
+
+def load_storage(storage_id, filename):
+    path = ctx.directory / filename
+    merge function_tag minecraft:load {"values": [generate_path("load_storage")]}
+    append function generate_path("load_storage"):
+        data merge storage storage_id json.loads(path.read_text())
+        say json loaded!

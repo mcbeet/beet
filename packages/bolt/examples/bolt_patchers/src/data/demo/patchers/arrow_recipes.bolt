@@ -1,0 +1,17 @@
+targets = {
+    recipes: "minecraft:*arrow"
+}
+
+def patch(name, recipe):
+    if recipe.type == minecraft:crafting_shaped:
+        result = recipe.result
+
+        recipe.key."#" = {
+            tag: minecraft:coals
+        }
+
+        if result.item == minecraft:arrow:
+            del recipe.key["X"]
+            recipe.pattern[0] = "#"
+
+        result["count"] += 2 + (10 - 9) * 3

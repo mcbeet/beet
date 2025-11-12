@@ -1,0 +1,22 @@
+_bolt_lineno = [1, 11], [1, 3]
+_bolt_helper_missing = _bolt_runtime.helpers['missing']
+_bolt_helper_children = _bolt_runtime.helpers['children']
+_bolt_helper_replace = _bolt_runtime.helpers['replace']
+with _bolt_runtime.scope() as _bolt_var0:
+    def g(a=_bolt_helper_missing):
+        'My other function'
+        if a is _bolt_helper_missing:
+            _bolt_var0 = 123
+            a = _bolt_var0
+        _bolt_var1 = a
+        return _bolt_var1
+_bolt_var1 = _bolt_helper_replace(_bolt_refs[0], commands=_bolt_helper_children(_bolt_var0))
+---
+output = _bolt_var1
+---
+_bolt_refs[0]
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=54, lineno=3, colno=13)
+  commands:
+    <class 'mecha.ast.AstCommand'>

@@ -1,0 +1,7 @@
+#>ERROR  Forbidden literal "macro".
+# line 1, column 7
+#      1 |  macro macro:
+#        :        ^^^^^
+#      2 |      pass
+macro macro:
+    pass

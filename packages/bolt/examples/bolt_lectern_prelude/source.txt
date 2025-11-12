@@ -1,0 +1,12 @@
+@module demo:prelude
+stuff = 123
+
+@function demo:foo
+say stuff
+
+@overlay dummy
+@module demo:prelude
+stuff = 456
+
+@function demo:foo
+say stuff

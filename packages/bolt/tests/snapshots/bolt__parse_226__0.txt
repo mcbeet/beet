@@ -1,0 +1,72 @@
+macro >> message=minecraft:message:
+    say message
+>> hello @p
+---
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=63, lineno=3, colno=12)
+  commands:
+    <class 'bolt.ast.AstMacro'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=51, lineno=2, colno=16)
+      identifier: '>>:message'
+      arguments:
+        <class 'bolt.ast.AstMacroLiteral'>
+          location: SourceLocation(pos=6, lineno=1, colno=7)
+          end_location: SourceLocation(pos=8, lineno=1, colno=9)
+          value: '>>'
+        <class 'bolt.ast.AstMacroMatchArgument'>
+          location: SourceLocation(pos=9, lineno=1, colno=10)
+          end_location: SourceLocation(pos=34, lineno=1, colno=35)
+          match_identifier:
+            <class 'bolt.ast.AstMacroArgument'>
+              location: SourceLocation(pos=9, lineno=1, colno=10)
+              end_location: SourceLocation(pos=16, lineno=1, colno=17)
+              value: 'message'
+          match_argument_parser:
+            <class 'mecha.ast.AstResourceLocation'>
+              location: SourceLocation(pos=17, lineno=1, colno=18)
+              end_location: SourceLocation(pos=34, lineno=1, colno=35)
+              is_tag: False
+              namespace: 'minecraft'
+              path: 'message'
+          match_argument_properties: None
+        <class 'mecha.ast.AstRoot'>
+          location: SourceLocation(pos=40, lineno=2, colno=5)
+          end_location: SourceLocation(pos=51, lineno=2, colno=16)
+          commands:
+            <class 'mecha.ast.AstCommand'>
+              location: SourceLocation(pos=40, lineno=2, colno=5)
+              end_location: SourceLocation(pos=51, lineno=2, colno=16)
+              identifier: 'say:message'
+              arguments:
+                <class 'bolt.ast.AstInterpolation'>
+                  location: SourceLocation(pos=44, lineno=2, colno=9)
+                  end_location: SourceLocation(pos=51, lineno=2, colno=16)
+                  prefix: None
+                  unpack: None
+                  converter: 'message'
+                  value:
+                    <class 'bolt.ast.AstIdentifier'>
+                      location: SourceLocation(pos=44, lineno=2, colno=9)
+                      end_location: SourceLocation(pos=51, lineno=2, colno=16)
+                      value: 'message'
+    <class 'bolt.ast.AstMacroCall'>
+      location: SourceLocation(pos=52, lineno=3, colno=1)
+      end_location: SourceLocation(pos=63, lineno=3, colno=12)
+      identifier: '>>:message'
+      arguments:
+        <class 'mecha.ast.AstMessage'>
+          location: SourceLocation(pos=55, lineno=3, colno=4)
+          end_location: SourceLocation(pos=63, lineno=3, colno=12)
+          fragments:
+            <class 'mecha.ast.AstMessageText'>
+              location: SourceLocation(pos=55, lineno=3, colno=4)
+              end_location: SourceLocation(pos=61, lineno=3, colno=10)
+              value: 'hello '
+            <class 'mecha.ast.AstSelector'>
+              location: SourceLocation(pos=61, lineno=3, colno=10)
+              end_location: SourceLocation(pos=63, lineno=3, colno=12)
+              variable: 'p'
+              arguments:
+                <empty>

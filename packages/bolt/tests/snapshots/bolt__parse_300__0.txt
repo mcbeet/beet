@@ -1,0 +1,7 @@
+#>ERROR  Expected at least one named argument after bare variadic marker.
+# line 1, column 12
+#      1 |  def g(foo, *):
+#        :             ^
+#      2 |      pass
+def g(foo, *):
+    pass

@@ -1,0 +1,35 @@
+class Foo:
+    say bar
+---
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=22, lineno=2, colno=12)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=22, lineno=2, colno=12)
+      identifier: 'class:name:body'
+      arguments:
+        <class 'bolt.ast.AstClassName'>
+          location: SourceLocation(pos=6, lineno=1, colno=7)
+          end_location: SourceLocation(pos=9, lineno=1, colno=10)
+          decorators:
+            <empty>
+          value: 'Foo'
+        <class 'bolt.ast.AstClassRoot'>
+          location: SourceLocation(pos=15, lineno=2, colno=5)
+          end_location: SourceLocation(pos=22, lineno=2, colno=12)
+          commands:
+            <class 'mecha.ast.AstCommand'>
+              location: SourceLocation(pos=15, lineno=2, colno=5)
+              end_location: SourceLocation(pos=22, lineno=2, colno=12)
+              identifier: 'say:message'
+              arguments:
+                <class 'mecha.ast.AstMessage'>
+                  location: SourceLocation(pos=19, lineno=2, colno=9)
+                  end_location: SourceLocation(pos=22, lineno=2, colno=12)
+                  fragments:
+                    <class 'mecha.ast.AstMessageText'>
+                      location: SourceLocation(pos=19, lineno=2, colno=9)
+                      end_location: SourceLocation(pos=22, lineno=2, colno=12)
+                      value: 'bar'

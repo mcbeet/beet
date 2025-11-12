@@ -1,0 +1,15 @@
+22220099.6667e-3
+---
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=17, lineno=2, colno=1)
+  commands:
+    <class 'bolt.ast.AstStatement'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=16, lineno=1, colno=17)
+      identifier: 'mecha:sentinel'
+      arguments:
+        <class 'bolt.ast.AstValue'>
+          location: SourceLocation(pos=0, lineno=1, colno=1)
+          end_location: SourceLocation(pos=16, lineno=1, colno=17)
+          value: 22220.0996667

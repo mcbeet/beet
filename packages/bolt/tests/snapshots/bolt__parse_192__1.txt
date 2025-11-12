@@ -1,0 +1,69 @@
+_bolt_lineno = [1, 10, 14, 15, 16, 18], [1, 2, 4, 5, 6, 7]
+_bolt_helper_interpolate_message = _bolt_runtime.helpers['interpolate_message']
+_bolt_helper_children = _bolt_runtime.helpers['children']
+_bolt_helper_replace = _bolt_runtime.helpers['replace']
+_bolt_helper_import_module = _bolt_runtime.helpers['import_module']
+_bolt_helper_get_attribute_handler = _bolt_runtime.helpers['get_attribute_handler']
+with _bolt_runtime.scope() as _bolt_var5:
+    _bolt_var0 = 0
+    math = _bolt_var0
+    _bolt_var1 = math
+    _bolt_var1 = _bolt_helper_interpolate_message(_bolt_var1, _bolt_refs[0])
+    _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[1], arguments=_bolt_helper_children([_bolt_var1])))
+    def wat():
+        global math
+        math = _bolt_helper_import_module('math')
+    _bolt_var2 = wat
+    _bolt_var2 = _bolt_var2()
+    _bolt_var3 = math
+    _bolt_var3 = _bolt_helper_get_attribute_handler(_bolt_var3)["ceil"]
+    _bolt_var4 = 0.1
+    _bolt_var3 = _bolt_var3(_bolt_var4)
+    _bolt_var3 = _bolt_helper_interpolate_message(_bolt_var3, _bolt_refs[2])
+    _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[3], arguments=_bolt_helper_children([_bolt_var3])))
+_bolt_var6 = _bolt_helper_replace(_bolt_refs[4], commands=_bolt_helper_children(_bolt_var5))
+---
+output = _bolt_var6
+---
+_bolt_refs[0]
+<class 'bolt.ast.AstInterpolation'>
+  location: SourceLocation(pos=13, lineno=2, colno=5)
+  end_location: SourceLocation(pos=17, lineno=2, colno=9)
+  prefix: None
+  unpack: None
+  converter: 'message'
+  value:
+    <class 'bolt.ast.AstIdentifier'>
+_bolt_refs[1]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=9, lineno=2, colno=1)
+  end_location: SourceLocation(pos=17, lineno=2, colno=9)
+  identifier: 'say:message'
+  arguments:
+    <class 'bolt.ast.AstInterpolation'>
+_bolt_refs[2]
+<class 'bolt.ast.AstInterpolation'>
+  location: SourceLocation(pos=71, lineno=7, colno=5)
+  end_location: SourceLocation(pos=85, lineno=7, colno=19)
+  prefix: None
+  unpack: None
+  converter: 'message'
+  value:
+    <class 'bolt.ast.AstCall'>
+_bolt_refs[3]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=67, lineno=7, colno=1)
+  end_location: SourceLocation(pos=85, lineno=7, colno=19)
+  identifier: 'say:message'
+  arguments:
+    <class 'bolt.ast.AstInterpolation'>
+_bolt_refs[4]
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=86, lineno=8, colno=1)
+  commands:
+    <class 'bolt.ast.AstStatement'>
+    <class 'mecha.ast.AstCommand'>
+    <class 'mecha.ast.AstCommand'>
+    <class 'bolt.ast.AstStatement'>
+    <class 'mecha.ast.AstCommand'>

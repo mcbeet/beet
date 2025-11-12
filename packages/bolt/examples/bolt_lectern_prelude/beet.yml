@@ -1,0 +1,10 @@
+require:
+  - bolt
+pipeline:
+  - lectern
+  - mecha
+meta:
+  lectern:
+    load: "source.txt"
+  bolt:
+    prelude: "demo:prelude"

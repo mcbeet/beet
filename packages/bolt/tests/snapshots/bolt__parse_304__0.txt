@@ -1,0 +1,7 @@
+#>ERROR  Argument without default can not appear after arguments with default values.
+# line 1, column 12
+#      1 |  def g(a=1, b):
+#        :             ^
+#      2 |      pass
+def g(a=1, b):
+    pass

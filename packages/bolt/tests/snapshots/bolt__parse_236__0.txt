@@ -1,0 +1,7 @@
+#>ERROR  Proc macro "foo" contains non-literal match.
+# line 1, column 11
+#      1 |  macro foo message=minecraft:message(stream):
+#        :            ^^^^^^^^^^^^^^^^^^^^^^^^^
+#      2 |      pass
+macro foo message=minecraft:message(stream):
+    pass

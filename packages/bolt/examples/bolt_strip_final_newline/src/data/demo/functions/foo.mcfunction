@@ -1,0 +1,1 @@
+scoreboard players operation foo set = bar set

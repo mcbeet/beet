@@ -1,0 +1,53 @@
+item replace block ~ ~2 ~ container.26 with minecraft:spruce_sapling 4
+---
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=71, lineno=2, colno=1)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=70, lineno=1, colno=71)
+      identifier: 'item:replace:block:pos:slot:with:item:count'
+      arguments:
+        <class 'mecha.ast.AstVector3'>
+          location: SourceLocation(pos=19, lineno=1, colno=20)
+          end_location: SourceLocation(pos=25, lineno=1, colno=26)
+          x:
+            <class 'mecha.ast.AstCoordinate'>
+              location: SourceLocation(pos=19, lineno=1, colno=20)
+              end_location: SourceLocation(pos=20, lineno=1, colno=21)
+              type: 'relative'
+              value: 0
+          y:
+            <class 'mecha.ast.AstCoordinate'>
+              location: SourceLocation(pos=21, lineno=1, colno=22)
+              end_location: SourceLocation(pos=23, lineno=1, colno=24)
+              type: 'relative'
+              value: 2
+          z:
+            <class 'mecha.ast.AstCoordinate'>
+              location: SourceLocation(pos=24, lineno=1, colno=25)
+              end_location: SourceLocation(pos=25, lineno=1, colno=26)
+              type: 'relative'
+              value: 0
+        <class 'mecha.ast.AstItemSlot'>
+          location: SourceLocation(pos=26, lineno=1, colno=27)
+          end_location: SourceLocation(pos=38, lineno=1, colno=39)
+          value: 'container.26'
+        <class 'mecha.ast.AstItemStack'>
+          location: SourceLocation(pos=44, lineno=1, colno=45)
+          end_location: SourceLocation(pos=68, lineno=1, colno=69)
+          identifier:
+            <class 'mecha.ast.AstResourceLocation'>
+              location: SourceLocation(pos=44, lineno=1, colno=45)
+              end_location: SourceLocation(pos=68, lineno=1, colno=69)
+              is_tag: False
+              namespace: 'minecraft'
+              path: 'spruce_sapling'
+          arguments:
+            <empty>
+          data_tags: None
+        <class 'mecha.ast.AstNumber'>
+          location: SourceLocation(pos=69, lineno=1, colno=70)
+          end_location: SourceLocation(pos=70, lineno=1, colno=71)
+          value: 4

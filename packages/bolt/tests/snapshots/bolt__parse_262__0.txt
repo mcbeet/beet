@@ -1,0 +1,53 @@
+class Foo:
+    bar = 1 + 2
+---
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=27, lineno=3, colno=1)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=26, lineno=2, colno=16)
+      identifier: 'class:name:body'
+      arguments:
+        <class 'bolt.ast.AstClassName'>
+          location: SourceLocation(pos=6, lineno=1, colno=7)
+          end_location: SourceLocation(pos=9, lineno=1, colno=10)
+          decorators:
+            <empty>
+          value: 'Foo'
+        <class 'bolt.ast.AstClassRoot'>
+          location: SourceLocation(pos=15, lineno=2, colno=5)
+          end_location: SourceLocation(pos=26, lineno=2, colno=16)
+          commands:
+            <class 'bolt.ast.AstStatement'>
+              location: SourceLocation(pos=15, lineno=2, colno=5)
+              end_location: SourceLocation(pos=26, lineno=2, colno=16)
+              identifier: 'mecha:sentinel'
+              arguments:
+                <class 'bolt.ast.AstAssignment'>
+                  location: SourceLocation(pos=15, lineno=2, colno=5)
+                  end_location: SourceLocation(pos=26, lineno=2, colno=16)
+                  operator: '='
+                  target:
+                    <class 'bolt.ast.AstTargetIdentifier'>
+                      location: SourceLocation(pos=15, lineno=2, colno=5)
+                      end_location: SourceLocation(pos=18, lineno=2, colno=8)
+                      value: 'bar'
+                      rebind: False
+                  value:
+                    <class 'bolt.ast.AstExpressionBinary'>
+                      location: SourceLocation(pos=21, lineno=2, colno=11)
+                      end_location: SourceLocation(pos=26, lineno=2, colno=16)
+                      operator: '+'
+                      left:
+                        <class 'bolt.ast.AstValue'>
+                          location: SourceLocation(pos=21, lineno=2, colno=11)
+                          end_location: SourceLocation(pos=22, lineno=2, colno=12)
+                          value: 1
+                      right:
+                        <class 'bolt.ast.AstValue'>
+                          location: SourceLocation(pos=25, lineno=2, colno=15)
+                          end_location: SourceLocation(pos=26, lineno=2, colno=16)
+                          value: 2
+                  type_annotation: None

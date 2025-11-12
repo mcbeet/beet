@@ -1,0 +1,10 @@
+class Foo:
+    bar = 2
+#>ERROR  Identifier "bar" is not defined.
+# line 3, column 7
+#      2 |      bar = 2
+#      3 |  print(bar)
+#        :        ^^^
+# Notes:
+#   - Expected equal but got brace ')'.
+print(bar)

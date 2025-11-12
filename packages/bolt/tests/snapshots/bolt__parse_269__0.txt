@@ -1,0 +1,9 @@
+if "beans":
+#>ERROR  Macro definition can only appear directly at scope level.
+# line 2, column 5
+#      1 |  if "beans":
+#      2 |      macro beans:
+#        :      ^^^^^^^^^^^
+#      3 |          pass
+    macro beans:
+        pass

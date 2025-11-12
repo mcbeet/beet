@@ -1,0 +1,9 @@
+memo something=123:
+#>ERROR  Identifier "somethig" is not defined. Did you mean "something"?
+# line 2, column 11
+#      1 |  memo something=123:
+#      2 |      print(somethig)
+#        :            ^^^^^^^^
+# Notes:
+#   - Expected equal but got brace ')'.
+    print(somethig)

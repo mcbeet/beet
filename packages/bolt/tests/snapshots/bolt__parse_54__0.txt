@@ -1,0 +1,7 @@
+#>ERROR  Identifier "foo" is not defined.
+# line 1, column 12
+#      1 |  for foo in foo:
+#        :             ^^^
+#      2 |      foo = foo
+for foo in foo:
+    foo = foo

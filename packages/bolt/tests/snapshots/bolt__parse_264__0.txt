@@ -1,0 +1,59 @@
+class Foo:
+    def bar(self):
+        say bar
+---
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=45, lineno=3, colno=16)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=45, lineno=3, colno=16)
+      identifier: 'class:name:body'
+      arguments:
+        <class 'bolt.ast.AstClassName'>
+          location: SourceLocation(pos=6, lineno=1, colno=7)
+          end_location: SourceLocation(pos=9, lineno=1, colno=10)
+          decorators:
+            <empty>
+          value: 'Foo'
+        <class 'bolt.ast.AstClassRoot'>
+          location: SourceLocation(pos=15, lineno=2, colno=5)
+          end_location: SourceLocation(pos=45, lineno=3, colno=16)
+          commands:
+            <class 'mecha.ast.AstCommand'>
+              location: SourceLocation(pos=15, lineno=2, colno=5)
+              end_location: SourceLocation(pos=45, lineno=3, colno=16)
+              identifier: 'def:function:body'
+              arguments:
+                <class 'bolt.ast.AstFunctionSignature'>
+                  location: SourceLocation(pos=19, lineno=2, colno=9)
+                  end_location: SourceLocation(pos=28, lineno=2, colno=18)
+                  decorators:
+                    <empty>
+                  name: 'bar'
+                  arguments:
+                    <class 'bolt.ast.AstFunctionSignatureArgument'>
+                      location: SourceLocation(pos=23, lineno=2, colno=13)
+                      end_location: SourceLocation(pos=27, lineno=2, colno=17)
+                      name: 'self'
+                      type_annotation: None
+                      default: None
+                  return_type_annotation: None
+                <class 'mecha.ast.AstRoot'>
+                  location: SourceLocation(pos=38, lineno=3, colno=9)
+                  end_location: SourceLocation(pos=45, lineno=3, colno=16)
+                  commands:
+                    <class 'mecha.ast.AstCommand'>
+                      location: SourceLocation(pos=38, lineno=3, colno=9)
+                      end_location: SourceLocation(pos=45, lineno=3, colno=16)
+                      identifier: 'say:message'
+                      arguments:
+                        <class 'mecha.ast.AstMessage'>
+                          location: SourceLocation(pos=42, lineno=3, colno=13)
+                          end_location: SourceLocation(pos=45, lineno=3, colno=16)
+                          fragments:
+                            <class 'mecha.ast.AstMessageText'>
+                              location: SourceLocation(pos=42, lineno=3, colno=13)
+                              end_location: SourceLocation(pos=45, lineno=3, colno=16)
+                              value: 'bar'

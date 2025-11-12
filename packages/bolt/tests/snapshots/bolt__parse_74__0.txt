@@ -1,0 +1,4 @@
+#>ERROR  Expected colon but reached end of file.
+# line 1, column 8
+#      1 |  def f()
+def f()

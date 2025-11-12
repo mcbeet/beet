@@ -1,0 +1,105 @@
+macro foo number=brigadier:integer text=brigadier:string{"type": "greedy"}:
+    print(number, text)
+foo 42 this is fine really
+---
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=127, lineno=4, colno=1)
+  commands:
+    <class 'bolt.ast.AstMacro'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=99, lineno=2, colno=24)
+      identifier: 'foo:number:text'
+      arguments:
+        <class 'bolt.ast.AstMacroLiteral'>
+          location: SourceLocation(pos=6, lineno=1, colno=7)
+          end_location: SourceLocation(pos=9, lineno=1, colno=10)
+          value: 'foo'
+        <class 'bolt.ast.AstMacroMatchArgument'>
+          location: SourceLocation(pos=10, lineno=1, colno=11)
+          end_location: SourceLocation(pos=34, lineno=1, colno=35)
+          match_identifier:
+            <class 'bolt.ast.AstMacroArgument'>
+              location: SourceLocation(pos=10, lineno=1, colno=11)
+              end_location: SourceLocation(pos=16, lineno=1, colno=17)
+              value: 'number'
+          match_argument_parser:
+            <class 'mecha.ast.AstResourceLocation'>
+              location: SourceLocation(pos=17, lineno=1, colno=18)
+              end_location: SourceLocation(pos=34, lineno=1, colno=35)
+              is_tag: False
+              namespace: 'brigadier'
+              path: 'integer'
+          match_argument_properties: None
+        <class 'bolt.ast.AstMacroMatchArgument'>
+          location: SourceLocation(pos=35, lineno=1, colno=36)
+          end_location: SourceLocation(pos=74, lineno=1, colno=75)
+          match_identifier:
+            <class 'bolt.ast.AstMacroArgument'>
+              location: SourceLocation(pos=35, lineno=1, colno=36)
+              end_location: SourceLocation(pos=39, lineno=1, colno=40)
+              value: 'text'
+          match_argument_parser:
+            <class 'mecha.ast.AstResourceLocation'>
+              location: SourceLocation(pos=40, lineno=1, colno=41)
+              end_location: SourceLocation(pos=56, lineno=1, colno=57)
+              is_tag: False
+              namespace: 'brigadier'
+              path: 'string'
+          match_argument_properties:
+            <class 'mecha.ast.AstJsonObject'>
+              location: SourceLocation(pos=56, lineno=1, colno=57)
+              end_location: SourceLocation(pos=74, lineno=1, colno=75)
+              entries:
+                <class 'mecha.ast.AstJsonObjectEntry'>
+                  location: SourceLocation(pos=57, lineno=1, colno=58)
+                  end_location: SourceLocation(pos=73, lineno=1, colno=74)
+                  key:
+                    <class 'mecha.ast.AstJsonObjectKey'>
+                      location: SourceLocation(pos=57, lineno=1, colno=58)
+                      end_location: SourceLocation(pos=63, lineno=1, colno=64)
+                      value: 'type'
+                  value:
+                    <class 'mecha.ast.AstJsonValue'>
+                      location: SourceLocation(pos=65, lineno=1, colno=66)
+                      end_location: SourceLocation(pos=73, lineno=1, colno=74)
+                      value: 'greedy'
+        <class 'mecha.ast.AstRoot'>
+          location: SourceLocation(pos=80, lineno=2, colno=5)
+          end_location: SourceLocation(pos=99, lineno=2, colno=24)
+          commands:
+            <class 'bolt.ast.AstStatement'>
+              location: SourceLocation(pos=80, lineno=2, colno=5)
+              end_location: SourceLocation(pos=99, lineno=2, colno=24)
+              identifier: 'mecha:sentinel'
+              arguments:
+                <class 'bolt.ast.AstCall'>
+                  location: SourceLocation(pos=80, lineno=2, colno=5)
+                  end_location: SourceLocation(pos=99, lineno=2, colno=24)
+                  value:
+                    <class 'bolt.ast.AstIdentifier'>
+                      location: SourceLocation(pos=80, lineno=2, colno=5)
+                      end_location: SourceLocation(pos=85, lineno=2, colno=10)
+                      value: 'print'
+                  arguments:
+                    <class 'bolt.ast.AstIdentifier'>
+                      location: SourceLocation(pos=86, lineno=2, colno=11)
+                      end_location: SourceLocation(pos=92, lineno=2, colno=17)
+                      value: 'number'
+                    <class 'bolt.ast.AstIdentifier'>
+                      location: SourceLocation(pos=94, lineno=2, colno=19)
+                      end_location: SourceLocation(pos=98, lineno=2, colno=23)
+                      value: 'text'
+    <class 'bolt.ast.AstMacroCall'>
+      location: SourceLocation(pos=100, lineno=3, colno=1)
+      end_location: SourceLocation(pos=126, lineno=3, colno=27)
+      identifier: 'foo:number:text'
+      arguments:
+        <class 'mecha.ast.AstNumber'>
+          location: SourceLocation(pos=104, lineno=3, colno=5)
+          end_location: SourceLocation(pos=106, lineno=3, colno=7)
+          value: 42
+        <class 'mecha.ast.AstGreedy'>
+          location: SourceLocation(pos=107, lineno=3, colno=8)
+          end_location: SourceLocation(pos=126, lineno=3, colno=27)
+          value: 'this is fine really'

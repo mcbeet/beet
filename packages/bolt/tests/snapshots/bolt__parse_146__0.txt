@@ -1,0 +1,8 @@
+def f():
+    pass
+#>ERROR  Positional argument not allowed after keyword arguments.
+# line 3, column 18
+#      2 |      pass
+#      3 |  f(1, 2, thing=3, 4)
+#        :                   ^
+f(1, 2, thing=3, 4)

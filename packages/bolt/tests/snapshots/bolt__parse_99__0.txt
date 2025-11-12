@@ -1,0 +1,7 @@
+#>ERROR  Expected colon, literal 'advancement', literal 'align', literal 'anchored', literal 'append', literal 'as' or 158 other tokens but got literal 'for'.
+# line 1, column 7
+#      1 |  at @s for i in "foo":
+#        :        ^^^
+#      2 |      say yolo
+at @s for i in "foo":
+    say yolo

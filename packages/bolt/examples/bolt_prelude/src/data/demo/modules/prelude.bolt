@@ -1,0 +1,8 @@
+from ./macros import greet
+from ./other import CALAMAR, dump_ast
+
+macro !!!:
+    say !!!
+
+def anonymous() -> str:
+    return "anonymous"

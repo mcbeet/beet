@@ -1,0 +1,82 @@
+numbers = list(range(12))
+numbers[3:] = []
+---
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=43, lineno=3, colno=1)
+  commands:
+    <class 'bolt.ast.AstStatement'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=25, lineno=1, colno=26)
+      identifier: 'mecha:sentinel'
+      arguments:
+        <class 'bolt.ast.AstAssignment'>
+          location: SourceLocation(pos=0, lineno=1, colno=1)
+          end_location: SourceLocation(pos=25, lineno=1, colno=26)
+          operator: '='
+          target:
+            <class 'bolt.ast.AstTargetIdentifier'>
+              location: SourceLocation(pos=0, lineno=1, colno=1)
+              end_location: SourceLocation(pos=7, lineno=1, colno=8)
+              value: 'numbers'
+              rebind: False
+          value:
+            <class 'bolt.ast.AstCall'>
+              location: SourceLocation(pos=10, lineno=1, colno=11)
+              end_location: SourceLocation(pos=25, lineno=1, colno=26)
+              value:
+                <class 'bolt.ast.AstIdentifier'>
+                  location: SourceLocation(pos=10, lineno=1, colno=11)
+                  end_location: SourceLocation(pos=14, lineno=1, colno=15)
+                  value: 'list'
+              arguments:
+                <class 'bolt.ast.AstCall'>
+                  location: SourceLocation(pos=15, lineno=1, colno=16)
+                  end_location: SourceLocation(pos=24, lineno=1, colno=25)
+                  value:
+                    <class 'bolt.ast.AstIdentifier'>
+                      location: SourceLocation(pos=15, lineno=1, colno=16)
+                      end_location: SourceLocation(pos=20, lineno=1, colno=21)
+                      value: 'range'
+                  arguments:
+                    <class 'bolt.ast.AstValue'>
+                      location: SourceLocation(pos=21, lineno=1, colno=22)
+                      end_location: SourceLocation(pos=23, lineno=1, colno=24)
+                      value: 12
+          type_annotation: None
+    <class 'bolt.ast.AstStatement'>
+      location: SourceLocation(pos=26, lineno=2, colno=1)
+      end_location: SourceLocation(pos=42, lineno=2, colno=17)
+      identifier: 'mecha:sentinel'
+      arguments:
+        <class 'bolt.ast.AstAssignment'>
+          location: SourceLocation(pos=26, lineno=2, colno=1)
+          end_location: SourceLocation(pos=42, lineno=2, colno=17)
+          operator: '='
+          target:
+            <class 'bolt.ast.AstTargetItem'>
+              location: SourceLocation(pos=26, lineno=2, colno=1)
+              end_location: SourceLocation(pos=37, lineno=2, colno=12)
+              value:
+                <class 'bolt.ast.AstIdentifier'>
+                  location: SourceLocation(pos=26, lineno=2, colno=1)
+                  end_location: SourceLocation(pos=33, lineno=2, colno=8)
+                  value: 'numbers'
+              arguments:
+                <class 'bolt.ast.AstSlice'>
+                  location: SourceLocation(pos=34, lineno=2, colno=9)
+                  end_location: SourceLocation(pos=36, lineno=2, colno=11)
+                  start:
+                    <class 'bolt.ast.AstValue'>
+                      location: SourceLocation(pos=34, lineno=2, colno=9)
+                      end_location: SourceLocation(pos=35, lineno=2, colno=10)
+                      value: 3
+                  stop: None
+                  step: None
+          value:
+            <class 'bolt.ast.AstList'>
+              location: SourceLocation(pos=40, lineno=2, colno=15)
+              end_location: SourceLocation(pos=42, lineno=2, colno=17)
+              items:
+                <empty>
+          type_annotation: None

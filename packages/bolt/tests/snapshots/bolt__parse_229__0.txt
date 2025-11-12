@@ -1,0 +1,54 @@
+macro foo:
+    pass
+as @p run foo
+---
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=34, lineno=4, colno=1)
+  commands:
+    <class 'bolt.ast.AstMacro'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=19, lineno=2, colno=9)
+      identifier: 'foo'
+      arguments:
+        <class 'bolt.ast.AstMacroLiteral'>
+          location: SourceLocation(pos=6, lineno=1, colno=7)
+          end_location: SourceLocation(pos=9, lineno=1, colno=10)
+          value: 'foo'
+        <class 'mecha.ast.AstRoot'>
+          location: SourceLocation(pos=15, lineno=2, colno=5)
+          end_location: SourceLocation(pos=19, lineno=2, colno=9)
+          commands:
+            <class 'mecha.ast.AstCommand'>
+              location: SourceLocation(pos=15, lineno=2, colno=5)
+              end_location: SourceLocation(pos=19, lineno=2, colno=9)
+              identifier: 'pass'
+              arguments:
+                <empty>
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=20, lineno=3, colno=1)
+      end_location: SourceLocation(pos=33, lineno=3, colno=14)
+      identifier: 'execute:subcommand'
+      arguments:
+        <class 'mecha.ast.AstCommand'>
+          location: SourceLocation(pos=20, lineno=3, colno=1)
+          end_location: SourceLocation(pos=33, lineno=3, colno=14)
+          identifier: 'execute:as:targets:subcommand'
+          arguments:
+            <class 'mecha.ast.AstSelector'>
+              location: SourceLocation(pos=23, lineno=3, colno=4)
+              end_location: SourceLocation(pos=25, lineno=3, colno=6)
+              variable: 'p'
+              arguments:
+                <empty>
+            <class 'mecha.ast.AstCommand'>
+              location: SourceLocation(pos=26, lineno=3, colno=7)
+              end_location: SourceLocation(pos=33, lineno=3, colno=14)
+              identifier: 'execute:run:subcommand'
+              arguments:
+                <class 'bolt.ast.AstMacroCall'>
+                  location: SourceLocation(pos=30, lineno=3, colno=11)
+                  end_location: SourceLocation(pos=33, lineno=3, colno=14)
+                  identifier: 'foo'
+                  arguments:
+                    <empty>

@@ -1,0 +1,9 @@
+def f(x):
+#>ERROR  Identifier "xx" is not defined. Did you mean "x"?
+# line 2, column 16
+#      1 |  def f(x):
+#      2 |      tellraw @a xx
+#        :                 ^^
+#      3 |  f("thing")
+    tellraw @a xx
+f("thing")

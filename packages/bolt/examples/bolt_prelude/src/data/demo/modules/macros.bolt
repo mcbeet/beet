@@ -1,0 +1,2 @@
+macro greet name=brigadier:string{"type": "word"}:
+    say f"hello {name.value}"

@@ -1,0 +1,80 @@
+bow_data = {CustomModelData: 7}
+give @s bow{**bow_data}
+---
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=55, lineno=2, colno=24)
+  commands:
+    <class 'bolt.ast.AstStatement'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=31, lineno=1, colno=32)
+      identifier: 'mecha:sentinel'
+      arguments:
+        <class 'bolt.ast.AstAssignment'>
+          location: SourceLocation(pos=0, lineno=1, colno=1)
+          end_location: SourceLocation(pos=31, lineno=1, colno=32)
+          operator: '='
+          target:
+            <class 'bolt.ast.AstTargetIdentifier'>
+              location: SourceLocation(pos=0, lineno=1, colno=1)
+              end_location: SourceLocation(pos=8, lineno=1, colno=9)
+              value: 'bow_data'
+              rebind: False
+          value:
+            <class 'bolt.ast.AstDict'>
+              location: SourceLocation(pos=11, lineno=1, colno=12)
+              end_location: SourceLocation(pos=31, lineno=1, colno=32)
+              items:
+                <class 'bolt.ast.AstDictItem'>
+                  location: SourceLocation(pos=12, lineno=1, colno=13)
+                  end_location: SourceLocation(pos=30, lineno=1, colno=31)
+                  key:
+                    <class 'bolt.ast.AstDictUnquotedKey'>
+                      location: SourceLocation(pos=12, lineno=1, colno=13)
+                      end_location: SourceLocation(pos=27, lineno=1, colno=28)
+                      value: 'CustomModelData'
+                  value:
+                    <class 'bolt.ast.AstValue'>
+                      location: SourceLocation(pos=29, lineno=1, colno=30)
+                      end_location: SourceLocation(pos=30, lineno=1, colno=31)
+                      value: 7
+          type_annotation: None
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=32, lineno=2, colno=1)
+      end_location: SourceLocation(pos=55, lineno=2, colno=24)
+      identifier: 'give:targets:item'
+      arguments:
+        <class 'mecha.ast.AstSelector'>
+          location: SourceLocation(pos=37, lineno=2, colno=6)
+          end_location: SourceLocation(pos=39, lineno=2, colno=8)
+          variable: 's'
+          arguments:
+            <empty>
+        <class 'mecha.ast.AstItemStack'>
+          location: SourceLocation(pos=40, lineno=2, colno=9)
+          end_location: SourceLocation(pos=55, lineno=2, colno=24)
+          identifier:
+            <class 'mecha.ast.AstResourceLocation'>
+              location: SourceLocation(pos=40, lineno=2, colno=9)
+              end_location: SourceLocation(pos=43, lineno=2, colno=12)
+              is_tag: False
+              namespace: None
+              path: 'bow'
+          arguments:
+            <empty>
+          data_tags:
+            <class 'mecha.ast.AstNbtCompound'>
+              location: SourceLocation(pos=43, lineno=2, colno=12)
+              end_location: SourceLocation(pos=55, lineno=2, colno=24)
+              entries:
+                <class 'bolt.ast.AstInterpolation'>
+                  location: SourceLocation(pos=46, lineno=2, colno=15)
+                  end_location: SourceLocation(pos=54, lineno=2, colno=23)
+                  prefix: None
+                  unpack: '**'
+                  converter: 'nbt'
+                  value:
+                    <class 'bolt.ast.AstIdentifier'>
+                      location: SourceLocation(pos=46, lineno=2, colno=15)
+                      end_location: SourceLocation(pos=54, lineno=2, colno=23)
+                      value: 'bow_data'

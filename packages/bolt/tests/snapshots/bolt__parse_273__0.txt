@@ -1,0 +1,135 @@
+particle minecraft:dust 0.00000 (117/255) (164/255) 0.5 ~ ~ ~ 0 0 0 0 1 force @s
+---
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=81, lineno=2, colno=1)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=80, lineno=1, colno=81)
+      identifier: 'particle:name:pos:delta:speed:count:force:viewers'
+      arguments:
+        <class 'mecha.ast.AstParticle'>
+          location: SourceLocation(pos=9, lineno=1, colno=10)
+          end_location: SourceLocation(pos=55, lineno=1, colno=56)
+          name:
+            <class 'mecha.ast.AstResourceLocation'>
+              location: SourceLocation(pos=9, lineno=1, colno=10)
+              end_location: SourceLocation(pos=23, lineno=1, colno=24)
+              is_tag: False
+              namespace: 'minecraft'
+              path: 'dust'
+          parameters:
+            <class 'mecha.ast.AstDustParticleParameters'>
+              location: SourceLocation(pos=24, lineno=1, colno=25)
+              end_location: SourceLocation(pos=55, lineno=1, colno=56)
+              red:
+                <class 'mecha.ast.AstNumber'>
+                  location: SourceLocation(pos=24, lineno=1, colno=25)
+                  end_location: SourceLocation(pos=31, lineno=1, colno=32)
+                  value: 0.0
+              green:
+                <class 'bolt.ast.AstInterpolation'>
+                  location: SourceLocation(pos=33, lineno=1, colno=34)
+                  end_location: SourceLocation(pos=40, lineno=1, colno=41)
+                  prefix: None
+                  unpack: None
+                  converter: 'numeric'
+                  value:
+                    <class 'bolt.ast.AstExpressionBinary'>
+                      location: SourceLocation(pos=33, lineno=1, colno=34)
+                      end_location: SourceLocation(pos=40, lineno=1, colno=41)
+                      operator: '/'
+                      left:
+                        <class 'bolt.ast.AstValue'>
+                          location: SourceLocation(pos=33, lineno=1, colno=34)
+                          end_location: SourceLocation(pos=36, lineno=1, colno=37)
+                          value: 117
+                      right:
+                        <class 'bolt.ast.AstValue'>
+                          location: SourceLocation(pos=37, lineno=1, colno=38)
+                          end_location: SourceLocation(pos=40, lineno=1, colno=41)
+                          value: 255
+              blue:
+                <class 'bolt.ast.AstInterpolation'>
+                  location: SourceLocation(pos=43, lineno=1, colno=44)
+                  end_location: SourceLocation(pos=50, lineno=1, colno=51)
+                  prefix: None
+                  unpack: None
+                  converter: 'numeric'
+                  value:
+                    <class 'bolt.ast.AstExpressionBinary'>
+                      location: SourceLocation(pos=43, lineno=1, colno=44)
+                      end_location: SourceLocation(pos=50, lineno=1, colno=51)
+                      operator: '/'
+                      left:
+                        <class 'bolt.ast.AstValue'>
+                          location: SourceLocation(pos=43, lineno=1, colno=44)
+                          end_location: SourceLocation(pos=46, lineno=1, colno=47)
+                          value: 164
+                      right:
+                        <class 'bolt.ast.AstValue'>
+                          location: SourceLocation(pos=47, lineno=1, colno=48)
+                          end_location: SourceLocation(pos=50, lineno=1, colno=51)
+                          value: 255
+              size:
+                <class 'mecha.ast.AstNumber'>
+                  location: SourceLocation(pos=52, lineno=1, colno=53)
+                  end_location: SourceLocation(pos=55, lineno=1, colno=56)
+                  value: 0.5
+        <class 'mecha.ast.AstVector3'>
+          location: SourceLocation(pos=56, lineno=1, colno=57)
+          end_location: SourceLocation(pos=61, lineno=1, colno=62)
+          x:
+            <class 'mecha.ast.AstCoordinate'>
+              location: SourceLocation(pos=56, lineno=1, colno=57)
+              end_location: SourceLocation(pos=57, lineno=1, colno=58)
+              type: 'relative'
+              value: 0
+          y:
+            <class 'mecha.ast.AstCoordinate'>
+              location: SourceLocation(pos=58, lineno=1, colno=59)
+              end_location: SourceLocation(pos=59, lineno=1, colno=60)
+              type: 'relative'
+              value: 0
+          z:
+            <class 'mecha.ast.AstCoordinate'>
+              location: SourceLocation(pos=60, lineno=1, colno=61)
+              end_location: SourceLocation(pos=61, lineno=1, colno=62)
+              type: 'relative'
+              value: 0
+        <class 'mecha.ast.AstVector3'>
+          location: SourceLocation(pos=62, lineno=1, colno=63)
+          end_location: SourceLocation(pos=67, lineno=1, colno=68)
+          x:
+            <class 'mecha.ast.AstCoordinate'>
+              location: SourceLocation(pos=62, lineno=1, colno=63)
+              end_location: SourceLocation(pos=63, lineno=1, colno=64)
+              type: 'absolute'
+              value: 0
+          y:
+            <class 'mecha.ast.AstCoordinate'>
+              location: SourceLocation(pos=64, lineno=1, colno=65)
+              end_location: SourceLocation(pos=65, lineno=1, colno=66)
+              type: 'absolute'
+              value: 0
+          z:
+            <class 'mecha.ast.AstCoordinate'>
+              location: SourceLocation(pos=66, lineno=1, colno=67)
+              end_location: SourceLocation(pos=67, lineno=1, colno=68)
+              type: 'absolute'
+              value: 0
+        <class 'mecha.ast.AstNumber'>
+          location: SourceLocation(pos=68, lineno=1, colno=69)
+          end_location: SourceLocation(pos=69, lineno=1, colno=70)
+          value: 0
+        <class 'mecha.ast.AstNumber'>
+          location: SourceLocation(pos=70, lineno=1, colno=71)
+          end_location: SourceLocation(pos=71, lineno=1, colno=72)
+          value: 1
+        <class 'mecha.ast.AstSelector'>
+          location: SourceLocation(pos=78, lineno=1, colno=79)
+          end_location: SourceLocation(pos=80, lineno=1, colno=81)
+          variable: 's'
+          arguments:
+            <empty>

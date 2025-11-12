@@ -1,0 +1,5 @@
+#>ERROR  Expected call expression on builtin "hex".
+# line 1, column 10
+#      1 |  time set hex.time
+#        :           ^^^^^^^^
+time set hex.time

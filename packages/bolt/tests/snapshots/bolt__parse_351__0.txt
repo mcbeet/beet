@@ -1,0 +1,7 @@
+#>ERROR  Interpolation disabled.
+# line 1, column 42
+#      1 |  macro hello thing=subcommand{"redirect": ]
+#        :                                           ^
+#      2 |      pass
+macro hello thing=subcommand{"redirect": ]
+    pass

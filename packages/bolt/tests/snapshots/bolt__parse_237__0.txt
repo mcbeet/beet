@@ -1,0 +1,12 @@
+raise
+---
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=5, lineno=1, colno=6)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=5, lineno=1, colno=6)
+      identifier: 'raise'
+      arguments:
+        <empty>

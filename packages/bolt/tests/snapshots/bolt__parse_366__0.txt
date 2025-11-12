@@ -1,0 +1,35 @@
+with storage ./args:
+    $say $(message)
+---
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=41, lineno=3, colno=1)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=40, lineno=2, colno=20)
+      identifier: 'with:storage:source:commands'
+      arguments:
+        <class 'mecha.ast.AstResourceLocation'>
+          location: SourceLocation(pos=13, lineno=1, colno=14)
+          end_location: SourceLocation(pos=19, lineno=1, colno=20)
+          is_tag: False
+          namespace: 'demo'
+          path: 'args'
+        <class 'mecha.ast.AstRoot'>
+          location: SourceLocation(pos=25, lineno=2, colno=5)
+          end_location: SourceLocation(pos=40, lineno=2, colno=20)
+          commands:
+            <class 'mecha.ast.AstMacroLine'>
+              location: SourceLocation(pos=25, lineno=2, colno=5)
+              end_location: SourceLocation(pos=40, lineno=2, colno=20)
+              identifier: 'mecha:sentinel'
+              arguments:
+                <class 'mecha.ast.AstMacroLineText'>
+                  location: SourceLocation(pos=26, lineno=2, colno=6)
+                  end_location: SourceLocation(pos=30, lineno=2, colno=10)
+                  value: 'say '
+                <class 'mecha.ast.AstMacroLineVariable'>
+                  location: SourceLocation(pos=30, lineno=2, colno=10)
+                  end_location: SourceLocation(pos=40, lineno=2, colno=20)
+                  value: 'message'

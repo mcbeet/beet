@@ -1,0 +1,21 @@
+from demo.math import add
+
+function ./foo:
+    say add(2, 3)
+
+function ./oby:
+    stat_list = [
+        "damage",
+        "attack_speed",
+        "multishot",
+        "piercing"
+    ]
+
+    if data storage firework:temp data.item.tag.aftermath.stats:
+
+        for stat in stat_list:
+            if data storage firework:temp f'data.item.tag.aftermath.stats.{stat}':
+                say f'{stat}, present'
+
+    unless data storage firework:temp data.item.tag.aftermath.stats:
+        say 'hi'

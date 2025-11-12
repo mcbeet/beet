@@ -1,0 +1,107 @@
+_bolt_lineno = [1, 14, 16, 20, 23, 26, 29, 34, 39], [1, 3, 4, 5, 6, 8, 9, 10, 11]
+_bolt_helper_missing = _bolt_runtime.helpers['missing']
+_bolt_helper_get_rebind = _bolt_runtime.helpers['get_rebind']
+_bolt_helper_children = _bolt_runtime.helpers['children']
+_bolt_helper_get_attribute_handler = _bolt_runtime.helpers['get_attribute_handler']
+_bolt_helper_interpolate_message = _bolt_runtime.helpers['interpolate_message']
+_bolt_helper_replace = _bolt_runtime.helpers['replace']
+with _bolt_runtime.scope() as _bolt_var5:
+    def Counter(x=_bolt_helper_missing):
+        if x is _bolt_helper_missing:
+            _bolt_var0 = 0
+            x = _bolt_var0
+        def incr():
+            nonlocal x
+            _bolt_var1 = 1
+            _bolt_rebind = _bolt_helper_get_rebind(x)
+            x += _bolt_var1
+            if _bolt_rebind is not None:
+                x = _bolt_rebind(x)
+            _bolt_var2 = x
+            return _bolt_var2
+        _bolt_var1 = 'incr'
+        _bolt_var2 = incr
+        _bolt_var3 = {_bolt_var1: _bolt_var2}
+        return _bolt_var3
+    _bolt_var0 = Counter
+    _bolt_var0 = _bolt_var0()
+    counter = _bolt_var0
+    _bolt_var1 = counter
+    _bolt_var1 = _bolt_helper_get_attribute_handler(_bolt_var1)["incr"]
+    _bolt_var1 = _bolt_var1()
+    _bolt_var1 = _bolt_helper_interpolate_message(_bolt_var1, _bolt_refs[0])
+    _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[1], arguments=_bolt_helper_children([_bolt_var1])))
+    _bolt_var2 = counter
+    _bolt_var2 = _bolt_helper_get_attribute_handler(_bolt_var2)["incr"]
+    _bolt_var2 = _bolt_var2()
+    _bolt_var2 = _bolt_helper_interpolate_message(_bolt_var2, _bolt_refs[2])
+    _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[3], arguments=_bolt_helper_children([_bolt_var2])))
+    _bolt_var3 = Counter
+    _bolt_var4 = 9
+    _bolt_var3 = _bolt_var3(_bolt_var4)
+    _bolt_var3 = _bolt_helper_get_attribute_handler(_bolt_var3)["incr"]
+    _bolt_var3 = _bolt_var3()
+    _bolt_var3 = _bolt_helper_interpolate_message(_bolt_var3, _bolt_refs[4])
+    _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[5], arguments=_bolt_helper_children([_bolt_var3])))
+_bolt_var6 = _bolt_helper_replace(_bolt_refs[6], commands=_bolt_helper_children(_bolt_var5))
+---
+output = _bolt_var6
+---
+_bolt_refs[0]
+<class 'bolt.ast.AstInterpolation'>
+  location: SourceLocation(pos=136, lineno=9, colno=5)
+  end_location: SourceLocation(pos=150, lineno=9, colno=19)
+  prefix: None
+  unpack: None
+  converter: 'message'
+  value:
+    <class 'bolt.ast.AstCall'>
+_bolt_refs[1]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=132, lineno=9, colno=1)
+  end_location: SourceLocation(pos=150, lineno=9, colno=19)
+  identifier: 'say:message'
+  arguments:
+    <class 'bolt.ast.AstInterpolation'>
+_bolt_refs[2]
+<class 'bolt.ast.AstInterpolation'>
+  location: SourceLocation(pos=155, lineno=10, colno=5)
+  end_location: SourceLocation(pos=169, lineno=10, colno=19)
+  prefix: None
+  unpack: None
+  converter: 'message'
+  value:
+    <class 'bolt.ast.AstCall'>
+_bolt_refs[3]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=151, lineno=10, colno=1)
+  end_location: SourceLocation(pos=169, lineno=10, colno=19)
+  identifier: 'say:message'
+  arguments:
+    <class 'bolt.ast.AstInterpolation'>
+_bolt_refs[4]
+<class 'bolt.ast.AstInterpolation'>
+  location: SourceLocation(pos=174, lineno=11, colno=5)
+  end_location: SourceLocation(pos=191, lineno=11, colno=22)
+  prefix: None
+  unpack: None
+  converter: 'message'
+  value:
+    <class 'bolt.ast.AstCall'>
+_bolt_refs[5]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=170, lineno=11, colno=1)
+  end_location: SourceLocation(pos=191, lineno=11, colno=22)
+  identifier: 'say:message'
+  arguments:
+    <class 'bolt.ast.AstInterpolation'>
+_bolt_refs[6]
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=192, lineno=12, colno=1)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+    <class 'bolt.ast.AstStatement'>
+    <class 'mecha.ast.AstCommand'>
+    <class 'mecha.ast.AstCommand'>
+    <class 'mecha.ast.AstCommand'>

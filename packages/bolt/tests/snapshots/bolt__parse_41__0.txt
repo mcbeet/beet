@@ -1,0 +1,33 @@
+while True:
+    say hello
+---
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=25, lineno=2, colno=14)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=25, lineno=2, colno=14)
+      identifier: 'while:condition:body'
+      arguments:
+        <class 'bolt.ast.AstValue'>
+          location: SourceLocation(pos=6, lineno=1, colno=7)
+          end_location: SourceLocation(pos=10, lineno=1, colno=11)
+          value: True
+        <class 'mecha.ast.AstRoot'>
+          location: SourceLocation(pos=16, lineno=2, colno=5)
+          end_location: SourceLocation(pos=25, lineno=2, colno=14)
+          commands:
+            <class 'mecha.ast.AstCommand'>
+              location: SourceLocation(pos=16, lineno=2, colno=5)
+              end_location: SourceLocation(pos=25, lineno=2, colno=14)
+              identifier: 'say:message'
+              arguments:
+                <class 'mecha.ast.AstMessage'>
+                  location: SourceLocation(pos=20, lineno=2, colno=9)
+                  end_location: SourceLocation(pos=25, lineno=2, colno=14)
+                  fragments:
+                    <class 'mecha.ast.AstMessageText'>
+                      location: SourceLocation(pos=20, lineno=2, colno=9)
+                      end_location: SourceLocation(pos=25, lineno=2, colno=14)
+                      value: 'hello'

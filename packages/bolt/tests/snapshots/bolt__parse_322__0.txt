@@ -1,0 +1,19 @@
+"""
+This is a docstring.
+
+Hello world
+"""
+---
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=42, lineno=6, colno=1)
+  commands:
+    <class 'bolt.ast.AstDocstring'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=41, lineno=5, colno=4)
+      identifier: 'mecha:sentinel'
+      arguments:
+        <class 'bolt.ast.AstValue'>
+          location: SourceLocation(pos=0, lineno=1, colno=1)
+          end_location: SourceLocation(pos=41, lineno=5, colno=4)
+          value: '\nThis is a docstring.\n\nHello world\n'

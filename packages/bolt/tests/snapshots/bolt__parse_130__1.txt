@@ -1,0 +1,108 @@
+_bolt_lineno = [1, 15, 19], [1, 2, 4]
+_bolt_helper_operator_not = _bolt_runtime.helpers['operator_not']
+_bolt_helper_branch = _bolt_runtime.helpers['branch']
+_bolt_helper_children = _bolt_runtime.helpers['children']
+_bolt_helper_replace = _bolt_runtime.helpers['replace']
+_bolt_helper_exit_stack = _bolt_runtime.helpers['exit_stack']
+with _bolt_runtime.scope() as _bolt_var2:
+    with _bolt_helper_exit_stack() as _bolt_fused_with_statement0:
+        _bolt_fused_with_statement0.enter_context(_bolt_runtime.push_nesting('execute:subcommand'))
+        _bolt_fused_with_statement0.enter_context(_bolt_runtime.push_nesting('execute:if:score:target:targetObjective:matches:range:subcommand', *_bolt_refs[6:9]))
+        _bolt_fused_with_statement0.enter_context(_bolt_runtime.push_nesting('execute:if:entity:entities:subcommand', *_bolt_refs[4:5]))
+        _bolt_fused_with_statement0.enter_context(_bolt_runtime.push_nesting('execute:commands'))
+        _bolt_var1 = _bolt_fused_with_statement0.enter_context(_bolt_runtime.scope())
+        _bolt_var0 = True
+        _bolt_var0_inverse = _bolt_helper_operator_not(_bolt_var0)
+        with _bolt_helper_branch(_bolt_var0) as _bolt_condition:
+            if _bolt_condition:
+                _bolt_runtime.commands.extend(_bolt_refs[0].commands)
+        _bolt_condition = _bolt_fused_with_statement0.enter_context(_bolt_helper_branch(_bolt_var0_inverse))
+        if _bolt_condition:
+            _bolt_runtime.commands.extend(_bolt_refs[1].commands)
+    _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[10], arguments=_bolt_helper_children([_bolt_helper_replace(_bolt_refs[9], arguments=_bolt_helper_children([*_bolt_refs[6:9], _bolt_helper_replace(_bolt_refs[5], arguments=_bolt_helper_children([*_bolt_refs[4:5], _bolt_helper_replace(_bolt_refs[3], arguments=_bolt_helper_children([_bolt_helper_replace(_bolt_refs[2], commands=_bolt_helper_children(_bolt_var1))]))]))]))])))
+_bolt_var3 = _bolt_helper_replace(_bolt_refs[11], commands=_bolt_helper_children(_bolt_var2))
+---
+output = _bolt_var3
+---
+_bolt_refs[0]
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=72, lineno=3, colno=9)
+  end_location: SourceLocation(pos=78, lineno=3, colno=15)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+_bolt_refs[1]
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=97, lineno=5, colno=9)
+  end_location: SourceLocation(pos=103, lineno=5, colno=15)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+_bolt_refs[2]
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=55, lineno=2, colno=5)
+  end_location: SourceLocation(pos=103, lineno=5, colno=15)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+    <class 'mecha.ast.AstCommand'>
+_bolt_refs[3]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=55, lineno=2, colno=5)
+  end_location: SourceLocation(pos=103, lineno=5, colno=15)
+  identifier: 'execute:commands'
+  arguments:
+    <class 'mecha.ast.AstRoot'>
+_bolt_refs[4]
+<class 'mecha.ast.AstSelector'>
+  location: SourceLocation(pos=38, lineno=1, colno=39)
+  end_location: SourceLocation(pos=49, lineno=1, colno=50)
+  variable: 'p'
+  arguments:
+    <class 'mecha.ast.AstSelectorArgument'>
+_bolt_refs[5]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=28, lineno=1, colno=29)
+  end_location: SourceLocation(pos=103, lineno=5, colno=15)
+  identifier: 'execute:if:entity:entities:subcommand'
+  arguments:
+    <class 'mecha.ast.AstSelector'>
+    <class 'mecha.ast.AstCommand'>
+_bolt_refs[6]
+<class 'mecha.ast.AstSelector'>
+  location: SourceLocation(pos=9, lineno=1, colno=10)
+  end_location: SourceLocation(pos=11, lineno=1, colno=12)
+  variable: 's'
+  arguments:
+    <empty>
+_bolt_refs[7]
+<class 'mecha.ast.AstObjective'>
+  location: SourceLocation(pos=12, lineno=1, colno=13)
+  end_location: SourceLocation(pos=15, lineno=1, colno=16)
+  value: 'tmp'
+_bolt_refs[8]
+<class 'mecha.ast.AstRange'>
+  location: SourceLocation(pos=24, lineno=1, colno=25)
+  end_location: SourceLocation(pos=27, lineno=1, colno=28)
+  min: 1
+  max: None
+_bolt_refs[9]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=103, lineno=5, colno=15)
+  identifier: 'execute:if:score:target:targetObjective:matches:range:subcommand'
+  arguments:
+    <class 'mecha.ast.AstSelector'>
+    <class 'mecha.ast.AstObjective'>
+    <class 'mecha.ast.AstRange'>
+    <class 'mecha.ast.AstCommand'>
+_bolt_refs[10]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=103, lineno=5, colno=15)
+  identifier: 'execute:subcommand'
+  arguments:
+    <class 'mecha.ast.AstCommand'>
+_bolt_refs[11]
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=103, lineno=5, colno=15)
+  commands:
+    <class 'mecha.ast.AstCommand'>

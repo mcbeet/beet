@@ -1,0 +1,16 @@
+"""hello
+world"""
+---
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=18, lineno=3, colno=1)
+  commands:
+    <class 'bolt.ast.AstDocstring'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=17, lineno=2, colno=9)
+      identifier: 'mecha:sentinel'
+      arguments:
+        <class 'bolt.ast.AstValue'>
+          location: SourceLocation(pos=0, lineno=1, colno=1)
+          end_location: SourceLocation(pos=17, lineno=2, colno=9)
+          value: 'hello\nworld'

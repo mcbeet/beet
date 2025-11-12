@@ -1,0 +1,5 @@
+#>ERROR  Expected quote but got brace '}'.
+# line 1, column 8
+#      1 |  yo = f"}"
+#        :         ^
+yo = f"}"

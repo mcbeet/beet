@@ -1,0 +1,80 @@
+entity_type = "creeper"
+at @e[type=entity_type] run summon lightning_bolt
+---
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=73, lineno=2, colno=50)
+  commands:
+    <class 'bolt.ast.AstStatement'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=23, lineno=1, colno=24)
+      identifier: 'mecha:sentinel'
+      arguments:
+        <class 'bolt.ast.AstAssignment'>
+          location: SourceLocation(pos=0, lineno=1, colno=1)
+          end_location: SourceLocation(pos=23, lineno=1, colno=24)
+          operator: '='
+          target:
+            <class 'bolt.ast.AstTargetIdentifier'>
+              location: SourceLocation(pos=0, lineno=1, colno=1)
+              end_location: SourceLocation(pos=11, lineno=1, colno=12)
+              value: 'entity_type'
+              rebind: False
+          value:
+            <class 'bolt.ast.AstValue'>
+              location: SourceLocation(pos=14, lineno=1, colno=15)
+              end_location: SourceLocation(pos=23, lineno=1, colno=24)
+              value: 'creeper'
+          type_annotation: None
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=24, lineno=2, colno=1)
+      end_location: SourceLocation(pos=73, lineno=2, colno=50)
+      identifier: 'execute:subcommand'
+      arguments:
+        <class 'mecha.ast.AstCommand'>
+          location: SourceLocation(pos=24, lineno=2, colno=1)
+          end_location: SourceLocation(pos=73, lineno=2, colno=50)
+          identifier: 'execute:at:targets:subcommand'
+          arguments:
+            <class 'mecha.ast.AstSelector'>
+              location: SourceLocation(pos=27, lineno=2, colno=4)
+              end_location: SourceLocation(pos=47, lineno=2, colno=24)
+              variable: 'e'
+              arguments:
+                <class 'mecha.ast.AstSelectorArgument'>
+                  location: SourceLocation(pos=30, lineno=2, colno=7)
+                  end_location: SourceLocation(pos=46, lineno=2, colno=23)
+                  inverted: False
+                  key:
+                    <class 'mecha.ast.AstString'>
+                      location: SourceLocation(pos=30, lineno=2, colno=7)
+                      end_location: SourceLocation(pos=34, lineno=2, colno=11)
+                      value: 'type'
+                  value:
+                    <class 'bolt.ast.AstInterpolation'>
+                      location: SourceLocation(pos=35, lineno=2, colno=12)
+                      end_location: SourceLocation(pos=46, lineno=2, colno=23)
+                      prefix: None
+                      unpack: None
+                      converter: 'resource_location'
+                      value:
+                        <class 'bolt.ast.AstIdentifier'>
+                          location: SourceLocation(pos=35, lineno=2, colno=12)
+                          end_location: SourceLocation(pos=46, lineno=2, colno=23)
+                          value: 'entity_type'
+            <class 'mecha.ast.AstCommand'>
+              location: SourceLocation(pos=48, lineno=2, colno=25)
+              end_location: SourceLocation(pos=73, lineno=2, colno=50)
+              identifier: 'execute:run:subcommand'
+              arguments:
+                <class 'mecha.ast.AstCommand'>
+                  location: SourceLocation(pos=52, lineno=2, colno=29)
+                  end_location: SourceLocation(pos=73, lineno=2, colno=50)
+                  identifier: 'summon:entity'
+                  arguments:
+                    <class 'mecha.ast.AstResourceLocation'>
+                      location: SourceLocation(pos=59, lineno=2, colno=36)
+                      end_location: SourceLocation(pos=73, lineno=2, colno=50)
+                      is_tag: False
+                      namespace: None
+                      path: 'lightning_bolt'

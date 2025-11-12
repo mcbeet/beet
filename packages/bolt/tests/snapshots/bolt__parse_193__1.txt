@@ -1,0 +1,171 @@
+_bolt_lineno = [1, 12, 16, 23, 30, 32, 38, 40, 50, 55, 60, 64, 69, 73], [1, 2, 5, 6, 7, 8, 9, 11, 13, 14, 15, 17, 18, 19]
+_bolt_helper_get_attribute_handler = _bolt_runtime.helpers['get_attribute_handler']
+_bolt_helper_children = _bolt_runtime.helpers['children']
+_bolt_helper_operator_not = _bolt_runtime.helpers['operator_not']
+_bolt_helper_branch = _bolt_runtime.helpers['branch']
+_bolt_helper_interpolate_entity = _bolt_runtime.helpers['interpolate_entity']
+_bolt_helper_replace = _bolt_runtime.helpers['replace']
+_bolt_helper_interpolate_numeric = _bolt_runtime.helpers['interpolate_numeric']
+_bolt_helper_get_rebind = _bolt_runtime.helpers['get_rebind']
+with _bolt_runtime.scope() as _bolt_var16:
+    def init_global_score(self, name):
+        _bolt_var0 = name
+        _bolt_var1 = self
+        _bolt_helper_get_attribute_handler(_bolt_var1)["name"] = _bolt_var0
+    def rebind_global_score(self, rhs):
+        _bolt_var0 = isinstance
+        _bolt_var1 = rhs
+        _bolt_var2 = GlobalScore
+        _bolt_var0 = _bolt_var0(_bolt_var1, _bolt_var2)
+        _bolt_var0_inverse = _bolt_helper_operator_not(_bolt_var0)
+        with _bolt_helper_branch(_bolt_var0) as _bolt_condition:
+            if _bolt_condition:
+                _bolt_var3 = self
+                _bolt_var3 = _bolt_helper_get_attribute_handler(_bolt_var3)["name"]
+                _bolt_var3 = _bolt_helper_interpolate_entity(_bolt_var3, _bolt_refs[0])
+                _bolt_var4 = rhs
+                _bolt_var4 = _bolt_helper_get_attribute_handler(_bolt_var4)["name"]
+                _bolt_var4 = _bolt_helper_interpolate_entity(_bolt_var4, _bolt_refs[1])
+                _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[5], arguments=_bolt_helper_children([_bolt_var3, _bolt_refs[2], _bolt_refs[3], _bolt_var4, _bolt_refs[4]])))
+        with _bolt_helper_branch(_bolt_var0_inverse) as _bolt_condition:
+            if _bolt_condition:
+                _bolt_var5 = self
+                _bolt_var5 = _bolt_helper_get_attribute_handler(_bolt_var5)["name"]
+                _bolt_var5 = _bolt_helper_interpolate_entity(_bolt_var5, _bolt_refs[6])
+                _bolt_var6 = rhs
+                _bolt_var6 = _bolt_helper_interpolate_numeric(_bolt_var6, _bolt_refs[7])
+                _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[9], arguments=_bolt_helper_children([_bolt_var5, _bolt_refs[8], _bolt_var6])))
+        _bolt_var7 = self
+        return _bolt_var7
+    _bolt_var0 = type
+    _bolt_var1 = 'GlobalScore'
+    _bolt_var2 = ()
+    _bolt_var3 = '__init__'
+    _bolt_var4 = init_global_score
+    _bolt_var5 = '__rebind__'
+    _bolt_var6 = rebind_global_score
+    _bolt_var7 = {_bolt_var3: _bolt_var4, _bolt_var5: _bolt_var6}
+    _bolt_var0 = _bolt_var0(_bolt_var1, _bolt_var2, _bolt_var7)
+    GlobalScore = _bolt_var0
+    _bolt_var8 = GlobalScore
+    _bolt_var9 = 'a'
+    _bolt_var8 = _bolt_var8(_bolt_var9)
+    a = _bolt_var8
+    _bolt_var10 = 123
+    _bolt_rebind = _bolt_helper_get_rebind(a)
+    a = _bolt_var10
+    if _bolt_rebind is not None:
+        a = _bolt_rebind(a)
+    _bolt_var11 = 456
+    _bolt_rebind = _bolt_helper_get_rebind(a)
+    a = _bolt_var11
+    if _bolt_rebind is not None:
+        a = _bolt_rebind(a)
+    _bolt_var12 = GlobalScore
+    _bolt_var13 = 'b'
+    _bolt_var12 = _bolt_var12(_bolt_var13)
+    b = _bolt_var12
+    _bolt_var14 = 789
+    _bolt_rebind = _bolt_helper_get_rebind(b)
+    b = _bolt_var14
+    if _bolt_rebind is not None:
+        b = _bolt_rebind(b)
+    _bolt_var15 = a
+    _bolt_rebind = _bolt_helper_get_rebind(b)
+    b = _bolt_var15
+    if _bolt_rebind is not None:
+        b = _bolt_rebind(b)
+_bolt_var17 = _bolt_helper_replace(_bolt_refs[10], commands=_bolt_helper_children(_bolt_var16))
+---
+output = _bolt_var17
+---
+_bolt_refs[0]
+<class 'bolt.ast.AstInterpolation'>
+  location: SourceLocation(pos=167, lineno=6, colno=38)
+  end_location: SourceLocation(pos=176, lineno=6, colno=47)
+  prefix: None
+  unpack: None
+  converter: 'entity'
+  value:
+    <class 'bolt.ast.AstAttribute'>
+_bolt_refs[1]
+<class 'bolt.ast.AstInterpolation'>
+  location: SourceLocation(pos=186, lineno=6, colno=57)
+  end_location: SourceLocation(pos=194, lineno=6, colno=65)
+  prefix: None
+  unpack: None
+  converter: 'entity'
+  value:
+    <class 'bolt.ast.AstAttribute'>
+_bolt_refs[2]
+<class 'mecha.ast.AstObjective'>
+  location: SourceLocation(pos=177, lineno=6, colno=48)
+  end_location: SourceLocation(pos=183, lineno=6, colno=54)
+  value: 'global'
+_bolt_refs[3]
+<class 'mecha.ast.AstScoreboardOperation'>
+  location: SourceLocation(pos=184, lineno=6, colno=55)
+  end_location: SourceLocation(pos=185, lineno=6, colno=56)
+  value: '='
+_bolt_refs[4]
+<class 'mecha.ast.AstObjective'>
+  location: SourceLocation(pos=195, lineno=6, colno=66)
+  end_location: SourceLocation(pos=201, lineno=6, colno=72)
+  value: 'global'
+_bolt_refs[5]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=138, lineno=6, colno=9)
+  end_location: SourceLocation(pos=201, lineno=6, colno=72)
+  identifier: 'scoreboard:players:operation:targets:targetObjective:operation:source:sourceObjective'
+  arguments:
+    <class 'bolt.ast.AstInterpolation'>
+    <class 'mecha.ast.AstObjective'>
+    <class 'mecha.ast.AstScoreboardOperation'>
+    <class 'bolt.ast.AstInterpolation'>
+    <class 'mecha.ast.AstObjective'>
+_bolt_refs[6]
+<class 'bolt.ast.AstInterpolation'>
+  location: SourceLocation(pos=243, lineno=8, colno=32)
+  end_location: SourceLocation(pos=252, lineno=8, colno=41)
+  prefix: None
+  unpack: None
+  converter: 'entity'
+  value:
+    <class 'bolt.ast.AstAttribute'>
+_bolt_refs[7]
+<class 'bolt.ast.AstInterpolation'>
+  location: SourceLocation(pos=260, lineno=8, colno=49)
+  end_location: SourceLocation(pos=263, lineno=8, colno=52)
+  prefix: None
+  unpack: None
+  converter: 'numeric'
+  value:
+    <class 'bolt.ast.AstIdentifier'>
+_bolt_refs[8]
+<class 'mecha.ast.AstObjective'>
+  location: SourceLocation(pos=253, lineno=8, colno=42)
+  end_location: SourceLocation(pos=259, lineno=8, colno=48)
+  value: 'global'
+_bolt_refs[9]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=220, lineno=8, colno=9)
+  end_location: SourceLocation(pos=263, lineno=8, colno=52)
+  identifier: 'scoreboard:players:set:targets:objective:score'
+  arguments:
+    <class 'bolt.ast.AstInterpolation'>
+    <class 'mecha.ast.AstObjective'>
+    <class 'bolt.ast.AstInterpolation'>
+_bolt_refs[10]
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=461, lineno=20, colno=1)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+    <class 'mecha.ast.AstCommand'>
+    <class 'bolt.ast.AstStatement'>
+    <class 'bolt.ast.AstStatement'>
+    <class 'bolt.ast.AstStatement'>
+    <class 'bolt.ast.AstStatement'>
+    <class 'bolt.ast.AstStatement'>
+    <class 'bolt.ast.AstStatement'>
+    <class 'bolt.ast.AstStatement'>

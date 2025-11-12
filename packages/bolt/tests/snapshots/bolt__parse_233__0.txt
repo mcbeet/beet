@@ -1,0 +1,72 @@
+macro foo(stream):
+    pass
+---
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=27, lineno=2, colno=9)
+  commands:
+    <class 'bolt.ast.AstProcMacro'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=27, lineno=2, colno=9)
+      identifier: 'foo:proc_macro_overload0'
+      arguments:
+        <class 'bolt.ast.AstMacroLiteral'>
+          location: SourceLocation(pos=6, lineno=1, colno=7)
+          end_location: SourceLocation(pos=9, lineno=1, colno=10)
+          value: 'foo'
+        <class 'bolt.ast.AstMacroMatchArgument'>
+          location: SourceLocation(pos=-1, lineno=0, colno=0)
+          end_location: SourceLocation(pos=-1, lineno=0, colno=0)
+          match_identifier:
+            <class 'bolt.ast.AstMacroArgument'>
+              location: SourceLocation(pos=-1, lineno=0, colno=0)
+              end_location: SourceLocation(pos=-1, lineno=0, colno=0)
+              value: 'proc_macro_overload0'
+          match_argument_parser:
+            <class 'mecha.ast.AstResourceLocation'>
+              location: SourceLocation(pos=-1, lineno=0, colno=0)
+              end_location: SourceLocation(pos=-1, lineno=0, colno=0)
+              is_tag: False
+              namespace: 'bolt'
+              path: 'proc_macro'
+          match_argument_properties:
+            <class 'mecha.ast.AstJsonObject'>
+              location: SourceLocation(pos=-1, lineno=0, colno=0)
+              end_location: SourceLocation(pos=-1, lineno=0, colno=0)
+              entries:
+                <class 'mecha.ast.AstJsonObjectEntry'>
+                  location: SourceLocation(pos=-1, lineno=0, colno=0)
+                  end_location: SourceLocation(pos=-1, lineno=0, colno=0)
+                  key:
+                    <class 'mecha.ast.AstJsonObjectKey'>
+                      location: SourceLocation(pos=-1, lineno=0, colno=0)
+                      end_location: SourceLocation(pos=-1, lineno=0, colno=0)
+                      value: 'resource_location'
+                  value:
+                    <class 'mecha.ast.AstJsonValue'>
+                      location: SourceLocation(pos=-1, lineno=0, colno=0)
+                      end_location: SourceLocation(pos=-1, lineno=0, colno=0)
+                      value: 'demo:test'
+                <class 'mecha.ast.AstJsonObjectEntry'>
+                  location: SourceLocation(pos=-1, lineno=0, colno=0)
+                  end_location: SourceLocation(pos=-1, lineno=0, colno=0)
+                  key:
+                    <class 'mecha.ast.AstJsonObjectKey'>
+                      location: SourceLocation(pos=-1, lineno=0, colno=0)
+                      end_location: SourceLocation(pos=-1, lineno=0, colno=0)
+                      value: 'identifier'
+                  value:
+                    <class 'mecha.ast.AstJsonValue'>
+                      location: SourceLocation(pos=-1, lineno=0, colno=0)
+                      end_location: SourceLocation(pos=-1, lineno=0, colno=0)
+                      value: 'foo:proc_macro_overload0'
+        <class 'mecha.ast.AstRoot'>
+          location: SourceLocation(pos=23, lineno=2, colno=5)
+          end_location: SourceLocation(pos=27, lineno=2, colno=9)
+          commands:
+            <class 'mecha.ast.AstCommand'>
+              location: SourceLocation(pos=23, lineno=2, colno=5)
+              end_location: SourceLocation(pos=27, lineno=2, colno=9)
+              identifier: 'pass'
+              arguments:
+                <empty>

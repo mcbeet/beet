@@ -1,0 +1,11 @@
+a = 1
+def f():
+#>ERROR  Identifier "a" is not defined.
+# line 3, column 5
+#      2 |  def f():
+#      3 |      a += 1
+#        :      ^
+# Notes:
+#   - Use "global a" or "nonlocal a" to mutate the variable defined in outer scope.
+#   - Expected assignment but got literal '+='.
+    a += 1

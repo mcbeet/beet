@@ -1,0 +1,25 @@
+_bolt_lineno = [1, 7, 8, 14], [1, 4, 5, 4]
+_bolt_helper_children = _bolt_runtime.helpers['children']
+_bolt_helper_replace = _bolt_runtime.helpers['replace']
+with _bolt_runtime.scope() as _bolt_var3:
+    def testing_decorator():
+        pass
+    _bolt_var0 = testing_decorator
+    _bolt_var1 = testing_decorator
+    _bolt_var2 = 1
+    _bolt_var1 = _bolt_var1(_bolt_var2)
+    def f():
+        pass
+    f = _bolt_var1(f)
+    f = _bolt_var0(f)
+_bolt_var4 = _bolt_helper_replace(_bolt_refs[0], commands=_bolt_helper_children(_bolt_var3))
+---
+output = _bolt_var4
+---
+_bolt_refs[0]
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=93, lineno=7, colno=9)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+    <class 'mecha.ast.AstCommand'>

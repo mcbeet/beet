@@ -1,0 +1,7 @@
+#>ERROR  Expected literal 'biome', literal 'block', literal 'blocks', literal 'data', literal 'dimension', literal 'entity' or 5 other tokens but got literal '"foo"'.
+# line 1, column 10
+#      1 |  at @s if "foo" == "bar":
+#        :           ^^^^^
+#      2 |      say yolo
+at @s if "foo" == "bar":
+    say yolo

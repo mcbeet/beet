@@ -1,0 +1,6 @@
+import ./foo as foo
+
+VALUE = 33
+
+def b():
+  return foo.VALUE
