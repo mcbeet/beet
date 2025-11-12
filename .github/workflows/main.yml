@@ -10,7 +10,7 @@ env:
   PYTHON_VERSION: "3.14"
 
 jobs:
-  test:
+  pytest:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -34,3 +34,15 @@ jobs:
       - name: Run tests
         working-directory: ${{ matrix.package }}
         run: uv run pytest -v
+
+  ruff:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+      - name: Ruff
+        uses: astral-sh/ruff-action@v3
+      - name: Ruff format
+        uses: astral-sh/ruff-action@v3
+        with:
+          args: "format --check --diff"

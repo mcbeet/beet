@@ -117,8 +117,8 @@ $ uv run pytest --insta review
 The code is formatted and checked with [`ruff`](https://github.com/astral-sh/ruff).
 
 ```console
-$ uv run ruff format src tests
-$ uv run ruff check src tests
+$ uv run ruff format
+$ uv run ruff check
 ```
 
 ---
