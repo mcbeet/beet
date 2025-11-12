@@ -30,7 +30,7 @@ def validate(ctx: Context):
             mc.compile(DataPack(path=path), report=mc.diagnostics)
 
         elif path.is_dir():
-            for filename in path.glob("**/*.mcfunction"):
+            for filename in sorted(path.glob("**/*.mcfunction")):
                 mc.compile(Function(source_path=filename), report=mc.diagnostics)
 
         elif path.is_file():

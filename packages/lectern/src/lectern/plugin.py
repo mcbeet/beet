@@ -36,7 +36,7 @@ def lectern(ctx: Context, opts: LecternOptions):
     document.loaders.append(LinkFragmentLoader(status=opts.links))
 
     for pattern in opts.load.entries():
-        for path in glob(str(ctx.directory / pattern)):
+        for path in sorted(glob(str(ctx.directory / pattern))):
             document.load(path)
 
     for arguments in opts.scripts:

@@ -66,7 +66,7 @@ def resolve_file_mapping(
         entries = [
             Path(entry)
             for pattern in value.entries()
-            for entry in glob(str(directory / pattern))
+            for entry in sorted(glob(str(directory / pattern)))
         ]
         for entry in entries:
             dst = f"{key}/{entry.name}" if len(entries) > 1 else key

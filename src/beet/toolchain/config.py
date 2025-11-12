@@ -312,7 +312,7 @@ class ProjectConfig(BaseModel):
             parent = ProjectConfig(meta={"autosave": {"link": False}})
 
             for broadcast_entry in broadcast:
-                if dirs := glob(str(path / broadcast_entry)):
+                if dirs := sorted(glob(str(path / broadcast_entry))):
                     for dirname in dirs:
                         config = self.model_copy(
                             update={"directory": dirname, "broadcast": ListOption()},

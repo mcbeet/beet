@@ -68,4 +68,4 @@ def evaluate_pattern(
     if url := pattern.http_url:
         return [cache.download(url)]
     else:
-        return [Path(entry) for entry in glob(str(directory / pattern))]
+        return [Path(entry) for entry in sorted(glob(str(directory / pattern)))]

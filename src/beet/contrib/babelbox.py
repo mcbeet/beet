@@ -51,7 +51,7 @@ def babelbox(ctx: Context, opts: BabelboxOptions):
     namespace = ctx.assets[opts.namespace]
 
     for pattern in opts.load.entries():
-        for path in glob(str(ctx.directory / pattern)):
+        for path in sorted(glob(str(ctx.directory / pattern))):
             namespace.languages.merge(
                 load_languages(
                     path=path,

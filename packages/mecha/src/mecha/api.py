@@ -227,7 +227,7 @@ class Mecha:
                     for p in (
                         [ctx.cache["commands"].download(entry.http_url)]
                         if entry.http_url
-                        else glob(str(ctx.directory / entry))
+                        else sorted(glob(str(ctx.directory / entry)))
                     )
                 ]
                 self.spec = CommandSpec(
