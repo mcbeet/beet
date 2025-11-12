@@ -1,62 +1,24 @@
-[tool.poetry]
+[project]
 name = "bolt"
 version = "0.49.2"
 description = "Supercharge Minecraft commands with Python"
-authors = ["Valentin Berlier <berlier.v@gmail.com>"]
-license = "MIT"
-
-homepage = "https://github.com/mcbeet/bolt"
-repository = "https://github.com/mcbeet/bolt"
-documentation = "https://github.com/mcbeet/bolt"
-
 readme = "README.md"
-
-keywords = [
-  "beet",
-  "minecraft",
-  "minecraft-commands",
-  "scripting-language",
-  "mcfunction"
+authors = [
+    { name = "Valentin Berlier", email = "berlier.v@gmail.com" }
+]
+requires-python = ">=3.14"
+dependencies = [
+    "beet",
+    "mecha",
 ]
 
-include = ["bolt/py.typed"]
-
-[tool.poetry.dependencies]
-python = "^3.10"
-beet = ">=0.108.0"
-mecha = ">=0.95.2"
-
-[tool.poetry.group.dev.dependencies]
-pytest = "^8.0.1"
-black = "^24.2.0"
-isort = "^5.13.2"
-python-semantic-release = "^7.33.3"
-pytest-insta = "^0.3.0"
-lectern = ">=0.34.0"
-
-[tool.poetry.plugins.beet]
+[project.entry-points."beet"]
 commands = "bolt.commands"
 
-[tool.pytest.ini_options]
-addopts = "tests --import-mode=importlib"
-
-[tool.pyright]
-typeCheckingMode = "strict"
-reportShadowedImports = false
-
-[tool.black]
-target-version = ["py310"]
-
-[tool.isort]
-profile = "black"
-
-[tool.semantic_release]
-branch = "main"
-version_variable = ["bolt/__init__.py:__version__"]
-version_toml = "pyproject.toml:tool.poetry.version"
-major_on_zero = false
-build_command = "poetry build"
-
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["uv_build>=0.9.8,<0.10.0"]
+build-backend = "uv_build"
+
+[tool.uv.sources]
+beet = { workspace = true }
+mecha = { workspace = true }
