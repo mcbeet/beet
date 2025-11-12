@@ -7,10 +7,26 @@
 ```json
 {
   "pack": {
-    "pack_format": 48,
+    "min_format": [
+      88,
+      0
+    ],
+    "max_format": [
+      88,
+      0
+    ],
     "description": ""
   }
 }
+```
+
+### bolt_proc_macro
+
+`@function bolt_proc_macro:generated_0`
+
+```mcfunction
+scoreboard players add @r counter 1
+execute unless entity @a[scores={counter=10}] run function bolt_proc_macro:generated_0
 ```
 
 ### demo
@@ -42,13 +58,4 @@ say [['defun', 'do_math', ['x', 'y'], ['add', 'x', 'y']], ['defun', 'do_more_mat
 
 ```mcfunction
 
-```
-
-### bolt_proc_macro
-
-`@function bolt_proc_macro:generated_0`
-
-```mcfunction
-scoreboard players add @r counter 1
-execute unless entity @a[scores={counter=10}] run function bolt_proc_macro:generated_0
 ```

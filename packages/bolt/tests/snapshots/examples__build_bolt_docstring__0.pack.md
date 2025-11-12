@@ -7,7 +7,14 @@
 ```json
 {
   "pack": {
-    "pack_format": 48,
+    "min_format": [
+      88,
+      0
+    ],
+    "max_format": [
+      88,
+      0
+    ],
     "description": ""
   }
 }
@@ -23,6 +30,6 @@ say 42
 say My function
 say 123
 say My other function
-say "This is a class.\n\n    It doesn't do anything.\n    "
+say "This is a class.\n\nIt doesn't do anything.\n"
 say '\n    foo\\n\\nbar\n'
 ```

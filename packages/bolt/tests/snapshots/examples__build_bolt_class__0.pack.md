@@ -7,7 +7,14 @@
 ```json
 {
   "pack": {
-    "pack_format": 48,
+    "min_format": [
+      88,
+      0
+    ],
+    "max_format": [
+      88,
+      0
+    ],
     "description": ""
   }
 }
@@ -37,5 +44,5 @@ setblock 0 0 0 air
 `@function demo:pydantic`
 
 ```mcfunction
-say {"a": 123, "b": "123"}
+say {"a":123,"b":"123"}
 ```

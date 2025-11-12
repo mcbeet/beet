@@ -7,7 +7,14 @@
 ```json
 {
   "pack": {
-    "pack_format": 48,
+    "min_format": [
+      88,
+      0
+    ],
+    "max_format": [
+      88,
+      0
+    ],
     "description": ""
   }
 }
@@ -42,10 +49,10 @@ setblock 1 2 3 air
 setblock 1 2 3 stone
 say this is repeated twice
 say this is repeated twice
-tellraw @p {"text": "Custom symbols work"}
-execute as @a run tellraw @p {"text": "Even inside execute"}
-execute as @a run tellraw @p {"text": "Overload execute to allow implicit \"run\""}
-tellraw @s {"text": "from demo:dummy_message"}
+tellraw @p {text: "Custom symbols work"}
+execute as @a run tellraw @p {text: "Even inside execute"}
+execute as @a run tellraw @p {text: 'Overload execute to allow implicit "run"'}
+tellraw @s {text: "from demo:dummy_message"}
 kill @e
 say 42
 ```
@@ -77,10 +84,10 @@ setblock 1 2 3 air
 setblock 1 2 3 stone
 say this is repeated twice
 say this is repeated twice
-tellraw @p {"text": "Custom symbols work"}
-execute as @a run tellraw @p {"text": "Even inside execute"}
-execute as @a run tellraw @p {"text": "Overload execute to allow implicit \"run\""}
-tellraw @s {"text": "from demo:dummy_message"}
+tellraw @p {text: "Custom symbols work"}
+execute as @a run tellraw @p {text: "Even inside execute"}
+execute as @a run tellraw @p {text: 'Overload execute to allow implicit "run"'}
+tellraw @s {text: "from demo:dummy_message"}
 kill @e
 say 42
 ```

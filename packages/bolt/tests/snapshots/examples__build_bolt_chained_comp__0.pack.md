@@ -7,7 +7,14 @@
 ```json
 {
   "pack": {
-    "pack_format": 48,
+    "min_format": [
+      88,
+      0
+    ],
+    "max_format": [
+      88,
+      0
+    ],
     "description": ""
   }
 }
@@ -591,788 +598,12 @@ execute if score global seven = global seven run scoreboard players set global t
 scoreboard players operation global tmp3 = global tmp4
 ```
 
-`@function demo:foo/nested_execute_2`
-
-```mcfunction
-scoreboard players set global tmp7 0
-execute if score global seven = global seven run scoreboard players set global tmp7 1
-scoreboard players operation global tmp6 = global tmp7
-```
-
-`@function demo:foo/nested_execute_3`
-
-```mcfunction
-scoreboard players set global tmp9 0
-execute if score global seven = global seven run scoreboard players set global tmp9 1
-scoreboard players operation global tmp8 = global tmp9
-```
-
-`@function demo:foo/nested_execute_4`
-
-```mcfunction
-scoreboard players set global tmp13 0
-execute if score global tmp10 = global thing run scoreboard players set global tmp13 1
-scoreboard players operation global tmp12 = global tmp13
-```
-
-`@function demo:foo/nested_execute_5`
-
-```mcfunction
-scoreboard players set global tmp17 0
-execute if score global foo matches 123 run scoreboard players set global tmp17 1
-scoreboard players operation global tmp16 = global tmp17
-```
-
-`@function demo:foo/nested_execute_6`
-
-```mcfunction
-scoreboard players set global tmp20 0
-execute if score global foo = global foo run scoreboard players set global tmp20 1
-scoreboard players operation global tmp19 = global tmp20
-```
-
-`@function demo:foo/nested_execute_7`
-
-```mcfunction
-scoreboard players set global tmp23 0
-execute if score global foo matches 123 run scoreboard players set global tmp23 1
-scoreboard players operation global tmp22 = global tmp23
-```
-
-`@function demo:foo/nested_execute_8`
-
-```mcfunction
-scoreboard players set global tmp27 0
-execute if score global foo matches 123 run scoreboard players set global tmp27 1
-scoreboard players operation global tmp26 = global tmp27
-```
-
-`@function demo:foo/nested_execute_9`
-
-```mcfunction
-scoreboard players set global tmp29 0
-execute if score global foo matches 123 run scoreboard players set global tmp29 1
-scoreboard players operation global tmp28 = global tmp29
-```
-
 `@function demo:foo/nested_execute_10`
 
 ```mcfunction
 scoreboard players set global tmp32 0
 execute if score global foo = global foo run scoreboard players set global tmp32 1
 scoreboard players operation global tmp31 = global tmp32
-```
-
-`@function demo:foo/nested_execute_11`
-
-```mcfunction
-scoreboard players set global tmp34 0
-execute if score global foo matches 123 run scoreboard players set global tmp34 1
-scoreboard players operation global tmp33 = global tmp34
-```
-
-`@function demo:foo/nested_execute_12`
-
-```mcfunction
-scoreboard players set global tmp37 0
-execute if score global foo = global foo run scoreboard players set global tmp37 1
-scoreboard players operation global tmp36 = global tmp37
-```
-
-`@function demo:foo/nested_execute_13`
-
-```mcfunction
-scoreboard players set global tmp39 0
-execute if score global foo = global foo run scoreboard players set global tmp39 1
-scoreboard players operation global tmp38 = global tmp39
-```
-
-`@function demo:foo/nested_execute_14`
-
-```mcfunction
-scoreboard players set global tmp46 0
-execute if score global foo matches 123 run scoreboard players set global tmp46 1
-scoreboard players operation global tmp45 = global tmp46
-```
-
-`@function demo:foo/nested_execute_15`
-
-```mcfunction
-scoreboard players set global tmp49 0
-execute if score global foo matches 123 run scoreboard players set global tmp49 1
-scoreboard players operation global tmp48 = global tmp49
-```
-
-`@function demo:foo/nested_execute_16`
-
-```mcfunction
-scoreboard players set global tmp51 0
-execute if score global foo matches 123 run scoreboard players set global tmp51 1
-scoreboard players operation global tmp50 = global tmp51
-```
-
-`@function demo:foo/nested_execute_17`
-
-```mcfunction
-scoreboard players set global tmp54 0
-execute if score global foo matches 123 run scoreboard players set global tmp54 1
-scoreboard players operation global tmp53 = global tmp54
-```
-
-`@function demo:foo/nested_execute_18`
-
-```mcfunction
-scoreboard players set global tmp56 0
-execute if score global foo = global foo run scoreboard players set global tmp56 1
-scoreboard players operation global tmp55 = global tmp56
-```
-
-`@function demo:foo/nested_execute_19`
-
-```mcfunction
-scoreboard players set global tmp59 0
-execute if score global foo matches 123 run scoreboard players set global tmp59 1
-scoreboard players operation global tmp58 = global tmp59
-```
-
-`@function demo:foo/nested_execute_20`
-
-```mcfunction
-scoreboard players set global tmp63 0
-execute if score global foo matches 123 run scoreboard players set global tmp63 1
-scoreboard players operation global tmp62 = global tmp63
-```
-
-`@function demo:foo/nested_execute_21`
-
-```mcfunction
-scoreboard players set global tmp65 0
-execute if score global foo matches 123 run scoreboard players set global tmp65 1
-scoreboard players operation global tmp64 = global tmp65
-```
-
-`@function demo:foo/nested_execute_22`
-
-```mcfunction
-scoreboard players set global tmp68 0
-execute if score global foo = global foo run scoreboard players set global tmp68 1
-scoreboard players operation global tmp67 = global tmp68
-```
-
-`@function demo:foo/nested_execute_23`
-
-```mcfunction
-scoreboard players set global tmp70 0
-execute if score global foo matches 123 run scoreboard players set global tmp70 1
-scoreboard players operation global tmp69 = global tmp70
-```
-
-`@function demo:foo/nested_execute_24`
-
-```mcfunction
-scoreboard players set global tmp73 0
-execute if score global foo = global foo run scoreboard players set global tmp73 1
-scoreboard players operation global tmp72 = global tmp73
-```
-
-`@function demo:foo/nested_execute_25`
-
-```mcfunction
-scoreboard players set global tmp75 0
-execute if score global foo = global foo run scoreboard players set global tmp75 1
-scoreboard players operation global tmp74 = global tmp75
-```
-
-`@function demo:foo/nested_execute_26`
-
-```mcfunction
-scoreboard players set global tmp79 0
-execute if score global bar matches 123 run scoreboard players set global tmp79 1
-scoreboard players operation global tmp78 = global tmp79
-```
-
-`@function demo:foo/nested_execute_27`
-
-```mcfunction
-scoreboard players set global tmp82 0
-execute if score global bar = global bar run scoreboard players set global tmp82 1
-scoreboard players operation global tmp81 = global tmp82
-```
-
-`@function demo:foo/nested_execute_28`
-
-```mcfunction
-scoreboard players set global tmp85 0
-execute if score global bar matches 123 run scoreboard players set global tmp85 1
-scoreboard players operation global tmp84 = global tmp85
-```
-
-`@function demo:foo/nested_execute_29`
-
-```mcfunction
-scoreboard players set global tmp89 0
-execute if score global bar matches 123 run scoreboard players set global tmp89 1
-scoreboard players operation global tmp88 = global tmp89
-```
-
-`@function demo:foo/nested_execute_30`
-
-```mcfunction
-scoreboard players set global tmp91 0
-execute if score global bar matches 123 run scoreboard players set global tmp91 1
-scoreboard players operation global tmp90 = global tmp91
-```
-
-`@function demo:foo/nested_execute_31`
-
-```mcfunction
-scoreboard players set global tmp94 0
-execute if score global bar = global bar run scoreboard players set global tmp94 1
-scoreboard players operation global tmp93 = global tmp94
-```
-
-`@function demo:foo/nested_execute_32`
-
-```mcfunction
-scoreboard players set global tmp96 0
-execute if score global bar matches 123 run scoreboard players set global tmp96 1
-scoreboard players operation global tmp95 = global tmp96
-```
-
-`@function demo:foo/nested_execute_33`
-
-```mcfunction
-scoreboard players set global tmp99 0
-execute if score global bar = global bar run scoreboard players set global tmp99 1
-scoreboard players operation global tmp98 = global tmp99
-```
-
-`@function demo:foo/nested_execute_34`
-
-```mcfunction
-scoreboard players set global tmp101 0
-execute if score global bar = global bar run scoreboard players set global tmp101 1
-scoreboard players operation global tmp100 = global tmp101
-```
-
-`@function demo:foo/nested_execute_35`
-
-```mcfunction
-scoreboard players set global tmp108 0
-execute if score global bar matches 123 run scoreboard players set global tmp108 1
-scoreboard players operation global tmp107 = global tmp108
-```
-
-`@function demo:foo/nested_execute_36`
-
-```mcfunction
-scoreboard players set global tmp111 0
-execute if score global bar matches 123 run scoreboard players set global tmp111 1
-scoreboard players operation global tmp110 = global tmp111
-```
-
-`@function demo:foo/nested_execute_37`
-
-```mcfunction
-scoreboard players set global tmp113 0
-execute if score global bar matches 123 run scoreboard players set global tmp113 1
-scoreboard players operation global tmp112 = global tmp113
-```
-
-`@function demo:foo/nested_execute_38`
-
-```mcfunction
-scoreboard players set global tmp116 0
-execute if score global bar matches 123 run scoreboard players set global tmp116 1
-scoreboard players operation global tmp115 = global tmp116
-```
-
-`@function demo:foo/nested_execute_39`
-
-```mcfunction
-scoreboard players set global tmp118 0
-execute if score global bar = global bar run scoreboard players set global tmp118 1
-scoreboard players operation global tmp117 = global tmp118
-```
-
-`@function demo:foo/nested_execute_40`
-
-```mcfunction
-scoreboard players set global tmp121 0
-execute if score global bar matches 123 run scoreboard players set global tmp121 1
-scoreboard players operation global tmp120 = global tmp121
-```
-
-`@function demo:foo/nested_execute_41`
-
-```mcfunction
-scoreboard players set global tmp125 0
-execute if score global bar matches 123 run scoreboard players set global tmp125 1
-scoreboard players operation global tmp124 = global tmp125
-```
-
-`@function demo:foo/nested_execute_42`
-
-```mcfunction
-scoreboard players set global tmp127 0
-execute if score global bar matches 123 run scoreboard players set global tmp127 1
-scoreboard players operation global tmp126 = global tmp127
-```
-
-`@function demo:foo/nested_execute_43`
-
-```mcfunction
-scoreboard players set global tmp130 0
-execute if score global bar = global bar run scoreboard players set global tmp130 1
-scoreboard players operation global tmp129 = global tmp130
-```
-
-`@function demo:foo/nested_execute_44`
-
-```mcfunction
-scoreboard players set global tmp132 0
-execute if score global bar matches 123 run scoreboard players set global tmp132 1
-scoreboard players operation global tmp131 = global tmp132
-```
-
-`@function demo:foo/nested_execute_45`
-
-```mcfunction
-scoreboard players set global tmp135 0
-execute if score global bar = global bar run scoreboard players set global tmp135 1
-scoreboard players operation global tmp134 = global tmp135
-```
-
-`@function demo:foo/nested_execute_46`
-
-```mcfunction
-scoreboard players set global tmp137 0
-execute if score global bar = global bar run scoreboard players set global tmp137 1
-scoreboard players operation global tmp136 = global tmp137
-```
-
-`@function demo:foo/nested_execute_47`
-
-```mcfunction
-scoreboard players set global tmp141 0
-execute if score global foo matches 456 run scoreboard players set global tmp141 1
-scoreboard players operation global tmp140 = global tmp141
-```
-
-`@function demo:foo/nested_execute_48`
-
-```mcfunction
-scoreboard players set global tmp144 0
-execute if score global foo = global foo run scoreboard players set global tmp144 1
-scoreboard players operation global tmp143 = global tmp144
-```
-
-`@function demo:foo/nested_execute_49`
-
-```mcfunction
-scoreboard players set global tmp147 0
-execute if score global foo matches 456 run scoreboard players set global tmp147 1
-scoreboard players operation global tmp146 = global tmp147
-```
-
-`@function demo:foo/nested_execute_50`
-
-```mcfunction
-scoreboard players set global tmp151 0
-execute if score global foo matches 456 run scoreboard players set global tmp151 1
-scoreboard players operation global tmp150 = global tmp151
-```
-
-`@function demo:foo/nested_execute_51`
-
-```mcfunction
-scoreboard players set global tmp153 0
-execute if score global foo matches 456 run scoreboard players set global tmp153 1
-scoreboard players operation global tmp152 = global tmp153
-```
-
-`@function demo:foo/nested_execute_52`
-
-```mcfunction
-scoreboard players set global tmp156 0
-execute if score global foo = global foo run scoreboard players set global tmp156 1
-scoreboard players operation global tmp155 = global tmp156
-```
-
-`@function demo:foo/nested_execute_53`
-
-```mcfunction
-scoreboard players set global tmp158 0
-execute if score global foo matches 456 run scoreboard players set global tmp158 1
-scoreboard players operation global tmp157 = global tmp158
-```
-
-`@function demo:foo/nested_execute_54`
-
-```mcfunction
-scoreboard players set global tmp161 0
-execute if score global foo = global foo run scoreboard players set global tmp161 1
-scoreboard players operation global tmp160 = global tmp161
-```
-
-`@function demo:foo/nested_execute_55`
-
-```mcfunction
-scoreboard players set global tmp163 0
-execute if score global foo = global foo run scoreboard players set global tmp163 1
-scoreboard players operation global tmp162 = global tmp163
-```
-
-`@function demo:foo/nested_execute_56`
-
-```mcfunction
-scoreboard players set global tmp170 0
-execute if score global foo matches 456 run scoreboard players set global tmp170 1
-scoreboard players operation global tmp169 = global tmp170
-```
-
-`@function demo:foo/nested_execute_57`
-
-```mcfunction
-scoreboard players set global tmp173 0
-execute if score global foo matches 456 run scoreboard players set global tmp173 1
-scoreboard players operation global tmp172 = global tmp173
-```
-
-`@function demo:foo/nested_execute_58`
-
-```mcfunction
-scoreboard players set global tmp175 0
-execute if score global foo matches 456 run scoreboard players set global tmp175 1
-scoreboard players operation global tmp174 = global tmp175
-```
-
-`@function demo:foo/nested_execute_59`
-
-```mcfunction
-scoreboard players set global tmp178 0
-execute if score global foo matches 456 run scoreboard players set global tmp178 1
-scoreboard players operation global tmp177 = global tmp178
-```
-
-`@function demo:foo/nested_execute_60`
-
-```mcfunction
-scoreboard players set global tmp180 0
-execute if score global foo = global foo run scoreboard players set global tmp180 1
-scoreboard players operation global tmp179 = global tmp180
-```
-
-`@function demo:foo/nested_execute_61`
-
-```mcfunction
-scoreboard players set global tmp183 0
-execute if score global foo matches 456 run scoreboard players set global tmp183 1
-scoreboard players operation global tmp182 = global tmp183
-```
-
-`@function demo:foo/nested_execute_62`
-
-```mcfunction
-scoreboard players set global tmp187 0
-execute if score global foo matches 456 run scoreboard players set global tmp187 1
-scoreboard players operation global tmp186 = global tmp187
-```
-
-`@function demo:foo/nested_execute_63`
-
-```mcfunction
-scoreboard players set global tmp189 0
-execute if score global foo matches 456 run scoreboard players set global tmp189 1
-scoreboard players operation global tmp188 = global tmp189
-```
-
-`@function demo:foo/nested_execute_64`
-
-```mcfunction
-scoreboard players set global tmp192 0
-execute if score global foo = global foo run scoreboard players set global tmp192 1
-scoreboard players operation global tmp191 = global tmp192
-```
-
-`@function demo:foo/nested_execute_65`
-
-```mcfunction
-scoreboard players set global tmp194 0
-execute if score global foo matches 456 run scoreboard players set global tmp194 1
-scoreboard players operation global tmp193 = global tmp194
-```
-
-`@function demo:foo/nested_execute_66`
-
-```mcfunction
-scoreboard players set global tmp197 0
-execute if score global foo = global foo run scoreboard players set global tmp197 1
-scoreboard players operation global tmp196 = global tmp197
-```
-
-`@function demo:foo/nested_execute_67`
-
-```mcfunction
-scoreboard players set global tmp199 0
-execute if score global foo = global foo run scoreboard players set global tmp199 1
-scoreboard players operation global tmp198 = global tmp199
-```
-
-`@function demo:foo/nested_execute_68`
-
-```mcfunction
-scoreboard players set global tmp203 0
-execute if score global bar matches 456 run scoreboard players set global tmp203 1
-scoreboard players operation global tmp202 = global tmp203
-```
-
-`@function demo:foo/nested_execute_69`
-
-```mcfunction
-scoreboard players set global tmp206 0
-execute if score global bar = global bar run scoreboard players set global tmp206 1
-scoreboard players operation global tmp205 = global tmp206
-```
-
-`@function demo:foo/nested_execute_70`
-
-```mcfunction
-scoreboard players set global tmp209 0
-execute if score global bar matches 456 run scoreboard players set global tmp209 1
-scoreboard players operation global tmp208 = global tmp209
-```
-
-`@function demo:foo/nested_execute_71`
-
-```mcfunction
-scoreboard players set global tmp213 0
-execute if score global bar matches 456 run scoreboard players set global tmp213 1
-scoreboard players operation global tmp212 = global tmp213
-```
-
-`@function demo:foo/nested_execute_72`
-
-```mcfunction
-scoreboard players set global tmp215 0
-execute if score global bar matches 456 run scoreboard players set global tmp215 1
-scoreboard players operation global tmp214 = global tmp215
-```
-
-`@function demo:foo/nested_execute_73`
-
-```mcfunction
-scoreboard players set global tmp218 0
-execute if score global bar = global bar run scoreboard players set global tmp218 1
-scoreboard players operation global tmp217 = global tmp218
-```
-
-`@function demo:foo/nested_execute_74`
-
-```mcfunction
-scoreboard players set global tmp220 0
-execute if score global bar matches 456 run scoreboard players set global tmp220 1
-scoreboard players operation global tmp219 = global tmp220
-```
-
-`@function demo:foo/nested_execute_75`
-
-```mcfunction
-scoreboard players set global tmp223 0
-execute if score global bar = global bar run scoreboard players set global tmp223 1
-scoreboard players operation global tmp222 = global tmp223
-```
-
-`@function demo:foo/nested_execute_76`
-
-```mcfunction
-scoreboard players set global tmp225 0
-execute if score global bar = global bar run scoreboard players set global tmp225 1
-scoreboard players operation global tmp224 = global tmp225
-```
-
-`@function demo:foo/nested_execute_77`
-
-```mcfunction
-scoreboard players set global tmp232 0
-execute if score global bar matches 456 run scoreboard players set global tmp232 1
-scoreboard players operation global tmp231 = global tmp232
-```
-
-`@function demo:foo/nested_execute_78`
-
-```mcfunction
-scoreboard players set global tmp235 0
-execute if score global bar matches 456 run scoreboard players set global tmp235 1
-scoreboard players operation global tmp234 = global tmp235
-```
-
-`@function demo:foo/nested_execute_79`
-
-```mcfunction
-scoreboard players set global tmp237 0
-execute if score global bar matches 456 run scoreboard players set global tmp237 1
-scoreboard players operation global tmp236 = global tmp237
-```
-
-`@function demo:foo/nested_execute_80`
-
-```mcfunction
-scoreboard players set global tmp240 0
-execute if score global bar matches 456 run scoreboard players set global tmp240 1
-scoreboard players operation global tmp239 = global tmp240
-```
-
-`@function demo:foo/nested_execute_81`
-
-```mcfunction
-scoreboard players set global tmp242 0
-execute if score global bar = global bar run scoreboard players set global tmp242 1
-scoreboard players operation global tmp241 = global tmp242
-```
-
-`@function demo:foo/nested_execute_82`
-
-```mcfunction
-scoreboard players set global tmp245 0
-execute if score global bar matches 456 run scoreboard players set global tmp245 1
-scoreboard players operation global tmp244 = global tmp245
-```
-
-`@function demo:foo/nested_execute_83`
-
-```mcfunction
-scoreboard players set global tmp249 0
-execute if score global bar matches 456 run scoreboard players set global tmp249 1
-scoreboard players operation global tmp248 = global tmp249
-```
-
-`@function demo:foo/nested_execute_84`
-
-```mcfunction
-scoreboard players set global tmp251 0
-execute if score global bar matches 456 run scoreboard players set global tmp251 1
-scoreboard players operation global tmp250 = global tmp251
-```
-
-`@function demo:foo/nested_execute_85`
-
-```mcfunction
-scoreboard players set global tmp254 0
-execute if score global bar = global bar run scoreboard players set global tmp254 1
-scoreboard players operation global tmp253 = global tmp254
-```
-
-`@function demo:foo/nested_execute_86`
-
-```mcfunction
-scoreboard players set global tmp256 0
-execute if score global bar matches 456 run scoreboard players set global tmp256 1
-scoreboard players operation global tmp255 = global tmp256
-```
-
-`@function demo:foo/nested_execute_87`
-
-```mcfunction
-scoreboard players set global tmp259 0
-execute if score global bar = global bar run scoreboard players set global tmp259 1
-scoreboard players operation global tmp258 = global tmp259
-```
-
-`@function demo:foo/nested_execute_88`
-
-```mcfunction
-scoreboard players set global tmp261 0
-execute if score global bar = global bar run scoreboard players set global tmp261 1
-scoreboard players operation global tmp260 = global tmp261
-```
-
-`@function demo:foo/nested_execute_89`
-
-```mcfunction
-scoreboard players set global tmp264 0
-execute if score global foo = global foo run scoreboard players set global tmp264 1
-scoreboard players operation global tmp263 = global tmp264
-```
-
-`@function demo:foo/nested_execute_90`
-
-```mcfunction
-scoreboard players set global tmp266 0
-execute if score global foo = global foo run scoreboard players set global tmp266 1
-scoreboard players operation global tmp265 = global tmp266
-```
-
-`@function demo:foo/nested_execute_91`
-
-```mcfunction
-scoreboard players set global tmp269 0
-execute if score global foo = global foo run scoreboard players set global tmp269 1
-scoreboard players operation global tmp268 = global tmp269
-```
-
-`@function demo:foo/nested_execute_92`
-
-```mcfunction
-scoreboard players set global tmp271 0
-execute if score global foo = global bar run scoreboard players set global tmp271 1
-scoreboard players operation global tmp270 = global tmp271
-```
-
-`@function demo:foo/nested_execute_93`
-
-```mcfunction
-scoreboard players set global tmp274 0
-execute if score global foo = global bar run scoreboard players set global tmp274 1
-scoreboard players operation global tmp273 = global tmp274
-```
-
-`@function demo:foo/nested_execute_94`
-
-```mcfunction
-scoreboard players set global tmp276 0
-execute if score global bar = global foo run scoreboard players set global tmp276 1
-scoreboard players operation global tmp275 = global tmp276
-```
-
-`@function demo:foo/nested_execute_95`
-
-```mcfunction
-scoreboard players set global tmp279 0
-execute if score global foo = global bar run scoreboard players set global tmp279 1
-scoreboard players operation global tmp278 = global tmp279
-```
-
-`@function demo:foo/nested_execute_96`
-
-```mcfunction
-scoreboard players set global tmp281 0
-execute if score global bar = global bar run scoreboard players set global tmp281 1
-scoreboard players operation global tmp280 = global tmp281
-```
-
-`@function demo:foo/nested_execute_97`
-
-```mcfunction
-scoreboard players set global tmp284 0
-execute if score global bar = global foo run scoreboard players set global tmp284 1
-scoreboard players operation global tmp283 = global tmp284
-```
-
-`@function demo:foo/nested_execute_98`
-
-```mcfunction
-scoreboard players set global tmp286 0
-execute if score global foo = global foo run scoreboard players set global tmp286 1
-scoreboard players operation global tmp285 = global tmp286
-```
-
-`@function demo:foo/nested_execute_99`
-
-```mcfunction
-scoreboard players set global tmp289 0
-execute if score global bar = global foo run scoreboard players set global tmp289 1
-scoreboard players operation global tmp288 = global tmp289
 ```
 
 `@function demo:foo/nested_execute_100`
@@ -1455,6 +686,14 @@ execute if score global foo = global bar run scoreboard players set global tmp31
 scoreboard players operation global tmp313 = global tmp314
 ```
 
+`@function demo:foo/nested_execute_11`
+
+```mcfunction
+scoreboard players set global tmp34 0
+execute if score global foo matches 123 run scoreboard players set global tmp34 1
+scoreboard players operation global tmp33 = global tmp34
+```
+
 `@function demo:foo/nested_execute_110`
 
 ```mcfunction
@@ -1535,10 +774,778 @@ execute if score global bar = global bar run scoreboard players set global tmp33
 scoreboard players operation global tmp338 = global tmp339
 ```
 
+`@function demo:foo/nested_execute_12`
+
+```mcfunction
+scoreboard players set global tmp37 0
+execute if score global foo = global foo run scoreboard players set global tmp37 1
+scoreboard players operation global tmp36 = global tmp37
+```
+
 `@function demo:foo/nested_execute_120`
 
 ```mcfunction
 scoreboard players set global tmp341 0
 execute if score global bar = global bar run scoreboard players set global tmp341 1
 scoreboard players operation global tmp340 = global tmp341
+```
+
+`@function demo:foo/nested_execute_13`
+
+```mcfunction
+scoreboard players set global tmp39 0
+execute if score global foo = global foo run scoreboard players set global tmp39 1
+scoreboard players operation global tmp38 = global tmp39
+```
+
+`@function demo:foo/nested_execute_14`
+
+```mcfunction
+scoreboard players set global tmp46 0
+execute if score global foo matches 123 run scoreboard players set global tmp46 1
+scoreboard players operation global tmp45 = global tmp46
+```
+
+`@function demo:foo/nested_execute_15`
+
+```mcfunction
+scoreboard players set global tmp49 0
+execute if score global foo matches 123 run scoreboard players set global tmp49 1
+scoreboard players operation global tmp48 = global tmp49
+```
+
+`@function demo:foo/nested_execute_16`
+
+```mcfunction
+scoreboard players set global tmp51 0
+execute if score global foo matches 123 run scoreboard players set global tmp51 1
+scoreboard players operation global tmp50 = global tmp51
+```
+
+`@function demo:foo/nested_execute_17`
+
+```mcfunction
+scoreboard players set global tmp54 0
+execute if score global foo matches 123 run scoreboard players set global tmp54 1
+scoreboard players operation global tmp53 = global tmp54
+```
+
+`@function demo:foo/nested_execute_18`
+
+```mcfunction
+scoreboard players set global tmp56 0
+execute if score global foo = global foo run scoreboard players set global tmp56 1
+scoreboard players operation global tmp55 = global tmp56
+```
+
+`@function demo:foo/nested_execute_19`
+
+```mcfunction
+scoreboard players set global tmp59 0
+execute if score global foo matches 123 run scoreboard players set global tmp59 1
+scoreboard players operation global tmp58 = global tmp59
+```
+
+`@function demo:foo/nested_execute_2`
+
+```mcfunction
+scoreboard players set global tmp7 0
+execute if score global seven = global seven run scoreboard players set global tmp7 1
+scoreboard players operation global tmp6 = global tmp7
+```
+
+`@function demo:foo/nested_execute_20`
+
+```mcfunction
+scoreboard players set global tmp63 0
+execute if score global foo matches 123 run scoreboard players set global tmp63 1
+scoreboard players operation global tmp62 = global tmp63
+```
+
+`@function demo:foo/nested_execute_21`
+
+```mcfunction
+scoreboard players set global tmp65 0
+execute if score global foo matches 123 run scoreboard players set global tmp65 1
+scoreboard players operation global tmp64 = global tmp65
+```
+
+`@function demo:foo/nested_execute_22`
+
+```mcfunction
+scoreboard players set global tmp68 0
+execute if score global foo = global foo run scoreboard players set global tmp68 1
+scoreboard players operation global tmp67 = global tmp68
+```
+
+`@function demo:foo/nested_execute_23`
+
+```mcfunction
+scoreboard players set global tmp70 0
+execute if score global foo matches 123 run scoreboard players set global tmp70 1
+scoreboard players operation global tmp69 = global tmp70
+```
+
+`@function demo:foo/nested_execute_24`
+
+```mcfunction
+scoreboard players set global tmp73 0
+execute if score global foo = global foo run scoreboard players set global tmp73 1
+scoreboard players operation global tmp72 = global tmp73
+```
+
+`@function demo:foo/nested_execute_25`
+
+```mcfunction
+scoreboard players set global tmp75 0
+execute if score global foo = global foo run scoreboard players set global tmp75 1
+scoreboard players operation global tmp74 = global tmp75
+```
+
+`@function demo:foo/nested_execute_26`
+
+```mcfunction
+scoreboard players set global tmp79 0
+execute if score global bar matches 123 run scoreboard players set global tmp79 1
+scoreboard players operation global tmp78 = global tmp79
+```
+
+`@function demo:foo/nested_execute_27`
+
+```mcfunction
+scoreboard players set global tmp82 0
+execute if score global bar = global bar run scoreboard players set global tmp82 1
+scoreboard players operation global tmp81 = global tmp82
+```
+
+`@function demo:foo/nested_execute_28`
+
+```mcfunction
+scoreboard players set global tmp85 0
+execute if score global bar matches 123 run scoreboard players set global tmp85 1
+scoreboard players operation global tmp84 = global tmp85
+```
+
+`@function demo:foo/nested_execute_29`
+
+```mcfunction
+scoreboard players set global tmp89 0
+execute if score global bar matches 123 run scoreboard players set global tmp89 1
+scoreboard players operation global tmp88 = global tmp89
+```
+
+`@function demo:foo/nested_execute_3`
+
+```mcfunction
+scoreboard players set global tmp9 0
+execute if score global seven = global seven run scoreboard players set global tmp9 1
+scoreboard players operation global tmp8 = global tmp9
+```
+
+`@function demo:foo/nested_execute_30`
+
+```mcfunction
+scoreboard players set global tmp91 0
+execute if score global bar matches 123 run scoreboard players set global tmp91 1
+scoreboard players operation global tmp90 = global tmp91
+```
+
+`@function demo:foo/nested_execute_31`
+
+```mcfunction
+scoreboard players set global tmp94 0
+execute if score global bar = global bar run scoreboard players set global tmp94 1
+scoreboard players operation global tmp93 = global tmp94
+```
+
+`@function demo:foo/nested_execute_32`
+
+```mcfunction
+scoreboard players set global tmp96 0
+execute if score global bar matches 123 run scoreboard players set global tmp96 1
+scoreboard players operation global tmp95 = global tmp96
+```
+
+`@function demo:foo/nested_execute_33`
+
+```mcfunction
+scoreboard players set global tmp99 0
+execute if score global bar = global bar run scoreboard players set global tmp99 1
+scoreboard players operation global tmp98 = global tmp99
+```
+
+`@function demo:foo/nested_execute_34`
+
+```mcfunction
+scoreboard players set global tmp101 0
+execute if score global bar = global bar run scoreboard players set global tmp101 1
+scoreboard players operation global tmp100 = global tmp101
+```
+
+`@function demo:foo/nested_execute_35`
+
+```mcfunction
+scoreboard players set global tmp108 0
+execute if score global bar matches 123 run scoreboard players set global tmp108 1
+scoreboard players operation global tmp107 = global tmp108
+```
+
+`@function demo:foo/nested_execute_36`
+
+```mcfunction
+scoreboard players set global tmp111 0
+execute if score global bar matches 123 run scoreboard players set global tmp111 1
+scoreboard players operation global tmp110 = global tmp111
+```
+
+`@function demo:foo/nested_execute_37`
+
+```mcfunction
+scoreboard players set global tmp113 0
+execute if score global bar matches 123 run scoreboard players set global tmp113 1
+scoreboard players operation global tmp112 = global tmp113
+```
+
+`@function demo:foo/nested_execute_38`
+
+```mcfunction
+scoreboard players set global tmp116 0
+execute if score global bar matches 123 run scoreboard players set global tmp116 1
+scoreboard players operation global tmp115 = global tmp116
+```
+
+`@function demo:foo/nested_execute_39`
+
+```mcfunction
+scoreboard players set global tmp118 0
+execute if score global bar = global bar run scoreboard players set global tmp118 1
+scoreboard players operation global tmp117 = global tmp118
+```
+
+`@function demo:foo/nested_execute_4`
+
+```mcfunction
+scoreboard players set global tmp13 0
+execute if score global tmp10 = global thing run scoreboard players set global tmp13 1
+scoreboard players operation global tmp12 = global tmp13
+```
+
+`@function demo:foo/nested_execute_40`
+
+```mcfunction
+scoreboard players set global tmp121 0
+execute if score global bar matches 123 run scoreboard players set global tmp121 1
+scoreboard players operation global tmp120 = global tmp121
+```
+
+`@function demo:foo/nested_execute_41`
+
+```mcfunction
+scoreboard players set global tmp125 0
+execute if score global bar matches 123 run scoreboard players set global tmp125 1
+scoreboard players operation global tmp124 = global tmp125
+```
+
+`@function demo:foo/nested_execute_42`
+
+```mcfunction
+scoreboard players set global tmp127 0
+execute if score global bar matches 123 run scoreboard players set global tmp127 1
+scoreboard players operation global tmp126 = global tmp127
+```
+
+`@function demo:foo/nested_execute_43`
+
+```mcfunction
+scoreboard players set global tmp130 0
+execute if score global bar = global bar run scoreboard players set global tmp130 1
+scoreboard players operation global tmp129 = global tmp130
+```
+
+`@function demo:foo/nested_execute_44`
+
+```mcfunction
+scoreboard players set global tmp132 0
+execute if score global bar matches 123 run scoreboard players set global tmp132 1
+scoreboard players operation global tmp131 = global tmp132
+```
+
+`@function demo:foo/nested_execute_45`
+
+```mcfunction
+scoreboard players set global tmp135 0
+execute if score global bar = global bar run scoreboard players set global tmp135 1
+scoreboard players operation global tmp134 = global tmp135
+```
+
+`@function demo:foo/nested_execute_46`
+
+```mcfunction
+scoreboard players set global tmp137 0
+execute if score global bar = global bar run scoreboard players set global tmp137 1
+scoreboard players operation global tmp136 = global tmp137
+```
+
+`@function demo:foo/nested_execute_47`
+
+```mcfunction
+scoreboard players set global tmp141 0
+execute if score global foo matches 456 run scoreboard players set global tmp141 1
+scoreboard players operation global tmp140 = global tmp141
+```
+
+`@function demo:foo/nested_execute_48`
+
+```mcfunction
+scoreboard players set global tmp144 0
+execute if score global foo = global foo run scoreboard players set global tmp144 1
+scoreboard players operation global tmp143 = global tmp144
+```
+
+`@function demo:foo/nested_execute_49`
+
+```mcfunction
+scoreboard players set global tmp147 0
+execute if score global foo matches 456 run scoreboard players set global tmp147 1
+scoreboard players operation global tmp146 = global tmp147
+```
+
+`@function demo:foo/nested_execute_5`
+
+```mcfunction
+scoreboard players set global tmp17 0
+execute if score global foo matches 123 run scoreboard players set global tmp17 1
+scoreboard players operation global tmp16 = global tmp17
+```
+
+`@function demo:foo/nested_execute_50`
+
+```mcfunction
+scoreboard players set global tmp151 0
+execute if score global foo matches 456 run scoreboard players set global tmp151 1
+scoreboard players operation global tmp150 = global tmp151
+```
+
+`@function demo:foo/nested_execute_51`
+
+```mcfunction
+scoreboard players set global tmp153 0
+execute if score global foo matches 456 run scoreboard players set global tmp153 1
+scoreboard players operation global tmp152 = global tmp153
+```
+
+`@function demo:foo/nested_execute_52`
+
+```mcfunction
+scoreboard players set global tmp156 0
+execute if score global foo = global foo run scoreboard players set global tmp156 1
+scoreboard players operation global tmp155 = global tmp156
+```
+
+`@function demo:foo/nested_execute_53`
+
+```mcfunction
+scoreboard players set global tmp158 0
+execute if score global foo matches 456 run scoreboard players set global tmp158 1
+scoreboard players operation global tmp157 = global tmp158
+```
+
+`@function demo:foo/nested_execute_54`
+
+```mcfunction
+scoreboard players set global tmp161 0
+execute if score global foo = global foo run scoreboard players set global tmp161 1
+scoreboard players operation global tmp160 = global tmp161
+```
+
+`@function demo:foo/nested_execute_55`
+
+```mcfunction
+scoreboard players set global tmp163 0
+execute if score global foo = global foo run scoreboard players set global tmp163 1
+scoreboard players operation global tmp162 = global tmp163
+```
+
+`@function demo:foo/nested_execute_56`
+
+```mcfunction
+scoreboard players set global tmp170 0
+execute if score global foo matches 456 run scoreboard players set global tmp170 1
+scoreboard players operation global tmp169 = global tmp170
+```
+
+`@function demo:foo/nested_execute_57`
+
+```mcfunction
+scoreboard players set global tmp173 0
+execute if score global foo matches 456 run scoreboard players set global tmp173 1
+scoreboard players operation global tmp172 = global tmp173
+```
+
+`@function demo:foo/nested_execute_58`
+
+```mcfunction
+scoreboard players set global tmp175 0
+execute if score global foo matches 456 run scoreboard players set global tmp175 1
+scoreboard players operation global tmp174 = global tmp175
+```
+
+`@function demo:foo/nested_execute_59`
+
+```mcfunction
+scoreboard players set global tmp178 0
+execute if score global foo matches 456 run scoreboard players set global tmp178 1
+scoreboard players operation global tmp177 = global tmp178
+```
+
+`@function demo:foo/nested_execute_6`
+
+```mcfunction
+scoreboard players set global tmp20 0
+execute if score global foo = global foo run scoreboard players set global tmp20 1
+scoreboard players operation global tmp19 = global tmp20
+```
+
+`@function demo:foo/nested_execute_60`
+
+```mcfunction
+scoreboard players set global tmp180 0
+execute if score global foo = global foo run scoreboard players set global tmp180 1
+scoreboard players operation global tmp179 = global tmp180
+```
+
+`@function demo:foo/nested_execute_61`
+
+```mcfunction
+scoreboard players set global tmp183 0
+execute if score global foo matches 456 run scoreboard players set global tmp183 1
+scoreboard players operation global tmp182 = global tmp183
+```
+
+`@function demo:foo/nested_execute_62`
+
+```mcfunction
+scoreboard players set global tmp187 0
+execute if score global foo matches 456 run scoreboard players set global tmp187 1
+scoreboard players operation global tmp186 = global tmp187
+```
+
+`@function demo:foo/nested_execute_63`
+
+```mcfunction
+scoreboard players set global tmp189 0
+execute if score global foo matches 456 run scoreboard players set global tmp189 1
+scoreboard players operation global tmp188 = global tmp189
+```
+
+`@function demo:foo/nested_execute_64`
+
+```mcfunction
+scoreboard players set global tmp192 0
+execute if score global foo = global foo run scoreboard players set global tmp192 1
+scoreboard players operation global tmp191 = global tmp192
+```
+
+`@function demo:foo/nested_execute_65`
+
+```mcfunction
+scoreboard players set global tmp194 0
+execute if score global foo matches 456 run scoreboard players set global tmp194 1
+scoreboard players operation global tmp193 = global tmp194
+```
+
+`@function demo:foo/nested_execute_66`
+
+```mcfunction
+scoreboard players set global tmp197 0
+execute if score global foo = global foo run scoreboard players set global tmp197 1
+scoreboard players operation global tmp196 = global tmp197
+```
+
+`@function demo:foo/nested_execute_67`
+
+```mcfunction
+scoreboard players set global tmp199 0
+execute if score global foo = global foo run scoreboard players set global tmp199 1
+scoreboard players operation global tmp198 = global tmp199
+```
+
+`@function demo:foo/nested_execute_68`
+
+```mcfunction
+scoreboard players set global tmp203 0
+execute if score global bar matches 456 run scoreboard players set global tmp203 1
+scoreboard players operation global tmp202 = global tmp203
+```
+
+`@function demo:foo/nested_execute_69`
+
+```mcfunction
+scoreboard players set global tmp206 0
+execute if score global bar = global bar run scoreboard players set global tmp206 1
+scoreboard players operation global tmp205 = global tmp206
+```
+
+`@function demo:foo/nested_execute_7`
+
+```mcfunction
+scoreboard players set global tmp23 0
+execute if score global foo matches 123 run scoreboard players set global tmp23 1
+scoreboard players operation global tmp22 = global tmp23
+```
+
+`@function demo:foo/nested_execute_70`
+
+```mcfunction
+scoreboard players set global tmp209 0
+execute if score global bar matches 456 run scoreboard players set global tmp209 1
+scoreboard players operation global tmp208 = global tmp209
+```
+
+`@function demo:foo/nested_execute_71`
+
+```mcfunction
+scoreboard players set global tmp213 0
+execute if score global bar matches 456 run scoreboard players set global tmp213 1
+scoreboard players operation global tmp212 = global tmp213
+```
+
+`@function demo:foo/nested_execute_72`
+
+```mcfunction
+scoreboard players set global tmp215 0
+execute if score global bar matches 456 run scoreboard players set global tmp215 1
+scoreboard players operation global tmp214 = global tmp215
+```
+
+`@function demo:foo/nested_execute_73`
+
+```mcfunction
+scoreboard players set global tmp218 0
+execute if score global bar = global bar run scoreboard players set global tmp218 1
+scoreboard players operation global tmp217 = global tmp218
+```
+
+`@function demo:foo/nested_execute_74`
+
+```mcfunction
+scoreboard players set global tmp220 0
+execute if score global bar matches 456 run scoreboard players set global tmp220 1
+scoreboard players operation global tmp219 = global tmp220
+```
+
+`@function demo:foo/nested_execute_75`
+
+```mcfunction
+scoreboard players set global tmp223 0
+execute if score global bar = global bar run scoreboard players set global tmp223 1
+scoreboard players operation global tmp222 = global tmp223
+```
+
+`@function demo:foo/nested_execute_76`
+
+```mcfunction
+scoreboard players set global tmp225 0
+execute if score global bar = global bar run scoreboard players set global tmp225 1
+scoreboard players operation global tmp224 = global tmp225
+```
+
+`@function demo:foo/nested_execute_77`
+
+```mcfunction
+scoreboard players set global tmp232 0
+execute if score global bar matches 456 run scoreboard players set global tmp232 1
+scoreboard players operation global tmp231 = global tmp232
+```
+
+`@function demo:foo/nested_execute_78`
+
+```mcfunction
+scoreboard players set global tmp235 0
+execute if score global bar matches 456 run scoreboard players set global tmp235 1
+scoreboard players operation global tmp234 = global tmp235
+```
+
+`@function demo:foo/nested_execute_79`
+
+```mcfunction
+scoreboard players set global tmp237 0
+execute if score global bar matches 456 run scoreboard players set global tmp237 1
+scoreboard players operation global tmp236 = global tmp237
+```
+
+`@function demo:foo/nested_execute_8`
+
+```mcfunction
+scoreboard players set global tmp27 0
+execute if score global foo matches 123 run scoreboard players set global tmp27 1
+scoreboard players operation global tmp26 = global tmp27
+```
+
+`@function demo:foo/nested_execute_80`
+
+```mcfunction
+scoreboard players set global tmp240 0
+execute if score global bar matches 456 run scoreboard players set global tmp240 1
+scoreboard players operation global tmp239 = global tmp240
+```
+
+`@function demo:foo/nested_execute_81`
+
+```mcfunction
+scoreboard players set global tmp242 0
+execute if score global bar = global bar run scoreboard players set global tmp242 1
+scoreboard players operation global tmp241 = global tmp242
+```
+
+`@function demo:foo/nested_execute_82`
+
+```mcfunction
+scoreboard players set global tmp245 0
+execute if score global bar matches 456 run scoreboard players set global tmp245 1
+scoreboard players operation global tmp244 = global tmp245
+```
+
+`@function demo:foo/nested_execute_83`
+
+```mcfunction
+scoreboard players set global tmp249 0
+execute if score global bar matches 456 run scoreboard players set global tmp249 1
+scoreboard players operation global tmp248 = global tmp249
+```
+
+`@function demo:foo/nested_execute_84`
+
+```mcfunction
+scoreboard players set global tmp251 0
+execute if score global bar matches 456 run scoreboard players set global tmp251 1
+scoreboard players operation global tmp250 = global tmp251
+```
+
+`@function demo:foo/nested_execute_85`
+
+```mcfunction
+scoreboard players set global tmp254 0
+execute if score global bar = global bar run scoreboard players set global tmp254 1
+scoreboard players operation global tmp253 = global tmp254
+```
+
+`@function demo:foo/nested_execute_86`
+
+```mcfunction
+scoreboard players set global tmp256 0
+execute if score global bar matches 456 run scoreboard players set global tmp256 1
+scoreboard players operation global tmp255 = global tmp256
+```
+
+`@function demo:foo/nested_execute_87`
+
+```mcfunction
+scoreboard players set global tmp259 0
+execute if score global bar = global bar run scoreboard players set global tmp259 1
+scoreboard players operation global tmp258 = global tmp259
+```
+
+`@function demo:foo/nested_execute_88`
+
+```mcfunction
+scoreboard players set global tmp261 0
+execute if score global bar = global bar run scoreboard players set global tmp261 1
+scoreboard players operation global tmp260 = global tmp261
+```
+
+`@function demo:foo/nested_execute_89`
+
+```mcfunction
+scoreboard players set global tmp264 0
+execute if score global foo = global foo run scoreboard players set global tmp264 1
+scoreboard players operation global tmp263 = global tmp264
+```
+
+`@function demo:foo/nested_execute_9`
+
+```mcfunction
+scoreboard players set global tmp29 0
+execute if score global foo matches 123 run scoreboard players set global tmp29 1
+scoreboard players operation global tmp28 = global tmp29
+```
+
+`@function demo:foo/nested_execute_90`
+
+```mcfunction
+scoreboard players set global tmp266 0
+execute if score global foo = global foo run scoreboard players set global tmp266 1
+scoreboard players operation global tmp265 = global tmp266
+```
+
+`@function demo:foo/nested_execute_91`
+
+```mcfunction
+scoreboard players set global tmp269 0
+execute if score global foo = global foo run scoreboard players set global tmp269 1
+scoreboard players operation global tmp268 = global tmp269
+```
+
+`@function demo:foo/nested_execute_92`
+
+```mcfunction
+scoreboard players set global tmp271 0
+execute if score global foo = global bar run scoreboard players set global tmp271 1
+scoreboard players operation global tmp270 = global tmp271
+```
+
+`@function demo:foo/nested_execute_93`
+
+```mcfunction
+scoreboard players set global tmp274 0
+execute if score global foo = global bar run scoreboard players set global tmp274 1
+scoreboard players operation global tmp273 = global tmp274
+```
+
+`@function demo:foo/nested_execute_94`
+
+```mcfunction
+scoreboard players set global tmp276 0
+execute if score global bar = global foo run scoreboard players set global tmp276 1
+scoreboard players operation global tmp275 = global tmp276
+```
+
+`@function demo:foo/nested_execute_95`
+
+```mcfunction
+scoreboard players set global tmp279 0
+execute if score global foo = global bar run scoreboard players set global tmp279 1
+scoreboard players operation global tmp278 = global tmp279
+```
+
+`@function demo:foo/nested_execute_96`
+
+```mcfunction
+scoreboard players set global tmp281 0
+execute if score global bar = global bar run scoreboard players set global tmp281 1
+scoreboard players operation global tmp280 = global tmp281
+```
+
+`@function demo:foo/nested_execute_97`
+
+```mcfunction
+scoreboard players set global tmp284 0
+execute if score global bar = global foo run scoreboard players set global tmp284 1
+scoreboard players operation global tmp283 = global tmp284
+```
+
+`@function demo:foo/nested_execute_98`
+
+```mcfunction
+scoreboard players set global tmp286 0
+execute if score global foo = global foo run scoreboard players set global tmp286 1
+scoreboard players operation global tmp285 = global tmp286
+```
+
+`@function demo:foo/nested_execute_99`
+
+```mcfunction
+scoreboard players set global tmp289 0
+execute if score global bar = global foo run scoreboard players set global tmp289 1
+scoreboard players operation global tmp288 = global tmp289
 ```

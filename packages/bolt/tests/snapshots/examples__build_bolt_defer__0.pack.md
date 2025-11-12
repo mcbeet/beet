@@ -7,13 +7,26 @@
 ```json
 {
   "pack": {
-    "pack_format": 48,
+    "min_format": [
+      88,
+      0
+    ],
+    "max_format": [
+      88,
+      0
+    ],
     "description": ""
   }
 }
 ```
 
 ### demo
+
+`@function demo:bar`
+
+```mcfunction
+say 18
+```
 
 `@function demo:foo`
 
@@ -25,10 +38,4 @@ say 7
 say 8
 say end
 tag @p add thing19
-```
-
-`@function demo:bar`
-
-```mcfunction
-say 18
 ```

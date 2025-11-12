@@ -7,10 +7,25 @@
 ```json
 {
   "pack": {
-    "pack_format": 48,
+    "min_format": [
+      88,
+      0
+    ],
+    "max_format": [
+      88,
+      0
+    ],
     "description": ""
   }
 }
+```
+
+### demo
+
+`@function demo:foo`
+
+```mcfunction
+say hello
 ```
 
 ### minecraft
@@ -23,12 +38,4 @@
     "demo:foo"
   ]
 }
-```
-
-### demo
-
-`@function demo:foo`
-
-```mcfunction
-say hello
 ```

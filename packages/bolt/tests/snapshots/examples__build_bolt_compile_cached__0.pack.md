@@ -7,19 +7,20 @@
 ```json
 {
   "pack": {
-    "pack_format": 48,
+    "min_format": [
+      88,
+      0
+    ],
+    "max_format": [
+      88,
+      0
+    ],
     "description": ""
   }
 }
 ```
 
 ### demo
-
-`@function demo:foo`
-
-```mcfunction
-say hello
-```
 
 `@function demo:cached/slow`
 
@@ -34,4 +35,10 @@ say something slow 6
 say something slow 7
 say something slow 8
 say something slow 9
+```
+
+`@function demo:foo`
+
+```mcfunction
+say hello
 ```
