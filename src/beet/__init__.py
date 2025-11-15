@@ -19,3 +19,5 @@ from .toolchain.query import *  # noqa: F403
 from .toolchain.template import *  # noqa: F403
 from .toolchain.tree import *  # noqa: F403
 from .toolchain.worker import *  # noqa: F403
+
+print("test")
