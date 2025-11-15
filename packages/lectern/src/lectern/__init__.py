@@ -7,4 +7,4 @@ from .plugin import *  # noqa: F403
 from .prefetch import *  # noqa: F403
 from .serialize import *  # noqa: F403
 
-__version__ = "0.35.0-beta.3"
+__version__ = "0.35.0-beta.4"
