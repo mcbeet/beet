@@ -12,7 +12,7 @@ PackType = TypeVar("PackType", bound=Pack[Any])
 
 def ignore_name(pack: PackType) -> PackType:
     """Patch the pack so that it's name gets ignored during equality checks."""
-    pack.name = IgnoreName(pack)  # type: ignore
+    pack.name = IgnoreName(pack)  # pyright: ignore[reportAttributeAccessIssue]
     return pack
 
 

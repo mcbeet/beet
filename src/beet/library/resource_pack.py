@@ -32,10 +32,7 @@ from copy import deepcopy
 from dataclasses import dataclass
 from typing import Any, ClassVar, Dict, Optional, Type
 
-try:
-    from PIL.Image import Image
-except ImportError:
-    Image = Any
+from PIL.Image import Image
 
 from beet.core.file import BinaryFile, BinaryFileContent, JsonFile, PngFile, TextFile
 from beet.core.utils import JsonDict, extra_field, split_version
@@ -83,7 +80,7 @@ class Language(JsonFile):
     scope: ClassVar[NamespaceFileScope] = ("lang",)
     extension: ClassVar[str] = ".json"
 
-    def merge(self, other: "Language") -> bool:  # type: ignore
+    def merge(self, other: "Language") -> bool:  # pyright: ignore[reportIncompatibleMethodOverride]
         self.data.update(other.data)
         return True
 
@@ -94,7 +91,7 @@ class Font(JsonFile):
     scope: ClassVar[NamespaceFileScope] = ("font",)
     extension: ClassVar[str] = ".json"
 
-    def merge(self, other: "Font") -> bool:  # type: ignore
+    def merge(self, other: "Font") -> bool:  # pyright: ignore[reportIncompatibleMethodOverride]
         providers = self.data.setdefault("providers", [])
 
         for provider in other.data.get("providers", []):
@@ -246,7 +243,7 @@ class Sound(BinaryFile):
 class SoundConfig(JsonFile):
     """Class representing the sounds.json configuration."""
 
-    def merge(self, other: "SoundConfig") -> bool:  # type: ignore
+    def merge(self, other: "SoundConfig") -> bool:  # pyright: ignore[reportIncompatibleMethodOverride]
         for key, other_event in other.data.items():
             if other_event.get("replace"):
                 self.data[key] = deepcopy(other_event)
@@ -278,7 +275,7 @@ class Atlas(JsonFile):
     scope: ClassVar[NamespaceFileScope] = ("atlases",)
     extension: ClassVar[str] = ".json"
 
-    def merge(self, other: "Atlas") -> bool:  # type: ignore
+    def merge(self, other: "Atlas") -> bool:  # pyright: ignore[reportIncompatibleMethodOverride]
         values = self.data.setdefault("sources", [])
 
         for value in other.data.get("sources", []):

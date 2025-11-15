@@ -199,7 +199,7 @@ class Generator:
 
         else:
             if render:
-                file_instance = cast(NamespaceFile, render)
+                file_instance = cast(NamespaceFile, render)  # pyright: ignore[reportInvalidCast]
                 fmt = args[0] if args else None
             elif merge:
                 file_instance = merge

@@ -575,7 +575,7 @@ class PackQuery(Generic[PackType]):
         *args: Union[FromPackType, Sequence[FromPackType]],
     ) -> "PackQuery[FromPackType]":
         packs = [p for arg in args for p in ([arg] if isinstance(arg, Pack) else arg)]
-        return replace(self, packs=packs)  # type: ignore
+        return PackQuery(packs, self.template)
 
     @overload
     def prepare(

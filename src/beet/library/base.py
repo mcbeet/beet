@@ -1456,7 +1456,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
             )
         }
 
-        self.merge(namespaces)  # type: ignore
+        self.merge(namespaces)  # pyright: ignore[reportArgumentType]
 
         if self.overlay_parent is None:
             overlays: Any = self.mcmeta.data.get("overlays", {})

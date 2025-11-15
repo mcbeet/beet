@@ -136,27 +136,27 @@ class LogHandler(logging.Handler):
 class BeetHelpColorsMixin:
     """Mixin that fixes usage formatting."""
 
-    help_headers_color: str
-    help_options_color: str
+    help_headers_color: str = "red"
+    help_options_color: str = "green"
 
     def __init__(self, *args: Any, **kwargs: Any):
-        kwargs.setdefault("help_headers_color", "red")
-        kwargs.setdefault("help_options_color", "green")
+        kwargs.setdefault("help_headers_color", self.help_headers_color)
+        kwargs.setdefault("help_options_color", self.help_options_color)
         super().__init__(*args, **kwargs)
 
     def format_usage(self, ctx: click.Context, formatter: Any):
         formatter.write_usage(
             ctx.command_path,
-            " ".join(self.collect_usage_pieces(ctx)),  # type: ignore
-            click.style("Usage", fg=self.help_headers_color) + ": ",
+            " ".join(self.collect_usage_pieces(ctx)),  # pyright: ignore[reportAttributeAccessIssue]
+            click.style("Usage", fg=self.help_headers_color),
         )
 
 
-class BeetCommand(BeetHelpColorsMixin, HelpColorsCommand):
+class BeetCommand(BeetHelpColorsMixin, HelpColorsCommand):  # pyright: ignore[reportUnsafeMultipleInheritance]
     """Click command subclass for the beet command-line."""
 
 
-class BeetGroup(BeetHelpColorsMixin, HelpColorsGroup):
+class BeetGroup(BeetHelpColorsMixin, HelpColorsGroup):  # pyright: ignore[reportUnsafeMultipleInheritance]
     """Click group subclass for the beet command-line."""
 
     def get_command(self, ctx: click.Context, cmd_name: str) -> Optional[click.Command]:
@@ -178,7 +178,7 @@ class BeetGroup(BeetHelpColorsMixin, HelpColorsGroup):
             cmd.callback = error_handler(should_exit=True)(cmd.callback)  # type: ignore
         return super().add_command(cmd, name=name)
 
-    def command(
+    def command(  # pyright: ignore[reportIncompatibleMethodOverride]
         self,
         *args: Any,
         **kwargs: Any,
@@ -186,7 +186,7 @@ class BeetGroup(BeetHelpColorsMixin, HelpColorsGroup):
         kwargs.setdefault("cls", BeetCommand)
         return super().command(*args, **kwargs)
 
-    def group(
+    def group(  # pyright: ignore[reportIncompatibleMethodOverride]
         self,
         *args: Any,
         **kwargs: Any,
@@ -274,7 +274,7 @@ def beet(
         project_obj.config_path = project
 
     if not ctx.invoked_subcommand:
-        if build := beet.get_command(ctx, "build"):  # type: ignore
+        if build := beet.get_command(ctx, "build"):  # pyright: ignore[reportFunctionMemberAccess]
             ctx.invoke(build)
 
 

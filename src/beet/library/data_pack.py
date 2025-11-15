@@ -370,7 +370,7 @@ class TagFile(JsonFile):
 
     extension: ClassVar[str] = ".json"
 
-    def merge(self: TagFileType, other: TagFileType) -> bool:  # type: ignore
+    def merge(self: TagFileType, other: TagFileType) -> bool:  # pyright: ignore[reportIncompatibleMethodOverride]
         if other.data.get("replace"):
             self.data["replace"] = True
             self.data["values"] = deepcopy(other.data.get("values", []))

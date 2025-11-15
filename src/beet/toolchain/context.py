@@ -291,7 +291,7 @@ class Context:
 
         try:
             if isinstance(validator, type) and issubclass(validator, BaseModel):
-                return validator.model_validate(options)  # type: ignore
+                return validator.model_validate(options)  # pyright: ignore[reportReturnType]
             return validator(**options)
         except BubbleException:
             raise
@@ -357,7 +357,7 @@ def configurable(
     if not callable(plugin):
         if isinstance(plugin, str):
             name = plugin
-        return partial(configurable, name=name, validator=validator)
+        return partial(configurable, name=name, validator=validator)  # pyright: ignore[reportCallIssue]
 
     @wraps(plugin)
     def wrapper(ctx: Optional[Context] = None, /, **kwargs: Any) -> Any:
