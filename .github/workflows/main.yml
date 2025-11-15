@@ -47,6 +47,8 @@ jobs:
             fi
           done
           exit $status
+      - name: Pyright
+        run: uv run basedpyright --level error
       - name: Ruff
         run: uv run ruff check
       - name: Ruff format
