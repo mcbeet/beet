@@ -7,8 +7,9 @@ name = "mecha"
 version = "0.100.0-beta.3"
 description = "A powerful Minecraft command library"
 authors = [{ name = "Valentin Berlier", email = "berlier.v@gmail.com" }]
+license = "MIT"
+license-files = ["LICENSE"]
 readme = "README.md"
-license = { file = "LICENSE" }
 keywords = [
   "beet",
   "minecraft",
