@@ -21,7 +21,7 @@ wheels = [
 
 [[package]]
 name = "beet"
-version = "0.113.0b2"
+version = "0.113.0b3"
 source = { editable = "." }
 dependencies = [
     { name = "click" },
