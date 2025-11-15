@@ -1,6 +1,6 @@
 # Changelog
 
-<!--next-version-placeholder-->
+<!-- version list -->
 
 ## v0.34.0 (2024-07-21)
 

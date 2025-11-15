@@ -15,3 +15,5 @@ from .prototype import *  # noqa: F403
 from .resources import *  # noqa: F403
 from .serialize import *  # noqa: F403
 from .spec import *  # noqa: F403
+
+print("yo")

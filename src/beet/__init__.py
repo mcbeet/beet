@@ -21,3 +21,4 @@ from .toolchain.tree import *  # noqa: F403
 from .toolchain.worker import *  # noqa: F403
 
 print("test")
+print("yo")

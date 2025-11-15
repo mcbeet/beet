@@ -58,7 +58,7 @@ jobs:
         run: |
           for p in $PACKAGES; do
           uv run --directory "$p" bash -e <<"EOF"
-            if semantic-release --strict version --no-commit --no-tag; then
+            if semantic-release -v --strict version --no-commit --no-tag; then
               uv lock --upgrade-package $(uv version | cut -d " " -f1)
               git add "$GITHUB_WORKSPACE/uv.lock"
               grep "{ workspace = true }" pyproject.toml | {
@@ -68,7 +68,7 @@ jobs:
               }
               git add pyproject.toml
               uv build -o dist
-              semantic-release --strict version
+              semantic-release -v --strict version
               semantic-release publish
               uv publish dist/*
             fi

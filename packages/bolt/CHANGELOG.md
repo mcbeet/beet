@@ -1,6 +1,6 @@
 # Changelog
 
-<!--next-version-placeholder-->
+<!-- version list -->
 
 ## v0.49.2 (2025-06-17)
 

@@ -1,6 +1,6 @@
 # Changelog
 
-<!--next-version-placeholder-->
+<!-- version list -->
 
 ## v0.112.0 (2025-10-15)
 
