@@ -69,8 +69,8 @@ jobs:
               git add pyproject.toml
               uv build -o dist
               semantic-release --strict version
-              semantic-release publish
               uv publish dist/*
+              semantic-release publish
             fi
           EOF
           done
