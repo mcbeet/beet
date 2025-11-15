@@ -2,6 +2,13 @@
 
 <!-- version list -->
 
+## v0.100.0-beta.2 (2025-11-15)
+
+### Features
+
+- Yo ([`b2817f0`](https://github.com/mcbeet/beet/commit/b2817f0a979e8d65b31ea81677c808c978cc935a))
+
+
 ## v0.99.0 (2025-07-18)
 
 ### Feature
