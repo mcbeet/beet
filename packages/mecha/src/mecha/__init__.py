@@ -1,4 +1,4 @@
-__version__ = "0.100.0-beta.2"
+__version__ = "0.100.0-beta.3"
 
 
 from .api import *  # noqa: F403

@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v0.100.0-beta.3 (2025-11-15)
+
+### Bug Fixes
+
+- No print
+  ([`a5e3805`](https://github.com/mcbeet/beet/commit/a5e3805ad0c6ca04d5d0052157c05e3475321dfa))
+
+
 ## v0.100.0-beta.2 (2025-11-15)
 
 ### Features
