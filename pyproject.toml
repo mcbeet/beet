@@ -46,6 +46,7 @@ beet = "beet.pytest_plugin"
 
 [dependency-groups]
 dev = [
+    "basedpyright>=1.33.0",
     "pytest>=9.0.0",
     "pytest-insta>=0.4.0",
     "pytest-minecraft>=0.2.0",
