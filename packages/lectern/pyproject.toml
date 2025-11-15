@@ -4,7 +4,7 @@ build-backend = "uv_build"
 
 [project]
 name = "lectern"
-version = "0.35.0-beta.1"
+version = "0.35.0-beta.2"
 description = "Literate Minecraft data packs and resource packs"
 authors = [{ name = "Valentin Berlier", email = "berlier.v@gmail.com" }]
 readme = "README.md"
@@ -19,7 +19,7 @@ keywords = [
 
 requires-python = ">=3.14"
 dependencies = [
-    "beet>=0.112.0",
+    "beet>=0.113.0b2",
     "markdown-it-py>=4.0.0",
 ]
 
