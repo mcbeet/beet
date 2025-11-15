@@ -1,4 +1,4 @@
-__version__ = "0.49.2"
+__version__ = "0.50.0-beta.1"
 
 
 from .ast import *  # noqa: F403
