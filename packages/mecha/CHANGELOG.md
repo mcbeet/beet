@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v0.100.0-beta.4 (2025-11-15)
+
+### Bug Fixes
+
+- Change outdated license format
+  ([`a25ab4a`](https://github.com/mcbeet/beet/commit/a25ab4a0f0a42da927ec1d30d58bbd1e6b37e1ff))
+
+
 ## v0.100.0-beta.3 (2025-11-15)
 
 ### Bug Fixes
