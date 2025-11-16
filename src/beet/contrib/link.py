@@ -139,7 +139,7 @@ class LinkManager:
         """Try to find the .minecraft folder."""
         locations = [
             Path(path)
-            for path in os.environ.get("MINECRAFT_PATH", "").split(":")
+            for path in os.environ.get("MINECRAFT_PATH", "").split(os.pathsep)
             if path
         ]
         system = platform.system()
