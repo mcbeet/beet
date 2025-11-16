@@ -178,7 +178,7 @@ class TemplateManager:
         if isinstance(data, str):
             return self.render_string(data, **kwargs)
         elif isinstance(data, list):
-            return [self.render_json(element, **kwargs) for element in data]    # pyright: ignore[reportReturnType]
+            return [self.render_json(element, **kwargs) for element in data]  # pyright: ignore[reportReturnType]
         elif isinstance(data, dict):
             return {  # pyright: ignore[reportReturnType]
                 key: self.render_json(value, **kwargs) for key, value in data.items()

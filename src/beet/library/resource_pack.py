@@ -30,7 +30,7 @@ __all__ = [
 from contextlib import suppress
 from copy import deepcopy
 from dataclasses import dataclass
-from typing import Any, ClassVar, Dict, Optional, Type
+from typing import ClassVar, Dict, Optional, Type
 
 from PIL.Image import Image
 

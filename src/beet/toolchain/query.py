@@ -25,7 +25,7 @@ __all__ = [
 
 
 import re
-from dataclasses import dataclass, replace
+from dataclasses import dataclass
 from typing import (
     Any,
     Dict,
