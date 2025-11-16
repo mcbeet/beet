@@ -339,6 +339,7 @@ class MultiCache(MatchMixin, Container[str, CacheType]):
 
     def clear(self):
         """Clear the entire cache."""
+        self.preload()
         if self.path.is_dir():
             shutil.rmtree(self.path)
         super().clear()
