@@ -8,7 +8,7 @@ class Internationalization:
     languages: DefaultDict[str, Language]
 
     def __init__(self, ctx: Context):
-        self.languages = defaultdict(Language)  # type: ignore
+        self.languages = defaultdict(Language)
         ctx.require(self.add_translations)
 
     def add_translations(self, ctx: Context):

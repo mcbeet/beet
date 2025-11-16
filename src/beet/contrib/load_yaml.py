@@ -80,10 +80,10 @@ class YamlPackLoader:
         self.merge_extended_pack(self.data, extended_pack)
 
     def create_extended_pack(self, pack_type: Type[PackType]) -> PackType:
-        class ExtendedNamespace(pack_type.namespace_type):  # type: ignore
+        class ExtendedNamespace(pack_type.namespace_type):
             @classmethod
             def get_extra_info(cls) -> Dict[str, Type[PackFile]]:
-                return self.rewrite_extra_info(super().get_extra_info())  # type: ignore
+                return self.rewrite_extra_info(super().get_extra_info())
 
         ExtendedNamespace.field_map = pack_type.namespace_type.field_map
         ExtendedNamespace.scope_map = {
@@ -93,14 +93,14 @@ class YamlPackLoader:
             if extension == ".json"
         }
 
-        class ExtendedPack(pack_type):  # type: ignore
+        class ExtendedPack(pack_type):
             @classmethod
             def get_extra_info(cls) -> Dict[str, Type[PackFile]]:
-                return self.rewrite_extra_info(super().get_extra_info())  # type: ignore
+                return self.rewrite_extra_info(super().get_extra_info())
 
         ExtendedPack.namespace_type = ExtendedNamespace
 
-        return ExtendedPack()  # type: ignore
+        return ExtendedPack()
 
     def rewrite_extra_info(
         self,

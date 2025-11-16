@@ -6,7 +6,7 @@ from beet.toolchain.cli import beet
 
 from mecha import AstCacheBackend
 
-pass_project = click.make_pass_decorator(Project)  # type: ignore
+pass_project = click.make_pass_decorator(Project)
 
 
 @beet.command()

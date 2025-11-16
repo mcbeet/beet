@@ -15,7 +15,7 @@ from lectern import __version__
 from .prefetch import MarkdownPrefetcher
 
 
-@click.command(context_settings={"help_option_names": ("-h", "--help")})  # type: ignore
+@click.command(context_settings={"help_option_names": ("-h", "--help")})
 @click.pass_context
 @click.argument("path", nargs=-1)
 @click.option(

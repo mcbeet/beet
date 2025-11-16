@@ -105,7 +105,7 @@ class Serializer(Visitor):
     )
     nbt_quote_helper: QuoteHelper = field(default_factory=NbtQuoteHelper)
 
-    def __call__(self, node: AstNode, **kwargs: Any) -> str:  # type: ignore
+    def __call__(self, node: AstNode, **kwargs: Any) -> str:
         result: List[str] = []
 
         previous_formatting = self.formatting if kwargs else None

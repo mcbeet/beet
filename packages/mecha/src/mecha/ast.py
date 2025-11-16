@@ -173,7 +173,7 @@ class AbstractNode:
             attribute = getattr(self, f.name)
 
             if isinstance(attribute, AbstractChildren):
-                for child in attribute:  # type: ignore
+                for child in attribute:
                     if isinstance(child, AbstractNode):
                         yield from child.walk()
 
@@ -202,7 +202,7 @@ class AbstractNode:
                     )
                     if attribute
                     else prefix + "    <empty>"
-                )  # type: ignore
+                )
                 if isinstance(attribute := getattr(self, f.name), AbstractChildren)
                 else (
                     "\n"
@@ -252,10 +252,10 @@ class AstNode(AbstractNode):
     compile_hints: ClassVar[JsonDict] = {}
 
     def __iter__(self) -> Iterator["AstNode"]:
-        return super().__iter__()  # type: ignore
+        return super().__iter__()
 
     def walk(self) -> Iterator["AstNode"]:
-        return super().walk()  # type: ignore
+        return super().walk()
 
 
 class AstChildren(AbstractChildren[AstNodeType]):
@@ -760,15 +760,15 @@ class AstNbt(AstNode):
             return AstNbtValue(value=String(value))
         elif isinstance(value, ByteArray):
             return AstNbtByteArray(
-                elements=AstChildren(cls.from_value(e) for e in value)  # type: ignore
+                elements=AstChildren(cls.from_value(e) for e in value)
             )
         elif isinstance(value, IntArray):
             return AstNbtIntArray(
-                elements=AstChildren(cls.from_value(e) for e in value)  # type: ignore
+                elements=AstChildren(cls.from_value(e) for e in value)
             )
         elif isinstance(value, LongArray):
             return AstNbtLongArray(
-                elements=AstChildren(cls.from_value(e) for e in value)  # type: ignore
+                elements=AstChildren(cls.from_value(e) for e in value)
             )
         elif isinstance(value, Mapping):
             compound: Mapping[Any, Any] = value
@@ -776,14 +776,14 @@ class AstNbt(AstNode):
                 entries=AstChildren(
                     AstNbtCompoundEntry(
                         key=AstNbtCompoundKey(value=str(k)),
-                        value=cls.from_value(v),  # type: ignore
+                        value=cls.from_value(v),
                     )
                     for k, v in compound.items()
                 )
             )
         elif isinstance(value, Sequence):
             lst: Sequence[Any] = value
-            return AstNbtList(elements=AstChildren(cls.from_value(e) for e in lst))  # type: ignore
+            return AstNbtList(elements=AstChildren(cls.from_value(e) for e in lst))
         else:
             raise ValueError(f"Invalid nbt value of type {type(value)!r}.")
 
@@ -814,7 +814,7 @@ class AstNbtList(AstNbt):
     parser = None
 
     def evaluate(self) -> Any:
-        return ListTag([element.evaluate() for element in self.elements])  # type: ignore
+        return ListTag([element.evaluate() for element in self.elements])
 
 
 @dataclass(frozen=True, slots=True)
@@ -841,7 +841,7 @@ class AstNbtCompound(AstNbt):
     parser = "nbt_compound"
 
     def evaluate(self) -> Any:
-        return Compound(  # type: ignore
+        return Compound(
             {entry.key.value: entry.value.evaluate() for entry in self.entries},
         )
 
@@ -856,7 +856,7 @@ class AstNbtByteArray(AstNbt):
     array_prefix = "B"
 
     def evaluate(self) -> Any:
-        return ByteArray([element.evaluate() for element in self.elements])  # type: ignore
+        return ByteArray([element.evaluate() for element in self.elements])
 
 
 @dataclass(frozen=True, slots=True)
@@ -869,7 +869,7 @@ class AstNbtIntArray(AstNbt):
     array_prefix = "I"
 
     def evaluate(self) -> Any:
-        return IntArray([element.evaluate() for element in self.elements])  # type: ignore
+        return IntArray([element.evaluate() for element in self.elements])
 
 
 @dataclass(frozen=True, slots=True)
@@ -882,7 +882,7 @@ class AstNbtLongArray(AstNbt):
     array_prefix = "L"
 
     def evaluate(self) -> Any:
-        return LongArray([element.evaluate() for element in self.elements])  # type: ignore
+        return LongArray([element.evaluate() for element in self.elements])
 
 
 @dataclass(frozen=True, slots=True)
@@ -1064,7 +1064,7 @@ class AstRange(AstNode):
     @property
     def value(self) -> Union[int, float]:
         """Return the exact value."""
-        return self.min  # type: ignore
+        return self.min
 
     @classmethod
     def from_value(
@@ -1233,7 +1233,7 @@ class AstNbtPath(AstNode):
     def from_value(cls, value: Any) -> "AstNbtPath":
         """Create nbt path ast nodes representing the specified value."""
         if isinstance(value, str):
-            value = Path(value)  # type: ignore
+            value = Path(value)
         if not isinstance(value, Path):
             raise ValueError(f"Invalid nbt path value of type {type(value)!r}.")
 

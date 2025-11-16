@@ -288,7 +288,7 @@ class LexicalScope:
     def deferred(self, scope_type: Type["LexicalScopeType"]) -> "LexicalScopeType":
         if not isinstance(self.next_deferred, scope_type):
             self.next_deferred = self.push(scope_type)
-        return self.next_deferred  # type: ignore
+        return self.next_deferred
 
     def deferred_complete(self):
         self.next_deferred = None

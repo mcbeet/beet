@@ -356,7 +356,7 @@ class Dispatcher(Generic[T]):
 
     def __call__(self, node: AbstractNode, *args: Any, **kwargs: Any) -> T:
         if not self.filter(node) or not self.count:
-            return node  # type: ignore
+            return node
         self.stack.clear()
         result = self.invoke(node, *args, **kwargs)
         self.stack.clear()
@@ -399,10 +399,10 @@ class MutatingReducer(Dispatcher[Any]):
             if isinstance(attribute, AbstractChildren):
                 result = type(attribute)(
                     self.invoke(child, *args, **kwargs) for child in attribute
-                )  # type: ignore
+                )
                 if len(result) != len(attribute) or any(
                     child is not original for child, original in zip(result, attribute)
-                ):  # type: ignore
+                ):
                     to_replace[f.name] = result
             elif isinstance(attribute, AbstractNode):
                 result = self.invoke(attribute, *args, **kwargs)
@@ -427,7 +427,7 @@ class MutatingReducer(Dispatcher[Any]):
                         break
                     elif result is None or isinstance(result, AbstractChildren):
                         self.stack.pop()
-                        return result  # type: ignore
+                        return result
                     else:
                         msg = f"Invalid node of type {type(result)}."
                         if name:

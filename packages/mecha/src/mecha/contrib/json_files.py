@@ -97,7 +97,7 @@ class JsonFileCompilation:
         self.handler = JsonFileHandler(database=self.mc.database)
         self.mc.steps.append(self.handler)
 
-        self.file_types = {  # type: ignore
+        self.file_types = {
             file_type
             for pack in packs
             for file_type in pack.get_file_types(extend=JsonFileBase)
@@ -123,7 +123,7 @@ class JsonFileCompilation:
 
         self.mc.providers.append(
             FileTypeCompilationUnitProvider(
-                sorted(self.file_types, key=lambda t: t.snake_name),  # type: ignore
+                sorted(self.file_types, key=lambda t: t.snake_name),
                 no_index=True,
             )
         )
@@ -207,15 +207,15 @@ class JsonFileHandler(Visitor):
                     if compilation_unit.pack and compilation_unit.resource_location:
                         compilation_unit.pack[target_type].merge(
                             {compilation_unit.resource_location: file_instance}
-                        )  # type: ignore
+                        )
                     elif not target.merge(file_instance):
                         target.data = file_instance.data
 
                 elif isinstance(node, AstAppendJsonContent):
-                    target.append(file_instance)  # type: ignore
+                    target.append(file_instance)
 
                 elif isinstance(node, AstPrependJsonContent):
-                    target.prepend(file_instance)  # type: ignore
+                    target.prepend(file_instance)
 
                 else:
                     target.data = file_instance.data

@@ -80,7 +80,7 @@ class RegexOption(RootModel[RegexFlagsOption]):
     def validate_root(cls, value: Any) -> Any:
         if not isinstance(value, Mapping):
             return {"regex": value}
-        return value  # type: ignore
+        return value
 
     def resolve(
         self, template: Optional[TemplateManager] = None
@@ -433,7 +433,7 @@ class PreparedPackMatchQuery(Generic[PackType]):
                     for pack in packs:
                         pack_and_overlays = [pack]
                         if pack.overlay_parent is None:
-                            pack_and_overlays.extend(pack.overlays.values())  # type: ignore
+                            pack_and_overlays.extend(pack.overlays.values())
 
                         for p in pack_and_overlays:
                             for path, file_instance in p[file_type].items():

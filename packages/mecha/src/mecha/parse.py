@@ -1134,7 +1134,7 @@ class JsonParser:
             elif number:
                 value = string_to_number(number.value)
 
-            node = AstJsonValue(value=value)  # type: ignore
+            node = AstJsonValue(value=value)
             return set_location(node, stream.current)
 
     def parse_object_entry(self, stream: TokenStream) -> AstJsonObjectEntry:
@@ -1178,7 +1178,7 @@ class NbtParser:
     recursive_parser: Parser = field(init=False)
 
     number_suffixes: Dict[str, Type[Any]] = field(
-        default_factory=lambda: {  # type: ignore
+        default_factory=lambda: {
             "b": Byte,
             "s": Short,
             "l": Long,
@@ -1188,7 +1188,7 @@ class NbtParser:
     )
 
     literal_aliases: Dict[str, AstNbtValue] = field(
-        default_factory=lambda: {  # type: ignore
+        default_factory=lambda: {
             "true": AstNbtBool(value=Byte(1)),
             "false": AstNbtBool(value=Byte(0)),
         }
@@ -1247,15 +1247,15 @@ class NbtParser:
                 if array:
                     if array.value[1] == "B":
                         node = AstNbtByteArray(elements=AstChildren(elements))
-                        element_type = Byte  # type: ignore
+                        element_type = Byte
                         msg = "Expected all elements to be bytes."
                     elif array.value[1] == "I":
                         node = AstNbtIntArray(elements=AstChildren(elements))
-                        element_type = Int  # type: ignore
+                        element_type = Int
                         msg = "Expected all elements to be integers."
                     else:
                         node = AstNbtLongArray(elements=AstChildren(elements))
-                        element_type = Long  # type: ignore
+                        element_type = Long
                         msg = "Expected all elements to be long integers."
 
                     node = set_location(node, array, stream.current)
@@ -1277,13 +1277,13 @@ class NbtParser:
                     if suffix in self.number_suffixes:
                         value = self.number_suffixes[suffix](number.value[:-1])
                     else:
-                        value = (  # type: ignore
+                        value = (
                             Double(number.value)
                             if "." in number.value
                             else Int(number.value)
                         )
                 except (OutOfRange, ValueError):
-                    value = String(number.value)  # type: ignore
+                    value = String(number.value)
 
             elif string:
                 alias = string.value.lower()
@@ -1291,12 +1291,12 @@ class NbtParser:
                 if node := self.literal_aliases.get(alias):
                     return set_location(node, stream.current)
                 else:
-                    value = String(string.value)  # type: ignore
+                    value = String(string.value)
 
             elif quoted_string:
-                value = String(self.quote_helper.unquote_string(quoted_string))  # type: ignore
+                value = String(self.quote_helper.unquote_string(quoted_string))
 
-            node = AstNbtValue(value=value)  # type: ignore
+            node = AstNbtValue(value=value)
             return set_location(node, stream.current)
 
     def parse_compound_entry(self, stream: TokenStream) -> AstNbtCompoundEntry:
@@ -1475,7 +1475,7 @@ class KeyValuePairParser:
             stream.expect("equal")
             value_node = self.value_parser(stream)
 
-            entry_node = self.node_type(key=key_node, value=value_node)  # type: ignore
+            entry_node = self.node_type(key=key_node, value=value_node)
             return set_location(entry_node, key_node, value_node)
 
 
@@ -1688,7 +1688,7 @@ class SelectorParser:
                 end_location = stream.current.end_location
 
         node = AstSelector(
-            variable=variable,  # type: ignore
+            variable=variable,
             arguments=AstChildren(arguments),
         )
         return set_location(node, location, end_location)

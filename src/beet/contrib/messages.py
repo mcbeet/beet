@@ -26,7 +26,7 @@ class Message(JsonFile):
 
 def beet_default(ctx: Context):
     messages = ctx.inject(MessageManager)
-    ctx.template.env.filters["msg"] = messages.get_as_string  # type: ignore
+    ctx.template.env.filters["msg"] = messages.get_as_string
 
 
 @dataclass

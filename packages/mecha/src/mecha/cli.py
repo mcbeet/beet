@@ -37,7 +37,7 @@ def validate(ctx: Context):
             mc.compile(Function(source_path=path), report=mc.diagnostics)
 
 
-@click.command(  # type: ignore
+@click.command(
     cls=BeetCommand,
     context_settings={"help_option_names": ("-h", "--help")},
 )

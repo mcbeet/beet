@@ -1,6 +1,3 @@
-# type: ignore
-
-
 from pathlib import Path
 
 from _pytest.assertion.util import assertrepr_compare

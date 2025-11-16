@@ -86,7 +86,7 @@ class ListOption(RootModel[List[ItemType]], Generic[ItemType]):
             value = value.entries()
         if not isinstance(value, (list, tuple)):
             value = [value]
-        return value  # type: ignore
+        return value
 
     def entries(self) -> List[ItemType]:
         """Return the internal list."""
@@ -457,7 +457,7 @@ def config_error_handler(path: FileSystemPath = "(unknown)"):
     try:
         yield
     except (json.JSONDecodeError, toml.TomlDecodeError) as exc:
-        raise InvalidProjectConfig(f"{path}:{exc.lineno}: {exc.msg}.") from exc  # type: ignore
+        raise InvalidProjectConfig(f"{path}:{exc.lineno}: {exc.msg}.") from exc
     except yaml.MarkedYAMLError as exc:
         if exc.context_mark:
             exc.context_mark.name = str(path)

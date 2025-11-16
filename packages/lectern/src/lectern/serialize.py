@@ -405,7 +405,7 @@ class MarkdownSerializer:
                             self.serialize_file_instance(
                                 mapping[file_type],
                                 f"{name}:{path}",
-                                file_instance,  # type: ignore
+                                file_instance,
                                 external_files,
                                 external_prefix,
                             )
@@ -415,7 +415,7 @@ class MarkdownSerializer:
                             self.serialize_file_instance(
                                 pack_directive,
                                 f"{namespace.directory}/{name}/{'/'.join(get_output_scope(file_type.scope, pack.pack_format))}/{path}{file_type.extension}",
-                                file_instance,  # type: ignore
+                                file_instance,
                                 external_files,
                                 external_prefix,
                             )

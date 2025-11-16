@@ -128,7 +128,7 @@ class TemplateManager:
 
     def expose(self, name: str, function: Callable[..., Any]):
         """Expose a utility function to the template context."""
-        self.globals[name] = lambda *args, **kwargs: function(*args, **kwargs)  # type: ignore
+        self.globals[name] = lambda *args, **kwargs: function(*args, **kwargs)
 
     def add_package(self, dotted_path: str, prefix: Optional[str] = None):
         """Make the templates included in the specified package available."""

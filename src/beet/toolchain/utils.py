@@ -77,9 +77,9 @@ def iter_options(options: Any) -> Iterable[str]:
     if isinstance(options, str):
         yield from options.splitlines()
     elif isinstance(options, Mapping):
-        yield from iter_options(options.get("overrides", []))  # type: ignore
+        yield from iter_options(options.get("overrides", []))
     elif isinstance(options, Sequence):
-        for option in options:  # type: ignore
+        for option in options:
             yield from iter_options(option)
 
 
@@ -116,7 +116,7 @@ def eval_option(option: str) -> Any:
 
 def default_option(option: Any) -> Any:
     if isinstance(option, Mapping):
-        if option and all(isinstance(k, int) for k in option):  # type: ignore
+        if option and all(isinstance(k, int) for k in option):
             return []
         return {}
     if isinstance(option, Sequence) and not isinstance(option, str):
@@ -136,7 +136,7 @@ def apply_option(result: Any, option: Any) -> Any:
         ):
             result = default
         else:
-            result = copy(result)  # type: ignore
+            result = copy(result)
 
         for key, value in cast(Mapping[Any, Any], option).items():
             if isinstance(key, int):
@@ -153,7 +153,7 @@ def apply_option(result: Any, option: Any) -> Any:
             result[key] = apply_option(current, value)
 
     elif isinstance(option, Sequence) and not isinstance(option, str):
-        option = [apply_option(default_option(value), value) for value in option]  # type: ignore
+        option = [apply_option(default_option(value), value) for value in option]
 
         if isinstance(result, Sequence) and not isinstance(result, str):
             result = [*result, *option]

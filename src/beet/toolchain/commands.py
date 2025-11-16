@@ -7,7 +7,7 @@ from beet import Project
 from beet.core.utils import dump_json
 from beet.toolchain.cli import beet, error_handler, message_fence
 
-pass_project = click.make_pass_decorator(Project)  # type: ignore
+pass_project = click.make_pass_decorator(Project)
 
 
 @beet.command()

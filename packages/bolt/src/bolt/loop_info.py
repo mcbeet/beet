@@ -80,7 +80,7 @@ class LoopInfo(Generic[T]):
     @property
     def count(self) -> int:
         try:
-            return len(self.iterable)  # type: ignore
+            return len(self.iterable)
         except TypeError:
             self.accumulator.extend(self.iterator)
             return len(self.accumulator)

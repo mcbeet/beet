@@ -47,7 +47,7 @@ def messaging(ctx: Context, opts: MessagingOptions):
             )
         elif code_blocks := [
             token.content
-            for token in document.markdown_extractor.parser.parse(message)  # type: ignore
+            for token in document.markdown_extractor.parser.parse(message)
             if token.type in ["fence", "code_block"]
         ]:
             ctx.generate("default", Function("\n".join(code_blocks)))

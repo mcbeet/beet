@@ -74,7 +74,7 @@ class DeferHandler(MutatingReducer):
             result = yield result
         elif isinstance(result, AstChildren):
             children: List[Any] = []
-            for child in result:  # type: ignore
+            for child in result:
                 deferred_child = yield child
                 children.append(deferred_child)
             result = AstChildren(children)

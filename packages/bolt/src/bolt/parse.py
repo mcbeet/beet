@@ -2655,7 +2655,7 @@ class PrimaryParser:
 
                     arguments.append(
                         set_location(AstValue(value=value), stream.current)
-                    )  # type: ignore
+                    )
 
                 else:
                     if token.match("brace"):
@@ -2727,7 +2727,7 @@ class BuiltinCallRestriction:
         if (
             isinstance(node, AstIdentifier)
             and not isinstance(parent, AstCall)
-            and node.value in self.builtins  # type: ignore
+            and node.value in self.builtins
             and not lexical_scope.has_binding(node.value, search_parents=True)
         ):
             # Reset the underlying token generator so that the identifier can
@@ -2901,7 +2901,7 @@ class LiteralParser:
             elif number:
                 value = string_to_number(number.value)
 
-            node = AstValue(value=value)  # type: ignore
+            node = AstValue(value=value)
             return set_location(node, stream.current)
 
 

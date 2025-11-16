@@ -590,7 +590,7 @@ class Codegen(Visitor):
         default_factory=lambda: [WithStatementFusion.finalize]
     )
 
-    def __call__(self, node: AstRoot) -> CodegenResult:  # type: ignore
+    def __call__(self, node: AstRoot) -> CodegenResult:
         acc = self.accumulator_factory()
         result = self.invoke(node, acc)
 

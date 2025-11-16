@@ -52,7 +52,7 @@ def test_mcmeta_properties():
     pack.min_format = None
     pack.max_format = None
 
-    assert pack.mcmeta._content == {  # type: ignore
+    assert pack.mcmeta._content == {
         "pack": {"description": "Something", "pack_format": 1}
     }
 

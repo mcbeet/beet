@@ -183,7 +183,7 @@ class MergePolicy:
             (self.namespace_extra, other.namespace_extra),
         ]:
             for key, value in other_rules.items():
-                rules.setdefault(key, []).extend(value)  # type: ignore
+                rules.setdefault(key, []).extend(value)
 
     def extend_extra(self, filename: str, rule: MergeCallback):
         """Add rule for merging extra files."""
@@ -278,7 +278,7 @@ class NamespaceExtraContainer(ExtraContainer, Generic[NamespaceType]):
 
             return pack.merge_policy.merge_with_rules(
                 pack=pack,
-                current=self,  # type: ignore
+                current=self,
                 other=other,
                 map_rules=lambda key: (
                     f"{name}:{key}",
@@ -314,7 +314,7 @@ class PackExtraContainer(ExtraContainer, Generic[PackType]):
 
             return pack.merge_policy.merge_with_rules(
                 pack=pack,
-                current=self,  # type: ignore
+                current=self,
                 other=other,
                 map_rules=lambda key: (
                     key,
@@ -397,7 +397,7 @@ class NamespaceContainer(MatchMixin, MergeMixin, Container[str, NamespaceFileTyp
 
             return pack.merge_policy.merge_with_rules(
                 pack=pack,
-                current=self,  # type: ignore
+                current=self,
                 other=other,
                 map_rules=lambda key: (
                     f"{name}:{key}",
@@ -487,7 +487,7 @@ class Namespace(
 
     def __setitem__(self, key: Any, value: Any):
         if isinstance(key, type):
-            super().__setitem__(key, value)  # type: ignore
+            super().__setitem__(key, value)
         else:
             self[type(value)][key] = value
 
@@ -510,17 +510,17 @@ class Namespace(
         return NamespaceContainer()
 
     def merge(
-        self: MutableMapping[T, MergeableType],  # type: ignore
+        self: MutableMapping[T, MergeableType],
         other: Mapping[T, MergeableType],
     ) -> bool:
-        super().merge(other)  # type: ignore
+        super().merge(other)
 
         if isinstance(self, Namespace) and isinstance(other, Namespace):
             self.extra.merge(other.extra)
 
-        empty_containers = [key for key, value in self.items() if not value]  # type: ignore
+        empty_containers = [key for key, value in self.items() if not value]
         for container in empty_containers:
-            del self[container]  # type: ignore
+            del self[container]
 
         return True
 
@@ -703,13 +703,13 @@ class NamespaceProxy(
         default: Optional[NamespaceFileType] = None,
     ) -> NamespaceFileType:
         key1, key2 = self.split_key(key)
-        return self.proxy[key1][self.proxy_key].setdefault(key2, default)  # type: ignore
+        return self.proxy[key1][self.proxy_key].setdefault(key2, default)
 
     def merge(self, other: Mapping[Any, SupportsMerge]) -> bool:
         if isinstance(pack := self.proxy, Pack):
             return pack.merge_policy.merge_with_rules(
                 pack=pack,
-                current=self,  # type: ignore
+                current=self,
                 other=other,
                 map_rules=lambda key: (
                     key,
@@ -723,7 +723,7 @@ class NamespaceProxy(
         for prefix, namespace in self.proxy.items():
             separator = ":"
             roots: List[Tuple[str, Dict[Any, Any]]] = [
-                (prefix, namespace[self.proxy_key].generate_tree())  # type: ignore
+                (prefix, namespace[self.proxy_key].generate_tree())
             ]
 
             while roots:
@@ -763,7 +763,7 @@ class NamespaceProxyDescriptor(Generic[NamespaceFileType]):
 class Mcmeta(JsonFile):
     """Class representing a pack.mcmeta file."""
 
-    def merge(self, other: "Mcmeta") -> bool:  # type: ignore
+    def merge(self, other: "Mcmeta") -> bool:
         for key, value in other.data.items():
             if key == "filter":
                 block = self.data.setdefault("filter", {}).setdefault("block", [])
@@ -1131,9 +1131,9 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
 
     def __setitem__(self, key: str, value: Any):
         if isinstance(value, Namespace):
-            super().__setitem__(key, value)  # type: ignore
+            super().__setitem__(key, value)
         else:
-            NamespaceProxy[NamespaceFile](self, type(value))[key] = value  # type: ignore
+            NamespaceProxy[NamespaceFile](self, type(value))[key] = value
 
     def __eq__(self, other: Any) -> bool:
         if self is other:
@@ -1172,24 +1172,24 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
         self.save(overwrite=True)
 
     def process(self, key: str, value: NamespaceType) -> NamespaceType:
-        value.bind(self, key)  # type: ignore
+        value.bind(self, key)
         return value
 
     def missing(self, key: str) -> NamespaceType:
-        return self.namespace_type()  # type: ignore
+        return self.namespace_type()
 
     def merge(
         self: MutableMapping[T, MergeableType], other: Mapping[T, MergeableType]
     ) -> bool:
-        super().merge(other)  # type: ignore
+        super().merge(other)
 
         if isinstance(self, Pack) and isinstance(other, Pack):
-            self.extra.merge(other.extra)  # type: ignore
-            self.overlays.merge(other.overlays)  # type: ignore
+            self.extra.merge(other.extra)
+            self.overlays.merge(other.overlays)
 
-        empty_namespaces = [key for key, value in self.items() if not value]  # type: ignore
+        empty_namespaces = [key for key, value in self.items() if not value]
         for namespace in empty_namespaces:
-            del self[namespace]  # type: ignore
+            del self[namespace]
 
         return True
 
@@ -1272,11 +1272,11 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
             yield f"{overlay}{path}", item
 
         for namespace_name, namespace in self.items():
-            yield from namespace.list_files(namespace_name, *extensions, extend=extend)  # type: ignore
+            yield from namespace.list_files(namespace_name, *extensions, extend=extend)
 
         if self.overlay_parent is None:
             for overlay in self.overlays.values():
-                yield from overlay.list_files(*extensions, extend=extend)  # type: ignore
+                yield from overlay.list_files(*extensions, extend=extend)
 
     @overload
     def all(self, *match: str) -> Iterable[Tuple[str, NamespaceFile]]: ...

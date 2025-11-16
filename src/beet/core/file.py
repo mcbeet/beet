@@ -97,7 +97,7 @@ class File(Generic[ValueType, SerializeType]):
     def __post_init__(self):
         if self._content is self.source_path is None:
             self._content = self.default()
-        if not self.reader:  # type: ignore
+        if not self.reader:
             self.reader = self.from_path
         if not self.original:
             self.original = self
@@ -153,7 +153,7 @@ class File(Generic[ValueType, SerializeType]):
         if self.source_path:
             return self.source_path
         raise ValueError(
-            f"Expected {self.__class__.__name__} object to be initialized with "  # type: ignore
+            f"Expected {self.__class__.__name__} object to be initialized with "
             "a source path."
         )
 
@@ -172,7 +172,7 @@ class File(Generic[ValueType, SerializeType]):
             self.serializer = backup
 
         self.set_content(content)
-        return content  # type: ignore
+        return content
 
     def ensure_deserialized(
         self,
@@ -189,7 +189,7 @@ class File(Generic[ValueType, SerializeType]):
             self.deserializer = backup
 
         self.set_content(content)
-        return content  # type: ignore
+        return content
 
     def __eq__(self, other: Any) -> bool:
         if self is other:
@@ -405,9 +405,9 @@ class TextFileBase(File[ValueType, str]):
 
     def __post_init__(self):
         super().__post_init__()
-        if not self.serializer:  # type: ignore
+        if not self.serializer:
             self.serializer = self.to_str
-        if not self.deserializer:  # type: ignore
+        if not self.deserializer:
             self.deserializer = self.from_str
 
     def serialize(self, content: Union[ValueType, str]) -> str:
@@ -495,9 +495,9 @@ class BinaryFileBase(File[ValueType, bytes]):
 
     def __post_init__(self):
         super().__post_init__()
-        if not self.serializer:  # type: ignore
+        if not self.serializer:
             self.serializer = self.to_bytes
-        if not self.deserializer:  # type: ignore
+        if not self.deserializer:
             self.deserializer = self.from_bytes
 
     def serialize(self, content: Union[ValueType, bytes]) -> bytes:
@@ -598,7 +598,7 @@ class DataModelBase(TextFileBase[ValueType]):
             and issubclass(self.model, BaseModel)
             and isinstance(content, self.model)
         ):
-            content = content.model_dump()  # type: ignore
+            content = content.model_dump()
         return self.encoder(content)
 
     def from_str(self, content: str) -> ValueType:
@@ -609,11 +609,11 @@ class DataModelBase(TextFileBase[ValueType]):
             except ValidationError as exc:
                 message = format_validation_error(snake_case(self.model.__name__), exc)
                 raise InvalidDataModel(self, message) from exc
-        return value  # type: ignore
+        return value
 
     @classmethod
     def default(cls) -> ValueType:
-        return cls.model() if cls.model and issubclass(cls.model, BaseModel) else {}  # type: ignore
+        return cls.model() if cls.model and issubclass(cls.model, BaseModel) else {}
 
 
 class JsonFileBase(DataModelBase[ValueType]):
@@ -621,9 +621,9 @@ class JsonFileBase(DataModelBase[ValueType]):
 
     def __post_init__(self):
         super().__post_init__()
-        if not self.encoder:  # type: ignore
+        if not self.encoder:
             self.encoder = dump_json
-        if not self.decoder:  # type: ignore
+        if not self.decoder:
             self.decoder = json.loads
 
 
@@ -643,9 +643,9 @@ class YamlFileBase(DataModelBase[ValueType]):
 
     def __post_init__(self):
         super().__post_init__()
-        if not self.encoder:  # type: ignore
+        if not self.encoder:
             self.encoder = yaml.safe_dump
-        if not self.decoder:  # type: ignore
+        if not self.decoder:
             self.decoder = yaml.safe_load
 
 

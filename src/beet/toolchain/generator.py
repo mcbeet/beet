@@ -51,7 +51,7 @@ class Generator:
     ctx: "Context"
     scope: Tuple[Any, ...] = ()
     registry: DefaultDict[Tuple[Any, ...], int] = field(
-        default_factory=lambda: defaultdict(int)  # type: ignore
+        default_factory=lambda: defaultdict(int)
     )
 
     assets: ResourcePack = field(default_factory=ResourcePack)

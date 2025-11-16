@@ -84,7 +84,7 @@ class RenameFilesHandler:
         if isinstance(self.query, PreparedPackMatchQuery):
             for entries in self.query.select().values():
                 for (path, file_instance), (pack, _) in entries.items():
-                    self.handle_path_for_namespace_file(pack, file_instance, path)  # type: ignore
+                    self.handle_path_for_namespace_file(pack, file_instance, path)
         else:
             file_types = tuple(
                 cast(Type[File[Any, Any]], file_type)
@@ -95,7 +95,7 @@ class RenameFilesHandler:
                 if isinstance(file_instance, file_types):
                     self.handle_filename_for_namespace_file(
                         pack, file_instance, filename
-                    )  # type: ignore
+                    )
                 else:
                     self.handle_filename(pack, file_instance, filename)
 

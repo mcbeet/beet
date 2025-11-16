@@ -88,7 +88,7 @@ class LootTableEmbedParser(MutatingReducer):
 class CustomSubstitutions(MutatingReducer):
     @rule(AstNbtValue, value="$PLACEHOLDER")
     def replace_placeholder(self, node: AstNbtValue):
-        return replace(node, value=String("owo"))  # type: ignore
+        return replace(node, value=String("owo"))
 
     @rule(
         AstJsonObjectEntry,

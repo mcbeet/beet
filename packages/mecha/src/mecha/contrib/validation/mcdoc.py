@@ -127,10 +127,10 @@ class McdocNode(AbstractNode):
     """Base class for mcdoc nodes."""
 
     def __iter__(self) -> Iterator["McdocNode"]:
-        return super().__iter__()  # type: ignore
+        return super().__iter__()
 
     def walk(self) -> Iterator["McdocNode"]:
-        return super().walk()  # type: ignore
+        return super().walk()
 
 
 class McdocChildren(AbstractChildren[McdocNodeType]):
@@ -635,7 +635,7 @@ def parse_integer_range(stream: TokenStream) -> McdocIntegerRange:
             delimiter = ".."
             right = left
 
-        node = McdocIntegerRange(left=left, delimiter=delimiter, right=right)  # type: ignore
+        node = McdocIntegerRange(left=left, delimiter=delimiter, right=right)
         return set_location(node, token)
 
 
@@ -652,7 +652,7 @@ def parse_float_range(stream: TokenStream) -> McdocFloatRange:
             delimiter = ".."
             right = left
 
-        node = McdocFloatRange(left=left, delimiter=delimiter, right=right)  # type: ignore
+        node = McdocFloatRange(left=left, delimiter=delimiter, right=right)
         return set_location(node, token)
 
 
@@ -903,7 +903,7 @@ def parse_enum(stream: TokenStream) -> McdocEnum:
 
         node = McdocEnum(
             prelim=prelim,
-            type=type.value,  # type: ignore
+            type=type.value,
             identifier=identifier,
             fields=McdocChildren(fields),
         )

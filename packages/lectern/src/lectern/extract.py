@@ -290,7 +290,7 @@ class MarkdownExtractor(Extractor):
         directives: Mapping[str, Directive],
         external_files: Optional[FileSystemPath] = None,
     ) -> Iterator[Fragment]:
-        tokens = self.parser.parse(source)  # type: ignore
+        tokens = self.parser.parse(source)
         regex = self.get_regex(directives)
 
         skip_to = 0
@@ -618,7 +618,7 @@ class MarkdownExtractor(Extractor):
                 )
                 for token, token_type in zip(tokens, token_types)
             )
-            and next((token.map[-1] for token in reversed(tokens) if token.map), 1)  # type: ignore
+            and next((token.map[-1] for token in reversed(tokens) if token.map), 1)
         )
 
     def match_newline(self, tokens: Optional[List[Token]], index: int) -> bool:

@@ -189,7 +189,7 @@ class Sandbox:
         get_attribute_handler = self.runtime.helpers["get_attribute_handler"]
 
         self.runtime.helpers.update(
-            get_attribute_handler=lambda obj: SandboxedAttributeHandler(  # type: ignore
+            get_attribute_handler=lambda obj: SandboxedAttributeHandler(
                 obj=obj,
                 handler=get_attribute_handler(obj),
                 sandbox=self,

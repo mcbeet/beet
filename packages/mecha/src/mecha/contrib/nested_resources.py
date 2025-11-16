@@ -315,9 +315,9 @@ class NestedResourcesTransformer(MutatingReducer):
                     target = self.generate(full_name, default=file_instance)
                     if target is not file_instance:
                         if command.identifier.startswith("append:"):
-                            target.append(file_instance)  # type: ignore
+                            target.append(file_instance)
                         elif command.identifier.startswith("prepend:"):
-                            target.prepend(file_instance)  # type: ignore
+                            target.prepend(file_instance)
                         elif (
                             target.ensure_deserialized()
                             != file_instance.ensure_deserialized()

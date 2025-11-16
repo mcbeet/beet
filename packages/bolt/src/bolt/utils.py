@@ -29,7 +29,7 @@ INTERNAL_CODE: Set[CodeType] = {
 
 
 def internal(f: T) -> T:
-    INTERNAL_CODE.add(f.__code__)  # type: ignore
+    INTERNAL_CODE.add(f.__code__)
     return f
 
 
@@ -63,7 +63,7 @@ def rewrite_traceback(exc: Exception) -> Exception:
     return exc.with_traceback(tb)
 
 
-def fake_traceback(exc: Exception, tb: TracebackType, lineno: int) -> TracebackType:  # type: ignore
+def fake_traceback(exc: Exception, tb: TracebackType, lineno: int) -> TracebackType:
     name = tb.tb_frame.f_code.co_name
     filename = tb.tb_frame.f_globals["__file__"]
 
@@ -78,7 +78,7 @@ def fake_traceback(exc: Exception, tb: TracebackType, lineno: int) -> TracebackT
     try:
         exec(code, {"_bolt_exc": exc})
     except Exception as exc:
-        return exc.__traceback__.tb_next  # type: ignore
+        return exc.__traceback__.tb_next
 
 
 def suggest_typo(wrong: str, possibilities: Iterable[str]) -> Optional[str]:

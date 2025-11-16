@@ -54,7 +54,7 @@ class CommandEmitter:
             if isinstance(result, Generator):
                 try:
                     while True:
-                        node: Any = next(result)  # type: ignore
+                        node: Any = next(result)
                         if isinstance(node, AstRoot):
                             self.commands.extend(node.commands)
                         elif isinstance(node, AstCommand):

@@ -211,7 +211,7 @@ def python_import_module(name: str):
         return import_module(name)
     except Exception as exc:
         tb = exc.__traceback__
-        tb = tb.tb_next.tb_next  # type: ignore
+        tb = tb.tb_next.tb_next
         while tb and tb.tb_frame.f_code.co_filename.startswith("<frozen importlib"):
             tb = tb.tb_next
         raise exc.with_traceback(tb)

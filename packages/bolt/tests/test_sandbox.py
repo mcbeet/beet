@@ -30,4 +30,4 @@ def test_run(snapshot: SnapshotFixture, ctx_sandbox: Context, source: Function):
         if isinstance(exc_info.value, CompilationError)
         else str(exc_info.value)
     )
-    assert snapshot() == f"{source.text}---\n{details}"  # type: ignore
+    assert snapshot() == f"{source.text}---\n{details}"

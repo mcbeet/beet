@@ -174,8 +174,8 @@ class BeetGroup(BeetHelpColorsMixin, HelpColorsGroup):  # pyright: ignore[report
         return None
 
     def add_command(self, cmd: click.Command, name: Optional[str] = None) -> None:
-        if cmd.callback:  # type: ignore
-            cmd.callback = error_handler(should_exit=True)(cmd.callback)  # type: ignore
+        if cmd.callback:
+            cmd.callback = error_handler(should_exit=True)(cmd.callback)
         return super().add_command(cmd, name=name)
 
     def command(  # pyright: ignore[reportIncompatibleMethodOverride]
@@ -223,7 +223,7 @@ class MainGroup(BeetGroup):
         return super().list_commands(ctx)
 
 
-@click.group(cls=MainGroup)  # type: ignore
+@click.group(cls=MainGroup)
 @click.pass_context
 @click.option(
     "-p",

@@ -152,7 +152,7 @@ class Runtime(CommandEmitter):
 
     def expose(self, name: str, function: Callable[..., Any]):
         """Expose a utility function."""
-        self.globals[name] = lambda *args, **kwargs: function(*args, **kwargs)  # type: ignore
+        self.globals[name] = lambda *args, **kwargs: function(*args, **kwargs)
 
     @internal
     def import_module(self, resource_location: str) -> CompiledModule:

@@ -11,7 +11,7 @@ from mecha import AstCacheBackend
 
 from bolt import AstMemo, MemoRegistry, MemoStorage
 
-pass_project = click.make_pass_decorator(Project)  # type: ignore
+pass_project = click.make_pass_decorator(Project)
 
 
 @beet.command()
@@ -175,7 +175,7 @@ def generate_summary(
 
         if directory and directory.is_dir():
             yield f"      directory = {os.path.relpath(directory, project_directory)}"
-            for line in format_directory(directory):  # type: ignore
+            for line in format_directory(directory):
                 yield f"        {line}"
         else:
             yield "      directory = None"

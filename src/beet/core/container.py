@@ -59,10 +59,10 @@ class MergeMixin:
             return True
         for key, value in other.items():
             try:
-                if key not in self or not self[key].merge(value):  # type: ignore
-                    self[key] = value  # type: ignore
+                if key not in self or not self[key].merge(value):
+                    self[key] = value
             except Drop:
-                del self[key]  # type: ignore
+                del self[key]
         return True
 
 
@@ -70,7 +70,7 @@ class MatchMixin:
     def match(self, *patterns: str) -> Set[str]:
         """Return keys matching the given path patterns."""
         spec = PathSpec.from_lines("gitwildmatch", patterns)
-        return set(spec.match_files(self.keys()))  # type: ignore
+        return set(spec.match_files(self.keys()))
 
 
 @dataclass

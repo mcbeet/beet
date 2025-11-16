@@ -65,7 +65,7 @@ def list_origin_folders(prefix: str, origin: FileOrigin) -> Dict[str, List[PureP
 
 def list_extensions(path: PurePath) -> List[str]:
     extensions: List[str] = list(
-        accumulate(reversed(path.suffixes), lambda a, b: b + a)  # type: ignore
+        accumulate(reversed(path.suffixes), lambda a, b: b + a)
     )
     extensions.reverse()
     extensions.append("")
