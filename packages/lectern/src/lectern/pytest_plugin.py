@@ -13,8 +13,15 @@ else:
 
     def load_snapshot(path: Path) -> Document:
         document = Document(path=path)
+
         ignore_name(document.assets)
         ignore_name(document.data)
+
+        for overlay in document.assets.overlays.values():
+            ignore_name(overlay)
+        for overlay in document.data.overlays.values():
+            ignore_name(overlay)
+
         return document
 
     class FmtPackText(Fmt[Document]):
