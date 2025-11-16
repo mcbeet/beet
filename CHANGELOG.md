@@ -2,6 +2,29 @@
 
 <!-- version list -->
 
+## v0.113.0-beta.6 (2025-11-16)
+
+### Bug Fixes
+
+- Fetch_objects race condition (close #479)
+  ([`e7405ae`](https://github.com/mcbeet/beet/commit/e7405aeceb74927749bc9f9cf8bb8b96495f89e6))
+
+- Locate_minecraft path separator (close #477)
+  ([`e445ea7`](https://github.com/mcbeet/beet/commit/e445ea75eefeebdb5b737d6b2e58540ae14d0728))
+
+- Preload before MultiCache.clear (close #352)
+  ([`4e3d3ec`](https://github.com/mcbeet/beet/commit/4e3d3ec020300a7e82d0e4aad353b11a6aacf365))
+
+- Start fixing type issues
+  ([`532d109`](https://github.com/mcbeet/beet/commit/532d109b0a86e6eda48caf77a431773dc4201395))
+
+- Update click (close #484)
+  ([`054fed8`](https://github.com/mcbeet/beet/commit/054fed8d3334ff27420adbcf674d42faedeb9b2f))
+
+- Use PathLike
+  ([`b140c99`](https://github.com/mcbeet/beet/commit/b140c995bb9b846691d00b1c9a1e591439c60b99))
+
+
 ## v0.113.0-beta.5 (2025-11-15)
 
 ### Bug Fixes
