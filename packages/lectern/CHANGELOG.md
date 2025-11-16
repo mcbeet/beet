@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v0.35.0-beta.5 (2025-11-16)
+
+### Bug Fixes
+
+- Ignore_name snapshot overlays
+  ([`4c55a5c`](https://github.com/mcbeet/beet/commit/4c55a5c2844414baf6833627371bdc5d63fdf493))
+
+
 ## v0.35.0-beta.4 (2025-11-15)
 
 ### Bug Fixes
