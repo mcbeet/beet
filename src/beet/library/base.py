@@ -1472,30 +1472,26 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
                 if not overlay:
                     del self.overlays[name]
 
-    def unveil(self, prefix: str, origin: Union[FileSystemPath, UnveilMapping]):
-        """Lazily mount resources from the root of a pack on the filesystem."""
+    def unveil(self, prefix: str, origin: Union[FileSystemPath, UnveilMapping]) -> bool:
+        """Track mounted resource prefix."""
         if not isinstance(origin, UnveilMapping):
             origin = Path(origin).resolve()
 
         mounted = self.unveiled.setdefault(origin, set())
 
         if prefix in mounted:
-            return
+            return False
 
         to_remove: Set[str] = set()
         for mnt in mounted:
             if prefix.startswith(mnt):
-                return
+                return False
             if mnt.startswith(prefix):
                 to_remove.add(mnt)
 
         mounted -= to_remove
         mounted.add(prefix)
-
-        if isinstance(origin, UnveilMapping):
-            self.mount(prefix, origin.with_prefix(prefix))
-        else:
-            self.mount(prefix, origin / prefix)
+        return True
 
     def dump(self, origin: FileOrigin):
         """Write the content of the pack to a zipfile or to the filesystem"""

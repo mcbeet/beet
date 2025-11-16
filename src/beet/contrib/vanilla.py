@@ -85,11 +85,18 @@ class ClientJar:
                 pack.load(ZipFile(self.path))
                 pack.save(path=path)
         elif pack.path != path.parent:
-            pack.unveil(prefix, path)
+            if pack.unveil(prefix, path):
+                pack.mount(prefix, path / prefix)
 
         if object_mapping and isinstance(pack, ResourcePack):
-            with self.cache.parallel_downloads():
-                pack.unveil(prefix, object_mapping)
+            if pack.unveil(prefix, object_mapping):
+                # Download into an empty resource pack first to avoid
+                # triggering merge policies that might try to deserialize
+                # files before they're fully retrieved.
+                temp = ResourcePack()
+                with self.cache.parallel_downloads():
+                    temp.mount(prefix, object_mapping.with_prefix(prefix))
+                pack.merge(temp)
 
         return self
 
