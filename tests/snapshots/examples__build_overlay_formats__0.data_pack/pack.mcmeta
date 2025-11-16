@@ -1,11 +1,11 @@
 {
   "pack": {
     "min_format": [
-      69,
+      88,
       0
     ],
     "max_format": [
-      69,
+      88,
       0
     ],
     "description": ""
@@ -13,15 +13,9 @@
   "overlays": {
     "entries": [
       {
-        "directory": "foo",
-        "min_format": [
-          69,
-          0
-        ],
-        "max_format": [
-          69,
-          0
-        ]
+        "directory": "my_overlay",
+        "min_format": 85,
+        "max_format": 91
       }
     ]
   }

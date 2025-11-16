@@ -989,12 +989,6 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
     pack_format: PackPin[Optional[int]] = PackPin(
         "pack_format", default=None, delete_default=True
     )
-    min_format: PackPin[Optional[FormatSpecifier]] = PackPin(
-        "min_format", default=None, delete_default=True
-    )
-    max_format: PackPin[Optional[FormatSpecifier]] = PackPin(
-        "max_format", default=None, delete_default=True
-    )
     filter: McmetaPin[JsonDict] = McmetaPin(
         "filter", default_factory=lambda: {"block": []}
     )
@@ -1325,6 +1319,62 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
                 )
         else:
             self.mcmeta.data.setdefault("pack", {})["supported_formats"] = value
+
+    @property
+    def min_format(self) -> Optional[FormatSpecifier]:
+        if self.overlay_parent is not None:
+            overlays: Any = self.overlay_parent.mcmeta.data.get("overlays", {})
+            for entry in overlays.get("entries", []):
+                if entry.get("directory") == self.overlay_name:
+                    return entry.get("min_format")
+        else:
+            return self.mcmeta.data.get("pack", {}).get("min_format")
+
+    @min_format.setter
+    def min_format(self, value: Optional[FormatSpecifier]):
+        if self.overlay_parent is not None:
+            overlays: Any = self.overlay_parent.mcmeta.data.setdefault("overlays", {})
+            for entry in overlays.setdefault("entries", []):
+                if entry.get("directory") == self.overlay_name:
+                    entry["min_format"] = value
+                    break
+            else:
+                overlays["entries"].append(
+                    {"directory": self.overlay_name, "min_format": value}
+                )
+        else:
+            if value is not None:
+                self.mcmeta.data.setdefault("pack", {})["min_format"] = value
+            else:
+                del self.mcmeta.data.setdefault("pack", {})["min_format"]
+
+    @property
+    def max_format(self) -> Optional[FormatSpecifier]:
+        if self.overlay_parent is not None:
+            overlays: Any = self.overlay_parent.mcmeta.data.get("overlays", {})
+            for entry in overlays.get("entries", []):
+                if entry.get("directory") == self.overlay_name:
+                    return entry.get("max_format")
+        else:
+            return self.mcmeta.data.get("pack", {}).get("max_format")
+
+    @max_format.setter
+    def max_format(self, value: Optional[FormatSpecifier]):
+        if self.overlay_parent is not None:
+            overlays: Any = self.overlay_parent.mcmeta.data.setdefault("overlays", {})
+            for entry in overlays.setdefault("entries", []):
+                if entry.get("directory") == self.overlay_name:
+                    entry["max_format"] = value
+                    break
+            else:
+                overlays["entries"].append(
+                    {"directory": self.overlay_name, "max_format": value}
+                )
+        else:
+            if value is not None:
+                self.mcmeta.data.setdefault("pack", {})["max_format"] = value
+            else:
+                del self.mcmeta.data.setdefault("pack", {})["max_format"]
 
     @classmethod
     def get_extra_info(cls) -> Dict[str, Type[PackFile]]:

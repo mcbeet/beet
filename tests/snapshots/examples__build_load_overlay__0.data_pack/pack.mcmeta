@@ -10,29 +10,72 @@
   "overlays": {
     "entries": [
       {
+        "directory": "creeper",
+        "min_format": [
+          88,
+          0
+        ],
+        "max_format": [
+          88,
+          0
+        ],
         "formats": {
           "min_inclusive": 18,
           "max_inclusive": 19
-        },
-        "directory": "creeper"
+        }
       },
       {
         "formats": {
           "min_inclusive": 17,
           "max_inclusive": 18
         },
-        "directory": "overlay1"
+        "directory": "overlay1",
+        "min_format": [
+          88,
+          0
+        ],
+        "max_format": [
+          88,
+          0
+        ]
       },
       {
         "formats": {
           "min_inclusive": 18,
           "max_inclusive": 19
         },
-        "directory": "overlay2"
+        "directory": "overlay2",
+        "min_format": [
+          88,
+          0
+        ],
+        "max_format": [
+          88,
+          0
+        ]
       },
       {
         "formats": 19,
-        "directory": "overlay_missing"
+        "directory": "overlay_missing",
+        "min_format": [
+          88,
+          0
+        ],
+        "max_format": [
+          88,
+          0
+        ]
+      },
+      {
+        "directory": "overlay_extra",
+        "min_format": [
+          88,
+          0
+        ],
+        "max_format": [
+          88,
+          0
+        ]
       }
     ]
   }
