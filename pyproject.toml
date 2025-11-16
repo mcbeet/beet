@@ -20,7 +20,7 @@ keywords = [
 
 requires-python = ">=3.14"
 dependencies = [
-    "click==8.1.7",
+    "click>=8.3.1",
     "click-help-colors>=0.9.4",
     "jinja2>=3.1.6",
     "nbtlib==1.12.1",
@@ -53,6 +53,10 @@ dev = [
     "python-semantic-release>=10.5.2",
     "ruff>=0.14.4",
 ]
+
+# Remove when python-semantic-release allows the fixed click release.
+[tool.uv]
+override-dependencies = ["click>=8.3.1"]
 
 [tool.uv.workspace]
 members = ["packages/*"]
