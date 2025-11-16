@@ -356,7 +356,7 @@ class Dispatcher(Generic[T]):
 
     def __call__(self, node: AbstractNode, *args: Any, **kwargs: Any) -> T:
         if not self.filter(node) or not self.count:
-            return node
+            return node  # pyright: ignore[reportReturnType]
         self.stack.clear()
         result = self.invoke(node, *args, **kwargs)
         self.stack.clear()

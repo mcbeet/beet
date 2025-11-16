@@ -10,7 +10,7 @@ __all__ = [
 import logging
 from collections import defaultdict
 from dataclasses import dataclass
-from typing import Dict, Iterator, List, Optional, Tuple, Union, Annotated
+from typing import Dict, Iterator, List, Optional, Tuple, Union
 
 from beet import Context
 from beet.core.utils import dump_json
@@ -38,34 +38,29 @@ class Statistics(BaseModel):
     """Class holding all the stats gathered from the analysis."""
 
     function_count: int = 0
-    command_count: Annotated[
-        dict[str, dict[str, int]],
-        Field(default_factory=lambda: defaultdict(lambda: defaultdict(int))),
-    ]
-    command_behind_execute_count: Annotated[
-        dict[str, int], Field(default_factory=lambda: defaultdict(int))
-    ]
+    command_count: dict[str, dict[str, int]] = Field(
+        default_factory=lambda: defaultdict(lambda: defaultdict(int))
+    )
+    command_behind_execute_count: dict[str, int] = Field(
+        default_factory=lambda: defaultdict(int)
+    )
     execute_count: int = 0
-    execute_clause_count: Annotated[
-        dict[str, int], Field(default_factory=lambda: defaultdict(int))
-    ]
-    selector_count: Annotated[
-        dict[str, int], Field(default_factory=lambda: defaultdict(int))
-    ]
-    selector_entity_type_count: Annotated[
-        dict[str, int], Field(default_factory=lambda: defaultdict(int))
-    ]
-    selector_argument_count: Annotated[
-        dict[str, dict[str, int]],
-        Field(default_factory=lambda: defaultdict(lambda: defaultdict(int))),
-    ]
-    scoreboard_references: Annotated[
-        dict[str, int], Field(default_factory=lambda: defaultdict(int))
-    ]
-    scoreboard_fake_player_references: Annotated[
-        dict[str, dict[str, int]],
-        Field(default_factory=lambda: defaultdict(lambda: defaultdict(int))),
-    ]
+    execute_clause_count: dict[str, int] = Field(
+        default_factory=lambda: defaultdict(int)
+    )
+    selector_count: dict[str, int] = Field(default_factory=lambda: defaultdict(int))
+    selector_entity_type_count: dict[str, int] = Field(
+        default_factory=lambda: defaultdict(int)
+    )
+    selector_argument_count: dict[str, dict[str, int]] = Field(
+        default_factory=lambda: defaultdict(lambda: defaultdict(int))
+    )
+    scoreboard_references: dict[str, int] = Field(
+        default_factory=lambda: defaultdict(int)
+    )
+    scoreboard_fake_player_references: dict[str, dict[str, int]] = Field(
+        default_factory=lambda: defaultdict(lambda: defaultdict(int))
+    )
     scoreboard_objectives: Dict[str, str] = {}
 
 

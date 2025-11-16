@@ -1134,7 +1134,7 @@ class JsonParser:
             elif number:
                 value = string_to_number(number.value)
 
-            node = AstJsonValue(value=value)
+            node = AstJsonValue(value=value)  # pyright: ignore[reportPossiblyUnboundVariable]
             return set_location(node, stream.current)
 
     def parse_object_entry(self, stream: TokenStream) -> AstJsonObjectEntry:
@@ -1156,7 +1156,7 @@ class JsonObjectParser(TypeConstraint):
     """Parser for json objects."""
 
     parser: Parser = field(default_factory=JsonParser)
-    type: Type[AstJsonObject] = AstJsonObject
+    type: Union[Type[Any], Tuple[Type[Any], ...]] = AstJsonObject
     message: str = "Expected json object."
 
 
@@ -1296,7 +1296,7 @@ class NbtParser:
             elif quoted_string:
                 value = String(self.quote_helper.unquote_string(quoted_string))
 
-            node = AstNbtValue(value=value)
+            node = AstNbtValue(value=value)  # pyright: ignore[reportPossiblyUnboundVariable]
             return set_location(node, stream.current)
 
     def parse_compound_entry(self, stream: TokenStream) -> AstNbtCompoundEntry:
@@ -1318,7 +1318,7 @@ class NbtCompoundParser(TypeConstraint):
     """Parser for nbt compounds."""
 
     parser: Parser = field(default_factory=NbtParser)
-    type: Type[AstNbtCompound] = AstNbtCompound
+    type: Union[Type[Any], Tuple[Type[Any], ...]] = AstNbtCompound
     message: str = "Expected nbt compound."
 
 
@@ -1475,7 +1475,7 @@ class KeyValuePairParser:
             stream.expect("equal")
             value_node = self.value_parser(stream)
 
-            entry_node = self.node_type(key=key_node, value=value_node)
+            entry_node = self.node_type(key=key_node, value=value_node)  # pyright: ignore[reportCallIssue]
             return set_location(entry_node, key_node, value_node)
 
 
@@ -1688,7 +1688,7 @@ class SelectorParser:
                 end_location = stream.current.end_location
 
         node = AstSelector(
-            variable=variable,
+            variable=variable,  # pyright: ignore[reportArgumentType]
             arguments=AstChildren(arguments),
         )
         return set_location(node, location, end_location)

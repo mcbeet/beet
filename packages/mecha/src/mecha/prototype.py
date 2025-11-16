@@ -34,7 +34,7 @@ class CommandPrototype(NamedTuple):
             else:
                 raise ValueError(f"No argument {arg!r}.")
 
-        return self.signature[self.arguments[arg]]
+        return self.signature[self.arguments[arg]]  # pyright: ignore[reportReturnType]
 
     def usage(self) -> str:
         """Return a string showing the command usage."""

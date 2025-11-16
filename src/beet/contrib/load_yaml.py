@@ -100,7 +100,7 @@ class YamlPackLoader:
 
         ExtendedPack.namespace_type = ExtendedNamespace
 
-        return ExtendedPack()
+        return ExtendedPack()  # pyright: ignore[reportReturnType]
 
     def rewrite_extra_info(
         self,

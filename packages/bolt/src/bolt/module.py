@@ -305,7 +305,7 @@ class ModuleManager(Mapping[TextFileBase[Any], CompiledModule]):
     def __len__(self) -> int:
         return len(self.database)
 
-    def get(self, current: Union[TextFileBase[Any], str]) -> Optional[CompiledModule]:
+    def get(self, current: Union[TextFileBase[Any], str]) -> Optional[CompiledModule]:  # pyright: ignore[reportIncompatibleMethodOverride]
         """Return executable module if exists."""
         if isinstance(current, str):
             try:

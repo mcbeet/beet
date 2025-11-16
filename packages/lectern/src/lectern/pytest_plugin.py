@@ -61,7 +61,7 @@ def pytest_assertrepr_compare(config, op, left, right):
             explanation += generate_explanation(config, left.data, right.data)
 
     if explanation:
-        return [assertrepr_compare(config, op, left, right)[0]] + explanation
+        return [assertrepr_compare(config, op, left, right)[0]] + explanation  # pyright: ignore[reportOptionalSubscript]
 
 
 def generate_explanation(config, left, right):

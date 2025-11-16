@@ -29,7 +29,7 @@ INTERNAL_CODE: Set[CodeType] = {
 
 
 def internal(f: T) -> T:
-    INTERNAL_CODE.add(f.__code__)
+    INTERNAL_CODE.add(f.__code__)  # pyright: ignore[reportAttributeAccessIssue]
     return f
 
 
@@ -78,7 +78,11 @@ def fake_traceback(exc: Exception, tb: TracebackType, lineno: int) -> TracebackT
     try:
         exec(code, {"_bolt_exc": exc})
     except Exception as exc:
+        assert exc.__traceback__ is not None
+        assert exc.__traceback__.tb_next is not None
         return exc.__traceback__.tb_next
+
+    assert False
 
 
 def suggest_typo(wrong: str, possibilities: Iterable[str]) -> Optional[str]:

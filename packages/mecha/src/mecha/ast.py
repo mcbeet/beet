@@ -252,10 +252,10 @@ class AstNode(AbstractNode):
     compile_hints: ClassVar[JsonDict] = {}
 
     def __iter__(self) -> Iterator["AstNode"]:
-        return super().__iter__()
+        return super().__iter__()  # pyright: ignore[reportReturnType]
 
     def walk(self) -> Iterator["AstNode"]:
-        return super().walk()
+        return super().walk()  # pyright: ignore[reportReturnType]
 
 
 class AstChildren(AbstractChildren[AstNodeType]):
@@ -1064,6 +1064,7 @@ class AstRange(AstNode):
     @property
     def value(self) -> Union[int, float]:
         """Return the exact value."""
+        assert self.min is not None
         return self.min
 
     @classmethod

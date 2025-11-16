@@ -183,7 +183,7 @@ class MergePolicy:
             (self.namespace_extra, other.namespace_extra),
         ]:
             for key, value in other_rules.items():
-                rules.setdefault(key, []).extend(value)
+                rules.setdefault(key, []).extend(value)  # pyright: ignore[reportArgumentType]
 
     def extend_extra(self, filename: str, rule: MergeCallback):
         """Add rule for merging extra files."""
@@ -278,7 +278,7 @@ class NamespaceExtraContainer(ExtraContainer, Generic[NamespaceType]):
 
             return pack.merge_policy.merge_with_rules(
                 pack=pack,
-                current=self,
+                current=self,  # pyright: ignore[reportArgumentType]
                 other=other,
                 map_rules=lambda key: (
                     f"{name}:{key}",
@@ -314,7 +314,7 @@ class PackExtraContainer(ExtraContainer, Generic[PackType]):
 
             return pack.merge_policy.merge_with_rules(
                 pack=pack,
-                current=self,
+                current=self,  # pyright: ignore[reportArgumentType]
                 other=other,
                 map_rules=lambda key: (
                     key,
@@ -397,7 +397,7 @@ class NamespaceContainer(MatchMixin, MergeMixin, Container[str, NamespaceFileTyp
 
             return pack.merge_policy.merge_with_rules(
                 pack=pack,
-                current=self,
+                current=self,  # pyright: ignore[reportArgumentType]
                 other=other,
                 map_rules=lambda key: (
                     f"{name}:{key}",
@@ -497,7 +497,7 @@ class Namespace(
         if type(self) is type(other) and not self.extra == other.extra:
             return False
         if isinstance(other, Mapping):
-            rhs: Mapping[Type[NamespaceFile], NamespaceContainer[NamespaceFile]] = other
+            rhs: Mapping[Type[NamespaceFile], NamespaceContainer[NamespaceFile]] = other  # pyright: ignore[reportAssignmentType]
             return all(
                 self[key] == rhs.get(key, {}) for key in self.keys() | rhs.keys()
             )
@@ -513,14 +513,14 @@ class Namespace(
         self: MutableMapping[T, MergeableType],
         other: Mapping[T, MergeableType],
     ) -> bool:
-        super().merge(other)
+        super().merge(other)  # pyright: ignore[reportAttributeAccessIssue]
 
         if isinstance(self, Namespace) and isinstance(other, Namespace):
             self.extra.merge(other.extra)
 
         empty_containers = [key for key, value in self.items() if not value]
         for container in empty_containers:
-            del self[container]
+            del self[container]  # pyright: ignore[reportArgumentType]
 
         return True
 
@@ -703,13 +703,13 @@ class NamespaceProxy(
         default: Optional[NamespaceFileType] = None,
     ) -> NamespaceFileType:
         key1, key2 = self.split_key(key)
-        return self.proxy[key1][self.proxy_key].setdefault(key2, default)
+        return self.proxy[key1][self.proxy_key].setdefault(key2, default)  # pyright: ignore[reportArgumentType]
 
     def merge(self, other: Mapping[Any, SupportsMerge]) -> bool:
         if isinstance(pack := self.proxy, Pack):
             return pack.merge_policy.merge_with_rules(
                 pack=pack,
-                current=self,
+                current=self,  # pyright: ignore[reportArgumentType]
                 other=other,
                 map_rules=lambda key: (
                     key,
@@ -723,7 +723,7 @@ class NamespaceProxy(
         for prefix, namespace in self.proxy.items():
             separator = ":"
             roots: List[Tuple[str, Dict[Any, Any]]] = [
-                (prefix, namespace[self.proxy_key].generate_tree())
+                (prefix, namespace[self.proxy_key].generate_tree())  # pyright: ignore[reportAttributeAccessIssue]
             ]
 
             while roots:
@@ -763,7 +763,7 @@ class NamespaceProxyDescriptor(Generic[NamespaceFileType]):
 class Mcmeta(JsonFile):
     """Class representing a pack.mcmeta file."""
 
-    def merge(self, other: "Mcmeta") -> bool:
+    def merge(self, other: "Mcmeta") -> bool:  # pyright: ignore[reportIncompatibleMethodOverride]
         for key, value in other.data.items():
             if key == "filter":
                 block = self.data.setdefault("filter", {}).setdefault("block", [])
@@ -903,7 +903,7 @@ class OverlayContainer(MatchMixin, MergeMixin, Container[str, PackType]):
         if self is other:
             return True
         if isinstance(other, Mapping):
-            rhs: Mapping[str, PackType] = other
+            rhs: Mapping[str, PackType] = other  # pyright: ignore[reportAssignmentType]
             return (
                 all(not self[k] for k in self.keys() - rhs.keys())
                 and all(not rhs[k] for k in rhs.keys() - self.keys())
@@ -1131,7 +1131,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
 
     def __setitem__(self, key: str, value: Any):
         if isinstance(value, Namespace):
-            super().__setitem__(key, value)
+            super().__setitem__(key, value)  # pyright: ignore[reportArgumentType]
         else:
             NamespaceProxy[NamespaceFile](self, type(value))[key] = value
 
@@ -1149,7 +1149,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
         ):
             return False
         if isinstance(other, Mapping):
-            rhs: Mapping[str, Namespace] = other
+            rhs: Mapping[str, Namespace] = other  # pyright: ignore[reportAssignmentType]
             return all(
                 self[key] == rhs.get(key, {}) for key in self.keys() | rhs.keys()
             )
@@ -1172,16 +1172,16 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
         self.save(overwrite=True)
 
     def process(self, key: str, value: NamespaceType) -> NamespaceType:
-        value.bind(self, key)
+        value.bind(self, key)  # pyright: ignore[reportArgumentType]
         return value
 
     def missing(self, key: str) -> NamespaceType:
-        return self.namespace_type()
+        return self.namespace_type()  # pyright: ignore[reportReturnType]
 
     def merge(
         self: MutableMapping[T, MergeableType], other: Mapping[T, MergeableType]
     ) -> bool:
-        super().merge(other)
+        super().merge(other)  # pyright: ignore[reportAttributeAccessIssue]
 
         if isinstance(self, Pack) and isinstance(other, Pack):
             self.extra.merge(other.extra)
@@ -1189,7 +1189,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
 
         empty_namespaces = [key for key, value in self.items() if not value]
         for namespace in empty_namespaces:
-            del self[namespace]
+            del self[namespace]  # pyright: ignore[reportArgumentType]
 
         return True
 
@@ -1272,11 +1272,11 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
             yield f"{overlay}{path}", item
 
         for namespace_name, namespace in self.items():
-            yield from namespace.list_files(namespace_name, *extensions, extend=extend)
+            yield from namespace.list_files(namespace_name, *extensions, extend=extend)  # pyright: ignore[reportArgumentType]
 
         if self.overlay_parent is None:
             for overlay in self.overlays.values():
-                yield from overlay.list_files(*extensions, extend=extend)
+                yield from overlay.list_files(*extensions, extend=extend)  # pyright: ignore[reportArgumentType]
 
     @overload
     def all(self, *match: str) -> Iterable[Tuple[str, NamespaceFile]]: ...

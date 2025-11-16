@@ -598,7 +598,7 @@ class DataModelBase(TextFileBase[ValueType]):
             and issubclass(self.model, BaseModel)
             and isinstance(content, self.model)
         ):
-            content = content.model_dump()
+            content = content.model_dump()  # pyright: ignore[reportAssignmentType]
         return self.encoder(content)
 
     def from_str(self, content: str) -> ValueType:
@@ -609,11 +609,11 @@ class DataModelBase(TextFileBase[ValueType]):
             except ValidationError as exc:
                 message = format_validation_error(snake_case(self.model.__name__), exc)
                 raise InvalidDataModel(self, message) from exc
-        return value
+        return value  # pyright: ignore[reportReturnType]
 
     @classmethod
     def default(cls) -> ValueType:
-        return cls.model() if cls.model and issubclass(cls.model, BaseModel) else {}
+        return cls.model() if cls.model and issubclass(cls.model, BaseModel) else {}  # pyright: ignore[reportReturnType]
 
 
 class JsonFileBase(DataModelBase[ValueType]):
@@ -674,7 +674,7 @@ class PngFile(BinaryFileBase[Image.Image]):
     def from_bytes(self, content: bytes) -> Image.Image:
         return Image.open(io.BytesIO(content))
 
-    def content_equal(self, other: Self) -> bool:
+    def content_equal(self, other: Self) -> bool:  # pyright: ignore[reportIncompatibleMethodOverride]
         left, right = self.image, other.image
         if left.size != right.size:
             return False
@@ -684,5 +684,5 @@ class PngFile(BinaryFileBase[Image.Image]):
         return not ImageChops.difference(left, right).getbbox()
 
     @classmethod
-    def default(cls) -> Image:
+    def default(cls) -> Image.Image:
         return Image.new("RGBA", (16, 16), "magenta")

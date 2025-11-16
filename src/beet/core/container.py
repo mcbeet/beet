@@ -59,10 +59,10 @@ class MergeMixin:
             return True
         for key, value in other.items():
             try:
-                if key not in self or not self[key].merge(value):
-                    self[key] = value
+                if key not in self or not self[key].merge(value):  # pyright: ignore[reportIndexIssue]
+                    self[key] = value  # pyright: ignore[reportIndexIssue]
             except Drop:
-                del self[key]
+                del self[key]  # pyright: ignore[reportIndexIssue]
         return True
 
 
@@ -70,7 +70,7 @@ class MatchMixin:
     def match(self, *patterns: str) -> Set[str]:
         """Return keys matching the given path patterns."""
         spec = PathSpec.from_lines("gitwildmatch", patterns)
-        return set(spec.match_files(self.keys()))
+        return set(map(str, spec.match_files(self.keys())))  # pyright: ignore[reportAttributeAccessIssue]
 
 
 @dataclass
@@ -139,7 +139,7 @@ class Pin(Generic[K, CV]):
     def collect_from(
         cls: Type["Pin[K, CV]"], target: Type[Any]
     ) -> Dict[str, "Pin[K, CV]"]:
-        return {
+        return {  # pyright: ignore[reportReturnType]
             key: value for key, value in vars(target).items() if isinstance(value, cls)
         }
 

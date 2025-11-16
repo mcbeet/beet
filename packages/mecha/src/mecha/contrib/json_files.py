@@ -97,7 +97,7 @@ class JsonFileCompilation:
         self.handler = JsonFileHandler(database=self.mc.database)
         self.mc.steps.append(self.handler)
 
-        self.file_types = {
+        self.file_types = {  # pyright: ignore[reportAttributeAccessIssue]
             file_type
             for pack in packs
             for file_type in pack.get_file_types(extend=JsonFileBase)
@@ -123,7 +123,7 @@ class JsonFileCompilation:
 
         self.mc.providers.append(
             FileTypeCompilationUnitProvider(
-                sorted(self.file_types, key=lambda t: t.snake_name),
+                sorted(self.file_types, key=lambda t: t.snake_name),  # pyright: ignore[reportArgumentType]
                 no_index=True,
             )
         )
@@ -205,17 +205,17 @@ class JsonFileHandler(Visitor):
                 if isinstance(node, AstMergeJsonContent):
                     compilation_unit = self.database[target]
                     if compilation_unit.pack and compilation_unit.resource_location:
-                        compilation_unit.pack[target_type].merge(
+                        compilation_unit.pack[target_type].merge(  # pyright: ignore[reportCallIssue, reportArgumentType]
                             {compilation_unit.resource_location: file_instance}
                         )
                     elif not target.merge(file_instance):
                         target.data = file_instance.data
 
                 elif isinstance(node, AstAppendJsonContent):
-                    target.append(file_instance)
+                    target.append(file_instance)  # pyright: ignore[reportAttributeAccessIssue]
 
                 elif isinstance(node, AstPrependJsonContent):
-                    target.prepend(file_instance)
+                    target.prepend(file_instance)  # pyright: ignore[reportAttributeAccessIssue]
 
                 else:
                     target.data = file_instance.data

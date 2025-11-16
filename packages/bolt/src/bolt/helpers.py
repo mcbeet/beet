@@ -211,6 +211,8 @@ def python_import_module(name: str):
         return import_module(name)
     except Exception as exc:
         tb = exc.__traceback__
+        assert tb is not None
+        assert tb.tb_next is not None
         tb = tb.tb_next.tb_next
         while tb and tb.tb_frame.f_code.co_filename.startswith("<frozen importlib"):
             tb = tb.tb_next

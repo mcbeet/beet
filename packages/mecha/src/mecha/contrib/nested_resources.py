@@ -246,7 +246,7 @@ class NestedResourcesTransformer(MutatingReducer):
                         file_instance = file_type(
                             original=self.database.current.original
                         )
-                        target = cast(
+                        target = cast(  # pyright: ignore[reportInvalidCast]
                             JsonFileBase[Any],
                             self.generate(full_name, default=file_instance),
                         )
@@ -315,9 +315,9 @@ class NestedResourcesTransformer(MutatingReducer):
                     target = self.generate(full_name, default=file_instance)
                     if target is not file_instance:
                         if command.identifier.startswith("append:"):
-                            target.append(file_instance)
+                            target.append(file_instance)  # pyright: ignore[reportAttributeAccessIssue]
                         elif command.identifier.startswith("prepend:"):
-                            target.prepend(file_instance)
+                            target.prepend(file_instance)  # pyright: ignore[reportAttributeAccessIssue]
                         elif (
                             target.ensure_deserialized()
                             != file_instance.ensure_deserialized()

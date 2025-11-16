@@ -1494,7 +1494,7 @@ class Codegen(Visitor):
         self,
         node: AstTypeDeclaration,
         acc: Accumulator,
-    ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
+    ) -> Optional[List[str]]:
         value = node.type_annotation.string
         acc.statement(f"{node.identifier.value}: {value}")
         return []

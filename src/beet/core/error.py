@@ -16,7 +16,7 @@ class BubbleException(BeetException):
 class WrappedException(BubbleException):
     """Raised to wrap an underlying exception."""
 
-    __cause__: Exception
+    __cause__: Exception  # pyright: ignore[reportIncompatibleVariableOverride]
     hide_wrapped_exception: bool
 
     def __init__(self, *args: object) -> None:

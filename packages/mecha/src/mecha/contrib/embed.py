@@ -175,7 +175,7 @@ class EmbedHandler:
         else:
             embed_type = AstNbtValueEmbed
 
-        return set_location(embed_type(value=node.value, embed=embed), node)
+        return set_location(embed_type(value=node.value, embed=embed), node)  # pyright: ignore[reportReturnType]
 
 
 @dataclass

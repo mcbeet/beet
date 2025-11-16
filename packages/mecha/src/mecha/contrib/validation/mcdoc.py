@@ -127,10 +127,10 @@ class McdocNode(AbstractNode):
     """Base class for mcdoc nodes."""
 
     def __iter__(self) -> Iterator["McdocNode"]:
-        return super().__iter__()
+        return super().__iter__()  # pyright: ignore[reportReturnType]
 
     def walk(self) -> Iterator["McdocNode"]:
-        return super().walk()
+        return super().walk()  # pyright: ignore[reportReturnType]
 
 
 class McdocChildren(AbstractChildren[McdocNodeType]):
@@ -635,7 +635,7 @@ def parse_integer_range(stream: TokenStream) -> McdocIntegerRange:
             delimiter = ".."
             right = left
 
-        node = McdocIntegerRange(left=left, delimiter=delimiter, right=right)
+        node = McdocIntegerRange(left=left, delimiter=delimiter, right=right)  # pyright: ignore[reportArgumentType]
         return set_location(node, token)
 
 
@@ -652,7 +652,7 @@ def parse_float_range(stream: TokenStream) -> McdocFloatRange:
             delimiter = ".."
             right = left
 
-        node = McdocFloatRange(left=left, delimiter=delimiter, right=right)
+        node = McdocFloatRange(left=left, delimiter=delimiter, right=right)  # pyright: ignore[reportArgumentType]
         return set_location(node, token)
 
 
@@ -903,7 +903,7 @@ def parse_enum(stream: TokenStream) -> McdocEnum:
 
         node = McdocEnum(
             prelim=prelim,
-            type=type.value,
+            type=type.value,  # pyright: ignore[reportArgumentType]
             identifier=identifier,
             fields=McdocChildren(fields),
         )

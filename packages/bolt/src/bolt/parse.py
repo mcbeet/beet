@@ -2654,7 +2654,7 @@ class PrimaryParser:
                         value = int(number.value)
 
                     arguments.append(
-                        set_location(AstValue(value=value), stream.current)
+                        set_location(AstValue(value=value), stream.current)  # pyright: ignore[reportPossiblyUnboundVariable]
                     )
 
                 else:
@@ -2901,7 +2901,7 @@ class LiteralParser:
             elif number:
                 value = string_to_number(number.value)
 
-            node = AstValue(value=value)
+            node = AstValue(value=value)  # pyright: ignore[reportPossiblyUnboundVariable]
             return set_location(node, stream.current)
 
 
