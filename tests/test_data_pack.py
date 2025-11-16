@@ -609,9 +609,9 @@ def test_overlay():
     assert a.overlay_name == "a"
     assert a.overlay_parent is p
 
-    assert p == DataPack()
+    assert p != DataPack()
     assert a == DataPack()
-    assert a == p
+    assert a != p
     assert not p
     assert not a
 
@@ -623,20 +623,29 @@ def test_overlay():
     assert p
     assert a
 
+    latest_pack_format_list = DataPack.latest_pack_format
+    if isinstance(latest_pack_format_list, tuple):
+        latest_pack_format_list = list(latest_pack_format_list)
+
     assert a.supported_formats is None
     assert p.mcmeta.data == {
         "pack": {
-            "min_format": DataPack.latest_pack_format,
-            "max_format": DataPack.latest_pack_format,
+            "min_format": latest_pack_format_list,
+            "max_format": latest_pack_format_list,
             "description": "",
+        },
+        "overlays": {
+            "entries": [{"directory": "a", "min_format": latest_pack_format_list, "max_format": latest_pack_format_list}]
         }
     }
 
     a.supported_formats = [17, 18]
+    a.min_format = None
+    a.max_format = None
     assert p.mcmeta.data == {
         "pack": {
-            "min_format": DataPack.latest_pack_format,
-            "max_format": DataPack.latest_pack_format,
+            "min_format": latest_pack_format_list,
+            "max_format": latest_pack_format_list,
             "description": "",
         },
         "overlays": {"entries": [{"formats": [17, 18], "directory": "a"}]},
@@ -649,8 +658,8 @@ def test_overlay():
     assert b.supported_formats == {"min_inclusive": 16, "max_inclusive": 17}
     assert p.mcmeta.data == {
         "pack": {
-            "min_format": DataPack.latest_pack_format,
-            "max_format": DataPack.latest_pack_format,
+            "min_format": latest_pack_format_list,
+            "max_format": latest_pack_format_list,
             "description": "",
         },
         "overlays": {
@@ -670,7 +679,7 @@ def test_overlay():
     assert p.overlays.setdefault("b", supported_formats=18) is b
     assert b.supported_formats == {"min_inclusive": 16, "max_inclusive": 17}
 
-    c = DataPack(supported_formats=19)
+    c = DataPack(min_format=(88,0), max_format=(88,0))
     c["demo:thing"] = Function()
     p.overlays["c"] = c
 
@@ -678,13 +687,13 @@ def test_overlay():
     assert c.overlay_name == "c"
     assert c.overlay_parent is p
     assert dict(p.list_files()) == {
-        "a/data/demo/function/foo.mcfunction": Function(["say hello"]),
+        "a/data/demo/functions/foo.mcfunction": Function(["say hello"]),
         "c/data/demo/function/thing.mcfunction": Function([]),
         "pack.mcmeta": Mcmeta(
             {
                 "pack": {
-                    "min_format": DataPack.latest_pack_format,
-                    "max_format": DataPack.latest_pack_format,
+                    "min_format": latest_pack_format_list,
+                    "max_format": latest_pack_format_list,
                     "description": "",
                 },
                 "overlays": {
@@ -698,8 +707,9 @@ def test_overlay():
                             "directory": "b",
                         },
                         {
-                            "formats": 19,
                             "directory": "c",
+                            "min_format": [88, 0],
+                            "max_format": [88, 0],
                         },
                     ]
                 },
@@ -710,8 +720,8 @@ def test_overlay():
     del p.overlays["b"]
     assert p.mcmeta.data == {
         "pack": {
-            "min_format": DataPack.latest_pack_format,
-            "max_format": DataPack.latest_pack_format,
+            "min_format": latest_pack_format_list,
+            "max_format": latest_pack_format_list,
             "description": "",
         },
         "overlays": {
@@ -721,8 +731,9 @@ def test_overlay():
                     "directory": "a",
                 },
                 {
-                    "formats": 19,
                     "directory": "c",
+                    "min_format": [88, 0],
+                    "max_format": [88, 0],
                 },
             ]
         },
