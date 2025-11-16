@@ -86,3 +86,4 @@ prerelease_token = "beta"
 
 [tool.pyright]
 reportImportCycles = "none"
+failOnWarnings = false
