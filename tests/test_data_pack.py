@@ -635,8 +635,14 @@ def test_overlay():
             "description": "",
         },
         "overlays": {
-            "entries": [{"directory": "a", "min_format": latest_pack_format_list, "max_format": latest_pack_format_list}]
-        }
+            "entries": [
+                {
+                    "directory": "a",
+                    "min_format": latest_pack_format_list,
+                    "max_format": latest_pack_format_list,
+                }
+            ]
+        },
     }
 
     a.supported_formats = [17, 18]
@@ -679,7 +685,7 @@ def test_overlay():
     assert p.overlays.setdefault("b", supported_formats=18) is b
     assert b.supported_formats == {"min_inclusive": 16, "max_inclusive": 17}
 
-    c = DataPack(min_format=(88,0), max_format=(88,0))
+    c = DataPack(min_format=(88, 0), max_format=(88, 0))
     c["demo:thing"] = Function()
     p.overlays["c"] = c
 

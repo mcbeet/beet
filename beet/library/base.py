@@ -776,9 +776,13 @@ class Mcmeta(JsonFile):
                     for entry in overlays.setdefault("entries", []):
                         if entry.get("directory") == other_entry.get("directory"):
                             entry["formats"] = deepcopy(other_entry.get("formats"))
-                            if (x := deepcopy(other_entry.get("min_format"))) is not None:
+                            if (
+                                x := deepcopy(other_entry.get("min_format"))
+                            ) is not None:
                                 entry["min_format"] = x
-                            if (x := deepcopy(other_entry.get("max_format"))) is not None:
+                            if (
+                                x := deepcopy(other_entry.get("max_format"))
+                            ) is not None:
                                 entry["max_format"] = x
                             break
                     else:
@@ -1501,7 +1505,6 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
         if origin_folders is None:
             origin_folders = list_origin_folders(prefix, origin)
 
-
         scan_folder = (
             self.namespace_type.directory
             if self.overlay_name is None
@@ -1536,7 +1539,6 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
                     if (x := entry_copy.get("supported_formats")) is not None:
                         overlay.supported_formats = x
                     overlay.mount(prefix, origin, origin_folders)
-                    
 
             remaining_overlays = list(origin_folders)
             for name in remaining_overlays:
