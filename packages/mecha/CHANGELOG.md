@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v0.100.0-beta.5 (2025-11-16)
+
+### Bug Fixes
+
+- Macro_line statistics (close #485)
+  ([`779fad6`](https://github.com/mcbeet/beet/commit/779fad68256aa06c6a67e026bc8a45bc10b00ef7))
+
+
 ## v0.100.0-beta.4 (2025-11-15)
 
 ### Bug Fixes

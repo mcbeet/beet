@@ -4,7 +4,7 @@ build-backend = "uv_build"
 
 [project]
 name = "mecha"
-version = "0.100.0-beta.4"
+version = "0.100.0-beta.5"
 description = "A powerful Minecraft command library"
 authors = [{ name = "Valentin Berlier", email = "berlier.v@gmail.com" }]
 license = "MIT"
@@ -20,7 +20,7 @@ keywords = [
 
 requires-python = ">=3.14"
 dependencies = [
-    "beet>=0.113.0b5",
+    "beet>=0.113.0b6",
     "tokenstream>=1.7.0",
 ]
 
