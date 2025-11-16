@@ -18,6 +18,10 @@ from pydantic import BaseModel, Field
 
 from mecha import (
     AstCommand,
+    AstCommandSentinel,
+    AstMacroLine,
+    AstMacroLineText,
+    AstMacroLineVariable,
     AstObjective,
     AstObjectiveCriteria,
     AstPlayerName,
@@ -44,6 +48,7 @@ class Statistics(BaseModel):
     command_behind_execute_count: dict[str, int] = Field(
         default_factory=lambda: defaultdict(int)
     )
+    macro_line_count: dict[str, int] = Field(default_factory=lambda: defaultdict(int))
     execute_count: int = 0
     execute_clause_count: dict[str, int] = Field(
         default_factory=lambda: defaultdict(int)
@@ -105,6 +110,9 @@ class Analyzer(Reducer):
         self.stats.function_count += 1
 
         for command in node.commands:
+            if isinstance(command, AstCommandSentinel):
+                continue
+
             behind_execute = False
 
             while command.identifier.startswith("execute"):
@@ -163,6 +171,18 @@ class Analyzer(Reducer):
                 self.stats.scoreboard_fake_player_references[objective][ref] += 1
                 ref = None
 
+    @rule(AstMacroLine)
+    def macro_line(self, node: AstMacroLine):
+        parts = ["$"]
+        for arg in node.arguments:
+            if isinstance(arg, AstMacroLineText):
+                parts.append(arg.value)
+            elif isinstance(arg, AstMacroLineVariable):
+                parts.append("$(")
+                parts.append(arg.value)
+                parts.append(")")
+        self.stats.macro_line_count["".join(parts)] += 1
+
 
 @dataclass
 class Summary:
@@ -202,6 +222,9 @@ class Summary:
             ]
             for prefix, stats in self.stats.command_count.items()
         }
+
+        for macro_line, count in self.stats.macro_line_count.items():
+            command_stats[macro_line, count, 0] = []
 
         if self.stats.execute_count:
             command_stats["/execute", self.stats.execute_count, 0] = [
