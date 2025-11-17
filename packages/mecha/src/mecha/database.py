@@ -35,11 +35,10 @@ from beet import (
     TextFile,
     TextFileBase,
 )
-from beet.core.utils import FileSystemPath, extra_field
+from beet.core.utils import FileSystemPath, extra_field, resolve_within
 
 from .ast import AstRoot
 from .diagnostic import DiagnosticCollection
-from .utils import resolve_source_filename
 
 
 @dataclass
@@ -111,7 +110,7 @@ class CompilationDatabase(Container[TextFileBase[Any], CompilationUnit]):
         value: CompilationUnit,
     ) -> CompilationUnit:
         if not value.filename:
-            value.filename = resolve_source_filename(key, self.directory)
+            value.filename = resolve_within(key.source_path, self.directory)
         if not value.diagnostics.filename and value.filename:
             value.diagnostics.filename = value.filename
 

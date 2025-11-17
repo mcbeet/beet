@@ -34,7 +34,7 @@ from beet import (
     configurable,
 )
 from beet.contrib.worldgen import worldgen
-from beet.core.utils import FileSystemPath, log_time
+from beet.core.utils import FileSystemPath, log_time_scope
 
 MANIFEST_URL: str = "https://piston-meta.mojang.com/mc/game/version_manifest_v2.json"
 RESOURCES_URL: str = "https://resources.download.minecraft.net"
@@ -81,7 +81,7 @@ class ClientJar:
             return self
 
         if not path.is_dir():
-            with log_time("Extract vanilla pack."):
+            with log_time_scope("Extract vanilla pack."):
                 pack.load(ZipFile(self.path))
                 pack.save(path=path)
         elif pack.path != path.parent:

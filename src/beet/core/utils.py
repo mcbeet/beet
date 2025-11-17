@@ -19,6 +19,7 @@ __all__ = [
     "resolve_packageable_path",
     "local_import_path",
     "log_time",
+    "log_time_scope",
     "remove_path",
     "format_obj",
     "format_exc",
@@ -26,6 +27,7 @@ __all__ = [
     "format_directory",
     "pop_traceback",
     "change_directory",
+    "resolve_within",
 ]
 
 
@@ -56,6 +58,8 @@ from typing import (
 )
 
 from pydantic import ValidationError
+
+from .error import BubbleException
 
 T = TypeVar("T")
 
@@ -220,9 +224,22 @@ def log_time(message: str, *args: Any, **kwargs: Any) -> Iterator[None]:
     start = time.time()
     try:
         yield
+    except BubbleException:
+        raise
+    except Exception as exc:
+        tb = exc.__traceback__
+        kwargs["exc_info"] = exc.with_traceback(tb.tb_next) if tb else exc
+        raise
     finally:
         message = f"{message} (took {time.time() - start:.2f}s)"
         time_logger.debug(message, *args, **kwargs)
+
+
+@contextmanager
+def log_time_scope(message: str, *args: Any, **kwargs: Any) -> Iterator[None]:
+    time_logger.debug(f"{message} (start)", *args, **kwargs)
+    with log_time(message, *args, **kwargs):
+        yield
 
 
 def remove_path(*paths: FileSystemPath):
@@ -314,3 +331,17 @@ def change_directory(directory: Optional[FileSystemPath] = None):
         yield
     finally:
         os.chdir(cwd)
+
+
+def resolve_within(
+    path: FileSystemPath | None,
+    directory: FileSystemPath | None = None,
+) -> str | None:
+    if path:
+        if directory:
+            try:
+                return Path(path).relative_to(directory).as_posix()
+            except ValueError:
+                pass
+        return Path(path).resolve().as_posix()
+    return None

@@ -49,6 +49,7 @@ from beet.core.utils import (
     VersionNumber,
     extra_field,
     import_from_string,
+    resolve_within,
 )
 from pydantic import BaseModel, field_validator
 from tokenstream import InvalidSyntax, Preprocessor, TokenStream, set_location
@@ -72,7 +73,6 @@ from .parse import delegate, get_parsers
 from .preprocess import wrap_backslash_continuation
 from .serialize import FormattingOptions, Serializer
 from .spec import CommandSpec
-from .utils import resolve_source_filename
 
 AstNodeType = TypeVar("AstNodeType", bound=AstNode)
 TextFileType = TypeVar("TextFileType", bound=TextFileBase[Any])
@@ -358,7 +358,7 @@ class Mecha:
             source = Function(source)
 
         if not filename:
-            filename = resolve_source_filename(source, self.directory)
+            filename = resolve_within(source.source_path, self.directory)
 
         cache_miss = None
 
@@ -516,7 +516,7 @@ class Mecha:
             if isinstance(source, TextFileBase):
                 result = source
                 if not filename:
-                    filename = resolve_source_filename(source, self.directory)
+                    filename = resolve_within(source.source_path, self.directory)
             else:
                 result = Function()
 

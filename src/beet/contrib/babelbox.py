@@ -25,7 +25,7 @@ from beet import (
     PluginOptions,
     configurable,
 )
-from beet.core.utils import FileSystemPath
+from beet.core.utils import FileSystemPath, log_time, resolve_within
 
 DialectLike = Union[str, Dialect, Type[Dialect]]
 
@@ -52,14 +52,15 @@ def babelbox(ctx: Context, opts: BabelboxOptions):
 
     for pattern in opts.load.entries():
         for path in sorted(glob(str(ctx.directory / pattern))):
-            namespace.languages.merge(
-                load_languages(
-                    path=path,
-                    dialect=opts.dialect,
-                    prefix=Path(path).stem + "." if opts.filename_prefix else "",
-                    unicode_escape=opts.unicode_escape,
+            with log_time(f'Merge languages "{resolve_within(path, ctx.directory)}".'):
+                namespace.languages.merge(
+                    load_languages(
+                        path=path,
+                        dialect=opts.dialect,
+                        prefix=Path(path).stem + "." if opts.filename_prefix else "",
+                        unicode_escape=opts.unicode_escape,
+                    )
                 )
-            )
 
 
 def load_languages(
@@ -68,7 +69,7 @@ def load_languages(
     prefix: str = "",
     unicode_escape: bool = False,
 ) -> Dict[str, Language]:
-    """Return a dictionnary mapping each column to a language file."""
+    """Return a dictionary mapping each column to a language file."""
     with open(path, encoding="utf-8", newline="") as csv_file:
         if not dialect:
             dialect = Sniffer().sniff(csv_file.read(1024))

@@ -24,7 +24,7 @@ from beet.core.utils import (
     JsonDict,
     change_directory,
     intersperse,
-    log_time,
+    log_time_scope,
     normalize_string,
     split_version,
 )
@@ -330,7 +330,7 @@ class ProjectBuilder:
             )
         )
 
-        with log_time("Run pipeline."):
+        with log_time_scope("Run pipeline."):
             yield
 
         description_parts = [

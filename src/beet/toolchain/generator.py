@@ -27,7 +27,7 @@ from typing import (
 
 from beet.core.container import Container
 from beet.core.file import TextFileBase
-from beet.core.utils import TextComponent, log_time, required_field
+from beet.core.utils import TextComponent, log_time_scope, required_field
 from beet.library.base import NamespaceFile
 from beet.library.data_pack import DataPack, Function
 from beet.library.resource_pack import ResourcePack
@@ -394,13 +394,13 @@ class Draft(Generator):
         key = f"{key} {zipped=}"
 
         if cache.json.get("draft_key") == key:
-            with log_time('Load draft "%s" from cache.', name):
+            with log_time_scope('Load draft "%s" from cache.', name):
                 self.assets.load(cached_resource_pack)
                 self.data.load(cached_data_pack)
             raise DraftCacheSignal()
 
         @self.exit_stack.callback
-        @log_time('Update cache for draft "%s".', name)
+        @log_time_scope('Update cache for draft "%s".', name)
         def _():
             if self.assets:
                 self.assets.save(path=cached_resource_pack, overwrite=True)
@@ -408,4 +408,4 @@ class Draft(Generator):
                 self.data.save(path=cached_data_pack, overwrite=True)
             cache.json["draft_key"] = key
 
-        self.exit_stack.enter_context(log_time('Generate draft "%s".', name))
+        self.exit_stack.enter_context(log_time_scope('Generate draft "%s".', name))

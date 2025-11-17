@@ -12,7 +12,7 @@ from pathlib import Path
 from typing import List, Optional, Union
 
 from beet import Cache, CachePin, Context, ErrorMessage, MultiCache, PackOverwrite
-from beet.core.utils import FileSystemPath, log_time, remove_path
+from beet.core.utils import FileSystemPath, log_time_scope, remove_path
 
 logger = logging.getLogger("link")
 
@@ -54,7 +54,7 @@ class LinkManager:
         ]
 
         if to_link:
-            with log_time("Link project."):
+            with log_time_scope("Link project."):
                 for directory, pack in to_link:
                     try:
                         self.dirty.append(str(pack.save(directory)))

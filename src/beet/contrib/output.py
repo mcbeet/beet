@@ -9,7 +9,7 @@ __all__ = [
 from typing import Optional
 
 from beet import Context, ListOption, PluginOptions, configurable
-from beet.core.utils import FileSystemPath, log_time
+from beet.core.utils import FileSystemPath, log_time_scope
 
 
 class OutputOptions(PluginOptions):
@@ -30,7 +30,7 @@ def output(ctx: Context, opts: OutputOptions):
     packs = list(filter(None, ctx.packs))
 
     if paths and packs:
-        with log_time("Output files."):
+        with log_time_scope("Output files."):
             for pack in packs:
                 for path in paths:
                     pack.save(path, overwrite=True)
