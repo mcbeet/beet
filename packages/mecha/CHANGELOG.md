@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v0.100.0-beta.6 (2025-11-17)
+
+### Features
+
+- Add log_time_scope
+  ([`3ef14eb`](https://github.com/mcbeet/beet/commit/3ef14ebf9f9ffe49ee69bd195926862899865f2a))
+
+
 ## v0.100.0-beta.5 (2025-11-16)
 
 ### Bug Fixes
