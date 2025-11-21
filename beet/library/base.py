@@ -1538,11 +1538,15 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
                         overlay.max_format = x
                     if (x := entry_copy.get("supported_formats")) is not None:
                         overlay.supported_formats = x
+                    overlay.extend_namespace = self.extend_namespace
+                    overlay.extend_namespace_extra = self.extend_namespace_extra
                     overlay.mount(prefix, origin, origin_folders)
 
             remaining_overlays = list(origin_folders)
             for name in remaining_overlays:
                 overlay = self.overlays[name]
+                overlay.extend_namespace = self.extend_namespace
+                overlay.extend_namespace_extra = self.extend_namespace_extra
                 overlay.mount(prefix, origin, origin_folders)
                 if not overlay:
                     del self.overlays[name]
