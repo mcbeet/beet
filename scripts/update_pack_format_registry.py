@@ -2,7 +2,6 @@
 import json
 from typing import Any
 import requests
-from importlib.resources import files
 from beet.resources.pack_format_registry import pack_format_registry_path
 
 URL = "https://raw.githubusercontent.com/misode/mcmeta/refs/heads/summary/versions/data.json"
