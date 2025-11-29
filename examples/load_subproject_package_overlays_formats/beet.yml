@@ -1,0 +1,3 @@
+require: [demo]
+
+output: build

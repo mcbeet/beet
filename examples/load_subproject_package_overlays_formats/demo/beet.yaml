@@ -1,0 +1,14 @@
+
+
+
+data_pack:
+  load: ["."]
+  min_format: 88
+  max_format: 88
+  overlays:
+    - directory: my_overlay
+      min_format: 85
+      max_format: 91
+      pack_format: 85
+
+
