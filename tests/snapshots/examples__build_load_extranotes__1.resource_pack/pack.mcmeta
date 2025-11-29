@@ -1,13 +1,6 @@
 {
   "pack": {
-    "description": "Minecraft Note Block Studio\nExtended octave range",
-    "min_format": [
-      69,
-      0
-    ],
-    "max_format": [
-      69,
-      0
-    ]
+    "pack_format": 6,
+    "description": "Minecraft Note Block Studio\nExtended octave range"
   }
 }
