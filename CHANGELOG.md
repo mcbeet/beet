@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.112.1 (2025-11-29)
+
+### Fix
+
+* Pack format handling with overlays ([#481](https://github.com/mcbeet/beet/issues/481)) ([`07899be`](https://github.com/mcbeet/beet/commit/07899beee46b57a1482e085fe7f33af39908b311))
+
 ## v0.112.0 (2025-10-15)
 
 ### Feature
