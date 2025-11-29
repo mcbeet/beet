@@ -782,6 +782,14 @@ class Mcmeta(JsonFile):
                     for entry in overlays.setdefault("entries", []):
                         if entry.get("directory") == other_entry.get("directory"):
                             entry["formats"] = deepcopy(other_entry.get("formats"))
+                            if (
+                                x := deepcopy(other_entry.get("min_format"))
+                            ) is not None:
+                                entry["min_format"] = x
+                            if (
+                                x := deepcopy(other_entry.get("max_format"))
+                            ) is not None:
+                                entry["max_format"] = x
                             break
                     else:
                         overlays["entries"].append(deepcopy(other_entry))
@@ -888,6 +896,8 @@ class OverlayContainer(MatchMixin, MergeMixin, Container[str, PackType]):
             default = self.missing(key)
         if supported_formats is not None:
             default.supported_formats = supported_formats
+            default.min_format = None
+            default.max_format = None
         if min_format is not None:
             default.min_format = min_format
         if max_format is not None:
@@ -994,12 +1004,6 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
     description: PackPin[TextComponent] = PackPin("description", default="")
     pack_format: PackPin[Optional[int]] = PackPin(
         "pack_format", default=None, delete_default=True
-    )
-    min_format: PackPin[Optional[FormatSpecifier]] = PackPin(
-        "min_format", default=None, delete_default=True
-    )
-    max_format: PackPin[Optional[FormatSpecifier]] = PackPin(
-        "max_format", default=None, delete_default=True
     )
     filter: McmetaPin[JsonDict] = McmetaPin(
         "filter", default_factory=lambda: {"block": []}
@@ -1332,6 +1336,69 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
         else:
             self.mcmeta.data.setdefault("pack", {})["supported_formats"] = value
 
+    @property
+    def min_format(self) -> Optional[FormatSpecifier]:
+        if self.overlay_parent is not None:
+            overlays: Any = self.overlay_parent.mcmeta.data.get("overlays", {})
+            for entry in overlays.get("entries", []):
+                if entry.get("directory") == self.overlay_name:
+                    return entry.get("min_format")
+        else:
+            return self.mcmeta.data.get("pack", {}).get("min_format")
+
+    @min_format.setter
+    def min_format(self, value: Optional[FormatSpecifier]):
+        if self.overlay_parent is not None:
+            overlays: Any = self.overlay_parent.mcmeta.data.setdefault("overlays", {})
+            for entry in overlays.setdefault("entries", []):
+                if entry.get("directory") == self.overlay_name:
+                    if value is None:
+                        entry.pop("min_format", None)
+                    else:
+                        entry["min_format"] = value
+                    break
+            else:
+                if value is not None:
+                    overlays["entries"].append(
+                        {"directory": self.overlay_name, "min_format": value}
+                    )
+        pack = self.mcmeta.data.setdefault("pack", {})
+        if value is None:
+            pack.pop("min_format", None)
+        else:
+            pack["min_format"] = value
+
+    @property
+    def max_format(self) -> Optional[FormatSpecifier]:
+        if self.overlay_parent is not None:
+            overlays: Any = self.overlay_parent.mcmeta.data.get("overlays", {})
+            for entry in overlays.get("entries", []):
+                if entry.get("directory") == self.overlay_name:
+                    return entry.get("max_format")
+        else:
+            return self.mcmeta.data.get("pack", {}).get("max_format")
+
+    @max_format.setter
+    def max_format(self, value: Optional[FormatSpecifier]):
+        if self.overlay_parent is not None:
+            overlays: Any = self.overlay_parent.mcmeta.data.setdefault("overlays", {})
+            for entry in overlays.setdefault("entries", []):
+                if entry.get("directory") == self.overlay_name:
+                    if value is None:
+                        entry.pop("max_format", None)
+                    else:
+                        entry["max_format"] = value
+                    break
+            else:
+                overlays["entries"].append(
+                    {"directory": self.overlay_name, "max_format": value}
+                )
+        pack = self.mcmeta.data.setdefault("pack", {})
+        if value is None:
+            pack.pop("max_format", None)
+        else:
+            pack["max_format"] = value
+
     @classmethod
     def get_extra_info(cls) -> Dict[str, Type[PackFile]]:
         return {"pack.mcmeta": Mcmeta, "pack.png": PngFile}
@@ -1469,11 +1536,23 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
             for entry in overlays.get("entries", []):
                 name = entry.get("directory")
                 if name is not None:
-                    self.overlays[name].mount(prefix, origin, origin_folders)
+                    entry_copy = deepcopy(entry)
+                    overlay = self.overlays[name]
+                    if (x := entry_copy.get("min_format")) is not None:
+                        overlay.min_format = x
+                    if (x := entry_copy.get("max_format")) is not None:
+                        overlay.max_format = x
+                    if (x := entry_copy.get("supported_formats")) is not None:
+                        overlay.supported_formats = x
+                    overlay.extend_namespace = self.extend_namespace
+                    overlay.extend_namespace_extra = self.extend_namespace_extra
+                    overlay.mount(prefix, origin, origin_folders)
 
             remaining_overlays = list(origin_folders)
             for name in remaining_overlays:
                 overlay = self.overlays[name]
+                overlay.extend_namespace = self.extend_namespace
+                overlay.extend_namespace_extra = self.extend_namespace_extra
                 overlay.mount(prefix, origin, origin_folders)
                 if not overlay:
                     del self.overlays[name]
@@ -1576,7 +1655,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
     def __repr__(self) -> str:
         return (
             f"{self.__class__.__name__}(name={self.name!r}, "
-            f"description={self.description!r}, pack_format={self.pack_format!r})"
+            f"description={self.description!r}, pack_format={self.pack_format!r}, min_format={self.min_format!r}, max_format={self.max_format!r})"
         )
 
 
