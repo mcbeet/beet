@@ -1191,8 +1191,8 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
         super().merge(other)  # type: ignore
 
         if isinstance(self, Pack) and isinstance(other, Pack):
-            self.extra.merge(other.extra)  # type: ignore
             self.overlays.merge(other.overlays)  # type: ignore
+            self.extra.merge(other.extra)  # type: ignore
 
         empty_namespaces = [key for key, value in self.items() if not value]  # type: ignore
         for namespace in empty_namespaces:
