@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.112.2 (2025-12-01)
+
+### Fix
+
+* Pack format with subproject and overlays ([#487](https://github.com/mcbeet/beet/issues/487)) ([`400a946`](https://github.com/mcbeet/beet/commit/400a9466aaaed979687ae530dc703ad1beaa2fc3))
+
 ## v0.112.1 (2025-11-29)
 
 ### Fix
