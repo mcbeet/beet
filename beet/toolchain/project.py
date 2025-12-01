@@ -268,7 +268,7 @@ class ProjectBuilder:
                 project_root=self.root,
                 minecraft_version=self.config.minecraft or LATEST_MINECRAFT_VERSION,
                 directory=self.project.directory,
-                output_directory=self.project.output_directory,
+                output_directory=self.project.output_directory if self.root else None,
                 meta=meta,
                 cache=cache,
                 worker=stack.enter_context(self.project.worker_pool.handle()),

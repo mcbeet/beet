@@ -775,15 +775,22 @@ class Mcmeta(JsonFile):
                     overlays: Any = self.data.setdefault("overlays", {})
                     for entry in overlays.setdefault("entries", []):
                         if entry.get("directory") == other_entry.get("directory"):
-                            entry["formats"] = deepcopy(other_entry.get("formats"))
+                            if (value := deepcopy(other_entry.get("formats"))) is None:
+                                entry.pop("formats", None)
+                            else:
+                                entry["formats"] = value
                             if (
-                                x := deepcopy(other_entry.get("min_format"))
-                            ) is not None:
-                                entry["min_format"] = x
+                                value := deepcopy(other_entry.get("min_format"))
+                            ) is None:
+                                entry.pop("min_format", None)
+                            else:
+                                entry["min_format"] = value
                             if (
-                                x := deepcopy(other_entry.get("max_format"))
-                            ) is not None:
-                                entry["max_format"] = x
+                                value := deepcopy(other_entry.get("max_format"))
+                            ) is None:
+                                entry.pop("max_format", None)
+                            else:
+                                entry["max_format"] = value
                             break
                     else:
                         overlays["entries"].append(deepcopy(other_entry))
@@ -1188,8 +1195,8 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
         super().merge(other)  # type: ignore
 
         if isinstance(self, Pack) and isinstance(other, Pack):
-            self.extra.merge(other.extra)  # type: ignore
             self.overlays.merge(other.overlays)  # type: ignore
+            self.extra.merge(other.extra)  # type: ignore
 
         empty_namespaces = [key for key, value in self.items() if not value]  # type: ignore
         for namespace in empty_namespaces:
@@ -1321,14 +1328,23 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
             overlays: Any = self.overlay_parent.mcmeta.data.setdefault("overlays", {})
             for entry in overlays.setdefault("entries", []):
                 if entry.get("directory") == self.overlay_name:
-                    entry["formats"] = value
+                    if value is None:
+                        entry.pop("formats", None)
+                    else:
+                        entry["formats"] = value
                     break
             else:
-                overlays["entries"].append(
-                    {"formats": value, "directory": self.overlay_name}
-                )
+                if value is not None:
+                    overlays["entries"].append(
+                        {"formats": value, "directory": self.overlay_name}
+                    )
+                else:
+                    overlays["entries"].append({"directory": self.overlay_name})
         else:
-            self.mcmeta.data.setdefault("pack", {})["supported_formats"] = value
+            if value is None:
+                self.mcmeta.data.setdefault("pack", {}).pop("supported_formats", None)
+            else:
+                self.mcmeta.data.setdefault("pack", {})["supported_formats"] = value
 
     @property
     def min_format(self) -> Optional[FormatSpecifier]:
@@ -1356,6 +1372,8 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
                     overlays["entries"].append(
                         {"directory": self.overlay_name, "min_format": value}
                     )
+                else:
+                    overlays["entries"].append({"directory": self.overlay_name})
         pack = self.mcmeta.data.setdefault("pack", {})
         if value is None:
             pack.pop("min_format", None)
@@ -1384,9 +1402,12 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
                         entry["max_format"] = value
                     break
             else:
-                overlays["entries"].append(
-                    {"directory": self.overlay_name, "max_format": value}
-                )
+                if value is None:
+                    overlays["entries"].append({"directory": self.overlay_name})
+                else:
+                    overlays["entries"].append(
+                        {"directory": self.overlay_name, "max_format": value}
+                    )
         pack = self.mcmeta.data.setdefault("pack", {})
         if value is None:
             pack.pop("max_format", None)

@@ -795,6 +795,67 @@ def test_overlay():
     assert s1 == s2
     assert len(s1) == 6
 
+    a, b = DataPack(min_format=(88, 0), max_format=(88, 0)), DataPack(
+        min_format=(99, 0), max_format=(99, 0)
+    )
+    a.merge(b)
+    assert a.min_format == (99, 0)
+    assert a.max_format == (99, 0)
+    assert a.pack_format is None
+
+    a, b = DataPack(min_format=88, max_format=88), DataPack(
+        min_format=99, max_format=99
+    )
+    a.merge(b)
+    assert a.min_format == 99
+    assert a.max_format == 99
+    assert a.pack_format is None
+
+    a, b = DataPack(pack_format=88), DataPack(pack_format=99)
+    a.merge(b)
+    assert a.pack_format == 99
+    assert a.min_format is None
+    assert a.max_format is None
+
+    a, b = DataPack(min_format=(88, 0), max_format=(88, 0)), DataPack(pack_format=99)
+    a.merge(b)
+    assert a.pack_format == 99
+    assert a.min_format is None
+    assert a.max_format is None
+
+    a, b = DataPack(min_format=88, max_format=88), DataPack(pack_format=99)
+    overlay = b.overlays.setdefault("overlay")
+    overlay.min_format = 77
+    overlay.max_format = 77
+    a.merge(b)
+
+    assert a.pack_format == 99
+    assert a.min_format is None
+    assert a.max_format is None
+    assert a.overlays["overlay"].min_format == 77
+    assert a.overlays["overlay"].max_format == 77
+
+    a, b = DataPack(min_format=88, max_format=88), DataPack(
+        min_format=99, max_format=99
+    )
+    overlayA = a.overlays.setdefault("overlay")
+    overlayA.min_format = 66
+    overlayA.max_format = 66
+    overlayA.functions.setdefault("demo:thing", Function()).append("say hi from A")
+    overlayB = b.overlays.setdefault("overlay")
+    overlayB.min_format = 77
+    overlayB.max_format = 77
+    overlayB.functions.setdefault("demo:thing", Function()).append("say hi from B")
+    a.merge(b)
+    assert a.pack_format is None
+    assert a.min_format == 99
+    assert a.max_format == 99
+    assert a.overlays["overlay"].min_format == 77
+    assert a.overlays["overlay"].max_format == 77
+    assert a.overlays["overlay"].functions["demo:thing"].lines == [
+        "say hi from B",
+    ]
+
 
 def test_merge_overlays():
     m = Mcmeta()
