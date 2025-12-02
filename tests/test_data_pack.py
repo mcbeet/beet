@@ -795,16 +795,18 @@ def test_overlay():
     assert s1 == s2
     assert len(s1) == 6
 
-    a, b = DataPack(min_format=(88, 0), max_format=(88, 0)), DataPack(
-        min_format=(99, 0), max_format=(99, 0)
+    a, b = (
+        DataPack(min_format=(88, 0), max_format=(88, 0)),
+        DataPack(min_format=(99, 0), max_format=(99, 0)),
     )
     a.merge(b)
     assert a.min_format == (99, 0)
     assert a.max_format == (99, 0)
     assert a.pack_format is None
 
-    a, b = DataPack(min_format=88, max_format=88), DataPack(
-        min_format=99, max_format=99
+    a, b = (
+        DataPack(min_format=88, max_format=88),
+        DataPack(min_format=99, max_format=99),
     )
     a.merge(b)
     assert a.min_format == 99
@@ -835,8 +837,9 @@ def test_overlay():
     assert a.overlays["overlay"].min_format == 77
     assert a.overlays["overlay"].max_format == 77
 
-    a, b = DataPack(min_format=88, max_format=88), DataPack(
-        min_format=99, max_format=99
+    a, b = (
+        DataPack(min_format=88, max_format=88),
+        DataPack(min_format=99, max_format=99),
     )
     overlayA = a.overlays.setdefault("overlay")
     overlayA.min_format = 66
