@@ -141,13 +141,13 @@ class Extractor:
                 if fragment.directive == "overlay":
                     directory = fragment.expect("directory")
                     formats: Any = (
-                        json.loads(fragment.modifier) if fragment.modifier else None
+                        json.loads(fragment.modifier) if fragment.modifier else {}
                     )
                     assets = assets.overlays.setdefault(
-                        directory, supported_formats=formats
+                        directory, **formats
                     )
                     data = data.overlays.setdefault(
-                        directory, supported_formats=formats
+                        directory, **formats
                     )
                     added_overlays.add(directory)
                 elif fragment.directive == "endoverlay":

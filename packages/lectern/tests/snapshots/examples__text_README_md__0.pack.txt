@@ -14,11 +14,15 @@
   "overlays": {
     "entries": [
       {
-        "formats": {
-          "min_inclusive": 16,
-          "max_inclusive": 17
-        },
-        "directory": "dummy_overlay"
+        "directory": "dummy_overlay",
+        "min_format": [
+          88,
+          0
+        ],
+        "max_format": [
+          88,
+          0
+        ]
       }
     ]
   }
