@@ -156,9 +156,7 @@ class Extractor:
                     directives[fragment.directive](fragment, assets, data)
 
         for pack in original_packs:
-            for directory in added_overlays:
-                if not pack.overlays[directory]:
-                    del pack.overlays[directory]
+            pack.overlays.cleanup(added_overlays)
 
     def parse_fragments(
         self,

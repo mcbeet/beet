@@ -8,3 +8,4 @@ data_pack:
 pipeline:
   - mecha
   - overgen.remove_custom_resources
+  - beet.contrib.cleanup_overlays

@@ -16,6 +16,21 @@
       0
     ],
     "description": ""
+  },
+  "overlays": {
+    "entries": [
+      {
+        "directory": "dummy_overlay",
+        "min_format": [
+          88,
+          0
+        ],
+        "max_format": [
+          88,
+          0
+        ]
+      }
+    ]
   }
 }
 ```

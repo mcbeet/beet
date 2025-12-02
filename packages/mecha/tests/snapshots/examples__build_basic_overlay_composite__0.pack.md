@@ -20,7 +20,14 @@
   "overlays": {
     "entries": [
       {
-        "formats": 12,
+        "min_format": [
+          88,
+          0
+        ],
+        "max_format": [
+          88,
+          0
+        ],
         "directory": "old"
       }
     ]

@@ -863,6 +863,9 @@ class OverlayContainer(MatchMixin, MergeMixin, Container[str, PackType]):
                 del self[key]
 
     def __delitem__(self, key: str):
+        orphan = self[key]
+        orphan.overlay_name = None
+        orphan.overlay_parent = None
         super().__delitem__(key)
         if self.pack is not None:
             overlays: Any = self.pack.mcmeta.data.get("overlays", {})
@@ -930,6 +933,14 @@ class OverlayContainer(MatchMixin, MergeMixin, Container[str, PackType]):
 
     def __bool__(self) -> bool:
         return any(self.values())
+
+    def cleanup(self, directories: Iterable[str] | None = None):
+        """Remove empty overlays."""
+        if directories is None:
+            directories = list(self)
+        for directory in directories:
+            if not self[directory]:
+                del self[directory]
 
 
 class UnveilMapping(Mapping[str, FileSystemPath]):

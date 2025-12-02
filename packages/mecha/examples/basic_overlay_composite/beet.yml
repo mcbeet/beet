@@ -8,8 +8,10 @@ pipeline:
         old/data/demo/functions/foo.mcfunction: "foo_old.mcfunction"
     pipeline:
       - mecha
+      - beet.contrib.cleanup_overlays
   - data_pack:
       load:
         data/demo/functions/foo.mcfunction: "foo.mcfunction"
     pipeline:
       - mecha
+      - beet.contrib.cleanup_overlays

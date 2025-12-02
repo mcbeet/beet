@@ -20,11 +20,15 @@
   "overlays": {
     "entries": [
       {
-        "formats": {
-          "min_inclusive": 18,
-          "max_inclusive": 19
-        },
-        "directory": "demo_stuff"
+        "directory": "demo_stuff",
+        "min_format": [
+          88,
+          0
+        ],
+        "max_format": [
+          88,
+          0
+        ]
       }
     ]
   }

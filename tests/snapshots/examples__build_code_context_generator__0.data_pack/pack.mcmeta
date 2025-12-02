@@ -9,5 +9,20 @@
       0
     ],
     "description": ""
+  },
+  "overlays": {
+    "entries": [
+      {
+        "directory": "foo",
+        "min_format": [
+          88,
+          0
+        ],
+        "max_format": [
+          88,
+          0
+        ]
+      }
+    ]
   }
 }

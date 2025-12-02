@@ -49,13 +49,11 @@ def define_compilation_unit_providers(ctx: Context):
 class DeclareOverlayFormats:
     database: CompilationDatabase
 
-    def __call__(self, min_inclusive: int, max_inclusive: int):
+    def __call__(self, min_format: int, max_format: int):
         pack = self.database[self.database.current].pack
         if pack is not None:
-            pack.supported_formats = FormatsRangeDict(
-                min_inclusive=min_inclusive,
-                max_inclusive=max_inclusive,
-            )
+            pack.min_format = min_format
+            pack.max_format = max_format
 
 
 def define_module_globals(ctx: Context):
