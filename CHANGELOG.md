@@ -56,6 +56,18 @@
 - Yo ([`b2817f0`](https://github.com/mcbeet/beet/commit/b2817f0a979e8d65b31ea81677c808c978cc935a))
 
 
+## v0.112.2 (2025-12-01)
+
+### Fix
+
+* Pack format with subproject and overlays ([#487](https://github.com/mcbeet/beet/issues/487)) ([`400a946`](https://github.com/mcbeet/beet/commit/400a9466aaaed979687ae530dc703ad1beaa2fc3))
+
+## v0.112.1 (2025-11-29)
+
+### Fix
+
+* Pack format handling with overlays ([#481](https://github.com/mcbeet/beet/issues/481)) ([`07899be`](https://github.com/mcbeet/beet/commit/07899beee46b57a1482e085fe7f33af39908b311))
+
 ## v0.112.0 (2025-10-15)
 
 ### Feature
