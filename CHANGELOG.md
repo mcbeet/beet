@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v0.113.0-beta.8 (2025-12-03)
+
+### Bug Fixes
+
+- Cleanup empty overlays
+  ([`15d2d86`](https://github.com/mcbeet/beet/commit/15d2d862281e4af36e41b41606669dd2ba5ada54))
+
+
 ## v0.113.0-beta.7 (2025-11-17)
 
 ### Features
