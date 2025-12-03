@@ -14,24 +14,11 @@ env:
     packages/bolt
 
 jobs:
-  main:
-    concurrency:
-      group: ${{ github.workflow }}-${{ github.ref_name }}
-      cancel-in-progress: false
-    environment:
-      name: pypi
-    permissions:
-      id-token: write
-      contents: write
+  check:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
-        with:
-          ref: ${{ github.ref_name }}
-          fetch-depth: 0
-      - name: Reset workflow sha
-        run: git reset --hard ${{ github.sha }}
       - name: Set up Python
         uses: actions/setup-python@v6
       - name: Set up uv
@@ -53,8 +40,34 @@ jobs:
         run: uv run ruff check
       - name: Ruff format
         run: uv run ruff format --check --diff
+
+  release:
+    if: github.event_name == 'push' && github.repository == 'mcbeet/beet'
+    needs: check
+    concurrency:
+      group: ${{ github.workflow }}-release-${{ github.ref_name }}
+      cancel-in-progress: false
+    environment:
+      name: pypi
+    permissions:
+      id-token: write
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
+      - name: Reset workflow sha
+        run: git reset --hard ${{ github.sha }}
+      - name: Set up Python
+        uses: actions/setup-python@v6
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v7
+      - name: Install dependencies
+        run: uv sync --all-packages --locked --all-extras --dev
       - name: Release
-        if: github.event_name == 'push' && github.repository == 'mcbeet/beet'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
