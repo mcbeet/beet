@@ -13,7 +13,7 @@ __all__ = [
 ]
 from importlib.resources import files
 import json
-from typing import Literal, Mapping
+from typing import Literal
 from beet.toolchain.config import FormatSpecifier
 from pydantic import BaseModel
 from beet.core.utils import normalize_string, VersionNumber
@@ -38,7 +38,7 @@ class PackFormatRegistry(BaseModel):
 
 
 pack_format_registry_path = files("beet.resources").joinpath(
-    f"pack_format_registry.json"
+    "pack_format_registry.json"
 )
 
 data = json.loads(pack_format_registry_path.read_text())
