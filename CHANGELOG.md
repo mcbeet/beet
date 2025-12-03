@@ -2,6 +2,15 @@
 
 <!-- version list -->
 
+## v0.113.0-beta.9 (2025-12-03)
+
+### Bug Fixes
+
+- Include subprojects' ignore and output directories to prevent rebuild loops in watch when using
+  broadcast ([#482](https://github.com/mcbeet/beet/pull/482),
+  [`624eb96`](https://github.com/mcbeet/beet/commit/624eb96dbef139c671e2f1b316fcc00c132f0c51))
+
+
 ## v0.113.0-beta.8 (2025-12-03)
 
 ### Bug Fixes
