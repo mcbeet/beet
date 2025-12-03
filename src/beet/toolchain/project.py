@@ -106,14 +106,18 @@ class Project:
     def ignore(self) -> List[str]:
         ignore = set(self.config.ignore)
         if self.output_directory and self.directory in self.output_directory.parents:
-            ignore.add(f"{self.output_directory.relative_to(self.directory).as_posix()}/")
+            ignore.add(
+                f"{self.output_directory.relative_to(self.directory).as_posix()}/"
+            )
         for entry in self.config.pipeline:
             if isinstance(entry, ProjectConfig):
                 ignore.update(entry.ignore)
                 if entry.output:
                     output_directory = Path(entry.output)
                     if entry.directory in output_directory.parents:
-                        ignore.add(f"{output_directory.relative_to(entry.directory).as_posix()}/")
+                        ignore.add(
+                            f"{output_directory.relative_to(entry.directory).as_posix()}/"
+                        )
         return list(ignore)
 
     @property
