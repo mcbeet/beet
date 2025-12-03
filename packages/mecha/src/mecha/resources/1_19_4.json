@@ -1194,11 +1194,17 @@
                                                 "end": {
                                                   "type": "argument",
                                                   "executable": true,
-                                                  "parser": "brigadier:integer"
+                                                  "parser": "brigadier:integer",
+                                                  "properties": {
+                                                    "min": 0
+                                                  }
                                                 }
                                               },
                                               "executable": true,
-                                              "parser": "brigadier:integer"
+                                              "parser": "brigadier:integer",
+                                              "properties": {
+                                                "min": 0
+                                              }
                                             }
                                           },
                                           "executable": true,
@@ -1225,11 +1231,17 @@
                                                 "end": {
                                                   "type": "argument",
                                                   "executable": true,
-                                                  "parser": "brigadier:integer"
+                                                  "parser": "brigadier:integer",
+                                                  "properties": {
+                                                    "min": 0
+                                                  }
                                                 }
                                               },
                                               "executable": true,
-                                              "parser": "brigadier:integer"
+                                              "parser": "brigadier:integer",
+                                              "properties": {
+                                                "min": 0
+                                              }
                                             }
                                           },
                                           "executable": true,
@@ -1260,11 +1272,17 @@
                                                 "end": {
                                                   "type": "argument",
                                                   "executable": true,
-                                                  "parser": "brigadier:integer"
+                                                  "parser": "brigadier:integer",
+                                                  "properties": {
+                                                    "min": 0
+                                                  }
                                                 }
                                               },
                                               "executable": true,
-                                              "parser": "brigadier:integer"
+                                              "parser": "brigadier:integer",
+                                              "properties": {
+                                                "min": 0
+                                              }
                                             }
                                           },
                                           "executable": true,
@@ -1374,11 +1392,17 @@
                                                     "end": {
                                                       "type": "argument",
                                                       "executable": true,
-                                                      "parser": "brigadier:integer"
+                                                      "parser": "brigadier:integer",
+                                                      "properties": {
+                                                        "min": 0
+                                                      }
                                                     }
                                                   },
                                                   "executable": true,
-                                                  "parser": "brigadier:integer"
+                                                  "parser": "brigadier:integer",
+                                                  "properties": {
+                                                    "min": 0
+                                                  }
                                                 }
                                               },
                                               "executable": true,
@@ -1405,11 +1429,17 @@
                                                     "end": {
                                                       "type": "argument",
                                                       "executable": true,
-                                                      "parser": "brigadier:integer"
+                                                      "parser": "brigadier:integer",
+                                                      "properties": {
+                                                        "min": 0
+                                                      }
                                                     }
                                                   },
                                                   "executable": true,
-                                                  "parser": "brigadier:integer"
+                                                  "parser": "brigadier:integer",
+                                                  "properties": {
+                                                    "min": 0
+                                                  }
                                                 }
                                               },
                                               "executable": true,
@@ -1440,11 +1470,17 @@
                                                     "end": {
                                                       "type": "argument",
                                                       "executable": true,
-                                                      "parser": "brigadier:integer"
+                                                      "parser": "brigadier:integer",
+                                                      "properties": {
+                                                        "min": 0
+                                                      }
                                                     }
                                                   },
                                                   "executable": true,
-                                                  "parser": "brigadier:integer"
+                                                  "parser": "brigadier:integer",
+                                                  "properties": {
+                                                    "min": 0
+                                                  }
                                                 }
                                               },
                                               "executable": true,
@@ -1554,11 +1590,17 @@
                                                 "end": {
                                                   "type": "argument",
                                                   "executable": true,
-                                                  "parser": "brigadier:integer"
+                                                  "parser": "brigadier:integer",
+                                                  "properties": {
+                                                    "min": 0
+                                                  }
                                                 }
                                               },
                                               "executable": true,
-                                              "parser": "brigadier:integer"
+                                              "parser": "brigadier:integer",
+                                              "properties": {
+                                                "min": 0
+                                              }
                                             }
                                           },
                                           "executable": true,
@@ -1585,11 +1627,17 @@
                                                 "end": {
                                                   "type": "argument",
                                                   "executable": true,
-                                                  "parser": "brigadier:integer"
+                                                  "parser": "brigadier:integer",
+                                                  "properties": {
+                                                    "min": 0
+                                                  }
                                                 }
                                               },
                                               "executable": true,
-                                              "parser": "brigadier:integer"
+                                              "parser": "brigadier:integer",
+                                              "properties": {
+                                                "min": 0
+                                              }
                                             }
                                           },
                                           "executable": true,
@@ -1620,11 +1668,17 @@
                                                 "end": {
                                                   "type": "argument",
                                                   "executable": true,
-                                                  "parser": "brigadier:integer"
+                                                  "parser": "brigadier:integer",
+                                                  "properties": {
+                                                    "min": 0
+                                                  }
                                                 }
                                               },
                                               "executable": true,
-                                              "parser": "brigadier:integer"
+                                              "parser": "brigadier:integer",
+                                              "properties": {
+                                                "min": 0
+                                              }
                                             }
                                           },
                                           "executable": true,
@@ -1731,11 +1785,17 @@
                                                 "end": {
                                                   "type": "argument",
                                                   "executable": true,
-                                                  "parser": "brigadier:integer"
+                                                  "parser": "brigadier:integer",
+                                                  "properties": {
+                                                    "min": 0
+                                                  }
                                                 }
                                               },
                                               "executable": true,
-                                              "parser": "brigadier:integer"
+                                              "parser": "brigadier:integer",
+                                              "properties": {
+                                                "min": 0
+                                              }
                                             }
                                           },
                                           "executable": true,
@@ -1762,11 +1822,17 @@
                                                 "end": {
                                                   "type": "argument",
                                                   "executable": true,
-                                                  "parser": "brigadier:integer"
+                                                  "parser": "brigadier:integer",
+                                                  "properties": {
+                                                    "min": 0
+                                                  }
                                                 }
                                               },
                                               "executable": true,
-                                              "parser": "brigadier:integer"
+                                              "parser": "brigadier:integer",
+                                              "properties": {
+                                                "min": 0
+                                              }
                                             }
                                           },
                                           "executable": true,
@@ -1797,11 +1863,17 @@
                                                 "end": {
                                                   "type": "argument",
                                                   "executable": true,
-                                                  "parser": "brigadier:integer"
+                                                  "parser": "brigadier:integer",
+                                                  "properties": {
+                                                    "min": 0
+                                                  }
                                                 }
                                               },
                                               "executable": true,
-                                              "parser": "brigadier:integer"
+                                              "parser": "brigadier:integer",
+                                              "properties": {
+                                                "min": 0
+                                              }
                                             }
                                           },
                                           "executable": true,
@@ -1908,11 +1980,17 @@
                                                 "end": {
                                                   "type": "argument",
                                                   "executable": true,
-                                                  "parser": "brigadier:integer"
+                                                  "parser": "brigadier:integer",
+                                                  "properties": {
+                                                    "min": 0
+                                                  }
                                                 }
                                               },
                                               "executable": true,
-                                              "parser": "brigadier:integer"
+                                              "parser": "brigadier:integer",
+                                              "properties": {
+                                                "min": 0
+                                              }
                                             }
                                           },
                                           "executable": true,
@@ -1939,11 +2017,17 @@
                                                 "end": {
                                                   "type": "argument",
                                                   "executable": true,
-                                                  "parser": "brigadier:integer"
+                                                  "parser": "brigadier:integer",
+                                                  "properties": {
+                                                    "min": 0
+                                                  }
                                                 }
                                               },
                                               "executable": true,
-                                              "parser": "brigadier:integer"
+                                              "parser": "brigadier:integer",
+                                              "properties": {
+                                                "min": 0
+                                              }
                                             }
                                           },
                                           "executable": true,
@@ -1974,11 +2058,17 @@
                                                 "end": {
                                                   "type": "argument",
                                                   "executable": true,
-                                                  "parser": "brigadier:integer"
+                                                  "parser": "brigadier:integer",
+                                                  "properties": {
+                                                    "min": 0
+                                                  }
                                                 }
                                               },
                                               "executable": true,
-                                              "parser": "brigadier:integer"
+                                              "parser": "brigadier:integer",
+                                              "properties": {
+                                                "min": 0
+                                              }
                                             }
                                           },
                                           "executable": true,
@@ -2102,11 +2192,17 @@
                                                 "end": {
                                                   "type": "argument",
                                                   "executable": true,
-                                                  "parser": "brigadier:integer"
+                                                  "parser": "brigadier:integer",
+                                                  "properties": {
+                                                    "min": 0
+                                                  }
                                                 }
                                               },
                                               "executable": true,
-                                              "parser": "brigadier:integer"
+                                              "parser": "brigadier:integer",
+                                              "properties": {
+                                                "min": 0
+                                              }
                                             }
                                           },
                                           "executable": true,
@@ -2133,11 +2229,17 @@
                                                 "end": {
                                                   "type": "argument",
                                                   "executable": true,
-                                                  "parser": "brigadier:integer"
+                                                  "parser": "brigadier:integer",
+                                                  "properties": {
+                                                    "min": 0
+                                                  }
                                                 }
                                               },
                                               "executable": true,
-                                              "parser": "brigadier:integer"
+                                              "parser": "brigadier:integer",
+                                              "properties": {
+                                                "min": 0
+                                              }
                                             }
                                           },
                                           "executable": true,
@@ -2168,11 +2270,17 @@
                                                 "end": {
                                                   "type": "argument",
                                                   "executable": true,
-                                                  "parser": "brigadier:integer"
+                                                  "parser": "brigadier:integer",
+                                                  "properties": {
+                                                    "min": 0
+                                                  }
                                                 }
                                               },
                                               "executable": true,
-                                              "parser": "brigadier:integer"
+                                              "parser": "brigadier:integer",
+                                              "properties": {
+                                                "min": 0
+                                              }
                                             }
                                           },
                                           "executable": true,
@@ -2282,11 +2390,17 @@
                                                     "end": {
                                                       "type": "argument",
                                                       "executable": true,
-                                                      "parser": "brigadier:integer"
+                                                      "parser": "brigadier:integer",
+                                                      "properties": {
+                                                        "min": 0
+                                                      }
                                                     }
                                                   },
                                                   "executable": true,
-                                                  "parser": "brigadier:integer"
+                                                  "parser": "brigadier:integer",
+                                                  "properties": {
+                                                    "min": 0
+                                                  }
                                                 }
                                               },
                                               "executable": true,
@@ -2313,11 +2427,17 @@
                                                     "end": {
                                                       "type": "argument",
                                                       "executable": true,
-                                                      "parser": "brigadier:integer"
+                                                      "parser": "brigadier:integer",
+                                                      "properties": {
+                                                        "min": 0
+                                                      }
                                                     }
                                                   },
                                                   "executable": true,
-                                                  "parser": "brigadier:integer"
+                                                  "parser": "brigadier:integer",
+                                                  "properties": {
+                                                    "min": 0
+                                                  }
                                                 }
                                               },
                                               "executable": true,
@@ -2348,11 +2468,17 @@
                                                     "end": {
                                                       "type": "argument",
                                                       "executable": true,
-                                                      "parser": "brigadier:integer"
+                                                      "parser": "brigadier:integer",
+                                                      "properties": {
+                                                        "min": 0
+                                                      }
                                                     }
                                                   },
                                                   "executable": true,
-                                                  "parser": "brigadier:integer"
+                                                  "parser": "brigadier:integer",
+                                                  "properties": {
+                                                    "min": 0
+                                                  }
                                                 }
                                               },
                                               "executable": true,
@@ -2462,11 +2588,17 @@
                                                 "end": {
                                                   "type": "argument",
                                                   "executable": true,
-                                                  "parser": "brigadier:integer"
+                                                  "parser": "brigadier:integer",
+                                                  "properties": {
+                                                    "min": 0
+                                                  }
                                                 }
                                               },
                                               "executable": true,
-                                              "parser": "brigadier:integer"
+                                              "parser": "brigadier:integer",
+                                              "properties": {
+                                                "min": 0
+                                              }
                                             }
                                           },
                                           "executable": true,
@@ -2493,11 +2625,17 @@
                                                 "end": {
                                                   "type": "argument",
                                                   "executable": true,
-                                                  "parser": "brigadier:integer"
+                                                  "parser": "brigadier:integer",
+                                                  "properties": {
+                                                    "min": 0
+                                                  }
                                                 }
                                               },
                                               "executable": true,
-                                              "parser": "brigadier:integer"
+                                              "parser": "brigadier:integer",
+                                              "properties": {
+                                                "min": 0
+                                              }
                                             }
                                           },
                                           "executable": true,
@@ -2528,11 +2666,17 @@
                                                 "end": {
                                                   "type": "argument",
                                                   "executable": true,
-                                                  "parser": "brigadier:integer"
+                                                  "parser": "brigadier:integer",
+                                                  "properties": {
+                                                    "min": 0
+                                                  }
                                                 }
                                               },
                                               "executable": true,
-                                              "parser": "brigadier:integer"
+                                              "parser": "brigadier:integer",
+                                              "properties": {
+                                                "min": 0
+                                              }
                                             }
                                           },
                                           "executable": true,
@@ -2639,11 +2783,17 @@
                                                 "end": {
                                                   "type": "argument",
                                                   "executable": true,
-                                                  "parser": "brigadier:integer"
+                                                  "parser": "brigadier:integer",
+                                                  "properties": {
+                                                    "min": 0
+                                                  }
                                                 }
                                               },
                                               "executable": true,
-                                              "parser": "brigadier:integer"
+                                              "parser": "brigadier:integer",
+                                              "properties": {
+                                                "min": 0
+                                              }
                                             }
                                           },
                                           "executable": true,
@@ -2670,11 +2820,17 @@
                                                 "end": {
                                                   "type": "argument",
                                                   "executable": true,
-                                                  "parser": "brigadier:integer"
+                                                  "parser": "brigadier:integer",
+                                                  "properties": {
+                                                    "min": 0
+                                                  }
                                                 }
                                               },
                                               "executable": true,
-                                              "parser": "brigadier:integer"
+                                              "parser": "brigadier:integer",
+                                              "properties": {
+                                                "min": 0
+                                              }
                                             }
                                           },
                                           "executable": true,
@@ -2705,11 +2861,17 @@
                                                 "end": {
                                                   "type": "argument",
                                                   "executable": true,
-                                                  "parser": "brigadier:integer"
+                                                  "parser": "brigadier:integer",
+                                                  "properties": {
+                                                    "min": 0
+                                                  }
                                                 }
                                               },
                                               "executable": true,
-                                              "parser": "brigadier:integer"
+                                              "parser": "brigadier:integer",
+                                              "properties": {
+                                                "min": 0
+                                              }
                                             }
                                           },
                                           "executable": true,
@@ -2816,11 +2978,17 @@
                                                 "end": {
                                                   "type": "argument",
                                                   "executable": true,
-                                                  "parser": "brigadier:integer"
+                                                  "parser": "brigadier:integer",
+                                                  "properties": {
+                                                    "min": 0
+                                                  }
                                                 }
                                               },
                                               "executable": true,
-                                              "parser": "brigadier:integer"
+                                              "parser": "brigadier:integer",
+                                              "properties": {
+                                                "min": 0
+                                              }
                                             }
                                           },
                                           "executable": true,
@@ -2847,11 +3015,17 @@
                                                 "end": {
                                                   "type": "argument",
                                                   "executable": true,
-                                                  "parser": "brigadier:integer"
+                                                  "parser": "brigadier:integer",
+                                                  "properties": {
+                                                    "min": 0
+                                                  }
                                                 }
                                               },
                                               "executable": true,
-                                              "parser": "brigadier:integer"
+                                              "parser": "brigadier:integer",
+                                              "properties": {
+                                                "min": 0
+                                              }
                                             }
                                           },
                                           "executable": true,
@@ -2882,11 +3056,17 @@
                                                 "end": {
                                                   "type": "argument",
                                                   "executable": true,
-                                                  "parser": "brigadier:integer"
+                                                  "parser": "brigadier:integer",
+                                                  "properties": {
+                                                    "min": 0
+                                                  }
                                                 }
                                               },
                                               "executable": true,
-                                              "parser": "brigadier:integer"
+                                              "parser": "brigadier:integer",
+                                              "properties": {
+                                                "min": 0
+                                              }
                                             }
                                           },
                                           "executable": true,
@@ -3014,11 +3194,17 @@
                                                 "end": {
                                                   "type": "argument",
                                                   "executable": true,
-                                                  "parser": "brigadier:integer"
+                                                  "parser": "brigadier:integer",
+                                                  "properties": {
+                                                    "min": 0
+                                                  }
                                                 }
                                               },
                                               "executable": true,
-                                              "parser": "brigadier:integer"
+                                              "parser": "brigadier:integer",
+                                              "properties": {
+                                                "min": 0
+                                              }
                                             }
                                           },
                                           "executable": true,
@@ -3045,11 +3231,17 @@
                                                 "end": {
                                                   "type": "argument",
                                                   "executable": true,
-                                                  "parser": "brigadier:integer"
+                                                  "parser": "brigadier:integer",
+                                                  "properties": {
+                                                    "min": 0
+                                                  }
                                                 }
                                               },
                                               "executable": true,
-                                              "parser": "brigadier:integer"
+                                              "parser": "brigadier:integer",
+                                              "properties": {
+                                                "min": 0
+                                              }
                                             }
                                           },
                                           "executable": true,
@@ -3080,11 +3272,17 @@
                                                 "end": {
                                                   "type": "argument",
                                                   "executable": true,
-                                                  "parser": "brigadier:integer"
+                                                  "parser": "brigadier:integer",
+                                                  "properties": {
+                                                    "min": 0
+                                                  }
                                                 }
                                               },
                                               "executable": true,
-                                              "parser": "brigadier:integer"
+                                              "parser": "brigadier:integer",
+                                              "properties": {
+                                                "min": 0
+                                              }
                                             }
                                           },
                                           "executable": true,
@@ -3194,11 +3392,17 @@
                                                     "end": {
                                                       "type": "argument",
                                                       "executable": true,
-                                                      "parser": "brigadier:integer"
+                                                      "parser": "brigadier:integer",
+                                                      "properties": {
+                                                        "min": 0
+                                                      }
                                                     }
                                                   },
                                                   "executable": true,
-                                                  "parser": "brigadier:integer"
+                                                  "parser": "brigadier:integer",
+                                                  "properties": {
+                                                    "min": 0
+                                                  }
                                                 }
                                               },
                                               "executable": true,
@@ -3225,11 +3429,17 @@
                                                     "end": {
                                                       "type": "argument",
                                                       "executable": true,
-                                                      "parser": "brigadier:integer"
+                                                      "parser": "brigadier:integer",
+                                                      "properties": {
+                                                        "min": 0
+                                                      }
                                                     }
                                                   },
                                                   "executable": true,
-                                                  "parser": "brigadier:integer"
+                                                  "parser": "brigadier:integer",
+                                                  "properties": {
+                                                    "min": 0
+                                                  }
                                                 }
                                               },
                                               "executable": true,
@@ -3260,11 +3470,17 @@
                                                     "end": {
                                                       "type": "argument",
                                                       "executable": true,
-                                                      "parser": "brigadier:integer"
+                                                      "parser": "brigadier:integer",
+                                                      "properties": {
+                                                        "min": 0
+                                                      }
                                                     }
                                                   },
                                                   "executable": true,
-                                                  "parser": "brigadier:integer"
+                                                  "parser": "brigadier:integer",
+                                                  "properties": {
+                                                    "min": 0
+                                                  }
                                                 }
                                               },
                                               "executable": true,
@@ -3374,11 +3590,17 @@
                                                 "end": {
                                                   "type": "argument",
                                                   "executable": true,
-                                                  "parser": "brigadier:integer"
+                                                  "parser": "brigadier:integer",
+                                                  "properties": {
+                                                    "min": 0
+                                                  }
                                                 }
                                               },
                                               "executable": true,
-                                              "parser": "brigadier:integer"
+                                              "parser": "brigadier:integer",
+                                              "properties": {
+                                                "min": 0
+                                              }
                                             }
                                           },
                                           "executable": true,
@@ -3405,11 +3627,17 @@
                                                 "end": {
                                                   "type": "argument",
                                                   "executable": true,
-                                                  "parser": "brigadier:integer"
+                                                  "parser": "brigadier:integer",
+                                                  "properties": {
+                                                    "min": 0
+                                                  }
                                                 }
                                               },
                                               "executable": true,
-                                              "parser": "brigadier:integer"
+                                              "parser": "brigadier:integer",
+                                              "properties": {
+                                                "min": 0
+                                              }
                                             }
                                           },
                                           "executable": true,
@@ -3440,11 +3668,17 @@
                                                 "end": {
                                                   "type": "argument",
                                                   "executable": true,
-                                                  "parser": "brigadier:integer"
+                                                  "parser": "brigadier:integer",
+                                                  "properties": {
+                                                    "min": 0
+                                                  }
                                                 }
                                               },
                                               "executable": true,
-                                              "parser": "brigadier:integer"
+                                              "parser": "brigadier:integer",
+                                              "properties": {
+                                                "min": 0
+                                              }
                                             }
                                           },
                                           "executable": true,
@@ -3551,11 +3785,17 @@
                                                 "end": {
                                                   "type": "argument",
                                                   "executable": true,
-                                                  "parser": "brigadier:integer"
+                                                  "parser": "brigadier:integer",
+                                                  "properties": {
+                                                    "min": 0
+                                                  }
                                                 }
                                               },
                                               "executable": true,
-                                              "parser": "brigadier:integer"
+                                              "parser": "brigadier:integer",
+                                              "properties": {
+                                                "min": 0
+                                              }
                                             }
                                           },
                                           "executable": true,
@@ -3582,11 +3822,17 @@
                                                 "end": {
                                                   "type": "argument",
                                                   "executable": true,
-                                                  "parser": "brigadier:integer"
+                                                  "parser": "brigadier:integer",
+                                                  "properties": {
+                                                    "min": 0
+                                                  }
                                                 }
                                               },
                                               "executable": true,
-                                              "parser": "brigadier:integer"
+                                              "parser": "brigadier:integer",
+                                              "properties": {
+                                                "min": 0
+                                              }
                                             }
                                           },
                                           "executable": true,
@@ -3617,11 +3863,17 @@
                                                 "end": {
                                                   "type": "argument",
                                                   "executable": true,
-                                                  "parser": "brigadier:integer"
+                                                  "parser": "brigadier:integer",
+                                                  "properties": {
+                                                    "min": 0
+                                                  }
                                                 }
                                               },
                                               "executable": true,
-                                              "parser": "brigadier:integer"
+                                              "parser": "brigadier:integer",
+                                              "properties": {
+                                                "min": 0
+                                              }
                                             }
                                           },
                                           "executable": true,
@@ -3728,11 +3980,17 @@
                                                 "end": {
                                                   "type": "argument",
                                                   "executable": true,
-                                                  "parser": "brigadier:integer"
+                                                  "parser": "brigadier:integer",
+                                                  "properties": {
+                                                    "min": 0
+                                                  }
                                                 }
                                               },
                                               "executable": true,
-                                              "parser": "brigadier:integer"
+                                              "parser": "brigadier:integer",
+                                              "properties": {
+                                                "min": 0
+                                              }
                                             }
                                           },
                                           "executable": true,
@@ -3759,11 +4017,17 @@
                                                 "end": {
                                                   "type": "argument",
                                                   "executable": true,
-                                                  "parser": "brigadier:integer"
+                                                  "parser": "brigadier:integer",
+                                                  "properties": {
+                                                    "min": 0
+                                                  }
                                                 }
                                               },
                                               "executable": true,
-                                              "parser": "brigadier:integer"
+                                              "parser": "brigadier:integer",
+                                              "properties": {
+                                                "min": 0
+                                              }
                                             }
                                           },
                                           "executable": true,
@@ -3794,11 +4058,17 @@
                                                 "end": {
                                                   "type": "argument",
                                                   "executable": true,
-                                                  "parser": "brigadier:integer"
+                                                  "parser": "brigadier:integer",
+                                                  "properties": {
+                                                    "min": 0
+                                                  }
                                                 }
                                               },
                                               "executable": true,
-                                              "parser": "brigadier:integer"
+                                              "parser": "brigadier:integer",
+                                              "properties": {
+                                                "min": 0
+                                              }
                                             }
                                           },
                                           "executable": true,
@@ -8499,16 +8769,6 @@
     "reload": {
       "type": "literal",
       "executable": true
-    },
-    "return": {
-      "type": "literal",
-      "children": {
-        "value": {
-          "type": "argument",
-          "executable": true,
-          "parser": "brigadier:integer"
-        }
-      }
     },
     "ride": {
       "type": "literal",
