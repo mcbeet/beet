@@ -2,6 +2,19 @@
 
 <!-- version list -->
 
+## v0.35.0-beta.6 (2025-12-03)
+
+### Bug Fixes
+
+- Cleanup empty overlays
+  ([`15d2d86`](https://github.com/mcbeet/beet/commit/15d2d862281e4af36e41b41606669dd2ba5ada54))
+
+- Min/max_format in overlay directive
+  ([`c23f08a`](https://github.com/mcbeet/beet/commit/c23f08a7d5866a12f339172d936f9b051b995bed))
+
+- Ruff ([`9ac861d`](https://github.com/mcbeet/beet/commit/9ac861d0dd4d02bf92b6a5c58d08539e8db08a2e))
+
+
 ## v0.35.0-beta.5 (2025-11-16)
 
 ### Bug Fixes
