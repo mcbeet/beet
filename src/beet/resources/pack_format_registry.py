@@ -104,10 +104,12 @@ class PackFormatRegistryContainer(Container[VersionNumber, FormatSpecifier]):
             key = tuple(normalize_string(key).split("_"))
         return tuple(int(value) if value != "x" else "x" for value in key)
 
-    def missing(self, key: tuple[int, int, str]) -> FormatSpecifier:
+    def missing(self, key: VersionNumber) -> FormatSpecifier:
         """
         Implement the missing method to return a default value.
         """
+        if not isinstance(key, tuple):
+            key = self.normalize_key(key)
         if not isinstance(key[-1], str):
             raise KeyError(key)
         if key[-1] != "x":
