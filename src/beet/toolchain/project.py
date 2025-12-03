@@ -26,7 +26,6 @@ from beet.core.utils import (
     intersperse,
     log_time_scope,
     normalize_string,
-    split_version,
 )
 from beet.core.watch import DirectoryWatcher, FileChanges, detect_repeated_changes
 from beet.library.base import LATEST_MINECRAFT_VERSION, Mcmeta
@@ -343,7 +342,7 @@ class ProjectBuilder:
                     pack.max_format = config.max_format
             else:
                 format = pack.pack_format_registry.get(
-                    split_version(self.config.minecraft), pack.latest_pack_format
+                    self.config.minecraft, pack.latest_pack_format
                 )
                 if isinstance(format, int):
                     if format < pack.pack_format_switch_format:

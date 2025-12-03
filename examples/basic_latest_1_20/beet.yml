@@ -1,0 +1,12 @@
+resource_pack:
+  load: "."
+data_pack:
+  load: "."
+
+minecraft: "1.20.x"
+
+
+pipeline:
+  - pipeline
+
+output: dist

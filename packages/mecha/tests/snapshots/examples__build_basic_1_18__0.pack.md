@@ -8,7 +8,7 @@
 {
   "pack": {
     "description": "",
-    "pack_format": 9
+    "pack_format": 8
   }
 }
 ```
