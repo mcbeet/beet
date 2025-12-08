@@ -203,7 +203,7 @@ def test_dummy_source_file_provider(mc: Mecha, dummy_source_file_provider: Any):
 
     a = Function("say fold \\\n this")
     b = DummySourceFile("# some comment")
-    c = DummySourceFile("gamerule keepInventory true")
+    c = DummySourceFile("gamerule keep_inventory true")
 
     p["demo:a"] = a
     p["demo:b"] = b
@@ -214,7 +214,7 @@ def test_dummy_source_file_provider(mc: Mecha, dummy_source_file_provider: Any):
 
     assert a == Function("say fold \\\n this")
     assert b == DummySourceFile("")
-    assert c == DummySourceFile("gamerule keepInventory true\n")
+    assert c == DummySourceFile("gamerule keep_inventory true\n")
 
     assert a not in mc.database
     assert mc.database[b].ast == AstRoot(commands=AstChildren())
@@ -222,7 +222,7 @@ def test_dummy_source_file_provider(mc: Mecha, dummy_source_file_provider: Any):
         commands=AstChildren(
             [
                 AstCommand(
-                    identifier="gamerule:keepInventory:value",
+                    identifier="gamerule:keep_inventory:value",
                     arguments=AstChildren([AstBool(value=True)]),
                 )
             ]
@@ -234,18 +234,18 @@ def test_assets_dummy_source_file_provider(mc: Mecha, dummy_source_file_provider
     r = ResourcePack()
     r.extend_namespace.append(DummySourceFile)
 
-    a = DummySourceFile("gamerule keep\\\nInventory true")
+    a = DummySourceFile("gamerule keep\\\n_inventory true")
     r["demo:a"] = a
 
     diagnostics = DiagnosticCollection()
     mc.compile(r, report=diagnostics)
 
-    assert a == DummySourceFile("gamerule keepInventory true\n")
+    assert a == DummySourceFile("gamerule keep_inventory true\n")
     assert mc.database[a].ast == AstRoot(
         commands=AstChildren(
             [
                 AstCommand(
-                    identifier="gamerule:keepInventory:value",
+                    identifier="gamerule:keep_inventory:value",
                     arguments=AstChildren([AstBool(value=True)]),
                 )
             ]

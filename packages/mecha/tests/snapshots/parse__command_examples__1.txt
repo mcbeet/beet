@@ -62,13 +62,13 @@ function custom:example/test
 function #custom:example/test
 gamemode creative
 gamemode survival @a
-gamerule doDaylightCycle false
-gamerule naturalRegeneration false
-gamerule mobGriefing false
-gamerule doWeatherCycle false
-gamerule keepInventory true
-gamerule commandBlockOutput false
-gamerule doInsomnia false
+gamerule advance_time false
+gamerule natural_health_regeneration false
+gamerule mob_griefing false
+gamerule advance_weather false
+gamerule keep_inventory true
+gamerule command_block_output false
+gamerule spawn_phantoms false
 give @p minecraft:diamond_sword{display: {Lore: ['"A legendary weapon"']}} 1
 give @a potion{Potion: "minecraft:night_vision"} 1
 give @r diamond_sword{Enchantments: [{id: "minecraft:sharpness", lvl: 10}]} 1
@@ -136,14 +136,14 @@ execute unless biome ~10 ~ ~ minecraft:forest run say ok
 execute unless dimension minecraft:overworld run say ok
 fillbiome ~ ~ ~ ~16 ~16 ~16 minecraft:deep_dark
 gamemode survival @a
-gamerule blockExplosionDropDecay true
-gamerule commandModificationBlockLimit 1000
-gamerule globalSoundEvents false
-gamerule lavaSourceConversion true
-gamerule mobExplosionDropDecay true
-gamerule snowAccumulationHeight 10
-gamerule tntExplosionDropDecay true
-gamerule waterSourceConversion true
+gamerule block_explosion_drop_decay true
+gamerule max_block_modifications 1000
+gamerule global_sound_events false
+gamerule lava_source_conversion true
+gamerule mob_explosion_drop_decay true
+gamerule max_snow_accumulation_height 8
+gamerule tnt_explosion_drop_decay true
+gamerule water_source_conversion true
 clone ~ ~ ~ ~10 ~10 ~10 0 0 0 masked
 clone from overworld ~ ~ ~ ~10 ~10 ~10 0 0 0 masked
 clone ~ ~ ~ ~10 ~10 ~10 to nether 0 0 0 masked
@@ -165,7 +165,7 @@ execute as @a[tag=blob] run function demo:foo
 say hello
 execute if function demo:foo run return run function demo:bar
 execute store result score @s foo run return run data get entity @s foodSaturationLevel
-gamerule maxCommandForkCount 9999
+gamerule max_command_forks 9999
 scoreboard objectives modify foo displayautoupdate true
 scoreboard objectives modify foo numberformat styled {bold: true}
 give @s wooden_pickaxe[damage=23]

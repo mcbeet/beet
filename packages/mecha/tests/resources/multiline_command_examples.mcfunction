@@ -79,14 +79,14 @@ say
     continuation
 
 gamerule
-    doDaylightCycle
+    advance_time
  false
 
 gamerule
-            doMobLoot
+            mob_drops
             false
                 gamerule
-                        doDaylightCycle
+                        advance_time
                     false
     execute as foo run
         gamemode
@@ -99,7 +99,7 @@ gamerule
             the_end
             run
             say foo
-    gamerule doDaylightCycle
+    gamerule advance_time
                          false
 
 scoreboard players set #index global 3
