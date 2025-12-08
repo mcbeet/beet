@@ -327,7 +327,7 @@ wheels = [
 
 [[package]]
 name = "mecha"
-version = "0.100.0b6"
+version = "0.101.0"
 source = { editable = "packages/mecha" }
 dependencies = [
     { name = "beet" },
