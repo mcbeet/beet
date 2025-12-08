@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v0.102.0-beta.1 (2025-12-08)
+
+### Features
+
+- Major version
+  ([`9e89fec`](https://github.com/mcbeet/beet/commit/9e89fec9526b45f4271dc2f026d914e50cca581e))
+
+
 ## v0.101.1-beta.1 (2025-12-08)
 
 ### Bug Fixes
