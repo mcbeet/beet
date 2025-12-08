@@ -21,7 +21,7 @@ keywords = [
 requires-python = ">=3.14"
 dependencies = [
     "beet>=0.113.0b9",
-    "mecha>=0.101.0",
+    "mecha>=0.102.0b1",
 ]
 
 [project.urls]
