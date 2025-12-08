@@ -4,7 +4,7 @@ build-backend = "uv_build"
 
 [project]
 name = "bolt"
-version = "0.50.0-beta.3"
+version = "0.50.0-beta.4"
 description = "Supercharge Minecraft commands with Python"
 authors = [{ name = "Valentin Berlier", email = "berlier.v@gmail.com" }]
 license = "MIT"
@@ -21,7 +21,7 @@ keywords = [
 requires-python = ">=3.14"
 dependencies = [
     "beet>=0.113.0b9",
-    "mecha>=0.102.0b1",
+    "mecha>=0.101.1b1",
 ]
 
 [project.urls]
