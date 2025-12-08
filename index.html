@@ -1,0 +1,434 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+<link rel="index" title="Index" href="genindex/" /><link rel="search" title="Search" href="search/" /><link rel="next" title="Getting Started" href="getting_started/" />
+        <link rel="canonical" href="https://mcbeet.dev/index.html" />
+
+    <link rel="shortcut icon" href="_static/favicon.png"/><!-- Generated with Sphinx 5.3.0 and Furo 2022.12.07 -->
+        <title>Beet documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=91d0f0d1c444bdcb17a68e833c7a53903343c195" />
+    <link rel="stylesheet" type="text/css" href="_static/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mudkip_furo.css" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="#"><div class="brand">Beet documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand centered" href="#">
+  
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo" src="_static/beet_logo.png" alt="Logo"/>
+  </div>
+  
+  
+</a><form class="sidebar-search-container" method="get" action="search/" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="getting_started/">Getting Started</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="getting_started/plugins/">Plugins</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="rationale/">Rationale</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview/">General overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog/">Changelog</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Project links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/mcbeet/beet">GitHub Repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/beet">PyPI Package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://discord.gg/98MdSGMm8j">Beet Discord</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <section id="beet-documentation">
+<h1>Beet documentation<a class="headerlink" href="#beet-documentation" title="Permalink to this heading">#</a></h1>
+<p>Welcome! This is the place where you'll eventually find everything there is to know about the <code class="docutils literal notranslate"><span class="pre">beet</span></code> project. The documentation is currently a work-in-progress. You're welcome to help write guides and contribute example use-cases. In the meantime, don't be afraid to check out the code!</p>
+<p>You can follow the development of the project, discuss ideas, get help, and hang out with cool people interested in map-making and programming on our brand new discord! You can also ask questions about <code class="docutils literal notranslate"><span class="pre">beet</span></code> and get general help about Minecraft map-making on the Minecraft Commands discord server.</p>
+<ul>
+<li><p><strong>Beet</strong> - The Minecraft pack development kit</p>
+<p><a class="reference external" href="https://discord.gg/98MdSGMm8j"><img alt="Discord" src="https://img.shields.io/discord/900530660677156924?color=7289DA&amp;label=discord&amp;logo=discord&amp;logoColor=fff" /></a></p>
+</li>
+<li><p><strong>Minecraft Commands</strong> - General discussions about commands and map-making</p>
+<p><a class="reference external" href="https://discord.gg/QAFXFtZ"><img alt="Discord" src="https://img.shields.io/discord/154777837382008833?color=7289DA&amp;label=discord&amp;logo=discord&amp;logoColor=fff" /></a></p>
+</li>
+</ul>
+<div class="toctree-wrapper compound">
+</div>
+<div class="toctree-wrapper compound">
+</div>
+<p><a class="reference external" href="https://github.com/mcbeet/beet/actions"><img alt="GitHub Actions" src="https://github.com/mcbeet/beet/workflows/CI/badge.svg" /></a>
+<a class="reference external" href="https://pypi.org/project/beet/"><img alt="PyPI" src="https://img.shields.io/pypi/v/beet.svg" /></a>
+<a class="reference external" href="https://pypi.org/project/beet/"><img alt="PyPI - Python Version" src="https://img.shields.io/pypi/pyversions/beet.svg" /></a>
+<a class="reference external" href="https://github.com/ambv/black"><img alt="Code style: black" src="https://img.shields.io/badge/code%20style-black-000000.svg" /></a>
+<a class="reference external" href="https://discord.gg/98MdSGMm8j"><img alt="Discord" src="https://img.shields.io/discord/900530660677156924?color=7289DA&amp;label=discord&amp;logo=discord&amp;logoColor=fff" /></a></p>
+<blockquote>
+<div><p>The Minecraft pack development kit.</p>
+</div></blockquote>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">#</a></h2>
+<p>Minecraft <a class="reference external" href="https://minecraft.wiki/w/Resource_pack">resource packs</a> and <a class="reference external" href="https://minecraft.wiki/w/Data_pack">data packs</a> work well as <em>distribution</em> formats but can be pretty limiting as <em>authoring</em> formats. You can quickly end up having to manage hundreds of files, some of which might be buried within the bundled output of various generators.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">beet</span></code> project is a development kit that tries to unify data pack and resource pack tooling into a single pipeline. The community is always coming up with pre-processors, frameworks, and generators of all kinds to make the developer experience more ergonomic. With <code class="docutils literal notranslate"><span class="pre">beet</span></code> you can seamlessly integrate all these tools in your project.</p>
+<section id="screencasts">
+<h3>Screencasts<a class="headerlink" href="#screencasts" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Quick start</strong> <a class="reference external" href="https://youtu.be/JGrJTOhG3pY">https://youtu.be/JGrJTOhG3pY</a></p></li>
+<li><p><strong>Command-line</strong> <a class="reference external" href="https://youtu.be/fQ9up0ELPNE">https://youtu.be/fQ9up0ELPNE</a></p></li>
+<li><p><strong>Library overview</strong> <a class="reference external" href="https://youtu.be/LDvV4_l-PSc">https://youtu.be/LDvV4_l-PSc</a></p></li>
+<li><p><strong>Plugins basics</strong> <a class="reference external" href="https://youtu.be/XTzKmvHqd1g">https://youtu.be/XTzKmvHqd1g</a></p></li>
+<li><p><strong>Pipeline configuration</strong> <a class="reference external" href="https://youtu.be/QsnQncGxAAs">https://youtu.be/QsnQncGxAAs</a></p></li>
+</ul>
+</section>
+<section id="library">
+<h3>Library<a class="headerlink" href="#library" title="Permalink to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">beet</span> <span class="kn">import</span> <span class="n">ResourcePack</span><span class="p">,</span> <span class="n">Texture</span>
+
+<span class="c1"># Open a zipped resource pack and add a custom stone texture</span>
+<span class="k">with</span> <span class="n">ResourcePack</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s2">&quot;stone.zip&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">assets</span><span class="p">:</span>
+    <span class="n">assets</span><span class="p">[</span><span class="s2">&quot;minecraft:block/stone&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Texture</span><span class="p">(</span><span class="n">source_path</span><span class="o">=</span><span class="s2">&quot;custom.png&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">beet</span></code> library provides carefully crafted primitives for working with Minecraft resource packs and data packs.</p>
+<ul class="simple">
+<li><p>Create, read, edit and merge resource packs and data packs</p></li>
+<li><p>Handle zipped and unzipped packs</p></li>
+<li><p>Fast and lazy by default, files are transparently loaded when needed</p></li>
+<li><p>Statically typed API enabling rich intellisense and autocompletion</p></li>
+<li><p>First-class <a class="reference external" href="https://github.com/pytest-dev/pytest/"><code class="docutils literal notranslate"><span class="pre">pytest</span></code></a> integration with detailed assertion explanations</p></li>
+</ul>
+</section>
+<section id="toolchain">
+<h3>Toolchain<a class="headerlink" href="#toolchain" title="Permalink to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">beet</span> <span class="kn">import</span> <span class="n">Context</span><span class="p">,</span> <span class="n">Function</span>
+
+<span class="k">def</span> <span class="nf">greet</span><span class="p">(</span><span class="n">ctx</span><span class="p">:</span> <span class="n">Context</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Plugin that adds a function for greeting the player.&quot;&quot;&quot;</span>
+    <span class="n">ctx</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;greet:hello&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Function</span><span class="p">([</span><span class="s2">&quot;say hello&quot;</span><span class="p">],</span> <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;minecraft:load&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">beet</span></code> toolchain is designed to support a wide range of use-cases. The most basic pipeline will let you create configurable resource packs and data packs, but plugins make it easy to implement arbitrarily advanced workflows and tools like linters, asset generators and function pre-processors.</p>
+<ul class="simple">
+<li><p>Compose plugins that can inspect and edit the generated resource pack and data pack</p></li>
+<li><p>Configure powerful build systems for development and creating releases</p></li>
+<li><p>First-class template integration approachable without prior Python knowledge</p></li>
+<li><p>Link the generated resource pack and data pack to Minecraft</p></li>
+<li><p>Automatically rebuild the project on file changes with watch mode</p></li>
+<li><p>Batteries-included package that comes with a few handy plugins out of the box</p></li>
+<li><p>Rich ecosystem, extensible CLI, and powerful generator and worker API</p></li>
+</ul>
+</section>
+</section>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading">#</a></h2>
+<p>The package can be installed with <code class="docutils literal notranslate"><span class="pre">pip</span></code>.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>beet
+</pre></div>
+</div>
+<p>To create and edit images programmatically you should install <code class="docutils literal notranslate"><span class="pre">beet</span></code> with the <code class="docutils literal notranslate"><span class="pre">image</span></code> extra or install <code class="docutils literal notranslate"><span class="pre">Pillow</span></code> separately.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>beet<span class="o">[</span>image<span class="o">]</span>
+$<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>beet<span class="w"> </span>Pillow
+</pre></div>
+</div>
+<p>You can make sure that <code class="docutils literal notranslate"><span class="pre">beet</span></code> was successfully installed by trying to use the toolchain from the command-line.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>beet<span class="w"> </span>--help
+Usage:<span class="w"> </span>beet<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span><span class="w"> </span>COMMAND<span class="w"> </span><span class="o">[</span>ARGS<span class="o">]</span>...
+
+<span class="w">  </span>The<span class="w"> </span>beet<span class="w"> </span>toolchain.
+
+Options:
+<span class="w">  </span>-p,<span class="w"> </span>--project<span class="w"> </span>PATH<span class="w">  </span>Select<span class="w"> </span>project.
+<span class="w">  </span>-s,<span class="w"> </span>--set<span class="w"> </span>OPTION<span class="w">    </span>Set<span class="w"> </span>config<span class="w"> </span>option.
+<span class="w">  </span>-l,<span class="w"> </span>--log<span class="w"> </span>LEVEL<span class="w">     </span>Configure<span class="w"> </span>output<span class="w"> </span>verbosity.
+<span class="w">  </span>-v,<span class="w"> </span>--version<span class="w">       </span>Show<span class="w"> </span>the<span class="w"> </span>version<span class="w"> </span>and<span class="w"> </span>exit.
+<span class="w">  </span>-h,<span class="w"> </span>--help<span class="w">          </span>Show<span class="w"> </span>this<span class="w"> </span>message<span class="w"> </span>and<span class="w"> </span>exit.
+
+Commands:
+<span class="w">  </span>build<span class="w">  </span>Build<span class="w"> </span>the<span class="w"> </span>current<span class="w"> </span>project.
+<span class="w">  </span>cache<span class="w">  </span>Inspect<span class="w"> </span>or<span class="w"> </span>clear<span class="w"> </span>the<span class="w"> </span>cache.
+<span class="w">  </span>link<span class="w">   </span>Link<span class="w"> </span>the<span class="w"> </span>generated<span class="w"> </span>resource<span class="w"> </span>pack<span class="w"> </span>and<span class="w"> </span>data<span class="w"> </span>pack<span class="w"> </span>to<span class="w"> </span>Minecraft.
+<span class="w">  </span>watch<span class="w">  </span>Watch<span class="w"> </span>the<span class="w"> </span>project<span class="w"> </span>directory<span class="w"> </span>and<span class="w"> </span>build<span class="w"> </span>on<span class="w"> </span>file<span class="w"> </span>changes.
+</pre></div>
+</div>
+</section>
+<section id="contributing">
+<h2>Contributing<a class="headerlink" href="#contributing" title="Permalink to this heading">#</a></h2>
+<p>Contributions are welcome. Make sure to first open an issue discussing the problem or the new feature before creating a pull request. The project uses <a class="reference external" href="https://python-poetry.org"><code class="docutils literal notranslate"><span class="pre">poetry</span></code></a>.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>poetry<span class="w"> </span>install<span class="w"> </span>--extras<span class="w"> </span>image
+</pre></div>
+</div>
+<p>You can run the tests with <code class="docutils literal notranslate"><span class="pre">poetry</span> <span class="pre">run</span> <span class="pre">pytest</span></code>. We use <a class="reference external" href="https://github.com/vberlier/pytest-minecraft"><code class="docutils literal notranslate"><span class="pre">pytest-minecraft</span></code></a> to run tests against actual Minecraft releases.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>poetry<span class="w"> </span>run<span class="w"> </span>pytest
+$<span class="w"> </span>poetry<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>--minecraft-latest
+</pre></div>
+</div>
+<p>We also use <a class="reference external" href="https://github.com/vberlier/pytest-minecraft"><code class="docutils literal notranslate"><span class="pre">pytest-insta</span></code></a> for snapshot testing. Data pack and resource pack snapshots make it easy to monitor and review changes.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>poetry<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>--insta<span class="w"> </span>review
+</pre></div>
+</div>
+<p>The project must type-check with <a class="reference external" href="https://github.com/microsoft/pyright"><code class="docutils literal notranslate"><span class="pre">pyright</span></code></a>. If you're using VSCode the <a class="reference external" href="https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance"><code class="docutils literal notranslate"><span class="pre">pylance</span></code></a> extension should report diagnostics automatically. You can also install the type-checker locally with <code class="docutils literal notranslate"><span class="pre">npm</span> <span class="pre">install</span></code> and run it from the command-line.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>npm<span class="w"> </span>run<span class="w"> </span>watch
+$<span class="w"> </span>npm<span class="w"> </span>run<span class="w"> </span>check
+</pre></div>
+</div>
+<p>The code follows the <a class="reference external" href="https://github.com/psf/black"><code class="docutils literal notranslate"><span class="pre">black</span></code></a> code style. Import statements are sorted with <a class="reference external" href="https://pycqa.github.io/isort/"><code class="docutils literal notranslate"><span class="pre">isort</span></code></a>.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>poetry<span class="w"> </span>run<span class="w"> </span>isort<span class="w"> </span>beet<span class="w"> </span>tests
+$<span class="w"> </span>poetry<span class="w"> </span>run<span class="w"> </span>black<span class="w"> </span>beet<span class="w"> </span>tests
+$<span class="w"> </span>poetry<span class="w"> </span>run<span class="w"> </span>black<span class="w"> </span>--check<span class="w"> </span>beet<span class="w"> </span>tests
+</pre></div>
+</div>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="getting_started/">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Getting Started</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2025
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Beet documentation</a><ul>
+<li><a class="reference internal" href="#introduction">Introduction</a><ul>
+<li><a class="reference internal" href="#screencasts">Screencasts</a></li>
+<li><a class="reference internal" href="#library">Library</a></li>
+<li><a class="reference internal" href="#toolchain">Toolchain</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#installation">Installation</a></li>
+<li><a class="reference internal" href="#contributing">Contributing</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="#" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/scripts/furo.js"></script>
+    <script src="_static/scripts/furo.js"></script>
+    <script src="_static/tabs.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+    </body>
+</html>

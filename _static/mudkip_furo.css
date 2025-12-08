@@ -1,0 +1,27 @@
+.cell_input,
+.cell_output .output {
+  border: none !important;
+  background: none !important;
+}
+
+.cell_output {
+  border: none !important;
+}
+
+.cell_output .output.text_plain,
+.cell_output .output.traceback,
+.cell_output .output.stream,
+.cell_output .output.stderr {
+  margin: -1rem 0 0 0;
+}
+
+.cell_output .output + .output.text_plain,
+.cell_output .output + .output.traceback,
+.cell_output .output + .output.stream,
+.cell_output .output + .output.stderr {
+  margin: 0;
+}
+
+.cell_output .output .highlight {
+  background: none;
+}

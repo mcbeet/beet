@@ -1,0 +1,333 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+<link rel="index" title="Index" href="../genindex/" /><link rel="search" title="Search" href="../search/" /><link rel="next" title="General overview" href="../overview/" /><link rel="prev" title="Plugins" href="../getting_started/plugins/" />
+        <link rel="canonical" href="https://mcbeet.dev/rationale.html" />
+
+    <link rel="shortcut icon" href="../_static/favicon.png"/><!-- Generated with Sphinx 5.3.0 and Furo 2022.12.07 -->
+        <title>Rationale - Beet documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=91d0f0d1c444bdcb17a68e833c7a53903343c195" />
+    <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mudkip_furo.css" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../"><div class="brand">Beet documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand centered" href="../">
+  
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo" src="../_static/beet_logo.png" alt="Logo"/>
+  </div>
+  
+  
+</a><form class="sidebar-search-container" method="get" action="../search/" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul class="current">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../getting_started/">Getting Started</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../getting_started/plugins/">Plugins</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Rationale</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview/">General overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog/">Changelog</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Project links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/mcbeet/beet">GitHub Repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/beet">PyPI Package</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://discord.gg/98MdSGMm8j">Beet Discord</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <section id="rationale">
+<h1>Rationale<a class="headerlink" href="#rationale" title="Permalink to this heading">#</a></h1>
+<p>Data packs and resource packs were introduced by Mojang to make hard-coded logic data-driven. This turned Minecraft into an incredible parametric sandbox, where most aspects of the vanilla experience can be overridden at will by players. As a result, data packs and resource packs naturally became the primary entry point for customizing Minecraft and over time, they gained an impressive number of features that now make it possible to implement almost any game mechanic imaginable using a resource pack and a data pack.</p>
+<p>However, by design, Minecraft packs are not meant to be ergonomic for developers in the technical community. The format is constrained by the following requirements:</p>
+<ul class="simple">
+<li><p>Data packs and resource packs should be simple and easily loadable by Minecraft. Mojang could introduce features targeted to developers to make their lives easier but it would affect loading times for all players. This means that there's an upper bound when it comes to complexity.</p></li>
+<li><p>Data packs and resource packs should be interoperable. Minecraft needs to be able to combine and merge resources from multiple packs, and the &quot;simplicity constraint&quot; limits the affordable strategies for doing that.</p></li>
+</ul>
+<p>This results in a simple and straightforward distribution format that happens to be pretty easily approachable despite not being optimized for developer experience.</p>
+<section id="data-pack-tooling">
+<h2>Data pack tooling<a class="headerlink" href="#data-pack-tooling" title="Permalink to this heading">#</a></h2>
+<p>As creators become more and more ambitious, data packs become harder and harder to reason about due to the very limited abstractions available. The community is tackling the problem with tooling that alleviates some of the common use-cases. The ecosystem flourished with tons of generators, and a wide variety of projects from command pre-processors to frameworks of all kinds and full-blown programming languages.</p>
+<p>The problem is that these efforts are mostly disparate, and some of these tools end up having to re-implement the same things to develop their value proposition.</p>
+<p>It's also important to understand that they all have their strength and weaknesses and that depending on your use case some tools will provide more suitable abstractions than others. However, it's usually pretty difficult to use them together because the interoperability is generally quite poor due to the different toolchains. As a result, creators often need to compromise when a combination of tools would provide the ideal workflow.</p>
+</section>
+<section id="what-s-a-development-kit-for-data-packs-anyway">
+<h2>What's a development kit for data packs anyway?<a class="headerlink" href="#what-s-a-development-kit-for-data-packs-anyway" title="Permalink to this heading">#</a></h2>
+<p>The term &quot;development kit&quot; is technically the most accurate way to describe <code class="docutils literal notranslate"><span class="pre">beet</span></code> but it sounds slightly obscure. Since you can't directly map the term &quot;development kit&quot; to a specific use case it can take some time to wrap your head around it. Projects with a more bounded scope like &quot;command pre-processor&quot; or &quot;framework for writing commands in TypeScript&quot; are easier to grasp because they address a specific high-level need. <code class="docutils literal notranslate"><span class="pre">beet</span></code> is a level below that. It's a platform on top of which you can build and integrate any of the tools or frameworks you might need to streamline pack development.</p>
+<p>One analogy would be with the Java SDK. When you want to make programs in Java you install the JDK (Java Development Kit) which contains your standard library as well as tools for building your projects. <code class="docutils literal notranslate"><span class="pre">beet</span></code> is similar. The library contains primitives for working with data packs and resource packs programmatically, and you use the <code class="docutils literal notranslate"><span class="pre">beet</span></code> toolchain to build your projects.</p>
+<p>In practice, this means that <code class="docutils literal notranslate"><span class="pre">beet</span></code> is here to introduce a build step and rescue you from developing directly in your <code class="docutils literal notranslate"><span class="pre">.minecraft</span></code> folder. By default, the <code class="docutils literal notranslate"><span class="pre">beet</span></code> pipeline is a simple pass-through. You tell it to load your data pack and resource pack and it will output it in your development world or wherever you want. Even without introducing any new concept compared to regular data pack development, it's already much more ergonomic since you can have your data pack and resource pack side by side in the same directory under version control. It also lets you easily experiment with different worlds, and even benefit from live data pack reloading with the <code class="docutils literal notranslate"><span class="pre">beet</span> <span class="pre">watch</span> <span class="pre">--reload</span></code> command.</p>
+<p>Of course, the whole point of introducing a build step is that after loading your data pack, it lets you do more stuff. For example, it can help you automate releases and versioning now that there's a clear separation between your project sources and what you're going to publish.</p>
+</section>
+<section id="a-unified-build-process">
+<h2>A unified build process<a class="headerlink" href="#a-unified-build-process" title="Permalink to this heading">#</a></h2>
+<p>Data packs aren't optimized for developer experience so you often end up having to write a lot of repetitive code or use external generators. Depending on your use case, you may already have custom scripts that let you automate things. This quickly becomes a nightmare to maintain, and it clutters your workspace by making you navigate through lots of files that you wouldn't even edit manually anyway. <code class="docutils literal notranslate"><span class="pre">beet</span></code> makes it easy to make your project data-driven by letting you write plugins that operate on the output data pack and resource pack. You can think of the <code class="docutils literal notranslate"><span class="pre">beet</span></code> pipeline as a little conveyor belt that transports your data pack through a factory. Along the way, plugins can analyze, apply transformations, and generate anything that you wouldn't want to write manually.</p>
+<p>The plugin system is also what makes it possible to write higher-level tools and integrate external utilities into your build process. The <code class="docutils literal notranslate"><span class="pre">beet</span></code> ecosystem has been growing steadily and there are now really useful projects like <a class="reference external" href="https://github.com/mcbeet/mecha"><code class="docutils literal notranslate"><span class="pre">mecha</span></code></a> and <a class="reference external" href="https://github.com/mcbeet/lectern"><code class="docutils literal notranslate"><span class="pre">lectern</span></code></a> that leverage <code class="docutils literal notranslate"><span class="pre">beet</span></code> to extend the command syntax and provide a document-based authoring format for data packs and resource packs.</p>
+<p>The core idea behind the <code class="docutils literal notranslate"><span class="pre">beet</span></code> pipeline is that since different projects can have widely different requirements, it should be able to act as an interoperability layer between existing tools to let you set up a cohesive build system without compromising. This is implemented through merging by using data packs as a sort of &quot;lingua franca&quot; emitted and understood by pretty much everything built by the community.</p>
+<p>If you're familiar with web development, you could compare <code class="docutils literal notranslate"><span class="pre">beet</span></code> to <code class="docutils literal notranslate"><span class="pre">webpack</span></code> in the sense that it lets you process and bundle separate sources into a production package. For example, <code class="docutils literal notranslate"><span class="pre">beet</span></code> integrates with <a class="reference external" href="https://www.sandstone.dev/"><code class="docutils literal notranslate"><span class="pre">sandstone</span></code></a>, which is a Node.js/TypeScript framework for writing commands. <code class="docutils literal notranslate"><span class="pre">beet</span></code> can run <code class="docutils literal notranslate"><span class="pre">sandstone</span></code> as part of your build and merge the generated data pack with anything else you might need.</p>
+<p>Another implication of the unified pipeline is that new utilities don't need to reinvent the wheel. They can leverage the toolchain and <code class="docutils literal notranslate"><span class="pre">beet</span></code> primitives to simplify their implementation. It also makes it easier for the end-user thanks to the seamless interoperability and the friendly development workflow.</p>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="../overview/">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">General overview</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="../getting_started/plugins/">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Plugins</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2025
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Rationale</a><ul>
+<li><a class="reference internal" href="#data-pack-tooling">Data pack tooling</a></li>
+<li><a class="reference internal" href="#what-s-a-development-kit-for-data-packs-anyway">What's a development kit for data packs anyway?</a></li>
+<li><a class="reference internal" href="#a-unified-build-process">A unified build process</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/scripts/furo.js"></script>
+    <script src="../_static/scripts/furo.js"></script>
+    <script src="../_static/tabs.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+    </body>
+</html>
