@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v0.50.0-beta.3 (2025-12-08)
+
+### Bug Fixes
+
+- Skip version released from old repo
+  ([`762ee6c`](https://github.com/mcbeet/beet/commit/762ee6ca4d649d101714fe73c57f23dd79f86bcf))
+
+
 ## v0.50.0-beta.2 (2025-11-15)
 
 ### Bug Fixes
