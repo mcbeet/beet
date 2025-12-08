@@ -6359,6 +6359,35 @@
       },
       "required_level": 2
     },
+    "fetchprofile": {
+      "type": "literal",
+      "children": {
+        "id": {
+          "type": "literal",
+          "children": {
+            "id": {
+              "type": "argument",
+              "executable": true,
+              "parser": "minecraft:uuid"
+            }
+          }
+        },
+        "name": {
+          "type": "literal",
+          "children": {
+            "name": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:string",
+              "properties": {
+                "type": "greedy"
+              }
+            }
+          }
+        }
+      },
+      "required_level": 2
+    },
     "fill": {
       "type": "literal",
       "children": {
@@ -6632,6 +6661,17 @@
     "gamerule": {
       "type": "literal",
       "children": {
+        "allowEnteringNetherUsingPortals": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
         "allowFireTicksAwayFromPlayer": {
           "type": "literal",
           "children": {
@@ -6666,6 +6706,17 @@
           "executable": true
         },
         "commandBlockOutput": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "commandBlocksEnabled": {
           "type": "literal",
           "children": {
             "value": {
@@ -7120,6 +7171,17 @@
           },
           "executable": true
         },
+        "pvp": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
         "randomTickSpeed": {
           "type": "literal",
           "children": {
@@ -7175,17 +7237,13 @@
           },
           "executable": true
         },
-        "spawnChunkRadius": {
+        "spawnMonsters": {
           "type": "literal",
           "children": {
             "value": {
               "type": "argument",
               "executable": true,
-              "parser": "brigadier:integer",
-              "properties": {
-                "max": 32,
-                "min": 0
-              }
+              "parser": "brigadier:bool"
             }
           },
           "executable": true
@@ -7197,6 +7255,17 @@
               "type": "argument",
               "executable": true,
               "parser": "brigadier:integer"
+            }
+          },
+          "executable": true
+        },
+        "spawnerBlocksEnabled": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
             }
           },
           "executable": true
@@ -10081,10 +10150,10 @@
         "pos": {
           "type": "argument",
           "children": {
-            "angle": {
+            "rotation": {
               "type": "argument",
               "executable": true,
-              "parser": "minecraft:angle"
+              "parser": "minecraft:rotation"
             }
           },
           "executable": true,
@@ -10103,10 +10172,10 @@
             "pos": {
               "type": "argument",
               "children": {
-                "angle": {
+                "rotation": {
                   "type": "argument",
                   "executable": true,
-                  "parser": "minecraft:angle"
+                  "parser": "minecraft:rotation"
                 }
               },
               "executable": true,
