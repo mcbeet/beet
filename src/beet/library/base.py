@@ -87,7 +87,7 @@ from beet.toolchain.config import FormatSpecifier
 
 from .utils import list_extensions, list_origin_folders
 
-LATEST_MINECRAFT_VERSION: str = "1.21.10"
+LATEST_MINECRAFT_VERSION: str = "1.21.11"
 
 
 T = TypeVar("T")

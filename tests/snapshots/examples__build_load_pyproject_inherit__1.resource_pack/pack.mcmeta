@@ -1,11 +1,11 @@
 {
     "pack": {
         "min_format": [
-            69,
+            75,
             0
         ],
         "max_format": [
-            69,
+            75,
             0
         ],
         "description": "Demo project\nAuthor: Valentin Berlier <berlier.v@gmail.com>\nVersion: 0.1.0"
