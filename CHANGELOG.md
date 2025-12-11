@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v0.113.0-beta.10 (2025-12-11)
+
+### Features
+
+- Use full minecraft version to get pack_format ([#488](https://github.com/mcbeet/beet/pull/488),
+  [`5a51958`](https://github.com/mcbeet/beet/commit/5a51958a4bd575718b7c557e30f8b9142225957c))
+
+
 ## v0.113.0-beta.9 (2025-12-03)
 
 ### Bug Fixes
