@@ -142,6 +142,13 @@
             }
           }
         }
+      },
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "gamemasters"
+        }
       }
     },
     "attribute": {
@@ -269,6 +276,13 @@
             "amount": "single"
           }
         }
+      },
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "gamemasters"
+        }
       }
     },
     "ban": {
@@ -285,6 +299,13 @@
           },
           "executable": true,
           "parser": "minecraft:game_profile"
+        }
+      },
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "admins"
         }
       }
     },
@@ -306,6 +327,13 @@
             "type": "word"
           }
         }
+      },
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "admins"
+        }
       }
     },
     "banlist": {
@@ -320,7 +348,14 @@
           "executable": true
         }
       },
-      "executable": true
+      "executable": true,
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "admins"
+        }
+      }
     },
     "bossbar": {
       "type": "literal",
@@ -512,6 +547,13 @@
             }
           }
         }
+      },
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "gamemasters"
+        }
       }
     },
     "clear": {
@@ -544,7 +586,14 @@
           }
         }
       },
-      "executable": true
+      "executable": true,
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "gamemasters"
+        }
+      }
     },
     "clone": {
       "type": "literal",
@@ -874,6 +923,13 @@
             }
           }
         }
+      },
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "gamemasters"
+        }
       }
     },
     "damage": {
@@ -948,6 +1004,13 @@
             "type": "entities",
             "amount": "single"
           }
+        }
+      },
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "gamemasters"
         }
       }
     },
@@ -3882,11 +3945,44 @@
             }
           }
         }
+      },
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "gamemasters"
+        }
       }
     },
     "datapack": {
       "type": "literal",
       "children": {
+        "create": {
+          "type": "literal",
+          "children": {
+            "id": {
+              "type": "argument",
+              "children": {
+                "description": {
+                  "type": "argument",
+                  "executable": true,
+                  "parser": "minecraft:component"
+                }
+              },
+              "parser": "brigadier:string",
+              "properties": {
+                "type": "phrase"
+              }
+            }
+          },
+          "permissions": {
+            "type": "minecraft:require",
+            "permission": {
+              "type": "minecraft:command_level",
+              "level": "owners"
+            }
+          }
+        },
         "disable": {
           "type": "literal",
           "children": {
@@ -3963,6 +4059,13 @@
           },
           "executable": true
         }
+      },
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "gamemasters"
+        }
       }
     },
     "debug": {
@@ -3976,6 +4079,13 @@
               "executable": true,
               "parser": "minecraft:function"
             }
+          },
+          "permissions": {
+            "type": "minecraft:require",
+            "permission": {
+              "type": "minecraft:command_level",
+              "level": "admins"
+            }
           }
         },
         "start": {
@@ -3985,6 +4095,13 @@
         "stop": {
           "type": "literal",
           "executable": true
+        }
+      },
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "admins"
         }
       }
     },
@@ -3996,6 +4113,13 @@
           "executable": true,
           "parser": "minecraft:gamemode"
         }
+      },
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "gamemasters"
+        }
       }
     },
     "deop": {
@@ -4005,6 +4129,59 @@
           "type": "argument",
           "executable": true,
           "parser": "minecraft:game_profile"
+        }
+      },
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "admins"
+        }
+      }
+    },
+    "dialog": {
+      "type": "literal",
+      "children": {
+        "clear": {
+          "type": "literal",
+          "children": {
+            "targets": {
+              "type": "argument",
+              "executable": true,
+              "parser": "minecraft:entity",
+              "properties": {
+                "type": "players",
+                "amount": "multiple"
+              }
+            }
+          }
+        },
+        "show": {
+          "type": "literal",
+          "children": {
+            "targets": {
+              "type": "argument",
+              "children": {
+                "dialog": {
+                  "type": "argument",
+                  "executable": true,
+                  "parser": "minecraft:dialog"
+                }
+              },
+              "parser": "minecraft:entity",
+              "properties": {
+                "type": "players",
+                "amount": "multiple"
+              }
+            }
+          }
+        }
+      },
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "gamemasters"
         }
       }
     },
@@ -4028,7 +4205,14 @@
           "executable": true
         }
       },
-      "executable": true
+      "executable": true,
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "gamemasters"
+        }
+      }
     },
     "effect": {
       "type": "literal",
@@ -4132,6 +4316,13 @@
             }
           }
         }
+      },
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "gamemasters"
+        }
       }
     },
     "enchant": {
@@ -4164,6 +4355,13 @@
             "type": "entities",
             "amount": "multiple"
           }
+        }
+      },
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "gamemasters"
         }
       }
     },
@@ -4674,6 +4872,25 @@
                   "properties": {
                     "amount": "single"
                   }
+                }
+              }
+            },
+            "stopwatch": {
+              "type": "literal",
+              "children": {
+                "id": {
+                  "type": "argument",
+                  "children": {
+                    "range": {
+                      "type": "argument",
+                      "executable": true,
+                      "parser": "minecraft:float_range",
+                      "redirect": [
+                        "execute"
+                      ]
+                    }
+                  },
+                  "parser": "minecraft:resource_location"
                 }
               }
             }
@@ -5891,8 +6108,34 @@
                   }
                 }
               }
+            },
+            "stopwatch": {
+              "type": "literal",
+              "children": {
+                "id": {
+                  "type": "argument",
+                  "children": {
+                    "range": {
+                      "type": "argument",
+                      "executable": true,
+                      "parser": "minecraft:float_range",
+                      "redirect": [
+                        "execute"
+                      ]
+                    }
+                  },
+                  "parser": "minecraft:resource_location"
+                }
+              }
             }
           }
+        }
+      },
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "gamemasters"
         }
       }
     },
@@ -5985,6 +6228,48 @@
             }
           }
         }
+      },
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "gamemasters"
+        }
+      }
+    },
+    "fetchprofile": {
+      "type": "literal",
+      "children": {
+        "id": {
+          "type": "literal",
+          "children": {
+            "id": {
+              "type": "argument",
+              "executable": true,
+              "parser": "minecraft:uuid"
+            }
+          }
+        },
+        "name": {
+          "type": "literal",
+          "children": {
+            "name": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:string",
+              "properties": {
+                "type": "greedy"
+              }
+            }
+          }
+        }
+      },
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "gamemasters"
+        }
       }
     },
     "fill": {
@@ -6036,6 +6321,13 @@
           },
           "parser": "minecraft:block_pos"
         }
+      },
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "gamemasters"
+        }
       }
     },
     "fillbiome": {
@@ -6075,6 +6367,13 @@
             }
           },
           "parser": "minecraft:block_pos"
+        }
+      },
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "gamemasters"
         }
       }
     },
@@ -6129,6 +6428,13 @@
               "parser": "minecraft:column_pos"
             }
           }
+        }
+      },
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "gamemasters"
         }
       }
     },
@@ -6207,6 +6513,13 @@
           "executable": true,
           "parser": "minecraft:function"
         }
+      },
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "gamemasters"
+        }
       }
     },
     "gamemode": {
@@ -6228,12 +6541,19 @@
           "executable": true,
           "parser": "minecraft:gamemode"
         }
+      },
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "gamemasters"
+        }
       }
     },
     "gamerule": {
       "type": "literal",
       "children": {
-        "announceAdvancements": {
+        "advance_time": {
           "type": "literal",
           "children": {
             "value": {
@@ -6244,7 +6564,7 @@
           },
           "executable": true
         },
-        "blockExplosionDropDecay": {
+        "advance_weather": {
           "type": "literal",
           "children": {
             "value": {
@@ -6255,7 +6575,7 @@
           },
           "executable": true
         },
-        "commandBlockOutput": {
+        "allow_entering_nether_using_portals": {
           "type": "literal",
           "children": {
             "value": {
@@ -6266,18 +6586,7 @@
           },
           "executable": true
         },
-        "commandModificationBlockLimit": {
-          "type": "literal",
-          "children": {
-            "value": {
-              "type": "argument",
-              "executable": true,
-              "parser": "brigadier:integer"
-            }
-          },
-          "executable": true
-        },
-        "disableElytraMovementCheck": {
+        "block_drops": {
           "type": "literal",
           "children": {
             "value": {
@@ -6288,7 +6597,7 @@
           },
           "executable": true
         },
-        "disableRaids": {
+        "block_explosion_drop_decay": {
           "type": "literal",
           "children": {
             "value": {
@@ -6299,7 +6608,7 @@
           },
           "executable": true
         },
-        "doDaylightCycle": {
+        "command_block_output": {
           "type": "literal",
           "children": {
             "value": {
@@ -6310,7 +6619,7 @@
           },
           "executable": true
         },
-        "doEntityDrops": {
+        "command_blocks_work": {
           "type": "literal",
           "children": {
             "value": {
@@ -6321,7 +6630,7 @@
           },
           "executable": true
         },
-        "doFireTick": {
+        "drowning_damage": {
           "type": "literal",
           "children": {
             "value": {
@@ -6332,7 +6641,7 @@
           },
           "executable": true
         },
-        "doImmediateRespawn": {
+        "elytra_movement_check": {
           "type": "literal",
           "children": {
             "value": {
@@ -6343,7 +6652,7 @@
           },
           "executable": true
         },
-        "doInsomnia": {
+        "ender_pearls_vanish_on_death": {
           "type": "literal",
           "children": {
             "value": {
@@ -6354,7 +6663,7 @@
           },
           "executable": true
         },
-        "doLimitedCrafting": {
+        "entity_drops": {
           "type": "literal",
           "children": {
             "value": {
@@ -6365,7 +6674,7 @@
           },
           "executable": true
         },
-        "doMobLoot": {
+        "fall_damage": {
           "type": "literal",
           "children": {
             "value": {
@@ -6376,7 +6685,7 @@
           },
           "executable": true
         },
-        "doMobSpawning": {
+        "fire_damage": {
           "type": "literal",
           "children": {
             "value": {
@@ -6387,348 +6696,7 @@
           },
           "executable": true
         },
-        "doPatrolSpawning": {
-          "type": "literal",
-          "children": {
-            "value": {
-              "type": "argument",
-              "executable": true,
-              "parser": "brigadier:bool"
-            }
-          },
-          "executable": true
-        },
-        "doTileDrops": {
-          "type": "literal",
-          "children": {
-            "value": {
-              "type": "argument",
-              "executable": true,
-              "parser": "brigadier:bool"
-            }
-          },
-          "executable": true
-        },
-        "doTraderSpawning": {
-          "type": "literal",
-          "children": {
-            "value": {
-              "type": "argument",
-              "executable": true,
-              "parser": "brigadier:bool"
-            }
-          },
-          "executable": true
-        },
-        "doVinesSpread": {
-          "type": "literal",
-          "children": {
-            "value": {
-              "type": "argument",
-              "executable": true,
-              "parser": "brigadier:bool"
-            }
-          },
-          "executable": true
-        },
-        "doWardenSpawning": {
-          "type": "literal",
-          "children": {
-            "value": {
-              "type": "argument",
-              "executable": true,
-              "parser": "brigadier:bool"
-            }
-          },
-          "executable": true
-        },
-        "doWeatherCycle": {
-          "type": "literal",
-          "children": {
-            "value": {
-              "type": "argument",
-              "executable": true,
-              "parser": "brigadier:bool"
-            }
-          },
-          "executable": true
-        },
-        "drowningDamage": {
-          "type": "literal",
-          "children": {
-            "value": {
-              "type": "argument",
-              "executable": true,
-              "parser": "brigadier:bool"
-            }
-          },
-          "executable": true
-        },
-        "enderPearlsVanishOnDeath": {
-          "type": "literal",
-          "children": {
-            "value": {
-              "type": "argument",
-              "executable": true,
-              "parser": "brigadier:bool"
-            }
-          },
-          "executable": true
-        },
-        "fallDamage": {
-          "type": "literal",
-          "children": {
-            "value": {
-              "type": "argument",
-              "executable": true,
-              "parser": "brigadier:bool"
-            }
-          },
-          "executable": true
-        },
-        "fireDamage": {
-          "type": "literal",
-          "children": {
-            "value": {
-              "type": "argument",
-              "executable": true,
-              "parser": "brigadier:bool"
-            }
-          },
-          "executable": true
-        },
-        "forgiveDeadPlayers": {
-          "type": "literal",
-          "children": {
-            "value": {
-              "type": "argument",
-              "executable": true,
-              "parser": "brigadier:bool"
-            }
-          },
-          "executable": true
-        },
-        "freezeDamage": {
-          "type": "literal",
-          "children": {
-            "value": {
-              "type": "argument",
-              "executable": true,
-              "parser": "brigadier:bool"
-            }
-          },
-          "executable": true
-        },
-        "globalSoundEvents": {
-          "type": "literal",
-          "children": {
-            "value": {
-              "type": "argument",
-              "executable": true,
-              "parser": "brigadier:bool"
-            }
-          },
-          "executable": true
-        },
-        "keepInventory": {
-          "type": "literal",
-          "children": {
-            "value": {
-              "type": "argument",
-              "executable": true,
-              "parser": "brigadier:bool"
-            }
-          },
-          "executable": true
-        },
-        "lavaSourceConversion": {
-          "type": "literal",
-          "children": {
-            "value": {
-              "type": "argument",
-              "executable": true,
-              "parser": "brigadier:bool"
-            }
-          },
-          "executable": true
-        },
-        "logAdminCommands": {
-          "type": "literal",
-          "children": {
-            "value": {
-              "type": "argument",
-              "executable": true,
-              "parser": "brigadier:bool"
-            }
-          },
-          "executable": true
-        },
-        "maxCommandChainLength": {
-          "type": "literal",
-          "children": {
-            "value": {
-              "type": "argument",
-              "executable": true,
-              "parser": "brigadier:integer"
-            }
-          },
-          "executable": true
-        },
-        "maxCommandForkCount": {
-          "type": "literal",
-          "children": {
-            "value": {
-              "type": "argument",
-              "executable": true,
-              "parser": "brigadier:integer"
-            }
-          },
-          "executable": true
-        },
-        "maxEntityCramming": {
-          "type": "literal",
-          "children": {
-            "value": {
-              "type": "argument",
-              "executable": true,
-              "parser": "brigadier:integer"
-            }
-          },
-          "executable": true
-        },
-        "mobExplosionDropDecay": {
-          "type": "literal",
-          "children": {
-            "value": {
-              "type": "argument",
-              "executable": true,
-              "parser": "brigadier:bool"
-            }
-          },
-          "executable": true
-        },
-        "mobGriefing": {
-          "type": "literal",
-          "children": {
-            "value": {
-              "type": "argument",
-              "executable": true,
-              "parser": "brigadier:bool"
-            }
-          },
-          "executable": true
-        },
-        "naturalRegeneration": {
-          "type": "literal",
-          "children": {
-            "value": {
-              "type": "argument",
-              "executable": true,
-              "parser": "brigadier:bool"
-            }
-          },
-          "executable": true
-        },
-        "playersNetherPortalCreativeDelay": {
-          "type": "literal",
-          "children": {
-            "value": {
-              "type": "argument",
-              "executable": true,
-              "parser": "brigadier:integer"
-            }
-          },
-          "executable": true
-        },
-        "playersNetherPortalDefaultDelay": {
-          "type": "literal",
-          "children": {
-            "value": {
-              "type": "argument",
-              "executable": true,
-              "parser": "brigadier:integer"
-            }
-          },
-          "executable": true
-        },
-        "playersSleepingPercentage": {
-          "type": "literal",
-          "children": {
-            "value": {
-              "type": "argument",
-              "executable": true,
-              "parser": "brigadier:integer"
-            }
-          },
-          "executable": true
-        },
-        "projectilesCanBreakBlocks": {
-          "type": "literal",
-          "children": {
-            "value": {
-              "type": "argument",
-              "executable": true,
-              "parser": "brigadier:bool"
-            }
-          },
-          "executable": true
-        },
-        "randomTickSpeed": {
-          "type": "literal",
-          "children": {
-            "value": {
-              "type": "argument",
-              "executable": true,
-              "parser": "brigadier:integer"
-            }
-          },
-          "executable": true
-        },
-        "reducedDebugInfo": {
-          "type": "literal",
-          "children": {
-            "value": {
-              "type": "argument",
-              "executable": true,
-              "parser": "brigadier:bool"
-            }
-          },
-          "executable": true
-        },
-        "sendCommandFeedback": {
-          "type": "literal",
-          "children": {
-            "value": {
-              "type": "argument",
-              "executable": true,
-              "parser": "brigadier:bool"
-            }
-          },
-          "executable": true
-        },
-        "showDeathMessages": {
-          "type": "literal",
-          "children": {
-            "value": {
-              "type": "argument",
-              "executable": true,
-              "parser": "brigadier:bool"
-            }
-          },
-          "executable": true
-        },
-        "snowAccumulationHeight": {
-          "type": "literal",
-          "children": {
-            "value": {
-              "type": "argument",
-              "executable": true,
-              "parser": "brigadier:integer"
-            }
-          },
-          "executable": true
-        },
-        "spawnChunkRadius": {
+        "fire_spread_radius_around_player": {
           "type": "literal",
           "children": {
             "value": {
@@ -6736,25 +6704,198 @@
               "executable": true,
               "parser": "brigadier:integer",
               "properties": {
-                "max": 32,
+                "min": -1
+              }
+            }
+          },
+          "executable": true
+        },
+        "forgive_dead_players": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "freeze_damage": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "global_sound_events": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "immediate_respawn": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "keep_inventory": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "lava_source_conversion": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "limited_crafting": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "locator_bar": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "log_admin_commands": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "max_block_modifications": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:integer",
+              "properties": {
+                "min": 1
+              }
+            }
+          },
+          "executable": true
+        },
+        "max_command_forks": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:integer",
+              "properties": {
                 "min": 0
               }
             }
           },
           "executable": true
         },
-        "spawnRadius": {
+        "max_command_sequence_length": {
           "type": "literal",
           "children": {
             "value": {
               "type": "argument",
               "executable": true,
-              "parser": "brigadier:integer"
+              "parser": "brigadier:integer",
+              "properties": {
+                "min": 0
+              }
             }
           },
           "executable": true
         },
-        "spectatorsGenerateChunks": {
+        "max_entity_cramming": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:integer",
+              "properties": {
+                "min": 0
+              }
+            }
+          },
+          "executable": true
+        },
+        "max_minecart_speed": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:integer",
+              "properties": {
+                "max": 1000,
+                "min": 1
+              }
+            }
+          },
+          "executable": true
+        },
+        "max_snow_accumulation_height": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:integer",
+              "properties": {
+                "max": 8,
+                "min": 0
+              }
+            }
+          },
+          "executable": true
+        },
+        "minecraft:advance_time": {
           "type": "literal",
           "children": {
             "value": {
@@ -6765,7 +6906,7 @@
           },
           "executable": true
         },
-        "tntExplosionDropDecay": {
+        "minecraft:advance_weather": {
           "type": "literal",
           "children": {
             "value": {
@@ -6776,7 +6917,7 @@
           },
           "executable": true
         },
-        "universalAnger": {
+        "minecraft:allow_entering_nether_using_portals": {
           "type": "literal",
           "children": {
             "value": {
@@ -6787,7 +6928,7 @@
           },
           "executable": true
         },
-        "waterSourceConversion": {
+        "minecraft:block_drops": {
           "type": "literal",
           "children": {
             "value": {
@@ -6797,6 +6938,1001 @@
             }
           },
           "executable": true
+        },
+        "minecraft:block_explosion_drop_decay": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "minecraft:command_block_output": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "minecraft:command_blocks_work": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "minecraft:drowning_damage": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "minecraft:elytra_movement_check": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "minecraft:ender_pearls_vanish_on_death": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "minecraft:entity_drops": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "minecraft:fall_damage": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "minecraft:fire_damage": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "minecraft:fire_spread_radius_around_player": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:integer",
+              "properties": {
+                "min": -1
+              }
+            }
+          },
+          "executable": true
+        },
+        "minecraft:forgive_dead_players": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "minecraft:freeze_damage": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "minecraft:global_sound_events": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "minecraft:immediate_respawn": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "minecraft:keep_inventory": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "minecraft:lava_source_conversion": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "minecraft:limited_crafting": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "minecraft:locator_bar": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "minecraft:log_admin_commands": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "minecraft:max_block_modifications": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:integer",
+              "properties": {
+                "min": 1
+              }
+            }
+          },
+          "executable": true
+        },
+        "minecraft:max_command_forks": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:integer",
+              "properties": {
+                "min": 0
+              }
+            }
+          },
+          "executable": true
+        },
+        "minecraft:max_command_sequence_length": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:integer",
+              "properties": {
+                "min": 0
+              }
+            }
+          },
+          "executable": true
+        },
+        "minecraft:max_entity_cramming": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:integer",
+              "properties": {
+                "min": 0
+              }
+            }
+          },
+          "executable": true
+        },
+        "minecraft:max_minecart_speed": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:integer",
+              "properties": {
+                "max": 1000,
+                "min": 1
+              }
+            }
+          },
+          "executable": true
+        },
+        "minecraft:max_snow_accumulation_height": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:integer",
+              "properties": {
+                "max": 8,
+                "min": 0
+              }
+            }
+          },
+          "executable": true
+        },
+        "minecraft:mob_drops": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "minecraft:mob_explosion_drop_decay": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "minecraft:mob_griefing": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "minecraft:natural_health_regeneration": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "minecraft:player_movement_check": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "minecraft:players_nether_portal_creative_delay": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:integer",
+              "properties": {
+                "min": 0
+              }
+            }
+          },
+          "executable": true
+        },
+        "minecraft:players_nether_portal_default_delay": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:integer",
+              "properties": {
+                "min": 0
+              }
+            }
+          },
+          "executable": true
+        },
+        "minecraft:players_sleeping_percentage": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:integer",
+              "properties": {
+                "min": 0
+              }
+            }
+          },
+          "executable": true
+        },
+        "minecraft:projectiles_can_break_blocks": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "minecraft:pvp": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "minecraft:raids": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "minecraft:random_tick_speed": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:integer",
+              "properties": {
+                "min": 0
+              }
+            }
+          },
+          "executable": true
+        },
+        "minecraft:reduced_debug_info": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "minecraft:respawn_radius": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:integer",
+              "properties": {
+                "min": 0
+              }
+            }
+          },
+          "executable": true
+        },
+        "minecraft:send_command_feedback": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "minecraft:show_advancement_messages": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "minecraft:show_death_messages": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "minecraft:spawn_mobs": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "minecraft:spawn_monsters": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "minecraft:spawn_patrols": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "minecraft:spawn_phantoms": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "minecraft:spawn_wandering_traders": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "minecraft:spawn_wardens": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "minecraft:spawner_blocks_work": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "minecraft:spectators_generate_chunks": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "minecraft:spread_vines": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "minecraft:tnt_explodes": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "minecraft:tnt_explosion_drop_decay": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "minecraft:universal_anger": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "minecraft:water_source_conversion": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "mob_drops": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "mob_explosion_drop_decay": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "mob_griefing": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "natural_health_regeneration": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "player_movement_check": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "players_nether_portal_creative_delay": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:integer",
+              "properties": {
+                "min": 0
+              }
+            }
+          },
+          "executable": true
+        },
+        "players_nether_portal_default_delay": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:integer",
+              "properties": {
+                "min": 0
+              }
+            }
+          },
+          "executable": true
+        },
+        "players_sleeping_percentage": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:integer",
+              "properties": {
+                "min": 0
+              }
+            }
+          },
+          "executable": true
+        },
+        "projectiles_can_break_blocks": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "pvp": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "raids": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "random_tick_speed": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:integer",
+              "properties": {
+                "min": 0
+              }
+            }
+          },
+          "executable": true
+        },
+        "reduced_debug_info": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "respawn_radius": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:integer",
+              "properties": {
+                "min": 0
+              }
+            }
+          },
+          "executable": true
+        },
+        "send_command_feedback": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "show_advancement_messages": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "show_death_messages": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "spawn_mobs": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "spawn_monsters": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "spawn_patrols": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "spawn_phantoms": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "spawn_wandering_traders": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "spawn_wardens": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "spawner_blocks_work": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "spectators_generate_chunks": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "spread_vines": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "tnt_explodes": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "tnt_explosion_drop_decay": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "universal_anger": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "water_source_conversion": {
+          "type": "literal",
+          "children": {
+            "value": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        }
+      },
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "gamemasters"
         }
       }
     },
@@ -6827,6 +7963,13 @@
             "type": "players",
             "amount": "multiple"
           }
+        }
+      },
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "gamemasters"
         }
       }
     },
@@ -7095,6 +8238,13 @@
             }
           }
         }
+      },
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "gamemasters"
+        }
       }
     },
     "jfr": {
@@ -7107,6 +8257,13 @@
         "stop": {
           "type": "literal",
           "executable": true
+        }
+      },
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "owners"
         }
       }
     },
@@ -7129,6 +8286,13 @@
             "amount": "multiple"
           }
         }
+      },
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "admins"
+        }
       }
     },
     "kill": {
@@ -7144,7 +8308,14 @@
           }
         }
       },
-      "executable": true
+      "executable": true,
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "gamemasters"
+        }
+      }
     },
     "list": {
       "type": "literal",
@@ -7197,6 +8368,13 @@
               }
             }
           }
+        }
+      },
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "gamemasters"
         }
       }
     },
@@ -7861,6 +9039,13 @@
             }
           }
         }
+      },
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "gamemasters"
+        }
       }
     },
     "me": {
@@ -7901,6 +9086,13 @@
           "executable": true,
           "parser": "minecraft:game_profile"
         }
+      },
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "admins"
+        }
       }
     },
     "pardon": {
@@ -7910,6 +9102,13 @@
           "type": "argument",
           "executable": true,
           "parser": "minecraft:game_profile"
+        }
+      },
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "admins"
         }
       }
     },
@@ -7923,6 +9122,13 @@
           "properties": {
             "type": "word"
           }
+        }
+      },
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "admins"
         }
       }
     },
@@ -7998,6 +9204,13 @@
           "executable": true,
           "parser": "minecraft:particle"
         }
+      },
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "gamemasters"
+        }
       }
     },
     "perf": {
@@ -8010,6 +9223,13 @@
         "stop": {
           "type": "literal",
           "executable": true
+        }
+      },
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "owners"
         }
       }
     },
@@ -8140,6 +9360,13 @@
               "parser": "minecraft:resource_location"
             }
           }
+        }
+      },
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "gamemasters"
         }
       }
     },
@@ -8693,6 +9920,13 @@
           "executable": true,
           "parser": "minecraft:resource_location"
         }
+      },
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "gamemasters"
+        }
       }
     },
     "publish": {
@@ -8722,7 +9956,14 @@
           "parser": "brigadier:bool"
         }
       },
-      "executable": true
+      "executable": true,
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "owners"
+        }
+      }
     },
     "random": {
       "type": "literal",
@@ -8781,6 +10022,13 @@
               "executable": true,
               "parser": "minecraft:resource_location"
             }
+          },
+          "permissions": {
+            "type": "minecraft:require",
+            "permission": {
+              "type": "minecraft:command_level",
+              "level": "gamemasters"
+            }
           }
         },
         "roll": {
@@ -8792,7 +10040,14 @@
                 "sequence": {
                   "type": "argument",
                   "executable": true,
-                  "parser": "minecraft:resource_location"
+                  "parser": "minecraft:resource_location",
+                  "permissions": {
+                    "type": "minecraft:require",
+                    "permission": {
+                      "type": "minecraft:command_level",
+                      "level": "gamemasters"
+                    }
+                  }
                 }
               },
               "executable": true,
@@ -8809,7 +10064,14 @@
                 "sequence": {
                   "type": "argument",
                   "executable": true,
-                  "parser": "minecraft:resource_location"
+                  "parser": "minecraft:resource_location",
+                  "permissions": {
+                    "type": "minecraft:require",
+                    "permission": {
+                      "type": "minecraft:command_level",
+                      "level": "gamemasters"
+                    }
+                  }
                 }
               },
               "executable": true,
@@ -8870,11 +10132,25 @@
             }
           }
         }
+      },
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "gamemasters"
+        }
       }
     },
     "reload": {
       "type": "literal",
-      "executable": true
+      "executable": true,
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "gamemasters"
+        }
+      }
     },
     "return": {
       "type": "literal",
@@ -8890,6 +10166,13 @@
           "type": "argument",
           "executable": true,
           "parser": "brigadier:integer"
+        }
+      },
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "gamemasters"
         }
       }
     },
@@ -8924,6 +10207,71 @@
             "amount": "single"
           }
         }
+      },
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "gamemasters"
+        }
+      }
+    },
+    "rotate": {
+      "type": "literal",
+      "children": {
+        "target": {
+          "type": "argument",
+          "children": {
+            "facing": {
+              "type": "literal",
+              "children": {
+                "entity": {
+                  "type": "literal",
+                  "children": {
+                    "facingEntity": {
+                      "type": "argument",
+                      "children": {
+                        "facingAnchor": {
+                          "type": "argument",
+                          "executable": true,
+                          "parser": "minecraft:entity_anchor"
+                        }
+                      },
+                      "executable": true,
+                      "parser": "minecraft:entity",
+                      "properties": {
+                        "type": "entities",
+                        "amount": "single"
+                      }
+                    }
+                  }
+                },
+                "facingLocation": {
+                  "type": "argument",
+                  "executable": true,
+                  "parser": "minecraft:vec3"
+                }
+              }
+            },
+            "rotation": {
+              "type": "argument",
+              "executable": true,
+              "parser": "minecraft:rotation"
+            }
+          },
+          "parser": "minecraft:entity",
+          "properties": {
+            "type": "entities",
+            "amount": "single"
+          }
+        }
+      },
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "gamemasters"
+        }
       }
     },
     "save-all": {
@@ -8934,15 +10282,36 @@
           "executable": true
         }
       },
-      "executable": true
+      "executable": true,
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "owners"
+        }
+      }
     },
     "save-off": {
       "type": "literal",
-      "executable": true
+      "executable": true,
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "owners"
+        }
+      }
     },
     "save-on": {
       "type": "literal",
-      "executable": true
+      "executable": true,
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "owners"
+        }
+      }
     },
     "say": {
       "type": "literal",
@@ -8951,6 +10320,13 @@
           "type": "argument",
           "executable": true,
           "parser": "minecraft:message"
+        }
+      },
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "gamemasters"
         }
       }
     },
@@ -8998,6 +10374,13 @@
               "parser": "minecraft:function"
             }
           }
+        }
+      },
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "gamemasters"
         }
       }
     },
@@ -9414,11 +10797,25 @@
             }
           }
         }
+      },
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "gamemasters"
+        }
       }
     },
     "seed": {
       "type": "literal",
-      "executable": true
+      "executable": true,
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "gamemasters"
+        }
+      }
     },
     "setblock": {
       "type": "literal",
@@ -9448,6 +10845,13 @@
           },
           "parser": "minecraft:block_pos"
         }
+      },
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "gamemasters"
+        }
       }
     },
     "setidletimeout": {
@@ -9461,6 +10865,13 @@
             "min": 0
           }
         }
+      },
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "admins"
+        }
       }
     },
     "setworldspawn": {
@@ -9469,17 +10880,24 @@
         "pos": {
           "type": "argument",
           "children": {
-            "angle": {
+            "rotation": {
               "type": "argument",
               "executable": true,
-              "parser": "minecraft:angle"
+              "parser": "minecraft:rotation"
             }
           },
           "executable": true,
           "parser": "minecraft:block_pos"
         }
       },
-      "executable": true
+      "executable": true,
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "gamemasters"
+        }
+      }
     },
     "spawnpoint": {
       "type": "literal",
@@ -9490,10 +10908,10 @@
             "pos": {
               "type": "argument",
               "children": {
-                "angle": {
+                "rotation": {
                   "type": "argument",
                   "executable": true,
-                  "parser": "minecraft:angle"
+                  "parser": "minecraft:rotation"
                 }
               },
               "executable": true,
@@ -9508,7 +10926,14 @@
           }
         }
       },
-      "executable": true
+      "executable": true,
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "gamemasters"
+        }
+      }
     },
     "spectate": {
       "type": "literal",
@@ -9534,7 +10959,14 @@
           }
         }
       },
-      "executable": true
+      "executable": true,
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "gamemasters"
+        }
+      }
     },
     "spreadplayers": {
       "type": "literal",
@@ -9604,11 +11036,25 @@
           },
           "parser": "minecraft:vec2"
         }
+      },
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "gamemasters"
+        }
       }
     },
     "stop": {
       "type": "literal",
-      "executable": true
+      "executable": true,
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "owners"
+        }
+      }
     },
     "stopsound": {
       "type": "literal",
@@ -9744,6 +11190,72 @@
             "amount": "multiple"
           }
         }
+      },
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "gamemasters"
+        }
+      }
+    },
+    "stopwatch": {
+      "type": "literal",
+      "children": {
+        "create": {
+          "type": "literal",
+          "children": {
+            "id": {
+              "type": "argument",
+              "executable": true,
+              "parser": "minecraft:resource_location"
+            }
+          }
+        },
+        "query": {
+          "type": "literal",
+          "children": {
+            "id": {
+              "type": "argument",
+              "children": {
+                "scale": {
+                  "type": "argument",
+                  "executable": true,
+                  "parser": "brigadier:double"
+                }
+              },
+              "executable": true,
+              "parser": "minecraft:resource_location"
+            }
+          }
+        },
+        "remove": {
+          "type": "literal",
+          "children": {
+            "id": {
+              "type": "argument",
+              "executable": true,
+              "parser": "minecraft:resource_location"
+            }
+          }
+        },
+        "restart": {
+          "type": "literal",
+          "children": {
+            "id": {
+              "type": "argument",
+              "executable": true,
+              "parser": "minecraft:resource_location"
+            }
+          }
+        }
+      },
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "gamemasters"
+        }
       }
     },
     "summon": {
@@ -9770,6 +11282,13 @@
           "properties": {
             "registry": "minecraft:entity_type"
           }
+        }
+      },
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "gamemasters"
         }
       }
     },
@@ -9815,6 +11334,13 @@
             "type": "entities",
             "amount": "multiple"
           }
+        }
+      },
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "gamemasters"
         }
       }
     },
@@ -10039,6 +11565,13 @@
             }
           }
         }
+      },
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "gamemasters"
+        }
       }
     },
     "teammsg": {
@@ -10130,6 +11663,13 @@
             "amount": "multiple"
           }
         }
+      },
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "gamemasters"
+        }
       }
     },
     "tell": {
@@ -10155,6 +11695,328 @@
             "type": "players",
             "amount": "multiple"
           }
+        }
+      },
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "gamemasters"
+        }
+      }
+    },
+    "test": {
+      "type": "literal",
+      "children": {
+        "clearall": {
+          "type": "literal",
+          "children": {
+            "radius": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:integer"
+            }
+          },
+          "executable": true
+        },
+        "clearthat": {
+          "type": "literal",
+          "executable": true
+        },
+        "clearthese": {
+          "type": "literal",
+          "executable": true
+        },
+        "create": {
+          "type": "literal",
+          "children": {
+            "id": {
+              "type": "argument",
+              "children": {
+                "width": {
+                  "type": "argument",
+                  "children": {
+                    "height": {
+                      "type": "argument",
+                      "children": {
+                        "depth": {
+                          "type": "argument",
+                          "executable": true,
+                          "parser": "brigadier:integer"
+                        }
+                      },
+                      "parser": "brigadier:integer"
+                    }
+                  },
+                  "executable": true,
+                  "parser": "brigadier:integer"
+                }
+              },
+              "executable": true,
+              "parser": "minecraft:resource_location"
+            }
+          }
+        },
+        "locate": {
+          "type": "literal",
+          "children": {
+            "tests": {
+              "type": "argument",
+              "executable": true,
+              "parser": "minecraft:resource_selector",
+              "properties": {
+                "registry": "minecraft:test_instance"
+              }
+            }
+          }
+        },
+        "pos": {
+          "type": "literal",
+          "children": {
+            "var": {
+              "type": "argument",
+              "executable": true,
+              "parser": "brigadier:string",
+              "properties": {
+                "type": "word"
+              }
+            }
+          },
+          "executable": true
+        },
+        "resetclosest": {
+          "type": "literal",
+          "executable": true
+        },
+        "resetthat": {
+          "type": "literal",
+          "executable": true
+        },
+        "resetthese": {
+          "type": "literal",
+          "executable": true
+        },
+        "run": {
+          "type": "literal",
+          "children": {
+            "tests": {
+              "type": "argument",
+              "children": {
+                "numberOfTimes": {
+                  "type": "argument",
+                  "children": {
+                    "untilFailed": {
+                      "type": "argument",
+                      "children": {
+                        "rotationSteps": {
+                          "type": "argument",
+                          "children": {
+                            "testsPerRow": {
+                              "type": "argument",
+                              "executable": true,
+                              "parser": "brigadier:integer"
+                            }
+                          },
+                          "executable": true,
+                          "parser": "brigadier:integer"
+                        }
+                      },
+                      "executable": true,
+                      "parser": "brigadier:bool"
+                    }
+                  },
+                  "executable": true,
+                  "parser": "brigadier:integer",
+                  "properties": {
+                    "min": 0
+                  }
+                }
+              },
+              "executable": true,
+              "parser": "minecraft:resource_selector",
+              "properties": {
+                "registry": "minecraft:test_instance"
+              }
+            }
+          }
+        },
+        "runclosest": {
+          "type": "literal",
+          "children": {
+            "numberOfTimes": {
+              "type": "argument",
+              "children": {
+                "untilFailed": {
+                  "type": "argument",
+                  "executable": true,
+                  "parser": "brigadier:bool"
+                }
+              },
+              "executable": true,
+              "parser": "brigadier:integer",
+              "properties": {
+                "min": 0
+              }
+            }
+          },
+          "executable": true
+        },
+        "runfailed": {
+          "type": "literal",
+          "children": {
+            "numberOfTimes": {
+              "type": "argument",
+              "children": {
+                "untilFailed": {
+                  "type": "argument",
+                  "children": {
+                    "rotationSteps": {
+                      "type": "argument",
+                      "children": {
+                        "testsPerRow": {
+                          "type": "argument",
+                          "executable": true,
+                          "parser": "brigadier:integer"
+                        }
+                      },
+                      "executable": true,
+                      "parser": "brigadier:integer"
+                    }
+                  },
+                  "executable": true,
+                  "parser": "brigadier:bool"
+                }
+              },
+              "executable": true,
+              "parser": "brigadier:integer",
+              "properties": {
+                "min": 0
+              }
+            },
+            "onlyRequiredTests": {
+              "type": "argument",
+              "children": {
+                "numberOfTimes": {
+                  "type": "argument",
+                  "children": {
+                    "untilFailed": {
+                      "type": "argument",
+                      "children": {
+                        "rotationSteps": {
+                          "type": "argument",
+                          "children": {
+                            "testsPerRow": {
+                              "type": "argument",
+                              "executable": true,
+                              "parser": "brigadier:integer"
+                            }
+                          },
+                          "executable": true,
+                          "parser": "brigadier:integer"
+                        }
+                      },
+                      "executable": true,
+                      "parser": "brigadier:bool"
+                    }
+                  },
+                  "executable": true,
+                  "parser": "brigadier:integer",
+                  "properties": {
+                    "min": 0
+                  }
+                }
+              },
+              "executable": true,
+              "parser": "brigadier:bool"
+            }
+          },
+          "executable": true
+        },
+        "runmultiple": {
+          "type": "literal",
+          "children": {
+            "tests": {
+              "type": "argument",
+              "children": {
+                "amount": {
+                  "type": "argument",
+                  "executable": true,
+                  "parser": "brigadier:integer"
+                }
+              },
+              "executable": true,
+              "parser": "minecraft:resource_selector",
+              "properties": {
+                "registry": "minecraft:test_instance"
+              }
+            }
+          }
+        },
+        "runthat": {
+          "type": "literal",
+          "children": {
+            "numberOfTimes": {
+              "type": "argument",
+              "children": {
+                "untilFailed": {
+                  "type": "argument",
+                  "executable": true,
+                  "parser": "brigadier:bool"
+                }
+              },
+              "executable": true,
+              "parser": "brigadier:integer",
+              "properties": {
+                "min": 0
+              }
+            }
+          },
+          "executable": true
+        },
+        "runthese": {
+          "type": "literal",
+          "children": {
+            "numberOfTimes": {
+              "type": "argument",
+              "children": {
+                "untilFailed": {
+                  "type": "argument",
+                  "executable": true,
+                  "parser": "brigadier:bool"
+                }
+              },
+              "executable": true,
+              "parser": "brigadier:integer",
+              "properties": {
+                "min": 0
+              }
+            }
+          },
+          "executable": true
+        },
+        "stop": {
+          "type": "literal",
+          "executable": true
+        },
+        "verify": {
+          "type": "literal",
+          "children": {
+            "tests": {
+              "type": "argument",
+              "executable": true,
+              "parser": "minecraft:resource_selector",
+              "properties": {
+                "registry": "minecraft:test_instance"
+              }
+            }
+          }
+        }
+      },
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "gamemasters"
         }
       }
     },
@@ -10222,6 +12084,13 @@
           "type": "literal",
           "executable": true
         }
+      },
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "admins"
+        }
       }
     },
     "time": {
@@ -10285,6 +12154,13 @@
               }
             }
           }
+        }
+      },
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "gamemasters"
         }
       }
     },
@@ -10370,6 +12246,13 @@
             "amount": "multiple"
           }
         }
+      },
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "gamemasters"
+        }
       }
     },
     "tm": {
@@ -10380,6 +12263,13 @@
     },
     "tp": {
       "type": "literal",
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "gamemasters"
+        }
+      },
       "redirect": [
         "teleport"
       ]
@@ -10417,6 +12307,13 @@
             "type": "phrase"
           }
         }
+      },
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "admins"
+        }
       }
     },
     "trigger": {
@@ -10451,11 +12348,96 @@
         }
       }
     },
+    "version": {
+      "type": "literal",
+      "executable": true,
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "gamemasters"
+        }
+      }
+    },
     "w": {
       "type": "literal",
       "redirect": [
         "msg"
       ]
+    },
+    "waypoint": {
+      "type": "literal",
+      "children": {
+        "list": {
+          "type": "literal",
+          "executable": true
+        },
+        "modify": {
+          "type": "literal",
+          "children": {
+            "waypoint": {
+              "type": "argument",
+              "children": {
+                "color": {
+                  "type": "literal",
+                  "children": {
+                    "color": {
+                      "type": "argument",
+                      "executable": true,
+                      "parser": "minecraft:color"
+                    },
+                    "hex": {
+                      "type": "literal",
+                      "children": {
+                        "color": {
+                          "type": "argument",
+                          "executable": true,
+                          "parser": "minecraft:hex_color"
+                        }
+                      }
+                    },
+                    "reset": {
+                      "type": "literal",
+                      "executable": true
+                    }
+                  }
+                },
+                "style": {
+                  "type": "literal",
+                  "children": {
+                    "reset": {
+                      "type": "literal",
+                      "executable": true
+                    },
+                    "set": {
+                      "type": "literal",
+                      "children": {
+                        "style": {
+                          "type": "argument",
+                          "executable": true,
+                          "parser": "minecraft:resource_location"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "parser": "minecraft:entity",
+              "properties": {
+                "type": "entities",
+                "amount": "single"
+              }
+            }
+          }
+        }
+      },
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "gamemasters"
+        }
+      }
     },
     "weather": {
       "type": "literal",
@@ -10502,6 +12484,13 @@
           },
           "executable": true
         }
+      },
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "gamemasters"
+        }
       }
     },
     "whitelist": {
@@ -10543,6 +12532,13 @@
             }
           }
         }
+      },
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "admins"
+        }
       }
     },
     "worldborder": {
@@ -10557,7 +12553,7 @@
                 "time": {
                   "type": "argument",
                   "executable": true,
-                  "parser": "brigadier:integer",
+                  "parser": "minecraft:time",
                   "properties": {
                     "min": 0
                   }
@@ -10626,7 +12622,7 @@
                 "time": {
                   "type": "argument",
                   "executable": true,
-                  "parser": "brigadier:integer",
+                  "parser": "minecraft:time",
                   "properties": {
                     "min": 0
                   }
@@ -10663,7 +12659,7 @@
                 "time": {
                   "type": "argument",
                   "executable": true,
-                  "parser": "brigadier:integer",
+                  "parser": "minecraft:time",
                   "properties": {
                     "min": 0
                   }
@@ -10672,10 +12668,24 @@
             }
           }
         }
+      },
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "gamemasters"
+        }
       }
     },
     "xp": {
       "type": "literal",
+      "permissions": {
+        "type": "minecraft:require",
+        "permission": {
+          "type": "minecraft:command_level",
+          "level": "gamemasters"
+        }
+      },
       "redirect": [
         "experience"
       ]

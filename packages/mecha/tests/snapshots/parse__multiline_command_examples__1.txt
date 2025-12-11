@@ -12,13 +12,13 @@ tellraw @a {text: 'Hello" # "there'}
 tellraw @s ["foo"]
 say foo bar hello wat welp
 say this is a continuation
-gamerule doDaylightCycle false
-gamerule doMobLoot false
-gamerule doDaylightCycle false
+gamerule advance_time false
+gamerule mob_drops false
+gamerule advance_time false
 execute as foo run gamemode survival @s[tag=bar]
 say hello
 execute in the_end run say foo
-gamerule doDaylightCycle false
+gamerule advance_time false
 scoreboard players set #index global 3
 scoreboard players set $index global 3
 scoreboard players operation #sie_1_flags_delta integer = #sie_1_flags integer

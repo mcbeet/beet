@@ -2,6 +2,30 @@
 
 <!-- version list -->
 
+## v0.50.0-beta.5 (2025-12-08)
+
+### Features
+
+- Major version
+  ([`9e89fec`](https://github.com/mcbeet/beet/commit/9e89fec9526b45f4271dc2f026d914e50cca581e))
+
+
+## v0.50.0-beta.4 (2025-12-08)
+
+### Bug Fixes
+
+- Release new beta
+  ([`4532692`](https://github.com/mcbeet/beet/commit/4532692e833df89961a9be608728288e285a13f8))
+
+
+## v0.50.0-beta.3 (2025-12-08)
+
+### Bug Fixes
+
+- Skip version released from old repo
+  ([`762ee6c`](https://github.com/mcbeet/beet/commit/762ee6ca4d649d101714fe73c57f23dd79f86bcf))
+
+
 ## v0.50.0-beta.2 (2025-11-15)
 
 ### Bug Fixes

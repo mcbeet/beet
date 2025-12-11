@@ -83,7 +83,7 @@ dev = [
 
 [[package]]
 name = "bolt"
-version = "0.50.0b2"
+version = "0.50.0b5"
 source = { editable = "packages/bolt" }
 dependencies = [
     { name = "beet" },
@@ -327,7 +327,7 @@ wheels = [
 
 [[package]]
 name = "mecha"
-version = "0.100.0b6"
+version = "0.102.0b1"
 source = { editable = "packages/mecha" }
 dependencies = [
     { name = "beet" },
