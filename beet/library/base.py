@@ -26,6 +26,8 @@ __all__ = [
     "get_output_scope",
     "PACK_COMPRESSION",
     "LATEST_MINECRAFT_VERSION",
+    "NamespaceFileScope",
+    "get_output_scope",
 ]
 
 
@@ -430,6 +432,20 @@ class NamespacePin(Pin[Type[NamespaceFileType], NamespaceContainer[NamespaceFile
     """Descriptor for accessing namespace containers by attribute lookup."""
 
 
+def create_scope_map(
+    pins: Dict[str, Pin[type[NamespaceFile], NamespaceContainer[NamespaceFile]]]
+):
+    scope_map: Mapping[Tuple[Tuple[str, ...], str], Type[NamespaceFile]] = {}
+    for pin in pins.values():
+        if isinstance(scopes := pin.key.scope, tuple):
+            scope_map[(scopes, pin.key.extension)] = pin.key
+        else:
+            for scope in scopes.values():
+                scope_map[(scope, pin.key.extension)] = pin.key
+
+    return scope_map
+
+
 class Namespace(
     MergeMixin,
     Container[Type[NamespaceFile], NamespaceContainer[NamespaceFile]],
@@ -611,6 +627,7 @@ class Namespace(
             _update_with_none(extra_info, extend_namespace_extra)
 
         scope_map = dict(cls.scope_map)
+
         for file_type in extend_namespace:
             for scope in list_input_scopes(file_type.scope):
                 scope_map[scope, file_type.extension] = file_type
