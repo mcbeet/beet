@@ -18,11 +18,14 @@ __all__ = [
     "WorldgenTemplatePool",
     "WorldgenWorldPreset",
     "WorldgenFlatLevelGeneratorPreset",
+    "WorldgenMultiNoiseBiomeSourceParameterList",
     "WorldgenBiomeTag",
     "WorldgenStructureSetTag",
     "WorldgenStructureTag",
     "WorldgenConfiguredCarverTag",
     "WorldgenPlacedFeatureTag",
+    "WorldgenFlatLevelGeneratorPresetTag",
+    "WorldgenWorldPresetTag",
 ]
 
 
@@ -56,11 +59,14 @@ def worldgen(pack: Union[Context, DataPack]):
         WorldgenTemplatePool,
         WorldgenWorldPreset,
         WorldgenFlatLevelGeneratorPreset,
+        WorldgenMultiNoiseBiomeSourceParameterList,
         WorldgenBiomeTag,
         WorldgenStructureSetTag,
         WorldgenStructureTag,
         WorldgenConfiguredCarverTag,
         WorldgenPlacedFeatureTag,
+        WorldgenFlatLevelGeneratorPresetTag,
+        WorldgenWorldPresetTag,
     ]
 
 
@@ -176,6 +182,16 @@ class WorldgenFlatLevelGeneratorPreset(JsonFile):
     extension: ClassVar[str] = ".json"
 
 
+class WorldgenMultiNoiseBiomeSourceParameterList(JsonFile):
+    """Class representing a worldgen multi noise biome source parameter list."""
+
+    scope: ClassVar[NamespaceFileScope] = (
+        "worldgen",
+        "multi_noise_biome_source_parameter_list",
+    )
+    extension: ClassVar[str] = ".json"
+
+
 class WorldgenBiomeTag(TagFile):
     """Class representing a biome tag."""
 
@@ -204,3 +220,20 @@ class WorldgenPlacedFeatureTag(TagFile):
     """Class representing a worldgen placed feature tag."""
 
     scope: ClassVar[NamespaceFileScope] = ("tags", "worldgen", "placed_feature")
+
+
+class WorldgenFlatLevelGeneratorPresetTag(TagFile):
+    """Class representing a worldgen flat level generator preset tag."""
+
+    scope: ClassVar[NamespaceFileScope] = (
+        "tags",
+        "worldgen",
+        "flat_level_generator_preset",
+    )
+
+
+# world_preset
+class WorldgenWorldPresetTag(TagFile):
+    """Class representing a worldgen world preset tag."""
+
+    scope: ClassVar[NamespaceFileScope] = ("tags", "worldgen", "world_preset")

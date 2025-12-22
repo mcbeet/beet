@@ -80,12 +80,25 @@ class Pin(Generic[K, CV]):
     key: K
     default: PinDefault[CV] = SENTINEL_OBJ
     default_factory: PinDefaultFactory[CV] = SENTINEL_OBJ
+    delete_default: bool = False
 
     def __get__(self, obj: Any, objtype: Optional[Type[Any]] = None) -> CV:
         mapping = self.forward(obj)
 
         try:
-            return mapping[self.key]
+            value = mapping[self.key]
+
+            if self.delete_default:
+                default_value = (
+                    self.default
+                    if isinstance(self.default_factory, Sentinel)
+                    else self.default_factory()
+                )
+
+                if value == default_value:
+                    mapping.pop(self.key, None)
+
+            return value
         except KeyError:
             value = (
                 self.default
@@ -100,7 +113,20 @@ class Pin(Generic[K, CV]):
             return self.__get__(obj, objtype)
 
     def __set__(self: "Pin[K, V]", obj: Any, value: V):
-        self.forward(obj)[self.key] = value
+        mapping = self.forward(obj)
+
+        if self.delete_default:
+            default_value = (
+                self.default
+                if isinstance(self.default_factory, Sentinel)
+                else self.default_factory()
+            )
+
+            if value == default_value:
+                mapping.pop(self.key, None)
+                return
+
+        mapping[self.key] = value
 
     def __delete__(self, obj: Any):
         del self.forward(obj)[self.key]

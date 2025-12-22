@@ -10,7 +10,15 @@ __all__ = [
 
 from typing import Any, ClassVar, Tuple, Type
 
-from beet import Context, Drop, JsonFileBase, NamespaceFile, Pack, YamlFile, NamespaceFileScope
+from beet import (
+    Context,
+    Drop,
+    JsonFileBase,
+    NamespaceFile,
+    NamespaceFileScope,
+    Pack,
+    YamlFile,
+)
 
 
 def beet_default(ctx: Context):

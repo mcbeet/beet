@@ -31,7 +31,12 @@ from beet.core.utils import (
 from beet.core.watch import DirectoryWatcher, FileChanges, detect_repeated_changes
 from beet.library.base import LATEST_MINECRAFT_VERSION, Mcmeta
 
-from .config import PackConfig, ProjectConfig, load_config, locate_config
+from .config import (
+    PackConfig,
+    ProjectConfig,
+    load_config,
+    locate_config,
+)
 from .context import Context, PluginSpec, ProjectCache
 from .template import TemplateManager
 from .worker import WorkerPool
@@ -263,7 +268,7 @@ class ProjectBuilder:
                 project_root=self.root,
                 minecraft_version=self.config.minecraft or LATEST_MINECRAFT_VERSION,
                 directory=self.project.directory,
-                output_directory=self.project.output_directory,
+                output_directory=self.project.output_directory if self.root else None,
                 meta=meta,
                 cache=cache,
                 worker=stack.enter_context(self.project.worker_pool.handle()),
@@ -302,13 +307,67 @@ class ProjectBuilder:
         autosave.add_output(output(directory=ctx.output_directory))
         autosave.add_link(ctx.inject(LinkManager).autosave_handler)
 
+        pack_configs = [self.config.resource_pack, self.config.data_pack]
+        pack_suffixes = ["_resource_pack", "_data_pack"]
+
+        for config, pack in zip(pack_configs, ctx.packs):
+            # if any of the config is None, overwrite others values
+            if not self.config.minecraft:
+                if any(
+                    [
+                        x is not None
+                        for x in [
+                            config.pack_format,
+                            config.min_format,
+                            config.max_format,
+                        ]
+                    ]
+                ):
+                    pack.pack_format = None
+                    pack.min_format = None
+                    pack.max_format = None
+                if config.pack_format is not None:
+                    pack.pack_format = config.pack_format
+                if config.min_format is not None:
+                    pack.min_format = config.min_format
+                if config.max_format is not None:
+                    pack.max_format = config.max_format
+            else:
+                format = pack.pack_format_registry.get(
+                    split_version(self.config.minecraft), pack.latest_pack_format
+                )
+                if isinstance(format, int):
+                    if format < pack.pack_format_switch_format:
+                        pack.pack_format = format
+                        pack.min_format = None
+                        pack.max_format = None
+                    else:
+                        pack.pack_format = None
+                        pack.min_format = pack.max_format = format
+                else:
+                    pack.min_format = pack.max_format = format
+
+            if config.supported_formats:
+                pack.supported_formats = config.supported_formats
+            if config.overlays:
+                for overlay in config.overlays.entries():
+                    if overlay.formats is not None:
+                        pack.overlays[overlay.directory].supported_formats = deepcopy(
+                            overlay.formats
+                        )
+                    if overlay.min_format:
+                        pack.overlays[overlay.directory].min_format = deepcopy(
+                            overlay.min_format
+                        )
+                    if overlay.max_format:
+                        pack.overlays[overlay.directory].max_format = deepcopy(
+                            overlay.max_format
+                        )
+
         plugins = (self.autoload or []) + self.config.require
 
         for plugin in plugins:
             ctx.require(plugin)
-
-        pack_configs = [self.config.resource_pack, self.config.data_pack]
-        pack_suffixes = ["_resource_pack", "_data_pack"]
 
         ctx.require(
             load(
@@ -349,11 +408,6 @@ class ProjectBuilder:
                 PackConfig(
                     name=default_name,
                     description=pack.description or description,
-                    pack_format=(
-                        pack.pack_format_registry[split_version(self.config.minecraft)]
-                        if self.config.minecraft
-                        else pack.pack_format
-                    ),
                     zipped=pack.zipped,
                     compression=pack.compression,
                     compression_level=pack.compression_level,
@@ -362,18 +416,10 @@ class ProjectBuilder:
 
             pack.name = ctx.template.render_string(config.name)
             pack.description = ctx.template.render_json(config.description)
-            pack.pack_format = config.pack_format
             if config.filter:
                 pack.mcmeta.merge(
                     Mcmeta({"filter": config.filter.dict(exclude_none=True)})
                 )
-            if config.supported_formats:
-                pack.supported_formats = config.supported_formats
-            if config.overlays:
-                for overlay in config.overlays.entries():
-                    pack.overlays[overlay.directory].supported_formats = deepcopy(
-                        overlay.formats
-                    )
             pack.zipped = bool(config.zipped)
             pack.compression = config.compression
             pack.compression_level = config.compression_level

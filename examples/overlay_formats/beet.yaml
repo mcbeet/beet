@@ -1,0 +1,13 @@
+
+
+
+data_pack:
+  load: ["."]
+  overlays:
+    - directory: my_overlay
+      min_format: 85
+      max_format: 91
+      pack_format: 85
+
+
+output: build

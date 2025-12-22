@@ -19,7 +19,7 @@ from beet.core.utils import JsonDict, TextComponent, normalize_string
 
 
 class InstallationAdvancementOptions(PluginOptions):
-    icon: JsonDict = {"item": "minecraft:apple"}
+    icon: JsonDict = {"id": "minecraft:apple"}
     author_namespace: Optional[str] = None
     author_description: str = ""
     author_skull_owner: Optional[str] = None
@@ -66,7 +66,7 @@ def create_root_advancement():
             "display": {
                 "title": "Installed Datapacks",
                 "description": "",
-                "icon": {"item": "minecraft:knowledge_book"},
+                "icon": {"id": "minecraft:knowledge_book"},
                 "background": "minecraft:textures/block/gray_concrete.png",
                 "show_toast": False,
                 "announce_to_chat": False,
@@ -87,8 +87,8 @@ def create_author_advancement(
                 "title": author,
                 "description": author_description,
                 "icon": {
-                    "item": "minecraft:player_head",
-                    "nbt": f"{{'SkullOwner': '{skull_owner}'}}",
+                    "id": "minecraft:player_head",
+                    "components": {"minecraft:profile": {"name": skull_owner}},
                 },
                 "show_toast": False,
                 "announce_to_chat": False,

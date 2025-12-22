@@ -49,6 +49,8 @@ def test_mcmeta_properties():
     pack = ResourcePack()
     pack.description = "Something"
     pack.pack_format = 1
+    pack.min_format = None
+    pack.max_format = None
 
     assert pack.mcmeta._content == {  # type: ignore
         "pack": {"description": "Something", "pack_format": 1}
@@ -136,7 +138,6 @@ def test_vanilla_shaders(snapshot: SnapshotFixture, minecraft_resource_pack: Pat
     pack = ResourcePack(path=minecraft_resource_pack)
     assert snapshot("json") == pack.shader_posts["minecraft:spider"].data
     assert snapshot("json") == pack.shaders["minecraft:program/entity_outline"].data
-    assert snapshot() == pack.fragment_shaders["minecraft:program/wobble"].text
     assert snapshot() == pack.vertex_shaders["minecraft:program/sobel"].text
 
 

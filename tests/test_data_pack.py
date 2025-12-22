@@ -481,8 +481,8 @@ def test_query():
     query = PackQuery([p])
 
     selection = {
-        (k := "data/demo/functions/foo.mcfunction", p.functions["demo:foo"]): (p, k),
-        (k := "data/demo/functions/bar.mcfunction", p.functions["demo:bar"]): (p, k),
+        (k := "data/demo/function/foo.mcfunction", p.functions["demo:foo"]): (p, k),
+        (k := "data/demo/function/bar.mcfunction", p.functions["demo:bar"]): (p, k),
     }
     assert query(".mcfunction", files=r".*") == selection
     assert query(extend=Function, files=r".*") == selection
@@ -609,9 +609,9 @@ def test_overlay():
     assert a.overlay_name == "a"
     assert a.overlay_parent is p
 
-    assert p == DataPack()
+    assert p != DataPack()
     assert a == DataPack()
-    assert a == p
+    assert a != p
     assert not p
     assert not a
 
@@ -623,14 +623,37 @@ def test_overlay():
     assert p
     assert a
 
+    latest_pack_format_list = DataPack.latest_pack_format
+    if isinstance(latest_pack_format_list, tuple):
+        latest_pack_format_list = list(latest_pack_format_list)
+
     assert a.supported_formats is None
     assert p.mcmeta.data == {
-        "pack": {"pack_format": DataPack.latest_pack_format, "description": ""}
+        "pack": {
+            "min_format": latest_pack_format_list,
+            "max_format": latest_pack_format_list,
+            "description": "",
+        },
+        "overlays": {
+            "entries": [
+                {
+                    "directory": "a",
+                    "min_format": latest_pack_format_list,
+                    "max_format": latest_pack_format_list,
+                }
+            ]
+        },
     }
 
     a.supported_formats = [17, 18]
+    a.min_format = None
+    a.max_format = None
     assert p.mcmeta.data == {
-        "pack": {"pack_format": DataPack.latest_pack_format, "description": ""},
+        "pack": {
+            "min_format": latest_pack_format_list,
+            "max_format": latest_pack_format_list,
+            "description": "",
+        },
         "overlays": {"entries": [{"formats": [17, 18], "directory": "a"}]},
     }
 
@@ -640,7 +663,11 @@ def test_overlay():
     assert not b
     assert b.supported_formats == {"min_inclusive": 16, "max_inclusive": 17}
     assert p.mcmeta.data == {
-        "pack": {"pack_format": DataPack.latest_pack_format, "description": ""},
+        "pack": {
+            "min_format": latest_pack_format_list,
+            "max_format": latest_pack_format_list,
+            "description": "",
+        },
         "overlays": {
             "entries": [
                 {
@@ -658,7 +685,7 @@ def test_overlay():
     assert p.overlays.setdefault("b", supported_formats=18) is b
     assert b.supported_formats == {"min_inclusive": 16, "max_inclusive": 17}
 
-    c = DataPack(supported_formats=19)
+    c = DataPack(min_format=(88, 0), max_format=(88, 0))
     c["demo:thing"] = Function()
     p.overlays["c"] = c
 
@@ -667,10 +694,14 @@ def test_overlay():
     assert c.overlay_parent is p
     assert dict(p.list_files()) == {
         "a/data/demo/functions/foo.mcfunction": Function(["say hello"]),
-        "c/data/demo/functions/thing.mcfunction": Function([]),
+        "c/data/demo/function/thing.mcfunction": Function([]),
         "pack.mcmeta": Mcmeta(
             {
-                "pack": {"pack_format": DataPack.latest_pack_format, "description": ""},
+                "pack": {
+                    "min_format": latest_pack_format_list,
+                    "max_format": latest_pack_format_list,
+                    "description": "",
+                },
                 "overlays": {
                     "entries": [
                         {
@@ -682,8 +713,9 @@ def test_overlay():
                             "directory": "b",
                         },
                         {
-                            "formats": 19,
                             "directory": "c",
+                            "min_format": [88, 0],
+                            "max_format": [88, 0],
                         },
                     ]
                 },
@@ -693,7 +725,11 @@ def test_overlay():
 
     del p.overlays["b"]
     assert p.mcmeta.data == {
-        "pack": {"pack_format": DataPack.latest_pack_format, "description": ""},
+        "pack": {
+            "min_format": latest_pack_format_list,
+            "max_format": latest_pack_format_list,
+            "description": "",
+        },
         "overlays": {
             "entries": [
                 {
@@ -701,8 +737,9 @@ def test_overlay():
                     "directory": "a",
                 },
                 {
-                    "formats": 19,
                     "directory": "c",
+                    "min_format": [88, 0],
+                    "max_format": [88, 0],
                 },
             ]
         },
@@ -757,6 +794,67 @@ def test_overlay():
     s2 = set(select.distinct(match="*"))
     assert s1 == s2
     assert len(s1) == 6
+
+    a, b = DataPack(min_format=(88, 0), max_format=(88, 0)), DataPack(
+        min_format=(99, 0), max_format=(99, 0)
+    )
+    a.merge(b)
+    assert a.min_format == (99, 0)
+    assert a.max_format == (99, 0)
+    assert a.pack_format is None
+
+    a, b = DataPack(min_format=88, max_format=88), DataPack(
+        min_format=99, max_format=99
+    )
+    a.merge(b)
+    assert a.min_format == 99
+    assert a.max_format == 99
+    assert a.pack_format is None
+
+    a, b = DataPack(pack_format=88), DataPack(pack_format=99)
+    a.merge(b)
+    assert a.pack_format == 99
+    assert a.min_format is None
+    assert a.max_format is None
+
+    a, b = DataPack(min_format=(88, 0), max_format=(88, 0)), DataPack(pack_format=99)
+    a.merge(b)
+    assert a.pack_format == 99
+    assert a.min_format is None
+    assert a.max_format is None
+
+    a, b = DataPack(min_format=88, max_format=88), DataPack(pack_format=99)
+    overlay = b.overlays.setdefault("overlay")
+    overlay.min_format = 77
+    overlay.max_format = 77
+    a.merge(b)
+
+    assert a.pack_format == 99
+    assert a.min_format is None
+    assert a.max_format is None
+    assert a.overlays["overlay"].min_format == 77
+    assert a.overlays["overlay"].max_format == 77
+
+    a, b = DataPack(min_format=88, max_format=88), DataPack(
+        min_format=99, max_format=99
+    )
+    overlayA = a.overlays.setdefault("overlay")
+    overlayA.min_format = 66
+    overlayA.max_format = 66
+    overlayA.functions.setdefault("demo:thing", Function()).append("say hi from A")
+    overlayB = b.overlays.setdefault("overlay")
+    overlayB.min_format = 77
+    overlayB.max_format = 77
+    overlayB.functions.setdefault("demo:thing", Function()).append("say hi from B")
+    a.merge(b)
+    assert a.pack_format is None
+    assert a.min_format == 99
+    assert a.max_format == 99
+    assert a.overlays["overlay"].min_format == 77
+    assert a.overlays["overlay"].max_format == 77
+    assert a.overlays["overlay"].functions["demo:thing"].lines == [
+        "say hi from B",
+    ]
 
 
 def test_merge_overlays():

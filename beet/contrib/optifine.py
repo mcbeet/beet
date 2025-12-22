@@ -12,8 +12,7 @@ __all__ = [
 
 from typing import ClassVar, Union
 
-from beet import Context, JsonFile, PngFile, ResourcePack, TextFile
-from beet.library.base import NamespaceFileScope
+from beet import Context, JsonFile, NamespaceFileScope, PngFile, ResourcePack, TextFile
 
 
 def beet_default(ctx: Context):

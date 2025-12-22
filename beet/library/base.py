@@ -11,6 +11,7 @@ __all__ = [
     "PackPin",
     "Namespace",
     "NamespaceFile",
+    "NamespaceFileScope",
     "NamespaceContainer",
     "NamespacePin",
     "NamespaceProxy",
@@ -21,6 +22,8 @@ __all__ = [
     "UnveilMapping",
     "PackOverwrite",
     "create_group_map",
+    "list_input_scopes",
+    "get_output_scope",
     "PACK_COMPRESSION",
     "LATEST_MINECRAFT_VERSION",
     "NamespaceFileScope",
@@ -76,10 +79,11 @@ from beet.core.container import (
 )
 from beet.core.file import File, FileOrigin, JsonFile, PngFile
 from beet.core.utils import FileSystemPath, JsonDict, SupportedFormats, TextComponent
+from beet.toolchain.config import FormatSpecifier
 
 from .utils import list_extensions, list_origin_folders
 
-LATEST_MINECRAFT_VERSION: str = "1.20"
+LATEST_MINECRAFT_VERSION: str = "1.21"
 
 
 T = TypeVar("T")
@@ -459,7 +463,11 @@ class Namespace(
     def __init_subclass__(cls):
         pins = NamespacePin[NamespaceFile].collect_from(cls)
         cls.field_map = {pin.key: attr for attr, pin in pins.items()}
-        cls.scope_map = create_scope_map(pins)
+        cls.scope_map = {
+            (scope, pin.key.extension): pin.key
+            for pin in pins.values()
+            for scope in list_input_scopes(pin.key.scope)
+        }
 
     def __init__(self):
         super().__init__()
@@ -588,9 +596,7 @@ class Namespace(
             if extend and not issubclass(content_type, extend):
                 continue
 
-            scope = get_output_scope(
-                content_type.scope, self.pack.pack_format if self.pack else 0
-            )
+            scope = get_output_scope(content_type.scope, self.pack)
             prefix = "/".join((self.directory, namespace) + scope)
             for name, item in container.items():
                 yield f"{overlay}{prefix}/{name}{content_type.extension}", item
@@ -623,11 +629,8 @@ class Namespace(
         scope_map = dict(cls.scope_map)
 
         for file_type in extend_namespace:
-            if isinstance(file_type.scope, tuple):
-                scope_map[file_type.scope, file_type.extension] = file_type
-            else:
-                for scope in file_type.scope.values():
-                    scope_map[scope, file_type.extension] = file_type
+            for scope in list_input_scopes(file_type.scope):
+                scope_map[scope, file_type.extension] = file_type
 
         name = None
         namespace = None
@@ -789,7 +792,22 @@ class Mcmeta(JsonFile):
                     overlays: Any = self.data.setdefault("overlays", {})
                     for entry in overlays.setdefault("entries", []):
                         if entry.get("directory") == other_entry.get("directory"):
-                            entry["formats"] = deepcopy(other_entry.get("formats"))
+                            if (value := deepcopy(other_entry.get("formats"))) is None:
+                                entry.pop("formats", None)
+                            else:
+                                entry["formats"] = value
+                            if (
+                                value := deepcopy(other_entry.get("min_format"))
+                            ) is None:
+                                entry.pop("min_format", None)
+                            else:
+                                entry["min_format"] = value
+                            if (
+                                value := deepcopy(other_entry.get("max_format"))
+                            ) is None:
+                                entry.pop("max_format", None)
+                            else:
+                                entry["max_format"] = value
                             break
                     else:
                         overlays["entries"].append(deepcopy(other_entry))
@@ -821,6 +839,9 @@ class OverlayContainer(MatchMixin, MergeMixin, Container[str, PackType]):
 
     def process(self, key: str, value: PackType) -> PackType:
         supported_formats = value.supported_formats
+        min_format = value.min_format
+        max_format = value.max_format
+        description = value.description
 
         value.overlay_name = key
         value.overlay_parent = self.pack
@@ -840,6 +861,11 @@ class OverlayContainer(MatchMixin, MergeMixin, Container[str, PackType]):
 
         if supported_formats is not None:
             value.supported_formats = supported_formats
+        if min_format is not None:
+            value.min_format = min_format
+        if max_format is not None:
+            value.max_format = max_format
+        value.description = description
 
         return value
 
@@ -878,6 +904,8 @@ class OverlayContainer(MatchMixin, MergeMixin, Container[str, PackType]):
         default: Optional[PackType] = None,
         *,
         supported_formats: Optional[SupportedFormats] = None,
+        min_format: Optional[FormatSpecifier] = None,
+        max_format: Optional[FormatSpecifier] = None,
     ) -> PackType:
         value = self._wrapped.get(key)
         if value is not None:
@@ -886,6 +914,12 @@ class OverlayContainer(MatchMixin, MergeMixin, Container[str, PackType]):
             default = self.missing(key)
         if supported_formats is not None:
             default.supported_formats = supported_formats
+            default.min_format = None
+            default.max_format = None
+        if min_format is not None:
+            default.min_format = min_format
+        if max_format is not None:
+            default.max_format = max_format
         self[key] = default
         return default
 
@@ -986,7 +1020,9 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
     icon: ExtraPin[Optional[PngFile]] = ExtraPin("pack.png", default=None)
 
     description: PackPin[TextComponent] = PackPin("description", default="")
-    pack_format: PackPin[int] = PackPin("pack_format", default=0)
+    pack_format: PackPin[Optional[int]] = PackPin(
+        "pack_format", default=None, delete_default=True
+    )
     filter: McmetaPin[JsonDict] = McmetaPin(
         "filter", default_factory=lambda: {"block": []}
     )
@@ -1004,8 +1040,9 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
 
     namespace_type: ClassVar[Type[Namespace]]
     default_name: ClassVar[str]
-    pack_format_registry: ClassVar[Dict[Tuple[int, ...], int]]
-    latest_pack_format: ClassVar[int]
+    pack_format_registry: ClassVar[Dict[Tuple[int, ...], int | FormatSpecifier]]
+    latest_pack_format: ClassVar[int | FormatSpecifier]
+    pack_format_switch_format: ClassVar[int]
 
     def __init_subclass__(cls):
         cls.namespace_type = get_args(getattr(cls, "__orig_bases__")[0])[0]
@@ -1024,6 +1061,8 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
         description: Optional[str] = None,
         pack_format: Optional[int] = None,
         supported_formats: Optional[SupportedFormats] = None,
+        min_format: Optional[FormatSpecifier] = None,
+        max_format: Optional[FormatSpecifier] = None,
         filter: Optional[JsonDict] = None,
         extend_extra: Optional[Mapping[str, Type[PackFile]]] = None,
         extend_namespace: Iterable[Type[NamespaceFile]] = (),
@@ -1065,6 +1104,10 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
             self.pack_format = pack_format
         if supported_formats is not None:
             self.supported_formats = supported_formats
+        if min_format is not None:
+            self.min_format = min_format
+        if max_format is not None:
+            self.max_format = max_format
         if filter is not None:
             self.filter = filter
 
@@ -1169,8 +1212,8 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
         super().merge(other)  # type: ignore
 
         if isinstance(self, Pack) and isinstance(other, Pack):
-            self.extra.merge(other.extra)  # type: ignore
             self.overlays.merge(other.overlays)  # type: ignore
+            self.extra.merge(other.extra)  # type: ignore
 
         empty_namespaces = [key for key, value in self.items() if not value]  # type: ignore
         for namespace in empty_namespaces:
@@ -1197,13 +1240,29 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
 
         return pack_copy
 
+    def assign_format(self):
+        if (
+            self.pack_format is None
+            and self.min_format is None
+            and self.max_format is None
+        ):
+            if isinstance(self.latest_pack_format, int):
+                if self.latest_pack_format < self.pack_format_switch_format:
+                    self.pack_format = self.latest_pack_format
+                    self.min_format = None
+                    self.max_format = None
+                else:
+                    self.pack_format = None
+                    self.min_format = self.max_format = self.latest_pack_format
+            else:
+                self.min_format = self.max_format = self.latest_pack_format
+
     def clear(self):
         self.extra.clear()
         if self.overlay_parent is None:
             self.overlays.clear()
         super().clear()
-        if not self.pack_format:
-            self.pack_format = self.latest_pack_format
+        self.assign_format()
         if not self.description:
             self.description = ""
 
@@ -1263,12 +1322,12 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
             proxy = self[file_type]
             for path in proxy.match(*match or ["*"]):
                 yield path, proxy[path]
-            if self.overlay_parent is None:
-                for overlay in self.overlays.values():
-                    if extend:
-                        yield from overlay.all(*match, extend=extend)
-                    else:
-                        yield from overlay.all(*match)
+        if self.overlay_parent is None:
+            for overlay in self.overlays.values():
+                if extend:
+                    yield from overlay.all(*match, extend=extend)
+                else:
+                    yield from overlay.all(*match)
 
     @property
     def supported_formats(self) -> Optional[SupportedFormats]:
@@ -1281,19 +1340,96 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
             return self.mcmeta.data.get("pack", {}).get("supported_formats")
 
     @supported_formats.setter
-    def supported_formats(self, value: SupportedFormats):
+    def supported_formats(self, value: Optional[SupportedFormats]):
         if self.overlay_parent is not None:
             overlays: Any = self.overlay_parent.mcmeta.data.setdefault("overlays", {})
             for entry in overlays.setdefault("entries", []):
                 if entry.get("directory") == self.overlay_name:
-                    entry["formats"] = value
+                    if value is None:
+                        entry.pop("formats", None)
+                    else:
+                        entry["formats"] = value
                     break
             else:
-                overlays["entries"].append(
-                    {"formats": value, "directory": self.overlay_name}
-                )
+                if value is not None:
+                    overlays["entries"].append(
+                        {"formats": value, "directory": self.overlay_name}
+                    )
+                else:
+                    overlays["entries"].append({"directory": self.overlay_name})
         else:
-            self.mcmeta.data.setdefault("pack", {})["supported_formats"] = value
+            if value is None:
+                self.mcmeta.data.setdefault("pack", {}).pop("supported_formats", None)
+            else:
+                self.mcmeta.data.setdefault("pack", {})["supported_formats"] = value
+
+    @property
+    def min_format(self) -> Optional[FormatSpecifier]:
+        if self.overlay_parent is not None:
+            overlays: Any = self.overlay_parent.mcmeta.data.get("overlays", {})
+            for entry in overlays.get("entries", []):
+                if entry.get("directory") == self.overlay_name:
+                    return entry.get("min_format")
+        else:
+            return self.mcmeta.data.get("pack", {}).get("min_format")
+
+    @min_format.setter
+    def min_format(self, value: Optional[FormatSpecifier]):
+        if self.overlay_parent is not None:
+            overlays: Any = self.overlay_parent.mcmeta.data.setdefault("overlays", {})
+            for entry in overlays.setdefault("entries", []):
+                if entry.get("directory") == self.overlay_name:
+                    if value is None:
+                        entry.pop("min_format", None)
+                    else:
+                        entry["min_format"] = value
+                    break
+            else:
+                if value is not None:
+                    overlays["entries"].append(
+                        {"directory": self.overlay_name, "min_format": value}
+                    )
+                else:
+                    overlays["entries"].append({"directory": self.overlay_name})
+        pack = self.mcmeta.data.setdefault("pack", {})
+        if value is None:
+            pack.pop("min_format", None)
+        else:
+            pack["min_format"] = value
+
+    @property
+    def max_format(self) -> Optional[FormatSpecifier]:
+        if self.overlay_parent is not None:
+            overlays: Any = self.overlay_parent.mcmeta.data.get("overlays", {})
+            for entry in overlays.get("entries", []):
+                if entry.get("directory") == self.overlay_name:
+                    return entry.get("max_format")
+        else:
+            return self.mcmeta.data.get("pack", {}).get("max_format")
+
+    @max_format.setter
+    def max_format(self, value: Optional[FormatSpecifier]):
+        if self.overlay_parent is not None:
+            overlays: Any = self.overlay_parent.mcmeta.data.setdefault("overlays", {})
+            for entry in overlays.setdefault("entries", []):
+                if entry.get("directory") == self.overlay_name:
+                    if value is None:
+                        entry.pop("max_format", None)
+                    else:
+                        entry["max_format"] = value
+                    break
+            else:
+                if value is None:
+                    overlays["entries"].append({"directory": self.overlay_name})
+                else:
+                    overlays["entries"].append(
+                        {"directory": self.overlay_name, "max_format": value}
+                    )
+        pack = self.mcmeta.data.setdefault("pack", {})
+        if value is None:
+            pack.pop("max_format", None)
+        else:
+            pack["max_format"] = value
 
     @classmethod
     def get_extra_info(cls) -> Dict[str, Type[PackFile]]:
@@ -1310,11 +1446,8 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
     ) -> Dict[Tuple[Tuple[str, ...], str], Type[NamespaceFile]]:
         scope_map = dict(self.namespace_type.scope_map)
         for file_type in self.extend_namespace:
-            if isinstance(file_type.scope, tuple):
-                scope_map[file_type.scope, file_type.extension] = file_type
-            else:
-                for scope in file_type.scope.values():
-                    scope_map[scope, file_type.extension] = file_type
+            for scope in list_input_scopes(file_type.scope):
+                scope_map[scope, file_type.extension] = file_type
 
         return scope_map
 
@@ -1376,8 +1509,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
         if origin:
             self.mount("", origin)
 
-        if not self.pack_format:
-            self.pack_format = self.latest_pack_format
+        self.assign_format()
         if not self.description:
             self.description = ""
 
@@ -1436,11 +1568,23 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
             for entry in overlays.get("entries", []):
                 name = entry.get("directory")
                 if name is not None:
-                    self.overlays[name].mount(prefix, origin, origin_folders)
+                    entry_copy = deepcopy(entry)
+                    overlay = self.overlays[name]
+                    if (x := entry_copy.get("min_format")) is not None:
+                        overlay.min_format = x
+                    if (x := entry_copy.get("max_format")) is not None:
+                        overlay.max_format = x
+                    if (x := entry_copy.get("supported_formats")) is not None:
+                        overlay.supported_formats = x
+                    overlay.extend_namespace = self.extend_namespace
+                    overlay.extend_namespace_extra = self.extend_namespace_extra
+                    overlay.mount(prefix, origin, origin_folders)
 
             remaining_overlays = list(origin_folders)
             for name in remaining_overlays:
                 overlay = self.overlays[name]
+                overlay.extend_namespace = self.extend_namespace
+                overlay.extend_namespace_extra = self.extend_namespace_extra
                 overlay.mount(prefix, origin, origin_folders)
                 if not overlay:
                     del self.overlays[name]
@@ -1543,7 +1687,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
     def __repr__(self) -> str:
         return (
             f"{self.__class__.__name__}(name={self.name!r}, "
-            f"description={self.description!r}, pack_format={self.pack_format!r})"
+            f"description={self.description!r}, pack_format={self.pack_format!r}, min_format={self.min_format!r}, max_format={self.max_format!r})"
         )
 
 
@@ -1587,9 +1731,43 @@ def create_group_map(
     return group_map
 
 
-def get_output_scope(scope: NamespaceFileScope, pack_format: int) -> Tuple[str, ...]:
+def list_input_scopes(scope: NamespaceFileScope) -> Iterable[Tuple[str, ...]]:
+    return [scope] if isinstance(scope, tuple) else scope.values()
+
+
+def get_output_scope(
+    scope: NamespaceFileScope, pack: Optional[int | Pack[Any]]
+) -> Tuple[str, ...]:
     if isinstance(scope, tuple):
         return scope
+
+    pack_format: None | int | tuple[int] | tuple[int, int] = None
+    if pack is None:
+        # Fall back to the most recent scope
+        pack_format = 9999
+    elif isinstance(pack, int):
+        pack_format = pack
+    else:
+        # Use the pack format from the pack's supported_formats.
+        # Otherwise, use the pack_format itself
+        if pack.max_format:
+            if isinstance(pack.max_format, int):
+                pack_format = pack.pack_format
+            else:
+                pack_format = pack.max_format[0]
+        elif pack.supported_formats:
+            if isinstance(pack.supported_formats, int):
+                pack_format = pack.supported_formats
+            elif isinstance(pack.supported_formats, list):
+                pack_format = pack.supported_formats[1]
+            else:
+                pack_format = pack.supported_formats["max_inclusive"]
+        else:
+            pack_format = pack.pack_format
+    if pack_format is None:
+        # Fall back to the most recent scope
+        pack_format = 9999
+
     result: Tuple[str, ...] | None = None
     result_format: int | None = None
     for key, value in scope.items():

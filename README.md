@@ -1,3 +1,11 @@
+> [!IMPORTANT]
+> 
+> We're updating to [Pydantic v2](https://docs.pydantic.dev/2.0/migration/)!
+>
+> If your project defines custom Pydantic models and validators, try switching to the [`beta`](https://github.com/mcbeet/beet/tree/beta) branch to be ready for Pydantic v2 when it's released on `main`. 
+
+---
+
 <img align="right" src="https://raw.githubusercontent.com/mcbeet/beet/main/logo.png?sanitize=true" alt="logo" width="76">
 
 # Beet
@@ -12,7 +20,7 @@
 
 ## Introduction
 
-Minecraft [resource packs](https://minecraft.gamepedia.com/Resource_Pack) and [data packs](https://minecraft.gamepedia.com/Data_Pack) work well as _distribution_ formats but can be pretty limiting as _authoring_ formats. You can quickly end up having to manage hundreds of files, some of which might be buried within the bundled output of various generators.
+Minecraft [resource packs](https://minecraft.wiki/w/Resource_pack) and [data packs](https://minecraft.wiki/w/Data_pack) work well as _distribution_ formats but can be pretty limiting as _authoring_ formats. You can quickly end up having to manage hundreds of files, some of which might be buried within the bundled output of various generators.
 
 The `beet` project is a development kit that tries to unify data pack and resource pack tooling into a single pipeline. The community is always coming up with pre-processors, frameworks, and generators of all kinds to make the developer experience more ergonomic. With `beet` you can seamlessly integrate all these tools in your project.
 

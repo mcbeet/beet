@@ -1,0 +1,10 @@
+{
+  "pack": {
+    "description": "",
+    "min_format": 40,
+    "max_format": [
+      100,
+      1
+    ]
+  }
+}

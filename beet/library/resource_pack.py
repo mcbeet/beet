@@ -14,11 +14,16 @@ __all__ = [
     "VertexShader",
     "GlslShader",
     "Text",
+    "TextJson",
     "TextureMcmeta",
     "Texture",
     "Sound",
     "SoundConfig",
     "Particle",
+    "ItemModel",
+    "WaypointStyle",
+    "PostEffect",
+    "Equipment",
 ]
 
 
@@ -62,6 +67,16 @@ class Model(JsonFile):
     extension: ClassVar[str] = ".json"
 
 
+class Equipment(JsonFile):
+    """Class representing an equipment."""
+
+    scope: ClassVar[NamespaceFileScope] = {
+        0: ("models", "equipment"),
+        46: ("equipment",),
+    }
+    extension: ClassVar[str] = ".json"
+
+
 class Language(JsonFile):
     """Class representing a language file."""
 
@@ -99,6 +114,13 @@ class TrueTypeFont(BinaryFile):
 
     scope: ClassVar[NamespaceFileScope] = ("font",)
     extension: ClassVar[str] = ".ttf"
+
+
+class PostEffect(JsonFile):
+    """Class representing a post effect pipeline."""
+
+    scope: ClassVar[NamespaceFileScope] = ("post_effect",)
+    extension: ClassVar[str] = ".json"
 
 
 class ShaderPost(JsonFile):
@@ -141,6 +163,13 @@ class Text(TextFile):
 
     scope: ClassVar[NamespaceFileScope] = ("texts",)
     extension: ClassVar[str] = ".txt"
+
+
+class TextJson(TextFile):
+    """Class representing a text file."""
+
+    scope: ClassVar[NamespaceFileScope] = ("texts",)
+    extension: ClassVar[str] = ".json"
 
 
 class TextureMcmeta(JsonFile):
@@ -286,6 +315,20 @@ class Atlas(JsonFile):
         return {"sources": []}
 
 
+class ItemModel(JsonFile):
+    """Class representing an item model."""
+
+    scope: ClassVar[NamespaceFileScope] = ("items",)
+    extension: ClassVar[str] = ".json"
+
+
+class WaypointStyle(JsonFile):
+    """Class representing a waypoint style."""
+
+    scope: ClassVar[NamespaceFileScope] = ("waypoint_style",)
+    extension: ClassVar[str] = ".json"
+
+
 class ResourcePackNamespace(Namespace):
     """Class representing a resource pack namespace."""
 
@@ -298,10 +341,12 @@ class ResourcePackNamespace(Namespace):
     # fmt: off
     blockstates:      NamespacePin[Blockstate]     = NamespacePin(Blockstate)
     models:           NamespacePin[Model]          = NamespacePin(Model)
+    equipments:       NamespacePin[Equipment]      = NamespacePin(Equipment)
     languages:        NamespacePin[Language]       = NamespacePin(Language)
     fonts:            NamespacePin[Font]           = NamespacePin(Font)
     glyph_sizes:      NamespacePin[GlyphSizes]     = NamespacePin(GlyphSizes)
     true_type_fonts:  NamespacePin[TrueTypeFont]   = NamespacePin(TrueTypeFont)
+    post_effects:     NamespacePin[PostEffect]     = NamespacePin(PostEffect)
     shader_posts:     NamespacePin[ShaderPost]     = NamespacePin(ShaderPost)
     shaders:          NamespacePin[Shader]         = NamespacePin(Shader)
     fragment_shaders: NamespacePin[FragmentShader] = NamespacePin(FragmentShader)
@@ -313,6 +358,9 @@ class ResourcePackNamespace(Namespace):
     sounds:           NamespacePin[Sound]          = NamespacePin(Sound)
     particles:        NamespacePin[Particle]       = NamespacePin(Particle)
     atlases:          NamespacePin[Atlas]          = NamespacePin(Atlas)
+    item_models:      NamespacePin[ItemModel]      = NamespacePin(ItemModel)
+    waypoint_styles:  NamespacePin[WaypointStyle]  = NamespacePin(WaypointStyle)
+    text_json:        NamespacePin[TextJson]       = NamespacePin(TextJson)
     # fmt: on
 
     @classmethod
@@ -341,19 +389,22 @@ class ResourcePack(Pack[ResourcePackNamespace]):
         (1, 18): 8,
         (1, 19): 13,
         (1, 20): 32,
-        (1, 21): 34,
+        (1, 21): (69, 0),
     }
     latest_pack_format = pack_format_registry[split_version(LATEST_MINECRAFT_VERSION)]
+    pack_format_switch_format = 65
 
     language_config = McmetaPin[Dict[str, JsonDict]]("language", default_factory=dict)
 
     # fmt: off
     blockstates:      NamespaceProxyDescriptor[Blockstate]     = NamespaceProxyDescriptor(Blockstate)
     models:           NamespaceProxyDescriptor[Model]          = NamespaceProxyDescriptor(Model)
+    equipments:       NamespaceProxyDescriptor[Equipment]      = NamespaceProxyDescriptor(Equipment)
     languages:        NamespaceProxyDescriptor[Language]       = NamespaceProxyDescriptor(Language)
     fonts:            NamespaceProxyDescriptor[Font]           = NamespaceProxyDescriptor(Font)
     glyph_sizes:      NamespaceProxyDescriptor[GlyphSizes]     = NamespaceProxyDescriptor(GlyphSizes)
     true_type_fonts:  NamespaceProxyDescriptor[TrueTypeFont]   = NamespaceProxyDescriptor(TrueTypeFont)
+    post_effects:     NamespaceProxyDescriptor[PostEffect]     = NamespaceProxyDescriptor(PostEffect)
     shader_posts:     NamespaceProxyDescriptor[ShaderPost]     = NamespaceProxyDescriptor(ShaderPost)
     shaders:          NamespaceProxyDescriptor[Shader]         = NamespaceProxyDescriptor(Shader)
     fragment_shaders: NamespaceProxyDescriptor[FragmentShader] = NamespaceProxyDescriptor(FragmentShader)
@@ -365,4 +416,7 @@ class ResourcePack(Pack[ResourcePackNamespace]):
     sounds:           NamespaceProxyDescriptor[Sound]          = NamespaceProxyDescriptor(Sound)
     particles:        NamespaceProxyDescriptor[Particle]       = NamespaceProxyDescriptor(Particle)
     atlases:          NamespaceProxyDescriptor[Atlas]          = NamespaceProxyDescriptor(Atlas)
+    item_models:      NamespaceProxyDescriptor[ItemModel]      = NamespaceProxyDescriptor(ItemModel)
+    waypoint_styles:  NamespaceProxyDescriptor[WaypointStyle]  = NamespaceProxyDescriptor(WaypointStyle)
+    text_json:        NamespaceProxyDescriptor[TextJson]       = NamespaceProxyDescriptor(TextJson)
     # fmt: on

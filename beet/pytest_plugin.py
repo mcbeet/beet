@@ -12,6 +12,7 @@ from beet import (
     Pack,
     ResourcePack,
 )
+from beet.contrib.worldgen import worldgen
 from beet.library.test_utils import ignore_name
 
 try:
@@ -33,7 +34,10 @@ else:
         extension = ".data_pack"
 
         def load(self, path: Path) -> DataPack:
-            return ignore_name(DataPack(path=path))
+            data_pack = DataPack()
+            worldgen(data_pack)
+            data_pack.load(path)
+            return ignore_name(data_pack)
 
         def dump(self, path: Path, value: DataPack):
             value.save(path=path, overwrite=True)

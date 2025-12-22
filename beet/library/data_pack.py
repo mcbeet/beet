@@ -19,6 +19,11 @@ __all__ = [
     "Structure",
     "TrimPattern",
     "TrimMaterial",
+    "FrogVariant",
+    "CatVariant",
+    "CowVariant",
+    "ChickenVariant",
+    "WolfSoundVariant",
     "TagFile",
     "BlockTag",
     "EntityTypeTag",
@@ -35,6 +40,17 @@ __all__ = [
     "InstrumentTag",
     "PaintingVariantTag",
     "PointOfInterestTypeTag",
+    "Instrument",
+    "TrialSpawner",
+    "FrogVariantTag",
+    "CowVariantTag",
+    "ChickenVariantTag",
+    "WolfSoundVariantTag",
+    "Dialog",
+    "PigVariant",
+    "DialogTag",
+    "TestInstance",
+    "TestEnvironment",
 ]
 
 
@@ -131,6 +147,69 @@ class PaintingVariant(JsonFile):
     """Class representing a painting variant."""
 
     scope: ClassVar[NamespaceFileScope] = ("painting_variant",)
+    extension: ClassVar[str] = ".json"
+
+
+class Instrument(JsonFile):
+    """Class representing an instrument."""
+
+    scope: ClassVar[NamespaceFileScope] = ("instrument",)
+    extension: ClassVar[str] = ".json"
+
+
+class TrialSpawner(JsonFile):
+    """Class representing a trial spawner config."""
+
+    scope: ClassVar[NamespaceFileScope] = ("trial_spawner",)
+    extension: ClassVar[str] = ".json"
+
+
+class FrogVariant(JsonFile):
+    """Class representing a frog variant."""
+
+    scope: ClassVar[NamespaceFileScope] = ("frog_variant",)
+    extension: ClassVar[str] = ".json"
+
+
+class CatVariant(JsonFile):
+    """Class representing a cat variant."""
+
+    scope: ClassVar[NamespaceFileScope] = ("cat_variant",)
+    extension: ClassVar[str] = ".json"
+
+
+class CowVariant(JsonFile):
+    """Class representing a cow variant."""
+
+    scope: ClassVar[NamespaceFileScope] = ("cow_variant",)
+    extension: ClassVar[str] = ".json"
+
+
+class ChickenVariant(JsonFile):
+    """Class representing a chicken variant."""
+
+    scope: ClassVar[NamespaceFileScope] = ("chicken_variant",)
+    extension: ClassVar[str] = ".json"
+
+
+class Dialog(JsonFile):
+    """Class representing a dialog."""
+
+    scope: ClassVar[NamespaceFileScope] = ("dialog",)
+    extension: ClassVar[str] = ".json"
+
+
+class WolfSoundVariant(JsonFile):
+    """Class representing a wolf sound variant."""
+
+    scope: ClassVar[NamespaceFileScope] = ("wolf_sound_variant",)
+    extension: ClassVar[str] = ".json"
+
+
+class PigVariant(JsonFile):
+    """Class representing a pig variant."""
+
+    scope: ClassVar[NamespaceFileScope] = ("pig_variant",)
     extension: ClassVar[str] = ".json"
 
 
@@ -265,6 +344,20 @@ class TrimMaterial(JsonFile):
     """Class representing a trim material."""
 
     scope: ClassVar[NamespaceFileScope] = ("trim_material",)
+    extension: ClassVar[str] = ".json"
+
+
+class TestInstance(JsonFile):
+    """Class representing a test instance."""
+
+    scope: ClassVar[NamespaceFileScope] = ("test_instance",)
+    extension: ClassVar[str] = ".json"
+
+
+class TestEnvironment(JsonFile):
+    """Class representing a test environment."""
+
+    scope: ClassVar[NamespaceFileScope] = ("test_environment",)
     extension: ClassVar[str] = ".json"
 
 
@@ -448,6 +541,51 @@ class PointOfInterestTypeTag(TagFile):
     )
 
 
+class FrogVariantTag(TagFile):
+    """Class representing a frog variant tag."""
+
+    scope: ClassVar[NamespaceFileScope] = (
+        "tags",
+        "frog_variant",
+    )
+
+
+class CowVariantTag(TagFile):
+    """Class representing a cow variant tag."""
+
+    scope: ClassVar[NamespaceFileScope] = (
+        "tags",
+        "cow_variant",
+    )
+
+
+class ChickenVariantTag(TagFile):
+    """Class representing a chicken variant tag."""
+
+    scope: ClassVar[NamespaceFileScope] = (
+        "tags",
+        "chicken_variant",
+    )
+
+
+class WolfSoundVariantTag(TagFile):
+    """Class representing a wolf sound variant tag."""
+
+    scope: ClassVar[NamespaceFileScope] = (
+        "tags",
+        "wolf_sound_variant",
+    )
+
+
+class DialogTag(TagFile):
+    """Class representing a dialog tag."""
+
+    scope: ClassVar[NamespaceFileScope] = (
+        "tags",
+        "dialog",
+    )
+
+
 class DataPackNamespace(Namespace):
     """Class representing a data pack namespace."""
 
@@ -471,6 +609,13 @@ class DataPackNamespace(Namespace):
     enchantment_providers:              NamespacePin[EnchantmentProvider]       = NamespacePin(EnchantmentProvider)
     jukebox_songs:                      NamespacePin[JukeboxSong]               = NamespacePin(JukeboxSong)
     painting_variants:                  NamespacePin[PaintingVariant]           = NamespacePin(PaintingVariant)
+    instruments:                        NamespacePin[Instrument]                = NamespacePin(Instrument)
+    trial_spawners:                     NamespacePin[TrialSpawner]              = NamespacePin(TrialSpawner)
+    frog_variants:                      NamespacePin[FrogVariant]               = NamespacePin(FrogVariant)
+    cat_variants:                       NamespacePin[CatVariant]                = NamespacePin(CatVariant)
+    cow_variants:                       NamespacePin[CowVariant]                = NamespacePin(CowVariant)
+    chicken_variants:                   NamespacePin[ChickenVariant]            = NamespacePin(ChickenVariant)
+    wolf_sound_variants:                NamespacePin[WolfSoundVariant]          = NamespacePin(WolfSoundVariant)
     block_tags:                         NamespacePin[BlockTag]                  = NamespacePin(BlockTag)
     entity_type_tags:                   NamespacePin[EntityTypeTag]             = NamespacePin(EntityTypeTag)
     fluid_tags:                         NamespacePin[FluidTag]                  = NamespacePin(FluidTag)
@@ -485,6 +630,15 @@ class DataPackNamespace(Namespace):
     instrument_tags:                    NamespacePin[InstrumentTag]             = NamespacePin(InstrumentTag)
     painting_variant_tags:              NamespacePin[PaintingVariantTag]        = NamespacePin(PaintingVariantTag)
     point_of_interest_type_tags:        NamespacePin[PointOfInterestTypeTag]    = NamespacePin(PointOfInterestTypeTag)
+    frog_variant_tags:                  NamespacePin[FrogVariantTag]            = NamespacePin(FrogVariantTag)
+    cow_variant_tags:                   NamespacePin[CowVariantTag]             = NamespacePin(CowVariantTag)
+    chicken_variant_tags:               NamespacePin[ChickenVariantTag]         = NamespacePin(ChickenVariantTag)
+    wolf_sound_variant_tags:            NamespacePin[WolfSoundVariantTag]       = NamespacePin(WolfSoundVariantTag)
+    dialogs:                            NamespacePin[Dialog]                    = NamespacePin(Dialog)
+    pig_variants:                       NamespacePin[PigVariant]                = NamespacePin(PigVariant)
+    dialogs_tags:                       NamespacePin[DialogTag]                 = NamespacePin(DialogTag)
+    test_instances:                     NamespacePin[TestInstance]              = NamespacePin(TestInstance)
+    test_environments:                  NamespacePin[TestEnvironment]           = NamespacePin(TestEnvironment)
 
     # fmt: on
 
@@ -503,9 +657,10 @@ class DataPack(Pack[DataPackNamespace]):
         (1, 18): 9,
         (1, 19): 12,
         (1, 20): 41,
-        (1, 21): 48,
+        (1, 21): (88, 0),
     }
     latest_pack_format = pack_format_registry[split_version(LATEST_MINECRAFT_VERSION)]
+    pack_format_switch_format = 82
 
     # fmt: off
     advancements:                       NamespaceProxyDescriptor[Advancement]               = NamespaceProxyDescriptor(Advancement)
@@ -525,6 +680,13 @@ class DataPack(Pack[DataPackNamespace]):
     enchantment_providers:              NamespaceProxyDescriptor[EnchantmentProvider]       = NamespaceProxyDescriptor(EnchantmentProvider)
     jukebox_songs:                      NamespaceProxyDescriptor[JukeboxSong]               = NamespaceProxyDescriptor(JukeboxSong)
     painting_variants:                  NamespaceProxyDescriptor[PaintingVariant]           = NamespaceProxyDescriptor(PaintingVariant)
+    instruments:                        NamespaceProxyDescriptor[Instrument]                = NamespaceProxyDescriptor(Instrument)
+    trial_spawners:                     NamespaceProxyDescriptor[TrialSpawner]              = NamespaceProxyDescriptor(TrialSpawner)
+    frog_variants:                      NamespaceProxyDescriptor[FrogVariant]               = NamespaceProxyDescriptor(FrogVariant)
+    cat_variants:                       NamespaceProxyDescriptor[CatVariant]                = NamespaceProxyDescriptor(CatVariant)
+    cow_variants:                       NamespaceProxyDescriptor[CowVariant]                = NamespaceProxyDescriptor(CowVariant)
+    chicken_variants:                   NamespaceProxyDescriptor[ChickenVariant]            = NamespaceProxyDescriptor(ChickenVariant)
+    wolf_sound_variants:                NamespaceProxyDescriptor[WolfSoundVariant]          = NamespaceProxyDescriptor(WolfSoundVariant)
     block_tags:                         NamespaceProxyDescriptor[BlockTag]                  = NamespaceProxyDescriptor(BlockTag)
     entity_type_tags:                   NamespaceProxyDescriptor[EntityTypeTag]             = NamespaceProxyDescriptor(EntityTypeTag)
     fluid_tags:                         NamespaceProxyDescriptor[FluidTag]                  = NamespaceProxyDescriptor(FluidTag)
@@ -539,4 +701,13 @@ class DataPack(Pack[DataPackNamespace]):
     instrument_tags:                    NamespaceProxyDescriptor[InstrumentTag]             = NamespaceProxyDescriptor(InstrumentTag)
     painting_variant_tags:              NamespaceProxyDescriptor[PaintingVariantTag]        = NamespaceProxyDescriptor(PaintingVariantTag)
     point_of_interest_type_tags:        NamespaceProxyDescriptor[PointOfInterestTypeTag]    = NamespaceProxyDescriptor(PointOfInterestTypeTag)
+    frog_variant_tags:                  NamespaceProxyDescriptor[FrogVariantTag]            = NamespaceProxyDescriptor(FrogVariantTag)
+    cow_variant_tags:                   NamespaceProxyDescriptor[CowVariantTag]             = NamespaceProxyDescriptor(CowVariantTag)
+    chicken_variant_tags:               NamespaceProxyDescriptor[ChickenVariantTag]         = NamespaceProxyDescriptor(ChickenVariantTag)
+    wolf_sound_variant_tags:            NamespaceProxyDescriptor[WolfSoundVariantTag]       = NamespaceProxyDescriptor(WolfSoundVariantTag)
+    dialogs:                            NamespaceProxyDescriptor[Dialog]                    = NamespaceProxyDescriptor(Dialog)
+    pig_variants:                       NamespaceProxyDescriptor[PigVariant]                = NamespaceProxyDescriptor(PigVariant)
+    dialogs_tags:                       NamespaceProxyDescriptor[DialogTag]                 = NamespaceProxyDescriptor(DialogTag)
+    test_instances:                     NamespaceProxyDescriptor[TestInstance]              = NamespaceProxyDescriptor(TestInstance)
+    test_environments:                  NamespaceProxyDescriptor[TestEnvironment]           = NamespaceProxyDescriptor(TestEnvironment)
     # fmt: on
