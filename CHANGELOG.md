@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v0.113.0-beta.11 (2026-01-14)
+
+### Bug Fixes
+
+- Update format registry
+  ([`320ea89`](https://github.com/mcbeet/beet/commit/320ea896f97eec821c3047d4a13f1f8793757b7d))
+
+
 ## v0.113.0-beta.10 (2025-12-11)
 
 ### Features
