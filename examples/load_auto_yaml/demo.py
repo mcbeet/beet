@@ -1,7 +1,7 @@
 import json
 from typing import ClassVar
 
-from pydantic.v1 import BaseModel
+from pydantic import BaseModel
 
 from beet import Context, DataPack, Drop, FileDeserialize, Function, JsonFileBase
 

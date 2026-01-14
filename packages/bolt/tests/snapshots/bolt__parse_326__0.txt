@@ -1,0 +1,7 @@
+#>ERROR  Trailing input following final expression.
+# line 1, column 9
+#      1 |  foo = """
+#        :          ^
+#      2 |      This is a docstring.
+foo = """
+    This is a docstring.

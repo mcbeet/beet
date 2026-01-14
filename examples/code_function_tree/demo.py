@@ -18,7 +18,7 @@ def beet_default(ctx: Context):
 def handle_content(ctx: Context, node: TreeNode[str], function: Function, n: int):
     if node.root:
         ctx.generate(Function([f"function {node.parent}"], tags=["minecraft:tick"]))
-        function.lines.append(f"scoreboard players add #index temp 1")
+        function.lines.append("scoreboard players add #index temp 1")
     if node.partition(n):
         function.lines.append(
             f"execute if score #index temp matches {node.range} run function {node.children}"

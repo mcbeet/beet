@@ -5,7 +5,7 @@ from pytest_insta import SnapshotFixture
 
 from beet import run_beet
 
-EXAMPLES = [f for f in os.listdir("examples") if not f.startswith("nosnap_")]
+EXAMPLES = [f for f in sorted(os.listdir("examples")) if not f.startswith("nosnap_")]
 
 
 @pytest.mark.parametrize("directory", EXAMPLES)

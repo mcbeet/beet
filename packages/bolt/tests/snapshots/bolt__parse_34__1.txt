@@ -1,0 +1,31 @@
+_bolt_lineno = [1, 11, 17], [1, 2, 3]
+_bolt_helper_branch = _bolt_runtime.helpers['branch']
+_bolt_helper_get_rebind = _bolt_runtime.helpers['get_rebind']
+_bolt_helper_children = _bolt_runtime.helpers['children']
+_bolt_helper_replace = _bolt_runtime.helpers['replace']
+_bolt_helper_exit_stack = _bolt_runtime.helpers['exit_stack']
+with _bolt_helper_exit_stack() as _bolt_fused_with_statement0:
+    _bolt_var4 = _bolt_fused_with_statement0.enter_context(_bolt_runtime.scope())
+    _bolt_var0 = 1
+    a = _bolt_var0
+    _bolt_var1 = a
+    _bolt_var2 = 1
+    _bolt_var1 = _bolt_var1 == _bolt_var2
+    _bolt_condition = _bolt_fused_with_statement0.enter_context(_bolt_helper_branch(_bolt_var1))
+    if _bolt_condition:
+        _bolt_var3 = 0
+        _bolt_rebind = _bolt_helper_get_rebind(a)
+        a = _bolt_var3
+        if _bolt_rebind is not None:
+            a = _bolt_rebind(a)
+_bolt_var5 = _bolt_helper_replace(_bolt_refs[0], commands=_bolt_helper_children(_bolt_var4))
+---
+output = _bolt_var5
+---
+_bolt_refs[0]
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=27, lineno=4, colno=1)
+  commands:
+    <class 'bolt.ast.AstStatement'>
+    <class 'mecha.ast.AstCommand'>

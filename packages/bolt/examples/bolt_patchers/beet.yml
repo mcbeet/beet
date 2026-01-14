@@ -1,0 +1,7 @@
+require:
+  - bolt.contrib.sandbox
+  - patchers.define_custom_resources
+data_pack:
+  load: "src"
+pipeline:
+  - patchers.process_files

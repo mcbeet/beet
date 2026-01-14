@@ -1,0 +1,9 @@
+minecraft:scoreboard_slot 1 1
+---
+{}
+---
+foo.bar
+---
+Reported 1 error.
+
+line 1, column 1: Expected scoreboard_slot but got literal 'foo.bar'.

@@ -1,0 +1,6 @@
+require:
+  - mecha.contrib.raw
+data_pack:
+  load: "src"
+pipeline:
+  - mecha

@@ -1,0 +1,9 @@
+minecraft:block_state 1 3
+---
+{}
+---
+stone[
+---
+Reported 1 error.
+
+line 1, column 7: Expected quoted_string or word but reached end of file.

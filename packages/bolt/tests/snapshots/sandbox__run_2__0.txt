@@ -1,0 +1,7 @@
+def hello():
+    return "world"
+say hello.__name__.capitalize()
+---
+Traceback (most recent call last):
+  File "demo:foo", line 3, in demo:foo
+bolt.contrib.sandbox.SecurityError: Access forbidden attribute '__name__' of <class 'function'>.

@@ -1,0 +1,8 @@
+This is ignored. Anything that appears before the first directive is not taken into
+account by the extractor.
+
+@function demo:foo
+say foo
+
+@function demo:bar
+say bar

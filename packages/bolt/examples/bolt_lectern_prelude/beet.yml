@@ -1,0 +1,11 @@
+require:
+  - bolt
+pipeline:
+  - lectern
+  - mecha
+  - beet.contrib.cleanup_overlays
+meta:
+  lectern:
+    load: "source.txt"
+  bolt:
+    prelude: "demo:prelude"

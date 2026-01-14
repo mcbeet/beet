@@ -1,0 +1,406 @@
+__all__ = [
+    "Atlas",
+    "ResourcePack",
+    "ResourcePackNamespace",
+    "Blockstate",
+    "Model",
+    "Language",
+    "Font",
+    "GlyphSizes",
+    "TrueTypeFont",
+    "ShaderPost",
+    "Shader",
+    "FragmentShader",
+    "VertexShader",
+    "GlslShader",
+    "Text",
+    "TextJson",
+    "TextureMcmeta",
+    "Texture",
+    "Sound",
+    "SoundConfig",
+    "Particle",
+    "ItemModel",
+    "WaypointStyle",
+    "PostEffect",
+    "Equipment",
+]
+
+
+from contextlib import suppress
+from copy import deepcopy
+from dataclasses import dataclass
+from typing import ClassVar, Dict, Optional, Type
+
+from beet.resources.pack_format_registry import PackFormatRegistryContainer
+
+from PIL.Image import Image
+
+from beet.core.file import BinaryFile, BinaryFileContent, JsonFile, PngFile, TextFile
+from beet.core.utils import JsonDict, extra_field
+
+from .base import (
+    LATEST_MINECRAFT_VERSION,
+    ExtraPin,
+    McmetaPin,
+    Namespace,
+    NamespaceFileScope,
+    NamespacePin,
+    NamespaceProxyDescriptor,
+    Pack,
+    PackFile,
+)
+
+
+class Blockstate(JsonFile):
+    """Class representing a blockstate."""
+
+    scope: ClassVar[NamespaceFileScope] = ("blockstates",)
+    extension: ClassVar[str] = ".json"
+
+
+class Model(JsonFile):
+    """Class representing a model."""
+
+    scope: ClassVar[NamespaceFileScope] = ("models",)
+    extension: ClassVar[str] = ".json"
+
+
+class Equipment(JsonFile):
+    """Class representing an equipment."""
+
+    scope: ClassVar[NamespaceFileScope] = {
+        0: ("models", "equipment"),
+        46: ("equipment",),
+    }
+    extension: ClassVar[str] = ".json"
+
+
+class Language(JsonFile):
+    """Class representing a language file."""
+
+    scope: ClassVar[NamespaceFileScope] = ("lang",)
+    extension: ClassVar[str] = ".json"
+
+    def merge(self, other: "Language") -> bool:  # pyright: ignore[reportIncompatibleMethodOverride]
+        self.data.update(other.data)
+        return True
+
+
+class Font(JsonFile):
+    """Class representing a font configuration file."""
+
+    scope: ClassVar[NamespaceFileScope] = ("font",)
+    extension: ClassVar[str] = ".json"
+
+    def merge(self, other: "Font") -> bool:  # pyright: ignore[reportIncompatibleMethodOverride]
+        providers = self.data.setdefault("providers", [])
+
+        for provider in other.data.get("providers", []):
+            providers.append(deepcopy(provider))
+        return True
+
+
+class GlyphSizes(BinaryFile):
+    """Class representing a legacy unicode glyph size file."""
+
+    scope: ClassVar[NamespaceFileScope] = ("font",)
+    extension: ClassVar[str] = ".bin"
+
+
+class TrueTypeFont(BinaryFile):
+    """Class representing a TrueType font."""
+
+    scope: ClassVar[NamespaceFileScope] = ("font",)
+    extension: ClassVar[str] = ".ttf"
+
+
+class PostEffect(JsonFile):
+    """Class representing a post effect pipeline."""
+
+    scope: ClassVar[NamespaceFileScope] = ("post_effect",)
+    extension: ClassVar[str] = ".json"
+
+
+class ShaderPost(JsonFile):
+    """Class representing a shader post-processing pipeline."""
+
+    scope: ClassVar[NamespaceFileScope] = ("shaders", "post")
+    extension: ClassVar[str] = ".json"
+
+
+class Shader(JsonFile):
+    """Class representing a shader."""
+
+    scope: ClassVar[NamespaceFileScope] = ("shaders",)
+    extension: ClassVar[str] = ".json"
+
+
+class FragmentShader(TextFile):
+    """Class representing a fragment shader."""
+
+    scope: ClassVar[NamespaceFileScope] = ("shaders",)
+    extension: ClassVar[str] = ".fsh"
+
+
+class VertexShader(TextFile):
+    """Class representing a vertex shader."""
+
+    scope: ClassVar[NamespaceFileScope] = ("shaders",)
+    extension: ClassVar[str] = ".vsh"
+
+
+class GlslShader(TextFile):
+    """Class representing a glsl shader."""
+
+    scope: ClassVar[NamespaceFileScope] = ("shaders",)
+    extension: ClassVar[str] = ".glsl"
+
+
+class Text(TextFile):
+    """Class representing a text file."""
+
+    scope: ClassVar[NamespaceFileScope] = ("texts",)
+    extension: ClassVar[str] = ".txt"
+
+
+class TextJson(TextFile):
+    """Class representing a text file."""
+
+    scope: ClassVar[NamespaceFileScope] = ("texts",)
+    extension: ClassVar[str] = ".json"
+
+
+class TextureMcmeta(JsonFile):
+    """Class representing a texture mcmeta."""
+
+    scope: ClassVar[NamespaceFileScope] = ("textures",)
+    extension: ClassVar[str] = ".png.mcmeta"
+
+
+@dataclass(eq=False, repr=False)
+class Texture(PngFile):
+    """Class representing a texture."""
+
+    content: BinaryFileContent[Image] = None
+    mcmeta: Optional[JsonDict] = extra_field(default=None)
+
+    scope: ClassVar[NamespaceFileScope] = ("textures",)
+    extension: ClassVar[str] = ".png"
+
+    def bind(self, pack: "ResourcePack", path: str):
+        super().bind(pack, path)
+
+        if self.mcmeta is not None:
+            pack.textures_mcmeta[path] = TextureMcmeta(self.mcmeta)
+
+
+@dataclass(eq=False, repr=False)
+class Sound(BinaryFile):
+    """Class representing a sound file."""
+
+    event: Optional[str] = extra_field(default=None)
+    subtitle: Optional[str] = extra_field(default=None)
+    replace: Optional[bool] = extra_field(default=None)
+    volume: Optional[float] = extra_field(default=None)
+    pitch: Optional[float] = extra_field(default=None)
+    weight: Optional[int] = extra_field(default=None)
+    stream: Optional[bool] = extra_field(default=None)
+    attenuation_distance: Optional[int] = extra_field(default=None)
+    preload: Optional[bool] = extra_field(default=None)
+
+    scope: ClassVar[NamespaceFileScope] = ("sounds",)
+    extension: ClassVar[str] = ".ogg"
+
+    def bind(self, pack: "ResourcePack", path: str):
+        super().bind(pack, path)
+
+        namespace, _, path = path.partition(":")
+
+        if self.event is not None:
+            attributes = {
+                "volume": self.volume,
+                "pitch": self.pitch,
+                "weight": self.weight,
+                "stream": self.stream,
+                "attenuation_distance": self.attenuation_distance,
+                "preload": self.preload,
+            }
+
+            attributes = {k: v for k, v in attributes.items() if v is not None}
+            event: JsonDict = {
+                "sounds": [{"name": path, **attributes} if attributes else path]
+            }
+
+            if self.replace is not None:
+                event["replace"] = self.replace
+            if self.subtitle is not None:
+                event["subtitle"] = self.subtitle
+
+            pack[namespace].extra.merge(
+                {"sounds.json": SoundConfig({self.event: event})}
+            )
+
+
+class SoundConfig(JsonFile):
+    """Class representing the sounds.json configuration."""
+
+    def merge(self, other: "SoundConfig") -> bool:  # pyright: ignore[reportIncompatibleMethodOverride]
+        for key, other_event in other.data.items():
+            if other_event.get("replace"):
+                self.data[key] = deepcopy(other_event)
+                continue
+
+            event = self.data.setdefault(key, {})
+
+            if subtitle := other_event.get("subtitle"):
+                event["subtitle"] = subtitle
+
+            sounds = event.setdefault("sounds", [])
+            for sound in other_event.get("sounds", []):
+                if sound not in sounds:
+                    sounds.append(deepcopy(sound))
+
+        return True
+
+
+class Particle(JsonFile):
+    """Class representing a particle configuration file."""
+
+    scope: ClassVar[NamespaceFileScope] = ("particles",)
+    extension: ClassVar[str] = ".json"
+
+
+class Atlas(JsonFile):
+    """Class representing an atlas configuration file."""
+
+    scope: ClassVar[NamespaceFileScope] = ("atlases",)
+    extension: ClassVar[str] = ".json"
+
+    def merge(self, other: "Atlas") -> bool:  # pyright: ignore[reportIncompatibleMethodOverride]
+        values = self.data.setdefault("sources", [])
+
+        for value in other.data.get("sources", []):
+            if value not in values:
+                values.append(deepcopy(value))
+        return True
+
+    def append(self, other: "Atlas"):
+        """Append values from another atlas."""
+        self.merge(other)
+
+    def prepend(self, other: "Atlas"):
+        """Prepend values from another atlas."""
+        values = self.data.setdefault("sources", [])
+
+        for value in other.data.get("sources", []):
+            if value not in values:
+                values.insert(0, deepcopy(value))
+
+    def add(self, value: JsonDict):
+        """Add an entry."""
+        values = self.data.setdefault("sources", [])
+        if value not in values:
+            values.append(value)
+
+    def remove(self, value: JsonDict):
+        """Remove an entry."""
+        values = self.data.setdefault("sources", [])
+        with suppress(ValueError):
+            values.remove(value)
+
+    @classmethod
+    def default(cls) -> JsonDict:
+        return {"sources": []}
+
+
+class ItemModel(JsonFile):
+    """Class representing an item model."""
+
+    scope: ClassVar[NamespaceFileScope] = ("items",)
+    extension: ClassVar[str] = ".json"
+
+
+class WaypointStyle(JsonFile):
+    """Class representing a waypoint style."""
+
+    scope: ClassVar[NamespaceFileScope] = ("waypoint_style",)
+    extension: ClassVar[str] = ".json"
+
+
+class ResourcePackNamespace(Namespace):
+    """Class representing a resource pack namespace."""
+
+    directory = "assets"
+
+    sound_config: ExtraPin[Optional[SoundConfig]] = ExtraPin(
+        "sounds.json", default=None
+    )
+
+    # fmt: off
+    blockstates:      NamespacePin[Blockstate]     = NamespacePin(Blockstate)
+    models:           NamespacePin[Model]          = NamespacePin(Model)
+    equipments:       NamespacePin[Equipment]      = NamespacePin(Equipment)
+    languages:        NamespacePin[Language]       = NamespacePin(Language)
+    fonts:            NamespacePin[Font]           = NamespacePin(Font)
+    glyph_sizes:      NamespacePin[GlyphSizes]     = NamespacePin(GlyphSizes)
+    true_type_fonts:  NamespacePin[TrueTypeFont]   = NamespacePin(TrueTypeFont)
+    post_effects:     NamespacePin[PostEffect]     = NamespacePin(PostEffect)
+    shader_posts:     NamespacePin[ShaderPost]     = NamespacePin(ShaderPost)
+    shaders:          NamespacePin[Shader]         = NamespacePin(Shader)
+    fragment_shaders: NamespacePin[FragmentShader] = NamespacePin(FragmentShader)
+    vertex_shaders:   NamespacePin[VertexShader]   = NamespacePin(VertexShader)
+    glsl_shaders:     NamespacePin[GlslShader]     = NamespacePin(GlslShader)
+    texts:            NamespacePin[Text]           = NamespacePin(Text)
+    textures_mcmeta:  NamespacePin[TextureMcmeta]  = NamespacePin(TextureMcmeta)
+    textures:         NamespacePin[Texture]        = NamespacePin(Texture)
+    sounds:           NamespacePin[Sound]          = NamespacePin(Sound)
+    particles:        NamespacePin[Particle]       = NamespacePin(Particle)
+    atlases:          NamespacePin[Atlas]          = NamespacePin(Atlas)
+    item_models:      NamespacePin[ItemModel]      = NamespacePin(ItemModel)
+    waypoint_styles:  NamespacePin[WaypointStyle]  = NamespacePin(WaypointStyle)
+    text_json:        NamespacePin[TextJson]       = NamespacePin(TextJson)
+    # fmt: on
+
+    @classmethod
+    def get_extra_info(cls) -> Dict[str, Type[PackFile]]:
+        return {**super().get_extra_info(), "sounds.json": SoundConfig}
+
+
+class ResourcePack(Pack[ResourcePackNamespace]):
+    """Class representing a resource pack."""
+
+    default_name = "untitled_resource_pack"
+
+    pack_format_switch_format = 65
+    pack_format_registry = PackFormatRegistryContainer(
+        pack_format_switch_format, "resource_pack"
+    )
+    latest_pack_format = pack_format_registry[LATEST_MINECRAFT_VERSION]
+
+    language_config = McmetaPin[Dict[str, JsonDict]]("language", default_factory=dict)
+
+    # fmt: off
+    blockstates:      NamespaceProxyDescriptor[Blockstate]     = NamespaceProxyDescriptor(Blockstate)
+    models:           NamespaceProxyDescriptor[Model]          = NamespaceProxyDescriptor(Model)
+    equipments:       NamespaceProxyDescriptor[Equipment]      = NamespaceProxyDescriptor(Equipment)
+    languages:        NamespaceProxyDescriptor[Language]       = NamespaceProxyDescriptor(Language)
+    fonts:            NamespaceProxyDescriptor[Font]           = NamespaceProxyDescriptor(Font)
+    glyph_sizes:      NamespaceProxyDescriptor[GlyphSizes]     = NamespaceProxyDescriptor(GlyphSizes)
+    true_type_fonts:  NamespaceProxyDescriptor[TrueTypeFont]   = NamespaceProxyDescriptor(TrueTypeFont)
+    post_effects:     NamespaceProxyDescriptor[PostEffect]     = NamespaceProxyDescriptor(PostEffect)
+    shader_posts:     NamespaceProxyDescriptor[ShaderPost]     = NamespaceProxyDescriptor(ShaderPost)
+    shaders:          NamespaceProxyDescriptor[Shader]         = NamespaceProxyDescriptor(Shader)
+    fragment_shaders: NamespaceProxyDescriptor[FragmentShader] = NamespaceProxyDescriptor(FragmentShader)
+    vertex_shaders:   NamespaceProxyDescriptor[VertexShader]   = NamespaceProxyDescriptor(VertexShader)
+    glsl_shaders:     NamespaceProxyDescriptor[GlslShader]     = NamespaceProxyDescriptor(GlslShader)
+    texts:            NamespaceProxyDescriptor[Text]           = NamespaceProxyDescriptor(Text)
+    textures_mcmeta:  NamespaceProxyDescriptor[TextureMcmeta]  = NamespaceProxyDescriptor(TextureMcmeta)
+    textures:         NamespaceProxyDescriptor[Texture]        = NamespaceProxyDescriptor(Texture)
+    sounds:           NamespaceProxyDescriptor[Sound]          = NamespaceProxyDescriptor(Sound)
+    particles:        NamespaceProxyDescriptor[Particle]       = NamespaceProxyDescriptor(Particle)
+    atlases:          NamespaceProxyDescriptor[Atlas]          = NamespaceProxyDescriptor(Atlas)
+    item_models:      NamespaceProxyDescriptor[ItemModel]      = NamespaceProxyDescriptor(ItemModel)
+    waypoint_styles:  NamespaceProxyDescriptor[WaypointStyle]  = NamespaceProxyDescriptor(WaypointStyle)
+    text_json:        NamespaceProxyDescriptor[TextJson]       = NamespaceProxyDescriptor(TextJson)
+    # fmt: on

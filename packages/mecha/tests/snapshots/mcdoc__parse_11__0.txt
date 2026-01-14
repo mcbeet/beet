@@ -1,0 +1,221 @@
+type Integer = (byte | short | int | long)
+type Float = (float | double)
+type Number = (Integer | Float)
+---
+<class 'mecha.contrib.validation.mcdoc.Mcdoc'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=104, lineno=3, colno=32)
+  items:
+    <class 'mecha.contrib.validation.mcdoc.McdocTypeAlias'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=42, lineno=1, colno=43)
+      prelim:
+        <class 'mecha.contrib.validation.mcdoc.McdocPrelim'>
+          location: SourceLocation(pos=0, lineno=1, colno=1)
+          end_location: SourceLocation(pos=4, lineno=1, colno=5)
+          doc_comments:
+            <empty>
+          attributes:
+            <empty>
+      identifier:
+        <class 'mecha.contrib.validation.mcdoc.McdocIdentifier'>
+          location: SourceLocation(pos=5, lineno=1, colno=6)
+          end_location: SourceLocation(pos=12, lineno=1, colno=13)
+          name: 'Integer'
+      parameters:
+        <empty>
+      type:
+        <class 'mecha.contrib.validation.mcdoc.McdocType'>
+          location: SourceLocation(pos=15, lineno=1, colno=16)
+          end_location: SourceLocation(pos=42, lineno=1, colno=43)
+          attributes:
+            <empty>
+          unattributed_type:
+            <class 'mecha.contrib.validation.mcdoc.McdocUnionType'>
+              location: SourceLocation(pos=15, lineno=1, colno=16)
+              end_location: SourceLocation(pos=42, lineno=1, colno=43)
+              types:
+                <class 'mecha.contrib.validation.mcdoc.McdocType'>
+                  location: SourceLocation(pos=16, lineno=1, colno=17)
+                  end_location: SourceLocation(pos=20, lineno=1, colno=21)
+                  attributes:
+                    <empty>
+                  unattributed_type:
+                    <class 'mecha.contrib.validation.mcdoc.McdocNumericType'>
+                      location: SourceLocation(pos=16, lineno=1, colno=17)
+                      end_location: SourceLocation(pos=20, lineno=1, colno=21)
+                      name: 'byte'
+                      constraint: None
+                  modifiers:
+                    <empty>
+                <class 'mecha.contrib.validation.mcdoc.McdocType'>
+                  location: SourceLocation(pos=23, lineno=1, colno=24)
+                  end_location: SourceLocation(pos=28, lineno=1, colno=29)
+                  attributes:
+                    <empty>
+                  unattributed_type:
+                    <class 'mecha.contrib.validation.mcdoc.McdocNumericType'>
+                      location: SourceLocation(pos=23, lineno=1, colno=24)
+                      end_location: SourceLocation(pos=28, lineno=1, colno=29)
+                      name: 'short'
+                      constraint: None
+                  modifiers:
+                    <empty>
+                <class 'mecha.contrib.validation.mcdoc.McdocType'>
+                  location: SourceLocation(pos=31, lineno=1, colno=32)
+                  end_location: SourceLocation(pos=34, lineno=1, colno=35)
+                  attributes:
+                    <empty>
+                  unattributed_type:
+                    <class 'mecha.contrib.validation.mcdoc.McdocNumericType'>
+                      location: SourceLocation(pos=31, lineno=1, colno=32)
+                      end_location: SourceLocation(pos=34, lineno=1, colno=35)
+                      name: 'int'
+                      constraint: None
+                  modifiers:
+                    <empty>
+                <class 'mecha.contrib.validation.mcdoc.McdocType'>
+                  location: SourceLocation(pos=37, lineno=1, colno=38)
+                  end_location: SourceLocation(pos=41, lineno=1, colno=42)
+                  attributes:
+                    <empty>
+                  unattributed_type:
+                    <class 'mecha.contrib.validation.mcdoc.McdocNumericType'>
+                      location: SourceLocation(pos=37, lineno=1, colno=38)
+                      end_location: SourceLocation(pos=41, lineno=1, colno=42)
+                      name: 'long'
+                      constraint: None
+                  modifiers:
+                    <empty>
+          modifiers:
+            <empty>
+    <class 'mecha.contrib.validation.mcdoc.McdocTypeAlias'>
+      location: SourceLocation(pos=43, lineno=2, colno=1)
+      end_location: SourceLocation(pos=72, lineno=2, colno=30)
+      prelim:
+        <class 'mecha.contrib.validation.mcdoc.McdocPrelim'>
+          location: SourceLocation(pos=43, lineno=2, colno=1)
+          end_location: SourceLocation(pos=47, lineno=2, colno=5)
+          doc_comments:
+            <empty>
+          attributes:
+            <empty>
+      identifier:
+        <class 'mecha.contrib.validation.mcdoc.McdocIdentifier'>
+          location: SourceLocation(pos=48, lineno=2, colno=6)
+          end_location: SourceLocation(pos=53, lineno=2, colno=11)
+          name: 'Float'
+      parameters:
+        <empty>
+      type:
+        <class 'mecha.contrib.validation.mcdoc.McdocType'>
+          location: SourceLocation(pos=56, lineno=2, colno=14)
+          end_location: SourceLocation(pos=72, lineno=2, colno=30)
+          attributes:
+            <empty>
+          unattributed_type:
+            <class 'mecha.contrib.validation.mcdoc.McdocUnionType'>
+              location: SourceLocation(pos=56, lineno=2, colno=14)
+              end_location: SourceLocation(pos=72, lineno=2, colno=30)
+              types:
+                <class 'mecha.contrib.validation.mcdoc.McdocType'>
+                  location: SourceLocation(pos=57, lineno=2, colno=15)
+                  end_location: SourceLocation(pos=62, lineno=2, colno=20)
+                  attributes:
+                    <empty>
+                  unattributed_type:
+                    <class 'mecha.contrib.validation.mcdoc.McdocNumericType'>
+                      location: SourceLocation(pos=57, lineno=2, colno=15)
+                      end_location: SourceLocation(pos=62, lineno=2, colno=20)
+                      name: 'float'
+                      constraint: None
+                  modifiers:
+                    <empty>
+                <class 'mecha.contrib.validation.mcdoc.McdocType'>
+                  location: SourceLocation(pos=65, lineno=2, colno=23)
+                  end_location: SourceLocation(pos=71, lineno=2, colno=29)
+                  attributes:
+                    <empty>
+                  unattributed_type:
+                    <class 'mecha.contrib.validation.mcdoc.McdocNumericType'>
+                      location: SourceLocation(pos=65, lineno=2, colno=23)
+                      end_location: SourceLocation(pos=71, lineno=2, colno=29)
+                      name: 'double'
+                      constraint: None
+                  modifiers:
+                    <empty>
+          modifiers:
+            <empty>
+    <class 'mecha.contrib.validation.mcdoc.McdocTypeAlias'>
+      location: SourceLocation(pos=73, lineno=3, colno=1)
+      end_location: SourceLocation(pos=104, lineno=3, colno=32)
+      prelim:
+        <class 'mecha.contrib.validation.mcdoc.McdocPrelim'>
+          location: SourceLocation(pos=73, lineno=3, colno=1)
+          end_location: SourceLocation(pos=77, lineno=3, colno=5)
+          doc_comments:
+            <empty>
+          attributes:
+            <empty>
+      identifier:
+        <class 'mecha.contrib.validation.mcdoc.McdocIdentifier'>
+          location: SourceLocation(pos=78, lineno=3, colno=6)
+          end_location: SourceLocation(pos=84, lineno=3, colno=12)
+          name: 'Number'
+      parameters:
+        <empty>
+      type:
+        <class 'mecha.contrib.validation.mcdoc.McdocType'>
+          location: SourceLocation(pos=87, lineno=3, colno=15)
+          end_location: SourceLocation(pos=104, lineno=3, colno=32)
+          attributes:
+            <empty>
+          unattributed_type:
+            <class 'mecha.contrib.validation.mcdoc.McdocUnionType'>
+              location: SourceLocation(pos=87, lineno=3, colno=15)
+              end_location: SourceLocation(pos=104, lineno=3, colno=32)
+              types:
+                <class 'mecha.contrib.validation.mcdoc.McdocType'>
+                  location: SourceLocation(pos=88, lineno=3, colno=16)
+                  end_location: SourceLocation(pos=95, lineno=3, colno=23)
+                  attributes:
+                    <empty>
+                  unattributed_type:
+                    <class 'mecha.contrib.validation.mcdoc.McdocReferenceType'>
+                      location: SourceLocation(pos=88, lineno=3, colno=16)
+                      end_location: SourceLocation(pos=95, lineno=3, colno=23)
+                      path:
+                        <class 'mecha.contrib.validation.mcdoc.McdocPath'>
+                          location: SourceLocation(pos=88, lineno=3, colno=16)
+                          end_location: SourceLocation(pos=95, lineno=3, colno=23)
+                          absolute: False
+                          segments:
+                            <class 'mecha.contrib.validation.mcdoc.McdocIdentifier'>
+                              location: SourceLocation(pos=88, lineno=3, colno=16)
+                              end_location: SourceLocation(pos=95, lineno=3, colno=23)
+                              name: 'Integer'
+                  modifiers:
+                    <empty>
+                <class 'mecha.contrib.validation.mcdoc.McdocType'>
+                  location: SourceLocation(pos=98, lineno=3, colno=26)
+                  end_location: SourceLocation(pos=103, lineno=3, colno=31)
+                  attributes:
+                    <empty>
+                  unattributed_type:
+                    <class 'mecha.contrib.validation.mcdoc.McdocReferenceType'>
+                      location: SourceLocation(pos=98, lineno=3, colno=26)
+                      end_location: SourceLocation(pos=103, lineno=3, colno=31)
+                      path:
+                        <class 'mecha.contrib.validation.mcdoc.McdocPath'>
+                          location: SourceLocation(pos=98, lineno=3, colno=26)
+                          end_location: SourceLocation(pos=103, lineno=3, colno=31)
+                          absolute: False
+                          segments:
+                            <class 'mecha.contrib.validation.mcdoc.McdocIdentifier'>
+                              location: SourceLocation(pos=98, lineno=3, colno=26)
+                              end_location: SourceLocation(pos=103, lineno=3, colno=31)
+                              name: 'Float'
+                  modifiers:
+                    <empty>
+          modifiers:
+            <empty>

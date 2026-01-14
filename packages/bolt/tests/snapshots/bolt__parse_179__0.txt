@@ -1,0 +1,4 @@
+#>ERROR  Expected identifier, nested_location or resource_location but got newline '\n'.
+# line 1, column 19
+#      1 |  merge function_tag
+merge function_tag

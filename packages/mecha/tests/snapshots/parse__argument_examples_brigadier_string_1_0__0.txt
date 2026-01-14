@@ -1,0 +1,12 @@
+brigadier:string 1 0
+---
+{'type': 'phrase'}
+---
+"quoted phrase"
+---
+"quoted phrase"
+---
+<class 'mecha.ast.AstString'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=15, lineno=1, colno=16)
+  value: 'quoted phrase'

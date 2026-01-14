@@ -1,0 +1,12 @@
+minecraft:objective_criteria 0 0
+---
+{}
+---
+minecraft.mined:minecraft.stone
+---
+minecraft.mined:minecraft.stone
+---
+<class 'mecha.ast.AstObjectiveCriteria'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=31, lineno=1, colno=32)
+  value: 'minecraft.mined:minecraft.stone'

@@ -1,0 +1,27 @@
+text = "demo:foo"
+---
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=18, lineno=2, colno=1)
+  commands:
+    <class 'bolt.ast.AstStatement'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=17, lineno=1, colno=18)
+      identifier: 'mecha:sentinel'
+      arguments:
+        <class 'bolt.ast.AstAssignment'>
+          location: SourceLocation(pos=0, lineno=1, colno=1)
+          end_location: SourceLocation(pos=17, lineno=1, colno=18)
+          operator: '='
+          target:
+            <class 'bolt.ast.AstTargetIdentifier'>
+              location: SourceLocation(pos=0, lineno=1, colno=1)
+              end_location: SourceLocation(pos=4, lineno=1, colno=5)
+              value: 'text'
+              rebind: False
+          value:
+            <class 'bolt.ast.AstValue'>
+              location: SourceLocation(pos=7, lineno=1, colno=8)
+              end_location: SourceLocation(pos=17, lineno=1, colno=18)
+              value: 'demo:foo'
+          type_annotation: None

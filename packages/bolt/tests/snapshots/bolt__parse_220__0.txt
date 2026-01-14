@@ -1,0 +1,47 @@
+macro foo:
+    bar
+macro bar:
+    foo
+---
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=37, lineno=4, colno=8)
+  commands:
+    <class 'bolt.ast.AstMacro'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=18, lineno=2, colno=8)
+      identifier: 'foo'
+      arguments:
+        <class 'bolt.ast.AstMacroLiteral'>
+          location: SourceLocation(pos=6, lineno=1, colno=7)
+          end_location: SourceLocation(pos=9, lineno=1, colno=10)
+          value: 'foo'
+        <class 'mecha.ast.AstRoot'>
+          location: SourceLocation(pos=15, lineno=2, colno=5)
+          end_location: SourceLocation(pos=18, lineno=2, colno=8)
+          commands:
+            <class 'bolt.ast.AstMacroCall'>
+              location: SourceLocation(pos=15, lineno=2, colno=5)
+              end_location: SourceLocation(pos=18, lineno=2, colno=8)
+              identifier: 'bar'
+              arguments:
+                <empty>
+    <class 'bolt.ast.AstMacro'>
+      location: SourceLocation(pos=19, lineno=3, colno=1)
+      end_location: SourceLocation(pos=37, lineno=4, colno=8)
+      identifier: 'bar'
+      arguments:
+        <class 'bolt.ast.AstMacroLiteral'>
+          location: SourceLocation(pos=25, lineno=3, colno=7)
+          end_location: SourceLocation(pos=28, lineno=3, colno=10)
+          value: 'bar'
+        <class 'mecha.ast.AstRoot'>
+          location: SourceLocation(pos=34, lineno=4, colno=5)
+          end_location: SourceLocation(pos=37, lineno=4, colno=8)
+          commands:
+            <class 'bolt.ast.AstMacroCall'>
+              location: SourceLocation(pos=34, lineno=4, colno=5)
+              end_location: SourceLocation(pos=37, lineno=4, colno=8)
+              identifier: 'foo'
+              arguments:
+                <empty>

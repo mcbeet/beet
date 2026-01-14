@@ -1,0 +1,9 @@
+data_pack:
+  load: "src"
+pipeline:
+  - mecha
+meta:
+  mecha:
+    commands:
+      - "@mecha/resources/1_20.json"
+      - "commands.json"

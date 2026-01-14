@@ -1,0 +1,34 @@
+class A:
+    """This is a class.
+
+    It doesn't do anything.
+    """
+---
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=70, lineno=6, colno=1)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=69, lineno=5, colno=8)
+      identifier: 'class:name:body'
+      arguments:
+        <class 'bolt.ast.AstClassName'>
+          location: SourceLocation(pos=6, lineno=1, colno=7)
+          end_location: SourceLocation(pos=7, lineno=1, colno=8)
+          decorators:
+            <empty>
+          value: 'A'
+        <class 'bolt.ast.AstClassRoot'>
+          location: SourceLocation(pos=13, lineno=2, colno=5)
+          end_location: SourceLocation(pos=69, lineno=5, colno=8)
+          commands:
+            <class 'bolt.ast.AstDocstring'>
+              location: SourceLocation(pos=13, lineno=2, colno=5)
+              end_location: SourceLocation(pos=69, lineno=5, colno=8)
+              identifier: 'mecha:sentinel'
+              arguments:
+                <class 'bolt.ast.AstValue'>
+                  location: SourceLocation(pos=13, lineno=2, colno=5)
+                  end_location: SourceLocation(pos=69, lineno=5, colno=8)
+                  value: "This is a class.\n\n    It doesn't do anything.\n    "

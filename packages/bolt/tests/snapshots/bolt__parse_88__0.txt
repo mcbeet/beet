@@ -1,0 +1,10 @@
+def f():
+    foo = 0
+#>ERROR  Identifier "foo" is not defined.
+# line 3, column 3
+#      2 |      foo = 0
+#      3 |  f(foo)
+#        :    ^^^
+# Notes:
+#   - Expected equal but got brace ')'.
+f(foo)

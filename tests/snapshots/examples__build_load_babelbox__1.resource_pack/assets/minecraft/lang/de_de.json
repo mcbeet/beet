@@ -4,5 +4,7 @@
   "other.prefix.baz": "v3",
   "foo.hello": "3",
   "foo.world": "6",
+  "entity.gm4.congealed_shard": "x",
+  "entity.gm4.fire_sprite": "x",
   "test": "W\u00fcrde eine ziemlich merkw\u00fcrde"
 }

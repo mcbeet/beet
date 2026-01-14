@@ -1,0 +1,7 @@
+require:
+  - mecha.contrib.debug_ast
+data_pack:
+  load: "src"
+pipeline:
+  - mecha
+  - extend: "beet-location.yml"

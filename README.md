@@ -1,11 +1,3 @@
-> [!IMPORTANT]
-> 
-> We're updating to [Pydantic v2](https://docs.pydantic.dev/2.0/migration/)!
->
-> If your project defines custom Pydantic models and validators, try switching to the [`beta`](https://github.com/mcbeet/beet/tree/beta) branch to be ready for Pydantic v2 when it's released on `main`. 
-
----
-
 <img align="right" src="https://raw.githubusercontent.com/mcbeet/beet/main/logo.png?sanitize=true" alt="logo" width="76">
 
 # Beet
@@ -13,7 +5,6 @@
 [![GitHub Actions](https://github.com/mcbeet/beet/workflows/CI/badge.svg)](https://github.com/mcbeet/beet/actions)
 [![PyPI](https://img.shields.io/pypi/v/beet.svg)](https://pypi.org/project/beet/)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/beet.svg)](https://pypi.org/project/beet/)
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
 [![Discord](https://img.shields.io/discord/900530660677156924?color=7289DA&label=discord&logo=discord&logoColor=fff)](https://discord.gg/98MdSGMm8j)
 
 > The Minecraft pack development kit.
@@ -72,22 +63,17 @@ The `beet` toolchain is designed to support a wide range of use-cases. The most 
 
 ## Installation
 
-The package can be installed with `pip`.
+We recommend `uv` (https://github.com/astral-sh/uv#installation). With `uv` installed, you can try `beet` by running `uvx beet`. You can also install `beet` as a global tool on your machine.
 
-```bash
-$ pip install beet
+```console
+$ uv tool install beet
 ```
 
-To create and edit images programmatically you should install `beet` with the `image` extra or install `Pillow` separately.
-
-```bash
-$ pip install beet[image]
-$ pip install beet Pillow
-```
+> If you see the message `warning: ... is not on your PATH`, you'll need to add the specified directory to your global path to invoke `beet` directly instead of using `uvx beet`.
 
 You can make sure that `beet` was successfully installed by trying to use the toolchain from the command-line.
 
-```bash
+```console
 $ beet --help
 Usage: beet [OPTIONS] COMMAND [ARGS]...
 
@@ -109,38 +95,30 @@ Commands:
 
 ## Contributing
 
-Contributions are welcome. Make sure to first open an issue discussing the problem or the new feature before creating a pull request. The project uses [`poetry`](https://python-poetry.org).
+Contributions are welcome. Make sure to first open an issue discussing the problem or the new feature before creating a pull request. The project uses [`uv`](https://github.com/astral-sh/uv).
 
-```bash
-$ poetry install --extras image
+```console
+$ uv sync
 ```
 
-You can run the tests with `poetry run pytest`. We use [`pytest-minecraft`](https://github.com/vberlier/pytest-minecraft) to run tests against actual Minecraft releases.
+You can run the tests with `uv run pytest`. We use [`pytest-minecraft`](https://github.com/vberlier/pytest-minecraft) to run tests against actual Minecraft releases.
 
-```bash
-$ poetry run pytest
-$ poetry run pytest --minecraft-latest
+```console
+$ uv run pytest
+$ uv run pytest --minecraft-latest
 ```
 
-We also use [`pytest-insta`](https://github.com/vberlier/pytest-minecraft) for snapshot testing. Data pack and resource pack snapshots make it easy to monitor and review changes.
+We also use [`pytest-insta`](https://github.com/vberlier/pytest-insta) for snapshot testing. Data pack and resource pack snapshots make it easy to monitor and review changes.
 
-```bash
-$ poetry run pytest --insta review
+```console
+$ uv run pytest --insta review
 ```
 
-The project must type-check with [`pyright`](https://github.com/microsoft/pyright). If you're using VSCode the [`pylance`](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) extension should report diagnostics automatically. You can also install the type-checker locally with `npm install` and run it from the command-line.
+The code is formatted and checked with [`ruff`](https://github.com/astral-sh/ruff).
 
-```bash
-$ npm run watch
-$ npm run check
-```
-
-The code follows the [`black`](https://github.com/psf/black) code style. Import statements are sorted with [`isort`](https://pycqa.github.io/isort/).
-
-```bash
-$ poetry run isort beet tests
-$ poetry run black beet tests
-$ poetry run black --check beet tests
+```console
+$ uv run ruff format
+$ uv run ruff check
 ```
 
 ---

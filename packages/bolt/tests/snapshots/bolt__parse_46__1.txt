@@ -1,0 +1,105 @@
+_bolt_lineno = [1, 15, 16, 29, 36], [1, 2, 3, 5, 3]
+_bolt_helper_loop = _bolt_runtime.helpers['loop']
+_bolt_helper_branch = _bolt_runtime.helpers['branch']
+_bolt_helper_get_rebind = _bolt_runtime.helpers['get_rebind']
+_bolt_helper_children = _bolt_runtime.helpers['children']
+_bolt_helper_replace = _bolt_runtime.helpers['replace']
+_bolt_helper_exit_stack = _bolt_runtime.helpers['exit_stack']
+with _bolt_runtime.scope() as _bolt_var7:
+    with _bolt_helper_exit_stack() as _bolt_fused_with_statement1:
+        _bolt_fused_with_statement1.enter_context(_bolt_runtime.push_nesting('execute:subcommand'))
+        _bolt_fused_with_statement1.enter_context(_bolt_runtime.push_nesting('execute:if:score:target:targetObjective:matches:range:subcommand', *_bolt_refs[3:6]))
+        _bolt_fused_with_statement1.enter_context(_bolt_runtime.push_nesting('execute:commands'))
+        _bolt_var6 = _bolt_fused_with_statement1.enter_context(_bolt_runtime.scope())
+        _bolt_var0 = 42
+        count = _bolt_var0
+        while True:
+            with _bolt_runtime.scope() as _bolt_condition_commands:
+                _bolt_var1 = count
+                _bolt_var2 = 0
+                _bolt_var1 = _bolt_var1 > _bolt_var2
+            with _bolt_helper_exit_stack() as _bolt_fused_with_statement0:
+                (_bolt_loop_overridden, _bolt_var3) = _bolt_fused_with_statement0.enter_context(_bolt_helper_loop(_bolt_var1))
+                _bolt_runtime.commands.extend(_bolt_condition_commands)
+                if not _bolt_loop_overridden:
+                    _bolt_var1 = bool(_bolt_var1)
+                _bolt_condition = _bolt_fused_with_statement0.enter_context(_bolt_helper_branch(_bolt_var1))
+                if _bolt_condition:
+                    _bolt_runtime.commands.append(_bolt_refs[0])
+                    _bolt_var4 = count
+                    _bolt_var5 = 1
+                    _bolt_var4 = _bolt_var4 - _bolt_var5
+                    _bolt_rebind = _bolt_helper_get_rebind(count)
+                    count = _bolt_var4
+                    if _bolt_rebind is not None:
+                        count = _bolt_rebind(count)
+                    if _bolt_var3:
+                        continue
+            break
+    _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[7], arguments=_bolt_helper_children([_bolt_helper_replace(_bolt_refs[6], arguments=_bolt_helper_children([*_bolt_refs[3:6], _bolt_helper_replace(_bolt_refs[2], arguments=_bolt_helper_children([_bolt_helper_replace(_bolt_refs[1], commands=_bolt_helper_children(_bolt_var6))]))]))])))
+_bolt_var8 = _bolt_helper_replace(_bolt_refs[8], commands=_bolt_helper_children(_bolt_var7))
+---
+output = _bolt_var8
+---
+_bolt_refs[0]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=72, lineno=4, colno=9)
+  end_location: SourceLocation(pos=81, lineno=4, colno=18)
+  identifier: 'say:message'
+  arguments:
+    <class 'mecha.ast.AstMessage'>
+_bolt_refs[1]
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=32, lineno=2, colno=5)
+  end_location: SourceLocation(pos=107, lineno=5, colno=26)
+  commands:
+    <class 'bolt.ast.AstStatement'>
+    <class 'mecha.ast.AstCommand'>
+_bolt_refs[2]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=32, lineno=2, colno=5)
+  end_location: SourceLocation(pos=107, lineno=5, colno=26)
+  identifier: 'execute:commands'
+  arguments:
+    <class 'mecha.ast.AstRoot'>
+_bolt_refs[3]
+<class 'mecha.ast.AstSelector'>
+  location: SourceLocation(pos=9, lineno=1, colno=10)
+  end_location: SourceLocation(pos=11, lineno=1, colno=12)
+  variable: 's'
+  arguments:
+    <empty>
+_bolt_refs[4]
+<class 'mecha.ast.AstObjective'>
+  location: SourceLocation(pos=12, lineno=1, colno=13)
+  end_location: SourceLocation(pos=15, lineno=1, colno=16)
+  value: 'tmp'
+_bolt_refs[5]
+<class 'mecha.ast.AstRange'>
+  location: SourceLocation(pos=24, lineno=1, colno=25)
+  end_location: SourceLocation(pos=26, lineno=1, colno=27)
+  min: 42
+  max: 42
+_bolt_refs[6]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=107, lineno=5, colno=26)
+  identifier: 'execute:if:score:target:targetObjective:matches:range:subcommand'
+  arguments:
+    <class 'mecha.ast.AstSelector'>
+    <class 'mecha.ast.AstObjective'>
+    <class 'mecha.ast.AstRange'>
+    <class 'mecha.ast.AstCommand'>
+_bolt_refs[7]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=107, lineno=5, colno=26)
+  identifier: 'execute:subcommand'
+  arguments:
+    <class 'mecha.ast.AstCommand'>
+_bolt_refs[8]
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=108, lineno=6, colno=1)
+  commands:
+    <class 'mecha.ast.AstCommand'>

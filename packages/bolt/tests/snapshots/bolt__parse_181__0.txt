@@ -1,0 +1,15 @@
+demo:foo
+---
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=9, lineno=2, colno=1)
+  commands:
+    <class 'bolt.ast.AstDocstring'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=8, lineno=1, colno=9)
+      identifier: 'mecha:sentinel'
+      arguments:
+        <class 'bolt.ast.AstValue'>
+          location: SourceLocation(pos=0, lineno=1, colno=1)
+          end_location: SourceLocation(pos=8, lineno=1, colno=9)
+          value: 'demo:foo'

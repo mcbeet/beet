@@ -1,0 +1,5 @@
+import sys
+---
+Traceback (most recent call last):
+  File "demo:foo", line 1, in demo:foo
+bolt.contrib.sandbox.SecurityError: Access forbidden module 'sys'.

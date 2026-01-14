@@ -1,0 +1,19 @@
+scoreboard objectives setdisplay list some_score_name
+---
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=54, lineno=2, colno=1)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=53, lineno=1, colno=54)
+      identifier: 'scoreboard:objectives:setdisplay:slot:objective'
+      arguments:
+        <class 'mecha.ast.AstScoreboardSlot'>
+          location: SourceLocation(pos=33, lineno=1, colno=34)
+          end_location: SourceLocation(pos=37, lineno=1, colno=38)
+          value: 'list'
+        <class 'mecha.ast.AstObjective'>
+          location: SourceLocation(pos=38, lineno=1, colno=39)
+          end_location: SourceLocation(pos=53, lineno=1, colno=54)
+          value: 'some_score_name'

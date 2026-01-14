@@ -1,0 +1,9 @@
+minecraft:particle 1 0
+---
+{}
+---
+dust 1.0 0.5 0.5
+---
+Reported 1 error.
+
+line 1, column 17: Expected number but got eof.

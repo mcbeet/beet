@@ -1,0 +1,84 @@
+def testing_decorator():
+    pass
+
+@testing_decorator
+@testing_decorator(1)
+def f():
+    pass
+---
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=93, lineno=7, colno=9)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=33, lineno=2, colno=9)
+      identifier: 'def:function:body'
+      arguments:
+        <class 'bolt.ast.AstFunctionSignature'>
+          location: SourceLocation(pos=4, lineno=1, colno=5)
+          end_location: SourceLocation(pos=23, lineno=1, colno=24)
+          decorators:
+            <empty>
+          name: 'testing_decorator'
+          arguments:
+            <empty>
+          return_type_annotation: None
+        <class 'mecha.ast.AstRoot'>
+          location: SourceLocation(pos=29, lineno=2, colno=5)
+          end_location: SourceLocation(pos=33, lineno=2, colno=9)
+          commands:
+            <class 'mecha.ast.AstCommand'>
+              location: SourceLocation(pos=29, lineno=2, colno=5)
+              end_location: SourceLocation(pos=33, lineno=2, colno=9)
+              identifier: 'pass'
+              arguments:
+                <empty>
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=76, lineno=6, colno=1)
+      end_location: SourceLocation(pos=93, lineno=7, colno=9)
+      identifier: 'def:function:body'
+      arguments:
+        <class 'bolt.ast.AstFunctionSignature'>
+          location: SourceLocation(pos=80, lineno=6, colno=5)
+          end_location: SourceLocation(pos=83, lineno=6, colno=8)
+          decorators:
+            <class 'bolt.ast.AstDecorator'>
+              location: SourceLocation(pos=35, lineno=4, colno=1)
+              end_location: SourceLocation(pos=53, lineno=4, colno=19)
+              expression:
+                <class 'bolt.ast.AstIdentifier'>
+                  location: SourceLocation(pos=36, lineno=4, colno=2)
+                  end_location: SourceLocation(pos=53, lineno=4, colno=19)
+                  value: 'testing_decorator'
+            <class 'bolt.ast.AstDecorator'>
+              location: SourceLocation(pos=54, lineno=5, colno=1)
+              end_location: SourceLocation(pos=75, lineno=5, colno=22)
+              expression:
+                <class 'bolt.ast.AstCall'>
+                  location: SourceLocation(pos=55, lineno=5, colno=2)
+                  end_location: SourceLocation(pos=75, lineno=5, colno=22)
+                  value:
+                    <class 'bolt.ast.AstIdentifier'>
+                      location: SourceLocation(pos=55, lineno=5, colno=2)
+                      end_location: SourceLocation(pos=72, lineno=5, colno=19)
+                      value: 'testing_decorator'
+                  arguments:
+                    <class 'bolt.ast.AstValue'>
+                      location: SourceLocation(pos=73, lineno=5, colno=20)
+                      end_location: SourceLocation(pos=74, lineno=5, colno=21)
+                      value: 1
+          name: 'f'
+          arguments:
+            <empty>
+          return_type_annotation: None
+        <class 'mecha.ast.AstRoot'>
+          location: SourceLocation(pos=89, lineno=7, colno=5)
+          end_location: SourceLocation(pos=93, lineno=7, colno=9)
+          commands:
+            <class 'mecha.ast.AstCommand'>
+              location: SourceLocation(pos=89, lineno=7, colno=5)
+              end_location: SourceLocation(pos=93, lineno=7, colno=9)
+              identifier: 'pass'
+              arguments:
+                <empty>

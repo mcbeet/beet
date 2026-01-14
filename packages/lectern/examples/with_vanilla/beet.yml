@@ -1,0 +1,8 @@
+require:
+  - lectern.contrib.vanilla
+output: "out"
+pipeline:
+  - lectern
+meta:
+  lectern:
+    load: README.md

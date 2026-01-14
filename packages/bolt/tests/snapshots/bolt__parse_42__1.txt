@@ -1,0 +1,95 @@
+_bolt_lineno = [1, 14, 20], [1, 2, 4]
+_bolt_helper_branch = _bolt_runtime.helpers['branch']
+_bolt_helper_children = _bolt_runtime.helpers['children']
+_bolt_helper_replace = _bolt_runtime.helpers['replace']
+_bolt_helper_exit_stack = _bolt_runtime.helpers['exit_stack']
+with _bolt_runtime.scope() as _bolt_var5:
+    with _bolt_helper_exit_stack() as _bolt_fused_with_statement0:
+        _bolt_fused_with_statement0.enter_context(_bolt_runtime.push_nesting('execute:subcommand'))
+        _bolt_fused_with_statement0.enter_context(_bolt_runtime.push_nesting('execute:if:score:target:targetObjective:matches:range:subcommand', *_bolt_refs[4:7]))
+        _bolt_fused_with_statement0.enter_context(_bolt_runtime.push_nesting('execute:commands'))
+        _bolt_var4 = _bolt_fused_with_statement0.enter_context(_bolt_runtime.scope())
+        _bolt_var0 = 'thing'
+        _bolt_var1 = 'bar'
+        _bolt_var0 = _bolt_var0 == _bolt_var1
+        with _bolt_helper_branch(_bolt_var0) as _bolt_condition:
+            if _bolt_condition:
+                _bolt_runtime.commands.extend(_bolt_refs[0].commands)
+        _bolt_var2 = 'thing'
+        _bolt_var3 = 'foo'
+        _bolt_var2 = _bolt_var2 == _bolt_var3
+        _bolt_condition = _bolt_fused_with_statement0.enter_context(_bolt_helper_branch(_bolt_var2))
+        if _bolt_condition:
+            _bolt_runtime.commands.extend(_bolt_refs[1].commands)
+    _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[8], arguments=_bolt_helper_children([_bolt_helper_replace(_bolt_refs[7], arguments=_bolt_helper_children([*_bolt_refs[4:7], _bolt_helper_replace(_bolt_refs[3], arguments=_bolt_helper_children([_bolt_helper_replace(_bolt_refs[2], commands=_bolt_helper_children(_bolt_var4))]))]))])))
+_bolt_var6 = _bolt_helper_replace(_bolt_refs[9], commands=_bolt_helper_children(_bolt_var5))
+---
+output = _bolt_var6
+---
+_bolt_refs[0]
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=60, lineno=3, colno=9)
+  end_location: SourceLocation(pos=69, lineno=3, colno=18)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+_bolt_refs[1]
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=103, lineno=5, colno=9)
+  end_location: SourceLocation(pos=112, lineno=5, colno=18)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+_bolt_refs[2]
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=31, lineno=2, colno=5)
+  end_location: SourceLocation(pos=112, lineno=5, colno=18)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+    <class 'mecha.ast.AstCommand'>
+_bolt_refs[3]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=31, lineno=2, colno=5)
+  end_location: SourceLocation(pos=112, lineno=5, colno=18)
+  identifier: 'execute:commands'
+  arguments:
+    <class 'mecha.ast.AstRoot'>
+_bolt_refs[4]
+<class 'mecha.ast.AstSelector'>
+  location: SourceLocation(pos=9, lineno=1, colno=10)
+  end_location: SourceLocation(pos=11, lineno=1, colno=12)
+  variable: 's'
+  arguments:
+    <empty>
+_bolt_refs[5]
+<class 'mecha.ast.AstObjective'>
+  location: SourceLocation(pos=12, lineno=1, colno=13)
+  end_location: SourceLocation(pos=15, lineno=1, colno=16)
+  value: 'tmp'
+_bolt_refs[6]
+<class 'mecha.ast.AstRange'>
+  location: SourceLocation(pos=24, lineno=1, colno=25)
+  end_location: SourceLocation(pos=25, lineno=1, colno=26)
+  min: 0
+  max: 0
+_bolt_refs[7]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=112, lineno=5, colno=18)
+  identifier: 'execute:if:score:target:targetObjective:matches:range:subcommand'
+  arguments:
+    <class 'mecha.ast.AstSelector'>
+    <class 'mecha.ast.AstObjective'>
+    <class 'mecha.ast.AstRange'>
+    <class 'mecha.ast.AstCommand'>
+_bolt_refs[8]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=112, lineno=5, colno=18)
+  identifier: 'execute:subcommand'
+  arguments:
+    <class 'mecha.ast.AstCommand'>
+_bolt_refs[9]
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=112, lineno=5, colno=18)
+  commands:
+    <class 'mecha.ast.AstCommand'>

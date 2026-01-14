@@ -1,0 +1,9 @@
+require:
+  - mecha.contrib.embed
+  - mecha.contrib.json_files
+  - mecha.contrib.nested_resources
+  - demo
+data_pack:
+  load: "src"
+pipeline:
+  - mecha

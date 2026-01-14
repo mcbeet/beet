@@ -1,0 +1,9 @@
+minecraft:block_state 1 6
+---
+{}
+---
+stone[thing=hello]{what:is:that}
+---
+Reported 1 error.
+
+line 1, column 27: Expected curly '}' but got colon ':'.

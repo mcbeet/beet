@@ -1,0 +1,111 @@
+_bolt_lineno = [1], [1]
+_bolt_helper_interpolate_numeric = _bolt_runtime.helpers['interpolate_numeric']
+_bolt_helper_replace = _bolt_runtime.helpers['replace']
+_bolt_helper_children = _bolt_runtime.helpers['children']
+with _bolt_runtime.scope() as _bolt_var4:
+    _bolt_var0 = 117
+    _bolt_var1 = 255
+    _bolt_var0 = _bolt_var0 / _bolt_var1
+    _bolt_var0 = _bolt_helper_interpolate_numeric(_bolt_var0, _bolt_refs[0])
+    _bolt_var2 = 164
+    _bolt_var3 = 255
+    _bolt_var2 = _bolt_var2 / _bolt_var3
+    _bolt_var2 = _bolt_helper_interpolate_numeric(_bolt_var2, _bolt_refs[1])
+    _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[9], arguments=_bolt_helper_children([_bolt_helper_replace(_bolt_refs[3], parameters=_bolt_helper_replace(_bolt_refs[2], green=_bolt_var0, blue=_bolt_var2)), _bolt_refs[4], _bolt_refs[5], _bolt_refs[6], _bolt_refs[7], _bolt_refs[8]])))
+_bolt_var5 = _bolt_helper_replace(_bolt_refs[10], commands=_bolt_helper_children(_bolt_var4))
+---
+output = _bolt_var5
+---
+_bolt_refs[0]
+<class 'bolt.ast.AstInterpolation'>
+  location: SourceLocation(pos=33, lineno=1, colno=34)
+  end_location: SourceLocation(pos=40, lineno=1, colno=41)
+  prefix: None
+  unpack: None
+  converter: 'numeric'
+  value:
+    <class 'bolt.ast.AstExpressionBinary'>
+_bolt_refs[1]
+<class 'bolt.ast.AstInterpolation'>
+  location: SourceLocation(pos=43, lineno=1, colno=44)
+  end_location: SourceLocation(pos=50, lineno=1, colno=51)
+  prefix: None
+  unpack: None
+  converter: 'numeric'
+  value:
+    <class 'bolt.ast.AstExpressionBinary'>
+_bolt_refs[2]
+<class 'mecha.ast.AstDustParticleParameters'>
+  location: SourceLocation(pos=24, lineno=1, colno=25)
+  end_location: SourceLocation(pos=55, lineno=1, colno=56)
+  red:
+    <class 'mecha.ast.AstNumber'>
+  green:
+    <class 'bolt.ast.AstInterpolation'>
+  blue:
+    <class 'bolt.ast.AstInterpolation'>
+  size:
+    <class 'mecha.ast.AstNumber'>
+_bolt_refs[3]
+<class 'mecha.ast.AstParticle'>
+  location: SourceLocation(pos=9, lineno=1, colno=10)
+  end_location: SourceLocation(pos=55, lineno=1, colno=56)
+  name:
+    <class 'mecha.ast.AstResourceLocation'>
+  parameters:
+    <class 'mecha.ast.AstDustParticleParameters'>
+_bolt_refs[4]
+<class 'mecha.ast.AstVector3'>
+  location: SourceLocation(pos=56, lineno=1, colno=57)
+  end_location: SourceLocation(pos=61, lineno=1, colno=62)
+  x:
+    <class 'mecha.ast.AstCoordinate'>
+  y:
+    <class 'mecha.ast.AstCoordinate'>
+  z:
+    <class 'mecha.ast.AstCoordinate'>
+_bolt_refs[5]
+<class 'mecha.ast.AstVector3'>
+  location: SourceLocation(pos=62, lineno=1, colno=63)
+  end_location: SourceLocation(pos=67, lineno=1, colno=68)
+  x:
+    <class 'mecha.ast.AstCoordinate'>
+  y:
+    <class 'mecha.ast.AstCoordinate'>
+  z:
+    <class 'mecha.ast.AstCoordinate'>
+_bolt_refs[6]
+<class 'mecha.ast.AstNumber'>
+  location: SourceLocation(pos=68, lineno=1, colno=69)
+  end_location: SourceLocation(pos=69, lineno=1, colno=70)
+  value: 0
+_bolt_refs[7]
+<class 'mecha.ast.AstNumber'>
+  location: SourceLocation(pos=70, lineno=1, colno=71)
+  end_location: SourceLocation(pos=71, lineno=1, colno=72)
+  value: 1
+_bolt_refs[8]
+<class 'mecha.ast.AstSelector'>
+  location: SourceLocation(pos=78, lineno=1, colno=79)
+  end_location: SourceLocation(pos=80, lineno=1, colno=81)
+  variable: 's'
+  arguments:
+    <empty>
+_bolt_refs[9]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=80, lineno=1, colno=81)
+  identifier: 'particle:name:pos:delta:speed:count:force:viewers'
+  arguments:
+    <class 'mecha.ast.AstParticle'>
+    <class 'mecha.ast.AstVector3'>
+    <class 'mecha.ast.AstVector3'>
+    <class 'mecha.ast.AstNumber'>
+    <class 'mecha.ast.AstNumber'>
+    <class 'mecha.ast.AstSelector'>
+_bolt_refs[10]
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=81, lineno=2, colno=1)
+  commands:
+    <class 'mecha.ast.AstCommand'>

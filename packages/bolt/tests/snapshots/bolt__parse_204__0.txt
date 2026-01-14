@@ -1,0 +1,7 @@
+"hey"
+#>ERROR  Invalid indent following final expression.
+# line 2, column 5
+#      1 |  "hey"
+#      2 |      "hey"
+#        :      ^^^^^
+    "hey"

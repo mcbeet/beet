@@ -1,0 +1,3 @@
+from hello:main import i_run_last
+
+i_run_last()

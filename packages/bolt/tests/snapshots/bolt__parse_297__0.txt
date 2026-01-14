@@ -1,0 +1,7 @@
+#>ERROR  Positional marker can not appear directly at the beginning of the argument list.
+# line 1, column 7
+#      1 |  def g(/, *):
+#        :        ^
+#      2 |      pass
+def g(/, *):
+    pass

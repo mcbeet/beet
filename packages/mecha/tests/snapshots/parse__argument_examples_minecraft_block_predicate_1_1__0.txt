@@ -1,0 +1,9 @@
+minecraft:block_predicate 1 1
+---
+{}
+---
+#stone[foo=bar,
+---
+Reported 1 error.
+
+line 1, column 16: Expected quoted_string or word but reached end of file.

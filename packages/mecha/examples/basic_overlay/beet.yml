@@ -1,0 +1,8 @@
+require:
+  - mecha.contrib.relative_location
+  - mecha.contrib.nesting
+data_pack:
+  load: "src"
+pipeline:
+  - mecha
+  - beet.contrib.cleanup_overlays

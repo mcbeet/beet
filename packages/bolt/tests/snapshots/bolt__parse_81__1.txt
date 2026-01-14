@@ -1,0 +1,46 @@
+_bolt_lineno = [1, 10, 11, 13, 21], [1, 9, 10, 11, 14]
+_bolt_helper_get_rebind = _bolt_runtime.helpers['get_rebind']
+_bolt_helper_children = _bolt_runtime.helpers['children']
+_bolt_helper_replace = _bolt_runtime.helpers['replace']
+with _bolt_runtime.scope() as _bolt_var0:
+    def foo(something):
+        def wat():
+            _bolt_runtime.commands.append(_bolt_refs[0])
+            _bolt_var0 = 'hello'
+            x = _bolt_var0
+            _bolt_var1 = something
+            for i in _bolt_var1:
+                _bolt_var2 = i
+                _bolt_var3 = 3
+                _bolt_var2 = _bolt_var2 * _bolt_var3
+                _bolt_rebind = _bolt_helper_get_rebind(x)
+                x += _bolt_var2
+                if _bolt_rebind is not None:
+                    x = _bolt_rebind(x)
+            _bolt_runtime.commands.append(_bolt_refs[1])
+        _bolt_var0 = wat
+        _bolt_var0 = _bolt_var0()
+_bolt_var1 = _bolt_helper_replace(_bolt_refs[2], commands=_bolt_helper_children(_bolt_var0))
+---
+output = _bolt_var1
+---
+_bolt_refs[0]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=43, lineno=3, colno=9)
+  end_location: SourceLocation(pos=108, lineno=7, colno=16)
+  identifier: 'say:message'
+  arguments:
+    <class 'mecha.ast.AstMessage'>
+_bolt_refs[1]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=209, lineno=13, colno=9)
+  end_location: SourceLocation(pos=216, lineno=13, colno=16)
+  identifier: 'say:message'
+  arguments:
+    <class 'mecha.ast.AstMessage'>
+_bolt_refs[2]
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=226, lineno=14, colno=10)
+  commands:
+    <class 'mecha.ast.AstCommand'>

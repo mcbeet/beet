@@ -1,0 +1,6 @@
+require:
+  - sample_ui.resources
+data_pack:
+  load: "src"
+pipeline:
+  - sample_ui.generate

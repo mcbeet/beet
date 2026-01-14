@@ -1,0 +1,9 @@
+minecraft:particle 1 8
+---
+{}
+---
+shriek ~ ~ ~
+---
+Reported 1 error.
+
+line 1, column 8: Expected number but got literal '~'.

@@ -1,0 +1,36 @@
+minecraft:particle 0 6
+---
+{}
+---
+item minecraft:apple
+---
+item minecraft:apple
+---
+<class 'mecha.ast.AstParticle'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=20, lineno=1, colno=21)
+  name:
+    <class 'mecha.ast.AstResourceLocation'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=4, lineno=1, colno=5)
+      is_tag: False
+      namespace: None
+      path: 'item'
+  parameters:
+    <class 'mecha.ast.AstItemParticleParameters'>
+      location: SourceLocation(pos=5, lineno=1, colno=6)
+      end_location: SourceLocation(pos=20, lineno=1, colno=21)
+      item:
+        <class 'mecha.ast.AstItemStack'>
+          location: SourceLocation(pos=5, lineno=1, colno=6)
+          end_location: SourceLocation(pos=20, lineno=1, colno=21)
+          identifier:
+            <class 'mecha.ast.AstResourceLocation'>
+              location: SourceLocation(pos=5, lineno=1, colno=6)
+              end_location: SourceLocation(pos=20, lineno=1, colno=21)
+              is_tag: False
+              namespace: 'minecraft'
+              path: 'apple'
+          arguments:
+            <empty>
+          data_tags: None

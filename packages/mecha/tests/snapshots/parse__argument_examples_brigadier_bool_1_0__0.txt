@@ -1,0 +1,9 @@
+brigadier:bool 1 0
+---
+{}
+---
+blob
+---
+Reported 1 error.
+
+line 1, column 1: Expected literal 'false' or literal 'true' but got literal 'blob'.

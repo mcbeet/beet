@@ -1,0 +1,16 @@
+minecraft:message 0 1
+---
+{}
+---
+foo
+---
+foo
+---
+<class 'mecha.ast.AstMessage'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=3, lineno=1, colno=4)
+  fragments:
+    <class 'mecha.ast.AstMessageText'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=3, lineno=1, colno=4)
+      value: 'foo'

@@ -1,0 +1,9 @@
+class Foo:
+#>ERROR  Identifier "Foo" is not defined.
+# line 2, column 5
+#      1 |  class Foo:
+#      2 |      Foo()
+#        :      ^^^
+# Notes:
+#   - Expected assignment but got literal '()'.
+    Foo()

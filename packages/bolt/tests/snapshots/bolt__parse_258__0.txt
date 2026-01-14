@@ -1,0 +1,11 @@
+if True:
+#>ERROR  Can't apply decorator to nothing.
+# line 2, column 5
+#      1 |  if True:
+#      2 |      @print
+#        :      ^^^^^^
+#      3 |  class A:
+#      4 |      pass
+    @print
+class A:
+    pass

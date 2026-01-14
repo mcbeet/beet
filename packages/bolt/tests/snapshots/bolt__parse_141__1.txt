@@ -1,0 +1,57 @@
+_bolt_lineno = [1, 8], [1, 2]
+_bolt_helper_interpolate_coordinate = _bolt_runtime.helpers['interpolate_coordinate']
+_bolt_helper_replace = _bolt_runtime.helpers['replace']
+_bolt_helper_children = _bolt_runtime.helpers['children']
+with _bolt_runtime.scope() as _bolt_var2:
+    _bolt_var0 = 1
+    a = _bolt_var0
+    _bolt_var1 = a
+    _bolt_var1 = _bolt_helper_interpolate_coordinate(_bolt_var1, _bolt_refs[0])
+    _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[3], arguments=_bolt_helper_children([_bolt_helper_replace(_bolt_refs[1], x=_bolt_var1), _bolt_refs[2]])))
+_bolt_var3 = _bolt_helper_replace(_bolt_refs[4], commands=_bolt_helper_children(_bolt_var2))
+---
+output = _bolt_var3
+---
+_bolt_refs[0]
+<class 'bolt.ast.AstInterpolation'>
+  location: SourceLocation(pos=15, lineno=2, colno=10)
+  end_location: SourceLocation(pos=16, lineno=2, colno=11)
+  prefix: None
+  unpack: None
+  converter: 'coordinate'
+  value:
+    <class 'bolt.ast.AstIdentifier'>
+_bolt_refs[1]
+<class 'mecha.ast.AstVector3'>
+  location: SourceLocation(pos=15, lineno=2, colno=10)
+  end_location: SourceLocation(pos=20, lineno=2, colno=15)
+  x:
+    <class 'bolt.ast.AstInterpolation'>
+  y:
+    <class 'mecha.ast.AstCoordinate'>
+  z:
+    <class 'mecha.ast.AstCoordinate'>
+_bolt_refs[2]
+<class 'mecha.ast.AstBlock'>
+  location: SourceLocation(pos=21, lineno=2, colno=16)
+  end_location: SourceLocation(pos=26, lineno=2, colno=21)
+  identifier:
+    <class 'mecha.ast.AstResourceLocation'>
+  block_states:
+    <empty>
+  data_tags: None
+_bolt_refs[3]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=6, lineno=2, colno=1)
+  end_location: SourceLocation(pos=26, lineno=2, colno=21)
+  identifier: 'setblock:pos:block'
+  arguments:
+    <class 'mecha.ast.AstVector3'>
+    <class 'mecha.ast.AstBlock'>
+_bolt_refs[4]
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=26, lineno=2, colno=21)
+  commands:
+    <class 'bolt.ast.AstStatement'>
+    <class 'mecha.ast.AstCommand'>

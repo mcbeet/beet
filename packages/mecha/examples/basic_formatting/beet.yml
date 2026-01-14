@@ -1,0 +1,41 @@
+pipeline:
+  - data_pack:
+      load:
+        data/demo/functions/minify.mcfunction: foo.mcfunction
+    pipeline:
+      - mecha
+    meta:
+      mecha:
+        multiline: true
+        formatting: minify
+  - data_pack:
+      load:
+        data/demo/functions/dense.mcfunction: foo.mcfunction
+    pipeline:
+      - mecha
+    meta:
+      mecha:
+        multiline: true
+        formatting: dense
+  - data_pack:
+      load:
+        data/demo/functions/preserve.mcfunction: foo.mcfunction
+    pipeline:
+      - mecha
+    meta:
+      mecha:
+        multiline: true
+        formatting: preserve
+  - data_pack:
+      load:
+        data/demo/functions/funky.mcfunction: foo.mcfunction
+    pipeline:
+      - mecha
+    meta:
+      mecha:
+        multiline: true
+        formatting:
+          layout: preserve
+          nbt_compact: true
+          json_ensure_ascii: false
+          json_sort_keys: true

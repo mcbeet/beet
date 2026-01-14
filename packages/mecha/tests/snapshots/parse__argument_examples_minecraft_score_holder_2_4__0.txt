@@ -1,0 +1,9 @@
+minecraft:score_holder 2 4
+---
+{'amount': 'single'}
+---
+@s[ sort = arbitrary , sort = unknown , ]
+---
+Reported 1 error.
+
+line 1, column 31: Expected sort_order but got literal 'unknown'.

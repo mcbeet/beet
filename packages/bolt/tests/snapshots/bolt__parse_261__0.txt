@@ -1,0 +1,8 @@
+def f():
+    class Foo:
+#>ERROR  Statement "return" is not allowed in this context.
+# line 3, column 9
+#      2 |      class Foo:
+#      3 |          return
+#        :          ^^^^^^
+        return

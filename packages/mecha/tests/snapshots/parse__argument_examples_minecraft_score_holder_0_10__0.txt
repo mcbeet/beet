@@ -1,0 +1,45 @@
+minecraft:score_holder 0 10
+---
+{'amount': 'multiple'}
+---
+@e[ type = ! skeleton , type = ! zombie , ]
+---
+@e[type=!skeleton, type=!zombie]
+---
+<class 'mecha.ast.AstSelector'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=43, lineno=1, colno=44)
+  variable: 'e'
+  arguments:
+    <class 'mecha.ast.AstSelectorArgument'>
+      location: SourceLocation(pos=4, lineno=1, colno=5)
+      end_location: SourceLocation(pos=21, lineno=1, colno=22)
+      inverted: True
+      key:
+        <class 'mecha.ast.AstString'>
+          location: SourceLocation(pos=4, lineno=1, colno=5)
+          end_location: SourceLocation(pos=8, lineno=1, colno=9)
+          value: 'type'
+      value:
+        <class 'mecha.ast.AstResourceLocation'>
+          location: SourceLocation(pos=13, lineno=1, colno=14)
+          end_location: SourceLocation(pos=21, lineno=1, colno=22)
+          is_tag: False
+          namespace: None
+          path: 'skeleton'
+    <class 'mecha.ast.AstSelectorArgument'>
+      location: SourceLocation(pos=24, lineno=1, colno=25)
+      end_location: SourceLocation(pos=39, lineno=1, colno=40)
+      inverted: True
+      key:
+        <class 'mecha.ast.AstString'>
+          location: SourceLocation(pos=24, lineno=1, colno=25)
+          end_location: SourceLocation(pos=28, lineno=1, colno=29)
+          value: 'type'
+      value:
+        <class 'mecha.ast.AstResourceLocation'>
+          location: SourceLocation(pos=33, lineno=1, colno=34)
+          end_location: SourceLocation(pos=39, lineno=1, colno=40)
+          is_tag: False
+          namespace: None
+          path: 'zombie'

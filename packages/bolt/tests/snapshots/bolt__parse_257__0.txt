@@ -1,0 +1,5 @@
+#>ERROR  Can't apply decorator to nothing.
+# line 1, column 1
+#      1 |  @print
+#        :  ^^^^^^
+@print

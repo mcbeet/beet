@@ -1,0 +1,28 @@
+minecraft:entity 0 13
+---
+{'type': 'entities', 'amount': 'multiple'}
+---
+@a[ level = 1.. , ]
+---
+@a[level=1..]
+---
+<class 'mecha.ast.AstSelector'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=19, lineno=1, colno=20)
+  variable: 'a'
+  arguments:
+    <class 'mecha.ast.AstSelectorArgument'>
+      location: SourceLocation(pos=4, lineno=1, colno=5)
+      end_location: SourceLocation(pos=15, lineno=1, colno=16)
+      inverted: False
+      key:
+        <class 'mecha.ast.AstString'>
+          location: SourceLocation(pos=4, lineno=1, colno=5)
+          end_location: SourceLocation(pos=9, lineno=1, colno=10)
+          value: 'level'
+      value:
+        <class 'mecha.ast.AstRange'>
+          location: SourceLocation(pos=12, lineno=1, colno=13)
+          end_location: SourceLocation(pos=15, lineno=1, colno=16)
+          min: 1
+          max: None

@@ -1,0 +1,26 @@
+minecraft:message 0 3
+---
+{}
+---
+Hello @p :)
+---
+Hello @p :)
+---
+<class 'mecha.ast.AstMessage'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=11, lineno=1, colno=12)
+  fragments:
+    <class 'mecha.ast.AstMessageText'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=6, lineno=1, colno=7)
+      value: 'Hello '
+    <class 'mecha.ast.AstSelector'>
+      location: SourceLocation(pos=6, lineno=1, colno=7)
+      end_location: SourceLocation(pos=8, lineno=1, colno=9)
+      variable: 'p'
+      arguments:
+        <empty>
+    <class 'mecha.ast.AstMessageText'>
+      location: SourceLocation(pos=8, lineno=1, colno=9)
+      end_location: SourceLocation(pos=11, lineno=1, colno=12)
+      value: ' :)'

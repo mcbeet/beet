@@ -1,0 +1,5 @@
+#>ERROR  Can only delete variables, attributes, or subscripted items.
+# line 1, column 5
+#      1 |  del 1 + 1
+#        :      ^^^^^
+del 1 + 1

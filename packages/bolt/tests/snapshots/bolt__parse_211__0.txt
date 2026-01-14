@@ -1,0 +1,76 @@
+with open("README.md") as f:
+    tellraw @p f.readline()
+---
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=56, lineno=2, colno=28)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=56, lineno=2, colno=28)
+      identifier: 'with:context:body'
+      arguments:
+        <class 'bolt.ast.AstWithContext'>
+          location: SourceLocation(pos=5, lineno=1, colno=6)
+          end_location: SourceLocation(pos=27, lineno=1, colno=28)
+          clauses:
+            <class 'bolt.ast.AstWithClause'>
+              location: SourceLocation(pos=5, lineno=1, colno=6)
+              end_location: SourceLocation(pos=27, lineno=1, colno=28)
+              value:
+                <class 'bolt.ast.AstCall'>
+                  location: SourceLocation(pos=5, lineno=1, colno=6)
+                  end_location: SourceLocation(pos=22, lineno=1, colno=23)
+                  value:
+                    <class 'bolt.ast.AstIdentifier'>
+                      location: SourceLocation(pos=5, lineno=1, colno=6)
+                      end_location: SourceLocation(pos=9, lineno=1, colno=10)
+                      value: 'open'
+                  arguments:
+                    <class 'bolt.ast.AstValue'>
+                      location: SourceLocation(pos=10, lineno=1, colno=11)
+                      end_location: SourceLocation(pos=21, lineno=1, colno=22)
+                      value: 'README.md'
+              target:
+                <class 'bolt.ast.AstTargetIdentifier'>
+                  location: SourceLocation(pos=26, lineno=1, colno=27)
+                  end_location: SourceLocation(pos=27, lineno=1, colno=28)
+                  value: 'f'
+                  rebind: False
+        <class 'mecha.ast.AstRoot'>
+          location: SourceLocation(pos=33, lineno=2, colno=5)
+          end_location: SourceLocation(pos=56, lineno=2, colno=28)
+          commands:
+            <class 'mecha.ast.AstCommand'>
+              location: SourceLocation(pos=33, lineno=2, colno=5)
+              end_location: SourceLocation(pos=56, lineno=2, colno=28)
+              identifier: 'tellraw:targets:message'
+              arguments:
+                <class 'mecha.ast.AstSelector'>
+                  location: SourceLocation(pos=41, lineno=2, colno=13)
+                  end_location: SourceLocation(pos=43, lineno=2, colno=15)
+                  variable: 'p'
+                  arguments:
+                    <empty>
+                <class 'bolt.ast.AstInterpolation'>
+                  location: SourceLocation(pos=44, lineno=2, colno=16)
+                  end_location: SourceLocation(pos=56, lineno=2, colno=28)
+                  prefix: None
+                  unpack: None
+                  converter: 'nbt'
+                  value:
+                    <class 'bolt.ast.AstCall'>
+                      location: SourceLocation(pos=44, lineno=2, colno=16)
+                      end_location: SourceLocation(pos=56, lineno=2, colno=28)
+                      value:
+                        <class 'bolt.ast.AstAttribute'>
+                          location: SourceLocation(pos=44, lineno=2, colno=16)
+                          end_location: SourceLocation(pos=54, lineno=2, colno=26)
+                          name: 'readline'
+                          value:
+                            <class 'bolt.ast.AstIdentifier'>
+                              location: SourceLocation(pos=44, lineno=2, colno=16)
+                              end_location: SourceLocation(pos=45, lineno=2, colno=17)
+                              value: 'f'
+                      arguments:
+                        <empty>

@@ -1,0 +1,6 @@
+name: demo
+version: 1.2.3
+data_pack:
+  load: "src"
+pipeline:
+  - version_prefixing

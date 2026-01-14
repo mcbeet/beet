@@ -1,0 +1,14 @@
+minecraft:dimension 0 1
+---
+{}
+---
+minecraft:the_nether
+---
+minecraft:the_nether
+---
+<class 'mecha.ast.AstResourceLocation'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=20, lineno=1, colno=21)
+  is_tag: False
+  namespace: 'minecraft'
+  path: 'the_nether'

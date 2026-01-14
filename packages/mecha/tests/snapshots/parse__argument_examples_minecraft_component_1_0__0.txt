@@ -1,0 +1,9 @@
+minecraft:component 1 0
+---
+{}
+---
+{"hey": ]}
+---
+Reported 1 error.
+
+line 1, column 9: Expected array, bracket '[', curly '{', number, quoted_string or string but got bracket ']'.

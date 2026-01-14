@@ -2,79 +2,90 @@ name: CI
 
 on:
   push:
-    branches: [main]
-    paths-ignore:
-      - "docs/**"
+    branches: [main, beta]
   pull_request:
-    branches: [main]
-    paths-ignore:
-      - "docs/**"
+    branches: [main, beta]
 
 env:
-  PYTHON_VERSION: "3.10"
-  POETRY_VERSION: "1.5.1"
+  PACKAGES: |
+    .
+    packages/lectern
+    packages/mecha
+    packages/bolt
 
 jobs:
-  main:
-    name: Test and release
+  check:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+        uses: actions/checkout@v5
       - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{ env.PYTHON_VERSION }}
-      - name: Cache poetry
-        id: cache-poetry
-        uses: actions/cache@v4
-        with:
-          path: ~/.local
-          key: poetry-${{ runner.os }}-${{ env.PYTHON_VERSION }}-${{ env.POETRY_VERSION }}
-      - name: Install poetry
-        if: steps.cache-poetry.outputs.cache-hit != 'true'
-        uses: snok/install-poetry@v1
-        with:
-          version: ${{ env.POETRY_VERSION }}
-          virtualenvs-in-project: true
-      - name: Cache venv
-        id: cache-venv
-        uses: actions/cache@v4
-        with:
-          path: .venv
-          key: venv-${{ runner.os }}-${{ env.PYTHON_VERSION }}-${{ env.POETRY_VERSION }}-${{ hashFiles('poetry.lock') }}
-          restore-keys: |
-            venv-${{ runner.os }}-${{ env.PYTHON_VERSION }}-${{ env.POETRY_VERSION }}-
+        uses: actions/setup-python@v6
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v7
       - name: Install dependencies
-        if: steps.cache-venv.outputs.cache-hit != 'true'
-        run: poetry install -E image
-      - name: Setup npm cache
-        id: cache-npm
-        uses: actions/cache@v4
+        run: uv sync --all-packages --locked --all-extras --dev
+      - name: Tests
+        run: |
+          status=0
+          for p in $PACKAGES; do
+            if ! (uv run --directory "$p" pytest -v); then
+              status=1
+            fi
+          done
+          exit $status
+      - name: Pyright
+        run: uv run basedpyright --level error
+      - name: Ruff
+        run: uv run ruff check
+      - name: Ruff format
+        run: uv run ruff format --check --diff
+
+  release:
+    if: github.event_name == 'push' && github.repository == 'mcbeet/beet'
+    needs: check
+    concurrency:
+      group: ${{ github.workflow }}-release-${{ github.ref_name }}
+      cancel-in-progress: false
+    environment:
+      name: pypi
+    permissions:
+      id-token: write
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
         with:
-          path: node_modules
-          key: npm-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
-      - name: Install Pyright
-        if: steps.cache-npm.outputs.cache-hit != 'true'
-        run: npm install
-      - name: Run tests
-        run: poetry run pytest -v
-      - name: Run type-checking
-        run: npm run check
-      - name: Check formatting
-        run: poetry run black --check beet tests
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
+      - name: Reset workflow sha
+        run: git reset --hard ${{ github.sha }}
+      - name: Set up Python
+        uses: actions/setup-python@v6
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v7
+      - name: Install dependencies
+        run: uv sync --all-packages --locked --all-extras --dev
       - name: Release
-        if: |
-          github.repository == 'mcbeet/beet'
-          && github.event_name == 'push'
-          && github.ref == 'refs/heads/main'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
         run: |
-          git config --global user.name "github-actions"
-          git config --global user.email "action@github.com"
-          poetry run semantic-release publish -v DEBUG -D commit_author="github-actions <action@github.com>"
+          for p in $PACKAGES; do
+          uv run --directory "$p" bash -e <<"EOF"
+            if semantic-release --strict version --no-commit --no-tag; then
+              uv lock --upgrade-package $(uv version | cut -d " " -f1)
+              git add "$GITHUB_WORKSPACE/uv.lock"
+              grep "{ workspace = true }" pyproject.toml | {
+                while read dep _; do
+                  uv add "$dep>=$(uv version --package $dep --short)"
+                done
+              }
+              git add pyproject.toml
+              uv build -o dist
+              semantic-release --strict version
+              uv publish dist/*
+              semantic-release publish
+            fi
+          EOF
+          done

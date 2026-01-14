@@ -1,0 +1,7 @@
+#>ERROR  Variadic keyword arguments should not be followed by anything.
+# line 1, column 17
+#      1 |  def g(**kwargs, foo):
+#        :                  ^^^
+#      2 |      pass
+def g(**kwargs, foo):
+    pass

@@ -1,0 +1,9 @@
+minecraft:entity 2 2
+---
+{'type': 'players', 'amount': 'multiple'}
+---
+@a[ gamemode = creative , gamemode = unknown , ]
+---
+Reported 1 error.
+
+line 1, column 38: Expected gamemode but got literal 'unknown'.

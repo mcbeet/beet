@@ -1,0 +1,8 @@
+def i_run_last():
+  print(2)
+  append function hello:world:
+    say second
+
+print(1)
+append function hello:world:
+  say first

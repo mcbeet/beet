@@ -1,0 +1,6 @@
+require:
+  - bolt.contrib.debug_codegen
+data_pack:
+  load: "src"
+pipeline:
+  - mecha

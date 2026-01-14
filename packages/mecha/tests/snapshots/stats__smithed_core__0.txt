@@ -1,0 +1,163 @@
+Analyzed 108 functions
+---------------------------------------------------------------------------------
+Total commands (414 behind execute)                                    |      689
+---------------------------------------------------------------------------------
+       /execute                                                        |      414
+                run <subcommand>                                       |      414
+                positioned <pos> <subcommand>                          |      183
+                if block <pos> <block> <subcommand>                    |      170
+                if score <target> <targetObjective> matches <range>... |      117
+                if data storage <source> <path> <subcommand>           |       87
+                store result score <targets> <objective> <subcommand>  |       34
+                unless score <target> <targetObjective> matches <ra... |       16
+                align <axes> <subcommand>                              |       14
+                unless data storage <source> <path> <subcommand>       |       13
+                if predicate <predicate> <subcommand>                  |       12
+                if data entity <source> <path> <subcommand>            |        7
+                if entity <entities> <subcommand>                      |        6
+                store result storage <target> <path> int <scale> <s... |        5
+                as <targets> <subcommand>                              |        4
+                if score <target> <targetObjective> >= <source> <so... |        2
+                if score <target> <targetObjective> > <source> <sou... |        2
+                at <targets> <subcommand>                              |        2
+                store success score <targets> <objective> <subcomma... |        1
+                if score <target> <targetObjective> < <source> <sou... |        1
+                store result entity <target> <path> float <scale> <... |        1
+                if score <target> <targetObjective> = <source> <sou... |        1
+                unless score <target> <targetObjective> = <source> ... |        1
+       /function (257 behind execute)                                  |      309
+       /scoreboard (82 behind execute)                                 |      219
+                   players set <targets> <objective> <score>           |      105
+                   players operation <targets> <targetObjective> <o... |       80
+                   players remove <targets> <objective> <score>        |       13
+                   objectives add <objective> <criteria>               |        9
+                   players get <target> <objective>                    |        6
+                   players reset <targets> <objective>                 |        3
+                   players add <targets> <objective> <score>           |        3
+       /data (34 behind execute)                                       |       75
+             get storage <target> <path>                               |       23
+             modify storage <target> <targetPath> set from entity <... |       14
+             merge storage <target> <nbt>                              |       11
+             modify storage <target> <targetPath> merge value <value>  |        9
+             remove storage <target> <path>                            |        5
+             modify storage <target> <targetPath> set value <value>    |        4
+             modify storage <target> <targetPath> set from entity <... |        3
+             modify storage <target> <targetPath> set from block <s... |        2
+             modify storage <target> <targetPath> set from block <s... |        1
+             get entity <target> <path>                                |        1
+             get entity <target> <path> <scale>                        |        1
+             modify storage <target> <targetPath> set from storage ... |        1
+       /attribute (7 behind execute)                                   |       29
+                  <target> <attribute> modifier add <uuid> <name> <... |       11
+                  <target> <attribute> modifier remove <uuid>          |       11
+                  <target> <attribute> get <scale>                     |        6
+                  <target> <attribute> get                             |        1
+       /item (24 behind execute)                                       |       24
+             modify entity <targets> <slot> <modifier>                 |       12
+             replace entity <targets> <slot> with <item>               |       12
+       /advancement                                                    |       10
+       /tag (1 behind execute)                                         |        4
+            <targets> add <name>                                       |        2
+            <targets> remove <name>                                    |        2
+       /schedule                                                       |        3
+                 clear <function>                                      |        1
+                 function <function> <time>                            |        1
+                 function <function> <time> replace                    |        1
+       /gamerule (3 behind execute)                                    |        3
+                 showDeathMessages <value>                             |        2
+                 showDeathMessages                                     |        1
+       /kill (1 behind execute)                                        |        3
+       /effect                                                         |        3
+       /tellraw (3 behind execute)                                     |        3
+       /particle                                                       |        1
+       /setblock                                                       |        1
+       /playsound (1 behind execute)                                   |        1
+       /time (1 behind execute)                                        |        1
+---------------------------------------------------------------------------------
+Total selectors                                                        |      173
+---------------------------------------------------------------------------------
+       @s                                                              |      163
+          [type]                                                       |        8
+          [tag]                                                        |        1
+       @a                                                              |        9
+          [tag]                                                        |        4
+          [distance]                                                   |        1
+       @e                                                              |        1
+          [type]                                                       |        1
+       @e with type                                                    |        1
+          [type=#smithed:core/ticking]                                 |        1
+---------------------------------------------------------------------------------
+Scoreboard objectives                                                  |        9
+---------------------------------------------------------------------------------
+       smd.data (dummy)                                                |      176
+                $temp4                                                 |       83
+                $temp                                                  |       41
+                $out                                                   |       18
+                $temp1                                                 |        7
+                $temp3                                                 |        4
+                $temp5                                                 |        4
+                $seconds                                               |        4
+                $minutes                                               |        4
+                $hours                                                 |        4
+                $temp2                                                 |        3
+                $temp6                                                 |        3
+       smd.damage (dummy)                                              |      158
+                  #reduction                                           |       26
+                  #protection                                          |       12
+                  #helm                                                |        6
+                  #chest                                               |        6
+                  #legs                                                |        6
+                  #boots                                               |        6
+                  #10armor                                             |        5
+                  #damage                                              |        5
+                  #armor_calc                                          |        5
+                  #damage_toughness                                    |        5
+                  $maximumHealth                                       |        4
+                  #10toughness                                         |        4
+                  #resistance                                          |        4
+                  $temp                                                |        4
+                  #toughness_calc                                      |        3
+                  #10ATF                                               |        3
+                  $currentHealth                                       |        2
+       load.status (dummy)                                             |       77
+                   #smd.core.major                                     |       26
+                   #smd.core.minor                                     |       25
+                   #smd.core.patch                                     |       24
+       smd.const (dummy)                                               |       56
+                 100                                                   |        7
+                 10                                                    |        4
+                 80                                                    |        4
+                 4                                                     |        3
+                 20                                                    |        3
+                 60                                                    |        3
+                 8                                                     |        2
+                 5                                                     |        2
+                 200                                                   |        2
+                 25                                                    |        2
+                 24                                                    |        2
+                 1200                                                  |        2
+                 72000                                                 |        2
+                 0                                                     |        1
+                 1                                                     |        1
+                 2                                                     |        1
+                 3                                                     |        1
+                 6                                                     |        1
+                 7                                                     |        1
+                 9                                                     |        1
+                 15                                                    |        1
+                 30                                                    |        1
+                 40                                                    |        1
+                 50                                                    |        1
+                 70                                                    |        1
+                 90                                                    |        1
+                 250                                                   |        1
+                 1000                                                  |        1
+                 2000                                                  |        1
+                 2500                                                  |        1
+       smd.id (dummy)                                                  |        5
+              $global                                                  |        2
+       smd.logLevel (dummy)                                            |        4
+                    $temp                                              |        2
+       smd.coas (minecraft.used:minecraft.carrot_on_a_stick)           |        3
+       smd.takeDamage (minecraft.custom:minecraft.damage_taken)        |        1
+       smd.dealDamage (minecraft.custom:minecraft.damage_dealt)        |        1

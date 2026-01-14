@@ -1,0 +1,9 @@
+minecraft:entity 4 1
+---
+{'type': 'entities', 'amount': 'single'}
+---
+@a[tag=!foo]
+---
+Reported 1 error.
+
+line 1, column 1: Expected entity selector targeting a single entity.

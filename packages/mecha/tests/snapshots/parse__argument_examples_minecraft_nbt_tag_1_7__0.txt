@@ -1,0 +1,9 @@
+minecraft:nbt_tag 1 7
+---
+{}
+---
+{with space: 5}
+---
+Reported 1 error.
+
+line 1, column 7: Expected colon but got string 'space'.

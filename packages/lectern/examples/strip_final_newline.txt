@@ -1,0 +1,7 @@
+@function(strip_final_newline) demo:hello
+say hello
+
+@function(strip_final_newline) demo:foo
+say foo
+@function(strip_final_newline) demo:bar
+say bar

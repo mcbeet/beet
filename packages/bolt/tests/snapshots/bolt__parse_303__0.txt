@@ -1,0 +1,7 @@
+#>ERROR  Variadic arguments already specified.
+# line 1, column 24
+#      1 |  def g(foo, *args, bar, *args):
+#        :                         ^
+#      2 |      pass
+def g(foo, *args, bar, *args):
+    pass

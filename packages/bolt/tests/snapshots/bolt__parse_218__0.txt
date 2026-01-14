@@ -1,0 +1,33 @@
+macro foo:
+    foo
+foo
+---
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=23, lineno=4, colno=1)
+  commands:
+    <class 'bolt.ast.AstMacro'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=18, lineno=2, colno=8)
+      identifier: 'foo'
+      arguments:
+        <class 'bolt.ast.AstMacroLiteral'>
+          location: SourceLocation(pos=6, lineno=1, colno=7)
+          end_location: SourceLocation(pos=9, lineno=1, colno=10)
+          value: 'foo'
+        <class 'mecha.ast.AstRoot'>
+          location: SourceLocation(pos=15, lineno=2, colno=5)
+          end_location: SourceLocation(pos=18, lineno=2, colno=8)
+          commands:
+            <class 'bolt.ast.AstMacroCall'>
+              location: SourceLocation(pos=15, lineno=2, colno=5)
+              end_location: SourceLocation(pos=18, lineno=2, colno=8)
+              identifier: 'foo'
+              arguments:
+                <empty>
+    <class 'bolt.ast.AstMacroCall'>
+      location: SourceLocation(pos=19, lineno=3, colno=1)
+      end_location: SourceLocation(pos=22, lineno=3, colno=4)
+      identifier: 'foo'
+      arguments:
+        <empty>

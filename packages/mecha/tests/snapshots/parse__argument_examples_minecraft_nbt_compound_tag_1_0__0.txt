@@ -1,0 +1,9 @@
+minecraft:nbt_compound_tag 1 0
+---
+{}
+---
+[{foo:bar}]
+---
+Reported 1 error.
+
+line 1, column 1: Expected nbt compound.

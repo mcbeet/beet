@@ -1,0 +1,75 @@
+minecraft:particle 0 12
+---
+{}
+---
+minecraft:block{block_state: {Name: 'minecraft:redstone_lamp', Properties: {lit: 'true'}}}
+---
+minecraft:block{block_state: {Name: "minecraft:redstone_lamp", Properties: {lit: "true"}}}
+---
+<class 'mecha.ast.AstParticle'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=90, lineno=1, colno=91)
+  name:
+    <class 'mecha.ast.AstResourceLocation'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=15, lineno=1, colno=16)
+      is_tag: False
+      namespace: 'minecraft'
+      path: 'block'
+  parameters:
+    <class 'mecha.ast.AstNbtCompound'>
+      location: SourceLocation(pos=15, lineno=1, colno=16)
+      end_location: SourceLocation(pos=90, lineno=1, colno=91)
+      entries:
+        <class 'mecha.ast.AstNbtCompoundEntry'>
+          location: SourceLocation(pos=16, lineno=1, colno=17)
+          end_location: SourceLocation(pos=89, lineno=1, colno=90)
+          key:
+            <class 'mecha.ast.AstNbtCompoundKey'>
+              location: SourceLocation(pos=16, lineno=1, colno=17)
+              end_location: SourceLocation(pos=27, lineno=1, colno=28)
+              value: 'block_state'
+          value:
+            <class 'mecha.ast.AstNbtCompound'>
+              location: SourceLocation(pos=29, lineno=1, colno=30)
+              end_location: SourceLocation(pos=89, lineno=1, colno=90)
+              entries:
+                <class 'mecha.ast.AstNbtCompoundEntry'>
+                  location: SourceLocation(pos=30, lineno=1, colno=31)
+                  end_location: SourceLocation(pos=61, lineno=1, colno=62)
+                  key:
+                    <class 'mecha.ast.AstNbtCompoundKey'>
+                      location: SourceLocation(pos=30, lineno=1, colno=31)
+                      end_location: SourceLocation(pos=34, lineno=1, colno=35)
+                      value: 'Name'
+                  value:
+                    <class 'mecha.ast.AstNbtValue'>
+                      location: SourceLocation(pos=36, lineno=1, colno=37)
+                      end_location: SourceLocation(pos=61, lineno=1, colno=62)
+                      value: String('minecraft:redstone_lamp')
+                <class 'mecha.ast.AstNbtCompoundEntry'>
+                  location: SourceLocation(pos=63, lineno=1, colno=64)
+                  end_location: SourceLocation(pos=88, lineno=1, colno=89)
+                  key:
+                    <class 'mecha.ast.AstNbtCompoundKey'>
+                      location: SourceLocation(pos=63, lineno=1, colno=64)
+                      end_location: SourceLocation(pos=73, lineno=1, colno=74)
+                      value: 'Properties'
+                  value:
+                    <class 'mecha.ast.AstNbtCompound'>
+                      location: SourceLocation(pos=75, lineno=1, colno=76)
+                      end_location: SourceLocation(pos=88, lineno=1, colno=89)
+                      entries:
+                        <class 'mecha.ast.AstNbtCompoundEntry'>
+                          location: SourceLocation(pos=76, lineno=1, colno=77)
+                          end_location: SourceLocation(pos=87, lineno=1, colno=88)
+                          key:
+                            <class 'mecha.ast.AstNbtCompoundKey'>
+                              location: SourceLocation(pos=76, lineno=1, colno=77)
+                              end_location: SourceLocation(pos=79, lineno=1, colno=80)
+                              value: 'lit'
+                          value:
+                            <class 'mecha.ast.AstNbtValue'>
+                              location: SourceLocation(pos=81, lineno=1, colno=82)
+                              end_location: SourceLocation(pos=87, lineno=1, colno=88)
+                              value: String('true')

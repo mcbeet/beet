@@ -1,0 +1,4 @@
+#>ERROR  Expected bracket '[', curly '{', docstring, ellipsis, false, identifier or 5 other tokens but got newline '\n'.
+# line 1, column 12
+#      1 |  if True and
+if True and

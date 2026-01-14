@@ -1,0 +1,43 @@
+minecraft:entity 0 7
+---
+{'type': 'entities', 'amount': 'multiple'}
+---
+@a[ advancements = { } , advancements = { } , ]
+---
+@a[advancements={}, advancements={}]
+---
+<class 'mecha.ast.AstSelector'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=47, lineno=1, colno=48)
+  variable: 'a'
+  arguments:
+    <class 'mecha.ast.AstSelectorArgument'>
+      location: SourceLocation(pos=4, lineno=1, colno=5)
+      end_location: SourceLocation(pos=22, lineno=1, colno=23)
+      inverted: False
+      key:
+        <class 'mecha.ast.AstString'>
+          location: SourceLocation(pos=4, lineno=1, colno=5)
+          end_location: SourceLocation(pos=16, lineno=1, colno=17)
+          value: 'advancements'
+      value:
+        <class 'mecha.ast.AstSelectorAdvancements'>
+          location: SourceLocation(pos=19, lineno=1, colno=20)
+          end_location: SourceLocation(pos=22, lineno=1, colno=23)
+          advancements:
+            <empty>
+    <class 'mecha.ast.AstSelectorArgument'>
+      location: SourceLocation(pos=25, lineno=1, colno=26)
+      end_location: SourceLocation(pos=43, lineno=1, colno=44)
+      inverted: False
+      key:
+        <class 'mecha.ast.AstString'>
+          location: SourceLocation(pos=25, lineno=1, colno=26)
+          end_location: SourceLocation(pos=37, lineno=1, colno=38)
+          value: 'advancements'
+      value:
+        <class 'mecha.ast.AstSelectorAdvancements'>
+          location: SourceLocation(pos=40, lineno=1, colno=41)
+          end_location: SourceLocation(pos=43, lineno=1, colno=44)
+          advancements:
+            <empty>

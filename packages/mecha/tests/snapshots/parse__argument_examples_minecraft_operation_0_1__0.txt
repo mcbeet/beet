@@ -1,0 +1,12 @@
+minecraft:operation 0 1
+---
+{}
+---
+>
+---
+>
+---
+<class 'mecha.ast.AstScoreboardOperation'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=1, lineno=1, colno=2)
+  value: '>'

@@ -1,0 +1,12 @@
+@function demo:foo
+@function demo:bar
+@skip
+
+
+This is ignored
+
+
+@function demo:thing
+@skip
+
+Same here

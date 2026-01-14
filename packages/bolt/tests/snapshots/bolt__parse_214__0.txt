@@ -1,0 +1,5 @@
+#>ERROR  Expected identifier but got invalid ':'.
+# line 1, column 13
+#      1 |  with None as:
+#        :              ^
+with None as:

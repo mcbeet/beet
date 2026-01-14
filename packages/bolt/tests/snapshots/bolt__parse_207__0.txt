@@ -1,0 +1,104 @@
+red = {"color": "red"}
+tellraw @p ["", {"text": "hey", **red}, *red.color]
+---
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=75, lineno=3, colno=1)
+  commands:
+    <class 'bolt.ast.AstStatement'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=22, lineno=1, colno=23)
+      identifier: 'mecha:sentinel'
+      arguments:
+        <class 'bolt.ast.AstAssignment'>
+          location: SourceLocation(pos=0, lineno=1, colno=1)
+          end_location: SourceLocation(pos=22, lineno=1, colno=23)
+          operator: '='
+          target:
+            <class 'bolt.ast.AstTargetIdentifier'>
+              location: SourceLocation(pos=0, lineno=1, colno=1)
+              end_location: SourceLocation(pos=3, lineno=1, colno=4)
+              value: 'red'
+              rebind: False
+          value:
+            <class 'bolt.ast.AstDict'>
+              location: SourceLocation(pos=6, lineno=1, colno=7)
+              end_location: SourceLocation(pos=22, lineno=1, colno=23)
+              items:
+                <class 'bolt.ast.AstDictItem'>
+                  location: SourceLocation(pos=7, lineno=1, colno=8)
+                  end_location: SourceLocation(pos=21, lineno=1, colno=22)
+                  key:
+                    <class 'bolt.ast.AstValue'>
+                      location: SourceLocation(pos=7, lineno=1, colno=8)
+                      end_location: SourceLocation(pos=14, lineno=1, colno=15)
+                      value: 'color'
+                  value:
+                    <class 'bolt.ast.AstValue'>
+                      location: SourceLocation(pos=16, lineno=1, colno=17)
+                      end_location: SourceLocation(pos=21, lineno=1, colno=22)
+                      value: 'red'
+          type_annotation: None
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=23, lineno=2, colno=1)
+      end_location: SourceLocation(pos=74, lineno=2, colno=52)
+      identifier: 'tellraw:targets:message'
+      arguments:
+        <class 'mecha.ast.AstSelector'>
+          location: SourceLocation(pos=31, lineno=2, colno=9)
+          end_location: SourceLocation(pos=33, lineno=2, colno=11)
+          variable: 'p'
+          arguments:
+            <empty>
+        <class 'mecha.ast.AstNbtList'>
+          location: SourceLocation(pos=34, lineno=2, colno=12)
+          end_location: SourceLocation(pos=74, lineno=2, colno=52)
+          elements:
+            <class 'mecha.ast.AstNbtValue'>
+              location: SourceLocation(pos=35, lineno=2, colno=13)
+              end_location: SourceLocation(pos=37, lineno=2, colno=15)
+              value: String('')
+            <class 'mecha.ast.AstNbtCompound'>
+              location: SourceLocation(pos=39, lineno=2, colno=17)
+              end_location: SourceLocation(pos=61, lineno=2, colno=39)
+              entries:
+                <class 'mecha.ast.AstNbtCompoundEntry'>
+                  location: SourceLocation(pos=40, lineno=2, colno=18)
+                  end_location: SourceLocation(pos=53, lineno=2, colno=31)
+                  key:
+                    <class 'mecha.ast.AstNbtCompoundKey'>
+                      location: SourceLocation(pos=40, lineno=2, colno=18)
+                      end_location: SourceLocation(pos=46, lineno=2, colno=24)
+                      value: 'text'
+                  value:
+                    <class 'mecha.ast.AstNbtValue'>
+                      location: SourceLocation(pos=48, lineno=2, colno=26)
+                      end_location: SourceLocation(pos=53, lineno=2, colno=31)
+                      value: String('hey')
+                <class 'bolt.ast.AstInterpolation'>
+                  location: SourceLocation(pos=57, lineno=2, colno=35)
+                  end_location: SourceLocation(pos=60, lineno=2, colno=38)
+                  prefix: None
+                  unpack: '**'
+                  converter: 'nbt'
+                  value:
+                    <class 'bolt.ast.AstIdentifier'>
+                      location: SourceLocation(pos=57, lineno=2, colno=35)
+                      end_location: SourceLocation(pos=60, lineno=2, colno=38)
+                      value: 'red'
+            <class 'bolt.ast.AstInterpolation'>
+              location: SourceLocation(pos=64, lineno=2, colno=42)
+              end_location: SourceLocation(pos=73, lineno=2, colno=51)
+              prefix: None
+              unpack: '*'
+              converter: 'nbt'
+              value:
+                <class 'bolt.ast.AstAttribute'>
+                  location: SourceLocation(pos=64, lineno=2, colno=42)
+                  end_location: SourceLocation(pos=73, lineno=2, colno=51)
+                  name: 'color'
+                  value:
+                    <class 'bolt.ast.AstIdentifier'>
+                      location: SourceLocation(pos=64, lineno=2, colno=42)
+                      end_location: SourceLocation(pos=67, lineno=2, colno=45)
+                      value: 'red'

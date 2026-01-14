@@ -1,0 +1,29 @@
+yo = f""
+---
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=9, lineno=2, colno=1)
+  commands:
+    <class 'bolt.ast.AstStatement'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=8, lineno=1, colno=9)
+      identifier: 'mecha:sentinel'
+      arguments:
+        <class 'bolt.ast.AstAssignment'>
+          location: SourceLocation(pos=0, lineno=1, colno=1)
+          end_location: SourceLocation(pos=8, lineno=1, colno=9)
+          operator: '='
+          target:
+            <class 'bolt.ast.AstTargetIdentifier'>
+              location: SourceLocation(pos=0, lineno=1, colno=1)
+              end_location: SourceLocation(pos=2, lineno=1, colno=3)
+              value: 'yo'
+              rebind: False
+          value:
+            <class 'bolt.ast.AstFormatString'>
+              location: SourceLocation(pos=5, lineno=1, colno=6)
+              end_location: SourceLocation(pos=8, lineno=1, colno=9)
+              fmt: ''
+              values:
+                <empty>
+          type_annotation: None

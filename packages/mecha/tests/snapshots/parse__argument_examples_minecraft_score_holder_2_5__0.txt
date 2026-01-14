@@ -1,0 +1,9 @@
+minecraft:score_holder 2 5
+---
+{'amount': 'single'}
+---
+@a[ unknown = 1 , ]
+---
+Reported 1 error.
+
+line 1, column 5: Invalid selector argument 'unknown'.

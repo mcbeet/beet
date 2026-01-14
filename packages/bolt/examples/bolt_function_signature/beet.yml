@@ -1,0 +1,7 @@
+require:
+  - bolt
+data_pack:
+  load:
+    data/demo/functions/foo.mcfunction: "foo.mcfunction"
+pipeline:
+  - mecha

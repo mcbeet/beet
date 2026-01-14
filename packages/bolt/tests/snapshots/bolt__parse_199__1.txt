@@ -1,0 +1,88 @@
+_bolt_lineno = [1, 17, 21, 25, 27], [1, 2, 3, 4, 5]
+_bolt_helper_get_dup = _bolt_runtime.helpers['get_dup']
+_bolt_helper_branch = _bolt_runtime.helpers['branch']
+_bolt_helper_get_rebind = _bolt_runtime.helpers['get_rebind']
+_bolt_helper_operator_not = _bolt_runtime.helpers['operator_not']
+_bolt_helper_operator_in = _bolt_runtime.helpers['operator_in']
+_bolt_helper_operator_not_in = _bolt_runtime.helpers['operator_not_in']
+_bolt_helper_children = _bolt_runtime.helpers['children']
+_bolt_helper_replace = _bolt_runtime.helpers['replace']
+with _bolt_runtime.scope() as _bolt_var27:
+    _bolt_var0 = False
+    _bolt_var1 = True
+    _bolt_var2 = [_bolt_var0, _bolt_var1]
+    for a in _bolt_var2:
+        _bolt_var3 = False
+        _bolt_var4 = True
+        _bolt_var5 = [_bolt_var3, _bolt_var4]
+        for b in _bolt_var5:
+            _bolt_var6 = False
+            _bolt_var7 = True
+            _bolt_var8 = [_bolt_var6, _bolt_var7]
+            for c in _bolt_var8:
+                _bolt_var9 = False
+                _bolt_var10 = True
+                _bolt_var11 = [_bolt_var9, _bolt_var10]
+                for d in _bolt_var11:
+                    _bolt_var12 = print
+                    _bolt_var13 = a
+                    _bolt_var14 = _bolt_var13
+                    _bolt_var15 = _bolt_helper_get_dup(_bolt_var13)
+                    if _bolt_var15 is not None:
+                        _bolt_var13 = _bolt_var15()
+                    with _bolt_helper_branch(_bolt_var14) as _bolt_condition:
+                        if _bolt_condition:
+                            _bolt_var16 = b
+                            if _bolt_var15 is not None:
+                                _bolt_rebind = _bolt_helper_get_rebind(_bolt_var13)
+                                _bolt_var13 = _bolt_var16
+                                if _bolt_rebind is not None:
+                                    _bolt_var13 = _bolt_rebind(_bolt_var13)
+                            else:
+                                _bolt_var13 = _bolt_var16
+                    _bolt_var17 = _bolt_helper_operator_not(_bolt_var13)
+                    _bolt_var18 = _bolt_helper_get_dup(_bolt_var13)
+                    if _bolt_var18 is not None:
+                        _bolt_var13 = _bolt_var18()
+                    with _bolt_helper_branch(_bolt_var17) as _bolt_condition:
+                        if _bolt_condition:
+                            _bolt_var19 = c
+                            _bolt_var20 = _bolt_var19
+                            _bolt_var21 = _bolt_helper_get_dup(_bolt_var19)
+                            if _bolt_var21 is not None:
+                                _bolt_var19 = _bolt_var21()
+                            with _bolt_helper_branch(_bolt_var20) as _bolt_condition:
+                                if _bolt_condition:
+                                    _bolt_var22 = d
+                                    _bolt_var22 = _bolt_helper_operator_not(_bolt_var22)
+                                    if _bolt_var21 is not None:
+                                        _bolt_rebind = _bolt_helper_get_rebind(_bolt_var19)
+                                        _bolt_var19 = _bolt_var22
+                                        if _bolt_rebind is not None:
+                                            _bolt_var19 = _bolt_rebind(_bolt_var19)
+                                    else:
+                                        _bolt_var19 = _bolt_var22
+                            if _bolt_var18 is not None:
+                                _bolt_rebind = _bolt_helper_get_rebind(_bolt_var13)
+                                _bolt_var13 = _bolt_var19
+                                if _bolt_rebind is not None:
+                                    _bolt_var13 = _bolt_rebind(_bolt_var13)
+                            else:
+                                _bolt_var13 = _bolt_var19
+                    _bolt_var23 = True
+                    _bolt_var24 = [_bolt_var23]
+                    _bolt_var13 = _bolt_helper_operator_in(_bolt_var13, _bolt_var24)
+                    _bolt_var25 = False
+                    _bolt_var26 = [_bolt_var25]
+                    _bolt_var13 = _bolt_helper_operator_not_in(_bolt_var13, _bolt_var26)
+                    _bolt_var12 = _bolt_var12(_bolt_var13)
+_bolt_var28 = _bolt_helper_replace(_bolt_refs[0], commands=_bolt_helper_children(_bolt_var27))
+---
+output = _bolt_var28
+---
+_bolt_refs[0]
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=195, lineno=6, colno=1)
+  commands:
+    <class 'mecha.ast.AstCommand'>

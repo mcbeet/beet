@@ -1,0 +1,63 @@
+_bolt_lineno = [1, 9], [1, 2]
+_bolt_helper_interpolate_coordinate = _bolt_runtime.helpers['interpolate_coordinate']
+_bolt_helper_replace = _bolt_runtime.helpers['replace']
+_bolt_helper_children = _bolt_runtime.helpers['children']
+with _bolt_runtime.scope() as _bolt_var2:
+    _bolt_var0 = 1
+    a = _bolt_var0
+    with _bolt_runtime.push_nesting('execute:subcommand'):
+        _bolt_var1 = a
+        _bolt_var1 = _bolt_helper_interpolate_coordinate(f'~{_bolt_var1}', _bolt_refs[0])
+    _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[4], arguments=_bolt_helper_children([_bolt_helper_replace(_bolt_refs[3], arguments=_bolt_helper_children([*_bolt_helper_children([_bolt_helper_replace(_bolt_refs[1], y=_bolt_var1)]), _bolt_refs[2]]))])))
+_bolt_var3 = _bolt_helper_replace(_bolt_refs[5], commands=_bolt_helper_children(_bolt_var2))
+---
+output = _bolt_var3
+---
+_bolt_refs[0]
+<class 'bolt.ast.AstInterpolation'>
+  location: SourceLocation(pos=19, lineno=2, colno=14)
+  end_location: SourceLocation(pos=21, lineno=2, colno=16)
+  prefix: '~'
+  unpack: None
+  converter: 'coordinate'
+  value:
+    <class 'bolt.ast.AstIdentifier'>
+_bolt_refs[1]
+<class 'mecha.ast.AstVector3'>
+  location: SourceLocation(pos=17, lineno=2, colno=12)
+  end_location: SourceLocation(pos=23, lineno=2, colno=18)
+  x:
+    <class 'mecha.ast.AstCoordinate'>
+  y:
+    <class 'bolt.ast.AstInterpolation'>
+  z:
+    <class 'mecha.ast.AstCoordinate'>
+_bolt_refs[2]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=24, lineno=2, colno=19)
+  end_location: SourceLocation(pos=41, lineno=2, colno=36)
+  identifier: 'execute:run:subcommand'
+  arguments:
+    <class 'mecha.ast.AstCommand'>
+_bolt_refs[3]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=6, lineno=2, colno=1)
+  end_location: SourceLocation(pos=41, lineno=2, colno=36)
+  identifier: 'execute:positioned:pos:subcommand'
+  arguments:
+    <class 'mecha.ast.AstVector3'>
+    <class 'mecha.ast.AstCommand'>
+_bolt_refs[4]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=6, lineno=2, colno=1)
+  end_location: SourceLocation(pos=41, lineno=2, colno=36)
+  identifier: 'execute:subcommand'
+  arguments:
+    <class 'mecha.ast.AstCommand'>
+_bolt_refs[5]
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=42, lineno=3, colno=1)
+  commands:
+    <class 'bolt.ast.AstStatement'>
+    <class 'mecha.ast.AstCommand'>

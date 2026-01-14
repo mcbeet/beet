@@ -1,0 +1,26 @@
+print(~/foo)
+---
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=13, lineno=2, colno=1)
+  commands:
+    <class 'bolt.ast.AstStatement'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=12, lineno=1, colno=13)
+      identifier: 'mecha:sentinel'
+      arguments:
+        <class 'bolt.ast.AstCall'>
+          location: SourceLocation(pos=0, lineno=1, colno=1)
+          end_location: SourceLocation(pos=12, lineno=1, colno=13)
+          value:
+            <class 'bolt.ast.AstIdentifier'>
+              location: SourceLocation(pos=0, lineno=1, colno=1)
+              end_location: SourceLocation(pos=5, lineno=1, colno=6)
+              value: 'print'
+          arguments:
+            <class 'bolt.ast.AstFormattedLocation'>
+              location: SourceLocation(pos=6, lineno=1, colno=7)
+              end_location: SourceLocation(pos=11, lineno=1, colno=12)
+              fmt: 'foo'
+              values:
+                <empty>

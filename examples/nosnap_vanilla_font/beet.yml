@@ -1,0 +1,10 @@
+pipeline:
+  - beet.contrib.vanilla.load_vanilla
+
+meta:
+  vanilla:
+    version: "1.21.8"
+
+  load_vanilla:
+    match:
+      fonts: "minecraft:*"

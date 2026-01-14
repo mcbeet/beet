@@ -1,0 +1,72 @@
+_bolt_lineno = [1, 13], [1, 2]
+_bolt_helper_get_attribute_handler = _bolt_runtime.helpers['get_attribute_handler']
+_bolt_helper_interpolate_item_slot = _bolt_runtime.helpers['interpolate_item_slot']
+_bolt_helper_children = _bolt_runtime.helpers['children']
+_bolt_helper_replace = _bolt_runtime.helpers['replace']
+with _bolt_runtime.scope() as _bolt_var7:
+    _bolt_var0 = 'offhand'
+    _bolt_var1 = 'weapon.offhand'
+    _bolt_var2 = 'mainhand'
+    _bolt_var3 = 'weapon.mainhand'
+    _bolt_var4 = {_bolt_var0: _bolt_var1, _bolt_var2: _bolt_var3}
+    my_weapon = _bolt_var4
+    _bolt_var5 = my_weapon
+    _bolt_var5 = _bolt_helper_get_attribute_handler(_bolt_var5)["offhand"]
+    _bolt_var5 = _bolt_helper_interpolate_item_slot(_bolt_var5, _bolt_refs[0])
+    _bolt_var6 = my_weapon
+    _bolt_var6 = _bolt_helper_get_attribute_handler(_bolt_var6)["mainhand"]
+    _bolt_var6 = _bolt_helper_interpolate_item_slot(_bolt_var6, _bolt_refs[2])
+    _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[4], arguments=_bolt_helper_children([_bolt_refs[1], _bolt_var5, _bolt_refs[3], _bolt_var6])))
+_bolt_var8 = _bolt_helper_replace(_bolt_refs[5], commands=_bolt_helper_children(_bolt_var7))
+---
+output = _bolt_var8
+---
+_bolt_refs[0]
+<class 'bolt.ast.AstInterpolation'>
+  location: SourceLocation(pos=92, lineno=2, colno=24)
+  end_location: SourceLocation(pos=109, lineno=2, colno=41)
+  prefix: None
+  unpack: None
+  converter: 'item_slot'
+  value:
+    <class 'bolt.ast.AstAttribute'>
+_bolt_refs[1]
+<class 'mecha.ast.AstSelector'>
+  location: SourceLocation(pos=89, lineno=2, colno=21)
+  end_location: SourceLocation(pos=91, lineno=2, colno=23)
+  variable: 's'
+  arguments:
+    <empty>
+_bolt_refs[2]
+<class 'bolt.ast.AstInterpolation'>
+  location: SourceLocation(pos=125, lineno=2, colno=57)
+  end_location: SourceLocation(pos=143, lineno=2, colno=75)
+  prefix: None
+  unpack: None
+  converter: 'item_slot'
+  value:
+    <class 'bolt.ast.AstAttribute'>
+_bolt_refs[3]
+<class 'mecha.ast.AstSelector'>
+  location: SourceLocation(pos=122, lineno=2, colno=54)
+  end_location: SourceLocation(pos=124, lineno=2, colno=56)
+  variable: 's'
+  arguments:
+    <empty>
+_bolt_refs[4]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=69, lineno=2, colno=1)
+  end_location: SourceLocation(pos=143, lineno=2, colno=75)
+  identifier: 'item:replace:entity:targets:slot:from:entity:source:sourceSlot'
+  arguments:
+    <class 'mecha.ast.AstSelector'>
+    <class 'bolt.ast.AstInterpolation'>
+    <class 'mecha.ast.AstSelector'>
+    <class 'bolt.ast.AstInterpolation'>
+_bolt_refs[5]
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=144, lineno=3, colno=1)
+  commands:
+    <class 'bolt.ast.AstStatement'>
+    <class 'mecha.ast.AstCommand'>

@@ -1,0 +1,9 @@
+@language(merge) minecraft:custom
+{
+  "custom.foo": "foo"
+}
+
+@language(merge) minecraft:custom
+{
+  "custom.bar": "bar"
+}

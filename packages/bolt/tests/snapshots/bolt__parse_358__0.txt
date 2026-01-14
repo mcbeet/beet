@@ -1,0 +1,5 @@
+#>ERROR  Expected literal 'advancement', literal 'align', literal 'anchored', literal 'append', literal 'as', literal 'at' or 205 other tokens but got literal '"not'.
+# line 1, column 13
+#      1 |  execute run "not docstring"
+#        :              ^^^^
+execute run "not docstring"

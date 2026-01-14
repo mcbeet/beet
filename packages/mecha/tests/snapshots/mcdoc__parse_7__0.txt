@@ -1,0 +1,229 @@
+struct RandomIntGenerator {
+	type?: ("uniform" | "binomial" | "constant"),
+	...minecraft:random_int_generator[[type]],
+}
+
+dispatch minecraft:random_int_generator[uniform, %none] to struct { min?: int, max?: int }
+---
+<class 'mecha.contrib.validation.mcdoc.Mcdoc'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=212, lineno=6, colno=91)
+  items:
+    <class 'mecha.contrib.validation.mcdoc.McdocStruct'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=120, lineno=4, colno=2)
+      prelim:
+        <class 'mecha.contrib.validation.mcdoc.McdocPrelim'>
+          location: SourceLocation(pos=0, lineno=1, colno=1)
+          end_location: SourceLocation(pos=6, lineno=1, colno=7)
+          doc_comments:
+            <empty>
+          attributes:
+            <empty>
+      identifier:
+        <class 'mecha.contrib.validation.mcdoc.McdocIdentifier'>
+          location: SourceLocation(pos=7, lineno=1, colno=8)
+          end_location: SourceLocation(pos=25, lineno=1, colno=26)
+          name: 'RandomIntGenerator'
+      fields:
+        <class 'mecha.contrib.validation.mcdoc.McdocStructField'>
+          location: SourceLocation(pos=29, lineno=2, colno=2)
+          end_location: SourceLocation(pos=73, lineno=2, colno=46)
+          prelim:
+            <class 'mecha.contrib.validation.mcdoc.McdocPrelim'>
+              location: SourceLocation(pos=29, lineno=2, colno=2)
+              end_location: SourceLocation(pos=74, lineno=2, colno=47)
+              doc_comments:
+                <empty>
+              attributes:
+                <empty>
+          key:
+            <class 'mecha.contrib.validation.mcdoc.McdocIdentifier'>
+              location: SourceLocation(pos=29, lineno=2, colno=2)
+              end_location: SourceLocation(pos=33, lineno=2, colno=6)
+              name: 'type'
+          optional: True
+          type:
+            <class 'mecha.contrib.validation.mcdoc.McdocType'>
+              location: SourceLocation(pos=36, lineno=2, colno=9)
+              end_location: SourceLocation(pos=73, lineno=2, colno=46)
+              attributes:
+                <empty>
+              unattributed_type:
+                <class 'mecha.contrib.validation.mcdoc.McdocUnionType'>
+                  location: SourceLocation(pos=36, lineno=2, colno=9)
+                  end_location: SourceLocation(pos=73, lineno=2, colno=46)
+                  types:
+                    <class 'mecha.contrib.validation.mcdoc.McdocType'>
+                      location: SourceLocation(pos=37, lineno=2, colno=10)
+                      end_location: SourceLocation(pos=46, lineno=2, colno=19)
+                      attributes:
+                        <empty>
+                      unattributed_type:
+                        <class 'mecha.contrib.validation.mcdoc.McdocString'>
+                          location: SourceLocation(pos=37, lineno=2, colno=10)
+                          end_location: SourceLocation(pos=46, lineno=2, colno=19)
+                          value: 'uniform'
+                      modifiers:
+                        <empty>
+                    <class 'mecha.contrib.validation.mcdoc.McdocType'>
+                      location: SourceLocation(pos=49, lineno=2, colno=22)
+                      end_location: SourceLocation(pos=59, lineno=2, colno=32)
+                      attributes:
+                        <empty>
+                      unattributed_type:
+                        <class 'mecha.contrib.validation.mcdoc.McdocString'>
+                          location: SourceLocation(pos=49, lineno=2, colno=22)
+                          end_location: SourceLocation(pos=59, lineno=2, colno=32)
+                          value: 'binomial'
+                      modifiers:
+                        <empty>
+                    <class 'mecha.contrib.validation.mcdoc.McdocType'>
+                      location: SourceLocation(pos=62, lineno=2, colno=35)
+                      end_location: SourceLocation(pos=72, lineno=2, colno=45)
+                      attributes:
+                        <empty>
+                      unattributed_type:
+                        <class 'mecha.contrib.validation.mcdoc.McdocString'>
+                          location: SourceLocation(pos=62, lineno=2, colno=35)
+                          end_location: SourceLocation(pos=72, lineno=2, colno=45)
+                          value: 'constant'
+                      modifiers:
+                        <empty>
+              modifiers:
+                <empty>
+        <class 'mecha.contrib.validation.mcdoc.McdocSpread'>
+          location: SourceLocation(pos=76, lineno=3, colno=2)
+          end_location: SourceLocation(pos=117, lineno=3, colno=43)
+          attributes:
+            <empty>
+          type:
+            <class 'mecha.contrib.validation.mcdoc.McdocType'>
+              location: SourceLocation(pos=79, lineno=3, colno=5)
+              end_location: SourceLocation(pos=117, lineno=3, colno=43)
+              attributes:
+                <empty>
+              unattributed_type:
+                <class 'mecha.contrib.validation.mcdoc.McdocDispatcherType'>
+                  location: SourceLocation(pos=79, lineno=3, colno=5)
+                  end_location: SourceLocation(pos=117, lineno=3, colno=43)
+                  resource_location:
+                    <class 'mecha.contrib.validation.mcdoc.McdocResourceLocation'>
+                      location: SourceLocation(pos=79, lineno=3, colno=5)
+                      end_location: SourceLocation(pos=109, lineno=3, colno=35)
+                      value: 'minecraft:random_int_generator'
+                  indices:
+                    <class 'mecha.contrib.validation.mcdoc.McdocDynamicIndex'>
+                      location: SourceLocation(pos=110, lineno=3, colno=36)
+                      end_location: SourceLocation(pos=116, lineno=3, colno=42)
+                      accessors:
+                        <class 'mecha.contrib.validation.mcdoc.McdocIdentifier'>
+                          location: SourceLocation(pos=111, lineno=3, colno=37)
+                          end_location: SourceLocation(pos=115, lineno=3, colno=41)
+                          name: 'type'
+              modifiers:
+                <empty>
+    <class 'mecha.contrib.validation.mcdoc.McdocDispatchStatement'>
+      location: SourceLocation(pos=122, lineno=6, colno=1)
+      end_location: SourceLocation(pos=212, lineno=6, colno=91)
+      attributes:
+        <empty>
+      resource_location:
+        <class 'mecha.contrib.validation.mcdoc.McdocResourceLocation'>
+          location: SourceLocation(pos=131, lineno=6, colno=10)
+          end_location: SourceLocation(pos=161, lineno=6, colno=40)
+          value: 'minecraft:random_int_generator'
+      indices:
+        <class 'mecha.contrib.validation.mcdoc.McdocIdentifier'>
+          location: SourceLocation(pos=162, lineno=6, colno=41)
+          end_location: SourceLocation(pos=169, lineno=6, colno=48)
+          name: 'uniform'
+        <class 'mecha.contrib.validation.mcdoc.McdocNoneIndexKey'>
+          location: SourceLocation(pos=171, lineno=6, colno=50)
+          end_location: SourceLocation(pos=176, lineno=6, colno=55)
+      parameters:
+        <empty>
+      type:
+        <class 'mecha.contrib.validation.mcdoc.McdocType'>
+          location: SourceLocation(pos=181, lineno=6, colno=60)
+          end_location: SourceLocation(pos=212, lineno=6, colno=91)
+          attributes:
+            <empty>
+          unattributed_type:
+            <class 'mecha.contrib.validation.mcdoc.McdocStruct'>
+              location: SourceLocation(pos=181, lineno=6, colno=60)
+              end_location: SourceLocation(pos=212, lineno=6, colno=91)
+              prelim:
+                <class 'mecha.contrib.validation.mcdoc.McdocPrelim'>
+                  location: SourceLocation(pos=181, lineno=6, colno=60)
+                  end_location: SourceLocation(pos=187, lineno=6, colno=66)
+                  doc_comments:
+                    <empty>
+                  attributes:
+                    <empty>
+              identifier: None
+              fields:
+                <class 'mecha.contrib.validation.mcdoc.McdocStructField'>
+                  location: SourceLocation(pos=190, lineno=6, colno=69)
+                  end_location: SourceLocation(pos=199, lineno=6, colno=78)
+                  prelim:
+                    <class 'mecha.contrib.validation.mcdoc.McdocPrelim'>
+                      location: SourceLocation(pos=190, lineno=6, colno=69)
+                      end_location: SourceLocation(pos=212, lineno=6, colno=91)
+                      doc_comments:
+                        <empty>
+                      attributes:
+                        <empty>
+                  key:
+                    <class 'mecha.contrib.validation.mcdoc.McdocIdentifier'>
+                      location: SourceLocation(pos=190, lineno=6, colno=69)
+                      end_location: SourceLocation(pos=193, lineno=6, colno=72)
+                      name: 'min'
+                  optional: True
+                  type:
+                    <class 'mecha.contrib.validation.mcdoc.McdocType'>
+                      location: SourceLocation(pos=196, lineno=6, colno=75)
+                      end_location: SourceLocation(pos=199, lineno=6, colno=78)
+                      attributes:
+                        <empty>
+                      unattributed_type:
+                        <class 'mecha.contrib.validation.mcdoc.McdocNumericType'>
+                          location: SourceLocation(pos=196, lineno=6, colno=75)
+                          end_location: SourceLocation(pos=199, lineno=6, colno=78)
+                          name: 'int'
+                          constraint: None
+                      modifiers:
+                        <empty>
+                <class 'mecha.contrib.validation.mcdoc.McdocStructField'>
+                  location: SourceLocation(pos=201, lineno=6, colno=80)
+                  end_location: SourceLocation(pos=210, lineno=6, colno=89)
+                  prelim:
+                    <class 'mecha.contrib.validation.mcdoc.McdocPrelim'>
+                      location: SourceLocation(pos=201, lineno=6, colno=80)
+                      end_location: SourceLocation(pos=212, lineno=6, colno=91)
+                      doc_comments:
+                        <empty>
+                      attributes:
+                        <empty>
+                  key:
+                    <class 'mecha.contrib.validation.mcdoc.McdocIdentifier'>
+                      location: SourceLocation(pos=201, lineno=6, colno=80)
+                      end_location: SourceLocation(pos=204, lineno=6, colno=83)
+                      name: 'max'
+                  optional: True
+                  type:
+                    <class 'mecha.contrib.validation.mcdoc.McdocType'>
+                      location: SourceLocation(pos=207, lineno=6, colno=86)
+                      end_location: SourceLocation(pos=210, lineno=6, colno=89)
+                      attributes:
+                        <empty>
+                      unattributed_type:
+                        <class 'mecha.contrib.validation.mcdoc.McdocNumericType'>
+                          location: SourceLocation(pos=207, lineno=6, colno=86)
+                          end_location: SourceLocation(pos=210, lineno=6, colno=89)
+                          name: 'int'
+                          constraint: None
+                      modifiers:
+                        <empty>
+          modifiers:
+            <empty>

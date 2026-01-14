@@ -1,0 +1,41 @@
+minecraft:score_holder 0 8
+---
+{'amount': 'multiple'}
+---
+@a[ team = ! foo , team = ! bar , ]
+---
+@a[team=!foo, team=!bar]
+---
+<class 'mecha.ast.AstSelector'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=35, lineno=1, colno=36)
+  variable: 'a'
+  arguments:
+    <class 'mecha.ast.AstSelectorArgument'>
+      location: SourceLocation(pos=4, lineno=1, colno=5)
+      end_location: SourceLocation(pos=16, lineno=1, colno=17)
+      inverted: True
+      key:
+        <class 'mecha.ast.AstString'>
+          location: SourceLocation(pos=4, lineno=1, colno=5)
+          end_location: SourceLocation(pos=8, lineno=1, colno=9)
+          value: 'team'
+      value:
+        <class 'mecha.ast.AstTeam'>
+          location: SourceLocation(pos=13, lineno=1, colno=14)
+          end_location: SourceLocation(pos=16, lineno=1, colno=17)
+          value: 'foo'
+    <class 'mecha.ast.AstSelectorArgument'>
+      location: SourceLocation(pos=19, lineno=1, colno=20)
+      end_location: SourceLocation(pos=31, lineno=1, colno=32)
+      inverted: True
+      key:
+        <class 'mecha.ast.AstString'>
+          location: SourceLocation(pos=19, lineno=1, colno=20)
+          end_location: SourceLocation(pos=23, lineno=1, colno=24)
+          value: 'team'
+      value:
+        <class 'mecha.ast.AstTeam'>
+          location: SourceLocation(pos=28, lineno=1, colno=29)
+          end_location: SourceLocation(pos=31, lineno=1, colno=32)
+          value: 'bar'

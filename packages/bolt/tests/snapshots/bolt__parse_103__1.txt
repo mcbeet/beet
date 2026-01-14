@@ -1,0 +1,171 @@
+_bolt_lineno = [1, 15], [1, 4]
+_bolt_helper_interpolate_nbt = _bolt_runtime.helpers['interpolate_nbt']
+_bolt_helper_replace = _bolt_runtime.helpers['replace']
+_bolt_helper_children = _bolt_runtime.helpers['children']
+_bolt_helper_exit_stack = _bolt_runtime.helpers['exit_stack']
+with _bolt_runtime.scope() as _bolt_var2:
+    _bolt_var0 = '[{"text": "Hello", "bold": true}]'
+    foo = _bolt_var0
+    with _bolt_helper_exit_stack() as _bolt_fused_with_statement0:
+        _bolt_fused_with_statement0.enter_context(_bolt_runtime.push_nesting('execute:subcommand'))
+        _bolt_fused_with_statement0.enter_context(_bolt_runtime.push_nesting('execute:as:targets:subcommand', *_bolt_refs[15:16]))
+        _bolt_fused_with_statement0.enter_context(_bolt_runtime.push_nesting('execute:at:targets:subcommand', *_bolt_refs[13:14]))
+        _bolt_fused_with_statement0.enter_context(_bolt_runtime.push_nesting('execute:if:block:pos:block:subcommand', *_bolt_refs[10:12]))
+        _bolt_fused_with_statement0.enter_context(_bolt_runtime.push_nesting('execute:run:subcommand'))
+        _bolt_var1 = foo
+        _bolt_var1 = _bolt_helper_interpolate_nbt(_bolt_var1, _bolt_refs[0])
+    _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[17], arguments=_bolt_helper_children([_bolt_helper_replace(_bolt_refs[16], arguments=_bolt_helper_children([*_bolt_refs[15:16], _bolt_helper_replace(_bolt_refs[14], arguments=_bolt_helper_children([*_bolt_refs[13:14], _bolt_helper_replace(_bolt_refs[12], arguments=_bolt_helper_children([*_bolt_refs[10:12], _bolt_helper_replace(_bolt_refs[9], arguments=_bolt_helper_children([_bolt_helper_replace(_bolt_refs[8], arguments=_bolt_helper_children([_bolt_refs[7], _bolt_helper_replace(_bolt_refs[6], data_tags=_bolt_helper_replace(_bolt_refs[5], entries=_bolt_helper_children([_bolt_helper_replace(_bolt_refs[4], value=_bolt_helper_replace(_bolt_refs[3], entries=_bolt_helper_children([_bolt_helper_replace(_bolt_refs[1], value=_bolt_var1), _bolt_refs[2]])))])))]))]))]))]))]))])))
+_bolt_var3 = _bolt_helper_replace(_bolt_refs[18], commands=_bolt_helper_children(_bolt_var2))
+---
+output = _bolt_var3
+---
+_bolt_refs[0]
+<class 'bolt.ast.AstInterpolation'>
+  location: SourceLocation(pos=121, lineno=4, colno=15)
+  end_location: SourceLocation(pos=124, lineno=4, colno=18)
+  prefix: None
+  unpack: None
+  converter: 'nbt'
+  value:
+    <class 'bolt.ast.AstIdentifier'>
+_bolt_refs[1]
+<class 'mecha.ast.AstNbtCompoundEntry'>
+  location: SourceLocation(pos=115, lineno=4, colno=9)
+  end_location: SourceLocation(pos=124, lineno=4, colno=18)
+  key:
+    <class 'mecha.ast.AstNbtCompoundKey'>
+  value:
+    <class 'bolt.ast.AstInterpolation'>
+_bolt_refs[2]
+<class 'mecha.ast.AstNbtCompoundEntry'>
+  location: SourceLocation(pos=134, lineno=5, colno=9)
+  end_location: SourceLocation(pos=202, lineno=7, colno=10)
+  key:
+    <class 'mecha.ast.AstNbtCompoundKey'>
+  value:
+    <class 'mecha.ast.AstNbtList'>
+_bolt_refs[3]
+<class 'mecha.ast.AstNbtCompound'>
+  location: SourceLocation(pos=105, lineno=3, colno=14)
+  end_location: SourceLocation(pos=208, lineno=8, colno=6)
+  entries:
+    <class 'mecha.ast.AstNbtCompoundEntry'>
+    <class 'mecha.ast.AstNbtCompoundEntry'>
+_bolt_refs[4]
+<class 'mecha.ast.AstNbtCompoundEntry'>
+  location: SourceLocation(pos=96, lineno=3, colno=5)
+  end_location: SourceLocation(pos=208, lineno=8, colno=6)
+  key:
+    <class 'mecha.ast.AstNbtCompoundKey'>
+  value:
+    <class 'mecha.ast.AstNbtCompound'>
+_bolt_refs[5]
+<class 'mecha.ast.AstNbtCompound'>
+  location: SourceLocation(pos=90, lineno=2, colno=49)
+  end_location: SourceLocation(pos=210, lineno=9, colno=2)
+  entries:
+    <class 'mecha.ast.AstNbtCompoundEntry'>
+_bolt_refs[6]
+<class 'mecha.ast.AstItemStack'>
+  location: SourceLocation(pos=85, lineno=2, colno=44)
+  end_location: SourceLocation(pos=210, lineno=9, colno=2)
+  identifier:
+    <class 'mecha.ast.AstResourceLocation'>
+  arguments:
+    <empty>
+  data_tags:
+    <class 'mecha.ast.AstNbtCompound'>
+_bolt_refs[7]
+<class 'mecha.ast.AstSelector'>
+  location: SourceLocation(pos=82, lineno=2, colno=41)
+  end_location: SourceLocation(pos=84, lineno=2, colno=43)
+  variable: 's'
+  arguments:
+    <empty>
+_bolt_refs[8]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=77, lineno=2, colno=36)
+  end_location: SourceLocation(pos=210, lineno=9, colno=2)
+  identifier: 'give:targets:item'
+  arguments:
+    <class 'mecha.ast.AstSelector'>
+    <class 'mecha.ast.AstItemStack'>
+_bolt_refs[9]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=77, lineno=2, colno=36)
+  end_location: SourceLocation(pos=210, lineno=9, colno=2)
+  identifier: 'execute:run:subcommand'
+  arguments:
+    <class 'mecha.ast.AstCommand'>
+_bolt_refs[10]
+<class 'mecha.ast.AstVector3'>
+  location: SourceLocation(pos=63, lineno=2, colno=22)
+  end_location: SourceLocation(pos=70, lineno=2, colno=29)
+  x:
+    <class 'mecha.ast.AstCoordinate'>
+  y:
+    <class 'mecha.ast.AstCoordinate'>
+  z:
+    <class 'mecha.ast.AstCoordinate'>
+_bolt_refs[11]
+<class 'mecha.ast.AstBlock'>
+  location: SourceLocation(pos=71, lineno=2, colno=30)
+  end_location: SourceLocation(pos=76, lineno=2, colno=35)
+  identifier:
+    <class 'mecha.ast.AstResourceLocation'>
+  block_states:
+    <empty>
+  data_tags: None
+_bolt_refs[12]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=54, lineno=2, colno=13)
+  end_location: SourceLocation(pos=210, lineno=9, colno=2)
+  identifier: 'execute:if:block:pos:block:subcommand'
+  arguments:
+    <class 'mecha.ast.AstVector3'>
+    <class 'mecha.ast.AstBlock'>
+    <class 'mecha.ast.AstCommand'>
+_bolt_refs[13]
+<class 'mecha.ast.AstSelector'>
+  location: SourceLocation(pos=51, lineno=2, colno=10)
+  end_location: SourceLocation(pos=53, lineno=2, colno=12)
+  variable: 's'
+  arguments:
+    <empty>
+_bolt_refs[14]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=48, lineno=2, colno=7)
+  end_location: SourceLocation(pos=210, lineno=9, colno=2)
+  identifier: 'execute:at:targets:subcommand'
+  arguments:
+    <class 'mecha.ast.AstSelector'>
+    <class 'mecha.ast.AstCommand'>
+_bolt_refs[15]
+<class 'mecha.ast.AstSelector'>
+  location: SourceLocation(pos=45, lineno=2, colno=4)
+  end_location: SourceLocation(pos=47, lineno=2, colno=6)
+  variable: 'a'
+  arguments:
+    <empty>
+_bolt_refs[16]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=42, lineno=2, colno=1)
+  end_location: SourceLocation(pos=210, lineno=9, colno=2)
+  identifier: 'execute:as:targets:subcommand'
+  arguments:
+    <class 'mecha.ast.AstSelector'>
+    <class 'mecha.ast.AstCommand'>
+_bolt_refs[17]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=42, lineno=2, colno=1)
+  end_location: SourceLocation(pos=210, lineno=9, colno=2)
+  identifier: 'execute:subcommand'
+  arguments:
+    <class 'mecha.ast.AstCommand'>
+_bolt_refs[18]
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=210, lineno=9, colno=2)
+  commands:
+    <class 'bolt.ast.AstStatement'>
+    <class 'mecha.ast.AstCommand'>

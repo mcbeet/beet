@@ -1,0 +1,9 @@
+minecraft:block_state 1 5
+---
+{}
+---
+stone[thing=hello]{
+---
+Reported 1 error.
+
+line 1, column 20: Expected number, quoted_string or string but got eof.

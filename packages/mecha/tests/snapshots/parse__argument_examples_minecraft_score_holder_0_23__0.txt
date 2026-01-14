@@ -1,0 +1,12 @@
+minecraft:score_holder 0 23
+---
+{'amount': 'multiple'}
+---
+%foo.bar
+---
+%foo.bar
+---
+<class 'mecha.ast.AstPlayerName'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=8, lineno=1, colno=9)
+  value: '%foo.bar'

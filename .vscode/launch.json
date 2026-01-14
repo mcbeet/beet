@@ -1,0 +1,32 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "pytest",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "pytest",
+        },
+        {
+            "name": "nosnap_vanilla",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "beet",
+            "args": ["-p", "examples/nosnap_vanilla"]
+        },
+        {
+            "name": "mecha_basic",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "beet",
+            "args": ["-p", "packages/mecha/examples/basic"]
+        },
+        {
+            "name": "mecha_stats",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "mecha",
+            "args": ["-s", "packages/mecha/examples/basic/src/data/demo/functions/foo.mcfunction"]
+        }
+    ]
+}

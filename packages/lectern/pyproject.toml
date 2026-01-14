@@ -1,0 +1,64 @@
+[build-system]
+requires = ["uv_build>=0.9.8,<0.10.0"]
+build-backend = "uv_build"
+
+[project]
+name = "lectern"
+version = "0.35.0-beta.6"
+description = "Literate Minecraft data packs and resource packs"
+authors = [{ name = "Valentin Berlier", email = "berlier.v@gmail.com" }]
+license = "MIT"
+license-files = ["LICENSE"]
+readme = "README.md"
+keywords = [
+  "literate-programming",
+  "beet",
+  "resourcepack",
+  "minecraft",
+  "datapack"
+]
+
+requires-python = ">=3.14"
+dependencies = [
+    "beet>=0.113.0b8",
+    "markdown-it-py>=4.0.0",
+]
+
+[project.urls]
+Repository = "https://github.com/mcbeet/beet/blob/main/packages/lectern"
+
+[project.scripts]
+lectern = "lectern.cli:main"
+
+[project.entry-points.pytest11]
+lectern = "lectern.pytest_plugin"
+
+[tool.uv.sources]
+beet = { workspace = true }
+
+[tool.pytest.ini_options]
+addopts = "tests --import-mode=importlib"
+
+[tool.semantic_release]
+commit_parser = "conventional-monorepo"
+commit_message = "chore(release): lectern-v{version}"
+tag_format = "lectern-v{version}"
+version_toml = ["pyproject.toml:project.version"]
+version_variables = ["src/lectern/__init__.py:__version__"]
+major_on_zero = false
+allow_zero_version = true
+
+[tool.semantic_release.commit_parser_options]
+path_filters = ["src", "pyproject.toml", "README.md", "LICENSE"]
+
+[tool.semantic_release.changelog]
+exclude_commit_patterns = ["(?!feat|fix).+"]
+
+[tool.semantic_release.branches.main]
+match = "main"
+prerelease = false
+
+[tool.semantic_release.branches.beta]
+match = "beta"
+prerelease = true
+prerelease_token = "beta"

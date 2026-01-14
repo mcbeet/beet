@@ -1,0 +1,12 @@
+minecraft:entity 5 3
+---
+{'type': 'players', 'amount': 'single'}
+---
+#exp(-0.1)*65536
+---
+#exp(-0.1)*65536
+---
+<class 'mecha.ast.AstPlayerName'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=16, lineno=1, colno=17)
+  value: '#exp(-0.1)*65536'

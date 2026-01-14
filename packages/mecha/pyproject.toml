@@ -1,0 +1,64 @@
+[build-system]
+requires = ["uv_build>=0.9.8,<0.10.0"]
+build-backend = "uv_build"
+
+[project]
+name = "mecha"
+version = "0.102.0-beta.3"
+description = "A powerful Minecraft command library"
+authors = [{ name = "Valentin Berlier", email = "berlier.v@gmail.com" }]
+license = "MIT"
+license-files = ["LICENSE"]
+readme = "README.md"
+keywords = [
+  "beet",
+  "minecraft",
+  "datapack",
+  "minecraft-commands",
+  "mcfunction"
+]
+
+requires-python = ">=3.14"
+dependencies = [
+    "beet>=0.113.0b11",
+    "tokenstream>=1.7.0",
+]
+
+[project.urls]
+Repository = "https://github.com/mcbeet/beet/blob/main/packages/mecha"
+
+[project.scripts]
+mecha = "mecha.cli:main"
+
+[project.entry-points.beet]
+commands = "mecha.commands"
+
+[tool.uv.sources]
+beet = { workspace = true }
+
+[tool.pytest.ini_options]
+addopts = "tests --import-mode=importlib"
+
+[tool.semantic_release]
+commit_parser = "conventional-monorepo"
+commit_message = "chore(release): mecha-v{version}"
+tag_format = "mecha-v{version}"
+version_toml = ["pyproject.toml:project.version"]
+version_variables = ["src/mecha/__init__.py:__version__"]
+major_on_zero = false
+allow_zero_version = true
+
+[tool.semantic_release.commit_parser_options]
+path_filters = ["src", "pyproject.toml", "README.md", "LICENSE"]
+
+[tool.semantic_release.changelog]
+exclude_commit_patterns = ["(?!feat|fix).+"]
+
+[tool.semantic_release.branches.main]
+match = "main"
+prerelease = false
+
+[tool.semantic_release.branches.beta]
+match = "beta"
+prerelease = true
+prerelease_token = "beta"

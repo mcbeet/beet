@@ -1,0 +1,20 @@
+{
+  "type": "root",
+  "children": {
+    "function": {
+      "type": "literal",
+      "children": {
+        "tag": {
+          "type": "literal",
+          "children": {
+            "name": {
+              "type": "argument",
+              "parser": "minecraft:resource_location",
+              "executable": true
+            }
+          }
+        }
+      }
+    }
+  }
+}

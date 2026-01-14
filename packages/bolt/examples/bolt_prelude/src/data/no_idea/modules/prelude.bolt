@@ -1,0 +1,6 @@
+from ./aaa import alright_then
+
+macro what about(stream):
+    from mecha import delegate
+    node = delegate("resource_location", stream)
+    say repr(node)

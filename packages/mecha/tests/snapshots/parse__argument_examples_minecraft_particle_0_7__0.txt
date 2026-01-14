@@ -1,0 +1,53 @@
+minecraft:particle 0 7
+---
+{}
+---
+item minecraft:apple{foo: bar}
+---
+item minecraft:apple{foo: "bar"}
+---
+<class 'mecha.ast.AstParticle'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=30, lineno=1, colno=31)
+  name:
+    <class 'mecha.ast.AstResourceLocation'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=4, lineno=1, colno=5)
+      is_tag: False
+      namespace: None
+      path: 'item'
+  parameters:
+    <class 'mecha.ast.AstItemParticleParameters'>
+      location: SourceLocation(pos=5, lineno=1, colno=6)
+      end_location: SourceLocation(pos=30, lineno=1, colno=31)
+      item:
+        <class 'mecha.ast.AstItemStack'>
+          location: SourceLocation(pos=5, lineno=1, colno=6)
+          end_location: SourceLocation(pos=30, lineno=1, colno=31)
+          identifier:
+            <class 'mecha.ast.AstResourceLocation'>
+              location: SourceLocation(pos=5, lineno=1, colno=6)
+              end_location: SourceLocation(pos=20, lineno=1, colno=21)
+              is_tag: False
+              namespace: 'minecraft'
+              path: 'apple'
+          arguments:
+            <empty>
+          data_tags:
+            <class 'mecha.ast.AstNbtCompound'>
+              location: SourceLocation(pos=20, lineno=1, colno=21)
+              end_location: SourceLocation(pos=30, lineno=1, colno=31)
+              entries:
+                <class 'mecha.ast.AstNbtCompoundEntry'>
+                  location: SourceLocation(pos=21, lineno=1, colno=22)
+                  end_location: SourceLocation(pos=29, lineno=1, colno=30)
+                  key:
+                    <class 'mecha.ast.AstNbtCompoundKey'>
+                      location: SourceLocation(pos=21, lineno=1, colno=22)
+                      end_location: SourceLocation(pos=24, lineno=1, colno=25)
+                      value: 'foo'
+                  value:
+                    <class 'mecha.ast.AstNbtValue'>
+                      location: SourceLocation(pos=26, lineno=1, colno=27)
+                      end_location: SourceLocation(pos=29, lineno=1, colno=30)
+                      value: String('bar')

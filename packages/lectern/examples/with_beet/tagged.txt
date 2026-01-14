@@ -1,0 +1,23 @@
+@load_function demo:a
+say tagged a
+
+@load_function demo:b
+say tagged b
+
+@load_function a_relative
+say tagged a_relative
+
+@load_function
+say tagged load
+
+@load_function(prepend)
+say before
+
+@tick_function wow
+say tagged wow
+
+@foo_function
+say tagged foo
+
+@bar_function
+say tagged bar

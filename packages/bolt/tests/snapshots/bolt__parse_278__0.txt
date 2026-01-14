@@ -1,0 +1,49 @@
+hex = 123
+time set hex.time
+---
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=28, lineno=3, colno=1)
+  commands:
+    <class 'bolt.ast.AstStatement'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=9, lineno=1, colno=10)
+      identifier: 'mecha:sentinel'
+      arguments:
+        <class 'bolt.ast.AstAssignment'>
+          location: SourceLocation(pos=0, lineno=1, colno=1)
+          end_location: SourceLocation(pos=9, lineno=1, colno=10)
+          operator: '='
+          target:
+            <class 'bolt.ast.AstTargetIdentifier'>
+              location: SourceLocation(pos=0, lineno=1, colno=1)
+              end_location: SourceLocation(pos=3, lineno=1, colno=4)
+              value: 'hex'
+              rebind: False
+          value:
+            <class 'bolt.ast.AstValue'>
+              location: SourceLocation(pos=6, lineno=1, colno=7)
+              end_location: SourceLocation(pos=9, lineno=1, colno=10)
+              value: 123
+          type_annotation: None
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=10, lineno=2, colno=1)
+      end_location: SourceLocation(pos=27, lineno=2, colno=18)
+      identifier: 'time:set:time'
+      arguments:
+        <class 'bolt.ast.AstInterpolation'>
+          location: SourceLocation(pos=19, lineno=2, colno=10)
+          end_location: SourceLocation(pos=27, lineno=2, colno=18)
+          prefix: None
+          unpack: None
+          converter: 'time'
+          value:
+            <class 'bolt.ast.AstAttribute'>
+              location: SourceLocation(pos=19, lineno=2, colno=10)
+              end_location: SourceLocation(pos=27, lineno=2, colno=18)
+              name: 'time'
+              value:
+                <class 'bolt.ast.AstIdentifier'>
+                  location: SourceLocation(pos=19, lineno=2, colno=10)
+                  end_location: SourceLocation(pos=22, lineno=2, colno=13)
+                  value: 'hex'

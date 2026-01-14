@@ -1,0 +1,76 @@
+struct Foo {}
+
+type Bar = super::super::qux::Something
+---
+<class 'mecha.contrib.validation.mcdoc.Mcdoc'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=54, lineno=3, colno=40)
+  items:
+    <class 'mecha.contrib.validation.mcdoc.McdocStruct'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=13, lineno=1, colno=14)
+      prelim:
+        <class 'mecha.contrib.validation.mcdoc.McdocPrelim'>
+          location: SourceLocation(pos=0, lineno=1, colno=1)
+          end_location: SourceLocation(pos=6, lineno=1, colno=7)
+          doc_comments:
+            <empty>
+          attributes:
+            <empty>
+      identifier:
+        <class 'mecha.contrib.validation.mcdoc.McdocIdentifier'>
+          location: SourceLocation(pos=7, lineno=1, colno=8)
+          end_location: SourceLocation(pos=10, lineno=1, colno=11)
+          name: 'Foo'
+      fields:
+        <empty>
+    <class 'mecha.contrib.validation.mcdoc.McdocTypeAlias'>
+      location: SourceLocation(pos=15, lineno=3, colno=1)
+      end_location: SourceLocation(pos=54, lineno=3, colno=40)
+      prelim:
+        <class 'mecha.contrib.validation.mcdoc.McdocPrelim'>
+          location: SourceLocation(pos=15, lineno=3, colno=1)
+          end_location: SourceLocation(pos=19, lineno=3, colno=5)
+          doc_comments:
+            <empty>
+          attributes:
+            <empty>
+      identifier:
+        <class 'mecha.contrib.validation.mcdoc.McdocIdentifier'>
+          location: SourceLocation(pos=20, lineno=3, colno=6)
+          end_location: SourceLocation(pos=23, lineno=3, colno=9)
+          name: 'Bar'
+      parameters:
+        <empty>
+      type:
+        <class 'mecha.contrib.validation.mcdoc.McdocType'>
+          location: SourceLocation(pos=26, lineno=3, colno=12)
+          end_location: SourceLocation(pos=54, lineno=3, colno=40)
+          attributes:
+            <empty>
+          unattributed_type:
+            <class 'mecha.contrib.validation.mcdoc.McdocReferenceType'>
+              location: SourceLocation(pos=26, lineno=3, colno=12)
+              end_location: SourceLocation(pos=54, lineno=3, colno=40)
+              path:
+                <class 'mecha.contrib.validation.mcdoc.McdocPath'>
+                  location: SourceLocation(pos=26, lineno=3, colno=12)
+                  end_location: SourceLocation(pos=54, lineno=3, colno=40)
+                  absolute: False
+                  segments:
+                    <class 'mecha.contrib.validation.mcdoc.McdocSuper'>
+                      location: SourceLocation(pos=26, lineno=3, colno=12)
+                      end_location: SourceLocation(pos=31, lineno=3, colno=17)
+                    <class 'mecha.contrib.validation.mcdoc.McdocSuper'>
+                      location: SourceLocation(pos=33, lineno=3, colno=19)
+                      end_location: SourceLocation(pos=38, lineno=3, colno=24)
+                    <class 'mecha.contrib.validation.mcdoc.McdocIdentifier'>
+                      location: SourceLocation(pos=40, lineno=3, colno=26)
+                      end_location: SourceLocation(pos=43, lineno=3, colno=29)
+                      name: 'qux'
+                    <class 'mecha.contrib.validation.mcdoc.McdocIdentifier'>
+                      location: SourceLocation(pos=45, lineno=3, colno=31)
+                      end_location: SourceLocation(pos=54, lineno=3, colno=40)
+                      name: 'Something'
+          modifiers:
+            <empty>

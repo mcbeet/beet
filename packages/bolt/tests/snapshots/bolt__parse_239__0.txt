@@ -1,0 +1,25 @@
+raise ValueError() from None
+---
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=29, lineno=2, colno=1)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=28, lineno=1, colno=29)
+      identifier: 'raise:exception:from:cause'
+      arguments:
+        <class 'bolt.ast.AstCall'>
+          location: SourceLocation(pos=6, lineno=1, colno=7)
+          end_location: SourceLocation(pos=18, lineno=1, colno=19)
+          value:
+            <class 'bolt.ast.AstIdentifier'>
+              location: SourceLocation(pos=6, lineno=1, colno=7)
+              end_location: SourceLocation(pos=16, lineno=1, colno=17)
+              value: 'ValueError'
+          arguments:
+            <empty>
+        <class 'bolt.ast.AstValue'>
+          location: SourceLocation(pos=24, lineno=1, colno=25)
+          end_location: SourceLocation(pos=28, lineno=1, colno=29)
+          value: None

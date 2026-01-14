@@ -1,4 +1,5 @@
 import os
+import json
 from itertools import count
 from pathlib import PurePath
 from typing import Any
@@ -12,14 +13,20 @@ from beet.toolchain.utils import apply_option, eval_option
 
 def encode_path(obj: Any) -> Any:
     if isinstance(obj, PurePath):
-        return PurePath(os.path.relpath(obj)).as_posix()
-    raise TypeError()
+        return str(PurePath(os.path.relpath(obj)).as_posix())
+    elif isinstance(obj, list):
+        return [encode_path(item) for item in obj]
+    elif isinstance(obj, dict):
+        return {key: encode_path(value) for key, value in obj.items()}
+    else:
+        return obj
 
 
-@pytest.mark.parametrize("directory", os.listdir("tests/config_examples"))
+@pytest.mark.parametrize("directory", sorted(os.listdir("tests/config_examples")))
 def test_config_resolution(snapshot: SnapshotFixture, directory: str):
     project_config = load_config(f"tests/config_examples/{directory}/beet.json")
-    assert snapshot() == project_config.json(indent=2, encoder=encode_path) + "\n"
+    d = encode_path(project_config.model_dump(warnings="none"))
+    assert snapshot() == json.dumps(d, indent=2) + "\n"
 
 
 @pytest.mark.parametrize(

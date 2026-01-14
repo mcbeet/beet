@@ -1,0 +1,11 @@
+require:
+  - bolt.contrib.sandbox
+  - overgen.define_custom_resources
+  - overgen.define_compilation_unit_providers
+  - overgen.define_module_globals
+data_pack:
+  load: "src"
+pipeline:
+  - mecha
+  - overgen.remove_custom_resources
+  - beet.contrib.cleanup_overlays

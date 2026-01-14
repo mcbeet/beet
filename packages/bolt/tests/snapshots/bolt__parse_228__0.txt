@@ -1,0 +1,79 @@
+macro do_twice body=mecha:nested_root:
+    yield body
+    yield body
+do_twice:
+    say hello
+---
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=92, lineno=5, colno=14)
+  commands:
+    <class 'bolt.ast.AstMacro'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=68, lineno=3, colno=15)
+      identifier: 'do_twice:body'
+      arguments:
+        <class 'bolt.ast.AstMacroLiteral'>
+          location: SourceLocation(pos=6, lineno=1, colno=7)
+          end_location: SourceLocation(pos=14, lineno=1, colno=15)
+          value: 'do_twice'
+        <class 'bolt.ast.AstMacroMatchArgument'>
+          location: SourceLocation(pos=15, lineno=1, colno=16)
+          end_location: SourceLocation(pos=37, lineno=1, colno=38)
+          match_identifier:
+            <class 'bolt.ast.AstMacroArgument'>
+              location: SourceLocation(pos=15, lineno=1, colno=16)
+              end_location: SourceLocation(pos=19, lineno=1, colno=20)
+              value: 'body'
+          match_argument_parser:
+            <class 'mecha.ast.AstResourceLocation'>
+              location: SourceLocation(pos=20, lineno=1, colno=21)
+              end_location: SourceLocation(pos=37, lineno=1, colno=38)
+              is_tag: False
+              namespace: 'mecha'
+              path: 'nested_root'
+          match_argument_properties: None
+        <class 'mecha.ast.AstRoot'>
+          location: SourceLocation(pos=43, lineno=2, colno=5)
+          end_location: SourceLocation(pos=68, lineno=3, colno=15)
+          commands:
+            <class 'mecha.ast.AstCommand'>
+              location: SourceLocation(pos=43, lineno=2, colno=5)
+              end_location: SourceLocation(pos=53, lineno=2, colno=15)
+              identifier: 'yield:value'
+              arguments:
+                <class 'bolt.ast.AstIdentifier'>
+                  location: SourceLocation(pos=49, lineno=2, colno=11)
+                  end_location: SourceLocation(pos=53, lineno=2, colno=15)
+                  value: 'body'
+            <class 'mecha.ast.AstCommand'>
+              location: SourceLocation(pos=58, lineno=3, colno=5)
+              end_location: SourceLocation(pos=68, lineno=3, colno=15)
+              identifier: 'yield:value'
+              arguments:
+                <class 'bolt.ast.AstIdentifier'>
+                  location: SourceLocation(pos=64, lineno=3, colno=11)
+                  end_location: SourceLocation(pos=68, lineno=3, colno=15)
+                  value: 'body'
+    <class 'bolt.ast.AstMacroCall'>
+      location: SourceLocation(pos=69, lineno=4, colno=1)
+      end_location: SourceLocation(pos=92, lineno=5, colno=14)
+      identifier: 'do_twice:body'
+      arguments:
+        <class 'mecha.ast.AstRoot'>
+          location: SourceLocation(pos=83, lineno=5, colno=5)
+          end_location: SourceLocation(pos=92, lineno=5, colno=14)
+          commands:
+            <class 'mecha.ast.AstCommand'>
+              location: SourceLocation(pos=83, lineno=5, colno=5)
+              end_location: SourceLocation(pos=92, lineno=5, colno=14)
+              identifier: 'say:message'
+              arguments:
+                <class 'mecha.ast.AstMessage'>
+                  location: SourceLocation(pos=87, lineno=5, colno=9)
+                  end_location: SourceLocation(pos=92, lineno=5, colno=14)
+                  fragments:
+                    <class 'mecha.ast.AstMessageText'>
+                      location: SourceLocation(pos=87, lineno=5, colno=9)
+                      end_location: SourceLocation(pos=92, lineno=5, colno=14)
+                      value: 'hello'

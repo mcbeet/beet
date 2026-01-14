@@ -1,0 +1,9 @@
+minecraft:game_profile 1 0
+---
+{}
+---
+@e
+---
+Reported 1 error.
+
+line 1, column 1: Expected player-type entity selector.

@@ -1,0 +1,9 @@
+minecraft:nbt_tag 1 10
+---
+{}
+---
+{error: [test]]}
+---
+Reported 1 error.
+
+line 1, column 15: Expected curly '}' but got bracket ']'.

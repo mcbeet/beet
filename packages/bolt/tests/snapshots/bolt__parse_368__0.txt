@@ -1,0 +1,10 @@
+class A:
+    pass
+#>ERROR  Base class not allowed after keyword argument "foo".
+# line 3, column 19
+#      2 |      pass
+#      3 |  class B(foo=True, A):
+#        :                    ^
+#      4 |      pass
+class B(foo=True, A):
+    pass

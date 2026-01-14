@@ -1,0 +1,17 @@
+data_pack:
+  load:
+    pack.mcmeta: "pack.mcmeta"
+pipeline:
+  - minecraft: "1.19"
+    data_pack:
+      load:
+        old/data/demo/functions/foo.mcfunction: "foo_old.mcfunction"
+    pipeline:
+      - mecha
+      - beet.contrib.cleanup_overlays
+  - data_pack:
+      load:
+        data/demo/functions/foo.mcfunction: "foo.mcfunction"
+    pipeline:
+      - mecha
+      - beet.contrib.cleanup_overlays

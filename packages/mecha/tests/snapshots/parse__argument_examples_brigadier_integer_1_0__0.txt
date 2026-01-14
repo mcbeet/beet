@@ -1,0 +1,9 @@
+brigadier:integer 1 0
+---
+{'min': 7, 'max': 15}
+---
+yolo
+---
+Reported 1 error.
+
+line 1, column 1: Expected number but got literal 'yolo'.

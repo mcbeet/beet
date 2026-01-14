@@ -1,0 +1,7 @@
+#>ERROR  Specifying a tag is not allowed '#brigadier:integer'.
+# line 1, column 15
+#      1 |  macro foo bar=#brigadier:integer:
+#        :                ^^^^^^^^^^^^^^^^^^
+#      2 |      pass
+macro foo bar=#brigadier:integer:
+    pass

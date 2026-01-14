@@ -1,0 +1,9 @@
+minecraft:block_predicate 1 3
+---
+{}
+---
+#stone[foo
+---
+Reported 1 error.
+
+line 1, column 11: Expected equal but got eof.

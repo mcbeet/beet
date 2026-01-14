@@ -1,0 +1,145 @@
+class A:
+    def b(self):
+        say b
+        return B()
+class B:
+    def a(self):
+        say a
+        return A()
+---
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=117, lineno=8, colno=19)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=58, lineno=4, colno=19)
+      identifier: 'class:name:body'
+      arguments:
+        <class 'bolt.ast.AstClassName'>
+          location: SourceLocation(pos=6, lineno=1, colno=7)
+          end_location: SourceLocation(pos=7, lineno=1, colno=8)
+          decorators:
+            <empty>
+          value: 'A'
+        <class 'bolt.ast.AstClassRoot'>
+          location: SourceLocation(pos=13, lineno=2, colno=5)
+          end_location: SourceLocation(pos=58, lineno=4, colno=19)
+          commands:
+            <class 'mecha.ast.AstCommand'>
+              location: SourceLocation(pos=13, lineno=2, colno=5)
+              end_location: SourceLocation(pos=58, lineno=4, colno=19)
+              identifier: 'def:function:body'
+              arguments:
+                <class 'bolt.ast.AstFunctionSignature'>
+                  location: SourceLocation(pos=17, lineno=2, colno=9)
+                  end_location: SourceLocation(pos=24, lineno=2, colno=16)
+                  decorators:
+                    <empty>
+                  name: 'b'
+                  arguments:
+                    <class 'bolt.ast.AstFunctionSignatureArgument'>
+                      location: SourceLocation(pos=19, lineno=2, colno=11)
+                      end_location: SourceLocation(pos=23, lineno=2, colno=15)
+                      name: 'self'
+                      type_annotation: None
+                      default: None
+                  return_type_annotation: None
+                <class 'mecha.ast.AstRoot'>
+                  location: SourceLocation(pos=34, lineno=3, colno=9)
+                  end_location: SourceLocation(pos=58, lineno=4, colno=19)
+                  commands:
+                    <class 'mecha.ast.AstCommand'>
+                      location: SourceLocation(pos=34, lineno=3, colno=9)
+                      end_location: SourceLocation(pos=39, lineno=3, colno=14)
+                      identifier: 'say:message'
+                      arguments:
+                        <class 'mecha.ast.AstMessage'>
+                          location: SourceLocation(pos=38, lineno=3, colno=13)
+                          end_location: SourceLocation(pos=39, lineno=3, colno=14)
+                          fragments:
+                            <class 'mecha.ast.AstMessageText'>
+                              location: SourceLocation(pos=38, lineno=3, colno=13)
+                              end_location: SourceLocation(pos=39, lineno=3, colno=14)
+                              value: 'b'
+                    <class 'mecha.ast.AstCommand'>
+                      location: SourceLocation(pos=48, lineno=4, colno=9)
+                      end_location: SourceLocation(pos=58, lineno=4, colno=19)
+                      identifier: 'return:pythonresult'
+                      arguments:
+                        <class 'bolt.ast.AstCall'>
+                          location: SourceLocation(pos=55, lineno=4, colno=16)
+                          end_location: SourceLocation(pos=58, lineno=4, colno=19)
+                          value:
+                            <class 'bolt.ast.AstIdentifier'>
+                              location: SourceLocation(pos=55, lineno=4, colno=16)
+                              end_location: SourceLocation(pos=56, lineno=4, colno=17)
+                              value: 'B'
+                          arguments:
+                            <empty>
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=59, lineno=5, colno=1)
+      end_location: SourceLocation(pos=117, lineno=8, colno=19)
+      identifier: 'class:name:body'
+      arguments:
+        <class 'bolt.ast.AstClassName'>
+          location: SourceLocation(pos=65, lineno=5, colno=7)
+          end_location: SourceLocation(pos=66, lineno=5, colno=8)
+          decorators:
+            <empty>
+          value: 'B'
+        <class 'bolt.ast.AstClassRoot'>
+          location: SourceLocation(pos=72, lineno=6, colno=5)
+          end_location: SourceLocation(pos=117, lineno=8, colno=19)
+          commands:
+            <class 'mecha.ast.AstCommand'>
+              location: SourceLocation(pos=72, lineno=6, colno=5)
+              end_location: SourceLocation(pos=117, lineno=8, colno=19)
+              identifier: 'def:function:body'
+              arguments:
+                <class 'bolt.ast.AstFunctionSignature'>
+                  location: SourceLocation(pos=76, lineno=6, colno=9)
+                  end_location: SourceLocation(pos=83, lineno=6, colno=16)
+                  decorators:
+                    <empty>
+                  name: 'a'
+                  arguments:
+                    <class 'bolt.ast.AstFunctionSignatureArgument'>
+                      location: SourceLocation(pos=78, lineno=6, colno=11)
+                      end_location: SourceLocation(pos=82, lineno=6, colno=15)
+                      name: 'self'
+                      type_annotation: None
+                      default: None
+                  return_type_annotation: None
+                <class 'mecha.ast.AstRoot'>
+                  location: SourceLocation(pos=93, lineno=7, colno=9)
+                  end_location: SourceLocation(pos=117, lineno=8, colno=19)
+                  commands:
+                    <class 'mecha.ast.AstCommand'>
+                      location: SourceLocation(pos=93, lineno=7, colno=9)
+                      end_location: SourceLocation(pos=98, lineno=7, colno=14)
+                      identifier: 'say:message'
+                      arguments:
+                        <class 'mecha.ast.AstMessage'>
+                          location: SourceLocation(pos=97, lineno=7, colno=13)
+                          end_location: SourceLocation(pos=98, lineno=7, colno=14)
+                          fragments:
+                            <class 'mecha.ast.AstMessageText'>
+                              location: SourceLocation(pos=97, lineno=7, colno=13)
+                              end_location: SourceLocation(pos=98, lineno=7, colno=14)
+                              value: 'a'
+                    <class 'mecha.ast.AstCommand'>
+                      location: SourceLocation(pos=107, lineno=8, colno=9)
+                      end_location: SourceLocation(pos=117, lineno=8, colno=19)
+                      identifier: 'return:pythonresult'
+                      arguments:
+                        <class 'bolt.ast.AstCall'>
+                          location: SourceLocation(pos=114, lineno=8, colno=16)
+                          end_location: SourceLocation(pos=117, lineno=8, colno=19)
+                          value:
+                            <class 'bolt.ast.AstIdentifier'>
+                              location: SourceLocation(pos=114, lineno=8, colno=16)
+                              end_location: SourceLocation(pos=115, lineno=8, colno=17)
+                              value: 'A'
+                          arguments:
+                            <empty>

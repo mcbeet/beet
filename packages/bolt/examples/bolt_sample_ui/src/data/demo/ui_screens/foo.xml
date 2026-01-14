@@ -1,0 +1,12 @@
+<screen w="64" h="64" d="2" name="test">
+    <group key="buttons" background="test_background">
+        <button
+            key="1" x="6" y="6"
+            default="ok_button" hover="arrow_down_1"
+        />
+        <button
+            key="2" x="42" y="6"
+            default="ok_button" hover="ok_button_hover"
+        />
+    </group>
+</screen>

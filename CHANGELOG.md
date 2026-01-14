@@ -1,6 +1,93 @@
 # Changelog
 
-<!--next-version-placeholder-->
+<!-- version list -->
+
+## v0.113.0-beta.11 (2026-01-14)
+
+### Bug Fixes
+
+- Update format registry
+  ([`320ea89`](https://github.com/mcbeet/beet/commit/320ea896f97eec821c3047d4a13f1f8793757b7d))
+
+
+## v0.113.0-beta.10 (2025-12-11)
+
+### Features
+
+- Use full minecraft version to get pack_format ([#488](https://github.com/mcbeet/beet/pull/488),
+  [`5a51958`](https://github.com/mcbeet/beet/commit/5a51958a4bd575718b7c557e30f8b9142225957c))
+
+
+## v0.113.0-beta.9 (2025-12-03)
+
+### Bug Fixes
+
+- Include subprojects' ignore and output directories to prevent rebuild loops in watch when using
+  broadcast ([#482](https://github.com/mcbeet/beet/pull/482),
+  [`624eb96`](https://github.com/mcbeet/beet/commit/624eb96dbef139c671e2f1b316fcc00c132f0c51))
+
+
+## v0.113.0-beta.8 (2025-12-03)
+
+### Bug Fixes
+
+- Cleanup empty overlays
+  ([`15d2d86`](https://github.com/mcbeet/beet/commit/15d2d862281e4af36e41b41606669dd2ba5ada54))
+
+
+## v0.113.0-beta.7 (2025-11-17)
+
+### Features
+
+- Add log_time_scope
+  ([`3ef14eb`](https://github.com/mcbeet/beet/commit/3ef14ebf9f9ffe49ee69bd195926862899865f2a))
+
+
+## v0.113.0-beta.6 (2025-11-16)
+
+### Bug Fixes
+
+- Fetch_objects race condition (close #479)
+  ([`e7405ae`](https://github.com/mcbeet/beet/commit/e7405aeceb74927749bc9f9cf8bb8b96495f89e6))
+
+- Locate_minecraft path separator (close #477)
+  ([`e445ea7`](https://github.com/mcbeet/beet/commit/e445ea75eefeebdb5b737d6b2e58540ae14d0728))
+
+- Preload before MultiCache.clear (close #352)
+  ([`4e3d3ec`](https://github.com/mcbeet/beet/commit/4e3d3ec020300a7e82d0e4aad353b11a6aacf365))
+
+- Start fixing type issues
+  ([`532d109`](https://github.com/mcbeet/beet/commit/532d109b0a86e6eda48caf77a431773dc4201395))
+
+- Update click (close #484)
+  ([`054fed8`](https://github.com/mcbeet/beet/commit/054fed8d3334ff27420adbcf674d42faedeb9b2f))
+
+- Use PathLike
+  ([`b140c99`](https://github.com/mcbeet/beet/commit/b140c995bb9b846691d00b1c9a1e591439c60b99))
+
+
+## v0.113.0-beta.5 (2025-11-15)
+
+### Bug Fixes
+
+- Change outdated license format
+  ([`a25ab4a`](https://github.com/mcbeet/beet/commit/a25ab4a0f0a42da927ec1d30d58bbd1e6b37e1ff))
+
+
+## v0.113.0-beta.4 (2025-11-15)
+
+### Bug Fixes
+
+- No print
+  ([`a5e3805`](https://github.com/mcbeet/beet/commit/a5e3805ad0c6ca04d5d0052157c05e3475321dfa))
+
+
+## v0.113.0-beta.3 (2025-11-15)
+
+### Features
+
+- Yo ([`b2817f0`](https://github.com/mcbeet/beet/commit/b2817f0a979e8d65b31ea81677c808c978cc935a))
+
 
 ## v0.112.2 (2025-12-01)
 

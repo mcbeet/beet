@@ -1,0 +1,13 @@
+require:
+  - mecha.contrib.inline_function_tag
+  - mecha.contrib.relative_location
+  - mecha.contrib.implicit_execute
+  - mecha.contrib.messages
+  - mecha.contrib.nesting
+data_pack:
+  load: [src]
+pipeline:
+  - mecha
+meta:
+  mecha:
+    multiline: true

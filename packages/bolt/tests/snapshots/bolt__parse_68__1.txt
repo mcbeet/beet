@@ -1,0 +1,30 @@
+_bolt_lineno = [1], [1]
+_bolt_helper_get_attribute_handler = _bolt_runtime.helpers['get_attribute_handler']
+_bolt_helper_children = _bolt_runtime.helpers['children']
+_bolt_helper_replace = _bolt_runtime.helpers['replace']
+with _bolt_runtime.scope() as _bolt_var7:
+    _bolt_var0 = 'foo'
+    _bolt_var0 = _bolt_helper_get_attribute_handler(_bolt_var0)["bar"]
+    _bolt_var0 = _bolt_var0()
+    _bolt_var1 = 0
+    _bolt_var0 = _bolt_var0[_bolt_var1]
+    _bolt_var2 = 'hello'
+    _bolt_var0 = _bolt_var0[_bolt_var2]
+    _bolt_var3 = 99
+    _bolt_var0 = _bolt_var0[_bolt_var3]
+    _bolt_var4 = 'with space'
+    _bolt_var0 = _bolt_var0[_bolt_var4]
+    _bolt_var5 = 'thing'
+    _bolt_var6 = 7
+    _bolt_var5 = _bolt_var5 * _bolt_var6
+    _bolt_var0 = _bolt_var0(_bolt_var5)
+_bolt_var8 = _bolt_helper_replace(_bolt_refs[0], commands=_bolt_helper_children(_bolt_var7))
+---
+output = _bolt_var8
+---
+_bolt_refs[0]
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=52, lineno=2, colno=1)
+  commands:
+    <class 'bolt.ast.AstStatement'>

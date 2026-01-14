@@ -1,0 +1,93 @@
+_bolt_lineno = [1, 11, 13], [1, 2, 3]
+_bolt_helper_interpolate_nbt = _bolt_runtime.helpers['interpolate_nbt']
+_bolt_helper_children = _bolt_runtime.helpers['children']
+_bolt_helper_replace = _bolt_runtime.helpers['replace']
+with _bolt_runtime.scope() as _bolt_var7:
+    _bolt_var0 = 'CustomModelData'
+    _bolt_var1 = 7
+    _bolt_var2 = {_bolt_var0: _bolt_var1}
+    custom_model_data = _bolt_var2
+    _bolt_var3 = 'minecraft:dirt'
+    _bolt_var4 = [_bolt_var3]
+    stone_can_place_on = _bolt_var4
+    _bolt_var5 = stone_can_place_on
+    _bolt_var5 = _bolt_helper_interpolate_nbt([*_bolt_var5], _bolt_refs[0])
+    _bolt_var6 = custom_model_data
+    _bolt_var6 = _bolt_helper_interpolate_nbt({**_bolt_var6}, _bolt_refs[3])
+    _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[7], arguments=_bolt_helper_children([_bolt_refs[6], _bolt_helper_replace(_bolt_refs[5], data_tags=_bolt_helper_replace(_bolt_refs[4], entries=_bolt_helper_children([_bolt_helper_replace(_bolt_refs[2], value=_bolt_helper_replace(_bolt_refs[1], elements=_bolt_helper_children([*_bolt_var5]))), *_bolt_var6])))])))
+_bolt_var8 = _bolt_helper_replace(_bolt_refs[8], commands=_bolt_helper_children(_bolt_var7))
+---
+output = _bolt_var8
+---
+_bolt_refs[0]
+<class 'bolt.ast.AstInterpolation'>
+  location: SourceLocation(pos=109, lineno=3, colno=29)
+  end_location: SourceLocation(pos=127, lineno=3, colno=47)
+  prefix: None
+  unpack: '*'
+  converter: 'nbt'
+  value:
+    <class 'bolt.ast.AstIdentifier'>
+_bolt_refs[1]
+<class 'mecha.ast.AstNbtList'>
+  location: SourceLocation(pos=107, lineno=3, colno=27)
+  end_location: SourceLocation(pos=128, lineno=3, colno=48)
+  elements:
+    <class 'bolt.ast.AstInterpolation'>
+_bolt_refs[2]
+<class 'mecha.ast.AstNbtCompoundEntry'>
+  location: SourceLocation(pos=95, lineno=3, colno=15)
+  end_location: SourceLocation(pos=128, lineno=3, colno=48)
+  key:
+    <class 'mecha.ast.AstNbtCompoundKey'>
+  value:
+    <class 'mecha.ast.AstNbtList'>
+_bolt_refs[3]
+<class 'bolt.ast.AstInterpolation'>
+  location: SourceLocation(pos=132, lineno=3, colno=52)
+  end_location: SourceLocation(pos=149, lineno=3, colno=69)
+  prefix: None
+  unpack: '**'
+  converter: 'nbt'
+  value:
+    <class 'bolt.ast.AstIdentifier'>
+_bolt_refs[4]
+<class 'mecha.ast.AstNbtCompound'>
+  location: SourceLocation(pos=94, lineno=3, colno=14)
+  end_location: SourceLocation(pos=150, lineno=3, colno=70)
+  entries:
+    <class 'mecha.ast.AstNbtCompoundEntry'>
+    <class 'bolt.ast.AstInterpolation'>
+_bolt_refs[5]
+<class 'mecha.ast.AstItemStack'>
+  location: SourceLocation(pos=89, lineno=3, colno=9)
+  end_location: SourceLocation(pos=150, lineno=3, colno=70)
+  identifier:
+    <class 'mecha.ast.AstResourceLocation'>
+  arguments:
+    <empty>
+  data_tags:
+    <class 'mecha.ast.AstNbtCompound'>
+_bolt_refs[6]
+<class 'mecha.ast.AstSelector'>
+  location: SourceLocation(pos=86, lineno=3, colno=6)
+  end_location: SourceLocation(pos=88, lineno=3, colno=8)
+  variable: 's'
+  arguments:
+    <empty>
+_bolt_refs[7]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=81, lineno=3, colno=1)
+  end_location: SourceLocation(pos=150, lineno=3, colno=70)
+  identifier: 'give:targets:item'
+  arguments:
+    <class 'mecha.ast.AstSelector'>
+    <class 'mecha.ast.AstItemStack'>
+_bolt_refs[8]
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=150, lineno=3, colno=70)
+  commands:
+    <class 'bolt.ast.AstStatement'>
+    <class 'bolt.ast.AstStatement'>
+    <class 'mecha.ast.AstCommand'>

@@ -1,0 +1,7 @@
+class Foo:
+#>ERROR  Statement "return" is not allowed in this context.
+# line 2, column 5
+#      1 |  class Foo:
+#      2 |      return
+#        :      ^^^^^^
+    return

@@ -1,0 +1,10 @@
+require:
+  - bolt
+data_pack:
+  load:
+      data/demo/modules: "@demo"
+pipeline:
+  - mecha
+meta:
+  bolt:
+    entrypoint: "demo:main"

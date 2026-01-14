@@ -2,7 +2,7 @@ from beet import Context, Project, ProjectBuilder, ProjectConfig, WorkerPool
 
 
 def beet_default(ctx: Context):
-    config = ProjectConfig(data_pack={"load": ["src"]}).resolve(ctx.directory)  # type: ignore
+    config = ProjectConfig(data_pack={"load": ["src"]}).resolve(ctx.directory)  # pyright: ignore[reportArgumentType]
     ctx.require(
         ProjectBuilder(
             Project(

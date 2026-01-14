@@ -1,0 +1,7 @@
+#>ERROR  Identifier "foo" is not defined.
+# line 1, column 8
+#      1 |  return foo
+#        :         ^^^
+# Notes:
+#   - Expected colon, eof, literal 'fail', literal 'run', newline or number but got literal 'foo'.
+return foo

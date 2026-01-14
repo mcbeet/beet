@@ -1,0 +1,198 @@
+macro hello clause=subcommand{"redirect": ["execute"]}:
+    pass
+hello if block ~ ~ ~ water say blbllblb
+hello setblock ~ ~ ~ lava
+hello run summon bat
+---
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=151, lineno=5, colno=21)
+  commands:
+    <class 'bolt.ast.AstMacro'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=64, lineno=2, colno=9)
+      identifier: 'hello:subcommand'
+      arguments:
+        <class 'bolt.ast.AstMacroLiteral'>
+          location: SourceLocation(pos=6, lineno=1, colno=7)
+          end_location: SourceLocation(pos=11, lineno=1, colno=12)
+          value: 'hello'
+        <class 'bolt.ast.AstMacroMatchArgument'>
+          location: SourceLocation(pos=12, lineno=1, colno=13)
+          end_location: SourceLocation(pos=54, lineno=1, colno=55)
+          match_identifier:
+            <class 'bolt.ast.AstMacroArgument'>
+              location: SourceLocation(pos=12, lineno=1, colno=13)
+              end_location: SourceLocation(pos=18, lineno=1, colno=19)
+              value: 'clause'
+          match_argument_parser:
+            <class 'mecha.ast.AstResourceLocation'>
+              location: SourceLocation(pos=19, lineno=1, colno=20)
+              end_location: SourceLocation(pos=29, lineno=1, colno=30)
+              is_tag: False
+              namespace: None
+              path: 'subcommand'
+          match_argument_properties:
+            <class 'mecha.ast.AstJsonObject'>
+              location: SourceLocation(pos=29, lineno=1, colno=30)
+              end_location: SourceLocation(pos=54, lineno=1, colno=55)
+              entries:
+                <class 'mecha.ast.AstJsonObjectEntry'>
+                  location: SourceLocation(pos=30, lineno=1, colno=31)
+                  end_location: SourceLocation(pos=53, lineno=1, colno=54)
+                  key:
+                    <class 'mecha.ast.AstJsonObjectKey'>
+                      location: SourceLocation(pos=30, lineno=1, colno=31)
+                      end_location: SourceLocation(pos=40, lineno=1, colno=41)
+                      value: 'redirect'
+                  value:
+                    <class 'mecha.ast.AstJsonArray'>
+                      location: SourceLocation(pos=42, lineno=1, colno=43)
+                      end_location: SourceLocation(pos=53, lineno=1, colno=54)
+                      elements:
+                        <class 'mecha.ast.AstJsonValue'>
+                          location: SourceLocation(pos=43, lineno=1, colno=44)
+                          end_location: SourceLocation(pos=52, lineno=1, colno=53)
+                          value: 'execute'
+        <class 'mecha.ast.AstRoot'>
+          location: SourceLocation(pos=60, lineno=2, colno=5)
+          end_location: SourceLocation(pos=64, lineno=2, colno=9)
+          commands:
+            <class 'mecha.ast.AstCommand'>
+              location: SourceLocation(pos=60, lineno=2, colno=5)
+              end_location: SourceLocation(pos=64, lineno=2, colno=9)
+              identifier: 'pass'
+              arguments:
+                <empty>
+    <class 'bolt.ast.AstMacroCall'>
+      location: SourceLocation(pos=65, lineno=3, colno=1)
+      end_location: SourceLocation(pos=104, lineno=3, colno=40)
+      identifier: 'hello:subcommand'
+      arguments:
+        <class 'mecha.ast.AstCommand'>
+          location: SourceLocation(pos=71, lineno=3, colno=7)
+          end_location: SourceLocation(pos=104, lineno=3, colno=40)
+          identifier: 'execute:if:block:pos:block:subcommand'
+          arguments:
+            <class 'mecha.ast.AstVector3'>
+              location: SourceLocation(pos=80, lineno=3, colno=16)
+              end_location: SourceLocation(pos=85, lineno=3, colno=21)
+              x:
+                <class 'mecha.ast.AstCoordinate'>
+                  location: SourceLocation(pos=80, lineno=3, colno=16)
+                  end_location: SourceLocation(pos=81, lineno=3, colno=17)
+                  type: 'relative'
+                  value: 0
+              y:
+                <class 'mecha.ast.AstCoordinate'>
+                  location: SourceLocation(pos=82, lineno=3, colno=18)
+                  end_location: SourceLocation(pos=83, lineno=3, colno=19)
+                  type: 'relative'
+                  value: 0
+              z:
+                <class 'mecha.ast.AstCoordinate'>
+                  location: SourceLocation(pos=84, lineno=3, colno=20)
+                  end_location: SourceLocation(pos=85, lineno=3, colno=21)
+                  type: 'relative'
+                  value: 0
+            <class 'mecha.ast.AstBlock'>
+              location: SourceLocation(pos=86, lineno=3, colno=22)
+              end_location: SourceLocation(pos=91, lineno=3, colno=27)
+              identifier:
+                <class 'mecha.ast.AstResourceLocation'>
+                  location: SourceLocation(pos=86, lineno=3, colno=22)
+                  end_location: SourceLocation(pos=91, lineno=3, colno=27)
+                  is_tag: False
+                  namespace: None
+                  path: 'water'
+              block_states:
+                <empty>
+              data_tags: None
+            <class 'mecha.ast.AstCommand'>
+              location: SourceLocation(pos=92, lineno=3, colno=28)
+              end_location: SourceLocation(pos=104, lineno=3, colno=40)
+              identifier: 'execute:run:subcommand'
+              arguments:
+                <class 'mecha.ast.AstCommand'>
+                  location: SourceLocation(pos=92, lineno=3, colno=28)
+                  end_location: SourceLocation(pos=104, lineno=3, colno=40)
+                  identifier: 'say:message'
+                  arguments:
+                    <class 'mecha.ast.AstMessage'>
+                      location: SourceLocation(pos=96, lineno=3, colno=32)
+                      end_location: SourceLocation(pos=104, lineno=3, colno=40)
+                      fragments:
+                        <class 'mecha.ast.AstMessageText'>
+                          location: SourceLocation(pos=96, lineno=3, colno=32)
+                          end_location: SourceLocation(pos=104, lineno=3, colno=40)
+                          value: 'blbllblb'
+    <class 'bolt.ast.AstMacroCall'>
+      location: SourceLocation(pos=105, lineno=4, colno=1)
+      end_location: SourceLocation(pos=130, lineno=4, colno=26)
+      identifier: 'hello:subcommand'
+      arguments:
+        <class 'mecha.ast.AstCommand'>
+          location: SourceLocation(pos=111, lineno=4, colno=7)
+          end_location: SourceLocation(pos=130, lineno=4, colno=26)
+          identifier: 'execute:run:subcommand'
+          arguments:
+            <class 'mecha.ast.AstCommand'>
+              location: SourceLocation(pos=111, lineno=4, colno=7)
+              end_location: SourceLocation(pos=130, lineno=4, colno=26)
+              identifier: 'setblock:pos:block'
+              arguments:
+                <class 'mecha.ast.AstVector3'>
+                  location: SourceLocation(pos=120, lineno=4, colno=16)
+                  end_location: SourceLocation(pos=125, lineno=4, colno=21)
+                  x:
+                    <class 'mecha.ast.AstCoordinate'>
+                      location: SourceLocation(pos=120, lineno=4, colno=16)
+                      end_location: SourceLocation(pos=121, lineno=4, colno=17)
+                      type: 'relative'
+                      value: 0
+                  y:
+                    <class 'mecha.ast.AstCoordinate'>
+                      location: SourceLocation(pos=122, lineno=4, colno=18)
+                      end_location: SourceLocation(pos=123, lineno=4, colno=19)
+                      type: 'relative'
+                      value: 0
+                  z:
+                    <class 'mecha.ast.AstCoordinate'>
+                      location: SourceLocation(pos=124, lineno=4, colno=20)
+                      end_location: SourceLocation(pos=125, lineno=4, colno=21)
+                      type: 'relative'
+                      value: 0
+                <class 'mecha.ast.AstBlock'>
+                  location: SourceLocation(pos=126, lineno=4, colno=22)
+                  end_location: SourceLocation(pos=130, lineno=4, colno=26)
+                  identifier:
+                    <class 'mecha.ast.AstResourceLocation'>
+                      location: SourceLocation(pos=126, lineno=4, colno=22)
+                      end_location: SourceLocation(pos=130, lineno=4, colno=26)
+                      is_tag: False
+                      namespace: None
+                      path: 'lava'
+                  block_states:
+                    <empty>
+                  data_tags: None
+    <class 'bolt.ast.AstMacroCall'>
+      location: SourceLocation(pos=131, lineno=5, colno=1)
+      end_location: SourceLocation(pos=151, lineno=5, colno=21)
+      identifier: 'hello:subcommand'
+      arguments:
+        <class 'mecha.ast.AstCommand'>
+          location: SourceLocation(pos=137, lineno=5, colno=7)
+          end_location: SourceLocation(pos=151, lineno=5, colno=21)
+          identifier: 'execute:run:subcommand'
+          arguments:
+            <class 'mecha.ast.AstCommand'>
+              location: SourceLocation(pos=141, lineno=5, colno=11)
+              end_location: SourceLocation(pos=151, lineno=5, colno=21)
+              identifier: 'summon:entity'
+              arguments:
+                <class 'mecha.ast.AstResourceLocation'>
+                  location: SourceLocation(pos=148, lineno=5, colno=18)
+                  end_location: SourceLocation(pos=151, lineno=5, colno=21)
+                  is_tag: False
+                  namespace: None
+                  path: 'bat'

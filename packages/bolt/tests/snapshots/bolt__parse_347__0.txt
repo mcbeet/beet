@@ -1,0 +1,8 @@
+for i in range(10):
+    def f():
+#>ERROR  Can only use "break" in loops.
+# line 3, column 9
+#      2 |      def f():
+#      3 |          break
+#        :          ^^^^^
+        break

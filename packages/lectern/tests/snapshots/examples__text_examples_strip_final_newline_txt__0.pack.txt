@@ -1,0 +1,21 @@
+@data_pack pack.mcmeta
+{
+  "pack": {
+    "min_format": [
+      94,
+      1
+    ],
+    "max_format": [
+      94,
+      1
+    ],
+    "description": ""
+  }
+}
+
+@function demo:hello
+say hello
+@function demo:foo
+say foo
+@function demo:bar
+say bar

@@ -1,0 +1,155 @@
+-2 ** 3 + +4 * 5 // 6 / 7 % 9 + 10 - 11 << 12 >> 13 & 14 ^ 15 | 16
+---
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=67, lineno=2, colno=1)
+  commands:
+    <class 'bolt.ast.AstStatement'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=66, lineno=1, colno=67)
+      identifier: 'mecha:sentinel'
+      arguments:
+        <class 'bolt.ast.AstExpressionBinary'>
+          location: SourceLocation(pos=0, lineno=1, colno=1)
+          end_location: SourceLocation(pos=66, lineno=1, colno=67)
+          operator: '|'
+          left:
+            <class 'bolt.ast.AstExpressionBinary'>
+              location: SourceLocation(pos=0, lineno=1, colno=1)
+              end_location: SourceLocation(pos=61, lineno=1, colno=62)
+              operator: '^'
+              left:
+                <class 'bolt.ast.AstExpressionBinary'>
+                  location: SourceLocation(pos=0, lineno=1, colno=1)
+                  end_location: SourceLocation(pos=56, lineno=1, colno=57)
+                  operator: '&'
+                  left:
+                    <class 'bolt.ast.AstExpressionBinary'>
+                      location: SourceLocation(pos=0, lineno=1, colno=1)
+                      end_location: SourceLocation(pos=51, lineno=1, colno=52)
+                      operator: '>>'
+                      left:
+                        <class 'bolt.ast.AstExpressionBinary'>
+                          location: SourceLocation(pos=0, lineno=1, colno=1)
+                          end_location: SourceLocation(pos=45, lineno=1, colno=46)
+                          operator: '<<'
+                          left:
+                            <class 'bolt.ast.AstExpressionBinary'>
+                              location: SourceLocation(pos=0, lineno=1, colno=1)
+                              end_location: SourceLocation(pos=39, lineno=1, colno=40)
+                              operator: '-'
+                              left:
+                                <class 'bolt.ast.AstExpressionBinary'>
+                                  location: SourceLocation(pos=0, lineno=1, colno=1)
+                                  end_location: SourceLocation(pos=34, lineno=1, colno=35)
+                                  operator: '+'
+                                  left:
+                                    <class 'bolt.ast.AstExpressionBinary'>
+                                      location: SourceLocation(pos=0, lineno=1, colno=1)
+                                      end_location: SourceLocation(pos=29, lineno=1, colno=30)
+                                      operator: '+'
+                                      left:
+                                        <class 'bolt.ast.AstExpressionUnary'>
+                                          location: SourceLocation(pos=0, lineno=1, colno=1)
+                                          end_location: SourceLocation(pos=7, lineno=1, colno=8)
+                                          operator: '-'
+                                          value:
+                                            <class 'bolt.ast.AstExpressionBinary'>
+                                              location: SourceLocation(pos=1, lineno=1, colno=2)
+                                              end_location: SourceLocation(pos=7, lineno=1, colno=8)
+                                              operator: '**'
+                                              left:
+                                                <class 'bolt.ast.AstValue'>
+                                                  location: SourceLocation(pos=1, lineno=1, colno=2)
+                                                  end_location: SourceLocation(pos=2, lineno=1, colno=3)
+                                                  value: 2
+                                              right:
+                                                <class 'bolt.ast.AstValue'>
+                                                  location: SourceLocation(pos=6, lineno=1, colno=7)
+                                                  end_location: SourceLocation(pos=7, lineno=1, colno=8)
+                                                  value: 3
+                                      right:
+                                        <class 'bolt.ast.AstExpressionBinary'>
+                                          location: SourceLocation(pos=10, lineno=1, colno=11)
+                                          end_location: SourceLocation(pos=29, lineno=1, colno=30)
+                                          operator: '%'
+                                          left:
+                                            <class 'bolt.ast.AstExpressionBinary'>
+                                              location: SourceLocation(pos=10, lineno=1, colno=11)
+                                              end_location: SourceLocation(pos=25, lineno=1, colno=26)
+                                              operator: '/'
+                                              left:
+                                                <class 'bolt.ast.AstExpressionBinary'>
+                                                  location: SourceLocation(pos=10, lineno=1, colno=11)
+                                                  end_location: SourceLocation(pos=21, lineno=1, colno=22)
+                                                  operator: '//'
+                                                  left:
+                                                    <class 'bolt.ast.AstExpressionBinary'>
+                                                      location: SourceLocation(pos=10, lineno=1, colno=11)
+                                                      end_location: SourceLocation(pos=16, lineno=1, colno=17)
+                                                      operator: '*'
+                                                      left:
+                                                        <class 'bolt.ast.AstExpressionUnary'>
+                                                          location: SourceLocation(pos=10, lineno=1, colno=11)
+                                                          end_location: SourceLocation(pos=12, lineno=1, colno=13)
+                                                          operator: '+'
+                                                          value:
+                                                            <class 'bolt.ast.AstValue'>
+                                                              location: SourceLocation(pos=11, lineno=1, colno=12)
+                                                              end_location: SourceLocation(pos=12, lineno=1, colno=13)
+                                                              value: 4
+                                                      right:
+                                                        <class 'bolt.ast.AstValue'>
+                                                          location: SourceLocation(pos=15, lineno=1, colno=16)
+                                                          end_location: SourceLocation(pos=16, lineno=1, colno=17)
+                                                          value: 5
+                                                  right:
+                                                    <class 'bolt.ast.AstValue'>
+                                                      location: SourceLocation(pos=20, lineno=1, colno=21)
+                                                      end_location: SourceLocation(pos=21, lineno=1, colno=22)
+                                                      value: 6
+                                              right:
+                                                <class 'bolt.ast.AstValue'>
+                                                  location: SourceLocation(pos=24, lineno=1, colno=25)
+                                                  end_location: SourceLocation(pos=25, lineno=1, colno=26)
+                                                  value: 7
+                                          right:
+                                            <class 'bolt.ast.AstValue'>
+                                              location: SourceLocation(pos=28, lineno=1, colno=29)
+                                              end_location: SourceLocation(pos=29, lineno=1, colno=30)
+                                              value: 9
+                                  right:
+                                    <class 'bolt.ast.AstValue'>
+                                      location: SourceLocation(pos=32, lineno=1, colno=33)
+                                      end_location: SourceLocation(pos=34, lineno=1, colno=35)
+                                      value: 10
+                              right:
+                                <class 'bolt.ast.AstValue'>
+                                  location: SourceLocation(pos=37, lineno=1, colno=38)
+                                  end_location: SourceLocation(pos=39, lineno=1, colno=40)
+                                  value: 11
+                          right:
+                            <class 'bolt.ast.AstValue'>
+                              location: SourceLocation(pos=43, lineno=1, colno=44)
+                              end_location: SourceLocation(pos=45, lineno=1, colno=46)
+                              value: 12
+                      right:
+                        <class 'bolt.ast.AstValue'>
+                          location: SourceLocation(pos=49, lineno=1, colno=50)
+                          end_location: SourceLocation(pos=51, lineno=1, colno=52)
+                          value: 13
+                  right:
+                    <class 'bolt.ast.AstValue'>
+                      location: SourceLocation(pos=54, lineno=1, colno=55)
+                      end_location: SourceLocation(pos=56, lineno=1, colno=57)
+                      value: 14
+              right:
+                <class 'bolt.ast.AstValue'>
+                  location: SourceLocation(pos=59, lineno=1, colno=60)
+                  end_location: SourceLocation(pos=61, lineno=1, colno=62)
+                  value: 15
+          right:
+            <class 'bolt.ast.AstValue'>
+              location: SourceLocation(pos=64, lineno=1, colno=65)
+              end_location: SourceLocation(pos=66, lineno=1, colno=67)
+              value: 16

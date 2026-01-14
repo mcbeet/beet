@@ -69,7 +69,7 @@ def test_namespaces():
     assert p1["hello"] != p2["hello"]
     assert p1 != p2
 
-    p1["hello"].functions["world"].lines.append("say world")  # type: ignore
+    p1["hello"].functions["world"].lines.append("say world")
 
     assert p1.functions["hello:world"] == p2.functions["hello:world"]
     assert p1["hello"] == p2["hello"]
@@ -335,29 +335,29 @@ def test_overload_proxy():
 def test_accessors_with_function(tmp_path: Path):
     func1 = Function(["say hello"])
 
-    assert func1._content == ["say hello"]  # type: ignore
+    assert func1._content == ["say hello"]
 
     assert func1.lines == ["say hello"]
-    assert func1._content == func1.lines  # type: ignore
+    assert func1._content == func1.lines
 
     assert func1.text == "say hello\n"
-    assert func1._content == "say hello\n"  # type: ignore
+    assert func1._content == "say hello\n"
 
     filename = tmp_path / "foo.mcfunction"
     filename.write_text("say world")
     func2 = Function(source_path=filename)
 
-    assert func2._content is None  # type: ignore
+    assert func2._content is None
 
     assert func2.text == "say world"
-    assert func2._content == func2.text  # type: ignore
+    assert func2._content == func2.text
     assert func2.source_path is None
 
     assert func2.lines == ["say world"]
-    assert func2._content == func2.lines  # type: ignore
+    assert func2._content == func2.lines
 
     assert func2.text == "say world\n"
-    assert func2._content == func2.text  # type: ignore
+    assert func2._content == func2.text
 
 
 def test_on_bind():
@@ -795,16 +795,18 @@ def test_overlay():
     assert s1 == s2
     assert len(s1) == 6
 
-    a, b = DataPack(min_format=(88, 0), max_format=(88, 0)), DataPack(
-        min_format=(99, 0), max_format=(99, 0)
+    a, b = (
+        DataPack(min_format=(88, 0), max_format=(88, 0)),
+        DataPack(min_format=(99, 0), max_format=(99, 0)),
     )
     a.merge(b)
     assert a.min_format == (99, 0)
     assert a.max_format == (99, 0)
     assert a.pack_format is None
 
-    a, b = DataPack(min_format=88, max_format=88), DataPack(
-        min_format=99, max_format=99
+    a, b = (
+        DataPack(min_format=88, max_format=88),
+        DataPack(min_format=99, max_format=99),
     )
     a.merge(b)
     assert a.min_format == 99
@@ -835,8 +837,9 @@ def test_overlay():
     assert a.overlays["overlay"].min_format == 77
     assert a.overlays["overlay"].max_format == 77
 
-    a, b = DataPack(min_format=88, max_format=88), DataPack(
-        min_format=99, max_format=99
+    a, b = (
+        DataPack(min_format=88, max_format=88),
+        DataPack(min_format=99, max_format=99),
     )
     overlayA = a.overlays.setdefault("overlay")
     overlayA.min_format = 66

@@ -1,0 +1,5 @@
+#>ERROR  Identifier "doesnotexist" is not defined.
+# line 1, column 6
+#      1 |  foo: doesnotexist = 123
+#        :       ^^^^^^^^^^^^
+foo: doesnotexist = 123

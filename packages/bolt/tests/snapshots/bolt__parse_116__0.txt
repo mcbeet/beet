@@ -1,0 +1,5 @@
+#>ERROR  Invalid escape sequence \e.
+# line 1, column 14
+#      1 |  yo = f'thing \e'
+#        :               ^^
+yo = f'thing \e'

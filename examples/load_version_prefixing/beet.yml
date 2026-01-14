@@ -1,0 +1,22 @@
+version: 1.2.3
+data_pack:
+  load: "src"
+pipeline:
+  - beet.contrib.rename_files
+  - beet.contrib.find_replace
+  - beet.contrib.function_header
+meta:
+  rename_files:
+    data_pack:
+      match: "demo:*"
+      find: 'demo:(?!no_prefix/)([a-z0-9_/]+)'
+      replace: 'demo:v{{ project_version }}/\1'
+  find_replace:
+    data_pack:
+      match: "demo:*"
+    substitute:
+      find: 'demo:(?!no_prefix/)([a-z0-9_/]+)'
+      replace: 'demo:v{{ project_version }}/\1'
+  function_header:
+    match: ["demo:*", "!demo:no_prefix/*"]
+    template: 'version_check.mcfunction'

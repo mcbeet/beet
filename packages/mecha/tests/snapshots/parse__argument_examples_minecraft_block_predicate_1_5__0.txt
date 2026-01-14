@@ -1,0 +1,9 @@
+minecraft:block_predicate 1 5
+---
+{}
+---
+#stone[thing=hello]{what:is:that}
+---
+Reported 1 error.
+
+line 1, column 28: Expected curly '}' but got colon ':'.

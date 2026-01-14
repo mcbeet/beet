@@ -1,0 +1,47 @@
+_bolt_lineno = [1, 8], [1, 2]
+_bolt_helper_interpolate_vec3 = _bolt_runtime.helpers['interpolate_vec3']
+_bolt_helper_children = _bolt_runtime.helpers['children']
+_bolt_helper_replace = _bolt_runtime.helpers['replace']
+with _bolt_runtime.scope() as _bolt_var2:
+    _bolt_var0 = '1 2 3'
+    a = _bolt_var0
+    _bolt_var1 = a
+    _bolt_var1 = _bolt_helper_interpolate_vec3(_bolt_var1, _bolt_refs[0])
+    _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[2], arguments=_bolt_helper_children([_bolt_var1, _bolt_refs[1]])))
+_bolt_var3 = _bolt_helper_replace(_bolt_refs[3], commands=_bolt_helper_children(_bolt_var2))
+---
+output = _bolt_var3
+---
+_bolt_refs[0]
+<class 'bolt.ast.AstInterpolation'>
+  location: SourceLocation(pos=21, lineno=2, colno=10)
+  end_location: SourceLocation(pos=22, lineno=2, colno=11)
+  prefix: None
+  unpack: None
+  converter: 'vec3'
+  value:
+    <class 'bolt.ast.AstIdentifier'>
+_bolt_refs[1]
+<class 'mecha.ast.AstBlock'>
+  location: SourceLocation(pos=23, lineno=2, colno=12)
+  end_location: SourceLocation(pos=28, lineno=2, colno=17)
+  identifier:
+    <class 'mecha.ast.AstResourceLocation'>
+  block_states:
+    <empty>
+  data_tags: None
+_bolt_refs[2]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=12, lineno=2, colno=1)
+  end_location: SourceLocation(pos=28, lineno=2, colno=17)
+  identifier: 'setblock:pos:block'
+  arguments:
+    <class 'bolt.ast.AstInterpolation'>
+    <class 'mecha.ast.AstBlock'>
+_bolt_refs[3]
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=28, lineno=2, colno=17)
+  commands:
+    <class 'bolt.ast.AstStatement'>
+    <class 'mecha.ast.AstCommand'>

@@ -1,0 +1,9 @@
+minecraft:float_range 1 0
+---
+{}
+---
+..
+---
+Reported 1 error.
+
+line 1, column 1: Expected range but got literal '..'.

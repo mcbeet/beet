@@ -1,0 +1,10 @@
+uwu = 0
+def f():
+    global uwu
+    memo:
+#>ERROR  Binding to global variable "uwu" is not allowed in this context.
+# line 5, column 9
+#      4 |      memo:
+#      5 |          uwu = 9
+#        :          ^^^
+        uwu = 9

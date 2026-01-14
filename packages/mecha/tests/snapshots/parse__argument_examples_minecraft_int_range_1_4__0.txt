@@ -1,0 +1,9 @@
+minecraft:int_range 1 4
+---
+{}
+---
+..100.4
+---
+Reported 1 error.
+
+line 1, column 1: Expected integer range.

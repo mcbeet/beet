@@ -1,0 +1,6 @@
+import ./bar as bar
+
+VALUE = 42
+
+def a():
+  return bar.VALUE

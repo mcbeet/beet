@@ -1,0 +1,9 @@
+import xml.etree.ElementTree as ET
+
+for name, content in ctx.meta.sample_ui.all_screens.items():
+    parser = ET.XMLPullParser(["start", "end"])
+    parser.feed(content)
+
+    function name:
+        for event, elem in parser.read_events():
+            say (event, elem.tag, elem.attrib)

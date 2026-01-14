@@ -1,0 +1,44 @@
+def f():
+    """My function"""
+    return 42
+---
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=44, lineno=3, colno=14)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=44, lineno=3, colno=14)
+      identifier: 'def:function:body'
+      arguments:
+        <class 'bolt.ast.AstFunctionSignature'>
+          location: SourceLocation(pos=4, lineno=1, colno=5)
+          end_location: SourceLocation(pos=7, lineno=1, colno=8)
+          decorators:
+            <empty>
+          name: 'f'
+          arguments:
+            <empty>
+          return_type_annotation: None
+        <class 'mecha.ast.AstRoot'>
+          location: SourceLocation(pos=13, lineno=2, colno=5)
+          end_location: SourceLocation(pos=44, lineno=3, colno=14)
+          commands:
+            <class 'bolt.ast.AstDocstring'>
+              location: SourceLocation(pos=13, lineno=2, colno=5)
+              end_location: SourceLocation(pos=30, lineno=2, colno=22)
+              identifier: 'mecha:sentinel'
+              arguments:
+                <class 'bolt.ast.AstValue'>
+                  location: SourceLocation(pos=13, lineno=2, colno=5)
+                  end_location: SourceLocation(pos=30, lineno=2, colno=22)
+                  value: 'My function'
+            <class 'mecha.ast.AstCommand'>
+              location: SourceLocation(pos=35, lineno=3, colno=5)
+              end_location: SourceLocation(pos=44, lineno=3, colno=14)
+              identifier: 'return:pythonresult'
+              arguments:
+                <class 'bolt.ast.AstValue'>
+                  location: SourceLocation(pos=42, lineno=3, colno=12)
+                  end_location: SourceLocation(pos=44, lineno=3, colno=14)
+                  value: 42

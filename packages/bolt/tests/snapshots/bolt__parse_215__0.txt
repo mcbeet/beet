@@ -1,0 +1,53 @@
+with None, None, None:
+    pass
+---
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=32, lineno=3, colno=1)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=31, lineno=2, colno=9)
+      identifier: 'with:context:body'
+      arguments:
+        <class 'bolt.ast.AstWithContext'>
+          location: SourceLocation(pos=5, lineno=1, colno=6)
+          end_location: SourceLocation(pos=21, lineno=1, colno=22)
+          clauses:
+            <class 'bolt.ast.AstWithClause'>
+              location: SourceLocation(pos=5, lineno=1, colno=6)
+              end_location: SourceLocation(pos=9, lineno=1, colno=10)
+              value:
+                <class 'bolt.ast.AstValue'>
+                  location: SourceLocation(pos=5, lineno=1, colno=6)
+                  end_location: SourceLocation(pos=9, lineno=1, colno=10)
+                  value: None
+              target: None
+            <class 'bolt.ast.AstWithClause'>
+              location: SourceLocation(pos=11, lineno=1, colno=12)
+              end_location: SourceLocation(pos=15, lineno=1, colno=16)
+              value:
+                <class 'bolt.ast.AstValue'>
+                  location: SourceLocation(pos=11, lineno=1, colno=12)
+                  end_location: SourceLocation(pos=15, lineno=1, colno=16)
+                  value: None
+              target: None
+            <class 'bolt.ast.AstWithClause'>
+              location: SourceLocation(pos=17, lineno=1, colno=18)
+              end_location: SourceLocation(pos=21, lineno=1, colno=22)
+              value:
+                <class 'bolt.ast.AstValue'>
+                  location: SourceLocation(pos=17, lineno=1, colno=18)
+                  end_location: SourceLocation(pos=21, lineno=1, colno=22)
+                  value: None
+              target: None
+        <class 'mecha.ast.AstRoot'>
+          location: SourceLocation(pos=27, lineno=2, colno=5)
+          end_location: SourceLocation(pos=31, lineno=2, colno=9)
+          commands:
+            <class 'mecha.ast.AstCommand'>
+              location: SourceLocation(pos=27, lineno=2, colno=5)
+              end_location: SourceLocation(pos=31, lineno=2, colno=9)
+              identifier: 'pass'
+              arguments:
+                <empty>

@@ -52,7 +52,7 @@ def test_mcmeta_properties():
     pack.min_format = None
     pack.max_format = None
 
-    assert pack.mcmeta._content == {  # type: ignore
+    assert pack.mcmeta._content == {
         "pack": {"description": "Something", "pack_format": 1}
     }
 
@@ -60,7 +60,7 @@ def test_mcmeta_properties():
 def test_texture(snapshot: SnapshotFixture):
     image = Image.new("RGB", (64, 64))
     d = ImageDraw.Draw(image)
-    d.text((10, 10), "hello", fill="white")
+    d.rectangle([0, 0, 64, 64], fill="green")
 
     pack = ResourcePack("custom")
     pack["custom:hello"] = Texture(image)
@@ -71,8 +71,8 @@ def test_texture(snapshot: SnapshotFixture):
 def test_texture_mcmeta(snapshot: SnapshotFixture):
     image = Image.new("RGB", (64, 128))
     d = ImageDraw.Draw(image)
-    d.text((10, 10), "hello", fill="white")
-    d.text((10, 74), "world", fill="white")
+    d.rectangle([0, 0, 64, 64], fill="green")
+    d.rectangle([0, 64, 64, 128], fill="red")
 
     pack = ResourcePack("custom")
     pack["custom:hello"] = Texture(image, mcmeta={"animation": {"frametime": 20}})
@@ -136,9 +136,9 @@ def test_vanilla_zip(minecraft_resource_pack: Path, tmp_path: Path):
 
 def test_vanilla_shaders(snapshot: SnapshotFixture, minecraft_resource_pack: Path):
     pack = ResourcePack(path=minecraft_resource_pack)
-    assert snapshot("json") == pack.shader_posts["minecraft:spider"].data
-    assert snapshot("json") == pack.shaders["minecraft:program/entity_outline"].data
-    assert snapshot() == pack.vertex_shaders["minecraft:program/sobel"].text
+    assert snapshot("json") == pack.post_effects["minecraft:spider"].data
+    assert snapshot("json") == pack.post_effects["minecraft:entity_outline"].data
+    assert snapshot() == pack.fragment_shaders["minecraft:post/entity_sobel"].text
 
 
 def test_vanilla_particles(snapshot: SnapshotFixture, minecraft_resource_pack: Path):

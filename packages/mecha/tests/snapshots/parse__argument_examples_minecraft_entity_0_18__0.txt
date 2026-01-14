@@ -1,0 +1,45 @@
+minecraft:entity 0 18
+---
+{'type': 'entities', 'amount': 'multiple'}
+---
+@a[ predicate = spgoding:foo , predicate = ! spgoding:bar , ]
+---
+@a[predicate=spgoding:foo, predicate=!spgoding:bar]
+---
+<class 'mecha.ast.AstSelector'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=61, lineno=1, colno=62)
+  variable: 'a'
+  arguments:
+    <class 'mecha.ast.AstSelectorArgument'>
+      location: SourceLocation(pos=4, lineno=1, colno=5)
+      end_location: SourceLocation(pos=28, lineno=1, colno=29)
+      inverted: False
+      key:
+        <class 'mecha.ast.AstString'>
+          location: SourceLocation(pos=4, lineno=1, colno=5)
+          end_location: SourceLocation(pos=13, lineno=1, colno=14)
+          value: 'predicate'
+      value:
+        <class 'mecha.ast.AstResourceLocation'>
+          location: SourceLocation(pos=16, lineno=1, colno=17)
+          end_location: SourceLocation(pos=28, lineno=1, colno=29)
+          is_tag: False
+          namespace: 'spgoding'
+          path: 'foo'
+    <class 'mecha.ast.AstSelectorArgument'>
+      location: SourceLocation(pos=31, lineno=1, colno=32)
+      end_location: SourceLocation(pos=57, lineno=1, colno=58)
+      inverted: True
+      key:
+        <class 'mecha.ast.AstString'>
+          location: SourceLocation(pos=31, lineno=1, colno=32)
+          end_location: SourceLocation(pos=40, lineno=1, colno=41)
+          value: 'predicate'
+      value:
+        <class 'mecha.ast.AstResourceLocation'>
+          location: SourceLocation(pos=45, lineno=1, colno=46)
+          end_location: SourceLocation(pos=57, lineno=1, colno=58)
+          is_tag: False
+          namespace: 'spgoding'
+          path: 'bar'

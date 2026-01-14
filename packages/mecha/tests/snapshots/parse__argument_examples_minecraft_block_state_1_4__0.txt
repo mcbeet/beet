@@ -1,0 +1,9 @@
+minecraft:block_state 1 4
+---
+{}
+---
+stone[foo
+---
+Reported 1 error.
+
+line 1, column 10: Expected equal but got eof.

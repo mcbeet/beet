@@ -1,0 +1,9 @@
+minecraft:column_pos 1 2
+---
+{}
+---
+@
+---
+Reported 1 error.
+
+line 1, column 1: Expected coordinate but got literal '@'.
