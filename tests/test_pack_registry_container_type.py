@@ -22,21 +22,16 @@ def test_registry_data():
     assert DataPack.pack_format_registry.get((1, 18)) == 8
 
 
-def redact_sha1(x: PackFormatRegistry) -> PackFormatRegistry:
-    x.sha1 = ""
-    return x
-
-
 def test_misode_mcmeta():
     URL = "https://raw.githubusercontent.com/misode/mcmeta/refs/heads/summary/versions/data.json"
     r = requests.get(URL)
     r.raise_for_status()
-    misode_data = [redact_sha1(PackFormatRegistry.model_validate(x)) for x in r.json()]
+    misode_data = [PackFormatRegistry.model_validate(x) for x in r.json()]
     misode_data = [x for x in misode_data if x.type == "release"]
 
     with open(str(pack_format_registry_path), "r") as f:
         beet_data = json.load(f)
-    beet_data = [redact_sha1(PackFormatRegistry.model_validate(x)) for x in beet_data]
+    beet_data = [PackFormatRegistry.model_validate(x) for x in beet_data]
     for x in misode_data:
         assert x in beet_data
     for x in beet_data:
