@@ -1,4 +1,4 @@
-__version__ = "0.102.0-beta.3"
+__version__ = "0.102.0"
 
 from .api import *  # noqa: F403
 from .ast import *  # noqa: F403
