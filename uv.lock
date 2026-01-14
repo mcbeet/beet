@@ -261,7 +261,7 @@ wheels = [
 
 [[package]]
 name = "lectern"
-version = "0.35.0b6"
+version = "0.35.0"
 source = { editable = "packages/lectern" }
 dependencies = [
     { name = "beet" },
