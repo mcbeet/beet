@@ -1,11 +1,3 @@
-> [!IMPORTANT]
-> 
-> We're updating to [Pydantic v2](https://docs.pydantic.dev/2.0/migration/)!
->
-> If your project defines custom Pydantic models and validators, try switching to the [`beta`](https://github.com/mcbeet/beet/tree/beta) branch to be ready for Pydantic v2 when it's released on `main`. 
-
----
-
 <img align="right" src="https://raw.githubusercontent.com/mcbeet/beet/main/logo.png?sanitize=true" alt="logo" width="76">
 
 # Beet

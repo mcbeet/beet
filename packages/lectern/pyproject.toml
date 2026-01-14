@@ -54,6 +54,10 @@ path_filters = ["src", "pyproject.toml", "README.md", "LICENSE"]
 [tool.semantic_release.changelog]
 exclude_commit_patterns = ["(?!feat|fix).+"]
 
+[tool.semantic_release.branches.main]
+match = "main"
+prerelease = false
+
 [tool.semantic_release.branches.beta]
 match = "beta"
 prerelease = true
