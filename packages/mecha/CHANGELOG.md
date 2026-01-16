@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v0.102.1 (2026-01-16)
+
+### Bug Fixes
+
+- Lint duplicate_execute
+  ([`c3e791c`](https://github.com/mcbeet/beet/commit/c3e791c555cc505f9a255899117b1e80cbf248da))
+
+
 ## v0.102.0 (2026-01-14)
 
 
