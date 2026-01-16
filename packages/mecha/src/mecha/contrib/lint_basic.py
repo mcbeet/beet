@@ -82,3 +82,24 @@ class BasicLinter(Reducer):
             for conflict_index in range(index):
                 if conflict[conflict_index] < 0:
                     conflict[conflict_index] = i
+
+    @rule(AstCommand, identifier="execute:subcommand")
+    def duplicate_execute(self, node: AstCommand):
+        match node.arguments[-1]:
+            case AstCommand(
+                identifier=id1,
+                arguments=[
+                    *args1,
+                    AstCommand(
+                        identifier=id2,
+                        arguments=[*args2, subcommand],
+                    ) as duplicate_node,
+                ],
+            ) if id1 == id2 and args1 == args2:
+                return set_location(
+                    Diagnostic("warn", "Duplicate execute clause."),
+                    duplicate_node,
+                    subcommand.location.with_horizontal_offset(-1),
+                )
+            case _:
+                return node

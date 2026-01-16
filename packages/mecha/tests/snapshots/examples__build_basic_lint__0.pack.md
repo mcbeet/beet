@@ -46,4 +46,11 @@ execute run say hello @p[scores={tmp=1},gamemode=adventure]
 #      5 |  execute in the_end run execute at @a run setblock ~ ~ ~ lava
 #        :                     ^^^^^^^^^^^
 execute in the_end run execute at @a run setblock ~ ~ ~ lava
+
+#>WARN   Duplicate execute clause. (duplicate_execute)
+# src/data/demo/functions/foo.mcfunction:7:15
+#      6 |  
+#      7 |  execute at @s at @s run say test
+#        :                ^^^^^
+execute at @s at @s run say test
 ```
