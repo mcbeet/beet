@@ -2,7 +2,7 @@ _bolt_lineno = [1, 7], [1, 2]
 _bolt_memo_storage_bdd640fb06671ad11c80317fa3b1799d = None
 _bolt_helper_children = _bolt_runtime.helpers['children']
 _bolt_helper_replace = _bolt_runtime.helpers['replace']
-with _bolt_runtime.scope() as _bolt_var0:
+with _bolt_runtime.scope() as __bolt_var0:
     def f():
         global _bolt_memo_storage_bdd640fb06671ad11c80317fa3b1799d
         if _bolt_memo_storage_bdd640fb06671ad11c80317fa3b1799d is None:
@@ -14,9 +14,9 @@ with _bolt_runtime.scope() as _bolt_var0:
         else:
             with _bolt_runtime.memo.record(_bolt_runtime, _bolt_memo_invocation_bdd640fb06671ad11c80317fa3b1799d, _bolt_memo_invocation_path_bdd640fb06671ad11c80317fa3b1799d, __name__):
                 pass
-_bolt_var1 = _bolt_helper_replace(_bolt_refs[1], commands=_bolt_helper_children(_bolt_var0))
+__bolt_var1 = _bolt_helper_replace(_bolt_refs[1], commands=_bolt_helper_children(__bolt_var0))
 ---
-output = _bolt_var1
+output = __bolt_var1
 ---
 _bolt_refs[0]
 <class 'bolt.ast.AstMemo'>

@@ -2,19 +2,19 @@ _bolt_lineno = [1, 7, 9, 10, 12, 13, 14], [1, 2, 3, 4, 3, 2, 1]
 _bolt_helper_get_attribute_handler = _bolt_runtime.helpers['get_attribute_handler']
 _bolt_helper_children = _bolt_runtime.helpers['children']
 _bolt_helper_replace = _bolt_runtime.helpers['replace']
-with _bolt_runtime.scope() as _bolt_var3:
-    _bolt_var0 = print
-    _bolt_var1 = str
-    _bolt_var1 = _bolt_helper_get_attribute_handler(_bolt_var1)["upper"]
-    _bolt_var2 = str
+with _bolt_runtime.scope() as __bolt_var3:
+    __bolt_var0 = print
+    __bolt_var1 = str
+    __bolt_var1 = _bolt_helper_get_attribute_handler(__bolt_var1)["upper"]
+    __bolt_var2 = str
     class Foo:
         pass
-    Foo = _bolt_var2(Foo)
-    Foo = _bolt_var1(Foo)
-    Foo = _bolt_var0(Foo)
-_bolt_var4 = _bolt_helper_replace(_bolt_refs[0], commands=_bolt_helper_children(_bolt_var3))
+    Foo = __bolt_var2(Foo)
+    Foo = __bolt_var1(Foo)
+    Foo = __bolt_var0(Foo)
+__bolt_var4 = _bolt_helper_replace(_bolt_refs[0], commands=_bolt_helper_children(__bolt_var3))
 ---
-output = _bolt_var4
+output = __bolt_var4
 ---
 _bolt_refs[0]
 <class 'mecha.ast.AstRoot'>

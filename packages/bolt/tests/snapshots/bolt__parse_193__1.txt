@@ -7,77 +7,77 @@ _bolt_helper_interpolate_entity = _bolt_runtime.helpers['interpolate_entity']
 _bolt_helper_replace = _bolt_runtime.helpers['replace']
 _bolt_helper_interpolate_numeric = _bolt_runtime.helpers['interpolate_numeric']
 _bolt_helper_get_rebind = _bolt_runtime.helpers['get_rebind']
-with _bolt_runtime.scope() as _bolt_var16:
+with _bolt_runtime.scope() as __bolt_var16:
     def init_global_score(self, name):
-        _bolt_var0 = name
-        _bolt_var1 = self
-        _bolt_helper_get_attribute_handler(_bolt_var1)["name"] = _bolt_var0
+        __bolt_var0 = name
+        __bolt_var1 = self
+        _bolt_helper_get_attribute_handler(__bolt_var1)["name"] = __bolt_var0
     def rebind_global_score(self, rhs):
-        _bolt_var0 = isinstance
-        _bolt_var1 = rhs
-        _bolt_var2 = GlobalScore
-        _bolt_var0 = _bolt_var0(_bolt_var1, _bolt_var2)
-        _bolt_var0_inverse = _bolt_helper_operator_not(_bolt_var0)
-        with _bolt_helper_branch(_bolt_var0) as _bolt_condition:
+        __bolt_var0 = isinstance
+        __bolt_var1 = rhs
+        __bolt_var2 = GlobalScore
+        __bolt_var0 = __bolt_var0(__bolt_var1, __bolt_var2)
+        __bolt_var0_inverse = _bolt_helper_operator_not(__bolt_var0)
+        with _bolt_helper_branch(__bolt_var0) as _bolt_condition:
             if _bolt_condition:
-                _bolt_var3 = self
-                _bolt_var3 = _bolt_helper_get_attribute_handler(_bolt_var3)["name"]
-                _bolt_var3 = _bolt_helper_interpolate_entity(_bolt_var3, _bolt_refs[0])
-                _bolt_var4 = rhs
-                _bolt_var4 = _bolt_helper_get_attribute_handler(_bolt_var4)["name"]
-                _bolt_var4 = _bolt_helper_interpolate_entity(_bolt_var4, _bolt_refs[1])
-                _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[5], arguments=_bolt_helper_children([_bolt_var3, _bolt_refs[2], _bolt_refs[3], _bolt_var4, _bolt_refs[4]])))
-        with _bolt_helper_branch(_bolt_var0_inverse) as _bolt_condition:
+                __bolt_var3 = self
+                __bolt_var3 = _bolt_helper_get_attribute_handler(__bolt_var3)["name"]
+                __bolt_var3 = _bolt_helper_interpolate_entity(__bolt_var3, _bolt_refs[0])
+                __bolt_var4 = rhs
+                __bolt_var4 = _bolt_helper_get_attribute_handler(__bolt_var4)["name"]
+                __bolt_var4 = _bolt_helper_interpolate_entity(__bolt_var4, _bolt_refs[1])
+                _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[5], arguments=_bolt_helper_children([__bolt_var3, _bolt_refs[2], _bolt_refs[3], __bolt_var4, _bolt_refs[4]])))
+        with _bolt_helper_branch(__bolt_var0_inverse) as _bolt_condition:
             if _bolt_condition:
-                _bolt_var5 = self
-                _bolt_var5 = _bolt_helper_get_attribute_handler(_bolt_var5)["name"]
-                _bolt_var5 = _bolt_helper_interpolate_entity(_bolt_var5, _bolt_refs[6])
-                _bolt_var6 = rhs
-                _bolt_var6 = _bolt_helper_interpolate_numeric(_bolt_var6, _bolt_refs[7])
-                _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[9], arguments=_bolt_helper_children([_bolt_var5, _bolt_refs[8], _bolt_var6])))
-        _bolt_var7 = self
-        return _bolt_var7
-    _bolt_var0 = type
-    _bolt_var1 = 'GlobalScore'
-    _bolt_var2 = ()
-    _bolt_var3 = '__init__'
-    _bolt_var4 = init_global_score
-    _bolt_var5 = '__rebind__'
-    _bolt_var6 = rebind_global_score
-    _bolt_var7 = {_bolt_var3: _bolt_var4, _bolt_var5: _bolt_var6}
-    _bolt_var0 = _bolt_var0(_bolt_var1, _bolt_var2, _bolt_var7)
-    GlobalScore = _bolt_var0
-    _bolt_var8 = GlobalScore
-    _bolt_var9 = 'a'
-    _bolt_var8 = _bolt_var8(_bolt_var9)
-    a = _bolt_var8
-    _bolt_var10 = 123
+                __bolt_var5 = self
+                __bolt_var5 = _bolt_helper_get_attribute_handler(__bolt_var5)["name"]
+                __bolt_var5 = _bolt_helper_interpolate_entity(__bolt_var5, _bolt_refs[6])
+                __bolt_var6 = rhs
+                __bolt_var6 = _bolt_helper_interpolate_numeric(__bolt_var6, _bolt_refs[7])
+                _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[9], arguments=_bolt_helper_children([__bolt_var5, _bolt_refs[8], __bolt_var6])))
+        __bolt_var7 = self
+        return __bolt_var7
+    __bolt_var0 = type
+    __bolt_var1 = 'GlobalScore'
+    __bolt_var2 = ()
+    __bolt_var3 = '__init__'
+    __bolt_var4 = init_global_score
+    __bolt_var5 = '__rebind__'
+    __bolt_var6 = rebind_global_score
+    __bolt_var7 = {__bolt_var3: __bolt_var4, __bolt_var5: __bolt_var6}
+    __bolt_var0 = __bolt_var0(__bolt_var1, __bolt_var2, __bolt_var7)
+    GlobalScore = __bolt_var0
+    __bolt_var8 = GlobalScore
+    __bolt_var9 = 'a'
+    __bolt_var8 = __bolt_var8(__bolt_var9)
+    a = __bolt_var8
+    __bolt_var10 = 123
     _bolt_rebind = _bolt_helper_get_rebind(a)
-    a = _bolt_var10
+    a = __bolt_var10
     if _bolt_rebind is not None:
         a = _bolt_rebind(a)
-    _bolt_var11 = 456
+    __bolt_var11 = 456
     _bolt_rebind = _bolt_helper_get_rebind(a)
-    a = _bolt_var11
+    a = __bolt_var11
     if _bolt_rebind is not None:
         a = _bolt_rebind(a)
-    _bolt_var12 = GlobalScore
-    _bolt_var13 = 'b'
-    _bolt_var12 = _bolt_var12(_bolt_var13)
-    b = _bolt_var12
-    _bolt_var14 = 789
+    __bolt_var12 = GlobalScore
+    __bolt_var13 = 'b'
+    __bolt_var12 = __bolt_var12(__bolt_var13)
+    b = __bolt_var12
+    __bolt_var14 = 789
     _bolt_rebind = _bolt_helper_get_rebind(b)
-    b = _bolt_var14
+    b = __bolt_var14
     if _bolt_rebind is not None:
         b = _bolt_rebind(b)
-    _bolt_var15 = a
+    __bolt_var15 = a
     _bolt_rebind = _bolt_helper_get_rebind(b)
-    b = _bolt_var15
+    b = __bolt_var15
     if _bolt_rebind is not None:
         b = _bolt_rebind(b)
-_bolt_var17 = _bolt_helper_replace(_bolt_refs[10], commands=_bolt_helper_children(_bolt_var16))
+__bolt_var17 = _bolt_helper_replace(_bolt_refs[10], commands=_bolt_helper_children(__bolt_var16))
 ---
-output = _bolt_var17
+output = __bolt_var17
 ---
 _bolt_refs[0]
 <class 'bolt.ast.AstInterpolation'>

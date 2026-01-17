@@ -1,39 +1,39 @@
 _bolt_lineno = [1], [1]
 _bolt_helper_children = _bolt_runtime.helpers['children']
 _bolt_helper_replace = _bolt_runtime.helpers['replace']
-with _bolt_runtime.scope() as _bolt_var14:
-    _bolt_var0 = 2
-    _bolt_var1 = 3
-    _bolt_var0 = _bolt_var0 ** _bolt_var1
-    _bolt_var0 = - _bolt_var0
-    _bolt_var2 = 4
-    _bolt_var2 = + _bolt_var2
-    _bolt_var3 = 5
-    _bolt_var2 = _bolt_var2 * _bolt_var3
-    _bolt_var4 = 6
-    _bolt_var2 = _bolt_var2 // _bolt_var4
-    _bolt_var5 = 7
-    _bolt_var2 = _bolt_var2 / _bolt_var5
-    _bolt_var6 = 9
-    _bolt_var2 = _bolt_var2 % _bolt_var6
-    _bolt_var0 = _bolt_var0 + _bolt_var2
-    _bolt_var7 = 10
-    _bolt_var0 = _bolt_var0 + _bolt_var7
-    _bolt_var8 = 11
-    _bolt_var0 = _bolt_var0 - _bolt_var8
-    _bolt_var9 = 12
-    _bolt_var0 = _bolt_var0 << _bolt_var9
-    _bolt_var10 = 13
-    _bolt_var0 = _bolt_var0 >> _bolt_var10
-    _bolt_var11 = 14
-    _bolt_var0 = _bolt_var0 & _bolt_var11
-    _bolt_var12 = 15
-    _bolt_var0 = _bolt_var0 ^ _bolt_var12
-    _bolt_var13 = 16
-    _bolt_var0 = _bolt_var0 | _bolt_var13
-_bolt_var15 = _bolt_helper_replace(_bolt_refs[0], commands=_bolt_helper_children(_bolt_var14))
+with _bolt_runtime.scope() as __bolt_var14:
+    __bolt_var0 = 2
+    __bolt_var1 = 3
+    __bolt_var0 = __bolt_var0 ** __bolt_var1
+    __bolt_var0 = - __bolt_var0
+    __bolt_var2 = 4
+    __bolt_var2 = + __bolt_var2
+    __bolt_var3 = 5
+    __bolt_var2 = __bolt_var2 * __bolt_var3
+    __bolt_var4 = 6
+    __bolt_var2 = __bolt_var2 // __bolt_var4
+    __bolt_var5 = 7
+    __bolt_var2 = __bolt_var2 / __bolt_var5
+    __bolt_var6 = 9
+    __bolt_var2 = __bolt_var2 % __bolt_var6
+    __bolt_var0 = __bolt_var0 + __bolt_var2
+    __bolt_var7 = 10
+    __bolt_var0 = __bolt_var0 + __bolt_var7
+    __bolt_var8 = 11
+    __bolt_var0 = __bolt_var0 - __bolt_var8
+    __bolt_var9 = 12
+    __bolt_var0 = __bolt_var0 << __bolt_var9
+    __bolt_var10 = 13
+    __bolt_var0 = __bolt_var0 >> __bolt_var10
+    __bolt_var11 = 14
+    __bolt_var0 = __bolt_var0 & __bolt_var11
+    __bolt_var12 = 15
+    __bolt_var0 = __bolt_var0 ^ __bolt_var12
+    __bolt_var13 = 16
+    __bolt_var0 = __bolt_var0 | __bolt_var13
+__bolt_var15 = _bolt_helper_replace(_bolt_refs[0], commands=_bolt_helper_children(__bolt_var14))
 ---
-output = _bolt_var15
+output = __bolt_var15
 ---
 _bolt_refs[0]
 <class 'mecha.ast.AstRoot'>

@@ -2,16 +2,16 @@ _bolt_lineno = [1, 8], [1, 2]
 _bolt_helper_interpolate_scoreboard_slot = _bolt_runtime.helpers['interpolate_scoreboard_slot']
 _bolt_helper_children = _bolt_runtime.helpers['children']
 _bolt_helper_replace = _bolt_runtime.helpers['replace']
-with _bolt_runtime.scope() as _bolt_var3:
-    _bolt_var0 = 'red'
-    color = _bolt_var0
-    _bolt_var1 = color
-    _bolt_var2 = 'sidebar.team.{}'.format(_bolt_var1)
-    _bolt_var2 = _bolt_helper_interpolate_scoreboard_slot(_bolt_var2, _bolt_refs[0])
-    _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[2], arguments=_bolt_helper_children([_bolt_var2, _bolt_refs[1]])))
-_bolt_var4 = _bolt_helper_replace(_bolt_refs[3], commands=_bolt_helper_children(_bolt_var3))
+with _bolt_runtime.scope() as __bolt_var3:
+    __bolt_var0 = 'red'
+    color = __bolt_var0
+    __bolt_var1 = color
+    __bolt_var2 = 'sidebar.team.{}'.format(__bolt_var1)
+    __bolt_var2 = _bolt_helper_interpolate_scoreboard_slot(__bolt_var2, _bolt_refs[0])
+    _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[2], arguments=_bolt_helper_children([__bolt_var2, _bolt_refs[1]])))
+__bolt_var4 = _bolt_helper_replace(_bolt_refs[3], commands=_bolt_helper_children(__bolt_var3))
 ---
-output = _bolt_var4
+output = __bolt_var4
 ---
 _bolt_refs[0]
 <class 'bolt.ast.AstInterpolation'>

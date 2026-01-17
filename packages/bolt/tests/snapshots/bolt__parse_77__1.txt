@@ -3,20 +3,20 @@ _bolt_helper_missing = _bolt_runtime.helpers['missing']
 _bolt_helper_get_rebind = _bolt_runtime.helpers['get_rebind']
 _bolt_helper_children = _bolt_runtime.helpers['children']
 _bolt_helper_replace = _bolt_runtime.helpers['replace']
-with _bolt_runtime.scope() as _bolt_var0:
+with _bolt_runtime.scope() as __bolt_var0:
     def f(a, b=_bolt_helper_missing):
         if b is _bolt_helper_missing:
-            _bolt_var0 = a
-            b = _bolt_var0
-        _bolt_var1 = a
+            __bolt_var0 = a
+            b = __bolt_var0
+        __bolt_var1 = a
         _bolt_rebind = _bolt_helper_get_rebind(b)
-        b += _bolt_var1
+        b += __bolt_var1
         if _bolt_rebind is not None:
             b = _bolt_rebind(b)
         _bolt_runtime.commands.append(_bolt_refs[0])
-_bolt_var1 = _bolt_helper_replace(_bolt_refs[1], commands=_bolt_helper_children(_bolt_var0))
+__bolt_var1 = _bolt_helper_replace(_bolt_refs[1], commands=_bolt_helper_children(__bolt_var0))
 ---
-output = _bolt_var1
+output = __bolt_var1
 ---
 _bolt_refs[0]
 <class 'mecha.ast.AstCommand'>

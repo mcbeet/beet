@@ -4,24 +4,24 @@ _bolt_helper_branch = _bolt_runtime.helpers['branch']
 _bolt_helper_children = _bolt_runtime.helpers['children']
 _bolt_helper_replace = _bolt_runtime.helpers['replace']
 _bolt_helper_exit_stack = _bolt_runtime.helpers['exit_stack']
-with _bolt_runtime.scope() as _bolt_var2:
+with _bolt_runtime.scope() as __bolt_var2:
     while True:
         with _bolt_runtime.scope() as _bolt_condition_commands:
-            _bolt_var0 = False
+            __bolt_var0 = False
         with _bolt_helper_exit_stack() as _bolt_fused_with_statement0:
-            (_bolt_loop_overridden, _bolt_var1) = _bolt_fused_with_statement0.enter_context(_bolt_helper_loop(_bolt_var0))
+            (_bolt_loop_overridden, __bolt_var1) = _bolt_fused_with_statement0.enter_context(_bolt_helper_loop(__bolt_var0))
             _bolt_runtime.commands.extend(_bolt_condition_commands)
             if not _bolt_loop_overridden:
-                _bolt_var0 = bool(_bolt_var0)
-            _bolt_condition = _bolt_fused_with_statement0.enter_context(_bolt_helper_branch(_bolt_var0))
+                __bolt_var0 = bool(__bolt_var0)
+            _bolt_condition = _bolt_fused_with_statement0.enter_context(_bolt_helper_branch(__bolt_var0))
             if _bolt_condition:
                 break
-                if _bolt_var1:
+                if __bolt_var1:
                     continue
         break
-_bolt_var3 = _bolt_helper_replace(_bolt_refs[0], commands=_bolt_helper_children(_bolt_var2))
+__bolt_var3 = _bolt_helper_replace(_bolt_refs[0], commands=_bolt_helper_children(__bolt_var2))
 ---
-output = _bolt_var3
+output = __bolt_var3
 ---
 _bolt_refs[0]
 <class 'mecha.ast.AstRoot'>

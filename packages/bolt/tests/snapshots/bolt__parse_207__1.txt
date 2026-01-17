@@ -3,20 +3,20 @@ _bolt_helper_interpolate_nbt = _bolt_runtime.helpers['interpolate_nbt']
 _bolt_helper_children = _bolt_runtime.helpers['children']
 _bolt_helper_replace = _bolt_runtime.helpers['replace']
 _bolt_helper_get_attribute_handler = _bolt_runtime.helpers['get_attribute_handler']
-with _bolt_runtime.scope() as _bolt_var5:
-    _bolt_var0 = 'color'
-    _bolt_var1 = 'red'
-    _bolt_var2 = {_bolt_var0: _bolt_var1}
-    red = _bolt_var2
-    _bolt_var3 = red
-    _bolt_var3 = _bolt_helper_interpolate_nbt({**_bolt_var3}, _bolt_refs[0])
-    _bolt_var4 = red
-    _bolt_var4 = _bolt_helper_get_attribute_handler(_bolt_var4)["color"]
-    _bolt_var4 = _bolt_helper_interpolate_nbt([*_bolt_var4], _bolt_refs[4])
-    _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[7], arguments=_bolt_helper_children([_bolt_refs[6], _bolt_helper_replace(_bolt_refs[5], elements=_bolt_helper_children([_bolt_refs[3], _bolt_helper_replace(_bolt_refs[2], entries=_bolt_helper_children([_bolt_refs[1], *_bolt_var3])), *_bolt_var4]))])))
-_bolt_var6 = _bolt_helper_replace(_bolt_refs[8], commands=_bolt_helper_children(_bolt_var5))
+with _bolt_runtime.scope() as __bolt_var5:
+    __bolt_var0 = 'color'
+    __bolt_var1 = 'red'
+    __bolt_var2 = {__bolt_var0: __bolt_var1}
+    red = __bolt_var2
+    __bolt_var3 = red
+    __bolt_var3 = _bolt_helper_interpolate_nbt({**__bolt_var3}, _bolt_refs[0])
+    __bolt_var4 = red
+    __bolt_var4 = _bolt_helper_get_attribute_handler(__bolt_var4)["color"]
+    __bolt_var4 = _bolt_helper_interpolate_nbt([*__bolt_var4], _bolt_refs[4])
+    _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[7], arguments=_bolt_helper_children([_bolt_refs[6], _bolt_helper_replace(_bolt_refs[5], elements=_bolt_helper_children([_bolt_refs[3], _bolt_helper_replace(_bolt_refs[2], entries=_bolt_helper_children([_bolt_refs[1], *__bolt_var3])), *__bolt_var4]))])))
+__bolt_var6 = _bolt_helper_replace(_bolt_refs[8], commands=_bolt_helper_children(__bolt_var5))
 ---
-output = _bolt_var6
+output = __bolt_var6
 ---
 _bolt_refs[0]
 <class 'bolt.ast.AstInterpolation'>

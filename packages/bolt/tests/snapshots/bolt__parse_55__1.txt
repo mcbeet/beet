@@ -2,17 +2,17 @@ _bolt_lineno = [1, 8], [1, 2]
 _bolt_helper_get_rebind = _bolt_runtime.helpers['get_rebind']
 _bolt_helper_children = _bolt_runtime.helpers['children']
 _bolt_helper_replace = _bolt_runtime.helpers['replace']
-with _bolt_runtime.scope() as _bolt_var2:
-    _bolt_var0 = 'foo'
-    for foo in _bolt_var0:
-        _bolt_var1 = foo
+with _bolt_runtime.scope() as __bolt_var2:
+    __bolt_var0 = 'foo'
+    for foo in __bolt_var0:
+        __bolt_var1 = foo
         _bolt_rebind = _bolt_helper_get_rebind(foo)
-        foo = _bolt_var1
+        foo = __bolt_var1
         if _bolt_rebind is not None:
             foo = _bolt_rebind(foo)
-_bolt_var3 = _bolt_helper_replace(_bolt_refs[0], commands=_bolt_helper_children(_bolt_var2))
+__bolt_var3 = _bolt_helper_replace(_bolt_refs[0], commands=_bolt_helper_children(__bolt_var2))
 ---
-output = _bolt_var3
+output = __bolt_var3
 ---
 _bolt_refs[0]
 <class 'mecha.ast.AstRoot'>

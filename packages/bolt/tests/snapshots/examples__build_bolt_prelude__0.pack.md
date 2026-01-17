@@ -47,12 +47,12 @@ say !!!
 _bolt_lineno = [1], [1]
 _bolt_helper_children = _bolt_runtime.helpers['children']
 _bolt_helper_replace = _bolt_runtime.helpers['replace']
-with _bolt_runtime.scope() as _bolt_var1:
+with _bolt_runtime.scope() as __bolt_var1:
     CALAMAR, dump_ast, anonymous, _bolt_macro0, _bolt_macro1 = _bolt_runtime.from_module_import('demo:codegen/prelude', 'CALAMAR', 'dump_ast', 'anonymous', '_bolt_macro0', '_bolt_macro1')
     alright_then, _bolt_macro2 = _bolt_runtime.from_module_import('no_idea:prelude', 'alright_then', '_bolt_macro0')
-    _bolt_var0 = dump_ast
-    _bolt_var0 = _bolt_var0()
-_bolt_var2 = _bolt_helper_replace(_bolt_refs[0], commands=_bolt_helper_children(_bolt_var1))
+    __bolt_var0 = dump_ast
+    __bolt_var0 = __bolt_var0()
+__bolt_var2 = _bolt_helper_replace(_bolt_refs[0], commands=_bolt_helper_children(__bolt_var1))
 ```
 
 `@function demo:codegen/foo`
@@ -65,34 +65,34 @@ _bolt_helper_children = _bolt_runtime.helpers['children']
 _bolt_helper_replace = _bolt_runtime.helpers['replace']
 _bolt_helper_interpolate_resource_location = _bolt_runtime.helpers['interpolate_resource_location']
 _bolt_helper_get_rebind = _bolt_runtime.helpers['get_rebind']
-with _bolt_runtime.scope() as _bolt_var9:
+with _bolt_runtime.scope() as __bolt_var9:
     CALAMAR, dump_ast, anonymous, _bolt_macro0, _bolt_macro1 = _bolt_runtime.from_module_import('demo:codegen/prelude', 'CALAMAR', 'dump_ast', 'anonymous', '_bolt_macro0', '_bolt_macro1')
     alright_then, _bolt_macro2 = _bolt_runtime.from_module_import('no_idea:prelude', 'alright_then', '_bolt_macro0')
-    _bolt_var0 = _bolt_helper_macro_call(_bolt_runtime, _bolt_macro1, _bolt_refs[0])
-    _bolt_runtime.commands.extend(_bolt_var0)
-    _bolt_var1 = anonymous
-    _bolt_var1 = _bolt_var1()
-    _bolt_var1 = _bolt_helper_interpolate_word(_bolt_var1, _bolt_refs[1])
-    _bolt_var2 = _bolt_helper_macro_call(_bolt_runtime, _bolt_macro0, _bolt_helper_replace(_bolt_refs[2], arguments=_bolt_helper_children([_bolt_var1])))
-    _bolt_runtime.commands.extend(_bolt_var2)
-    _bolt_var3 = CALAMAR
-    _bolt_var3 = _bolt_helper_interpolate_resource_location(_bolt_var3, _bolt_refs[3])
-    _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[4], arguments=_bolt_helper_children([_bolt_var3])))
-    _bolt_var4 = None
+    __bolt_var0 = _bolt_helper_macro_call(_bolt_runtime, _bolt_macro1, _bolt_refs[0])
+    _bolt_runtime.commands.extend(__bolt_var0)
+    __bolt_var1 = anonymous
+    __bolt_var1 = __bolt_var1()
+    __bolt_var1 = _bolt_helper_interpolate_word(__bolt_var1, _bolt_refs[1])
+    __bolt_var2 = _bolt_helper_macro_call(_bolt_runtime, _bolt_macro0, _bolt_helper_replace(_bolt_refs[2], arguments=_bolt_helper_children([__bolt_var1])))
+    _bolt_runtime.commands.extend(__bolt_var2)
+    __bolt_var3 = CALAMAR
+    __bolt_var3 = _bolt_helper_interpolate_resource_location(__bolt_var3, _bolt_refs[3])
+    _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[4], arguments=_bolt_helper_children([__bolt_var3])))
+    __bolt_var4 = None
     _bolt_rebind = _bolt_helper_get_rebind(CALAMAR)
-    CALAMAR = _bolt_var4
+    CALAMAR = __bolt_var4
     if _bolt_rebind is not None:
         CALAMAR = _bolt_rebind(CALAMAR)
-    _bolt_var5 = _bolt_helper_macro_call(_bolt_runtime, _bolt_macro1, _bolt_refs[5])
-    _bolt_runtime.commands.extend(_bolt_var5)
-    _bolt_var6 = alright_then
-    _bolt_var6 = _bolt_var6()
+    __bolt_var5 = _bolt_helper_macro_call(_bolt_runtime, _bolt_macro1, _bolt_refs[5])
+    _bolt_runtime.commands.extend(__bolt_var5)
+    __bolt_var6 = alright_then
+    __bolt_var6 = __bolt_var6()
     _bolt_runtime.commands.append(_bolt_refs[7])
-    _bolt_var7 = _bolt_helper_macro_call(_bolt_runtime, _bolt_macro1, _bolt_refs[6])
-    _bolt_runtime.commands.extend(_bolt_var7)
-    _bolt_var8 = dump_ast
-    _bolt_var8 = _bolt_var8()
-_bolt_var10 = _bolt_helper_replace(_bolt_refs[8], commands=_bolt_helper_children(_bolt_var9))
+    __bolt_var7 = _bolt_helper_macro_call(_bolt_runtime, _bolt_macro1, _bolt_refs[6])
+    _bolt_runtime.commands.extend(__bolt_var7)
+    __bolt_var8 = dump_ast
+    __bolt_var8 = __bolt_var8()
+__bolt_var10 = _bolt_helper_replace(_bolt_refs[8], commands=_bolt_helper_children(__bolt_var9))
 ```
 
 `@function(strip_final_newline) demo:bar`

@@ -1,30 +1,30 @@
 _bolt_lineno = [1, 20, 21, 22, 23], [1, 6, 5, 4, 1]
 _bolt_helper_children = _bolt_runtime.helpers['children']
 _bolt_helper_replace = _bolt_runtime.helpers['replace']
-with _bolt_runtime.scope() as _bolt_var19:
-    _bolt_var0 = 'condition'
-    _bolt_var1 = 'minecraft:entity_scores'
-    _bolt_var2 = 'entity'
-    _bolt_var3 = 'this'
-    _bolt_var4 = 'scores'
-    _bolt_var5 = 'score1'
-    _bolt_var6 = 'min'
-    _bolt_var7 = 'type'
-    _bolt_var8 = 'minecraft:score'
-    _bolt_var9 = 'target'
-    _bolt_var10 = 'this'
-    _bolt_var11 = 'score'
-    _bolt_var12 = 'score2'
-    _bolt_var13 = 'scale'
-    _bolt_var14 = 1
-    _bolt_var15 = {_bolt_var7: _bolt_var8, _bolt_var9: _bolt_var10, _bolt_var11: _bolt_var12, _bolt_var13: _bolt_var14}
-    _bolt_var16 = {_bolt_var6: _bolt_var15}
-    _bolt_var17 = {_bolt_var5: _bolt_var16}
-    _bolt_var18 = {_bolt_var0: _bolt_var1, _bolt_var2: _bolt_var3, _bolt_var4: _bolt_var17}
-    my_predicate = _bolt_var18
-_bolt_var20 = _bolt_helper_replace(_bolt_refs[0], commands=_bolt_helper_children(_bolt_var19))
+with _bolt_runtime.scope() as __bolt_var19:
+    __bolt_var0 = 'condition'
+    __bolt_var1 = 'minecraft:entity_scores'
+    __bolt_var2 = 'entity'
+    __bolt_var3 = 'this'
+    __bolt_var4 = 'scores'
+    __bolt_var5 = 'score1'
+    __bolt_var6 = 'min'
+    __bolt_var7 = 'type'
+    __bolt_var8 = 'minecraft:score'
+    __bolt_var9 = 'target'
+    __bolt_var10 = 'this'
+    __bolt_var11 = 'score'
+    __bolt_var12 = 'score2'
+    __bolt_var13 = 'scale'
+    __bolt_var14 = 1
+    __bolt_var15 = {__bolt_var7: __bolt_var8, __bolt_var9: __bolt_var10, __bolt_var11: __bolt_var12, __bolt_var13: __bolt_var14}
+    __bolt_var16 = {__bolt_var6: __bolt_var15}
+    __bolt_var17 = {__bolt_var5: __bolt_var16}
+    __bolt_var18 = {__bolt_var0: __bolt_var1, __bolt_var2: __bolt_var3, __bolt_var4: __bolt_var17}
+    my_predicate = __bolt_var18
+__bolt_var20 = _bolt_helper_replace(_bolt_refs[0], commands=_bolt_helper_children(__bolt_var19))
 ---
-output = _bolt_var20
+output = __bolt_var20
 ---
 _bolt_refs[0]
 <class 'mecha.ast.AstRoot'>

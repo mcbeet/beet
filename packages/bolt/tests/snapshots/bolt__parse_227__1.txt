@@ -3,17 +3,17 @@ _bolt_helper_interpolate_resource_location = _bolt_runtime.helpers['interpolate_
 _bolt_helper_replace = _bolt_runtime.helpers['replace']
 _bolt_helper_children = _bolt_runtime.helpers['children']
 _bolt_helper_macro_call = _bolt_runtime.helpers['macro_call']
-with _bolt_runtime.scope() as _bolt_var1:
+with _bolt_runtime.scope() as __bolt_var1:
     def _bolt_macro0(block):
-        _bolt_var0 = block
-        _bolt_var0 = _bolt_helper_interpolate_resource_location(_bolt_var0, _bolt_refs[0])
-        _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[3], arguments=_bolt_helper_children([_bolt_refs[2], _bolt_helper_replace(_bolt_refs[1], identifier=_bolt_var0)])))
-    _bolt_var0 = _bolt_helper_macro_call(_bolt_runtime, _bolt_macro0, _bolt_refs[4])
-    _bolt_runtime.commands.extend(_bolt_var0)
+        __bolt_var0 = block
+        __bolt_var0 = _bolt_helper_interpolate_resource_location(__bolt_var0, _bolt_refs[0])
+        _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[3], arguments=_bolt_helper_children([_bolt_refs[2], _bolt_helper_replace(_bolt_refs[1], identifier=__bolt_var0)])))
+    __bolt_var0 = _bolt_helper_macro_call(_bolt_runtime, _bolt_macro0, _bolt_refs[4])
+    _bolt_runtime.commands.extend(__bolt_var0)
     _bolt_runtime.commands.append(_bolt_refs[5])
-_bolt_var2 = _bolt_helper_replace(_bolt_refs[6], commands=_bolt_helper_children(_bolt_var1))
+__bolt_var2 = _bolt_helper_replace(_bolt_refs[6], commands=_bolt_helper_children(__bolt_var1))
 ---
-output = _bolt_var2
+output = __bolt_var2
 ---
 _bolt_refs[0]
 <class 'bolt.ast.AstInterpolation'>

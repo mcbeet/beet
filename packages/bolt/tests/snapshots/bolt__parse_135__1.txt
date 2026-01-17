@@ -4,41 +4,41 @@ _bolt_helper_branch = _bolt_runtime.helpers['branch']
 _bolt_helper_children = _bolt_runtime.helpers['children']
 _bolt_helper_replace = _bolt_runtime.helpers['replace']
 _bolt_helper_exit_stack = _bolt_runtime.helpers['exit_stack']
-with _bolt_runtime.scope() as _bolt_var4:
-    _bolt_var0 = 1
-    _bolt_var0_inverse = _bolt_helper_operator_not(_bolt_var0)
-    with _bolt_helper_branch(_bolt_var0) as _bolt_condition:
+with _bolt_runtime.scope() as __bolt_var4:
+    __bolt_var0 = 1
+    __bolt_var0_inverse = _bolt_helper_operator_not(__bolt_var0)
+    with _bolt_helper_branch(__bolt_var0) as _bolt_condition:
         if _bolt_condition:
             _bolt_runtime.commands.extend(_bolt_refs[0].commands)
     with _bolt_helper_exit_stack() as _bolt_fused_with_statement0:
-        _bolt_condition = _bolt_fused_with_statement0.enter_context(_bolt_helper_branch(_bolt_var0_inverse))
+        _bolt_condition = _bolt_fused_with_statement0.enter_context(_bolt_helper_branch(__bolt_var0_inverse))
         if _bolt_condition:
-            _bolt_var1 = 2
-            _bolt_var1_inverse = _bolt_helper_operator_not(_bolt_var1)
-            with _bolt_helper_branch(_bolt_var1) as _bolt_condition:
+            __bolt_var1 = 2
+            __bolt_var1_inverse = _bolt_helper_operator_not(__bolt_var1)
+            with _bolt_helper_branch(__bolt_var1) as _bolt_condition:
                 if _bolt_condition:
                     _bolt_runtime.commands.extend(_bolt_refs[1].commands)
-            _bolt_condition = _bolt_fused_with_statement0.enter_context(_bolt_helper_branch(_bolt_var1_inverse))
+            _bolt_condition = _bolt_fused_with_statement0.enter_context(_bolt_helper_branch(__bolt_var1_inverse))
             if _bolt_condition:
-                _bolt_var2 = 3
-                _bolt_var2_inverse = _bolt_helper_operator_not(_bolt_var2)
-                with _bolt_helper_branch(_bolt_var2) as _bolt_condition:
+                __bolt_var2 = 3
+                __bolt_var2_inverse = _bolt_helper_operator_not(__bolt_var2)
+                with _bolt_helper_branch(__bolt_var2) as _bolt_condition:
                     if _bolt_condition:
                         _bolt_runtime.commands.extend(_bolt_refs[2].commands)
-                _bolt_condition = _bolt_fused_with_statement0.enter_context(_bolt_helper_branch(_bolt_var2_inverse))
+                _bolt_condition = _bolt_fused_with_statement0.enter_context(_bolt_helper_branch(__bolt_var2_inverse))
                 if _bolt_condition:
-                    _bolt_var3 = 4
-                    _bolt_var3_inverse = _bolt_helper_operator_not(_bolt_var3)
-                    with _bolt_helper_branch(_bolt_var3) as _bolt_condition:
+                    __bolt_var3 = 4
+                    __bolt_var3_inverse = _bolt_helper_operator_not(__bolt_var3)
+                    with _bolt_helper_branch(__bolt_var3) as _bolt_condition:
                         if _bolt_condition:
                             _bolt_runtime.commands.extend(_bolt_refs[3].commands)
-                    _bolt_condition = _bolt_fused_with_statement0.enter_context(_bolt_helper_branch(_bolt_var3_inverse))
+                    _bolt_condition = _bolt_fused_with_statement0.enter_context(_bolt_helper_branch(__bolt_var3_inverse))
                     if _bolt_condition:
                         _bolt_runtime.commands.extend(_bolt_refs[4].commands)
     _bolt_runtime.commands.append(_bolt_refs[5])
-_bolt_var5 = _bolt_helper_replace(_bolt_refs[6], commands=_bolt_helper_children(_bolt_var4))
+__bolt_var5 = _bolt_helper_replace(_bolt_refs[6], commands=_bolt_helper_children(__bolt_var4))
 ---
-output = _bolt_var5
+output = __bolt_var5
 ---
 _bolt_refs[0]
 <class 'mecha.ast.AstRoot'>

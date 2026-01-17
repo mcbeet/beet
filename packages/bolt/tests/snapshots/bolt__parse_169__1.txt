@@ -2,21 +2,21 @@ _bolt_lineno = [1, 12], [1, 2]
 _bolt_helper_interpolate_message = _bolt_runtime.helpers['interpolate_message']
 _bolt_helper_children = _bolt_runtime.helpers['children']
 _bolt_helper_replace = _bolt_runtime.helpers['replace']
-with _bolt_runtime.scope() as _bolt_var5:
-    _bolt_var0 = list
-    _bolt_var1 = range
-    _bolt_var2 = 12
-    _bolt_var1 = _bolt_var1(_bolt_var2)
-    _bolt_var0 = _bolt_var0(_bolt_var1)
-    numbers = _bolt_var0
-    _bolt_var3 = numbers
-    _bolt_var4 = 3
-    _bolt_var3 = _bolt_var3[_bolt_var4:]
-    _bolt_var3 = _bolt_helper_interpolate_message(_bolt_var3, _bolt_refs[0])
-    _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[1], arguments=_bolt_helper_children([_bolt_var3])))
-_bolt_var6 = _bolt_helper_replace(_bolt_refs[2], commands=_bolt_helper_children(_bolt_var5))
+with _bolt_runtime.scope() as __bolt_var5:
+    __bolt_var0 = list
+    __bolt_var1 = range
+    __bolt_var2 = 12
+    __bolt_var1 = __bolt_var1(__bolt_var2)
+    __bolt_var0 = __bolt_var0(__bolt_var1)
+    numbers = __bolt_var0
+    __bolt_var3 = numbers
+    __bolt_var4 = 3
+    __bolt_var3 = __bolt_var3[__bolt_var4:]
+    __bolt_var3 = _bolt_helper_interpolate_message(__bolt_var3, _bolt_refs[0])
+    _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[1], arguments=_bolt_helper_children([__bolt_var3])))
+__bolt_var6 = _bolt_helper_replace(_bolt_refs[2], commands=_bolt_helper_children(__bolt_var5))
 ---
-output = _bolt_var6
+output = __bolt_var6
 ---
 _bolt_refs[0]
 <class 'bolt.ast.AstInterpolation'>

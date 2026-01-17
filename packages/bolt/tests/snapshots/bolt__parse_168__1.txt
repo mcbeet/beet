@@ -3,23 +3,23 @@ _bolt_helper_get_attribute_handler = _bolt_runtime.helpers['get_attribute_handle
 _bolt_helper_interpolate_item_slot = _bolt_runtime.helpers['interpolate_item_slot']
 _bolt_helper_children = _bolt_runtime.helpers['children']
 _bolt_helper_replace = _bolt_runtime.helpers['replace']
-with _bolt_runtime.scope() as _bolt_var7:
-    _bolt_var0 = 'offhand'
-    _bolt_var1 = 'weapon.offhand'
-    _bolt_var2 = 'mainhand'
-    _bolt_var3 = 'weapon.mainhand'
-    _bolt_var4 = {_bolt_var0: _bolt_var1, _bolt_var2: _bolt_var3}
-    my_weapon = _bolt_var4
-    _bolt_var5 = my_weapon
-    _bolt_var5 = _bolt_helper_get_attribute_handler(_bolt_var5)["offhand"]
-    _bolt_var5 = _bolt_helper_interpolate_item_slot(_bolt_var5, _bolt_refs[0])
-    _bolt_var6 = my_weapon
-    _bolt_var6 = _bolt_helper_get_attribute_handler(_bolt_var6)["mainhand"]
-    _bolt_var6 = _bolt_helper_interpolate_item_slot(_bolt_var6, _bolt_refs[2])
-    _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[4], arguments=_bolt_helper_children([_bolt_refs[1], _bolt_var5, _bolt_refs[3], _bolt_var6])))
-_bolt_var8 = _bolt_helper_replace(_bolt_refs[5], commands=_bolt_helper_children(_bolt_var7))
+with _bolt_runtime.scope() as __bolt_var7:
+    __bolt_var0 = 'offhand'
+    __bolt_var1 = 'weapon.offhand'
+    __bolt_var2 = 'mainhand'
+    __bolt_var3 = 'weapon.mainhand'
+    __bolt_var4 = {__bolt_var0: __bolt_var1, __bolt_var2: __bolt_var3}
+    my_weapon = __bolt_var4
+    __bolt_var5 = my_weapon
+    __bolt_var5 = _bolt_helper_get_attribute_handler(__bolt_var5)["offhand"]
+    __bolt_var5 = _bolt_helper_interpolate_item_slot(__bolt_var5, _bolt_refs[0])
+    __bolt_var6 = my_weapon
+    __bolt_var6 = _bolt_helper_get_attribute_handler(__bolt_var6)["mainhand"]
+    __bolt_var6 = _bolt_helper_interpolate_item_slot(__bolt_var6, _bolt_refs[2])
+    _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[4], arguments=_bolt_helper_children([_bolt_refs[1], __bolt_var5, _bolt_refs[3], __bolt_var6])))
+__bolt_var8 = _bolt_helper_replace(_bolt_refs[5], commands=_bolt_helper_children(__bolt_var7))
 ---
-output = _bolt_var8
+output = __bolt_var8
 ---
 _bolt_refs[0]
 <class 'bolt.ast.AstInterpolation'>

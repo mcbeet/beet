@@ -3,7 +3,7 @@ _bolt_memo_storage_bdd640fb06671ad11c80317fa3b1799d = None
 _bolt_helper_children = _bolt_runtime.helpers['children']
 _bolt_memo_storage_23b8c1e9392456de3eb13b9046685257 = None
 _bolt_helper_replace = _bolt_runtime.helpers['replace']
-with _bolt_runtime.scope() as _bolt_var0:
+with _bolt_runtime.scope() as __bolt_var0:
     if _bolt_memo_storage_bdd640fb06671ad11c80317fa3b1799d is None:
         _bolt_memo_storage_bdd640fb06671ad11c80317fa3b1799d = _bolt_runtime.memo.registry[__file__][_bolt_refs[0], 0]
     _bolt_memo_invocation_path_bdd640fb06671ad11c80317fa3b1799d = _bolt_runtime.get_nested_location()
@@ -22,9 +22,9 @@ with _bolt_runtime.scope() as _bolt_var0:
     else:
         with _bolt_runtime.memo.record(_bolt_runtime, _bolt_memo_invocation_23b8c1e9392456de3eb13b9046685257, _bolt_memo_invocation_path_23b8c1e9392456de3eb13b9046685257, __name__):
             pass
-_bolt_var1 = _bolt_helper_replace(_bolt_refs[2], commands=_bolt_helper_children(_bolt_var0))
+__bolt_var1 = _bolt_helper_replace(_bolt_refs[2], commands=_bolt_helper_children(__bolt_var0))
 ---
-output = _bolt_var1
+output = __bolt_var1
 ---
 _bolt_refs[0]
 <class 'bolt.ast.AstMemo'>

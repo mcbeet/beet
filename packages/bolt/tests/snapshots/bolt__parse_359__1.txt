@@ -2,11 +2,11 @@ _bolt_lineno = [1], [1]
 _bolt_helper_resolve_formatted_location = _bolt_runtime.helpers['resolve_formatted_location']
 _bolt_helper_children = _bolt_runtime.helpers['children']
 _bolt_helper_replace = _bolt_runtime.helpers['replace']
-with _bolt_runtime.scope() as _bolt_var1:
-    _bolt_var0 = _bolt_helper_resolve_formatted_location(_bolt_runtime, '')
-_bolt_var2 = _bolt_helper_replace(_bolt_refs[0], commands=_bolt_helper_children(_bolt_var1))
+with _bolt_runtime.scope() as __bolt_var1:
+    __bolt_var0 = _bolt_helper_resolve_formatted_location(_bolt_runtime, '')
+__bolt_var2 = _bolt_helper_replace(_bolt_refs[0], commands=_bolt_helper_children(__bolt_var1))
 ---
-output = _bolt_var2
+output = __bolt_var2
 ---
 _bolt_refs[0]
 <class 'mecha.ast.AstRoot'>

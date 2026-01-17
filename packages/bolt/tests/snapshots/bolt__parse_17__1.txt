@@ -9,200 +9,200 @@ _bolt_helper_children = _bolt_runtime.helpers['children']
 _bolt_helper_replace = _bolt_runtime.helpers['replace']
 _bolt_helper_exit_stack = _bolt_runtime.helpers['exit_stack']
 with _bolt_helper_exit_stack() as _bolt_fused_with_statement0:
-    _bolt_var47 = _bolt_fused_with_statement0.enter_context(_bolt_runtime.scope())
-    _bolt_var0 = False
-    _bolt_var1 = _bolt_helper_operator_not(_bolt_var0)
-    _bolt_var2 = _bolt_helper_get_dup(_bolt_var0)
-    if _bolt_var2 is not None:
-        _bolt_var0 = _bolt_var2()
-    with _bolt_helper_branch(_bolt_var1) as _bolt_condition:
+    __bolt_var47 = _bolt_fused_with_statement0.enter_context(_bolt_runtime.scope())
+    __bolt_var0 = False
+    __bolt_var1 = _bolt_helper_operator_not(__bolt_var0)
+    __bolt_var2 = _bolt_helper_get_dup(__bolt_var0)
+    if __bolt_var2 is not None:
+        __bolt_var0 = __bolt_var2()
+    with _bolt_helper_branch(__bolt_var1) as _bolt_condition:
         if _bolt_condition:
-            _bolt_var3 = True
-            _bolt_var4 = _bolt_var3
-            _bolt_var5 = _bolt_helper_get_dup(_bolt_var3)
-            if _bolt_var5 is not None:
-                _bolt_var3 = _bolt_var5()
-            with _bolt_helper_branch(_bolt_var4) as _bolt_condition:
+            __bolt_var3 = True
+            __bolt_var4 = __bolt_var3
+            __bolt_var5 = _bolt_helper_get_dup(__bolt_var3)
+            if __bolt_var5 is not None:
+                __bolt_var3 = __bolt_var5()
+            with _bolt_helper_branch(__bolt_var4) as _bolt_condition:
                 if _bolt_condition:
-                    _bolt_var6 = 'hello'
-                    if _bolt_var5 is not None:
-                        _bolt_rebind = _bolt_helper_get_rebind(_bolt_var3)
-                        _bolt_var3 = _bolt_var6
+                    __bolt_var6 = 'hello'
+                    if __bolt_var5 is not None:
+                        _bolt_rebind = _bolt_helper_get_rebind(__bolt_var3)
+                        __bolt_var3 = __bolt_var6
                         if _bolt_rebind is not None:
-                            _bolt_var3 = _bolt_rebind(_bolt_var3)
+                            __bolt_var3 = _bolt_rebind(__bolt_var3)
                     else:
-                        _bolt_var3 = _bolt_var6
-            if _bolt_var2 is not None:
-                _bolt_rebind = _bolt_helper_get_rebind(_bolt_var0)
-                _bolt_var0 = _bolt_var3
+                        __bolt_var3 = __bolt_var6
+            if __bolt_var2 is not None:
+                _bolt_rebind = _bolt_helper_get_rebind(__bolt_var0)
+                __bolt_var0 = __bolt_var3
                 if _bolt_rebind is not None:
-                    _bolt_var0 = _bolt_rebind(_bolt_var0)
+                    __bolt_var0 = _bolt_rebind(__bolt_var0)
             else:
-                _bolt_var0 = _bolt_var3
-    _bolt_var7 = _bolt_helper_operator_not(_bolt_var0)
-    _bolt_var8 = _bolt_helper_get_dup(_bolt_var0)
-    if _bolt_var8 is not None:
-        _bolt_var0 = _bolt_var8()
-    with _bolt_helper_branch(_bolt_var7) as _bolt_condition:
+                __bolt_var0 = __bolt_var3
+    __bolt_var7 = _bolt_helper_operator_not(__bolt_var0)
+    __bolt_var8 = _bolt_helper_get_dup(__bolt_var0)
+    if __bolt_var8 is not None:
+        __bolt_var0 = __bolt_var8()
+    with _bolt_helper_branch(__bolt_var7) as _bolt_condition:
         if _bolt_condition:
-            _bolt_var9 = 'foo'
-            _bolt_var10 = 'bar'
-            _bolt_var9 = _bolt_var9 == _bolt_var10
-            _bolt_var9 = _bolt_helper_operator_not(_bolt_var9)
-            if _bolt_var8 is not None:
-                _bolt_rebind = _bolt_helper_get_rebind(_bolt_var0)
-                _bolt_var0 = _bolt_var9
+            __bolt_var9 = 'foo'
+            __bolt_var10 = 'bar'
+            __bolt_var9 = __bolt_var9 == __bolt_var10
+            __bolt_var9 = _bolt_helper_operator_not(__bolt_var9)
+            if __bolt_var8 is not None:
+                _bolt_rebind = _bolt_helper_get_rebind(__bolt_var0)
+                __bolt_var0 = __bolt_var9
                 if _bolt_rebind is not None:
-                    _bolt_var0 = _bolt_rebind(_bolt_var0)
+                    __bolt_var0 = _bolt_rebind(__bolt_var0)
             else:
-                _bolt_var0 = _bolt_var9
-    _bolt_var11 = _bolt_helper_operator_not(_bolt_var0)
-    _bolt_var12 = _bolt_helper_get_dup(_bolt_var0)
-    if _bolt_var12 is not None:
-        _bolt_var0 = _bolt_var12()
-    _bolt_condition = _bolt_fused_with_statement0.enter_context(_bolt_helper_branch(_bolt_var11))
+                __bolt_var0 = __bolt_var9
+    __bolt_var11 = _bolt_helper_operator_not(__bolt_var0)
+    __bolt_var12 = _bolt_helper_get_dup(__bolt_var0)
+    if __bolt_var12 is not None:
+        __bolt_var0 = __bolt_var12()
+    _bolt_condition = _bolt_fused_with_statement0.enter_context(_bolt_helper_branch(__bolt_var11))
     if _bolt_condition:
-        _bolt_var13 = 1
-        _bolt_var14 = 2
-        _bolt_var13 = _bolt_var13 != _bolt_var14
-        _bolt_var15 = _bolt_var13
-        _bolt_var16 = _bolt_helper_get_dup(_bolt_var13)
-        if _bolt_var16 is not None:
-            _bolt_var13 = _bolt_var16()
-        with _bolt_helper_branch(_bolt_var15) as _bolt_condition:
+        __bolt_var13 = 1
+        __bolt_var14 = 2
+        __bolt_var13 = __bolt_var13 != __bolt_var14
+        __bolt_var15 = __bolt_var13
+        __bolt_var16 = _bolt_helper_get_dup(__bolt_var13)
+        if __bolt_var16 is not None:
+            __bolt_var13 = __bolt_var16()
+        with _bolt_helper_branch(__bolt_var15) as _bolt_condition:
             if _bolt_condition:
-                _bolt_var17 = 1
-                _bolt_var18 = 2
-                _bolt_var17 = _bolt_var17 < _bolt_var18
-                if _bolt_var16 is not None:
-                    _bolt_rebind = _bolt_helper_get_rebind(_bolt_var13)
-                    _bolt_var13 = _bolt_var17
+                __bolt_var17 = 1
+                __bolt_var18 = 2
+                __bolt_var17 = __bolt_var17 < __bolt_var18
+                if __bolt_var16 is not None:
+                    _bolt_rebind = _bolt_helper_get_rebind(__bolt_var13)
+                    __bolt_var13 = __bolt_var17
                     if _bolt_rebind is not None:
-                        _bolt_var13 = _bolt_rebind(_bolt_var13)
+                        __bolt_var13 = _bolt_rebind(__bolt_var13)
                 else:
-                    _bolt_var13 = _bolt_var17
-        _bolt_var19 = _bolt_var13
-        _bolt_var20 = _bolt_helper_get_dup(_bolt_var13)
-        if _bolt_var20 is not None:
-            _bolt_var13 = _bolt_var20()
-        with _bolt_helper_branch(_bolt_var19) as _bolt_condition:
+                    __bolt_var13 = __bolt_var17
+        __bolt_var19 = __bolt_var13
+        __bolt_var20 = _bolt_helper_get_dup(__bolt_var13)
+        if __bolt_var20 is not None:
+            __bolt_var13 = __bolt_var20()
+        with _bolt_helper_branch(__bolt_var19) as _bolt_condition:
             if _bolt_condition:
-                _bolt_var21 = 2
-                _bolt_var22 = 3
-                _bolt_var21 = _bolt_var21 <= _bolt_var22
-                if _bolt_var20 is not None:
-                    _bolt_rebind = _bolt_helper_get_rebind(_bolt_var13)
-                    _bolt_var13 = _bolt_var21
+                __bolt_var21 = 2
+                __bolt_var22 = 3
+                __bolt_var21 = __bolt_var21 <= __bolt_var22
+                if __bolt_var20 is not None:
+                    _bolt_rebind = _bolt_helper_get_rebind(__bolt_var13)
+                    __bolt_var13 = __bolt_var21
                     if _bolt_rebind is not None:
-                        _bolt_var13 = _bolt_rebind(_bolt_var13)
+                        __bolt_var13 = _bolt_rebind(__bolt_var13)
                 else:
-                    _bolt_var13 = _bolt_var21
-        _bolt_var23 = _bolt_var13
-        _bolt_var24 = _bolt_helper_get_dup(_bolt_var13)
-        if _bolt_var24 is not None:
-            _bolt_var13 = _bolt_var24()
-        with _bolt_helper_branch(_bolt_var23) as _bolt_condition:
+                    __bolt_var13 = __bolt_var21
+        __bolt_var23 = __bolt_var13
+        __bolt_var24 = _bolt_helper_get_dup(__bolt_var13)
+        if __bolt_var24 is not None:
+            __bolt_var13 = __bolt_var24()
+        with _bolt_helper_branch(__bolt_var23) as _bolt_condition:
             if _bolt_condition:
-                _bolt_var25 = 5
-                _bolt_var26 = 4
-                _bolt_var25 = _bolt_var25 > _bolt_var26
-                if _bolt_var24 is not None:
-                    _bolt_rebind = _bolt_helper_get_rebind(_bolt_var13)
-                    _bolt_var13 = _bolt_var25
+                __bolt_var25 = 5
+                __bolt_var26 = 4
+                __bolt_var25 = __bolt_var25 > __bolt_var26
+                if __bolt_var24 is not None:
+                    _bolt_rebind = _bolt_helper_get_rebind(__bolt_var13)
+                    __bolt_var13 = __bolt_var25
                     if _bolt_rebind is not None:
-                        _bolt_var13 = _bolt_rebind(_bolt_var13)
+                        __bolt_var13 = _bolt_rebind(__bolt_var13)
                 else:
-                    _bolt_var13 = _bolt_var25
-        _bolt_var27 = _bolt_var13
-        _bolt_var28 = _bolt_helper_get_dup(_bolt_var13)
-        if _bolt_var28 is not None:
-            _bolt_var13 = _bolt_var28()
-        with _bolt_helper_branch(_bolt_var27) as _bolt_condition:
+                    __bolt_var13 = __bolt_var25
+        __bolt_var27 = __bolt_var13
+        __bolt_var28 = _bolt_helper_get_dup(__bolt_var13)
+        if __bolt_var28 is not None:
+            __bolt_var13 = __bolt_var28()
+        with _bolt_helper_branch(__bolt_var27) as _bolt_condition:
             if _bolt_condition:
-                _bolt_var29 = 6
-                _bolt_var30 = 5
-                _bolt_var29 = _bolt_var29 >= _bolt_var30
-                if _bolt_var28 is not None:
-                    _bolt_rebind = _bolt_helper_get_rebind(_bolt_var13)
-                    _bolt_var13 = _bolt_var29
+                __bolt_var29 = 6
+                __bolt_var30 = 5
+                __bolt_var29 = __bolt_var29 >= __bolt_var30
+                if __bolt_var28 is not None:
+                    _bolt_rebind = _bolt_helper_get_rebind(__bolt_var13)
+                    __bolt_var13 = __bolt_var29
                     if _bolt_rebind is not None:
-                        _bolt_var13 = _bolt_rebind(_bolt_var13)
+                        __bolt_var13 = _bolt_rebind(__bolt_var13)
                 else:
-                    _bolt_var13 = _bolt_var29
-        _bolt_var31 = _bolt_var13
-        _bolt_var32 = _bolt_helper_get_dup(_bolt_var13)
-        if _bolt_var32 is not None:
-            _bolt_var13 = _bolt_var32()
-        with _bolt_helper_branch(_bolt_var31) as _bolt_condition:
+                    __bolt_var13 = __bolt_var29
+        __bolt_var31 = __bolt_var13
+        __bolt_var32 = _bolt_helper_get_dup(__bolt_var13)
+        if __bolt_var32 is not None:
+            __bolt_var13 = __bolt_var32()
+        with _bolt_helper_branch(__bolt_var31) as _bolt_condition:
             if _bolt_condition:
-                _bolt_var33 = 1
-                _bolt_var34 = 1
-                _bolt_var33 = _bolt_helper_operator_in(_bolt_var33, _bolt_var34)
-                if _bolt_var32 is not None:
-                    _bolt_rebind = _bolt_helper_get_rebind(_bolt_var13)
-                    _bolt_var13 = _bolt_var33
+                __bolt_var33 = 1
+                __bolt_var34 = 1
+                __bolt_var33 = _bolt_helper_operator_in(__bolt_var33, __bolt_var34)
+                if __bolt_var32 is not None:
+                    _bolt_rebind = _bolt_helper_get_rebind(__bolt_var13)
+                    __bolt_var13 = __bolt_var33
                     if _bolt_rebind is not None:
-                        _bolt_var13 = _bolt_rebind(_bolt_var13)
+                        __bolt_var13 = _bolt_rebind(__bolt_var13)
                 else:
-                    _bolt_var13 = _bolt_var33
-        _bolt_var35 = _bolt_var13
-        _bolt_var36 = _bolt_helper_get_dup(_bolt_var13)
-        if _bolt_var36 is not None:
-            _bolt_var13 = _bolt_var36()
-        with _bolt_helper_branch(_bolt_var35) as _bolt_condition:
+                    __bolt_var13 = __bolt_var33
+        __bolt_var35 = __bolt_var13
+        __bolt_var36 = _bolt_helper_get_dup(__bolt_var13)
+        if __bolt_var36 is not None:
+            __bolt_var13 = __bolt_var36()
+        with _bolt_helper_branch(__bolt_var35) as _bolt_condition:
             if _bolt_condition:
-                _bolt_var37 = 2
-                _bolt_var38 = 2
-                _bolt_var37 = _bolt_helper_operator_not_in(_bolt_var37, _bolt_var38)
-                if _bolt_var36 is not None:
-                    _bolt_rebind = _bolt_helper_get_rebind(_bolt_var13)
-                    _bolt_var13 = _bolt_var37
+                __bolt_var37 = 2
+                __bolt_var38 = 2
+                __bolt_var37 = _bolt_helper_operator_not_in(__bolt_var37, __bolt_var38)
+                if __bolt_var36 is not None:
+                    _bolt_rebind = _bolt_helper_get_rebind(__bolt_var13)
+                    __bolt_var13 = __bolt_var37
                     if _bolt_rebind is not None:
-                        _bolt_var13 = _bolt_rebind(_bolt_var13)
+                        __bolt_var13 = _bolt_rebind(__bolt_var13)
                 else:
-                    _bolt_var13 = _bolt_var37
-        _bolt_var39 = _bolt_var13
-        _bolt_var40 = _bolt_helper_get_dup(_bolt_var13)
-        if _bolt_var40 is not None:
-            _bolt_var13 = _bolt_var40()
-        with _bolt_helper_branch(_bolt_var39) as _bolt_condition:
+                    __bolt_var13 = __bolt_var37
+        __bolt_var39 = __bolt_var13
+        __bolt_var40 = _bolt_helper_get_dup(__bolt_var13)
+        if __bolt_var40 is not None:
+            __bolt_var13 = __bolt_var40()
+        with _bolt_helper_branch(__bolt_var39) as _bolt_condition:
             if _bolt_condition:
-                _bolt_var41 = 3
-                _bolt_var42 = 3
-                _bolt_var41 = _bolt_var41 is _bolt_var42
-                if _bolt_var40 is not None:
-                    _bolt_rebind = _bolt_helper_get_rebind(_bolt_var13)
-                    _bolt_var13 = _bolt_var41
+                __bolt_var41 = 3
+                __bolt_var42 = 3
+                __bolt_var41 = __bolt_var41 is __bolt_var42
+                if __bolt_var40 is not None:
+                    _bolt_rebind = _bolt_helper_get_rebind(__bolt_var13)
+                    __bolt_var13 = __bolt_var41
                     if _bolt_rebind is not None:
-                        _bolt_var13 = _bolt_rebind(_bolt_var13)
+                        __bolt_var13 = _bolt_rebind(__bolt_var13)
                 else:
-                    _bolt_var13 = _bolt_var41
-        _bolt_var43 = _bolt_var13
-        _bolt_var44 = _bolt_helper_get_dup(_bolt_var13)
-        if _bolt_var44 is not None:
-            _bolt_var13 = _bolt_var44()
-        with _bolt_helper_branch(_bolt_var43) as _bolt_condition:
+                    __bolt_var13 = __bolt_var41
+        __bolt_var43 = __bolt_var13
+        __bolt_var44 = _bolt_helper_get_dup(__bolt_var13)
+        if __bolt_var44 is not None:
+            __bolt_var13 = __bolt_var44()
+        with _bolt_helper_branch(__bolt_var43) as _bolt_condition:
             if _bolt_condition:
-                _bolt_var45 = 3
-                _bolt_var46 = 3
-                _bolt_var45 = _bolt_var45 is not _bolt_var46
-                if _bolt_var44 is not None:
-                    _bolt_rebind = _bolt_helper_get_rebind(_bolt_var13)
-                    _bolt_var13 = _bolt_var45
+                __bolt_var45 = 3
+                __bolt_var46 = 3
+                __bolt_var45 = __bolt_var45 is not __bolt_var46
+                if __bolt_var44 is not None:
+                    _bolt_rebind = _bolt_helper_get_rebind(__bolt_var13)
+                    __bolt_var13 = __bolt_var45
                     if _bolt_rebind is not None:
-                        _bolt_var13 = _bolt_rebind(_bolt_var13)
+                        __bolt_var13 = _bolt_rebind(__bolt_var13)
                 else:
-                    _bolt_var13 = _bolt_var45
-        if _bolt_var12 is not None:
-            _bolt_rebind = _bolt_helper_get_rebind(_bolt_var0)
-            _bolt_var0 = _bolt_var13
+                    __bolt_var13 = __bolt_var45
+        if __bolt_var12 is not None:
+            _bolt_rebind = _bolt_helper_get_rebind(__bolt_var0)
+            __bolt_var0 = __bolt_var13
             if _bolt_rebind is not None:
-                _bolt_var0 = _bolt_rebind(_bolt_var0)
+                __bolt_var0 = _bolt_rebind(__bolt_var0)
         else:
-            _bolt_var0 = _bolt_var13
-_bolt_var48 = _bolt_helper_replace(_bolt_refs[0], commands=_bolt_helper_children(_bolt_var47))
+            __bolt_var0 = __bolt_var13
+__bolt_var48 = _bolt_helper_replace(_bolt_refs[0], commands=_bolt_helper_children(__bolt_var47))
 ---
-output = _bolt_var48
+output = __bolt_var48
 ---
 _bolt_refs[0]
 <class 'mecha.ast.AstRoot'>

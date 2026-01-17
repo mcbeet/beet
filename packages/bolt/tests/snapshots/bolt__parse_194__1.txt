@@ -5,47 +5,47 @@ _bolt_helper_children = _bolt_runtime.helpers['children']
 _bolt_helper_get_attribute_handler = _bolt_runtime.helpers['get_attribute_handler']
 _bolt_helper_interpolate_message = _bolt_runtime.helpers['interpolate_message']
 _bolt_helper_replace = _bolt_runtime.helpers['replace']
-with _bolt_runtime.scope() as _bolt_var5:
+with _bolt_runtime.scope() as __bolt_var5:
     def Counter(x=_bolt_helper_missing):
         if x is _bolt_helper_missing:
-            _bolt_var0 = 0
-            x = _bolt_var0
+            __bolt_var0 = 0
+            x = __bolt_var0
         def incr():
             nonlocal x
-            _bolt_var1 = 1
+            __bolt_var1 = 1
             _bolt_rebind = _bolt_helper_get_rebind(x)
-            x += _bolt_var1
+            x += __bolt_var1
             if _bolt_rebind is not None:
                 x = _bolt_rebind(x)
-            _bolt_var2 = x
-            return _bolt_var2
-        _bolt_var1 = 'incr'
-        _bolt_var2 = incr
-        _bolt_var3 = {_bolt_var1: _bolt_var2}
-        return _bolt_var3
-    _bolt_var0 = Counter
-    _bolt_var0 = _bolt_var0()
-    counter = _bolt_var0
-    _bolt_var1 = counter
-    _bolt_var1 = _bolt_helper_get_attribute_handler(_bolt_var1)["incr"]
-    _bolt_var1 = _bolt_var1()
-    _bolt_var1 = _bolt_helper_interpolate_message(_bolt_var1, _bolt_refs[0])
-    _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[1], arguments=_bolt_helper_children([_bolt_var1])))
-    _bolt_var2 = counter
-    _bolt_var2 = _bolt_helper_get_attribute_handler(_bolt_var2)["incr"]
-    _bolt_var2 = _bolt_var2()
-    _bolt_var2 = _bolt_helper_interpolate_message(_bolt_var2, _bolt_refs[2])
-    _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[3], arguments=_bolt_helper_children([_bolt_var2])))
-    _bolt_var3 = Counter
-    _bolt_var4 = 9
-    _bolt_var3 = _bolt_var3(_bolt_var4)
-    _bolt_var3 = _bolt_helper_get_attribute_handler(_bolt_var3)["incr"]
-    _bolt_var3 = _bolt_var3()
-    _bolt_var3 = _bolt_helper_interpolate_message(_bolt_var3, _bolt_refs[4])
-    _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[5], arguments=_bolt_helper_children([_bolt_var3])))
-_bolt_var6 = _bolt_helper_replace(_bolt_refs[6], commands=_bolt_helper_children(_bolt_var5))
+            __bolt_var2 = x
+            return __bolt_var2
+        __bolt_var1 = 'incr'
+        __bolt_var2 = incr
+        __bolt_var3 = {__bolt_var1: __bolt_var2}
+        return __bolt_var3
+    __bolt_var0 = Counter
+    __bolt_var0 = __bolt_var0()
+    counter = __bolt_var0
+    __bolt_var1 = counter
+    __bolt_var1 = _bolt_helper_get_attribute_handler(__bolt_var1)["incr"]
+    __bolt_var1 = __bolt_var1()
+    __bolt_var1 = _bolt_helper_interpolate_message(__bolt_var1, _bolt_refs[0])
+    _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[1], arguments=_bolt_helper_children([__bolt_var1])))
+    __bolt_var2 = counter
+    __bolt_var2 = _bolt_helper_get_attribute_handler(__bolt_var2)["incr"]
+    __bolt_var2 = __bolt_var2()
+    __bolt_var2 = _bolt_helper_interpolate_message(__bolt_var2, _bolt_refs[2])
+    _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[3], arguments=_bolt_helper_children([__bolt_var2])))
+    __bolt_var3 = Counter
+    __bolt_var4 = 9
+    __bolt_var3 = __bolt_var3(__bolt_var4)
+    __bolt_var3 = _bolt_helper_get_attribute_handler(__bolt_var3)["incr"]
+    __bolt_var3 = __bolt_var3()
+    __bolt_var3 = _bolt_helper_interpolate_message(__bolt_var3, _bolt_refs[4])
+    _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[5], arguments=_bolt_helper_children([__bolt_var3])))
+__bolt_var6 = _bolt_helper_replace(_bolt_refs[6], commands=_bolt_helper_children(__bolt_var5))
 ---
-output = _bolt_var6
+output = __bolt_var6
 ---
 _bolt_refs[0]
 <class 'bolt.ast.AstInterpolation'>

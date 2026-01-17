@@ -2,18 +2,18 @@ _bolt_lineno = [1, 9], [1, 2]
 _bolt_helper_interpolate_range = _bolt_runtime.helpers['interpolate_range']
 _bolt_helper_children = _bolt_runtime.helpers['children']
 _bolt_helper_replace = _bolt_runtime.helpers['replace']
-with _bolt_runtime.scope() as _bolt_var4:
-    _bolt_var0 = 8
-    x = _bolt_var0
+with _bolt_runtime.scope() as __bolt_var4:
+    __bolt_var0 = 8
+    x = __bolt_var0
     with _bolt_runtime.push_nesting('execute:subcommand'):
-        _bolt_var1 = x
-        _bolt_var2 = None
-        _bolt_var3 = (_bolt_var1,_bolt_var2,)
-        _bolt_var3 = _bolt_helper_interpolate_range(_bolt_var3, _bolt_refs[0])
-    _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[5], arguments=_bolt_helper_children([_bolt_helper_replace(_bolt_refs[4], arguments=_bolt_helper_children([*_bolt_helper_children([_bolt_refs[1], _bolt_refs[2], _bolt_var3]), _bolt_refs[3]]))])))
-_bolt_var5 = _bolt_helper_replace(_bolt_refs[6], commands=_bolt_helper_children(_bolt_var4))
+        __bolt_var1 = x
+        __bolt_var2 = None
+        __bolt_var3 = (__bolt_var1,__bolt_var2,)
+        __bolt_var3 = _bolt_helper_interpolate_range(__bolt_var3, _bolt_refs[0])
+    _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[5], arguments=_bolt_helper_children([_bolt_helper_replace(_bolt_refs[4], arguments=_bolt_helper_children([*_bolt_helper_children([_bolt_refs[1], _bolt_refs[2], __bolt_var3]), _bolt_refs[3]]))])))
+__bolt_var5 = _bolt_helper_replace(_bolt_refs[6], commands=_bolt_helper_children(__bolt_var4))
 ---
-output = _bolt_var5
+output = __bolt_var5
 ---
 _bolt_refs[0]
 <class 'bolt.ast.AstInterpolation'>

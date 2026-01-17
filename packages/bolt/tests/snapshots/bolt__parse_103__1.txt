@@ -3,21 +3,21 @@ _bolt_helper_interpolate_nbt = _bolt_runtime.helpers['interpolate_nbt']
 _bolt_helper_replace = _bolt_runtime.helpers['replace']
 _bolt_helper_children = _bolt_runtime.helpers['children']
 _bolt_helper_exit_stack = _bolt_runtime.helpers['exit_stack']
-with _bolt_runtime.scope() as _bolt_var2:
-    _bolt_var0 = '[{"text": "Hello", "bold": true}]'
-    foo = _bolt_var0
+with _bolt_runtime.scope() as __bolt_var2:
+    __bolt_var0 = '[{"text": "Hello", "bold": true}]'
+    foo = __bolt_var0
     with _bolt_helper_exit_stack() as _bolt_fused_with_statement0:
         _bolt_fused_with_statement0.enter_context(_bolt_runtime.push_nesting('execute:subcommand'))
         _bolt_fused_with_statement0.enter_context(_bolt_runtime.push_nesting('execute:as:targets:subcommand', *_bolt_refs[15:16]))
         _bolt_fused_with_statement0.enter_context(_bolt_runtime.push_nesting('execute:at:targets:subcommand', *_bolt_refs[13:14]))
         _bolt_fused_with_statement0.enter_context(_bolt_runtime.push_nesting('execute:if:block:pos:block:subcommand', *_bolt_refs[10:12]))
         _bolt_fused_with_statement0.enter_context(_bolt_runtime.push_nesting('execute:run:subcommand'))
-        _bolt_var1 = foo
-        _bolt_var1 = _bolt_helper_interpolate_nbt(_bolt_var1, _bolt_refs[0])
-    _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[17], arguments=_bolt_helper_children([_bolt_helper_replace(_bolt_refs[16], arguments=_bolt_helper_children([*_bolt_refs[15:16], _bolt_helper_replace(_bolt_refs[14], arguments=_bolt_helper_children([*_bolt_refs[13:14], _bolt_helper_replace(_bolt_refs[12], arguments=_bolt_helper_children([*_bolt_refs[10:12], _bolt_helper_replace(_bolt_refs[9], arguments=_bolt_helper_children([_bolt_helper_replace(_bolt_refs[8], arguments=_bolt_helper_children([_bolt_refs[7], _bolt_helper_replace(_bolt_refs[6], data_tags=_bolt_helper_replace(_bolt_refs[5], entries=_bolt_helper_children([_bolt_helper_replace(_bolt_refs[4], value=_bolt_helper_replace(_bolt_refs[3], entries=_bolt_helper_children([_bolt_helper_replace(_bolt_refs[1], value=_bolt_var1), _bolt_refs[2]])))])))]))]))]))]))]))])))
-_bolt_var3 = _bolt_helper_replace(_bolt_refs[18], commands=_bolt_helper_children(_bolt_var2))
+        __bolt_var1 = foo
+        __bolt_var1 = _bolt_helper_interpolate_nbt(__bolt_var1, _bolt_refs[0])
+    _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[17], arguments=_bolt_helper_children([_bolt_helper_replace(_bolt_refs[16], arguments=_bolt_helper_children([*_bolt_refs[15:16], _bolt_helper_replace(_bolt_refs[14], arguments=_bolt_helper_children([*_bolt_refs[13:14], _bolt_helper_replace(_bolt_refs[12], arguments=_bolt_helper_children([*_bolt_refs[10:12], _bolt_helper_replace(_bolt_refs[9], arguments=_bolt_helper_children([_bolt_helper_replace(_bolt_refs[8], arguments=_bolt_helper_children([_bolt_refs[7], _bolt_helper_replace(_bolt_refs[6], data_tags=_bolt_helper_replace(_bolt_refs[5], entries=_bolt_helper_children([_bolt_helper_replace(_bolt_refs[4], value=_bolt_helper_replace(_bolt_refs[3], entries=_bolt_helper_children([_bolt_helper_replace(_bolt_refs[1], value=__bolt_var1), _bolt_refs[2]])))])))]))]))]))]))]))])))
+__bolt_var3 = _bolt_helper_replace(_bolt_refs[18], commands=_bolt_helper_children(__bolt_var2))
 ---
-output = _bolt_var3
+output = __bolt_var3
 ---
 _bolt_refs[0]
 <class 'bolt.ast.AstInterpolation'>

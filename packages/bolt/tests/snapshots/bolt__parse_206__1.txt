@@ -2,22 +2,22 @@ _bolt_lineno = [1, 11, 13], [1, 2, 3]
 _bolt_helper_interpolate_nbt = _bolt_runtime.helpers['interpolate_nbt']
 _bolt_helper_children = _bolt_runtime.helpers['children']
 _bolt_helper_replace = _bolt_runtime.helpers['replace']
-with _bolt_runtime.scope() as _bolt_var7:
-    _bolt_var0 = 'CustomModelData'
-    _bolt_var1 = 7
-    _bolt_var2 = {_bolt_var0: _bolt_var1}
-    custom_model_data = _bolt_var2
-    _bolt_var3 = 'minecraft:dirt'
-    _bolt_var4 = [_bolt_var3]
-    stone_can_place_on = _bolt_var4
-    _bolt_var5 = stone_can_place_on
-    _bolt_var5 = _bolt_helper_interpolate_nbt([*_bolt_var5], _bolt_refs[0])
-    _bolt_var6 = custom_model_data
-    _bolt_var6 = _bolt_helper_interpolate_nbt({**_bolt_var6}, _bolt_refs[3])
-    _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[7], arguments=_bolt_helper_children([_bolt_refs[6], _bolt_helper_replace(_bolt_refs[5], data_tags=_bolt_helper_replace(_bolt_refs[4], entries=_bolt_helper_children([_bolt_helper_replace(_bolt_refs[2], value=_bolt_helper_replace(_bolt_refs[1], elements=_bolt_helper_children([*_bolt_var5]))), *_bolt_var6])))])))
-_bolt_var8 = _bolt_helper_replace(_bolt_refs[8], commands=_bolt_helper_children(_bolt_var7))
+with _bolt_runtime.scope() as __bolt_var7:
+    __bolt_var0 = 'CustomModelData'
+    __bolt_var1 = 7
+    __bolt_var2 = {__bolt_var0: __bolt_var1}
+    custom_model_data = __bolt_var2
+    __bolt_var3 = 'minecraft:dirt'
+    __bolt_var4 = [__bolt_var3]
+    stone_can_place_on = __bolt_var4
+    __bolt_var5 = stone_can_place_on
+    __bolt_var5 = _bolt_helper_interpolate_nbt([*__bolt_var5], _bolt_refs[0])
+    __bolt_var6 = custom_model_data
+    __bolt_var6 = _bolt_helper_interpolate_nbt({**__bolt_var6}, _bolt_refs[3])
+    _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[7], arguments=_bolt_helper_children([_bolt_refs[6], _bolt_helper_replace(_bolt_refs[5], data_tags=_bolt_helper_replace(_bolt_refs[4], entries=_bolt_helper_children([_bolt_helper_replace(_bolt_refs[2], value=_bolt_helper_replace(_bolt_refs[1], elements=_bolt_helper_children([*__bolt_var5]))), *__bolt_var6])))])))
+__bolt_var8 = _bolt_helper_replace(_bolt_refs[8], commands=_bolt_helper_children(__bolt_var7))
 ---
-output = _bolt_var8
+output = __bolt_var8
 ---
 _bolt_refs[0]
 <class 'bolt.ast.AstInterpolation'>

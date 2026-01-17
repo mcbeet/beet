@@ -5,20 +5,20 @@ _bolt_helper_children = _bolt_runtime.helpers['children']
 _bolt_helper_replace = _bolt_runtime.helpers['replace']
 _bolt_helper_exit_stack = _bolt_runtime.helpers['exit_stack']
 with _bolt_helper_exit_stack() as _bolt_fused_with_statement0:
-    _bolt_var3 = _bolt_fused_with_statement0.enter_context(_bolt_runtime.scope())
-    _bolt_var0 = open
-    _bolt_var1 = 'README.md'
-    _bolt_var0 = _bolt_var0(_bolt_var1)
-    _bolt_with = _bolt_fused_with_statement0.enter_context(_bolt_var0)
+    __bolt_var3 = _bolt_fused_with_statement0.enter_context(_bolt_runtime.scope())
+    __bolt_var0 = open
+    __bolt_var1 = 'README.md'
+    __bolt_var0 = __bolt_var0(__bolt_var1)
+    _bolt_with = _bolt_fused_with_statement0.enter_context(__bolt_var0)
     f = _bolt_with
-    _bolt_var2 = f
-    _bolt_var2 = _bolt_helper_get_attribute_handler(_bolt_var2)["readline"]
-    _bolt_var2 = _bolt_var2()
-    _bolt_var2 = _bolt_helper_interpolate_nbt(_bolt_var2, _bolt_refs[0])
-    _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[2], arguments=_bolt_helper_children([_bolt_refs[1], _bolt_var2])))
-_bolt_var4 = _bolt_helper_replace(_bolt_refs[3], commands=_bolt_helper_children(_bolt_var3))
+    __bolt_var2 = f
+    __bolt_var2 = _bolt_helper_get_attribute_handler(__bolt_var2)["readline"]
+    __bolt_var2 = __bolt_var2()
+    __bolt_var2 = _bolt_helper_interpolate_nbt(__bolt_var2, _bolt_refs[0])
+    _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[2], arguments=_bolt_helper_children([_bolt_refs[1], __bolt_var2])))
+__bolt_var4 = _bolt_helper_replace(_bolt_refs[3], commands=_bolt_helper_children(__bolt_var3))
 ---
-output = _bolt_var4
+output = __bolt_var4
 ---
 _bolt_refs[0]
 <class 'bolt.ast.AstInterpolation'>

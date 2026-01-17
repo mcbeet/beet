@@ -2,15 +2,15 @@ _bolt_lineno = [1], [1]
 _bolt_helper_interpolate_word = _bolt_runtime.helpers['interpolate_word']
 _bolt_helper_replace = _bolt_runtime.helpers['replace']
 _bolt_helper_children = _bolt_runtime.helpers['children']
-with _bolt_runtime.scope() as _bolt_var2:
-    _bolt_var0 = hex
-    _bolt_var1 = 42
-    _bolt_var0 = _bolt_var0(_bolt_var1)
-    _bolt_var0 = _bolt_helper_interpolate_word(_bolt_var0, _bolt_refs[0])
-    _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[4], arguments=_bolt_helper_children([_bolt_helper_replace(_bolt_refs[3], fragments=_bolt_helper_children([_bolt_helper_replace(_bolt_refs[2], arguments=_bolt_helper_children([_bolt_helper_replace(_bolt_refs[1], value=_bolt_var0)]))]))])))
-_bolt_var3 = _bolt_helper_replace(_bolt_refs[5], commands=_bolt_helper_children(_bolt_var2))
+with _bolt_runtime.scope() as __bolt_var2:
+    __bolt_var0 = hex
+    __bolt_var1 = 42
+    __bolt_var0 = __bolt_var0(__bolt_var1)
+    __bolt_var0 = _bolt_helper_interpolate_word(__bolt_var0, _bolt_refs[0])
+    _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[4], arguments=_bolt_helper_children([_bolt_helper_replace(_bolt_refs[3], fragments=_bolt_helper_children([_bolt_helper_replace(_bolt_refs[2], arguments=_bolt_helper_children([_bolt_helper_replace(_bolt_refs[1], value=__bolt_var0)]))]))])))
+__bolt_var3 = _bolt_helper_replace(_bolt_refs[5], commands=_bolt_helper_children(__bolt_var2))
 ---
-output = _bolt_var3
+output = __bolt_var3
 ---
 _bolt_refs[0]
 <class 'bolt.ast.AstInterpolation'>

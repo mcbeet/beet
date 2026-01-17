@@ -3,15 +3,15 @@ _bolt_helper_import_module = _bolt_runtime.helpers['import_module']
 _bolt_helper_get_attribute_handler = _bolt_runtime.helpers['get_attribute_handler']
 _bolt_helper_children = _bolt_runtime.helpers['children']
 _bolt_helper_replace = _bolt_runtime.helpers['replace']
-with _bolt_runtime.scope() as _bolt_var2:
+with _bolt_runtime.scope() as __bolt_var2:
     math = _bolt_helper_import_module('math')
-    _bolt_var0 = math
-    _bolt_var0 = _bolt_helper_get_attribute_handler(_bolt_var0)["sin"]
-    _bolt_var1 = 1
-    _bolt_var0 = _bolt_var0(_bolt_var1)
-_bolt_var3 = _bolt_helper_replace(_bolt_refs[0], commands=_bolt_helper_children(_bolt_var2))
+    __bolt_var0 = math
+    __bolt_var0 = _bolt_helper_get_attribute_handler(__bolt_var0)["sin"]
+    __bolt_var1 = 1
+    __bolt_var0 = __bolt_var0(__bolt_var1)
+__bolt_var3 = _bolt_helper_replace(_bolt_refs[0], commands=_bolt_helper_children(__bolt_var2))
 ---
-output = _bolt_var3
+output = __bolt_var3
 ---
 _bolt_refs[0]
 <class 'mecha.ast.AstRoot'>

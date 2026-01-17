@@ -8,52 +8,52 @@ _bolt_helper_interpolate_range = _bolt_runtime.helpers['interpolate_range']
 _bolt_helper_replace = _bolt_runtime.helpers['replace']
 _bolt_helper_interpolate_message = _bolt_runtime.helpers['interpolate_message']
 _bolt_helper_exit_stack = _bolt_runtime.helpers['exit_stack']
-with _bolt_runtime.scope() as _bolt_var10:
-    _bolt_var0 = generate_tree
-    _bolt_var1 = 'abcdefghijklmnopqrstuvwxyz0123456789'
-    _bolt_var0 = _bolt_var0(_bolt_var1)
-    for node in _bolt_var0:
-        _bolt_var2 = node
-        _bolt_var2 = _bolt_helper_get_attribute_handler(_bolt_var2)["parent"]
-        _bolt_var2 = _bolt_helper_interpolate_resource_location(_bolt_var2, _bolt_refs[0])
+with _bolt_runtime.scope() as __bolt_var10:
+    __bolt_var0 = generate_tree
+    __bolt_var1 = 'abcdefghijklmnopqrstuvwxyz0123456789'
+    __bolt_var0 = __bolt_var0(__bolt_var1)
+    for node in __bolt_var0:
+        __bolt_var2 = node
+        __bolt_var2 = _bolt_helper_get_attribute_handler(__bolt_var2)["parent"]
+        __bolt_var2 = _bolt_helper_interpolate_resource_location(__bolt_var2, _bolt_refs[0])
         with _bolt_helper_exit_stack() as _bolt_fused_with_statement2:
-            _bolt_fused_with_statement2.enter_context(_bolt_runtime.push_nesting('append:function:name:commands', *_bolt_helper_children([_bolt_var2])))
-            _bolt_var9 = _bolt_fused_with_statement2.enter_context(_bolt_runtime.scope())
-            _bolt_var3 = node
-            _bolt_var3 = _bolt_helper_get_attribute_handler(_bolt_var3)["partition"]
-            _bolt_var4 = 5
-            _bolt_var3 = _bolt_var3(_bolt_var4)
-            _bolt_var3_inverse = _bolt_helper_operator_not(_bolt_var3)
-            with _bolt_helper_branch(_bolt_var3) as _bolt_condition:
+            _bolt_fused_with_statement2.enter_context(_bolt_runtime.push_nesting('append:function:name:commands', *_bolt_helper_children([__bolt_var2])))
+            __bolt_var9 = _bolt_fused_with_statement2.enter_context(_bolt_runtime.scope())
+            __bolt_var3 = node
+            __bolt_var3 = _bolt_helper_get_attribute_handler(__bolt_var3)["partition"]
+            __bolt_var4 = 5
+            __bolt_var3 = __bolt_var3(__bolt_var4)
+            __bolt_var3_inverse = _bolt_helper_operator_not(__bolt_var3)
+            with _bolt_helper_branch(__bolt_var3) as _bolt_condition:
                 if _bolt_condition:
                     with _bolt_helper_exit_stack() as _bolt_fused_with_statement0:
                         _bolt_fused_with_statement0.enter_context(_bolt_runtime.push_nesting('execute:subcommand'))
-                        _bolt_var5 = node
-                        _bolt_var5 = _bolt_helper_get_attribute_handler(_bolt_var5)["range"]
-                        _bolt_var5 = _bolt_helper_interpolate_range(_bolt_var5, _bolt_refs[1])
-                        _bolt_fused_with_statement0.enter_context(_bolt_runtime.push_nesting('execute:if:score:target:targetObjective:matches:range:subcommand', *_bolt_helper_children([_bolt_refs[2], _bolt_refs[3], _bolt_var5])))
+                        __bolt_var5 = node
+                        __bolt_var5 = _bolt_helper_get_attribute_handler(__bolt_var5)["range"]
+                        __bolt_var5 = _bolt_helper_interpolate_range(__bolt_var5, _bolt_refs[1])
+                        _bolt_fused_with_statement0.enter_context(_bolt_runtime.push_nesting('execute:if:score:target:targetObjective:matches:range:subcommand', *_bolt_helper_children([_bolt_refs[2], _bolt_refs[3], __bolt_var5])))
                         _bolt_fused_with_statement0.enter_context(_bolt_runtime.push_nesting('execute:run:subcommand'))
-                        _bolt_var6 = node
-                        _bolt_var6 = _bolt_helper_get_attribute_handler(_bolt_var6)["children"]
-                        _bolt_var6 = _bolt_helper_interpolate_resource_location(_bolt_var6, _bolt_refs[4])
-                    _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[8], arguments=_bolt_helper_children([_bolt_helper_replace(_bolt_refs[7], arguments=_bolt_helper_children([*_bolt_helper_children([_bolt_refs[2], _bolt_refs[3], _bolt_var5]), _bolt_helper_replace(_bolt_refs[6], arguments=_bolt_helper_children([_bolt_helper_replace(_bolt_refs[5], arguments=_bolt_helper_children([_bolt_var6]))]))]))])))
-            _bolt_condition = _bolt_fused_with_statement2.enter_context(_bolt_helper_branch(_bolt_var3_inverse))
+                        __bolt_var6 = node
+                        __bolt_var6 = _bolt_helper_get_attribute_handler(__bolt_var6)["children"]
+                        __bolt_var6 = _bolt_helper_interpolate_resource_location(__bolt_var6, _bolt_refs[4])
+                    _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[8], arguments=_bolt_helper_children([_bolt_helper_replace(_bolt_refs[7], arguments=_bolt_helper_children([*_bolt_helper_children([_bolt_refs[2], _bolt_refs[3], __bolt_var5]), _bolt_helper_replace(_bolt_refs[6], arguments=_bolt_helper_children([_bolt_helper_replace(_bolt_refs[5], arguments=_bolt_helper_children([__bolt_var6]))]))]))])))
+            _bolt_condition = _bolt_fused_with_statement2.enter_context(_bolt_helper_branch(__bolt_var3_inverse))
             if _bolt_condition:
                 with _bolt_helper_exit_stack() as _bolt_fused_with_statement1:
                     _bolt_fused_with_statement1.enter_context(_bolt_runtime.push_nesting('execute:subcommand'))
-                    _bolt_var7 = node
-                    _bolt_var7 = _bolt_helper_get_attribute_handler(_bolt_var7)["range"]
-                    _bolt_var7 = _bolt_helper_interpolate_range(_bolt_var7, _bolt_refs[9])
-                    _bolt_fused_with_statement1.enter_context(_bolt_runtime.push_nesting('execute:if:score:target:targetObjective:matches:range:subcommand', *_bolt_helper_children([_bolt_refs[10], _bolt_refs[11], _bolt_var7])))
+                    __bolt_var7 = node
+                    __bolt_var7 = _bolt_helper_get_attribute_handler(__bolt_var7)["range"]
+                    __bolt_var7 = _bolt_helper_interpolate_range(__bolt_var7, _bolt_refs[9])
+                    _bolt_fused_with_statement1.enter_context(_bolt_runtime.push_nesting('execute:if:score:target:targetObjective:matches:range:subcommand', *_bolt_helper_children([_bolt_refs[10], _bolt_refs[11], __bolt_var7])))
                     _bolt_fused_with_statement1.enter_context(_bolt_runtime.push_nesting('execute:run:subcommand'))
-                    _bolt_var8 = node
-                    _bolt_var8 = _bolt_helper_get_attribute_handler(_bolt_var8)["value"]
-                    _bolt_var8 = _bolt_helper_interpolate_message(_bolt_var8, _bolt_refs[12])
-                _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[16], arguments=_bolt_helper_children([_bolt_helper_replace(_bolt_refs[15], arguments=_bolt_helper_children([*_bolt_helper_children([_bolt_refs[10], _bolt_refs[11], _bolt_var7]), _bolt_helper_replace(_bolt_refs[14], arguments=_bolt_helper_children([_bolt_helper_replace(_bolt_refs[13], arguments=_bolt_helper_children([_bolt_var8]))]))]))])))
-        _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[18], arguments=_bolt_helper_children([*_bolt_helper_children([_bolt_var2]), _bolt_helper_replace(_bolt_refs[17], commands=_bolt_helper_children(_bolt_var9))])))
-_bolt_var11 = _bolt_helper_replace(_bolt_refs[19], commands=_bolt_helper_children(_bolt_var10))
+                    __bolt_var8 = node
+                    __bolt_var8 = _bolt_helper_get_attribute_handler(__bolt_var8)["value"]
+                    __bolt_var8 = _bolt_helper_interpolate_message(__bolt_var8, _bolt_refs[12])
+                _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[16], arguments=_bolt_helper_children([_bolt_helper_replace(_bolt_refs[15], arguments=_bolt_helper_children([*_bolt_helper_children([_bolt_refs[10], _bolt_refs[11], __bolt_var7]), _bolt_helper_replace(_bolt_refs[14], arguments=_bolt_helper_children([_bolt_helper_replace(_bolt_refs[13], arguments=_bolt_helper_children([__bolt_var8]))]))]))])))
+        _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[18], arguments=_bolt_helper_children([*_bolt_helper_children([__bolt_var2]), _bolt_helper_replace(_bolt_refs[17], commands=_bolt_helper_children(__bolt_var9))])))
+__bolt_var11 = _bolt_helper_replace(_bolt_refs[19], commands=_bolt_helper_children(__bolt_var10))
 ---
-output = _bolt_var11
+output = __bolt_var11
 ---
 _bolt_refs[0]
 <class 'bolt.ast.AstInterpolation'>

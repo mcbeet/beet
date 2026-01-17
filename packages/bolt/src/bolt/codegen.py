@@ -201,7 +201,7 @@ class Accumulator:
 
     def make_variable(self) -> str:
         """Create a unique variable name."""
-        name = f"_bolt_var{self.counter}"
+        name = f"__bolt_var{self.counter}"
         self.counter += 1
         return name
 
@@ -931,7 +931,7 @@ class Codegen(Visitor):
             temp_stop = acc.counter
 
             for i in range(temp_start, temp_stop):
-                acc.statement(f"del _bolt_var{i}")
+                acc.statement(f"del __bolt_var{i}")
 
             acc.counter = temp_start
 

@@ -1,12 +1,12 @@
 _bolt_lineno = [1], [1]
 _bolt_helper_children = _bolt_runtime.helpers['children']
 _bolt_helper_replace = _bolt_runtime.helpers['replace']
-with _bolt_runtime.scope() as _bolt_var0:
+with _bolt_runtime.scope() as __bolt_var0:
     def foo():
         return
-_bolt_var1 = _bolt_helper_replace(_bolt_refs[0], commands=_bolt_helper_children(_bolt_var0))
+__bolt_var1 = _bolt_helper_replace(_bolt_refs[0], commands=_bolt_helper_children(__bolt_var0))
 ---
-output = _bolt_var1
+output = __bolt_var1
 ---
 _bolt_refs[0]
 <class 'mecha.ast.AstRoot'>

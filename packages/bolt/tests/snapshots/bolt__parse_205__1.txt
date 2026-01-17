@@ -2,17 +2,17 @@ _bolt_lineno = [1, 10], [1, 2]
 _bolt_helper_interpolate_nbt = _bolt_runtime.helpers['interpolate_nbt']
 _bolt_helper_children = _bolt_runtime.helpers['children']
 _bolt_helper_replace = _bolt_runtime.helpers['replace']
-with _bolt_runtime.scope() as _bolt_var4:
-    _bolt_var0 = 'CustomModelData'
-    _bolt_var1 = 7
-    _bolt_var2 = {_bolt_var0: _bolt_var1}
-    bow_data = _bolt_var2
-    _bolt_var3 = bow_data
-    _bolt_var3 = _bolt_helper_interpolate_nbt({**_bolt_var3}, _bolt_refs[0])
-    _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[4], arguments=_bolt_helper_children([_bolt_refs[3], _bolt_helper_replace(_bolt_refs[2], data_tags=_bolt_helper_replace(_bolt_refs[1], entries=_bolt_helper_children([*_bolt_var3])))])))
-_bolt_var5 = _bolt_helper_replace(_bolt_refs[5], commands=_bolt_helper_children(_bolt_var4))
+with _bolt_runtime.scope() as __bolt_var4:
+    __bolt_var0 = 'CustomModelData'
+    __bolt_var1 = 7
+    __bolt_var2 = {__bolt_var0: __bolt_var1}
+    bow_data = __bolt_var2
+    __bolt_var3 = bow_data
+    __bolt_var3 = _bolt_helper_interpolate_nbt({**__bolt_var3}, _bolt_refs[0])
+    _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[4], arguments=_bolt_helper_children([_bolt_refs[3], _bolt_helper_replace(_bolt_refs[2], data_tags=_bolt_helper_replace(_bolt_refs[1], entries=_bolt_helper_children([*__bolt_var3])))])))
+__bolt_var5 = _bolt_helper_replace(_bolt_refs[5], commands=_bolt_helper_children(__bolt_var4))
 ---
-output = _bolt_var5
+output = __bolt_var5
 ---
 _bolt_refs[0]
 <class 'bolt.ast.AstInterpolation'>

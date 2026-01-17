@@ -4,31 +4,31 @@ _bolt_helper_branch = _bolt_runtime.helpers['branch']
 _bolt_helper_get_rebind = _bolt_runtime.helpers['get_rebind']
 _bolt_helper_children = _bolt_runtime.helpers['children']
 _bolt_helper_replace = _bolt_runtime.helpers['replace']
-with _bolt_runtime.scope() as _bolt_var0:
+with _bolt_runtime.scope() as __bolt_var0:
     def foo(value):
-        _bolt_var0 = 'init'
-        result = _bolt_var0
-        _bolt_var1 = value
-        _bolt_var1_inverse = _bolt_helper_operator_not(_bolt_var1)
-        with _bolt_helper_branch(_bolt_var1) as _bolt_condition:
+        __bolt_var0 = 'init'
+        result = __bolt_var0
+        __bolt_var1 = value
+        __bolt_var1_inverse = _bolt_helper_operator_not(__bolt_var1)
+        with _bolt_helper_branch(__bolt_var1) as _bolt_condition:
             if _bolt_condition:
-                _bolt_var2 = 1
+                __bolt_var2 = 1
                 _bolt_rebind = _bolt_helper_get_rebind(result)
-                result = _bolt_var2
+                result = __bolt_var2
                 if _bolt_rebind is not None:
                     result = _bolt_rebind(result)
-        with _bolt_helper_branch(_bolt_var1_inverse) as _bolt_condition:
+        with _bolt_helper_branch(__bolt_var1_inverse) as _bolt_condition:
             if _bolt_condition:
-                _bolt_var3 = 0
+                __bolt_var3 = 0
                 _bolt_rebind = _bolt_helper_get_rebind(result)
-                result = _bolt_var3
+                result = __bolt_var3
                 if _bolt_rebind is not None:
                     result = _bolt_rebind(result)
-        _bolt_var4 = result
-        return _bolt_var4
-_bolt_var1 = _bolt_helper_replace(_bolt_refs[0], commands=_bolt_helper_children(_bolt_var0))
+        __bolt_var4 = result
+        return __bolt_var4
+__bolt_var1 = _bolt_helper_replace(_bolt_refs[0], commands=_bolt_helper_children(__bolt_var0))
 ---
-output = _bolt_var1
+output = __bolt_var1
 ---
 _bolt_refs[0]
 <class 'mecha.ast.AstRoot'>
