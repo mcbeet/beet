@@ -238,6 +238,9 @@ def get_default_parsers() -> Dict[str, Parser]:
         "resource_location_or_nbt": AlternativeParser(
             [delegate("resource_location"), delegate("nbt_compound")]
         ),
+        "resource_location_or_nbt_list": AlternativeParser(
+            [delegate("resource_location_or_nbt"), delegate("nbt")]
+        ),
         "uuid": parse_uuid,
         "objective": BasicLiteralParser(AstObjective),
         "objective_criteria": BasicLiteralParser(AstObjectiveCriteria),
@@ -513,10 +516,10 @@ def get_default_parsers() -> Dict[str, Parser]:
             delegate("resource_location_or_nbt")
         ),
         "command:argument:minecraft:loot_predicate": MultilineParser(
-            delegate("resource_location_or_nbt")
+            delegate("resource_location_or_nbt_list")
         ),
         "command:argument:minecraft:loot_modifier": MultilineParser(
-            delegate("resource_location_or_nbt")
+            delegate("resource_location_or_nbt_list")
         ),
         "command:argument:minecraft:game_profile": delegate("game_profile"),
         "command:argument:minecraft:gamemode": delegate("gamemode"),
