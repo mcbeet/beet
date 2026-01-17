@@ -1,0 +1,12 @@
+
+
+data_pack:
+  load: .
+
+
+pipeline:
+  - mecha
+
+meta:
+  mecha:
+    multiline: true
