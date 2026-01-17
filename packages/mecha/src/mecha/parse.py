@@ -28,6 +28,7 @@ __all__ = [
     "JsonObjectParser",
     "NbtParser",
     "NbtCompoundParser",
+    "NbtListParser",
     "AdjacentConstraint",
     "ResourceLocationParser",
     "NoTagConstraint",
@@ -226,6 +227,7 @@ def get_default_parsers() -> Dict[str, Parser]:
         "nbt_compound_entry": nbt_parser.parse_compound_entry,
         "nbt_list_or_array_element": delegate("nbt"),
         "nbt_compound": NbtCompoundParser(delegate("nbt")),
+        "nbt_list": NbtListParser(delegate("nbt")),
         "adjacent_nbt_compound": AdjacentConstraint(delegate("nbt_compound"), r"\{"),
         "nbt_path": NbtPathParser(
             integer_parser=delegate("integer"),
@@ -237,6 +239,9 @@ def get_default_parsers() -> Dict[str, Parser]:
         "resource_location": NoTagConstraint(delegate("resource_location_or_tag")),
         "resource_location_or_nbt": AlternativeParser(
             [delegate("resource_location"), delegate("nbt_compound")]
+        ),
+        "resource_location_or_nbt_list": AlternativeParser(
+            [delegate("resource_location_or_nbt"), delegate("nbt_list")]
         ),
         "uuid": parse_uuid,
         "objective": BasicLiteralParser(AstObjective),
@@ -513,10 +518,10 @@ def get_default_parsers() -> Dict[str, Parser]:
             delegate("resource_location_or_nbt")
         ),
         "command:argument:minecraft:loot_predicate": MultilineParser(
-            delegate("resource_location_or_nbt")
+            delegate("resource_location_or_nbt_list")
         ),
         "command:argument:minecraft:loot_modifier": MultilineParser(
-            delegate("resource_location_or_nbt")
+            delegate("resource_location_or_nbt_list")
         ),
         "command:argument:minecraft:game_profile": delegate("game_profile"),
         "command:argument:minecraft:gamemode": delegate("gamemode"),
@@ -1320,6 +1325,15 @@ class NbtCompoundParser(TypeConstraint):
     parser: Parser = field(default_factory=NbtParser)
     type: Union[Type[Any], Tuple[Type[Any], ...]] = AstNbtCompound
     message: str = "Expected nbt compound."
+
+
+@dataclass
+class NbtListParser(TypeConstraint):
+    """Parser for nbt list."""
+
+    parser: Parser = field(default_factory=NbtParser)
+    type: Union[Type[Any], Tuple[Type[Any], ...]] = AstNbtList
+    message: str = "Expected nbt list."
 
 
 @dataclass
