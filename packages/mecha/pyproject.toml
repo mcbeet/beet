@@ -4,7 +4,7 @@ build-backend = "uv_build"
 
 [project]
 name = "mecha"
-version = "0.102.1"
+version = "0.102.2"
 description = "A powerful Minecraft command library"
 authors = [{ name = "Valentin Berlier", email = "berlier.v@gmail.com" }]
 license = "MIT"

@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v0.102.2 (2026-01-17)
+
+### Bug Fixes
+
+- List as root #491 ([#494](https://github.com/mcbeet/beet/pull/494),
+  [`1cb3a81`](https://github.com/mcbeet/beet/commit/1cb3a81a04c54886616b265962755dcc815ecd71))
+
+
 ## v0.102.1 (2026-01-16)
 
 ### Bug Fixes
