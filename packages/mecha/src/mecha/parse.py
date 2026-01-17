@@ -28,6 +28,7 @@ __all__ = [
     "JsonObjectParser",
     "NbtParser",
     "NbtCompoundParser",
+    "NbtListParser",
     "AdjacentConstraint",
     "ResourceLocationParser",
     "NoTagConstraint",
@@ -1328,11 +1329,11 @@ class NbtCompoundParser(TypeConstraint):
 
 @dataclass
 class NbtListParser(TypeConstraint):
-    """Parser for nbt compounds."""
+    """Parser for nbt list."""
 
     parser: Parser = field(default_factory=NbtParser)
     type: Union[Type[Any], Tuple[Type[Any], ...]] = AstNbtList
-    message: str = "Expected list compound."
+    message: str = "Expected nbt list."
 
 
 @dataclass
