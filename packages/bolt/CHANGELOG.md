@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v0.50.1 (2026-01-17)
+
+### Bug Fixes
+
+- Make enums work in bolt
+  ([`bf80c4a`](https://github.com/mcbeet/beet/commit/bf80c4aabacca937d7cd54c37c0cd5e5f851d362))
+
+
 ## v0.50.0 (2026-01-14)
 
 
