@@ -4,12 +4,13 @@ __all__ = [
     "NonFunctionSerializer",
 ]
 
-
 import builtins
 from dataclasses import dataclass, field
 from functools import partial
 from importlib.resources import files
 from typing import Any, Callable, Dict, Iterable, List, Optional, Set, Union
+
+from ....mecha.src.mecha.ast import AstError
 
 from beet import Context, TextFileBase, generate_tree
 from beet.core.utils import JsonDict, extra_field, required_field
@@ -30,7 +31,7 @@ from mecha.contrib.relative_location import resolve_relative_location
 from pathspec import PathSpec
 from tokenstream import set_location
 
-from .ast import AstNonFunctionRoot
+from .ast import AstNonFunctionRoot, AstRoot
 from .codegen import Codegen
 from .emit import CommandEmitter
 from .helpers import get_bolt_helpers
@@ -275,6 +276,10 @@ class NonFunctionSerializer(Visitor):
             result.append(source)
         if node.commands:
             command = node.commands[0]
+
+            if isinstance(command, AstError):
+                return None
+
             name = command.identifier.partition(":")[0]
             d = Diagnostic(
                 "warn", f'Ignored top-level "{name}" command outside function.'

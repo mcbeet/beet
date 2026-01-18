@@ -189,7 +189,11 @@ class Sandbox:
         get_attribute_handler = self.runtime.helpers["get_attribute_handler"]
 
         self.runtime.helpers.update(
+<<<<<<< HEAD
             get_attribute_handler=lambda obj: SandboxedAttributeHandler(
+=======
+            get_attribute_handler=lambda obj: SandboxedAttributeHandler(  # type: ignore
+>>>>>>> bolt-fork/migrate-to-beet
                 obj=obj,
                 handler=get_attribute_handler(obj),
                 sandbox=self,

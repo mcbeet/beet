@@ -75,6 +75,7 @@ from mecha import (
     AstChildren,
     AstCommand,
     AstCommandSentinel,
+    AstError,
     AstJson,
     AstLiteral,
     AstNode,
@@ -493,7 +494,7 @@ class AstProcMacroMarker(AstNode):
 class AstProcMacroResult(AstNode):
     """Ast proc macro result node."""
 
-    commands: AstChildren[AstCommand] = required_field()
+    commands: AstChildren[AstCommand|AstError] = required_field()
 
 
 @dataclass(frozen=True, slots=True)
