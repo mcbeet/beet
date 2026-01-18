@@ -139,35 +139,36 @@ class MacroBaker(Visitor):
         result: List[AstCommand|AstError] = []
         modified = False
 
-        for command in node.commands:
-            if isinstance(command, AstError):
-                result.append(command)
-                continue
-            
-            if isinstance(command, AstMacroLine) and invocation:
-                baked_macro_line = self.bake_macro_line(command, invocation)
-                modified |= baked_macro_line is not command
-                command = baked_macro_line
+        for c in node.commands:
+            match c:
+                case AstError() as error:
+                    result.append(error)
+                    continue
+                case AstCommand() as command:
+                    if isinstance(command, AstMacroLine) and invocation:
+                        baked_macro_line = self.bake_macro_line(command, invocation)
+                        modified |= baked_macro_line is not command
+                        command = baked_macro_line
 
-            args = command.arguments
-            stack: List[AstCommand] = [command]
+                    args = command.arguments
+                    stack: List[AstCommand] = [command]
 
-            while args and isinstance(subcommand := args[-1], AstCommand):
-                stack.append(subcommand)
-                args = subcommand.arguments
+                    while args and isinstance(subcommand := args[-1], AstCommand):
+                        stack.append(subcommand)
+                        args = subcommand.arguments
 
-            last = stack[-1]
+                    last = stack[-1]
 
-            if last.identifier == "function:name:arguments":
-                last = self.bake_macro_invocation(last)
-                if last is not stack.pop():
-                    for prefix in reversed(stack):
-                        args = AstChildren([*prefix.arguments[:-1], last])
-                        last = replace(prefix, arguments=args)
-                    modified = True
-                    command = last
+                    if last.identifier == "function:name:arguments":
+                        last = self.bake_macro_invocation(last)
+                        if last is not stack.pop():
+                            for prefix in reversed(stack):
+                                args = AstChildren([*prefix.arguments[:-1], last])
+                                last = replace(prefix, arguments=args)
+                            modified = True
+                            command = last
 
-            result.append(command)
+                    result.append(command)
 
         if invocation:
             invocation_compilation_unit = self.database[invocation.file_instance]
