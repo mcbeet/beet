@@ -10,12 +10,11 @@ from functools import partial
 from importlib.resources import files
 from typing import Any, Callable, Dict, Iterable, List, Optional, Set, Union
 
-from ....mecha.src.mecha.ast import AstError
-
 from beet import Context, TextFileBase, generate_tree
 from beet.core.utils import JsonDict, extra_field, required_field
 from mecha import (
     AstRoot,
+    AstError,
     CommandSpec,
     CommandTree,
     CompilationDatabase,
