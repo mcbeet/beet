@@ -31,6 +31,7 @@ from tokenstream import INITIAL_LOCATION, Preprocessor, SourceLocation, set_loca
 from mecha import (
     AstChildren,
     AstCommand,
+    AstError,
     AstMacroLine,
     AstMacroLineText,
     AstMacroLineVariable,
@@ -135,10 +136,14 @@ class MacroBaker(Visitor):
     def bake_macros(self, node: AstRoot):
         invocation = self.invocations.get(self.database.current)
 
-        result: List[AstCommand] = []
+        result: List[AstCommand|AstError] = []
         modified = False
 
         for command in node.commands:
+            if isinstance(command, AstError):
+                result.append(command)
+                continue
+            
             if isinstance(command, AstMacroLine) and invocation:
                 baked_macro_line = self.bake_macro_line(command, invocation)
                 modified |= baked_macro_line is not command

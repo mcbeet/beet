@@ -5,6 +5,7 @@ from pytest_insta import SnapshotFixture
 
 from mecha import DiagnosticError, Mecha
 
+MULTIPLE_ERRORS = Function(source_path="tests/resources/multiple_errors.mcfunction")
 COMMAND_EXAMPLES = Function(source_path="tests/resources/command_examples.mcfunction")
 MULTILINE_COMMAND_EXAMPLES = Function(
     source_path="tests/resources/multiline_command_examples.mcfunction"
@@ -127,3 +128,14 @@ def test_player_name_no_length_restriction(mc: Mecha):
         )
         == "scoreboard players set some_really_long_name_right_here foo 42\n"
     )
+
+
+def test_multiple_parse_errors(mc: Mecha):
+    with pytest.raises(DiagnosticError) as exc_info:
+        mc.parse(MULTIPLE_ERRORS, multiline=True)
+
+    assert len(exc_info.value.diagnostics.exceptions) == 5
+
+
+if __name__ == "__main__":
+    Mecha().parse(MULTIPLE_ERRORS, multiline=True)

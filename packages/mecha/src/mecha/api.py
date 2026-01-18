@@ -54,7 +54,7 @@ from beet.core.utils import (
 from pydantic import BaseModel, field_validator
 from tokenstream import InvalidSyntax, Preprocessor, TokenStream, set_location
 
-from .ast import AstLiteral, AstNode, AstRoot
+from .ast import AstError, AstLiteral, AstNode, AstRoot
 from .config import CommandTree
 from .database import (
     CompilationDatabase,
@@ -396,7 +396,7 @@ class Mecha:
                 filename=str(filename) if filename else None,
                 file=source,
             )
-            raise DiagnosticError(DiagnosticCollection([set_location(d, exc)])) from exc
+            diagnostics.append(set_location(d, exc))
         else:
             if self.cache and filename and cache_miss:
                 try:
@@ -406,6 +406,24 @@ class Mecha:
                 except Exception:
                     pass
             return ast
+
+        if len(diagnostics) > 0:
+            if self.cache and filename and cache_miss:
+                self.cache.invalidate_changes(self.directory / filename)
+
+            raise DiagnosticError(DiagnosticCollection(diagnostics))
+
+    def parse_stream(
+        self,
+        multiline: bool | None,
+        provide: JsonDict | None,
+        parser: str,
+        stream: TokenStream,
+    ):
+        with self.prepare_token_stream(stream, multiline=multiline):
+            with stream.provide(**provide or {}):
+                ast = delegate(parser, stream)
+        return ast
 
     @overload
     def compile(

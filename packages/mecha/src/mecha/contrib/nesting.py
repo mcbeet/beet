@@ -22,6 +22,7 @@ from tokenstream import InvalidSyntax, TokenStream, set_location
 from mecha import (
     AstChildren,
     AstCommand,
+    AstError,
     AstResourceLocation,
     AstRoot,
     CommandTree,
@@ -34,6 +35,7 @@ from mecha import (
     rule,
 )
 from mecha.contrib.nested_location import NestedLocationResolver
+from mecha.parse import parse_root_item
 
 
 class NestingOptions(BaseModel):
@@ -81,8 +83,8 @@ def parse_nested_root(stream: TokenStream) -> AstRoot:
 
     level, command_level = stream.indentation[-2:]
 
-    commands: List[AstCommand] = []
-
+    errors: list[InvalidSyntax] = []
+    commands: List[AstCommand|AstError] = []
     with (
         stream.intercept("newline"),
         stream.provide(
@@ -91,7 +93,11 @@ def parse_nested_root(stream: TokenStream) -> AstRoot:
         ),
     ):
         while True:
-            commands.append(delegate("root_item", stream))
+            
+            result = parse_root_item(stream, errors, colon=True)
+            
+            if result is not None:
+                commands.append(result)
 
             # The command parser consumes the trailing newline so we need to rewind
             # to be able to use "consume_line_continuation()".
@@ -101,7 +107,6 @@ def parse_nested_root(stream: TokenStream) -> AstRoot:
             with stream.provide(multiline=True, line_indentation=level):
                 if not consume_line_continuation(stream):
                     break
-
     node = AstRoot(commands=AstChildren(commands))
     return set_location(node, commands[0], commands[-1])
 
@@ -179,6 +184,9 @@ class NestedCommandsTransformer(MutatingReducer):
 
         single_command = None
         for command in root.commands:
+            if isinstance(command, AstError):
+                continue
+
             if command.compile_hints.get("skip_execute_inline_single_command"):
                 continue
             if single_command is None:
@@ -270,12 +278,20 @@ class NestedCommandsTransformer(MutatingReducer):
     @rule(AstRoot)
     def nesting(self, node: AstRoot):
         changed = False
-        commands: List[AstCommand] = []
+        commands: List[AstCommand|AstError] = []
 
         for command in node.commands:
+            if isinstance(command, AstError):
+                commands.append(command)
+                continue
+
             if command.identifier in self.identifier_map:
                 result = yield from self.handle_function(command, top_level=True)
                 commands.extend(result)
+
+                if len(result) == 1 and result[0] is command:
+                    continue
+
                 changed = True
                 continue
 
@@ -294,6 +310,10 @@ class NestedCommandsTransformer(MutatingReducer):
             if expand:
                 changed = True
                 for nested_command in cast(AstRoot, expand.arguments[0]).commands:
+                    if isinstance(nested_command, AstError):
+                        commands.append(nested_command)
+                        continue
+                    
                     if nested_command.identifier == "execute:subcommand":
                         expansion = cast(AstCommand, nested_command.arguments[0])
                     else:
@@ -321,7 +341,7 @@ class NestedCommandsTransformer(MutatingReducer):
         self,
         node: AstCommand,
         top_level: bool = False,
-    ) -> Generator[Diagnostic, None, List[AstCommand]]:
+    ) -> Generator[Diagnostic, None, List[AstCommand|AstError]]:
         name, *args, root = node.arguments
 
         if isinstance(name, AstResourceLocation) and isinstance(root, AstRoot):

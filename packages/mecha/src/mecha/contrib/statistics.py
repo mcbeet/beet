@@ -19,6 +19,7 @@ from pydantic import BaseModel, Field
 from mecha import (
     AstCommand,
     AstCommandSentinel,
+    AstError,
     AstMacroLine,
     AstMacroLineText,
     AstMacroLineVariable,
@@ -110,9 +111,9 @@ class Analyzer(Reducer):
         self.stats.function_count += 1
 
         for command in node.commands:
-            if isinstance(command, AstCommandSentinel):
+            if isinstance(command, (AstCommandSentinel, AstError)):
                 continue
-
+            
             behind_execute = False
 
             while command.identifier.startswith("execute"):
