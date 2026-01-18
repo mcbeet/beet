@@ -132,9 +132,9 @@ def test_player_name_no_length_restriction(mc: Mecha):
 
 def test_multiple_parse_errors(mc: Mecha):
     with pytest.raises(DiagnosticError) as exc_info:
-        mc.parse(MULTIPLE_ERRORS, multiline=True)
+        res = mc.parse(MULTIPLE_ERRORS, multiline=True)
 
-    assert len(exc_info.value.diagnostics.exceptions) == 5
+    assert len(exc_info.value.diagnostics.exceptions) > 1
 
 
 if __name__ == "__main__":

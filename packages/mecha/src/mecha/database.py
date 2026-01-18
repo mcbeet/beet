@@ -127,7 +127,7 @@ class CompilationDatabase(Container[TextFileBase[Any], CompilationUnit]):
     def __delitem__(self, key: TextFileBase[Any]):
         pack_index = self.indices[self[key].pack]
         for index in [self[key].filename, self[key].resource_location]:
-            if index:
+            if index and index in pack_index:
                 del pack_index[index]
         super().__delitem__(key)
 

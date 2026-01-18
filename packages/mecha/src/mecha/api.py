@@ -69,7 +69,7 @@ from .diagnostic import (
     DiagnosticErrorSummary,
 )
 from .dispatch import Dispatcher, MutatingReducer, Reducer
-from .parse import delegate, get_parsers
+from .parse import InvalidSyntaxCollection, delegate, get_parsers
 from .preprocess import wrap_backslash_continuation
 from .serialize import FormattingOptions, Serializer
 from .spec import CommandSpec
@@ -381,13 +381,30 @@ class Mecha:
             preprocessor=preprocessor or self.preprocessor,
         )
 
+        diagnostics = []
         try:
-            with self.prepare_token_stream(stream, multiline=multiline):
-                with stream.provide(**provide or {}):
-                    ast = delegate(parser, stream)
+            ast: AstRoot = self.parse_stream(multiline, provide, parser, stream)
+
+            errors: list[InvalidSyntax] = []
+            for node in ast.walk():
+                if isinstance(node, AstError):
+                    errors.append(node.error)
+
+            if len(errors) >= 1:
+                raise InvalidSyntaxCollection(errors)
+
+        except InvalidSyntaxCollection as collection:
+            for exc in collection.errors:
+                d = Diagnostic(
+                    level="error",
+                    message=str(exc),
+                    notes=exc.notes,
+                    hint=resource_location,
+                    filename=str(filename) if filename else None,
+                    file=source,
+                )
+                diagnostics.append(set_location(d, exc))
         except InvalidSyntax as exc:
-            if self.cache and filename and cache_miss:
-                self.cache.invalidate_changes(self.directory / filename)
             d = Diagnostic(
                 level="error",
                 message=str(exc),
@@ -412,7 +429,7 @@ class Mecha:
                 self.cache.invalidate_changes(self.directory / filename)
 
             raise DiagnosticError(DiagnosticCollection(diagnostics))
-
+            
     def parse_stream(
         self,
         multiline: bool | None,
