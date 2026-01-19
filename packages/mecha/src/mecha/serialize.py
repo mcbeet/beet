@@ -19,6 +19,7 @@ from .ast import (
     AstChildren,
     AstCommand,
     AstCoordinate,
+    AstError,
     AstItemComponent,
     AstItemPredicate,
     AstItemPredicateAlternatives,
@@ -183,6 +184,10 @@ class Serializer(Visitor):
         if source and pos > -1:
             if fill := source[pos:]:
                 result.append(self.regex_comments.sub(r"\1", fill))
+
+    @rule(AstError)
+    def error(self, _node: AstError, _result: List[str]):
+        pass
 
     @rule(AstCommand)
     def command(self, node: AstCommand, result: List[str]):
