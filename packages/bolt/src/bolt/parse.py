@@ -1373,7 +1373,6 @@ def parse_function_signature(stream: TokenStream) -> AstFunctionSignature:
         stream.expect(("brace", "("))
 
         node = set_location(AstFunctionSignature(name=identifier.value), identifier)
-        lexical_scope.bind_variable(identifier.value, node)
 
         deferred_scope = lexical_scope.deferred(FunctionScope)
 
@@ -1505,6 +1504,7 @@ def parse_function_signature(stream: TokenStream) -> AstFunctionSignature:
         arguments=AstChildren(arguments),
         return_type_annotation=return_type_annotation,
     )
+    lexical_scope.bind_variable(identifier.value, node)
     return set_location(node, node, stream.current)
 
 
