@@ -130,6 +130,9 @@ class QuoteHelperWithUnicode(QuoteHelper):
             return chr(int(unicode_hex, 16))
         return super().handle_substitution(token, match)
 
+    def encode_non_bmp_char(self, codepoint: int) -> str:
+        return f"\\U{codepoint:08x}"
+
     def handle_quoting(self, value: str) -> str:
         value = super().handle_quoting(value)
 
@@ -137,6 +140,8 @@ class QuoteHelperWithUnicode(QuoteHelper):
             codepoint = ord(char)
             if codepoint < 128:
                 return char
+            if codepoint > 65535:
+                return self.encode_non_bmp_char(codepoint)
             return f"\\u{codepoint:04x}"
 
         return "".join(escape_char(c) for c in value)
@@ -155,6 +160,11 @@ class JsonQuoteHelper(QuoteHelperWithUnicode):
             r"\t": "\t",
         }
     )
+
+    def encode_non_bmp_char(self, codepoint: int) -> str:
+        low_surrogate = 0xD800 + ((codepoint - 0x10000) >> 10)
+        high_surrogate = 0xDC00 + (codepoint & 0x3FF)
+        return f"\\u{low_surrogate:04x}\\u{high_surrogate:04x}"
 
 
 @dataclass
