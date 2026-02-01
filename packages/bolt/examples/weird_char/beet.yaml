@@ -1,0 +1,11 @@
+
+data_pack:
+  load: .
+
+output: build
+
+require:
+  - bolt
+
+pipeline:
+  - mecha
