@@ -52,6 +52,7 @@ dev = [
     "pytest-minecraft>=0.2.0",
     "python-semantic-release>=10.5.2",
     "ruff>=0.14.4",
+    "zensical>=0.0.20",
 ]
 
 # Remove when python-semantic-release allows the fixed click release.
