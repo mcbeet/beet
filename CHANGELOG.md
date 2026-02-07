@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v0.114.0 (2026-02-07)
+
+### Features
+
+- Add new folders from 1.21.11 and 26.1 ([#500](https://github.com/mcbeet/beet/pull/500),
+  [`5c5a925`](https://github.com/mcbeet/beet/commit/5c5a925be0ed39b7ed6c0589728af5f1d1d4902e))
+
+
 ## v0.113.0 (2026-01-14)
 
 
