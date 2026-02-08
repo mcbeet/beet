@@ -29,6 +29,7 @@ from tokenstream import InvalidSyntax, Token, TokenStream, set_location
 from mecha import (
     AstChildren,
     AstCommand,
+    AstError,
     AstJson,
     AstNode,
     AstResourceLocation,
@@ -217,9 +218,13 @@ class NestedResourcesTransformer(MutatingReducer):
     @rule(AstRoot)
     def nested_resources(self, node: AstRoot):
         changed = False
-        commands: List[AstCommand] = []
+        commands: List[AstCommand|AstError] = []
 
         for command in node.commands:
+            if isinstance(command, AstError):
+                commands.append(command)
+                continue
+
             if file_type := self.nested_resource_identifiers.get(command.identifier):
                 name, content = command.arguments
 
