@@ -121,6 +121,13 @@ $ uv run ruff format
 $ uv run ruff check
 ```
 
+The documenation site uses [Zensical](https://zensical.org/docs/).
+
+```console
+$ uv run zensical serve
+$ uv run zensical build
+```
+
 ---
 
 License - [MIT](https://github.com/mcbeet/beet/blob/main/LICENSE)
