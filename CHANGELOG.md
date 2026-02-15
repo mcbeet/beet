@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v0.114.1 (2026-02-15)
+
+### Bug Fixes
+
+- Broadcast is outputing files ([#501](https://github.com/mcbeet/beet/pull/501),
+  [`26cd2c1`](https://github.com/mcbeet/beet/commit/26cd2c14e9c948486f1e31804a3b27f43ec45afa))
+
+
 ## v0.114.0 (2026-02-07)
 
 ### Features
