@@ -95,12 +95,12 @@ pack.functions == {
 Unfortunately, data packs and resource packs aren't limited to neatly namespaced files and can contain extra files at the pack level and at the namespace level. Still, the `beet` library handles extra files as first-class citizens. In fact, `pack.mcmeta` and `pack.png` are both handled through this mechanism.
 
 ```py
-from beet import JsonFile
+from beet import Mcmeta
 
 pack = DataPack()
 
 pack.extra == {
-  "pack.mcmeta": JsonFile({"pack": {"description": "", "pack_format": 6}})
+  "pack.mcmeta": Mcmeta({'pack': {'min_format': (88, 0), 'max_format': (88, 0), 'description': ''}})
 }
 ```
 
@@ -233,7 +233,7 @@ p2["demo:bar"] = Function(["say world"], tags=["minecraft:tick"])
 
 p1.merge(p2)
 
-dict(p1.content) == {
+dict(p1.all()) == {
     "demo:foo": Function(["say hello"]),
     "demo:bar": Function(["say world"]),
     "minecraft:tick": FunctionTag({"values": ["demo:foo", "demo:bar"]}),
