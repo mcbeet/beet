@@ -6,6 +6,7 @@ on:
     paths-ignore: ['zensical.toml', 'docs/**']
   pull_request:
     branches: [main, beta]
+    paths-ignore: ['zensical.toml', 'docs/**']
 
 env:
   PACKAGES: |
