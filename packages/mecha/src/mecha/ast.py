@@ -4,6 +4,7 @@ __all__ = [
     "AstNode",
     "AstChildren",
     "AstRoot",
+    "AstError",
     "AstCommand",
     "AstCommandSentinel",
     "AstString",
@@ -119,7 +120,9 @@ from beet.core.utils import JsonDict, extra_field, required_field
 from nbtlib import Byte, ByteArray, Compound, CompoundMatch, Double, Int, IntArray
 from nbtlib import List as ListTag
 from nbtlib import ListIndex, LongArray, NamedKey, Numeric, Path, String
-from tokenstream import UNKNOWN_LOCATION, SourceLocation, set_location
+from tokenstream import UNKNOWN_LOCATION, InvalidSyntax, SourceLocation, set_location
+
+from mecha.error import MechaError
 
 from .utils import string_to_number
 
@@ -266,9 +269,16 @@ class AstChildren(AbstractChildren[AstNodeType]):
 class AstRoot(AstNode):
     """Ast root node."""
 
-    commands: AstChildren["AstCommand"] = required_field()
+    commands: AstChildren["AstCommand|AstError"] = required_field()
 
     parser = "root"
+
+
+@dataclass(frozen=True, slots=True)
+class AstError(AstNode):
+    """Ast error node."""
+
+    error: InvalidSyntax = required_field()
 
 
 @dataclass(frozen=True, slots=True)
