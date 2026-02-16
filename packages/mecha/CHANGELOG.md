@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v0.102.3 (2026-02-15)
+
+### Bug Fixes
+
+- Properly encode unicode codepoints outside BMP ([#497](https://github.com/mcbeet/beet/pull/497),
+  [`858018a`](https://github.com/mcbeet/beet/commit/858018a1d43fa57ee57e14ccfe717dce0fce665d))
+
+
 ## v0.102.2 (2026-01-17)
 
 ### Bug Fixes
