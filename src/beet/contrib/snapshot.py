@@ -11,8 +11,10 @@ from beet.resources.pack_format_registry import (
 from beet.toolchain.context import PluginOptions
 from beet import configurable
 
+
 class SnapshotOptions(PluginOptions):
     """Plugin options for the snapshot plugin."""
+
     url_versions: str = "https://raw.githubusercontent.com/misode/mcmeta/refs/tags/{version}-summary/version.json"
     """URL template to download the version manifest from. The {version} placeholder will be replaced with the Minecraft version."""
 

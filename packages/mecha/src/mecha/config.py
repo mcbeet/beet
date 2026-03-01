@@ -41,12 +41,10 @@ class CommandTree(BaseModel):
 
         if version and not patch_only:
             try:
-                filename = f"{'_'.join(map(str, split_version(search_version(version))))}.json"
-                sources.append(
-                    files("mecha.resources")
-                    .joinpath(filename)
-                    .read_text()
+                filename = (
+                    f"{'_'.join(map(str, split_version(search_version(version))))}.json"
                 )
+                sources.append(files("mecha.resources").joinpath(filename).read_text())
             except FileNotFoundError as exc:
                 raise ErrorMessage(f"Invalid minecraft version {version!r}.") from exc
 
