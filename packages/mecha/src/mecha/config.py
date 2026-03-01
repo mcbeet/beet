@@ -11,6 +11,7 @@ from typing import Dict, Iterator, List, Literal, Optional, Set, Tuple, Union
 from beet import ErrorMessage
 from beet.core.utils import FileSystemPath, JsonDict, VersionNumber, split_version
 from pydantic import BaseModel
+from beet.resources.pack_format_registry import search_version
 
 
 class CommandTree(BaseModel):
@@ -38,14 +39,12 @@ class CommandTree(BaseModel):
         for filename in args:
             sources.append(Path(filename).read_text())
 
-        version = split_version(version) if version is not None else None
-
         if version and not patch_only:
-            version_name = "_".join(map(str, version))
             try:
+                filename = f"{'_'.join(map(str, split_version(search_version(version))))}.json"
                 sources.append(
                     files("mecha.resources")
-                    .joinpath(f"{version_name}.json")
+                    .joinpath(filename)
                     .read_text()
                 )
             except FileNotFoundError as exc:
