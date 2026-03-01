@@ -588,7 +588,7 @@ def get_parsers(version: VersionNumber = LATEST_MINECRAFT_VERSION) -> Dict[str, 
     resolved = search_version(version)
     try:
         version = split_version(resolved)
-    except:
+    except ValueError:
         version = split_version(LATEST_MINECRAFT_VERSION)
 
     parsers = get_default_parsers()
