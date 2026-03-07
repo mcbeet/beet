@@ -1353,10 +1353,10 @@ class AdjacentConstraint:
         return self.parser(stream)
 
 
-RESOURCE_LOCATION_PATTERN = r"#?(?:[0-9a-z_\-\.]+:(?:[0-9a-z_./-]+|(?![ \t\r]*\n[ \t]+\S))|[0-9a-z_./-]+)"
-RESOURCE_LOCATION_REQUIRE_PATH_PATTERN = (
-    r"#?(?:[0-9a-z_\-\.]+:)?[0-9a-z_./-]+"
+RESOURCE_LOCATION_PATTERN = (
+    r"#?(?:[0-9a-z_\-\.]+:(?:[0-9a-z_./-]+|(?![ \t\r]*\n[ \t]+\S))|[0-9a-z_./-]+)"
 )
+RESOURCE_LOCATION_REQUIRE_PATH_PATTERN = r"#?(?:[0-9a-z_\-\.]+:)?[0-9a-z_./-]+"
 
 
 @dataclass
