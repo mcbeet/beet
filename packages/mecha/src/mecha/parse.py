@@ -67,6 +67,8 @@ __all__ = [
     "NUMBER_PATTERN",
     "JSON_STRING_PATTERN",
     "NBT_QUOTED_STRING_PATTERN",
+    "RESOURCE_LOCATION_PATTERN",
+    "RESOURCE_LOCATION_REQUIRE_PATH_PATTERN",
 ]
 
 
@@ -1351,12 +1353,25 @@ class AdjacentConstraint:
         return self.parser(stream)
 
 
+RESOURCE_LOCATION_PATTERN = r"#?(?:[0-9a-z_\-\.]+:(?:[0-9a-z_./-]+|(?![ \t\r]*\n[ \t]+\S))|[0-9a-z_./-]+)"
+RESOURCE_LOCATION_REQUIRE_PATH_PATTERN = (
+    r"#?(?:[0-9a-z_\-\.]+:)?[0-9a-z_./-]+"
+)
+
+
 @dataclass
 class ResourceLocationParser:
     """Parser for resource locations."""
 
+    allow_empty_path: bool = True
+
     def __call__(self, stream: TokenStream) -> AstResourceLocation:
-        with stream.syntax(resource_location=r"#?(?:[0-9a-z_\-\.]+:)?[0-9a-z_./-]+"):
+        pattern = (
+            RESOURCE_LOCATION_PATTERN
+            if self.allow_empty_path
+            else RESOURCE_LOCATION_REQUIRE_PATH_PATTERN
+        )
+        with stream.syntax(resource_location=pattern):
             token = stream.expect("resource_location")
             value = token.value
 
