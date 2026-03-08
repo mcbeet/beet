@@ -28,6 +28,8 @@
 function demo:bar
 function dm:
 say YOLO
+function #name:
+function #name:name/
 ```
 
 `@function demo:bar`
