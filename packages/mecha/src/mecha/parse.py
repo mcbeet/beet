@@ -594,7 +594,7 @@ def get_parsers(version: VersionNumber = LATEST_MINECRAFT_VERSION) -> Dict[str, 
     if version < (1, 20):
         parsers["scoreboard_slot"] = BasicLiteralParser(AstLegacyScoreboardSlot)
 
-    if version < (1, 21):
+    if version < (1, 21, 5):
         parsers["command:argument:minecraft:component"] = MultilineParser(
             delegate("json")
         )
