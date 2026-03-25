@@ -8,11 +8,11 @@
 {
   "pack": {
     "min_format": [
-      94,
+      101,
       1
     ],
     "max_format": [
-      94,
+      101,
       1
     ],
     "description": ""
@@ -457,11 +457,11 @@ tellraw @a ["", {"text": "hello", "color": "red"}]
 {
   "pack": {
     "min_format": [
-      75,
+      84,
       0
     ],
     "max_format": [
-      75,
+      84,
       0
     ],
     "description": ""
