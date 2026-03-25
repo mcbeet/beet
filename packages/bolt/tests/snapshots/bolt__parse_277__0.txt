@@ -1,5 +1,17 @@
-#>ERROR  Expected call expression on builtin "hex".
-# line 1, column 10
-#      1 |  time set hex.time
-#        :           ^^^^^^^^
 time set hex.time
+---
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=18, lineno=2, colno=1)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=17, lineno=1, colno=18)
+      identifier: 'time:set:timemarker'
+      arguments:
+        <class 'mecha.ast.AstResourceLocation'>
+          location: SourceLocation(pos=9, lineno=1, colno=10)
+          end_location: SourceLocation(pos=17, lineno=1, colno=18)
+          is_tag: False
+          namespace: None
+          path: 'hex.time'
