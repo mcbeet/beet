@@ -2,11 +2,11 @@
 {
   "pack": {
     "min_format": [
-      101,
+      94,
       1
     ],
     "max_format": [
-      101,
+      94,
       1
     ],
     "description": ""

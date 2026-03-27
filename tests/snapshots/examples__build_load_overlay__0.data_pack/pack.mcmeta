@@ -12,11 +12,11 @@
       {
         "directory": "creeper",
         "min_format": [
-          101,
+          94,
           1
         ],
         "max_format": [
-          101,
+          94,
           1
         ],
         "formats": {
@@ -31,11 +31,11 @@
         },
         "directory": "overlay1",
         "min_format": [
-          101,
+          94,
           1
         ],
         "max_format": [
-          101,
+          94,
           1
         ]
       },
@@ -46,11 +46,11 @@
         },
         "directory": "overlay2",
         "min_format": [
-          101,
+          94,
           1
         ],
         "max_format": [
-          101,
+          94,
           1
         ]
       },
@@ -58,22 +58,22 @@
         "formats": 19,
         "directory": "overlay_missing",
         "min_format": [
-          101,
+          94,
           1
         ],
         "max_format": [
-          101,
+          94,
           1
         ]
       },
       {
         "directory": "overlay_extra",
         "min_format": [
-          101,
+          94,
           1
         ],
         "max_format": [
-          101,
+          94,
           1
         ]
       }

@@ -1,11 +1,11 @@
 {
   "pack": {
     "min_format": [
-      101,
+      94,
       1
     ],
     "max_format": [
-      101,
+      94,
       1
     ],
     "description": "The description of my project\nAuthor: Example\nVersion: 1.7.4"

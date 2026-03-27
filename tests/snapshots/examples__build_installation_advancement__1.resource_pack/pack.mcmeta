@@ -1,11 +1,11 @@
 {
   "pack": {
     "min_format": [
-      84,
+      75,
       0
     ],
     "max_format": [
-      84,
+      75,
       0
     ],
     "description": "An example project\nAuthor: mcbeet"

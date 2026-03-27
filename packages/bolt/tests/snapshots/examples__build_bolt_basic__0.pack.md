@@ -8,11 +8,11 @@
 {
   "pack": {
     "min_format": [
-      101,
+      94,
       1
     ],
     "max_format": [
-      101,
+      94,
       1
     ],
     "description": ""
@@ -691,11 +691,11 @@ say json loaded!
 {
   "pack": {
     "min_format": [
-      84,
+      75,
       0
     ],
     "max_format": [
-      84,
+      75,
       0
     ],
     "description": ""

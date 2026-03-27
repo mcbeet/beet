@@ -5242,14 +5242,9 @@
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=5810, lineno=140, colno=1)
       end_location: SourceLocation(pos=5822, lineno=140, colno=13)
-      identifier: 'time:set:timemarker'
+      identifier: 'time:set:day'
       arguments:
-        <class 'mecha.ast.AstResourceLocation'>
-          location: SourceLocation(pos=5819, lineno=140, colno=10)
-          end_location: SourceLocation(pos=5822, lineno=140, colno=13)
-          is_tag: False
-          namespace: None
-          path: 'day'
+        <empty>
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=5823, lineno=141, colno=1)
       end_location: SourceLocation(pos=5838, lineno=141, colno=16)

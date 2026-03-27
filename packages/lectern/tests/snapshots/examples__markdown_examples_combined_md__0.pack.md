@@ -29,11 +29,11 @@ say foo
 {
   "pack": {
     "min_format": [
-      84,
+      75,
       0
     ],
     "max_format": [
-      84,
+      75,
       0
     ],
     "description": ""
