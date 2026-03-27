@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v0.103.0 (2026-03-27)
+
+### Features
+
+- Update to Minecraft 26.1 ([#507](https://github.com/mcbeet/beet/pull/507),
+  [`07ac3bd`](https://github.com/mcbeet/beet/commit/07ac3bdf259c93a449dc522c8dd7e3bf54a1be0c))
+
+
 ## v0.102.3 (2026-02-15)
 
 ### Bug Fixes
