@@ -1,0 +1,8 @@
+data_pack:
+  load: "src"
+
+pipeline: [beet.contrib.bake_overlays]
+
+meta:
+  bake_overlays:
+    selected_data_format: 18
