@@ -8,11 +8,11 @@
 {
   "pack": {
     "min_format": [
-      94,
+      101,
       1
     ],
     "max_format": [
-      94,
+      101,
       1
     ],
     "description": ""
@@ -67,11 +67,11 @@ say world
 {
   "pack": {
     "min_format": [
-      75,
+      84,
       0
     ],
     "max_format": [
-      75,
+      84,
       0
     ],
     "description": ""

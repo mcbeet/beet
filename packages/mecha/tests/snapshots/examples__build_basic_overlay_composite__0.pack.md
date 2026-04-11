@@ -8,11 +8,11 @@
 {
   "pack": {
     "min_format": [
-      94,
+      101,
       1
     ],
     "max_format": [
-      94,
+      101,
       1
     ],
     "description": ""
@@ -21,11 +21,11 @@
     "entries": [
       {
         "min_format": [
-          94,
+          101,
           1
         ],
         "max_format": [
-          94,
+          101,
           1
         ],
         "directory": "old"

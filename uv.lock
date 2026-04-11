@@ -34,7 +34,7 @@ wheels = [
 
 [[package]]
 name = "beet"
-version = "0.114.1"
+version = "0.115.0"
 source = { editable = "." }
 dependencies = [
     { name = "click" },
@@ -347,7 +347,7 @@ wheels = [
 
 [[package]]
 name = "mecha"
-version = "0.102.3"
+version = "0.103.0"
 source = { editable = "packages/mecha" }
 dependencies = [
     { name = "beet" },
