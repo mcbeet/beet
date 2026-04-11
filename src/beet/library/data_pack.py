@@ -366,6 +366,41 @@ class TestEnvironment(JsonFile):
     extension: ClassVar[str] = ".json"
 
 
+class Timeline(JsonFile):
+    """Class representing a timeline."""
+
+    scope: ClassVar[NamespaceFileScope] = ("timeline",)
+    extension: ClassVar[str] = ".json"
+
+
+class ZombieNautilusVariant(JsonFile):
+    """Class representing a zombie nautilus variant."""
+
+    scope: ClassVar[NamespaceFileScope] = ("zombie_nautilus_variant",)
+    extension: ClassVar[str] = ".json"
+
+
+class VillagerTrade(JsonFile):
+    """Class representing a villager trade."""
+
+    scope: ClassVar[NamespaceFileScope] = ("villager_trade",)
+    extension: ClassVar[str] = ".json"
+
+
+class TradeSet(JsonFile):
+    """Class representing a trade set."""
+
+    scope: ClassVar[NamespaceFileScope] = ("trade_set",)
+    extension: ClassVar[str] = ".json"
+
+
+class WorldClock(JsonFile):
+    """Class representing a world clock."""
+
+    scope: ClassVar[NamespaceFileScope] = ("world_clock",)
+    extension: ClassVar[str] = ".json"
+
+
 class TagFile(JsonFile):
     """Base class for tag files."""
 
@@ -591,6 +626,51 @@ class DialogTag(TagFile):
     )
 
 
+class TimelineTag(TagFile):
+    """Class representing a timeline tag."""
+
+    scope: ClassVar[NamespaceFileScope] = (
+        "tags",
+        "timeline",
+    )
+
+
+class ZombieNautilusVariantTag(TagFile):
+    """Class representing a zombie nautilus variant tag."""
+
+    scope: ClassVar[NamespaceFileScope] = (
+        "tags",
+        "zombie_nautilus_variant",
+    )
+
+
+class VillagerTradeTag(TagFile):
+    """Class representing a villager trade tag."""
+
+    scope: ClassVar[NamespaceFileScope] = (
+        "tags",
+        "villager_trade",
+    )
+
+
+class TradeSetTag(TagFile):
+    """Class representing a villager trade tag."""
+
+    scope: ClassVar[NamespaceFileScope] = (
+        "tags",
+        "trade_set",
+    )
+
+
+class WorldClockTag(TagFile):
+    """Class representing a world clock tag."""
+
+    scope: ClassVar[NamespaceFileScope] = (
+        "tags",
+        "world_clock",
+    )
+
+
 class DataPackNamespace(Namespace):
     """Class representing a data pack namespace."""
 
@@ -621,6 +701,11 @@ class DataPackNamespace(Namespace):
     cow_variants:                       NamespacePin[CowVariant]                = NamespacePin(CowVariant)
     chicken_variants:                   NamespacePin[ChickenVariant]            = NamespacePin(ChickenVariant)
     wolf_sound_variants:                NamespacePin[WolfSoundVariant]          = NamespacePin(WolfSoundVariant)
+    timelines:                          NamespacePin[Timeline]                  = NamespacePin(Timeline)
+    zombie_nautilus_variants:           NamespacePin[ZombieNautilusVariant]     = NamespacePin(ZombieNautilusVariant)
+    villager_trades:                    NamespacePin[VillagerTrade]             = NamespacePin(VillagerTrade)
+    trade_sets:                         NamespacePin[TradeSet]                  = NamespacePin(TradeSet)
+    world_clocks:                       NamespacePin[WorldClock]                = NamespacePin(WorldClock)
     block_tags:                         NamespacePin[BlockTag]                  = NamespacePin(BlockTag)
     entity_type_tags:                   NamespacePin[EntityTypeTag]             = NamespacePin(EntityTypeTag)
     fluid_tags:                         NamespacePin[FluidTag]                  = NamespacePin(FluidTag)
@@ -644,6 +729,11 @@ class DataPackNamespace(Namespace):
     dialogs_tags:                       NamespacePin[DialogTag]                 = NamespacePin(DialogTag)
     test_instances:                     NamespacePin[TestInstance]              = NamespacePin(TestInstance)
     test_environments:                  NamespacePin[TestEnvironment]           = NamespacePin(TestEnvironment)
+    timeline_tags:                      NamespacePin[TimelineTag]               = NamespacePin(TimelineTag)
+    zombie_nautilus_variant_tags:       NamespacePin[ZombieNautilusVariantTag]  = NamespacePin(ZombieNautilusVariantTag)
+    villager_trade_tags:                NamespacePin[VillagerTradeTag]          = NamespacePin(VillagerTradeTag)
+    trade_set_tags:                     NamespacePin[TradeSetTag]               = NamespacePin(TradeSetTag)
+    world_clock_tags:                   NamespacePin[WorldClockTag]             = NamespacePin(WorldClockTag)
 
     # fmt: on
 
@@ -684,6 +774,11 @@ class DataPack(Pack[DataPackNamespace]):
     cow_variants:                       NamespaceProxyDescriptor[CowVariant]                = NamespaceProxyDescriptor(CowVariant)
     chicken_variants:                   NamespaceProxyDescriptor[ChickenVariant]            = NamespaceProxyDescriptor(ChickenVariant)
     wolf_sound_variants:                NamespaceProxyDescriptor[WolfSoundVariant]          = NamespaceProxyDescriptor(WolfSoundVariant)
+    timelines:                          NamespaceProxyDescriptor[Timeline]                  = NamespaceProxyDescriptor(Timeline)
+    zombie_nautilus_variants:           NamespaceProxyDescriptor[ZombieNautilusVariant]     = NamespaceProxyDescriptor(ZombieNautilusVariant)
+    village_trades:                     NamespaceProxyDescriptor[VillagerTrade]             = NamespaceProxyDescriptor(VillagerTrade)
+    trade_sets:                         NamespaceProxyDescriptor[TradeSet]                  = NamespaceProxyDescriptor(TradeSet)
+    world_clocks:                       NamespaceProxyDescriptor[WorldClock]                = NamespaceProxyDescriptor(WorldClock)
     block_tags:                         NamespaceProxyDescriptor[BlockTag]                  = NamespaceProxyDescriptor(BlockTag)
     entity_type_tags:                   NamespaceProxyDescriptor[EntityTypeTag]             = NamespaceProxyDescriptor(EntityTypeTag)
     fluid_tags:                         NamespaceProxyDescriptor[FluidTag]                  = NamespaceProxyDescriptor(FluidTag)
@@ -707,4 +802,9 @@ class DataPack(Pack[DataPackNamespace]):
     dialogs_tags:                       NamespaceProxyDescriptor[DialogTag]                 = NamespaceProxyDescriptor(DialogTag)
     test_instances:                     NamespaceProxyDescriptor[TestInstance]              = NamespaceProxyDescriptor(TestInstance)
     test_environments:                  NamespaceProxyDescriptor[TestEnvironment]           = NamespaceProxyDescriptor(TestEnvironment)
+    timeline_tags:                      NamespaceProxyDescriptor[TimelineTag]               = NamespaceProxyDescriptor(TimelineTag)
+    zombie_nautilus_variant_tags:       NamespaceProxyDescriptor[ZombieNautilusVariantTag]  = NamespaceProxyDescriptor(ZombieNautilusVariantTag)
+    village_trade_tags:                 NamespaceProxyDescriptor[VillagerTradeTag]          = NamespaceProxyDescriptor(VillagerTradeTag)
+    trade_set_tags:                     NamespaceProxyDescriptor[TradeSetTag]               = NamespaceProxyDescriptor(TradeSetTag)
+    world_clock_tags:                   NamespaceProxyDescriptor[WorldClockTag]             = NamespaceProxyDescriptor(WorldClockTag)
     # fmt: on

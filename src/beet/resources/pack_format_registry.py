@@ -32,9 +32,6 @@ class PackFormatRegistry(BaseModel):
     data_pack_version_minor: int
     resource_pack_version: int
     resource_pack_version_minor: int
-    build_time: str
-    release_time: str
-    sha1: str
 
 
 pack_format_registry_path = files("beet.resources").joinpath(
