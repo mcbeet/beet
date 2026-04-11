@@ -91,7 +91,15 @@ from uuid import UUID
 from beet import LATEST_MINECRAFT_VERSION
 from beet.core.utils import VersionNumber, split_version
 from nbtlib import Byte, Double, Float, Int, Long, OutOfRange, Short, String
-from tokenstream import InvalidSyntax, SourceLocation, TokenStream, set_location
+from tokenstream import (
+    InvalidSyntax,
+    SourceLocation,
+    SyntaxRules,
+    TokenStream,
+    UnexpectedToken,
+    set_location,
+    Token,
+)
 
 from .ast import (
     AstAdvancementPredicate,
@@ -108,6 +116,7 @@ from .ast import (
     AstDustColorTransitionParticleParameters,
     AstDustParticleParameters,
     AstEntityAnchor,
+    AstError,
     AstFallingDustParticleParameters,
     AstGamemode,
     AstGreedy,
@@ -638,6 +647,13 @@ class UnrecognizedParser(MechaError):
         self.parser = parser
 
 
+class InvalidSyntaxCollection(MechaError):
+    errors: list[InvalidSyntax]
+
+    def __init__(self, errors: list[InvalidSyntax]):
+        self.errors = errors
+
+
 @overload
 def delegate(parser: str) -> Parser: ...
 
@@ -681,6 +697,7 @@ def consume_line_continuation(stream: TokenStream) -> bool:
     return False
 
 
+# TODO: Attempt to move error recovery into AstCommand's parser
 def parse_root(stream: TokenStream) -> AstRoot:
     """Parse root."""
     start = stream.peek()
@@ -689,7 +706,8 @@ def parse_root(stream: TokenStream) -> AstRoot:
         node = AstRoot(commands=AstChildren[AstCommand]())
         return set_location(node, SourceLocation(0, 1, 1))
 
-    commands: List[AstCommand] = []
+    errors: List[InvalidSyntax] = []
+    commands: List[AstCommand | AstError] = []
 
     with stream.ignore("comment"):
         for _ in stream.peek_until():
@@ -697,12 +715,50 @@ def parse_root(stream: TokenStream) -> AstRoot:
                 continue
             if stream.get("eof"):
                 break
-            commands.append(delegate("root_item", stream))
 
-    node = AstRoot(commands=AstChildren(commands))
-    return set_location(node, start, stream.current)
+            result = parse_root_item(stream, errors)
+            if result is not None:
+                commands.append(result)
+
+    children = AstChildren(commands)
+
+    node = AstRoot(commands=children)
+
+    if stream.index < 0:
+        end_location = SourceLocation(1, 0, 0)
+    else:
+        end_location = stream.current.end_location
+
+    return set_location(node, start, end_location)
+
+def consume_error(stream: TokenStream, errors: list[InvalidSyntax]):
+    next = stream.peek()
+    with stream.syntax(unknown=r"."):
+        while next := stream.peek():
+            stream.expect()
+            if next.value == "\n":
+                break
+    node = AstError(errors[-1].location, errors[-1].end_location, errors[-1])
+    return node
 
 
+
+def parse_root_item(stream: TokenStream, errors: list[InvalidSyntax], colon: bool = False):
+
+    with stream.checkpoint() as commit:
+        try:
+            command: AstCommand = delegate("root_item", stream)
+            commit()
+            return command
+        except InvalidSyntax as exc:
+            errors.append(exc)
+
+    if commit.rollback:
+        if colon:
+            with stream.syntax(colon=r":"):
+                return consume_error(stream, errors)
+        return consume_error(stream, errors)
+        
 def parse_command(stream: TokenStream) -> AstCommand:
     """Parse command."""
     spec = get_stream_spec(stream)

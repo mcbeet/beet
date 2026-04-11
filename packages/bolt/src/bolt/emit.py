@@ -6,7 +6,7 @@ __all__ = [
 from contextlib import contextmanager
 from typing import Any, Callable, Generator, Iterator, List, Optional, ParamSpec, Tuple
 
-from mecha import AstCommand, AstNode, AstRoot
+from mecha import AstCommand, AstError, AstNode, AstRoot
 
 from .utils import internal
 
@@ -16,7 +16,7 @@ P = ParamSpec("P")
 class CommandEmitter:
     """Command emitter."""
 
-    commands: List[AstCommand]
+    commands: List[AstCommand|AstError]
     nesting: List[Tuple[str, Tuple[AstNode, ...]]]
 
     def __init__(self):
@@ -26,8 +26,8 @@ class CommandEmitter:
     @contextmanager
     def scope(
         self,
-        commands: Optional[List[AstCommand]] = None,
-    ) -> Iterator[List[AstCommand]]:
+        commands: Optional[List[AstCommand|AstError]] = None,
+    ) -> Iterator[List[AstCommand|AstError]]:
         """Create a new scope to gather commands."""
         if commands is None:
             commands = []
@@ -46,7 +46,7 @@ class CommandEmitter:
         f: Callable[P, Any],
         *args: P.args,
         **kwargs: P.kwargs,
-    ) -> List[AstCommand]:
+    ) -> List[AstCommand|AstError]:
         """Invoke a user-defined function and return the list of generated commands."""
         with self.scope() as output:
             result = f(*args, **kwargs)
