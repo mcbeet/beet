@@ -78,9 +78,13 @@ def incremental_save(pack: Pack, output_path: Path) -> None:
                 ):
                     changed = not filecmp.cmp(pack_file.source_path, disk_path, shallow=False)
                 else:
-                    # Standard path: use beet's own content equality
-                    existing_file: PackFile = type(pack_file)(source_path=disk_path)
-                    changed = not pack_file.content_equal(existing_file)
+                    # Standard path: compare the **exact** serialized output against disk content.
+                    serialized: str | bytes = pack_file.ensure_serialized()
+                    if isinstance(serialized, str):
+                        encoding: str = getattr(pack_file, "encoding", None) or "utf-8"
+                        changed = disk_path.read_text(encoding=encoding) != serialized
+                    else:
+                        changed = disk_path.read_bytes() != serialized
             except Exception:
                 changed = True  # Fallback to overwrite on any error
 
