@@ -18,7 +18,7 @@ from beet.library.utils import list_files as list_dir_files
 
 class OutputOptions(PluginOptions):
     directory: ListOption[FileSystemPath] | None = None
-    incremental: bool = False
+    incremental: bool | None = None
 
 
 def beet_default(ctx: Context):
@@ -53,6 +53,8 @@ def incremental_save(pack: Pack, output_path: Path) -> None:
             pass  # not empty - leave it
 
     # Ensure the root output directory exists
+    if output_path.exists() and not output_path.is_dir():
+        output_path.unlink()
     output_path.mkdir(parents=True, exist_ok=True)
 
     # For each expected file, compare with disk and write if new/changed
@@ -67,21 +69,20 @@ def incremental_save(pack: Pack, output_path: Path) -> None:
         # Existing file: compare before writing
         else:
             changed: bool = True
-
-            # Fast path: if the pack file still points directly to a source path, avoid loading content into memory
-            if (
-                pack_file.source_path is not None
-                and pack_file.source_start is None
-                and pack_file.source_stop is None
-            ):
-                changed = not filecmp.cmp(pack_file.source_path, disk_path, shallow=False)
-            else:
-                # Standard path: use beet's own content equality
-                try:
+            try:
+                # Fast path: if the pack file still points directly to a source path, avoid loading content into memory
+                if (
+                    pack_file.source_path is not None
+                    and pack_file.source_start is None
+                    and pack_file.source_stop is None
+                ):
+                    changed = not filecmp.cmp(pack_file.source_path, disk_path, shallow=False)
+                else:
+                    # Standard path: use beet's own content equality
                     existing_file: PackFile = type(pack_file)(source_path=disk_path)
                     changed = not pack_file.content_equal(existing_file)
-                except Exception:
-                    changed = True  # Fallback to overwrite on any error
+            except Exception:
+                changed = True  # Fallback to overwrite on any error
 
             if changed:
                 pack_file.dump(output_path, rel_path)
@@ -94,8 +95,8 @@ def output(ctx: Context, opts: OutputOptions):
         return
 
     # Check both opts and ctx.meta.output for incremental flag
-    incremental: bool = opts.incremental
-    if not incremental:
+    incremental: bool | None = opts.incremental
+    if incremental is None:
         meta_opts = ctx.meta.get("output")
         if isinstance(meta_opts, dict):
             incremental = bool(meta_opts.get("incremental", False))
