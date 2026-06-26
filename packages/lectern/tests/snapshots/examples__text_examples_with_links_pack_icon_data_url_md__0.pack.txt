@@ -2,11 +2,11 @@
 {
   "pack": {
     "min_format": [
-      84,
+      88,
       0
     ],
     "max_format": [
-      84,
+      88,
       0
     ],
     "description": ""
@@ -20,11 +20,11 @@ iVBORw0KGgoAAAANSUhEUgAAASwAAAEsCAYAAAB5fY51AAEAAElEQVR4nOz92ZNkWXLmB/70nHOv+R5b
 {
   "pack": {
     "min_format": [
-      101,
+      107,
       1
     ],
     "max_format": [
-      101,
+      107,
       1
     ],
     "description": ""
