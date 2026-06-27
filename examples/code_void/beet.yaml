@@ -1,0 +1,10 @@
+data_pack:
+  load: [.]
+resource_pack:
+  load: [.]
+
+output: build
+
+
+pipeline:
+  - add_header

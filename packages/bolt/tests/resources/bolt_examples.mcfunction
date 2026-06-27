@@ -1393,3 +1393,19 @@ def a(v):
 x = None
 with a(1) as x, a(x) as y:
     say y
+###
+function minecraft:name:
+###
+function foo:
+say aaa
+###
+function foo:
+    say aaa
+###
+function ::
+###
+function namespace:path/:
+    say boooo
+###
+function namespace:path/
+

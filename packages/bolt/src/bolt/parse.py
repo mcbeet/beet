@@ -88,7 +88,9 @@ from mecha import (
     CommentDisambiguation,
     CompilationDatabase,
     MultilineParser,
+    NoTagConstraint,
     Parser,
+    ResourceLocationParser,
     consume_line_continuation,
     delegate,
     get_stream_properties,
@@ -317,7 +319,7 @@ def get_bolt_parsers(
             literal_parser=delegate("bolt:macro_literal"),
             argument_parser=delegate("bolt:macro_argument"),
             resource_location_parser=DisableInterpolationParser(
-                delegate("resource_location")
+                NoTagConstraint(ResourceLocationParser(allow_empty_path=False))
             ),
             json_properties_parser=DisableInterpolationParser(
                 AdjacentConstraint(MultilineParser(delegate("json_object")), r"\{")

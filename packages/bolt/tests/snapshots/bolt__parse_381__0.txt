@@ -1,0 +1,5 @@
+#>ERROR  Expected non-empty block.
+# line 1, column 24
+#      1 |  function minecraft:name:
+#        :                         ^
+function minecraft:name:
