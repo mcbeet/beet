@@ -568,6 +568,7 @@ def get_default_parsers() -> Dict[str, Parser]:
         "command:argument:minecraft:scoreboard_slot": delegate("scoreboard_slot"),
         "command:argument:minecraft:swizzle": delegate("swizzle"),
         "command:argument:minecraft:team": delegate("team"),
+        "command:argument:minecraft:team_color": delegate("color"),
         "command:argument:minecraft:time": delegate("time"),
         "command:argument:minecraft:uuid": delegate("uuid"),
         "command:argument:minecraft:vec2": delegate("vec2"),
