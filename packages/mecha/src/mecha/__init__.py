@@ -1,4 +1,4 @@
-__version__ = "0.104.0"
+__version__ = "0.104.1"
 
 from .api import *  # noqa: F403
 from .ast import *  # noqa: F403

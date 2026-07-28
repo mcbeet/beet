@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v0.104.1 (2026-07-08)
+
+### Bug Fixes
+
+- Text components became SNBT in 1.21.5, not 1.21 ([#505](https://github.com/mcbeet/beet/pull/505),
+  [`b56f104`](https://github.com/mcbeet/beet/commit/b56f1042762c624d66b8d2369da8b1046cdda507))
+
+
 ## v0.104.0 (2026-06-26)
 
 ### Features
