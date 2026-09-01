@@ -22,7 +22,7 @@ ManifestEntry = tuple[int, int, str]
 
 class OutputOptions(PluginOptions):
     directory: ListOption[FileSystemPath] | None = None
-    incremental: bool | None = None
+    incremental: bool | None = True
 
 
 def beet_default(ctx: Context):
