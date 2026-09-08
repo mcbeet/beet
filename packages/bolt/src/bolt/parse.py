@@ -2274,7 +2274,13 @@ class DeferredRootBacktracker:
                 deferred_stream.data["macro_scope"] = get_stream_macro_scope(stream)
                 deferred_stream.data["pending_macros"] = []
 
-                nested_root = delegate("nested_root", deferred_stream)
+                try:
+                    nested_root = delegate("nested_root", deferred_stream)
+                except InvalidSyntax as exc:
+                    error = AstError(exc.location, exc.end_location, exc)
+                    nested_root = set_location(
+                        AstRoot(commands=AstChildren([error])), error, error
+                    )
 
                 self.macro_handler.cache_local_spec(deferred_stream)
 
