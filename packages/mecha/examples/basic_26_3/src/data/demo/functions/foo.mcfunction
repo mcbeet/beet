@@ -41,3 +41,5 @@ execute positioned ~ ~3 ~ run place feature {
 }
 
 swing @s mainhand stab 500t
+
+execute store success score $has_hand_item gm4_binder_data if items entity @s weapon.* *

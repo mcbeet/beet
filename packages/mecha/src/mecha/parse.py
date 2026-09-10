@@ -581,7 +581,7 @@ def get_default_parsers() -> Dict[str, Parser]:
         "command:argument:minecraft:feature": MultilineParser(delegate("resource_location_or_nbt")),
         "command:argument:minecraft:swing_animation": BasicLiteralParser(AstSwingAnimation),
         "command:argument:minecraft:slot_source": AlternativeParser([
-            delegate("item_slot"), 
+            delegate("item_slots"), 
             MultilineParser(delegate("resource_location_or_nbt"))
         ]),
         ################################################################################
