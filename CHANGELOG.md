@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v0.118.0 (2026-09-10)
+
+### Features
+
+- Support for empty filenames ([#504](https://github.com/mcbeet/beet/pull/504),
+  [`83147e3`](https://github.com/mcbeet/beet/commit/83147e3b1325807fc6a4321a9c46e0ec9a24cd70))
+
+
 ## v0.117.0 (2026-09-01)
 
 ### Features
