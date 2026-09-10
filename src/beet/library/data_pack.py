@@ -286,6 +286,14 @@ class SulfurCubeArchetype(JsonFile):
     extension: ClassVar[str] = ".json"
 
 
+class SlotSource(JsonFile):
+    """Class representing a slot source."""
+
+    scope: ClassVar[NamespaceFileScope] = ("slot_source",)
+    extension: ClassVar[str] = ".json"
+
+
+
 @dataclass(eq=False, repr=False)
 class Function(TextFileBase[List[str]]):
     """Class representing a function."""
@@ -652,6 +660,16 @@ class PointOfInterestTypeTag(TagFile):
         "point_of_interest_type",
     )
 
+class LootTableTag(TagFile):
+    """Class representing a loot table tag."""
+
+    scope: ClassVar[NamespaceFileScope] = (
+        "tags",
+        "loot_table",
+    )
+
+
+
 
 class FrogVariantTag(TagFile):
     """Class representing a frog variant tag."""
@@ -825,6 +843,8 @@ class DataPackNamespace(Namespace):
     context_int_providers:              NamespacePin[ContextIntProvider]        = NamespacePin(ContextIntProvider)
     context_float_providers:            NamespacePin[ContextFloatProvider]      = NamespacePin(ContextFloatProvider)
     decorated_pot_patterns:             NamespacePin[DecoratedPotPattern]       = NamespacePin(DecoratedPotPattern)
+    loot_tables_tags:                   NamespacePin[LootTableTag]              = NamespacePin(LootTableTag)
+    slot_source:                        NamespacePin[SlotSource]                = NamespacePin(SlotSource)
 
     # fmt: on
 
@@ -908,6 +928,8 @@ class DataPack(Pack[DataPackNamespace]):
     context_int_providers:              NamespaceProxyDescriptor[ContextIntProvider]        = NamespaceProxyDescriptor(ContextIntProvider)
     context_float_providers:            NamespaceProxyDescriptor[ContextFloatProvider]      = NamespaceProxyDescriptor(ContextFloatProvider)
     decorated_pot_patterns:             NamespaceProxyDescriptor[DecoratedPotPattern]       = NamespaceProxyDescriptor(DecoratedPotPattern)
+    loot_tables_tags:                   NamespaceProxyDescriptor[LootTableTag]              = NamespaceProxyDescriptor(LootTableTag)
+    slot_source:                        NamespaceProxyDescriptor[SlotSource]                = NamespaceProxyDescriptor(SlotSource)
 
 
     # fmt: on
