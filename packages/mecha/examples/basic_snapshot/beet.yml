@@ -1,0 +1,15 @@
+
+
+
+data_pack:
+  load: .
+
+minecraft: "26.1-snapshot-10"
+
+require:
+  - beet.contrib.snapshot
+
+pipeline: 
+  - mecha
+
+output: build

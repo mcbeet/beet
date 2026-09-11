@@ -1,0 +1,13 @@
+
+
+
+data_pack:
+  load: .
+
+minecraft: "1.21.x"
+
+
+pipeline: 
+  - mecha
+
+output: build
