@@ -27,6 +27,12 @@ __all__ = [
     "WorldgenFlatLevelGeneratorPresetTag",
     "WorldgenWorldPresetTag",
     "ConfiguredFeatureTag",
+    "WorldgenCarver",
+    "WorldgenBlockStateProvider",
+    "WorldgenMaterialRule",
+    "WorldgenMaterialCondition",
+    "WorldgenFeature",
+    "WorldgenFeatureTag",
 ]
 
 
@@ -69,12 +75,12 @@ def worldgen(pack: Union[Context, DataPack]):
         WorldgenFlatLevelGeneratorPresetTag,
         WorldgenWorldPresetTag,
         ConfiguredFeatureTag,
-        BlockStateCarver,
-        BlockStateProvider,
-        MaterialRule,
-        MaterialCondition,
-        Feature,
-        FeatureTag,
+        WorldgenCarver,
+        WorldgenBlockStateProvider,
+        WorldgenMaterialRule,
+        WorldgenMaterialCondition,
+        WorldgenFeature,
+        WorldgenFeatureTag,
     ]
 
 
@@ -200,15 +206,15 @@ class WorldgenMultiNoiseBiomeSourceParameterList(JsonFile):
     extension: ClassVar[str] = ".json"
 
 
-class BlockStateCarver(JsonFile):
-    """Class representing a wordlgen carver."""
+class WorldgenCarver(JsonFile):
+    """Class representing a worldgen carver."""
 
     scope: ClassVar[NamespaceFileScope] = (
         "worldgen",
         "carver",
     )
     extension: ClassVar[str] = ".json"
-class BlockStateProvider(JsonFile):
+class WorldgenBlockStateProvider(JsonFile):
     """Class representing a block state provider."""
 
     scope: ClassVar[NamespaceFileScope] = (
@@ -217,7 +223,7 @@ class BlockStateProvider(JsonFile):
     )
     extension: ClassVar[str] = ".json"
 
-class MaterialRule(JsonFile):
+class WorldgenMaterialRule(JsonFile):
     """Class representing a material rule."""
 
     scope: ClassVar[NamespaceFileScope] = (
@@ -226,7 +232,7 @@ class MaterialRule(JsonFile):
     )
     extension: ClassVar[str] = ".json"
 
-class MaterialCondition(JsonFile):
+class WorldgenMaterialCondition(JsonFile):
     """Class representing a material condition."""
 
     scope: ClassVar[NamespaceFileScope] = (
@@ -235,7 +241,7 @@ class MaterialCondition(JsonFile):
     )
     extension: ClassVar[str] = ".json"
 
-class Feature(JsonFile):
+class WorldgenFeature(JsonFile):
     """Class representing a wordgen feature."""
 
     scope: ClassVar[NamespaceFileScope] = (
@@ -245,7 +251,7 @@ class Feature(JsonFile):
     extension: ClassVar[str] = ".json"
 
 
-class FeatureTag(TagFile):
+class WorldgenFeatureTag(TagFile):
     """Class representing a wordgen feature."""
 
     scope: ClassVar[NamespaceFileScope] = (
