@@ -76,6 +76,7 @@ from mecha import (
     AdjacentConstraint,
     AlternativeParser,
     AstChildren,
+    AstError,
     AstCommand,
     AstJson,
     AstNode,
@@ -970,9 +971,13 @@ class EscapeAnalysisResolver:
 
     def resolve(self, node: AstRoot) -> AstRoot:
         should_replace = False
-        commands: List[AstCommand] = []
+        commands: List[AstCommand|AstError] = []
 
         for command in node.commands:
+            if isinstance(command, AstError):
+                commands.append(command)
+                continue
+
             stack: List[AstCommand] = [command]
 
             while command.arguments and isinstance(
@@ -1102,9 +1107,13 @@ class DecoratorResolver:
         stack: List[AstDecorator] = []
 
         changed = False
-        result: List[AstCommand] = []
+        result: List[AstCommand|AstError] = []
 
         for command in node.commands:
+            if isinstance(command, AstError):
+                result.append(command)
+                continue
+
             if isinstance(command, AstStatement) and isinstance(
                 decorator := command.arguments[0], AstDecorator
             ):
@@ -1187,9 +1196,13 @@ class VanillaReturnHandler:
             return node
 
         changed = False
-        result: List[AstCommand] = []
+        result: List[AstCommand|AstError] = []
 
         for command in node.commands:
+            if isinstance(command, AstError):
+                result.append(command)
+                continue
+
             if command.identifier == "return:value" and command.arguments:
                 changed = True
 
@@ -1224,12 +1237,16 @@ class IfElseLoweringParser:
         node: AstRoot = self.parser(stream)
 
         changed = False
-        result: List[AstCommand] = []
+        result: List[AstError|AstCommand] = []
 
         commands = iter(node.commands)
         previous = ""
 
         for command in commands:
+            if isinstance(command, AstError):
+                result.append(command)
+                continue
+
             if command.identifier in ["elif:condition:body", "else:body"]:
                 if previous not in ["if:condition:body", "elif:condition:body"]:
                     exc = InvalidSyntax(
@@ -1242,6 +1259,9 @@ class IfElseLoweringParser:
                 elif_chain = [command]
 
                 for command in commands:
+                    if isinstance(command, AstError):
+                        continue
+
                     if command.identifier not in ["elif:condition:body", "else:body"]:
                         break
                     elif_chain.append(command)
@@ -1293,6 +1313,9 @@ class BreakContinueConstraint:
 
         if not loop:
             for command in node.commands:
+                if isinstance(command, AstError):
+                    continue
+
                 if command.identifier in ["break", "continue"]:
                     exc = InvalidSyntax(
                         f'Can only use "{command.identifier}" in loops.'
@@ -1352,7 +1375,6 @@ def parse_function_signature(stream: TokenStream) -> AstFunctionSignature:
         stream.expect(("brace", "("))
 
         node = set_location(AstFunctionSignature(name=identifier.value), identifier)
-        lexical_scope.bind_variable(identifier.value, node)
 
         deferred_scope = lexical_scope.deferred(FunctionScope)
 
@@ -1471,6 +1493,7 @@ def parse_function_signature(stream: TokenStream) -> AstFunctionSignature:
                         exc = InvalidSyntax(
                             "Expected at least one named argument after bare variadic marker."
                         )
+                        
                         raise set_location(exc, argument)
 
             return_type_annotation = None
@@ -1483,6 +1506,7 @@ def parse_function_signature(stream: TokenStream) -> AstFunctionSignature:
         arguments=AstChildren(arguments),
         return_type_annotation=return_type_annotation,
     )
+    lexical_scope.bind_variable(identifier.value, node)
     return set_location(node, node, stream.current)
 
 
@@ -1757,11 +1781,15 @@ class ProcMacroExpansion:
 
     def __call__(self, stream: TokenStream) -> AstRoot:
         should_replace = False
-        commands: List[AstCommand] = []
+        commands: List[AstCommand|AstError] = []
 
         node: AstRoot = self.parser(stream)
 
         for command in node.commands:
+            if isinstance(command, AstError):
+                commands.append(command)
+                continue
+
             stack: List[AstCommand] = [command]
 
             while command.arguments and isinstance(
@@ -2076,9 +2104,13 @@ class DocstringHandler:
         node: AstRoot = self.parser(stream)
 
         changed = False
-        result: List[AstCommand] = []
+        result: List[AstCommand|AstError] = []
 
         for command in node.commands:
+            if isinstance(command, AstError):
+                result.append(command)
+                continue
+
             if (
                 isinstance(command, AstStatement)
                 and command.arguments
@@ -2200,9 +2232,13 @@ class DeferredRootBacktracker:
 
     def resolve_deferred(self, node: AstRoot, stream: TokenStream) -> AstRoot:
         should_replace = False
-        commands: List[AstCommand] = []
+        commands: List[AstCommand|AstError] = []
 
         for command in node.commands:
+            if isinstance(command, AstError):
+                commands.append(command)
+                continue 
+
             if command.arguments and isinstance(
                 body := command.arguments[-1], AstClassRoot
             ):
@@ -2285,6 +2321,9 @@ class LexicalScopeConstraint:
 
         if isinstance(node, AstRoot):
             for command in node.commands:
+                if isinstance(command, AstError):
+                    continue
+
                 if command.identifier in self.command_identifiers:
                     name, _, _ = command.identifier.partition(":")
                     exc = InvalidSyntax(
@@ -2403,7 +2442,6 @@ class UnpackParser:
 
         node = AstUnpack(type="dict" if prefix.value == "**" else "list", value=node)
         return set_location(node, prefix, node.value)
-
 
 @dataclass
 class UnpackConstraint:
