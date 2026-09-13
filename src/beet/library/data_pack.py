@@ -21,8 +21,11 @@ __all__ = [
     "TrimMaterial",
     "FrogVariant",
     "CatVariant",
+    "CatSoundVariant",
     "CowVariant",
+    "CowSoundVariant",
     "ChickenVariant",
+    "ChickenSoundVariant",
     "WolfSoundVariant",
     "TagFile",
     "BlockTag",
@@ -48,9 +51,12 @@ __all__ = [
     "WolfSoundVariantTag",
     "Dialog",
     "PigVariant",
+    "PigSoundVariant",
     "DialogTag",
     "TestInstance",
     "TestEnvironment",
+    "SulfurCubeArchetype",
+    "PotionTag",
 ]
 
 
@@ -179,6 +185,13 @@ class CatVariant(JsonFile):
     extension: ClassVar[str] = ".json"
 
 
+class CatSoundVariant(JsonFile):
+    """Class representing a cat sound variant."""
+
+    scope: ClassVar[NamespaceFileScope] = ("cat_sound_variant",)
+    extension: ClassVar[str] = ".json"
+
+
 class CowVariant(JsonFile):
     """Class representing a cow variant."""
 
@@ -186,10 +199,24 @@ class CowVariant(JsonFile):
     extension: ClassVar[str] = ".json"
 
 
+class CowSoundVariant(JsonFile):
+    """Class representing a cow sound variant."""
+
+    scope: ClassVar[NamespaceFileScope] = ("cow_sound_variant",)
+    extension: ClassVar[str] = ".json"
+
+
 class ChickenVariant(JsonFile):
     """Class representing a chicken variant."""
 
     scope: ClassVar[NamespaceFileScope] = ("chicken_variant",)
+    extension: ClassVar[str] = ".json"
+
+
+class ChickenSoundVariant(JsonFile):
+    """Class representing a chicken sound variant."""
+
+    scope: ClassVar[NamespaceFileScope] = ("chicken_sound_variant",)
     extension: ClassVar[str] = ".json"
 
 
@@ -211,6 +238,20 @@ class PigVariant(JsonFile):
     """Class representing a pig variant."""
 
     scope: ClassVar[NamespaceFileScope] = ("pig_variant",)
+    extension: ClassVar[str] = ".json"
+
+
+class PigSoundVariant(JsonFile):
+    """Class representing a pig sound variant."""
+
+    scope: ClassVar[NamespaceFileScope] = ("pig_sound_variant",)
+    extension: ClassVar[str] = ".json"
+
+
+class SulfurCubeArchetype(JsonFile):
+    """Class representing a sulfur cube archetype."""
+
+    scope: ClassVar[NamespaceFileScope] = ("sulfur_cube_archetype",)
     extension: ClassVar[str] = ".json"
 
 
@@ -671,6 +712,15 @@ class WorldClockTag(TagFile):
     )
 
 
+class PotionTag(TagFile):
+    """Class representing a potion tag."""
+
+    scope: ClassVar[NamespaceFileScope] = (
+        "tags",
+        "potion",
+    )
+
+
 class DataPackNamespace(Namespace):
     """Class representing a data pack namespace."""
 
@@ -698,8 +748,11 @@ class DataPackNamespace(Namespace):
     trial_spawners:                     NamespacePin[TrialSpawner]              = NamespacePin(TrialSpawner)
     frog_variants:                      NamespacePin[FrogVariant]               = NamespacePin(FrogVariant)
     cat_variants:                       NamespacePin[CatVariant]                = NamespacePin(CatVariant)
+    cat_sound_variants:                 NamespacePin[CatSoundVariant]           = NamespacePin(CatSoundVariant)
     cow_variants:                       NamespacePin[CowVariant]                = NamespacePin(CowVariant)
+    cow_sound_variants:                 NamespacePin[CowSoundVariant]           = NamespacePin(CowSoundVariant)
     chicken_variants:                   NamespacePin[ChickenVariant]            = NamespacePin(ChickenVariant)
+    chicken_sound_variants:             NamespacePin[ChickenSoundVariant]       = NamespacePin(ChickenSoundVariant)
     wolf_sound_variants:                NamespacePin[WolfSoundVariant]          = NamespacePin(WolfSoundVariant)
     timelines:                          NamespacePin[Timeline]                  = NamespacePin(Timeline)
     zombie_nautilus_variants:           NamespacePin[ZombieNautilusVariant]     = NamespacePin(ZombieNautilusVariant)
@@ -726,6 +779,7 @@ class DataPackNamespace(Namespace):
     wolf_sound_variant_tags:            NamespacePin[WolfSoundVariantTag]       = NamespacePin(WolfSoundVariantTag)
     dialogs:                            NamespacePin[Dialog]                    = NamespacePin(Dialog)
     pig_variants:                       NamespacePin[PigVariant]                = NamespacePin(PigVariant)
+    pig_sound_variants:                 NamespacePin[PigSoundVariant]           = NamespacePin(PigSoundVariant)
     dialogs_tags:                       NamespacePin[DialogTag]                 = NamespacePin(DialogTag)
     test_instances:                     NamespacePin[TestInstance]              = NamespacePin(TestInstance)
     test_environments:                  NamespacePin[TestEnvironment]           = NamespacePin(TestEnvironment)
@@ -734,6 +788,8 @@ class DataPackNamespace(Namespace):
     villager_trade_tags:                NamespacePin[VillagerTradeTag]          = NamespacePin(VillagerTradeTag)
     trade_set_tags:                     NamespacePin[TradeSetTag]               = NamespacePin(TradeSetTag)
     world_clock_tags:                   NamespacePin[WorldClockTag]             = NamespacePin(WorldClockTag)
+    potion_tags:                        NamespacePin[PotionTag]                 = NamespacePin(PotionTag)
+    sulfur_cube_archetypes:             NamespacePin[SulfurCubeArchetype]       = NamespacePin(SulfurCubeArchetype)
 
     # fmt: on
 
@@ -771,8 +827,11 @@ class DataPack(Pack[DataPackNamespace]):
     trial_spawners:                     NamespaceProxyDescriptor[TrialSpawner]              = NamespaceProxyDescriptor(TrialSpawner)
     frog_variants:                      NamespaceProxyDescriptor[FrogVariant]               = NamespaceProxyDescriptor(FrogVariant)
     cat_variants:                       NamespaceProxyDescriptor[CatVariant]                = NamespaceProxyDescriptor(CatVariant)
+    cat_sound_variants:                 NamespaceProxyDescriptor[CatSoundVariant]           = NamespaceProxyDescriptor(CatSoundVariant)
     cow_variants:                       NamespaceProxyDescriptor[CowVariant]                = NamespaceProxyDescriptor(CowVariant)
+    cow_sound_variants:                 NamespaceProxyDescriptor[CowSoundVariant]           = NamespaceProxyDescriptor(CowSoundVariant)
     chicken_variants:                   NamespaceProxyDescriptor[ChickenVariant]            = NamespaceProxyDescriptor(ChickenVariant)
+    chicken_sound_variants:             NamespaceProxyDescriptor[ChickenSoundVariant]       = NamespaceProxyDescriptor(ChickenSoundVariant)
     wolf_sound_variants:                NamespaceProxyDescriptor[WolfSoundVariant]          = NamespaceProxyDescriptor(WolfSoundVariant)
     timelines:                          NamespaceProxyDescriptor[Timeline]                  = NamespaceProxyDescriptor(Timeline)
     zombie_nautilus_variants:           NamespaceProxyDescriptor[ZombieNautilusVariant]     = NamespaceProxyDescriptor(ZombieNautilusVariant)
@@ -799,6 +858,7 @@ class DataPack(Pack[DataPackNamespace]):
     wolf_sound_variant_tags:            NamespaceProxyDescriptor[WolfSoundVariantTag]       = NamespaceProxyDescriptor(WolfSoundVariantTag)
     dialogs:                            NamespaceProxyDescriptor[Dialog]                    = NamespaceProxyDescriptor(Dialog)
     pig_variants:                       NamespaceProxyDescriptor[PigVariant]                = NamespaceProxyDescriptor(PigVariant)
+    pig_sound_variants:                 NamespaceProxyDescriptor[PigSoundVariant]           = NamespaceProxyDescriptor(PigSoundVariant)
     dialogs_tags:                       NamespaceProxyDescriptor[DialogTag]                 = NamespaceProxyDescriptor(DialogTag)
     test_instances:                     NamespaceProxyDescriptor[TestInstance]              = NamespaceProxyDescriptor(TestInstance)
     test_environments:                  NamespaceProxyDescriptor[TestEnvironment]           = NamespaceProxyDescriptor(TestEnvironment)
@@ -807,4 +867,8 @@ class DataPack(Pack[DataPackNamespace]):
     village_trade_tags:                 NamespaceProxyDescriptor[VillagerTradeTag]          = NamespaceProxyDescriptor(VillagerTradeTag)
     trade_set_tags:                     NamespaceProxyDescriptor[TradeSetTag]               = NamespaceProxyDescriptor(TradeSetTag)
     world_clock_tags:                   NamespaceProxyDescriptor[WorldClockTag]             = NamespaceProxyDescriptor(WorldClockTag)
+    potion_tags:                        NamespaceProxyDescriptor[PotionTag]                 = NamespaceProxyDescriptor(PotionTag)
+    sulfur_cube_archetypes:             NamespaceProxyDescriptor[SulfurCubeArchetype]       = NamespaceProxyDescriptor(SulfurCubeArchetype)
+
+
     # fmt: on

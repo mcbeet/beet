@@ -26,6 +26,7 @@ __all__ = [
     "WorldgenPlacedFeatureTag",
     "WorldgenFlatLevelGeneratorPresetTag",
     "WorldgenWorldPresetTag",
+    "ConfiguredFeatureTag",
 ]
 
 
@@ -67,6 +68,7 @@ def worldgen(pack: Union[Context, DataPack]):
         WorldgenPlacedFeatureTag,
         WorldgenFlatLevelGeneratorPresetTag,
         WorldgenWorldPresetTag,
+        ConfiguredFeatureTag,
     ]
 
 
@@ -237,3 +239,9 @@ class WorldgenWorldPresetTag(TagFile):
     """Class representing a worldgen world preset tag."""
 
     scope: ClassVar[NamespaceFileScope] = ("tags", "worldgen", "world_preset")
+
+
+class ConfiguredFeatureTag(TagFile):
+    """Class representing a configured feature tag."""
+
+    scope: ClassVar[NamespaceFileScope] = ("tags", "worldgen", "configured_feature")

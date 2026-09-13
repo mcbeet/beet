@@ -1,0 +1,5 @@
+#>ERROR  Expected bracket '[', curly '{', docstring, ellipsis, false, identifier or 5 other tokens but got colon ':'.
+# line 1, column 11
+#      1 |  function ::
+#        :            ^
+function ::

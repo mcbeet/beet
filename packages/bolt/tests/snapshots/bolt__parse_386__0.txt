@@ -1,0 +1,18 @@
+function namespace:path/
+
+---
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=26, lineno=3, colno=1)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=24, lineno=1, colno=25)
+      identifier: 'function:name'
+      arguments:
+        <class 'mecha.ast.AstResourceLocation'>
+          location: SourceLocation(pos=9, lineno=1, colno=10)
+          end_location: SourceLocation(pos=24, lineno=1, colno=25)
+          is_tag: False
+          namespace: 'namespace'
+          path: 'path/'

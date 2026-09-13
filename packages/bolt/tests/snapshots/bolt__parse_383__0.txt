@@ -1,0 +1,35 @@
+function foo:
+    say aaa
+---
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=25, lineno=2, colno=12)
+  commands:
+    <class 'mecha.ast.AstCommand'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=25, lineno=2, colno=12)
+      identifier: 'function:name:commands'
+      arguments:
+        <class 'mecha.ast.AstResourceLocation'>
+          location: SourceLocation(pos=9, lineno=1, colno=10)
+          end_location: SourceLocation(pos=12, lineno=1, colno=13)
+          is_tag: False
+          namespace: None
+          path: 'foo'
+        <class 'mecha.ast.AstRoot'>
+          location: SourceLocation(pos=18, lineno=2, colno=5)
+          end_location: SourceLocation(pos=25, lineno=2, colno=12)
+          commands:
+            <class 'mecha.ast.AstCommand'>
+              location: SourceLocation(pos=18, lineno=2, colno=5)
+              end_location: SourceLocation(pos=25, lineno=2, colno=12)
+              identifier: 'say:message'
+              arguments:
+                <class 'mecha.ast.AstMessage'>
+                  location: SourceLocation(pos=22, lineno=2, colno=9)
+                  end_location: SourceLocation(pos=25, lineno=2, colno=12)
+                  fragments:
+                    <class 'mecha.ast.AstMessageText'>
+                      location: SourceLocation(pos=22, lineno=2, colno=9)
+                      end_location: SourceLocation(pos=25, lineno=2, colno=12)
+                      value: 'aaa'
