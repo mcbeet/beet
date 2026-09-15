@@ -199,11 +199,13 @@ class TrialSpawner(JsonFile):
     scope: ClassVar[NamespaceFileScope] = ("trial_spawner",)
     extension: ClassVar[str] = ".json"
 
+
 class BlockTranformer(JsonFile):
     """Class representing a block transformer."""
 
     scope: ClassVar[NamespaceFileScope] = ("block_transformer",)
     extension: ClassVar[str] = ".json"
+
 
 class ContextIntProvider(JsonFile):
     """Class representing a int provider."""
@@ -211,20 +213,19 @@ class ContextIntProvider(JsonFile):
     scope: ClassVar[NamespaceFileScope] = ("context_int_provider",)
     extension: ClassVar[str] = ".json"
 
+
 class ContextFloatProvider(JsonFile):
     """Class representing a float provider."""
 
     scope: ClassVar[NamespaceFileScope] = ("context_float_provider",)
     extension: ClassVar[str] = ".json"
 
+
 class DecoratedPotPattern(JsonFile):
     """Class representing a float provider."""
 
     scope: ClassVar[NamespaceFileScope] = ("decorated_pot_pattern",)
     extension: ClassVar[str] = ".json"
-
-
-
 
 
 class FrogVariant(JsonFile):
@@ -316,7 +317,6 @@ class SlotSource(JsonFile):
 
     scope: ClassVar[NamespaceFileScope] = ("slot_source",)
     extension: ClassVar[str] = ".json"
-
 
 
 @dataclass(eq=False, repr=False)
@@ -685,6 +685,7 @@ class PointOfInterestTypeTag(TagFile):
         "point_of_interest_type",
     )
 
+
 class LootTableTag(TagFile):
     """Class representing a loot table tag."""
 
@@ -692,8 +693,6 @@ class LootTableTag(TagFile):
         "tags",
         "loot_table",
     )
-
-
 
 
 class FrogVariantTag(TagFile):
@@ -1000,6 +999,7 @@ class WolfVariantTag(TagFile):
         "tags",
         "wolf_variant",
     )
+
 
 class DataPackNamespace(Namespace):
     """Class representing a data pack namespace."""

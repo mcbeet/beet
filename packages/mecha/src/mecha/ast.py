@@ -1052,13 +1052,11 @@ class AstSwingAnimation(AstOption):
     """Ast swing animation node."""
 
     parser = "item_slot"
-    options = (
-        {
-            "none",
-            "stab",
-            "whack",
-        }
-    )
+    options = {
+        "none",
+        "stab",
+        "whack",
+    }
 
 
 @dataclass(frozen=True, slots=True)

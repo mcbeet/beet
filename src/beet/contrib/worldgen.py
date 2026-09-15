@@ -238,6 +238,8 @@ class WorldgenCarver(JsonFile):
         "carver",
     )
     extension: ClassVar[str] = ".json"
+
+
 class WorldgenBlockStateProvider(JsonFile):
     """Class representing a block state provider."""
 
@@ -246,6 +248,7 @@ class WorldgenBlockStateProvider(JsonFile):
         "block_state_provider",
     )
     extension: ClassVar[str] = ".json"
+
 
 class WorldgenMaterialRule(JsonFile):
     """Class representing a material rule."""
@@ -256,6 +259,7 @@ class WorldgenMaterialRule(JsonFile):
     )
     extension: ClassVar[str] = ".json"
 
+
 class WorldgenMaterialCondition(JsonFile):
     """Class representing a material condition."""
 
@@ -264,6 +268,7 @@ class WorldgenMaterialCondition(JsonFile):
         "material_condition",
     )
     extension: ClassVar[str] = ".json"
+
 
 class WorldgenFeature(JsonFile):
     """Class representing a wordgen feature."""

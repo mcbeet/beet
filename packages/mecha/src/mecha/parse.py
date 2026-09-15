@@ -576,14 +576,24 @@ def get_default_parsers() -> Dict[str, Parser]:
         "command:argument:minecraft:uuid": delegate("uuid"),
         "command:argument:minecraft:vec2": delegate("vec2"),
         "command:argument:minecraft:vec3": delegate("vec3"),
-        "command:argument:minecraft:context_float_provider": MultilineParser(delegate("resource_location_or_nbt")),
-        "command:argument:minecraft:context_int_provider": MultilineParser(delegate("resource_location_or_nbt")),
-        "command:argument:minecraft:feature": MultilineParser(delegate("resource_location_or_nbt")),
-        "command:argument:minecraft:swing_animation": BasicLiteralParser(AstSwingAnimation),
-        "command:argument:minecraft:slot_source": AlternativeParser([
-            delegate("item_slots"), 
-            MultilineParser(delegate("resource_location_or_nbt"))
-        ]),
+        "command:argument:minecraft:context_float_provider": MultilineParser(
+            delegate("resource_location_or_nbt")
+        ),
+        "command:argument:minecraft:context_int_provider": MultilineParser(
+            delegate("resource_location_or_nbt")
+        ),
+        "command:argument:minecraft:feature": MultilineParser(
+            delegate("resource_location_or_nbt")
+        ),
+        "command:argument:minecraft:swing_animation": BasicLiteralParser(
+            AstSwingAnimation
+        ),
+        "command:argument:minecraft:slot_source": AlternativeParser(
+            [
+                delegate("item_slots"),
+                MultilineParser(delegate("resource_location_or_nbt")),
+            ]
+        ),
         ################################################################################
         # Macro line
         ################################################################################

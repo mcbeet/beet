@@ -53,12 +53,14 @@ def nesting(ctx: Context, opts: NestingOptions):
     mc.spec.multiline = True
 
     if split_version(ctx.minecraft_version) >= (26, 3):
-        commands_json = files("mecha.resources").joinpath("nesting_after_26_3.json").read_text()
+        commands_json = (
+            files("mecha.resources").joinpath("nesting_after_26_3.json").read_text()
+        )
         block_source_type = "source"
     else:
         commands_json = files("mecha.resources").joinpath("nesting.json").read_text()
         block_source_type = "sourcePos"
-    
+
     mc.spec.add_commands(CommandTree.model_validate_json(commands_json))
 
     mc.spec.parsers["nested_root"] = parse_nested_root
@@ -141,7 +143,6 @@ class NestedCommandsTransformer(MutatingReducer):
             "prepend:function:name:commands": "function:name",
         }
         return super().__post_init__()
-
 
     def emit_function(self, path: str, root: AstRoot):
         """Helper method for emitting nested commands into a separate function."""
