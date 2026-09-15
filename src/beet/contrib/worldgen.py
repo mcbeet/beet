@@ -27,6 +27,24 @@ __all__ = [
     "WorldgenFlatLevelGeneratorPresetTag",
     "WorldgenWorldPresetTag",
     "ConfiguredFeatureTag",
+    "WorldgenCarver",
+    "WorldgenBlockStateProvider",
+    "WorldgenMaterialRule",
+    "WorldgenMaterialCondition",
+    "WorldgenFeature",
+    "WorldgenFeatureTag",
+    "DimensionTag",
+    "DimensionTypeTag",
+    "WorldgenBlockStateProviderTag",
+    "WorldgenCarverTag",
+    "WorldgenDensityFunctionTag",
+    "WorldgenMaterialConditionTag",
+    "WorldgenMaterialRuleTag",
+    "WorldgenMultiNoiseBiomeSourceParameterListTag",
+    "WorldgenNoiseSettingsTag",
+    "WorldgenNoiseTag",
+    "WorldgenProcessorListTag",
+    "WorldgenTemplatePoolTag",
 ]
 
 
@@ -69,6 +87,24 @@ def worldgen(pack: Union[Context, DataPack]):
         WorldgenFlatLevelGeneratorPresetTag,
         WorldgenWorldPresetTag,
         ConfiguredFeatureTag,
+        WorldgenCarver,
+        WorldgenBlockStateProvider,
+        WorldgenMaterialRule,
+        WorldgenMaterialCondition,
+        WorldgenFeature,
+        WorldgenFeatureTag,
+        DimensionTag,
+        DimensionTypeTag,
+        WorldgenBlockStateProviderTag,
+        WorldgenCarverTag,
+        WorldgenDensityFunctionTag,
+        WorldgenMaterialConditionTag,
+        WorldgenMaterialRuleTag,
+        WorldgenMultiNoiseBiomeSourceParameterListTag,
+        WorldgenNoiseSettingsTag,
+        WorldgenNoiseTag,
+        WorldgenProcessorListTag,
+        WorldgenTemplatePoolTag,
     ]
 
 
@@ -194,6 +230,67 @@ class WorldgenMultiNoiseBiomeSourceParameterList(JsonFile):
     extension: ClassVar[str] = ".json"
 
 
+class WorldgenCarver(JsonFile):
+    """Class representing a worldgen carver."""
+
+    scope: ClassVar[NamespaceFileScope] = (
+        "worldgen",
+        "carver",
+    )
+    extension: ClassVar[str] = ".json"
+
+
+class WorldgenBlockStateProvider(JsonFile):
+    """Class representing a block state provider."""
+
+    scope: ClassVar[NamespaceFileScope] = (
+        "worldgen",
+        "block_state_provider",
+    )
+    extension: ClassVar[str] = ".json"
+
+
+class WorldgenMaterialRule(JsonFile):
+    """Class representing a material rule."""
+
+    scope: ClassVar[NamespaceFileScope] = (
+        "worldgen",
+        "material_rule",
+    )
+    extension: ClassVar[str] = ".json"
+
+
+class WorldgenMaterialCondition(JsonFile):
+    """Class representing a material condition."""
+
+    scope: ClassVar[NamespaceFileScope] = (
+        "worldgen",
+        "material_condition",
+    )
+    extension: ClassVar[str] = ".json"
+
+
+class WorldgenFeature(JsonFile):
+    """Class representing a wordgen feature."""
+
+    scope: ClassVar[NamespaceFileScope] = (
+        "worldgen",
+        "feature",
+    )
+    extension: ClassVar[str] = ".json"
+
+
+class WorldgenFeatureTag(TagFile):
+    """Class representing a wordgen feature."""
+
+    scope: ClassVar[NamespaceFileScope] = (
+        "tags",
+        "worldgen",
+        "feature",
+    )
+    extension: ClassVar[str] = ".json"
+
+
 class WorldgenBiomeTag(TagFile):
     """Class representing a biome tag."""
 
@@ -245,3 +342,115 @@ class ConfiguredFeatureTag(TagFile):
     """Class representing a configured feature tag."""
 
     scope: ClassVar[NamespaceFileScope] = ("tags", "worldgen", "configured_feature")
+
+
+class DimensionTag(TagFile):
+    """Class representing a dimension tag."""
+
+    scope: ClassVar[NamespaceFileScope] = ("tags", "dimension")
+
+
+class DimensionTypeTag(TagFile):
+    """Class representing a dimension type tag."""
+
+    scope: ClassVar[NamespaceFileScope] = ("tags", "dimension_type")
+
+
+class WorldgenBlockStateProviderTag(TagFile):
+    """Class representing a block state provider tag."""
+
+    scope: ClassVar[NamespaceFileScope] = (
+        "tags",
+        "worldgen",
+        "block_state_provider",
+    )
+
+
+class WorldgenCarverTag(TagFile):
+    """Class representing a worldgen carver tag."""
+
+    scope: ClassVar[NamespaceFileScope] = (
+        "tags",
+        "worldgen",
+        "carver",
+    )
+
+
+class WorldgenDensityFunctionTag(TagFile):
+    """Class representing a density function tag."""
+
+    scope: ClassVar[NamespaceFileScope] = (
+        "tags",
+        "worldgen",
+        "density_function",
+    )
+
+
+class WorldgenMaterialConditionTag(TagFile):
+    """Class representing a material condition tag."""
+
+    scope: ClassVar[NamespaceFileScope] = (
+        "tags",
+        "worldgen",
+        "material_condition",
+    )
+
+
+class WorldgenMaterialRuleTag(TagFile):
+    """Class representing a material rule tag."""
+
+    scope: ClassVar[NamespaceFileScope] = (
+        "tags",
+        "worldgen",
+        "material_rule",
+    )
+
+
+class WorldgenMultiNoiseBiomeSourceParameterListTag(TagFile):
+    """Class representing a multi noise biome source parameter list tag."""
+
+    scope: ClassVar[NamespaceFileScope] = (
+        "tags",
+        "worldgen",
+        "multi_noise_biome_source_parameter_list",
+    )
+
+
+class WorldgenNoiseSettingsTag(TagFile):
+    """Class representing worldgen noise settings tag."""
+
+    scope: ClassVar[NamespaceFileScope] = (
+        "tags",
+        "worldgen",
+        "noise_settings",
+    )
+
+
+class WorldgenNoiseTag(TagFile):
+    """Class representing a worldgen noise tag."""
+
+    scope: ClassVar[NamespaceFileScope] = (
+        "tags",
+        "worldgen",
+        "noise",
+    )
+
+
+class WorldgenProcessorListTag(TagFile):
+    """Class representing a worldgen processor list tag."""
+
+    scope: ClassVar[NamespaceFileScope] = (
+        "tags",
+        "worldgen",
+        "processor_list",
+    )
+
+
+class WorldgenTemplatePoolTag(TagFile):
+    """Class representing a worldgen template pool tag."""
+
+    scope: ClassVar[NamespaceFileScope] = (
+        "tags",
+        "worldgen",
+        "template_pool",
+    )

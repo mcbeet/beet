@@ -495,7 +495,7 @@
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=649, lineno=17, colno=1)
       end_location: SourceLocation(pos=721, lineno=17, colno=73)
-      identifier: 'data:modify:block:targetPos:targetPath:set:value:value'
+      identifier: 'data:modify:block:target:targetPath:set:value:value'
       arguments:
         <class 'mecha.ast.AstVector3'>
           location: SourceLocation(pos=667, lineno=17, colno=19)
@@ -3731,7 +3731,7 @@
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=4113, lineno=92, colno=1)
       end_location: SourceLocation(pos=4183, lineno=92, colno=71)
-      identifier: 'item:replace:block:pos:slot:with:item:count'
+      identifier: 'item:replace:block:target:slots:with:item:count'
       arguments:
         <class 'mecha.ast.AstVector3'>
           location: SourceLocation(pos=4132, lineno=92, colno=20)
@@ -3754,7 +3754,7 @@
               end_location: SourceLocation(pos=4138, lineno=92, colno=26)
               type: 'relative'
               value: 0
-        <class 'mecha.ast.AstItemSlot'>
+        <class 'mecha.ast.AstItemSlots'>
           location: SourceLocation(pos=4139, lineno=92, colno=27)
           end_location: SourceLocation(pos=4151, lineno=92, colno=39)
           value: 'container.26'
@@ -3778,7 +3778,7 @@
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=4184, lineno=93, colno=1)
       end_location: SourceLocation(pos=4247, lineno=93, colno=64)
-      identifier: 'item:replace:entity:targets:slot:with:item:count'
+      identifier: 'item:replace:entity:target:slots:with:item:count'
       arguments:
         <class 'mecha.ast.AstSelector'>
           location: SourceLocation(pos=4204, lineno=93, colno=21)
@@ -3786,7 +3786,7 @@
           variable: 'p'
           arguments:
             <empty>
-        <class 'mecha.ast.AstItemSlot'>
+        <class 'mecha.ast.AstItemSlots'>
           location: SourceLocation(pos=4207, lineno=93, colno=24)
           end_location: SourceLocation(pos=4215, lineno=93, colno=32)
           value: 'hotbar.8'
@@ -3810,7 +3810,7 @@
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=4248, lineno=94, colno=1)
       end_location: SourceLocation(pos=4316, lineno=94, colno=69)
-      identifier: 'item:replace:entity:targets:slot:from:entity:source:sourceSlot'
+      identifier: 'item:replace:entity:target:slots:from:entity:source:sourceSlots'
       arguments:
         <class 'mecha.ast.AstSelector'>
           location: SourceLocation(pos=4268, lineno=94, colno=21)
@@ -3818,7 +3818,7 @@
           variable: 's'
           arguments:
             <empty>
-        <class 'mecha.ast.AstItemSlot'>
+        <class 'mecha.ast.AstItemSlots'>
           location: SourceLocation(pos=4271, lineno=94, colno=24)
           end_location: SourceLocation(pos=4285, lineno=94, colno=38)
           value: 'weapon.offhand'
@@ -3828,7 +3828,7 @@
           variable: 's'
           arguments:
             <empty>
-        <class 'mecha.ast.AstItemSlot'>
+        <class 'mecha.ast.AstItemSlots'>
           location: SourceLocation(pos=4301, lineno=94, colno=54)
           end_location: SourceLocation(pos=4316, lineno=94, colno=69)
           value: 'weapon.mainhand'
@@ -6609,7 +6609,7 @@
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=7607, lineno=180, colno=1)
       end_location: SourceLocation(pos=7674, lineno=180, colno=68)
-      identifier: 'data:modify:block:targetPos:targetPath:set:string:storage:source:sourcePath:start:end'
+      identifier: 'data:modify:block:target:targetPath:set:string:storage:source:sourcePath:start:end'
       arguments:
         <class 'mecha.ast.AstVector3'>
           location: SourceLocation(pos=7625, lineno=180, colno=19)
@@ -6665,7 +6665,7 @@
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=7675, lineno=181, colno=1)
       end_location: SourceLocation(pos=7740, lineno=181, colno=66)
-      identifier: 'data:modify:block:targetPos:targetPath:append:string:block:sourcePos:sourcePath:start:end'
+      identifier: 'data:modify:block:target:targetPath:append:string:block:source:sourcePath:start:end'
       arguments:
         <class 'mecha.ast.AstVector3'>
           location: SourceLocation(pos=7693, lineno=181, colno=19)
@@ -6736,7 +6736,7 @@
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=7741, lineno=182, colno=1)
       end_location: SourceLocation(pos=7809, lineno=182, colno=69)
-      identifier: 'data:modify:block:targetPos:targetPath:prepend:string:entity:source:sourcePath:start:end'
+      identifier: 'data:modify:block:target:targetPath:prepend:string:entity:source:sourcePath:start:end'
       arguments:
         <class 'mecha.ast.AstVector3'>
           location: SourceLocation(pos=7759, lineno=182, colno=19)
@@ -6792,7 +6792,7 @@
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=7810, lineno=183, colno=1)
       end_location: SourceLocation(pos=7882, lineno=183, colno=73)
-      identifier: 'data:modify:block:targetPos:targetPath:insert:index:string:storage:source:sourcePath:start:end'
+      identifier: 'data:modify:block:target:targetPath:insert:index:string:storage:source:sourcePath:start:end'
       arguments:
         <class 'mecha.ast.AstVector3'>
           location: SourceLocation(pos=7828, lineno=183, colno=19)
@@ -6852,7 +6852,7 @@
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=7883, lineno=184, colno=1)
       end_location: SourceLocation(pos=7952, lineno=184, colno=70)
-      identifier: 'data:modify:block:targetPos:targetPath:merge:string:storage:source:sourcePath:start:end'
+      identifier: 'data:modify:block:target:targetPath:merge:string:storage:source:sourcePath:start:end'
       arguments:
         <class 'mecha.ast.AstVector3'>
           location: SourceLocation(pos=7901, lineno=184, colno=19)
@@ -7633,7 +7633,7 @@
             <class 'mecha.ast.AstCommand'>
               location: SourceLocation(pos=8921, lineno=219, colno=15)
               end_location: SourceLocation(pos=9026, lineno=219, colno=120)
-              identifier: 'execute:if:items:entity:entities:slots:item_predicate:subcommand'
+              identifier: 'execute:if:items:entity:source:slots:item_predicate:subcommand'
               arguments:
                 <class 'mecha.ast.AstSelector'>
                   location: SourceLocation(pos=8937, lineno=219, colno=31)
@@ -7666,7 +7666,7 @@
                     <class 'mecha.ast.AstCommand'>
                       location: SourceLocation(pos=8967, lineno=219, colno=61)
                       end_location: SourceLocation(pos=9026, lineno=219, colno=120)
-                      identifier: 'item:modify:entity:targets:slot:modifier'
+                      identifier: 'item:modify:entity:target:slots:modifier'
                       arguments:
                         <class 'mecha.ast.AstSelector'>
                           location: SourceLocation(pos=8986, lineno=219, colno=80)
@@ -7674,7 +7674,7 @@
                           variable: 's'
                           arguments:
                             <empty>
-                        <class 'mecha.ast.AstItemSlot'>
+                        <class 'mecha.ast.AstItemSlots'>
                           location: SourceLocation(pos=8989, lineno=219, colno=83)
                           end_location: SourceLocation(pos=9004, lineno=219, colno=98)
                           value: 'weapon.mainhand'
@@ -7703,7 +7703,7 @@
             <class 'mecha.ast.AstCommand'>
               location: SourceLocation(pos=9041, lineno=220, colno=15)
               end_location: SourceLocation(pos=9142, lineno=220, colno=116)
-              identifier: 'execute:if:items:entity:entities:slots:item_predicate:subcommand'
+              identifier: 'execute:if:items:entity:source:slots:item_predicate:subcommand'
               arguments:
                 <class 'mecha.ast.AstSelector'>
                   location: SourceLocation(pos=9057, lineno=220, colno=31)
@@ -7736,7 +7736,7 @@
                     <class 'mecha.ast.AstCommand'>
                       location: SourceLocation(pos=9085, lineno=220, colno=59)
                       end_location: SourceLocation(pos=9142, lineno=220, colno=116)
-                      identifier: 'item:modify:entity:targets:slot:modifier'
+                      identifier: 'item:modify:entity:target:slots:modifier'
                       arguments:
                         <class 'mecha.ast.AstSelector'>
                           location: SourceLocation(pos=9104, lineno=220, colno=78)
@@ -7744,7 +7744,7 @@
                           variable: 's'
                           arguments:
                             <empty>
-                        <class 'mecha.ast.AstItemSlot'>
+                        <class 'mecha.ast.AstItemSlots'>
                           location: SourceLocation(pos=9107, lineno=220, colno=81)
                           end_location: SourceLocation(pos=9120, lineno=220, colno=94)
                           value: 'player.cursor'

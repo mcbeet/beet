@@ -8,12 +8,12 @@
 {
   "pack": {
     "min_format": [
-      107,
-      1
+      121,
+      0
     ],
     "max_format": [
-      107,
-      1
+      121,
+      0
     ],
     "description": ""
   },
@@ -21,12 +21,12 @@
     "entries": [
       {
         "min_format": [
-          107,
-          1
+          121,
+          0
         ],
         "max_format": [
-          107,
-          1
+          121,
+          0
         ],
         "directory": "old"
       }
