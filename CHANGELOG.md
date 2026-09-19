@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v0.119.0 (2026-09-19)
+
+### Features
+
+- 26.3 update ([#518](https://github.com/mcbeet/beet/pull/518),
+  [`9be3d81`](https://github.com/mcbeet/beet/commit/9be3d81c05aa5d67a53b4e4df87c815b38274ac9))
+
+
 ## v0.118.0 (2026-09-10)
 
 ### Features
