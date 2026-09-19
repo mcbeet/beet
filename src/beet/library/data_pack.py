@@ -57,6 +57,35 @@ __all__ = [
     "TestEnvironment",
     "SulfurCubeArchetype",
     "PotionTag",
+    "BlockTranformer",
+    "ContextIntProvider",
+    "ContextFloatProvider",
+    "DecoratedPotPattern",
+    "SlotSource",
+    "SlotSourceTag",
+    "LootTableTag",
+    "AdvancementTag",
+    "ItemModifierTag",
+    "ContextIntProviderTag",
+    "ContextFloatProviderTag",
+    "RecipeTag",
+    "PredicateTag",
+    "BlockTransformerTag",
+    "CatSoundVariantTag",
+    "ChickenSoundVariantTag",
+    "CowSoundVariantTag",
+    "DecoratedPotPatternTag",
+    "EnchantmentProviderTag",
+    "JukeboxSongTag",
+    "PigSoundVariantTag",
+    "PigVariantTag",
+    "SulfurCubeArchetypeTag",
+    "TestEnvironmentTag",
+    "TestInstanceTag",
+    "TrialSpawnerTag",
+    "TrimMaterialTag",
+    "TrimPatternTag",
+    "WolfVariantTag",
 ]
 
 
@@ -171,6 +200,34 @@ class TrialSpawner(JsonFile):
     extension: ClassVar[str] = ".json"
 
 
+class BlockTranformer(JsonFile):
+    """Class representing a block transformer."""
+
+    scope: ClassVar[NamespaceFileScope] = ("block_transformer",)
+    extension: ClassVar[str] = ".json"
+
+
+class ContextIntProvider(JsonFile):
+    """Class representing a int provider."""
+
+    scope: ClassVar[NamespaceFileScope] = ("context_int_provider",)
+    extension: ClassVar[str] = ".json"
+
+
+class ContextFloatProvider(JsonFile):
+    """Class representing a float provider."""
+
+    scope: ClassVar[NamespaceFileScope] = ("context_float_provider",)
+    extension: ClassVar[str] = ".json"
+
+
+class DecoratedPotPattern(JsonFile):
+    """Class representing a float provider."""
+
+    scope: ClassVar[NamespaceFileScope] = ("decorated_pot_pattern",)
+    extension: ClassVar[str] = ".json"
+
+
 class FrogVariant(JsonFile):
     """Class representing a frog variant."""
 
@@ -252,6 +309,13 @@ class SulfurCubeArchetype(JsonFile):
     """Class representing a sulfur cube archetype."""
 
     scope: ClassVar[NamespaceFileScope] = ("sulfur_cube_archetype",)
+    extension: ClassVar[str] = ".json"
+
+
+class SlotSource(JsonFile):
+    """Class representing a slot source."""
+
+    scope: ClassVar[NamespaceFileScope] = ("slot_source",)
     extension: ClassVar[str] = ".json"
 
 
@@ -622,6 +686,15 @@ class PointOfInterestTypeTag(TagFile):
     )
 
 
+class LootTableTag(TagFile):
+    """Class representing a loot table tag."""
+
+    scope: ClassVar[NamespaceFileScope] = (
+        "tags",
+        "loot_table",
+    )
+
+
 class FrogVariantTag(TagFile):
     """Class representing a frog variant tag."""
 
@@ -721,6 +794,213 @@ class PotionTag(TagFile):
     )
 
 
+class AdvancementTag(TagFile):
+    """Class representing an advancement tag."""
+
+    scope: ClassVar[NamespaceFileScope] = (
+        "tags",
+        "advancement",
+    )
+
+
+class ItemModifierTag(TagFile):
+    """Class representing an item modifier tag."""
+
+    scope: ClassVar[NamespaceFileScope] = (
+        "tags",
+        "item_modifier",
+    )
+
+
+class PredicateTag(TagFile):
+    """Class representing a predicate tag."""
+
+    scope: ClassVar[NamespaceFileScope] = (
+        "tags",
+        "predicate",
+    )
+
+
+class RecipeTag(TagFile):
+    """Class representing a recipe tag."""
+
+    scope: ClassVar[NamespaceFileScope] = (
+        "tags",
+        "recipe",
+    )
+
+
+class ContextFloatProviderTag(TagFile):
+    """Class representing a context float provider tag."""
+
+    scope: ClassVar[NamespaceFileScope] = (
+        "tags",
+        "context_float_provider",
+    )
+
+
+class ContextIntProviderTag(TagFile):
+    """Class representing a context int provider tag."""
+
+    scope: ClassVar[NamespaceFileScope] = (
+        "tags",
+        "context_int_provider",
+    )
+
+
+class SlotSourceTag(TagFile):
+    """Class representing a slot source tag."""
+
+    scope: ClassVar[NamespaceFileScope] = (
+        "tags",
+        "slot_source",
+    )
+
+
+class BlockTransformerTag(TagFile):
+    """Class representing a block transformer tag."""
+
+    scope: ClassVar[NamespaceFileScope] = (
+        "tags",
+        "block_transformer",
+    )
+
+
+class CatSoundVariantTag(TagFile):
+    """Class representing a cat sound variant tag."""
+
+    scope: ClassVar[NamespaceFileScope] = (
+        "tags",
+        "cat_sound_variant",
+    )
+
+
+class ChickenSoundVariantTag(TagFile):
+    """Class representing a chicken sound variant tag."""
+
+    scope: ClassVar[NamespaceFileScope] = (
+        "tags",
+        "chicken_sound_variant",
+    )
+
+
+class CowSoundVariantTag(TagFile):
+    """Class representing a cow sound variant tag."""
+
+    scope: ClassVar[NamespaceFileScope] = (
+        "tags",
+        "cow_sound_variant",
+    )
+
+
+class DecoratedPotPatternTag(TagFile):
+    """Class representing a decorated pot pattern tag."""
+
+    scope: ClassVar[NamespaceFileScope] = (
+        "tags",
+        "decorated_pot_pattern",
+    )
+
+
+class EnchantmentProviderTag(TagFile):
+    """Class representing an enchantment provider tag."""
+
+    scope: ClassVar[NamespaceFileScope] = (
+        "tags",
+        "enchantment_provider",
+    )
+
+
+class JukeboxSongTag(TagFile):
+    """Class representing a jukebox song tag."""
+
+    scope: ClassVar[NamespaceFileScope] = (
+        "tags",
+        "jukebox_song",
+    )
+
+
+class PigSoundVariantTag(TagFile):
+    """Class representing a pig sound variant tag."""
+
+    scope: ClassVar[NamespaceFileScope] = (
+        "tags",
+        "pig_sound_variant",
+    )
+
+
+class PigVariantTag(TagFile):
+    """Class representing a pig variant tag."""
+
+    scope: ClassVar[NamespaceFileScope] = (
+        "tags",
+        "pig_variant",
+    )
+
+
+class SulfurCubeArchetypeTag(TagFile):
+    """Class representing a sulfur cube archetype tag."""
+
+    scope: ClassVar[NamespaceFileScope] = (
+        "tags",
+        "sulfur_cube_archetype",
+    )
+
+
+class TestEnvironmentTag(TagFile):
+    """Class representing a test environment tag."""
+
+    scope: ClassVar[NamespaceFileScope] = (
+        "tags",
+        "test_environment",
+    )
+
+
+class TestInstanceTag(TagFile):
+    """Class representing a test instance tag."""
+
+    scope: ClassVar[NamespaceFileScope] = (
+        "tags",
+        "test_instance",
+    )
+
+
+class TrialSpawnerTag(TagFile):
+    """Class representing a trial spawner tag."""
+
+    scope: ClassVar[NamespaceFileScope] = (
+        "tags",
+        "trial_spawner",
+    )
+
+
+class TrimMaterialTag(TagFile):
+    """Class representing a trim material tag."""
+
+    scope: ClassVar[NamespaceFileScope] = (
+        "tags",
+        "trim_material",
+    )
+
+
+class TrimPatternTag(TagFile):
+    """Class representing a trim pattern tag."""
+
+    scope: ClassVar[NamespaceFileScope] = (
+        "tags",
+        "trim_pattern",
+    )
+
+
+class WolfVariantTag(TagFile):
+    """Class representing a wolf variant tag."""
+
+    scope: ClassVar[NamespaceFileScope] = (
+        "tags",
+        "wolf_variant",
+    )
+
+
 class DataPackNamespace(Namespace):
     """Class representing a data pack namespace."""
 
@@ -790,6 +1070,35 @@ class DataPackNamespace(Namespace):
     world_clock_tags:                   NamespacePin[WorldClockTag]             = NamespacePin(WorldClockTag)
     potion_tags:                        NamespacePin[PotionTag]                 = NamespacePin(PotionTag)
     sulfur_cube_archetypes:             NamespacePin[SulfurCubeArchetype]       = NamespacePin(SulfurCubeArchetype)
+    block_transformers:                 NamespacePin[BlockTranformer]           = NamespacePin(BlockTranformer)
+    context_int_providers:              NamespacePin[ContextIntProvider]        = NamespacePin(ContextIntProvider)
+    context_float_providers:            NamespacePin[ContextFloatProvider]      = NamespacePin(ContextFloatProvider)
+    decorated_pot_patterns:             NamespacePin[DecoratedPotPattern]       = NamespacePin(DecoratedPotPattern)
+    loot_tables_tags:                   NamespacePin[LootTableTag]              = NamespacePin(LootTableTag)
+    slot_sources:                       NamespacePin[SlotSource]                = NamespacePin(SlotSource)
+    slot_source_tags:                   NamespacePin[SlotSourceTag]             = NamespacePin(SlotSourceTag)
+    advancement_tags:                   NamespacePin[AdvancementTag]            = NamespacePin(AdvancementTag)
+    item_modifier_tags:                 NamespacePin[ItemModifierTag]           = NamespacePin(ItemModifierTag)
+    predicate_tags:                     NamespacePin[PredicateTag]              = NamespacePin(PredicateTag)
+    recipe_tags:                        NamespacePin[RecipeTag]                 = NamespacePin(RecipeTag)
+    context_float_provider_tags:        NamespacePin[ContextFloatProviderTag]   = NamespacePin(ContextFloatProviderTag)
+    context_int_provider_tags:          NamespacePin[ContextIntProviderTag]     = NamespacePin(ContextIntProviderTag)
+    block_transformer_tags:             NamespacePin[BlockTransformerTag]       = NamespacePin(BlockTransformerTag)
+    cat_sound_variant_tags:             NamespacePin[CatSoundVariantTag]        = NamespacePin(CatSoundVariantTag)
+    chicken_sound_variant_tags:         NamespacePin[ChickenSoundVariantTag]    = NamespacePin(ChickenSoundVariantTag)
+    cow_sound_variant_tags:             NamespacePin[CowSoundVariantTag]        = NamespacePin(CowSoundVariantTag)
+    decorated_pot_pattern_tags:         NamespacePin[DecoratedPotPatternTag]    = NamespacePin(DecoratedPotPatternTag)
+    enchantment_provider_tags:          NamespacePin[EnchantmentProviderTag]    = NamespacePin(EnchantmentProviderTag)
+    jukebox_song_tags:                  NamespacePin[JukeboxSongTag]            = NamespacePin(JukeboxSongTag)
+    pig_sound_variant_tags:             NamespacePin[PigSoundVariantTag]        = NamespacePin(PigSoundVariantTag)
+    pig_variant_tags:                   NamespacePin[PigVariantTag]             = NamespacePin(PigVariantTag)
+    sulfur_cube_archetype_tags:         NamespacePin[SulfurCubeArchetypeTag]    = NamespacePin(SulfurCubeArchetypeTag)
+    test_environment_tags:              NamespacePin[TestEnvironmentTag]        = NamespacePin(TestEnvironmentTag)
+    test_instance_tags:                 NamespacePin[TestInstanceTag]           = NamespacePin(TestInstanceTag)
+    trial_spawner_tags:                 NamespacePin[TrialSpawnerTag]           = NamespacePin(TrialSpawnerTag)
+    trim_material_tags:                 NamespacePin[TrimMaterialTag]           = NamespacePin(TrimMaterialTag)
+    trim_pattern_tags:                  NamespacePin[TrimPatternTag]            = NamespacePin(TrimPatternTag)
+    wolf_variant_tags:                  NamespacePin[WolfVariantTag]            = NamespacePin(WolfVariantTag)
 
     # fmt: on
 
@@ -869,6 +1178,35 @@ class DataPack(Pack[DataPackNamespace]):
     world_clock_tags:                   NamespaceProxyDescriptor[WorldClockTag]             = NamespaceProxyDescriptor(WorldClockTag)
     potion_tags:                        NamespaceProxyDescriptor[PotionTag]                 = NamespaceProxyDescriptor(PotionTag)
     sulfur_cube_archetypes:             NamespaceProxyDescriptor[SulfurCubeArchetype]       = NamespaceProxyDescriptor(SulfurCubeArchetype)
+    block_transformers:                 NamespaceProxyDescriptor[BlockTranformer]           = NamespaceProxyDescriptor(BlockTranformer)
+    context_int_providers:              NamespaceProxyDescriptor[ContextIntProvider]        = NamespaceProxyDescriptor(ContextIntProvider)
+    context_float_providers:            NamespaceProxyDescriptor[ContextFloatProvider]      = NamespaceProxyDescriptor(ContextFloatProvider)
+    decorated_pot_patterns:             NamespaceProxyDescriptor[DecoratedPotPattern]       = NamespaceProxyDescriptor(DecoratedPotPattern)
+    loot_tables_tags:                   NamespaceProxyDescriptor[LootTableTag]              = NamespaceProxyDescriptor(LootTableTag)
+    slot_sources:                       NamespaceProxyDescriptor[SlotSource]                = NamespaceProxyDescriptor(SlotSource)
+    slot_source_tags:                   NamespaceProxyDescriptor[SlotSourceTag]             = NamespaceProxyDescriptor(SlotSourceTag)
+    advancement_tags:                   NamespaceProxyDescriptor[AdvancementTag]            = NamespaceProxyDescriptor(AdvancementTag)
+    item_modifier_tags:                 NamespaceProxyDescriptor[ItemModifierTag]           = NamespaceProxyDescriptor(ItemModifierTag)
+    predicate_tags:                     NamespaceProxyDescriptor[PredicateTag]              = NamespaceProxyDescriptor(PredicateTag)
+    recipe_tags:                        NamespaceProxyDescriptor[RecipeTag]                 = NamespaceProxyDescriptor(RecipeTag)
+    context_float_provider_tags:        NamespaceProxyDescriptor[ContextFloatProviderTag]   = NamespaceProxyDescriptor(ContextFloatProviderTag)
+    context_int_provider_tags:          NamespaceProxyDescriptor[ContextIntProviderTag]     = NamespaceProxyDescriptor(ContextIntProviderTag)
+    block_transformer_tags:             NamespaceProxyDescriptor[BlockTransformerTag]       = NamespaceProxyDescriptor(BlockTransformerTag)
+    cat_sound_variant_tags:             NamespaceProxyDescriptor[CatSoundVariantTag]        = NamespaceProxyDescriptor(CatSoundVariantTag)
+    chicken_sound_variant_tags:         NamespaceProxyDescriptor[ChickenSoundVariantTag]    = NamespaceProxyDescriptor(ChickenSoundVariantTag)
+    cow_sound_variant_tags:             NamespaceProxyDescriptor[CowSoundVariantTag]        = NamespaceProxyDescriptor(CowSoundVariantTag)
+    decorated_pot_pattern_tags:         NamespaceProxyDescriptor[DecoratedPotPatternTag]    = NamespaceProxyDescriptor(DecoratedPotPatternTag)
+    enchantment_provider_tags:          NamespaceProxyDescriptor[EnchantmentProviderTag]    = NamespaceProxyDescriptor(EnchantmentProviderTag)
+    jukebox_song_tags:                  NamespaceProxyDescriptor[JukeboxSongTag]            = NamespaceProxyDescriptor(JukeboxSongTag)
+    pig_sound_variant_tags:             NamespaceProxyDescriptor[PigSoundVariantTag]        = NamespaceProxyDescriptor(PigSoundVariantTag)
+    pig_variant_tags:                   NamespaceProxyDescriptor[PigVariantTag]             = NamespaceProxyDescriptor(PigVariantTag)
+    sulfur_cube_archetype_tags:         NamespaceProxyDescriptor[SulfurCubeArchetypeTag]    = NamespaceProxyDescriptor(SulfurCubeArchetypeTag)
+    test_environment_tags:              NamespaceProxyDescriptor[TestEnvironmentTag]        = NamespaceProxyDescriptor(TestEnvironmentTag)
+    test_instance_tags:                 NamespaceProxyDescriptor[TestInstanceTag]           = NamespaceProxyDescriptor(TestInstanceTag)
+    trial_spawner_tags:                 NamespaceProxyDescriptor[TrialSpawnerTag]           = NamespaceProxyDescriptor(TrialSpawnerTag)
+    trim_material_tags:                 NamespaceProxyDescriptor[TrimMaterialTag]           = NamespaceProxyDescriptor(TrimMaterialTag)
+    trim_pattern_tags:                  NamespaceProxyDescriptor[TrimPatternTag]            = NamespaceProxyDescriptor(TrimPatternTag)
+    wolf_variant_tags:                  NamespaceProxyDescriptor[WolfVariantTag]            = NamespaceProxyDescriptor(WolfVariantTag)
 
 
     # fmt: on
