@@ -9,6 +9,7 @@ __all__ = [
 import csv
 import logging
 import os
+import hashlib
 import pickle
 import sys
 from contextlib import contextmanager
@@ -376,6 +377,32 @@ class Mecha:
 
             cache_miss = ast_path
 
+        if self.cache and (resource_location and not filename):
+            ast_path = self.cache.get_path(f"{resource_location}-ast")
+            # compile the hash of the file at resource_location
+            hash = hashlib.sha256(source.text.encode("utf-8")).hexdigest()
+            changed = False
+            known_hash = self.cache.json.get("resource_location_hashes", {}).get(
+                resource_location
+            )
+            if known_hash != hash:
+                changed = True
+            self.cache.json.setdefault("resource_location_hashes", {})[
+                resource_location
+            ] = hash
+            if not changed:
+                try:
+                    with ast_path.open("rb") as f:
+                        ast = self.cache_backend.load(f)
+                        logger.debug(
+                            'Load cached ast for file "%s".', resource_location
+                        )
+                        return ast
+                except Exception:
+                    pass
+
+            cache_miss = ast_path
+
         stream = TokenStream(
             source.text,
             preprocessor=preprocessor or self.preprocessor,
@@ -388,6 +415,10 @@ class Mecha:
         except InvalidSyntax as exc:
             if self.cache and filename and cache_miss:
                 self.cache.invalidate_changes(self.directory / filename)
+            if self.cache and (resource_location and not filename) and cache_miss:
+                self.cache.json.get("resource_location_hashes", {}).pop(
+                    resource_location, None
+                )
             d = Diagnostic(
                 level="error",
                 message=str(exc),
@@ -398,11 +429,14 @@ class Mecha:
             )
             raise DiagnosticError(DiagnosticCollection([set_location(d, exc)])) from exc
         else:
-            if self.cache and filename and cache_miss:
+            if self.cache and (filename or resource_location) and cache_miss:
                 try:
                     with cache_miss.open("wb") as f:
                         self.cache_backend.dump(ast, f)
-                        logger.debug('Update cached ast for file "%s".', filename)
+                        logger.debug(
+                            'Update cached ast for file "%s".',
+                            filename or resource_location,
+                        )
                 except Exception:
                     pass
             return ast
