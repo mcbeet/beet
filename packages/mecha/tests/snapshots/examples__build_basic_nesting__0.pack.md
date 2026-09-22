@@ -8,12 +8,12 @@
 {
   "pack": {
     "min_format": [
-      107,
-      1
+      121,
+      0
     ],
     "max_format": [
-      107,
-      1
+      121,
+      0
     ],
     "description": ""
   }
@@ -71,10 +71,12 @@ function demo:foo/nested_macro_0 with entity @s
 function demo:foo/nested_macro_1 with entity @s Inventory
 function demo:foo/nested_macro_2 with storage demo:temp
 function demo:foo/nested_macro_3 with storage demo:temp args
-function demo:foo/nested_macro_4 with block ~ ~ ~
-function demo:foo/nested_macro_5 with block ~ ~ ~ Items
-function demo:foo/nested_macro_6 with storage demo:temp
-function demo:foo/nested_macro_7 with storage demo:temp args
+with block ~ ~ ~ say anonymous definition 5
+
+with block ~ ~ ~ Items say anonymous definition 6
+
+function demo:foo/nested_macro_4 with storage demo:temp
+function demo:foo/nested_macro_5 with storage demo:temp args
 return run say inline by default
 return run function demo:named_return_run
 return run say inlined command
@@ -243,22 +245,10 @@ say anonymous definition 4
 `@function demo:foo/nested_macro_4`
 
 ```mcfunction
-say anonymous definition 5
-```
-
-`@function demo:foo/nested_macro_5`
-
-```mcfunction
-say anonymous definition 6
-```
-
-`@function demo:foo/nested_macro_6`
-
-```mcfunction
 say anonymous definition 7
 ```
 
-`@function demo:foo/nested_macro_7`
+`@function demo:foo/nested_macro_5`
 
 ```mcfunction
 say anonymous definition 8

@@ -10,12 +10,12 @@ __all__ = [
 
 from dataclasses import dataclass, field, replace
 from importlib.resources import files
-from typing import Generator, List, cast
+from typing import Generator, List, Literal, cast
 
 from beet import Context, Function
 from beet import Generator as BeetGenerator
 from beet import configurable
-from beet.core.utils import required_field
+from beet.core.utils import required_field, split_version
 from pydantic import BaseModel
 from tokenstream import InvalidSyntax, TokenStream, set_location
 
@@ -54,7 +54,15 @@ def nesting(ctx: Context, opts: NestingOptions):
 
     mc.spec.multiline = True
 
-    commands_json = files("mecha.resources").joinpath("nesting.json").read_text()
+    if split_version(ctx.minecraft_version) >= (26, 3):
+        commands_json = (
+            files("mecha.resources").joinpath("nesting_after_26_3.json").read_text()
+        )
+        block_source_type = "source"
+    else:
+        commands_json = files("mecha.resources").joinpath("nesting.json").read_text()
+        block_source_type = "sourcePos"
+
     mc.spec.add_commands(CommandTree.model_validate_json(commands_json))
 
     mc.spec.parsers["nested_root"] = parse_nested_root
@@ -68,6 +76,7 @@ def nesting(ctx: Context, opts: NestingOptions):
             generate_macro_template=opts.generate_macro,
             generate_return_template=opts.generate_return,
             nested_location_resolver=ctx.inject(NestedLocationResolver),
+            block_source_type=block_source_type,
         )
     )
 
@@ -122,12 +131,15 @@ class NestedCommandsTransformer(MutatingReducer):
     generate_return_template: str = required_field()
     nested_location_resolver: NestedLocationResolver = required_field()
 
-    identifier_map: dict[str, str] = field(
-        default_factory=lambda: {
+    identifier_map: dict[str, str] = field(init=False)
+    block_source_type: Literal["source", "sourcePos"] = field(default="sourcePos")
+
+    def __post_init__(self):
+        self.identifier_map = {
             "function:name:commands": "function:name",
             "function:name:arguments:commands": "function:name:arguments",
-            "function:name:with:block:sourcePos:commands": "function:name:with:block:sourcePos",
-            "function:name:with:block:sourcePos:path:commands": "function:name:with:block:sourcePos:path",
+            f"function:name:with:block:{self.block_source_type}:commands": f"function:name:with:block:{self.block_source_type}",
+            f"function:name:with:block:{self.block_source_type}:path:commands": f"function:name:with:block:{self.block_source_type}:path",
             "function:name:with:entity:source:commands": "function:name:with:entity:source",
             "function:name:with:entity:source:path:commands": "function:name:with:entity:source:path",
             "function:name:with:storage:source:commands": "function:name:with:storage:source",
@@ -135,7 +147,7 @@ class NestedCommandsTransformer(MutatingReducer):
             "append:function:name:commands": "function:name",
             "prepend:function:name:commands": "function:name",
         }
-    )
+        return super().__post_init__()
 
     def emit_function(self, path: str, root: AstRoot):
         """Helper method for emitting nested commands into a separate function."""
@@ -220,10 +232,10 @@ class NestedCommandsTransformer(MutatingReducer):
             arguments=AstChildren([subcommand]),
         )
 
-    @rule(AstCommand, identifier="with:block:sourcePos:commands")
-    @rule(AstCommand, identifier="with:block:sourcePos")
-    @rule(AstCommand, identifier="with:block:sourcePos:path:commands")
-    @rule(AstCommand, identifier="with:block:sourcePos:path")
+    @rule(AstCommand, identifier=f"with:block:{block_source_type}:commands")
+    @rule(AstCommand, identifier=f"with:block:{block_source_type}")
+    @rule(AstCommand, identifier=f"with:block:{block_source_type}:path:commands")
+    @rule(AstCommand, identifier=f"with:block:{block_source_type}:path")
     @rule(AstCommand, identifier="with:entity:source:commands")
     @rule(AstCommand, identifier="with:entity:source")
     @rule(AstCommand, identifier="with:entity:source:path:commands")
@@ -350,8 +362,8 @@ class NestedCommandsTransformer(MutatingReducer):
             if top_level:
                 if node.identifier in (
                     "function:name:arguments:commands",
-                    "function:name:with:block:sourcePos:commands",
-                    "function:name:with:block:sourcePos:path:commands",
+                    f"function:name:with:block:{self.block_source_type}:commands",
+                    f"function:name:with:block:{self.block_source_type}:path:commands",
                     "function:name:with:entity:source:commands",
                     "function:name:with:entity:source:path:commands",
                     "function:name:with:storage:source:commands",

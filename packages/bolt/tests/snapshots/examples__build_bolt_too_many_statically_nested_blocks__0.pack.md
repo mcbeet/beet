@@ -8,12 +8,12 @@
 {
   "pack": {
     "min_format": [
-      107,
-      1
+      121,
+      0
     ],
     "max_format": [
-      107,
-      1
+      121,
+      0
     ],
     "description": ""
   }
@@ -35,7 +35,7 @@ _bolt_helper_interpolate_nbt = _bolt_runtime.helpers['interpolate_nbt']
 _bolt_helper_replace = _bolt_runtime.helpers['replace']
 _bolt_helper_interpolate_numeric = _bolt_runtime.helpers['interpolate_numeric']
 _bolt_helper_interpolate_resource_location = _bolt_runtime.helpers['interpolate_resource_location']
-_bolt_helper_interpolate_item_slot = _bolt_runtime.helpers['interpolate_item_slot']
+_bolt_helper_interpolate_item_slots = _bolt_runtime.helpers['interpolate_item_slots']
 _bolt_helper_exit_stack = _bolt_runtime.helpers['exit_stack']
 with _bolt_helper_exit_stack() as _bolt_fused_with_statement9:
     __bolt_var37 = _bolt_fused_with_statement9.enter_context(_bolt_runtime.scope())
@@ -230,7 +230,7 @@ with _bolt_helper_exit_stack() as _bolt_fused_with_statement9:
                         _bolt_fused_with_statement5.enter_context(_bolt_runtime.push_nesting('execute:run:subcommand'))
                         __bolt_var32 = i
                         __bolt_var33 = 'container.{}'.format(__bolt_var32)
-                        __bolt_var33 = _bolt_helper_interpolate_item_slot(__bolt_var33, _bolt_refs[93])
+                        __bolt_var33 = _bolt_helper_interpolate_item_slots(__bolt_var33, _bolt_refs[93])
                     _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[99], arguments=_bolt_helper_children([_bolt_helper_replace(_bolt_refs[98], arguments=_bolt_helper_children([*_bolt_helper_children([_bolt_refs[92], _bolt_helper_replace(_bolt_refs[91], components=_bolt_helper_children([_bolt_refs[90], _bolt_helper_replace(_bolt_refs[89], index=_bolt_helper_replace(_bolt_refs[88], entries=_bolt_helper_children([_bolt_helper_replace(_bolt_refs[86], value=__bolt_var30), _bolt_refs[87]])))]))]), _bolt_helper_replace(_bolt_refs[97], arguments=_bolt_helper_children([_bolt_helper_replace(_bolt_refs[96], arguments=_bolt_helper_children([_bolt_refs[94], __bolt_var33, _bolt_refs[95]]))]))]))])))
             _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[108], arguments=_bolt_helper_children([_bolt_helper_replace(_bolt_refs[107], arguments=_bolt_helper_children([*_bolt_refs[104:107], _bolt_helper_replace(_bolt_refs[103], arguments=_bolt_helper_children([_bolt_helper_replace(_bolt_refs[102], arguments=_bolt_helper_children([*_bolt_refs[101:102], _bolt_helper_replace(_bolt_refs[100], commands=_bolt_helper_children(__bolt_var34))]))]))]))])))
         _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[120], arguments=_bolt_helper_children([_bolt_helper_replace(_bolt_refs[119], arguments=_bolt_helper_children([*_bolt_refs[116:119], _bolt_helper_replace(_bolt_refs[115], arguments=_bolt_helper_children([_bolt_helper_replace(_bolt_refs[114], arguments=_bolt_helper_children([*_bolt_refs[113:114], _bolt_helper_replace(_bolt_refs[112], commands=_bolt_helper_children(__bolt_var35))]))]))]))])))
