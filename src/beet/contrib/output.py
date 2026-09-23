@@ -40,7 +40,7 @@ def scan_directory(directory: Path) -> dict[str, tuple[int, int]]:
     """
     result: dict[str, tuple[int, int]] = {}
 
-	# Recursive os.scandir() pass
+    # Recursive os.scandir() pass
     def walk(path: str, prefix: str) -> None:
         with os.scandir(path) as entries:
             for entry in entries:
@@ -202,7 +202,7 @@ def output(ctx: Context, opts: OutputOptions):
         )
 
     paths: list[Path] = [ctx.directory / path for path in opts.directory.entries()]
-    packs: list[Pack] = [pack for pack in ctx.packs if pack]
+    packs: list[Pack[Any]] = [pack for pack in ctx.packs if pack]
 
     if paths and packs:
         with log_time_scope("Output files."):
