@@ -136,14 +136,32 @@ class ContextContainer(Container[Callable[["Context"], Any], Any]):
 
 
 class ProjectCache(MultiCache[Cache]):
-    """The project cache.
+    r"""The project cache.
 
     The `generated` attribute is a MultiCache instance that's
     meant to be tracked by version control, unlike the main project
     cache that usually lives in the ignored `.beet_cache` directory.
+
+    The `shared` attribute is a MultiCache instance that's bound to a
+    platform-dependent shared global directory outside the project,
+    somewhere in the user's home folder.
+
+        Windows     C:\Users\<you>\AppData\Local\beet\cache
+        MacOS       /Users/<you>/Library/Application Support/beet/cache
+        Linux       /home/<you>/.local/share/beet/cache
+
+    The `shared` cache is useful to centralize downloads and resources
+    that would normally be duplicated into every project cache.
+
+    If the project cache is instantiated without explicit access to the
+    shared cache, for example when using the --tmpdir option,
+    the `shared` attribute will map to `self`. This gracefully
+    downgrades all operations against the shared cache to operations
+    against the local project cache.
     """
 
     generated: MultiCache[Cache]
+    shared: MultiCache[Cache]
 
     def __init__(
         self,
@@ -152,18 +170,24 @@ class ProjectCache(MultiCache[Cache]):
         default_cache: str = "default",
         gitignore: bool = True,
         cache_type: Type[Cache] = Cache,
+        shared: MultiCache[Cache] | None = None,
     ):
-        super().__init__(directory, default_cache, gitignore, cache_type=Cache)
+        super().__init__(directory, default_cache, gitignore, cache_type=cache_type)
         self.generated = MultiCache(
             generated_directory,
             default_cache,
             gitignore=False,
             cache_type=cache_type,
         )
+        if shared is None:
+            shared = self
+        self.shared = shared
 
     def flush(self):
         super().flush()
         self.generated.flush()
+        if self.shared is not self:
+            self.shared.flush()
 
 
 @dataclass(eq=False, frozen=True)

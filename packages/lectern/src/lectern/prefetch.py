@@ -25,7 +25,7 @@ class MarkdownPrefetcher:
     extractor: MarkdownExtractor = field(default_factory=MarkdownExtractor)
 
     def __post_init__(self, cache: Optional[Cache]):
-        if cache:
+        if cache is not None:
             self.extractor.cache = cache
 
     def process_file(

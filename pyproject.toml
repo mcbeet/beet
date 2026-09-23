@@ -26,6 +26,7 @@ dependencies = [
     "nbtlib==1.12.1",
     "pathspec>=0.12.1",
     "pillow>=12.0.0",
+    "platformdirs>=4.11.11",
     "pydantic>=2.12.4",
     "pyyaml>=6.0.3",
     "toml>=0.10.2",

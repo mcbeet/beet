@@ -5,10 +5,14 @@ __all__ = [
     "load_vanilla",
     "Vanilla",
     "VanillaOptions",
+    "RuntimeRegistry",
+    "Runtime",
     "ReleaseRegistry",
     "Release",
     "ClientJar",
+    "ServerJar",
     "AssetIndex",
+    "ReportsContainer",
     "MANIFEST_URL",
     "RESOURCES_URL",
 ]
@@ -18,7 +22,8 @@ import os
 import re
 from pathlib import Path
 import stat
-from typing import Iterator, Optional, Union
+import subprocess
+from typing import Iterator, Optional, Self, Union
 from zipfile import ZipFile
 from platform import system, machine
 from beet import (
@@ -28,6 +33,7 @@ from beet import (
     Context,
     DataPack,
     JsonFile,
+    MatchMixin,
     PackFilesOption,
     PackMatchOption,
     PluginOptions,
@@ -84,7 +90,7 @@ class ClientJar:
         else:
             return self
 
-        if not path.is_dir():
+        if self.cache.update(path):
             with log_time_scope("Extract vanilla pack."):
                 pack.load(ZipFile(self.path))
                 pack.save(path=path)
@@ -127,7 +133,7 @@ class AssetIndex(Container[str, FileSystemPath]):
 
         path = self.cache.directory / "objects" / object_hash[:2] / object_hash
 
-        if not path.is_file():
+        if self.cache.update(path):
             path.parent.mkdir(parents=True, exist_ok=True)
             self.cache.download(
                 f"{RESOURCES_URL}/{object_hash[:2]}/{object_hash}",
@@ -155,110 +161,47 @@ class ServerJar:
         self.path = Path(path)
 
 
-class Release:
-    """Class holding information about a minecraft release."""
+class ReportsContainer(MatchMixin, Container[str, JsonFile]):
+    """Container that stores data generator reports."""
 
-    cache: Cache
-    info: JsonFile
+    _directory: Path
+    _mounted: set[str]
 
-    _client_jar: Optional[ClientJar]
-    _server_jar: Optional[ServerJar]
-    _object_mapping: Optional[UnveilMapping]
-
-    def __init__(self, cache: Cache, info: JsonFile):
-        self.cache = cache
-        self.info = info
-        self._client_jar = None
-        self._server_jar = None
-        self._object_mapping = None
-
-    @property
-    def type(self) -> str:
-        return self.info.data["type"]
-
-    @property
-    def runtime(self) -> str:
-        return self.info.data["javaVersion"]["component"]
-
-    @property
-    def client_jar(self) -> ClientJar:
-        if not self._client_jar:
-            path = self.cache.download(self.info.data["downloads"]["client"]["url"])
-            self._client_jar = ClientJar(self.cache, path)
-        return self._client_jar
-
-    @property
-    def server_jar(self) -> ServerJar:
-        if not self._server_jar:
-            path = self.cache.download(self.info.data["downloads"]["server"]["url"])
-            self._server_jar = ServerJar(self.cache, path)
-        return self._server_jar
-
-    @property
-    def object_mapping(self) -> UnveilMapping:
-        if not self._object_mapping:
-            path = self.cache.download(self.info.data["assetIndex"]["url"])
-            self._object_mapping = UnveilMapping(
-                AssetIndex(self.cache, JsonFile(source_path=path))
-            )
-        return self._object_mapping
-
-    def mount(
-        self,
-        prefix: Optional[str] = None,
-        fetch_objects: bool = False,
-    ) -> ClientJar:
-        return self.client_jar.mount(
-            prefix=prefix,
-            object_mapping=self.object_mapping if fetch_objects else None,
-        )
-
-    @property
-    def assets(self) -> ResourcePack:
-        return self.mount("assets").assets
-
-    @property
-    def data(self) -> DataPack:
-        return self.mount("data").data
-
-
-class ReleaseRegistry(Container[str, Release]):
-    """Registry for minecraft releases."""
-
-    cache: Cache
-    manifest: JsonFile
-
-    def __init__(
-        self,
-        cache: Cache,
-        manifest: Optional[Union[FileSystemPath, JsonFile]] = None,
-    ):
+    def __init__(self, directory: Path):
         super().__init__()
-        self.cache = cache
+        self._directory = directory
+        self._mounted = set()
 
-        manifest = manifest or MANIFEST_URL
+    def mount(self, prefix: str = "") -> Self:
+        if prefix in self._mounted:
+            return self
 
-        if isinstance(manifest, str) and manifest.startswith(("http://", "https://")):
-            manifest = self.cache.download(manifest)
-        if not isinstance(manifest, JsonFile):
-            manifest = JsonFile(source_path=manifest)
+        to_remove: set[str] = set()
+        for mnt in self._mounted:
+            if prefix.startswith(mnt):
+                return self
+            if mnt.startswith(prefix):
+                to_remove.add(mnt)
 
-        self.manifest = manifest
+        self._mounted -= to_remove
+        self._mounted.add(prefix)
 
-    def missing(self, key: str) -> Release:
-        pattern = re.compile(
-            "^"
-            + "|".join(
-                r"\d+".join(map(re.escape, k.split("*")))
-                for k in [key, key.removesuffix(".*")]
+        if prefix.endswith(".json"):
+            result = [self._directory / prefix]
+        elif prefix:
+            result = list(self._directory.glob(f"{prefix}/**/*.json"))
+        else:
+            result = list(self._directory.glob("**/*.json"))
+
+        self._wrapped.update(
+            (
+                "/".join(child.with_suffix("").relative_to(self._directory).parts),
+                JsonFile(source_path=child),
             )
-            + "$"
+            for child in result
         )
-        for version in self.manifest.data["versions"]:
-            if pattern.match(version["id"]):
-                info = JsonFile(source_path=self.cache.download(version["url"]))
-                return Release(self.cache, info)
-        raise KeyError(key)
+
+        return self
 
 
 class Runtime:
@@ -283,10 +226,10 @@ class Runtime:
             files: JsonDict = self.info.data["files"]
             is_windows = system() == "Windows"
 
-            dest.mkdir(exist_ok=True)
-
-            with self.cache.parallel_downloads():
-                self.download_files(dest, files, is_windows)
+            if self.cache.update(dest):
+                dest.mkdir()
+                with self.cache.parallel_downloads():
+                    self.download_files(dest, files, is_windows)
 
             java = "bin/java.exe" if is_windows else "bin/java"
             self._java = dest / next(path for path in files if path.endswith(java))
@@ -303,7 +246,7 @@ class Runtime:
             entry_type = meta["type"]
 
             if entry_type == "directory":
-                target.mkdir(exist_ok=True)
+                target.mkdir()
 
             elif entry_type == "link":
                 if is_windows:
@@ -340,7 +283,7 @@ class RuntimeRegistry(Container[str, Runtime]):
         manifest = manifest or RUNTIMES_URL
 
         if isinstance(manifest, str) and manifest.startswith(("http://", "https://")):
-            manifest = self.cache.download(manifest)
+            manifest = self.cache.download(manifest, max_age=3600)
         if not isinstance(manifest, JsonFile):
             manifest = JsonFile(source_path=manifest)
 
@@ -378,13 +321,156 @@ class RuntimeRegistry(Container[str, Runtime]):
         raise KeyError(key)
 
 
+class Release:
+    """Class holding information about a minecraft release."""
+
+    runtime: Runtime
+    cache: Cache
+    info: JsonFile
+
+    _client_jar: Optional[ClientJar]
+    _server_jar: Optional[ServerJar]
+    _object_mapping: Optional[UnveilMapping]
+    _reports: ReportsContainer | None
+
+    def __init__(self, runtime: Runtime, cache: Cache, info: JsonFile):
+        self.runtime = runtime
+        self.cache = cache
+        self.info = info
+        self._client_jar = None
+        self._server_jar = None
+        self._object_mapping = None
+        self._reports = None
+
+    @property
+    def type(self) -> str:
+        return self.info.data["type"]
+
+    @property
+    def client_jar(self) -> ClientJar:
+        if not self._client_jar:
+            release_id = self.info.data["id"]
+            path = self.cache.directory / f"{release_id}-client" / "client.jar"
+            path.parent.mkdir(exist_ok=True)
+            self.cache.download(self.info.data["downloads"]["client"]["url"], path)
+            self._client_jar = ClientJar(self.cache, path)
+        return self._client_jar
+
+    @property
+    def server_jar(self) -> ServerJar:
+        if not self._server_jar:
+            release_id = self.info.data["id"]
+            path = self.cache.directory / f"{release_id}-server" / "server.jar"
+            path.parent.mkdir(exist_ok=True)
+            self.cache.download(self.info.data["downloads"]["server"]["url"], path)
+            self._server_jar = ServerJar(self.cache, path)
+        return self._server_jar
+
+    @property
+    def object_mapping(self) -> UnveilMapping:
+        if not self._object_mapping:
+            path = self.cache.download(self.info.data["assetIndex"]["url"])
+            self._object_mapping = UnveilMapping(
+                AssetIndex(self.cache, JsonFile(source_path=path))
+            )
+        return self._object_mapping
+
+    def mount(
+        self,
+        prefix: Optional[str] = None,
+        fetch_objects: bool = False,
+    ) -> ClientJar:
+        return self.client_jar.mount(
+            prefix=prefix,
+            object_mapping=self.object_mapping if fetch_objects else None,
+        )
+
+    @property
+    def assets(self) -> ResourcePack:
+        return self.mount("assets").assets
+
+    @property
+    def data(self) -> DataPack:
+        return self.mount("data").data
+
+    @property
+    def reports(self) -> ReportsContainer:
+        if self._reports is None:
+            server_jar = self.server_jar.path
+            reports = server_jar.with_name("generated") / "reports"
+
+            if self.cache.update(reports):
+                java = self.runtime.java
+                with log_time_scope("Data generators."):
+                    subprocess.run(
+                        [
+                            java,
+                            "-DbundlerMainClass=net.minecraft.data.Main",
+                            "-jar",
+                            server_jar,
+                            "--reports",
+                        ],
+                        cwd=server_jar.parent,
+                        capture_output=True,
+                        check=True,
+                    )
+
+            self._reports = ReportsContainer(reports)
+
+        return self._reports
+
+
+class ReleaseRegistry(Container[str, Release]):
+    """Registry for minecraft releases."""
+
+    runtimes: RuntimeRegistry
+    cache: Cache
+    manifest: JsonFile
+
+    def __init__(
+        self,
+        runtimes: RuntimeRegistry,
+        cache: Cache,
+        manifest: Optional[Union[FileSystemPath, JsonFile]] = None,
+    ):
+        super().__init__()
+        self.runtimes = runtimes
+        self.cache = cache
+
+        manifest = manifest or MANIFEST_URL
+
+        if isinstance(manifest, str) and manifest.startswith(("http://", "https://")):
+            manifest = self.cache.download(manifest, max_age=3600)
+        if not isinstance(manifest, JsonFile):
+            manifest = JsonFile(source_path=manifest)
+
+        self.manifest = manifest
+
+    def missing(self, key: str) -> Release:
+        pattern = re.compile(
+            "^"
+            + "|".join(
+                r"\d+".join(map(re.escape, k.split("*")))
+                for k in [key, key.removesuffix(".*")]
+            )
+            + "$"
+        )
+        for version in self.manifest.data["versions"]:
+            if pattern.match(version["id"]):
+                info = JsonFile(source_path=self.cache.download(version["url"]))
+                runtime = self.runtimes[info.data["javaVersion"]["component"]]
+                return Release(runtime, self.cache, info)
+        raise KeyError(key)
+
+
 class Vanilla:
     """Service for fetching and unpacking vanilla resources."""
 
     cache: Cache
-    releases: ReleaseRegistry
     runtimes: RuntimeRegistry
+    releases: ReleaseRegistry
     minecraft_version: str
+    shared: Vanilla
 
     def __init__(
         self,
@@ -394,18 +480,26 @@ class Vanilla:
         manifest: Optional[Union[FileSystemPath, JsonFile]] = None,
         runtimes: Optional[Union[FileSystemPath, JsonFile]] = None,
         minecraft_version: Optional[str] = None,
+        shared: Vanilla | None = None,
     ):
         opts = ctx and ctx.validate("vanilla", VanillaOptions)
 
-        if cache:
+        if cache is not None:
             self.cache = cache
         elif ctx:
             self.cache = ctx.cache["vanilla"]
         else:
             raise ValueError("Cache was not provided.")
 
-        self.releases = ReleaseRegistry(self.cache, manifest or opts and opts.manifest)
-        self.runtimes = RuntimeRegistry(self.cache, runtimes or opts and opts.runtimes)
+        self.runtimes = RuntimeRegistry(
+            cache=self.cache,
+            manifest=runtimes or opts and opts.runtimes,
+        )
+        self.releases = ReleaseRegistry(
+            runtimes=self.runtimes,
+            cache=self.cache,
+            manifest=manifest or opts and opts.manifest,
+        )
 
         if minecraft_version:
             self.minecraft_version = minecraft_version
@@ -415,6 +509,16 @@ class Vanilla:
             self.minecraft_version = f"{ctx.minecraft_version}.*"
         else:
             self.minecraft_version = f"{LATEST_MINECRAFT_VERSION}.*"
+
+        if shared:
+            self.shared = shared
+        elif ctx and self.cache is not ctx.cache.shared:
+            self.shared = Vanilla(
+                cache=ctx.cache.shared["vanilla"],
+                minecraft_version=self.minecraft_version,
+            )
+        else:
+            self.shared = self
 
     def mount(
         self,
@@ -432,22 +536,24 @@ class Vanilla:
         return self.releases[self.minecraft_version].data
 
     @property
-    def client(self) -> Path:
-        return self.releases[self.minecraft_version].client_jar.path
+    def client_jar(self) -> ClientJar:
+        return self.releases[self.minecraft_version].client_jar
 
     @property
-    def server(self) -> Path:
-        return self.releases[self.minecraft_version].server_jar.path
+    def server_jar(self) -> ServerJar:
+        return self.releases[self.minecraft_version].server_jar
 
     @property
     def java(self) -> Path:
-        component = self.releases[self.minecraft_version].runtime
-        return self.runtimes[component].java
+        return self.releases[self.minecraft_version].runtime.java
 
     @property
     def javaw(self) -> Path:
-        component = self.releases[self.minecraft_version].runtime
-        return self.runtimes[component].javaw
+        return self.releases[self.minecraft_version].runtime.javaw
+
+    @property
+    def reports(self) -> ReportsContainer:
+        return self.releases[self.minecraft_version].reports
 
 
 class LoadVanillaOptions(PluginOptions):

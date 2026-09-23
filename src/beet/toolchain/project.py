@@ -29,6 +29,7 @@ from beet.core.utils import (
 )
 from beet.core.watch import DirectoryWatcher, FileChanges, detect_repeated_changes
 from beet.library.base import LATEST_MINECRAFT_VERSION, Mcmeta
+from beet.toolchain.utils import resolve_shared_cache
 
 from .config import (
     PackConfig,
@@ -97,6 +98,7 @@ class Project:
         self.resolved_cache = ProjectCache(
             directory=cache_directory,
             generated_directory=self.directory / "generated",
+            shared=resolve_shared_cache(),
         )
 
         return self.resolved_cache

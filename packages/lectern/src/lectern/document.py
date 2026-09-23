@@ -72,7 +72,7 @@ class Document:
             if cache is None:
                 cache = ctx.cache["lectern"]
 
-        if cache:
+        if cache is not None:
             self.text_extractor.cache = cache
             self.markdown_extractor.cache = cache
 
