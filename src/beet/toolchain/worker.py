@@ -169,6 +169,9 @@ class Channel(Generic[T, U]):
             self.close()
             raise
 
+    def recv(self) -> T:
+        return next(self)
+
     def __enter__(self: SelfType) -> SelfType:
         return self
 
