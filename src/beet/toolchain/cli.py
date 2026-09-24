@@ -114,17 +114,16 @@ class LogHandler(logging.Handler):
 
         line_prefix = click.style("       |", **style)
 
-        leading_line, *lines = self.format(record).splitlines()
-        if record.levelname in ["ERROR", "CRITICAL"]:
-            leading_line = click.style(leading_line, **style)
+        lines = self.format(record).splitlines()
+        if leading_line := not getattr(record, "continue", False) and lines.pop(0):
+            if record.levelname in ["ERROR", "CRITICAL"]:
+                leading_line = click.style(leading_line, **style)
 
-        leading_line = (
-            click.style(getattr(record, "prefix", record.name), bold=True, fg="black")
-            + "  "
-            + leading_line
-        )
+            prefix = getattr(record, "prefix", record.name)
+            prefix = click.style(prefix, bold=True, fg="black")
+            leading_line = f"{prefix}  {leading_line}"
 
-        click.echo(click.style(f"{level:<7}|", **style) + " " + leading_line)
+            click.echo(click.style(f"{level:<7}|", **style) + " " + leading_line)
 
         if annotate := getattr(record, "annotate", None):
             lines.insert(0, click.style(str(annotate), fg="cyan"))

@@ -54,6 +54,12 @@ def build(
 @beet.command()
 @pass_project
 @click.option(
+    "-p",
+    "--play",
+    is_flag=True,
+    help="Run playground server.",
+)
+@click.option(
     "-r",
     "--reload",
     is_flag=True,
@@ -74,6 +80,7 @@ def build(
 )
 def watch(
     project: Project,
+    play: bool,
     reload: bool,
     link: Optional[str],
     interval: float,
@@ -99,7 +106,10 @@ def watch(
 
             with (
                 error_handler(format_padding=1),
-                project.override(reload and "require[] = beet.contrib.livereload"),
+                project.override(
+                    reload and "require[] = beet.contrib.livereload",
+                    play and "require[] = beet.contrib.playground.bootstrap",
+                ),
             ):
                 project.build()
 
