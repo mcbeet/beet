@@ -7,6 +7,7 @@ __all__ = [
 ]
 
 
+from functools import partial
 import json
 import logging
 import shutil
@@ -400,14 +401,29 @@ class DownloadManager:
 
     def download(self, arg: Union[str, Request], path: Path):
         """Download a given url."""
-        fileobj = path.open("wb")
-        if self.executor:
-            self.executor.submit(self.retrieve, arg, fileobj)
-        else:
-            self.retrieve(arg, fileobj)
+        if isinstance(arg, str):
+            arg = Request(arg)
 
-    def retrieve(self, arg: Union[str, Request], fileobj: BinaryIO):
-        """Retrieve file from url."""
-        url = arg.get_full_url() if isinstance(arg, Request) else arg
-        with log_time('Download "%s".', url), closing(fileobj), urlopen(arg) as f:
-            fileobj.write(f.read())
+        if path.is_file():
+            func = partial(self.update, arg, path)
+        else:
+            func = partial(self.retrieve, arg, path.open("wb"))
+
+        if self.executor:
+            self.executor.submit(func)
+        else:
+            func()
+
+    def update(self, request: Request, path: Path):
+        """Retrieve new version of existing file from url."""
+        url = request.get_full_url()
+        with log_time(f'Download "{url}".', suppress=f'Download failed "{url}".'):
+            with urlopen(request) as f:
+                path.write_bytes(f.read())
+
+    def retrieve(self, request: Request, fileobj: BinaryIO):
+        """Retrieve missing file from url."""
+        url = request.get_full_url()
+        with log_time(f'Download "{url}".'):
+            with closing(fileobj), urlopen(request) as f:
+                fileobj.write(f.read())

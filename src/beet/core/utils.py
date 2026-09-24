@@ -47,6 +47,7 @@ from traceback import format_exception
 from typing import (
     Any,
     Dict,
+    Generator,
     Iterable,
     Iterator,
     List,
@@ -220,25 +221,33 @@ time_logger = logging.getLogger("time")
 
 
 @contextmanager
-def log_time(message: str, *args: Any, **kwargs: Any) -> Iterator[None]:
+def log_time(message: str, *, suppress: str | None = None) -> Generator[None]:
+    level = logging.DEBUG
+    fmt = "%(message)s %(duration)s"
+    kwargs = {}
     start = time.time()
     try:
         yield
     except BubbleException:
         raise
     except Exception as exc:
-        tb = exc.__traceback__
-        kwargs["exc_info"] = exc.with_traceback(tb.tb_next) if tb else exc
-        raise
+        if suppress:
+            level = logging.WARNING
+            fmt = suppress
+        else:
+            level = logging.ERROR
+            tb = exc.__traceback__
+            kwargs["exc_info"] = exc.with_traceback(tb.tb_next) if tb else exc
+            raise
     finally:
-        message = f"{message} (took {time.time() - start:.2f}s)"
-        time_logger.debug(message, *args, **kwargs)
+        args = {"message": message, "duration": f"(took {time.time() - start:.2f}s)"}
+        time_logger.log(level, fmt, args, **kwargs)
 
 
 @contextmanager
-def log_time_scope(message: str, *args: Any, **kwargs: Any) -> Iterator[None]:
-    time_logger.debug(f"{message} (start)", *args, **kwargs)
-    with log_time(message, *args, **kwargs):
+def log_time_scope(message: str, *, suppress: str | None = None) -> Generator[None]:
+    time_logger.debug(f"{message} (start)")
+    with log_time(message, suppress=suppress):
         yield
 
 
