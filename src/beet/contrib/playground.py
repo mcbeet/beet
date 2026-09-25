@@ -17,8 +17,8 @@ import re
 import subprocess
 from textwrap import dedent
 from threading import Event, Thread
-from typing import Self, TextIO
-
+from typing import Self
+from collections.abc import Iterable
 
 from beet import (
     Context,
@@ -36,21 +36,16 @@ from beet.contrib.vanilla import Vanilla
 from beet.core.utils import remove_path
 
 
-logger = logging.getLogger("play")
-
-
-STDOUT_REGEX = re.compile(r"\[(.+?)\] \[.+?/(DEBUG|INFO|WARN|ERROR|FATAL)\]: (.+)")
-
-
 class PlaygroundOptions(PluginOptions):
     port: int | None = None
     server_properties: str = r"""
         white-list=false
+        pause-when-empty-seconds=86400
         level-type=minecraft:flat
         generator-settings={"biome":"minecraft:the_void","layers":[{"block":"minecraft:air","height":1}],"features":true}
         difficulty=normal
         gamemode=creative
-        motd=§cbeet §a{{ project_name }}§r\n{{ project_directory | replace("\\", "\\\\") }}
+        motd=§4beet §2({{ project_name }})§r\n{{ project_directory | replace("\\", "\\\\") }}
     """
 
 
@@ -130,17 +125,20 @@ def playground_worker(connection: Connection[None, Playground]):
 
 
 class Playground:
+    logger: logging.Logger
+    ready: Event
+
     proc: subprocess.Popen[str] | None
     args: PlaygroundArgs | None
-    threads: list[Thread]
-    done: Event
+    logging_thread: Thread | None = None
 
     def __init__(self):
+        self.logger = logging.getLogger("game")
+        self.ready = Event()
+
         self.proc = None
         self.args = None
-        self.threads = []
-        self.done = Event()
-        logger.addFilter(self._log_filter)
+        self.logging_thread = None
 
     def start(self, args: PlaygroundArgs):
         if self.args == args:
@@ -172,12 +170,11 @@ class Playground:
 
         self.args = args
 
-        self.threads = [
-            Thread(target=self._log_stdout, args=(self.proc.stdout,)),
-        ]
-
-        for thread in self.threads:
-            thread.start()
+        self.logging_thread = Thread(
+            target=_pump_logs,
+            args=(self.logger, self.proc.stdout),
+        )
+        self.logging_thread.start()
 
     def link(self, data: DataPack) -> Path | None:
         if self.args:
@@ -187,13 +184,13 @@ class Playground:
                 pass
 
     def reload(self):
-        if self.proc and self.done.is_set():
+        if self.proc and self.ready.is_set():
             assert self.proc.stdin
             self.proc.stdin.write("reload\n")
             self.proc.stdin.flush()
 
     def stop(self):
-        self.done.clear()
+        self.ready.clear()
 
         if self.proc:
             assert self.proc.stdin
@@ -202,46 +199,49 @@ class Playground:
             self.proc.wait()
             self.proc = None
 
-        for thread in self.threads:
-            thread.join()
-
-        self.threads = []
-
-    def _log_stdout(self, stdout: TextIO):
-        previous_level = ""
-
-        for line in stdout:
-            fmt = "%(message)s"
-
-            if m := STDOUT_REGEX.match(line):
-                args = {"time": m[1], "level": m[2], "message": m[3]}
-                extra = {}
-            else:
-                args = {"level": previous_level, "message": line}
-                extra = {"continue": True}
-
-            if args["level"] == "DEBUG":
-                logger.debug(fmt, args, extra=extra)
-            elif args["level"] == "INFO":
-                logger.info(fmt, args, extra=extra)
-            elif args["level"] == "WARN":
-                logger.warning(fmt, args, extra=extra)
-            elif args["level"] in ["ERROR", "FATAL"]:
-                logger.error(fmt, args, extra=extra)
-
-            previous_level = args["level"]
+        if self.logging_thread:
+            self.logging_thread.join()
 
     def _log_filter(self, record: logging.LogRecord):
         if getattr(record, "continue", False):
             return True
 
-        if not self.done.is_set() and record.getMessage().startswith("Done ("):
-            self.done.set()
+        if not self.ready.is_set() and record.getMessage().startswith("Done ("):
+            self.ready.set()
 
         return True
 
     def __enter__(self) -> Self:
+        self.logger.addFilter(self._log_filter)
         return self
 
     def __exit__(self, *_):
+        self.logger.removeFilter(self._log_filter)
         self.stop()
+
+
+def _pump_logs(logger: logging.Logger, lines: Iterable[str]):
+    regex = re.compile(r"\[(.+?)\] \[.+?/(DEBUG|INFO|WARN|ERROR|FATAL)\]: (.+)")
+
+    previous_level = ""
+
+    for line in lines:
+        fmt = "%(message)s"
+        extra = {}
+
+        if m := regex.match(line):
+            args = {"time": m[1], "level": m[2], "message": m[3]}
+        else:
+            args = {"level": previous_level, "message": line}
+            extra["continue"] = True
+
+        if args["level"] == "DEBUG":
+            logger.debug(fmt, args, extra=extra)
+        elif args["level"] == "INFO":
+            logger.info(fmt, args, extra=extra)
+        elif args["level"] == "WARN":
+            logger.warning(fmt, args, extra=extra)
+        elif args["level"] in ["ERROR", "FATAL"]:
+            logger.error(fmt, args, extra=extra)
+
+        previous_level = args["level"]
