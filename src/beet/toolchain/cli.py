@@ -119,9 +119,9 @@ class LogHandler(logging.Handler):
             if record.levelname in ["ERROR", "CRITICAL"]:
                 leading_line = click.style(leading_line, **style)
 
-            prefix = getattr(record, "prefix", record.name)
-            prefix = click.style(prefix, bold=True, fg="black")
-            leading_line = f"{prefix}  {leading_line}"
+            if prefix := getattr(record, "prefix", record.name):
+                prefix = click.style(prefix, bold=True, fg="black")
+                leading_line = f"{prefix}  {leading_line}"
 
             click.echo(click.style(f"{level:<7}|", **style) + " " + leading_line)
 
