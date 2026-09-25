@@ -244,7 +244,7 @@ class MainGroup(BeetGroup):
     type=click.Choice(
         ["CRITICAL", "ERROR", "WARNING", "INFO", "DEBUG"], case_sensitive=False
     ),
-    default="WARNING",
+    default="INFO",
     help="Configure output verbosity.",
 )
 @click.version_option(
