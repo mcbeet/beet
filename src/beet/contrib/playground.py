@@ -3,22 +3,24 @@
 __all__ = [
     "PlaygroundOptions",
     "PlaygroundArgs",
-    "PlaygroundState",
     "Playground",
     "bootstrap",
+    "start",
+    "link",
+    "reload",
     "playground_worker",
+    "ServerThread",
 ]
 
 
 from dataclasses import dataclass
 import logging
 from pathlib import Path
+from queue import Queue
 import re
 import subprocess
 from textwrap import dedent
 from threading import Event, Thread
-from typing import Self
-from collections.abc import Iterable
 
 from beet import (
     Context,
@@ -32,8 +34,9 @@ from beet import (
     MultiCache,
 )
 from beet.contrib.autosave import Autosave
+from beet.contrib.link import LinkManager
 from beet.contrib.vanilla import Vanilla
-from beet.core.utils import remove_path
+from beet.core.utils import FileSystemPath, remove_path
 
 
 class PlaygroundOptions(PluginOptions):
@@ -45,7 +48,7 @@ class PlaygroundOptions(PluginOptions):
         generator-settings={"biome":"minecraft:the_void","layers":[{"block":"minecraft:air","height":1}],"features":true}
         difficulty=normal
         gamemode=creative
-        motd=§4beet §2({{ project_name }})§r\n{{ project_directory | replace("\\", "\\\\") }}
+        motd=§a{{ project_name }} §4(beet)§r\n{{ project_directory | replace("\\", "\\\\") }}
     """
 
 
@@ -54,97 +57,174 @@ class PlaygroundArgs:
     java: Path
     server_jar: Path
     server_properties: str
-    universe: Path
     port: int | None
 
 
-class PlaygroundState:
-    cache: Cache
+def bootstrap(ctx: Context):
+    playground = ctx.inject(Playground)
+    playground.clean()
 
+    ctx.require(start)
+
+    autosave = ctx.inject(Autosave)
+    if autosave.link:
+        # Make sure these run after LinkManager.autosave_handler
+        autosave.add_link(link)
+        autosave.add_link(reload)
+    else:
+        autosave.add_output(link)
+        autosave.add_output(reload)
+
+
+@configurable("playground", validator=PlaygroundOptions)
+def start(ctx: Context, opts: PlaygroundOptions):
+    playground = ctx.inject(Playground)
+    vanilla = ctx.inject(Vanilla).shared
+
+    args = PlaygroundArgs(
+        java=vanilla.java,
+        server_jar=vanilla.server_jar.path,
+        server_properties=dedent(ctx.template.render_string(opts.server_properties)),
+        port=opts.port,
+    )
+    playground.start(args)
+
+
+def link(ctx: Context):
+    playground = ctx.inject(Playground)
+    playground.link(ctx.data)
+
+
+def reload(ctx: Context):
+    playground = ctx.inject(Playground)
+    playground.run("reload")
+
+
+class Playground:
+    server: ServerThread
+    external_world: Path | None
+
+    cache: Cache
     dirty = CachePin[list[str]]("dirty", default_factory=list)
 
-    def __init__(self, arg: Context | MultiCache[Cache] | Cache):
+    def __init__(
+        self,
+        arg: Context | MultiCache[Cache] | Cache,
+        *,
+        server: ServerThread | None = None,
+        external_world: FileSystemPath | None = None,
+    ):
+        if server is not None:
+            self.server = server
+        elif isinstance(arg, Context):
+            with arg.worker(playground_worker) as channel:
+                self.server = channel.recv()
+        else:
+            raise ValueError("Server not provided.")
+
         if isinstance(arg, Context):
             arg = arg.cache
+
+        if external_world is None and isinstance(arg, MultiCache):
+            external_world = LinkManager(arg).world
+        if external_world is not None:
+            external_world = Path(external_world).resolve()
+
+        self.external_world = external_world
+
         if isinstance(arg, MultiCache):
             arg = arg["playground"]
+
         self.cache = arg
+
+    def start(self, args: PlaygroundArgs):
+        if self.external_world and self.external_world.is_dir():
+            world = str(self.external_world).replace("\\", "\\\\")
+        else:
+            world = "world"
+        args.server_properties += f"\nlevel-name={world}\n"
+
+        if self.server.args == args:
+            return
+
+        if self.server.started.is_set():
+            self.stop()
+
+        universe = self.cache.directory
+        self.server.queue.put((universe, args))
+        self.server.started.wait()
+
+    def stop(self):
+        self.run("stop")
+        self.server.stopped.wait()
+
+    def run(self, command: str):
+        self.server.ready.wait()
+        proc = self.server.proc
+        assert proc
+        assert proc.stdin
+        proc.stdin.write(command + "\n")
+        proc.stdin.flush()
+
+    def link(self, data: DataPack):
+        try:
+            world = self.external_world or self.cache.directory / "world"
+            path = data.save(world / "datapacks")
+        except PackOverwrite:
+            pass
+        else:
+            if self.cache.directory in path.parents:
+                path = "/".join(path.relative_to(self.cache.directory).parts)
+            self.dirty.append(str(path))
 
     def clean(self):
         remove_path(*[self.cache.directory / path for path in self.dirty])
         self.dirty.clear()
 
-    def mark_dirty(self, path: Path):
-        self.dirty.append("/".join(path.relative_to(self.cache.directory).parts))
+
+def playground_worker(connection: Connection[None, ServerThread]):
+    server = ServerThread()
+    server.start()
+    for client in connection:
+        client.send(server)
+        client.close()
+    server.queue.join()
 
 
-@configurable("playground", validator=PlaygroundOptions)
-def bootstrap(ctx: Context, opts: PlaygroundOptions):
-    port = opts.port
-    server_properties = dedent(ctx.template.render_string(opts.server_properties))
-
-    state = ctx.inject(PlaygroundState)
-    state.clean()
-
-    vanilla = ctx.inject(Vanilla).shared
-
-    with ctx.worker(playground_worker) as channel:
-        channel.recv().start(
-            PlaygroundArgs(
-                java=vanilla.java,
-                server_jar=vanilla.server_jar.path,
-                server_properties=server_properties,
-                universe=state.cache.directory,
-                port=port,
-            )
-        )
-
-    autosave = ctx.inject(Autosave)
-    autosave.add_output("beet.contrib.playground")
-    autosave.add_output(reload)
-
-
-def beet_default(ctx: Context):
-    state = ctx.inject(PlaygroundState)
-
-    with ctx.worker(playground_worker) as channel:
-        if path := channel.recv().link(ctx.data):
-            state.mark_dirty(path)
-
-
-def reload(ctx: Context):
-    with ctx.worker(playground_worker) as channel:
-        channel.recv().reload()
-
-
-def playground_worker(connection: Connection[None, Playground]):
-    with Playground() as playground:
-        for client in connection:
-            client.send(playground)
-            client.close()
-
-
-class Playground:
-    logger: logging.Logger
-    ready: Event
+class ServerThread(Thread):
+    queue: Queue[tuple[Path, PlaygroundArgs]]
 
     proc: subprocess.Popen[str] | None
     args: PlaygroundArgs | None
-    logging_thread: Thread | None = None
 
-    def __init__(self):
-        self.logger = logging.getLogger("game")
-        self.ready = Event()
+    started: Event
+    ready: Event
+    stopped: Event
+
+    logger: logging.Logger
+
+    def __init__(self) -> None:
+        super().__init__(daemon=True)
+        self.queue = Queue()
 
         self.proc = None
         self.args = None
-        self.logging_thread = None
 
-    def start(self, args: PlaygroundArgs):
-        if self.args == args:
-            return
+        self.started = Event()
+        self.ready = Event()
+        self.stopped = Event()
+        self.stopped.set()
 
-        self.stop()
+        self.logger = logging.getLogger("game")
+
+    def run(self):
+        while True:
+            universe, args = self.queue.get()
+            self.loop(universe, args)
+            self.queue.task_done()
+
+    def loop(self, universe: Path, args: PlaygroundArgs):
+        self.stopped.clear()
 
         args.server_jar.with_name("eula.txt").write_text("eula=true\n")
         args.server_jar.with_name("server.properties").write_text(
@@ -153,7 +233,7 @@ class Playground:
         )
 
         cmd = [args.java, "-jar", args.server_jar, "--nogui"]
-        cmd += ["--universe", args.universe]
+        cmd += ["--universe", universe]
         if args.port is not None:
             cmd += ["--port", str(args.port)]
 
@@ -167,81 +247,44 @@ class Playground:
             encoding="utf-8",
             errors="ignore",
         )
-
         self.args = args
 
-        self.logging_thread = Thread(
-            target=_pump_logs,
-            args=(self.logger, self.proc.stdout),
-        )
-        self.logging_thread.start()
+        self.started.set()
 
-    def link(self, data: DataPack) -> Path | None:
-        if self.args:
-            try:
-                return data.save(self.args.universe / "world" / "datapacks")
-            except PackOverwrite:
-                pass
+        regex = re.compile(r"\[(.+?)\] \[.+?/(DEBUG|INFO|WARN|ERROR|FATAL)\]: (.+)")
+        previous_level = ""
 
-    def reload(self):
-        if self.proc and self.ready.is_set():
-            assert self.proc.stdin
-            self.proc.stdin.write("reload\n")
-            self.proc.stdin.flush()
+        assert self.proc.stdout
+        for line in self.proc.stdout:
+            extra = {}
 
-    def stop(self):
+            if m := regex.match(line):
+                level = m[2]
+                message = m[3]
+                if message.startswith("Done ("):
+                    self.ready.set()
+                if message == "Stopping server":
+                    self.ready.clear()
+            else:
+                level = previous_level
+                message = line
+                extra["continue"] = True
+
+            if level == "DEBUG":
+                self.logger.debug(message, extra=extra)
+            elif level == "INFO":
+                self.logger.info(message, extra=extra)
+            elif level == "WARN":
+                self.logger.warning(message, extra=extra)
+            elif level in ["ERROR", "FATAL"]:
+                self.logger.error(message, extra=extra)
+
+            previous_level = level
+
+        self.proc.wait()
+        self.proc = None
+        self.args = None
+
+        self.started.clear()
         self.ready.clear()
-
-        if self.proc:
-            assert self.proc.stdin
-            self.proc.stdin.write("stop\n")
-            self.proc.stdin.flush()
-            self.proc.wait()
-            self.proc = None
-
-        if self.logging_thread:
-            self.logging_thread.join()
-
-    def _log_filter(self, record: logging.LogRecord):
-        if getattr(record, "continue", False):
-            return True
-
-        if not self.ready.is_set() and record.getMessage().startswith("Done ("):
-            self.ready.set()
-
-        return True
-
-    def __enter__(self) -> Self:
-        self.logger.addFilter(self._log_filter)
-        return self
-
-    def __exit__(self, *_):
-        self.logger.removeFilter(self._log_filter)
-        self.stop()
-
-
-def _pump_logs(logger: logging.Logger, lines: Iterable[str]):
-    regex = re.compile(r"\[(.+?)\] \[.+?/(DEBUG|INFO|WARN|ERROR|FATAL)\]: (.+)")
-
-    previous_level = ""
-
-    for line in lines:
-        fmt = "%(message)s"
-        extra = {}
-
-        if m := regex.match(line):
-            args = {"time": m[1], "level": m[2], "message": m[3]}
-        else:
-            args = {"level": previous_level, "message": line}
-            extra["continue"] = True
-
-        if args["level"] == "DEBUG":
-            logger.debug(fmt, args, extra=extra)
-        elif args["level"] == "INFO":
-            logger.info(fmt, args, extra=extra)
-        elif args["level"] == "WARN":
-            logger.warning(fmt, args, extra=extra)
-        elif args["level"] in ["ERROR", "FATAL"]:
-            logger.error(fmt, args, extra=extra)
-
-        previous_level = args["level"]
+        self.stopped.set()
