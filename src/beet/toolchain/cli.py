@@ -6,7 +6,6 @@ __all__ = [
     "LogHandler",
     "main",
     "beet",
-    "format_error",
     "error_handler",
     "message_fence",
 ]
@@ -19,26 +18,15 @@ from typing import Any, Callable, Iterator, List, Optional
 
 import click
 from click_help_colors import HelpColorsCommand, HelpColorsGroup
+from prompt_toolkit import print_formatted_text as print
+from prompt_toolkit.formatted_text import FormattedText
+from prompt_toolkit.styles import Style
 
 from beet import __version__
 from beet.core.error import BeetException, WrappedException
 from beet.core.utils import format_exc
 
 from .project import Project
-
-
-def format_error(
-    message: str,
-    exception: Optional[BaseException] = None,
-    padding: int = 0,
-) -> str:
-    """Format a given error message and exception."""
-    output = "\n" * padding
-    output += click.style("Error: " + message, fg="red", bold=True) + "\n"
-    if exception:
-        output += "\n" + format_exc(exception)
-    output += "\n" * padding
-    return output
 
 
 @contextmanager
@@ -55,7 +43,7 @@ def error_handler(should_exit: bool = False, format_padding: int = 0) -> Iterato
     except BeetException as exc:
         message = str(exc)
     except (click.Abort, KeyboardInterrupt):
-        click.echo()
+        print()
         message = "Aborted."
     except (click.ClickException, click.exceptions.Exit):
         raise
@@ -66,9 +54,16 @@ def error_handler(should_exit: bool = False, format_padding: int = 0) -> Iterato
         return
 
     if LogHandler.has_output and not format_padding:
-        click.echo()
+        print()
 
-    click.echo(format_error(message, exception, format_padding), nl=False)
+    message = [
+        ("", "\n" * format_padding),
+        ("fg:ansibrightred", f"Error: {message}"),
+        ("", "\n"),
+        ("", "\n" + format_exc(exception) if exception else ""),
+        ("", "\n" * format_padding),
+    ]
+    print(FormattedText(message), end="")
 
     if should_exit:
         raise click.exceptions.Exit(1)
@@ -76,25 +71,31 @@ def error_handler(should_exit: bool = False, format_padding: int = 0) -> Iterato
 
 @contextmanager
 def message_fence(message: str) -> Iterator[None]:
-    """Context manager used to report the begining and the end of a cli operation."""
-    click.secho(message + "\n", fg="red")
+    """Context manager used to report the beginning and the end of a cli operation."""
+    print(FormattedText([("fg:ansired", message + "\n")]))
     yield
     if LogHandler.has_output:
-        click.echo()
-    click.secho("Done!", fg="green", bold=True)
+        print()
+    print(FormattedText([("fg:ansibrightgreen", "Done!")]))
     LogHandler.has_output = False
 
 
 class LogHandler(logging.Handler):
     """Logging handler for the beet cli."""
 
-    style: Any = {
-        "CRITICAL": {"fg": "red", "bold": True},
-        "ERROR": {"fg": "red", "bold": True},
-        "WARNING": {"fg": "yellow", "bold": True},
-        "INFO": {},
-        "DEBUG": {"fg": "magenta"},
-    }
+    style = Style(
+        [
+            ("level critical", "fg:ansibrightred"),
+            ("level error", "fg:ansibrightred"),
+            ("level warning", "fg:ansibrightyellow"),
+            ("level info", ""),
+            ("level debug", "fg:ansimagenta"),
+            ("leading_line critical", "fg:ansibrightred"),
+            ("leading_line error", "fg:ansibrightred"),
+            ("prefix", "fg:ansibrightblack"),
+            ("annotate", "fg:ansicyan"),
+        ]
+    )
 
     abbreviations: Any = {
         "CRITICAL": "CRIT",
@@ -109,27 +110,34 @@ class LogHandler(logging.Handler):
 
     def emit(self, record: logging.LogRecord):
         LogHandler.has_output = True
-        level = self.abbreviations.get(record.levelname, record.levelname)
-        style = self.style[record.levelname]
-
-        line_prefix = click.style("       |", **style)
+        message = []
+        level_class = f"class:{record.levelname.lower()}"
 
         lines = self.format(record).splitlines()
         if leading_line := not getattr(record, "continue", False) and lines.pop(0):
-            if record.levelname in ["ERROR", "CRITICAL"]:
-                leading_line = click.style(leading_line, **style)
+            level = self.abbreviations.get(record.levelname, record.levelname)
+            message += [(f"class:level {level_class}", f"{level:<7}|"), ("", " ")]
 
             if prefix := getattr(record, "prefix", record.name):
-                prefix = click.style(prefix, bold=True, fg="black")
-                leading_line = f"{prefix}  {leading_line}"
+                message += [("class:prefix", prefix), ("", "  ")]
 
-            click.echo(click.style(f"{level:<7}|", **style) + " " + leading_line)
+            message += [(f"class:leading_line {level_class}", leading_line), ("", "\n")]
 
         if annotate := getattr(record, "annotate", None):
-            lines.insert(0, click.style(str(annotate), fg="cyan"))
+            message += [
+                (f"class:level {level_class}", "       |"),
+                ("", " "),
+                ("class:annotate", str(annotate)),
+                ("", "\n"),
+            ]
 
         for line in lines:
-            click.echo(line_prefix + " " * bool(line) + line)
+            message += [(f"class:level {level_class}", "       |")]
+            if line:
+                message += [("", " "), ("", line)]
+            message += [("", "\n")]
+
+        print(FormattedText(message), style=self.style, end="")
 
 
 class BeetHelpColorsMixin:

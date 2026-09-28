@@ -2,6 +2,8 @@ import time
 from typing import Optional, Sequence
 
 import click
+from prompt_toolkit import print_formatted_text as print
+from prompt_toolkit.formatted_text import FormattedText
 
 from beet import Project
 from beet.core.utils import dump_json
@@ -42,12 +44,12 @@ def build(
         raise click.BadOptionUsage("link", msg)
 
     if json:
-        click.echo(dump_json(project.build_report(tmpdir=tmpdir)), nl=False)
+        print(dump_json(project.build_report(tmpdir=tmpdir)), end="")
     else:
         text = "Linking and building project..." if link else "Building project..."
         with message_fence(text):
             if link:
-                click.echo(project.link(world=link))
+                print(project.link(world=link))
             project.build(tmpdir=tmpdir)
 
 
@@ -89,7 +91,7 @@ def watch(
     text = "Linking and watching project..." if link else "Watching project..."
     with message_fence(text):
         if link:
-            click.echo(project.link(world=link))
+            print(project.link(world=link))
 
         for changes in project.watch(interval):
             filename, action = next(iter(changes.items()))
@@ -101,8 +103,7 @@ def watch(
             )
 
             now = time.strftime("%H:%M:%S")
-            change_time = click.style(now, fg="green", bold=True)
-            click.echo(f"{change_time} {text}")
+            print(FormattedText([("fg:ansibrightgreen", now), ("", " "), ("", text)]))
 
             with (
                 error_handler(format_padding=1),
@@ -128,16 +129,16 @@ def cache(project: Project, patterns: Sequence[str], clear: bool):
     if clear:
         with message_fence("Clearing cache..."):
             if cache_names := ", ".join(project.clear_cache(patterns)):
-                click.echo(f"Cache cleared successfully: {cache_names}.\n")
+                print(f"Cache cleared successfully: {cache_names}.\n")
             else:
-                click.echo(
+                print(
                     "No matching results.\n"
                     if patterns
                     else "The cache is already cleared.\n"
                 )
     else:
         with message_fence("Inspecting cache..."):
-            click.echo(
+            print(
                 "\n".join(project.inspect_cache(patterns))
                 or (
                     "No matching results.\n"
@@ -185,4 +186,4 @@ def link(
             project.clear_link()
     else:
         with message_fence("Linking project..."):
-            click.echo(project.link(world, minecraft, data_pack, resource_pack))
+            print(project.link(world, minecraft, data_pack, resource_pack))
