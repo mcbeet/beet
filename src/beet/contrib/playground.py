@@ -15,10 +15,12 @@ __all__ = [
 ]
 
 
+from collections.abc import Generator, Iterator
+from contextlib import contextmanager
 from dataclasses import dataclass
 import logging
 from pathlib import Path
-from queue import Queue
+from queue import Empty, Queue, ShutDown
 import re
 import subprocess
 from textwrap import dedent
@@ -214,6 +216,7 @@ class ServerThread(Thread):
     stopped: Event
 
     logger: logging.Logger
+    listeners: list[Queue[str]]
 
     def __init__(self) -> None:
         super().__init__(daemon=True)
@@ -228,8 +231,10 @@ class ServerThread(Thread):
         self.stopped.set()
 
         self.logger = logging.getLogger("game")
+        self.listeners = []
 
     def run(self):
+        self.logger.addFilter(_filter_game_log)
         while True:
             universe, args = self.queue.get()
             self.loop(universe, args)
@@ -268,6 +273,9 @@ class ServerThread(Thread):
 
         assert self.proc.stdout
         for line in self.proc.stdout:
+            for queue in self.listeners:
+                queue.put(line)
+
             extra = {}
 
             if m := regex.match(line):
@@ -275,8 +283,6 @@ class ServerThread(Thread):
                 message = m[3]
                 if message.startswith("Done ("):
                     self.ready.set()
-                if message == "Stopping server":
-                    self.ready.clear()
             else:
                 level = previous_level
                 message = line
@@ -310,3 +316,26 @@ class ServerThread(Thread):
         assert proc.stdin
         proc.stdin.write(command + "\n")
         proc.stdin.flush()
+
+    @contextmanager
+    def listen(self, timeout: float | None = None) -> Generator[Iterator[str]]:
+        queue: Queue[str] = Queue()
+        self.listeners.append(queue)
+        try:
+            yield _drain_queue(queue, timeout=timeout)
+        finally:
+            self.listeners.remove(queue)
+            queue.shutdown()
+
+
+def _drain_queue[T](queue: Queue[T], timeout: float | None = None) -> Iterator[T]:
+    while True:
+        try:
+            yield queue.get(timeout=timeout)
+        except ShutDown, Empty:
+            break
+
+
+def _filter_game_log(record: logging.LogRecord) -> bool:
+    record.msg = record.getMessage().removeprefix("[Not Secure] ")
+    return True
