@@ -15,7 +15,7 @@ __all__ = [
 ]
 
 
-from collections.abc import Generator, Iterator
+from collections.abc import Callable, Generator, Iterable
 from contextlib import contextmanager
 from dataclasses import dataclass
 import logging
@@ -216,7 +216,7 @@ class ServerThread(Thread):
     stopped: Event
 
     logger: logging.Logger
-    listeners: list[Queue[str]]
+    listeners: list[Callable[[str], None]]
 
     def __init__(self) -> None:
         super().__init__(daemon=True)
@@ -273,9 +273,6 @@ class ServerThread(Thread):
 
         assert self.proc.stdout
         for line in self.proc.stdout:
-            for queue in self.listeners:
-                queue.put(line)
-
             extra = {}
 
             if m := regex.match(line):
@@ -299,6 +296,9 @@ class ServerThread(Thread):
 
             previous_level = level
 
+            for listener in self.listeners:
+                listener(line)
+
         self.proc.wait()
         self.proc = None
         self.args = None
@@ -318,17 +318,26 @@ class ServerThread(Thread):
         proc.stdin.flush()
 
     @contextmanager
-    def listen(self, timeout: float | None = None) -> Generator[Iterator[str]]:
-        queue: Queue[str] = Queue()
-        self.listeners.append(queue)
+    def listen(
+        self,
+        callback: Callable[[str], None] | None = None,
+        timeout: float | None = None,
+    ) -> Generator[Iterable[str]]:
+        queue = None
+        if callback is None:
+            queue = Queue()
+            callback = queue.put
+
+        self.listeners.append(callback)
         try:
-            yield _drain_queue(queue, timeout=timeout)
+            yield _drain_queue(queue, timeout=timeout) if queue else []
         finally:
-            self.listeners.remove(queue)
-            queue.shutdown()
+            self.listeners.remove(callback)
+            if queue:
+                queue.shutdown()
 
 
-def _drain_queue[T](queue: Queue[T], timeout: float | None = None) -> Iterator[T]:
+def _drain_queue[T](queue: Queue[T], timeout: float | None = None) -> Iterable[T]:
     while True:
         try:
             yield queue.get(timeout=timeout)
