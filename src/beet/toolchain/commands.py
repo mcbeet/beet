@@ -88,6 +88,10 @@ def watch(
     interval: float,
 ):
     """Watch the project directory and build on file changes."""
+    if play and reload:
+        msg = "The --reload option is forbidden when using --play."
+        raise click.BadOptionUsage("reload", msg)
+
     text = "Linking and watching project..." if link else "Watching project..."
     with message_fence(text):
         if link:
