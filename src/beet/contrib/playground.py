@@ -6,10 +6,12 @@ __all__ = [
     "Playground",
     "bootstrap",
     "start",
+    "stop",
     "link",
     "reload",
     "playground_worker",
     "ServerThread",
+    "PlaygroundNotStarted",
 ]
 
 
@@ -37,6 +39,10 @@ from beet.contrib.autosave import Autosave
 from beet.contrib.link import LinkManager
 from beet.contrib.vanilla import Vanilla
 from beet.core.utils import FileSystemPath, remove_path
+
+
+class PlaygroundNotStarted(Exception):
+    """Raised when trying to exec a command but the playground was not started."""
 
 
 class PlaygroundOptions(PluginOptions):
@@ -90,6 +96,11 @@ def start(ctx: Context, opts: PlaygroundOptions):
     playground.start(args)
 
 
+def stop(ctx: Context):
+    playground = ctx.inject(Playground)
+    playground.stop()
+
+
 def link(ctx: Context):
     playground = ctx.inject(Playground)
     playground.link(ctx.data)
@@ -97,7 +108,7 @@ def link(ctx: Context):
 
 def reload(ctx: Context):
     playground = ctx.inject(Playground)
-    playground.run("reload")
+    playground.server.exec("reload")
 
 
 class Playground:
@@ -155,27 +166,21 @@ class Playground:
         self.server.started.wait()
 
     def stop(self):
-        self.run("stop")
-        self.server.stopped.wait()
-
-    def run(self, command: str):
-        self.server.ready.wait()
-        proc = self.server.proc
-        assert proc
-        assert proc.stdin
-        proc.stdin.write(command + "\n")
-        proc.stdin.flush()
+        try:
+            self.server.exec("stop")
+            self.server.stopped.wait()
+        except PlaygroundNotStarted:
+            pass
 
     def link(self, data: DataPack):
         try:
             world = self.external_world or self.cache.directory / "world"
             path = data.save(world / "datapacks")
         except PackOverwrite:
-            pass
-        else:
-            if self.cache.directory in path.parents:
-                path = "/".join(path.relative_to(self.cache.directory).parts)
-            self.dirty.append(str(path))
+            return
+        if self.cache.directory in path.parents:
+            path = "/".join(path.relative_to(self.cache.directory).parts)
+        self.dirty.append(str(path))
 
     def clean(self):
         remove_path(*[self.cache.directory / path for path in self.dirty])
@@ -185,9 +190,16 @@ class Playground:
 def playground_worker(connection: Connection[None, ServerThread]):
     server = ServerThread()
     server.start()
+
     for client in connection:
         client.send(server)
         client.close()
+
+    try:
+        server.exec("stop")
+    except PlaygroundNotStarted:
+        pass
+
     server.queue.join()
 
 
@@ -288,3 +300,13 @@ class ServerThread(Thread):
         self.started.clear()
         self.ready.clear()
         self.stopped.set()
+
+    def exec(self, command: str):
+        if self.stopped.is_set():
+            raise PlaygroundNotStarted()
+        self.ready.wait()
+        proc = self.proc
+        assert proc
+        assert proc.stdin
+        proc.stdin.write(command + "\n")
+        proc.stdin.flush()
