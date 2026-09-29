@@ -1,21 +1,20 @@
-"""Plugin for running the playground."""
+"""Singleton for managing a background process running a minecraft server."""
 
 __all__ = [
     "PlaygroundOptions",
     "PlaygroundArgs",
     "Playground",
-    "bootstrap",
     "start",
     "stop",
     "link",
+    "clean",
     "reload",
-    "playground_worker",
-    "ServerThread",
-    "PlaygroundNotStarted",
+    "playground_logs",
+    "PlaygroundListener",
 ]
 
 
-from collections.abc import Callable, Generator, Iterable
+from collections.abc import Generator, Iterable
 from contextlib import contextmanager
 from dataclasses import dataclass
 import logging
@@ -24,31 +23,17 @@ from queue import Empty, Queue, ShutDown
 import re
 import subprocess
 from textwrap import dedent
-from threading import Event, Thread
+from threading import Condition, Thread
+from typing import Self
 
-from beet import (
-    Context,
-    PluginOptions,
-    configurable,
-    Connection,
-    DataPack,
-    PackOverwrite,
-    Cache,
-    CachePin,
-    MultiCache,
-)
-from beet.contrib.autosave import Autosave
+from beet import Context, PluginOptions, configurable, PackOverwrite
 from beet.contrib.link import LinkManager
+from beet.contrib.singleton import singleton
 from beet.contrib.vanilla import Vanilla
-from beet.core.utils import FileSystemPath, remove_path
-
-
-class PlaygroundNotStarted(Exception):
-    """Raised when trying to exec a command but the playground was not started."""
+from beet.core.utils import JsonDict, remove_path
 
 
 class PlaygroundOptions(PluginOptions):
-    port: int | None = None
     server_properties: str = r"""
         white-list=false
         pause-when-empty-seconds=86400
@@ -58,6 +43,7 @@ class PlaygroundOptions(PluginOptions):
         gamemode=creative
         motd=§a{{ project_name }} §4(beet)§r\n{{ project_directory | replace("\\", "\\\\") }}
     """
+    port: int | None = None
 
 
 @dataclass
@@ -65,286 +51,221 @@ class PlaygroundArgs:
     java: Path
     server_jar: Path
     server_properties: str
+    world: Path
     port: int | None
 
 
-def bootstrap(ctx: Context):
-    playground = ctx.inject(Playground)
-    playground.clean()
-
+def beet_default(ctx: Context):
     ctx.require(start)
-
-    autosave = ctx.inject(Autosave)
-    if autosave.link:
-        # Make sure these run after LinkManager.autosave_handler
-        autosave.add_link(link)
-        autosave.add_link(reload)
-    else:
-        autosave.add_output(link)
-        autosave.add_output(reload)
 
 
 @configurable("playground", validator=PlaygroundOptions)
 def start(ctx: Context, opts: PlaygroundOptions):
-    playground = ctx.inject(Playground)
-    vanilla = ctx.inject(Vanilla).shared
+    """Plugin to start the playground."""
+    link_manager = ctx.inject(LinkManager)
+    vanilla = ctx.inject(Vanilla)
+    cache = ctx.cache["playground"]
 
     args = PlaygroundArgs(
-        java=vanilla.java,
-        server_jar=vanilla.server_jar.path,
+        java=vanilla.shared.java,
+        server_jar=vanilla.shared.server_jar.path,
         server_properties=dedent(ctx.template.render_string(opts.server_properties)),
+        world=Path(link_manager.world or cache.directory / "world").resolve(),
         port=opts.port,
     )
+
+    playground = ctx.inject(singleton(Playground))
     playground.start(args)
 
 
 def stop(ctx: Context):
-    playground = ctx.inject(Playground)
+    """Plugin to stop the playground."""
+    playground = ctx.inject(singleton(Playground))
     playground.stop()
 
 
 def link(ctx: Context):
-    playground = ctx.inject(Playground)
-    playground.link(ctx.data)
+    """Plugin to copy the data pack to the world opened in the playground."""
+    cache = ctx.cache["playground"]
+    dirty = cache.json.setdefault("dirty", [])
+
+    playground = ctx.inject(singleton(Playground))
+    with playground.cond:
+        if playground.args:
+            try:
+                path = ctx.data.save(playground.args.world / "datapacks")
+            except PackOverwrite:
+                pass
+            else:
+                if cache.directory in path.parents:
+                    path = "/".join(path.relative_to(cache.directory).parts)
+                dirty.append(str(path))
+
+
+def clean(ctx: Context):
+    """Plugin to remove the data pack previously linked to the playground."""
+    cache = ctx.cache["playground"]
+    dirty = cache.json.setdefault("dirty", [])
+
+    playground = ctx.inject(singleton(Playground))
+    with playground.cond:
+        remove_path(*[cache.directory / path for path in dirty])
+
+    dirty.clear()
 
 
 def reload(ctx: Context):
-    playground = ctx.inject(Playground)
-    playground.server.exec("reload")
+    """Plugin to make the playground reload data packs."""
+    playground = ctx.inject(singleton(Playground))
+    playground.run("reload")
 
 
 class Playground:
-    server: ServerThread
-    external_world: Path | None
-
-    cache: Cache
-    dirty = CachePin[list[str]]("dirty", default_factory=list)
-
-    def __init__(
-        self,
-        arg: Context | MultiCache[Cache] | Cache,
-        *,
-        server: ServerThread | None = None,
-        external_world: FileSystemPath | None = None,
-    ):
-        if server is not None:
-            self.server = server
-        elif isinstance(arg, Context):
-            with arg.worker(playground_worker) as channel:
-                self.server = channel.recv()
-        else:
-            raise ValueError("Server not provided.")
-
-        if isinstance(arg, Context):
-            arg = arg.cache
-
-        if external_world is None and isinstance(arg, MultiCache):
-            external_world = LinkManager(arg).world
-        if external_world is not None:
-            external_world = Path(external_world).resolve()
-
-        self.external_world = external_world
-
-        if isinstance(arg, MultiCache):
-            arg = arg["playground"]
-
-        self.cache = arg
-
-    def start(self, args: PlaygroundArgs):
-        if self.external_world and self.external_world.is_dir():
-            world = str(self.external_world).replace("\\", "\\\\")
-        else:
-            world = "world"
-        args.server_properties += f"\nlevel-name={world}\n"
-
-        if self.server.args == args:
-            return
-
-        if self.server.started.is_set():
-            self.stop()
-
-        universe = self.cache.directory
-        self.server.queue.put((universe, args))
-        self.server.started.wait()
-
-    def stop(self):
-        try:
-            self.server.exec("stop")
-            self.server.stopped.wait()
-        except PlaygroundNotStarted:
-            pass
-
-    def link(self, data: DataPack):
-        try:
-            world = self.external_world or self.cache.directory / "world"
-            path = data.save(world / "datapacks")
-        except PackOverwrite:
-            return
-        if self.cache.directory in path.parents:
-            path = "/".join(path.relative_to(self.cache.directory).parts)
-        self.dirty.append(str(path))
-
-    def clean(self):
-        remove_path(*[self.cache.directory / path for path in self.dirty])
-        self.dirty.clear()
-
-
-def playground_worker(connection: Connection[None, ServerThread]):
-    server = ServerThread()
-    server.start()
-
-    for client in connection:
-        client.send(server)
-        client.close()
-
-    try:
-        server.exec("stop")
-    except PlaygroundNotStarted:
-        pass
-
-    server.queue.join()
-
-
-class ServerThread(Thread):
-    queue: Queue[tuple[Path, PlaygroundArgs]]
-
+    cond: Condition
     proc: subprocess.Popen[str] | None
     args: PlaygroundArgs | None
+    ready: bool
 
-    started: Event
-    ready: Event
-    stopped: Event
-
-    logger: logging.Logger
-    listeners: list[Callable[[str], None]]
-
-    def __init__(self) -> None:
-        super().__init__(daemon=True)
-        self.queue = Queue()
-
+    def __init__(self):
+        self.cond = Condition()
         self.proc = None
         self.args = None
+        self.ready = False
 
-        self.started = Event()
-        self.ready = Event()
-        self.stopped = Event()
-        self.stopped.set()
+    def start(self, args: PlaygroundArgs):
+        with self.cond:
+            if self.args == args:
+                return
 
-        self.logger = logging.getLogger("game")
-        self.listeners = []
+            self.stop()
 
-    def run(self):
-        self.logger.addFilter(_filter_game_log)
-        while True:
-            universe, args = self.queue.get()
-            self.loop(universe, args)
-            self.queue.task_done()
+            level_name = str(args.world).replace("\\", "\\\\")
 
-    def loop(self, universe: Path, args: PlaygroundArgs):
-        self.stopped.clear()
+            server_properties = args.server_properties
+            server_properties += f"\nlevel-name={level_name}\n"
 
-        args.server_jar.with_name("eula.txt").write_text("eula=true\n")
-        args.server_jar.with_name("server.properties").write_text(
-            args.server_properties,
-            encoding="utf-8",
-        )
+            args.server_jar.with_name("eula.txt").write_text("eula=true\n")
+            args.server_jar.with_name("server.properties").write_text(
+                server_properties,
+                encoding="utf-8",
+            )
 
-        cmd = [args.java, "-jar", args.server_jar, "--nogui"]
-        cmd += ["--universe", universe]
-        if args.port is not None:
-            cmd += ["--port", str(args.port)]
+            cmd = [args.java, "-jar", args.server_jar, "--nogui"]
+            if args.port is not None:
+                cmd += ["--port", str(args.port)]
 
-        self.proc = subprocess.Popen(
-            cmd,
-            cwd=args.server_jar.parent,
-            stdin=subprocess.PIPE,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.DEVNULL,
-            text=True,
-            encoding="utf-8",
-            errors="ignore",
-        )
-        self.args = args
+            self.proc = subprocess.Popen(
+                cmd,
+                cwd=args.server_jar.parent,
+                stdin=subprocess.PIPE,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.DEVNULL,
+                text=True,
+                encoding="utf-8",
+                errors="ignore",
+            )
+            self.args = args
 
-        self.started.set()
+            Thread(target=self._daemon, args=(self.proc,), daemon=True).start()
+
+    def stop(self):
+        with self.cond:
+            if self.ready:
+                self.run("stop")
+            elif self.proc:
+                self.proc.kill()
+            self.cond.wait_for(lambda: self.proc is None)
+
+    def run(self, command: str):
+        with self.cond:
+            self.cond.wait_for(lambda: self.ready or self.proc is None)
+            if self.proc:
+                assert self.proc.stdin
+                self.proc.stdin.write(command.strip() + "\n")
+                self.proc.stdin.flush()
+
+    def _daemon(self, proc: subprocess.Popen[str]):
+        game = logging.getLogger("game")
+        game.addFilter(_filter_game_log)
 
         regex = re.compile(r"\[(.+?)\] \[.+?/(DEBUG|INFO|WARN|ERROR|FATAL)\]: (.+)")
         previous_level = ""
 
-        assert self.proc.stdout
-        for line in self.proc.stdout:
-            extra = {}
+        assert proc.stdout
+        for line in proc.stdout:
+            extra: JsonDict = {"raw": line}
 
             if m := regex.match(line):
                 level = m[2]
                 message = m[3]
                 if message.startswith("Done ("):
-                    self.ready.set()
+                    with self.cond:
+                        if not self.ready:
+                            self.ready = True
+                            self.cond.notify_all()
             else:
                 level = previous_level
                 message = line
                 extra["continue"] = True
 
             if level == "DEBUG":
-                self.logger.debug(message, extra=extra)
+                game.debug(message, extra=extra)
             elif level == "INFO":
-                self.logger.info(message, extra=extra)
+                game.info(message, extra=extra)
             elif level == "WARN":
-                self.logger.warning(message, extra=extra)
+                game.warning(message, extra=extra)
             elif level in ["ERROR", "FATAL"]:
-                self.logger.error(message, extra=extra)
+                game.error(message, extra=extra)
 
             previous_level = level
 
-            for listener in self.listeners:
-                listener(line)
+        with self.cond:
+            proc.wait()
+            self.proc = None
+            self.args = None
+            self.ready = False
+            self.cond.notify_all()
 
-        self.proc.wait()
-        self.proc = None
-        self.args = None
+    def __enter__(self) -> Self:
+        return self
 
-        self.started.clear()
-        self.ready.clear()
-        self.stopped.set()
-
-    def exec(self, command: str):
-        if self.stopped.is_set():
-            raise PlaygroundNotStarted()
-        self.ready.wait()
-        proc = self.proc
-        assert proc
-        assert proc.stdin
-        proc.stdin.write(command + "\n")
-        proc.stdin.flush()
-
-    @contextmanager
-    def listen(
-        self,
-        callback: Callable[[str], None] | None = None,
-        timeout: float | None = None,
-    ) -> Generator[Iterable[str]]:
-        queue = None
-        if callback is None:
-            queue = Queue()
-            callback = queue.put
-
-        self.listeners.append(callback)
-        try:
-            yield _drain_queue(queue, timeout=timeout) if queue else []
-        finally:
-            self.listeners.remove(callback)
-            if queue:
-                queue.shutdown()
-
-
-def _drain_queue[T](queue: Queue[T], timeout: float | None = None) -> Iterable[T]:
-    while True:
-        try:
-            yield queue.get(timeout=timeout)
-        except ShutDown, Empty:
-            break
+    def __exit__(self, *_):
+        self.stop()
 
 
 def _filter_game_log(record: logging.LogRecord) -> bool:
     record.msg = record.getMessage().removeprefix("[Not Secure] ")
     return True
+
+
+@contextmanager
+def playground_logs(timeout: float | None = None) -> Generator[Iterable[str]]:
+    listener = PlaygroundListener()
+
+    game = logging.getLogger("game")
+    game.addFilter(listener)
+    try:
+        yield listener.collect(timeout)
+    finally:
+        game.removeFilter(listener)
+        listener.queue.shutdown()
+
+
+class PlaygroundListener:
+    queue: Queue[str]
+
+    def __init__(self):
+        self.queue = Queue()
+
+    def __call__(self, record: logging.LogRecord) -> bool:
+        raw = getattr(record, "raw", None)
+        if raw is not None:
+            self.queue.put(raw)
+        return True
+
+    def collect(self, timeout: float | None = None) -> Iterable[str]:
+        while True:
+            try:
+                yield self.queue.get(timeout=timeout)
+            except ShutDown, Empty:
+                break

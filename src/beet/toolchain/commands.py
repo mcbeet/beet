@@ -113,7 +113,7 @@ def watch(
                 error_handler(format_padding=1),
                 project.override(
                     reload and "require[] = beet.contrib.livereload",
-                    play and "require[] = beet.contrib.playground.bootstrap",
+                    play and "require[] = beet.contrib.playground_interactivity",
                 ),
             ):
                 project.build()

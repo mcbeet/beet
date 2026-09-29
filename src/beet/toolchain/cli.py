@@ -45,6 +45,7 @@ def error_handler(should_exit: bool = False, format_padding: int = 0) -> Iterato
     except (click.Abort, KeyboardInterrupt):
         print()
         message = "Aborted."
+        should_exit = True
     except (click.ClickException, click.exceptions.Exit):
         raise
     except Exception as exc:
