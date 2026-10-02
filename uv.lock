@@ -1,5 +1,5 @@
 version = 1
-revision = 3
+revision = 5
 requires-python = ">=3.14"
 
 [manifest]
@@ -34,7 +34,7 @@ wheels = [
 
 [[package]]
 name = "beet"
-version = "0.119.0"
+version = "0.119.1"
 source = { editable = "." }
 dependencies = [
     { name = "click" },

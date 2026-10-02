@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v0.119.1 (2026-10-02)
+
+### Bug Fixes
+
+- Minify_function comment continuation
+  ([`5af3466`](https://github.com/mcbeet/beet/commit/5af34664663505ca70b66f97a3b502f1dd64b3d7))
+
+
 ## v0.119.0 (2026-09-19)
 
 ### Features
