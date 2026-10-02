@@ -2,6 +2,31 @@
 
 <!-- version list -->
 
+## v0.120.0-beta.1 (2026-10-02)
+
+### Bug Fixes
+
+- Suppress download failed for max_age refresh
+  ([`c8fd95e`](https://github.com/mcbeet/beet/commit/c8fd95e935dc1716100e47e6399f6ad483a170d5))
+
+### Features
+
+- Interactive console
+  ([`98d3170`](https://github.com/mcbeet/beet/commit/98d317082ec46db39209ee22beb774882fb59536))
+
+- Playground
+  ([`ff1d829`](https://github.com/mcbeet/beet/commit/ff1d8298a5314c7f86cf4b769c51529b8257e880))
+
+- Playground server listen for output
+  ([`337b3bb`](https://github.com/mcbeet/beet/commit/337b3bb08e9dc64b23e4c68ec8e98c43cb6f6527))
+
+- Shared cache and vanilla reports
+  ([`c566723`](https://github.com/mcbeet/beet/commit/c566723d3311a3a6899642fed1aaa7a0d3a5a804))
+
+- Vanilla server and runtime
+  ([`dc72d59`](https://github.com/mcbeet/beet/commit/dc72d59e508df02bfbc36c823aad5bdcbf361245))
+
+
 ## v0.119.0 (2026-09-19)
 
 ### Features
