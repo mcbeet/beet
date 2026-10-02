@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v0.36.0-beta.1 (2026-10-02)
+
+### Features
+
+- Shared cache and vanilla reports
+  ([`c566723`](https://github.com/mcbeet/beet/commit/c566723d3311a3a6899642fed1aaa7a0d3a5a804))
+
+
 ## v0.35.0 (2026-01-14)
 
 
