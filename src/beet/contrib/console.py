@@ -108,7 +108,7 @@ class Console:
                 self.session.app.exit(exception=ConsoleStop)
             self.cond.wait_for(lambda: self.session is None)
 
-    def _daemon(self, session: PromptSession):
+    def _daemon(self, session: PromptSession[str]):
         logging.getLogger("asyncio").addFilter(_filter_asyncio_logs)
 
         with patch_stdout():
