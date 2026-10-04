@@ -3,7 +3,7 @@ from pathlib import Path
 import pytest
 from beet import Context, Function
 from beet.core.utils import format_exc
-from mecha import CompilationError, DiagnosticError, Mecha
+from mecha import CompilationError, DiagnosticCollection, DiagnosticError, Mecha
 from pytest_insta import SnapshotFixture
 
 SANDBOX_EXAMPLES = [
@@ -22,7 +22,7 @@ SANDBOX_EXAMPLES = [
 def test_run(snapshot: SnapshotFixture, ctx_sandbox: Context, source: Function):
     mc = ctx_sandbox.inject(Mecha)
 
-    with pytest.raises((CompilationError, DiagnosticError)) as exc_info:
+    with pytest.raises((CompilationError, DiagnosticError, DiagnosticCollection)) as exc_info:
         mc.compile(source, resource_location="demo:foo")
 
     details = (
