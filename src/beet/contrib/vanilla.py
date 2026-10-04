@@ -94,6 +94,8 @@ class ClientJar:
                 # triggering merge policies that might try to deserialize
                 # files before they're fully retrieved.
                 temp = ResourcePack()
+                temp.extend_namespace.extend(pack.extend_namespace)
+                temp.extend_namespace_extra.update(pack.extend_namespace_extra)
                 with self.cache.parallel_downloads():
                     temp.mount(prefix, object_mapping.with_prefix(prefix))
                 pack.merge(temp)
