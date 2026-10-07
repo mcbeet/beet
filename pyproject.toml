@@ -52,6 +52,7 @@ dev = [
     "pytest>=9.0.0",
     "pytest-insta>=0.4.0",
     "pytest-minecraft>=0.2.0",
+    "pytest-xdist>=3.8.0",
     "python-semantic-release>=10.5.2",
     "ruff>=0.14.4",
     "zensical>=0.0.20",
