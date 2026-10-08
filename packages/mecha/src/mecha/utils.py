@@ -231,6 +231,9 @@ def underline_code(
         start = max(start, len(code) - len(code.lstrip()) + 1)
         stop = min(stop, len(code.rstrip()) + 1)
 
+        if start == stop and line == lineno:
+            stop += 1
+
         if start < stop:
             underline = NOTABS_REGEX.sub(" ", code[: start - 1]) + "^" * (stop - start)
             view.insert(index + 1, underline)
