@@ -220,6 +220,12 @@ def underline_code(
     gutter = [f"{i + view_start_line} |" for i in range(len(view))]
 
     for line in reversed(range(lineno, end_lineno + 1)):
+        # AI-assisted fix (Claude, Anthropic): see the commit message.
+        # A span ending at column 1 of a later line (e.g. a newline token)
+        # does not cover any character of that line.
+        if line > lineno and line == end_lineno and end_colno == 1:
+            continue
+
         index = line - view_start_line
         code = view[index] if index < len(view) else ""
         start = colno if line == lineno else 1
@@ -228,8 +234,13 @@ def underline_code(
         if start >= stop:
             stop = start + 1
 
-        start = max(start, len(code) - len(code.lstrip()) + 1)
-        stop = min(stop, len(code.rstrip()) + 1)
+        clamped_start = max(start, len(code) - len(code.lstrip()) + 1)
+        clamped_stop = min(stop, len(code.rstrip()) + 1)
+
+        if clamped_start < clamped_stop:
+            start, stop = clamped_start, clamped_stop
+        elif line != lineno or start <= len(code.rstrip()):
+            continue
 
         if start < stop:
             underline = NOTABS_REGEX.sub(" ", code[: start - 1]) + "^" * (stop - start)

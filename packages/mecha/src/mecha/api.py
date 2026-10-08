@@ -551,6 +551,14 @@ class Mecha:
                     self.database.enqueue(file_instance, initial_step)
                 except DiagnosticError as exc:
                     compilation_unit.diagnostics.extend(exc.diagnostics)
+                except UnicodeDecodeError as exc:
+                    # AI-assisted fix (Claude, Anthropic): see the commit message.
+                    compilation_unit.diagnostics.add(
+                        Diagnostic(
+                            "error",
+                            f"Could not decode file as utf-8: {exc.reason}.",
+                        )
+                    )
 
             elif step < len(self.steps):
                 if not compilation_unit.ast:
