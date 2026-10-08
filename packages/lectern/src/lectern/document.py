@@ -91,7 +91,7 @@ class Document:
     def load(self, path: FileSystemPath):
         """Load and extract fragments from the file at the specified location."""
         path = Path(path).resolve()
-        self.add(path.read_text(), external_files=path.parent)
+        self.add(path.read_text(encoding="utf-8"), external_files=path.parent)
 
     def add(
         self,
@@ -204,4 +204,4 @@ class Document:
             content = self.get_text()
 
         path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(content)
+        path.write_text(content, encoding="utf-8")
