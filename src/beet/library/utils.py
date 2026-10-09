@@ -17,9 +17,14 @@ from beet.core.utils import FileSystemPath
 
 
 def list_files(directory: FileSystemPath) -> Iterator[Path]:
-    for root, _, files in os.walk(directory):
+    # Slicing the prefix off the string os.walk already built is several times faster
+    # than rebuilding a Path per file just to have relative_to take it apart again
+    base: str = os.fspath(directory)
+    prefix_length: int = len(base) + (0 if base.endswith(("/", os.sep)) else 1)
+    for root, _, files in os.walk(base):
+        relative_root = root[prefix_length:]
         for filename in files:
-            yield Path(root, filename).relative_to(directory)
+            yield Path(relative_root, filename)
 
 
 def list_origin(origin: FileOrigin) -> List[PurePath]:
