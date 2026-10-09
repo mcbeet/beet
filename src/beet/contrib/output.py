@@ -47,7 +47,7 @@ def scan_directory(directory: Path) -> dict[str, tuple[int, int]]:
                 if entry.is_dir(follow_symlinks=False):
                     walk(entry.path, f"{prefix}{entry.name}/")
                 else:
-                    stat = entry.stat()
+                    stat = entry.stat(follow_symlinks=False)
                     result[f"{prefix}{entry.name}"] = (stat.st_size, stat.st_mtime_ns)
 
     if directory.is_dir():
