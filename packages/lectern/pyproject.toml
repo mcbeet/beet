@@ -41,8 +41,8 @@ lectern = "lectern.pytest_plugin"
 [tool.uv.sources]
 beet = { workspace = true }
 
-[tool.pytest.ini_options]
-addopts = "tests --import-mode=importlib"
+[tool.pytest]
+addopts = ["tests", "--import-mode=importlib"]
 
 [tool.semantic_release]
 commit_parser = "conventional-monorepo"

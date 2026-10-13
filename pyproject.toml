@@ -70,8 +70,8 @@ override-dependencies = ["click>=8.3.1"]
 [tool.uv.workspace]
 members = ["packages/*"]
 
-[tool.pytest.ini_options]
-addopts = "tests --import-mode=importlib"
+[tool.pytest]
+addopts = ["tests", "--import-mode=importlib"]
 
 [tool.semantic_release]
 commit_parser = "conventional-monorepo"
