@@ -33,6 +33,11 @@ dependencies = [
     "toml>=0.10.2",
 ]
 
+classifiers = [
+    "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: 3.15",
+]
+
 [project.urls]
 Repository = "https://github.com/mcbeet/beet"
 

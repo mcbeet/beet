@@ -24,6 +24,11 @@ dependencies = [
     "mecha>=0.105.0",
 ]
 
+classifiers = [
+    "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: 3.15",
+]
+
 [project.urls]
 Repository = "https://github.com/mcbeet/beet/blob/main/packages/bolt"
 
