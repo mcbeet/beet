@@ -9,8 +9,6 @@ __all__ = [
     "link",
     "clean",
     "reload",
-    "playground_logs",
-    "PlaygroundListener",
 ]
 
 
@@ -24,13 +22,13 @@ import re
 import subprocess
 from textwrap import dedent
 from threading import Condition, Thread
-from typing import Self
+from typing import Callable, Self
 
 from beet import Context, PluginOptions, configurable, PackOverwrite
 from beet.contrib.link import LinkManager
 from beet.contrib.singleton import singleton
 from beet.contrib.vanilla import Vanilla
-from beet.core.utils import JsonDict, remove_path
+from beet.core.utils import remove_path
 
 
 class PlaygroundOptions(PluginOptions):
@@ -126,11 +124,15 @@ class Playground:
     args: PlaygroundArgs | None
     ready: bool
 
+    listeners: list[Callable[[str], None]]
+
     def __init__(self):
         self.cond = Condition()
         self.proc = None
         self.args = None
         self.ready = False
+
+        self.listeners = []
 
     def start(self, args: PlaygroundArgs):
         with self.cond:
@@ -184,19 +186,36 @@ class Playground:
                 self.proc.stdin.write(command.strip() + "\n")
                 self.proc.stdin.flush()
 
+    @contextmanager
+    def log(self, timeout: float | None = None) -> Generator[Iterable[str]]:
+        queue = Queue[str]()
+        self.listeners.append(queue.put)
+        try:
+            yield _drain_queue(queue, timeout)
+        finally:
+            self.listeners.remove(queue.put)
+
     def _daemon(self, proc: subprocess.Popen[str]):
         game = logging.getLogger("game")
         game.addFilter(_filter_game_log)
 
+        levels = {
+            "DEBUG": logging.DEBUG,
+            "INFO": logging.INFO,
+            "WARN": logging.WARNING,
+            "ERROR": logging.ERROR,
+            "FATAL": logging.ERROR,
+        }
+
         regex = re.compile(r"\[(.+?)\] \[.+?/(DEBUG|INFO|WARN|ERROR|FATAL)\]: (.+)")
-        previous_level = ""
+        previous_level = None
 
         assert proc.stdout
         for line in proc.stdout:
-            extra: JsonDict = {"raw": line}
+            extra = {}
 
             if m := regex.match(line):
-                level = m[2]
+                level = levels.get(m[2])
                 message = m[3]
                 if message.startswith("Done ("):
                     with self.cond:
@@ -208,16 +227,13 @@ class Playground:
                 message = line
                 extra["continue"] = True
 
-            if level == "DEBUG":
-                game.debug(message, extra=extra)
-            elif level == "INFO":
-                game.info(message, extra=extra)
-            elif level == "WARN":
-                game.warning(message, extra=extra)
-            elif level in ["ERROR", "FATAL"]:
-                game.error(message, extra=extra)
+            if level is not None:
+                game.log(level, message, extra=extra)
 
             previous_level = level
+
+            for listener in self.listeners:
+                listener(line)
 
         with self.cond:
             proc.wait()
@@ -238,34 +254,9 @@ def _filter_game_log(record: logging.LogRecord) -> bool:
     return True
 
 
-@contextmanager
-def playground_logs(timeout: float | None = None) -> Generator[Iterable[str]]:
-    listener = PlaygroundListener()
-
-    game = logging.getLogger("game")
-    game.addFilter(listener)
-    try:
-        yield listener.collect(timeout)
-    finally:
-        game.removeFilter(listener)
-        listener.queue.shutdown()
-
-
-class PlaygroundListener:
-    queue: Queue[str]
-
-    def __init__(self):
-        self.queue = Queue()
-
-    def __call__(self, record: logging.LogRecord) -> bool:
-        raw = getattr(record, "raw", None)
-        if raw is not None:
-            self.queue.put(raw)
-        return True
-
-    def collect(self, timeout: float | None = None) -> Iterable[str]:
-        while True:
-            try:
-                yield self.queue.get(timeout=timeout)
-            except ShutDown, Empty:
-                break
+def _drain_queue[T](queue: Queue[T], timeout: float | None = None) -> Iterable[T]:
+    while True:
+        try:
+            yield queue.get(timeout=timeout)
+        except ShutDown, Empty:
+            break
