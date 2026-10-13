@@ -11,3 +11,5 @@ function ./welp:
 
 function ~/{"":_<2}
 function ~/foo{"bar":_^5}
+
+append function_tag minecraft:load {"values": [~/]}

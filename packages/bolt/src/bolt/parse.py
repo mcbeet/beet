@@ -62,6 +62,7 @@ __all__ = [
     "parse_dict_item",
     "LiteralParser",
     "TypeAnnotationParser",
+    "NestedLocationInterpolationParser",
 ]
 
 
@@ -97,6 +98,7 @@ from mecha import (
     get_stream_scope,
     get_stream_spec,
 )
+from mecha.contrib.nested_location import AstNestedLocation
 from mecha.contrib.relative_location import resolve_using_database
 from mecha.utils import (
     JsonQuoteHelper,
@@ -518,11 +520,13 @@ def get_bolt_parsers(
         ),
         "range": AlternativeParser([parsers["range"], InterpolationParser("range")]),
         "resource_location_or_tag": CommentDisambiguation(
-            AlternativeParser(
-                [
-                    InterpolationParser("resource_location", prefix=r"#"),
-                    parsers["resource_location_or_tag"],
-                ]
+            NestedLocationInterpolationParser(
+                AlternativeParser(
+                    [
+                        InterpolationParser("resource_location", prefix=r"#"),
+                        parsers["resource_location_or_tag"],
+                    ]
+                )
             )
         ),
         "item_slot": AlternativeParser(
@@ -2607,12 +2611,6 @@ class PrimaryParser:
                                 stream.expect(("curly", "}"))
                             fmt += "}"
 
-                    if not values and self.truncate:
-                        exc = InvalidSyntax(
-                            "Truncated nested location requires interpolated values."
-                        )
-                        raise set_location(exc, token, stream.current)
-
                     node = AstFormattedLocation(fmt=fmt, values=AstChildren(values))
                     node = set_location(node, token, stream.current)
 
@@ -2918,3 +2916,23 @@ class TypeAnnotationParser:
         string = stream.source[value.location.pos : value.end_location.pos]
         node = AstTypeAnnotation(string=string, value=value)
         return set_location(node, value)
+
+
+@dataclass
+class NestedLocationInterpolationParser:
+    """Convert AstFormattedLocation with no interpolated values to AstFormattedLocation."""
+
+    parser: Parser
+
+    def __call__(self, stream: TokenStream) -> Any:
+        node = self.parser(stream)
+        if (
+            isinstance(node, AstInterpolation)
+            and isinstance(node.value, AstFormattedLocation)
+            and not node.value.values
+        ):
+            node = set_location(
+                AstNestedLocation(is_tag=node.prefix == "#", path=node.value.fmt),
+                node,
+            )
+        return node

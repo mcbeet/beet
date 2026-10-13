@@ -122,3 +122,15 @@ function ref:upthis
 function ref:upthis/thing
 function ref:thing
 ```
+
+### minecraft
+
+`@function_tag minecraft:load`
+
+```json
+{
+  "values": [
+    "demo:foo"
+  ]
+}
+```
