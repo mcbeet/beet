@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v0.51.1-beta.1 (2026-10-14)
+
+### Bug Fixes
+
+- Don't require interpolated values
+  ([`c4bd759`](https://github.com/mcbeet/beet/commit/c4bd759b2ea2dbce3149d7a4bfcbb469374146cd))
+
+
 ## v0.51.0 (2026-09-10)
 
 ### Features
