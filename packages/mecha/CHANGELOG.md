@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v0.106.1-beta.1 (2026-10-14)
+
+### Bug Fixes
+
+- Missing caret
+  ([`ce6eeed`](https://github.com/mcbeet/beet/commit/ce6eeed9d2e6e9a74f7a951732c94f1972e64e26))
+
+
 ## v0.106.0 (2026-09-19)
 
 ### Features
