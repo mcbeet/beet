@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v0.120.0-beta.3 (2026-10-14)
+
+### Bug Fixes
+
+- Playground.log
+  ([`87fc297`](https://github.com/mcbeet/beet/commit/87fc297f7d5ba15e92094367c501319fe6fed627))
+
+
 ## v0.120.0-beta.2 (2026-10-02)
 
 ### Bug Fixes
