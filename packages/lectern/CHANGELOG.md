@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v0.36.0-beta.2 (2026-10-14)
+
+### Bug Fixes
+
+- Lectern encoding on load/save
+  ([`8f2694d`](https://github.com/mcbeet/beet/commit/8f2694db8a70f6c6d400d3896a1013a76f7874ab))
+
+
 ## v0.36.0-beta.1 (2026-10-02)
 
 ### Features

@@ -1,4 +1,4 @@
-__version__ = "0.36.0-beta.1"
+__version__ = "0.36.0-beta.2"
 
 from .directive import *  # noqa: F403
 from .document import *  # noqa: F403
