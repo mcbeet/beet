@@ -70,7 +70,10 @@ from dataclasses import dataclass
 from typing import Any, List, Optional, Tuple, Union
 from uuid import UUID, uuid4
 
+from tokenstream import TokenStream
+
 from beet.core.utils import JsonDict, extra_field, required_field
+
 from mecha import (
     AstChildren,
     AstCommand,
@@ -81,7 +84,6 @@ from mecha import (
     AstResourceLocation,
     AstRoot,
 )
-from tokenstream import TokenStream
 
 from .pattern import IDENTIFIER_PATTERN
 from .semantics import Binding

@@ -1,10 +1,10 @@
 from pathlib import Path
-
-from beet import DataPack, ResourcePack, Cache, LATEST_MINECRAFT_VERSION, JsonFile
-from beet.contrib.unknown_files import UnknownAsset, UnknownData
-from beet.contrib.worldgen import worldgen
-from beet.contrib.vanilla import MANIFEST_URL
 from zipfile import ZipFile
+
+from beet import LATEST_MINECRAFT_VERSION, Cache, DataPack, JsonFile, ResourcePack
+from beet.contrib.unknown_files import UnknownAsset, UnknownData
+from beet.contrib.vanilla import MANIFEST_URL
+from beet.contrib.worldgen import worldgen
 
 
 def test_vanilla_loading(tmp_path: Path):

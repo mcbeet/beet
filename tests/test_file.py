@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import List, Literal, Union
 
 import pytest
-from pydantic import BaseModel, RootModel, Field
+from pydantic import BaseModel, Field, RootModel
 from typing_extensions import Annotated
 
 from beet import BinaryFile, JsonFileBase, TextFile

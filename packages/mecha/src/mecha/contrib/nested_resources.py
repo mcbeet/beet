@@ -12,6 +12,8 @@ from dataclasses import dataclass, replace
 from textwrap import dedent
 from typing import Any, Dict, List, Type, Union, cast
 
+from tokenstream import InvalidSyntax, Token, TokenStream, set_location
+
 from beet import (
     Context,
     DataModelBase,
@@ -24,7 +26,6 @@ from beet import (
     TextFileBase,
 )
 from beet.core.utils import JsonDict, required_field, snake_case
-from tokenstream import InvalidSyntax, Token, TokenStream, set_location
 
 from mecha import (
     AstChildren,

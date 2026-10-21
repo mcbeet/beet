@@ -7,13 +7,13 @@ __all__ = [
 ]
 
 
-from functools import partial
 import json
 import logging
 import shutil
 from concurrent.futures import Executor, ThreadPoolExecutor
 from contextlib import closing, contextmanager
 from datetime import datetime, timedelta
+from functools import partial
 from pathlib import Path
 from textwrap import indent
 from time import time

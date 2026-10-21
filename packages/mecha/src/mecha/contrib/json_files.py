@@ -16,9 +16,10 @@ __all__ = [
 from dataclasses import dataclass
 from typing import Any, Set, Type, Union
 
+from tokenstream import TokenStream, set_location
+
 from beet import Context, DataPack, JsonFileBase, ResourcePack
 from beet.core.utils import required_field
-from tokenstream import TokenStream, set_location
 
 from mecha import (
     AstChildren,

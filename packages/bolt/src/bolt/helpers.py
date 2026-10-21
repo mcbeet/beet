@@ -10,6 +10,8 @@ from importlib import import_module
 from typing import Any, Callable, Dict
 from uuid import UUID
 
+from tokenstream import set_location
+
 from mecha import (
     AstAdvancementPredicate,
     AstBool,
@@ -46,7 +48,6 @@ from mecha import (
     AstWord,
 )
 from mecha.contrib.relative_location import resolve_relative_location
-from tokenstream import set_location
 
 from .utils import internal
 

@@ -7,9 +7,10 @@ __all__ = [
 from dataclasses import dataclass
 from typing import Any, Dict, Protocol, Set, Tuple, Union
 
+from tokenstream import TokenStream
+
 from beet import LATEST_MINECRAFT_VERSION
 from beet.core.utils import JsonDict, extra_field
-from tokenstream import TokenStream
 
 from .config import CommandTree
 from .prototype import CommandArgument, CommandPrototype, CommandSignature

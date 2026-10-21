@@ -8,8 +8,9 @@ import subprocess
 from glob import glob
 from typing import List, Literal, Optional
 
-from beet import Context, ListOption, PackageablePath, configurable
 from pydantic import BaseModel
+
+from beet import Context, ListOption, PackageablePath, configurable
 
 from .document import Document
 from .loaders import LinkFragmentLoader

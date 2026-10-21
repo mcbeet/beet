@@ -9,6 +9,7 @@ from dataclasses import replace
 from typing import Mapping
 
 import yaml
+
 from beet import Context, JsonFile
 
 from lectern import (

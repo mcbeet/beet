@@ -90,10 +90,11 @@ from typing import (
 )
 from uuid import UUID
 
-from beet import LATEST_MINECRAFT_VERSION
-from beet.core.utils import VersionNumber, split_version
 from nbtlib import Byte, Double, Float, Int, Long, OutOfRange, Short, String
 from tokenstream import InvalidSyntax, SourceLocation, TokenStream, set_location
+
+from beet import LATEST_MINECRAFT_VERSION
+from beet.core.utils import VersionNumber, split_version
 
 from .ast import (
     AstAdvancementPredicate,

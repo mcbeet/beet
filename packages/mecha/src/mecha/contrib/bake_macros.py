@@ -14,6 +14,10 @@ from dataclasses import dataclass, field, replace
 from typing import Any, Dict, List, Protocol, Set
 from weakref import WeakKeyDictionary
 
+from nbtlib import Numeric, String
+from pathspec import PathSpec
+from tokenstream import INITIAL_LOCATION, Preprocessor, SourceLocation, set_location
+
 from beet import (
     Context,
     Function,
@@ -24,9 +28,6 @@ from beet import (
     configurable,
 )
 from beet.core.utils import required_field
-from nbtlib import Numeric, String
-from pathspec import PathSpec
-from tokenstream import INITIAL_LOCATION, Preprocessor, SourceLocation, set_location
 
 from mecha import (
     AstChildren,

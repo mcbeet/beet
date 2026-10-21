@@ -32,6 +32,9 @@ from typing import (
     overload,
 )
 
+from pydantic import BaseModel, field_validator
+from tokenstream import InvalidSyntax, Preprocessor, TokenStream, set_location
+
 from beet import (
     LATEST_MINECRAFT_VERSION,
     Cache,
@@ -51,8 +54,6 @@ from beet.core.utils import (
     import_from_string,
     resolve_within,
 )
-from pydantic import BaseModel, field_validator
-from tokenstream import InvalidSyntax, Preprocessor, TokenStream, set_location
 
 from .ast import AstLiteral, AstNode, AstRoot
 from .config import CommandTree

@@ -1,6 +1,8 @@
-from beet import Context
-from mecha import Mecha
 from pytest_insta import SnapshotFixture
+
+from beet import Context
+
+from mecha import Mecha
 
 
 def test_prototypes(snapshot: SnapshotFixture, ctx: Context):

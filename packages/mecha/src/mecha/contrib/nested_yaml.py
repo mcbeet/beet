@@ -19,9 +19,10 @@ from contextlib import contextmanager
 from dataclasses import dataclass, field
 from typing import Any, Callable, Generic, Iterator, List, TypeVar
 
-from beet import Context
 from nbtlib import String
 from tokenstream import SourceLocation, TokenStream, set_location
+
+from beet import Context
 
 from mecha import (
     AstChildren,

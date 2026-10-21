@@ -12,19 +12,19 @@ __all__ = [
 ]
 
 
+import logging
+import re
+import subprocess
 from collections.abc import Generator, Iterable
 from contextlib import contextmanager
 from dataclasses import dataclass
-import logging
 from pathlib import Path
 from queue import Empty, Queue, ShutDown
-import re
-import subprocess
 from textwrap import dedent
 from threading import Condition, Thread
 from typing import Callable, Self
 
-from beet import Context, PluginOptions, configurable, PackOverwrite
+from beet import Context, PackOverwrite, PluginOptions, configurable
 from beet.contrib.link import LinkManager
 from beet.contrib.singleton import singleton
 from beet.contrib.vanilla import Vanilla

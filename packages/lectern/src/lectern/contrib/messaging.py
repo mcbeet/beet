@@ -8,8 +8,9 @@ __all__ = [
 
 from typing import Literal, Optional
 
-from beet import Context, ErrorMessage, Function, ListOption, configurable
 from pydantic import BaseModel
+
+from beet import Context, ErrorMessage, Function, ListOption, configurable
 
 from lectern import Document, LinkFragmentLoader
 

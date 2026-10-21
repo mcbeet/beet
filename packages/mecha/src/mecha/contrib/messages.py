@@ -11,10 +11,11 @@ __all__ = [
 from dataclasses import dataclass
 from typing import Any, Optional
 
+from tokenstream import TokenStream, set_location
+
 from beet import Context
 from beet.contrib.messages import MessageManager
 from beet.core.utils import required_field
-from tokenstream import TokenStream, set_location
 
 from mecha import (
     AstJson,

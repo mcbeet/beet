@@ -35,6 +35,8 @@ from typing import (
     cast,
 )
 
+from tokenstream import InvalidSyntax
+
 from beet import (
     BubbleException,
     Cache,
@@ -45,6 +47,7 @@ from beet import (
     TextFileBase,
 )
 from beet.core.utils import JsonDict, extra_field, import_from_string, required_field
+
 from mecha import (
     AstCacheBackend,
     AstChildren,
@@ -59,7 +62,6 @@ from mecha import (
     Dispatcher,
     MechaError,
 )
-from tokenstream import InvalidSyntax
 
 from .ast import AstImportedItem, AstImportedMacro, AstMacro, AstPrelude
 from .semantics import LexicalScope

@@ -74,8 +74,9 @@ from typing import (
     Union,
 )
 
-from beet.core.utils import required_field
 from tokenstream import InvalidSyntax, TokenPattern, TokenStream, set_location
+
+from beet.core.utils import required_field
 
 from mecha import AbstractChildren, AbstractNode
 from mecha.utils import QuoteHelper

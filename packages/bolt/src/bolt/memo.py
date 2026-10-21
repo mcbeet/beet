@@ -39,6 +39,7 @@ from beet import (
     ResourcePack,
 )
 from beet.core.utils import log_time, remove_path
+
 from mecha import AstChildren, AstRoot, DiagnosticCollection, Mecha, rule
 
 from .ast import AstMemo, AstMemoResult

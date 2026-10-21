@@ -1,6 +1,6 @@
 import re
 
-from beet import Context, Function, ErrorMessage
+from beet import Context, ErrorMessage, Function
 from beet.contrib.playground import Playground
 from beet.contrib.singleton import singleton
 

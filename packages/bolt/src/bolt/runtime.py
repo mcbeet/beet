@@ -11,8 +11,12 @@ from functools import partial
 from importlib.resources import files
 from typing import Any, Callable, Dict, Iterable, List, Optional, Set, Union
 
+from pathspec import PathSpec
+from tokenstream import set_location
+
 from beet import Context, TextFileBase, generate_tree
 from beet.core.utils import JsonDict, extra_field, required_field
+
 from mecha import (
     AstRoot,
     CommandSpec,
@@ -27,8 +31,6 @@ from mecha import (
 )
 from mecha.contrib.nested_location import NestedLocationResolver
 from mecha.contrib.relative_location import resolve_relative_location
-from pathspec import PathSpec
-from tokenstream import set_location
 
 from .ast import AstNonFunctionRoot
 from .codegen import Codegen

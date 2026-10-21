@@ -11,8 +11,9 @@ from dataclasses import dataclass, replace
 from pathlib import PurePosixPath
 from typing import Tuple
 
-from beet import Context
 from tokenstream import InvalidSyntax, SourceLocation, TokenStream, set_location
+
+from beet import Context
 
 from mecha import AstResourceLocation, CompilationDatabase, Mecha, Parser
 

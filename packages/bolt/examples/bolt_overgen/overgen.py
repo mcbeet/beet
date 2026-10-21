@@ -10,6 +10,7 @@ from beet import (
     TextFileBase,
 )
 from beet.core.utils import normalize_string
+
 from mecha import CompilationDatabase, CompilationUnit, Mecha
 
 from bolt import Runtime

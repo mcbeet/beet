@@ -11,6 +11,7 @@ import zipfile
 from typing import Optional, Tuple
 
 import click
+
 from beet import LATEST_MINECRAFT_VERSION, Context, DataPack, Function, run_beet
 from beet.toolchain.cli import BeetCommand, LogHandler, error_handler, message_fence
 

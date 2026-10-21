@@ -5,14 +5,13 @@ __all__ = [
 ]
 
 
+import inspect
 from collections.abc import Callable
 from contextlib import AbstractContextManager, ExitStack
-import inspect
 from typing import Any
 
 from beet import Connection, Context
 from beet.core.utils import SENTINEL_OBJ, format_obj
-
 
 type Singleton[T] = Callable[..., T | AbstractContextManager[T]]
 

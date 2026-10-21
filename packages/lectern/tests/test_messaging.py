@@ -2,8 +2,9 @@ from itertools import count
 from textwrap import dedent
 
 import pytest
-from beet import run_beet
 from pytest_insta import SnapshotFixture
+
+from beet import run_beet
 
 from lectern import Document
 

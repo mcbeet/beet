@@ -10,12 +10,12 @@ __all__ = [
 ]
 
 
-from collections.abc import Callable
+import _thread
 import logging
+from collections.abc import Callable
 from pathlib import Path
 from threading import Condition, Thread
 from typing import Self
-import _thread
 
 from prompt_toolkit import PromptSession
 from prompt_toolkit.auto_suggest import (

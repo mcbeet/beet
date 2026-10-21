@@ -20,12 +20,13 @@ __all__ = [
 
 import os
 import re
-from pathlib import Path
 import stat
 import subprocess
+from pathlib import Path
+from platform import machine, system
 from typing import Iterator, Optional, Self, Union
 from zipfile import ZipFile
-from platform import system, machine
+
 from beet import (
     LATEST_MINECRAFT_VERSION,
     Cache,

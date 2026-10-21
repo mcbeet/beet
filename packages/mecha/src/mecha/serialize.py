@@ -9,8 +9,9 @@ import re
 from dataclasses import dataclass, field
 from typing import Any, Iterable, Iterator, List, Literal, Union
 
-from beet.core.utils import required_field
 from pydantic import BaseModel
+
+from beet.core.utils import required_field
 
 from .ast import (
     AstBlock,

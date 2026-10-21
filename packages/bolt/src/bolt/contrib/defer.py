@@ -14,6 +14,7 @@ from typing import Any, Callable, Generator, List, TypeVar
 
 from beet import Context
 from beet.core.utils import required_field
+
 from mecha import (
     AstChildren,
     AstCommandSentinel,

@@ -4,9 +4,11 @@ from pprint import pformat
 from typing import Iterable, Optional, Tuple
 
 import click
+
 from beet import ErrorMessage, Project
 from beet.core.utils import format_directory
 from beet.toolchain.cli import beet, message_fence
+
 from mecha import AstCacheBackend
 
 from bolt import AstMemo, MemoRegistry, MemoStorage

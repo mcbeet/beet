@@ -50,7 +50,7 @@ __all__ = [
 
 from typing import ClassVar, Union
 
-from beet import Context, DataPack, JsonFile, TagFile, NamespaceFileScope
+from beet import Context, DataPack, JsonFile, NamespaceFileScope, TagFile
 
 
 def beet_default(ctx: Context):

@@ -17,6 +17,7 @@ from typing import Any, Iterable, List, Optional, Set, TypeVar
 
 from beet import Container
 from beet.core.utils import FileSystemPath
+
 from mecha.utils import string_to_number
 
 T = TypeVar("T")

@@ -11,8 +11,9 @@ from textwrap import indent
 from types import TracebackType
 from typing import Any, Iterator, List, Literal, Optional, Type
 
-from beet import BubbleException, TextFileBase
 from tokenstream import UNKNOWN_LOCATION, SourceLocation
+
+from beet import BubbleException, TextFileBase
 
 from .error import MechaError
 from .utils import underline_code

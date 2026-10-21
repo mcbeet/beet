@@ -10,9 +10,10 @@ from dataclasses import dataclass, replace
 from importlib.resources import files
 from typing import List
 
+from tokenstream import set_location
+
 from beet import Context, FunctionTag, Generator
 from beet.core.utils import required_field
-from tokenstream import set_location
 
 from mecha import (
     AstChildren,

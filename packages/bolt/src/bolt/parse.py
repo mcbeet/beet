@@ -71,8 +71,18 @@ from dataclasses import dataclass, field, replace
 from typing import Any, Dict, FrozenSet, List, Literal, Optional, Set, Tuple, Type, cast
 from uuid import UUID, uuid4
 
+from tokenstream import (
+    InvalidSyntax,
+    Token,
+    TokenStream,
+    UnexpectedEOF,
+    UnexpectedToken,
+    set_location,
+)
+
 from beet import Function
 from beet.core.utils import extra_field
+
 from mecha import (
     AdjacentConstraint,
     AlternativeParser,
@@ -105,14 +115,6 @@ from mecha.utils import (
     QuoteHelper,
     normalize_whitespace,
     string_to_number,
-)
-from tokenstream import (
-    InvalidSyntax,
-    Token,
-    TokenStream,
-    UnexpectedEOF,
-    UnexpectedToken,
-    set_location,
 )
 
 from .ast import (

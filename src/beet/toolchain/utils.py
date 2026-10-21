@@ -14,14 +14,14 @@ __all__ = [
 
 import json
 import os
-from pathlib import Path
 import re
 from copy import copy
+from pathlib import Path
 from typing import Any, Callable, Iterable, List, Literal, Mapping, Sequence, cast
+
 from platformdirs import user_data_dir
 
 from beet.core.cache import Cache, MultiCache
-
 
 FNV_32_INIT = 0x811C9DC5
 FNV_64_INIT = 0xCBF29CE484222325

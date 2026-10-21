@@ -8,9 +8,10 @@ from importlib.resources import files
 from pathlib import Path
 from typing import Dict, Iterator, List, Literal, Optional, Set, Tuple, Union
 
+from pydantic import BaseModel
+
 from beet import ErrorMessage
 from beet.core.utils import FileSystemPath, JsonDict, VersionNumber, split_version
-from pydantic import BaseModel
 
 
 class CommandTree(BaseModel):

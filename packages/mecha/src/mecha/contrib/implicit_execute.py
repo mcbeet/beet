@@ -8,8 +8,9 @@ __all__ = [
 from dataclasses import dataclass, replace
 from typing import Any, Set
 
-from beet import Context
 from tokenstream import TokenStream, set_location
+
+from beet import Context
 
 from mecha import AstChildren, AstCommand, Mecha, Parser
 

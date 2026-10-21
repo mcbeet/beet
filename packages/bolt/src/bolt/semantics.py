@@ -16,9 +16,11 @@ __all__ = [
 from dataclasses import dataclass, field, replace
 from typing import Dict, List, Literal, Optional, Set, Tuple, Type, TypeVar
 
-from beet.core.utils import extra_field
-from mecha import AstNode
 from tokenstream import InvalidSyntax, set_location
+
+from beet.core.utils import extra_field
+
+from mecha import AstNode
 
 from .utils import suggest_typo
 

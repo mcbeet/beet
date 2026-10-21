@@ -34,10 +34,10 @@ from typing import (
     Generic,
     Mapping,
     Optional,
+    Self,
     Type,
     TypeVar,
     Union,
-    Self,
 )
 from zipfile import ZipFile
 
@@ -46,8 +46,6 @@ from PIL import Image, ImageChops
 from pydantic import BaseModel, ValidationError
 
 from .error import BubbleException, WrappedException
-
-
 from .utils import (
     FileSystemPath,
     JsonDict,

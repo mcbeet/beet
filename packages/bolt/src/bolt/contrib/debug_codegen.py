@@ -9,6 +9,7 @@ from dataclasses import dataclass
 
 from beet import Context
 from beet.core.utils import required_field
+
 from mecha import AstRoot, Mecha, Visitor, rule
 
 from bolt import Runtime

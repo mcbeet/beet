@@ -13,9 +13,10 @@ __all__ = [
 from dataclasses import dataclass
 from typing import Iterable, Iterator, List, Optional, Tuple, Union
 
+from tokenstream import InvalidSyntax, TokenStream, set_location
+
 from beet import Context, Generator
 from beet.core.utils import required_field
-from tokenstream import InvalidSyntax, TokenStream, set_location
 
 from mecha import (
     AlternativeParser,

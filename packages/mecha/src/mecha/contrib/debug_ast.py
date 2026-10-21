@@ -9,9 +9,10 @@ __all__ = [
 
 from dataclasses import dataclass
 
+from pydantic import BaseModel
+
 from beet import Context, configurable
 from beet.core.utils import required_field
-from pydantic import BaseModel
 
 from mecha import AstRoot, CompilationDatabase, Mecha, Visitor, rule
 

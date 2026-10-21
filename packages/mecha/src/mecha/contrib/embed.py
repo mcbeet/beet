@@ -14,9 +14,10 @@ from dataclasses import dataclass
 from difflib import SequenceMatcher
 from typing import Any, List, Optional, Protocol, TypeVar, Union
 
+from tokenstream import INITIAL_LOCATION, Preprocessor, SourceLocation, set_location
+
 from beet import Context, TextFileBase
 from beet.core.utils import required_field
-from tokenstream import INITIAL_LOCATION, Preprocessor, SourceLocation, set_location
 
 from mecha import (
     AstJsonValue,

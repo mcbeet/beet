@@ -4,8 +4,9 @@ __all__ = [
 ]
 
 
-from beet import Context, ListOption, configurable
 from pydantic import BaseModel
+
+from beet import Context, ListOption, configurable
 
 from .runtime import Runtime
 

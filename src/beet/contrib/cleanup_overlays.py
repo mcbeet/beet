@@ -6,7 +6,7 @@ __all__ = [
 ]
 
 
-from beet import Context, PluginOptions, configurable, ListOption
+from beet import Context, ListOption, PluginOptions, configurable
 
 
 class CleanupOverlaysOptions(PluginOptions):

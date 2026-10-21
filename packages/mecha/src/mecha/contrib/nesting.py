@@ -12,12 +12,12 @@ from dataclasses import dataclass, field, replace
 from importlib.resources import files
 from typing import Generator, List, cast
 
-from beet import Context, Function
-from beet import Generator as BeetGenerator
-from beet import configurable
-from beet.core.utils import required_field, split_version
 from pydantic import BaseModel
 from tokenstream import InvalidSyntax, TokenStream, set_location
+
+from beet import Context, Function, configurable
+from beet import Generator as BeetGenerator
+from beet.core.utils import required_field, split_version
 
 from mecha import (
     AstChildren,

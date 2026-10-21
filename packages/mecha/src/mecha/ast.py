@@ -115,11 +115,25 @@ from typing import (
 )
 from uuid import UUID
 
-from beet.core.utils import JsonDict, extra_field, required_field
-from nbtlib import Byte, ByteArray, Compound, CompoundMatch, Double, Int, IntArray
+from nbtlib import (
+    Byte,
+    ByteArray,
+    Compound,
+    CompoundMatch,
+    Double,
+    Int,
+    IntArray,
+    ListIndex,
+    LongArray,
+    NamedKey,
+    Numeric,
+    Path,
+    String,
+)
 from nbtlib import List as ListTag
-from nbtlib import ListIndex, LongArray, NamedKey, Numeric, Path, String
 from tokenstream import UNKNOWN_LOCATION, SourceLocation, set_location
+
+from beet.core.utils import JsonDict, extra_field, required_field
 
 from .utils import string_to_number
 

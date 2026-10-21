@@ -1,6 +1,7 @@
-from beet import Context, BinaryFile, NamespaceFileScope
-from beet.contrib.vanilla import Vanilla
 from typing import ClassVar
+
+from beet import BinaryFile, Context, NamespaceFileScope
+from beet.contrib.vanilla import Vanilla
 
 
 class UnihexZip(BinaryFile):

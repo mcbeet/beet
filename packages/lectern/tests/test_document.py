@@ -1,6 +1,7 @@
 from typing import Mapping, Optional
 
 import pytest
+
 from beet import DataPack, Function, ResourcePack
 
 from lectern import Directive, Document, Fragment, InvalidFragment

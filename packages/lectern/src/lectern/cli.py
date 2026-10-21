@@ -7,6 +7,7 @@ __all__ = [
 from typing import Any, Optional, Tuple
 
 import click
+
 from beet import ErrorMessage, run_beet
 from beet.toolchain.cli import error_handler
 

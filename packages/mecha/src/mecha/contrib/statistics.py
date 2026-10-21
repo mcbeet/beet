@@ -12,9 +12,10 @@ from collections import defaultdict
 from dataclasses import dataclass
 from typing import Dict, Iterator, List, Optional, Tuple, Union
 
+from pydantic import BaseModel, Field
+
 from beet import Context
 from beet.core.utils import dump_json
-from pydantic import BaseModel, Field
 
 from mecha import (
     AstCommand,

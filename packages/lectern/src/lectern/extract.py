@@ -26,10 +26,11 @@ from typing import (
     Union,
 )
 
-from beet import Cache, DataPack, ResourcePack
-from beet.core.utils import FileSystemPath
 from markdown_it.main import MarkdownIt
 from markdown_it.token import Token
+
+from beet import Cache, DataPack, ResourcePack
+from beet.core.utils import FileSystemPath
 
 from .directive import Directive
 from .fragment import Fragment

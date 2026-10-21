@@ -1,7 +1,8 @@
 import pytest
+from pytest_insta import SnapshotFixture
+
 from beet import Function, JsonFile
 from beet.core.utils import JsonDict
-from pytest_insta import SnapshotFixture
 
 from mecha import DiagnosticError, Mecha
 

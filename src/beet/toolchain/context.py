@@ -37,7 +37,7 @@ from typing import (
     overload,
 )
 
-from pydantic import BaseModel, ValidationError, ConfigDict
+from pydantic import BaseModel, ConfigDict, ValidationError
 
 from beet.core.cache import Cache, MultiCache
 from beet.core.container import Container

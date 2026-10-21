@@ -32,12 +32,11 @@ from copy import deepcopy
 from dataclasses import dataclass
 from typing import ClassVar, Dict, Optional, Type
 
-from beet.resources.pack_format_registry import PackFormatRegistryContainer
-
 from PIL.Image import Image
 
 from beet.core.file import BinaryFile, BinaryFileContent, JsonFile, PngFile, TextFile
 from beet.core.utils import JsonDict, extra_field
+from beet.resources.pack_format_registry import PackFormatRegistryContainer
 
 from .base import (
     LATEST_MINECRAFT_VERSION,
