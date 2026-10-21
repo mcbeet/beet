@@ -32,8 +32,8 @@ def get_formatter(
 
     suffix = "\n" if opts.final_newline else ""
 
-    return (
-        lambda content: json.dumps(
+    return lambda content: (
+        json.dumps(
             content,
             ensure_ascii=opts.ensure_ascii,
             allow_nan=opts.allow_nan,

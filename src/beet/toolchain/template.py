@@ -73,7 +73,7 @@ class FallbackContext(JinjaContext):
 
             try:
                 return ensure_builtins(manager.ctx.meta[key])
-            except (KeyError, TypeError):
+            except KeyError, TypeError:
                 pass
 
         return value

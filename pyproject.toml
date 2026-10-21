@@ -100,3 +100,6 @@ prerelease_token = "beta"
 [tool.pyright]
 failOnWarnings = false
 reportImportCycles = "none"
+
+[tool.ruff]
+extend-exclude = ["*.md"]

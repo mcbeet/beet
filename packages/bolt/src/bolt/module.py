@@ -360,7 +360,7 @@ class ModuleManager(Mapping[TextFileBase[Any], CompiledModule]):
         """Error handler for running module code."""
         try:
             yield
-        except (BubbleException, InvalidSyntax, SilentCompilationInterrupt):
+        except BubbleException, InvalidSyntax, SilentCompilationInterrupt:
             raise
         except UnusableCompilationUnit as exc:
             if not exc.compilation_unit.diagnostics.error:

@@ -89,7 +89,7 @@ class MessageReferenceTransformer(MutatingReducer):
 
         try:
             message = self.messages.get(name, path)
-        except (KeyError, IndexError):
+        except KeyError, IndexError:
             path = f"{path!r} in " if path else ""
             yield Diagnostic("error", f"Message not found {path}{name!r}.")
             return set_location(AstJson.from_value({}), node)

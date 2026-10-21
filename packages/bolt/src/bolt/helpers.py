@@ -176,7 +176,7 @@ class AttributeHandler:
                 result = self.obj[attr]
                 self.item = True
                 return result
-            except (TypeError, LookupError):
+            except TypeError, LookupError:
                 raise exc from None
 
     @internal

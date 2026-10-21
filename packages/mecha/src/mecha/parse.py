@@ -1309,7 +1309,7 @@ class NbtParser:
                             if "." in number.value
                             else Int(number.value)
                         )
-                except (OutOfRange, ValueError):
+                except OutOfRange, ValueError:
                     value = String(number.value)
 
             elif string:
