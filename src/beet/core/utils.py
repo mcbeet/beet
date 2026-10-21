@@ -303,7 +303,7 @@ def format_directory(directory: FileSystemPath, prefix: str = "") -> Iterator[st
         del entries[crop_entries:]
 
     indents = ["├─"] * len(entries)
-    if count <= max_entries:
+    if indents and count <= max_entries:
         indents[-1] = "└─"
 
     for indent, entry in zip(indents, entries):
