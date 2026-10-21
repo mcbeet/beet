@@ -51,6 +51,15 @@
   ([`dc72d59`](https://github.com/mcbeet/beet/commit/dc72d59e508df02bfbc36c823aad5bdcbf361245))
 
 
+## v0.119.2 (2026-10-21)
+
+### Bug Fixes
+
+- #506 adopt vanilla configuration for temporary pack
+  ([#510](https://github.com/mcbeet/beet/pull/510),
+  [`0499615`](https://github.com/mcbeet/beet/commit/0499615c44d35f5cdb7f47b52d6b10879f808e34))
+
+
 ## v0.119.1 (2026-10-02)
 
 ### Bug Fixes
