@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v0.106.1-beta.2 (2026-10-21)
+
+### Bug Fixes
+
+- Anonymous with block macro broken in #518
+  ([`b1b2fae`](https://github.com/mcbeet/beet/commit/b1b2fae43fcebbd0860621bbb6786eef348ba6a9))
+
+
 ## v0.106.1-beta.1 (2026-10-14)
 
 ### Bug Fixes
