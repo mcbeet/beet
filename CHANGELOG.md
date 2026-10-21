@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v0.121.1 (2026-10-21)
+
+### Bug Fixes
+
+- Print plain text when stdout is not a terminal ([#525](https://github.com/mcbeet/beet/pull/525),
+  [`72b5314`](https://github.com/mcbeet/beet/commit/72b531436e4297e2c7907fe4e3922bf850a46b73))
+
+
 ## v0.121.0 (2026-10-21)
 
 ### Bug Fixes
