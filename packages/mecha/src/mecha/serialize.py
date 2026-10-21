@@ -168,7 +168,7 @@ class Serializer(Visitor):
 
         for command in node.commands:
             if source:
-                end_pos = max(command.location.pos, pos + 1)
+                end_pos = max(command.location.pos, pos)
                 if pos > -1:
                     if fill := source[pos:end_pos]:
                         result.append(self.regex_comments.sub(r"\1", fill))
