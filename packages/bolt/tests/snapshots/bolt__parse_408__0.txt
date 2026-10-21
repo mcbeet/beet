@@ -1,0 +1,7 @@
+i = 1
+#>ERROR  Trailing input following final expression.
+# line 2, column 17
+#      1 |  i = 1
+#      2 |  range_tuple = i ..
+#        :                  ^^
+range_tuple = i ..

@@ -1,0 +1,23 @@
+_bolt_lineno = [1, 8], [1, 2]
+_bolt_helper_children = _bolt_runtime.helpers['children']
+_bolt_helper_replace = _bolt_runtime.helpers['replace']
+with _bolt_runtime.scope() as __bolt_var5:
+    __bolt_var0 = 1
+    i = __bolt_var0
+    __bolt_var1 = None
+    __bolt_var2 = i
+    __bolt_var3 = 1
+    __bolt_var2 = __bolt_var2 + __bolt_var3
+    __bolt_var4 = (__bolt_var1,__bolt_var2,)
+    range_tuple = __bolt_var4
+__bolt_var6 = _bolt_helper_replace(_bolt_refs[0], commands=_bolt_helper_children(__bolt_var5))
+---
+output = __bolt_var6
+---
+_bolt_refs[0]
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=30, lineno=3, colno=1)
+  commands:
+    <class 'bolt.ast.AstStatement'>
+    <class 'bolt.ast.AstStatement'>

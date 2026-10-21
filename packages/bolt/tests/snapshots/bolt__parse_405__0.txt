@@ -1,0 +1,7 @@
+i = 1
+#>ERROR  Expected identifier but got whitespace ' '.
+# line 2, column 28
+#      1 |  i = 1
+#      2 |  if score foo bar matches .. i say hi
+#        :                             ^
+if score foo bar matches .. i say hi

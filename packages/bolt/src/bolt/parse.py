@@ -33,6 +33,7 @@ __all__ = [
     "PrimaryParser",
     "ProcMacroExpansion",
     "ProcMacroParser",
+    "RangeTupleParser",
     "RootScopeHandler",
     "SubcommandConstraint",
     "ToplevelHandler",
@@ -84,6 +85,7 @@ from tokenstream import (
 from beet import Function
 from beet.core.utils import extra_field
 
+from mecha import NUMBER_PATTERN as RANGE_NUMBER_PATTERN
 from mecha import (
     AdjacentConstraint,
     AlternativeParser,
@@ -359,15 +361,17 @@ def get_bolt_parsers(
         ),
         "bolt:memo_root": MemoRootParser(EscapeAnalysisParser(delegate("nested_root"))),
         "bolt:del_target": parse_del_target,
-        "bolt:interpolation": UnaryParser(
-            operators=[r"\+", "-"],
-            parser=BinaryParser(
-                operators=[r"\*\*(?!=)"],
-                parser=BuiltinCallRestriction(
-                    PrimaryParser(delegate("bolt:identifier"), truncate=True),
-                    builtins=modules.builtins,
+        "bolt:interpolation": RangeTupleParser(
+            parser=UnaryParser(
+                operators=[r"\+", "-"],
+                parser=BinaryParser(
+                    operators=[r"\*\*(?!=)"],
+                    parser=BuiltinCallRestriction(
+                        PrimaryParser(delegate("bolt:identifier"), truncate=True),
+                        builtins=modules.builtins,
+                    ),
+                    right_associative=True,
                 ),
-                right_associative=True,
             ),
         ),
         "bolt:identifier": parse_identifier,
@@ -442,7 +446,8 @@ def get_bolt_parsers(
             operators=[r"\*(?!=)", r"//(?!=)", r"/(?!=)", r"%(?!=)"],
             parser=delegate("bolt:factor"),
         ),
-        "bolt:factor": UnaryParser(
+        "bolt:factor": RangeTupleParser(parser=delegate("bolt:range_bound")),
+        "bolt:range_bound": UnaryParser(
             operators=[r"\+", "-"],
             parser=delegate("bolt:power"),
         ),
@@ -528,7 +533,7 @@ def get_bolt_parsers(
         "nbt_path": AlternativeParser(
             [InterpolationParser("nbt_path"), parsers["nbt_path"]]
         ),
-        "range": AlternativeParser([parsers["range"], InterpolationParser("range")]),
+        "range": AlternativeParser([InterpolationParser("range"), parsers["range"]]),
         "resource_location_or_tag": CommentDisambiguation(
             NestedLocationInterpolationParser(
                 AlternativeParser(
@@ -2520,7 +2525,7 @@ class PrimaryParser:
             token = stream.get(("brace", "("), "format_string", "nested_location")
 
             if token and token.match("brace"):
-                with stream.ignore("newline"):
+                with stream.ignore("newline", "whitespace"):
                     comma = None
                     items: list[AstExpression] = []
 
@@ -2630,7 +2635,7 @@ class PrimaryParser:
         with (
             stream.intercept(*["whitespace"] * self.truncate),
             stream.syntax(
-                dot=r"\.",
+                dot=r"\.(?!\.)",
                 comma=r",",
                 brace=r"\(|\)",
                 bracket=r"\[|\]",
@@ -2946,3 +2951,44 @@ class NestedLocationInterpolationParser:
                 node,
             )
         return node
+
+
+@dataclass
+class RangeTupleParser:
+    """Parser for tuple expressions using range syntax."""
+
+    parser: Parser
+
+    def __call__(self, stream: TokenStream) -> Any:
+        with stream.syntax(
+            range_from=rf"{RANGE_NUMBER_PATTERN}\.\.(?!\.)",
+            range_to=rf"\.\.{RANGE_NUMBER_PATTERN}",
+            range=r"\.\.(?!\.)",
+        ):
+            if token := stream.get("range_from", "range"):
+                literal = token.value.removesuffix("..")
+                min = set_location(
+                    AstValue(value=string_to_number(literal) if literal else None),
+                    token,
+                    token.end_location.with_horizontal_offset(-2),
+                )
+                with stream.intercept("whitespace"):
+                    max = self.parser(stream)
+            else:
+                min = self.parser(stream)
+                with stream.intercept("whitespace"):
+                    token = stream.get("range_to", "range")
+                if not token:
+                    return min
+                literal = token.value.removeprefix("..")
+                max = set_location(
+                    AstValue(value=string_to_number(literal) if literal else None),
+                    token.location.with_horizontal_offset(2),
+                    token,
+                )
+                if max.value is None:
+                    with stream.alternative(), stream.intercept("whitespace"):
+                        max = self.parser(stream)
+
+        node = AstTuple(items=AstChildren([min, max]))
+        return set_location(node, min, max)

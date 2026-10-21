@@ -336,6 +336,13 @@ say demo:import_b
 say 14
 ```
 
+`@function demo:range_tuple`
+
+```mcfunction
+function demo:range_tuple/check
+function demo:range_tuple/check
+```
+
 `@function(strip_final_newline) demo:thing`
 
 ```mcfunction
@@ -616,6 +623,28 @@ execute if score @s thingy matches 19 run say 19
 
 ```mcfunction
 say that's neat
+```
+
+`@function demo:range_tuple/check`
+
+```mcfunction
+execute if score foo bar matches 10.. run say hi
+execute if score foo bar matches ..20 run say hi
+execute if score foo bar matches 10..20 run say hi
+execute if score foo bar matches -20.. run say hi
+execute if score foo bar matches ..-10 run say hi
+execute if score foo bar matches -20..-10 run say hi
+execute if score foo bar matches 10..20 run say hi
+execute if score foo bar matches 10..20 run say hi
+execute if score foo bar matches -20..-10 run say hi
+execute if score foo bar matches -20..-10 run say hi
+execute if score foo bar matches -10.. run say hi
+execute if score foo bar matches ..30 run say hi
+execute if score foo bar matches -10..0 run say hi
+execute if score foo bar matches 0..30 run say hi
+execute if score foo bar matches -10..20 run say hi
+execute if score foo bar matches 10..30 run say hi
+execute if score foo bar matches -10..30 run say hi
 ```
 
 `@function_tag demo:yolo_funcs`
