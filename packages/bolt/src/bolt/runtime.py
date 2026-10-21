@@ -215,7 +215,7 @@ class Evaluator(Visitor):
     modules: ModuleManager = required_field()
 
     entrypoint: List[str] = field(default_factory=list)
-    entrypoint_spec: PathSpec = extra_field(init=False)
+    entrypoint_spec: PathSpec[Any] = extra_field(init=False)
 
     def __post_init__(self):
         super().__post_init__()
@@ -227,7 +227,7 @@ class Evaluator(Visitor):
             for patterns in args
             for entry in ([patterns] if isinstance(patterns, str) else patterns)
         )
-        self.entrypoint_spec = PathSpec.from_lines("gitwildmatch", self.entrypoint)
+        self.entrypoint_spec = PathSpec.from_lines("gitignore", self.entrypoint)
 
     @rule(AstRoot)
     @internal

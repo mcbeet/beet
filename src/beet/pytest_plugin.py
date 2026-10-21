@@ -1,7 +1,7 @@
 from pathlib import Path
 from pprint import pformat
 
-from _pytest.assertion.util import assertrepr_compare
+import pytest
 
 from beet import (
     DataPack,
@@ -43,16 +43,24 @@ else:
             value.save(path=path, overwrite=True)
 
 
+@pytest.hookimpl(wrapper=True)
 def pytest_assertrepr_compare(config, op, left, right):
+    result = yield
+
     if type(left) is not type(right) or op != "==":
-        return
+        return result
 
     explanation = []
 
     if isinstance(left, Pack):
         if left.name != right.name:
-            if diff := assertrepr_compare(config, op, left.name, right.name):
-                explanation += ["", "Differing attribute 'name':"] + diff[1:]
+            if diff := config.hook.pytest_assertrepr_compare(
+                config=config,
+                op=op,
+                left=left.name,
+                right=right.name,
+            ):
+                explanation += ["", "Differing attribute 'name':"] + diff[0][1:]
         if left.extra != right.extra:
             explanation += generate_explanation(config, left.extra, right.extra, "file")
         if dict(left) != dict(right):
@@ -79,12 +87,14 @@ def pytest_assertrepr_compare(config, op, left, right):
             left=left.ensure_deserialized(),
             right=right.ensure_deserialized(),
         ):
-            return diff[0]
+            return diff
     elif isinstance(left, OverlayContainer):
         explanation += generate_explanation(config, left, right, "pack")
 
-    if explanation and (diff := assertrepr_compare(config, op, left, right)):
-        return [diff[0]] + explanation
+    if explanation:
+        result[0][1:] = explanation
+
+    return result
 
 
 def plural(name, count):

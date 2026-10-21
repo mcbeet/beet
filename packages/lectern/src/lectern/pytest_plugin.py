@@ -1,6 +1,7 @@
 from pathlib import Path
 
-from _pytest.assertion.util import assertrepr_compare
+import pytest
+
 from beet.library.test_utils import ignore_name
 
 from lectern import Document
@@ -53,9 +54,12 @@ else:
             value.save(path / "README.md", snapshot=True, external_files=path)
 
 
+@pytest.hookimpl(wrapper=True)
 def pytest_assertrepr_compare(config, op, left, right):
+    result = yield
+
     if type(left) is not type(right) or op != "==":
-        return
+        return result
 
     explanation = []
 
@@ -68,12 +72,17 @@ def pytest_assertrepr_compare(config, op, left, right):
             explanation += generate_explanation(config, left.data, right.data)
 
     if explanation:
-        return [assertrepr_compare(config, op, left, right)[0]] + explanation  # pyright: ignore[reportOptionalSubscript]
+        result[0][1:] = explanation
+
+    return result
 
 
 def generate_explanation(config, left, right):
     summary, *explanation = config.hook.pytest_assertrepr_compare(
-        config=config, op="==", left=left, right=right
+        config=config,
+        op="==",
+        left=left,
+        right=right,
     )[0]
 
     yield "  assert " + summary

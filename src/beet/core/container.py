@@ -69,7 +69,7 @@ class MergeMixin:
 class MatchMixin:
     def match(self, *patterns: str) -> Set[str]:
         """Return keys matching the given path patterns."""
-        spec = PathSpec.from_lines("gitwildmatch", patterns)
+        spec = PathSpec.from_lines("gitignore", patterns)
         return set(map(str, spec.match_files(self.keys())))  # pyright: ignore[reportAttributeAccessIssue]
 
 

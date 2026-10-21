@@ -66,8 +66,8 @@ def bake_macros(ctx: Context, opts: BakeMacrosOptions):
     mc.steps.insert(
         mc.steps.index(mc.transform) + 1,
         MacroBaker(
-            match_spec=PathSpec.from_lines("gitwildmatch", opts.match.entries()),
-            macro_spec=PathSpec.from_lines("gitwildmatch", opts.macro.entries()),
+            match_spec=PathSpec.from_lines("gitignore", opts.match.entries()),
+            macro_spec=PathSpec.from_lines("gitignore", opts.macro.entries()),
             database=mc.database,
             serialize=mc.serialize,
             generate=ctx.generate,
@@ -119,8 +119,8 @@ class MacroInvocation:
 class MacroBaker(Visitor):
     """Visitor for baking static macro invocations."""
 
-    match_spec: PathSpec = required_field()
-    macro_spec: PathSpec = required_field()
+    match_spec: PathSpec[Any] = required_field()
+    macro_spec: PathSpec[Any] = required_field()
 
     database: CompilationDatabase = required_field()
     serialize: Serializer = required_field()

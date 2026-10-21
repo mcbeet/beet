@@ -20,15 +20,15 @@ keywords = [
 
 requires-python = ">=3.14"
 dependencies = [
-    "click>=8.3.1",
+    "click>=8.5.0",
     "click-help-colors>=0.9.4",
     "jinja2>=3.1.6",
     "nbtlib==1.12.1",
-    "pathspec>=0.12.1",
-    "pillow>=12.0.0",
+    "pathspec>=1.1.1",
+    "pillow>=13.0.0",
     "platformdirs>=4.11.11",
     "prompt-toolkit>=3.0.53",
-    "pydantic>=2.12.4",
+    "pydantic>=2.14.1",
     "pyyaml>=6.0.3",
     "toml>=0.10.2",
 ]
@@ -53,14 +53,14 @@ beet = "beet.pytest_plugin"
 
 [dependency-groups]
 dev = [
-    "basedpyright>=1.33.0",
-    "pytest>=9.0.0",
+    "basedpyright>=1.40.2",
+    "pytest>=9.1.1",
     "pytest-insta>=0.4.0",
     "pytest-minecraft>=0.2.0",
     "pytest-xdist>=3.8.0",
-    "python-semantic-release>=10.5.2",
-    "ruff>=0.14.4",
-    "zensical>=0.0.20",
+    "python-semantic-release>=10.7.0",
+    "ruff>=0.17.1",
+    "zensical>=0.0.71",
 ]
 
 # Remove when python-semantic-release allows the fixed click release.

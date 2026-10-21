@@ -9,7 +9,17 @@ import os
 import time
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Dict, Iterable, Iterator, Literal, Optional, Sequence, Tuple, cast
+from typing import (
+    Any,
+    Dict,
+    Iterable,
+    Iterator,
+    Literal,
+    Optional,
+    Sequence,
+    Tuple,
+    cast,
+)
 
 from pathspec import PathSpec
 
@@ -24,7 +34,7 @@ class DirectoryWatcher:
 
     path: FileSystemPath
     interval: float = 0.6
-    ignore: PathSpec = field(init=False)
+    ignore: PathSpec[Any] = field(init=False)
 
     ignore_file: Optional[FileSystemPath] = extra_field(default=None)
     ignore_patterns: Sequence[str] = extra_field(default=())
@@ -50,7 +60,7 @@ class DirectoryWatcher:
                     if not line.startswith("#") and (pattern := line.strip())
                 ]
 
-        self.ignore = PathSpec.from_lines("gitwildmatch", self.ignore_patterns)
+        self.ignore = PathSpec.from_lines("gitignore", self.ignore_patterns)
 
     def __iter__(self) -> Iterator[FileChanges]:
         while True:

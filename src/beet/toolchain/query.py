@@ -45,7 +45,7 @@ from typing import (
 )
 
 from pathspec import PathSpec
-from pathspec.patterns.gitwildmatch import GitWildMatchPattern
+from pathspec.patterns.gitignore.spec import GitIgnoreSpecPattern
 from pydantic import BaseModel, RootModel, field_validator, ConfigDict
 
 from beet.core.file import File
@@ -152,7 +152,7 @@ class PackFilesOption(RootModel[Union[RegexOption, Dict[str, RegexOption]]]):
 
 
 ResolvedPathSpecOption = Sequence[str]
-CompiledPathSpecOption = Optional[PathSpec]
+CompiledPathSpecOption = Optional[PathSpec[Any]]
 
 
 class PathSpecOption(RootModel[ListOption[str]]):
@@ -170,7 +170,7 @@ class PathSpecOption(RootModel[ListOption[str]]):
     def compile(patterns: ResolvedPathSpecOption) -> CompiledPathSpecOption:
         if not patterns:
             return None
-        return PathSpec.from_lines("gitwildmatch", patterns)
+        return PathSpec.from_lines("gitignore", patterns)
 
 
 ResolvedPackMatchOption = Mapping[str, Mapping[str, ResolvedPathSpecOption]]
@@ -227,12 +227,12 @@ class PackMatchOption(
                 for pattern in patterns:
                     namespace, _, path = pattern.partition(":")
 
-                    escaped = GitWildMatchPattern.escape(namespace)
+                    escaped = GitIgnoreSpecPattern.escape(namespace)
                     if namespace != escaped:
                         base_paths.add(f"{overlay}{directory}")
                         continue
 
-                    escaped = GitWildMatchPattern.escape(path)
+                    escaped = GitIgnoreSpecPattern.escape(path)
                     if path == escaped:
                         scope = get_output_scope(file_type.scope, pack)
                         prefix = "/".join([directory, namespace, *scope])
