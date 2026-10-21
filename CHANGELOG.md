@@ -2,6 +2,28 @@
 
 <!-- version list -->
 
+## v0.121.0 (2026-10-21)
+
+### Bug Fixes
+
+- General clean
+  ([`d400c04`](https://github.com/mcbeet/beet/commit/d400c04ffd312e6951cde85a1c707dfdd3b5429d))
+
+- Ruff check ok
+  ([`0db268e`](https://github.com/mcbeet/beet/commit/0db268e92415e1052d19c7ec09cc06cad4c384eb))
+
+- Ruff safe fixes
+  ([`f3cc875`](https://github.com/mcbeet/beet/commit/f3cc87529e3b71037ebcea636d189bcde9d6a92d))
+
+- Ruff unsafe fixes
+  ([`0ad0404`](https://github.com/mcbeet/beet/commit/0ad0404bf3b048a2a024d231483af949ae1802e1))
+
+### Features
+
+- Bump dependencies
+  ([`5417385`](https://github.com/mcbeet/beet/commit/541738563276c3ac963061ccce24d8ab84873687))
+
+
 ## v0.120.0 (2026-10-21)
 
 
