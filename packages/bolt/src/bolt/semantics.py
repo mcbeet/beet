@@ -1,15 +1,15 @@
 __all__ = [
-    "LexicalScope",
-    "GlobalScope",
+    "Binding",
+    "ClassScope",
     "FunctionScope",
+    "GlobalScope",
+    "InconsistentIdentifierStorage",
+    "LexicalScope",
     "MacroScope",
     "ProcMacroScope",
-    "ClassScope",
-    "Variable",
-    "Binding",
-    "UndefinedIdentifier",
     "UnboundLocalIdentifier",
-    "InconsistentIdentifierStorage",
+    "UndefinedIdentifier",
+    "Variable",
 ]
 
 

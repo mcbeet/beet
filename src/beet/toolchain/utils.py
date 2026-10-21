@@ -1,14 +1,14 @@
 __all__ = [
     "LazyFormat",
-    "stable_int_hash",
-    "stable_hash",
-    "ensure_builtins",
-    "iter_options",
-    "eval_option",
-    "default_option",
     "apply_option",
-    "resolve_shared_dir",
+    "default_option",
+    "ensure_builtins",
+    "eval_option",
+    "iter_options",
     "resolve_shared_cache",
+    "resolve_shared_dir",
+    "stable_hash",
+    "stable_int_hash",
 ]
 
 

@@ -1,6 +1,6 @@
 __all__ = [
-    "bolt",
     "beet_default",
+    "bolt",
 ]
 
 

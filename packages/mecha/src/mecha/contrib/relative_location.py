@@ -2,8 +2,8 @@
 
 __all__ = [
     "RelativeResourceLocationParser",
-    "resolve_using_database",
     "resolve_relative_location",
+    "resolve_using_database",
 ]
 
 

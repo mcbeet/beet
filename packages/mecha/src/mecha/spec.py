@@ -1,6 +1,6 @@
 __all__ = [
-    "Parser",
     "CommandSpec",
+    "Parser",
 ]
 
 

@@ -1,10 +1,10 @@
 __all__ = [
-    "MemoHandler",
-    "MemoRegistry",
     "MemoFileIndex",
-    "MemoStorage",
+    "MemoHandler",
     "MemoInvocation",
+    "MemoRegistry",
     "MemoState",
+    "MemoStorage",
 ]
 
 

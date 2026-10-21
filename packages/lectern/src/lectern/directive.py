@@ -1,11 +1,11 @@
 __all__ = [
+    "BundleFragmentMixin",
+    "DataPackDirective",
     "Directive",
     "DirectiveRegistry",
-    "NamespacedResourceDirective",
-    "DataPackDirective",
-    "ResourcePackDirective",
-    "BundleFragmentMixin",
     "MergeZipDirective",
+    "NamespacedResourceDirective",
+    "ResourcePackDirective",
     "SkipDirective",
 ]
 

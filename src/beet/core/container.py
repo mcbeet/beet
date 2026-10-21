@@ -1,13 +1,13 @@
 __all__ = [
-    "SupportsMerge",
-    "MergeMixin",
-    "MatchMixin",
-    "Pin",
-    "PinDefault",
-    "PinDefaultFactory",
     "Container",
     "ContainerProxy",
     "Drop",
+    "MatchMixin",
+    "MergeMixin",
+    "Pin",
+    "PinDefault",
+    "PinDefaultFactory",
+    "SupportsMerge",
 ]
 
 

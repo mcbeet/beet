@@ -6,10 +6,10 @@ see file://./../../scripts/update_pack_format_registry.py
 """
 
 __all__ = [
+    "PackFormatRegistry",
+    "PackFormatRegistryContainer",
     "pack_format_registry",
     "pack_format_registry_path",
-    "PackFormatRegistryContainer",
-    "PackFormatRegistry",
 ]
 import json
 from importlib.resources import files

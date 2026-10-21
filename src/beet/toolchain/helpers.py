@@ -1,8 +1,8 @@
 __all__ = [
-    "subproject",
-    "sandbox",
-    "run_beet",
     "JinjaExtension",
+    "run_beet",
+    "sandbox",
+    "subproject",
 ]
 
 

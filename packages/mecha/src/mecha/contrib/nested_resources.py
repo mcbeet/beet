@@ -1,9 +1,9 @@
 """Plugin for handling nested resources."""
 
 __all__ = [
+    "AstNestedText",
     "NestedResources",
     "NestedResourcesTransformer",
-    "AstNestedText",
     "parse_nested_text",
 ]
 

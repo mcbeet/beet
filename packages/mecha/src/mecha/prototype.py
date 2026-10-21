@@ -1,7 +1,7 @@
 __all__ = [
-    "CommandSignature",
-    "CommandPrototype",
     "CommandArgument",
+    "CommandPrototype",
+    "CommandSignature",
 ]
 
 

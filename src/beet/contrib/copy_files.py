@@ -3,8 +3,8 @@
 __all__ = [
     "CopyFilesOptions",
     "copy_files",
-    "resolve_file_mapping",
     "guess_file_type",
+    "resolve_file_mapping",
 ]
 
 

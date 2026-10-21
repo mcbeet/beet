@@ -2,8 +2,8 @@
 
 __all__ = [
     "Analyzer",
-    "Summary",
     "Statistics",
+    "Summary",
 ]
 
 

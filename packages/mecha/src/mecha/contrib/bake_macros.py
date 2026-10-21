@@ -1,12 +1,12 @@
 """Plugin for baking static macro invocations."""
 
 __all__ = [
-    "bake_macros",
     "BakeMacrosOptions",
     "MacroBaker",
+    "MacroBakerParseCallback",
     "MacroInvocation",
     "MacroInvocationArgument",
-    "MacroBakerParseCallback",
+    "bake_macros",
 ]
 
 

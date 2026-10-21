@@ -11,10 +11,10 @@ https://feedback.minecraft.net/hc/en-us/community/posts/360077450811-In-line-fun
 
 __all__ = [
     "HangmanOptions",
+    "fold_hanging_commands",
     "hangman",
     "parse_lines",
     "parse_trailing_comment",
-    "fold_hanging_commands",
 ]
 
 

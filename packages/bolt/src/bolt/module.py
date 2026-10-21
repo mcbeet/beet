@@ -1,13 +1,13 @@
 __all__ = [
-    "Module",
     "AssetModule",
-    "CompiledModule",
-    "ModuleManager",
-    "ModuleCacheBackend",
-    "MacroLibrary",
     "CodegenResult",
-    "UnusableCompilationUnit",
+    "CompiledModule",
+    "MacroLibrary",
+    "Module",
+    "ModuleCacheBackend",
+    "ModuleManager",
     "SilentCompilationInterrupt",
+    "UnusableCompilationUnit",
 ]
 
 

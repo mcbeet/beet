@@ -1,11 +1,11 @@
 __all__ = [
-    "rewrite_traceback",
-    "fake_traceback",
-    "suggest_typo",
-    "load_pickle",
-    "dump_pickle",
-    "internal",
     "INTERNAL_CODE",
+    "dump_pickle",
+    "fake_traceback",
+    "internal",
+    "load_pickle",
+    "rewrite_traceback",
+    "suggest_typo",
 ]
 
 

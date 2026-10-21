@@ -1,10 +1,10 @@
 __all__ = [
     "GenericPipeline",
-    "Task",
     "GenericPlugin",
     "GenericPluginSpec",
     "PluginError",
     "PluginImportError",
+    "Task",
 ]
 
 

@@ -1,8 +1,8 @@
 """Plugin for collecting json logs."""
 
 __all__ = [
-    "JsonLogHandler",
     "JsonLogEntry",
+    "JsonLogHandler",
     "activate_json_log",
 ]
 

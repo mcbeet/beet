@@ -2,11 +2,11 @@
 
 __all__ = [
     "Console",
-    "start",
-    "stop",
-    "ConsoleSubmit",
     "ConsoleInterrupt",
     "ConsoleStop",
+    "ConsoleSubmit",
+    "start",
+    "stop",
 ]
 
 

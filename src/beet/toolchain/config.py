@@ -1,17 +1,17 @@
 __all__ = [
-    "ProjectConfig",
+    "DETECT_CONFIG_FILES",
+    "FormatSpecifier",
+    "InvalidProjectConfig",
+    "ListOption",
     "PackConfig",
     "PackFilterBlockConfig",
     "PackFilterConfig",
     "PackLoadOptions",
-    "ListOption",
     "PackageablePath",
-    "InvalidProjectConfig",
-    "locate_config",
-    "load_config",
+    "ProjectConfig",
     "config_error_handler",
-    "DETECT_CONFIG_FILES",
-    "FormatSpecifier",
+    "load_config",
+    "locate_config",
 ]
 
 

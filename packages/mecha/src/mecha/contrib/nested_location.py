@@ -2,11 +2,11 @@
 
 __all__ = [
     "AstNestedLocation",
+    "NestedLocationResolver",
+    "NestedLocationTransformer",
     "UnresolvedNestedLocation",
     "nested_location",
     "parse_nested_location",
-    "NestedLocationResolver",
-    "NestedLocationTransformer",
 ]
 
 

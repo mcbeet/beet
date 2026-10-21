@@ -3,8 +3,8 @@
 __all__ = [
     "ModelMergingOptions",
     "ModelOverridesMergePolicy",
-    "model_merging",
     "merge_model_overrides",
+    "model_merging",
 ]
 
 

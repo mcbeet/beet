@@ -1,20 +1,20 @@
 """Service for fetching and unpacking vanilla resources."""
 
 __all__ = [
-    "LoadVanillaOptions",
-    "load_vanilla",
-    "Vanilla",
-    "VanillaOptions",
-    "RuntimeRegistry",
-    "Runtime",
-    "ReleaseRegistry",
-    "Release",
-    "ClientJar",
-    "ServerJar",
-    "AssetIndex",
-    "ReportsContainer",
     "MANIFEST_URL",
     "RESOURCES_URL",
+    "AssetIndex",
+    "ClientJar",
+    "LoadVanillaOptions",
+    "Release",
+    "ReleaseRegistry",
+    "ReportsContainer",
+    "Runtime",
+    "RuntimeRegistry",
+    "ServerJar",
+    "Vanilla",
+    "VanillaOptions",
+    "load_vanilla",
 ]
 
 

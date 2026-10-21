@@ -1,12 +1,12 @@
 """Plugin for performing basic substitutions."""
 
 __all__ = [
-    "find_replace",
     "FindReplaceHandler",
     "FindReplaceOptions",
+    "RenderSubstitutionOption",
     "SubstitutionOption",
     "TextSubstitutionOption",
-    "RenderSubstitutionOption",
+    "find_replace",
 ]
 
 

@@ -1,15 +1,15 @@
 """Plugin for compiling json files with mecha."""
 
 __all__ = [
-    "JsonFileCompilation",
-    "AstJsonRoot",
-    "AstJsonContent",
-    "AstMergeJsonContent",
     "AstAppendJsonContent",
+    "AstJsonContent",
+    "AstJsonRoot",
+    "AstMergeJsonContent",
     "AstPrependJsonContent",
-    "JsonRootParser",
     "JsonContentParser",
+    "JsonFileCompilation",
     "JsonFileHandler",
+    "JsonRootParser",
 ]
 
 

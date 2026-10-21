@@ -1,10 +1,10 @@
 __all__ = [
-    "Extractor",
-    "TextExtractor",
     "EmbeddedExtractor",
+    "Extractor",
+    "FragmentLoader",
     "MarkdownExtractor",
     "MarkdownParserWithUncheckedLinks",
-    "FragmentLoader",
+    "TextExtractor",
 ]
 
 

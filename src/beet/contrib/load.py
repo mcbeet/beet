@@ -2,8 +2,8 @@
 
 __all__ = [
     "LoadOptions",
-    "load",
     "evaluate_pattern",
+    "load",
 ]
 
 

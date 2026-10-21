@@ -1,6 +1,6 @@
 __all__ = [
-    "wrap_backslash_continuation",
     "BACKSLASH_CONTINUATION_REGEX",
+    "wrap_backslash_continuation",
 ]
 
 

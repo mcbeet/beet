@@ -1,6 +1,6 @@
 __all__ = [
-    "TreeNode",
     "TreeData",
+    "TreeNode",
     "generate_tree",
 ]
 

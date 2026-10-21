@@ -1,8 +1,8 @@
 """Plugin that cleans up empty overlays."""
 
 __all__ = [
-    "cleanup_overlays",
     "CleanupOverlaysOptions",
+    "cleanup_overlays",
 ]
 
 

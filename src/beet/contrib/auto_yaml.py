@@ -1,10 +1,10 @@
 """Plugin that automatically translates yaml resources to json."""
 
 __all__ = [
-    "use_auto_yaml",
     "create_extra_handler",
-    "create_namespace_handler",
     "create_namespace_extra_handler",
+    "create_namespace_handler",
+    "use_auto_yaml",
 ]
 
 

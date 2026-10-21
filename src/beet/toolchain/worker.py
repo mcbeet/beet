@@ -1,12 +1,12 @@
 __all__ = [
+    "Channel",
+    "Connection",
+    "MessageQueue",
     "Worker",
-    "WorkerThread",
     "WorkerError",
     "WorkerPool",
     "WorkerPoolHandle",
-    "MessageQueue",
-    "Channel",
-    "Connection",
+    "WorkerThread",
 ]
 
 

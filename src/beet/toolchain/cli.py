@@ -1,12 +1,12 @@
 __all__ = [
-    "MainGroup",
-    "BeetHelpColorsMixin",
     "BeetCommand",
     "BeetGroup",
+    "BeetHelpColorsMixin",
     "LogHandler",
-    "main",
+    "MainGroup",
     "beet",
     "error_handler",
+    "main",
     "message_fence",
 ]
 

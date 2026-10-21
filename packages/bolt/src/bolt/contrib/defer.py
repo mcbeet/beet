@@ -1,10 +1,10 @@
 """Run deferred callbacks."""
 
 __all__ = [
-    "Defer",
-    "DeferHandler",
     "AstDefer",
     "AstDeferCommand",
+    "Defer",
+    "DeferHandler",
     "defer",
 ]
 

@@ -1,7 +1,7 @@
 __all__ = [
+    "FallbackContext",
     "TemplateError",
     "TemplateManager",
-    "FallbackContext",
 ]
 
 

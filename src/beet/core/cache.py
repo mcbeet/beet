@@ -1,9 +1,9 @@
 __all__ = [
-    "MultiCache",
     "Cache",
     "CachePin",
     "CacheTransaction",
     "DownloadManager",
+    "MultiCache",
 ]
 
 

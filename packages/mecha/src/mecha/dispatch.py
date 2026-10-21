@@ -1,11 +1,11 @@
 __all__ = [
-    "Dispatcher",
-    "Visitor",
-    "Reducer",
-    "MutatingReducer",
-    "Rule",
-    "rule",
     "CompilationError",
+    "Dispatcher",
+    "MutatingReducer",
+    "Reducer",
+    "Rule",
+    "Visitor",
+    "rule",
 ]
 
 

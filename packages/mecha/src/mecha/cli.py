@@ -1,7 +1,7 @@
 __all__ = [
-    "validate",
-    "mecha",
     "main",
+    "mecha",
+    "validate",
 ]
 
 

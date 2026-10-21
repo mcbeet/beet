@@ -1,8 +1,8 @@
 """Plugin that strips final newlines in text files."""
 
 __all__ = [
-    "StripFinalNewlinesSerializer",
     "StripFinalNewlinesOptions",
+    "StripFinalNewlinesSerializer",
     "strip_final_newlines",
 ]
 

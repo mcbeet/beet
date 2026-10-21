@@ -1,12 +1,12 @@
 """Plugin for renaming files."""
 
 __all__ = [
-    "rename_files",
     "RenameFilesHandler",
     "RenameFilesOptions",
     "RenameOption",
-    "TextRenameOption",
     "RenderRenameOption",
+    "TextRenameOption",
+    "rename_files",
 ]
 
 

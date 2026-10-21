@@ -1,6 +1,6 @@
 __all__ = [
-    "tagged_function_shorthand",
     "TaggedFunctionDirective",
+    "tagged_function_shorthand",
 ]
 
 

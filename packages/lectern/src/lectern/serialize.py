@@ -1,10 +1,10 @@
 __all__ = [
-    "TextSerializer",
-    "MarkdownSerializer",
-    "ExternalFilesManager",
-    "SerializedFile",
-    "snapshot_serialization_filter",
     "EXTENSION_HIGHLIGHTING",
+    "ExternalFilesManager",
+    "MarkdownSerializer",
+    "SerializedFile",
+    "TextSerializer",
+    "snapshot_serialization_filter",
 ]
 
 import os
