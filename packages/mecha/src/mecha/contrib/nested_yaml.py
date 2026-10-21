@@ -18,7 +18,7 @@ __all__ = [
 from collections.abc import Callable, Iterator
 from contextlib import contextmanager
 from dataclasses import dataclass, field
-from typing import Any, Generic, TypeVar
+from typing import Any
 
 from nbtlib import String
 from tokenstream import SourceLocation, TokenStream, set_location
@@ -45,10 +45,6 @@ from mecha import (
     delegate,
 )
 from mecha.utils import JsonQuoteHelper, QuoteHelper
-
-EntryType = TypeVar("EntryType")
-ValueType = TypeVar("ValueType")
-
 
 YAML_STRING_PATTERN = r'"(?:\\.|[^\\\n])*?"' "|" r"'(?:\\.|[^\\\n])*?'"
 
@@ -85,7 +81,7 @@ def beet_default(ctx: Context):
 
 
 @dataclass
-class BaseYamlObjectCollector(Generic[EntryType, ValueType]):
+class BaseYamlObjectCollector[EntryType, ValueType]:
     """Base class for yaml object collectors."""
 
     entries: list[EntryType] = field(default_factory=list)
@@ -116,7 +112,7 @@ class BaseYamlObjectCollector(Generic[EntryType, ValueType]):
 
 
 @dataclass
-class BaseYamlArrayCollector(Generic[ValueType]):
+class BaseYamlArrayCollector[ValueType]:
     """Base class for yaml array collectors."""
 
     elements: list[ValueType] = field(default_factory=list)

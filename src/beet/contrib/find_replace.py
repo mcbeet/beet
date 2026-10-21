@@ -12,7 +12,7 @@ __all__ = [
 
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass
-from typing import Any, Generic, TypeVar, Union
+from typing import Any, Union
 
 from pydantic import BaseModel, ConfigDict, RootModel
 
@@ -31,8 +31,6 @@ from beet import (
     TextFileBase,
     configurable,
 )
-
-PackType = TypeVar("PackType", bound=Pack[Any])
 
 
 class TextSubstitutionOption(BaseModel):
@@ -115,7 +113,7 @@ ListOption[Union[SubstitutionOption, "FindReplaceOptions"]].model_rebuild()
 
 
 @dataclass(frozen=True)
-class FindReplaceHandler(Generic[PackType]):
+class FindReplaceHandler[PackType: Pack[Any]]:
     pack_query: PreparedPackQuery[PackType]
     substitute: Sequence[Callable[[str], str] | FindReplaceHandler[PackType]]
 

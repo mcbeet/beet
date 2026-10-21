@@ -21,7 +21,7 @@ from copy import deepcopy
 from glob import glob
 from itertools import chain
 from pathlib import Path
-from typing import Any, Generic, Literal, TypeVar
+from typing import Any, Literal
 
 import toml
 import yaml
@@ -69,10 +69,7 @@ class InvalidProjectConfig(BubbleException):
         return f"Couldn't load project config.\n\n{self.explanation}"
 
 
-ItemType = TypeVar("ItemType")
-
-
-class ListOption(RootModel[list[ItemType]], Generic[ItemType]):
+class ListOption[ItemType](RootModel[list[ItemType]]):
     """List that transparently wraps single values."""
 
     root: list[ItemType] = []

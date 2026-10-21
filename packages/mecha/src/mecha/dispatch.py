@@ -16,9 +16,7 @@ from functools import partial
 from heapq import heappop, heappush
 from typing import (
     Any,
-    Generic,
     Literal,
-    TypeVar,
     overload,
 )
 
@@ -27,8 +25,6 @@ from beet.core.utils import extra_field
 
 from .ast import AbstractChildren, AbstractNode
 from .diagnostic import Diagnostic, DiagnosticCollection
-
-T = TypeVar("T")
 
 
 class CompilationError(WrappedException):
@@ -110,7 +106,7 @@ def rule(*args: Any, **kwargs: Any) -> Any:
 
 
 @dataclass(eq=False)
-class Dispatcher(Generic[T]):
+class Dispatcher[T]:
     """Ast dispatcher."""
 
     levels: dict[str, Literal["ignore", "info", "warn", "error"]] = extra_field(

@@ -13,24 +13,14 @@ __all__ = [
 
 from collections.abc import Callable, Iterator, Mapping, MutableMapping
 from dataclasses import dataclass
-from typing import (
-    Any,
-    Generic,
-    Protocol,
-    TypeVar,
-)
+from typing import Any, Protocol
 
 from pathspec import PathSpec
 
 from .utils import SENTINEL_OBJ, Sentinel
 
-K = TypeVar("K")
-V = TypeVar("V")
-CV = TypeVar("CV", covariant=True)
-ProxyKeyType = TypeVar("ProxyKeyType")
-
-PinDefault = V | Sentinel
-PinDefaultFactory = Callable[[], V] | Sentinel
+type PinDefault[V] = V | Sentinel
+type PinDefaultFactory[V] = Callable[[], V] | Sentinel
 
 
 class Drop(Exception):
@@ -65,7 +55,7 @@ class MatchMixin:
 
 
 @dataclass
-class Pin(Generic[K, CV]):
+class Pin[K, CV]:
     """Descriptor that exposes a specific value from a dict-like object."""
 
     key: K
@@ -103,7 +93,7 @@ class Pin(Generic[K, CV]):
             mapping[self.key] = value
             return self.__get__(obj, objtype)
 
-    def __set__(self: Pin[K, V], obj: Any, value: V):
+    def __set__[V](self: Pin[K, V], obj: Any, value: V):
         mapping = self.forward(obj)
 
         if self.delete_default:
@@ -133,7 +123,7 @@ class Pin(Generic[K, CV]):
         }
 
 
-class Container(MutableMapping[K, V]):
+class Container[K, V](MutableMapping[K, V]):
     """Generic dict-like container."""
 
     _wrapped: dict[K, V]
@@ -194,7 +184,7 @@ class Container(MutableMapping[K, V]):
         return f"{self.__class__.__name__}(keys={list(self.keys())})"
 
 
-class ContainerProxy(Generic[ProxyKeyType, K, V], MutableMapping[K, V]):
+class ContainerProxy[ProxyKeyType, K, V](MutableMapping[K, V]):
     """Generic aggregated view over several nested bounded dict-like objects."""
 
     proxy: Mapping[K, Mapping[ProxyKeyType, MutableMapping[K, V]]]

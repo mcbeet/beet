@@ -28,13 +28,7 @@ from collections.abc import Callable, Mapping
 from copy import deepcopy
 from dataclasses import dataclass, replace
 from pathlib import Path
-from typing import (
-    Any,
-    ClassVar,
-    Generic,
-    Self,
-    TypeVar,
-)
+from typing import Any, ClassVar, Self
 from zipfile import ZipFile
 
 import yaml
@@ -51,19 +45,15 @@ from .utils import (
     snake_case,
 )
 
-ValueType = TypeVar("ValueType", bound=Any)
-SerializeType = TypeVar("SerializeType", bound=Any)
-FileType = TypeVar("FileType", bound="File[Any, Any]")
-
 type FileOrigin = (
     FileSystemPath | ZipFile | Mapping[str, FileSystemPath | "File[Any, Any]"]
 )
-TextFileContent = ValueType | str | None
-BinaryFileContent = ValueType | bytes | None
+type TextFileContent[ValueType: Any] = ValueType | str | None
+type BinaryFileContent[ValueType: Any] = ValueType | bytes | None
 
 
 @dataclass(eq=False, repr=False)
-class File(Generic[ValueType, SerializeType]):
+class File[ValueType: Any, SerializeType: Any]:
     """Base file class."""
 
     _content: ValueType | SerializeType | None = None
@@ -302,7 +292,7 @@ class File(Generic[ValueType, SerializeType]):
             else:
                 self.dump_path(Path(origin, path), raw)
 
-    def convert(self, file_type: type[FileType]) -> FileType:
+    def convert[FileType: File[Any, Any]](self, file_type: type[FileType]) -> FileType:
         if self.source_path:
             return file_type(
                 source_path=self.source_path,
@@ -327,7 +317,7 @@ class File(Generic[ValueType, SerializeType]):
         return f"{self.__class__.__name__}({content})"
 
 
-class FileSerialize(Generic[SerializeType]):
+class FileSerialize[SerializeType: Any]:
     """Descriptor that makes sure that content of the file is serialized."""
 
     def __get__(
@@ -341,7 +331,7 @@ class FileSerialize(Generic[SerializeType]):
         obj.set_content(value)
 
 
-class FileDeserialize(Generic[ValueType]):
+class FileDeserialize[ValueType: Any]:
     """Descriptor that makes sure that content of the file is deserialized."""
 
     def __get__(
@@ -386,7 +376,7 @@ class DeserializationError(WrappedException):
 
 
 @dataclass(eq=False, repr=False)
-class TextFileBase(File[ValueType, str]):
+class TextFileBase[ValueType: Any](File[ValueType, str]):
     """Base class for files that get serialized to strings."""
 
     encoding: str | None = extra_field(default="utf-8")
@@ -459,7 +449,7 @@ class TextFileBase(File[ValueType, str]):
         """Convert string to content."""
         raise NotImplementedError()
 
-    def convert(self, file_type: type[FileType]) -> FileType:
+    def convert[FileType: File[Any, Any]](self, file_type: type[FileType]) -> FileType:
         if not issubclass(file_type, TextFileBase):
             raise TypeError("Incompatible file type.")
         if self.source_path:
@@ -482,7 +472,7 @@ class TextFile(TextFileBase[str]):
 
 
 @dataclass(eq=False, repr=False)
-class BinaryFileBase(File[ValueType, bytes]):
+class BinaryFileBase[ValueType: Any](File[ValueType, bytes]):
     """Base class for files that get serialized to bytes."""
 
     blob: ClassVar[FileSerialize[bytes]] = FileSerialize()
@@ -537,7 +527,7 @@ class BinaryFileBase(File[ValueType, bytes]):
         """Convert bytes to content."""
         raise NotImplementedError()
 
-    def convert(self, file_type: type[FileType]) -> FileType:
+    def convert[FileType: File[Any, Any]](self, file_type: type[FileType]) -> FileType:
         if not issubclass(file_type, BinaryFileBase):
             raise TypeError("Incompatible file type.")
         if self.source_path:
@@ -576,7 +566,7 @@ class InvalidDataModel(DeserializationError):
 
 
 @dataclass(eq=False, repr=False)
-class DataModelBase(TextFileBase[ValueType]):
+class DataModelBase[ValueType: Any](TextFileBase[ValueType]):
     """Base class for data models."""
 
     encoder: Callable[[Any], str] = extra_field(default=None)
@@ -610,7 +600,7 @@ class DataModelBase(TextFileBase[ValueType]):
         return cls.model() if cls.model and issubclass(cls.model, BaseModel) else {}  # pyright: ignore[reportReturnType]
 
 
-class JsonFileBase(DataModelBase[ValueType]):
+class JsonFileBase[ValueType: Any](DataModelBase[ValueType]):
     """Base class for json files."""
 
     def __post_init__(self):
@@ -632,7 +622,7 @@ class JsonFile(JsonFileBase[JsonDict]):
         return {}
 
 
-class YamlFileBase(DataModelBase[ValueType]):
+class YamlFileBase[ValueType: Any](DataModelBase[ValueType]):
     """Base class for yaml files."""
 
     def __post_init__(self):

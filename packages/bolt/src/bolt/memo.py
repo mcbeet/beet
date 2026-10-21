@@ -13,12 +13,7 @@ from collections.abc import Callable, Iterator
 from contextlib import contextmanager
 from dataclasses import dataclass
 from pathlib import Path
-from typing import (
-    Any,
-    ClassVar,
-    Generic,
-    TypeVar,
-)
+from typing import Any, ClassVar
 from uuid import UUID
 
 from beet import (
@@ -42,11 +37,8 @@ from .utils import dump_pickle, load_pickle
 logger = logging.getLogger("memo")
 
 
-T = TypeVar("T")
-
-
 @dataclass
-class MemoState(Generic[T]):
+class MemoState[T]:
     load: Callable[[Path], T]
     dump: Callable[[Path, T], Any]
     default: Callable[[], T]

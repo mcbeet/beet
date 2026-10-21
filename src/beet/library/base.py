@@ -49,11 +49,9 @@ from types import get_original_bases
 from typing import (
     Any,
     ClassVar,
-    Generic,
     Literal,
     Protocol,
     Self,
-    TypeVar,
     get_args,
     get_origin,
     overload,
@@ -83,18 +81,6 @@ from .utils import list_extensions, list_origin_folders
 
 LATEST_MINECRAFT_VERSION: str = "26.3"
 
-
-T = TypeVar("T")
-PinType = TypeVar("PinType", covariant=True)
-PackFileType = TypeVar("PackFileType", bound="PackFile")
-NamespaceType = TypeVar("NamespaceType", bound="Namespace")
-NamespaceFileType = TypeVar("NamespaceFileType", bound="NamespaceFile")
-PackType = TypeVar("PackType", bound="Pack[Any]")
-MergeableType = TypeVar("MergeableType", bound=SupportsMerge)
-
-type PackFile = File[Any, Any]
-
-
 PACK_COMPRESSION: dict[str, int] = {
     "none": ZIP_STORED,
     "deflate": ZIP_DEFLATED,
@@ -102,6 +88,7 @@ PACK_COMPRESSION: dict[str, int] = {
     "lzma": ZIP_LZMA,
 }
 
+type PackFile = File[Any, Any]
 type NamespaceFileScope = tuple[str, ...] | Mapping[int, tuple[str, ...]]
 
 
@@ -155,7 +142,9 @@ class NamespaceFile(Protocol):
 
     def dump(self, origin: FileOrigin, path: FileSystemPath): ...
 
-    def convert(self, file_type: type[PackFileType]) -> PackFileType: ...
+    def convert[PackFileType: PackFile](
+        self, file_type: type[PackFileType]
+    ) -> PackFileType: ...
 
 
 class MergeCallback(Protocol):
@@ -236,14 +225,14 @@ class SupportsExtra(Protocol):
     extra: ExtraContainer
 
 
-class ExtraPin(Pin[str, PinType]):
+class ExtraPin[PinType](Pin[str, PinType]):
     """Descriptor that makes a specific file accessible through attribute lookup."""
 
     def forward(self, obj: SupportsExtra) -> ExtraContainer:
         return obj.extra
 
 
-class NamespaceExtraContainer(ExtraContainer, Generic[NamespaceType]):
+class NamespaceExtraContainer[NamespaceType: Namespace](ExtraContainer):
     """Namespace extra container."""
 
     namespace: NamespaceType | None = None
@@ -288,7 +277,7 @@ class NamespaceExtraContainer(ExtraContainer, Generic[NamespaceType]):
         return super().merge(other)
 
 
-class PackExtraContainer(ExtraContainer, Generic[PackType]):
+class PackExtraContainer[PackType: Pack[Any]](ExtraContainer):
     """Pack extra container."""
 
     pack: PackType | None = None
@@ -344,7 +333,11 @@ class PackExtraContainer(ExtraContainer, Generic[PackType]):
         return True
 
 
-class NamespaceContainer(MatchMixin, MergeMixin, Container[str, NamespaceFileType]):
+class NamespaceContainer[NamespaceFileType: NamespaceFile](
+    MatchMixin,
+    MergeMixin,
+    Container[str, NamespaceFileType],
+):
     """Container that stores one type of files in a namespace."""
 
     namespace: Namespace | None = None
@@ -429,7 +422,9 @@ class NamespaceContainer(MatchMixin, MergeMixin, Container[str, NamespaceFileTyp
         return tree
 
 
-class NamespacePin(Pin[type[NamespaceFileType], NamespaceContainer[NamespaceFileType]]):
+class NamespacePin[NamespaceFileType: NamespaceFile](
+    Pin[type[NamespaceFileType], NamespaceContainer[NamespaceFileType]]
+):
     """Descriptor for accessing namespace containers by attribute lookup."""
 
 
@@ -516,7 +511,7 @@ class Namespace(
     def missing(self, key: type[NamespaceFile]) -> NamespaceContainer[NamespaceFile]:
         return NamespaceContainer()
 
-    def merge(
+    def merge[T, MergeableType: SupportsMerge](
         self: MutableMapping[T, MergeableType],
         other: Mapping[T, MergeableType],
     ) -> bool:
@@ -549,7 +544,7 @@ class Namespace(
     ) -> Iterator[tuple[str, PackFile]]: ...
 
     @overload
-    def list_files(
+    def list_files[T](
         self,
         namespace: str,
         *extensions: str,
@@ -688,7 +683,7 @@ class Namespace(
         return f"{self.__class__.__name__}({args})"
 
 
-class NamespaceProxy(
+class NamespaceProxy[NamespaceFileType: NamespaceFile](
     MatchMixin,
     MergeMixin,
     ContainerProxy[type[NamespaceFileType], str, NamespaceFileType],
@@ -754,7 +749,7 @@ class NamespaceProxy(
 
 
 @dataclass
-class NamespaceProxyDescriptor(Generic[NamespaceFileType]):
+class NamespaceProxyDescriptor[NamespaceFileType: NamespaceFile]:
     """Descriptor that dynamically instantiates a namespace proxy."""
 
     proxy_key: type[NamespaceFileType]
@@ -804,21 +799,25 @@ class Mcmeta(JsonFile):
         return True
 
 
-class McmetaPin(Pin[str, PinType]):
+class McmetaPin[PinType](Pin[str, PinType]):
     """Descriptor that makes it possible to bind pack.mcmeta information to attribute lookup."""
 
     def forward(self, obj: Pack[Namespace]) -> JsonDict:
         return obj.mcmeta.data
 
 
-class PackPin(McmetaPin[PinType]):
+class PackPin[PinType](McmetaPin[PinType]):
     """Descriptor that makes pack metadata accessible through attribute lookup."""
 
     def forward(self, obj: Pack[Namespace]) -> JsonDict:
         return super().forward(obj).setdefault("pack", {})
 
 
-class OverlayContainer(MatchMixin, MergeMixin, Container[str, PackType]):
+class OverlayContainer[PackType: Pack[Any]](
+    MatchMixin,
+    MergeMixin,
+    Container[str, PackType],
+):
     """Container that stores overlays."""
 
     pack: PackType | None = None
@@ -1005,7 +1004,11 @@ class PackOverwrite(Exception):
         return f'Couldn\'t overwrite "{self.path!s}".'
 
 
-class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
+class Pack[NamespaceType: Namespace](
+    MatchMixin,
+    MergeMixin,
+    Container[str, NamespaceType],
+):
     """Class representing a pack."""
 
     name: str | None
@@ -1142,7 +1145,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
     def __getitem__(self, key: str) -> NamespaceType: ...
 
     @overload
-    def __getitem__(
+    def __getitem__[NamespaceFileType: NamespaceFile](
         self, key: type[NamespaceFileType]
     ) -> NamespaceProxy[NamespaceFileType]: ...
 
@@ -1210,7 +1213,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
     def missing(self, key: str) -> NamespaceType:
         return self.namespace_type()  # pyright: ignore[reportReturnType]
 
-    def merge(
+    def merge[T, MergeableType: SupportsMerge](
         self: MutableMapping[T, MergeableType], other: Mapping[T, MergeableType]
     ) -> bool:
         super().merge(other)  # pyright: ignore[reportAttributeAccessIssue]
@@ -1277,7 +1280,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
     ) -> Iterator[tuple[str, PackFile]]: ...
 
     @overload
-    def list_files(
+    def list_files[T](
         self,
         *extensions: str,
         extend: type[T],
@@ -1314,7 +1317,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
     def all(self, *match: str) -> Iterable[tuple[str, NamespaceFile]]: ...
 
     @overload
-    def all(
+    def all[NamespaceFileType: NamespaceFile](
         self, *match: str, extend: type[NamespaceFileType]
     ) -> Iterable[tuple[str, NamespaceFileType]]: ...
 
@@ -1705,11 +1708,7 @@ def _dump_files(origin: FileOrigin, files: Iterable[tuple[str, PackFile]]):
             f.dump(origin, "/".join(directory + (filename,)))
 
 
-K = TypeVar("K")
-V = TypeVar("V")
-
-
-def _update_with_none(dst: MutableMapping[K, V], src: Mapping[K, V | None]):
+def _update_with_none[K, V](dst: MutableMapping[K, V], src: Mapping[K, V | None]):
     for k, v in list(src.items()):
         if v is None:
             dst.pop(k, None)
@@ -1717,7 +1716,7 @@ def _update_with_none(dst: MutableMapping[K, V], src: Mapping[K, V | None]):
             dst[k] = v
 
 
-def create_group_map(
+def create_group_map[PackType: Pack[Any]](
     file_types: Mapping[PackType, Iterable[type[NamespaceFile]]],
     plural: bool = False,
 ) -> dict[str, tuple[list[PackType], type[NamespaceFile]]]:

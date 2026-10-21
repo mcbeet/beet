@@ -8,24 +8,21 @@ __all__ = [
 from collections.abc import Callable, Iterable, Iterator
 from dataclasses import dataclass
 from math import ceil
-from typing import Generic, TypeVar
-
-T = TypeVar("T")
 
 
 @dataclass
-class TreeData(Generic[T]):
+class TreeData[T]:
     """Holds the static data for the search tree."""
 
     root: str
-    stack: list["TreeNode[T]"]
+    stack: list[TreeNode[T]]
     items: list[T]
     key: Callable[[T], int] | None
     name: str | None
 
 
 @dataclass
-class TreeNode(Generic[T]):
+class TreeNode[T]:
     """Represents a node of the generated search tree."""
 
     parent: str
@@ -120,7 +117,7 @@ class TreeNode(Generic[T]):
         return self.stop - self.start == len(self.data.items)
 
 
-def generate_tree(
+def generate_tree[T](
     root: str,
     items: Iterable[T],
     key: Callable[[T], int] | None = None,

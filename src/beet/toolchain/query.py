@@ -29,10 +29,8 @@ from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from typing import (
     Any,
-    Generic,
     Literal,
     Self,
-    TypeVar,
     get_origin,
     overload,
 )
@@ -46,11 +44,6 @@ from beet.library.base import NamespaceFile, Pack, create_group_map, get_output_
 
 from .config import ListOption
 from .template import TemplateManager
-
-T = TypeVar("T")
-PackType = TypeVar("PackType", bound=Pack[Any])
-FromPackType = TypeVar("FromPackType", bound=Pack[Any])
-
 
 type RegexFlags = Literal["ASCII", "IGNORECASE", "MULTILINE", "DOTALL", "VERBOSE"]
 
@@ -255,11 +248,13 @@ class PackQueryOption(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
 
-PackFilesSelection = Mapping[tuple[str, T], tuple[PackType, str]]
+type PackFilesSelection[T, PackType: Pack[Any]] = Mapping[
+    tuple[str, T], tuple[PackType, str]
+]
 
 
 @dataclass(frozen=True, slots=True)
-class PreparedPackFilesQuery(Generic[PackType]):
+class PreparedPackFilesQuery[PackType: Pack[Any]]:
     packs: Sequence[PackType]
     files: ResolvedPackFilesOption
     files_regex: CompiledPackFilesOption
@@ -278,7 +273,7 @@ class PreparedPackFilesQuery(Generic[PackType]):
     ) -> PackFilesSelection[File[Any, Any], PackType]: ...
 
     @overload
-    def select(
+    def select[T](
         self,
         *extensions: str,
         extend: type[T],
@@ -354,13 +349,13 @@ class PreparedPackFilesQuery(Generic[PackType]):
         return PreparedPackQuery([self])
 
 
-PackMatchSelection = Mapping[
+type PackMatchSelection[T, PackType: Pack[Any]] = Mapping[
     type[NamespaceFile], Mapping[tuple[str, T], tuple[PackType, str]]
 ]
 
 
 @dataclass(frozen=True, slots=True)
-class PreparedPackMatchQuery(Generic[PackType]):
+class PreparedPackMatchQuery[PackType: Pack[Any]]:
     packs: Sequence[PackType]
     match: ResolvedPackMatchOption
     match_spec: CompiledPackMatchOption
@@ -383,7 +378,7 @@ class PreparedPackMatchQuery(Generic[PackType]):
     ) -> PackMatchSelection[File[Any, Any], PackType]: ...
 
     @overload
-    def select(
+    def select[T](
         self,
         *extensions: str,
         extend: type[T],
@@ -479,11 +474,11 @@ class PreparedPackMatchQuery(Generic[PackType]):
         return PreparedPackQuery([self])
 
 
-PackSelection = Mapping[T, PackType]
+type PackSelection[T, PackType: Pack[Any]] = Mapping[T, PackType]
 
 
 @dataclass(frozen=True, slots=True)
-class PreparedPackQuery(Generic[PackType]):
+class PreparedPackQuery[PackType: Pack[Any]]:
     queries: Sequence[
         PreparedPackFilesQuery[PackType]
         | PreparedPackMatchQuery[PackType]
@@ -504,7 +499,7 @@ class PreparedPackQuery(Generic[PackType]):
     ) -> PackSelection[File[Any, Any], PackType]: ...
 
     @overload
-    def select(
+    def select[T](
         self,
         *extensions: str,
         extend: type[T],
@@ -551,11 +546,11 @@ class PreparedPackQuery(Generic[PackType]):
 
 
 @dataclass(frozen=True, slots=True)
-class PackQuery(Generic[PackType]):
+class PackQuery[PackType: Pack[Any]]:
     packs: Sequence[PackType]
     template: TemplateManager | None = None
 
-    def from_pack(
+    def from_pack[FromPackType: Pack[Any]](
         self,
         *args: FromPackType | Sequence[FromPackType],
     ) -> PackQuery[FromPackType]:
@@ -666,7 +661,7 @@ class PackQuery(Generic[PackType]):
     ) -> PackFilesSelection[File[Any, Any], PackType]: ...
 
     @overload
-    def __call__(
+    def __call__[T](
         self,
         *extensions: str,
         extend: type[T],
@@ -681,7 +676,7 @@ class PackQuery(Generic[PackType]):
     ) -> PackMatchSelection[File[Any, Any], PackType]: ...
 
     @overload
-    def __call__(
+    def __call__[T](
         self,
         *extensions: str,
         extend: type[T],
@@ -719,7 +714,7 @@ class PackQuery(Generic[PackType]):
     ) -> PackSelection[File[Any, Any], PackType]: ...
 
     @overload
-    def distinct(
+    def distinct[T](
         self,
         *args: str
         | PackFilesOption
