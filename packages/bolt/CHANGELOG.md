@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v0.51.2 (2026-10-21)
+
+### Bug Fixes
+
+- Relax interpolation syntax
+  ([`621da6b`](https://github.com/mcbeet/beet/commit/621da6bcf22a3b14c2cb4b9997e203b71416d974))
+
+
 ## v0.51.1 (2026-10-21)
 
 
