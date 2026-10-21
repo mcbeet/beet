@@ -18,7 +18,6 @@ from typing import Dict, List, Optional, Union
 from tokenstream import InvalidSyntax, SourceLocation, Token, set_location
 
 from .error import MechaError
-
 ESCAPE_REGEX = re.compile(r"\\.")
 UNICODE_ESCAPE_REGEX = re.compile(r"\\(?:u([0-9a-fA-F]{4})|.)")
 AVOID_QUOTES_REGEX = re.compile(r"^[0-9A-Za-z_\.\+\-]+$")
