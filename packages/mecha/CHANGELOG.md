@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v0.106.2 (2026-10-21)
+
+### Bug Fixes
+
+- #521 formatting preserve off by one
+  ([`1e5ac43`](https://github.com/mcbeet/beet/commit/1e5ac439ee310b56ed82bca47d370315ba376c41))
+
+
 ## v0.106.1 (2026-10-21)
 
 
