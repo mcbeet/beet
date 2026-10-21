@@ -1,4 +1,4 @@
-__version__ = "0.51.1-beta.1"
+__version__ = "0.51.1"
 
 from .ast import *  # noqa: F403
 from .codegen import *  # noqa: F403
