@@ -86,7 +86,7 @@ class File[ValueType: Any, SerializeType: Any]:
         if not self.original:
             self.original = self
 
-    def merge(self, other: Self) -> bool:
+    def merge(self, other: object) -> bool:
         """Merge the given file or return False to indicate no special handling."""
         return False
 
@@ -192,8 +192,10 @@ class File[ValueType: Any, SerializeType: Any]:
     def __hash__(self) -> int:
         return id(self)
 
-    def content_equal(self, other: Self) -> bool:
+    def content_equal(self, other: object) -> bool:
         """Compare file contents."""
+        if not isinstance(other, File):
+            return False
         return (
             self.get_content() == other.get_content()
             or self.ensure_serialized() == other.ensure_serialized()
@@ -658,7 +660,9 @@ class PngFile(BinaryFileBase[Image.Image]):
     def from_bytes(self, content: bytes) -> Image.Image:
         return Image.open(io.BytesIO(content))
 
-    def content_equal(self, other: Self) -> bool:  # pyright: ignore[reportIncompatibleMethodOverride]
+    def content_equal(self, other: object) -> bool:
+        if not isinstance(other, PngFile):
+            return False
         left, right = self.image, other.image
         if left.size != right.size:
             return False

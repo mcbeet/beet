@@ -12,7 +12,7 @@ __all__ = [
 
 from dataclasses import dataclass
 from difflib import SequenceMatcher
-from typing import Any, Protocol, TypeVar
+from typing import Any, Protocol
 
 from tokenstream import INITIAL_LOCATION, Preprocessor, SourceLocation, set_location
 
@@ -30,8 +30,6 @@ from mecha import (
     MutatingReducer,
     rule,
 )
-
-AstNodeType = TypeVar("AstNodeType", bound=AstNode)
 
 
 @dataclass(frozen=True, slots=True)
@@ -79,7 +77,7 @@ class EmbedHandler:
     database: CompilationDatabase
     parse_callback: EmbedParseCallback
     serialize_callback: EmbedSerializeCallback
-    resolver: "EmbedResolver"
+    resolver: EmbedResolver
 
     def __init__(self, arg: Context | Mecha):
         if isinstance(arg, Context):
@@ -90,7 +88,7 @@ class EmbedHandler:
         self.serialize_callback = arg.serialize
         self.resolver = EmbedResolver(embed_handler=self)
 
-    def parse(
+    def parse[AstNodeType: AstNode](
         self,
         node: AstNodeType,
         source: TextFileBase[Any] | None = None,

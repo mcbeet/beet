@@ -106,14 +106,14 @@ extend-exclude = ["*.md"]
 
 [tool.ruff.lint.isort]
 section-order = [
-  "future",
-  "standard-library",
-  "third-party",
-  "beet",
-  "lectern",
-  "mecha",
-  "bolt",
-  "local-folder",
+    "future",
+    "standard-library",
+    "third-party",
+    "beet",
+    "lectern",
+    "mecha",
+    "bolt",
+    "local-folder",
 ]
 
 [tool.ruff.lint.isort.sections]

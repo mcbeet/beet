@@ -115,4 +115,4 @@ class JinjaExtension(Extension):
 
     @property
     def ctx(self) -> Context:
-        return getattr(self.environment, "_beet_template_manager").ctx
+        return self.environment._beet_template_manager.ctx  # pyright: ignore[reportAttributeAccessIssue]

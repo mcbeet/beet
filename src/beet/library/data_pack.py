@@ -2,7 +2,6 @@ __all__ = [
     "Advancement",
     "AdvancementTag",
     "BannerPattern",
-    "BannerPattern",
     "BannerPatternTag",
     "BlockTag",
     "BlockTranformer",
@@ -84,17 +83,16 @@ __all__ = [
     "WolfSoundVariant",
     "WolfSoundVariantTag",
     "WolfVariant",
-    "WolfVariant",
     "WolfVariantTag",
 ]
 
 
 import io
-from collections.abc import Iterable
+from collections.abc import Iterable, Mapping
 from copy import deepcopy
 from dataclasses import dataclass
 from gzip import GzipFile
-from typing import ClassVar, TypeVar
+from typing import ClassVar
 
 from nbtlib.contrib.minecraft import StructureFile, StructureFileData
 
@@ -117,8 +115,6 @@ from .base import (
     NamespaceProxyDescriptor,
     Pack,
 )
-
-TagFileType = TypeVar("TagFileType", bound="TagFile")
 
 
 class Advancement(JsonFile):
@@ -336,7 +332,7 @@ class Function(TextFileBase[list[str]]):
 
     lines: ClassVar[FileDeserialize[list[str]]] = FileDeserialize()
 
-    def append(self, other: "Function" | Iterable[str] | str):
+    def append(self, other: Function | Iterable[str] | str):
         """Append lines from another function."""
         self.lines.extend(
             other.lines
@@ -346,7 +342,7 @@ class Function(TextFileBase[list[str]]):
             else other
         )
 
-    def prepend(self, other: "Function" | Iterable[str] | str):
+    def prepend(self, other: Function | Iterable[str] | str):
         """Prepend lines from another function."""
         self.lines[0:0] = (
             other.lines
@@ -366,7 +362,7 @@ class Function(TextFileBase[list[str]]):
     def from_str(self, content: str) -> list[str]:
         return content.splitlines()
 
-    def bind(self, pack: "DataPack", path: str):
+    def bind(self, pack: DataPack, path: str):
         super().bind(pack, path)
 
         for tag_name in self.tags or ():
@@ -512,33 +508,43 @@ class TagFile(JsonFile):
 
     extension: ClassVar[str] = ".json"
 
-    def merge(self: TagFileType, other: TagFileType) -> bool:  # pyright: ignore[reportIncompatibleMethodOverride]
-        if other.data.get("replace"):
+    def merge(self, other: object) -> bool:
+        if isinstance(other, JsonFile):
+            other = other.data
+        if not isinstance(other, Mapping):
+            return False
+
+        if other.get("replace"):
             self.data["replace"] = True
-            self.data["values"] = deepcopy(other.data.get("values", []))
+            self.data["values"] = deepcopy(other.get("values", []))
             return True
 
         values = self.data.setdefault("values", [])
 
-        for value in other.data.get("values", []):
+        for value in other.get("values", []):
             if value not in values:
                 values.append(deepcopy(value))
         return True
 
-    def append(self: TagFileType, other: TagFileType):
+    def append(self, other: object):
         """Append values from another tag."""
         self.merge(other)
 
-    def prepend(self: TagFileType, other: TagFileType):
+    def prepend(self, other: object):
         """Prepend values from another tag."""
-        if other.data.get("replace"):
+        if isinstance(other, JsonFile):
+            other = other.data
+        if not isinstance(other, Mapping):
+            return
+
+        if other.get("replace"):
             self.data["replace"] = True
-            self.data["values"] = deepcopy(other.data.get("values", []))
+            self.data["values"] = deepcopy(other.get("values", []))
             return
 
         values = self.data.setdefault("values", [])
 
-        for value in other.data.get("values", []):
+        for value in other.get("values", []):
             if value not in values:
                 values.insert(0, deepcopy(value))
 

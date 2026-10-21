@@ -11,7 +11,7 @@ __all__ = [
 
 from collections.abc import Callable, Generator
 from dataclasses import dataclass
-from typing import Any, TypeVar
+from typing import Any
 
 from beet import Context
 from beet.core.utils import required_field
@@ -28,8 +28,6 @@ from mecha import (
 )
 
 from bolt import Runtime
-
-CallbackType = TypeVar("CallbackType", bound=Callable[[], Any])
 
 
 def beet_default(ctx: Context):
@@ -94,7 +92,9 @@ class Defer:
         mc = ctx.inject(Mecha)
         mc.steps.insert(mc.steps.index(self.runtime.evaluate) + 1, self.handler)
 
-    def __call__(self, callback: CallbackType) -> CallbackType:
+    def __call__[CallbackType: Callable[[], Any]](
+        self, callback: CallbackType
+    ) -> CallbackType:
         self.runtime.commands.append(
             AstDeferCommand(
                 callback=lambda: AstChildren(self.runtime.capture_output(callback))

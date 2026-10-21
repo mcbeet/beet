@@ -8,14 +8,12 @@ from base64 import b64decode
 from collections.abc import Sequence
 from dataclasses import dataclass, replace
 from pathlib import Path
-from typing import Any, TypeVar, overload
+from typing import Any, overload
 from urllib.parse import urlparse
 from urllib.request import urlopen
 
 from beet import BinaryFile, BinaryFileBase, BubbleException, Cache, File
 from beet.core.utils import FileSystemPath
-
-FileType = TypeVar("FileType", bound=File[Any, Any])
 
 
 class InvalidFragment(BubbleException):
@@ -95,7 +93,9 @@ class Fragment:
     def as_file(self) -> BinaryFile: ...
 
     @overload
-    def as_file(self, file_type: type[FileType]) -> FileType: ...
+    def as_file[FileType: File[Any, Any]](
+        self, file_type: type[FileType]
+    ) -> FileType: ...
 
     def as_file(self, file_type: type[File[Any, Any]] = BinaryFile) -> File[Any, Any]:
         """Retrieve the content of the fragment as a file."""

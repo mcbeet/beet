@@ -14,7 +14,7 @@ __all__ = [
 
 
 from dataclasses import dataclass, field, replace
-from typing import Literal, TypeVar
+from typing import Literal
 
 from tokenstream import InvalidSyntax, set_location
 
@@ -23,8 +23,6 @@ from beet.core.utils import extra_field
 from mecha import AstNode
 
 from .utils import suggest_typo
-
-LexicalScopeType = TypeVar("LexicalScopeType", bound="LexicalScope")
 
 
 class UndefinedIdentifier(InvalidSyntax):
@@ -282,12 +280,16 @@ class LexicalScope:
 
         variable.bindings.append(Binding(origin=node))
 
-    def push(self, scope_type: type[LexicalScopeType]) -> LexicalScopeType:
+    def push[LexicalScopeType: LexicalScope](
+        self, scope_type: type[LexicalScopeType]
+    ) -> LexicalScopeType:
         child = scope_type(parent=self)
         self.children.append(child)
         return child
 
-    def deferred(self, scope_type: type[LexicalScopeType]) -> LexicalScopeType:
+    def deferred[LexicalScopeType: LexicalScope](
+        self, scope_type: type[LexicalScopeType]
+    ) -> LexicalScopeType:
         if not isinstance(self.next_deferred, scope_type):
             self.next_deferred = self.push(scope_type)
         return self.next_deferred
@@ -369,7 +371,9 @@ class ProcMacroScope(FunctionScope):
 class ClassScope(LexicalScope):
     """Dedicated type for class scope."""
 
-    def push(self, scope_type: type[LexicalScopeType]) -> LexicalScopeType:
+    def push[LexicalScopeType: LexicalScope](
+        self, scope_type: type[LexicalScopeType]
+    ) -> LexicalScopeType:
         if issubclass(scope_type, FunctionScope):
             if not self.parent:
                 raise ValueError("Class scope has no parent.")

@@ -97,14 +97,7 @@ import re
 from collections.abc import Iterable, Iterator, Mapping, Sequence
 from dataclasses import dataclass, fields
 from itertools import islice, permutations, zip_longest
-from typing import (
-    Any,
-    ClassVar,
-    Literal,
-    Self,
-    TypeVar,
-    overload,
-)
+from typing import Any, ClassVar, Literal, Self, overload
 from uuid import UUID
 
 from nbtlib import (
@@ -128,12 +121,6 @@ from tokenstream import UNKNOWN_LOCATION, SourceLocation, set_location
 from beet.core.utils import JsonDict, extra_field, required_field
 
 from .utils import string_to_number
-
-T = TypeVar("T")
-AbstractNodeType = TypeVar("AbstractNodeType", bound="AbstractNode", covariant=True)
-AstNodeType = TypeVar("AstNodeType", bound="AstNode", covariant=True)
-AstLiteralType = TypeVar("AstLiteralType", bound="AstLiteral")
-
 
 COLORS: tuple[str, ...] = (
     "black",
@@ -225,12 +212,12 @@ class AbstractNode:
             if not exclude or f.name not in exclude
         )
 
-    def emit_error(self, exc: T) -> T:
+    def emit_error[T](self, exc: T) -> T:
         """Add location information to invalid syntax exceptions."""
         return set_location(exc, self)
 
 
-class AbstractChildren(tuple[AbstractNodeType, ...]):
+class AbstractChildren[AbstractNodeType: AbstractNode](tuple[AbstractNodeType, ...]):
     """Abstract children."""
 
     def __new__(
@@ -264,7 +251,7 @@ class AstNode(AbstractNode):
         return super().walk()  # pyright: ignore[reportReturnType]
 
 
-class AstChildren(AbstractChildren[AstNodeType]):
+class AstChildren[AstNodeType: AstNode](AbstractChildren[AstNodeType]):
     """Specialized tuple subclass for holding multiple child ast nodes."""
 
 

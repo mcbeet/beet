@@ -18,12 +18,7 @@ from glob import glob
 from io import BufferedReader, BufferedWriter
 from pathlib import Path
 from time import perf_counter_ns
-from typing import (
-    Any,
-    Literal,
-    TypeVar,
-    overload,
-)
+from typing import Any, Literal, overload
 
 from pydantic import BaseModel, field_validator
 from tokenstream import InvalidSyntax, Preprocessor, TokenStream, set_location
@@ -67,11 +62,6 @@ from .parse import delegate, get_parsers
 from .preprocess import wrap_backslash_continuation
 from .serialize import FormattingOptions, Serializer
 from .spec import CommandSpec
-
-AstNodeType = TypeVar("AstNodeType", bound=AstNode)
-TextFileType = TypeVar("TextFileType", bound=TextFileBase[Any])
-PackType = TypeVar("PackType", bound=ResourcePack | DataPack)
-
 
 logger = logging.getLogger("mecha")
 
@@ -301,7 +291,7 @@ class Mecha:
     ) -> AstRoot: ...
 
     @overload
-    def parse(
+    def parse[AstNodeType: AstNode](
         self,
         source: TextFileBase[Any] | list[str] | str,
         *,
@@ -402,7 +392,7 @@ class Mecha:
             return ast
 
     @overload
-    def compile(
+    def compile[PackType: ResourcePack | DataPack](
         self,
         source: PackType,
         *,
@@ -428,7 +418,7 @@ class Mecha:
     ) -> None: ...
 
     @overload
-    def compile(
+    def compile[TextFileType: TextFileBase[Any]](
         self,
         source: TextFileType,
         *,

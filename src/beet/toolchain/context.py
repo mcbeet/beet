@@ -22,12 +22,7 @@ from contextlib import contextmanager
 from dataclasses import InitVar, dataclass, field
 from functools import partial, update_wrapper, wraps
 from pathlib import Path
-from typing import (
-    Any,
-    Protocol,
-    TypeVar,
-    overload,
-)
+from typing import Any, Protocol, overload
 
 from pydantic import BaseModel, ConfigDict, ValidationError
 
@@ -54,14 +49,10 @@ from .template import TemplateManager
 from .tree import generate_tree
 from .worker import WorkerPoolHandle
 
-T = TypeVar("T")
-OptionsType = TypeVar("OptionsType", contravariant=True)
-NamespaceFileType = TypeVar("NamespaceFileType", bound=NamespaceFile)
-
 type Plugin = GenericPlugin["Context"]
 type PluginSpec = GenericPluginSpec["Context"]
-ServiceFactory = Callable[["Context"], T]
-Validator = Callable[..., T]
+type ServiceFactory[T] = Callable[["Context"], T]
+type Validator[T] = Callable[..., T]
 
 
 class ErrorMessage(BubbleException):
@@ -100,7 +91,7 @@ class Pipeline(GenericPipeline["Context"]):
     ctx: Context
 
 
-class PluginWithOptions(Protocol[OptionsType]):
+class PluginWithOptions[OptionsType](Protocol):
     def __call__(self, ctx: Context, opts: OptionsType, /) -> Any: ...
 
 
@@ -243,7 +234,7 @@ class Context:
         self.template.expose("parse_json", lambda string: json.loads(string))
 
     @overload
-    def inject(self, cls: ServiceFactory[T]) -> T: ...
+    def inject[T](self, cls: ServiceFactory[T]) -> T: ...
 
     @overload
     def inject(self, cls: str) -> Any: ...
@@ -280,7 +271,7 @@ class Context:
                 del self.meta[key]
             self.meta.update(to_restore)
 
-    def validate(
+    def validate[T](
         self,
         key: str,
         validator: Validator[T],
@@ -333,7 +324,7 @@ class Context:
     def query(self) -> PackQuery[ResourcePack | DataPack]:
         return PackQuery(self.packs, self.template)
 
-    def __getitem__(
+    def __getitem__[NamespaceFileType: NamespaceFile](
         self, extend: type[NamespaceFileType]
     ) -> Iterable[tuple[str, NamespaceFileType]]:
         for pack in self.packs:
@@ -344,7 +335,7 @@ class Context:
 
 
 @overload
-def configurable(
+def configurable[OptionsType](
     name: str | None = None,
     /,
     *,

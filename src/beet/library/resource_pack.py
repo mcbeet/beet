@@ -27,6 +27,7 @@ __all__ = [
 ]
 
 
+from collections.abc import Mapping
 from contextlib import suppress
 from copy import deepcopy
 from dataclasses import dataclass
@@ -81,8 +82,13 @@ class Language(JsonFile):
     scope: ClassVar[NamespaceFileScope] = ("lang",)
     extension: ClassVar[str] = ".json"
 
-    def merge(self, other: "Language") -> bool:  # pyright: ignore[reportIncompatibleMethodOverride]
-        self.data.update(other.data)
+    def merge(self, other: object) -> bool:
+        if isinstance(other, JsonFile):
+            other = other.data
+        if not isinstance(other, Mapping):
+            return False
+
+        self.data.update(other)
         return True
 
 
@@ -92,10 +98,15 @@ class Font(JsonFile):
     scope: ClassVar[NamespaceFileScope] = ("font",)
     extension: ClassVar[str] = ".json"
 
-    def merge(self, other: "Font") -> bool:  # pyright: ignore[reportIncompatibleMethodOverride]
+    def merge(self, other: object) -> bool:
+        if isinstance(other, JsonFile):
+            other = other.data
+        if not isinstance(other, Mapping):
+            return False
+
         providers = self.data.setdefault("providers", [])
 
-        for provider in other.data.get("providers", []):
+        for provider in other.get("providers", []):
             providers.append(deepcopy(provider))
         return True
 
@@ -187,7 +198,7 @@ class Texture(PngFile):
     scope: ClassVar[NamespaceFileScope] = ("textures",)
     extension: ClassVar[str] = ".png"
 
-    def bind(self, pack: "ResourcePack", path: str):
+    def bind(self, pack: ResourcePack, path: str):
         super().bind(pack, path)
 
         if self.mcmeta is not None:
@@ -211,7 +222,7 @@ class Sound(BinaryFile):
     scope: ClassVar[NamespaceFileScope] = ("sounds",)
     extension: ClassVar[str] = ".ogg"
 
-    def bind(self, pack: "ResourcePack", path: str):
+    def bind(self, pack: ResourcePack, path: str):
         super().bind(pack, path)
 
         namespace, _, path = path.partition(":")
@@ -244,8 +255,13 @@ class Sound(BinaryFile):
 class SoundConfig(JsonFile):
     """Class representing the sounds.json configuration."""
 
-    def merge(self, other: "SoundConfig") -> bool:  # pyright: ignore[reportIncompatibleMethodOverride]
-        for key, other_event in other.data.items():
+    def merge(self, other: object) -> bool:
+        if isinstance(other, JsonFile):
+            other = other.data
+        if not isinstance(other, Mapping):
+            return False
+
+        for key, other_event in other.items():
             if other_event.get("replace"):
                 self.data[key] = deepcopy(other_event)
                 continue
@@ -276,23 +292,33 @@ class Atlas(JsonFile):
     scope: ClassVar[NamespaceFileScope] = ("atlases",)
     extension: ClassVar[str] = ".json"
 
-    def merge(self, other: "Atlas") -> bool:  # pyright: ignore[reportIncompatibleMethodOverride]
+    def merge(self, other: object) -> bool:
+        if isinstance(other, JsonFile):
+            other = other.data
+        if not isinstance(other, Mapping):
+            return False
+
         values = self.data.setdefault("sources", [])
 
-        for value in other.data.get("sources", []):
+        for value in other.get("sources", []):
             if value not in values:
                 values.append(deepcopy(value))
         return True
 
-    def append(self, other: "Atlas"):
+    def append(self, other: object):
         """Append values from another atlas."""
         self.merge(other)
 
-    def prepend(self, other: "Atlas"):
+    def prepend(self, other: object):
         """Prepend values from another atlas."""
+        if isinstance(other, JsonFile):
+            other = other.data
+        if not isinstance(other, Mapping):
+            return False
+
         values = self.data.setdefault("sources", [])
 
-        for value in other.data.get("sources", []):
+        for value in other.get("sources", []):
             if value not in values:
                 values.insert(0, deepcopy(value))
 

@@ -763,8 +763,13 @@ class NamespaceProxyDescriptor[NamespaceFileType: NamespaceFile]:
 class Mcmeta(JsonFile):
     """Class representing a pack.mcmeta file."""
 
-    def merge(self, other: Mcmeta) -> bool:  # pyright: ignore[reportIncompatibleMethodOverride]
-        for key, value in other.data.items():
+    def merge(self, other: object) -> bool:
+        if isinstance(other, JsonFile):
+            other = other.data
+        if not isinstance(other, Mapping):
+            return False
+
+        for key, value in other.items():
             if key == "filter":
                 block = self.data.setdefault("filter", {}).setdefault("block", [])
                 for item in value.get("block", []):

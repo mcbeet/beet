@@ -5,9 +5,9 @@ __all__ = [
 ]
 
 
-from typing import NamedTuple, Union
+from typing import NamedTuple
 
-CommandSignature = tuple[Union[str, "CommandArgument"], ...]
+type CommandSignature = tuple[str | CommandArgument, ...]
 
 
 class CommandArgument(NamedTuple):
@@ -31,8 +31,7 @@ class CommandPrototype(NamedTuple):
                 argument = self.get_argument(i)
                 if argument.name == arg:
                     return argument
-            else:
-                raise ValueError(f"No argument {arg!r}.")
+            raise ValueError(f"No argument {arg!r}.")
 
         return self.signature[self.arguments[arg]]  # pyright: ignore[reportReturnType]
 

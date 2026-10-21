@@ -12,7 +12,7 @@ __all__ = [
 
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass
-from typing import Any, Union
+from typing import Any
 
 from pydantic import BaseModel, ConfigDict, RootModel
 
@@ -109,7 +109,7 @@ class FindReplaceOptions(PluginOptions):
         )
 
 
-ListOption[Union[SubstitutionOption, "FindReplaceOptions"]].model_rebuild()
+ListOption[SubstitutionOption | FindReplaceOptions].model_rebuild()
 
 
 @dataclass(frozen=True)

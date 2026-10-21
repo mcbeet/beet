@@ -18,7 +18,7 @@ from functools import partial
 from pathlib import Path
 from textwrap import indent
 from time import time
-from typing import Any, BinaryIO, ClassVar, TypeVar
+from typing import Any, BinaryIO, ClassVar
 from urllib.request import Request, urlopen
 
 from .container import Container, MatchMixin, Pin
@@ -32,10 +32,6 @@ from .utils import (
     log_time,
     normalize_string,
 )
-
-PinType = TypeVar("PinType", covariant=True)
-CacheType = TypeVar("CacheType", bound="Cache")
-
 
 logger = logging.getLogger("cache")
 
@@ -299,14 +295,14 @@ class Cache:
         )
 
 
-class CachePin(Pin[str, PinType]):
+class CachePin[PinType](Pin[str, PinType]):
     """Descriptor that makes cache data accessible through attribute lookup."""
 
     def forward(self, obj: Any) -> JsonDict:
         return obj.cache.json if isinstance(obj.cache, Cache) else {}
 
 
-class MultiCache(MatchMixin, Container[str, CacheType]):
+class MultiCache[CacheType: Cache](MatchMixin, Container[str, CacheType]):
     """A container of lazily instantiated named caches."""
 
     path: Path

@@ -10,14 +10,7 @@ from collections import defaultdict
 from collections.abc import Callable, Iterable, Iterator
 from contextlib import ExitStack, contextmanager
 from dataclasses import dataclass, field, replace
-from typing import (
-    TYPE_CHECKING,
-    Any,
-    Self,
-    TypeVar,
-    cast,
-    overload,
-)
+from typing import TYPE_CHECKING, Any, Self, cast, overload
 
 from beet.core.container import Container
 from beet.core.file import TextFileBase
@@ -31,11 +24,6 @@ from .utils import LazyFormat, stable_hash
 
 if TYPE_CHECKING:
     from .context import Context
-
-
-T = TypeVar("T", contravariant=True)
-GeneratorType = TypeVar("GeneratorType", bound="Generator")
-NamespaceFileType = TypeVar("NamespaceFileType", bound="NamespaceFile")
 
 
 @dataclass
@@ -145,7 +133,7 @@ class Generator:
     ) -> str: ...
 
     @overload
-    def __call__(
+    def __call__[NamespaceFileType: NamespaceFile](
         self,
         fmt: str,
         *,
@@ -278,7 +266,7 @@ class Generator:
         return objective
 
     @overload
-    def function_tree(
+    def function_tree[T](
         self,
         fmt: str,
         items: Iterable[T],
@@ -290,7 +278,7 @@ class Generator:
     ) -> Iterator[tuple[TreeNode[T], Function]]: ...
 
     @overload
-    def function_tree(
+    def function_tree[T](
         self,
         items: Iterable[T],
         /,

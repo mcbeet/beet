@@ -63,12 +63,7 @@ __all__ = [
 from collections.abc import Callable, Iterator
 from contextlib import contextmanager
 from dataclasses import dataclass, replace
-from typing import (
-    Literal,
-    TypeAlias,
-    TypeVar,
-    Union,
-)
+from typing import Literal
 
 from tokenstream import InvalidSyntax, TokenPattern, TokenStream, set_location
 
@@ -76,8 +71,6 @@ from beet.core.utils import required_field
 
 from mecha import AbstractChildren, AbstractNode
 from mecha.utils import QuoteHelper
-
-McdocNodeType = TypeVar("McdocNodeType", bound="McdocNode", covariant=True)
 
 PATTERN_INTEGER: str = r"[-+]?[1-9][0-9]*|0"
 PATTERN_FLOAT: str = r"[-+]?(?:[0-9]*\.[0-9]+|[0-9]+)(?:[eE][-+]?[0-9]+)?"
@@ -130,7 +123,7 @@ class McdocNode(AbstractNode):
         return super().walk()  # pyright: ignore[reportReturnType]
 
 
-class McdocChildren(AbstractChildren[McdocNodeType]):
+class McdocChildren[McdocNodeType: McdocNode](AbstractChildren[McdocNodeType]):
     """Specialized tuple subclass for holding multiple child mcdoc nodes."""
 
 
@@ -225,7 +218,7 @@ class McdocPath(McdocNode):
     segments: McdocChildren[McdocPathSegment] = required_field()
 
 
-McdocPathSegment: TypeAlias = Union[McdocIdentifier, "McdocSuper"]
+type McdocPathSegment = McdocIdentifier | McdocSuper
 
 
 @dataclass(frozen=True, slots=True)
@@ -242,25 +235,25 @@ class McdocType(McdocNode):
     modifiers: McdocChildren[McdocTypeModifier] = required_field()
 
 
-McDocUnattributedType: TypeAlias = Union[
-    "McdocAnyType",
-    "McdocBooleanType",
-    "McdocStringType",
-    McdocBoolean,
-    McdocString,
-    McdocTypedNumber,
-    "McdocNumericType",
-    "McdocPrimitiveArrayType",
-    "McdocListType",
-    "McdocTupleType",
-    "McdocEnum",
-    "McdocStruct",
-    "McdocReferenceType",
-    "McdocDispatcherType",
-    "McdocUnionType",
-]
+type McDocUnattributedType = (
+    McdocAnyType
+    | McdocBooleanType
+    | McdocStringType
+    | McdocBoolean
+    | McdocString
+    | McdocTypedNumber
+    | McdocNumericType
+    | McdocPrimitiveArrayType
+    | McdocListType
+    | McdocTupleType
+    | McdocEnum
+    | McdocStruct
+    | McdocReferenceType
+    | McdocDispatcherType
+    | McdocUnionType
+)
 
-McdocTypeModifier: TypeAlias = Union["McdocIndexBody", "McdocTypeArgBlock"]
+type McdocTypeModifier = McdocIndexBody | McdocTypeArgBlock
 
 
 @dataclass(frozen=True, slots=True)
@@ -339,7 +332,7 @@ class McdocEnumField(McdocNode):
     value: McdocEnumValue = required_field()
 
 
-McdocEnumValue: TypeAlias = McdocTypedNumber | McdocString
+type McdocEnumValue = McdocTypedNumber | McdocString
 
 
 @dataclass(frozen=True, slots=True)
@@ -361,7 +354,7 @@ class McdocStructField(McdocNode):
     type: McdocType = required_field()
 
 
-McdocStructKey: TypeAlias = Union[McdocString, McdocIdentifier, "McdocDynamicKey"]
+type McdocStructKey = McdocString | McdocIdentifier | McdocDynamicKey
 
 
 @dataclass(frozen=True, slots=True)
@@ -408,19 +401,16 @@ class McdocIndexBody(McdocNode):
     indices: McdocChildren[McdocIndex] = required_field()
 
 
-McdocIndex: TypeAlias = Union[
-    "McdocStaticIndex",
-    "McdocDynamicIndex",
-]
+type McdocIndex = McdocStaticIndex | McdocDynamicIndex
 
-McdocStaticIndex: TypeAlias = Union[
-    "McdocFallbackIndexKey",
-    "McdocNoneIndexKey",
-    "McdocUnknownIndexKey",
-    McdocIdentifier,
-    McdocString,
-    McdocResourceLocation,
-]
+type McdocStaticIndex = (
+    McdocFallbackIndexKey
+    | McdocNoneIndexKey
+    | McdocUnknownIndexKey
+    | McdocIdentifier
+    | McdocString
+    | McdocResourceLocation
+)
 
 
 @dataclass(frozen=True, slots=True)
@@ -445,12 +435,9 @@ class McdocDynamicIndex(McdocNode):
     accessors: McdocChildren[McdocAccessor] = required_field()
 
 
-McdocAccessor: TypeAlias = Union[
-    "McdocKeyIndexKey",
-    "McdocParentIndexKey",
-    McdocIdentifier,
-    McdocString,
-]
+type McdocAccessor = (
+    McdocKeyIndexKey | McdocParentIndexKey | McdocIdentifier | McdocString
+)
 
 
 @dataclass(frozen=True, slots=True)
@@ -477,13 +464,13 @@ class Mcdoc(McdocNode):
     items: McdocChildren[McdocItem] = required_field()
 
 
-McdocItem: TypeAlias = Union[
-    McdocStruct,
-    McdocEnum,
-    "McdocTypeAlias",
-    "McdocUseStatement",
-    "McdocDispatchStatement",
-]
+type McdocItem = (
+    McdocStruct
+    | McdocEnum
+    | McdocTypeAlias
+    | McdocUseStatement
+    | McdocDispatchStatement
+)
 
 
 @dataclass(frozen=True, slots=True)
@@ -523,7 +510,7 @@ class McdocAttribute(McdocNode):
     value: McdocAttributeValue | None = None
 
 
-McdocAttributeValue: TypeAlias = Union[McdocType, "McdocAttributeTree"]
+type McdocAttributeValue = McdocType | McdocAttributeTree
 
 
 @dataclass(frozen=True, slots=True)
@@ -543,7 +530,7 @@ class McdocAttributeTreeNamedValue(McdocNode):
     value: McdocAttributeValue = required_field()
 
 
-McdocAttributeTreeName: TypeAlias = McdocIdentifier | McdocString
+type McdocAttributeTreeName = McdocIdentifier | McdocString
 
 
 @contextmanager
@@ -1268,7 +1255,7 @@ def parse_attribute_tree_named_value(
         return set_location(node, name, value)
 
 
-def expect_sequence(
+def expect_sequence[McdocNodeType: McdocNode](
     stream: TokenStream,
     nodes: list[McdocNodeType],
     parser: Callable[[TokenStream], McdocNodeType],
@@ -1284,7 +1271,7 @@ def expect_sequence(
         return stream.current
 
 
-def choose_alternative(
+def choose_alternative[McdocNodeType: McdocNode](
     stream: TokenStream,
     *args: Callable[[TokenStream], McdocNodeType],
 ) -> McdocNodeType:

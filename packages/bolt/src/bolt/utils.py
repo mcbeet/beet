@@ -14,15 +14,12 @@ from bisect import bisect
 from collections.abc import Iterable
 from difflib import get_close_matches
 from types import CodeType, TracebackType
-from typing import Any, TypeVar
+from typing import Any
 
 from beet import Container
 from beet.core.utils import FileSystemPath
 
 from mecha.utils import string_to_number
-
-T = TypeVar("T")
-
 
 INTERNAL_CODE: set[CodeType] = {
     string_to_number.__code__,
@@ -30,7 +27,7 @@ INTERNAL_CODE: set[CodeType] = {
 }
 
 
-def internal(f: T) -> T:
+def internal[T](f: T) -> T:
     INTERNAL_CODE.add(f.__code__)  # pyright: ignore[reportAttributeAccessIssue]
     return f
 

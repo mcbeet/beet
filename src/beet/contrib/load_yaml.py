@@ -9,7 +9,7 @@ __all__ = [
 
 import logging
 from dataclasses import InitVar, dataclass, field
-from typing import Any, TypeVar
+from typing import Any
 
 import yaml
 
@@ -28,8 +28,7 @@ from beet import (
 logger = logging.getLogger(__name__)
 
 
-PackType = TypeVar("PackType", bound=Pack[Any])
-PackFile = File[Any, Any]
+type PackFile = File[Any, Any]
 
 
 class LoadYamlOptions(PluginOptions):
@@ -79,7 +78,9 @@ class YamlPackLoader:
         extended_pack.load(origin)
         self.merge_extended_pack(self.data, extended_pack)
 
-    def create_extended_pack(self, pack_type: type[PackType]) -> PackType:
+    def create_extended_pack[PackType: Pack[Any]](
+        self, pack_type: type[PackType]
+    ) -> PackType:
         class ExtendedNamespace(pack_type.namespace_type):
             @classmethod
             def get_extra_info(cls) -> dict[str, type[PackFile]]:
@@ -113,7 +114,9 @@ class YamlPackLoader:
             if filename.endswith(".json")
         }
 
-    def merge_extended_pack(self, destination: PackType, extended_pack: PackType):
+    def merge_extended_pack[PackType: Pack[Any]](
+        self, destination: PackType, extended_pack: PackType
+    ):
         for _, yaml_file in extended_pack.list_files():
             yaml_file.ensure_deserialized(yaml.safe_load)
 

@@ -45,17 +45,11 @@ from importlib import import_module
 from importlib.util import find_spec
 from pathlib import Path
 from traceback import format_exception
-from typing import (
-    Any,
-    TypedDict,
-    TypeVar,
-)
+from typing import Any, TypedDict
 
 from pydantic import ValidationError
 
 from .error import BubbleException
-
-T = TypeVar("T")
 
 type JsonDict = dict[str, Any]
 type FileSystemPath = str | os.PathLike[str]
@@ -94,7 +88,7 @@ def _raise_required_field() -> Any:
     raise ValueError("Field required.")
 
 
-def intersperse(iterable: Iterable[T], delimitter: T) -> Iterator[T]:
+def intersperse[T](iterable: Iterable[T], delimitter: T) -> Iterator[T]:
     it = iter(iterable)
     yield next(it)
     for x in it:
@@ -154,7 +148,7 @@ def import_from_string(
     return getattr(module, default_member) if default_member else module
 
 
-def resolve_packageable_path(value: T) -> T | Path:
+def resolve_packageable_path[T](value: T) -> T | Path:
     value_str = str(value)
 
     if value_str.startswith("@"):
@@ -310,10 +304,9 @@ def format_directory(directory: FileSystemPath, prefix: str = "") -> Iterator[st
         yield f"{prefix}└─ ... ({count - crop_entries} more entries)"
 
 
-ExceptionType = TypeVar("ExceptionType", bound=BaseException)
-
-
-def pop_traceback(exc: ExceptionType, n: int = 1) -> ExceptionType:
+def pop_traceback[ExceptionType: BaseException](
+    exc: ExceptionType, n: int = 1
+) -> ExceptionType:
     tb = exc.__traceback__
     for _ in range(n):
         tb = getattr(exc.__traceback__, "tb_next", tb)
