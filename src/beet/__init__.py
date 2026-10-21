@@ -1,4 +1,4 @@
-__version__ = "0.120.0-beta.3"
+__version__ = "0.120.0-beta.4"
 
 from .core.cache import *  # noqa: F403
 from .core.container import *  # noqa: F403

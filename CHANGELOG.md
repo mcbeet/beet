@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v0.120.0-beta.4 (2026-10-21)
+
+### Bug Fixes
+
+- Empty cache directory
+  ([`2237acf`](https://github.com/mcbeet/beet/commit/2237acff91dfe5191964657cd276f85c17314988))
+
+
 ## v0.120.0-beta.3 (2026-10-14)
 
 ### Bug Fixes
