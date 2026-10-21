@@ -12,6 +12,7 @@ __all__ = [
 
 
 import logging
+import sys
 from collections.abc import Callable, Iterator
 from contextlib import contextmanager
 from importlib.metadata import entry_points
@@ -20,7 +21,9 @@ from typing import Any
 import click
 from click_help_colors import HelpColorsCommand, HelpColorsGroup
 from prompt_toolkit import print_formatted_text as print
+from prompt_toolkit.application import create_app_session
 from prompt_toolkit.formatted_text import FormattedText
+from prompt_toolkit.output.plain_text import PlainTextOutput
 from prompt_toolkit.styles import Style
 
 from beet import __version__
@@ -289,4 +292,10 @@ def beet(
 
 def main():
     """Invoke the beet command-line."""
-    beet(prog_name="beet")
+    # On Windows, prompt_toolkit raises NoConsoleScreenBufferError instead of falling back to plain text
+    stdout = sys.stdout
+    output = (
+        PlainTextOutput(stdout) if stdout is not None and not stdout.isatty() else None
+    )
+    with create_app_session(output=output):
+        beet(prog_name="beet")
