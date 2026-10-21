@@ -2,6 +2,19 @@
 
 <!-- version list -->
 
+## v0.53.0 (2026-10-21)
+
+### Bug Fixes
+
+- Minus prefix not needed with relaxed interpolation syntax
+  ([`845332a`](https://github.com/mcbeet/beet/commit/845332a6384af95fd29dd52541c5410650869302))
+
+### Features
+
+- Range tuple expression and interpolation
+  ([`1a93867`](https://github.com/mcbeet/beet/commit/1a938672ad9286eaff3613a30923462199106455))
+
+
 ## v0.52.0 (2026-10-21)
 
 ### Bug Fixes
