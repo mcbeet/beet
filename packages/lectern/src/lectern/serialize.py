@@ -17,9 +17,7 @@ from itertools import chain
 from mimetypes import guess_type
 from pathlib import Path
 from textwrap import indent
-from typing import (
-    Any,
-)
+from typing import Any, Self
 from urllib.parse import urlparse
 
 from beet import (
@@ -71,7 +69,7 @@ class ExternalFilesManager:
             for filename, file_instance in self.external_files.items():
                 file_instance.dump(self.directory, self.target.parent / filename)
 
-    def __enter__(self) -> ExternalFilesManager:
+    def __enter__(self) -> Self:
         return self
 
     def __exit__(self, *_):

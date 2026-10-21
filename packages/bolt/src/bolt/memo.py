@@ -249,8 +249,7 @@ class MemoRegistry(Container[str, MemoFileIndex]):
 
     def __iter__(self) -> Iterator[str]:
         if self.cache:
-            for key in self.cache.json.setdefault("files", {}):
-                yield key
+            yield from self.cache.json.setdefault("files", {})
 
     def missing(self, key: str) -> MemoFileIndex:
         if not self.cache:

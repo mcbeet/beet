@@ -16,7 +16,7 @@ import time
 from collections.abc import Callable
 from pathlib import Path
 from threading import Event, Thread
-from typing import Any, overload
+from typing import Any, Self, overload
 
 from beet import Connection, Context, DataPack, Function, PackOverwrite
 from beet.contrib.autosave import Autosave
@@ -211,7 +211,7 @@ class LogWatcher:
             self.event.set()
             self.thread.join()
 
-    def __enter__(self) -> LogWatcher:
+    def __enter__(self) -> Self:
         return self
 
     def __exit__(self, *_):

@@ -66,6 +66,7 @@ __all__ = [
 ]
 
 
+import itertools
 import re
 from dataclasses import dataclass, field, replace
 from typing import Any, Literal, cast
@@ -1674,7 +1675,7 @@ class MacroHandler:
             )
             return set_location(macro, command)
 
-        for left, right in zip(arguments, arguments[1:]):
+        for left, right in itertools.pairwise(arguments):
             if isinstance(left, AstMacroMatchArgument) and left.is_subcommand():
                 exc = InvalidSyntax("Unexpected macro argument after subcommand.")
                 raise set_location(exc, right)

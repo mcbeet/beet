@@ -238,7 +238,7 @@ class NestedCommandsTransformer(MutatingReducer):
     @rule(AstCommand, identifier="with:block:sourcePos:path")
     def nesting_macro_commands(self, node: AstCommand):
         identifier = node.identifier.split(":")
-        if not identifier[-1] == "commands":
+        if identifier[-1] != "commands":
             d = Diagnostic(
                 "error", "Anonymous macro invocation requires nested commands."
             )

@@ -10,7 +10,7 @@ from collections.abc import Iterator
 from dataclasses import dataclass, field, replace
 from textwrap import indent
 from types import TracebackType
-from typing import Any, Literal
+from typing import Any, Literal, Self
 
 from tokenstream import UNKNOWN_LOCATION, SourceLocation
 
@@ -145,7 +145,7 @@ class DiagnosticCollection(MechaError):
             if exc.level == "error":
                 yield exc
 
-    def __enter__(self) -> DiagnosticCollection:
+    def __enter__(self) -> Self:
         return self
 
     def __exit__(

@@ -325,13 +325,11 @@ class ProjectBuilder:
             # if any of the config is None, overwrite others values
             if not self.config.minecraft:
                 if any(
-                    [
-                        x is not None
-                        for x in [
-                            config.pack_format,
-                            config.min_format,
-                            config.max_format,
-                        ]
+                    x is not None
+                    for x in [
+                        config.pack_format,
+                        config.min_format,
+                        config.max_format,
                     ]
                 ):
                     pack.pack_format = None

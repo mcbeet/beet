@@ -183,8 +183,7 @@ class JsonFileHandler(Visitor):
 
     @rule(AstJsonRoot)
     def json_root(self, node: AstJsonRoot):
-        for command in node.commands:
-            yield command
+        yield from node.commands
 
     @rule(AstCommand)
     def command(self, node: AstCommand):

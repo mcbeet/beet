@@ -521,11 +521,11 @@ class PreparedPackQuery[PackType: Pack[Any]]:
                 ).items():
                     result[file_instance] = pack
             elif isinstance(query, PreparedPackMatchQuery):
-                for _, entries in (
+                for entries in (
                     query.select(*extensions, extend=extend)
                     if extend
                     else query.select(*extensions)
-                ).items():
+                ).values():
                     for (_, file_instance), (pack, _) in entries.items():
                         result[file_instance] = pack
             else:

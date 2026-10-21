@@ -18,7 +18,7 @@ from functools import partial
 from pathlib import Path
 from textwrap import indent
 from time import time
-from typing import Any, BinaryIO, ClassVar
+from typing import Any, BinaryIO, ClassVar, Self
 from urllib.request import Request, urlopen
 
 from .container import Container, MatchMixin, Pin
@@ -223,7 +223,7 @@ class Cache:
 
         self.index["timestamp"] = now.isoformat()
 
-    def __enter__(self) -> Cache:
+    def __enter__(self) -> Self:
         self.transaction.enter()
         return self
 
