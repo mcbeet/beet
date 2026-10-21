@@ -119,7 +119,7 @@ def livereload_server(connection: Connection[tuple[str | None, Path], None]):
                     continue
 
                 @log_watcher.tail(log_file_path)
-                def _(args: JsonDict):
+                def _(args: JsonDict, livereload_path=livereload_path):
                     if LIVERELOAD_REGEX.search(args["message"]) and livereload_path:
                         remove_path(livereload_path)
 

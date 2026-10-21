@@ -114,10 +114,10 @@ class NestedLocationResolver:
 
     def resolve(
         self,
-        nested_location: AstNestedLocation = AstNestedLocation(path=""),
+        nested_location: AstNestedLocation | None = None,
     ) -> tuple[str, str]:
         root, relative_path = self.concat_nested_path(
-            nested_location,
+            nested_location or AstNestedLocation(path=""),
             self.walk_location_hierarchy(
                 self.spec,
                 (

@@ -104,6 +104,20 @@ reportImportCycles = "none"
 [tool.ruff]
 extend-exclude = ["*.md"]
 
+[tool.ruff.lint]
+ignore = [
+    "SIM102",
+    "SIM117",
+    "BLE001",
+    "RUF009",
+    "RUF012",
+    "S110",
+    "TRY203",
+    "PLR1704",
+    "PLW0642",
+    "S102",
+]
+
 [tool.ruff.lint.isort]
 section-order = [
     "future",

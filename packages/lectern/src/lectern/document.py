@@ -59,12 +59,12 @@ class Document:
     def __post_init__(
         self,
         ctx: Context | None,
-        path: FileSystemPath | None = None,
-        source: str | None = None,
-        text: str | None = None,
-        markdown: str | None = None,
-        cache: Cache | None = None,
-        external_files: FileSystemPath | None = None,
+        path: FileSystemPath | None,
+        source: str | None,
+        text: str | None,
+        markdown: str | None,
+        cache: Cache | None,
+        external_files: FileSystemPath | None,
     ):
         if ctx:
             self.assets = ctx.assets

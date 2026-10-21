@@ -778,7 +778,7 @@ class AstNbt(AstNode):
             lst: Sequence[Any] = value
             return AstNbtList(elements=AstChildren(cls.from_value(e) for e in lst))
         else:
-            raise ValueError(f"Invalid nbt value of type {type(value)!r}.")
+            raise TypeError(f"Invalid nbt value of type {type(value)!r}.")
 
 
 @dataclass(frozen=True, slots=True)
@@ -1236,7 +1236,7 @@ class AstNbtPath(AstNode):
         if isinstance(value, str):
             value = Path(value)
         if not isinstance(value, Path):
-            raise ValueError(f"Invalid nbt path value of type {type(value)!r}.")
+            raise TypeError(f"Invalid nbt path value of type {type(value)!r}.")
 
         accessors = zip_longest(value, islice(value, 1, None))
         components: list[AstNbtPathKey | AstNbtCompound | AstNbtPathSubscript] = []
