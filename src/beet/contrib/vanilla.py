@@ -93,9 +93,7 @@ class ClientJar:
                 # Download into an empty resource pack first to avoid
                 # triggering merge policies that might try to deserialize
                 # files before they're fully retrieved.
-                temp = ResourcePack()
-                temp.extend_namespace.extend(pack.extend_namespace)
-                temp.extend_namespace_extra.update(pack.extend_namespace_extra)
+temp = ResourcePack().configure(pack)
                 with self.cache.parallel_downloads():
                     temp.mount(prefix, object_mapping.with_prefix(prefix))
                 pack.merge(temp)
