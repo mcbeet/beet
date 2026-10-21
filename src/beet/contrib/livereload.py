@@ -211,7 +211,7 @@ class LogWatcher:
             self.event.set()
             self.thread.join()
 
-    def __enter__(self) -> "LogWatcher":
+    def __enter__(self) -> LogWatcher:
         return self
 
     def __exit__(self, *_):

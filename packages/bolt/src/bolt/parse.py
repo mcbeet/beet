@@ -619,7 +619,7 @@ class ToplevelHandler:
     parser: Parser
 
     modules: ModuleManager
-    macro_handler: "MacroHandler"
+    macro_handler: MacroHandler
 
     def __call__(self, stream: TokenStream) -> Any:
         current = self.modules.database.current
@@ -668,7 +668,7 @@ class ToplevelHandler:
         return node
 
 
-def create_bolt_root_parser(parser: Parser, macro_handler: "MacroHandler"):
+def create_bolt_root_parser(parser: Parser, macro_handler: MacroHandler):
     """Compose root parsers."""
     parser = FlushPendingBindingsParser(parser, before=True)
     parser = DocstringHandler(parser)

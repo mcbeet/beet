@@ -42,4 +42,3 @@ class DebugAstEmitter(Visitor):
     def debug_ast(self, node: AstRoot):
         exclude = None if self.location else {"location", "end_location"}
         self.database.current.text = node.dump(exclude=exclude) + "\n"
-        return None

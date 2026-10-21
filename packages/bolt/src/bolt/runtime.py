@@ -60,7 +60,7 @@ class Runtime(CommandEmitter):
     memo: MemoHandler
 
     modules: ModuleManager
-    evaluate: "Evaluator"
+    evaluate: Evaluator
 
     spec: CommandSpec
     module_provider: CompilationUnitProvider

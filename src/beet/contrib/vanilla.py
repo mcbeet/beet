@@ -76,7 +76,7 @@ class ClientJar:
         self,
         prefix: str | None = None,
         object_mapping: UnveilMapping | None = None,
-    ) -> "ClientJar":
+    ) -> ClientJar:
         """Mount the specified prefix if it's not available already."""
         if not prefix:
             self.mount("assets", object_mapping)

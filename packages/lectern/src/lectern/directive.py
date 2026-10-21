@@ -31,7 +31,7 @@ class Directive(Protocol):
 class DirectiveRegistry(Container[str, Directive]):
     """Registry for directives."""
 
-    resolvers: list[Callable[["DirectiveRegistry"], Any]]
+    resolvers: list[Callable[[DirectiveRegistry], Any]]
     assets: ResourcePack
     data: DataPack
 
@@ -57,13 +57,13 @@ class DirectiveRegistry(Container[str, Directive]):
                     name = snake_case(file_type.__name__)
                     self[name] = NamespacedResourceDirective(file_type)
 
-    def resolve(self) -> "DirectiveRegistry":
+    def resolve(self) -> DirectiveRegistry:
         """Resolve all directives in the registry."""
         for callback in self.resolvers:
             callback(self)
         return self
 
-    def add_resolver(self, resolver: Callable[["DirectiveRegistry"], Any]):
+    def add_resolver(self, resolver: Callable[[DirectiveRegistry], Any]):
         """Add directive resolver."""
         self.resolvers.append(resolver)
 

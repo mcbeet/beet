@@ -132,7 +132,6 @@ class NestedTestTransformer(MutatingReducer):
                 no_index=True,
             )
             self.database.enqueue(target, self.database.step + 1)
-            return None
 
 
 def convert_tests(ctx: Context):

@@ -7,4 +7,4 @@ from mecha import Mecha
 
 def test_prototypes(snapshot: SnapshotFixture, ctx: Context):
     mc = ctx.inject(Mecha)
-    assert snapshot("json") == list(sorted(mc.spec.prototypes))
+    assert snapshot("json") == sorted(mc.spec.prototypes)

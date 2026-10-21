@@ -31,4 +31,3 @@ class DebugCodegenEmitter(Visitor):
     @rule(AstRoot)
     def debug_codegen(self, node: AstRoot):
         self.modules.database.current.text = self.modules.codegen(node).source or ""
-        return None

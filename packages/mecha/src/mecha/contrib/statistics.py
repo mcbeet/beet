@@ -264,7 +264,7 @@ class Summary:
                     command_stats.items(), key=lambda p: -p[0][1]
                 )
                 for label, count, behind_execute in [command]
-                + (list(sorted(stats, key=lambda p: -p[1])) if len(stats) > 1 else [])
+                + (sorted(stats, key=lambda p: -p[1]) if len(stats) > 1 else [])
             ],
         }
 
@@ -337,7 +337,7 @@ class Summary:
                     objectives.items(), key=lambda p: -p[0][1]
                 )
                 for label, count in [objective]
-                + list(sorted(fake_players, key=lambda p: -p[1]))
+                + sorted(fake_players, key=lambda p: -p[1])
             ]
         }
 

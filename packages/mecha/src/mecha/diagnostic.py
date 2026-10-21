@@ -85,7 +85,7 @@ class Diagnostic(MechaError):
         file: TextFileBase[Any] | None = None,
         location: SourceLocation = UNKNOWN_LOCATION,
         end_location: SourceLocation = UNKNOWN_LOCATION,
-    ) -> "Diagnostic":
+    ) -> Diagnostic:
         """Set default values for unspecified attributes."""
         if not self.location.unknown:
             location = self.location
@@ -123,7 +123,7 @@ class DiagnosticCollection(MechaError):
         self.exceptions.append(exc)
         return exc
 
-    def extend(self, other: "DiagnosticCollection"):
+    def extend(self, other: DiagnosticCollection):
         """Combine diagnostics from another collection."""
         self.exceptions.extend(other.exceptions)
 
@@ -145,7 +145,7 @@ class DiagnosticCollection(MechaError):
             if exc.level == "error":
                 yield exc
 
-    def __enter__(self) -> "DiagnosticCollection":
+    def __enter__(self) -> DiagnosticCollection:
         return self
 
     def __exit__(

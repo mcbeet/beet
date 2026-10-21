@@ -587,7 +587,7 @@ class AstPrelude(AstFromImport):
     """Ast prelude node."""
 
     @classmethod
-    def placeholder(cls, resource_location: str) -> "AstPrelude":
+    def placeholder(cls, resource_location: str) -> AstPrelude:
         return cls(
             arguments=AstChildren(
                 [

@@ -185,7 +185,6 @@ class JsonFileHandler(Visitor):
     def json_root(self, node: AstJsonRoot):
         for command in node.commands:
             yield command
-        return None
 
     @rule(AstCommand)
     def command(self, node: AstCommand):

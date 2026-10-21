@@ -30,8 +30,7 @@ class StripFinalNewlinesSerializer:
 
     def __call__(self, content: Any) -> str:
         raw = self.serializer(content)
-        if raw.endswith("\n"):
-            raw = raw[:-1]
+        raw = raw.removesuffix("\n")
         return raw
 
 

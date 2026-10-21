@@ -77,7 +77,7 @@ class JsonReporter:
         self.handlers.extend(specs)
 
     @contextmanager
-    def activate(self) -> Iterator["JsonReporter"]:
+    def activate(self) -> Iterator[JsonReporter]:
         if not self.opts.enabled:
             yield self
             return
