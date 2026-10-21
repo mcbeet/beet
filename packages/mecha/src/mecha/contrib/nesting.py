@@ -8,9 +8,10 @@ __all__ = [
 ]
 
 
+from collections.abc import Generator
 from dataclasses import dataclass, field, replace
 from importlib.resources import files
-from typing import Generator, List, cast
+from typing import cast
 
 from pydantic import BaseModel
 from tokenstream import InvalidSyntax, TokenStream, set_location
@@ -84,7 +85,7 @@ def parse_nested_root(stream: TokenStream) -> AstRoot:
 
     level, command_level = stream.indentation[-2:]
 
-    commands: List[AstCommand] = []
+    commands: list[AstCommand] = []
 
     with (
         stream.intercept("newline"),
@@ -281,7 +282,7 @@ class NestedCommandsTransformer(MutatingReducer):
     @rule(AstRoot)
     def nesting(self, node: AstRoot):
         changed = False
-        commands: List[AstCommand] = []
+        commands: list[AstCommand] = []
 
         for command in node.commands:
             if command.identifier in self.identifier_map:
@@ -291,7 +292,7 @@ class NestedCommandsTransformer(MutatingReducer):
                 continue
 
             args = command.arguments
-            stack: List[AstCommand] = [command]
+            stack: list[AstCommand] = [command]
 
             expand = None
 
@@ -332,7 +333,7 @@ class NestedCommandsTransformer(MutatingReducer):
         self,
         node: AstCommand,
         top_level: bool = False,
-    ) -> Generator[Diagnostic, None, List[AstCommand]]:
+    ) -> Generator[Diagnostic, None, list[AstCommand]]:
         name, *args, root = node.arguments
 
         if isinstance(name, AstResourceLocation) and isinstance(root, AstRoot):

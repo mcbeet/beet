@@ -6,7 +6,7 @@ __all__ = [
 ]
 
 
-from typing import Literal, Optional
+from typing import Literal
 
 from pydantic import BaseModel
 
@@ -18,7 +18,7 @@ from lectern import Document, LinkFragmentLoader
 class MessagingOptions(BaseModel):
     links: Literal["enable", "ignore", "disable"] = "enable"
     input: ListOption[str] = ListOption()
-    nothing_error: Optional[str] = None
+    nothing_error: str | None = None
 
 
 def beet_default(ctx: Context):

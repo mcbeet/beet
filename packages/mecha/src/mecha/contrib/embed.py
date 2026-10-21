@@ -12,7 +12,7 @@ __all__ = [
 
 from dataclasses import dataclass
 from difflib import SequenceMatcher
-from typing import Any, List, Optional, Protocol, TypeVar, Union
+from typing import Any, Protocol, TypeVar
 
 from tokenstream import INITIAL_LOCATION, Preprocessor, SourceLocation, set_location
 
@@ -81,7 +81,7 @@ class EmbedHandler:
     serialize_callback: EmbedSerializeCallback
     resolver: "EmbedResolver"
 
-    def __init__(self, arg: Union[Context, Mecha]):
+    def __init__(self, arg: Context | Mecha):
         if isinstance(arg, Context):
             arg = arg.inject(Mecha)
 
@@ -93,7 +93,7 @@ class EmbedHandler:
     def parse(
         self,
         node: AstNodeType,
-        source: Optional[TextFileBase[Any]] = None,
+        source: TextFileBase[Any] | None = None,
         *,
         using: str,
     ) -> AstNodeType:
@@ -118,8 +118,8 @@ class EmbedHandler:
             raise set_location(d, node)
 
         value = str(node.value)
-        source_mappings: List[SourceLocation] = []
-        preprocessed_mappings: List[SourceLocation] = []
+        source_mappings: list[SourceLocation] = []
+        preprocessed_mappings: list[SourceLocation] = []
 
         if (
             compilation_unit.source

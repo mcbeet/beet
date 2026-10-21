@@ -3,9 +3,10 @@ __all__ = [
 ]
 
 
+from collections.abc import Mapping
 from dataclasses import InitVar, dataclass, field
 from pathlib import Path
-from typing import Any, Dict, Mapping, Optional
+from typing import Any
 
 from beet import BinaryFile, Cache, File
 from beet.core.utils import FileSystemPath
@@ -20,11 +21,11 @@ from .serialize import ExternalFilesManager, SerializedFile
 class MarkdownPrefetcher:
     """Prefetcher that rewrites markdown links."""
 
-    cache: InitVar[Optional[Cache]] = None
+    cache: InitVar[Cache | None] = None
 
     extractor: MarkdownExtractor = field(default_factory=MarkdownExtractor)
 
-    def __post_init__(self, cache: Optional[Cache]):
+    def __post_init__(self, cache: Cache | None):
         if cache is not None:
             self.extractor.cache = cache
 
@@ -32,8 +33,8 @@ class MarkdownPrefetcher:
         self,
         path: FileSystemPath,
         output: FileSystemPath,
-        directives: Optional[Mapping[str, Directive]] = None,
-        external_files: Optional[FileSystemPath] = None,
+        directives: Mapping[str, Directive] | None = None,
+        external_files: FileSystemPath | None = None,
     ):
         """Prefetch urls in the specified document."""
         if directives is None:
@@ -61,7 +62,7 @@ class MarkdownPrefetcher:
         self,
         source: str,
         directives: Mapping[str, Directive],
-        external_files: Optional[Dict[str, File[Any, Any]]] = None,
+        external_files: dict[str, File[Any, Any]] | None = None,
         external_prefix: str = "",
     ) -> str:
         """Replace remote urls in the input by data urls or links to local files."""
@@ -85,7 +86,7 @@ class MarkdownPrefetcher:
         text: str,
         url: str,
         fragment: Fragment,
-        external_files: Optional[Dict[str, File[Any, Any]]] = None,
+        external_files: dict[str, File[Any, Any]] | None = None,
         external_prefix: str = "",
     ) -> str:
         """Prefetch the url and return the modified fragment."""

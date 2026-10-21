@@ -1,5 +1,5 @@
 import time
-from typing import Optional, Sequence
+from collections.abc import Sequence
 
 import click
 from prompt_toolkit import print_formatted_text as print
@@ -34,7 +34,7 @@ pass_project = click.make_pass_decorator(Project)
 )
 def build(
     project: Project,
-    link: Optional[str],
+    link: str | None,
     tmpdir: bool,
     json: bool,
 ):
@@ -84,7 +84,7 @@ def watch(
     project: Project,
     play: bool,
     reload: bool,
-    link: Optional[str],
+    link: str | None,
     interval: float,
 ):
     """Watch the project directory and build on file changes."""
@@ -178,10 +178,10 @@ def cache(project: Project, patterns: Sequence[str], clear: bool):
 )
 def link(
     project: Project,
-    world: Optional[str],
-    minecraft: Optional[str],
-    data_pack: Optional[str],
-    resource_pack: Optional[str],
+    world: str | None,
+    minecraft: str | None,
+    data_pack: str | None,
+    resource_pack: str | None,
     clear: bool,
 ):
     """Link the generated resource pack and data pack to Minecraft."""

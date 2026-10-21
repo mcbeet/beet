@@ -8,7 +8,6 @@ __all__ = [
 import logging
 from dataclasses import dataclass, replace
 from importlib.resources import files
-from typing import List
 
 from tokenstream import set_location
 
@@ -67,7 +66,7 @@ class InlineFunctionTagHandler(Visitor):
     @rule(AstRoot)
     def inline_function_tag(self, node: AstRoot):
         changed = False
-        commands: List[AstCommand] = []
+        commands: list[AstCommand] = []
 
         for command in node.commands:
             if command.identifier == "function:tag:name" and isinstance(

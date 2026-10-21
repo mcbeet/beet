@@ -5,8 +5,9 @@ __all__ = [
 ]
 
 
+from collections.abc import Callable
 from contextlib import contextmanager
-from typing import Any, Callable, Dict, List, Optional, Type, TypeVar
+from typing import Any, TypeVar
 
 from jinja2 import (
     BaseLoader,
@@ -83,14 +84,14 @@ class TemplateManager:
     """Class responsible for managing the Jinja environment."""
 
     env: Environment
-    loaders: List[BaseLoader]
-    prefix_map: Dict[str, BaseLoader]
-    directories: List[FileSystemPath]
+    loaders: list[BaseLoader]
+    prefix_map: dict[str, BaseLoader]
+    directories: list[FileSystemPath]
     cache_dir: FileSystemPath
     ctx: Any
     globals: JsonDict
 
-    def __init__(self, templates: List[FileSystemPath], cache_dir: FileSystemPath):
+    def __init__(self, templates: list[FileSystemPath], cache_dir: FileSystemPath):
         self.prefix_map = {}
         self.directories = templates
         self.cache_dir = cache_dir
@@ -104,7 +105,7 @@ class TemplateManager:
 
         self.reset_environment()
 
-    def reset_environment(self, cls: Type[Environment] = Environment):
+    def reset_environment(self, cls: type[Environment] = Environment):
         """Reset the Jinja environment."""
         self.env = cls(
             autoescape=False,
@@ -130,7 +131,7 @@ class TemplateManager:
         """Expose a utility function to the template context."""
         self.globals[name] = lambda *args, **kwargs: function(*args, **kwargs)
 
-    def add_package(self, dotted_path: str, prefix: Optional[str] = None):
+    def add_package(self, dotted_path: str, prefix: str | None = None):
         """Make the templates included in the specified package available."""
         if not prefix:
             prefix = dotted_path.replace(".", "/")
@@ -139,7 +140,7 @@ class TemplateManager:
     def compile(
         self,
         source: str,
-        filename: Optional[FileSystemPath] = None,
+        filename: FileSystemPath | None = None,
     ) -> Template:
         """Compile a template from a string."""
         return Template.from_code(

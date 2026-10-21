@@ -1,5 +1,5 @@
+from collections.abc import Generator
 from dataclasses import dataclass, replace
-from typing import Generator
 
 from nbtlib import String
 

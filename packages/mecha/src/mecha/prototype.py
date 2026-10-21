@@ -5,16 +5,16 @@ __all__ = [
 ]
 
 
-from typing import NamedTuple, Tuple, Union
+from typing import NamedTuple, Union
 
-CommandSignature = Tuple[Union[str, "CommandArgument"], ...]
+CommandSignature = tuple[Union[str, "CommandArgument"], ...]
 
 
 class CommandArgument(NamedTuple):
     """Class representing an argument in a command prototype."""
 
     name: str
-    scope: Tuple[str, ...]
+    scope: tuple[str, ...]
 
 
 class CommandPrototype(NamedTuple):
@@ -22,9 +22,9 @@ class CommandPrototype(NamedTuple):
 
     identifier: str
     signature: CommandSignature
-    arguments: Tuple[int, ...]
+    arguments: tuple[int, ...]
 
-    def get_argument(self, arg: Union[str, int]) -> CommandArgument:
+    def get_argument(self, arg: str | int) -> CommandArgument:
         """Return the argument corresponding to the given name or index."""
         if isinstance(arg, str):
             for i in range(len(self.arguments)):

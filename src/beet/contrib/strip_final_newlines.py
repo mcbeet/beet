@@ -7,8 +7,9 @@ __all__ = [
 ]
 
 
+from collections.abc import Callable
 from dataclasses import dataclass
-from typing import Any, Callable
+from typing import Any
 
 from beet import Context, ListOption, PluginOptions, TextFileBase, configurable
 

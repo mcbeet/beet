@@ -22,9 +22,10 @@ import os
 import re
 import stat
 import subprocess
+from collections.abc import Iterator
 from pathlib import Path
 from platform import machine, system
-from typing import Iterator, Optional, Self, Union
+from typing import Self
 from zipfile import ZipFile
 
 from beet import (
@@ -51,8 +52,8 @@ RUNTIMES_URL: str = "https://launchermeta.mojang.com/v1/products/java-runtime/2e
 
 
 class VanillaOptions(PluginOptions):
-    version: Optional[str] = None
-    manifest: Optional[str] = None
+    version: str | None = None
+    manifest: str | None = None
     runtimes: str | None = None
 
 
@@ -73,8 +74,8 @@ class ClientJar:
 
     def mount(
         self,
-        prefix: Optional[str] = None,
-        object_mapping: Optional[UnveilMapping] = None,
+        prefix: str | None = None,
+        object_mapping: UnveilMapping | None = None,
     ) -> "ClientJar":
         """Mount the specified prefix if it's not available already."""
         if not prefix:
@@ -329,9 +330,9 @@ class Release:
     cache: Cache
     info: JsonFile
 
-    _client_jar: Optional[ClientJar]
-    _server_jar: Optional[ServerJar]
-    _object_mapping: Optional[UnveilMapping]
+    _client_jar: ClientJar | None
+    _server_jar: ServerJar | None
+    _object_mapping: UnveilMapping | None
     _reports: ReportsContainer | None
 
     def __init__(self, runtime: Runtime, cache: Cache, info: JsonFile):
@@ -378,7 +379,7 @@ class Release:
 
     def mount(
         self,
-        prefix: Optional[str] = None,
+        prefix: str | None = None,
         fetch_objects: bool = False,
     ) -> ClientJar:
         return self.client_jar.mount(
@@ -432,7 +433,7 @@ class ReleaseRegistry(Container[str, Release]):
         self,
         runtimes: RuntimeRegistry,
         cache: Cache,
-        manifest: Optional[Union[FileSystemPath, JsonFile]] = None,
+        manifest: FileSystemPath | JsonFile | None = None,
     ):
         super().__init__()
         self.runtimes = runtimes
@@ -475,12 +476,12 @@ class Vanilla:
 
     def __init__(
         self,
-        ctx: Optional[Context] = None,
+        ctx: Context | None = None,
         *,
-        cache: Optional[Cache] = None,
-        manifest: Optional[Union[FileSystemPath, JsonFile]] = None,
-        runtimes: Optional[Union[FileSystemPath, JsonFile]] = None,
-        minecraft_version: Optional[str] = None,
+        cache: Cache | None = None,
+        manifest: FileSystemPath | JsonFile | None = None,
+        runtimes: FileSystemPath | JsonFile | None = None,
+        minecraft_version: str | None = None,
         shared: Vanilla | None = None,
     ):
         opts = ctx and ctx.validate("vanilla", VanillaOptions)
@@ -523,7 +524,7 @@ class Vanilla:
 
     def mount(
         self,
-        prefix: Optional[str] = None,
+        prefix: str | None = None,
         fetch_objects: bool = False,
     ) -> ClientJar:
         return self.releases[self.minecraft_version].mount(prefix, fetch_objects)
@@ -558,7 +559,7 @@ class Vanilla:
 
 
 class LoadVanillaOptions(PluginOptions):
-    version: Optional[str] = None
+    version: str | None = None
     files: PackFilesOption = PackFilesOption()
     match: PackMatchOption = PackMatchOption()
 

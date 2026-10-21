@@ -18,8 +18,9 @@ import json
 import math
 import random
 from collections import defaultdict, deque
+from collections.abc import Callable
 from dataclasses import dataclass, fields, is_dataclass
-from typing import Any, Callable, DefaultDict, Set, Type, Union, get_type_hints
+from typing import Any, get_type_hints
 
 from beet import Context, TreeData, TreeNode
 
@@ -41,7 +42,7 @@ def beet_default(ctx: Context):
     sandbox.activate()
 
 
-def public_attrs(obj: Any) -> Set[str]:
+def public_attrs(obj: Any) -> set[str]:
     """List public object attributes."""
     attrs = dir(obj)
     obj_type = obj if isinstance(obj, type) else type(obj)
@@ -58,12 +59,12 @@ class Sandbox:
     runtime: Runtime
     active: bool
 
-    allowed_builtins: Set[str]
-    allowed_imports: Set[str]
-    allowed_obj_attrs: DefaultDict[Any, Set[str]]
-    allowed_type_attrs: DefaultDict[Type[Any], Set[str]]
+    allowed_builtins: set[str]
+    allowed_imports: set[str]
+    allowed_obj_attrs: defaultdict[Any, set[str]]
+    allowed_type_attrs: defaultdict[type[Any], set[str]]
 
-    def __init__(self, ctx: Union[Context, Runtime]):
+    def __init__(self, ctx: Context | Runtime):
         if isinstance(ctx, Context):
             self.runtime = ctx.inject(Runtime)
         else:

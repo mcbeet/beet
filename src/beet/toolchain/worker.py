@@ -11,21 +11,16 @@ __all__ = [
 
 
 import logging
+from collections.abc import Iterator
 from contextlib import ExitStack, contextmanager
 from dataclasses import dataclass, field
 from queue import Queue
 from threading import Thread
 from typing import (
     Any,
-    Dict,
     Generic,
-    Iterator,
-    Optional,
     Protocol,
-    Set,
-    Tuple,
     TypeVar,
-    Union,
 )
 
 from beet.core.error import BubbleException, WrappedException
@@ -75,7 +70,7 @@ class MessageQueue(Generic[T]):
     messages once the queue is closed.
     """
 
-    queue: "Queue[Union[T, Sentinel, BaseException]]" = field(default_factory=Queue)
+    queue: "Queue[T | Sentinel | BaseException]" = field(default_factory=Queue)
     closed: bool = False
 
     def send(self, message: T):
@@ -179,7 +174,7 @@ class Channel(Generic[T, U]):
         self.close()
 
     @classmethod
-    def entangled_pair(cls) -> Tuple["Channel[Any, Any]", "Channel[Any, Any]"]:
+    def entangled_pair(cls) -> tuple["Channel[Any, Any]", "Channel[Any, Any]"]:
         """Return a pair of channels that can communicate with each other.
 
         Messages sent from one channel will be received by the other.
@@ -202,7 +197,7 @@ class Connection(MessageQueue[Channel[T, U]]):
     """
 
     long_lived: bool = False
-    current_client: Optional[Channel[T, U]] = None
+    current_client: Channel[T, U] | None = None
 
     def __next__(self) -> Channel[T, U]:
         self.current_client = super().__next__()
@@ -223,7 +218,7 @@ class WorkerThread(Thread, Generic[T, U]):
 
     func: Worker[T, U]
     connection: Connection[T, U]
-    exc: Optional[Exception]
+    exc: Exception | None
 
     def __init__(self, func: Worker[T, U], connection: Connection[T, U]):
         super().__init__()
@@ -246,7 +241,7 @@ class WorkerThread(Thread, Generic[T, U]):
         ):
             self.connection.current_client.throw(self.exc)
 
-    def join(self, timeout: Optional[float] = None):
+    def join(self, timeout: float | None = None):
         super().join(timeout=timeout)
         if self.exc:
             raise self.exc
@@ -262,13 +257,13 @@ class WorkerThread(Thread, Generic[T, U]):
 class WorkerPoolHandle:
     """Persistent handle that spawns and manages worker threads."""
 
-    exit_stack: Optional[ExitStack]
+    exit_stack: ExitStack | None
     long_lived: bool = False
-    connections: Dict[Worker[Any, Any], Connection[Any, Any]] = field(
+    connections: dict[Worker[Any, Any], Connection[Any, Any]] = field(
         default_factory=dict
     )
-    active_workers: Dict[str, Worker[Any, Any]] = field(default_factory=dict)
-    reload_skipped: Set[str] = field(default_factory=set)
+    active_workers: dict[str, Worker[Any, Any]] = field(default_factory=dict)
+    reload_skipped: set[str] = field(default_factory=set)
 
     def __call__(self, func: Worker[T, U]) -> Channel[U, T]:
         if self.exit_stack is None:
@@ -317,7 +312,7 @@ class WorkerPoolHandle:
 class WorkerPool:
     """Class that creates and keeps a reference to the pool handle."""
 
-    resolved_handle: Optional[WorkerPoolHandle] = None
+    resolved_handle: WorkerPoolHandle | None = None
 
     @contextmanager
     def handle(self) -> Iterator[WorkerPoolHandle]:

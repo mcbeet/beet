@@ -14,7 +14,7 @@ __all__ = [
 
 
 from dataclasses import dataclass
-from typing import Any, Set, Type, Union
+from typing import Any
 
 from tokenstream import TokenStream, set_location
 
@@ -81,13 +81,13 @@ class JsonFileCompilation:
 
     mc: Mecha
     handler: Dispatcher[AstRoot]
-    file_types: Set[Type[JsonFileBase[Any]]]
+    file_types: set[type[JsonFileBase[Any]]]
     active: bool
 
     def __init__(
         self,
-        arg: Union[Context, Mecha],
-        *packs: Union[ResourcePack, DataPack],
+        arg: Context | Mecha,
+        *packs: ResourcePack | DataPack,
     ):
         if isinstance(arg, Context):
             packs += arg.packs

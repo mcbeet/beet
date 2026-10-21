@@ -12,9 +12,10 @@ __all__ = [
 
 
 import logging
+from collections.abc import Callable, Iterator
 from contextlib import contextmanager
 from importlib.metadata import entry_points
-from typing import Any, Callable, Iterator, List, Optional
+from typing import Any
 
 import click
 from click_help_colors import HelpColorsCommand, HelpColorsGroup
@@ -167,7 +168,7 @@ class BeetCommand(BeetHelpColorsMixin, HelpColorsCommand):  # pyright: ignore[re
 class BeetGroup(BeetHelpColorsMixin, HelpColorsGroup):  # pyright: ignore[reportUnsafeMultipleInheritance]
     """Click group subclass for the beet command-line."""
 
-    def get_command(self, ctx: click.Context, cmd_name: str) -> Optional[click.Command]:
+    def get_command(self, ctx: click.Context, cmd_name: str) -> click.Command | None:
         if command := super().get_command(ctx, cmd_name):
             return command
 
@@ -181,7 +182,7 @@ class BeetGroup(BeetHelpColorsMixin, HelpColorsGroup):  # pyright: ignore[report
 
         return None
 
-    def add_command(self, cmd: click.Command, name: Optional[str] = None) -> None:
+    def add_command(self, cmd: click.Command, name: str | None = None) -> None:
         if cmd.callback:
             cmd.callback = error_handler(should_exit=True)(cmd.callback)
         return super().add_command(cmd, name=name)
@@ -222,11 +223,11 @@ class MainGroup(BeetGroup):
         for ep in entry_points(group="beet", name="commands"):
             ep.load()
 
-    def get_command(self, ctx: click.Context, cmd_name: str) -> Optional[click.Command]:
+    def get_command(self, ctx: click.Context, cmd_name: str) -> click.Command | None:
         self.load_entry_points()
         return super().get_command(ctx, cmd_name)
 
-    def list_commands(self, ctx: click.Context) -> List[str]:
+    def list_commands(self, ctx: click.Context) -> list[str]:
         self.load_entry_points()
         return super().list_commands(ctx)
 
@@ -265,8 +266,8 @@ class MainGroup(BeetGroup):
 )
 def beet(
     ctx: click.Context,
-    project: Optional[str],
-    set: List[str],
+    project: str | None,
+    set: list[str],
     log: str,
 ):
     """The beet toolchain."""

@@ -10,6 +10,7 @@ __all__ = [
 import json
 import logging
 import shutil
+from collections.abc import Mapping
 from concurrent.futures import Executor, ThreadPoolExecutor
 from contextlib import closing, contextmanager
 from datetime import datetime, timedelta
@@ -17,7 +18,7 @@ from functools import partial
 from pathlib import Path
 from textwrap import indent
 from time import time
-from typing import Any, BinaryIO, ClassVar, Mapping, Optional, Set, Type, TypeVar, Union
+from typing import Any, BinaryIO, ClassVar, TypeVar
 from urllib.request import Request, urlopen
 
 from .container import Container, MatchMixin, Pin
@@ -63,14 +64,14 @@ class Cache:
     index_path: Path
     index: JsonDict
     transaction: CacheTransaction
-    download_manager: "DownloadManager"
+    download_manager: DownloadManager
 
     index_file: ClassVar[str] = "index.json"
 
     def __init__(
         self,
         directory: FileSystemPath,
-        transaction: Optional[CacheTransaction] = None,
+        transaction: CacheTransaction | None = None,
     ):
         self.deleted = False
         self.directory = Path(directory).resolve()
@@ -136,7 +137,7 @@ class Cache:
         return self.directory / path
 
     @contextmanager
-    def parallel_downloads(self, max_workers: Optional[int] = None):
+    def parallel_downloads(self, max_workers: int | None = None):
         """Launch multiple requests at the same time."""
         with DownloadManager.parallel(max_workers) as parallel_download_manager:
             previous_manager = self.download_manager
@@ -148,8 +149,8 @@ class Cache:
 
     def download(
         self,
-        arg: Union[str, Request],
-        path: Optional[FileSystemPath] = None,
+        arg: str | Request,
+        path: FileSystemPath | None = None,
         *,
         headers: Mapping[str, str] = {},
         max_age: int | None = None,
@@ -173,7 +174,7 @@ class Cache:
 
         return path
 
-    def has_changed(self, *filenames: Optional[FileSystemPath]) -> bool:
+    def has_changed(self, *filenames: FileSystemPath | None) -> bool:
         """Return whether any of the given files changed since the last check."""
         mtime = self.index.setdefault("mtime", {})
         changed = False
@@ -192,7 +193,7 @@ class Cache:
 
         return changed
 
-    def invalidate_changes(self, *filenames: Optional[FileSystemPath]):
+    def invalidate_changes(self, *filenames: FileSystemPath | None):
         """Reset the modification time of the given files."""
         mtime = self.index.setdefault("mtime", {})
         for filename in filenames:
@@ -200,15 +201,15 @@ class Cache:
                 mtime.pop(str(Path(filename)), None)
 
     @property
-    def expire(self) -> Optional[datetime]:
+    def expire(self) -> datetime | None:
         expire = self.index["expire"]
         return expire and datetime.fromisoformat(expire)
 
     @expire.setter
-    def expire(self, value: Optional[datetime]):
+    def expire(self, value: datetime | None):
         self.index["expire"] = value and value.isoformat()
 
-    def timeout(self, delta: Optional[timedelta] = None, **kwargs: Any) -> "Cache":
+    def timeout(self, delta: timedelta | None = None, **kwargs: Any) -> Cache:
         """Invalidate the cache after a given timeout."""
         if not delta:
             delta = timedelta()
@@ -226,7 +227,7 @@ class Cache:
 
         self.index["timestamp"] = now.isoformat()
 
-    def __enter__(self) -> "Cache":
+    def __enter__(self) -> Cache:
         self.transaction.enter()
         return self
 
@@ -266,7 +267,7 @@ class Cache:
     def override(self, **data: Any):
         """Temporarily update the json data."""
         to_restore: JsonDict = {}
-        to_remove: Set[str] = set()
+        to_remove: set[str] = set()
 
         for key, value in data.items():
             if key in self.json:
@@ -311,7 +312,7 @@ class MultiCache(MatchMixin, Container[str, CacheType]):
     path: Path
     default_cache: str
     gitignore: bool
-    cache_type: Type[CacheType]
+    cache_type: type[CacheType]
     transaction: CacheTransaction
 
     def __init__(
@@ -319,7 +320,7 @@ class MultiCache(MatchMixin, Container[str, CacheType]):
         directory: FileSystemPath,
         default_cache: str = "default",
         gitignore: bool = True,
-        cache_type: Type[CacheType] = Cache,
+        cache_type: type[CacheType] = Cache,
     ):
         super().__init__()
         self.path = Path(directory).resolve()
@@ -345,7 +346,7 @@ class MultiCache(MatchMixin, Container[str, CacheType]):
     def json(self) -> JsonDict:
         return self[self.default_cache].json
 
-    def __enter__(self) -> "MultiCache[CacheType]":
+    def __enter__(self) -> MultiCache[CacheType]:
         self.transaction.enter()
         return self
 
@@ -387,19 +388,19 @@ class MultiCache(MatchMixin, Container[str, CacheType]):
 class DownloadManager:
     """Download manager."""
 
-    executor: Optional[Executor]
+    executor: Executor | None
 
-    def __init__(self, executor: Optional[Executor] = None):
+    def __init__(self, executor: Executor | None = None):
         self.executor = executor
 
     @classmethod
     @contextmanager
-    def parallel(cls, max_workers: Optional[int] = None):
+    def parallel(cls, max_workers: int | None = None):
         """Create a download manager that launches multiple requests at the same time."""
         with ThreadPoolExecutor(max_workers) as executor:
             yield cls(executor)
 
-    def download(self, arg: Union[str, Request], path: Path):
+    def download(self, arg: str | Request, path: Path):
         """Download a given url."""
         if isinstance(arg, str):
             arg = Request(arg)

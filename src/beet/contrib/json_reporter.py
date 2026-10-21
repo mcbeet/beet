@@ -15,10 +15,11 @@ __all__ = [
 import base64
 import io
 import zipfile
+from collections.abc import Iterator
 from contextlib import contextmanager, redirect_stdout
 from dataclasses import dataclass, field
 from functools import cached_property
-from typing import Any, Iterator, List, Optional, Union
+from typing import Any
 
 from beet import (
     BeetException,
@@ -38,8 +39,8 @@ from beet.core.utils import JsonDict, format_exc, get_import_string
 class JsonReporterOptions(PluginOptions):
     enabled: bool = False
     binary_files: bool = False
-    exception_filter: Optional[ListOption[str]] = None
-    handlers: List[str] = [
+    exception_filter: ListOption[str] | None = None
+    handlers: list[str] = [
         "beet.contrib.json_reporter.stdout",
         "beet.contrib.json_log",
         "beet.contrib.json_reporter.resource_pack_listing",
@@ -61,7 +62,7 @@ class JsonReporter:
     """Service for reporting the result of the build as json."""
 
     ctx: Context
-    handlers: List[PluginSpec] = field(default_factory=list)
+    handlers: list[PluginSpec] = field(default_factory=list)
     stdout: io.StringIO = field(default_factory=io.StringIO)
     data: JsonDict = field(default_factory=lambda: {"status": "unknown"})
 
@@ -153,7 +154,7 @@ def data_pack_zip(ctx: Context):
 
 
 def create_pack_listing(
-    pack: Union[ResourcePack, DataPack],
+    pack: ResourcePack | DataPack,
     binary_files: bool = False,
 ) -> JsonDict:
     listing: JsonDict = {
@@ -176,7 +177,7 @@ def create_pack_listing(
     return listing
 
 
-def create_pack_zip(pack: Union[ResourcePack, DataPack]) -> JsonDict:
+def create_pack_zip(pack: ResourcePack | DataPack) -> JsonDict:
     fileobj = io.BytesIO()
     with zipfile.ZipFile(fileobj, mode="w") as output:
         pack.dump(output)

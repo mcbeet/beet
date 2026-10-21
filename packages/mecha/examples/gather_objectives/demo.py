@@ -1,5 +1,4 @@
 from dataclasses import dataclass, field
-from typing import Set
 
 from beet import Context, Function
 
@@ -8,7 +7,7 @@ from mecha import AstObjective, Mecha, Reducer, rule
 
 @dataclass
 class ObjectiveCollector(Reducer):
-    objectives: Set[str] = field(default_factory=set)
+    objectives: set[str] = field(default_factory=set)
 
     @rule(AstObjective)
     def objective(self, node: AstObjective):

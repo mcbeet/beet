@@ -11,9 +11,10 @@ __all__ = [
 
 import pickle
 from bisect import bisect
+from collections.abc import Iterable
 from difflib import get_close_matches
 from types import CodeType, TracebackType
-from typing import Any, Iterable, List, Optional, Set, TypeVar
+from typing import Any, TypeVar
 
 from beet import Container
 from beet.core.utils import FileSystemPath
@@ -23,7 +24,7 @@ from mecha.utils import string_to_number
 T = TypeVar("T")
 
 
-INTERNAL_CODE: Set[CodeType] = {
+INTERNAL_CODE: set[CodeType] = {
     string_to_number.__code__,
     Container[Any, Any].__getitem__.__code__,
 }
@@ -37,7 +38,7 @@ def internal(f: T) -> T:
 def rewrite_traceback(exc: Exception) -> Exception:
     tb = exc.__traceback__ and exc.__traceback__.tb_next
 
-    stack: List[TracebackType] = []
+    stack: list[TracebackType] = []
 
     while tb is not None:
         if tb.tb_frame.f_code in INTERNAL_CODE:
@@ -86,7 +87,7 @@ def fake_traceback(exc: Exception, tb: TracebackType, lineno: int) -> TracebackT
     assert False
 
 
-def suggest_typo(wrong: str, possibilities: Iterable[str]) -> Optional[str]:
+def suggest_typo(wrong: str, possibilities: Iterable[str]) -> str | None:
     cutoff = 0.6 if len(wrong) < 3 else 0.7
 
     if matches := get_close_matches(wrong, possibilities, cutoff=cutoff):

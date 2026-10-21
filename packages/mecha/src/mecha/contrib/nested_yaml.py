@@ -15,9 +15,10 @@ __all__ = [
 ]
 
 
+from collections.abc import Callable, Iterator
 from contextlib import contextmanager
 from dataclasses import dataclass, field
-from typing import Any, Callable, Generic, Iterator, List, TypeVar
+from typing import Any, Generic, TypeVar
 
 from nbtlib import String
 from tokenstream import SourceLocation, TokenStream, set_location
@@ -87,7 +88,7 @@ def beet_default(ctx: Context):
 class BaseYamlObjectCollector(Generic[EntryType, ValueType]):
     """Base class for yaml object collectors."""
 
-    entries: List[EntryType] = field(default_factory=list)
+    entries: list[EntryType] = field(default_factory=list)
 
     @contextmanager
     def start(self) -> Iterator[None]:
@@ -118,7 +119,7 @@ class BaseYamlObjectCollector(Generic[EntryType, ValueType]):
 class BaseYamlArrayCollector(Generic[ValueType]):
     """Base class for yaml array collectors."""
 
-    elements: List[ValueType] = field(default_factory=list)
+    elements: list[ValueType] = field(default_factory=list)
 
     @contextmanager
     def start(self) -> Iterator[None]:

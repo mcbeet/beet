@@ -17,23 +17,15 @@ __all__ = [
 
 
 import json
+from collections.abc import Callable, Iterable, Sequence
 from contextlib import contextmanager
 from dataclasses import InitVar, dataclass, field
 from functools import partial, update_wrapper, wraps
 from pathlib import Path
 from typing import (
     Any,
-    Callable,
-    Iterable,
-    List,
-    Optional,
     Protocol,
-    Sequence,
-    Set,
-    Tuple,
-    Type,
     TypeVar,
-    Union,
     overload,
 )
 
@@ -66,8 +58,8 @@ T = TypeVar("T")
 OptionsType = TypeVar("OptionsType", contravariant=True)
 NamespaceFileType = TypeVar("NamespaceFileType", bound=NamespaceFile)
 
-Plugin = GenericPlugin["Context"]
-PluginSpec = GenericPluginSpec["Context"]
+type Plugin = GenericPlugin["Context"]
+type PluginSpec = GenericPluginSpec["Context"]
 ServiceFactory = Callable[["Context"], T]
 Validator = Callable[..., T]
 
@@ -89,9 +81,9 @@ class InvalidOptions(WrappedException):
     """Raised when a validation error occurs."""
 
     key: str
-    explanation: Optional[str]
+    explanation: str | None
 
-    def __init__(self, key: str, explanation: Optional[str] = None):
+    def __init__(self, key: str, explanation: str | None = None):
         super().__init__(key, explanation)
         self.key = key
         self.explanation = explanation
@@ -105,19 +97,19 @@ class InvalidOptions(WrappedException):
 
 @dataclass
 class Pipeline(GenericPipeline["Context"]):
-    ctx: "Context"
+    ctx: Context
 
 
 class PluginWithOptions(Protocol[OptionsType]):
-    def __call__(self, ctx: "Context", opts: OptionsType, /) -> Any: ...
+    def __call__(self, ctx: Context, opts: OptionsType, /) -> Any: ...
 
 
 class ConfigurablePlugin(Protocol):
     @overload
-    def __call__(self, ctx: "Context", /) -> Any: ...
+    def __call__(self, ctx: Context, /) -> Any: ...
 
     @overload
-    def __call__(self, **kwds: Any) -> "ConfigurablePlugin": ...
+    def __call__(self, **kwds: Any) -> ConfigurablePlugin: ...
 
 
 class PluginOptions(BaseModel):
@@ -129,9 +121,9 @@ class PluginOptions(BaseModel):
 class ContextContainer(Container[Callable[["Context"], Any], Any]):
     """Dict-like container that instantiates and holds objects injected into the context."""
 
-    ctx: "Context"
+    ctx: Context
 
-    def missing(self, key: Callable[["Context"], Any]) -> Any:
+    def missing(self, key: Callable[[Context], Any]) -> Any:
         return key(self.ctx)
 
 
@@ -169,7 +161,7 @@ class ProjectCache(MultiCache[Cache]):
         generated_directory: FileSystemPath,
         default_cache: str = "default",
         gitignore: bool = True,
-        cache_type: Type[Cache] = Cache,
+        cache_type: type[Cache] = Cache,
         shared: MultiCache[Cache] | None = None,
     ):
         super().__init__(directory, default_cache, gitignore, cache_type=cache_type)
@@ -203,7 +195,7 @@ class Context:
     minecraft_version: str
 
     directory: Path
-    output_directory: Optional[Path]
+    output_directory: Path | None
     meta: JsonDict = extra_field()
     cache: ProjectCache = extra_field()
     worker: WorkerPoolHandle = extra_field()
@@ -212,14 +204,14 @@ class Context:
     assets: ResourcePack = field(default_factory=ResourcePack)
     data: DataPack = field(default_factory=DataPack)
 
-    whitelist: InitVar[Optional[List[str]]] = extra_field(default=None)
+    whitelist: InitVar[list[str] | None] = extra_field(default=None)
 
     _container: ContextContainer = extra_field(
         init=False,
         default_factory=ContextContainer,
     )
 
-    def __post_init__(self, whitelist: Optional[List[str]]):
+    def __post_init__(self, whitelist: list[str] | None):
         self._container.ctx = self
 
         self.generate.assets = self.assets
@@ -272,7 +264,7 @@ class Context:
     def override(self, **meta: Any):
         """Temporarily update the context meta."""
         to_restore: JsonDict = {}
-        to_remove: Set[str] = set()
+        to_remove: set[str] = set()
 
         for key, value in meta.items():
             if key in self.meta:
@@ -292,7 +284,7 @@ class Context:
         self,
         key: str,
         validator: Validator[T],
-        options: Optional[JsonDict] = None,
+        options: JsonDict | None = None,
     ) -> T:
         """Validate options."""
         if options is None and isinstance(value := self.meta.get(key), dict):
@@ -326,7 +318,7 @@ class Context:
             raise InvalidOptions(key) from exc
 
     @property
-    def packs(self) -> Tuple[ResourcePack, DataPack]:
+    def packs(self) -> tuple[ResourcePack, DataPack]:
         return self.assets, self.data
 
     @property
@@ -338,22 +330,22 @@ class Context:
         self.inject(Pipeline).require(*args)
 
     @property
-    def query(self) -> PackQuery[Union[ResourcePack, DataPack]]:
+    def query(self) -> PackQuery[ResourcePack | DataPack]:
         return PackQuery(self.packs, self.template)
 
     def __getitem__(
-        self, extend: Type[NamespaceFileType]
-    ) -> Iterable[Tuple[str, NamespaceFileType]]:
+        self, extend: type[NamespaceFileType]
+    ) -> Iterable[tuple[str, NamespaceFileType]]:
         for pack in self.packs:
             yield from pack.all(extend=extend)
 
-    def get_file_types(self) -> Sequence[Type[NamespaceFile]]:
+    def get_file_types(self) -> Sequence[type[NamespaceFile]]:
         return [t for pack in self.packs for t in pack.get_file_types()]
 
 
 @overload
 def configurable(
-    name: Optional[str] = None,
+    name: str | None = None,
     /,
     *,
     validator: Validator[OptionsType],
@@ -362,7 +354,7 @@ def configurable(
 
 @overload
 def configurable(
-    name: Optional[str] = None,
+    name: str | None = None,
     /,
 ) -> Callable[[PluginWithOptions[JsonDict]], ConfigurablePlugin]: ...
 
@@ -374,8 +366,8 @@ def configurable(plugin: PluginWithOptions[JsonDict]) -> ConfigurablePlugin: ...
 def configurable(
     plugin: Any = None,
     *,
-    name: Optional[str] = None,
-    validator: Optional[Validator[Any]] = None,
+    name: str | None = None,
+    validator: Validator[Any] | None = None,
 ) -> Any:
     """Decorator for making a plugin configurable."""
     if not callable(plugin):
@@ -384,7 +376,7 @@ def configurable(
         return partial(configurable, name=name, validator=validator)  # pyright: ignore[reportCallIssue]
 
     @wraps(plugin)
-    def wrapper(ctx: Optional[Context] = None, /, **kwargs: Any) -> Any:
+    def wrapper(ctx: Context | None = None, /, **kwargs: Any) -> Any:
         if ctx is None:
             return update_wrapper(partial(wrapper, **kwargs), plugin)
         return plugin(

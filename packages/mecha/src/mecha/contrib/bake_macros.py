@@ -11,7 +11,7 @@ __all__ = [
 
 
 from dataclasses import dataclass, field, replace
-from typing import Any, Dict, List, Protocol, Set
+from typing import Any, Protocol
 from weakref import WeakKeyDictionary
 
 from nbtlib import Numeric, String
@@ -103,11 +103,11 @@ class MacroInvocation:
     file_instance: TextFileBase[Any]
     macro_path: str
     node: AstCommand
-    arguments: Dict[str, MacroInvocationArgument]
+    arguments: dict[str, MacroInvocationArgument]
 
     diagnostics: DiagnosticCollection = field(default_factory=DiagnosticCollection)
-    arguments_usage: Dict[str, List[AstMacroLine]] = field(default_factory=dict)
-    arguments_errors: Dict[str, Set[str]] = field(default_factory=dict)
+    arguments_usage: dict[str, list[AstMacroLine]] = field(default_factory=dict)
+    arguments_errors: dict[str, set[str]] = field(default_factory=dict)
 
     def add_usage(self, argument: str, node: AstMacroLine):
         self.arguments_usage.setdefault(argument, []).append(node)
@@ -136,7 +136,7 @@ class MacroBaker(Visitor):
     def bake_macros(self, node: AstRoot):
         invocation = self.invocations.get(self.database.current)
 
-        result: List[AstCommand] = []
+        result: list[AstCommand] = []
         modified = False
 
         for command in node.commands:
@@ -146,7 +146,7 @@ class MacroBaker(Visitor):
                 command = baked_macro_line
 
             args = command.arguments
-            stack: List[AstCommand] = [command]
+            stack: list[AstCommand] = [command]
 
             while args and isinstance(subcommand := args[-1], AstCommand):
                 stack.append(subcommand)
@@ -229,12 +229,12 @@ class MacroBaker(Visitor):
         return node
 
     def bake_macro_line(self, node: AstMacroLine, invocation: MacroInvocation):
-        result: List[str] = []
+        result: list[str] = []
         source_mappings: list[SourceLocation] = []
         preprocessed_mappings: list[SourceLocation] = []
         preprocessed_location = INITIAL_LOCATION
 
-        used_variables: List[AstMacroLineVariable] = []
+        used_variables: list[AstMacroLineVariable] = []
         valid = True
 
         for argument in node.arguments:

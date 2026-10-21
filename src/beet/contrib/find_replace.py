@@ -10,8 +10,9 @@ __all__ = [
 ]
 
 
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass
-from typing import Any, Callable, Generic, Sequence, Tuple, TypeVar, Union
+from typing import Any, Generic, TypeVar, Union
 
 from pydantic import BaseModel, ConfigDict, RootModel
 
@@ -64,9 +65,9 @@ class RenderSubstitutionOption(BaseModel):
 
 
 class SubstitutionOption(
-    RootModel[ListOption[Union[TextSubstitutionOption, RenderSubstitutionOption]]]
+    RootModel[ListOption[TextSubstitutionOption | RenderSubstitutionOption]]
 ):
-    root: ListOption[Union[TextSubstitutionOption, RenderSubstitutionOption]]
+    root: ListOption[TextSubstitutionOption | RenderSubstitutionOption]
 
     def compile(self, template: TemplateManager) -> Callable[[str], str]:
         substitutions = [sub.compile(template) for sub in self.root.entries()]
@@ -82,14 +83,14 @@ class SubstitutionOption(
 class FindReplaceOptions(PluginOptions):
     resource_pack: PackQueryOption = PackQueryOption()
     data_pack: PackQueryOption = PackQueryOption()
-    substitute: ListOption[Union[SubstitutionOption, "FindReplaceOptions"]]
+    substitute: ListOption[SubstitutionOption | FindReplaceOptions]
 
     def compile(
         self,
         assets_query: PackQuery[ResourcePack],
         data_query: PackQuery[DataPack],
         template: TemplateManager,
-    ) -> Tuple["FindReplaceHandler[ResourcePack]", "FindReplaceHandler[DataPack]"]:
+    ) -> tuple[FindReplaceHandler[ResourcePack], FindReplaceHandler[DataPack]]:
         substitute = [
             (
                 sub.compile(assets_query, data_query, template)
@@ -116,7 +117,7 @@ ListOption[Union[SubstitutionOption, "FindReplaceOptions"]].model_rebuild()
 @dataclass(frozen=True)
 class FindReplaceHandler(Generic[PackType]):
     pack_query: PreparedPackQuery[PackType]
-    substitute: Sequence[Union[Callable[[str], str], "FindReplaceHandler[PackType]"]]
+    substitute: Sequence[Callable[[str], str] | FindReplaceHandler[PackType]]
 
     def __call__(self):
         text_files = self.pack_query.select(extend=TextFileBase[Any])

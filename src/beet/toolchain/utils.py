@@ -15,9 +15,10 @@ __all__ = [
 import json
 import os
 import re
+from collections.abc import Callable, Iterable, Mapping, Sequence
 from copy import copy
 from pathlib import Path
-from typing import Any, Callable, Iterable, List, Literal, Mapping, Sequence, cast
+from typing import Any, Literal, cast
 
 from platformdirs import user_data_dir
 
@@ -67,7 +68,7 @@ def stable_hash(value: Any, short: bool = False) -> str:
 
 
 def encode_with_alphabet(value: int, alphabet: str) -> str:
-    indices: List[int] = []
+    indices: list[int] = []
     while value:
         value, i = divmod(value, len(alphabet))
         indices.append(i)

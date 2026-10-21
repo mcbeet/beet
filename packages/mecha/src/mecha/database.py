@@ -7,23 +7,13 @@ __all__ = [
 
 
 from collections import defaultdict
+from collections.abc import Iterable, Iterator, Sequence
 from contextlib import contextmanager
 from dataclasses import dataclass
 from heapq import heappop, heappush
 from typing import (
     Any,
-    DefaultDict,
-    Dict,
-    Iterable,
-    Iterator,
-    List,
-    Optional,
     Protocol,
-    Sequence,
-    Set,
-    Tuple,
-    Type,
-    Union,
 )
 
 from beet import (
@@ -45,16 +35,16 @@ from .diagnostic import DiagnosticCollection
 class CompilationUnit:
     """Information associated with the compilation of a specific function file."""
 
-    ast: Optional[AstRoot] = None
-    source: Optional[str] = None
-    filename: Optional[str] = None
-    resource_location: Optional[str] = None
+    ast: AstRoot | None = None
+    source: str | None = None
+    filename: str | None = None
+    resource_location: str | None = None
     no_index: bool = False
-    pack: Optional[Union[ResourcePack, DataPack]] = None
+    pack: ResourcePack | DataPack | None = None
     priority: int = 0
 
     diagnostics: DiagnosticCollection = extra_field(init=False)
-    perf: Dict[int, float] = extra_field(init=False)
+    perf: dict[int, float] = extra_field(init=False)
 
     def __post_init__(self):
         self.diagnostics = DiagnosticCollection(
@@ -67,17 +57,15 @@ class CompilationUnit:
 class CompilationDatabase(Container[TextFileBase[Any], CompilationUnit]):
     """Compilation database."""
 
-    indices: DefaultDict[
-        Optional[Union[ResourcePack, DataPack]], Dict[str, TextFileBase[Any]]
-    ]
-    session: Set[TextFileBase[Any]]
-    queue: List[Tuple[int, int, str, int, TextFileBase[Any]]]
+    indices: defaultdict[ResourcePack | DataPack | None, dict[str, TextFileBase[Any]]]
+    session: set[TextFileBase[Any]]
+    queue: list[tuple[int, int, str, int, TextFileBase[Any]]]
     step: int
     current: TextFileBase[Any]
     count: int
 
-    generate: Optional[Generator]
-    directory: Optional[FileSystemPath]
+    generate: Generator | None
+    directory: FileSystemPath | None
 
     def __init__(self):
         super().__init__()
@@ -93,15 +81,15 @@ class CompilationDatabase(Container[TextFileBase[Any], CompilationUnit]):
 
     def configure(
         self,
-        generate: Optional[Generator] = None,
-        directory: Optional[FileSystemPath] = None,
+        generate: Generator | None = None,
+        directory: FileSystemPath | None = None,
     ):
         self.generate = generate
         self.directory = directory
         self[self.current] = CompilationUnit()
 
     @property
-    def index(self) -> Dict[str, TextFileBase[Any]]:
+    def index(self) -> dict[str, TextFileBase[Any]]:
         return self.indices[self[self.current].pack]
 
     def process(
@@ -151,12 +139,12 @@ class CompilationDatabase(Container[TextFileBase[Any], CompilationUnit]):
             ),
         )
 
-    def dequeue(self) -> Tuple[int, TextFileBase[Any]]:
+    def dequeue(self) -> tuple[int, TextFileBase[Any]]:
         """Dequeue the next file that needs to be processed."""
         step, _, _, _, key = heappop(self.queue)
         return step, key
 
-    def process_queue(self) -> Iterator[Tuple[int, TextFileBase[Any]]]:
+    def process_queue(self) -> Iterator[tuple[int, TextFileBase[Any]]]:
         """Yield database entries from the queue."""
         while self.queue:
             self.step, self.current = self.dequeue()
@@ -179,23 +167,23 @@ class CompilationUnitProvider(Protocol):
 
     def __call__(
         self,
-        pack: Union[ResourcePack, DataPack],
-        match: Optional[List[str]] = None,
-    ) -> Iterable[Tuple[TextFileBase[Any], CompilationUnit]]: ...
+        pack: ResourcePack | DataPack,
+        match: list[str] | None = None,
+    ) -> Iterable[tuple[TextFileBase[Any], CompilationUnit]]: ...
 
 
 @dataclass
 class FileTypeCompilationUnitProvider:
     """Provide source files based on their type."""
 
-    file_types: Sequence[Type[NamespaceFile]]
+    file_types: Sequence[type[NamespaceFile]]
     no_index: bool = False
 
     def __call__(
         self,
-        pack: Union[ResourcePack, DataPack],
-        match: Optional[List[str]] = None,
-    ) -> Iterable[Tuple[TextFileBase[Any], CompilationUnit]]:
+        pack: ResourcePack | DataPack,
+        match: list[str] | None = None,
+    ) -> Iterable[tuple[TextFileBase[Any], CompilationUnit]]:
         packs = [pack]
         if pack.overlay_parent is None:
             packs.extend(pack.overlays.values())

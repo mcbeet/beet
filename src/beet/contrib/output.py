@@ -6,14 +6,12 @@ __all__ = [
 ]
 
 
-from typing import Optional
-
 from beet import Context, ListOption, PluginOptions, configurable
 from beet.core.utils import FileSystemPath, log_time_scope
 
 
 class OutputOptions(PluginOptions):
-    directory: Optional[ListOption[FileSystemPath]] = None
+    directory: ListOption[FileSystemPath] | None = None
 
 
 def beet_default(ctx: Context):

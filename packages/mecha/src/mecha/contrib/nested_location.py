@@ -10,8 +10,8 @@ __all__ = [
 ]
 
 
+from collections.abc import Iterable, Iterator
 from dataclasses import dataclass
-from typing import Iterable, Iterator, List, Optional, Tuple, Union
 
 from tokenstream import InvalidSyntax, TokenStream, set_location
 
@@ -101,7 +101,7 @@ def parse_nested_location(stream: TokenStream) -> AstNestedLocation:
 
 class NestedLocationResolver:
     spec: CommandSpec
-    steps: List[Dispatcher[AstRoot]]
+    steps: list[Dispatcher[AstRoot]]
     database: CompilationDatabase
     generate: Generator
 
@@ -115,7 +115,7 @@ class NestedLocationResolver:
     def resolve(
         self,
         nested_location: AstNestedLocation = AstNestedLocation(path=""),
-    ) -> Tuple[str, str]:
+    ) -> tuple[str, str]:
         root, relative_path = self.concat_nested_path(
             nested_location,
             self.walk_location_hierarchy(
@@ -145,7 +145,7 @@ class NestedLocationResolver:
     @staticmethod
     def walk_location_hierarchy(
         spec: CommandSpec,
-        stack: Iterable[Tuple[str, Tuple[AstNode, ...]]],
+        stack: Iterable[tuple[str, tuple[AstNode, ...]]],
     ) -> Iterator[AstResourceLocation]:
         for identifier, arguments in stack:
             prototype = spec.prototypes[identifier]
@@ -164,12 +164,10 @@ class NestedLocationResolver:
 
     @staticmethod
     def concat_nested_path(
-        *args: Union[
-            Iterable[Union[AstResourceLocation, str]], AstResourceLocation, str
-        ],
-    ) -> Tuple[Optional[str], str]:
+        *args: Iterable[AstResourceLocation | str] | AstResourceLocation | str,
+    ) -> tuple[str | None, str]:
         root = None
-        fragments: List[str] = []
+        fragments: list[str] = []
 
         for segments in args:
             if isinstance(segments, (AstResourceLocation, str)):

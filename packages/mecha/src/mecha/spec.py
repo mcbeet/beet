@@ -5,7 +5,7 @@ __all__ = [
 
 
 from dataclasses import dataclass
-from typing import Any, Dict, Protocol, Set, Tuple, Union
+from typing import Any, Protocol
 
 from tokenstream import TokenStream
 
@@ -31,14 +31,14 @@ class CommandSpec:
     tree: CommandTree = extra_field(
         default_factory=lambda: CommandTree.load_from(version=LATEST_MINECRAFT_VERSION)
     )
-    prototypes: Dict[str, CommandPrototype] = extra_field(default_factory=dict)
+    prototypes: dict[str, CommandPrototype] = extra_field(default_factory=dict)
 
-    parsers: Dict[str, Parser] = extra_field(default_factory=dict)
+    parsers: dict[str, Parser] = extra_field(default_factory=dict)
 
     def __post_init__(self):
         self.update()
 
-    def add_commands(self, tree: Union[CommandTree, JsonDict]):
+    def add_commands(self, tree: CommandTree | JsonDict):
         """Extend the command tree and regenerate prototypes."""
         if not isinstance(tree, CommandTree):
             tree = CommandTree(**tree)
@@ -55,9 +55,9 @@ class CommandSpec:
     def generate_prototypes(
         self,
         tree: CommandTree,
-        scope: Tuple[str, ...] = (),
+        scope: tuple[str, ...] = (),
         signature: CommandSignature = (),
-        arguments: Tuple[int, ...] = (),
+        arguments: tuple[int, ...] = (),
     ):
         """Traverse command tree and generate prototypes."""
         if tree.executable:
@@ -67,7 +67,7 @@ class CommandSpec:
             )
 
         recursive = False
-        hoisted: Set[str] = set()
+        hoisted: set[str] = set()
 
         if target := self.tree.get(tree.redirect):
             recursive = target.subcommand

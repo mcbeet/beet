@@ -5,7 +5,6 @@ __all__ = [
 
 
 from dataclasses import dataclass
-from typing import Union
 
 from beet import Context, DataPack, PackQuery, ResourcePack
 from beet.contrib.vanilla import Vanilla
@@ -26,7 +25,7 @@ def beet_default(ctx: Context):
 @dataclass
 class VanillaFilesDirective:
     vanilla: Vanilla
-    query: PackQuery[Union[ResourcePack, DataPack]]
+    query: PackQuery[ResourcePack | DataPack]
 
     def __call__(self, fragment: Fragment, assets: ResourcePack, data: DataPack):
         release = self.vanilla.releases[
@@ -55,7 +54,7 @@ class VanillaFilesDirective:
 class VanillaMatchDirective:
     group: str
     vanilla: Vanilla
-    query: PackQuery[Union[ResourcePack, DataPack]]
+    query: PackQuery[ResourcePack | DataPack]
 
     def __call__(self, fragment: Fragment, assets: ResourcePack, data: DataPack):
         release = self.vanilla.releases[

@@ -14,21 +14,12 @@ __all__ = [
 ]
 
 
+from collections.abc import Callable, Generator, Iterable
 from contextlib import ExitStack, contextmanager
 from dataclasses import dataclass, field, fields, replace
 from typing import (
     Any,
-    Callable,
-    Dict,
-    Generator,
-    Iterable,
-    List,
     Literal,
-    Optional,
-    Set,
-    Tuple,
-    Type,
-    Union,
     cast,
     overload,
 )
@@ -97,11 +88,11 @@ from .module import CodegenResult, MacroLibrary
 class CodegenStatement:
     """Python statement emitted by the codegen, which can recursively contain other statements."""
 
-    code: Tuple[str, ...]
-    lineno: Optional[int] = None
-    children: List["CodegenStatement"] = field(default_factory=list)
+    code: tuple[str, ...]
+    lineno: int | None = None
+    children: list[CodegenStatement] = field(default_factory=list)
 
-    def flatten(self, indent: str = "") -> Iterable[Tuple[str, Optional[int]]]:
+    def flatten(self, indent: str = "") -> Iterable[tuple[str, int | None]]:
         """Yield the indented statements with their associated line number."""
         if self.code:
             statement = " ".join(self.code)
@@ -118,20 +109,20 @@ class CodegenStatement:
 class Accumulator:
     """Utility for generating python code."""
 
-    refs: List[Any] = field(default_factory=list)
-    dependencies: Set[str] = field(default_factory=set)
-    prelude_imports: List[AstPrelude] = field(default_factory=list)
+    refs: list[Any] = field(default_factory=list)
+    dependencies: set[str] = field(default_factory=set)
+    prelude_imports: list[AstPrelude] = field(default_factory=list)
     macros: MacroLibrary = field(default_factory=dict)
-    macro_ids: Dict[str, int] = field(default_factory=dict)
-    memo_index: Dict[AstMemo, int] = field(default_factory=dict)
-    statements: List["CodegenStatement"] = field(default_factory=list)
+    macro_ids: dict[str, int] = field(default_factory=dict)
+    memo_index: dict[AstMemo, int] = field(default_factory=dict)
+    statements: list[CodegenStatement] = field(default_factory=list)
     counter: int = 0
-    header: Dict[str, str] = field(default_factory=dict)
+    header: dict[str, str] = field(default_factory=dict)
     root_scope: bool = True
 
-    current_siblings: Tuple[AstNode, ...] = ()
+    current_siblings: tuple[AstNode, ...] = ()
     current_sibling_index: int = 0
-    condition_inverse: Optional[str] = None
+    condition_inverse: str | None = None
 
     def get_source(self) -> str:
         """Return the source code."""
@@ -140,9 +131,9 @@ class Accumulator:
             for variable, expression in self.header.items()
         ]
 
-        lines: List[str] = ["_bolt_lineno = "]
-        numbers1: List[int] = [1]
-        numbers2: List[int] = [1]
+        lines: list[str] = ["_bolt_lineno = "]
+        numbers1: list[int] = [1]
+        numbers2: list[int] = [1]
 
         for statement in header + self.statements:
             for code, lineno in statement.flatten():
@@ -269,7 +260,7 @@ class Accumulator:
     def if_statement(
         self,
         condition: str,
-        inverse: Optional[str] = None,
+        inverse: str | None = None,
         *,
         lineno: Any = None,
     ):
@@ -391,7 +382,7 @@ class ChildrenCollector:
 
     acc: Accumulator
     start_index: int
-    children: List[str] = field(default_factory=list)
+    children: list[str] = field(default_factory=list)
 
     def add_static(self, *args: AstNode):
         self.children.extend(self.acc.make_ref(node) for node in args)
@@ -442,20 +433,20 @@ class RootCommandCollector(CommandCollector):
 @overload
 def visit_single(
     node: AstNode,
-) -> Generator[AstNode, Optional[List[str]], Optional[str]]: ...
+) -> Generator[AstNode, list[str] | None, str | None]: ...
 
 
 @overload
 def visit_single(
     node: AstNode,
     required: Literal[True],
-) -> Generator[AstNode, Optional[List[str]], str]: ...
+) -> Generator[AstNode, list[str] | None, str]: ...
 
 
 def visit_single(
     node: AstNode,
     required: bool = False,
-) -> Generator[AstNode, Optional[List[str]], Optional[str]]:
+) -> Generator[AstNode, list[str] | None, str | None]:
     """Yield the node and make sure that it returns a single result."""
     result = yield node
 
@@ -475,13 +466,13 @@ def visit_single(
 
 
 def visit_multiple(
-    children: Tuple[AstNode, ...],
+    children: tuple[AstNode, ...],
     acc: Accumulator,
-    children_collector: Type[ChildrenCollector] = ChildrenCollector,
-) -> Generator[AstNode, Optional[List[str]], Optional[str]]:
+    children_collector: type[ChildrenCollector] = ChildrenCollector,
+) -> Generator[AstNode, list[str] | None, str | None]:
     """Yield all the nodes and return a single result pointing to the new children."""
     current_count = 0
-    collector: Optional[ChildrenCollector] = None
+    collector: ChildrenCollector | None = None
     index = len(acc.statements)
 
     previous_siblings = acc.current_siblings
@@ -519,10 +510,10 @@ def visit_multiple(
 def visit_generic(
     node: AstNode,
     acc: Accumulator,
-    children_collector: Type[ChildrenCollector] = ChildrenCollector,
-) -> Generator[AstNode, Optional[List[str]], Optional[str]]:
+    children_collector: type[ChildrenCollector] = ChildrenCollector,
+) -> Generator[AstNode, list[str] | None, str | None]:
     """Recursively yield all the fields and return a result pointing to the updated node."""
-    to_replace: Dict[str, str] = {}
+    to_replace: dict[str, str] = {}
 
     for f in fields(node):
         attribute = getattr(node, f.name)
@@ -547,7 +538,7 @@ def visit_generic(
 def visit_body(
     node: AstRoot,
     acc: Accumulator,
-) -> Generator[AstNode, Optional[List[str]], None]:
+) -> Generator[AstNode, list[str] | None]:
     """Emit each individual command in the current scope."""
     result = yield from visit_multiple(node.commands, acc, CommandCollector)
     if result is None:
@@ -559,7 +550,7 @@ def visit_binding(
     op: str,
     value: str,
     acc: Accumulator,
-) -> Generator[AstNode, Optional[List[str]], None]:
+) -> Generator[AstNode, list[str] | None]:
     """Emit variable binding."""
     targets = yield target_node
 
@@ -586,7 +577,7 @@ class Codegen(Visitor):
     """Code generator."""
 
     accumulator_factory: Callable[[], Accumulator] = Accumulator
-    finalizers: List[Callable[[Accumulator], None]] = field(
+    finalizers: list[Callable[[Accumulator], None]] = field(
         default_factory=lambda: [WithStatementFusion.finalize]
     )
 
@@ -622,7 +613,7 @@ class Codegen(Visitor):
         self,
         node: AstNode,
         acc: Accumulator,
-    ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
+    ) -> Generator[AstNode, list[str] | None, list[str] | None]:
         result = yield from visit_generic(node, acc)
         if result is None:
             return None
@@ -633,7 +624,7 @@ class Codegen(Visitor):
         self,
         node: AstRoot,
         acc: Accumulator,
-    ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
+    ) -> Generator[AstNode, list[str] | None, list[str] | None]:
         result = yield from visit_generic(node, acc, RootCommandCollector)
         if result is None:
             return None
@@ -644,7 +635,7 @@ class Codegen(Visitor):
         self,
         node: AstCommand,
         acc: Accumulator,
-    ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
+    ) -> Generator[AstNode, list[str] | None, list[str] | None]:
         if not node.arguments:
             return None
 
@@ -680,7 +671,7 @@ class Codegen(Visitor):
         self,
         node: AstCommand,
         acc: Accumulator,
-    ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
+    ) -> Generator[AstNode, list[str] | None, list[str] | None]:
         yield node.arguments[0]
         return []
 
@@ -689,11 +680,11 @@ class Codegen(Visitor):
         self,
         node: AstMemo,
         acc: Accumulator,
-    ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
+    ) -> Generator[AstNode, list[str] | None, list[str] | None]:
         file_index = acc.memo_index.setdefault(node, 0)
         acc.memo_index[node] = file_index + 1
 
-        keys: List[str] = []
+        keys: list[str] = []
 
         *arguments, body = node.arguments
         cached_identifiers = (
@@ -751,16 +742,16 @@ class Codegen(Visitor):
         self,
         node: AstCommand,
         acc: Accumulator,
-    ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
+    ) -> Generator[AstNode, list[str] | None, list[str] | None]:
         signature = cast(AstFunctionSignature, node.arguments[0])
         body = cast(AstRoot, node.arguments[1])
 
-        decorators: List[str] = []
+        decorators: list[str] = []
         for decorator in signature.decorators:
             value = yield from visit_single(decorator.expression, required=True)
             decorators.append(value)
 
-        arguments: List[str] = []
+        arguments: list[str] = []
         for arg in signature.arguments:
             if isinstance(arg, AstFunctionSignatureArgument):
                 a = arg.name
@@ -818,7 +809,7 @@ class Codegen(Visitor):
         self,
         node: AstCommand,
         acc: Accumulator,
-    ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
+    ) -> Generator[AstNode, list[str] | None, list[str] | None]:
         statement = "return"
         if node.arguments:
             value = yield from visit_single(node.arguments[0], required=True)
@@ -833,7 +824,7 @@ class Codegen(Visitor):
         self,
         node: AstCommand,
         acc: Accumulator,
-    ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
+    ) -> Generator[AstNode, list[str] | None, list[str] | None]:
         statement = "yield from" if node.identifier == "yield:from:value" else "yield"
         if node.arguments:
             value = yield from visit_single(node.arguments[0], required=True)
@@ -846,7 +837,7 @@ class Codegen(Visitor):
         self,
         node: AstMacro,
         acc: Accumulator,
-    ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
+    ) -> Generator[AstNode, list[str] | None, list[str] | None]:
         macro = acc.make_macro(
             replace(node, arguments=AstChildren(node.arguments[:-1]))
         )
@@ -866,7 +857,7 @@ class Codegen(Visitor):
         self,
         node: AstMacroCall,
         acc: Accumulator,
-    ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
+    ) -> Generator[AstNode, list[str] | None, list[str] | None]:
         macro = acc.get_macro(node.identifier)
         result = yield from visit_generic(node, acc)
         if result is None:
@@ -883,7 +874,7 @@ class Codegen(Visitor):
         self,
         node: AstProcMacro,
         acc: Accumulator,
-    ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
+    ) -> Generator[AstNode, list[str] | None, list[str] | None]:
         macro = acc.make_macro(
             replace(node, arguments=AstChildren(node.arguments[:-1]))
         )
@@ -903,16 +894,16 @@ class Codegen(Visitor):
         self,
         node: AstCommand,
         acc: Accumulator,
-    ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
+    ) -> Generator[AstNode, list[str] | None, list[str] | None]:
         name = cast(AstClassName, node.arguments[0])
         body = cast(AstRoot, node.arguments[-1])
 
-        decorators: List[str] = []
+        decorators: list[str] = []
         for decorator in name.decorators:
             value = yield from visit_single(decorator.expression, required=True)
             decorators.append(value)
 
-        class_args: List[str] = []
+        class_args: list[str] = []
 
         if isinstance(bases := node.arguments[1], AstClassBases):
             for base in bases.inherit:
@@ -948,7 +939,7 @@ class Codegen(Visitor):
         self,
         node: AstDocstring,
         acc: Accumulator,
-    ) -> Optional[List[str]]:
+    ) -> list[str] | None:
         acc.statement(repr(cast(AstValue, node.arguments[0]).value))
         return []
 
@@ -957,7 +948,7 @@ class Codegen(Visitor):
         self,
         node: AstCommand,
         acc: Accumulator,
-    ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
+    ) -> Generator[AstNode, list[str] | None, list[str] | None]:
         targets = yield node.arguments[0]
         for target in targets or []:
             acc.statement(f"del {target}")
@@ -968,7 +959,7 @@ class Codegen(Visitor):
         self,
         node: AstCommand,
         acc: Accumulator,
-    ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
+    ) -> Generator[AstNode, list[str] | None, list[str] | None]:
         condition = yield from visit_single(node.arguments[0], required=True)
         inverse = None
 
@@ -991,7 +982,7 @@ class Codegen(Visitor):
         self,
         node: AstCommand,
         acc: Accumulator,
-    ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
+    ) -> Generator[AstNode, list[str] | None, list[str] | None]:
         with acc.else_statement(lineno=node):
             yield from visit_body(cast(AstRoot, node.arguments[0]), acc)
         return []
@@ -1001,7 +992,7 @@ class Codegen(Visitor):
         self,
         node: AstCommand,
         acc: Accumulator,
-    ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
+    ) -> Generator[AstNode, list[str] | None, list[str] | None]:
         acc.statement("while True", lineno=node)
         with acc.block():
             acc.statement(
@@ -1044,7 +1035,7 @@ class Codegen(Visitor):
         self,
         node: AstCommand,
         acc: Accumulator,
-    ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
+    ) -> Generator[AstNode, list[str] | None, list[str] | None]:
         iterable = yield from visit_single(node.arguments[1], required=True)
         targets = yield node.arguments[0]
         acc.statement(f"for {', '.join(targets or ['_'])} in {iterable}")
@@ -1057,7 +1048,7 @@ class Codegen(Visitor):
         self,
         node: AstCommand,
         acc: Accumulator,
-    ) -> Optional[List[str]]:
+    ) -> list[str] | None:
         acc.statement("break")
         return []
 
@@ -1066,7 +1057,7 @@ class Codegen(Visitor):
         self,
         node: AstCommand,
         acc: Accumulator,
-    ) -> Optional[List[str]]:
+    ) -> list[str] | None:
         acc.statement("continue")
         return []
 
@@ -1075,7 +1066,7 @@ class Codegen(Visitor):
         self,
         node: AstCommand,
         acc: Accumulator,
-    ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
+    ) -> Generator[AstNode, list[str] | None, list[str] | None]:
         context = cast(AstWithContext, node.arguments[0])
         body = cast(AstRoot, node.arguments[1])
 
@@ -1101,7 +1092,7 @@ class Codegen(Visitor):
         self,
         node: AstCommand,
         acc: Accumulator,
-    ) -> Optional[List[str]]:
+    ) -> list[str] | None:
         module = cast(AstResourceLocation, node.arguments[0])
 
         if node.identifier == "import:module:as:alias":
@@ -1134,19 +1125,19 @@ class Codegen(Visitor):
         self,
         node: AstFromImport,
         acc: Accumulator,
-    ) -> Optional[List[str]]:
+    ) -> list[str] | None:
         if isinstance(node, AstPrelude):
             acc.prelude_imports.append(node)
 
         module = cast(AstResourceLocation, node.arguments[0])
         items = cast(
-            AstChildren[Union[AstImportedItem, AstImportedMacro]], node.arguments[1:]
+            AstChildren[AstImportedItem | AstImportedMacro], node.arguments[1:]
         )
         names = [item.name for item in items]
 
         if module.namespace:
             full_path = module.get_value()
-            targets: List[str] = []
+            targets: list[str] = []
             for item in items:
                 if isinstance(item, AstImportedMacro):
                     targets.append(acc.import_macro(full_path, item))
@@ -1170,10 +1161,10 @@ class Codegen(Visitor):
         self,
         node: AstCommand,
         acc: Accumulator,
-    ) -> Optional[List[str]]:
+    ) -> list[str] | None:
         storage, _, _ = node.identifier.partition(":")
 
-        names: List[str] = []
+        names: list[str] = []
         subcommand = cast(AstCommand, node.arguments[0])
 
         while True:
@@ -1193,7 +1184,7 @@ class Codegen(Visitor):
         self,
         node: AstInterpolation,
         acc: Accumulator,
-    ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
+    ) -> Generator[AstNode, list[str] | None, list[str] | None]:
         result = yield from visit_single(node.value, required=True)
         value = "f" + repr(node.prefix + "{" + result + "}") if node.prefix else result
 
@@ -1215,7 +1206,7 @@ class Codegen(Visitor):
         self,
         node: AstExpressionBinary,
         acc: Accumulator,
-    ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
+    ) -> Generator[AstNode, list[str] | None, list[str] | None]:
         left = yield from visit_single(node.left, required=True)
         right = yield from visit_single(node.right, required=True)
         acc.binary(left, node.operator, right, lineno=node)
@@ -1227,7 +1218,7 @@ class Codegen(Visitor):
         self,
         node: AstExpressionBinary,
         acc: Accumulator,
-    ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
+    ) -> Generator[AstNode, list[str] | None, list[str] | None]:
         left = yield from visit_single(node.left, required=True)
 
         condition = acc.make_variable()
@@ -1247,7 +1238,7 @@ class Codegen(Visitor):
         self,
         node: AstExpressionUnary,
         acc: Accumulator,
-    ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
+    ) -> Generator[AstNode, list[str] | None, list[str] | None]:
         result = yield from visit_single(node.value, required=True)
         if node.operator in ["not"]:
             value = acc.helper(f"operator_{node.operator}", result)
@@ -1262,7 +1253,7 @@ class Codegen(Visitor):
         self,
         node: AstChainedComparison,
         acc: Accumulator,
-    ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
+    ) -> Generator[AstNode, list[str] | None, list[str] | None]:
         left = yield from visit_single(node.operands[0], required=True)
         right = yield from visit_single(node.operands[1], required=True)
         acc.binary(left, node.operators[0], right, lineno=node)
@@ -1283,13 +1274,13 @@ class Codegen(Visitor):
         return [left]
 
     @rule(AstValue)
-    def value(self, node: AstValue, acc: Accumulator) -> Optional[List[str]]:
+    def value(self, node: AstValue, acc: Accumulator) -> list[str] | None:
         result = acc.make_variable()
         acc.statement(f"{result} = {node.literal}")
         return [result]
 
     @rule(AstIdentifier)
-    def identifier(self, node: AstIdentifier, acc: Accumulator) -> Optional[List[str]]:
+    def identifier(self, node: AstIdentifier, acc: Accumulator) -> list[str] | None:
         result = acc.make_variable()
         acc.statement(f"{result} = {node.value}", lineno=node)
         return [result]
@@ -1299,8 +1290,8 @@ class Codegen(Visitor):
         self,
         node: AstFormatString,
         acc: Accumulator,
-    ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
-        values: List[str] = []
+    ) -> Generator[AstNode, list[str] | None, list[str] | None]:
+        values: list[str] = []
 
         for value in node.values:
             result = yield from visit_single(value, required=True)
@@ -1317,8 +1308,8 @@ class Codegen(Visitor):
         self,
         node: AstFormattedLocation,
         acc: Accumulator,
-    ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
-        values: List[str] = []
+    ) -> Generator[AstNode, list[str] | None, list[str] | None]:
+        values: list[str] = []
 
         for value in node.values:
             result = yield from visit_single(value, required=True)
@@ -1338,8 +1329,8 @@ class Codegen(Visitor):
         self,
         node: AstTuple,
         acc: Accumulator,
-    ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
-        items: List[str] = []
+    ) -> Generator[AstNode, list[str] | None, list[str] | None]:
+        items: list[str] = []
 
         for item in node.items:
             value = yield from visit_single(item, required=True)
@@ -1354,8 +1345,8 @@ class Codegen(Visitor):
         self,
         node: AstList,
         acc: Accumulator,
-    ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
-        items: List[str] = []
+    ) -> Generator[AstNode, list[str] | None, list[str] | None]:
+        items: list[str] = []
 
         for item in node.items:
             value = yield from visit_single(item, required=True)
@@ -1370,8 +1361,8 @@ class Codegen(Visitor):
         self,
         node: AstDict,
         acc: Accumulator,
-    ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
-        items: List[str] = []
+    ) -> Generator[AstNode, list[str] | None, list[str] | None]:
+        items: list[str] = []
 
         for item in node.items:
             value = yield from visit_single(item, required=True)
@@ -1386,7 +1377,7 @@ class Codegen(Visitor):
         self,
         node: AstDictItem,
         acc: Accumulator,
-    ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
+    ) -> Generator[AstNode, list[str] | None, list[str] | None]:
         key = yield from visit_single(node.key, required=True)
         value = yield from visit_single(node.value, required=True)
         return [f"{key}: {value}"]
@@ -1396,7 +1387,7 @@ class Codegen(Visitor):
         self,
         node: AstSlice,
         acc: Accumulator,
-    ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
+    ) -> Generator[AstNode, list[str] | None, list[str] | None]:
         start = ""
         stop = ""
         step = ""
@@ -1419,7 +1410,7 @@ class Codegen(Visitor):
         self,
         node: AstUnpack,
         acc: Accumulator,
-    ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
+    ) -> Generator[AstNode, list[str] | None, list[str] | None]:
         value = yield from visit_single(node.value, required=True)
         prefix = "**" if node.type == "dict" else "*"
         return [f"{prefix}{value}"]
@@ -1429,7 +1420,7 @@ class Codegen(Visitor):
         self,
         node: AstKeyword,
         acc: Accumulator,
-    ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
+    ) -> Generator[AstNode, list[str] | None, list[str] | None]:
         value = yield from visit_single(node.value, required=True)
         return [f"{node.name}={value}"]
 
@@ -1438,7 +1429,7 @@ class Codegen(Visitor):
         self,
         node: AstAttribute,
         acc: Accumulator,
-    ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
+    ) -> Generator[AstNode, list[str] | None, list[str] | None]:
         value = yield from visit_single(node.value, required=True)
         rhs = acc.get_attribute_handler(value, node.name)
         acc.statement(f"{value} = {rhs}", lineno=node)
@@ -1449,9 +1440,9 @@ class Codegen(Visitor):
         self,
         node: AstLookup,
         acc: Accumulator,
-    ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
+    ) -> Generator[AstNode, list[str] | None, list[str] | None]:
         result = yield from visit_single(node.value, required=True)
-        arguments: List[str] = []
+        arguments: list[str] = []
 
         for arg in node.arguments:
             value = yield from visit_single(arg, required=True)
@@ -1465,9 +1456,9 @@ class Codegen(Visitor):
         self,
         node: AstCall,
         acc: Accumulator,
-    ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
+    ) -> Generator[AstNode, list[str] | None, list[str] | None]:
         result = yield from visit_single(node.value, required=True)
-        arguments: List[str] = []
+        arguments: list[str] = []
 
         for arg in node.arguments:
             value = yield from visit_single(arg, required=True)
@@ -1481,7 +1472,7 @@ class Codegen(Visitor):
         self,
         node: AstAssignment,
         acc: Accumulator,
-    ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
+    ) -> Generator[AstNode, list[str] | None, list[str] | None]:
         if node.type_annotation and isinstance(node.target, AstTargetIdentifier):
             value = node.type_annotation.string
             acc.statement(f"{node.target.value}: {value}")
@@ -1494,7 +1485,7 @@ class Codegen(Visitor):
         self,
         node: AstTypeDeclaration,
         acc: Accumulator,
-    ) -> Optional[List[str]]:
+    ) -> list[str] | None:
         value = node.type_annotation.string
         acc.statement(f"{node.identifier.value}: {value}")
         return []
@@ -1504,7 +1495,7 @@ class Codegen(Visitor):
         self,
         node: AstTargetIdentifier,
         acc: Accumulator,
-    ) -> Optional[List[str]]:
+    ) -> list[str] | None:
         return [node.value]
 
     @rule(AstTargetUnpack)
@@ -1512,8 +1503,8 @@ class Codegen(Visitor):
         self,
         node: AstTargetUnpack,
         acc: Accumulator,
-    ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
-        targets: List[str] = []
+    ) -> Generator[AstNode, list[str] | None, list[str] | None]:
+        targets: list[str] = []
         for target in node.targets:
             result = yield from visit_single(target, required=True)
             targets.append(result)
@@ -1524,7 +1515,7 @@ class Codegen(Visitor):
         self,
         node: AstTargetAttribute,
         acc: Accumulator,
-    ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
+    ) -> Generator[AstNode, list[str] | None, list[str] | None]:
         value = yield from visit_single(node.value, required=True)
         target = acc.get_attribute_handler(value, node.name)
         return [target]
@@ -1534,9 +1525,9 @@ class Codegen(Visitor):
         self,
         node: AstTargetItem,
         acc: Accumulator,
-    ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
+    ) -> Generator[AstNode, list[str] | None, list[str] | None]:
         result = yield from visit_single(node.value, required=True)
-        arguments: List[str] = []
+        arguments: list[str] = []
 
         for arg in node.arguments:
             value = yield from visit_single(arg, required=True)
@@ -1549,7 +1540,7 @@ class Codegen(Visitor):
         self,
         node: AstCommand,
         acc: Accumulator,
-    ) -> Optional[List[str]]:
+    ) -> list[str] | None:
         acc.statement("pass")
         return []
 
@@ -1558,7 +1549,7 @@ class Codegen(Visitor):
         self,
         node: AstCommand,
         acc: Accumulator,
-    ) -> Optional[List[str]]:
+    ) -> list[str] | None:
         acc.statement("raise")
         return []
 
@@ -1567,7 +1558,7 @@ class Codegen(Visitor):
         self,
         node: AstCommand,
         acc: Accumulator,
-    ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
+    ) -> Generator[AstNode, list[str] | None, list[str] | None]:
         result = yield from visit_single(node.arguments[0], required=True)
         acc.statement(f"raise {result}")
         return []
@@ -1577,7 +1568,7 @@ class Codegen(Visitor):
         self,
         node: AstCommand,
         acc: Accumulator,
-    ) -> Generator[AstNode, Optional[List[str]], Optional[List[str]]]:
+    ) -> Generator[AstNode, list[str] | None, list[str] | None]:
         result = yield from visit_single(node.arguments[0], required=True)
         cause = yield from visit_single(node.arguments[1], required=True)
         acc.statement(f"raise {result} from {cause}")

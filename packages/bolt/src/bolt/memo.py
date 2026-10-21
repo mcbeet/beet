@@ -9,22 +9,15 @@ __all__ = [
 
 
 import logging
+from collections.abc import Callable, Iterator
 from contextlib import contextmanager
 from dataclasses import dataclass
 from pathlib import Path
 from typing import (
     Any,
-    Callable,
     ClassVar,
     Generic,
-    Iterator,
-    List,
-    Optional,
-    Set,
-    Tuple,
-    Type,
     TypeVar,
-    Union,
 )
 from uuid import UUID
 
@@ -60,10 +53,10 @@ class MemoState(Generic[T]):
 
     cached_field_name: str = "cached_{}"
 
-    def __set_name__(self, owner: Type["MemoInvocation"], name: str):
+    def __set_name__(self, owner: type[MemoInvocation], name: str):
         self.cached_field_name = self.cached_field_name.format(name)
 
-    def __get__(self, obj: "MemoInvocation", objtype: Type["MemoInvocation"]) -> T:
+    def __get__(self, obj: MemoInvocation, objtype: type[MemoInvocation]) -> T:
         value = getattr(obj, self.cached_field_name, None)
         if value is None:
             if (
@@ -83,7 +76,7 @@ class MemoState(Generic[T]):
             setattr(obj, self.cached_field_name, value)
         return value
 
-    def __set__(self, obj: "MemoInvocation", value: T):
+    def __set__(self, obj: MemoInvocation, value: T):
         if obj.cached and (directory := obj.locate_directory()):
             logger.debug(
                 'Persist "%s" for invocation "%s/%s".',
@@ -97,12 +90,12 @@ class MemoState(Generic[T]):
 
 
 class MemoInvocation:
-    parent: "MemoStorage"
+    parent: MemoStorage
     state_id: int
     cached: bool
     epoch: int
 
-    def __init__(self, parent: "MemoStorage", state_id: int):
+    def __init__(self, parent: MemoStorage, state_id: int):
         self.parent = parent
         self.state_id = state_id
         self.cached = False
@@ -126,62 +119,62 @@ class MemoInvocation:
         default=DataPack,
     )
 
-    bindings: ClassVar[MemoState[Tuple[Any, ...]]] = MemoState(
+    bindings: ClassVar[MemoState[tuple[Any, ...]]] = MemoState(
         load=load_pickle,
         dump=dump_pickle,
         default=tuple,
     )
 
-    def __getstate__(self) -> Tuple["MemoStorage", int, bool, int]:
+    def __getstate__(self) -> tuple[MemoStorage, int, bool, int]:
         return self.parent, self.state_id, self.cached, self.epoch
 
-    def __setstate__(self, state: Tuple["MemoStorage", int, bool, int]):
+    def __setstate__(self, state: tuple[MemoStorage, int, bool, int]):
         self.parent, self.state_id, self.cached, self.epoch = state
 
-    def locate_directory(self) -> Optional[Path]:
+    def locate_directory(self) -> Path | None:
         if path := self.parent.locate_directory():
             return path / hex(self.state_id)
         return None
 
 
-class MemoStorage(Container[Tuple[Any, ...], MemoInvocation]):
-    parent: "MemoFileIndex"
+class MemoStorage(Container[tuple[Any, ...], MemoInvocation]):
+    parent: MemoFileIndex
     memo_id: UUID
     memo_lineno: int
     invocation_counter: int
 
-    def __init__(self, parent: "MemoFileIndex", memo_id: UUID, lineno: int = -1):
+    def __init__(self, parent: MemoFileIndex, memo_id: UUID, lineno: int = -1):
         super().__init__()
         self.parent = parent
         self.memo_id = memo_id
         self.memo_lineno = lineno
         self.invocation_counter = 0
 
-    def __delitem__(self, key: Tuple[Any, ...]):
+    def __delitem__(self, key: tuple[Any, ...]):
         if directory := self[key].locate_directory():
             remove_path(directory)
         super().__delitem__(key)
 
-    def missing(self, key: Tuple[Any, ...]) -> MemoInvocation:
+    def missing(self, key: tuple[Any, ...]) -> MemoInvocation:
         self.invocation_counter += 1
         return MemoInvocation(parent=self, state_id=self.invocation_counter)
 
-    def locate_directory(self) -> Optional[Path]:
+    def locate_directory(self) -> Path | None:
         if path := self.parent.path:
             return path.with_name(self.memo_id.hex)
         return None
 
 
-class MemoFileIndex(Container[Union[Tuple[AstMemo, int], UUID], MemoStorage]):
+class MemoFileIndex(Container[tuple[AstMemo, int] | UUID, MemoStorage]):
     filename: str
-    path: Optional[Path]
+    path: Path | None
 
-    def __init__(self, filename: str, path: Optional[Path] = None):
+    def __init__(self, filename: str, path: Path | None = None):
         super().__init__()
         self.filename = filename
         self.path = path
 
-    def __getitem__(self, key: Union[Tuple[AstMemo, int], UUID]) -> MemoStorage:
+    def __getitem__(self, key: tuple[AstMemo, int] | UUID) -> MemoStorage:
         if isinstance(key, UUID):
             return super().__getitem__(key)
 
@@ -195,7 +188,7 @@ class MemoFileIndex(Container[Union[Tuple[AstMemo, int], UUID], MemoStorage]):
 
         return storage
 
-    def __delitem__(self, key: Union[Tuple[AstMemo, int], UUID]):
+    def __delitem__(self, key: tuple[AstMemo, int] | UUID):
         if isinstance(key, UUID):
             super().__delitem__(key)
             return
@@ -204,7 +197,7 @@ class MemoFileIndex(Container[Union[Tuple[AstMemo, int], UUID], MemoStorage]):
         del self[key[0].persistent_id]
         super().__delitem__(key)
 
-    def missing(self, key: Union[Tuple[AstMemo, int], UUID]) -> MemoStorage:
+    def missing(self, key: tuple[AstMemo, int] | UUID) -> MemoStorage:
         if isinstance(key, UUID):
             return super().missing(key)
         return MemoStorage(self, key[0].persistent_id)
@@ -214,8 +207,8 @@ class MemoFileIndex(Container[Union[Tuple[AstMemo, int], UUID], MemoStorage]):
         if self.path:
             remove_path(self.path)
 
-    def garbage_collect(self, gc_cutoff: int) -> Iterator[Tuple[UUID, int]]:
-        keep_alive: Set[UUID] = set()
+    def garbage_collect(self, gc_cutoff: int) -> Iterator[tuple[UUID, int]]:
+        keep_alive: set[UUID] = set()
 
         for storage_key, storage in self.items():
             if isinstance(storage_key, UUID):
@@ -239,14 +232,14 @@ class MemoFileIndex(Container[Union[Tuple[AstMemo, int], UUID], MemoStorage]):
 
 
 class MemoRegistry(Container[str, MemoFileIndex]):
-    cache: Optional[Cache]
+    cache: Cache | None
 
     epoch_counter: ClassVar[CachePin[int]] = CachePin("epoch_counter", 0)
     gc_epoch: ClassVar[CachePin[int]] = CachePin("gc_epoch", 0)
     gc_interval: ClassVar[CachePin[int]] = CachePin("gc_interval", 50)
     gc_max_age: ClassVar[CachePin[int]] = CachePin("gc_max_age", 30)
 
-    def __init__(self, arg: Union[Context, MultiCache[Any], Optional[Cache]] = None):
+    def __init__(self, arg: Context | MultiCache[Any] | Cache | None = None):
         super().__init__()
         arg = arg.cache if isinstance(arg, Context) else arg
         self.cache = arg["memo"] if isinstance(arg, MultiCache) else arg
@@ -288,7 +281,7 @@ class MemoRegistry(Container[str, MemoFileIndex]):
     def gc_cutoff(self) -> int:
         return self.epoch_counter - self.gc_max_age
 
-    def garbage_collect(self, *keys: str) -> Iterator[Tuple[UUID, int]]:
+    def garbage_collect(self, *keys: str) -> Iterator[tuple[UUID, int]]:
         for key in keys:
             file_index = self[key]
             yield from file_index.garbage_collect(self.gc_cutoff)
@@ -301,7 +294,7 @@ class MemoRegistry(Container[str, MemoFileIndex]):
 class MemoHandler:
     mc: Mecha
     registry: MemoRegistry
-    generate: Optional[Generator] = None
+    generate: Generator | None = None
 
     def __post_init__(self):
         self.mc.serialize.extend(serialize_memo_result)
@@ -324,7 +317,7 @@ class MemoHandler:
         emit: CommandEmitter,
         invocation: MemoInvocation,
         invocation_path: str,
-        name: Optional[str] = None,
+        name: str | None = None,
     ):
         if self.generate is None or name is None:
             yield
@@ -391,5 +384,5 @@ class MemoHandler:
 
 
 @rule(AstMemoResult)
-def serialize_memo_result(node: AstMemoResult, result: List[str]):
+def serialize_memo_result(node: AstMemoResult, result: list[str]):
     result.append(node.serialized)

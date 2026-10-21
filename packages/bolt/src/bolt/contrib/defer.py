@@ -9,8 +9,9 @@ __all__ = [
 ]
 
 
+from collections.abc import Callable, Generator
 from dataclasses import dataclass
-from typing import Any, Callable, Generator, List, TypeVar
+from typing import Any, TypeVar
 
 from beet import Context
 from beet.core.utils import required_field
@@ -74,7 +75,7 @@ class DeferHandler(MutatingReducer):
         if isinstance(result, AstNode):
             result = yield result
         elif isinstance(result, AstChildren):
-            children: List[Any] = []
+            children: list[Any] = []
             for child in result:
                 deferred_child = yield child
                 children.append(deferred_child)

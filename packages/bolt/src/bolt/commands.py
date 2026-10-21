@@ -1,7 +1,7 @@
 import os
+from collections.abc import Iterable
 from pathlib import Path
 from pprint import pformat
-from typing import Iterable, Optional, Tuple
 
 import click
 
@@ -62,9 +62,9 @@ def memo(
     project: Project,
     clear: bool,
     gc: bool,
-    gc_interval: Optional[int],
-    gc_max_age: Optional[int],
-    filenames: Tuple[str, ...],
+    gc_interval: int | None,
+    gc_max_age: int | None,
+    filenames: tuple[str, ...],
 ):
     """Inspect and manage bolt memo storage."""
     memo_registry = MemoRegistry(project.cache)

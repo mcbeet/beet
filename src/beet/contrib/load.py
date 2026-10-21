@@ -9,7 +9,6 @@ __all__ = [
 
 from glob import glob
 from pathlib import Path
-from typing import List
 from zipfile import ZipFile
 
 from beet import (
@@ -64,7 +63,7 @@ def evaluate_pattern(
     cache: Cache,
     directory: Path,
     pattern: PackageablePath,
-) -> List[Path]:
+) -> list[Path]:
     if url := pattern.http_url:
         return [cache.download(url)]
     else:

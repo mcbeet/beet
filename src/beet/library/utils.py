@@ -7,9 +7,9 @@ __all__ = [
 
 
 import os
+from collections.abc import Iterator, Mapping
 from itertools import accumulate
 from pathlib import Path, PurePath, PurePosixPath
-from typing import Dict, Iterator, List, Mapping
 from zipfile import ZipFile
 
 from beet.core.file import FileOrigin
@@ -22,7 +22,7 @@ def list_files(directory: FileSystemPath) -> Iterator[Path]:
             yield Path(root, filename).relative_to(directory)
 
 
-def list_origin(origin: FileOrigin) -> List[PurePath]:
+def list_origin(origin: FileOrigin) -> list[PurePath]:
     if isinstance(origin, ZipFile):
         filenames = (
             PurePosixPath(file_info.filename)
@@ -38,13 +38,13 @@ def list_origin(origin: FileOrigin) -> List[PurePath]:
     return sorted(filenames)
 
 
-def list_origin_folders(prefix: str, origin: FileOrigin) -> Dict[str, List[PurePath]]:
+def list_origin_folders(prefix: str, origin: FileOrigin) -> dict[str, list[PurePath]]:
     preparts = tuple(filter(None, prefix.split("/")))
 
-    folders: Dict[str, List[PurePath]] = {}
+    folders: dict[str, list[PurePath]] = {}
 
     current_name = ""
-    current_folder: List[PurePath] = []
+    current_folder: list[PurePath] = []
 
     for filename in list_origin(origin):
         parts = preparts + filename.parts
@@ -63,7 +63,7 @@ def list_origin_folders(prefix: str, origin: FileOrigin) -> Dict[str, List[PureP
     return folders
 
 
-def modified_suffixes(path: PurePath) -> List[str]:
+def modified_suffixes(path: PurePath) -> list[str]:
     """
     Equivalent to path.suffixes but support file with empty name
     """
@@ -76,8 +76,8 @@ def modified_suffixes(path: PurePath) -> List[str]:
     return path.suffixes
 
 
-def list_extensions(path: PurePath) -> List[str]:
-    extensions: List[str] = list(
+def list_extensions(path: PurePath) -> list[str]:
+    extensions: list[str] = list(
         accumulate(reversed(modified_suffixes(path)), lambda a, b: b + a)
     )
     extensions.reverse()

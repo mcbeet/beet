@@ -15,7 +15,6 @@ import logging
 from csv import Dialect, DictReader, Sniffer
 from glob import glob
 from pathlib import Path
-from typing import Dict, Optional, Type, Union
 
 from beet import (
     Context,
@@ -27,7 +26,7 @@ from beet import (
 )
 from beet.core.utils import FileSystemPath, log_time, resolve_within
 
-DialectLike = Union[str, Dialect, Type[Dialect]]
+type DialectLike = str | Dialect | type[Dialect]
 
 
 logger = logging.getLogger(__name__)
@@ -35,7 +34,7 @@ logger = logging.getLogger(__name__)
 
 class BabelboxOptions(PluginOptions):
     load: ListOption[PackageablePath] = ListOption()
-    dialect: Optional[str] = None
+    dialect: str | None = None
     namespace: str = "minecraft"
     filename_prefix: bool = False
     unicode_escape: bool = False
@@ -65,10 +64,10 @@ def babelbox(ctx: Context, opts: BabelboxOptions):
 
 def load_languages(
     path: FileSystemPath,
-    dialect: Optional[DialectLike] = None,
+    dialect: DialectLike | None = None,
     prefix: str = "",
     unicode_escape: bool = False,
-) -> Dict[str, Language]:
+) -> dict[str, Language]:
     """Return a dictionary mapping each column to a language file."""
     with open(path, encoding="utf-8", newline="") as csv_file:
         if not dialect:

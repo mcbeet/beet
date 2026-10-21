@@ -72,20 +72,14 @@ __all__ = [
 ]
 
 
+import builtins
+from collections.abc import Iterator, Sequence
 from contextlib import nullcontext
 from dataclasses import dataclass, field
 from functools import partial
 from typing import (
     Any,
-    Dict,
-    Iterator,
-    List,
     Literal,
-    Optional,
-    Sequence,
-    Tuple,
-    Type,
-    Union,
     overload,
 )
 from uuid import UUID
@@ -198,7 +192,7 @@ JSON_STRING_PATTERN: str = r'"(?:\\.|[^\\\n])*?"'
 NBT_QUOTED_STRING_PATTERN: str = r'"(?:\\.|[^\\\n])*?"' "|" r"'(?:\\.|[^\\\n])*?'"
 
 
-def get_default_parsers() -> Dict[str, Parser]:
+def get_default_parsers() -> dict[str, Parser]:
     """Return the default parsers."""
     json_parser = JsonParser()
     json_parser.object_entry_parser = delegate("json_object_entry")
@@ -604,7 +598,7 @@ def get_default_parsers() -> Dict[str, Parser]:
     }
 
 
-def get_parsers(version: VersionNumber = LATEST_MINECRAFT_VERSION) -> Dict[str, Parser]:
+def get_parsers(version: VersionNumber = LATEST_MINECRAFT_VERSION) -> dict[str, Parser]:
     """Return parsers for a specific version."""
     version = split_version(version)
 
@@ -631,12 +625,12 @@ def get_stream_spec(stream: TokenStream) -> CommandSpec:
     return stream.data["spec"]
 
 
-def get_stream_scope(stream: TokenStream) -> Tuple[str, ...]:
+def get_stream_scope(stream: TokenStream) -> tuple[str, ...]:
     """Return the current scope associated with the token stream."""
     return stream.data.get("scope", ())
 
 
-def get_stream_properties(stream: TokenStream) -> Dict[str, Any]:
+def get_stream_properties(stream: TokenStream) -> dict[str, Any]:
     """Return the current command node properties associated with the token stream."""
     return stream.data.get("properties", {})
 
@@ -669,7 +663,7 @@ def delegate(parser: str) -> Parser: ...
 def delegate(parser: str, stream: TokenStream) -> Any: ...
 
 
-def delegate(parser: str, stream: Optional[TokenStream] = None) -> Any:
+def delegate(parser: str, stream: TokenStream | None = None) -> Any:
     """Delegate parsing to a registered subparser."""
     if stream is None:
         return partial(delegate, parser)
@@ -712,7 +706,7 @@ def parse_root(stream: TokenStream) -> AstRoot:
         node = AstRoot(commands=AstChildren[AstCommand]())
         return set_location(node, SourceLocation(0, 1, 1))
 
-    commands: List[AstCommand] = []
+    commands: list[AstCommand] = []
 
     with stream.ignore("comment"):
         for _ in stream.peek_until():
@@ -734,7 +728,7 @@ def parse_command(stream: TokenStream) -> AstCommand:
 
     tree = spec.tree.get(scope)
 
-    arguments: List[AstNode] = []
+    arguments: list[AstNode] = []
     reached_terminal = False
 
     location = None
@@ -759,7 +753,7 @@ def parse_command(stream: TokenStream) -> AstCommand:
                 commit()
 
         if commit.rollback:
-            choices: List[Tuple[str, CommandTree]] = list((tree.children or {}).items())
+            choices: list[tuple[str, CommandTree]] = list((tree.children or {}).items())
             choices.sort(key=lambda p: p[1].type != "argument")
 
             if tree.executable:
@@ -982,7 +976,7 @@ class RestrictCoordinateConstraint:
     """Constraint that disallows certain types of coordinates."""
 
     parser: Parser
-    disallow: List[Literal["absolute", "relative", "local"]]
+    disallow: list[Literal["absolute", "relative", "local"]]
 
     def __call__(self, stream: TokenStream) -> Any:
         if isinstance(node := self.parser(stream), AstCoordinate):
@@ -1066,7 +1060,7 @@ class TypeConstraint:
     """Constraint that only allows specific instances."""
 
     parser: Parser
-    type: Union[Type[Any], Tuple[Type[Any], ...]]
+    type: type[Any] | tuple[type[Any], ...]
     message: str
 
     def __call__(self, stream: TokenStream) -> Any:
@@ -1126,7 +1120,7 @@ class JsonParser:
             )
 
             if curly:
-                entries: List[AstJsonObjectEntry] = []
+                entries: list[AstJsonObjectEntry] = []
 
                 for _ in stream.peek_until(("curly", "}")):
                     entries.append(self.object_entry_parser(stream))
@@ -1139,7 +1133,7 @@ class JsonParser:
                 return set_location(node, curly, stream.current)
 
             elif bracket:
-                elements: List[AstJson] = []
+                elements: list[AstJson] = []
 
                 for _ in stream.peek_until(("bracket", "]")):
                     elements.append(self.array_element_parser(stream))
@@ -1184,7 +1178,7 @@ class JsonObjectParser(TypeConstraint):
     """Parser for json objects."""
 
     parser: Parser = field(default_factory=JsonParser)
-    type: Union[Type[Any], Tuple[Type[Any], ...]] = AstJsonObject
+    type: builtins.type[Any] | tuple[builtins.type[Any], ...] = AstJsonObject
     message: str = "Expected json object."
 
 
@@ -1205,7 +1199,7 @@ class NbtParser:
     list_or_array_element_parser: Parser = field(init=False)
     recursive_parser: Parser = field(init=False)
 
-    number_suffixes: Dict[str, Type[Any]] = field(
+    number_suffixes: dict[str, type[Any]] = field(
         default_factory=lambda: {
             "b": Byte,
             "s": Short,
@@ -1215,7 +1209,7 @@ class NbtParser:
         }
     )
 
-    literal_aliases: Dict[str, AstNbtValue] = field(
+    literal_aliases: dict[str, AstNbtValue] = field(
         default_factory=lambda: {
             "true": AstNbtBool(value=Byte(1)),
             "false": AstNbtBool(value=Byte(0)),
@@ -1250,7 +1244,7 @@ class NbtParser:
             )
 
             if curly:
-                entries: List[AstNbtCompoundEntry] = []
+                entries: list[AstNbtCompoundEntry] = []
 
                 for _ in stream.peek_until(("curly", "}")):
                     entries.append(self.compound_entry_parser(stream))
@@ -1263,7 +1257,7 @@ class NbtParser:
                 return set_location(node, curly, stream.current)
 
             elif bracket or array:
-                elements: List[AstNbt] = []
+                elements: list[AstNbt] = []
 
                 for _ in stream.peek_until(("bracket", "]")):
                     elements.append(self.list_or_array_element_parser(stream))
@@ -1346,7 +1340,7 @@ class NbtCompoundParser(TypeConstraint):
     """Parser for nbt compounds."""
 
     parser: Parser = field(default_factory=NbtParser)
-    type: Union[Type[Any], Tuple[Type[Any], ...]] = AstNbtCompound
+    type: builtins.type[Any] | tuple[builtins.type[Any], ...] = AstNbtCompound
     message: str = "Expected nbt compound."
 
 
@@ -1355,7 +1349,7 @@ class NbtListParser(TypeConstraint):
     """Parser for nbt list."""
 
     parser: Parser = field(default_factory=NbtParser)
-    type: Union[Type[Any], Tuple[Type[Any], ...]] = AstNbtList
+    type: builtins.type[Any] | tuple[builtins.type[Any], ...] = AstNbtList
     message: str = "Expected nbt list."
 
 
@@ -1493,7 +1487,7 @@ class BracketedListParser:
     element_parser: Parser
 
     def __call__(self, stream: TokenStream) -> AstChildren[AstNode]:
-        elements: List[AstNode] = []
+        elements: list[AstNode] = []
 
         with stream.syntax(
             bracket=r"\[|\]",
@@ -1515,7 +1509,7 @@ class BracketedListParser:
 class KeyValuePairParser:
     """Parser for bracketed key-value pairs."""
 
-    node_type: Type[AstNode]
+    node_type: type[AstNode]
     key_parser: Parser
     value_parser: Parser
 
@@ -1533,7 +1527,7 @@ class KeyValuePairParser:
 class ItemParser:
     """Parser for minecraft items."""
 
-    node_type: Type[Any]
+    node_type: type[Any]
     identifier_parser: Parser
     arguments_parser: Parser
     data_tags_parser: Parser
@@ -1580,8 +1574,8 @@ class ItemPredicateAlternativesParser:
     value_parser: Parser
 
     def __call__(self, stream: TokenStream) -> AstItemPredicateAlternatives:
-        alternatives: List[
-            Union[AstItemPredicateTestComponent, AstItemPredicateTestPredicate]
+        alternatives: list[
+            AstItemPredicateTestComponent | AstItemPredicateTestPredicate
         ] = []
 
         with stream.syntax(
@@ -1638,7 +1632,7 @@ class NoDataTagsConstraint:
 class BasicLiteralParser:
     """Parser for simple literal values."""
 
-    type: Type[AstLiteral]
+    type: type[AstLiteral]
 
     def __call__(self, stream: TokenStream) -> Any:
         if not self.type.parser:
@@ -1726,7 +1720,7 @@ class SelectorParser:
             location = token.location
             end_location = token.end_location
 
-            arguments: List[AstSelectorArgument] = []
+            arguments: list[AstSelectorArgument] = []
 
             if token.value.endswith("["):
                 for _ in stream.peek_until(("bracket", "]")):
@@ -1786,7 +1780,7 @@ class SelectorArgumentInvertConstraint:
     """Constraint that only allows inverting a specific set of arguments."""
 
     parser: Parser
-    allow_invert: List[str]
+    allow_invert: list[str]
 
     def __call__(self, stream: TokenStream) -> Any:
         if isinstance(node := self.parser(stream), AstSelectorArgument):
@@ -1801,7 +1795,7 @@ class SelectorArgumentNoValueConstraint:
     """Constraint that only allows a specific set of arguments to have no associated value."""
 
     parser: Parser
-    allow_no_value: List[str]
+    allow_no_value: list[str]
 
     def __call__(self, stream: TokenStream) -> Any:
         if isinstance(node := self.parser(stream), AstSelectorArgument):
@@ -1821,7 +1815,7 @@ def parse_selector_scores(stream: TokenStream) -> AstSelectorScores:
     ):
         curly = stream.expect(("curly", "{"))
 
-        scores: List[AstSelectorScoreMatch] = []
+        scores: list[AstSelectorScoreMatch] = []
 
         for _ in stream.peek_until(("curly", "}")):
             key_node = delegate("objective", stream)
@@ -1845,14 +1839,14 @@ def parse_selector_advancements(stream: TokenStream) -> AstSelectorAdvancements:
     with stream.syntax(curly=r"\{|\}", equal=r"=", comma=r","):
         curly = stream.expect(("curly", "{"))
 
-        advancements: List[AstSelectorAdvancementMatch] = []
+        advancements: list[AstSelectorAdvancementMatch] = []
 
         for _ in stream.peek_until(("curly", "}")):
             key_node = delegate("resource_location", stream)
             stream.expect("equal")
 
             if stream.get("curly"):
-                predicates: List[AstSelectorAdvancementPredicateMatch] = []
+                predicates: list[AstSelectorAdvancementPredicateMatch] = []
 
                 for _ in stream.peek_until(("curly", "}")):
                     pkey = delegate("advancement_predicate", stream)
@@ -2022,7 +2016,7 @@ def parse_message(stream: TokenStream) -> AstMessage:
             text=r"[^\n@]+",
         ),
     ):
-        fragments: List[Any] = []
+        fragments: list[Any] = []
 
         while True:
             selector, text = stream.expect("selector", "text")
@@ -2073,7 +2067,7 @@ class NbtPathParser:
     )
 
     def __call__(self, stream: TokenStream) -> AstNbtPath:
-        components: List[Any] = []
+        components: list[Any] = []
 
         with stream.syntax(
             dot=r"\.",
@@ -2163,7 +2157,7 @@ def parse_macro_line(stream: TokenStream) -> AstMacroLine:
         token = stream.expect("macro_line")
 
     has_variable = False
-    arguments: List[AstNode] = []
+    arguments: list[AstNode] = []
 
     with (
         stream.intercept("newline", "whitespace"),
@@ -2191,8 +2185,8 @@ def parse_macro_line(stream: TokenStream) -> AstMacroLine:
 class AggregateParser:
     """Parser that creates a node by parsing the given fields one after the other."""
 
-    type: Type[AstNode]
-    fields: Dict[str, Parser]
+    type: type[AstNode]
+    fields: dict[str, Parser]
 
     def __call__(self, stream: TokenStream) -> Any:
         values = [(name, parser(stream)) for name, parser in self.fields.items()]

@@ -1,5 +1,6 @@
+from collections.abc import Iterable
 from dataclasses import dataclass
-from typing import Any, ClassVar, Iterable, List, Optional, Tuple, Union
+from typing import Any, ClassVar
 
 from beet import (
     Context,
@@ -26,9 +27,9 @@ def define_custom_resources(ctx: Context):
 
 
 def provide_compilation_units(
-    pack: Union[ResourcePack, DataPack],
-    match: Optional[List[str]] = None,
-) -> Iterable[Tuple[TextFileBase[Any], CompilationUnit]]:
+    pack: ResourcePack | DataPack,
+    match: list[str] | None = None,
+) -> Iterable[tuple[TextFileBase[Any], CompilationUnit]]:
     for resource_location in pack[Overgen].match(*match or ["*"]):
         file_instance = pack[Overgen][resource_location]
 

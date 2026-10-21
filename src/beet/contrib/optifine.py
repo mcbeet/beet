@@ -10,7 +10,7 @@ __all__ = [
 ]
 
 
-from typing import ClassVar, Union
+from typing import ClassVar
 
 from beet import Context, JsonFile, NamespaceFileScope, PngFile, ResourcePack, TextFile
 
@@ -19,7 +19,7 @@ def beet_default(ctx: Context):
     ctx.require(optifine)
 
 
-def optifine(pack: Union[Context, ResourcePack]):
+def optifine(pack: Context | ResourcePack):
     """Enable optifine resources."""
     if isinstance(pack, Context):
         pack = pack.assets

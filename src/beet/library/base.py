@@ -31,40 +31,34 @@ __all__ = [
 
 import shutil
 from collections import defaultdict
+from collections.abc import (
+    Callable,
+    Iterable,
+    Iterator,
+    Mapping,
+    MutableMapping,
+    Sequence,
+)
 from contextlib import nullcontext
 from copy import deepcopy
 from dataclasses import dataclass, field
 from functools import partial
 from itertools import count
 from pathlib import Path, PurePath, PurePosixPath
+from types import get_original_bases
 from typing import (
     Any,
-    Callable,
     ClassVar,
-    DefaultDict,
-    Dict,
     Generic,
-    Iterable,
-    Iterator,
-    List,
     Literal,
-    Mapping,
-    MutableMapping,
-    Optional,
     Protocol,
-    Sequence,
-    Set,
-    Tuple,
-    Type,
+    Self,
     TypeVar,
-    Union,
     get_args,
     get_origin,
     overload,
 )
 from zipfile import ZIP_BZIP2, ZIP_DEFLATED, ZIP_LZMA, ZIP_STORED, ZipFile
-
-from typing_extensions import Self
 
 from beet.core.container import (
     Container,
@@ -98,17 +92,17 @@ NamespaceFileType = TypeVar("NamespaceFileType", bound="NamespaceFile")
 PackType = TypeVar("PackType", bound="Pack[Any]")
 MergeableType = TypeVar("MergeableType", bound=SupportsMerge)
 
-PackFile = File[Any, Any]
+type PackFile = File[Any, Any]
 
 
-PACK_COMPRESSION: Dict[str, int] = {
+PACK_COMPRESSION: dict[str, int] = {
     "none": ZIP_STORED,
     "deflate": ZIP_DEFLATED,
     "bzip2": ZIP_BZIP2,
     "lzma": ZIP_LZMA,
 }
 
-NamespaceFileScope = Union[Tuple[str, ...], Mapping[int, Tuple[str, ...]]]
+type NamespaceFileScope = tuple[str, ...] | Mapping[int, tuple[str, ...]]
 
 
 class NamespaceFile(Protocol):
@@ -121,13 +115,13 @@ class NamespaceFile(Protocol):
 
     def __init__(
         self,
-        _content: Optional[Any] = None,
+        _content: Any | None = None,
         /,
         *,
-        source_path: Optional[FileSystemPath] = None,
-        source_start: Optional[int] = None,
-        source_stop: Optional[int] = None,
-        on_bind: Optional[Callable[[Any, Any, str], Any]] = None,
+        source_path: FileSystemPath | None = None,
+        source_start: int | None = None,
+        source_stop: int | None = None,
+        on_bind: Callable[[Any, Any, str], Any] | None = None,
         original: Any = None,
     ) -> None: ...
 
@@ -143,25 +137,25 @@ class NamespaceFile(Protocol):
 
     def ensure_serialized(
         self,
-        serializer: Optional[Callable[[Any], Any]] = None,
+        serializer: Callable[[Any], Any] | None = None,
     ) -> Any: ...
 
     def ensure_deserialized(
         self,
-        deserializer: Optional[Callable[[Any], Any]] = None,
+        deserializer: Callable[[Any], Any] | None = None,
     ) -> Any: ...
 
     @classmethod
     def default(cls) -> Any: ...
 
-    def copy(self: T) -> T: ...
+    def copy(self) -> Self: ...
 
     @classmethod
-    def load(cls: Type[T], origin: FileOrigin, path: FileSystemPath) -> T: ...
+    def load(cls, origin: FileOrigin, path: FileSystemPath) -> Self: ...
 
     def dump(self, origin: FileOrigin, path: FileSystemPath): ...
 
-    def convert(self, file_type: Type[PackFileType]) -> PackFileType: ...
+    def convert(self, file_type: type[PackFileType]) -> PackFileType: ...
 
 
 class MergeCallback(Protocol):
@@ -176,13 +170,13 @@ class MergeCallback(Protocol):
 class MergePolicy:
     """Class holding lists of rules for merging files."""
 
-    extra: Dict[str, List[MergeCallback]] = field(default_factory=dict)
-    namespace: Dict[Type[NamespaceFile], List[MergeCallback]] = field(
+    extra: dict[str, list[MergeCallback]] = field(default_factory=dict)
+    namespace: dict[type[NamespaceFile], list[MergeCallback]] = field(
         default_factory=dict
     )
-    namespace_extra: Dict[str, List[MergeCallback]] = field(default_factory=dict)
+    namespace_extra: dict[str, list[MergeCallback]] = field(default_factory=dict)
 
-    def extend(self, other: "MergePolicy"):
+    def extend(self, other: MergePolicy):
         for rules, other_rules in [
             (self.extra, other.extra),
             (self.namespace, other.namespace),
@@ -195,7 +189,7 @@ class MergePolicy:
         """Add rule for merging extra files."""
         self.extra.setdefault(filename, []).append(rule)
 
-    def extend_namespace(self, file_type: Type[NamespaceFile], rule: MergeCallback):
+    def extend_namespace(self, file_type: type[NamespaceFile], rule: MergeCallback):
         """Add rule for merging namespace files."""
         self.namespace.setdefault(file_type, []).append(rule)
 
@@ -208,7 +202,7 @@ class MergePolicy:
         pack: Any,
         current: MutableMapping[Any, SupportsMerge],
         other: Mapping[Any, SupportsMerge],
-        map_rules: Callable[[str], Tuple[str, List[MergeCallback]]],
+        map_rules: Callable[[str], tuple[str, list[MergeCallback]]],
     ) -> bool:
         """Merge values according to the given rules."""
         for key, value in other.items():
@@ -252,7 +246,7 @@ class ExtraPin(Pin[str, PinType]):
 class NamespaceExtraContainer(ExtraContainer, Generic[NamespaceType]):
     """Namespace extra container."""
 
-    namespace: Optional[NamespaceType] = None
+    namespace: NamespaceType | None = None
 
     def process(self, key: str, value: PackFile) -> PackFile:
         if (
@@ -297,7 +291,7 @@ class NamespaceExtraContainer(ExtraContainer, Generic[NamespaceType]):
 class PackExtraContainer(ExtraContainer, Generic[PackType]):
     """Pack extra container."""
 
-    pack: Optional[PackType] = None
+    pack: PackType | None = None
 
     def process(self, key: str, value: PackFile) -> PackFile:
         if self.pack is not None:
@@ -329,7 +323,10 @@ class PackExtraContainer(ExtraContainer, Generic[PackType]):
             )
         return super().merge(other)
 
-    def __eq__(self, other: Any) -> bool:
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, Mapping):
+            return False
+
         left, right = dict(self), dict(other)
 
         left_mcmeta = left.pop("pack.mcmeta", None)
@@ -350,8 +347,8 @@ class PackExtraContainer(ExtraContainer, Generic[PackType]):
 class NamespaceContainer(MatchMixin, MergeMixin, Container[str, NamespaceFileType]):
     """Container that stores one type of files in a namespace."""
 
-    namespace: Optional["Namespace"] = None
-    file_type: Optional[Type[NamespaceFileType]] = None
+    namespace: Namespace | None = None
+    file_type: type[NamespaceFileType] | None = None
 
     def process(self, key: str, value: NamespaceFileType) -> NamespaceFileType:
         if (
@@ -362,7 +359,7 @@ class NamespaceContainer(MatchMixin, MergeMixin, Container[str, NamespaceFileTyp
             value.bind(self.namespace.pack, f"{self.namespace.name}:{key}")
         return value
 
-    def bind(self, namespace: "Namespace", file_type: Type[NamespaceFileType]):
+    def bind(self, namespace: Namespace, file_type: type[NamespaceFileType]):
         """Handle insertion."""
         self.namespace = namespace
         self.file_type = file_type
@@ -376,7 +373,7 @@ class NamespaceContainer(MatchMixin, MergeMixin, Container[str, NamespaceFileTyp
     def setdefault(
         self,
         key: str,
-        default: Optional[NamespaceFileType] = None,
+        default: NamespaceFileType | None = None,
     ) -> NamespaceFileType:
         if value := self.get(key):
             return value
@@ -412,10 +409,10 @@ class NamespaceContainer(MatchMixin, MergeMixin, Container[str, NamespaceFileTyp
             )
         return super().merge(other)
 
-    def generate_tree(self, path: str = "") -> Dict[Any, Any]:
+    def generate_tree(self, path: str = "") -> dict[Any, Any]:
         """Generate a hierarchy of nested dictionaries representing the files and folders."""
         prefix = path.split("/") if path else []
-        tree: Dict[Any, Any] = {}
+        tree: dict[Any, Any] = {}
 
         for filename, file_instance in self.items():
             parts = filename.split("/")
@@ -432,23 +429,23 @@ class NamespaceContainer(MatchMixin, MergeMixin, Container[str, NamespaceFileTyp
         return tree
 
 
-class NamespacePin(Pin[Type[NamespaceFileType], NamespaceContainer[NamespaceFileType]]):
+class NamespacePin(Pin[type[NamespaceFileType], NamespaceContainer[NamespaceFileType]]):
     """Descriptor for accessing namespace containers by attribute lookup."""
 
 
 class Namespace(
     MergeMixin,
-    Container[Type[NamespaceFile], NamespaceContainer[NamespaceFile]],
+    Container[type[NamespaceFile], NamespaceContainer[NamespaceFile]],
 ):
     """Class representing a namespace."""
 
-    pack: Optional["Pack[Namespace]"] = None
-    name: Optional[str] = None
-    extra: NamespaceExtraContainer["Namespace"]
+    pack: Pack[Namespace] | None = None
+    name: str | None = None
+    extra: NamespaceExtraContainer[Namespace]
 
     directory: ClassVar[str]
-    field_map: ClassVar[Mapping[Type[NamespaceFile], str]]
-    scope_map: ClassVar[Mapping[Tuple[Tuple[str, ...], str], Type[NamespaceFile]]]
+    field_map: ClassVar[Mapping[type[NamespaceFile], str]]
+    scope_map: ClassVar[Mapping[tuple[tuple[str, ...], str], type[NamespaceFile]]]
 
     def __init_subclass__(cls):
         pins = NamespacePin[NamespaceFile].collect_from(cls)
@@ -465,13 +462,13 @@ class Namespace(
 
     def process(
         self,
-        key: Type[NamespaceFile],
+        key: type[NamespaceFile],
         value: NamespaceContainer[NamespaceFile],
     ) -> NamespaceContainer[NamespaceFile]:
         value.bind(self, key)
         return value
 
-    def bind(self, pack: "Pack[Namespace]", name: str):
+    def bind(self, pack: Pack[Namespace], name: str):
         """Handle insertion."""
         self.pack = pack
         self.name = name
@@ -484,7 +481,7 @@ class Namespace(
     @overload
     def __setitem__(
         self,
-        key: Type[NamespaceFile],
+        key: type[NamespaceFile],
         value: NamespaceContainer[NamespaceFile],
     ) -> None: ...
 
@@ -497,13 +494,17 @@ class Namespace(
         else:
             self[type(value)][key] = value
 
-    def __eq__(self, other: Any) -> bool:
+    def __eq__(self, other: object) -> bool:
         if self is other:
             return True
-        if type(self) is type(other) and not self.extra == other.extra:
+        if (
+            isinstance(other, Namespace)
+            and type(self) is type(other)
+            and not self.extra == other.extra
+        ):
             return False
         if isinstance(other, Mapping):
-            rhs: Mapping[Type[NamespaceFile], NamespaceContainer[NamespaceFile]] = other  # pyright: ignore[reportAssignmentType]
+            rhs: Mapping[type[NamespaceFile], NamespaceContainer[NamespaceFile]] = other  # pyright: ignore[reportAssignmentType]
             return all(
                 self[key] == rhs.get(key, {}) for key in self.keys() | rhs.keys()
             )
@@ -512,7 +513,7 @@ class Namespace(
     def __bool__(self) -> bool:
         return any(self.values()) or bool(self.extra)
 
-    def missing(self, key: Type[NamespaceFile]) -> NamespaceContainer[NamespaceFile]:
+    def missing(self, key: type[NamespaceFile]) -> NamespaceContainer[NamespaceFile]:
         return NamespaceContainer()
 
     def merge(
@@ -535,7 +536,7 @@ class Namespace(
         super().clear()
 
     @property
-    def content(self) -> Iterator[Tuple[str, NamespaceFile]]:
+    def content(self) -> Iterator[tuple[str, NamespaceFile]]:
         """Iterator that yields all the files stored in the namespace."""
         for container in self.values():
             yield from container.items()
@@ -545,22 +546,22 @@ class Namespace(
         self,
         namespace: str,
         *extensions: str,
-    ) -> Iterator[Tuple[str, PackFile]]: ...
+    ) -> Iterator[tuple[str, PackFile]]: ...
 
     @overload
     def list_files(
         self,
         namespace: str,
         *extensions: str,
-        extend: Type[T],
-    ) -> Iterator[Tuple[str, T]]: ...
+        extend: type[T],
+    ) -> Iterator[tuple[str, T]]: ...
 
     def list_files(
         self,
         namespace: str,
         *extensions: str,
-        extend: Optional[Any] = None,
-    ) -> Iterator[Tuple[str, Any]]:
+        extend: Any | None = None,
+    ) -> Iterator[tuple[str, Any]]:
         """List and filter all the files in the namespace."""
         if extend and (origin := get_origin(extend)):
             extend = origin
@@ -592,7 +593,7 @@ class Namespace(
                 yield f"{overlay}{prefix}/{name}{content_type.extension}", item
 
     @classmethod
-    def get_extra_info(cls) -> Dict[str, Type[PackFile]]:
+    def get_extra_info(cls) -> dict[str, type[PackFile]]:
         return {}
 
     @classmethod
@@ -600,11 +601,11 @@ class Namespace(
         cls,
         prefix: str,
         origin: FileOrigin,
-        filenames: List[PurePath],
-        overlay_name: Optional[str] = None,
-        extend_namespace: Iterable[Type[NamespaceFile]] = (),
-        extend_namespace_extra: Optional[Mapping[str, Optional[Type[PackFile]]]] = None,
-    ) -> Iterator[Tuple[str, "Namespace"]]:
+        filenames: list[PurePath],
+        overlay_name: str | None = None,
+        extend_namespace: Iterable[type[NamespaceFile]] = (),
+        extend_namespace_extra: Mapping[str, type[PackFile] | None] | None = None,
+    ) -> Iterator[tuple[str, Namespace]]:
         """Load namespaces by walking through a zipfile or directory."""
         preparts = tuple(filter(None, prefix.split("/")))
         if preparts and preparts[0] != (
@@ -654,7 +655,7 @@ class Namespace(
                 namespace.extra[path] = file_type.load(origin, filename)
                 continue
 
-            file_dir: List[str] = []
+            file_dir: list[str] = []
 
             while True:
                 path = tuple(scope)
@@ -690,11 +691,11 @@ class Namespace(
 class NamespaceProxy(
     MatchMixin,
     MergeMixin,
-    ContainerProxy[Type[NamespaceFileType], str, NamespaceFileType],
+    ContainerProxy[type[NamespaceFileType], str, NamespaceFileType],
 ):
     """Aggregated view that exposes a certain type of files over all namespaces."""
 
-    def split_key(self, key: str) -> Tuple[str, str]:
+    def split_key(self, key: str) -> tuple[str, str]:
         namespace, _, file_path = key.partition(":")
         return namespace, file_path
 
@@ -704,7 +705,7 @@ class NamespaceProxy(
     def setdefault(
         self,
         key: str,
-        default: Optional[NamespaceFileType] = None,
+        default: NamespaceFileType | None = None,
     ) -> NamespaceFileType:
         key1, key2 = self.split_key(key)
         return self.proxy[key1][self.proxy_key].setdefault(key2, default)  # pyright: ignore[reportArgumentType]
@@ -722,19 +723,19 @@ class NamespaceProxy(
             )
         return super().merge(other)
 
-    def walk(self) -> Iterator[Tuple[str, Set[str], Dict[str, NamespaceFileType]]]:
+    def walk(self) -> Iterator[tuple[str, set[str], dict[str, NamespaceFileType]]]:
         """Walk over the file hierarchy."""
         for prefix, namespace in self.proxy.items():
             separator = ":"
-            roots: List[Tuple[str, Dict[Any, Any]]] = [
+            roots: list[tuple[str, dict[Any, Any]]] = [
                 (prefix, namespace[self.proxy_key].generate_tree())  # pyright: ignore[reportAttributeAccessIssue]
             ]
 
             while roots:
                 prefix, root = roots.pop()
 
-                dirs: Set[str] = set()
-                files: Dict[str, NamespaceFileType] = {}
+                dirs: set[str] = set()
+                files: dict[str, NamespaceFileType] = {}
 
                 for key, value in root.items():
                     if not isinstance(key, str):
@@ -756,10 +757,10 @@ class NamespaceProxy(
 class NamespaceProxyDescriptor(Generic[NamespaceFileType]):
     """Descriptor that dynamically instantiates a namespace proxy."""
 
-    proxy_key: Type[NamespaceFileType]
+    proxy_key: type[NamespaceFileType]
 
     def __get__(
-        self, obj: Any, objtype: Optional[Type[Any]] = None
+        self, obj: Any, objtype: type[Any] | None = None
     ) -> NamespaceProxy[NamespaceFileType]:
         return NamespaceProxy[NamespaceFileType](obj, self.proxy_key)
 
@@ -767,7 +768,7 @@ class NamespaceProxyDescriptor(Generic[NamespaceFileType]):
 class Mcmeta(JsonFile):
     """Class representing a pack.mcmeta file."""
 
-    def merge(self, other: "Mcmeta") -> bool:  # pyright: ignore[reportIncompatibleMethodOverride]
+    def merge(self, other: Mcmeta) -> bool:  # pyright: ignore[reportIncompatibleMethodOverride]
         for key, value in other.data.items():
             if key == "filter":
                 block = self.data.setdefault("filter", {}).setdefault("block", [])
@@ -806,23 +807,23 @@ class Mcmeta(JsonFile):
 class McmetaPin(Pin[str, PinType]):
     """Descriptor that makes it possible to bind pack.mcmeta information to attribute lookup."""
 
-    def forward(self, obj: "Pack[Namespace]") -> JsonDict:
+    def forward(self, obj: Pack[Namespace]) -> JsonDict:
         return obj.mcmeta.data
 
 
 class PackPin(McmetaPin[PinType]):
     """Descriptor that makes pack metadata accessible through attribute lookup."""
 
-    def forward(self, obj: "Pack[Namespace]") -> JsonDict:
+    def forward(self, obj: Pack[Namespace]) -> JsonDict:
         return super().forward(obj).setdefault("pack", {})
 
 
 class OverlayContainer(MatchMixin, MergeMixin, Container[str, PackType]):
     """Container that stores overlays."""
 
-    pack: Optional[PackType] = None
+    pack: PackType | None = None
 
-    __currently_merging: Optional[Any] = Any
+    __currently_merging: Any | None = Any
 
     def process(self, key: str, value: PackType) -> PackType:
         supported_formats = value.supported_formats
@@ -891,11 +892,11 @@ class OverlayContainer(MatchMixin, MergeMixin, Container[str, PackType]):
     def setdefault(
         self,
         key: str,
-        default: Optional[PackType] = None,
+        default: PackType | None = None,
         *,
-        supported_formats: Optional[SupportedFormats] = None,
-        min_format: Optional[FormatSpecifier] = None,
-        max_format: Optional[FormatSpecifier] = None,
+        supported_formats: SupportedFormats | None = None,
+        min_format: FormatSpecifier | None = None,
+        max_format: FormatSpecifier | None = None,
     ) -> PackType:
         value = self._wrapped.get(key)
         if value is not None:
@@ -923,7 +924,7 @@ class OverlayContainer(MatchMixin, MergeMixin, Container[str, PackType]):
         finally:
             self.__currently_merging = previous_other
 
-    def __eq__(self, other: Any) -> bool:
+    def __eq__(self, other: object) -> bool:
         if self is other:
             return True
         if isinstance(other, Mapping):
@@ -957,7 +958,7 @@ class UnveilMapping(Mapping[str, FileSystemPath]):
         self.files = files
         self.prefix = prefix
 
-    def with_prefix(self, prefix: str) -> "UnveilMapping":
+    def with_prefix(self, prefix: str) -> UnveilMapping:
         return self.__class__(self.files, prefix)
 
     def __getitem__(self, key: str) -> FileSystemPath:
@@ -978,7 +979,7 @@ class UnveilMapping(Mapping[str, FileSystemPath]):
     def __len__(self) -> int:
         return len(self.files)
 
-    def __eq__(self, other: Any) -> bool:
+    def __eq__(self, other: object) -> bool:
         return self is other
 
     def __hash__(self) -> int:
@@ -1001,71 +1002,72 @@ class PackOverwrite(Exception):
         self.path = path
 
     def __str__(self) -> str:
-        return f'Couldn\'t overwrite "{str(self.path)}".'
+        return f'Couldn\'t overwrite "{self.path!s}".'
 
 
 class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
     """Class representing a pack."""
 
-    name: Optional[str]
-    path: Optional[Path]
+    name: str | None
+    path: Path | None
     zipped: bool
-    compression: Optional[Literal["none", "deflate", "bzip2", "lzma"]]
-    compression_level: Optional[int]
+    compression: Literal["none", "deflate", "bzip2", "lzma"] | None
+    compression_level: int | None
 
-    extra: PackExtraContainer["Pack[NamespaceType]"]
+    extra: PackExtraContainer[Pack[NamespaceType]]
     mcmeta: ExtraPin[Mcmeta] = ExtraPin("pack.mcmeta", default_factory=lambda: Mcmeta())
-    icon: ExtraPin[Optional[PngFile]] = ExtraPin("pack.png", default=None)
+    icon: ExtraPin[PngFile | None] = ExtraPin("pack.png", default=None)
 
     description: PackPin[TextComponent] = PackPin("description", default="")
-    pack_format: PackPin[Optional[int]] = PackPin(
+    pack_format: PackPin[int | None] = PackPin(
         "pack_format", default=None, delete_default=True
     )
     filter: McmetaPin[JsonDict] = McmetaPin(
         "filter", default_factory=lambda: {"block": []}
     )
 
-    overlay_name: Optional[str]
-    overlay_parent: Optional[Self]
+    overlay_name: str | None
+    overlay_parent: Self | None
     overlays: OverlayContainer[Self]
 
-    extend_extra: Dict[str, Optional[Type[PackFile]]]
-    extend_namespace: List[Type[NamespaceFile]]
-    extend_namespace_extra: Dict[str, Optional[Type[PackFile]]]
+    extend_extra: dict[str, type[PackFile] | None]
+    extend_namespace: list[type[NamespaceFile]]
+    extend_namespace_extra: dict[str, type[PackFile] | None]
 
     merge_policy: MergePolicy
-    unveiled: Dict[Union[Path, UnveilMapping], Set[str]]
+    unveiled: dict[Path | UnveilMapping, set[str]]
 
-    namespace_type: ClassVar[Type[Namespace]]
+    namespace_type: ClassVar[type[Namespace]]
     default_name: ClassVar[str]
     pack_format_registry: ClassVar[PackFormatRegistryContainer]
     latest_pack_format: ClassVar[int | FormatSpecifier]
     pack_format_switch_format: ClassVar[int]
 
     def __init_subclass__(cls):
-        cls.namespace_type = get_args(getattr(cls, "__orig_bases__")[0])[0]
+        if not hasattr(cls, "namespace_type"):
+            cls.namespace_type = get_args(get_original_bases(cls)[0])[0]
 
     def __init__(
         self,
-        name: Optional[str] = None,
-        path: Optional[FileSystemPath] = None,
-        zipfile: Optional[ZipFile] = None,
-        mapping: Optional[Mapping[str, FileSystemPath]] = None,
+        name: str | None = None,
+        path: FileSystemPath | None = None,
+        zipfile: ZipFile | None = None,
+        mapping: Mapping[str, FileSystemPath] | None = None,
         zipped: bool = False,
-        compression: Optional[Literal["none", "deflate", "bzip2", "lzma"]] = None,
-        compression_level: Optional[int] = None,
-        mcmeta: Optional[Mcmeta] = None,
-        icon: Optional[PngFile] = None,
-        description: Optional[str] = None,
-        pack_format: Optional[int] = None,
-        supported_formats: Optional[SupportedFormats] = None,
-        min_format: Optional[FormatSpecifier] = None,
-        max_format: Optional[FormatSpecifier] = None,
-        filter: Optional[JsonDict] = None,
-        extend_extra: Optional[Mapping[str, Type[PackFile]]] = None,
-        extend_namespace: Iterable[Type[NamespaceFile]] = (),
-        extend_namespace_extra: Optional[Mapping[str, Type[PackFile]]] = None,
-        merge_policy: Optional[MergePolicy] = None,
+        compression: Literal["none", "deflate", "bzip2", "lzma"] | None = None,
+        compression_level: int | None = None,
+        mcmeta: Mcmeta | None = None,
+        icon: PngFile | None = None,
+        description: str | None = None,
+        pack_format: int | None = None,
+        supported_formats: SupportedFormats | None = None,
+        min_format: FormatSpecifier | None = None,
+        max_format: FormatSpecifier | None = None,
+        filter: JsonDict | None = None,
+        extend_extra: Mapping[str, type[PackFile]] | None = None,
+        extend_namespace: Iterable[type[NamespaceFile]] = (),
+        extend_namespace_extra: Mapping[str, type[PackFile]] | None = None,
+        merge_policy: MergePolicy | None = None,
     ):
         super().__init__()
         self.name = name
@@ -1112,14 +1114,14 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
         self.load(path or zipfile or mapping)
 
     def configure(
-        self: PackType,
-        other: Optional[PackType] = None,
+        self,
+        other: Self | None = None,
         *,
-        extend_extra: Optional[Mapping[str, Type[PackFile]]] = None,
-        extend_namespace: Iterable[Type[NamespaceFile]] = (),
-        extend_namespace_extra: Optional[Mapping[str, Type[PackFile]]] = None,
-        merge_policy: Optional[MergePolicy] = None,
-    ) -> PackType:
+        extend_extra: Mapping[str, type[PackFile]] | None = None,
+        extend_namespace: Iterable[type[NamespaceFile]] = (),
+        extend_namespace_extra: Mapping[str, type[PackFile]] | None = None,
+        merge_policy: MergePolicy | None = None,
+    ) -> Self:
         """Helper for updating or copying configuration from another pack."""
         if other is not None:
             self.extend_extra.update(other.extend_extra or {})
@@ -1141,7 +1143,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
 
     @overload
     def __getitem__(
-        self, key: Type[NamespaceFileType]
+        self, key: type[NamespaceFileType]
     ) -> NamespaceProxy[NamespaceFileType]: ...
 
     def __getitem__(self, key: Any) -> Any:
@@ -1161,16 +1163,20 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
         else:
             NamespaceProxy[NamespaceFile](self, type(value))[key] = value
 
-    def __eq__(self, other: Any) -> bool:
+    def __eq__(self, other: object) -> bool:
         if self is other:
             return True
-        if type(self) is type(other) and not (
-            self.name == other.name
-            and self.extra == other.extra
-            and (
-                self.overlay_parent is not None
-                or other.overlay_parent is not None
-                or self.overlays == other.overlays
+        if (
+            isinstance(other, Pack)
+            and type(self) is type(other)
+            and not (
+                self.name == other.name
+                and self.extra == other.extra
+                and (
+                    self.overlay_parent is not None
+                    or other.overlay_parent is not None
+                    or self.overlays == other.overlays
+                )
             )
         ):
             return False
@@ -1191,7 +1197,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
             or (self.overlay_parent is None and bool(self.overlays))
         )
 
-    def __enter__(self: T) -> T:
+    def __enter__(self) -> Self:
         return self
 
     def __exit__(self, *_):
@@ -1268,20 +1274,20 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
     def list_files(
         self,
         *extensions: str,
-    ) -> Iterator[Tuple[str, PackFile]]: ...
+    ) -> Iterator[tuple[str, PackFile]]: ...
 
     @overload
     def list_files(
         self,
         *extensions: str,
-        extend: Type[T],
-    ) -> Iterator[Tuple[str, T]]: ...
+        extend: type[T],
+    ) -> Iterator[tuple[str, T]]: ...
 
     def list_files(
         self,
         *extensions: str,
-        extend: Optional[Any] = None,
-    ) -> Iterator[Tuple[str, Any]]:
+        extend: Any | None = None,
+    ) -> Iterator[tuple[str, Any]]:
         """List and filter all the files in the pack."""
         if extend and (origin := get_origin(extend)):
             extend = origin
@@ -1305,16 +1311,16 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
                 yield from overlay.list_files(*extensions, extend=extend)  # pyright: ignore[reportArgumentType]
 
     @overload
-    def all(self, *match: str) -> Iterable[Tuple[str, NamespaceFile]]: ...
+    def all(self, *match: str) -> Iterable[tuple[str, NamespaceFile]]: ...
 
     @overload
     def all(
-        self, *match: str, extend: Type[NamespaceFileType]
-    ) -> Iterable[Tuple[str, NamespaceFileType]]: ...
+        self, *match: str, extend: type[NamespaceFileType]
+    ) -> Iterable[tuple[str, NamespaceFileType]]: ...
 
     def all(
-        self, *match: str, extend: Optional[Type[NamespaceFile]] = None
-    ) -> Iterable[Tuple[str, NamespaceFile]]:
+        self, *match: str, extend: type[NamespaceFile] | None = None
+    ) -> Iterable[tuple[str, NamespaceFile]]:
         """List all the namespaced resources of a specific type, even from overlays."""
         for file_type in self.get_file_types(extend=extend):
             proxy = self[file_type]
@@ -1328,7 +1334,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
                     yield from overlay.all(*match)
 
     @property
-    def supported_formats(self) -> Optional[SupportedFormats]:
+    def supported_formats(self) -> SupportedFormats | None:
         if self.overlay_parent is not None:
             overlays: Any = self.overlay_parent.mcmeta.data.get("overlays", {})
             for entry in overlays.get("entries", []):
@@ -1338,7 +1344,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
             return self.mcmeta.data.get("pack", {}).get("supported_formats")
 
     @supported_formats.setter
-    def supported_formats(self, value: Optional[SupportedFormats]):
+    def supported_formats(self, value: SupportedFormats | None):
         if self.overlay_parent is not None:
             overlays: Any = self.overlay_parent.mcmeta.data.setdefault("overlays", {})
             for entry in overlays.setdefault("entries", []):
@@ -1362,7 +1368,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
                 self.mcmeta.data.setdefault("pack", {})["supported_formats"] = value
 
     @property
-    def min_format(self) -> Optional[FormatSpecifier]:
+    def min_format(self) -> FormatSpecifier | None:
         if self.overlay_parent is not None:
             overlays: Any = self.overlay_parent.mcmeta.data.get("overlays", {})
             for entry in overlays.get("entries", []):
@@ -1372,7 +1378,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
             return self.mcmeta.data.get("pack", {}).get("min_format")
 
     @min_format.setter
-    def min_format(self, value: Optional[FormatSpecifier]):
+    def min_format(self, value: FormatSpecifier | None):
         if self.overlay_parent is not None:
             overlays: Any = self.overlay_parent.mcmeta.data.setdefault("overlays", {})
             for entry in overlays.setdefault("entries", []):
@@ -1396,7 +1402,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
             pack["min_format"] = value
 
     @property
-    def max_format(self) -> Optional[FormatSpecifier]:
+    def max_format(self) -> FormatSpecifier | None:
         if self.overlay_parent is not None:
             overlays: Any = self.overlay_parent.mcmeta.data.get("overlays", {})
             for entry in overlays.get("entries", []):
@@ -1406,7 +1412,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
             return self.mcmeta.data.get("pack", {}).get("max_format")
 
     @max_format.setter
-    def max_format(self, value: Optional[FormatSpecifier]):
+    def max_format(self, value: FormatSpecifier | None):
         if self.overlay_parent is not None:
             overlays: Any = self.overlay_parent.mcmeta.data.setdefault("overlays", {})
             for entry in overlays.setdefault("entries", []):
@@ -1430,10 +1436,10 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
             pack["max_format"] = value
 
     @classmethod
-    def get_extra_info(cls) -> Dict[str, Type[PackFile]]:
+    def get_extra_info(cls) -> dict[str, type[PackFile]]:
         return {"pack.mcmeta": Mcmeta, "pack.png": PngFile}
 
-    def resolve_extra_info(self) -> Dict[str, Type[PackFile]]:
+    def resolve_extra_info(self) -> dict[str, type[PackFile]]:
         extra_info = self.get_extra_info()
         if self.extend_extra:
             _update_with_none(extra_info, self.extend_extra)
@@ -1441,7 +1447,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
 
     def resolve_scope_map(
         self,
-    ) -> Dict[Tuple[Tuple[str, ...], str], Type[NamespaceFile]]:
+    ) -> dict[tuple[tuple[str, ...], str], type[NamespaceFile]]:
         scope_map = dict(self.namespace_type.scope_map)
         for file_type in self.extend_namespace:
             for scope in list_input_scopes(file_type.scope):
@@ -1449,7 +1455,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
 
         return scope_map
 
-    def resolve_namespace_extra_info(self) -> Dict[str, Type[PackFile]]:
+    def resolve_namespace_extra_info(self) -> dict[str, type[PackFile]]:
         namespace_extra_info = self.namespace_type.get_extra_info()
         if self.extend_namespace_extra:
             _update_with_none(namespace_extra_info, self.extend_namespace_extra)
@@ -1458,8 +1464,8 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
     def get_file_types(
         self,
         *extensions: str,
-        extend: Optional[Any] = None,
-    ) -> Sequence[Type[NamespaceFile]]:
+        extend: Any | None = None,
+    ) -> Sequence[type[NamespaceFile]]:
         file_types = set(self.resolve_scope_map().values())
 
         if extensions:
@@ -1471,11 +1477,11 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
 
     def load(
         self,
-        origin: Optional[FileOrigin] = None,
-        extend_extra: Optional[Mapping[str, Type[PackFile]]] = None,
-        extend_namespace: Iterable[Type[NamespaceFile]] = (),
-        extend_namespace_extra: Optional[Mapping[str, Type[PackFile]]] = None,
-        merge_policy: Optional[MergePolicy] = None,
+        origin: FileOrigin | None = None,
+        extend_extra: Mapping[str, type[PackFile]] | None = None,
+        extend_namespace: Iterable[type[NamespaceFile]] = (),
+        extend_namespace_extra: Mapping[str, type[PackFile]] | None = None,
+        merge_policy: MergePolicy | None = None,
     ):
         """Load pack from a zipfile or from the filesystem."""
         self.extend_extra.update(extend_extra or {})
@@ -1515,10 +1521,10 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
         self,
         prefix: str,
         origin: FileOrigin,
-        origin_folders: Optional[Dict[str, List[PurePath]]] = None,
+        origin_folders: dict[str, list[PurePath]] | None = None,
     ):
         """Mount files from a zipfile or from the filesystem."""
-        files: Dict[str, PackFile] = {}
+        files: dict[str, PackFile] = {}
 
         for expected_filename, file_type in self.resolve_extra_info().items():
             filename = (
@@ -1587,7 +1593,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
                 if not overlay:
                     del self.overlays[name]
 
-    def unveil(self, prefix: str, origin: Union[FileSystemPath, UnveilMapping]) -> bool:
+    def unveil(self, prefix: str, origin: FileSystemPath | UnveilMapping) -> bool:
         """Track mounted resource prefix."""
         if not isinstance(origin, UnveilMapping):
             origin = Path(origin).resolve()
@@ -1597,7 +1603,7 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
         if prefix in mounted:
             return False
 
-        to_remove: Set[str] = set()
+        to_remove: set[str] = set()
         for mnt in mounted:
             if prefix.startswith(mnt):
                 return False
@@ -1614,12 +1620,12 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
 
     def save(
         self,
-        directory: Optional[FileSystemPath] = None,
-        path: Optional[FileSystemPath] = None,
-        zipped: Optional[bool] = None,
-        compression: Optional[Literal["none", "deflate", "bzip2", "lzma"]] = None,
-        compression_level: Optional[int] = None,
-        overwrite: Optional[bool] = False,
+        directory: FileSystemPath | None = None,
+        path: FileSystemPath | None = None,
+        zipped: bool | None = None,
+        compression: Literal["none", "deflate", "bzip2", "lzma"] | None = None,
+        compression_level: int | None = None,
+        overwrite: bool | None = False,
     ) -> Path:
         """Save the pack at the specified location."""
         if path:
@@ -1685,8 +1691,8 @@ class Pack(MatchMixin, MergeMixin, Container[str, NamespaceType]):
         )
 
 
-def _dump_files(origin: FileOrigin, files: Iterable[Tuple[str, PackFile]]):
-    dirs: DefaultDict[Tuple[str, ...], List[Tuple[str, PackFile]]] = defaultdict(list)
+def _dump_files(origin: FileOrigin, files: Iterable[tuple[str, PackFile]]):
+    dirs: defaultdict[tuple[str, ...], list[tuple[str, PackFile]]] = defaultdict(list)
 
     for full_path, item in files:
         directory, _, filename = full_path.rpartition("/")
@@ -1703,7 +1709,7 @@ K = TypeVar("K")
 V = TypeVar("V")
 
 
-def _update_with_none(dst: MutableMapping[K, V], src: Mapping[K, Optional[V]]):
+def _update_with_none(dst: MutableMapping[K, V], src: Mapping[K, V | None]):
     for k, v in list(src.items()):
         if v is None:
             dst.pop(k, None)
@@ -1712,10 +1718,10 @@ def _update_with_none(dst: MutableMapping[K, V], src: Mapping[K, Optional[V]]):
 
 
 def create_group_map(
-    file_types: Mapping[PackType, Iterable[Type[NamespaceFile]]],
+    file_types: Mapping[PackType, Iterable[type[NamespaceFile]]],
     plural: bool = False,
-) -> Dict[str, Tuple[List[PackType], Type[NamespaceFile]]]:
-    group_map: Dict[str, Tuple[List[PackType], Type[NamespaceFile]]] = {}
+) -> dict[str, tuple[list[PackType], type[NamespaceFile]]]:
+    group_map: dict[str, tuple[list[PackType], type[NamespaceFile]]] = {}
     for pack, types in file_types.items():
         for t in types:
             group_map.setdefault(t.snake_name, ([], t))[0].append(pack)
@@ -1725,13 +1731,13 @@ def create_group_map(
     return group_map
 
 
-def list_input_scopes(scope: NamespaceFileScope) -> Iterable[Tuple[str, ...]]:
+def list_input_scopes(scope: NamespaceFileScope) -> Iterable[tuple[str, ...]]:
     return [scope] if isinstance(scope, tuple) else scope.values()
 
 
 def get_output_scope(
-    scope: NamespaceFileScope, pack: Optional[int | Pack[Any]]
-) -> Tuple[str, ...]:
+    scope: NamespaceFileScope, pack: int | Pack[Any] | None
+) -> tuple[str, ...]:
     if isinstance(scope, tuple):
         return scope
 
@@ -1762,7 +1768,7 @@ def get_output_scope(
         # Fall back to the most recent scope
         pack_format = 9999
 
-    result: Tuple[str, ...] | None = None
+    result: tuple[str, ...] | None = None
     result_format: int | None = None
     for key, value in scope.items():
         if key <= pack_format and (result_format is None or key > result_format):

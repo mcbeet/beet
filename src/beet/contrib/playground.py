@@ -15,14 +15,14 @@ __all__ = [
 import logging
 import re
 import subprocess
-from collections.abc import Generator, Iterable
+from collections.abc import Callable, Generator, Iterable
 from contextlib import contextmanager
 from dataclasses import dataclass
 from pathlib import Path
 from queue import Empty, Queue, ShutDown
 from textwrap import dedent
 from threading import Condition, Thread
-from typing import Callable, Self
+from typing import Self
 
 from beet import Context, PackOverwrite, PluginOptions, configurable
 from beet.contrib.link import LinkManager

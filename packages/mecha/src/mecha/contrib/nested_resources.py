@@ -10,7 +10,7 @@ __all__ = [
 
 from dataclasses import dataclass, replace
 from textwrap import dedent
-from typing import Any, Dict, List, Type, Union, cast
+from typing import Any, cast
 
 from tokenstream import InvalidSyntax, Token, TokenStream, set_location
 
@@ -59,13 +59,13 @@ def beet_default(ctx: Context):
 
 class NestedResources:
     mc: Mecha
-    text_resources: Dict[str, Type[NamespaceFile]]
-    json_resources: Dict[str, Type[NamespaceFile]]
+    text_resources: dict[str, type[NamespaceFile]]
+    json_resources: dict[str, type[NamespaceFile]]
 
     def __init__(
         self,
-        arg: Union[Mecha, Context],
-        *packs: Union[ResourcePack, DataPack],
+        arg: Mecha | Context,
+        *packs: ResourcePack | DataPack,
     ):
         if isinstance(arg, Context):
             packs += arg.packs
@@ -190,7 +190,7 @@ def parse_nested_text(stream: TokenStream) -> AstNestedText:
         start_pos = stream.current.location.pos
         level = stream.indentation[-2]
 
-        lines: List[Token] = []
+        lines: list[Token] = []
 
         while True:
             lines.append(stream.expect("text"))
@@ -212,13 +212,13 @@ class NestedResourcesTransformer(MutatingReducer):
     generate: Generator = required_field()
     database: CompilationDatabase = required_field()
 
-    nested_resource_identifiers: Dict[str, Type[NamespaceFile]] = required_field()
+    nested_resource_identifiers: dict[str, type[NamespaceFile]] = required_field()
     json_file_compilation: JsonFileCompilation = required_field()
 
     @rule(AstRoot)
     def nested_resources(self, node: AstRoot):
         changed = False
-        commands: List[AstCommand] = []
+        commands: list[AstCommand] = []
 
         for command in node.commands:
             if file_type := self.nested_resource_identifiers.get(command.identifier):
@@ -230,7 +230,7 @@ class NestedResourcesTransformer(MutatingReducer):
                     full_name = name.get_canonical_value()
 
                     if isinstance(content, AstJson) and (
-                        cast(Type[JsonFileBase[Any]], file_type)
+                        cast(type[JsonFileBase[Any]], file_type)
                         in self.json_file_compilation.file_types
                     ):
                         if command.identifier.startswith("merge:"):

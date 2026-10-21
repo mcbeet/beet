@@ -9,27 +9,16 @@ __all__ = [
 ]
 
 
+from collections.abc import Callable, Generator, Iterable, Iterator
 from contextlib import contextmanager
 from dataclasses import dataclass, fields, replace
 from functools import partial
 from heapq import heappop, heappush
 from typing import (
     Any,
-    Callable,
-    Dict,
-    FrozenSet,
-    Generator,
     Generic,
-    Iterable,
-    Iterator,
-    List,
     Literal,
-    Optional,
-    Set,
-    Tuple,
-    Type,
     TypeVar,
-    Union,
     overload,
 )
 
@@ -60,11 +49,11 @@ class Rule:
     """Rule that can be associated to an ast node by the dispatcher."""
 
     callback: Callable[..., Any]
-    match_types: Tuple[Type[AbstractNode], ...] = ()
-    match_fields: FrozenSet[Tuple[str, Any]] = frozenset()
+    match_types: tuple[type[AbstractNode], ...] = ()
+    match_fields: frozenset[tuple[str, Any]] = frozenset()
 
-    name: Optional[str] = None
-    next: Optional["Rule"] = None
+    name: str | None = None
+    next: Rule | None = None
 
     def __post_init__(self):
         if isinstance(self.callback, Rule):
@@ -80,7 +69,7 @@ class Rule:
     def __call__(self, *args: Any, **kwargs: Any) -> Any:
         return self.callback(*args, **kwargs)
 
-    def with_callback(self, callback: Callable[..., Any]) -> "Rule":
+    def with_callback(self, callback: Callable[..., Any]) -> Rule:
         """Recursively update callback."""
         return replace(
             self,
@@ -88,7 +77,7 @@ class Rule:
             next=self.next.with_callback(callback) if self.next else None,
         )
 
-    def bake(self, *args: Any, **kwargs: Any) -> "Rule":
+    def bake(self, *args: Any, **kwargs: Any) -> Rule:
         """Bake arguments."""
         return self.with_callback(partial(self.callback, *args, **kwargs))
 
@@ -99,7 +88,7 @@ def rule(func: Callable[..., Any]) -> Rule: ...
 
 @overload
 def rule(
-    *args: Type[AbstractNode], **kwargs: Any
+    *args: type[AbstractNode], **kwargs: Any
 ) -> Callable[[Callable[..., Any]], Rule]: ...
 
 
@@ -124,15 +113,15 @@ def rule(*args: Any, **kwargs: Any) -> Any:
 class Dispatcher(Generic[T]):
     """Ast dispatcher."""
 
-    levels: Dict[str, Literal["ignore", "info", "warn", "error"]] = extra_field(
+    levels: dict[str, Literal["ignore", "info", "warn", "error"]] = extra_field(
         default_factory=dict
     )
 
-    rules: Dict[
-        Type[Any],
-        Dict[
-            FrozenSet[Tuple[str, Any]],
-            List[Tuple[int, Optional[str], Callable[..., Any]]],
+    rules: dict[
+        type[Any],
+        dict[
+            frozenset[tuple[str, Any]],
+            list[tuple[int, str | None, Callable[..., Any]]],
         ],
     ] = extra_field(init=False, default_factory=dict)
 
@@ -141,7 +130,7 @@ class Dispatcher(Generic[T]):
         default_factory=DiagnosticCollection
     )
 
-    stack: List[AbstractNode] = extra_field(default_factory=list)
+    stack: list[AbstractNode] = extra_field(default_factory=list)
 
     def __post_init__(self):
         for name in dir(self):
@@ -168,11 +157,7 @@ class Dispatcher(Generic[T]):
 
     def extend(
         self,
-        *args: Union[
-            "Dispatcher[Any]",
-            Callable[..., Any],
-            Iterable[Callable[..., Any]],
-        ],
+        *args: Dispatcher[Any] | Callable[..., Any] | Iterable[Callable[..., Any]],
     ):
         """Extend the dispatcher."""
         for arg in args:
@@ -207,11 +192,9 @@ class Dispatcher(Generic[T]):
     def dispatch(
         self,
         node: AbstractNode,
-    ) -> Iterator[Tuple[Optional[str], Callable[..., Any]]]:
+    ) -> Iterator[tuple[str | None, Callable[..., Any]]]:
         """Dispatch rules."""
-        priority_queue: List[
-            Tuple[int, int, int, Optional[str], Callable[..., Any]]
-        ] = []
+        priority_queue: list[tuple[int, int, int, str | None, Callable[..., Any]]] = []
 
         for i, node_type in enumerate(type(node).mro()):
             if value := self.rules.get(node_type):
@@ -230,7 +213,7 @@ class Dispatcher(Generic[T]):
                                 (i, -len(match_fields), -priority, name, callback),
                             )
 
-        dispatched: Set[Callable[..., Any]] = set()
+        dispatched: set[Callable[..., Any]] = set()
 
         while priority_queue:
             _, _, _, name, callback = heappop(priority_queue)
@@ -248,8 +231,8 @@ class Dispatcher(Generic[T]):
     def process(
         self,
         node: AbstractNode,
-        name: Optional[str] = None,
-        rule: Optional[Callable[..., Any]] = None,
+        name: str | None = None,
+        rule: Callable[..., Any] | None = None,
         *args: Any,
         **kwargs: Any,
     ) -> Any:
@@ -294,7 +277,7 @@ class Dispatcher(Generic[T]):
         self,
         node: AbstractNode,
         output: Any,
-        name: Optional[str] = None,
+        name: str | None = None,
     ) -> Any:
         """Handle rule output."""
         if isinstance(output, Diagnostic):
@@ -331,9 +314,7 @@ class Dispatcher(Generic[T]):
             self.diagnostics = previous_diagnostics
 
     @contextmanager
-    def use_rule(
-        self, node: AbstractNode, name: Optional[str] = None
-    ) -> Iterator[None]:
+    def use_rule(self, node: AbstractNode, name: str | None = None) -> Iterator[None]:
         """Handle rule diagnostics."""
         try:
             yield
@@ -392,7 +373,7 @@ class MutatingReducer(Dispatcher[Any]):
     def invoke(self, node: AbstractNode, *args: Any, **kwargs: Any) -> Any:
         self.stack.append(node)
 
-        to_replace: Dict[str, Union[AbstractNode, AbstractChildren[AbstractNode]]] = {}
+        to_replace: dict[str, AbstractNode | AbstractChildren[AbstractNode]] = {}
 
         for f in fields(node):
             attribute = getattr(node, f.name)

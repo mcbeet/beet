@@ -6,14 +6,12 @@ __all__ = [
 ]
 
 
-from typing import List, Optional
-
 from beet import Context, Function, PluginOptions, configurable
 
 
 class FunctionHeaderOptions(PluginOptions):
-    match: List[str] = []
-    template: Optional[str] = "function_header.mcfunction"
+    match: list[str] = []
+    template: str | None = "function_header.mcfunction"
 
 
 def beet_default(ctx: Context):

@@ -90,10 +90,11 @@ __all__ = [
 
 
 import io
+from collections.abc import Iterable
 from copy import deepcopy
 from dataclasses import dataclass
 from gzip import GzipFile
-from typing import ClassVar, Iterable, List, Optional, TypeVar, Union
+from typing import ClassVar, TypeVar
 
 from nbtlib.contrib.minecraft import StructureFile, StructureFileData
 
@@ -320,12 +321,12 @@ class SlotSource(JsonFile):
 
 
 @dataclass(eq=False, repr=False)
-class Function(TextFileBase[List[str]]):
+class Function(TextFileBase[list[str]]):
     """Class representing a function."""
 
-    content: TextFileContent[List[str]] = None
-    tags: Optional[List[str]] = extra_field(default=None)
-    prepend_tags: Optional[List[str]] = extra_field(default=None)
+    content: TextFileContent[list[str]] = None
+    tags: list[str] | None = extra_field(default=None)
+    prepend_tags: list[str] | None = extra_field(default=None)
 
     scope: ClassVar[NamespaceFileScope] = {
         0: ("functions",),
@@ -333,9 +334,9 @@ class Function(TextFileBase[List[str]]):
     }
     extension: ClassVar[str] = ".mcfunction"
 
-    lines: ClassVar[FileDeserialize[List[str]]] = FileDeserialize()
+    lines: ClassVar[FileDeserialize[list[str]]] = FileDeserialize()
 
-    def append(self, other: Union["Function", Iterable[str], str]):
+    def append(self, other: "Function" | Iterable[str] | str):
         """Append lines from another function."""
         self.lines.extend(
             other.lines
@@ -345,7 +346,7 @@ class Function(TextFileBase[List[str]]):
             else other
         )
 
-    def prepend(self, other: Union["Function", Iterable[str], str]):
+    def prepend(self, other: "Function" | Iterable[str] | str):
         """Prepend lines from another function."""
         self.lines[0:0] = (
             other.lines
@@ -356,13 +357,13 @@ class Function(TextFileBase[List[str]]):
         )
 
     @classmethod
-    def default(cls) -> List[str]:
+    def default(cls) -> list[str]:
         return []
 
-    def to_str(self, content: List[str]) -> str:
+    def to_str(self, content: list[str]) -> str:
         return "\n".join(content) + "\n"
 
-    def from_str(self, content: str) -> List[str]:
+    def from_str(self, content: str) -> list[str]:
         return content.splitlines()
 
     def bind(self, pack: "DataPack", path: str):

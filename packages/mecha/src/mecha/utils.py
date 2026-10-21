@@ -13,7 +13,6 @@ __all__ = [
 
 import re
 from dataclasses import dataclass, field
-from typing import Dict, List, Optional, Union
 
 from tokenstream import InvalidSyntax, SourceLocation, Token, set_location
 
@@ -34,12 +33,12 @@ def normalize_whitespace(op: str) -> str:
     return WHITESPACE_REGEX.sub("_", op).strip("_")
 
 
-def string_to_number(string: str) -> Union[int, float]:
+def string_to_number(string: str) -> int | float:
     """Helper for converting numbers to string and keeping their original type."""
     return float(string) if "." in string or "e" in string else int(string)
 
 
-def number_to_string(number: Union[int, float]) -> str:
+def number_to_string(number: float) -> str:
     """Helper for converting numbers to string and removing scientific notation."""
     value = str(number)
     if (index := value.find("e")) != -1:
@@ -64,12 +63,12 @@ class InvalidEscapeSequence(MechaError):
 class QuoteHelper:
     """Helper for removing quotes and interpreting escape sequences."""
 
-    escape_regex: "re.Pattern[str]" = ESCAPE_REGEX
-    avoid_quotes_regex: "re.Pattern[str]" = AVOID_QUOTES_REGEX
+    escape_regex: re.Pattern[str] = ESCAPE_REGEX
+    avoid_quotes_regex: re.Pattern[str] = AVOID_QUOTES_REGEX
 
-    escape_sequences: Dict[str, str] = field(default_factory=dict)
-    unquote_only_escape_characters: List[str] = field(default_factory=list)
-    escape_characters: Dict[str, str] = field(init=False)
+    escape_sequences: dict[str, str] = field(default_factory=dict)
+    unquote_only_escape_characters: list[str] = field(default_factory=list)
+    escape_characters: dict[str, str] = field(init=False)
 
     def __post_init__(self):
         self.escape_characters = {
@@ -93,7 +92,7 @@ class QuoteHelper:
             exc = InvalidSyntax(f"Invalid escape sequence {exc.characters}.")
             raise set_location(exc, location, end_location)
 
-    def handle_substitution(self, token: Token, match: "re.Match[str]") -> str:
+    def handle_substitution(self, token: Token, match: re.Match[str]) -> str:
         """Handle escaped character sequence."""
         characters = match[0]
 
@@ -123,9 +122,9 @@ class QuoteHelper:
 class QuoteHelperWithUnicode(QuoteHelper):
     """Quote helper that handles unicode escape sequences."""
 
-    escape_regex: "re.Pattern[str]" = UNICODE_ESCAPE_REGEX
+    escape_regex: re.Pattern[str] = UNICODE_ESCAPE_REGEX
 
-    def handle_substitution(self, token: Token, match: "re.Match[str]") -> str:
+    def handle_substitution(self, token: Token, match: re.Match[str]) -> str:
         if unicode_hex := match[1]:
             return chr(int(unicode_hex, 16))
         return super().handle_substitution(token, match)
@@ -151,7 +150,7 @@ class QuoteHelperWithUnicode(QuoteHelper):
 class JsonQuoteHelper(QuoteHelperWithUnicode):
     """Quote helper used for json."""
 
-    escape_sequences: Dict[str, str] = field(
+    escape_sequences: dict[str, str] = field(
         default_factory=lambda: {
             r"\\": "\\",
             r"\f": "\f",
@@ -171,7 +170,7 @@ class JsonQuoteHelper(QuoteHelperWithUnicode):
 class NbtQuoteHelper(QuoteHelperWithUnicode):
     """Quote helper used for snbt."""
 
-    escape_sequences: Dict[str, str] = field(
+    escape_sequences: dict[str, str] = field(
         default_factory=lambda: {
             r"\\": "\\",
             r"\b": "\b",
@@ -182,9 +181,9 @@ class NbtQuoteHelper(QuoteHelperWithUnicode):
             r"\t": "\t",
         }
     )
-    unquote_only_escape_characters: List[str] = field(default_factory=lambda: [r"\s"])
+    unquote_only_escape_characters: list[str] = field(default_factory=lambda: [r"\s"])
 
-    def quote_string(self, value: str, quote: Optional[str] = None) -> str:
+    def quote_string(self, value: str, quote: str | None = None) -> str:
         if not quote:
             found = QUOTE_REGEX.search(value)
             quote = "'" if found and found.group() == '"' else '"'

@@ -67,7 +67,7 @@ __all__ = [
 
 import re
 from dataclasses import dataclass
-from typing import Any, List, Optional, Tuple, Union
+from typing import Any
 from uuid import UUID, uuid4
 
 from tokenstream import TokenStream
@@ -125,7 +125,7 @@ class AstExpressionUnary(AstExpression):
 class AstChainedComparison(AstExpression):
     """Ast chained comparison node."""
 
-    operators: Tuple[str, ...] = required_field()
+    operators: tuple[str, ...] = required_field()
     operands: AstChildren[AstExpression] = required_field()
 
 
@@ -201,9 +201,9 @@ class AstDict(AstExpression):
 class AstSlice(AstNode):
     """Ast slice node."""
 
-    start: Optional[AstExpression] = None
-    stop: Optional[AstExpression] = None
-    step: Optional[AstExpression] = None
+    start: AstExpression | None = None
+    stop: AstExpression | None = None
+    step: AstExpression | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -235,7 +235,7 @@ class AstLookup(AstExpression):
     """Ast lookup node."""
 
     value: AstExpression = required_field()
-    arguments: AstChildren[Union[AstExpression, AstSlice]] = required_field()
+    arguments: AstChildren[AstExpression | AstSlice] = required_field()
 
 
 @dataclass(frozen=True, slots=True)
@@ -243,9 +243,7 @@ class AstCall(AstExpression):
     """Ast call node."""
 
     value: AstExpression = required_field()
-    arguments: AstChildren[Union[AstExpression, AstUnpack, AstKeyword]] = (
-        required_field()
-    )
+    arguments: AstChildren[AstExpression | AstUnpack | AstKeyword] = required_field()
 
 
 @dataclass(frozen=True, slots=True)
@@ -289,7 +287,7 @@ class AstTargetItem(AstTarget):
     """Ast target item node."""
 
     value: AstExpression = required_field()
-    arguments: AstChildren[Union[AstExpression, AstSlice]] = required_field()
+    arguments: AstChildren[AstExpression | AstSlice] = required_field()
 
 
 @dataclass(frozen=True, slots=True)
@@ -299,7 +297,7 @@ class AstAssignment(AstNode):
     operator: str = required_field()
     target: AstTarget = required_field()
     value: AstExpression = required_field()
-    type_annotation: Optional[AstTypeAnnotation] = None
+    type_annotation: AstTypeAnnotation | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -327,7 +325,7 @@ class AstWithClause(AstNode):
     """Ast with clause node."""
 
     value: AstExpression = required_field()
-    target: Optional[AstTarget] = None
+    target: AstTarget | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -347,8 +345,8 @@ class AstFunctionSignatureArgument(AstFunctionSignatureElement):
     """Ast function signature argument node."""
 
     name: str = required_field()
-    type_annotation: Optional[AstTypeAnnotation] = None
-    default: Optional[AstExpression] = None
+    type_annotation: AstTypeAnnotation | None = None
+    default: AstExpression | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -361,7 +359,7 @@ class AstFunctionSignatureVariadicArgument(AstFunctionSignatureElement):
     """Ast function signature variadic argument node."""
 
     name: str = required_field()
-    type_annotation: Optional[AstTypeAnnotation] = None
+    type_annotation: AstTypeAnnotation | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -374,7 +372,7 @@ class AstFunctionSignatureVariadicKeywordArgument(AstFunctionSignatureElement):
     """Ast function signature variadic keyword argument node."""
 
     name: str = required_field()
-    type_annotation: Optional[AstTypeAnnotation] = None
+    type_annotation: AstTypeAnnotation | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -384,7 +382,7 @@ class AstFunctionSignature(AstNode):
     decorators: AstChildren[AstDecorator] = AstChildren()
     name: str = required_field()
     arguments: AstChildren[AstFunctionSignatureElement] = AstChildren()
-    return_type_annotation: Optional[AstTypeAnnotation] = None
+    return_type_annotation: AstTypeAnnotation | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -472,7 +470,7 @@ class AstMacroMatchArgument(AstMacroMatch):
 
     match_identifier: AstMacroArgument = required_field()
     match_argument_parser: AstResourceLocation = required_field()
-    match_argument_properties: Optional[AstJson] = None
+    match_argument_properties: AstJson | None = None
 
     def is_subcommand(self) -> bool:
         return (
@@ -523,7 +521,7 @@ class AstClassRoot(AstRoot):
 class AstEscapeAnalysisRoot(AstRoot):
     """Ast escape analysis root node."""
 
-    refcount_snapshots: List[Tuple[str, Binding, int]] = extra_field(
+    refcount_snapshots: list[tuple[str, Binding, int]] = extra_field(
         default_factory=list
     )
 
@@ -532,7 +530,7 @@ class AstEscapeAnalysisRoot(AstRoot):
 class AstEscapeRoot(AstRoot):
     """Ast escape root node."""
 
-    identifiers: Tuple[str, ...] = ()
+    identifiers: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True, slots=True)
@@ -555,8 +553,8 @@ class AstMemoResult(AstCommandSentinel):
 class AstInterpolation(AstNode):
     """Ast interpolation node."""
 
-    prefix: Optional[str] = None
-    unpack: Optional[str] = None
+    prefix: str | None = None
+    unpack: str | None = None
     converter: str = required_field()
     value: AstExpression = required_field()
 

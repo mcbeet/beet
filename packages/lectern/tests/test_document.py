@@ -1,4 +1,4 @@
-from typing import Mapping, Optional
+from collections.abc import Mapping
 
 import pytest
 
@@ -102,7 +102,7 @@ def test_no_content():
 def test_loader():
     def handle_ignore_modifier(
         fragment: Fragment, directives: Mapping[str, Directive]
-    ) -> Optional[Fragment]:
+    ) -> Fragment | None:
         if fragment.modifier == "ignore":
             return None
         return fragment

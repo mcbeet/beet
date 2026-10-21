@@ -6,7 +6,7 @@ __all__ = [
 import re
 from dataclasses import InitVar, dataclass, field
 from pathlib import Path
-from typing import Any, Dict, List, Literal, Optional, Tuple, Union, overload
+from typing import Any, Literal, overload
 
 from beet import Cache, Context, DataPack, File, ResourcePack
 from beet.core.utils import FileSystemPath, extra_field
@@ -25,18 +25,18 @@ from .serialize import (
 class Document:
     """Class representing a lectern document."""
 
-    ctx: InitVar[Optional[Context]] = None
-    path: InitVar[Optional[FileSystemPath]] = None
-    source: InitVar[Optional[str]] = None
-    text: InitVar[Optional[str]] = None
-    markdown: InitVar[Optional[str]] = None
-    cache: InitVar[Optional[Cache]] = None
-    external_files: InitVar[Optional[FileSystemPath]] = None
+    ctx: InitVar[Context | None] = None
+    path: InitVar[FileSystemPath | None] = None
+    source: InitVar[str | None] = None
+    text: InitVar[str | None] = None
+    markdown: InitVar[str | None] = None
+    cache: InitVar[Cache | None] = None
+    external_files: InitVar[FileSystemPath | None] = None
 
     assets: ResourcePack = field(default_factory=ResourcePack)
     data: DataPack = field(default_factory=DataPack)
 
-    loaders: List[FragmentLoader] = extra_field(default_factory=list)
+    loaders: list[FragmentLoader] = extra_field(default_factory=list)
     directives: DirectiveRegistry = extra_field(default_factory=DirectiveRegistry)
 
     text_extractor: TextExtractor = extra_field(default_factory=TextExtractor)
@@ -49,7 +49,7 @@ class Document:
         default_factory=MarkdownSerializer
     )
 
-    markdown_sniffer: "re.Pattern[str]" = extra_field(
+    markdown_sniffer: re.Pattern[str] = extra_field(
         default=re.compile(
             r"^[ \t]*```|^[ \t]*<!--|^[ \t]*-->|^[ \t]*[*-]?[ \t]*\[?[ \t]*`@[a-z0-9_]{3,}",
             re.MULTILINE,
@@ -58,13 +58,13 @@ class Document:
 
     def __post_init__(
         self,
-        ctx: Optional[Context],
-        path: Optional[FileSystemPath] = None,
-        source: Optional[str] = None,
-        text: Optional[str] = None,
-        markdown: Optional[str] = None,
-        cache: Optional[Cache] = None,
-        external_files: Optional[FileSystemPath] = None,
+        ctx: Context | None,
+        path: FileSystemPath | None = None,
+        source: str | None = None,
+        text: str | None = None,
+        markdown: str | None = None,
+        cache: Cache | None = None,
+        external_files: FileSystemPath | None = None,
     ):
         if ctx:
             self.assets = ctx.assets
@@ -96,7 +96,7 @@ class Document:
     def add(
         self,
         source: str,
-        external_files: Optional[FileSystemPath] = None,
+        external_files: FileSystemPath | None = None,
     ) -> bool:
         """Extract pack fragments from source."""
         if self.markdown_sniffer.search(source):
@@ -119,7 +119,7 @@ class Document:
     def add_markdown(
         self,
         source: str,
-        external_files: Optional[FileSystemPath] = None,
+        external_files: FileSystemPath | None = None,
     ) -> bool:
         """Extract pack fragments from markdown."""
         assets, data = self.markdown_extractor.extract(
@@ -146,7 +146,7 @@ class Document:
         self,
         emit_external_files: Literal[True],
         prefix: str = "",
-    ) -> Tuple[str, Dict[str, File[Any, Any]]]: ...
+    ) -> tuple[str, dict[str, File[Any, Any]]]: ...
 
     @overload
     def get_markdown(self, emit_external_files: Literal[False] = False) -> str: ...
@@ -155,9 +155,9 @@ class Document:
         self,
         emit_external_files: bool = False,
         prefix: str = "",
-    ) -> Union[str, Tuple[str, Dict[str, File[Any, Any]]]]:
+    ) -> str | tuple[str, dict[str, File[Any, Any]]]:
         """Turn the data pack and the resource pack into markdown."""
-        external_files: Optional[Dict[str, File[Any, Any]]] = (
+        external_files: dict[str, File[Any, Any]] | None = (
             {} if emit_external_files else None
         )
 
@@ -177,7 +177,7 @@ class Document:
     def save(
         self,
         path: FileSystemPath,
-        external_files: Optional[FileSystemPath] = None,
+        external_files: FileSystemPath | None = None,
         snapshot: bool = False,
     ):
         """Save the serialized document at the specified location."""

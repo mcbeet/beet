@@ -1,10 +1,9 @@
 import json
 from pathlib import Path
-from typing import List, Literal, Union
+from typing import Annotated, Literal
 
 import pytest
 from pydantic import BaseModel, Field, RootModel
-from typing_extensions import Annotated
 
 from beet import BinaryFile, JsonFileBase, TextFile
 
@@ -68,12 +67,12 @@ class B(BaseModel):
     b: str
 
 
-class AB(RootModel[Union[A, B]]):
-    root: Annotated[Union[A, B], Field(discriminator="type")]
+class AB(RootModel[A | B]):
+    root: Annotated[A | B, Field(discriminator="type")]
 
 
-class ABGroup(RootModel[Union[AB, List[AB]]]):
-    root: Union[AB, List[AB]]
+class ABGroup(RootModel[AB | list[AB]]):
+    root: AB | list[AB]
 
 
 class ABFile(JsonFileBase[ABGroup]):

@@ -9,7 +9,7 @@ __all__ = [
 
 
 from dataclasses import dataclass
-from typing import Any, Optional
+from typing import Any
 
 from tokenstream import TokenStream, set_location
 
@@ -42,7 +42,7 @@ class AstMessageReference(AstNode):
     """Ast message reference node."""
 
     name: AstResourceLocation = required_field()
-    path: Optional[AstMessageReferencePath] = None
+    path: AstMessageReferencePath | None = None
 
 
 def beet_default(ctx: Context):

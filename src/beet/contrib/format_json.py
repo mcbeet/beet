@@ -7,7 +7,8 @@ __all__ = [
 
 
 import json
-from typing import Any, Callable, Optional, Tuple, Union
+from collections.abc import Callable
+from typing import Any
 
 from beet import Context, JsonFileBase, PluginOptions, configurable
 
@@ -15,14 +16,14 @@ from beet import Context, JsonFileBase, PluginOptions, configurable
 class FormatJsonOptions(PluginOptions):
     ensure_ascii: bool = True
     allow_nan: bool = True
-    indent: Union[int, str, None] = 2
-    separators: Optional[Tuple[str, str]] = None
+    indent: int | str | None = 2
+    separators: tuple[str, str] | None = None
     sort_keys: bool = False
     final_newline: bool = True
 
 
 def get_formatter(
-    formatter: Optional[Callable[[Any], str]] = None,
+    formatter: Callable[[Any], str] | None = None,
     **kwargs: Any,
 ) -> Callable[[Any], str]:
     if callable(formatter):

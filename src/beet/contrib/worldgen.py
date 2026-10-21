@@ -48,7 +48,7 @@ __all__ = [
 ]
 
 
-from typing import ClassVar, Union
+from typing import ClassVar
 
 from beet import Context, DataPack, JsonFile, NamespaceFileScope, TagFile
 
@@ -57,7 +57,7 @@ def beet_default(ctx: Context):
     ctx.require(worldgen)
 
 
-def worldgen(pack: Union[Context, DataPack]):
+def worldgen(pack: Context | DataPack):
     """Enable worldgen."""
     if isinstance(pack, Context):
         pack = pack.data

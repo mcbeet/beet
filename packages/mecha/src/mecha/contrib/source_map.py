@@ -12,7 +12,6 @@ __all__ = [
 
 
 from dataclasses import dataclass, replace
-from typing import List
 
 from jinja2 import Template
 from pydantic import BaseModel
@@ -83,5 +82,5 @@ class SourceMapTransformer(MutatingReducer):
 
 class SourceMapSerializer(Visitor):
     @rule(AstSourceMap)
-    def source_map(self, node: AstSourceMap, result: List[str]):
+    def source_map(self, node: AstSourceMap, result: list[str]):
         result.append(node.header)

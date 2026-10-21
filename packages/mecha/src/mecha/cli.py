@@ -8,7 +8,6 @@ __all__ = [
 import logging
 import os
 import zipfile
-from typing import Optional, Tuple
 
 import click
 
@@ -82,11 +81,11 @@ def validate(ctx: Context):
 )
 @error_handler(should_exit=True)
 def mecha(
-    source: Tuple[str, ...],
+    source: tuple[str, ...],
     minecraft: str,
     log: str,
     stats: bool,
-    json: Optional[str],
+    json: str | None,
 ):
     """Validate data packs and .mcfunction files."""
     if stats and log != "DEBUG":

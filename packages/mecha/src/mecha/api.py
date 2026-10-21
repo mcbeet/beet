@@ -11,6 +11,7 @@ import logging
 import os
 import pickle
 import sys
+from collections.abc import Iterable, Iterator
 from contextlib import contextmanager
 from dataclasses import InitVar, dataclass
 from glob import glob
@@ -19,16 +20,8 @@ from pathlib import Path
 from time import perf_counter_ns
 from typing import (
     Any,
-    Dict,
-    Iterable,
-    Iterator,
-    List,
     Literal,
-    Optional,
-    Tuple,
-    Type,
     TypeVar,
-    Union,
     overload,
 )
 
@@ -77,7 +70,7 @@ from .spec import CommandSpec
 
 AstNodeType = TypeVar("AstNodeType", bound=AstNode)
 TextFileType = TypeVar("TextFileType", bound=TextFileBase[Any])
-PackType = TypeVar("PackType", bound=Union[ResourcePack, DataPack])
+PackType = TypeVar("PackType", bound=ResourcePack | DataPack)
 
 
 logger = logging.getLogger("mecha")
@@ -111,7 +104,7 @@ class AstCacheBackend:
         self.dump_data({"ast": node}, f)
 
 
-FORMATTING_PRESETS: Dict[str, JsonDict] = {
+FORMATTING_PRESETS: dict[str, JsonDict] = {
     "minify": {
         "layout": "dense",
         "cmd_compact": True,
@@ -131,14 +124,14 @@ class MechaOptions(BaseModel):
     """Mecha options."""
 
     version: str = ""
-    commands: Optional[ListOption[PackageablePath]] = None
+    commands: ListOption[PackageablePath] | None = None
     multiline: bool = False
     formatting: FormattingOptions = FormattingOptions()
-    readonly: Optional[bool] = None
-    match: Optional[List[str]] = None
-    rules: Dict[str, Literal["ignore", "info", "warn", "error"]] = {}
+    readonly: bool | None = None
+    match: list[str] | None = None
+    rules: dict[str, Literal["ignore", "info", "warn", "error"]] = {}
     cache: bool = True
-    output_perf: Optional[FileSystemPath] = None
+    output_perf: FileSystemPath | None = None
 
     @field_validator("formatting", mode="before")
     @classmethod
@@ -153,25 +146,25 @@ class MechaOptions(BaseModel):
 class Mecha:
     """Class exposing the command api."""
 
-    ctx: InitVar[Optional[Context]] = None
+    ctx: InitVar[Context | None] = None
     version: InitVar[VersionNumber] = LATEST_MINECRAFT_VERSION
     multiline: InitVar[bool] = False
-    formatting: InitVar[Optional[FormattingOptions]] = None
+    formatting: InitVar[FormattingOptions | None] = None
     readonly: bool = False
-    match: Optional[List[str]] = None
+    match: list[str] | None = None
 
     directory: Path = extra_field(init=False)
-    cache: Optional[Cache] = extra_field(default=None)
+    cache: Cache | None = extra_field(default=None)
     cache_backend: AstCacheBackend = extra_field(default_factory=AstCacheBackend)
-    output_perf: Optional[FileSystemPath] = extra_field(default=None)
-    perf_report: Optional[List[Tuple[str, str, int, List[float]]]] = extra_field(
+    output_perf: FileSystemPath | None = extra_field(default=None)
+    perf_report: list[tuple[str, str, int, list[float]]] | None = extra_field(
         default=None
     )
 
     spec: CommandSpec = extra_field(default=None)
 
     function_provider: CompilationUnitProvider = extra_field(init=False)
-    providers: List[CompilationUnitProvider] = extra_field(init=False)
+    providers: list[CompilationUnitProvider] = extra_field(init=False)
 
     preprocessor: Preprocessor = extra_field(default=wrap_backslash_continuation)
 
@@ -180,7 +173,7 @@ class Mecha:
     optimize: Dispatcher[AstRoot] = extra_field(init=False)
     check: Dispatcher[AstRoot] = extra_field(init=False)
 
-    steps: List[Dispatcher[AstRoot]] = extra_field(default_factory=list)
+    steps: list[Dispatcher[AstRoot]] = extra_field(default_factory=list)
 
     serialize: Serializer = extra_field(init=False)
 
@@ -191,10 +184,10 @@ class Mecha:
 
     def __post_init__(
         self,
-        ctx: Optional[Context],
+        ctx: Context | None,
         version: VersionNumber,
         multiline: bool,
-        formatting: Optional[FormattingOptions],
+        formatting: FormattingOptions | None,
     ):
         if ctx:
             opts = ctx.validate("mecha", MechaOptions)
@@ -280,7 +273,7 @@ class Mecha:
     def prepare_token_stream(
         self,
         stream: TokenStream,
-        multiline: Optional[bool] = None,
+        multiline: bool | None = None,
     ) -> Iterator[TokenStream]:
         """Prepare the token stream for parsing."""
         with (
@@ -298,52 +291,52 @@ class Mecha:
     @overload
     def parse(
         self,
-        source: Union[TextFileBase[Any], List[str], str],
+        source: TextFileBase[Any] | list[str] | str,
         *,
-        filename: Optional[FileSystemPath] = None,
-        resource_location: Optional[str] = None,
-        multiline: Optional[bool] = None,
-        provide: Optional[JsonDict] = None,
-        preprocessor: Optional[Preprocessor] = None,
+        filename: FileSystemPath | None = None,
+        resource_location: str | None = None,
+        multiline: bool | None = None,
+        provide: JsonDict | None = None,
+        preprocessor: Preprocessor | None = None,
     ) -> AstRoot: ...
 
     @overload
     def parse(
         self,
-        source: Union[TextFileBase[Any], List[str], str],
+        source: TextFileBase[Any] | list[str] | str,
         *,
-        type: Type[AstNodeType],
-        filename: Optional[FileSystemPath] = None,
-        resource_location: Optional[str] = None,
-        multiline: Optional[bool] = None,
-        provide: Optional[JsonDict] = None,
-        preprocessor: Optional[Preprocessor] = None,
+        type: type[AstNodeType],
+        filename: FileSystemPath | None = None,
+        resource_location: str | None = None,
+        multiline: bool | None = None,
+        provide: JsonDict | None = None,
+        preprocessor: Preprocessor | None = None,
     ) -> AstNodeType: ...
 
     @overload
     def parse(
         self,
-        source: Union[TextFileBase[Any], List[str], str],
+        source: TextFileBase[Any] | list[str] | str,
         *,
         using: str,
-        filename: Optional[FileSystemPath] = None,
-        resource_location: Optional[str] = None,
-        multiline: Optional[bool] = None,
-        provide: Optional[JsonDict] = None,
-        preprocessor: Optional[Preprocessor] = None,
+        filename: FileSystemPath | None = None,
+        resource_location: str | None = None,
+        multiline: bool | None = None,
+        provide: JsonDict | None = None,
+        preprocessor: Preprocessor | None = None,
     ) -> Any: ...
 
     def parse(
         self,
-        source: Union[TextFileBase[Any], List[str], str],
+        source: TextFileBase[Any] | list[str] | str,
         *,
-        type: Optional[Type[AstNode]] = None,
-        using: Optional[str] = None,
-        filename: Optional[FileSystemPath] = None,
-        resource_location: Optional[str] = None,
-        multiline: Optional[bool] = None,
-        provide: Optional[JsonDict] = None,
-        preprocessor: Optional[Preprocessor] = None,
+        type: type[AstNode] | None = None,
+        using: str | None = None,
+        filename: FileSystemPath | None = None,
+        resource_location: str | None = None,
+        multiline: bool | None = None,
+        provide: JsonDict | None = None,
+        preprocessor: Preprocessor | None = None,
     ) -> Any:
         """Parse the given source into an AST."""
         if using:
@@ -413,25 +406,25 @@ class Mecha:
         self,
         source: PackType,
         *,
-        match: Optional[List[str]] = None,
-        multiline: Optional[bool] = None,
-        formatting: Optional[JsonDict] = None,
-        readonly: Optional[bool] = None,
+        match: list[str] | None = None,
+        multiline: bool | None = None,
+        formatting: JsonDict | None = None,
+        readonly: bool | None = None,
         initial_step: int = 0,
-        report: Optional[DiagnosticCollection] = None,
+        report: DiagnosticCollection | None = None,
     ) -> PackType: ...
 
     @overload
     def compile(
         self,
         *,
-        together: Iterable[Union[ResourcePack, DataPack]],
-        match: Optional[List[str]] = None,
-        multiline: Optional[bool] = None,
-        formatting: Optional[JsonDict] = None,
-        readonly: Optional[bool] = None,
+        together: Iterable[ResourcePack | DataPack],
+        match: list[str] | None = None,
+        multiline: bool | None = None,
+        formatting: JsonDict | None = None,
+        readonly: bool | None = None,
         initial_step: int = 0,
-        report: Optional[DiagnosticCollection] = None,
+        report: DiagnosticCollection | None = None,
     ) -> None: ...
 
     @overload
@@ -439,54 +432,52 @@ class Mecha:
         self,
         source: TextFileType,
         *,
-        filename: Optional[FileSystemPath] = None,
-        resource_location: Optional[str] = None,
-        within: Optional[Union[ResourcePack, DataPack]] = None,
-        multiline: Optional[bool] = None,
-        formatting: Optional[JsonDict] = None,
-        readonly: Optional[bool] = None,
+        filename: FileSystemPath | None = None,
+        resource_location: str | None = None,
+        within: ResourcePack | DataPack | None = None,
+        multiline: bool | None = None,
+        formatting: JsonDict | None = None,
+        readonly: bool | None = None,
         initial_step: int = 0,
-        report: Optional[DiagnosticCollection] = None,
+        report: DiagnosticCollection | None = None,
     ) -> TextFileType: ...
 
     @overload
     def compile(
         self,
-        source: Union[List[str], str, AstRoot],
+        source: list[str] | str | AstRoot,
         *,
-        filename: Optional[FileSystemPath] = None,
-        resource_location: Optional[str] = None,
-        within: Optional[Union[ResourcePack, DataPack]] = None,
-        multiline: Optional[bool] = None,
-        formatting: Optional[JsonDict] = None,
-        readonly: Optional[bool] = None,
+        filename: FileSystemPath | None = None,
+        resource_location: str | None = None,
+        within: ResourcePack | DataPack | None = None,
+        multiline: bool | None = None,
+        formatting: JsonDict | None = None,
+        readonly: bool | None = None,
         initial_step: int = 0,
-        report: Optional[DiagnosticCollection] = None,
+        report: DiagnosticCollection | None = None,
     ) -> Function: ...
 
     def compile(
         self,
-        source: Optional[
-            Union[
-                Union[ResourcePack, DataPack],
-                TextFileBase[Any],
-                List[str],
-                str,
-                AstRoot,
-            ]
-        ] = None,
+        source: ResourcePack
+        | DataPack
+        | TextFileBase[Any]
+        | list[str]
+        | str
+        | AstRoot
+        | None = None,
         *,
-        together: Optional[Iterable[Union[ResourcePack, DataPack]]] = None,
-        match: Optional[List[str]] = None,
-        filename: Optional[FileSystemPath] = None,
-        resource_location: Optional[str] = None,
-        within: Optional[Union[ResourcePack, DataPack]] = None,
-        multiline: Optional[bool] = None,
-        formatting: Optional[JsonDict] = None,
-        readonly: Optional[bool] = None,
+        together: Iterable[ResourcePack | DataPack] | None = None,
+        match: list[str] | None = None,
+        filename: FileSystemPath | None = None,
+        resource_location: str | None = None,
+        within: ResourcePack | DataPack | None = None,
+        multiline: bool | None = None,
+        formatting: JsonDict | None = None,
+        readonly: bool | None = None,
         initial_step: int = 0,
-        report: Optional[DiagnosticCollection] = None,
-    ) -> Optional[Union[Union[ResourcePack, DataPack], TextFileBase[Any]]]:
+        report: DiagnosticCollection | None = None,
+    ) -> ResourcePack | DataPack | TextFileBase[Any] | None:
         """Apply all compilation steps."""
         self.database.setup_compilation()
 
@@ -635,7 +626,7 @@ class Mecha:
             elif diagnostic.level == "info":
                 logger.info("%s", message, extra=extra)
 
-    def format_perf(self) -> List[List[str]]:
+    def format_perf(self) -> list[list[str]]:
         """Format perf report."""
         step_headers = [
             (

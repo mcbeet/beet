@@ -38,6 +38,7 @@ import re
 import shutil
 import sys
 import time
+from collections.abc import Generator, Iterable, Iterator
 from contextlib import contextmanager
 from dataclasses import field
 from importlib import import_module
@@ -46,16 +47,8 @@ from pathlib import Path
 from traceback import format_exception
 from typing import (
     Any,
-    Dict,
-    Generator,
-    Iterable,
-    Iterator,
-    List,
-    Optional,
-    Tuple,
     TypedDict,
     TypeVar,
-    Union,
 )
 
 from pydantic import ValidationError
@@ -64,9 +57,9 @@ from .error import BubbleException
 
 T = TypeVar("T")
 
-JsonDict = Dict[str, Any]
-FileSystemPath = str | os.PathLike[str]
-TextComponent = Union[str, List[Any], JsonDict]
+type JsonDict = dict[str, Any]
+type FileSystemPath = str | os.PathLike[str]
+type TextComponent = str | list[Any] | JsonDict
 
 
 class FormatsRangeDict(TypedDict):
@@ -74,7 +67,7 @@ class FormatsRangeDict(TypedDict):
     max_inclusive: int
 
 
-SupportedFormats = Union[int, List[int], FormatsRangeDict]
+type SupportedFormats = int | list[int] | FormatsRangeDict
 
 
 class Sentinel:
@@ -123,10 +116,10 @@ def snake_case(string: str) -> str:
     return CAMEL_REGEX.sub(r"_\1", string).lower()
 
 
-VersionNumber = Union[str, int, float, Tuple[Union[str, int], ...]]
+type VersionNumber = str | int | float | tuple[str | int, ...]
 
 
-def split_version(version: VersionNumber) -> Tuple[int, ...]:
+def split_version(version: VersionNumber) -> tuple[int, ...]:
     if isinstance(version, (int, float)):
         version = str(version)
     if isinstance(version, str):
@@ -140,8 +133,8 @@ def get_import_string(obj: Any) -> str:
 
 def import_from_string(
     dotted_path: str,
-    default_member: Optional[str] = None,
-    whitelist: Optional[List[str]] = None,
+    default_member: str | None = None,
+    whitelist: list[str] | None = None,
 ) -> Any:
     if whitelist is not None and dotted_path not in whitelist:
         raise ModuleNotFoundError(f"No module named {dotted_path!r}")
@@ -161,7 +154,7 @@ def import_from_string(
     return getattr(module, default_member) if default_member else module
 
 
-def resolve_packageable_path(value: T) -> Union[T, Path]:
+def resolve_packageable_path(value: T) -> T | Path:
     value_str = str(value)
 
     if value_str.startswith("@"):
@@ -296,7 +289,7 @@ def format_directory(directory: FileSystemPath, prefix: str = "") -> Iterator[st
     max_entries = 8
     crop_entries = 5
 
-    entries = list(sorted(Path(directory).iterdir()))
+    entries = sorted(Path(directory).iterdir())
 
     count = len(entries)
     if count > max_entries:
@@ -328,7 +321,7 @@ def pop_traceback(exc: ExceptionType, n: int = 1) -> ExceptionType:
 
 
 @contextmanager
-def change_directory(directory: Optional[FileSystemPath] = None):
+def change_directory(directory: FileSystemPath | None = None):
     if not directory:
         yield
         return

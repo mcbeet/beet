@@ -30,7 +30,7 @@ __all__ = [
 from contextlib import suppress
 from copy import deepcopy
 from dataclasses import dataclass
-from typing import ClassVar, Dict, Optional, Type
+from typing import ClassVar
 
 from PIL.Image import Image
 
@@ -182,7 +182,7 @@ class Texture(PngFile):
     """Class representing a texture."""
 
     content: BinaryFileContent[Image] = None
-    mcmeta: Optional[JsonDict] = extra_field(default=None)
+    mcmeta: JsonDict | None = extra_field(default=None)
 
     scope: ClassVar[NamespaceFileScope] = ("textures",)
     extension: ClassVar[str] = ".png"
@@ -198,15 +198,15 @@ class Texture(PngFile):
 class Sound(BinaryFile):
     """Class representing a sound file."""
 
-    event: Optional[str] = extra_field(default=None)
-    subtitle: Optional[str] = extra_field(default=None)
-    replace: Optional[bool] = extra_field(default=None)
-    volume: Optional[float] = extra_field(default=None)
-    pitch: Optional[float] = extra_field(default=None)
-    weight: Optional[int] = extra_field(default=None)
-    stream: Optional[bool] = extra_field(default=None)
-    attenuation_distance: Optional[int] = extra_field(default=None)
-    preload: Optional[bool] = extra_field(default=None)
+    event: str | None = extra_field(default=None)
+    subtitle: str | None = extra_field(default=None)
+    replace: bool | None = extra_field(default=None)
+    volume: float | None = extra_field(default=None)
+    pitch: float | None = extra_field(default=None)
+    weight: int | None = extra_field(default=None)
+    stream: bool | None = extra_field(default=None)
+    attenuation_distance: int | None = extra_field(default=None)
+    preload: bool | None = extra_field(default=None)
 
     scope: ClassVar[NamespaceFileScope] = ("sounds",)
     extension: ClassVar[str] = ".ogg"
@@ -332,9 +332,7 @@ class ResourcePackNamespace(Namespace):
 
     directory = "assets"
 
-    sound_config: ExtraPin[Optional[SoundConfig]] = ExtraPin(
-        "sounds.json", default=None
-    )
+    sound_config: ExtraPin[SoundConfig | None] = ExtraPin("sounds.json", default=None)
 
     # fmt: off
     blockstates:      NamespacePin[Blockstate]     = NamespacePin(Blockstate)
@@ -362,7 +360,7 @@ class ResourcePackNamespace(Namespace):
     # fmt: on
 
     @classmethod
-    def get_extra_info(cls) -> Dict[str, Type[PackFile]]:
+    def get_extra_info(cls) -> dict[str, type[PackFile]]:
         return {**super().get_extra_info(), "sounds.json": SoundConfig}
 
 
@@ -377,7 +375,7 @@ class ResourcePack(Pack[ResourcePackNamespace]):
     )
     latest_pack_format = pack_format_registry[LATEST_MINECRAFT_VERSION]
 
-    language_config = McmetaPin[Dict[str, JsonDict]]("language", default_factory=dict)
+    language_config = McmetaPin[dict[str, JsonDict]]("language", default_factory=dict)
 
     # fmt: off
     blockstates:      NamespaceProxyDescriptor[Blockstate]     = NamespaceProxyDescriptor(Blockstate)

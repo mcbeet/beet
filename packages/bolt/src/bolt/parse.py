@@ -68,7 +68,7 @@ __all__ = [
 
 import re
 from dataclasses import dataclass, field, replace
-from typing import Any, Dict, FrozenSet, List, Literal, Optional, Set, Tuple, Type, cast
+from typing import Any, Literal, cast
 from uuid import UUID, uuid4
 
 from tokenstream import (
@@ -209,10 +209,10 @@ IMPORT_REGEX = re.compile(rf"^{MODULE_PATTERN}$")
 
 
 def get_bolt_parsers(
-    parsers: Dict[str, Parser],
+    parsers: dict[str, Parser],
     modules: ModuleManager,
-    bolt_prototypes: Set[str],
-) -> Dict[str, Parser]:
+    bolt_prototypes: set[str],
+) -> dict[str, Parser]:
     """Return the bolt parsers."""
     macro_handler = MacroHandler(
         parser=parsers["command"],
@@ -602,12 +602,12 @@ def get_stream_lexical_scope(stream: TokenStream) -> LexicalScope:
     return stream.data.setdefault("lexical_scope", LexicalScope())
 
 
-def get_stream_macro_scope(stream: TokenStream) -> Dict[str, AstMacro]:
+def get_stream_macro_scope(stream: TokenStream) -> dict[str, AstMacro]:
     """Return the macro identifiers currently available."""
     return stream.data.setdefault("macro_scope", {})
 
 
-def get_stream_pending_macros(stream: TokenStream) -> List[AstMacro]:
+def get_stream_pending_macros(stream: TokenStream) -> list[AstMacro]:
     """Return pending macro declarations."""
     return stream.data.setdefault("pending_macros", [])
 
@@ -704,7 +704,7 @@ def create_bolt_root_parser(parser: Parser, macro_handler: "MacroHandler"):
 
 
 def create_bolt_command_parser(
-    parser: Parser, modules: ModuleManager, bolt_prototypes: Set[str]
+    parser: Parser, modules: ModuleManager, bolt_prototypes: set[str]
 ):
     """Compose command parsers."""
     parser = MemoHandler(parser)
@@ -799,8 +799,8 @@ class InterpolationParser:
     """Parser for interpolation."""
 
     converter: str
-    prefix: Optional[str] = None
-    unpack: Optional[str] = None
+    prefix: str | None = None
+    unpack: str | None = None
 
     def __call__(self, stream: TokenStream) -> Any:
         if stream.data.get("disable_interpolation"):
@@ -935,7 +935,7 @@ class EscapeAnalysisParser:
         }
 
         if isinstance(node := self.parser(stream), AstRoot):
-            refcount_snapshots: List[Tuple[str, Binding, int]] = []
+            refcount_snapshots: list[tuple[str, Binding, int]] = []
 
             for identifier, variable in lexical_scope.variables.items():
                 nb_bindings = previous_bindings.get(identifier)
@@ -983,10 +983,10 @@ class EscapeAnalysisResolver:
 
     def resolve(self, node: AstRoot) -> AstRoot:
         should_replace = False
-        commands: List[AstCommand] = []
+        commands: list[AstCommand] = []
 
         for command in node.commands:
-            stack: List[AstCommand] = [command]
+            stack: list[AstCommand] = [command]
 
             while command.arguments and isinstance(
                 command := command.arguments[-1], AstCommand
@@ -1068,8 +1068,8 @@ class MemoHandler:
         return node
 
     def create_memo(self, command: AstCommand, persistent_id: UUID) -> AstMemo:
-        identifier_parts: List[str] = ["memo"]
-        arguments: List[AstNode] = []
+        identifier_parts: list[str] = ["memo"]
+        arguments: list[AstNode] = []
 
         node = command
         while isinstance(subcommand := node.arguments[-1], AstCommand):
@@ -1112,10 +1112,10 @@ class DecoratorResolver:
     def __call__(self, stream: TokenStream) -> AstRoot:
         node: AstRoot = self.parser(stream)
 
-        stack: List[AstDecorator] = []
+        stack: list[AstDecorator] = []
 
         changed = False
-        result: List[AstCommand] = []
+        result: list[AstCommand] = []
 
         for command in node.commands:
             if isinstance(command, AstStatement) and isinstance(
@@ -1159,7 +1159,7 @@ class AssignmentTargetParser:
     def __call__(self, stream: TokenStream) -> AstTarget:
         lexical_scope = get_stream_lexical_scope(stream)
 
-        nodes: List[AstTarget] = []
+        nodes: list[AstTarget] = []
 
         with stream.syntax(identifier=IDENTIFIER_PATTERN, comma=r","):
             while True:
@@ -1200,7 +1200,7 @@ class VanillaReturnHandler:
             return node
 
         changed = False
-        result: List[AstCommand] = []
+        result: list[AstCommand] = []
 
         for command in node.commands:
             if command.identifier == "return:value" and command.arguments:
@@ -1237,7 +1237,7 @@ class IfElseLoweringParser:
         node: AstRoot = self.parser(stream)
 
         changed = False
-        result: List[AstCommand] = []
+        result: list[AstCommand] = []
 
         commands = iter(node.commands)
         previous = ""
@@ -1295,7 +1295,7 @@ class BreakContinueConstraint:
     """Constraint that makes sure that break and continue statements only occur in loops."""
 
     parser: Parser
-    allowed_scopes: Set[Tuple[str, ...]]
+    allowed_scopes: set[tuple[str, ...]]
 
     def __call__(self, stream: TokenStream) -> AstRoot:
         scope = get_stream_scope(stream)
@@ -1342,7 +1342,7 @@ def parse_function_signature(stream: TokenStream) -> AstFunctionSignature:
     lexical_scope = get_stream_lexical_scope(stream)
     type_annotation_scope = lexical_scope.fork()
 
-    arguments: List[AstFunctionSignatureElement] = []
+    arguments: list[AstFunctionSignatureElement] = []
 
     encountered_positional = False
     encountered_default = False
@@ -1567,8 +1567,8 @@ class MacroHandler:
 
     parser: Parser
 
-    proc_macro_overloads: Dict[str, Dict[str, int]] = extra_field(default_factory=dict)
-    spec_cache: Dict[FrozenSet[AstMacro], CommandSpec] = extra_field(
+    proc_macro_overloads: dict[str, dict[str, int]] = extra_field(default_factory=dict)
+    spec_cache: dict[frozenset[AstMacro], CommandSpec] = extra_field(
         default_factory=dict
     )
 
@@ -1613,10 +1613,10 @@ class MacroHandler:
     def create_macro(
         self,
         command: AstCommand,
-        resource_location: Optional[str] = None,
+        resource_location: str | None = None,
     ) -> AstMacro:
-        identifier_parts: List[str] = []
-        arguments: List[AstNode] = []
+        identifier_parts: list[str] = []
+        arguments: list[AstNode] = []
 
         node = command
         while isinstance(subcommand := node.arguments[-1], AstCommand):
@@ -1770,12 +1770,12 @@ class ProcMacroExpansion:
 
     def __call__(self, stream: TokenStream) -> AstRoot:
         should_replace = False
-        commands: List[AstCommand] = []
+        commands: list[AstCommand] = []
 
         node: AstRoot = self.parser(stream)
 
         for command in node.commands:
-            stack: List[AstCommand] = [command]
+            stack: list[AstCommand] = [command]
 
             while command.arguments and isinstance(
                 command := command.arguments[-1], AstCommand
@@ -1827,8 +1827,8 @@ class ClassBasesParser:
     parser: Parser
 
     def __call__(self, stream: TokenStream) -> AstClassBases:
-        inherit: List[AstExpression] = []
-        kwargs: List[AstKeyword] = []
+        inherit: list[AstExpression] = []
+        kwargs: list[AstKeyword] = []
 
         with stream.syntax(brace=r"\(|\)", comma=","):
             token = stream.expect(("brace", "("))
@@ -1989,7 +1989,7 @@ class ImportStatementHandler:
         except UnusableCompilationUnit:
             compiled_module = None
 
-        arguments: List[AstNode] = [module]
+        arguments: list[AstNode] = [module]
 
         subcommand = cast(AstCommand, node.arguments[1])
         while True:
@@ -2051,7 +2051,7 @@ class BindingStorageHandler:
 
     parser: Parser
 
-    storage_qualifiers: Dict[str, Literal["global", "nonlocal", "deleted"]] = field(
+    storage_qualifiers: dict[str, Literal["global", "nonlocal", "deleted"]] = field(
         default_factory=lambda: {
             "global:subcommand": "global",
             "nonlocal:subcommand": "nonlocal",
@@ -2089,7 +2089,7 @@ class DocstringHandler:
         node: AstRoot = self.parser(stream)
 
         changed = False
-        result: List[AstCommand] = []
+        result: list[AstCommand] = []
 
         for command in node.commands:
             if (
@@ -2119,7 +2119,7 @@ class WithContextParser:
     target_parser: Parser
 
     def __call__(self, stream: TokenStream) -> AstWithContext:
-        clauses: List[AstWithClause] = []
+        clauses: list[AstWithClause] = []
 
         with stream.syntax(
             brace=r"\(|\)",
@@ -2179,7 +2179,7 @@ class SubcommandConstraint:
     """Prevent using the specified prototypes as general subcommands."""
 
     parser: Parser
-    command_identifiers: Set[str]
+    command_identifiers: set[str]
 
     def __call__(self, stream: TokenStream) -> Any:
         if (
@@ -2213,7 +2213,7 @@ class DeferredRootBacktracker:
 
     def resolve_deferred(self, node: AstRoot, stream: TokenStream) -> AstRoot:
         should_replace = False
-        commands: List[AstCommand] = []
+        commands: list[AstCommand] = []
 
         for command in node.commands:
             if command.arguments and isinstance(
@@ -2227,7 +2227,7 @@ class DeferredRootBacktracker:
                         arguments=AstChildren([*command.arguments[:-1], resolved_body]),
                     )
 
-            stack: List[AstCommand] = [command]
+            stack: list[AstCommand] = [command]
 
             while command.arguments and isinstance(
                 command := command.arguments[-1], AstCommand
@@ -2282,9 +2282,9 @@ class LexicalScopeConstraint:
     """Constraint that restricts specific statements to the given scope type."""
 
     parser: Parser
-    type: Type[LexicalScope]
-    flags: Dict[str, bool]
-    command_identifiers: Set[str]
+    type: type[LexicalScope]
+    flags: dict[str, bool]
+    command_identifiers: set[str]
 
     def __call__(self, stream: TokenStream) -> AstRoot:
         node = self.parser(stream)
@@ -2327,16 +2327,16 @@ class RootScopeHandler:
 class BinaryParser:
     """Parser for binary expressions."""
 
-    operators: List[str]
+    operators: list[str]
     parser: Parser
     right_associative: bool = False
 
     def parse_operands(
         self, stream: TokenStream
-    ) -> Tuple[List[AstExpression], List[str]]:
+    ) -> tuple[list[AstExpression], list[str]]:
         with stream.syntax(operator="|".join(self.operators)):
             nodes = [self.parser(stream)]
-            operations: List[str] = []
+            operations: list[str] = []
 
             for op in stream.collect("operator"):
                 nodes.append(self.parser(stream))
@@ -2368,7 +2368,7 @@ class BinaryParser:
 class UnaryParser:
     """Parser for unary expressions."""
 
-    operators: List[str]
+    operators: list[str]
     parser: Parser
 
     def __call__(self, stream: TokenStream) -> Any:
@@ -2521,7 +2521,7 @@ class PrimaryParser:
             if token and token.match("brace"):
                 with stream.ignore("newline"):
                     comma = None
-                    items: List[AstExpression] = []
+                    items: list[AstExpression] = []
 
                     for _ in stream.peek_until(("brace", ")")):
                         items.append(delegate("bolt:expression", stream))
@@ -2553,7 +2553,7 @@ class PrimaryParser:
                     ),
                 ):
                     fmt = quote
-                    values: List[AstExpression] = []
+                    values: list[AstExpression] = []
 
                     for escape, double_brace, brace, text in stream.collect(
                         "escape",
@@ -2605,7 +2605,7 @@ class PrimaryParser:
                     ),
                 ):
                     fmt = ""
-                    values: List[AstExpression] = []
+                    values: list[AstExpression] = []
 
                     for path, curly in stream.collect("path", ("curly", "{")):
                         if path:
@@ -2639,7 +2639,7 @@ class PrimaryParser:
             ),
         ):
             while token := stream.get("dot", ("brace", "("), ("bracket", "[")):
-                arguments: List[Any] = []
+                arguments: list[Any] = []
 
                 if token.match("dot"):
                     identifier, string, number = stream.expect(
@@ -2721,7 +2721,7 @@ class BuiltinCallRestriction:
     """Only allow call expressions on builtins."""
 
     parser: Parser
-    builtins: Set[str]
+    builtins: set[str]
 
     def __call__(self, stream: TokenStream) -> Any:
         parent = None
@@ -2828,7 +2828,7 @@ class LiteralParser:
             )
 
             if curly:
-                items: List[Any] = []
+                items: list[Any] = []
                 unquoted = False
 
                 with stream.ignore("newline"):
@@ -2860,7 +2860,7 @@ class LiteralParser:
                 return set_location(node, curly, stream.current)
 
             if bracket:
-                elements: List[Any] = []
+                elements: list[Any] = []
 
                 with stream.ignore("newline"):
                     for _ in stream.peek_until(("bracket", "]")):

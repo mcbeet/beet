@@ -3,11 +3,12 @@ __all__ = [
 ]
 
 
+from collections.abc import Callable
 from contextlib import ExitStack, contextmanager
 from dataclasses import dataclass, replace
 from functools import partial, wraps
 from importlib import import_module
-from typing import Any, Callable, Dict
+from typing import Any
 from uuid import UUID
 
 from tokenstream import set_location
@@ -52,7 +53,7 @@ from mecha.contrib.relative_location import resolve_relative_location
 from .utils import internal
 
 
-def get_bolt_helpers() -> Dict[str, Any]:
+def get_bolt_helpers() -> dict[str, Any]:
     """Return a collection of helpers used by the generated code."""
     return {
         "replace": replace,

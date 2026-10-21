@@ -9,7 +9,6 @@ __all__ = [
 
 from dataclasses import dataclass, replace
 from pathlib import PurePosixPath
-from typing import Tuple
 
 from tokenstream import InvalidSyntax, SourceLocation, TokenStream, set_location
 
@@ -54,7 +53,7 @@ def resolve_using_database(
     database: CompilationDatabase,
     location: SourceLocation,
     end_location: SourceLocation,
-) -> Tuple[str, str]:
+) -> tuple[str, str]:
     """Resolve relative resource location."""
     current_file = database.current
     path = database[current_file].resource_location
@@ -73,7 +72,7 @@ def resolve_relative_location(
     root: str,
     *,
     include_root_file: bool = False,
-) -> Tuple[str, str]:
+) -> tuple[str, str]:
     namespace, _, current_path = root.partition(":")
 
     resolved = PurePosixPath(current_path)
