@@ -356,9 +356,16 @@ def get_bolt_parsers(
         ),
         "bolt:memo_root": MemoRootParser(EscapeAnalysisParser(delegate("nested_root"))),
         "bolt:del_target": parse_del_target,
-        "bolt:interpolation": BuiltinCallRestriction(
-            PrimaryParser(delegate("bolt:identifier"), truncate=True),
-            builtins=modules.builtins,
+        "bolt:interpolation": UnaryParser(
+            operators=[r"\+", "-"],
+            parser=BinaryParser(
+                operators=[r"\*\*(?!=)"],
+                parser=BuiltinCallRestriction(
+                    PrimaryParser(delegate("bolt:identifier"), truncate=True),
+                    builtins=modules.builtins,
+                ),
+                right_associative=True,
+            ),
         ),
         "bolt:identifier": parse_identifier,
         "bolt:with_context": WithContextParser(
