@@ -1409,3 +1409,7 @@ function namespace:path/:
 ###
 function namespace:path/
 
+###
+i = 7
+execute if score #test test matches i run function ~/test
+execute if score #test test matches -i run function ~/test

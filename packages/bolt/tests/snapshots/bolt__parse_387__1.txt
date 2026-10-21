@@ -1,0 +1,114 @@
+_bolt_lineno = [1, 9, 13], [1, 2, 3]
+_bolt_helper_interpolate_range = _bolt_runtime.helpers['interpolate_range']
+_bolt_helper_children = _bolt_runtime.helpers['children']
+_bolt_helper_replace = _bolt_runtime.helpers['replace']
+with _bolt_runtime.scope() as __bolt_var3:
+    __bolt_var0 = 7
+    i = __bolt_var0
+    with _bolt_runtime.push_nesting('execute:subcommand'):
+        __bolt_var1 = i
+        __bolt_var1 = _bolt_helper_interpolate_range(__bolt_var1, _bolt_refs[0])
+    _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[5], arguments=_bolt_helper_children([_bolt_helper_replace(_bolt_refs[4], arguments=_bolt_helper_children([*_bolt_helper_children([_bolt_refs[1], _bolt_refs[2], __bolt_var1]), _bolt_refs[3]]))])))
+    with _bolt_runtime.push_nesting('execute:subcommand'):
+        __bolt_var2 = i
+        __bolt_var2 = - __bolt_var2
+        __bolt_var2 = _bolt_helper_interpolate_range(__bolt_var2, _bolt_refs[6])
+    _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[11], arguments=_bolt_helper_children([_bolt_helper_replace(_bolt_refs[10], arguments=_bolt_helper_children([*_bolt_helper_children([_bolt_refs[7], _bolt_refs[8], __bolt_var2]), _bolt_refs[9]]))])))
+__bolt_var4 = _bolt_helper_replace(_bolt_refs[12], commands=_bolt_helper_children(__bolt_var3))
+---
+output = __bolt_var4
+---
+_bolt_refs[0]
+<class 'bolt.ast.AstInterpolation'>
+  location: SourceLocation(pos=42, lineno=2, colno=37)
+  end_location: SourceLocation(pos=43, lineno=2, colno=38)
+  prefix: None
+  unpack: None
+  converter: 'range'
+  value:
+    <class 'bolt.ast.AstIdentifier'>
+_bolt_refs[1]
+<class 'mecha.ast.AstPlayerName'>
+  location: SourceLocation(pos=23, lineno=2, colno=18)
+  end_location: SourceLocation(pos=28, lineno=2, colno=23)
+  value: '#test'
+_bolt_refs[2]
+<class 'mecha.ast.AstObjective'>
+  location: SourceLocation(pos=29, lineno=2, colno=24)
+  end_location: SourceLocation(pos=33, lineno=2, colno=28)
+  value: 'test'
+_bolt_refs[3]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=44, lineno=2, colno=39)
+  end_location: SourceLocation(pos=63, lineno=2, colno=58)
+  identifier: 'execute:run:subcommand'
+  arguments:
+    <class 'mecha.ast.AstCommand'>
+_bolt_refs[4]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=14, lineno=2, colno=9)
+  end_location: SourceLocation(pos=63, lineno=2, colno=58)
+  identifier: 'execute:if:score:target:targetObjective:matches:range:subcommand'
+  arguments:
+    <class 'mecha.ast.AstPlayerName'>
+    <class 'mecha.ast.AstObjective'>
+    <class 'bolt.ast.AstInterpolation'>
+    <class 'mecha.ast.AstCommand'>
+_bolt_refs[5]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=6, lineno=2, colno=1)
+  end_location: SourceLocation(pos=63, lineno=2, colno=58)
+  identifier: 'execute:subcommand'
+  arguments:
+    <class 'mecha.ast.AstCommand'>
+_bolt_refs[6]
+<class 'bolt.ast.AstInterpolation'>
+  location: SourceLocation(pos=100, lineno=3, colno=37)
+  end_location: SourceLocation(pos=102, lineno=3, colno=39)
+  prefix: None
+  unpack: None
+  converter: 'range'
+  value:
+    <class 'bolt.ast.AstExpressionUnary'>
+_bolt_refs[7]
+<class 'mecha.ast.AstPlayerName'>
+  location: SourceLocation(pos=81, lineno=3, colno=18)
+  end_location: SourceLocation(pos=86, lineno=3, colno=23)
+  value: '#test'
+_bolt_refs[8]
+<class 'mecha.ast.AstObjective'>
+  location: SourceLocation(pos=87, lineno=3, colno=24)
+  end_location: SourceLocation(pos=91, lineno=3, colno=28)
+  value: 'test'
+_bolt_refs[9]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=103, lineno=3, colno=40)
+  end_location: SourceLocation(pos=122, lineno=3, colno=59)
+  identifier: 'execute:run:subcommand'
+  arguments:
+    <class 'mecha.ast.AstCommand'>
+_bolt_refs[10]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=72, lineno=3, colno=9)
+  end_location: SourceLocation(pos=122, lineno=3, colno=59)
+  identifier: 'execute:if:score:target:targetObjective:matches:range:subcommand'
+  arguments:
+    <class 'mecha.ast.AstPlayerName'>
+    <class 'mecha.ast.AstObjective'>
+    <class 'bolt.ast.AstInterpolation'>
+    <class 'mecha.ast.AstCommand'>
+_bolt_refs[11]
+<class 'mecha.ast.AstCommand'>
+  location: SourceLocation(pos=64, lineno=3, colno=1)
+  end_location: SourceLocation(pos=122, lineno=3, colno=59)
+  identifier: 'execute:subcommand'
+  arguments:
+    <class 'mecha.ast.AstCommand'>
+_bolt_refs[12]
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=123, lineno=4, colno=1)
+  commands:
+    <class 'bolt.ast.AstStatement'>
+    <class 'mecha.ast.AstCommand'>
+    <class 'mecha.ast.AstCommand'>

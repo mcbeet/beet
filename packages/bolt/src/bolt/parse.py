@@ -490,12 +490,12 @@ def get_bolt_parsers(
         ################################################################################
         "bool": AlternativeParser([parsers["bool"], InterpolationParser("bool")]),
         "numeric": AlternativeParser(
-            [parsers["numeric"], InterpolationParser("numeric", prefix="-")]
+            [parsers["numeric"], InterpolationParser("numeric")]
         ),
         "coordinate": AlternativeParser(
             [
                 parsers["coordinate"],
-                InterpolationParser("coordinate", prefix="[~^]-?|-"),
+                InterpolationParser("coordinate", prefix="[~^]"),
             ]
         ),
         "time": AlternativeParser([parsers["time"], InterpolationParser("time")]),
