@@ -1,4 +1,4 @@
-__version__ = "0.106.2"
+__version__ = "0.107.0"
 
 from .api import *
 from .ast import *
