@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v0.121.2 (2026-10-22)
+
+### Bug Fixes
+
+- Pipe workaround from #525 messed up the interactive console
+  ([`d50616f`](https://github.com/mcbeet/beet/commit/d50616fe3f561c54ea2b4b905bc63ef13fbf5056))
+
+
 ## v0.121.1 (2026-10-21)
 
 ### Bug Fixes
