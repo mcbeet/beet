@@ -2,6 +2,57 @@
 
 <!-- version list -->
 
+## v0.53.0 (2026-10-21)
+
+### Bug Fixes
+
+- Minus prefix not needed with relaxed interpolation syntax
+  ([`845332a`](https://github.com/mcbeet/beet/commit/845332a6384af95fd29dd52541c5410650869302))
+
+### Features
+
+- Range tuple expression and interpolation
+  ([`1a93867`](https://github.com/mcbeet/beet/commit/1a938672ad9286eaff3613a30923462199106455))
+
+
+## v0.52.0 (2026-10-21)
+
+### Bug Fixes
+
+- General clean
+  ([`d400c04`](https://github.com/mcbeet/beet/commit/d400c04ffd312e6951cde85a1c707dfdd3b5429d))
+
+- Ruff safe fixes
+  ([`f3cc875`](https://github.com/mcbeet/beet/commit/f3cc87529e3b71037ebcea636d189bcde9d6a92d))
+
+- Ruff unsafe fixes
+  ([`0ad0404`](https://github.com/mcbeet/beet/commit/0ad0404bf3b048a2a024d231483af949ae1802e1))
+
+### Features
+
+- Bump dependencies
+  ([`5417385`](https://github.com/mcbeet/beet/commit/541738563276c3ac963061ccce24d8ab84873687))
+
+
+## v0.51.2 (2026-10-21)
+
+### Bug Fixes
+
+- Relax interpolation syntax
+  ([`621da6b`](https://github.com/mcbeet/beet/commit/621da6bcf22a3b14c2cb4b9997e203b71416d974))
+
+
+## v0.51.1 (2026-10-21)
+
+
+## v0.51.1-beta.1 (2026-10-14)
+
+### Bug Fixes
+
+- Don't require interpolated values
+  ([`c4bd759`](https://github.com/mcbeet/beet/commit/c4bd759b2ea2dbce3149d7a4bfcbb469374146cd))
+
+
 ## v0.51.0 (2026-09-10)
 
 ### Features

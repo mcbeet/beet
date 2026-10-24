@@ -4,19 +4,20 @@ __all__ = [
     "AstJsonValueEmbed",
     "AstNbtValueEmbed",
     "EmbedHandler",
-    "EmbedResolver",
     "EmbedParseCallback",
+    "EmbedResolver",
     "EmbedSerializeCallback",
 ]
 
 
 from dataclasses import dataclass
 from difflib import SequenceMatcher
-from typing import Any, List, Optional, Protocol, TypeVar, Union
+from typing import Any, Protocol
+
+from tokenstream import INITIAL_LOCATION, Preprocessor, SourceLocation, set_location
 
 from beet import Context, TextFileBase
 from beet.core.utils import required_field
-from tokenstream import INITIAL_LOCATION, Preprocessor, SourceLocation, set_location
 
 from mecha import (
     AstJsonValue,
@@ -29,8 +30,6 @@ from mecha import (
     MutatingReducer,
     rule,
 )
-
-AstNodeType = TypeVar("AstNodeType", bound=AstNode)
 
 
 @dataclass(frozen=True, slots=True)
@@ -78,9 +77,9 @@ class EmbedHandler:
     database: CompilationDatabase
     parse_callback: EmbedParseCallback
     serialize_callback: EmbedSerializeCallback
-    resolver: "EmbedResolver"
+    resolver: EmbedResolver
 
-    def __init__(self, arg: Union[Context, Mecha]):
+    def __init__(self, arg: Context | Mecha):
         if isinstance(arg, Context):
             arg = arg.inject(Mecha)
 
@@ -89,10 +88,10 @@ class EmbedHandler:
         self.serialize_callback = arg.serialize
         self.resolver = EmbedResolver(embed_handler=self)
 
-    def parse(
+    def parse[AstNodeType: AstNode](
         self,
         node: AstNodeType,
-        source: Optional[TextFileBase[Any]] = None,
+        source: TextFileBase[Any] | None = None,
         *,
         using: str,
     ) -> AstNodeType:
@@ -117,8 +116,8 @@ class EmbedHandler:
             raise set_location(d, node)
 
         value = str(node.value)
-        source_mappings: List[SourceLocation] = []
-        preprocessed_mappings: List[SourceLocation] = []
+        source_mappings: list[SourceLocation] = []
+        preprocessed_mappings: list[SourceLocation] = []
 
         if (
             compilation_unit.source

@@ -1,16 +1,16 @@
 __all__ = [
-    "validate",
-    "mecha",
     "main",
+    "mecha",
+    "validate",
 ]
 
 
 import logging
 import os
 import zipfile
-from typing import Optional, Tuple
 
 import click
+
 from beet import LATEST_MINECRAFT_VERSION, Context, DataPack, Function, run_beet
 from beet.toolchain.cli import BeetCommand, LogHandler, error_handler, message_fence
 
@@ -81,11 +81,11 @@ def validate(ctx: Context):
 )
 @error_handler(should_exit=True)
 def mecha(
-    source: Tuple[str, ...],
+    source: tuple[str, ...],
     minecraft: str,
     log: str,
     stats: bool,
-    json: Optional[str],
+    json: str | None,
 ):
     """Validate data packs and .mcfunction files."""
     if stats and log != "DEBUG":

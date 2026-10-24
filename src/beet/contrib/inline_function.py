@@ -5,7 +5,7 @@ __all__ = [
 ]
 
 
-from typing import Any, List
+from typing import Any
 
 from jinja2.nodes import CallBlock, Node, TemplateData
 
@@ -23,7 +23,7 @@ class InlineFunctions(JinjaExtension):
 
     def parse(self, parser: Any) -> Node:
         lineno = next(parser.stream).lineno
-        args: List[Any] = [parser.parse_expression()]
+        args: list[Any] = [parser.parse_expression()]
 
         if parser.stream.current.test("name:append"):
             args.append(TemplateData("append"))

@@ -1,33 +1,23 @@
 __all__ = [
-    "TextSerializer",
-    "MarkdownSerializer",
-    "ExternalFilesManager",
-    "SerializedFile",
-    "snapshot_serialization_filter",
     "EXTENSION_HIGHLIGHTING",
+    "ExternalFilesManager",
+    "MarkdownSerializer",
+    "SerializedFile",
+    "TextSerializer",
+    "snapshot_serialization_filter",
 ]
 
 import os
 import re
 from base64 import b64encode
+from collections.abc import Callable, Iterable, Iterator, Mapping
 from contextlib import contextmanager
 from dataclasses import dataclass, field
 from itertools import chain
 from mimetypes import guess_type
 from pathlib import Path
 from textwrap import indent
-from typing import (
-    Any,
-    Callable,
-    Dict,
-    Iterable,
-    Iterator,
-    List,
-    Mapping,
-    Optional,
-    Type,
-    Union,
-)
+from typing import Any, Self
 from urllib.parse import urlparse
 
 from beet import (
@@ -51,7 +41,7 @@ EXTENSION_HIGHLIGHTING = {
 }
 
 
-def snapshot_serialization_filter(pack: Union[DataPack, ResourcePack]) -> bool:
+def snapshot_serialization_filter(pack: DataPack | ResourcePack) -> bool:
     """Filter that selects non-empty packs and empty packs with modified pack.mcmeta."""
     return bool(pack or pack.mcmeta != type(pack)().mcmeta)
 
@@ -63,7 +53,7 @@ class ExternalFilesManager:
     directory: Path
     target: Path
 
-    external_files: Dict[str, File[Any, Any]] = field(default_factory=dict)
+    external_files: dict[str, File[Any, Any]] = field(default_factory=dict)
     external_prefix: str = ""
 
     def __post_init__(self):
@@ -79,7 +69,7 @@ class ExternalFilesManager:
             for filename, file_instance in self.external_files.items():
                 file_instance.dump(self.directory, self.target.parent / filename)
 
-    def __enter__(self) -> "ExternalFilesManager":
+    def __enter__(self) -> Self:
         return self
 
     def __exit__(self, *_):
@@ -114,7 +104,7 @@ class SerializedFile:
 
     def get_local_path(
         self,
-        external_files: Dict[str, File[Any, Any]],
+        external_files: dict[str, File[Any, Any]],
         external_prefix: str = "",
     ) -> str:
         """Rename the file to prevent conflicts within the given environment."""
@@ -134,7 +124,7 @@ class SerializedFile:
 
     def generate_link_target(
         self,
-        external_files: Optional[Dict[str, File[Any, Any]]] = None,
+        external_files: dict[str, File[Any, Any]] | None = None,
         external_prefix: str = "",
     ) -> str:
         """Generate the link for including the file in a serialized document."""
@@ -150,8 +140,8 @@ class TextSerializer:
     """Document serializer that outputs plain text."""
 
     sort: bool
-    escaped_regex: Optional["re.Pattern[str]"]
-    pack_filter: Callable[[Union[ResourcePack, DataPack]], bool]
+    escaped_regex: re.Pattern[str] | None
+    pack_filter: Callable[[ResourcePack | DataPack], bool]
 
     def __init__(self, *, sort: bool = False):
         self.sort = sort
@@ -175,8 +165,8 @@ class TextSerializer:
             self.sort = previous
 
     def get_escaped_regex(
-        self, mapping: Mapping[Type[NamespaceFile], str]
-    ) -> "re.Pattern[str]":
+        self, mapping: Mapping[type[NamespaceFile], str]
+    ) -> re.Pattern[str]:
         """Create and return the escaped regex for the specified serialization mapping."""
         names = "|".join([*mapping.values(), "resource_pack", "data_pack"])
         pattern = rf"^(@+(?:{names})\b.*)$"
@@ -190,10 +180,10 @@ class TextSerializer:
         self,
         assets: ResourcePack,
         data: DataPack,
-        mapping: Mapping[Type[NamespaceFile], str],
+        mapping: Mapping[type[NamespaceFile], str],
     ) -> str:
         """Return the serialized representation."""
-        result: List[str] = []
+        result: list[str] = []
 
         for pack, extra_directive in [
             (assets, "resource_pack"),
@@ -219,9 +209,9 @@ class TextSerializer:
 
     def serialize_pack(
         self,
-        pack: Union[DataPack, ResourcePack],
+        pack: DataPack | ResourcePack,
         extra_directive: str,
-        mapping: Mapping[Type[NamespaceFile], str],
+        mapping: Mapping[type[NamespaceFile], str],
     ) -> str:
         escaped_regex = self.get_escaped_regex(mapping)
 
@@ -277,7 +267,7 @@ class TextSerializer:
             )
         )
 
-    def escape_fragment(self, content: str, escaped_regex: "re.Pattern[str]") -> str:
+    def escape_fragment(self, content: str, escaped_regex: re.Pattern[str]) -> str:
         """Escape embedded directives."""
         return "".join(
             s.replace("@", "@@", 1) if i % 2 else s
@@ -290,7 +280,7 @@ class MarkdownSerializer:
 
     sort: bool
     flat: bool
-    pack_filter: Callable[[Union[ResourcePack, DataPack]], bool]
+    pack_filter: Callable[[ResourcePack | DataPack], bool]
 
     def __init__(self, *, sort: bool = False, flat: bool = False):
         self.sort = sort
@@ -328,8 +318,8 @@ class MarkdownSerializer:
         self,
         assets: ResourcePack,
         data: DataPack,
-        mapping: Mapping[Type[NamespaceFile], str],
-        external_files: Optional[Dict[str, File[Any, Any]]] = None,
+        mapping: Mapping[type[NamespaceFile], str],
+        external_files: dict[str, File[Any, Any]] | None = None,
         external_prefix: str = "",
     ) -> str:
         """Return the serialized representation and the files emitted in the process."""
@@ -357,9 +347,9 @@ class MarkdownSerializer:
         self,
         title: str,
         pack_directive: str,
-        pack: Union[DataPack, ResourcePack],
-        mapping: Mapping[Type[NamespaceFile], str],
-        external_files: Optional[Dict[str, File[Any, Any]]] = None,
+        pack: DataPack | ResourcePack,
+        mapping: Mapping[type[NamespaceFile], str],
+        external_files: dict[str, File[Any, Any]] | None = None,
         external_prefix: str = "",
     ) -> Iterator[str]:
         """Yield markdown chunks for the given pack."""
@@ -452,7 +442,7 @@ class MarkdownSerializer:
         directive: str,
         argument: str,
         file_instance: File[Any, Any],
-        external_files: Optional[Dict[str, File[Any, Any]]] = None,
+        external_files: dict[str, File[Any, Any]] | None = None,
         external_prefix: str = "",
     ) -> Iterator[str]:
         """Yield markdown chunks for including the given file instance."""

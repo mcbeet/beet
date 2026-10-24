@@ -5,19 +5,19 @@ from pydantic import ConfigDict
 __all__ = [
     "AstSourceMap",
     "SourceMapOptions",
-    "SourceMapTransformer",
     "SourceMapSerializer",
+    "SourceMapTransformer",
     "source_map",
 ]
 
 
 from dataclasses import dataclass, replace
-from typing import List
+
+from jinja2 import Template
+from pydantic import BaseModel
 
 from beet import Context, configurable
 from beet.core.utils import required_field
-from jinja2 import Template
-from pydantic import BaseModel
 
 from mecha import (
     AstChildren,
@@ -82,5 +82,5 @@ class SourceMapTransformer(MutatingReducer):
 
 class SourceMapSerializer(Visitor):
     @rule(AstSourceMap)
-    def source_map(self, node: AstSourceMap, result: List[str]):
+    def source_map(self, node: AstSourceMap, result: list[str]):
         result.append(node.header)

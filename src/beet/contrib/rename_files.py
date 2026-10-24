@@ -1,18 +1,19 @@
 """Plugin for renaming files."""
 
 __all__ = [
-    "rename_files",
     "RenameFilesHandler",
     "RenameFilesOptions",
     "RenameOption",
-    "TextRenameOption",
     "RenderRenameOption",
+    "TextRenameOption",
+    "rename_files",
 ]
 
 
 import logging
+from collections.abc import Callable
 from dataclasses import dataclass
-from typing import Any, Callable, List, Optional, Type, Union, cast
+from typing import Any, cast
 
 from pydantic import RootModel
 
@@ -39,21 +40,21 @@ logger = logging.getLogger(__name__)
 
 
 class TextRenameOption(TextSubstitutionOption):
-    match: Optional[PackMatchOption] = None
+    match: PackMatchOption | None = None
 
 
 class RenderRenameOption(RenderSubstitutionOption):
-    match: Optional[PackMatchOption] = None
+    match: PackMatchOption | None = None
 
 
-class RenameOption(RootModel[ListOption[Union[TextRenameOption, RenderRenameOption]]]):
-    root: ListOption[Union[TextRenameOption, RenderRenameOption]] = ListOption()
+class RenameOption(RootModel[ListOption[TextRenameOption | RenderRenameOption]]):
+    root: ListOption[TextRenameOption | RenderRenameOption] = ListOption()
 
     def compile(
         self,
-        query: PackQuery[Union[ResourcePack, DataPack]],
+        query: PackQuery[ResourcePack | DataPack],
         template: TemplateManager,
-    ) -> List["RenameFilesHandler"]:
+    ) -> list[RenameFilesHandler]:
         return [
             RenameFilesHandler(
                 (
@@ -74,10 +75,10 @@ class RenameFilesOptions(PluginOptions):
 
 @dataclass
 class RenameFilesHandler:
-    query: Union[
-        PreparedPackFilesQuery[Union[ResourcePack, DataPack]],
-        PreparedPackMatchQuery[Union[ResourcePack, DataPack]],
-    ]
+    query: (
+        PreparedPackFilesQuery[ResourcePack | DataPack]
+        | PreparedPackMatchQuery[ResourcePack | DataPack]
+    )
     substitute: Callable[[str], str]
 
     def __call__(self):
@@ -87,7 +88,7 @@ class RenameFilesHandler:
                     self.handle_path_for_namespace_file(pack, file_instance, path)  # pyright: ignore[reportArgumentType]
         else:
             file_types = tuple(
-                cast(Type[File[Any, Any]], file_type)
+                cast(type[File[Any, Any]], file_type)
                 for pack in self.query.packs
                 for file_type in pack.get_file_types()
             )
@@ -103,7 +104,7 @@ class RenameFilesHandler:
 
     def handle_path_for_namespace_file(
         self,
-        pack: Union[ResourcePack, DataPack],
+        pack: ResourcePack | DataPack,
         file_instance: NamespaceFile,
         path: str,
     ):
@@ -114,7 +115,7 @@ class RenameFilesHandler:
 
     def handle_filename_for_namespace_file(
         self,
-        pack: Union[ResourcePack, DataPack],
+        pack: ResourcePack | DataPack,
         file_instance: NamespaceFile,
         filename: str,
     ):
@@ -146,7 +147,7 @@ class RenameFilesHandler:
 
     def handle_filename(
         self,
-        pack: Union[ResourcePack, DataPack],
+        pack: ResourcePack | DataPack,
         file_instance: File[Any, Any],
         filename: str,
     ):

@@ -7,7 +7,6 @@ __all__ = [
 
 
 import subprocess
-from typing import Optional
 
 from pydantic import BaseModel
 
@@ -16,7 +15,7 @@ from beet.core.utils import FileSystemPath
 
 
 class SandstoneOption(BaseModel):
-    path: Optional[FileSystemPath] = None
+    path: FileSystemPath | None = None
 
 
 def beet_default(ctx: Context):

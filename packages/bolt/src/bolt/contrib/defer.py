@@ -1,19 +1,21 @@
 """Run deferred callbacks."""
 
 __all__ = [
-    "Defer",
-    "DeferHandler",
     "AstDefer",
     "AstDeferCommand",
+    "Defer",
+    "DeferHandler",
     "defer",
 ]
 
 
+from collections.abc import Callable, Generator
 from dataclasses import dataclass
-from typing import Any, Callable, Generator, List, TypeVar
+from typing import Any
 
 from beet import Context
 from beet.core.utils import required_field
+
 from mecha import (
     AstChildren,
     AstCommandSentinel,
@@ -26,8 +28,6 @@ from mecha import (
 )
 
 from bolt import Runtime
-
-CallbackType = TypeVar("CallbackType", bound=Callable[[], Any])
 
 
 def beet_default(ctx: Context):
@@ -73,7 +73,7 @@ class DeferHandler(MutatingReducer):
         if isinstance(result, AstNode):
             result = yield result
         elif isinstance(result, AstChildren):
-            children: List[Any] = []
+            children: list[Any] = []
             for child in result:
                 deferred_child = yield child
                 children.append(deferred_child)
@@ -92,7 +92,9 @@ class Defer:
         mc = ctx.inject(Mecha)
         mc.steps.insert(mc.steps.index(self.runtime.evaluate) + 1, self.handler)
 
-    def __call__(self, callback: CallbackType) -> CallbackType:
+    def __call__[CallbackType: Callable[[], Any]](
+        self, callback: CallbackType
+    ) -> CallbackType:
         self.runtime.commands.append(
             AstDeferCommand(
                 callback=lambda: AstChildren(self.runtime.capture_output(callback))

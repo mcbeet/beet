@@ -1409,3 +1409,99 @@ function namespace:path/:
 ###
 function namespace:path/
 
+###
+i = 7
+execute if score #test test matches i run function ~/test
+execute if score #test test matches -i run function ~/test
+###
+i = 1
+if score foo bar matches i.. say hi
+###
+i = 1
+if score foo bar matches ..i say hi
+###
+a = 10
+b = 20
+if score foo bar matches a..b say hi
+###
+a = 10
+if score foo bar matches a..20 say hi
+###
+b = 20
+if score foo bar matches 10..b say hi
+###
+a = 10
+b = 20
+if score foo bar matches -b..-a say hi
+###
+b = 20
+if score foo bar matches -b..-10 say hi
+###
+a = 10
+if score foo bar matches -20..-a say hi
+###
+i = 1
+range_tuple = i..
+###
+i = 1
+range_tuple = ..i
+###
+a = 10
+b = 20
+range_tuple = a..b
+###
+a = 10
+range_tuple = a..20
+###
+b = 20
+range_tuple = 10..b
+###
+a = 10
+b = 20
+range_tuple = -b..-a
+###
+b = 20
+range_tuple = -b..-10
+###
+a = 10
+range_tuple = -20..-a
+###
+i = 1
+if score foo bar matches i .. say hi
+###
+i = 1
+if score foo bar matches .. i say hi
+###
+a = 10
+b = 20
+if score foo bar matches a ..b say hi
+###
+a = 10
+b = 20
+if score foo bar matches -b.. -a say hi
+###
+i = 1
+range_tuple = i ..
+###
+i = 1
+range_tuple = .. i
+###
+a = 10
+b = 20
+range_tuple = a ..b
+###
+a = 10
+b = 20
+range_tuple = -b.. -a
+###
+i = 1
+if score foo bar matches (i - 1).. say hi
+###
+i = 1
+if score foo bar matches ..(i + 1) say hi
+###
+i = 1
+range_tuple = (i - 1)..
+###
+i = 1
+range_tuple = ..(i + 1)

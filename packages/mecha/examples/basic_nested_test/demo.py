@@ -1,9 +1,10 @@
 from dataclasses import dataclass, replace
 from typing import ClassVar
 
+from tokenstream import TokenStream, set_location
+
 from beet import Context, Function, Generator, NamespaceFileScope, TextFile
 from beet.core.utils import required_field
-from tokenstream import TokenStream, set_location
 
 from mecha import (
     AstChildren,
@@ -131,7 +132,6 @@ class NestedTestTransformer(MutatingReducer):
                 no_index=True,
             )
             self.database.enqueue(target, self.database.step + 1)
-            return None
 
 
 def convert_tests(ctx: Context):

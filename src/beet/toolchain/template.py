@@ -1,12 +1,13 @@
 __all__ = [
+    "FallbackContext",
     "TemplateError",
     "TemplateManager",
-    "FallbackContext",
 ]
 
 
+from collections.abc import Callable
 from contextlib import contextmanager
-from typing import Any, Callable, Dict, List, Optional, Type, TypeVar
+from typing import Any
 
 from jinja2 import (
     BaseLoader,
@@ -27,9 +28,6 @@ from beet.core.file import TextFileBase
 from beet.core.utils import FileSystemPath, JsonDict
 
 from .utils import ensure_builtins
-
-T = TypeVar("T")
-TextFileType = TypeVar("TextFileType", bound=TextFileBase[Any])
 
 
 class TemplateError(WrappedException):
@@ -52,15 +50,13 @@ class FallbackContext(JinjaContext):
         value: Any = super().resolve_or_missing(key)
 
         if value is jinja_missing:
-            manager: TemplateManager = getattr(
-                self.environment, "_beet_template_manager"
-            )
+            manager: TemplateManager = self.environment._beet_template_manager  # pyright: ignore[reportAttributeAccessIssue]
 
             if key in manager.globals:
                 return manager.globals[key]
 
             if key == "project_directory":
-                return manager.ctx.project_directory
+                return manager.ctx.directory
 
             if key in [
                 "project_id",
@@ -73,7 +69,7 @@ class FallbackContext(JinjaContext):
 
             try:
                 return ensure_builtins(manager.ctx.meta[key])
-            except (KeyError, TypeError):
+            except KeyError, TypeError:
                 pass
 
         return value
@@ -83,14 +79,14 @@ class TemplateManager:
     """Class responsible for managing the Jinja environment."""
 
     env: Environment
-    loaders: List[BaseLoader]
-    prefix_map: Dict[str, BaseLoader]
-    directories: List[FileSystemPath]
+    loaders: list[BaseLoader]
+    prefix_map: dict[str, BaseLoader]
+    directories: list[FileSystemPath]
     cache_dir: FileSystemPath
     ctx: Any
     globals: JsonDict
 
-    def __init__(self, templates: List[FileSystemPath], cache_dir: FileSystemPath):
+    def __init__(self, templates: list[FileSystemPath], cache_dir: FileSystemPath):
         self.prefix_map = {}
         self.directories = templates
         self.cache_dir = cache_dir
@@ -104,7 +100,7 @@ class TemplateManager:
 
         self.reset_environment()
 
-    def reset_environment(self, cls: Type[Environment] = Environment):
+    def reset_environment(self, cls: type[Environment] = Environment):
         """Reset the Jinja environment."""
         self.env = cls(
             autoescape=False,
@@ -119,7 +115,7 @@ class TemplateManager:
             ],
         )
 
-        setattr(self.env, "_beet_template_manager", self)
+        self.env._beet_template_manager = self  # pyright: ignore[reportAttributeAccessIssue]
         self.env.context_class = FallbackContext
 
     def bind(self, ctx: Any):
@@ -130,7 +126,7 @@ class TemplateManager:
         """Expose a utility function to the template context."""
         self.globals[name] = lambda *args, **kwargs: function(*args, **kwargs)
 
-    def add_package(self, dotted_path: str, prefix: Optional[str] = None):
+    def add_package(self, dotted_path: str, prefix: str | None = None):
         """Make the templates included in the specified package available."""
         if not prefix:
             prefix = dotted_path.replace(".", "/")
@@ -139,7 +135,7 @@ class TemplateManager:
     def compile(
         self,
         source: str,
-        filename: Optional[FileSystemPath] = None,
+        filename: FileSystemPath | None = None,
     ) -> Template:
         """Compile a template from a string."""
         return Template.from_code(
@@ -158,7 +154,9 @@ class TemplateManager:
         with self.error_handler("Couldn't render template."):
             return self.compile(template).render(kwargs)
 
-    def render_file(self, file: TextFileType, /, **kwargs: Any) -> TextFileType:
+    def render_file[TextFileType: TextFileBase[Any]](
+        self, file: TextFileType, /, **kwargs: Any
+    ) -> TextFileType:
         """Render a given file in-place."""
         original_path = file.source_path
         try:
@@ -173,7 +171,7 @@ class TemplateManager:
         file.text = self.render(str(original_path), **kwargs)
         return file
 
-    def render_json(self, data: T, /, **kwargs: Any) -> T:
+    def render_json[T](self, data: T, /, **kwargs: Any) -> T:
         """Render all strings in a json value."""
         if isinstance(data, str):
             return self.render_string(data, **kwargs)

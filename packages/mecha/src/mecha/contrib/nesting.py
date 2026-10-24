@@ -8,16 +8,17 @@ __all__ = [
 ]
 
 
+from collections.abc import Generator
 from dataclasses import dataclass, field, replace
 from importlib.resources import files
-from typing import Generator, List, Literal, cast
+from typing import cast
 
-from beet import Context, Function
-from beet import Generator as BeetGenerator
-from beet import configurable
-from beet.core.utils import required_field, split_version
 from pydantic import BaseModel
 from tokenstream import InvalidSyntax, TokenStream, set_location
+
+from beet import Context, Function, configurable
+from beet import Generator as BeetGenerator
+from beet.core.utils import required_field, split_version
 
 from mecha import (
     AstChildren,
@@ -52,14 +53,9 @@ def nesting(ctx: Context, opts: NestingOptions):
 
     mc.spec.multiline = True
 
+    commands_json = files("mecha.resources").joinpath("nesting.json").read_text()
     if split_version(ctx.minecraft_version) >= (26, 3):
-        commands_json = (
-            files("mecha.resources").joinpath("nesting_after_26_3.json").read_text()
-        )
-        block_source_type = "source"
-    else:
-        commands_json = files("mecha.resources").joinpath("nesting.json").read_text()
-        block_source_type = "sourcePos"
+        commands_json = commands_json.replace('"sourcePos"', '"source"')
 
     mc.spec.add_commands(CommandTree.model_validate_json(commands_json))
 
@@ -74,7 +70,6 @@ def nesting(ctx: Context, opts: NestingOptions):
             generate_macro_template=opts.generate_macro,
             generate_return_template=opts.generate_return,
             nested_location_resolver=ctx.inject(NestedLocationResolver),
-            block_source_type=block_source_type,
         )
     )
 
@@ -90,7 +85,7 @@ def parse_nested_root(stream: TokenStream) -> AstRoot:
 
     level, command_level = stream.indentation[-2:]
 
-    commands: List[AstCommand] = []
+    commands: list[AstCommand] = []
 
     with (
         stream.intercept("newline"),
@@ -126,23 +121,23 @@ class NestedCommandsTransformer(MutatingReducer):
     generate_return_template: str = required_field()
     nested_location_resolver: NestedLocationResolver = required_field()
 
-    identifier_map: dict[str, str] = field(init=False)
-    block_source_type: Literal["source", "sourcePos"] = field(default="sourcePos")
-
-    def __post_init__(self):
-        self.identifier_map = {
+    identifier_map: dict[str, str] = field(
+        default_factory=lambda: {
             "function:name:commands": "function:name",
             "function:name:arguments:commands": "function:name:arguments",
-            f"function:name:with:block:{self.block_source_type}:commands": f"function:name:with:block:{self.block_source_type}",
-            f"function:name:with:block:{self.block_source_type}:path:commands": f"function:name:with:block:{self.block_source_type}:path",
+            "function:name:with:block:source:commands": "function:name:with:block:source",
+            "function:name:with:block:source:path:commands": "function:name:with:block:source:path",
             "function:name:with:entity:source:commands": "function:name:with:entity:source",
             "function:name:with:entity:source:path:commands": "function:name:with:entity:source:path",
             "function:name:with:storage:source:commands": "function:name:with:storage:source",
             "function:name:with:storage:source:path:commands": "function:name:with:storage:source:path",
             "append:function:name:commands": "function:name",
             "prepend:function:name:commands": "function:name",
+            # pre 26.3
+            "function:name:with:block:sourcePos:commands": "function:name:with:block:sourcePos",
+            "function:name:with:block:sourcePos:path:commands": "function:name:with:block:sourcePos:path",
         }
-        return super().__post_init__()
+    )
 
     def emit_function(self, path: str, root: AstRoot):
         """Helper method for emitting nested commands into a separate function."""
@@ -224,10 +219,10 @@ class NestedCommandsTransformer(MutatingReducer):
             arguments=AstChildren([subcommand]),
         )
 
-    @rule(AstCommand, identifier=f"with:block:{block_source_type}:commands")
-    @rule(AstCommand, identifier=f"with:block:{block_source_type}")
-    @rule(AstCommand, identifier=f"with:block:{block_source_type}:path:commands")
-    @rule(AstCommand, identifier=f"with:block:{block_source_type}:path")
+    @rule(AstCommand, identifier="with:block:source:commands")
+    @rule(AstCommand, identifier="with:block:source")
+    @rule(AstCommand, identifier="with:block:source:path:commands")
+    @rule(AstCommand, identifier="with:block:source:path")
     @rule(AstCommand, identifier="with:entity:source:commands")
     @rule(AstCommand, identifier="with:entity:source")
     @rule(AstCommand, identifier="with:entity:source:path:commands")
@@ -236,9 +231,14 @@ class NestedCommandsTransformer(MutatingReducer):
     @rule(AstCommand, identifier="with:storage:source")
     @rule(AstCommand, identifier="with:storage:source:path:commands")
     @rule(AstCommand, identifier="with:storage:source:path")
+    # pre 26.3
+    @rule(AstCommand, identifier="with:block:sourcePos:commands")
+    @rule(AstCommand, identifier="with:block:sourcePos")
+    @rule(AstCommand, identifier="with:block:sourcePos:path:commands")
+    @rule(AstCommand, identifier="with:block:sourcePos:path")
     def nesting_macro_commands(self, node: AstCommand):
         identifier = node.identifier.split(":")
-        if not identifier[-1] == "commands":
+        if identifier[-1] != "commands":
             d = Diagnostic(
                 "error", "Anonymous macro invocation requires nested commands."
             )
@@ -282,7 +282,7 @@ class NestedCommandsTransformer(MutatingReducer):
     @rule(AstRoot)
     def nesting(self, node: AstRoot):
         changed = False
-        commands: List[AstCommand] = []
+        commands: list[AstCommand] = []
 
         for command in node.commands:
             if command.identifier in self.identifier_map:
@@ -292,7 +292,7 @@ class NestedCommandsTransformer(MutatingReducer):
                 continue
 
             args = command.arguments
-            stack: List[AstCommand] = [command]
+            stack: list[AstCommand] = [command]
 
             expand = None
 
@@ -333,7 +333,7 @@ class NestedCommandsTransformer(MutatingReducer):
         self,
         node: AstCommand,
         top_level: bool = False,
-    ) -> Generator[Diagnostic, None, List[AstCommand]]:
+    ) -> Generator[Diagnostic, None, list[AstCommand]]:
         name, *args, root = node.arguments
 
         if isinstance(name, AstResourceLocation) and isinstance(root, AstRoot):
@@ -342,12 +342,15 @@ class NestedCommandsTransformer(MutatingReducer):
             if top_level:
                 if node.identifier in (
                     "function:name:arguments:commands",
-                    f"function:name:with:block:{self.block_source_type}:commands",
-                    f"function:name:with:block:{self.block_source_type}:path:commands",
+                    "function:name:with:block:source:commands",
+                    "function:name:with:block:source:path:commands",
                     "function:name:with:entity:source:commands",
                     "function:name:with:entity:source:path:commands",
                     "function:name:with:storage:source:commands",
                     "function:name:with:storage:source:path:commands",
+                    # pre 26.3
+                    "function:name:with:block:sourcePos:commands",
+                    "function:name:with:block:sourcePos:path:commands",
                 ):
                     d = Diagnostic(
                         "error",

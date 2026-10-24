@@ -1,0 +1,8 @@
+a = 10
+b = 20
+#>ERROR  Trailing input following final expression.
+# line 3, column 17
+#      2 |  b = 20
+#      3 |  range_tuple = a ..b
+#        :                  ^^^
+range_tuple = a ..b

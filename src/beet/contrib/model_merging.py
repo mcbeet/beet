@@ -3,14 +3,14 @@
 __all__ = [
     "ModelMergingOptions",
     "ModelOverridesMergePolicy",
-    "model_merging",
     "merge_model_overrides",
+    "model_merging",
 ]
 
 
+from collections.abc import Sequence
 from copy import deepcopy
 from dataclasses import dataclass
-from typing import Dict, Sequence, Tuple, Union
 
 from beet import Context, Model, PluginOptions, ResourcePack
 from beet.core.utils import JsonDict
@@ -25,7 +25,7 @@ def beet_default(ctx: Context):
 
 
 def model_merging(
-    arg: Union[Context, ResourcePack],
+    arg: Context | ResourcePack,
     *,
     predicate_order: Sequence[str] = (),
 ):
@@ -71,7 +71,7 @@ def merge_model_overrides(
             if predicate not in predicate_cases:
                 predicate_cases.append(predicate)
 
-    override_index: Dict[Tuple[float, ...], JsonDict] = {}
+    override_index: dict[tuple[float, ...], JsonDict] = {}
     for override in concatenated_overrides:
         predicate = override.get("predicate", {})
         key = tuple(predicate.get(case, 0) for case in predicate_cases)

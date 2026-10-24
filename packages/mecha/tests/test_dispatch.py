@@ -1,4 +1,4 @@
-from typing import Generator, List, Type
+from collections.abc import Generator
 
 from mecha import (
     AstCommand,
@@ -21,7 +21,7 @@ from mecha import (
 def test_visitor(mc: Mecha):
     ast = mc.parse("particle dust 1.0 0.5 0.5 1.0 7 7 7")
 
-    numbers: List[AstNode] = []
+    numbers: list[AstNode] = []
 
     visitor = Visitor()
     visitor.add_rule(rule(AstNumber)(numbers.append))
@@ -38,9 +38,9 @@ def test_visitor(mc: Mecha):
 def test_visitor_extend(mc: Mecha):
     ast = mc.parse("particle dust 1.0 0.5 7 1.0 7 7 7", type=AstCommand)
 
-    nodes: List[Type[AstNode]] = []
-    numbers: List[AstNumber] = []
-    sevens: List[AstNumber] = []
+    nodes: list[type[AstNode]] = []
+    numbers: list[AstNumber] = []
+    sevens: list[AstNumber] = []
 
     class Foo(Visitor):
         @rule
@@ -76,8 +76,8 @@ def test_visitor_result(mc: Mecha):
 
     class Foo(Visitor):
         @rule(AstRoot)
-        def root(self, node: AstRoot) -> Generator[AstNode, str, List[str]]:
-            commands: List[str] = []
+        def root(self, node: AstRoot) -> Generator[AstNode, str, list[str]]:
+            commands: list[str] = []
 
             for command in node.commands:
                 value = yield command
@@ -87,7 +87,7 @@ def test_visitor_result(mc: Mecha):
 
         @rule(AstCommand)
         def command(self, node: AstCommand) -> Generator[AstNode, str, str]:
-            arguments: List[str] = []
+            arguments: list[str] = []
 
             for argument in node.arguments:
                 value = yield argument

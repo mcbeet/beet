@@ -6,13 +6,15 @@ __all__ = [
 ]
 
 
+from collections.abc import Iterator
 from dataclasses import dataclass, field, replace
 from textwrap import indent
 from types import TracebackType
-from typing import Any, Iterator, List, Literal, Optional, Type
+from typing import Any, Literal, Self
+
+from tokenstream import UNKNOWN_LOCATION, SourceLocation
 
 from beet import BubbleException, TextFileBase
-from tokenstream import UNKNOWN_LOCATION, SourceLocation
 
 from .error import MechaError
 from .utils import underline_code
@@ -24,12 +26,12 @@ class Diagnostic(MechaError):
 
     level: Literal["info", "warn", "error"]
     message: str
-    notes: List[str] = field(default_factory=list)
+    notes: list[str] = field(default_factory=list)
 
-    rule: Optional[str] = None
-    hint: Optional[str] = None
-    filename: Optional[str] = None
-    file: Optional[TextFileBase[Any]] = None
+    rule: str | None = None
+    hint: str | None = None
+    filename: str | None = None
+    file: TextFileBase[Any] | None = None
     location: SourceLocation = UNKNOWN_LOCATION
     end_location: SourceLocation = UNKNOWN_LOCATION
 
@@ -65,7 +67,7 @@ class Diagnostic(MechaError):
             location = ""
         return location
 
-    def format_code(self, code: str) -> Optional[str]:
+    def format_code(self, code: str) -> str | None:
         """Return the formatted code."""
         if self.location.unknown:
             return None
@@ -77,13 +79,13 @@ class Diagnostic(MechaError):
 
     def with_defaults(
         self,
-        rule: Optional[str] = None,
-        hint: Optional[str] = None,
-        filename: Optional[str] = None,
-        file: Optional[TextFileBase[Any]] = None,
+        rule: str | None = None,
+        hint: str | None = None,
+        filename: str | None = None,
+        file: TextFileBase[Any] | None = None,
         location: SourceLocation = UNKNOWN_LOCATION,
         end_location: SourceLocation = UNKNOWN_LOCATION,
-    ) -> "Diagnostic":
+    ) -> Diagnostic:
         """Set default values for unspecified attributes."""
         if not self.location.unknown:
             location = self.location
@@ -103,12 +105,12 @@ class Diagnostic(MechaError):
 class DiagnosticCollection(MechaError):
     """Exception that can be raised to group multiple diagnostics."""
 
-    exceptions: List[Diagnostic] = field(default_factory=list)
+    exceptions: list[Diagnostic] = field(default_factory=list)
 
-    rule: Optional[str] = None
-    hint: Optional[str] = None
-    filename: Optional[str] = None
-    file: Optional[TextFileBase[Any]] = None
+    rule: str | None = None
+    hint: str | None = None
+    filename: str | None = None
+    file: TextFileBase[Any] | None = None
 
     def add(self, exc: Diagnostic) -> Diagnostic:
         """Add diagnostic."""
@@ -121,7 +123,7 @@ class DiagnosticCollection(MechaError):
         self.exceptions.append(exc)
         return exc
 
-    def extend(self, other: "DiagnosticCollection"):
+    def extend(self, other: DiagnosticCollection):
         """Combine diagnostics from another collection."""
         self.exceptions.extend(other.exceptions)
 
@@ -143,14 +145,14 @@ class DiagnosticCollection(MechaError):
             if exc.level == "error":
                 yield exc
 
-    def __enter__(self) -> "DiagnosticCollection":
+    def __enter__(self) -> Self:
         return self
 
     def __exit__(
         self,
-        exc_type: Optional[Type[BaseException]],
-        exc_val: Optional[BaseException],
-        exc_tb: Optional[TracebackType],
+        exc_type: type[BaseException] | None,
+        exc_val: BaseException | None,
+        exc_tb: TracebackType | None,
     ):
         if not exc_type:
             if self.exceptions:

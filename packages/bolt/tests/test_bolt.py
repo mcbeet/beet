@@ -3,10 +3,12 @@ from random import Random
 from uuid import UUID
 
 import pytest
+from pytest_insta import SnapshotFixture
+
 from beet import Context, Function
+
 from mecha import AstNode, CompilationDatabase, CompilationUnit, DiagnosticError, Mecha
 from mecha.contrib.annotate_diagnostics import annotate_diagnostics
-from pytest_insta import SnapshotFixture
 
 from bolt import Runtime
 

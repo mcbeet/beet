@@ -4,52 +4,39 @@ __all__ = [
 ]
 
 
+from collections.abc import Iterable, Iterator
 from dataclasses import dataclass, field
-from typing import (
-    Any,
-    Generic,
-    Iterable,
-    Iterator,
-    List,
-    Optional,
-    Tuple,
-    TypeVar,
-    Union,
-    overload,
-)
+from typing import Any, overload
 
 from beet.core.utils import SENTINEL_OBJ, Sentinel
 
-T = TypeVar("T")
-U = TypeVar("U")
 
-
-def loop_info(iterable: Iterable[T]) -> "LoopInfo[T]":
+def loop_info[T](iterable: Iterable[T]) -> LoopInfo[T]:
     return LoopInfo(iterable, iter(iterable))
 
 
 @dataclass
-class LoopInfo(Generic[T]):
+class LoopInfo[T]:
     iterable: Iterable[T]
     iterator: Iterator[T]
 
     index: int = -1
-    accumulator: List[T] = field(default_factory=list)
+    accumulator: list[T] = field(default_factory=list)
 
-    def __iter__(self) -> "LoopInfo[T]":
+    def __iter__(self) -> LoopInfo[T]:
         return self
 
-    def __next__(self) -> Tuple["LoopInfo[T]", T]:
+    def __next__(self) -> tuple[LoopInfo[T], T]:
         while self.index + 1 >= len(self.accumulator):
             self.accumulator.append(next(self.iterator))
         self.index += 1
         return self, self.current
 
     @overload
-    def peek(self, offset: int) -> Optional[T]: ...
+    def peek(self, offset: int) -> T | None: ...
 
     @overload
-    def peek(self, offset: int, default: U) -> Union[T, U]: ...
+    def peek[U](self, offset: int, default: U) -> T | U: ...
 
     def peek(self, offset: int, default: Any = None) -> Any:
         index = self.index + offset
@@ -66,7 +53,7 @@ class LoopInfo(Generic[T]):
         return self.accumulator[index]
 
     @property
-    def before(self) -> Optional[T]:
+    def before(self) -> T | None:
         return self.peek(-1)
 
     @property
@@ -74,7 +61,7 @@ class LoopInfo(Generic[T]):
         return self.accumulator[self.index]
 
     @property
-    def after(self) -> Optional[T]:
+    def after(self) -> T | None:
         return self.peek(1)
 
     @property
@@ -93,6 +80,6 @@ class LoopInfo(Generic[T]):
     def last(self) -> bool:
         return isinstance(self.peek(1, SENTINEL_OBJ), Sentinel)
 
-    def cycle(self, arg: U, *args: U) -> U:
+    def cycle[U](self, arg: U, *args: U) -> U:
         args = (arg,) + args
         return args[self.index % len(args)]

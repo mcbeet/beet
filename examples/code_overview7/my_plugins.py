@@ -1,11 +1,10 @@
 from collections import defaultdict
-from typing import DefaultDict
 
 from beet import Context, Function, Language
 
 
 class Internationalization:
-    languages: DefaultDict[str, Language]
+    languages: defaultdict[str, Language]
 
     def __init__(self, ctx: Context):
         self.languages = defaultdict(Language)

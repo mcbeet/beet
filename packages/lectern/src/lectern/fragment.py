@@ -5,16 +5,15 @@ __all__ = [
 
 
 from base64 import b64decode
+from collections.abc import Sequence
 from dataclasses import dataclass, replace
 from pathlib import Path
-from typing import Any, Optional, Sequence, Type, TypeVar, overload
+from typing import Any, overload
 from urllib.parse import urlparse
 from urllib.request import urlopen
 
 from beet import BinaryFile, BinaryFileBase, BubbleException, Cache, File
 from beet.core.utils import FileSystemPath
-
-FileType = TypeVar("FileType", bound=File[Any, Any])
 
 
 class InvalidFragment(BubbleException):
@@ -39,23 +38,23 @@ class Fragment:
     start_line: int
     end_line: int
     directive: str
-    modifier: Optional[str] = None
+    modifier: str | None = None
     arguments: Sequence[str] = ()
-    content: Optional[str] = None
-    url: Optional[str] = None
-    path: Optional[FileSystemPath] = None
-    file: Optional[File[Any, Any]] = None
-    cache: Optional[Cache] = None
+    content: str | None = None
+    url: str | None = None
+    path: FileSystemPath | None = None
+    file: File[Any, Any] | None = None
+    cache: Cache | None = None
 
-    def with_content(self, content: str) -> "Fragment":
+    def with_content(self, content: str) -> Fragment:
         """Replace content."""
         return replace(self, content=content)
 
     def with_link(
         self,
         link: Any,
-        external_files: Optional[FileSystemPath] = None,
-    ) -> "Fragment":
+        external_files: FileSystemPath | None = None,
+    ) -> Fragment:
         """Replace linked content."""
         url = str(link)
         path = None
@@ -94,9 +93,11 @@ class Fragment:
     def as_file(self) -> BinaryFile: ...
 
     @overload
-    def as_file(self, file_type: Type[FileType]) -> FileType: ...
+    def as_file[FileType: File[Any, Any]](
+        self, file_type: type[FileType]
+    ) -> FileType: ...
 
-    def as_file(self, file_type: Type[File[Any, Any]] = BinaryFile) -> File[Any, Any]:
+    def as_file(self, file_type: type[File[Any, Any]] = BinaryFile) -> File[Any, Any]:
         """Retrieve the content of the fragment as a file."""
         is_binary = issubclass(file_type, BinaryFileBase)
 

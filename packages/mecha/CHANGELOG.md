@@ -2,6 +2,55 @@
 
 <!-- version list -->
 
+## v0.107.0 (2026-10-21)
+
+### Bug Fixes
+
+- General clean
+  ([`d400c04`](https://github.com/mcbeet/beet/commit/d400c04ffd312e6951cde85a1c707dfdd3b5429d))
+
+- Ruff check ok
+  ([`0db268e`](https://github.com/mcbeet/beet/commit/0db268e92415e1052d19c7ec09cc06cad4c384eb))
+
+- Ruff safe fixes
+  ([`f3cc875`](https://github.com/mcbeet/beet/commit/f3cc87529e3b71037ebcea636d189bcde9d6a92d))
+
+- Ruff unsafe fixes
+  ([`0ad0404`](https://github.com/mcbeet/beet/commit/0ad0404bf3b048a2a024d231483af949ae1802e1))
+
+### Features
+
+- Bump dependencies
+  ([`5417385`](https://github.com/mcbeet/beet/commit/541738563276c3ac963061ccce24d8ab84873687))
+
+
+## v0.106.2 (2026-10-21)
+
+### Bug Fixes
+
+- #521 formatting preserve off by one
+  ([`1e5ac43`](https://github.com/mcbeet/beet/commit/1e5ac439ee310b56ed82bca47d370315ba376c41))
+
+
+## v0.106.1 (2026-10-21)
+
+
+## v0.106.1-beta.2 (2026-10-21)
+
+### Bug Fixes
+
+- Anonymous with block macro broken in #518
+  ([`b1b2fae`](https://github.com/mcbeet/beet/commit/b1b2fae43fcebbd0860621bbb6786eef348ba6a9))
+
+
+## v0.106.1-beta.1 (2026-10-14)
+
+### Bug Fixes
+
+- Missing caret
+  ([`ce6eeed`](https://github.com/mcbeet/beet/commit/ce6eeed9d2e6e9a74f7a951732c94f1972e64e26))
+
+
 ## v0.106.0 (2026-09-19)
 
 ### Features

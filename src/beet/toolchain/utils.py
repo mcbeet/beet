@@ -1,19 +1,28 @@
 __all__ = [
     "LazyFormat",
-    "stable_int_hash",
-    "stable_hash",
-    "ensure_builtins",
-    "iter_options",
-    "eval_option",
-    "default_option",
     "apply_option",
+    "default_option",
+    "ensure_builtins",
+    "eval_option",
+    "iter_options",
+    "resolve_shared_cache",
+    "resolve_shared_dir",
+    "stable_hash",
+    "stable_int_hash",
 ]
 
 
 import json
+import os
 import re
+from collections.abc import Callable, Iterable, Mapping, Sequence
 from copy import copy
-from typing import Any, Callable, Iterable, List, Literal, Mapping, Sequence, cast
+from pathlib import Path
+from typing import Any, Literal, cast
+
+from platformdirs import user_data_dir
+
+from beet.core.cache import Cache, MultiCache
 
 FNV_32_INIT = 0x811C9DC5
 FNV_64_INIT = 0xCBF29CE484222325
@@ -59,7 +68,7 @@ def stable_hash(value: Any, short: bool = False) -> str:
 
 
 def encode_with_alphabet(value: int, alphabet: str) -> str:
-    indices: List[int] = []
+    indices: list[int] = []
     while value:
         value, i = divmod(value, len(alphabet))
         indices.append(i)
@@ -166,3 +175,13 @@ def apply_option(result: Any, option: Any) -> Any:
         result = option
 
     return result
+
+
+def resolve_shared_dir(name: str) -> Path:
+    if override := os.environ.get(f"BEET_{name.upper()}_DIR"):
+        return Path(override)
+    return Path(user_data_dir("beet", appauthor=False)) / name
+
+
+def resolve_shared_cache() -> MultiCache[Cache]:
+    return MultiCache(resolve_shared_dir("cache"), gitignore=False)

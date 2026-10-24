@@ -2,15 +2,16 @@ from dataclasses import replace
 from typing import Any, ClassVar
 
 import pytest
+
 from beet import DataPack, Function, NamespaceFileScope, ResourcePack, TextFile
 
 from mecha import (
     AstBool,
     AstChildren,
     AstCommand,
-    AstNbtValue,
     AstMessage,
     AstMessageText,
+    AstNbtValue,
     AstRoot,
     AstSelector,
     Diagnostic,

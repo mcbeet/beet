@@ -2,6 +2,7 @@ from glob import glob
 from typing import Any
 
 import pytest
+
 from beet import run_beet
 
 from lectern import Document

@@ -3,8 +3,9 @@ __all__ = [
 ]
 
 
-from beet import Context
 from tokenstream import set_location
+
+from beet import Context
 
 from mecha import AstCommand, AstSelector, Diagnostic, Mecha, Reducer, rule
 

@@ -3,8 +3,9 @@ __all__ = [
 ]
 
 
+from collections.abc import Mapping
 from dataclasses import dataclass
-from typing import Literal, Mapping, Optional
+from typing import Literal
 
 from .directive import Directive
 from .fragment import Fragment, InvalidFragment
@@ -20,7 +21,7 @@ class LinkFragmentLoader:
         self,
         fragment: Fragment,
         directives: Mapping[str, Directive],
-    ) -> Optional[Fragment]:
+    ) -> Fragment | None:
         if fragment.url or fragment.modifier == "download":
             if self.status == "ignore":
                 return None

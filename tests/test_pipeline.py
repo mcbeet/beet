@@ -1,10 +1,8 @@
-from typing import List
-
 import pytest
 
 from beet import GenericPipeline, PluginError, PluginImportError
 
-TestPipeline = GenericPipeline[List[str]]
+TestPipeline = GenericPipeline[list[str]]
 
 
 def test_empty():
@@ -16,10 +14,10 @@ def test_empty():
 def test_basic():
     pipeline = TestPipeline([])
 
-    def p1(ctx: List[str]):
+    def p1(ctx: list[str]):
         ctx.append("p1")
 
-    def p2(ctx: List[str]):
+    def p2(ctx: list[str]):
         ctx.append("p2")
 
     pipeline.run([p1, p2])
@@ -29,12 +27,12 @@ def test_basic():
 def test_with_yield():
     pipeline = TestPipeline([])
 
-    def p1(ctx: List[str]):
+    def p1(ctx: list[str]):
         ctx.append("p1")
         yield
         ctx.append("p1-bis")
 
-    def p2(ctx: List[str]):
+    def p2(ctx: list[str]):
         ctx.append("p2")
         yield
         ctx.append("p2-bis")
@@ -46,14 +44,14 @@ def test_with_yield():
 def test_with_multiple_yield():
     pipeline = TestPipeline([])
 
-    def p1(ctx: List[str]):
+    def p1(ctx: list[str]):
         ctx.append("p1")
         yield
         ctx.append("p1-bis")
         yield
         ctx.append("p1-bis-bis")
 
-    def p2(ctx: List[str]):
+    def p2(ctx: list[str]):
         ctx.append("p2")
         yield
         ctx.append("p2-bis")
@@ -67,7 +65,7 @@ def test_with_multiple_yield():
 def test_with_multiple_yield_and_nested_require():
     pipeline = TestPipeline([])
 
-    def p1(ctx: List[str]):
+    def p1(ctx: list[str]):
         ctx.append("p1")
         yield
         pipeline.require(p3)
@@ -75,14 +73,14 @@ def test_with_multiple_yield_and_nested_require():
         yield
         ctx.append("p1-bis-bis")
 
-    def p2(ctx: List[str]):
+    def p2(ctx: list[str]):
         ctx.append("p2")
         yield
         ctx.append("p2-bis")
         yield
         ctx.append("p2-bis-bis")
 
-    def p3(ctx: List[str]):
+    def p3(ctx: list[str]):
         ctx.append("p3")
         yield
         ctx.append("p3-bis")
@@ -103,7 +101,7 @@ def test_with_multiple_yield_and_nested_require():
 def test_self_require():
     pipeline = TestPipeline([])
 
-    def p1(ctx: List[str]):
+    def p1(ctx: list[str]):
         pipeline.require(p1)
         ctx.append("p1")
 
@@ -114,12 +112,12 @@ def test_self_require():
 def test_error():
     pipeline = TestPipeline([])
 
-    def p1(ctx: List[str]):
+    def p1(ctx: list[str]):
         ctx.append("p1")
         yield
         ctx.append("p1-bis")
 
-    def p2(ctx: List[str]):
+    def p2(ctx: list[str]):
         raise ValueError("nope")
 
     with pytest.raises(PluginError):
@@ -130,21 +128,21 @@ def test_error():
 def test_error_finally():
     pipeline = TestPipeline([])
 
-    def p1(ctx: List[str]):
+    def p1(ctx: list[str]):
         ctx.append("p1")
         try:
             yield
         finally:
             ctx.append("p1-bis")
 
-    def p2(ctx: List[str]):
+    def p2(ctx: list[str]):
         ctx.append("p2")
         try:
             yield
         finally:
             ctx.append("p2-bis")
 
-    def p3(ctx: List[str]):
+    def p3(ctx: list[str]):
         raise ValueError("nope")
 
     with pytest.raises(PluginError):
@@ -155,21 +153,21 @@ def test_error_finally():
 def test_error_recover():
     pipeline = TestPipeline([])
 
-    def p1(ctx: List[str]):
+    def p1(ctx: list[str]):
         ctx.append("p1")
         try:
             yield
         except PluginError as exc:
             ctx.append(str(exc.__cause__))
 
-    def p2(ctx: List[str]):
+    def p2(ctx: list[str]):
         raise ValueError("nope")
 
     pipeline.run([p1, p2])
     assert pipeline.ctx == ["p1", "nope"]
 
 
-def some_plugin(ctx: List[str]):
+def some_plugin(ctx: list[str]):
     ctx.append("hello")
 
 

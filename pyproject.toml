@@ -1,10 +1,10 @@
 [build-system]
-requires = ["uv_build>=0.9.8,<0.10.0"]
+requires = ["uv_build>=0.13.0,<0.14.0"]
 build-backend = "uv_build"
 
 [project]
 name = "beet"
-version = "0.119.0"
+version = "0.121.2"
 description = "The Minecraft pack development kit"
 authors = [{ name = "Valentin Berlier", email = "berlier.v@gmail.com" }]
 license = "MIT"
@@ -20,15 +20,22 @@ keywords = [
 
 requires-python = ">=3.14"
 dependencies = [
-    "click>=8.3.1",
+    "click>=8.5.0",
     "click-help-colors>=0.9.4",
     "jinja2>=3.1.6",
     "nbtlib==1.12.1",
-    "pathspec>=0.12.1",
-    "pillow>=12.0.0",
-    "pydantic>=2.12.4",
+    "pathspec>=1.1.1",
+    "pillow>=13.0.0",
+    "platformdirs>=4.11.11",
+    "prompt-toolkit>=3.0.53",
+    "pydantic>=2.14.1",
     "pyyaml>=6.0.3",
     "toml>=0.10.2",
+]
+
+classifiers = [
+    "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: 3.15",
 ]
 
 [project.urls]
@@ -46,13 +53,14 @@ beet = "beet.pytest_plugin"
 
 [dependency-groups]
 dev = [
-    "basedpyright>=1.33.0",
-    "pytest>=9.0.0",
+    "basedpyright>=1.40.2",
+    "pytest>=9.1.1",
     "pytest-insta>=0.4.0",
     "pytest-minecraft>=0.2.0",
-    "python-semantic-release>=10.5.2",
-    "ruff>=0.14.4",
-    "zensical>=0.0.20",
+    "pytest-xdist>=3.8.0",
+    "python-semantic-release>=10.7.0",
+    "ruff>=0.17.1",
+    "zensical>=0.0.71",
 ]
 
 # Remove when python-semantic-release allows the fixed click release.
@@ -62,8 +70,8 @@ override-dependencies = ["click>=8.3.1"]
 [tool.uv.workspace]
 members = ["packages/*"]
 
-[tool.pytest.ini_options]
-addopts = "tests --import-mode=importlib"
+[tool.pytest]
+addopts = ["tests", "--import-mode=importlib"]
 
 [tool.semantic_release]
 commit_parser = "conventional-monorepo"
@@ -92,3 +100,38 @@ prerelease_token = "beta"
 [tool.pyright]
 failOnWarnings = false
 reportImportCycles = "none"
+
+[tool.ruff]
+extend-exclude = ["*.md"]
+
+[tool.ruff.lint]
+ignore = [
+    "SIM102",
+    "SIM117",
+    "BLE001",
+    "RUF009",
+    "RUF012",
+    "S110",
+    "TRY203",
+    "PLR1704",
+    "PLW0642",
+    "S102",
+]
+
+[tool.ruff.lint.isort]
+section-order = [
+    "future",
+    "standard-library",
+    "third-party",
+    "beet",
+    "lectern",
+    "mecha",
+    "bolt",
+    "local-folder",
+]
+
+[tool.ruff.lint.isort.sections]
+beet = ["beet"]
+lectern = ["lectern"]
+mecha = ["mecha"]
+bolt = ["bolt"]

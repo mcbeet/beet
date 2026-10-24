@@ -1,135 +1,128 @@
 __all__ = [
-    "AbstractNode",
+    "COLORS",
     "AbstractChildren",
-    "AstNode",
-    "AstChildren",
-    "AstRoot",
-    "AstCommand",
-    "AstCommandSentinel",
-    "AstString",
-    "AstBool",
-    "AstNumber",
-    "AstUUID",
-    "AstCoordinate",
-    "AstLiteral",
-    "AstOption",
-    "AstWord",
-    "AstGreedy",
-    "AstObjective",
-    "AstObjectiveCriteria",
-    "AstScoreboardOperation",
-    "AstTeam",
-    "AstPlayerName",
-    "AstLegacyScoreboardSlot",
-    "AstScoreboardSlot",
-    "AstSwizzle",
+    "AbstractNode",
     "AstAdvancementPredicate",
-    "AstWildcard",
+    "AstBlock",
+    "AstBlockMarkerParticleParameters",
+    "AstBlockParticleParameters",
+    "AstBlockState",
+    "AstBool",
+    "AstChildren",
     "AstColor",
     "AstColorReset",
-    "AstHexColor",
-    "AstSortOrder",
-    "AstGamemode",
-    "AstHeightmap",
+    "AstCommand",
+    "AstCommandSentinel",
+    "AstCoordinate",
+    "AstDustColorTransitionParticleParameters",
+    "AstDustParticleParameters",
     "AstEntityAnchor",
-    "AstTemplateRotation",
-    "AstTemplateMirror",
-    "AstVector2",
-    "AstVector3",
-    "AstJson",
-    "AstJsonValue",
-    "AstJsonArray",
-    "AstJsonObjectKey",
-    "AstJsonObjectEntry",
-    "AstJsonObject",
-    "AstNbt",
-    "AstNbtValue",
-    "AstNbtBool",
-    "AstNbtList",
-    "AstNbtCompoundKey",
-    "AstNbtCompoundEntry",
-    "AstNbtCompound",
-    "AstNbtByteArray",
-    "AstNbtIntArray",
-    "AstNbtLongArray",
-    "AstResourceLocation",
-    "AstBlockState",
-    "AstBlock",
+    "AstFallingDustParticleParameters",
+    "AstGamemode",
+    "AstGreedy",
+    "AstHeightmap",
+    "AstHexColor",
     "AstItemComponent",
-    "AstItemRemovedDefaultComponent",
-    "AstItemStack",
+    "AstItemParticleParameters",
+    "AstItemPredicate",
+    "AstItemPredicateAlternatives",
     "AstItemPredicateTestComponent",
     "AstItemPredicateTestPredicate",
-    "AstItemPredicateAlternatives",
-    "AstItemPredicate",
+    "AstItemRemovedDefaultComponent",
     "AstItemSlot",
     "AstItemSlots",
-    "AstRange",
-    "AstTime",
-    "AstSelectorScoreMatch",
-    "AstSelectorScores",
-    "AstSelectorAdvancementPredicateMatch",
-    "AstSelectorAdvancementMatch",
-    "AstSelectorArgument",
-    "AstSelector",
-    "AstMessageText",
-    "AstMessage",
-    "AstNbtPathKey",
-    "AstNbtPathSubscript",
-    "AstNbtPath",
-    "AstParticleParameters",
-    "AstDustParticleParameters",
-    "AstDustColorTransitionParticleParameters",
-    "AstBlockParticleParameters",
-    "AstFallingDustParticleParameters",
-    "AstItemParticleParameters",
-    "AstVibrationParticleParameters",
-    "AstBlockMarkerParticleParameters",
-    "AstParticle",
+    "AstItemStack",
+    "AstJson",
+    "AstJsonArray",
+    "AstJsonObject",
+    "AstJsonObjectEntry",
+    "AstJsonObjectKey",
+    "AstJsonValue",
+    "AstLegacyScoreboardSlot",
+    "AstLiteral",
     "AstMacroLine",
     "AstMacroLineText",
     "AstMacroLineVariable",
-    "COLORS",
+    "AstMessage",
+    "AstMessageText",
+    "AstNbt",
+    "AstNbtBool",
+    "AstNbtByteArray",
+    "AstNbtCompound",
+    "AstNbtCompoundEntry",
+    "AstNbtCompoundKey",
+    "AstNbtIntArray",
+    "AstNbtList",
+    "AstNbtLongArray",
+    "AstNbtPath",
+    "AstNbtPathKey",
+    "AstNbtPathSubscript",
+    "AstNbtValue",
+    "AstNode",
+    "AstNumber",
+    "AstObjective",
+    "AstObjectiveCriteria",
+    "AstOption",
+    "AstParticle",
+    "AstParticleParameters",
+    "AstPlayerName",
+    "AstRange",
+    "AstResourceLocation",
+    "AstRoot",
+    "AstScoreboardOperation",
+    "AstScoreboardSlot",
+    "AstSelector",
+    "AstSelectorAdvancementMatch",
+    "AstSelectorAdvancementPredicateMatch",
+    "AstSelectorArgument",
+    "AstSelectorScoreMatch",
+    "AstSelectorScores",
+    "AstSortOrder",
+    "AstString",
+    "AstSwizzle",
+    "AstTeam",
+    "AstTemplateMirror",
+    "AstTemplateRotation",
+    "AstTime",
+    "AstUUID",
+    "AstVector2",
+    "AstVector3",
+    "AstVibrationParticleParameters",
+    "AstWildcard",
+    "AstWord",
 ]
 
 
 import re
+from collections.abc import Iterable, Iterator, Mapping, Sequence
 from dataclasses import dataclass, fields
 from itertools import islice, permutations, zip_longest
-from typing import (
-    Any,
-    ClassVar,
-    Iterable,
-    Iterator,
-    List,
-    Literal,
-    Mapping,
-    Optional,
-    Sequence,
-    Set,
-    Tuple,
-    Type,
-    TypeVar,
-    Union,
-    overload,
-)
+from typing import Any, ClassVar, Literal, Self, overload
 from uuid import UUID
 
-from beet.core.utils import JsonDict, extra_field, required_field
-from nbtlib import Byte, ByteArray, Compound, CompoundMatch, Double, Int, IntArray
+from nbtlib import (
+    Byte,
+    ByteArray,
+    Compound,
+    CompoundMatch,
+    Double,
+    Int,
+    IntArray,
+    ListIndex,
+    LongArray,
+    NamedKey,
+    Numeric,
+    Path,
+    String,
+)
 from nbtlib import List as ListTag
-from nbtlib import ListIndex, LongArray, NamedKey, Numeric, Path, String
 from tokenstream import UNKNOWN_LOCATION, SourceLocation, set_location
+
+from beet.core.utils import JsonDict, extra_field, required_field
 
 from .utils import string_to_number
 
-T = TypeVar("T")
-AbstractNodeType = TypeVar("AbstractNodeType", bound="AbstractNode", covariant=True)
-AstNodeType = TypeVar("AstNodeType", bound="AstNode", covariant=True)
-AstLiteralType = TypeVar("AstLiteralType", bound="AstLiteral")
-
-
-COLORS: Tuple[str, ...] = (
+COLORS: tuple[str, ...] = (
     "black",
     "dark_blue",
     "dark_green",
@@ -156,7 +149,7 @@ class AbstractNode:
     location: SourceLocation = extra_field(default=UNKNOWN_LOCATION)
     end_location: SourceLocation = extra_field(default=UNKNOWN_LOCATION)
 
-    def __iter__(self) -> Iterator["AbstractNode"]:
+    def __iter__(self) -> Iterator[AbstractNode]:
         for f in fields(self):
             attribute = getattr(self, f.name)
 
@@ -166,7 +159,7 @@ class AbstractNode:
             if isinstance(attribute, AbstractNode):
                 yield attribute
 
-    def walk(self) -> Iterator["AbstractNode"]:
+    def walk(self) -> Iterator[AbstractNode]:
         yield self
 
         for f in fields(self):
@@ -184,7 +177,7 @@ class AbstractNode:
         self,
         prefix: str = "",
         shallow: bool = False,
-        exclude: Optional[Set[str]] = None,
+        exclude: set[str] | None = None,
     ) -> str:
         """Return a pretty-printed representation of the ast."""
         return f"{prefix}{self.__class__}\n" + "\n".join(
@@ -219,18 +212,18 @@ class AbstractNode:
             if not exclude or f.name not in exclude
         )
 
-    def emit_error(self, exc: T) -> T:
+    def emit_error[T](self, exc: T) -> T:
         """Add location information to invalid syntax exceptions."""
         return set_location(exc, self)
 
 
-class AbstractChildren(Tuple[AbstractNodeType, ...]):
+class AbstractChildren[AbstractNodeType: AbstractNode](tuple[AbstractNodeType, ...]):
     """Abstract children."""
 
     def __new__(
         cls,
         children: Iterable[
-            None | AbstractNodeType | "AbstractChildren[AbstractNodeType]"
+            None | AbstractNodeType | AbstractChildren[AbstractNodeType]
         ] = (),
     ):
         children = [
@@ -248,17 +241,17 @@ class AbstractChildren(Tuple[AbstractNodeType, ...]):
 class AstNode(AbstractNode):
     """Base class for all ast nodes."""
 
-    parser: ClassVar[Optional[str]] = None
+    parser: ClassVar[str | None] = None
     compile_hints: ClassVar[JsonDict] = {}
 
-    def __iter__(self) -> Iterator["AstNode"]:
+    def __iter__(self) -> Iterator[AstNode]:
         return super().__iter__()  # pyright: ignore[reportReturnType]
 
-    def walk(self) -> Iterator["AstNode"]:
+    def walk(self) -> Iterator[AstNode]:
         return super().walk()  # pyright: ignore[reportReturnType]
 
 
-class AstChildren(AbstractChildren[AstNodeType]):
+class AstChildren[AstNodeType: AstNode](AbstractChildren[AstNodeType]):
     """Specialized tuple subclass for holding multiple child ast nodes."""
 
 
@@ -266,7 +259,7 @@ class AstChildren(AbstractChildren[AstNodeType]):
 class AstRoot(AstNode):
     """Ast root node."""
 
-    commands: AstChildren["AstCommand"] = required_field()
+    commands: AstChildren[AstCommand] = required_field()
 
     parser = "root"
 
@@ -300,7 +293,7 @@ class AstString(AstNode):
     parser = "phrase"
 
     @classmethod
-    def from_value(cls, value: Any) -> "AstString":
+    def from_value(cls, value: Any) -> AstString:
         """Return a string node from the given value."""
         return AstString(value=str(value))
 
@@ -314,7 +307,7 @@ class AstBool(AstNode):
     parser = "bool"
 
     @classmethod
-    def from_value(cls, value: Any) -> "AstBool":
+    def from_value(cls, value: Any) -> AstBool:
         """Return a bool node from the given value."""
         return AstBool(value=bool(value))
 
@@ -323,12 +316,12 @@ class AstBool(AstNode):
 class AstNumber(AstNode):
     """Ast number node."""
 
-    value: Union[int, float] = required_field()
+    value: int | float = required_field()
 
     parser = "numeric"
 
     @classmethod
-    def from_value(cls, value: Any) -> "AstNumber":
+    def from_value(cls, value: Any) -> AstNumber:
         """Return a number node from the given value."""
         if isinstance(value, str):
             value = string_to_number(value)
@@ -346,7 +339,7 @@ class AstUUID(AstNode):
     parser = "uuid"
 
     @classmethod
-    def from_value(cls, value: Any) -> "AstUUID":
+    def from_value(cls, value: Any) -> AstUUID:
         """Return a uuid node from the given value."""
         if isinstance(value, str):
             a, b, c, d, e = value.split("-")
@@ -361,12 +354,12 @@ class AstCoordinate(AstNode):
     """Coordinate ast node."""
 
     type: Literal["absolute", "relative", "local"] = "absolute"
-    value: Union[int, float] = required_field()
+    value: int | float = required_field()
 
     parser = "coordinate"
 
     @classmethod
-    def from_value(cls, value: Any) -> "AstCoordinate":
+    def from_value(cls, value: Any) -> AstCoordinate:
         """Return a coordinate node from the given value."""
         type = "absolute"
         if isinstance(value, str):
@@ -390,7 +383,7 @@ class AstVector2(AstNode):
     y: AstCoordinate = required_field()
 
     @classmethod
-    def from_value(cls, value: Any) -> "AstVector2":
+    def from_value(cls, value: Any) -> AstVector2:
         """Return a vector 2 node from the given value."""
         if isinstance(value, str):
             value = value.split()
@@ -407,7 +400,7 @@ class AstVector3(AstNode):
     z: AstCoordinate = required_field()
 
     @classmethod
-    def from_value(cls, value: Any) -> "AstVector3":
+    def from_value(cls, value: Any) -> AstVector3:
         """Return a vector 3 node from the given value."""
         if isinstance(value, str):
             value = value.split()
@@ -421,10 +414,10 @@ class AstLiteral(AstNode):
 
     value: str = required_field()
 
-    regex: ClassVar["re.Pattern[str]"] = re.compile(r"[^#:\s]+")
+    regex: ClassVar[re.Pattern[str]] = re.compile(r"[^#:\s]+")
 
     @classmethod
-    def from_value(cls: Type[AstLiteralType], value: Any) -> AstLiteralType:
+    def from_value(cls, value: Any) -> Self:
         """Return a literal node from a given value."""
         value = str(value)
         match = cls.regex.match(value)
@@ -445,7 +438,7 @@ class AstWord(AstLiteral):
 class AstOption(AstLiteral):
     """Base node for options."""
 
-    options: ClassVar[Set[str]] = set()
+    options: ClassVar[set[str]] = set()
 
     def __init_subclass__(cls):
         patterns = [
@@ -646,7 +639,7 @@ class AstJson(AstNode):
         raise NotImplementedError()
 
     @classmethod
-    def from_value(cls, value: Any) -> "AstJson":
+    def from_value(cls, value: Any) -> AstJson:
         """Create json ast nodes representing the specified json value."""
         if value is None or isinstance(value, (bool, str, int, float)):
             return AstJsonValue(value=value)
@@ -731,22 +724,22 @@ class AstNbt(AstNode):
 
     @overload
     @classmethod
-    def from_value(cls, value: Union[bool, int, float, str]) -> "AstNbtValue": ...
+    def from_value(cls, value: bool | float | str) -> AstNbtValue: ...
 
     @overload
     @classmethod
-    def from_value(cls, value: Mapping[Any, Any]) -> "AstNbtCompound": ...
+    def from_value(cls, value: Mapping[Any, Any]) -> AstNbtCompound: ...
 
     @overload
     @classmethod
-    def from_value(cls, value: Sequence[Any]) -> "AstNbtList": ...
+    def from_value(cls, value: Sequence[Any]) -> AstNbtList: ...
 
     @overload
     @classmethod
-    def from_value(cls, value: Any) -> "AstNbt": ...
+    def from_value(cls, value: Any) -> AstNbt: ...
 
     @classmethod
-    def from_value(cls, value: Any) -> "AstNbt":
+    def from_value(cls, value: Any) -> AstNbt:
         """Create nbt ast nodes representing the specified value."""
         if isinstance(value, (Numeric, String)):
             return AstNbtValue(value=value)
@@ -785,7 +778,7 @@ class AstNbt(AstNode):
             lst: Sequence[Any] = value
             return AstNbtList(elements=AstChildren(cls.from_value(e) for e in lst))
         else:
-            raise ValueError(f"Invalid nbt value of type {type(value)!r}.")
+            raise TypeError(f"Invalid nbt value of type {type(value)!r}.")
 
 
 @dataclass(frozen=True, slots=True)
@@ -890,13 +883,13 @@ class AstResourceLocation(AstNode):
     """Ast resource location node."""
 
     is_tag: bool = False
-    namespace: Optional[str] = None
+    namespace: str | None = None
     path: str = required_field()
 
     parser = "resource_location_or_tag"
 
     @classmethod
-    def from_value(cls, value: Any) -> "AstResourceLocation":
+    def from_value(cls, value: Any) -> AstResourceLocation:
         """Create a resource location node representing the given value."""
         value = str(value)
         if is_tag := value.startswith("#"):
@@ -931,7 +924,7 @@ class AstBlock(AstNode):
 
     identifier: AstResourceLocation = required_field()
     block_states: AstChildren[AstBlockState] = AstChildren()
-    data_tags: Optional[AstNbtCompound] = None
+    data_tags: AstNbtCompound | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -954,10 +947,10 @@ class AstItemStack(AstNode):
     """Ast item stack node."""
 
     identifier: AstResourceLocation = required_field()
-    arguments: AstChildren[Union[AstItemComponent, AstItemRemovedDefaultComponent]] = (
+    arguments: AstChildren[AstItemComponent | AstItemRemovedDefaultComponent] = (
         AstChildren()
     )
-    data_tags: Optional[AstNbtCompound] = None  # legacy compat
+    data_tags: AstNbtCompound | None = None  # legacy compat
 
 
 @dataclass(frozen=True, slots=True)
@@ -966,7 +959,7 @@ class AstItemPredicateTestComponent(AstNode):
 
     inverted: bool = False
     key: AstResourceLocation = required_field()
-    value: Optional[AstNbt] = None
+    value: AstNbt | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -983,7 +976,7 @@ class AstItemPredicateAlternatives(AstNode):
     """Ast item predicate alternatives node."""
 
     alternatives: AstChildren[
-        Union[AstItemPredicateTestComponent, AstItemPredicateTestPredicate]
+        AstItemPredicateTestComponent | AstItemPredicateTestPredicate
     ] = required_field()
 
 
@@ -991,9 +984,9 @@ class AstItemPredicateAlternatives(AstNode):
 class AstItemPredicate(AstNode):
     """Ast item predicate node."""
 
-    identifier: Union[AstResourceLocation, AstWildcard] = required_field()
+    identifier: AstResourceLocation | AstWildcard = required_field()
     arguments: AstChildren[AstItemPredicateAlternatives] = AstChildren()
-    data_tags: Optional[AstNbtCompound] = None  # legacy compat
+    data_tags: AstNbtCompound | None = None  # legacy compat
 
 
 @dataclass(frozen=True, slots=True)
@@ -1063,8 +1056,8 @@ class AstSwingAnimation(AstOption):
 class AstRange(AstNode):
     """Ast range node."""
 
-    min: Optional[Union[int, float]] = required_field()
-    max: Optional[Union[int, float]] = required_field()
+    min: int | float | None = required_field()
+    max: int | float | None = required_field()
 
     parser = "range"
 
@@ -1074,7 +1067,7 @@ class AstRange(AstNode):
         return self.min == self.max
 
     @property
-    def value(self) -> Union[int, float]:
+    def value(self) -> int | float:
         """Return the exact value."""
         assert self.min is not None
         return self.min
@@ -1082,13 +1075,8 @@ class AstRange(AstNode):
     @classmethod
     def from_value(
         cls,
-        value: Union[
-            str,
-            int,
-            float,
-            Tuple[Union[int, float, str], Union[int, float, str]],
-        ],
-    ) -> "AstRange":
+        value: str | float | tuple[int | float | str, int | float | str],
+    ) -> AstRange:
         """Create a range node from a given value."""
         if isinstance(value, (int, float)):
             return AstRange(min=value, max=value)
@@ -1115,13 +1103,13 @@ class AstRange(AstNode):
 class AstTime(AstNode):
     """Ast time node."""
 
-    value: Union[int, float] = required_field()
+    value: int | float = required_field()
     unit: Literal["day", "second", "tick"] = "tick"
 
     parser = "time"
 
     @classmethod
-    def from_value(cls, value: Union[str, int, float]) -> "AstTime":
+    def from_value(cls, value: str | float) -> AstTime:
         """Create a time node from a given value."""
         unit = "tick"
 
@@ -1167,7 +1155,7 @@ class AstSelectorAdvancementMatch(AstNode):
     """Ast selector advancement match node."""
 
     key: AstResourceLocation = required_field()
-    value: Union[AstBool, AstChildren[AstSelectorAdvancementPredicateMatch]] = (
+    value: AstBool | AstChildren[AstSelectorAdvancementPredicateMatch] = (
         required_field()
     )
 
@@ -1185,7 +1173,7 @@ class AstSelectorArgument(AstNode):
 
     inverted: bool = False
     key: AstString = required_field()
-    value: Optional[AstNode] = required_field()
+    value: AstNode | None = required_field()
 
 
 @dataclass(frozen=True, slots=True)
@@ -1210,10 +1198,10 @@ class AstMessageText(AstLiteral):
 class AstMessage(AstNode):
     """Ast message node."""
 
-    fragments: AstChildren[Union[AstMessageText, AstSelector]] = required_field()
+    fragments: AstChildren[AstMessageText | AstSelector] = required_field()
 
     @classmethod
-    def from_value(cls, obj: Any) -> "AstMessage":
+    def from_value(cls, obj: Any) -> AstMessage:
         """Return message node from a given value."""
         return AstMessage(fragments=AstChildren([AstMessageText.from_value(obj)]))
 
@@ -1229,29 +1217,29 @@ class AstNbtPathKey(AstNode):
 class AstNbtPathSubscript(AstNode):
     """Ast nbt path subscript node."""
 
-    index: Union[None, AstNumber, AstNbtCompound] = None
+    index: None | AstNumber | AstNbtCompound = None
 
 
 @dataclass(frozen=True, slots=True)
 class AstNbtPath(AstNode):
     """Ast nbt path node."""
 
-    components: AstChildren[
-        Union[AstNbtPathKey, AstNbtCompound, AstNbtPathSubscript]
-    ] = required_field()
+    components: AstChildren[AstNbtPathKey | AstNbtCompound | AstNbtPathSubscript] = (
+        required_field()
+    )
 
     parser = "nbt_path"
 
     @classmethod
-    def from_value(cls, value: Any) -> "AstNbtPath":
+    def from_value(cls, value: Any) -> AstNbtPath:
         """Create nbt path ast nodes representing the specified value."""
         if isinstance(value, str):
             value = Path(value)
         if not isinstance(value, Path):
-            raise ValueError(f"Invalid nbt path value of type {type(value)!r}.")
+            raise TypeError(f"Invalid nbt path value of type {type(value)!r}.")
 
         accessors = zip_longest(value, islice(value, 1, None))
-        components: List[Union[AstNbtPathKey, AstNbtCompound, AstNbtPathSubscript]] = []
+        components: list[AstNbtPathKey | AstNbtCompound | AstNbtPathSubscript] = []
 
         for accessor, next_accessor in accessors:
             if isinstance(accessor, NamedKey):
@@ -1366,7 +1354,7 @@ class AstParticle(AstNode):
     """Ast particle node."""
 
     name: AstResourceLocation = required_field()
-    parameters: Optional[Union[AstParticleParameters, AstNbtCompound]] = None
+    parameters: AstParticleParameters | AstNbtCompound | None = None
 
     parser = "particle"
 

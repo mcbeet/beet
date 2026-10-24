@@ -6,18 +6,20 @@ see file://./../../scripts/update_pack_format_registry.py
 """
 
 __all__ = [
+    "PackFormatRegistry",
+    "PackFormatRegistryContainer",
     "pack_format_registry",
     "pack_format_registry_path",
-    "PackFormatRegistryContainer",
-    "PackFormatRegistry",
 ]
-from importlib.resources import files
 import json
+from importlib.resources import files
 from typing import Literal
-from beet.toolchain.config import FormatSpecifier
+
 from pydantic import BaseModel
-from beet.core.utils import normalize_string, VersionNumber
+
 from beet.core.container import Container
+from beet.core.utils import VersionNumber, normalize_string
+from beet.toolchain.config import FormatSpecifier
 
 
 class PackFormatRegistry(BaseModel):

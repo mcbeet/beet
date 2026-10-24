@@ -1,30 +1,28 @@
 __all__ = [
-    "TreeNode",
     "TreeData",
+    "TreeNode",
     "generate_tree",
 ]
 
 
+from collections.abc import Callable, Iterable, Iterator
 from dataclasses import dataclass
 from math import ceil
-from typing import Callable, Generic, Iterable, Iterator, List, Optional, Tuple, TypeVar
-
-T = TypeVar("T")
 
 
 @dataclass
-class TreeData(Generic[T]):
+class TreeData[T]:
     """Holds the static data for the search tree."""
 
     root: str
-    stack: List["TreeNode[T]"]
-    items: List[T]
-    key: Optional[Callable[[T], int]]
-    name: Optional[str]
+    stack: list[TreeNode[T]]
+    items: list[T]
+    key: Callable[[T], int] | None
+    name: str | None
 
 
 @dataclass
-class TreeNode(Generic[T]):
+class TreeNode[T]:
     """Represents a node of the generated search tree."""
 
     parent: str
@@ -79,11 +77,11 @@ class TreeNode(Generic[T]):
         return self.data.items[self.start]
 
     @property
-    def items(self) -> List[T]:
+    def items(self) -> list[T]:
         return self.data.items[self.start : self.stop]
 
     @property
-    def delimitters(self) -> Tuple[int, int]:
+    def delimitters(self) -> tuple[int, int]:
         begin, end = self.start, self.stop - 1
 
         if self.data.key:
@@ -119,11 +117,11 @@ class TreeNode(Generic[T]):
         return self.stop - self.start == len(self.data.items)
 
 
-def generate_tree(
+def generate_tree[T](
     root: str,
     items: Iterable[T],
-    key: Optional[Callable[[T], int]] = None,
-    name: Optional[str] = None,
+    key: Callable[[T], int] | None = None,
+    name: str | None = None,
 ) -> Iterator[TreeNode[T]]:
     """Generate a search tree and yield nodes in a depth-first traversal."""
     data = TreeData[T](root, [], list(items), key, name)

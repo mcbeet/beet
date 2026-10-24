@@ -1,0 +1,8 @@
+a = 10
+b = 20
+#>ERROR  Expected colon, eof, literal 'advancement', literal 'advancement_tag', literal 'align', literal 'anchored' or 258 other tokens but got literal '-a'.
+# line 3, column 31
+#      2 |  b = 20
+#      3 |  if score foo bar matches -b.. -a say hi
+#        :                                ^^
+if score foo bar matches -b.. -a say hi

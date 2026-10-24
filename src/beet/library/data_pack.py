@@ -1,99 +1,98 @@
 __all__ = [
-    "DataPack",
-    "DataPackNamespace",
     "Advancement",
-    "DamageType",
-    "ChatType",
-    "BannerPattern",
-    "WolfVariant",
-    "Enchantment",
-    "EnchantmentProvider",
-    "JukeboxSong",
-    "PaintingVariant",
-    "WolfVariant",
-    "Function",
-    "ItemModifier",
-    "LootTable",
-    "Predicate",
-    "Recipe",
-    "Structure",
-    "TrimPattern",
-    "TrimMaterial",
-    "FrogVariant",
-    "CatVariant",
-    "CatSoundVariant",
-    "CowVariant",
-    "CowSoundVariant",
-    "ChickenVariant",
-    "ChickenSoundVariant",
-    "WolfSoundVariant",
-    "TagFile",
-    "BlockTag",
-    "EntityTypeTag",
-    "FluidTag",
-    "FunctionTag",
-    "GameEventTag",
-    "ItemTag",
-    "ChatTypeTag",
-    "DamageTypeTag",
+    "AdvancementTag",
     "BannerPattern",
     "BannerPatternTag",
-    "CatVariantTag",
-    "EnchantmentTag",
-    "InstrumentTag",
-    "PaintingVariantTag",
-    "PointOfInterestTypeTag",
-    "Instrument",
-    "TrialSpawner",
-    "FrogVariantTag",
-    "CowVariantTag",
-    "ChickenVariantTag",
-    "WolfSoundVariantTag",
-    "Dialog",
-    "PigVariant",
-    "PigSoundVariant",
-    "DialogTag",
-    "TestInstance",
-    "TestEnvironment",
-    "SulfurCubeArchetype",
-    "PotionTag",
+    "BlockTag",
     "BlockTranformer",
-    "ContextIntProvider",
+    "BlockTransformerTag",
+    "CatSoundVariant",
+    "CatSoundVariantTag",
+    "CatVariant",
+    "CatVariantTag",
+    "ChatType",
+    "ChatTypeTag",
+    "ChickenSoundVariant",
+    "ChickenSoundVariantTag",
+    "ChickenVariant",
+    "ChickenVariantTag",
     "ContextFloatProvider",
+    "ContextFloatProviderTag",
+    "ContextIntProvider",
+    "ContextIntProviderTag",
+    "CowSoundVariant",
+    "CowSoundVariantTag",
+    "CowVariant",
+    "CowVariantTag",
+    "DamageType",
+    "DamageTypeTag",
+    "DataPack",
+    "DataPackNamespace",
     "DecoratedPotPattern",
+    "DecoratedPotPatternTag",
+    "Dialog",
+    "DialogTag",
+    "Enchantment",
+    "EnchantmentProvider",
+    "EnchantmentProviderTag",
+    "EnchantmentTag",
+    "EntityTypeTag",
+    "FluidTag",
+    "FrogVariant",
+    "FrogVariantTag",
+    "Function",
+    "FunctionTag",
+    "GameEventTag",
+    "Instrument",
+    "InstrumentTag",
+    "ItemModifier",
+    "ItemModifierTag",
+    "ItemTag",
+    "JukeboxSong",
+    "JukeboxSongTag",
+    "LootTable",
+    "LootTableTag",
+    "PaintingVariant",
+    "PaintingVariantTag",
+    "PigSoundVariant",
+    "PigSoundVariantTag",
+    "PigVariant",
+    "PigVariantTag",
+    "PointOfInterestTypeTag",
+    "PotionTag",
+    "Predicate",
+    "PredicateTag",
+    "Recipe",
+    "RecipeTag",
     "SlotSource",
     "SlotSourceTag",
-    "LootTableTag",
-    "AdvancementTag",
-    "ItemModifierTag",
-    "ContextIntProviderTag",
-    "ContextFloatProviderTag",
-    "RecipeTag",
-    "PredicateTag",
-    "BlockTransformerTag",
-    "CatSoundVariantTag",
-    "ChickenSoundVariantTag",
-    "CowSoundVariantTag",
-    "DecoratedPotPatternTag",
-    "EnchantmentProviderTag",
-    "JukeboxSongTag",
-    "PigSoundVariantTag",
-    "PigVariantTag",
+    "Structure",
+    "SulfurCubeArchetype",
     "SulfurCubeArchetypeTag",
+    "TagFile",
+    "TestEnvironment",
     "TestEnvironmentTag",
+    "TestInstance",
     "TestInstanceTag",
+    "TrialSpawner",
     "TrialSpawnerTag",
+    "TrimMaterial",
     "TrimMaterialTag",
+    "TrimPattern",
     "TrimPatternTag",
+    "WolfSoundVariant",
+    "WolfSoundVariantTag",
+    "WolfVariant",
     "WolfVariantTag",
 ]
 
 
 import io
+from collections.abc import Iterable, Mapping
 from copy import deepcopy
 from dataclasses import dataclass
 from gzip import GzipFile
-from typing import ClassVar, Iterable, List, Optional, TypeVar, Union
+from typing import ClassVar
 
 from nbtlib.contrib.minecraft import StructureFile, StructureFileData
 
@@ -116,8 +115,6 @@ from .base import (
     NamespaceProxyDescriptor,
     Pack,
 )
-
-TagFileType = TypeVar("TagFileType", bound="TagFile")
 
 
 class Advancement(JsonFile):
@@ -320,12 +317,12 @@ class SlotSource(JsonFile):
 
 
 @dataclass(eq=False, repr=False)
-class Function(TextFileBase[List[str]]):
+class Function(TextFileBase[list[str]]):
     """Class representing a function."""
 
-    content: TextFileContent[List[str]] = None
-    tags: Optional[List[str]] = extra_field(default=None)
-    prepend_tags: Optional[List[str]] = extra_field(default=None)
+    content: TextFileContent[list[str]] = None
+    tags: list[str] | None = extra_field(default=None)
+    prepend_tags: list[str] | None = extra_field(default=None)
 
     scope: ClassVar[NamespaceFileScope] = {
         0: ("functions",),
@@ -333,9 +330,9 @@ class Function(TextFileBase[List[str]]):
     }
     extension: ClassVar[str] = ".mcfunction"
 
-    lines: ClassVar[FileDeserialize[List[str]]] = FileDeserialize()
+    lines: ClassVar[FileDeserialize[list[str]]] = FileDeserialize()
 
-    def append(self, other: Union["Function", Iterable[str], str]):
+    def append(self, other: Function | Iterable[str] | str):
         """Append lines from another function."""
         self.lines.extend(
             other.lines
@@ -345,7 +342,7 @@ class Function(TextFileBase[List[str]]):
             else other
         )
 
-    def prepend(self, other: Union["Function", Iterable[str], str]):
+    def prepend(self, other: Function | Iterable[str] | str):
         """Prepend lines from another function."""
         self.lines[0:0] = (
             other.lines
@@ -356,16 +353,16 @@ class Function(TextFileBase[List[str]]):
         )
 
     @classmethod
-    def default(cls) -> List[str]:
+    def default(cls) -> list[str]:
         return []
 
-    def to_str(self, content: List[str]) -> str:
+    def to_str(self, content: list[str]) -> str:
         return "\n".join(content) + "\n"
 
-    def from_str(self, content: str) -> List[str]:
+    def from_str(self, content: str) -> list[str]:
         return content.splitlines()
 
-    def bind(self, pack: "DataPack", path: str):
+    def bind(self, pack: DataPack, path: str):
         super().bind(pack, path)
 
         for tag_name in self.tags or ():
@@ -511,33 +508,43 @@ class TagFile(JsonFile):
 
     extension: ClassVar[str] = ".json"
 
-    def merge(self: TagFileType, other: TagFileType) -> bool:  # pyright: ignore[reportIncompatibleMethodOverride]
-        if other.data.get("replace"):
+    def merge(self, other: object) -> bool:
+        if isinstance(other, JsonFile):
+            other = other.data
+        if not isinstance(other, Mapping):
+            return False
+
+        if other.get("replace"):
             self.data["replace"] = True
-            self.data["values"] = deepcopy(other.data.get("values", []))
+            self.data["values"] = deepcopy(other.get("values", []))
             return True
 
         values = self.data.setdefault("values", [])
 
-        for value in other.data.get("values", []):
+        for value in other.get("values", []):
             if value not in values:
                 values.append(deepcopy(value))
         return True
 
-    def append(self: TagFileType, other: TagFileType):
+    def append(self, other: object):
         """Append values from another tag."""
         self.merge(other)
 
-    def prepend(self: TagFileType, other: TagFileType):
+    def prepend(self, other: object):
         """Prepend values from another tag."""
-        if other.data.get("replace"):
+        if isinstance(other, JsonFile):
+            other = other.data
+        if not isinstance(other, Mapping):
+            return
+
+        if other.get("replace"):
             self.data["replace"] = True
-            self.data["values"] = deepcopy(other.data.get("values", []))
+            self.data["values"] = deepcopy(other.get("values", []))
             return
 
         values = self.data.setdefault("values", [])
 
-        for value in other.data.get("values", []):
+        for value in other.get("values", []):
             if value not in values:
                 values.insert(0, deepcopy(value))
 

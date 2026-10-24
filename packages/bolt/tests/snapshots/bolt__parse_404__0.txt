@@ -1,0 +1,7 @@
+i = 1
+#>ERROR  Expected colon, eof, literal 'advancement', literal 'advancement_tag', literal 'align', literal 'anchored' or 258 other tokens but got literal '..'.
+# line 2, column 28
+#      1 |  i = 1
+#      2 |  if score foo bar matches i .. say hi
+#        :                             ^^
+if score foo bar matches i .. say hi

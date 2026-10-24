@@ -2,6 +2,113 @@
 
 <!-- version list -->
 
+## v0.121.2 (2026-10-22)
+
+### Bug Fixes
+
+- Pipe workaround from #525 messed up the interactive console
+  ([`d50616f`](https://github.com/mcbeet/beet/commit/d50616fe3f561c54ea2b4b905bc63ef13fbf5056))
+
+
+## v0.121.1 (2026-10-21)
+
+### Bug Fixes
+
+- Print plain text when stdout is not a terminal ([#525](https://github.com/mcbeet/beet/pull/525),
+  [`72b5314`](https://github.com/mcbeet/beet/commit/72b531436e4297e2c7907fe4e3922bf850a46b73))
+
+
+## v0.121.0 (2026-10-21)
+
+### Bug Fixes
+
+- General clean
+  ([`d400c04`](https://github.com/mcbeet/beet/commit/d400c04ffd312e6951cde85a1c707dfdd3b5429d))
+
+- Ruff check ok
+  ([`0db268e`](https://github.com/mcbeet/beet/commit/0db268e92415e1052d19c7ec09cc06cad4c384eb))
+
+- Ruff safe fixes
+  ([`f3cc875`](https://github.com/mcbeet/beet/commit/f3cc87529e3b71037ebcea636d189bcde9d6a92d))
+
+- Ruff unsafe fixes
+  ([`0ad0404`](https://github.com/mcbeet/beet/commit/0ad0404bf3b048a2a024d231483af949ae1802e1))
+
+### Features
+
+- Bump dependencies
+  ([`5417385`](https://github.com/mcbeet/beet/commit/541738563276c3ac963061ccce24d8ab84873687))
+
+
+## v0.120.0 (2026-10-21)
+
+
+## v0.120.0-beta.4 (2026-10-21)
+
+### Bug Fixes
+
+- Empty cache directory
+  ([`2237acf`](https://github.com/mcbeet/beet/commit/2237acff91dfe5191964657cd276f85c17314988))
+
+
+## v0.120.0-beta.3 (2026-10-14)
+
+### Bug Fixes
+
+- Playground.log
+  ([`87fc297`](https://github.com/mcbeet/beet/commit/87fc297f7d5ba15e92094367c501319fe6fed627))
+
+
+## v0.120.0-beta.2 (2026-10-02)
+
+### Bug Fixes
+
+- Minify_function comment continuation
+  ([`5af3466`](https://github.com/mcbeet/beet/commit/5af34664663505ca70b66f97a3b502f1dd64b3d7))
+
+
+## v0.120.0-beta.1 (2026-10-02)
+
+### Bug Fixes
+
+- Suppress download failed for max_age refresh
+  ([`c8fd95e`](https://github.com/mcbeet/beet/commit/c8fd95e935dc1716100e47e6399f6ad483a170d5))
+
+### Features
+
+- Interactive console
+  ([`98d3170`](https://github.com/mcbeet/beet/commit/98d317082ec46db39209ee22beb774882fb59536))
+
+- Playground
+  ([`ff1d829`](https://github.com/mcbeet/beet/commit/ff1d8298a5314c7f86cf4b769c51529b8257e880))
+
+- Playground server listen for output
+  ([`337b3bb`](https://github.com/mcbeet/beet/commit/337b3bb08e9dc64b23e4c68ec8e98c43cb6f6527))
+
+- Shared cache and vanilla reports
+  ([`c566723`](https://github.com/mcbeet/beet/commit/c566723d3311a3a6899642fed1aaa7a0d3a5a804))
+
+- Vanilla server and runtime
+  ([`dc72d59`](https://github.com/mcbeet/beet/commit/dc72d59e508df02bfbc36c823aad5bdcbf361245))
+
+
+## v0.119.2 (2026-10-21)
+
+### Bug Fixes
+
+- #506 adopt vanilla configuration for temporary pack
+  ([#510](https://github.com/mcbeet/beet/pull/510),
+  [`0499615`](https://github.com/mcbeet/beet/commit/0499615c44d35f5cdb7f47b52d6b10879f808e34))
+
+
+## v0.119.1 (2026-10-02)
+
+### Bug Fixes
+
+- Minify_function comment continuation
+  ([`5af3466`](https://github.com/mcbeet/beet/commit/5af34664663505ca70b66f97a3b502f1dd64b3d7))
+
+
 ## v0.119.0 (2026-09-19)
 
 ### Features

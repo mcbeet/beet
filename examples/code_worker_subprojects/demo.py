@@ -1,10 +1,8 @@
-from typing import List, Optional
-
 from beet import Connection, Context, Mcmeta, subproject
 
 
-def bridge(connection: Connection[Optional[Mcmeta], Mcmeta]):
-    q: List[Mcmeta] = []
+def bridge(connection: Connection[Mcmeta | None, Mcmeta]):
+    q: list[Mcmeta] = []
 
     for client in connection:
         for mcmeta in client:

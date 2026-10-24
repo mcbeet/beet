@@ -1,12 +1,12 @@
 """Plugin that cleans up empty overlays."""
 
 __all__ = [
-    "cleanup_overlays",
     "CleanupOverlaysOptions",
+    "cleanup_overlays",
 ]
 
 
-from beet import Context, PluginOptions, configurable, ListOption
+from beet import Context, ListOption, PluginOptions, configurable
 
 
 class CleanupOverlaysOptions(PluginOptions):

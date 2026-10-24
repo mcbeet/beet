@@ -1,9 +1,11 @@
-from beet.library.data_pack import DataPack
 import json
+
 import requests
+
+from beet.library.data_pack import DataPack
 from beet.resources.pack_format_registry import (
-    pack_format_registry_path,
     PackFormatRegistry,
+    pack_format_registry_path,
 )
 
 

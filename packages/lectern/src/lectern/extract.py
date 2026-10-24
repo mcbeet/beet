@@ -1,40 +1,32 @@
 __all__ = [
-    "Extractor",
-    "TextExtractor",
     "EmbeddedExtractor",
+    "Extractor",
+    "FragmentLoader",
     "MarkdownExtractor",
     "MarkdownParserWithUncheckedLinks",
-    "FragmentLoader",
+    "TextExtractor",
 ]
 
 
 import json
 import re
+from collections.abc import Callable, Iterable, Iterator, Mapping
 from dataclasses import replace
 from itertools import islice
 from typing import (
     Any,
-    Callable,
-    Dict,
-    Iterable,
-    Iterator,
-    List,
-    Mapping,
-    Optional,
-    Set,
-    Tuple,
-    Union,
 )
+
+from markdown_it.main import MarkdownIt
+from markdown_it.token import Token
 
 from beet import Cache, DataPack, ResourcePack
 from beet.core.utils import FileSystemPath
-from markdown_it.main import MarkdownIt
-from markdown_it.token import Token
 
 from .directive import Directive
 from .fragment import Fragment
 
-FragmentLoader = Callable[[Fragment, Mapping[str, Directive]], Optional[Fragment]]
+FragmentLoader = Callable[[Fragment, Mapping[str, Directive]], Fragment | None]
 
 
 RELATIVE_PATH_REGEX = re.compile(
@@ -45,12 +37,12 @@ RELATIVE_PATH_REGEX = re.compile(
 class Extractor:
     """Base class for extractors."""
 
-    directives: Dict[str, Directive]
-    regex: Optional["re.Pattern[str]"]
-    escaped_regex: Optional["re.Pattern[str]"]
-    cache: Optional[Cache]
+    directives: dict[str, Directive]
+    regex: re.Pattern[str] | None
+    escaped_regex: re.Pattern[str] | None
+    cache: Cache | None
 
-    def __init__(self, cache: Optional[Cache] = None):
+    def __init__(self, cache: Cache | None = None):
         self.directives = {}
         self.regex = None
         self.escaped_regex = None
@@ -74,11 +66,11 @@ class Extractor:
         names = self.generate_directives()
         return rf"(@@+(?:{names})\b.*)"
 
-    def compile_regex(self, regex: str) -> "re.Pattern[str]":
+    def compile_regex(self, regex: str) -> re.Pattern[str]:
         """Return the compiled pattern for the directive regex."""
         return re.compile(f"^{regex}$", flags=re.MULTILINE)
 
-    def get_regex(self, directives: Mapping[str, Directive]) -> "re.Pattern[str]":
+    def get_regex(self, directives: Mapping[str, Directive]) -> re.Pattern[str]:
         """Create and return the regex for the specified directives."""
         directives = dict(directives)
 
@@ -93,7 +85,7 @@ class Extractor:
         self,
         source: str,
         directives: Mapping[str, Directive],
-    ) -> Iterator[Tuple[str, Optional[Fragment]]]:
+    ) -> Iterator[tuple[str, Fragment | None]]:
         """Split the given content into fragments."""
         lines = source.splitlines(keepends=True)
         previous_line = 0
@@ -112,7 +104,7 @@ class Extractor:
         source: str,
         directives: Mapping[str, Directive],
         loaders: Iterable[FragmentLoader] = (),
-    ) -> Tuple[ResourcePack, DataPack]:
+    ) -> tuple[ResourcePack, DataPack]:
         """Extract a resource pack and a data pack."""
         assets, data = ResourcePack(), DataPack()
         self.apply_directives(
@@ -130,7 +122,7 @@ class Extractor:
     ):
         """Apply directives into a blank data pack and a blank resource pack."""
         original_packs = assets, data
-        added_overlays: Set[str] = set()
+        added_overlays: set[str] = set()
 
         for fragment in fragments:
             for loader in loaders:
@@ -166,7 +158,7 @@ class Extractor:
         self,
         start_line: int,
         end_line: int,
-        match: "re.Match[str]",
+        match: re.Match[str],
     ):
         """Helper for creating a fragment from a matched pattern."""
         directive, modifier, arguments = match.groups()
@@ -211,7 +203,7 @@ class TextExtractor(Extractor):
                     directive=directive,
                     modifier=modifier,
                     arguments=arguments.split(),
-                    content=content[:-1] if content.endswith("\n") else content,
+                    content=content.removesuffix("\n"),
                     cache=self.cache,
                 )
 
@@ -246,10 +238,10 @@ class MarkdownExtractor(Extractor):
     embedded_extractor: TextExtractor
     comment_extractor: TextExtractor
     parser: MarkdownIt
-    html_comment_regex: "re.Pattern[str]"
-    embedded_sniffer: "re.Pattern[str]"
+    html_comment_regex: re.Pattern[str]
+    embedded_sniffer: re.Pattern[str]
 
-    def __init__(self, cache: Optional[Cache] = None):
+    def __init__(self, cache: Cache | None = None):
         super().__init__(cache)
         self.text_extractor = TextExtractor(cache)
         self.embedded_extractor = EmbeddedExtractor(cache)
@@ -266,8 +258,8 @@ class MarkdownExtractor(Extractor):
         source: str,
         directives: Mapping[str, Directive],
         loaders: Iterable[FragmentLoader] = (),
-        external_files: Optional[FileSystemPath] = None,
-    ) -> Tuple[ResourcePack, DataPack]:
+        external_files: FileSystemPath | None = None,
+    ) -> tuple[ResourcePack, DataPack]:
         assets, data = ResourcePack(), DataPack()
         self.apply_directives(
             assets,
@@ -282,7 +274,7 @@ class MarkdownExtractor(Extractor):
         self,
         source: str,
         directives: Mapping[str, Directive],
-        external_files: Optional[FileSystemPath] = None,
+        external_files: FileSystemPath | None = None,
     ) -> Iterator[Fragment]:
         tokens = self.parser.parse(source)
         regex = self.get_regex(directives)
@@ -545,7 +537,7 @@ class MarkdownExtractor(Extractor):
         self,
         token: Token,
         directives: Mapping[str, Directive],
-        external_files: Optional[FileSystemPath] = None,
+        external_files: FileSystemPath | None = None,
     ) -> Iterator[Fragment]:
         if token.type == "inline" and token.children and token.map:
             regex = self.get_regex(directives)
@@ -597,8 +589,8 @@ class MarkdownExtractor(Extractor):
 
     def match_tokens(
         self,
-        tokens: Optional[List[Token]],
-        *token_types: Union[List[str], str],
+        tokens: list[Token] | None,
+        *token_types: list[str] | str,
     ) -> int:
         """Return whether the list of tokens matches the provided token types."""
         return (
@@ -615,7 +607,7 @@ class MarkdownExtractor(Extractor):
             and next((token.map[-1] for token in reversed(tokens) if token.map), 1)
         )
 
-    def match_newline(self, tokens: Optional[List[Token]], index: int) -> bool:
+    def match_newline(self, tokens: list[Token] | None, index: int) -> bool:
         return (
             not tokens
             or index < 0

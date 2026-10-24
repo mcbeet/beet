@@ -1,63 +1,63 @@
 """Plugin for experimental worldgen."""
 
 __all__ = [
-    "worldgen",
-    "Dimension",
-    "DimensionType",
-    "WorldgenBiome",
-    "WorldgenConfiguredCarver",
-    "WorldgenConfiguredFeature",
-    "WorldgenDensityFunction",
-    "WorldgenNoise",
-    "WorldgenNoiseSettings",
-    "WorldgenPlacedFeature",
-    "WorldgenProcessorList",
-    "WorldgenStructure",
-    "WorldgenStructureSet",
-    "WorldgenConfiguredSurfaceBuilder",
-    "WorldgenTemplatePool",
-    "WorldgenWorldPreset",
-    "WorldgenFlatLevelGeneratorPreset",
-    "WorldgenMultiNoiseBiomeSourceParameterList",
-    "WorldgenBiomeTag",
-    "WorldgenStructureSetTag",
-    "WorldgenStructureTag",
-    "WorldgenConfiguredCarverTag",
-    "WorldgenPlacedFeatureTag",
-    "WorldgenFlatLevelGeneratorPresetTag",
-    "WorldgenWorldPresetTag",
     "ConfiguredFeatureTag",
-    "WorldgenCarver",
+    "Dimension",
+    "DimensionTag",
+    "DimensionType",
+    "DimensionTypeTag",
+    "WorldgenBiome",
+    "WorldgenBiomeTag",
     "WorldgenBlockStateProvider",
-    "WorldgenMaterialRule",
-    "WorldgenMaterialCondition",
+    "WorldgenBlockStateProviderTag",
+    "WorldgenCarver",
+    "WorldgenCarverTag",
+    "WorldgenConfiguredCarver",
+    "WorldgenConfiguredCarverTag",
+    "WorldgenConfiguredFeature",
+    "WorldgenConfiguredSurfaceBuilder",
+    "WorldgenDensityFunction",
+    "WorldgenDensityFunctionTag",
     "WorldgenFeature",
     "WorldgenFeatureTag",
-    "DimensionTag",
-    "DimensionTypeTag",
-    "WorldgenBlockStateProviderTag",
-    "WorldgenCarverTag",
-    "WorldgenDensityFunctionTag",
+    "WorldgenFlatLevelGeneratorPreset",
+    "WorldgenFlatLevelGeneratorPresetTag",
+    "WorldgenMaterialCondition",
     "WorldgenMaterialConditionTag",
+    "WorldgenMaterialRule",
     "WorldgenMaterialRuleTag",
+    "WorldgenMultiNoiseBiomeSourceParameterList",
     "WorldgenMultiNoiseBiomeSourceParameterListTag",
+    "WorldgenNoise",
+    "WorldgenNoiseSettings",
     "WorldgenNoiseSettingsTag",
     "WorldgenNoiseTag",
+    "WorldgenPlacedFeature",
+    "WorldgenPlacedFeatureTag",
+    "WorldgenProcessorList",
     "WorldgenProcessorListTag",
+    "WorldgenStructure",
+    "WorldgenStructureSet",
+    "WorldgenStructureSetTag",
+    "WorldgenStructureTag",
+    "WorldgenTemplatePool",
     "WorldgenTemplatePoolTag",
+    "WorldgenWorldPreset",
+    "WorldgenWorldPresetTag",
+    "worldgen",
 ]
 
 
-from typing import ClassVar, Union
+from typing import ClassVar
 
-from beet import Context, DataPack, JsonFile, TagFile, NamespaceFileScope
+from beet import Context, DataPack, JsonFile, NamespaceFileScope, TagFile
 
 
 def beet_default(ctx: Context):
     ctx.require(worldgen)
 
 
-def worldgen(pack: Union[Context, DataPack]):
+def worldgen(pack: Context | DataPack):
     """Enable worldgen."""
     if isinstance(pack, Context):
         pack = pack.data

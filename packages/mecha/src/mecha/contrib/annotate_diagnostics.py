@@ -6,7 +6,7 @@ __all__ = [
 
 
 from heapq import heappop, heappush
-from typing import Any, Dict, List, Tuple
+from typing import Any
 
 from beet import Context, TextFileBase
 
@@ -23,7 +23,7 @@ def annotate_diagnostics(
     diagnostics: DiagnosticCollection,
 ):
     """Insert formatted error messages in the original source as comments."""
-    annotations: Dict[TextFileBase[Any], List[Tuple[int, int, List[str]]]] = {}
+    annotations: dict[TextFileBase[Any], list[tuple[int, int, list[str]]]] = {}
 
     for diagnostic in diagnostics.exceptions:
         message = f"{diagnostic.level.upper():<7}{diagnostic.format_message()}\n{diagnostic.format_location()}"
@@ -45,7 +45,7 @@ def annotate_diagnostics(
 
     for function, rendered in annotations.items():
         lines = function.text.splitlines()
-        result: List[str] = []
+        result: list[str] = []
 
         i = 0
         while rendered:

@@ -7,15 +7,20 @@ __all__ = [
 
 import os
 import time
+from collections.abc import Iterable, Iterator, Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Dict, Iterable, Iterator, Literal, Optional, Sequence, Tuple, cast
+from typing import (
+    Any,
+    Literal,
+    cast,
+)
 
 from pathspec import PathSpec
 
 from .utils import FileSystemPath, extra_field
 
-FileChanges = Dict[str, Literal["created", "edited", "removed"]]
+FileChanges = dict[str, Literal["created", "edited", "removed"]]
 
 
 @dataclass
@@ -24,12 +29,12 @@ class DirectoryWatcher:
 
     path: FileSystemPath
     interval: float = 0.6
-    ignore: PathSpec = field(init=False)
+    ignore: PathSpec[Any] = field(init=False)
 
-    ignore_file: Optional[FileSystemPath] = extra_field(default=None)
+    ignore_file: FileSystemPath | None = extra_field(default=None)
     ignore_patterns: Sequence[str] = extra_field(default=())
 
-    files: Dict[str, float] = extra_field(init=False, default_factory=dict)
+    files: dict[str, float] = extra_field(init=False, default_factory=dict)
 
     def __post_init__(self):
         self.ignore_patterns = list(self.ignore_patterns)
@@ -50,7 +55,7 @@ class DirectoryWatcher:
                     if not line.startswith("#") and (pattern := line.strip())
                 ]
 
-        self.ignore = PathSpec.from_lines("gitwildmatch", self.ignore_patterns)
+        self.ignore = PathSpec.from_lines("gitignore", self.ignore_patterns)
 
     def __iter__(self) -> Iterator[FileChanges]:
         while True:
@@ -71,7 +76,7 @@ class DirectoryWatcher:
         removed = self.files.keys() - new_files.keys()
         changes.update(
             cast(
-                Dict[str, Literal["removed"]],
+                dict[str, Literal["removed"]],
                 {filename: "removed" for filename in removed},
             )
         )
@@ -81,8 +86,8 @@ class DirectoryWatcher:
 
     def walk(
         self,
-        path: Optional[FileSystemPath] = None,
-    ) -> Iterator[Tuple[str, float]]:
+        path: FileSystemPath | None = None,
+    ) -> Iterator[tuple[str, float]]:
         """Walk down the watched directories."""
         base_path = Path(self.path).resolve()
         directory = base_path / path if path else base_path
@@ -104,7 +109,7 @@ def detect_repeated_changes(
     source: Iterable[FileChanges],
     min_interval: float = 1.2,
     max_streak: int = 3,
-) -> Iterator[Tuple[bool, FileChanges]]:
+) -> Iterator[tuple[bool, FileChanges]]:
     """Detect repeated changes."""
     streak: int = 0
     last_build: float = 0.0

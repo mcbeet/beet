@@ -4,36 +4,38 @@ __all__ = [
 
 
 import json
+from collections.abc import Iterator
 from importlib.resources import files
 from pathlib import Path
-from typing import Dict, Iterator, List, Literal, Optional, Set, Tuple, Union
+from typing import Literal
+
+from pydantic import BaseModel
 
 from beet import ErrorMessage
 from beet.core.utils import FileSystemPath, JsonDict, VersionNumber, split_version
-from pydantic import BaseModel
 
 
 class CommandTree(BaseModel):
     """Deserialized representation of the command tree."""
 
     type: Literal["root", "literal", "argument"]
-    parser: Optional[str] = None
-    properties: Optional[JsonDict] = None
-    executable: Optional[bool] = None
-    redirect: Optional[Tuple[str, ...]] = None
-    children: Optional[Dict[str, "CommandTree"]] = None
+    parser: str | None = None
+    properties: JsonDict | None = None
+    executable: bool | None = None
+    redirect: tuple[str, ...] | None = None
+    children: dict[str, CommandTree] | None = None
     subcommand: bool = False
 
     @classmethod
     def load_from(
         cls,
         *args: FileSystemPath,
-        version: Optional[VersionNumber] = None,
+        version: VersionNumber | None = None,
         unpatched: bool = False,
         patch_only: bool = False,
-    ) -> "CommandTree":
+    ) -> CommandTree:
         """Load the command tree from a file."""
-        sources: List[str] = []
+        sources: list[str] = []
 
         for filename in args:
             sources.append(Path(filename).read_text())
@@ -65,7 +67,7 @@ class CommandTree(BaseModel):
 
         return tree
 
-    def get(self, *scope: Union[str, Tuple[str, ...], None]) -> Optional["CommandTree"]:
+    def get(self, *scope: str | tuple[str, ...] | None) -> CommandTree | None:
         """Retrieve a nested node."""
         node = self
         for arg in scope:
@@ -78,7 +80,7 @@ class CommandTree(BaseModel):
                         return None
         return node
 
-    def get_literal(self, name: str) -> Optional["CommandTree"]:
+    def get_literal(self, name: str) -> CommandTree | None:
         """Retrieve a literal child by name."""
         if self.children:
             if child := self.children.get(name):
@@ -86,7 +88,7 @@ class CommandTree(BaseModel):
                     return child
         return None
 
-    def get_argument(self, name: str) -> Optional["CommandTree"]:
+    def get_argument(self, name: str) -> CommandTree | None:
         """Retrieve an argument child by name."""
         if self.children:
             if child := self.children.get(name):
@@ -94,21 +96,21 @@ class CommandTree(BaseModel):
                     return child
         return None
 
-    def get_all_literals(self) -> Iterator[Tuple[str, "CommandTree"]]:
+    def get_all_literals(self) -> Iterator[tuple[str, CommandTree]]:
         """Retrieve all the literal children."""
         if self.children:
             for name, child in self.children.items():
                 if child.type == "literal":
                     yield name, child
 
-    def get_all_arguments(self) -> Iterator[Tuple[str, "CommandTree"]]:
+    def get_all_arguments(self) -> Iterator[tuple[str, CommandTree]]:
         """Retrieve all the argument children."""
         if self.children:
             for name, child in self.children.items():
                 if child.type == "argument":
                     yield name, child
 
-    def extend(self, other: "CommandTree") -> "CommandTree":
+    def extend(self, other: CommandTree) -> CommandTree:
         """Merge nodes from another command tree."""
         self.type = other.type
 
@@ -137,14 +139,14 @@ class CommandTree(BaseModel):
 
     def resolve(
         self,
-        root: Optional["CommandTree"] = None,
-        scope: Tuple[str, ...] = (),
-    ) -> "CommandTree":
+        root: CommandTree | None = None,
+        scope: tuple[str, ...] = (),
+    ) -> CommandTree:
         """Resolve redirections and subcommands."""
         if not root:
             root = self
 
-        hoisted: Set[str] = set()
+        hoisted: set[str] = set()
 
         if self.redirect is not None:
             if target := root.get(self.redirect):

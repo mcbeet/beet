@@ -3,16 +3,16 @@
 __all__ = [
     "CopyFilesOptions",
     "copy_files",
-    "resolve_file_mapping",
     "guess_file_type",
+    "resolve_file_mapping",
 ]
 
 
 import mimetypes
 import os
+from collections.abc import Iterator
 from glob import glob
 from pathlib import Path
-from typing import Dict, Iterator, Tuple, Type
 
 from beet import (
     BinaryFile,
@@ -31,9 +31,9 @@ from beet.core.utils import FileSystemPath
 
 
 class CopyFilesOptions(PluginOptions):
-    resource_pack: Dict[str, ListOption[PackageablePath]] = {}
-    data_pack: Dict[str, ListOption[PackageablePath]] = {}
-    output: Dict[str, ListOption[PackageablePath]] = {}
+    resource_pack: dict[str, ListOption[PackageablePath]] = {}
+    data_pack: dict[str, ListOption[PackageablePath]] = {}
+    output: dict[str, ListOption[PackageablePath]] = {}
 
 
 def beet_default(ctx: Context):
@@ -58,9 +58,9 @@ def copy_files(ctx: Context, opts: CopyFilesOptions):
 
 
 def resolve_file_mapping(
-    mapping: Dict[str, ListOption[PackageablePath]],
+    mapping: dict[str, ListOption[PackageablePath]],
     directory: Path,
-) -> Iterator[Tuple[str, Path, Type[PackFile]]]:
+) -> Iterator[tuple[str, Path, type[PackFile]]]:
     """Expand glob patterns and guess the type of each file."""
     for key, value in mapping.items():
         entries = [
@@ -80,7 +80,7 @@ def resolve_file_mapping(
                 yield dst, entry, guess_file_type(entry)
 
 
-def guess_file_type(filename: FileSystemPath) -> Type[PackFile]:
+def guess_file_type(filename: FileSystemPath) -> type[PackFile]:
     """Helper to figure out the most appropriate file type depending on a filename."""
     filename = str(filename)
 

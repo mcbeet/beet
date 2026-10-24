@@ -1,15 +1,15 @@
 __all__ = [
-    "subproject",
-    "sandbox",
-    "run_beet",
     "JinjaExtension",
+    "run_beet",
+    "sandbox",
+    "subproject",
 ]
 
 
+from collections.abc import Iterator
 from contextlib import contextmanager
 from functools import wraps
 from pathlib import Path
-from typing import Iterator, Optional, Union
 
 from jinja2 import Environment
 from jinja2.ext import Extension
@@ -23,7 +23,7 @@ from .template import TemplateManager
 from .worker import WorkerPool
 
 
-def subproject(config: Union[ProjectConfig, JsonDict, FileSystemPath]) -> Plugin:
+def subproject(config: ProjectConfig | JsonDict | FileSystemPath) -> Plugin:
     """Return a plugin that runs a subproject."""
 
     @wraps(subproject)
@@ -80,9 +80,9 @@ def sandbox(*specs: PluginSpec) -> Plugin:
 
 @contextmanager
 def run_beet(
-    config: Optional[Union[ProjectConfig, JsonDict, FileSystemPath]] = None,
-    directory: Optional[FileSystemPath] = None,
-    cache: Union[bool, ProjectCache] = False,
+    config: ProjectConfig | JsonDict | FileSystemPath | None = None,
+    directory: FileSystemPath | None = None,
+    cache: bool | ProjectCache = False,
 ) -> Iterator[Context]:
     """Run the entire toolchain programmatically."""
     if not directory:
@@ -115,4 +115,4 @@ class JinjaExtension(Extension):
 
     @property
     def ctx(self) -> Context:
-        return getattr(self.environment, "_beet_template_manager").ctx
+        return self.environment._beet_template_manager.ctx  # pyright: ignore[reportAttributeAccessIssue]

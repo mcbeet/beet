@@ -5,13 +5,14 @@ __all__ = [
 
 
 import logging
+from collections.abc import Iterable, Iterator, Sequence
 from contextlib import ExitStack, contextmanager
 from copy import deepcopy
 from dataclasses import dataclass
 from importlib.metadata import entry_points
 from pathlib import Path
 from tempfile import TemporaryDirectory
-from typing import Any, ClassVar, Iterable, Iterator, List, Optional, Sequence
+from typing import Any, ClassVar
 
 from beet.contrib.autosave import Autosave
 from beet.contrib.json_reporter import JsonReporter
@@ -29,6 +30,7 @@ from beet.core.utils import (
 )
 from beet.core.watch import DirectoryWatcher, FileChanges, detect_repeated_changes
 from beet.library.base import LATEST_MINECRAFT_VERSION, Mcmeta
+from beet.toolchain.utils import resolve_shared_cache
 
 from .config import (
     PackConfig,
@@ -45,14 +47,14 @@ from .worker import WorkerPool
 class Project:
     """Class for interacting with a beet project."""
 
-    resolved_config: Optional[ProjectConfig] = None
-    config_overrides: Optional[Any] = None
-    config_path: Optional[FileSystemPath] = None
+    resolved_config: ProjectConfig | None = None
+    config_overrides: Any | None = None
+    config_path: FileSystemPath | None = None
 
-    resolved_cache: Optional[ProjectCache] = None
+    resolved_cache: ProjectCache | None = None
     cache_name: str = ".beet_cache"
 
-    resolved_worker_pool: Optional[WorkerPool] = None
+    resolved_worker_pool: WorkerPool | None = None
 
     @property
     def config(self) -> ProjectConfig:
@@ -72,11 +74,11 @@ class Project:
         return Path(self.config.directory)
 
     @property
-    def output_directory(self) -> Optional[Path]:
+    def output_directory(self) -> Path | None:
         return self.directory / self.config.output if self.config.output else None
 
     @property
-    def template_directories(self) -> List[FileSystemPath]:
+    def template_directories(self) -> list[FileSystemPath]:
         return [
             self.directory / template_directory
             for template_directory in self.config.templates.entries() or ["templates"]
@@ -97,12 +99,13 @@ class Project:
         self.resolved_cache = ProjectCache(
             directory=cache_directory,
             generated_directory=self.directory / "generated",
+            shared=resolve_shared_cache(),
         )
 
         return self.resolved_cache
 
     @property
-    def ignore(self) -> List[str]:
+    def ignore(self) -> list[str]:
         ignore = set(self.config.ignore)
         if self.output_directory and self.directory in self.output_directory.parents:
             ignore.add(
@@ -192,10 +195,10 @@ class Project:
 
     def link(
         self,
-        world: Optional[FileSystemPath] = None,
-        minecraft: Optional[FileSystemPath] = None,
-        data_pack: Optional[FileSystemPath] = None,
-        resource_pack: Optional[FileSystemPath] = None,
+        world: FileSystemPath | None = None,
+        minecraft: FileSystemPath | None = None,
+        data_pack: FileSystemPath | None = None,
+        resource_pack: FileSystemPath | None = None,
     ) -> str:
         """Associate a linked resource pack directory and data pack directory to the project."""
         with self.cache:
@@ -228,7 +231,7 @@ class ProjectBuilder:
     root: bool
     tmpdir: bool
 
-    autoload: ClassVar[Optional[List[str]]] = None
+    autoload: ClassVar[list[str] | None] = None
 
     def __init__(
         self,
@@ -287,7 +290,7 @@ class ProjectBuilder:
                 whitelist=self.config.whitelist,
             )
 
-            plugins: List[PluginSpec] = [self.bootstrap]
+            plugins: list[PluginSpec] = [self.bootstrap]
             plugins.extend(
                 (
                     item
@@ -322,13 +325,11 @@ class ProjectBuilder:
             # if any of the config is None, overwrite others values
             if not self.config.minecraft:
                 if any(
-                    [
-                        x is not None
-                        for x in [
-                            config.pack_format,
-                            config.min_format,
-                            config.max_format,
-                        ]
+                    x is not None
+                    for x in [
+                        config.pack_format,
+                        config.min_format,
+                        config.max_format,
                     ]
                 ):
                     pack.pack_format = None

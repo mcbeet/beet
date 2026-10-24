@@ -1,18 +1,19 @@
 __all__ = [
-    "Module",
     "AssetModule",
-    "CompiledModule",
-    "ModuleManager",
-    "ModuleCacheBackend",
-    "MacroLibrary",
     "CodegenResult",
-    "UnusableCompilationUnit",
+    "CompiledModule",
+    "MacroLibrary",
+    "Module",
+    "ModuleCacheBackend",
+    "ModuleManager",
     "SilentCompilationInterrupt",
+    "UnusableCompilationUnit",
 ]
 
 
 import logging
 import marshal
+from collections.abc import Callable, Iterable, Iterator, Mapping
 from contextlib import contextmanager
 from dataclasses import dataclass, field
 from io import BufferedReader, BufferedWriter
@@ -20,20 +21,12 @@ from pathlib import Path
 from types import CodeType
 from typing import (
     Any,
-    Callable,
     ClassVar,
-    Dict,
-    Iterable,
-    Iterator,
-    List,
-    Mapping,
-    Optional,
     Protocol,
-    Set,
-    Tuple,
-    Union,
     cast,
 )
+
+from tokenstream import InvalidSyntax
 
 from beet import (
     BubbleException,
@@ -45,6 +38,7 @@ from beet import (
     TextFileBase,
 )
 from beet.core.utils import JsonDict, extra_field, import_from_string, required_field
+
 from mecha import (
     AstCacheBackend,
     AstChildren,
@@ -59,7 +53,6 @@ from mecha import (
     Dispatcher,
     MechaError,
 )
-from tokenstream import InvalidSyntax
 
 from .ast import AstImportedItem, AstImportedMacro, AstMacro, AstPrelude
 from .semantics import LexicalScope
@@ -107,7 +100,7 @@ class AssetModule(TextFile):
     extension: ClassVar[str] = ".bolt"
 
 
-MacroLibrary = Dict[str, Dict[Tuple[str, AstMacro], Optional[Tuple[str, str]]]]
+MacroLibrary = dict[str, dict[tuple[str, AstMacro], tuple[str, str] | None]]
 
 
 @dataclass
@@ -115,30 +108,30 @@ class CompiledModule:
     """Class holding the state of a compiled module."""
 
     ast: AstRoot
-    code: Optional[CodeType]
-    python: Optional[str]
-    refs: List[Any]
-    dependencies: Set[str]
-    prelude_imports: Tuple[AstPrelude, ...]
+    code: CodeType | None
+    python: str | None
+    refs: list[Any]
+    dependencies: set[str]
+    prelude_imports: tuple[AstPrelude, ...]
     macros: MacroLibrary
     lexical_scope: LexicalScope
-    output: Optional[str]
-    resource_location: Optional[str]
-    globals: Set[str]
+    output: str | None
+    resource_location: str | None
+    globals: set[str]
     namespace: JsonDict = field(default_factory=dict)
     executing: bool = False
     executed: bool = False
-    execution_hooks: List[Callable[[], Any]] = field(default_factory=list)
+    execution_hooks: list[Callable[[], Any]] = field(default_factory=list)
     execution_index: int = 0
 
 
 @dataclass(frozen=True)
 class CodegenResult:
-    source: Optional[str] = None
-    output: Optional[str] = None
-    refs: List[Any] = field(default_factory=list)
-    dependencies: Set[str] = field(default_factory=set)
-    prelude_imports: Tuple[AstPrelude, ...] = ()
+    source: str | None = None
+    output: str | None = None
+    refs: list[Any] = field(default_factory=list)
+    dependencies: set[str] = field(default_factory=set)
+    prelude_imports: tuple[AstPrelude, ...] = ()
     macros: MacroLibrary = field(default_factory=dict)
 
 
@@ -149,8 +142,8 @@ class ModuleParseCallback(Protocol):
         self,
         source: TextFileBase[Any],
         *,
-        filename: Optional[str],
-        resource_location: Optional[str],
+        filename: str | None,
+        resource_location: str | None,
     ) -> AstRoot: ...
 
 
@@ -162,22 +155,22 @@ class ModuleManager(Mapping[TextFileBase[Any], CompiledModule]):
     database: CompilationDatabase = extra_field()
     codegen: Dispatcher[CodegenResult] = extra_field()
     parse_callback: ModuleParseCallback = extra_field()
-    cache: Optional[Cache] = extra_field(default=None)
+    cache: Cache | None = extra_field(default=None)
 
-    registry: Dict[TextFileBase[Any], CompiledModule] = extra_field(
+    registry: dict[TextFileBase[Any], CompiledModule] = extra_field(
         default_factory=dict
     )
-    stack: List[CompiledModule] = extra_field(default_factory=list)
-    parse_stack: List[TextFileBase[Any]] = extra_field(default_factory=list)
-    parse_scopes: Dict[TextFileBase[Any], LexicalScope] = extra_field(
+    stack: list[CompiledModule] = extra_field(default_factory=list)
+    parse_stack: list[TextFileBase[Any]] = extra_field(default_factory=list)
+    parse_scopes: dict[TextFileBase[Any], LexicalScope] = extra_field(
         default_factory=dict
     )
     globals: JsonDict = extra_field(default_factory=dict)
-    builtins: Set[str] = extra_field(default_factory=set)
-    prelude: Dict[str, Dict[Optional[Union[ResourcePack, DataPack]], AstPrelude]] = (
-        extra_field(default_factory=dict)
+    builtins: set[str] = extra_field(default_factory=set)
+    prelude: dict[str, dict[ResourcePack | DataPack | None, AstPrelude]] = extra_field(
+        default_factory=dict
     )
-    prelude_cache: Dict[TextFileBase[Any], Tuple[AstPrelude, ...]] = extra_field(
+    prelude_cache: dict[TextFileBase[Any], tuple[AstPrelude, ...]] = extra_field(
         default_factory=dict
     )
 
@@ -217,8 +210,8 @@ class ModuleManager(Mapping[TextFileBase[Any], CompiledModule]):
     def match_ast(
         self,
         node: AstRoot,
-        current: Optional[Union[TextFileBase[Any], str]] = None,
-    ) -> Tuple[CompilationUnit, CompiledModule]:
+        current: TextFileBase[Any] | str | None = None,
+    ) -> tuple[CompilationUnit, CompiledModule]:
         """Return the compilation unit and executable module for the current ast."""
         if not current:
             current = self.database.current
@@ -230,7 +223,7 @@ class ModuleManager(Mapping[TextFileBase[Any], CompiledModule]):
 
         return compilation_unit, self[current]
 
-    def __getitem__(self, current: Union[TextFileBase[Any], str]) -> CompiledModule:
+    def __getitem__(self, current: TextFileBase[Any] | str) -> CompiledModule:
         if isinstance(current, str):
             current = self.lookup(current)
 
@@ -305,7 +298,7 @@ class ModuleManager(Mapping[TextFileBase[Any], CompiledModule]):
     def __len__(self) -> int:
         return len(self.database)
 
-    def get(self, current: Union[TextFileBase[Any], str]) -> Optional[CompiledModule]:  # pyright: ignore[reportIncompatibleMethodOverride]
+    def get(self, current: TextFileBase[Any] | str) -> CompiledModule | None:  # pyright: ignore[reportIncompatibleMethodOverride]
         """Return executable module if exists."""
         if isinstance(current, str):
             try:
@@ -356,11 +349,11 @@ class ModuleManager(Mapping[TextFileBase[Any], CompiledModule]):
 
     @contextmanager
     @internal
-    def error_handler(self, message: str, resource_location: Optional[str] = None):
+    def error_handler(self, message: str, resource_location: str | None = None):
         """Error handler for running module code."""
         try:
             yield
-        except (BubbleException, InvalidSyntax, SilentCompilationInterrupt):
+        except BubbleException, InvalidSyntax, SilentCompilationInterrupt:
             raise
         except UnusableCompilationUnit as exc:
             if not exc.compilation_unit.diagnostics.error:
@@ -394,7 +387,7 @@ class ModuleManager(Mapping[TextFileBase[Any], CompiledModule]):
         finally:
             self.parse_stack.pop()
 
-    def add_prelude(self, *args: Union[str, Iterable[str]]):
+    def add_prelude(self, *args: str | Iterable[str]):
         """Add modules to the prelude."""
         for arg in args:
             if isinstance(arg, str):
@@ -402,12 +395,12 @@ class ModuleManager(Mapping[TextFileBase[Any], CompiledModule]):
             for resource_location in arg:
                 self.prelude.setdefault(resource_location, {})
 
-    def export_prelude(self, module: CompiledModule) -> Optional[AstPrelude]:
+    def export_prelude(self, module: CompiledModule) -> AstPrelude | None:
         """Export local variables and macros from a given module into a prelude import."""
         if not module.resource_location:
             return None
 
-        arguments: List[AstNode] = [
+        arguments: list[AstNode] = [
             AstResourceLocation.from_value(module.resource_location)
         ]
 
@@ -421,7 +414,7 @@ class ModuleManager(Mapping[TextFileBase[Any], CompiledModule]):
 
         return AstPrelude(arguments=AstChildren(arguments))
 
-    def load_prelude(self) -> Tuple[AstPrelude, ...]:
+    def load_prelude(self) -> tuple[AstPrelude, ...]:
         """Load the prelude imports for the current file."""
         cached = self.prelude_cache.get(self.database.current)
         if cached is not None:
@@ -430,7 +423,7 @@ class ModuleManager(Mapping[TextFileBase[Any], CompiledModule]):
         current_pack = self.database[self.database.current].pack
         current_prelude = self.prelude
 
-        prelude_imports: List[AstPrelude] = []
+        prelude_imports: list[AstPrelude] = []
 
         for resource_location, pack_prelude in list(current_prelude.items()):
             prelude = pack_prelude.get(current_pack)
