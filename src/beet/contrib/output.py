@@ -34,24 +34,24 @@ def beet_default(ctx: Context):
 def scan_directory(directory: Path) -> dict[str, tuple[int, int]]:
     """Return the size and modification time of every file below the directory.
 
-    `os.scandir()` is deliberate over pathlib. The entry already carries the size and the mtime,
-    so one pass answers both "which files are there" and "have they changed" without a stat call per file.
-    On a 4500 file pack that is 48ms against 473ms for Path.walk and 854ms for Path.rglob.
+    `os.scandir()` is deliberate over pathlib. On Windows the entry already carries the size and the mtime,
+    so `entry.stat()` costs no syscall. Elsewhere it still skips building a Path per file.
+    On a 4500 file pack that is 48ms against 473ms for Path.walk on Windows, and 60ms against 84ms for Path.iterdir on Linux.
     """
     result: dict[str, tuple[int, int]] = {}
+    if not directory.is_dir():
+        return result
 
-    # Recursive os.scandir() pass
-    def walk(path: str, prefix: str) -> None:
+    pending: list[tuple[str, str]] = [(str(directory), "")]
+    while pending:
+        path, prefix = pending.pop()
         with os.scandir(path) as entries:
             for entry in entries:
                 if entry.is_dir(follow_symlinks=False):
-                    walk(entry.path, f"{prefix}{entry.name}/")
+                    pending.append((entry.path, f"{prefix}{entry.name}/"))
                 else:
                     stat = entry.stat(follow_symlinks=False)
                     result[f"{prefix}{entry.name}"] = (stat.st_size, stat.st_mtime_ns)
-
-    if directory.is_dir():
-        walk(str(directory), "")
     return result
 
 
@@ -107,23 +107,18 @@ def file_differs(pack_file: PackFile, disk_path: Path) -> bool:
 
 
 def load_manifest(manifest_path: Path | None) -> dict[str, ManifestEntry]:
-    """Read the record of what the previous build wrote, treating any problem as an empty record."""
+    """Read the record of what the previous build wrote, treating a missing or unreadable file as an empty record."""
     if manifest_path is None:
         return {}
 
     try:
-        raw = json.loads(manifest_path.read_text("utf-8"))
-    except (OSError, ValueError):
+        raw: dict[str, ManifestEntry] = json.loads(manifest_path.read_text("utf-8"))
+    except OSError, ValueError:
         return {}
-    if not isinstance(raw, dict):
-        return {}
-
-    manifest: dict[str, ManifestEntry] = {}
-    for key, value in raw.items():
-        match value:
-            case [int(size), int(mtime), str(signature)]:
-                manifest[key] = (size, mtime, signature)
-    return manifest
+    # JSON arrays load as lists, which never compare equal to the stat tuples
+    return {
+        key: (size, mtime, signature) for key, (size, mtime, signature) in raw.items()
+    }
 
 
 def incremental_save(
