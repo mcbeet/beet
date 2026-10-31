@@ -1,20 +1,57 @@
 from pathlib import Path
 from zipfile import ZipFile
 
-from beet import LATEST_MINECRAFT_VERSION, Cache, DataPack, JsonFile, ResourcePack
+from pydantic import BaseModel
+
+from beet import Cache, DataPack, ResourcePack
 from beet.contrib.unknown_files import UnknownAsset, UnknownData
-from beet.contrib.vanilla import MANIFEST_URL
+from beet.contrib.vanilla import Vanilla
 from beet.contrib.worldgen import worldgen
+from beet.library.base import get_output_scope
+
+
+class DatapackRegistryProperties(BaseModel):
+    """Propriétés d'un registre ou élément"""
+
+    elements: bool
+    format: str | None = None
+    stable: bool
+    tags: bool
+
+
+class DatapackOthers(BaseModel):
+    """Section 'others' du fichier"""
+
+    function: DatapackRegistryProperties
+    structure: DatapackRegistryProperties
+
+
+class DatapackRegistries(BaseModel):
+    """Modèle racine pour le fichier de configuration Minecraft"""
+
+    others: DatapackOthers
+    registries: dict[str, DatapackRegistryProperties]
+
+
+def resolve_key(key: str):
+    return key if ":" in key else f"minecraft:{key}"
+
+
+def get_scopes(dp: DataPack):
+    all_scopes: dict[str, bool] = {}
+    for file_type in dp.get_file_types():
+        scope = get_output_scope(file_type.scope, dp)
+        is_tags = scope[0] == "tags"
+        if is_tags:
+            scope = scope[1:]
+        path = resolve_key("/".join(scope))
+        all_scopes[path] = is_tags
+    return all_scopes
 
 
 def test_vanilla_loading(tmp_path: Path):
-    cache = Cache(tmp_path)
-    manifest = JsonFile(source_path=cache.download(MANIFEST_URL))
-    version = next(
-        x for x in manifest.data["versions"] if x["id"] == LATEST_MINECRAFT_VERSION
-    )
-    version_manifest = JsonFile(source_path=cache.download(version["url"]))
-    client = cache.download(version_manifest.data["downloads"]["client"]["url"])
+    vanilla = Vanilla(cache=Cache(tmp_path)).shared
+    client = vanilla.client_jar.path
 
     dp = DataPack()
     rp = ResourcePack()
@@ -57,3 +94,52 @@ def test_vanilla_loading(tmp_path: Path):
 
     assert len(dp_unknown) == 0, dp_unknown
     assert len(rp_unknown) == 0, rp_unknown
+
+
+def test_registries(tmp_path: Path):
+    vanilla = Vanilla(cache=Cache(tmp_path)).shared
+
+    reports = vanilla.reports.mount("datapack.json")
+    data_registries = DatapackRegistries.model_validate(reports["datapack"].data)
+
+    dp_stable = DataPack()
+    dp_unstable = DataPack()
+    worldgen(dp_unstable)
+    scope_stable = get_scopes(dp_stable)
+    scope_unstable = get_scopes(dp_unstable)
+
+    not_parsed_registries_stable = set()
+    not_parsed_registries_unstable = set()
+    not_parsed_registries_stable_tags = set()
+    not_parsed_registries_unstable_tags = set()
+
+    for key, value in data_registries.registries.items():
+        key = resolve_key(key)
+        if not value.elements:
+            continue
+        if value.stable:
+            not_parsed_registries = not_parsed_registries_stable
+            not_parsed_registries_tags = not_parsed_registries_stable_tags
+            scope = scope_stable
+        else:
+            not_parsed_registries = not_parsed_registries_unstable
+            not_parsed_registries_tags = not_parsed_registries_unstable_tags
+            scope = scope_unstable
+        if key not in scope:
+            not_parsed_registries.add(key)
+            continue
+        if value.tags and not scope[key]:
+            not_parsed_registries_tags.add(key)
+    not_parsed_registries_stable = sorted(not_parsed_registries_stable)
+    not_parsed_registries_unstable = sorted(not_parsed_registries_unstable)
+    not_parsed_registries_stable_tags = sorted(not_parsed_registries_stable_tags)
+    not_parsed_registries_unstable_tags = sorted(not_parsed_registries_unstable_tags)
+
+    assert len(not_parsed_registries_stable) == 0, not_parsed_registries_stable
+    assert len(not_parsed_registries_unstable) == 0, not_parsed_registries_unstable
+    assert len(not_parsed_registries_stable_tags) == 0, (
+        not_parsed_registries_stable_tags
+    )
+    assert len(not_parsed_registries_unstable_tags) == 0, (
+        not_parsed_registries_unstable_tags
+    )
