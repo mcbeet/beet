@@ -18,7 +18,7 @@ from typing import Literal
 from pydantic import BaseModel
 
 from beet.core.container import Container
-from beet.core.utils import VersionNumber, normalize_string
+from beet.core.utils import VersionNumber, normalize_version, resolve_version
 from beet.toolchain.config import FormatSpecifier
 
 
@@ -97,33 +97,13 @@ class PackFormatRegistryContainer(Container[VersionNumber, FormatSpecifier]):
 
     def normalize_key(self, key: VersionNumber) -> tuple[str | int, ...]:
         """Normalize the key to a tuple of integers."""
-        if isinstance(key, (int, float)):
-            key = str(key)
-        if isinstance(key, str):
-            key = tuple(normalize_string(key).split("_"))
-        return tuple(int(value) if value != "x" else "x" for value in key)
+        return normalize_version(key)
 
     def missing(self, key: VersionNumber) -> FormatSpecifier:
         """
         Implement the missing method to return a default value.
         """
-        if not isinstance(key, tuple):
-            key = self.normalize_key(key)
-        if not isinstance(key[-1], str):
+        version = resolve_version(key, self.keys())
+        if version is None:
             raise KeyError(key)
-        if key[-1] != "x":
-            raise KeyError(f'Version must end with "x", got {key}')
-        max_patch = 0
-        for version in self.keys():
-            normalized_version = self.normalize_key(version)
-            if key[0] != normalized_version[0] or key[1] != normalized_version[1]:
-                continue
-            if len(normalized_version) == 2:
-                # The maximum is 0
-                continue
-            patch = normalized_version[2]
-            if isinstance(patch, int) and patch > max_patch:
-                max_patch = patch
-        if max_patch == 0:
-            return self[key[0], key[1]]
-        return self[key[0], key[1], max_patch]
+        return self[version]

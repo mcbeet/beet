@@ -1,0 +1,7 @@
+
+
+minecraft: 26.3.x
+
+
+pipeline:
+  - main

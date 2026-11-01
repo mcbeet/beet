@@ -44,7 +44,12 @@ from beet import (
     configurable,
 )
 from beet.contrib.worldgen import worldgen
-from beet.core.utils import FileSystemPath, JsonDict, log_time_scope
+from beet.core.utils import (
+    FileSystemPath,
+    JsonDict,
+    log_time_scope,
+    resolve_version,
+)
 
 MANIFEST_URL: str = "https://piston-meta.mojang.com/mc/game/version_manifest_v2.json"
 RESOURCES_URL: str = "https://resources.download.minecraft.net"
@@ -447,6 +452,15 @@ class ReleaseRegistry(Container[str, Release]):
             manifest = JsonFile(source_path=manifest)
 
         self.manifest = manifest
+
+    def normalize_key(self, key: str) -> str:
+        """Resolve a version ending with "x" to the latest matching release."""
+        releases = (
+            version["id"]
+            for version in self.manifest.data["versions"]
+            if version["type"] == "release"
+        )
+        return resolve_version(key.removesuffix(".*"), releases) or key
 
     def missing(self, key: str) -> Release:
         pattern = re.compile(
