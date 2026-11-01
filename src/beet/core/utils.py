@@ -21,10 +21,12 @@ __all__ = [
     "log_time",
     "log_time_scope",
     "normalize_string",
+    "normalize_version",
     "pop_traceback",
     "remove_path",
     "required_field",
     "resolve_packageable_path",
+    "resolve_version",
     "resolve_within",
     "snake_case",
     "split_version",
@@ -119,6 +121,39 @@ def split_version(version: VersionNumber) -> tuple[int, ...]:
     if isinstance(version, str):
         version = tuple(normalize_string(version).split("_"))
     return tuple(map(int, version))
+
+
+def normalize_version(key: VersionNumber) -> tuple[str | int, ...]:
+    """Normalize the version to a tuple of integers."""
+    if isinstance(key, (int, float)):
+        key = str(key)
+    if isinstance(key, str):
+        key = tuple(normalize_string(key).split("_"))
+    return tuple(int(value) if value != "x" else "x" for value in key)
+
+
+def resolve_version[T: VersionNumber](
+    version: VersionNumber, candidates: Iterable[T]
+) -> T | None:
+    """Resolve a version ending with "x" to the candidate with the highest patch."""
+    try:
+        normalized_version = normalize_version(version)
+    except ValueError:
+        return None
+    if len(normalized_version) != 3 or normalized_version[-1] != "x":
+        return None
+    latest: tuple[int, T] | None = None
+    for candidate in candidates:
+        try:
+            normalized_candidate = normalize_version(candidate)
+        except ValueError:
+            continue
+        if normalized_candidate[:2] != normalized_version[:2]:
+            continue
+        patch = normalized_candidate[2] if len(normalized_candidate) > 2 else 0
+        if isinstance(patch, int) and (latest is None or patch > latest[0]):
+            latest = (patch, candidate)
+    return latest[1] if latest else None
 
 
 def get_import_string(obj: Any) -> str:
