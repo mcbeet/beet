@@ -89,6 +89,7 @@ from tokenstream import InvalidSyntax, SourceLocation, TokenStream, set_location
 
 from beet import LATEST_MINECRAFT_VERSION
 from beet.core.utils import VersionNumber, split_version
+from beet.resources.pack_format_registry import search_version
 
 from .ast import (
     AstAdvancementPredicate,
@@ -600,7 +601,11 @@ def get_default_parsers() -> dict[str, Parser]:
 
 def get_parsers(version: VersionNumber = LATEST_MINECRAFT_VERSION) -> dict[str, Parser]:
     """Return parsers for a specific version."""
-    version = split_version(version)
+    resolved = search_version(version)
+    try:
+        version = split_version(resolved)
+    except ValueError:
+        version = split_version(LATEST_MINECRAFT_VERSION)
 
     parsers = get_default_parsers()
 
