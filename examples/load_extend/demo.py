@@ -7,9 +7,9 @@ from beet import (
     FileDeserialize,
     JsonFile,
     JsonFileBase,
+    NamespaceFileScope,
     TextFile,
     YamlFile,
-    NamespaceFileScope,
 )
 
 

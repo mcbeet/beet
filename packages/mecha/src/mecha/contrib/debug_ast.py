@@ -1,17 +1,18 @@
 """Plugin for emitting ast."""
 
 __all__ = [
-    "DebugAstOptions",
     "DebugAstEmitter",
+    "DebugAstOptions",
     "debug_ast",
 ]
 
 
 from dataclasses import dataclass
 
+from pydantic import BaseModel
+
 from beet import Context, configurable
 from beet.core.utils import required_field
-from pydantic import BaseModel
 
 from mecha import AstRoot, CompilationDatabase, Mecha, Visitor, rule
 
@@ -41,4 +42,3 @@ class DebugAstEmitter(Visitor):
     def debug_ast(self, node: AstRoot):
         exclude = None if self.location else {"location", "end_location"}
         self.database.current.text = node.dump(exclude=exclude) + "\n"
-        return None

@@ -1,27 +1,29 @@
 """Plugin for handling nested yaml."""
 
 __all__ = [
-    "BaseYamlObjectCollector",
+    "YAML_STRING_PATTERN",
     "BaseYamlArrayCollector",
-    "JsonObjectCollector",
+    "BaseYamlObjectCollector",
     "JsonArrayCollector",
+    "JsonObjectCollector",
     "NbtCompoundCollector",
     "NbtListCollector",
-    "NestedYamlParser",
     "NestedYamlContextProvider",
+    "NestedYamlParser",
     "collect_json_string",
     "collect_nbt_string",
-    "YAML_STRING_PATTERN",
 ]
 
 
+from collections.abc import Callable, Iterator
 from contextlib import contextmanager
 from dataclasses import dataclass, field
-from typing import Any, Callable, Generic, Iterator, List, TypeVar
+from typing import Any
 
-from beet import Context
 from nbtlib import String
 from tokenstream import SourceLocation, TokenStream, set_location
+
+from beet import Context
 
 from mecha import (
     AstChildren,
@@ -43,10 +45,6 @@ from mecha import (
     delegate,
 )
 from mecha.utils import JsonQuoteHelper, QuoteHelper
-
-EntryType = TypeVar("EntryType")
-ValueType = TypeVar("ValueType")
-
 
 YAML_STRING_PATTERN = r'"(?:\\.|[^\\\n])*?"' "|" r"'(?:\\.|[^\\\n])*?'"
 
@@ -83,10 +81,10 @@ def beet_default(ctx: Context):
 
 
 @dataclass
-class BaseYamlObjectCollector(Generic[EntryType, ValueType]):
+class BaseYamlObjectCollector[EntryType, ValueType]:
     """Base class for yaml object collectors."""
 
-    entries: List[EntryType] = field(default_factory=list)
+    entries: list[EntryType] = field(default_factory=list)
 
     @contextmanager
     def start(self) -> Iterator[None]:
@@ -114,10 +112,10 @@ class BaseYamlObjectCollector(Generic[EntryType, ValueType]):
 
 
 @dataclass
-class BaseYamlArrayCollector(Generic[ValueType]):
+class BaseYamlArrayCollector[ValueType]:
     """Base class for yaml array collectors."""
 
-    elements: List[ValueType] = field(default_factory=list)
+    elements: list[ValueType] = field(default_factory=list)
 
     @contextmanager
     def start(self) -> Iterator[None]:

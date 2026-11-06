@@ -6,7 +6,7 @@ __all__ = [
 ]
 
 
-from typing import Any, Optional
+from typing import Any
 
 from beet import Context, ListOption, PluginOptions, TextFileBase, configurable
 
@@ -14,7 +14,7 @@ from beet import Context, ListOption, PluginOptions, TextFileBase, configurable
 class TextEncodingOptions(PluginOptions):
     extensions: ListOption[str] = ListOption()
     encoding: str = "utf-8"
-    errors: Optional[str] = None
+    errors: str | None = None
 
 
 def beet_default(ctx: Context):

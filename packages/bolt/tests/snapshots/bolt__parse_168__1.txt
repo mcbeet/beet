@@ -1,6 +1,6 @@
 _bolt_lineno = [1, 13], [1, 2]
 _bolt_helper_get_attribute_handler = _bolt_runtime.helpers['get_attribute_handler']
-_bolt_helper_interpolate_item_slot = _bolt_runtime.helpers['interpolate_item_slot']
+_bolt_helper_interpolate_item_slots = _bolt_runtime.helpers['interpolate_item_slots']
 _bolt_helper_children = _bolt_runtime.helpers['children']
 _bolt_helper_replace = _bolt_runtime.helpers['replace']
 with _bolt_runtime.scope() as __bolt_var7:
@@ -12,10 +12,10 @@ with _bolt_runtime.scope() as __bolt_var7:
     my_weapon = __bolt_var4
     __bolt_var5 = my_weapon
     __bolt_var5 = _bolt_helper_get_attribute_handler(__bolt_var5)["offhand"]
-    __bolt_var5 = _bolt_helper_interpolate_item_slot(__bolt_var5, _bolt_refs[0])
+    __bolt_var5 = _bolt_helper_interpolate_item_slots(__bolt_var5, _bolt_refs[0])
     __bolt_var6 = my_weapon
     __bolt_var6 = _bolt_helper_get_attribute_handler(__bolt_var6)["mainhand"]
-    __bolt_var6 = _bolt_helper_interpolate_item_slot(__bolt_var6, _bolt_refs[2])
+    __bolt_var6 = _bolt_helper_interpolate_item_slots(__bolt_var6, _bolt_refs[2])
     _bolt_runtime.commands.append(_bolt_helper_replace(_bolt_refs[4], arguments=_bolt_helper_children([_bolt_refs[1], __bolt_var5, _bolt_refs[3], __bolt_var6])))
 __bolt_var8 = _bolt_helper_replace(_bolt_refs[5], commands=_bolt_helper_children(__bolt_var7))
 ---
@@ -27,7 +27,7 @@ _bolt_refs[0]
   end_location: SourceLocation(pos=109, lineno=2, colno=41)
   prefix: None
   unpack: None
-  converter: 'item_slot'
+  converter: 'item_slots'
   value:
     <class 'bolt.ast.AstAttribute'>
 _bolt_refs[1]
@@ -43,7 +43,7 @@ _bolt_refs[2]
   end_location: SourceLocation(pos=143, lineno=2, colno=75)
   prefix: None
   unpack: None
-  converter: 'item_slot'
+  converter: 'item_slots'
   value:
     <class 'bolt.ast.AstAttribute'>
 _bolt_refs[3]
@@ -57,7 +57,7 @@ _bolt_refs[4]
 <class 'mecha.ast.AstCommand'>
   location: SourceLocation(pos=69, lineno=2, colno=1)
   end_location: SourceLocation(pos=143, lineno=2, colno=75)
-  identifier: 'item:replace:entity:targets:slot:from:entity:source:sourceSlot'
+  identifier: 'item:replace:entity:target:slots:from:entity:source:sourceSlots'
   arguments:
     <class 'mecha.ast.AstSelector'>
     <class 'bolt.ast.AstInterpolation'>

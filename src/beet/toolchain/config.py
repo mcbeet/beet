@@ -1,17 +1,17 @@
 __all__ = [
-    "ProjectConfig",
+    "DETECT_CONFIG_FILES",
+    "FormatSpecifier",
+    "InvalidProjectConfig",
+    "ListOption",
     "PackConfig",
     "PackFilterBlockConfig",
     "PackFilterConfig",
     "PackLoadOptions",
-    "ListOption",
     "PackageablePath",
-    "InvalidProjectConfig",
-    "locate_config",
-    "load_config",
+    "ProjectConfig",
     "config_error_handler",
-    "DETECT_CONFIG_FILES",
-    "FormatSpecifier",
+    "load_config",
+    "locate_config",
 ]
 
 
@@ -21,17 +21,17 @@ from copy import deepcopy
 from glob import glob
 from itertools import chain
 from pathlib import Path
-from typing import Any, Dict, Generic, List, Literal, Optional, Tuple, TypeVar, Union
+from typing import Any, Literal
 
 import toml
 import yaml
 from pydantic import (
+    BaseModel,
+    ConfigDict,
     RootModel,
     ValidationError,
     field_validator,
     model_validator,
-    BaseModel,
-    ConfigDict,
 )
 
 from beet.core.error import BubbleException
@@ -47,7 +47,7 @@ from beet.core.utils import (
 
 from .utils import apply_option, eval_option, iter_options
 
-DETECT_CONFIG_FILES: Tuple[str, ...] = (
+DETECT_CONFIG_FILES: tuple[str, ...] = (
     "beet.json",
     "beet.toml",
     "beet.yml",
@@ -69,13 +69,10 @@ class InvalidProjectConfig(BubbleException):
         return f"Couldn't load project config.\n\n{self.explanation}"
 
 
-ItemType = TypeVar("ItemType")
-
-
-class ListOption(RootModel[List[ItemType]], Generic[ItemType]):
+class ListOption[ItemType](RootModel[list[ItemType]]):
     """List that transparently wraps single values."""
 
-    root: List[ItemType] = []
+    root: list[ItemType] = []
 
     @field_validator("root", mode="before")
     @classmethod
@@ -88,7 +85,7 @@ class ListOption(RootModel[List[ItemType]], Generic[ItemType]):
             value = [value]
         return value
 
-    def entries(self) -> List[ItemType]:
+    def entries(self) -> list[ItemType]:
         """Return the internal list."""
         return self.root
 
@@ -103,7 +100,7 @@ class PackageablePath(RootModel[FileSystemPath]):
     def validate_root(cls, value: Any):
         return resolve_packageable_path(value)
 
-    def resolve(self, directory: FileSystemPath) -> "PackageablePath":
+    def resolve(self, directory: FileSystemPath) -> PackageablePath:
         """Resolve path relative to the given directory."""
         return PackageablePath.model_validate(
             self.root if self.http_url else Path(directory) / self.root
@@ -123,16 +120,11 @@ class PackageablePath(RootModel[FileSystemPath]):
 
 
 class PackLoadOptions(
-    ListOption[
-        Union[
-            PackageablePath,
-            Dict[str, ListOption[PackageablePath]],
-        ]
-    ]
+    ListOption[PackageablePath | dict[str, ListOption[PackageablePath]]]
 ):
     """Options for loading data packs and resource packs."""
 
-    def resolve(self, directory: FileSystemPath) -> "PackLoadOptions":
+    def resolve(self, directory: FileSystemPath) -> PackLoadOptions:
         """Resolve load options relative to the given directory."""
         return PackLoadOptions.model_validate(
             [
@@ -165,8 +157,8 @@ class PackLoadOptions(
 class PackFilterBlockConfig(BaseModel):
     """Data pack and resource pack filter block configuration."""
 
-    namespace: Optional[str] = None
-    path: Optional[str] = None
+    namespace: str | None = None
+    path: str | None = None
 
 
 class PackFilterConfig(BaseModel):
@@ -174,7 +166,7 @@ class PackFilterConfig(BaseModel):
 
     block: ListOption[PackFilterBlockConfig] = ListOption()
 
-    def with_defaults(self, other: "PackFilterConfig") -> "PackFilterConfig":
+    def with_defaults(self, other: PackFilterConfig) -> PackFilterConfig:
         return PackFilterConfig.model_validate(
             {
                 "block": other.block.entries() + self.block.entries(),
@@ -182,16 +174,16 @@ class PackFilterConfig(BaseModel):
         )
 
 
-FormatSpecifier = Union[int, tuple[int], tuple[int, int]]
+type FormatSpecifier = int | tuple[int] | tuple[int, int]
 
 
 class PackOverlayConfig(BaseModel):
     """Overlay entry configuration."""
 
-    formats: Optional[SupportedFormats] = None
+    formats: SupportedFormats | None = None
     directory: str
-    min_format: Optional[FormatSpecifier] = None
-    max_format: Optional[FormatSpecifier] = None
+    min_format: FormatSpecifier | None = None
+    max_format: FormatSpecifier | None = None
 
 
 class PackConfig(BaseModel):
@@ -199,21 +191,21 @@ class PackConfig(BaseModel):
 
     name: str = ""
     description: TextComponent = ""
-    pack_format: Optional[int] = None
-    min_format: Optional[FormatSpecifier] = None
-    max_format: Optional[FormatSpecifier] = None
-    filter: Optional[PackFilterConfig] = None
-    supported_formats: Optional[SupportedFormats] = None
-    overlays: Optional[ListOption[PackOverlayConfig]] = None
-    zipped: Optional[bool] = None
-    compression: Optional[Literal["none", "deflate", "bzip2", "lzma"]] = None
-    compression_level: Optional[int] = None
+    pack_format: int | None = None
+    min_format: FormatSpecifier | None = None
+    max_format: FormatSpecifier | None = None
+    filter: PackFilterConfig | None = None
+    supported_formats: SupportedFormats | None = None
+    overlays: ListOption[PackOverlayConfig] | None = None
+    zipped: bool | None = None
+    compression: Literal["none", "deflate", "bzip2", "lzma"] | None = None
+    compression_level: int | None = None
 
     load: PackLoadOptions = PackLoadOptions()
-    render: Dict[str, ListOption[str]] = {}
+    render: dict[str, ListOption[str]] = {}
     model_config = ConfigDict(extra="forbid")
 
-    def with_defaults(self, other: "PackConfig") -> "PackConfig":
+    def with_defaults(self, other: PackConfig) -> PackConfig:
         """Combine the current pack config with another one."""
         return PackConfig.model_validate(
             {
@@ -273,15 +265,15 @@ class ProjectConfig(BaseModel):
     directory: FileSystemPath = ""
     broadcast: ListOption[FileSystemPath] = ListOption()
     extend: ListOption[PackageablePath] = ListOption()
-    output: Optional[FileSystemPath] = None
-    ignore: List[str] = []
-    whitelist: Optional[List[str]] = None
+    output: FileSystemPath | None = None
+    ignore: list[str] = []
+    whitelist: list[str] | None = None
 
-    require: List[str] = []
+    require: list[str] = []
     templates: ListOption[PackageablePath] = ListOption()
     data_pack: PackConfig = PackConfig()
     resource_pack: PackConfig = PackConfig()
-    pipeline: List[Union[str, "ProjectConfig"]] = []
+    pipeline: list[str | ProjectConfig] = []
     meta: JsonDict = {}
     model_config = ConfigDict(extra="forbid")
 
@@ -299,7 +291,7 @@ class ProjectConfig(BaseModel):
         values.pop("overrides", None)
         return values
 
-    def resolve(self, directory: FileSystemPath) -> "ProjectConfig":
+    def resolve(self, directory: FileSystemPath) -> ProjectConfig:
         """Resolve paths relative to the given directory and apply inheritance."""
         path = Path(directory)
 
@@ -347,7 +339,7 @@ class ProjectConfig(BaseModel):
 
         return self
 
-    def with_defaults(self, other: "ProjectConfig") -> "ProjectConfig":
+    def with_defaults(self, other: ProjectConfig) -> ProjectConfig:
         """Combine the current project config with another one."""
         return ProjectConfig.model_validate(
             {
@@ -379,7 +371,7 @@ class ProjectConfig(BaseModel):
 ProjectConfig.model_rebuild()
 
 
-def locate_config(directory: FileSystemPath, parents: bool = False) -> Optional[Path]:
+def locate_config(directory: FileSystemPath, parents: bool = False) -> Path | None:
     """Try to locate a config file in the given directory or its parents."""
     start = Path(directory).resolve()
 
@@ -392,7 +384,7 @@ def locate_config(directory: FileSystemPath, parents: bool = False) -> Optional[
 
 
 def load_config(
-    filename: Optional[FileSystemPath] = None,
+    filename: FileSystemPath | None = None,
     overrides: Any = None,
 ) -> ProjectConfig:
     """Load the project config at the specified location."""

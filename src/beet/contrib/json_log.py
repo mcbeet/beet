@@ -1,15 +1,14 @@
 """Plugin for collecting json logs."""
 
 __all__ = [
-    "JsonLogHandler",
     "JsonLogEntry",
+    "JsonLogHandler",
     "activate_json_log",
 ]
 
 
 import logging
 from contextlib import contextmanager
-from typing import List, Optional
 
 from pydantic import BaseModel
 
@@ -22,8 +21,8 @@ class JsonLogEntry(BaseModel):
     level: str
     prefix: str
     message: str
-    annotation: Optional[str]
-    details: List[str]
+    annotation: str | None
+    details: list[str]
 
 
 def activate_json_log(ctx: Context):
@@ -41,9 +40,9 @@ def beet_default(ctx: Context):
 class JsonLogHandler(LogHandler):
     """Logging handler that collects log records as json."""
 
-    entries: List[JsonLogEntry]
+    entries: list[JsonLogEntry]
 
-    def __init__(self, ctx: Optional[Context] = None):
+    def __init__(self, ctx: Context | None = None):
         super().__init__()
         self.entries = []
 

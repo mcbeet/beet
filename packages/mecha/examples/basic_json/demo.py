@@ -1,8 +1,9 @@
 from dataclasses import dataclass
 
+from tokenstream import set_location
+
 from beet import Context, LootTable
 from beet.core.utils import required_field
-from tokenstream import set_location
 
 from mecha import (
     AbstractNode,

@@ -1,45 +1,26 @@
 __all__ = [
-    "SupportsMerge",
-    "MergeMixin",
-    "MatchMixin",
-    "Pin",
-    "PinDefault",
-    "PinDefaultFactory",
     "Container",
     "ContainerProxy",
     "Drop",
+    "MatchMixin",
+    "MergeMixin",
+    "Pin",
+    "PinDefault",
+    "PinDefaultFactory",
+    "SupportsMerge",
 ]
 
 
+from collections.abc import Callable, Iterator, Mapping, MutableMapping
 from dataclasses import dataclass
-from typing import (
-    Any,
-    Callable,
-    Dict,
-    Generic,
-    Iterator,
-    Mapping,
-    MutableMapping,
-    Optional,
-    Protocol,
-    Set,
-    Tuple,
-    Type,
-    TypeVar,
-    Union,
-)
+from typing import Any, Protocol
 
 from pathspec import PathSpec
 
 from .utils import SENTINEL_OBJ, Sentinel
 
-K = TypeVar("K")
-V = TypeVar("V")
-CV = TypeVar("CV", covariant=True)
-ProxyKeyType = TypeVar("ProxyKeyType")
-
-PinDefault = Union[V, Sentinel]
-PinDefaultFactory = Union[Callable[[], V], Sentinel]
+type PinDefault[V] = V | Sentinel
+type PinDefaultFactory[V] = Callable[[], V] | Sentinel
 
 
 class Drop(Exception):
@@ -67,14 +48,14 @@ class MergeMixin:
 
 
 class MatchMixin:
-    def match(self, *patterns: str) -> Set[str]:
+    def match(self, *patterns: str) -> set[str]:
         """Return keys matching the given path patterns."""
-        spec = PathSpec.from_lines("gitwildmatch", patterns)
+        spec = PathSpec.from_lines("gitignore", patterns)
         return set(map(str, spec.match_files(self.keys())))  # pyright: ignore[reportAttributeAccessIssue]
 
 
 @dataclass
-class Pin(Generic[K, CV]):
+class Pin[K, CV]:
     """Descriptor that exposes a specific value from a dict-like object."""
 
     key: K
@@ -82,7 +63,7 @@ class Pin(Generic[K, CV]):
     default_factory: PinDefaultFactory[CV] = SENTINEL_OBJ
     delete_default: bool = False
 
-    def __get__(self, obj: Any, objtype: Optional[Type[Any]] = None) -> CV:
+    def __get__(self, obj: Any, objtype: type[Any] | None = None) -> CV:
         mapping = self.forward(obj)
 
         try:
@@ -112,7 +93,7 @@ class Pin(Generic[K, CV]):
             mapping[self.key] = value
             return self.__get__(obj, objtype)
 
-    def __set__(self: "Pin[K, V]", obj: Any, value: V):
+    def __set__[V](self: Pin[K, V], obj: Any, value: V):
         mapping = self.forward(obj)
 
         if self.delete_default:
@@ -136,18 +117,16 @@ class Pin(Generic[K, CV]):
         return obj
 
     @classmethod
-    def collect_from(
-        cls: Type["Pin[K, CV]"], target: Type[Any]
-    ) -> Dict[str, "Pin[K, CV]"]:
+    def collect_from(cls: type[Pin[K, CV]], target: type[Any]) -> dict[str, Pin[K, CV]]:
         return {  # pyright: ignore[reportReturnType]
             key: value for key, value in vars(target).items() if isinstance(value, cls)
         }
 
 
-class Container(MutableMapping[K, V]):
+class Container[K, V](MutableMapping[K, V]):
     """Generic dict-like container."""
 
-    _wrapped: Dict[K, V]
+    _wrapped: dict[K, V]
 
     def __init__(self):
         self._wrapped = {}
@@ -205,7 +184,7 @@ class Container(MutableMapping[K, V]):
         return f"{self.__class__.__name__}(keys={list(self.keys())})"
 
 
-class ContainerProxy(Generic[ProxyKeyType, K, V], MutableMapping[K, V]):
+class ContainerProxy[ProxyKeyType, K, V](MutableMapping[K, V]):
     """Generic aggregated view over several nested bounded dict-like objects."""
 
     proxy: Mapping[K, Mapping[ProxyKeyType, MutableMapping[K, V]]]
@@ -239,7 +218,7 @@ class ContainerProxy(Generic[ProxyKeyType, K, V], MutableMapping[K, V]):
     def __len__(self) -> int:
         return sum(len(mapping[self.proxy_key]) for mapping in self.proxy.values())
 
-    def split_key(self, key: K) -> Tuple[K, K]:
+    def split_key(self, key: K) -> tuple[K, K]:
         """Return the outer mapping key and the nested key."""
         raise NotImplementedError()
 

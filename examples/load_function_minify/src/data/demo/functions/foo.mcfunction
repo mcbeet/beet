@@ -2,6 +2,10 @@
 
 say this is a command
 
+# comment \
+say this is still part of the comment
+say this should remain
+
 # Empty lines will be removed too
 
 say another command

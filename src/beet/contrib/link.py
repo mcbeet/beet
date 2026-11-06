@@ -9,7 +9,6 @@ import logging
 import os
 import platform
 from pathlib import Path
-from typing import List, Optional, Union
 
 from beet import Cache, CachePin, Context, ErrorMessage, MultiCache, PackOverwrite
 from beet.core.utils import FileSystemPath, log_time_scope, remove_path
@@ -25,14 +24,14 @@ def link_cache_finalizer(cache: Cache):
 class LinkManager:
     cache: Cache
 
-    dirty = CachePin[List[str]]("dirty", default_factory=list)
+    dirty = CachePin[list[str]]("dirty", default_factory=list)
 
-    world = CachePin[Optional[str]]("world", None)
-    minecraft = CachePin[Optional[str]]("minecraft", None)
-    data_pack = CachePin[Optional[str]]("data_pack", None)
-    resource_pack = CachePin[Optional[str]]("resource_pack", None)
+    world = CachePin[str | None]("world", None)
+    minecraft = CachePin[str | None]("minecraft", None)
+    data_pack = CachePin[str | None]("data_pack", None)
+    resource_pack = CachePin[str | None]("resource_pack", None)
 
-    def __init__(self, arg: Union[Context, MultiCache[Cache], Cache]):
+    def __init__(self, arg: Context | MultiCache[Cache] | Cache):
         if isinstance(arg, Context):
             arg = arg.cache
         if isinstance(arg, MultiCache):
@@ -65,10 +64,10 @@ class LinkManager:
 
     def setup_link(
         self,
-        world: Optional[FileSystemPath] = None,
-        minecraft: Optional[FileSystemPath] = None,
-        data_pack: Optional[FileSystemPath] = None,
-        resource_pack: Optional[FileSystemPath] = None,
+        world: FileSystemPath | None = None,
+        minecraft: FileSystemPath | None = None,
+        data_pack: FileSystemPath | None = None,
+        resource_pack: FileSystemPath | None = None,
     ):
         """Associate minecraft directories to the project."""
         if minecraft:

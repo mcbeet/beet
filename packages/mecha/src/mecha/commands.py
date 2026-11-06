@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import click
+
 from beet import ErrorMessage, Project
 from beet.toolchain.cli import beet
 

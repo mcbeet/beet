@@ -5,8 +5,12 @@ from beet import Context, Function
 
 def beet_default(ctx: Context):
     for _, function in ctx[Function]:
-        function.text = "".join(
-            stripped + "\n"
-            for line in function.lines
-            if (stripped := line.strip()) and not stripped.startswith("#")
-        )
+        lines = []
+        comment_cont = False
+        for line in function.lines:
+            stripped = line.strip()
+            comment = stripped.startswith("#")
+            if stripped and not comment and not comment_cont:
+                lines.append(stripped + "\n")
+            comment_cont = (comment or comment_cont) and stripped.endswith("\\")
+        function.text = "".join(lines)

@@ -1,14 +1,15 @@
 """Plugin that strips final newlines in text files."""
 
 __all__ = [
-    "StripFinalNewlinesSerializer",
     "StripFinalNewlinesOptions",
+    "StripFinalNewlinesSerializer",
     "strip_final_newlines",
 ]
 
 
+from collections.abc import Callable
 from dataclasses import dataclass
-from typing import Any, Callable
+from typing import Any
 
 from beet import Context, ListOption, PluginOptions, TextFileBase, configurable
 
@@ -29,8 +30,7 @@ class StripFinalNewlinesSerializer:
 
     def __call__(self, content: Any) -> str:
         raw = self.serializer(content)
-        if raw.endswith("\n"):
-            raw = raw[:-1]
+        raw = raw.removesuffix("\n")
         return raw
 
 

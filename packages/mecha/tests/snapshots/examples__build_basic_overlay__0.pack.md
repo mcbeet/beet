@@ -8,12 +8,12 @@
 {
   "pack": {
     "min_format": [
-      107,
-      1
+      121,
+      0
     ],
     "max_format": [
-      107,
-      1
+      121,
+      0
     ],
     "description": ""
   },
@@ -22,12 +22,12 @@
       {
         "directory": "dummy_overlay",
         "min_format": [
-          107,
-          1
+          121,
+          0
         ],
         "max_format": [
-          107,
-          1
+          121,
+          0
         ]
       }
     ]

@@ -13,12 +13,12 @@ _bolt_refs[0]
 <class 'mecha.ast.AstCommand'>
   location: SourceLocation(pos=17, lineno=2, colno=1)
   end_location: SourceLocation(pos=85, lineno=2, colno=69)
-  identifier: 'item:replace:entity:targets:slot:from:entity:source:sourceSlot'
+  identifier: 'item:replace:entity:target:slots:from:entity:source:sourceSlots'
   arguments:
     <class 'mecha.ast.AstSelector'>
-    <class 'mecha.ast.AstItemSlot'>
+    <class 'mecha.ast.AstItemSlots'>
     <class 'mecha.ast.AstSelector'>
-    <class 'mecha.ast.AstItemSlot'>
+    <class 'mecha.ast.AstItemSlots'>
 _bolt_refs[1]
 <class 'mecha.ast.AstRoot'>
   location: SourceLocation(pos=0, lineno=1, colno=1)

@@ -1,77 +1,91 @@
 __all__ = [
+    "AssignmentStatementParser",
+    "AssignmentTargetParser",
+    "BinaryParser",
+    "BindingStorageHandler",
+    "BranchScopeManager",
+    "BreakContinueConstraint",
+    "BuiltinCallRestriction",
+    "ChainedComparisonParser",
+    "ClassBasesParser",
+    "DeferredRootBacktracker",
+    "DisableInterpolationParser",
+    "DocstringHandler",
+    "EscapeAnalysisParser",
+    "EscapeAnalysisResolver",
+    "FinalExpressionParser",
+    "FlushPendingBindingsParser",
+    "ForkLexicalScopeParser",
+    "IfElseLoweringParser",
+    "ImportLocationConstraint",
+    "ImportStatementHandler",
+    "ImprovedErrorHandler",
+    "InterpolationParser",
+    "KeywordParser",
+    "LexicalScopeConstraint",
+    "LiteralParser",
+    "LookupParser",
+    "MacroHandler",
+    "MacroMatchParser",
+    "MemoHandler",
+    "MemoRootParser",
+    "NestedLocationInterpolationParser",
+    "PrimaryParser",
+    "ProcMacroExpansion",
+    "ProcMacroParser",
+    "RangeTupleParser",
+    "RootScopeHandler",
+    "SubcommandConstraint",
+    "ToplevelHandler",
+    "TrailingCommaParser",
+    "TypeAnnotationParser",
+    "UnaryParser",
+    "UndefinedIdentifier",
+    "UnpackConstraint",
+    "UnpackParser",
+    "VanillaReturnHandler",
+    "WithContextParser",
+    "create_bolt_command_parser",
+    "create_bolt_root_parser",
     "get_bolt_parsers",
     "get_stream_lexical_scope",
     "get_stream_macro_scope",
     "get_stream_pending_macros",
-    "ToplevelHandler",
-    "create_bolt_root_parser",
-    "create_bolt_command_parser",
-    "UndefinedIdentifier",
-    "ImprovedErrorHandler",
-    "parse_statement",
-    "BranchScopeManager",
-    "FinalExpressionParser",
-    "InterpolationParser",
-    "DisableInterpolationParser",
-    "ForkLexicalScopeParser",
-    "AssignmentStatementParser",
-    "EscapeAnalysisParser",
-    "EscapeAnalysisResolver",
-    "MemoRootParser",
-    "MemoHandler",
-    "parse_decorator",
-    "AssignmentTargetParser",
-    "IfElseLoweringParser",
-    "VanillaReturnHandler",
-    "BreakContinueConstraint",
-    "parse_deferred_root",
-    "parse_function_signature",
-    "parse_proc_macro_signature",
-    "MacroMatchParser",
-    "MacroHandler",
-    "ProcMacroParser",
-    "ProcMacroExpansion",
     "parse_class_name",
-    "ClassBasesParser",
     "parse_class_root",
+    "parse_decorator",
+    "parse_deferred_root",
     "parse_del_target",
+    "parse_dict_item",
+    "parse_function_signature",
     "parse_identifier",
-    "TrailingCommaParser",
-    "ImportLocationConstraint",
-    "ImportStatementHandler",
-    "parse_python_import",
     "parse_import_name",
     "parse_name_list",
-    "BindingStorageHandler",
-    "DocstringHandler",
-    "WithContextParser",
-    "FlushPendingBindingsParser",
-    "SubcommandConstraint",
-    "DeferredRootBacktracker",
-    "LexicalScopeConstraint",
-    "RootScopeHandler",
-    "BinaryParser",
-    "UnaryParser",
-    "ChainedComparisonParser",
-    "UnpackParser",
-    "UnpackConstraint",
-    "KeywordParser",
-    "LookupParser",
-    "PrimaryParser",
-    "BuiltinCallRestriction",
-    "parse_dict_item",
-    "LiteralParser",
-    "TypeAnnotationParser",
+    "parse_proc_macro_signature",
+    "parse_python_import",
+    "parse_statement",
 ]
 
 
+import itertools
 import re
 from dataclasses import dataclass, field, replace
-from typing import Any, Dict, FrozenSet, List, Literal, Optional, Set, Tuple, Type, cast
+from typing import Any, Literal, cast
 from uuid import UUID, uuid4
+
+from tokenstream import (
+    InvalidSyntax,
+    Token,
+    TokenStream,
+    UnexpectedEOF,
+    UnexpectedToken,
+    set_location,
+)
 
 from beet import Function
 from beet.core.utils import extra_field
+
+from mecha import NUMBER_PATTERN as RANGE_NUMBER_PATTERN
 from mecha import (
     AdjacentConstraint,
     AlternativeParser,
@@ -97,20 +111,13 @@ from mecha import (
     get_stream_scope,
     get_stream_spec,
 )
+from mecha.contrib.nested_location import AstNestedLocation
 from mecha.contrib.relative_location import resolve_using_database
 from mecha.utils import (
     JsonQuoteHelper,
     QuoteHelper,
     normalize_whitespace,
     string_to_number,
-)
-from tokenstream import (
-    InvalidSyntax,
-    Token,
-    TokenStream,
-    UnexpectedEOF,
-    UnexpectedToken,
-    set_location,
 )
 
 from .ast import (
@@ -205,10 +212,10 @@ IMPORT_REGEX = re.compile(rf"^{MODULE_PATTERN}$")
 
 
 def get_bolt_parsers(
-    parsers: Dict[str, Parser],
+    parsers: dict[str, Parser],
     modules: ModuleManager,
-    bolt_prototypes: Set[str],
-) -> Dict[str, Parser]:
+    bolt_prototypes: set[str],
+) -> dict[str, Parser]:
     """Return the bolt parsers."""
     macro_handler = MacroHandler(
         parser=parsers["command"],
@@ -354,9 +361,18 @@ def get_bolt_parsers(
         ),
         "bolt:memo_root": MemoRootParser(EscapeAnalysisParser(delegate("nested_root"))),
         "bolt:del_target": parse_del_target,
-        "bolt:interpolation": BuiltinCallRestriction(
-            PrimaryParser(delegate("bolt:identifier"), truncate=True),
-            builtins=modules.builtins,
+        "bolt:interpolation": RangeTupleParser(
+            parser=UnaryParser(
+                operators=[r"\+", "-"],
+                parser=BinaryParser(
+                    operators=[r"\*\*(?!=)"],
+                    parser=BuiltinCallRestriction(
+                        PrimaryParser(delegate("bolt:identifier"), truncate=True),
+                        builtins=modules.builtins,
+                    ),
+                    right_associative=True,
+                ),
+            ),
         ),
         "bolt:identifier": parse_identifier,
         "bolt:with_context": WithContextParser(
@@ -430,7 +446,8 @@ def get_bolt_parsers(
             operators=[r"\*(?!=)", r"//(?!=)", r"/(?!=)", r"%(?!=)"],
             parser=delegate("bolt:factor"),
         ),
-        "bolt:factor": UnaryParser(
+        "bolt:factor": RangeTupleParser(parser=delegate("bolt:range_bound")),
+        "bolt:range_bound": UnaryParser(
             operators=[r"\+", "-"],
             parser=delegate("bolt:power"),
         ),
@@ -478,12 +495,12 @@ def get_bolt_parsers(
         ################################################################################
         "bool": AlternativeParser([parsers["bool"], InterpolationParser("bool")]),
         "numeric": AlternativeParser(
-            [parsers["numeric"], InterpolationParser("numeric", prefix="-")]
+            [parsers["numeric"], InterpolationParser("numeric")]
         ),
         "coordinate": AlternativeParser(
             [
                 parsers["coordinate"],
-                InterpolationParser("coordinate", prefix="[~^]-?|-"),
+                InterpolationParser("coordinate", prefix="[~^]"),
             ]
         ),
         "time": AlternativeParser([parsers["time"], InterpolationParser("time")]),
@@ -516,13 +533,15 @@ def get_bolt_parsers(
         "nbt_path": AlternativeParser(
             [InterpolationParser("nbt_path"), parsers["nbt_path"]]
         ),
-        "range": AlternativeParser([parsers["range"], InterpolationParser("range")]),
+        "range": AlternativeParser([InterpolationParser("range"), parsers["range"]]),
         "resource_location_or_tag": CommentDisambiguation(
-            AlternativeParser(
-                [
-                    InterpolationParser("resource_location", prefix=r"#"),
-                    parsers["resource_location_or_tag"],
-                ]
+            NestedLocationInterpolationParser(
+                AlternativeParser(
+                    [
+                        InterpolationParser("resource_location", prefix=r"#"),
+                        parsers["resource_location_or_tag"],
+                    ]
+                )
             )
         ),
         "item_slot": AlternativeParser(
@@ -589,12 +608,12 @@ def get_stream_lexical_scope(stream: TokenStream) -> LexicalScope:
     return stream.data.setdefault("lexical_scope", LexicalScope())
 
 
-def get_stream_macro_scope(stream: TokenStream) -> Dict[str, AstMacro]:
+def get_stream_macro_scope(stream: TokenStream) -> dict[str, AstMacro]:
     """Return the macro identifiers currently available."""
     return stream.data.setdefault("macro_scope", {})
 
 
-def get_stream_pending_macros(stream: TokenStream) -> List[AstMacro]:
+def get_stream_pending_macros(stream: TokenStream) -> list[AstMacro]:
     """Return pending macro declarations."""
     return stream.data.setdefault("pending_macros", [])
 
@@ -606,7 +625,7 @@ class ToplevelHandler:
     parser: Parser
 
     modules: ModuleManager
-    macro_handler: "MacroHandler"
+    macro_handler: MacroHandler
 
     def __call__(self, stream: TokenStream) -> Any:
         current = self.modules.database.current
@@ -655,7 +674,7 @@ class ToplevelHandler:
         return node
 
 
-def create_bolt_root_parser(parser: Parser, macro_handler: "MacroHandler"):
+def create_bolt_root_parser(parser: Parser, macro_handler: MacroHandler):
     """Compose root parsers."""
     parser = FlushPendingBindingsParser(parser, before=True)
     parser = DocstringHandler(parser)
@@ -691,7 +710,7 @@ def create_bolt_root_parser(parser: Parser, macro_handler: "MacroHandler"):
 
 
 def create_bolt_command_parser(
-    parser: Parser, modules: ModuleManager, bolt_prototypes: Set[str]
+    parser: Parser, modules: ModuleManager, bolt_prototypes: set[str]
 ):
     """Compose command parsers."""
     parser = MemoHandler(parser)
@@ -786,8 +805,8 @@ class InterpolationParser:
     """Parser for interpolation."""
 
     converter: str
-    prefix: Optional[str] = None
-    unpack: Optional[str] = None
+    prefix: str | None = None
+    unpack: str | None = None
 
     def __call__(self, stream: TokenStream) -> Any:
         if stream.data.get("disable_interpolation"):
@@ -922,7 +941,7 @@ class EscapeAnalysisParser:
         }
 
         if isinstance(node := self.parser(stream), AstRoot):
-            refcount_snapshots: List[Tuple[str, Binding, int]] = []
+            refcount_snapshots: list[tuple[str, Binding, int]] = []
 
             for identifier, variable in lexical_scope.variables.items():
                 nb_bindings = previous_bindings.get(identifier)
@@ -970,10 +989,10 @@ class EscapeAnalysisResolver:
 
     def resolve(self, node: AstRoot) -> AstRoot:
         should_replace = False
-        commands: List[AstCommand] = []
+        commands: list[AstCommand] = []
 
         for command in node.commands:
-            stack: List[AstCommand] = [command]
+            stack: list[AstCommand] = [command]
 
             while command.arguments and isinstance(
                 command := command.arguments[-1], AstCommand
@@ -1055,8 +1074,8 @@ class MemoHandler:
         return node
 
     def create_memo(self, command: AstCommand, persistent_id: UUID) -> AstMemo:
-        identifier_parts: List[str] = ["memo"]
-        arguments: List[AstNode] = []
+        identifier_parts: list[str] = ["memo"]
+        arguments: list[AstNode] = []
 
         node = command
         while isinstance(subcommand := node.arguments[-1], AstCommand):
@@ -1099,10 +1118,10 @@ class DecoratorResolver:
     def __call__(self, stream: TokenStream) -> AstRoot:
         node: AstRoot = self.parser(stream)
 
-        stack: List[AstDecorator] = []
+        stack: list[AstDecorator] = []
 
         changed = False
-        result: List[AstCommand] = []
+        result: list[AstCommand] = []
 
         for command in node.commands:
             if isinstance(command, AstStatement) and isinstance(
@@ -1146,7 +1165,7 @@ class AssignmentTargetParser:
     def __call__(self, stream: TokenStream) -> AstTarget:
         lexical_scope = get_stream_lexical_scope(stream)
 
-        nodes: List[AstTarget] = []
+        nodes: list[AstTarget] = []
 
         with stream.syntax(identifier=IDENTIFIER_PATTERN, comma=r","):
             while True:
@@ -1187,7 +1206,7 @@ class VanillaReturnHandler:
             return node
 
         changed = False
-        result: List[AstCommand] = []
+        result: list[AstCommand] = []
 
         for command in node.commands:
             if command.identifier == "return:value" and command.arguments:
@@ -1224,7 +1243,7 @@ class IfElseLoweringParser:
         node: AstRoot = self.parser(stream)
 
         changed = False
-        result: List[AstCommand] = []
+        result: list[AstCommand] = []
 
         commands = iter(node.commands)
         previous = ""
@@ -1282,7 +1301,7 @@ class BreakContinueConstraint:
     """Constraint that makes sure that break and continue statements only occur in loops."""
 
     parser: Parser
-    allowed_scopes: Set[Tuple[str, ...]]
+    allowed_scopes: set[tuple[str, ...]]
 
     def __call__(self, stream: TokenStream) -> AstRoot:
         scope = get_stream_scope(stream)
@@ -1329,7 +1348,7 @@ def parse_function_signature(stream: TokenStream) -> AstFunctionSignature:
     lexical_scope = get_stream_lexical_scope(stream)
     type_annotation_scope = lexical_scope.fork()
 
-    arguments: List[AstFunctionSignatureElement] = []
+    arguments: list[AstFunctionSignatureElement] = []
 
     encountered_positional = False
     encountered_default = False
@@ -1554,8 +1573,8 @@ class MacroHandler:
 
     parser: Parser
 
-    proc_macro_overloads: Dict[str, Dict[str, int]] = extra_field(default_factory=dict)
-    spec_cache: Dict[FrozenSet[AstMacro], CommandSpec] = extra_field(
+    proc_macro_overloads: dict[str, dict[str, int]] = extra_field(default_factory=dict)
+    spec_cache: dict[frozenset[AstMacro], CommandSpec] = extra_field(
         default_factory=dict
     )
 
@@ -1600,10 +1619,10 @@ class MacroHandler:
     def create_macro(
         self,
         command: AstCommand,
-        resource_location: Optional[str] = None,
+        resource_location: str | None = None,
     ) -> AstMacro:
-        identifier_parts: List[str] = []
-        arguments: List[AstNode] = []
+        identifier_parts: list[str] = []
+        arguments: list[AstNode] = []
 
         node = command
         while isinstance(subcommand := node.arguments[-1], AstCommand):
@@ -1661,7 +1680,7 @@ class MacroHandler:
             )
             return set_location(macro, command)
 
-        for left, right in zip(arguments, arguments[1:]):
+        for left, right in itertools.pairwise(arguments):
             if isinstance(left, AstMacroMatchArgument) and left.is_subcommand():
                 exc = InvalidSyntax("Unexpected macro argument after subcommand.")
                 raise set_location(exc, right)
@@ -1757,12 +1776,12 @@ class ProcMacroExpansion:
 
     def __call__(self, stream: TokenStream) -> AstRoot:
         should_replace = False
-        commands: List[AstCommand] = []
+        commands: list[AstCommand] = []
 
         node: AstRoot = self.parser(stream)
 
         for command in node.commands:
-            stack: List[AstCommand] = [command]
+            stack: list[AstCommand] = [command]
 
             while command.arguments and isinstance(
                 command := command.arguments[-1], AstCommand
@@ -1814,8 +1833,8 @@ class ClassBasesParser:
     parser: Parser
 
     def __call__(self, stream: TokenStream) -> AstClassBases:
-        inherit: List[AstExpression] = []
-        kwargs: List[AstKeyword] = []
+        inherit: list[AstExpression] = []
+        kwargs: list[AstKeyword] = []
 
         with stream.syntax(brace=r"\(|\)", comma=","):
             token = stream.expect(("brace", "("))
@@ -1976,7 +1995,7 @@ class ImportStatementHandler:
         except UnusableCompilationUnit:
             compiled_module = None
 
-        arguments: List[AstNode] = [module]
+        arguments: list[AstNode] = [module]
 
         subcommand = cast(AstCommand, node.arguments[1])
         while True:
@@ -2038,7 +2057,7 @@ class BindingStorageHandler:
 
     parser: Parser
 
-    storage_qualifiers: Dict[str, Literal["global", "nonlocal", "deleted"]] = field(
+    storage_qualifiers: dict[str, Literal["global", "nonlocal", "deleted"]] = field(
         default_factory=lambda: {
             "global:subcommand": "global",
             "nonlocal:subcommand": "nonlocal",
@@ -2076,7 +2095,7 @@ class DocstringHandler:
         node: AstRoot = self.parser(stream)
 
         changed = False
-        result: List[AstCommand] = []
+        result: list[AstCommand] = []
 
         for command in node.commands:
             if (
@@ -2106,7 +2125,7 @@ class WithContextParser:
     target_parser: Parser
 
     def __call__(self, stream: TokenStream) -> AstWithContext:
-        clauses: List[AstWithClause] = []
+        clauses: list[AstWithClause] = []
 
         with stream.syntax(
             brace=r"\(|\)",
@@ -2166,7 +2185,7 @@ class SubcommandConstraint:
     """Prevent using the specified prototypes as general subcommands."""
 
     parser: Parser
-    command_identifiers: Set[str]
+    command_identifiers: set[str]
 
     def __call__(self, stream: TokenStream) -> Any:
         if (
@@ -2200,7 +2219,7 @@ class DeferredRootBacktracker:
 
     def resolve_deferred(self, node: AstRoot, stream: TokenStream) -> AstRoot:
         should_replace = False
-        commands: List[AstCommand] = []
+        commands: list[AstCommand] = []
 
         for command in node.commands:
             if command.arguments and isinstance(
@@ -2214,7 +2233,7 @@ class DeferredRootBacktracker:
                         arguments=AstChildren([*command.arguments[:-1], resolved_body]),
                     )
 
-            stack: List[AstCommand] = [command]
+            stack: list[AstCommand] = [command]
 
             while command.arguments and isinstance(
                 command := command.arguments[-1], AstCommand
@@ -2269,9 +2288,9 @@ class LexicalScopeConstraint:
     """Constraint that restricts specific statements to the given scope type."""
 
     parser: Parser
-    type: Type[LexicalScope]
-    flags: Dict[str, bool]
-    command_identifiers: Set[str]
+    type: type[LexicalScope]
+    flags: dict[str, bool]
+    command_identifiers: set[str]
 
     def __call__(self, stream: TokenStream) -> AstRoot:
         node = self.parser(stream)
@@ -2314,16 +2333,16 @@ class RootScopeHandler:
 class BinaryParser:
     """Parser for binary expressions."""
 
-    operators: List[str]
+    operators: list[str]
     parser: Parser
     right_associative: bool = False
 
     def parse_operands(
         self, stream: TokenStream
-    ) -> Tuple[List[AstExpression], List[str]]:
+    ) -> tuple[list[AstExpression], list[str]]:
         with stream.syntax(operator="|".join(self.operators)):
             nodes = [self.parser(stream)]
-            operations: List[str] = []
+            operations: list[str] = []
 
             for op in stream.collect("operator"):
                 nodes.append(self.parser(stream))
@@ -2355,7 +2374,7 @@ class BinaryParser:
 class UnaryParser:
     """Parser for unary expressions."""
 
-    operators: List[str]
+    operators: list[str]
     parser: Parser
 
     def __call__(self, stream: TokenStream) -> Any:
@@ -2506,9 +2525,9 @@ class PrimaryParser:
             token = stream.get(("brace", "("), "format_string", "nested_location")
 
             if token and token.match("brace"):
-                with stream.ignore("newline"):
+                with stream.ignore("newline", "whitespace"):
                     comma = None
-                    items: List[AstExpression] = []
+                    items: list[AstExpression] = []
 
                     for _ in stream.peek_until(("brace", ")")):
                         items.append(delegate("bolt:expression", stream))
@@ -2540,7 +2559,7 @@ class PrimaryParser:
                     ),
                 ):
                     fmt = quote
-                    values: List[AstExpression] = []
+                    values: list[AstExpression] = []
 
                     for escape, double_brace, brace, text in stream.collect(
                         "escape",
@@ -2592,7 +2611,7 @@ class PrimaryParser:
                     ),
                 ):
                     fmt = ""
-                    values: List[AstExpression] = []
+                    values: list[AstExpression] = []
 
                     for path, curly in stream.collect("path", ("curly", "{")):
                         if path:
@@ -2607,12 +2626,6 @@ class PrimaryParser:
                                 stream.expect(("curly", "}"))
                             fmt += "}"
 
-                    if not values and self.truncate:
-                        exc = InvalidSyntax(
-                            "Truncated nested location requires interpolated values."
-                        )
-                        raise set_location(exc, token, stream.current)
-
                     node = AstFormattedLocation(fmt=fmt, values=AstChildren(values))
                     node = set_location(node, token, stream.current)
 
@@ -2622,7 +2635,7 @@ class PrimaryParser:
         with (
             stream.intercept(*["whitespace"] * self.truncate),
             stream.syntax(
-                dot=r"\.",
+                dot=r"\.(?!\.)",
                 comma=r",",
                 brace=r"\(|\)",
                 bracket=r"\[|\]",
@@ -2632,7 +2645,7 @@ class PrimaryParser:
             ),
         ):
             while token := stream.get("dot", ("brace", "("), ("bracket", "[")):
-                arguments: List[Any] = []
+                arguments: list[Any] = []
 
                 if token.match("dot"):
                     identifier, string, number = stream.expect(
@@ -2714,7 +2727,7 @@ class BuiltinCallRestriction:
     """Only allow call expressions on builtins."""
 
     parser: Parser
-    builtins: Set[str]
+    builtins: set[str]
 
     def __call__(self, stream: TokenStream) -> Any:
         parent = None
@@ -2821,7 +2834,7 @@ class LiteralParser:
             )
 
             if curly:
-                items: List[Any] = []
+                items: list[Any] = []
                 unquoted = False
 
                 with stream.ignore("newline"):
@@ -2853,7 +2866,7 @@ class LiteralParser:
                 return set_location(node, curly, stream.current)
 
             if bracket:
-                elements: List[Any] = []
+                elements: list[Any] = []
 
                 with stream.ignore("newline"):
                     for _ in stream.peek_until(("bracket", "]")):
@@ -2918,3 +2931,64 @@ class TypeAnnotationParser:
         string = stream.source[value.location.pos : value.end_location.pos]
         node = AstTypeAnnotation(string=string, value=value)
         return set_location(node, value)
+
+
+@dataclass
+class NestedLocationInterpolationParser:
+    """Convert AstFormattedLocation with no interpolated values to AstFormattedLocation."""
+
+    parser: Parser
+
+    def __call__(self, stream: TokenStream) -> Any:
+        node = self.parser(stream)
+        if (
+            isinstance(node, AstInterpolation)
+            and isinstance(node.value, AstFormattedLocation)
+            and not node.value.values
+        ):
+            node = set_location(
+                AstNestedLocation(is_tag=node.prefix == "#", path=node.value.fmt),
+                node,
+            )
+        return node
+
+
+@dataclass
+class RangeTupleParser:
+    """Parser for tuple expressions using range syntax."""
+
+    parser: Parser
+
+    def __call__(self, stream: TokenStream) -> Any:
+        with stream.syntax(
+            range_from=rf"{RANGE_NUMBER_PATTERN}\.\.(?!\.)",
+            range_to=rf"\.\.{RANGE_NUMBER_PATTERN}",
+            range=r"\.\.(?!\.)",
+        ):
+            if token := stream.get("range_from", "range"):
+                literal = token.value.removesuffix("..")
+                min = set_location(
+                    AstValue(value=string_to_number(literal) if literal else None),
+                    token,
+                    token.end_location.with_horizontal_offset(-2),
+                )
+                with stream.intercept("whitespace"):
+                    max = self.parser(stream)
+            else:
+                min = self.parser(stream)
+                with stream.intercept("whitespace"):
+                    token = stream.get("range_to", "range")
+                if not token:
+                    return min
+                literal = token.value.removeprefix("..")
+                max = set_location(
+                    AstValue(value=string_to_number(literal) if literal else None),
+                    token.location.with_horizontal_offset(2),
+                    token,
+                )
+                if max.value is None:
+                    with stream.alternative(), stream.intercept("whitespace"):
+                        max = self.parser(stream)
+
+        node = AstTuple(items=AstChildren([min, max]))
+        return set_location(node, min, max)

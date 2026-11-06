@@ -9,6 +9,7 @@ from dataclasses import dataclass
 
 from beet import Context
 from beet.core.utils import required_field
+
 from mecha import AstRoot, Mecha, Visitor, rule
 
 from bolt import Runtime
@@ -30,4 +31,3 @@ class DebugCodegenEmitter(Visitor):
     @rule(AstRoot)
     def debug_codegen(self, node: AstRoot):
         self.modules.database.current.text = self.modules.codegen(node).source or ""
-        return None

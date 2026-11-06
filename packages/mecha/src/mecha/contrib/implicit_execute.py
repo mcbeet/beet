@@ -6,10 +6,11 @@ __all__ = [
 
 
 from dataclasses import dataclass, replace
-from typing import Any, Set
+from typing import Any
+
+from tokenstream import TokenStream, set_location
 
 from beet import Context
-from tokenstream import TokenStream, set_location
 
 from mecha import AstChildren, AstCommand, Mecha, Parser
 
@@ -68,8 +69,8 @@ def beet_default(ctx: Context):
 class ImplicitExecuteParser:
     """Parser that replaces implicit execute shorthands with the full command."""
 
-    commands: Set[str]
-    shorthands: Set[str]
+    commands: set[str]
+    shorthands: set[str]
     parser: Parser
 
     def __call__(self, stream: TokenStream) -> Any:

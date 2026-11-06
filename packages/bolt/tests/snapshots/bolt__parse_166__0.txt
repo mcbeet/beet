@@ -7,7 +7,7 @@ item replace block ~ ~2 ~ container.26 with minecraft:spruce_sapling 4
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=0, lineno=1, colno=1)
       end_location: SourceLocation(pos=70, lineno=1, colno=71)
-      identifier: 'item:replace:block:pos:slot:with:item:count'
+      identifier: 'item:replace:block:target:slots:with:item:count'
       arguments:
         <class 'mecha.ast.AstVector3'>
           location: SourceLocation(pos=19, lineno=1, colno=20)
@@ -30,7 +30,7 @@ item replace block ~ ~2 ~ container.26 with minecraft:spruce_sapling 4
               end_location: SourceLocation(pos=25, lineno=1, colno=26)
               type: 'relative'
               value: 0
-        <class 'mecha.ast.AstItemSlot'>
+        <class 'mecha.ast.AstItemSlots'>
           location: SourceLocation(pos=26, lineno=1, colno=27)
           end_location: SourceLocation(pos=38, lineno=1, colno=39)
           value: 'container.26'

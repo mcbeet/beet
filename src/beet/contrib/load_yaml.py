@@ -9,7 +9,7 @@ __all__ = [
 
 import logging
 from dataclasses import InitVar, dataclass, field
-from typing import Any, Dict, List, Optional, Type, TypeVar
+from typing import Any
 
 import yaml
 
@@ -28,13 +28,12 @@ from beet import (
 logger = logging.getLogger(__name__)
 
 
-PackType = TypeVar("PackType", bound=Pack[Any])
-PackFile = File[Any, Any]
+type PackFile = File[Any, Any]
 
 
 class LoadYamlOptions(PluginOptions):
-    resource_pack: List[str] = []
-    data_pack: List[str] = []
+    resource_pack: list[str] = []
+    data_pack: list[str] = []
 
 
 def beet_default(ctx: Context):
@@ -58,12 +57,12 @@ def load_yaml(ctx: Context, opts: LoadYamlOptions):
 class YamlPackLoader:
     """Loader for data packs and resource packs using yaml files."""
 
-    ctx: InitVar[Optional[Context]] = None
+    ctx: InitVar[Context | None] = None
 
     assets: ResourcePack = field(default_factory=ResourcePack)
     data: DataPack = field(default_factory=DataPack)
 
-    def __post_init__(self, ctx: Optional[Context]):
+    def __post_init__(self, ctx: Context | None):
         logger.warning("Deprecated in favor of beet.contrib.auto_yaml.")
         if ctx:
             self.assets = ctx.assets
@@ -79,10 +78,12 @@ class YamlPackLoader:
         extended_pack.load(origin)
         self.merge_extended_pack(self.data, extended_pack)
 
-    def create_extended_pack(self, pack_type: Type[PackType]) -> PackType:
+    def create_extended_pack[PackType: Pack[Any]](
+        self, pack_type: type[PackType]
+    ) -> PackType:
         class ExtendedNamespace(pack_type.namespace_type):
             @classmethod
-            def get_extra_info(cls) -> Dict[str, Type[PackFile]]:
+            def get_extra_info(cls) -> dict[str, type[PackFile]]:
                 return self.rewrite_extra_info(super().get_extra_info())
 
         ExtendedNamespace.field_map = pack_type.namespace_type.field_map
@@ -95,7 +96,7 @@ class YamlPackLoader:
 
         class ExtendedPack(pack_type):
             @classmethod
-            def get_extra_info(cls) -> Dict[str, Type[PackFile]]:
+            def get_extra_info(cls) -> dict[str, type[PackFile]]:
                 return self.rewrite_extra_info(super().get_extra_info())
 
         ExtendedPack.namespace_type = ExtendedNamespace
@@ -104,8 +105,8 @@ class YamlPackLoader:
 
     def rewrite_extra_info(
         self,
-        original: Dict[str, Type[PackFile]],
-    ) -> Dict[str, Type[PackFile]]:
+        original: dict[str, type[PackFile]],
+    ) -> dict[str, type[PackFile]]:
         return {
             filename[:-5] + yaml_extension: file_type
             for yaml_extension in [".yml", ".yaml"]
@@ -113,7 +114,9 @@ class YamlPackLoader:
             if filename.endswith(".json")
         }
 
-    def merge_extended_pack(self, destination: PackType, extended_pack: PackType):
+    def merge_extended_pack[PackType: Pack[Any]](
+        self, destination: PackType, extended_pack: PackType
+    ):
         for _, yaml_file in extended_pack.list_files():
             yaml_file.ensure_deserialized(yaml.safe_load)
 

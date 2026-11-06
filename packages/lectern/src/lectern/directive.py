@@ -1,18 +1,19 @@
 __all__ = [
+    "BundleFragmentMixin",
+    "DataPackDirective",
     "Directive",
     "DirectiveRegistry",
-    "NamespacedResourceDirective",
-    "DataPackDirective",
-    "ResourcePackDirective",
-    "BundleFragmentMixin",
     "MergeZipDirective",
+    "NamespacedResourceDirective",
+    "ResourcePackDirective",
     "SkipDirective",
 ]
 
 
 import io
+from collections.abc import Callable
 from dataclasses import dataclass
-from typing import Any, Callable, Dict, List, Optional, Protocol, Type
+from typing import Any, Protocol
 from zipfile import ZipFile
 
 from beet import Container, DataPack, NamespaceFile, ResourcePack
@@ -30,14 +31,14 @@ class Directive(Protocol):
 class DirectiveRegistry(Container[str, Directive]):
     """Registry for directives."""
 
-    resolvers: List[Callable[["DirectiveRegistry"], Any]]
+    resolvers: list[Callable[[DirectiveRegistry], Any]]
     assets: ResourcePack
     data: DataPack
 
     def __init__(
         self,
-        assets: Optional[ResourcePack] = None,
-        data: Optional[DataPack] = None,
+        assets: ResourcePack | None = None,
+        data: DataPack | None = None,
     ):
         super().__init__()
         self.resolvers = []
@@ -56,17 +57,17 @@ class DirectiveRegistry(Container[str, Directive]):
                     name = snake_case(file_type.__name__)
                     self[name] = NamespacedResourceDirective(file_type)
 
-    def resolve(self) -> "DirectiveRegistry":
+    def resolve(self) -> DirectiveRegistry:
         """Resolve all directives in the registry."""
         for callback in self.resolvers:
             callback(self)
         return self
 
-    def add_resolver(self, resolver: Callable[["DirectiveRegistry"], Any]):
+    def add_resolver(self, resolver: Callable[[DirectiveRegistry], Any]):
         """Add directive resolver."""
         self.resolvers.append(resolver)
 
-    def get_serialization_mapping(self) -> Dict[Type[NamespaceFile], str]:
+    def get_serialization_mapping(self) -> dict[type[NamespaceFile], str]:
         """Return the serialization mapping."""
         return {
             directive.file_type: directive_name
@@ -79,7 +80,7 @@ class DirectiveRegistry(Container[str, Directive]):
 class NamespacedResourceDirective:
     """Directive for including namespaced resources."""
 
-    file_type: Type[NamespaceFile]
+    file_type: type[NamespaceFile]
 
     def __call__(self, fragment: Fragment, assets: ResourcePack, data: DataPack):
         full_name = fragment.expect("full_name")

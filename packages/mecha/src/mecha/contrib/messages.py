@@ -9,12 +9,13 @@ __all__ = [
 
 
 from dataclasses import dataclass
-from typing import Any, Optional
+from typing import Any
+
+from tokenstream import TokenStream, set_location
 
 from beet import Context
 from beet.contrib.messages import MessageManager
 from beet.core.utils import required_field
-from tokenstream import TokenStream, set_location
 
 from mecha import (
     AstJson,
@@ -41,7 +42,7 @@ class AstMessageReference(AstNode):
     """Ast message reference node."""
 
     name: AstResourceLocation = required_field()
-    path: Optional[AstMessageReferencePath] = None
+    path: AstMessageReferencePath | None = None
 
 
 def beet_default(ctx: Context):
@@ -89,7 +90,7 @@ class MessageReferenceTransformer(MutatingReducer):
 
         try:
             message = self.messages.get(name, path)
-        except (KeyError, IndexError):
+        except KeyError, IndexError:
             path = f"{path!r} in " if path else ""
             yield Diagnostic("error", f"Message not found {path}{name!r}.")
             return set_location(AstJson.from_value({}), node)

@@ -1,12 +1,14 @@
 import os
+from collections.abc import Iterable
 from pathlib import Path
 from pprint import pformat
-from typing import Iterable, Optional, Tuple
 
 import click
+
 from beet import ErrorMessage, Project
 from beet.core.utils import format_directory
 from beet.toolchain.cli import beet, message_fence
+
 from mecha import AstCacheBackend
 
 from bolt import AstMemo, MemoRegistry, MemoStorage
@@ -24,7 +26,7 @@ def codegen(project: Project, filename: str):
 
     try:
         with ast_path.open("rb") as f:
-            click.echo(AstCacheBackend().load_data(f)["codegen"], nl=False)
+            print(AstCacheBackend().load_data(f)["codegen"], end="")
     except Exception as exc:
         raise ErrorMessage(f'No cached codegen for "{filename}".') from exc
 
@@ -60,9 +62,9 @@ def memo(
     project: Project,
     clear: bool,
     gc: bool,
-    gc_interval: Optional[int],
-    gc_max_age: Optional[int],
-    filenames: Tuple[str, ...],
+    gc_interval: int | None,
+    gc_max_age: int | None,
+    filenames: tuple[str, ...],
 ):
     """Inspect and manage bolt memo storage."""
     memo_registry = MemoRegistry(project.cache)
@@ -75,12 +77,12 @@ def memo(
         with message_fence("Updating GC settings..."):
             if gc_interval is not None:
                 memo_registry.gc_interval = gc_interval
-                click.echo(
+                print(
                     f"Set garbage collection interval to {gc_interval} epoch{(gc_interval > 1) * 's'}.\n"
                 )
             if gc_max_age is not None:
                 memo_registry.gc_max_age = gc_max_age
-                click.echo(
+                print(
                     f"Set garbage collection max age to {gc_max_age} epoch{(gc_max_age > 1) * 's'}.\n"
                 )
             project.cache.flush()
@@ -99,14 +101,12 @@ def memo(
         else "Inspecting memo..."
     ):
         if not keys:
-            click.echo("The memo registry is empty.\n")
+            print("The memo registry is empty.\n")
             return
 
         if clear:
             for key in keys:
-                click.echo(
-                    f'Clear memo for "{os.path.relpath(key, project.directory)}".\n'
-                )
+                print(f'Clear memo for "{os.path.relpath(key, project.directory)}".\n')
                 del memo_registry[key]
             memo_registry.flush()
             project.cache.flush()
@@ -114,33 +114,33 @@ def memo(
 
         if gc:
             for memo_id, state_id in memo_registry.garbage_collect(*keys):
-                click.echo(f'GC "{memo_id.hex}/{hex(state_id)}".\n')
+                print(f'GC "{memo_id.hex}/{hex(state_id)}".\n')
             memo_registry.flush()
             project.cache.flush()
             return
 
         n = len(keys)
-        click.echo(f"Looking up {n} file{(n > 1) * 's'} in the registry.\n")
+        print(f"Looking up {n} file{(n > 1) * 's'} in the registry.\n")
 
         for key in keys:
             memo_file_index = memo_registry[key]
             if not memo_file_index:
-                click.echo(
+                print(
                     f'No entries associated with "{os.path.relpath(key, project.directory)}".\n'
                 )
                 continue
 
-            click.echo(
+            print(
                 os.path.relpath(key, project.directory) if os.path.isabs(key) else key
             )
 
             for key, storage in memo_file_index.items():
                 if isinstance(key, tuple):
-                    click.echo("  |")
+                    print("  |")
                     for line in generate_summary(project.directory, key[0], storage):
-                        click.echo(f"  |  {line}".rstrip())
+                        print(f"  |  {line}".rstrip())
 
-            click.echo()
+            print()
 
 
 def generate_summary(

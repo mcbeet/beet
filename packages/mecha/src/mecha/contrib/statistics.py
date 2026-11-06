@@ -2,19 +2,20 @@
 
 __all__ = [
     "Analyzer",
-    "Summary",
     "Statistics",
+    "Summary",
 ]
 
 
 import logging
 from collections import defaultdict
+from collections.abc import Iterator
 from dataclasses import dataclass
-from typing import Dict, Iterator, List, Optional, Tuple, Union
+
+from pydantic import BaseModel, Field
 
 from beet import Context
 from beet.core.utils import dump_json
-from pydantic import BaseModel, Field
 
 from mecha import (
     AstCommand,
@@ -66,11 +67,11 @@ class Statistics(BaseModel):
     scoreboard_fake_player_references: dict[str, dict[str, int]] = Field(
         default_factory=lambda: defaultdict(lambda: defaultdict(int))
     )
-    scoreboard_objectives: Dict[str, str] = {}
+    scoreboard_objectives: dict[str, str] = {}
 
 
 class StatisticsOptions(BaseModel):
-    output: Optional[str] = None
+    output: str | None = None
 
 
 def beet_default(ctx: Context):
@@ -82,7 +83,7 @@ class Analyzer(Reducer):
 
     stats: Statistics
 
-    def __init__(self, ctx: Union[Context, Mecha, None] = None):
+    def __init__(self, ctx: Context | Mecha | None = None):
         super().__init__()
 
         if isinstance(ctx, Context):
@@ -206,7 +207,7 @@ class Summary:
         }
         yield from self.format_table(results)
 
-    def format_commands(self) -> Dict[Tuple[str, ...], List[Tuple[str, ...]]]:
+    def format_commands(self) -> dict[tuple[str, ...], list[tuple[str, ...]]]:
         command_stats = {
             (
                 f"/{prefix}",
@@ -263,11 +264,11 @@ class Summary:
                     command_stats.items(), key=lambda p: -p[0][1]
                 )
                 for label, count, behind_execute in [command]
-                + (list(sorted(stats, key=lambda p: -p[1])) if len(stats) > 1 else [])
+                + (sorted(stats, key=lambda p: -p[1]) if len(stats) > 1 else [])
             ],
         }
 
-    def format_selectors(self) -> Dict[Tuple[str, ...], List[Tuple[str, ...]]]:
+    def format_selectors(self) -> dict[tuple[str, ...], list[tuple[str, ...]]]:
         selector_types = [
             (f"   [type={entity_type}]", entity_type_count)
             for entity_type, entity_type_count in sorted(
@@ -311,7 +312,7 @@ class Summary:
             ],
         }
 
-    def format_scoreboard(self) -> Dict[Tuple[str, ...], List[Tuple[str, ...]]]:
+    def format_scoreboard(self) -> dict[tuple[str, ...], list[tuple[str, ...]]]:
         objectives = {
             (
                 (
@@ -336,13 +337,13 @@ class Summary:
                     objectives.items(), key=lambda p: -p[0][1]
                 )
                 for label, count in [objective]
-                + list(sorted(fake_players, key=lambda p: -p[1]))
+                + sorted(fake_players, key=lambda p: -p[1])
             ]
         }
 
     def format_table(
         self,
-        sections: Dict[Tuple[str, ...], List[Tuple[str, ...]]],
+        sections: dict[tuple[str, ...], list[tuple[str, ...]]],
     ) -> Iterator[str]:
         cols = self.compute_column_layout(sections)
 
@@ -358,8 +359,8 @@ class Summary:
 
     def format_row(
         self,
-        row: Tuple[str, ...],
-        cols: List[int],
+        row: tuple[str, ...],
+        cols: list[int],
         header: bool = False,
     ) -> str:
         row = ((not header) * self.indent + row[0],) + row[1:]
@@ -374,10 +375,10 @@ class Summary:
 
     def compute_column_layout(
         self,
-        sections: Dict[Tuple[str, ...], List[Tuple[str, ...]]],
-    ) -> List[int]:
+        sections: dict[tuple[str, ...], list[tuple[str, ...]]],
+    ) -> list[int]:
         column_count = max(map(len, sections))
-        cols: List[int] = []
+        cols: list[int] = []
 
         for i in range(column_count):
             header_size = max(

@@ -1,6 +1,7 @@
 import pytest
-from beet import Context, DataPack, run_beet
 from pytest_insta import SnapshotFixture
+
+from beet import Context, DataPack, run_beet
 
 from mecha import Mecha
 from mecha.contrib.statistics import Analyzer, Summary

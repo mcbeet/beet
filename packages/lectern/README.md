@@ -315,7 +315,7 @@ You can include inline markdown images in the output data pack or resource pack 
 
 `@data_pack pack.png`
 
-![](https://static.wikia.nocookie.net/minecraft_gamepedia/images/3/3a/Pack.png/revision/20210509190015)
+![](https://placehold.co/64x64.png)
 
 Image fragments support the same variations as code block fragments. You can put the directive in a comment or surround the image with a `<details>` element to make it foldable.
 

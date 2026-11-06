@@ -12,19 +12,17 @@ __all__ = [
 ]
 
 
-from typing import Optional
-
 from beet import Advancement, Context, PluginOptions, configurable
 from beet.core.utils import JsonDict, TextComponent, normalize_string
 
 
 class InstallationAdvancementOptions(PluginOptions):
     icon: JsonDict = {"id": "minecraft:apple"}
-    author_namespace: Optional[str] = None
+    author_namespace: str | None = None
     author_description: str = ""
-    author_skull_owner: Optional[str] = None
-    project_namespace: Optional[str] = None
-    project_advancement_path: Optional[str] = None
+    author_skull_owner: str | None = None
+    project_namespace: str | None = None
+    project_advancement_path: str | None = None
 
 
 def beet_default(ctx: Context):

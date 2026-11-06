@@ -6,10 +6,11 @@ __all__ = [
 
 import subprocess
 from glob import glob
-from typing import List, Literal, Optional
+from typing import Literal
+
+from pydantic import BaseModel
 
 from beet import Context, ListOption, PackageablePath, configurable
-from pydantic import BaseModel
 
 from .document import Document
 from .loaders import LinkFragmentLoader
@@ -18,11 +19,11 @@ from .loaders import LinkFragmentLoader
 class LecternOptions(BaseModel):
     load: ListOption[PackageablePath] = ListOption()
     links: Literal["enable", "ignore", "disable"] = "enable"
-    snapshot: Optional[str] = None
+    snapshot: str | None = None
     snapshot_sort: bool = False
     snapshot_flat: bool = False
-    external_files: Optional[PackageablePath] = None
-    scripts: List[List[str]] = []
+    external_files: PackageablePath | None = None
+    scripts: list[list[str]] = []
 
 
 def beet_default(ctx: Context):

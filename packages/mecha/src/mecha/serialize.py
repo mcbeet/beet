@@ -1,16 +1,18 @@
 __all__ = [
-    "Serializer",
     "FormattingOptions",
+    "Serializer",
 ]
 
 
 import json
 import re
+from collections.abc import Iterable, Iterator
 from dataclasses import dataclass, field
-from typing import Any, Iterable, Iterator, List, Literal, Union
+from typing import Any, Literal
+
+from pydantic import BaseModel
 
 from beet.core.utils import required_field
-from pydantic import BaseModel
 
 from .ast import (
     AstBlock,
@@ -91,7 +93,7 @@ class Serializer(Visitor):
 
     formatting: FormattingOptions = field(default_factory=FormattingOptions)
 
-    regex_comments: "re.Pattern[str]" = field(default=REGEX_COMMENTS)
+    regex_comments: re.Pattern[str] = field(default=REGEX_COMMENTS)
     quote_helper: QuoteHelper = field(
         default_factory=lambda: QuoteHelper(
             escape_sequences={
@@ -106,7 +108,7 @@ class Serializer(Visitor):
     nbt_quote_helper: QuoteHelper = field(default_factory=NbtQuoteHelper)
 
     def __call__(self, node: AstNode, **kwargs: Any) -> str:
-        result: List[str] = []
+        result: list[str] = []
 
         previous_formatting = self.formatting if kwargs else None
         if previous_formatting:
@@ -126,7 +128,7 @@ class Serializer(Visitor):
         self,
         nodes: Iterable[AstNode],
         delimitters: str,
-        result: List[str],
+        result: list[str],
     ) -> Iterator[AstNode]:
         """Helper for serializing collections."""
         result.append(delimitters[0])
@@ -138,20 +140,20 @@ class Serializer(Visitor):
             yield node
         result.append(delimitters[-1])
 
-    def key_value(self, node: Any, sep: str, result: List[str]) -> Iterator[AstNode]:
+    def key_value(self, node: Any, sep: str, result: list[str]) -> Iterator[AstNode]:
         """Helper for serializing key-value pairs."""
         yield node.key
         result.append(sep)
         yield node.value
 
     @rule(AstNode)
-    def unserializable(self, node: AstNode, result: List[str]):
+    def unserializable(self, node: AstNode, result: list[str]):
         raise ValueError(f"Couldn't serialize {type(node)!r} node.")
 
     @rule(AstVector2)
     @rule(AstVector3)
     @rule(AstParticleParameters)
-    def aggregate(self, node: AstNode, result: List[str]):
+    def aggregate(self, node: AstNode, result: list[str]):
         sep = ""
         for child in node:
             result.append(sep)
@@ -159,7 +161,7 @@ class Serializer(Visitor):
             yield child
 
     @rule(AstRoot)
-    def root(self, node: AstRoot, result: List[str]):
+    def root(self, node: AstRoot, result: list[str]):
         pos = 0
         source = (
             self.formatting.layout == "preserve"
@@ -168,7 +170,7 @@ class Serializer(Visitor):
 
         for command in node.commands:
             if source:
-                end_pos = max(command.location.pos, pos + 1)
+                end_pos = max(command.location.pos, pos)
                 if pos > -1:
                     if fill := source[pos:end_pos]:
                         result.append(self.regex_comments.sub(r"\1", fill))
@@ -185,7 +187,7 @@ class Serializer(Visitor):
                 result.append(self.regex_comments.sub(r"\1", fill))
 
     @rule(AstCommand)
-    def command(self, node: AstCommand, result: List[str]):
+    def command(self, node: AstCommand, result: list[str]):
         prototype = self.spec.prototypes[node.identifier]
         argument_index = 0
 
@@ -201,27 +203,27 @@ class Serializer(Visitor):
                 argument_index += 1
 
     @rule(AstLiteral)
-    def literal(self, node: AstLiteral, result: List[str]):
+    def literal(self, node: AstLiteral, result: list[str]):
         result.append(node.value)
 
     @rule(AstString)
-    def string(self, node: AstString, result: List[str]):
+    def string(self, node: AstString, result: list[str]):
         result.append(self.quote_helper.quote_string(node.value))
 
     @rule(AstBool)
-    def bool(self, node: AstBool, result: List[str]):
+    def bool(self, node: AstBool, result: list[str]):
         result.append(str(node.value).lower())
 
     @rule(AstNumber)
-    def number(self, node: AstNumber, result: List[str]):
+    def number(self, node: AstNumber, result: list[str]):
         result.append(number_to_string(node.value))
 
     @rule(AstUUID)
-    def uuid(self, node: AstUUID, result: List[str]):
+    def uuid(self, node: AstUUID, result: list[str]):
         result.append(str(node.value))
 
     @rule(AstCoordinate)
-    def coordinate(self, node: AstCoordinate, result: List[str]):
+    def coordinate(self, node: AstCoordinate, result: list[str]):
         if node.type == "relative":
             result.append("~")
             if node.value == 0:
@@ -233,7 +235,7 @@ class Serializer(Visitor):
         result.append(number_to_string(node.value))
 
     @rule(AstJson)
-    def json(self, node: AstJson, result: List[str]):
+    def json(self, node: AstJson, result: list[str]):
         result.append(
             json.dumps(
                 node.evaluate(),
@@ -245,18 +247,18 @@ class Serializer(Visitor):
         )
 
     @rule(AstNbtValue)
-    def nbt_value(self, node: AstNbtValue, result: List[str]):
+    def nbt_value(self, node: AstNbtValue, result: list[str]):
         if isinstance(node.value, str):
             result.append(self.nbt_quote_helper.quote_string(node.value))
         else:
             result.append(node.evaluate().snbt(compact=self.formatting.nbt_compact))
 
     @rule(AstNbtBool)
-    def nbt_bool(self, node: AstNbtBool, result: List[str]):
+    def nbt_bool(self, node: AstNbtBool, result: list[str]):
         result.append("true" if node.value else "false")
 
     @rule(AstNbtList)
-    def nbt_list(self, node: AstNbtList, result: List[str]):
+    def nbt_list(self, node: AstNbtList, result: list[str]):
         result.append("[")
         comma = "," if self.formatting.nbt_compact else ", "
         sep = ""
@@ -267,14 +269,14 @@ class Serializer(Visitor):
         result.append("]")
 
     @rule(AstNbtCompoundKey)
-    def nbt_compound_key(self, node: AstNbtCompoundKey, result: List[str]):
+    def nbt_compound_key(self, node: AstNbtCompoundKey, result: list[str]):
         if UNQUOTED_COMPOUND_KEY.match(node.value):
             result.append(node.value)
         else:
             result.append(self.nbt_quote_helper.quote_string(node.value))
 
     @rule(AstNbtCompound)
-    def nbt_compound(self, node: AstNbtCompound, result: List[str]):
+    def nbt_compound(self, node: AstNbtCompound, result: list[str]):
         result.append("{")
         comma, colon = (",", ":") if self.formatting.nbt_compact else (", ", ": ")
         sep = ""
@@ -291,8 +293,8 @@ class Serializer(Visitor):
     @rule(AstNbtLongArray)
     def nbt_array(
         self,
-        node: Union[AstNbtByteArray, AstNbtIntArray, AstNbtLongArray],
-        result: List[str],
+        node: AstNbtByteArray | AstNbtIntArray | AstNbtLongArray,
+        result: list[str],
     ):
         result.append("[")
         result.append(node.array_prefix)
@@ -307,15 +309,15 @@ class Serializer(Visitor):
         result.append("]")
 
     @rule(AstResourceLocation)
-    def resource_location(self, node: AstResourceLocation, result: List[str]):
+    def resource_location(self, node: AstResourceLocation, result: list[str]):
         result.append(node.get_value())
 
     @rule(AstBlockState)
-    def block_state(self, node: AstBlockState, result: List[str]):
+    def block_state(self, node: AstBlockState, result: list[str]):
         yield from self.key_value(node, "=", result)
 
     @rule(AstBlock)
-    def block(self, node: AstBlock, result: List[str]):
+    def block(self, node: AstBlock, result: list[str]):
         yield node.identifier
         if node.block_states:
             yield from self.collection(node.block_states, "[]", result)
@@ -323,12 +325,12 @@ class Serializer(Visitor):
             yield node.data_tags
 
     @rule(AstItemComponent)
-    def item_component(self, node: AstItemComponent, result: List[str]):
+    def item_component(self, node: AstItemComponent, result: list[str]):
         yield from self.key_value(node, "=", result)
 
     @rule(AstItemRemovedDefaultComponent)
     def item_removed_default_component(
-        self, node: AstItemRemovedDefaultComponent, result: List[str]
+        self, node: AstItemRemovedDefaultComponent, result: list[str]
     ):
         result.append("!")
         yield node.key
@@ -337,8 +339,8 @@ class Serializer(Visitor):
     @rule(AstItemPredicateTestPredicate)
     def item_test(
         self,
-        node: Union[AstItemPredicateTestComponent, AstItemPredicateTestPredicate],
-        result: List[str],
+        node: AstItemPredicateTestComponent | AstItemPredicateTestPredicate,
+        result: list[str],
     ):
         if node.inverted:
             result.append("!")
@@ -352,7 +354,7 @@ class Serializer(Visitor):
             yield node.value
 
     @rule(AstItemPredicateAlternatives)
-    def item_alternatives(self, node: AstItemPredicateAlternatives, result: List[str]):
+    def item_alternatives(self, node: AstItemPredicateAlternatives, result: list[str]):
         pipe = "|" if self.formatting.cmd_compact else " | "
         sep = ""
         for test_node in node.alternatives:
@@ -362,7 +364,7 @@ class Serializer(Visitor):
 
     @rule(AstItemStack)
     @rule(AstItemPredicate)
-    def item(self, node: Union[AstItemStack, AstItemPredicate], result: List[str]):
+    def item(self, node: AstItemStack | AstItemPredicate, result: list[str]):
         yield node.identifier
         if node.arguments:
             yield from self.collection(node.arguments, "[]", result)
@@ -370,7 +372,7 @@ class Serializer(Visitor):
             yield node.data_tags
 
     @rule(AstRange)
-    def range(self, node: AstRange, result: List[str]):
+    def range(self, node: AstRange, result: list[str]):
         if node.exact:
             result.append(number_to_string(node.value))
         else:
@@ -381,7 +383,7 @@ class Serializer(Visitor):
                 result.append(number_to_string(node.max))
 
     @rule(AstTime)
-    def time(self, node: AstTime, result: List[str]):
+    def time(self, node: AstTime, result: list[str]):
         result.append(number_to_string(node.value))
 
         if node.unit == "day":
@@ -391,18 +393,18 @@ class Serializer(Visitor):
 
     @rule(AstSelectorScoreMatch)
     @rule(AstSelectorAdvancementPredicateMatch)
-    def selector_argument_key_value(self, node: AstNode, result: List[str]):
+    def selector_argument_key_value(self, node: AstNode, result: list[str]):
         yield from self.key_value(node, "=", result)
 
     @rule(AstSelectorScores)
-    def selector_scores(self, node: AstSelectorScores, result: List[str]):
+    def selector_scores(self, node: AstSelectorScores, result: list[str]):
         yield from self.collection(node.scores, "{}", result)
 
     @rule(AstSelectorAdvancementMatch)
     def selector_advancement_match(
         self,
         node: AstSelectorAdvancementMatch,
-        result: List[str],
+        result: list[str],
     ):
         yield node.key
         result.append("=")
@@ -412,11 +414,11 @@ class Serializer(Visitor):
             yield node.value
 
     @rule(AstSelectorAdvancements)
-    def selector_advancements(self, node: AstSelectorAdvancements, result: List[str]):
+    def selector_advancements(self, node: AstSelectorAdvancements, result: list[str]):
         yield from self.collection(node.advancements, "{}", result)
 
     @rule(AstSelectorArgument)
-    def selector_argument(self, node: AstSelectorArgument, result: List[str]):
+    def selector_argument(self, node: AstSelectorArgument, result: list[str]):
         yield node.key
         result.append("=")
         if node.inverted:
@@ -425,32 +427,32 @@ class Serializer(Visitor):
             yield node.value
 
     @rule(AstSelector)
-    def selector(self, node: AstSelector, result: List[str]):
+    def selector(self, node: AstSelector, result: list[str]):
         result.append("@")
         result.append(node.variable)
         if node.arguments:
             yield from self.collection(node.arguments, "[]", result)
 
     @rule(AstMessage)
-    def message(self, node: AstMessage, result: List[str]):
+    def message(self, node: AstMessage, result: list[str]):
         yield from node.fragments
 
     @rule(AstNbtPathKey)
-    def nbt_path_key(self, node: AstNbtPathKey, result: List[str]):
+    def nbt_path_key(self, node: AstNbtPathKey, result: list[str]):
         value = self.quote_helper.quote_string(node.value)
         if "." in value and not value.startswith(('"', "'")):
             value = f'"{value}"'
         result.append(value)
 
     @rule(AstNbtPathSubscript)
-    def nbt_path_subscript(self, node: AstNbtPathSubscript, result: List[str]):
+    def nbt_path_subscript(self, node: AstNbtPathSubscript, result: list[str]):
         result.append("[")
         if node.index:
             yield node.index
         result.append("]")
 
     @rule(AstNbtPath)
-    def nbt_path(self, node: AstNbtPath, result: List[str]):
+    def nbt_path(self, node: AstNbtPath, result: list[str]):
         sep = ""
         for component in node.components:
             if isinstance(component, AstNbtPathKey):
@@ -459,7 +461,7 @@ class Serializer(Visitor):
             yield component
 
     @rule(AstParticle)
-    def particle(self, node: AstParticle, result: List[str]):
+    def particle(self, node: AstParticle, result: list[str]):
         yield node.name
         if node.parameters:
             if not isinstance(node.parameters, AstNbtCompound):
@@ -467,16 +469,16 @@ class Serializer(Visitor):
             yield node.parameters
 
     @rule(AstMacroLine)
-    def macro_line(self, node: AstMacroLine, result: List[str]):
+    def macro_line(self, node: AstMacroLine, result: list[str]):
         result.append("$")
         yield from node.arguments
 
     @rule(AstMacroLineText)
-    def macro_line_text(self, node: AstMacroLineText, result: List[str]):
+    def macro_line_text(self, node: AstMacroLineText, result: list[str]):
         result.append(node.value)
 
     @rule(AstMacroLineVariable)
-    def macro_line_variable(self, node: AstMacroLineVariable, result: List[str]):
+    def macro_line_variable(self, node: AstMacroLineVariable, result: list[str]):
         result.append("$(")
         result.append(node.value)
         result.append(")")

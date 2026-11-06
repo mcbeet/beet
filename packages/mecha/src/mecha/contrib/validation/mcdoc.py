@@ -1,86 +1,76 @@
 __all__ = [
-    "McdocNode",
-    "McdocChildren",
-    "McdocDocComment",
-    "McdocPrelim",
-    "McdocBoolean",
-    "McdocInteger",
-    "McdocFloat",
-    "McdocTypedNumber",
-    "McdocIntegerRange",
-    "McdocFloatRange",
-    "McdocString",
-    "McdocResourceLocation",
-    "McdocIdentifier",
-    "McdocPath",
-    "McdocPathSegment",
-    "McdocSuper",
-    "McdocType",
     "McDocUnattributedType",
-    "McdocTypeModifier",
+    "Mcdoc",
+    "McdocAccessor",
     "McdocAnyType",
+    "McdocAttribute",
+    "McdocAttributeTree",
+    "McdocAttributeTreeName",
+    "McdocAttributeTreeNamedValue",
+    "McdocAttributeValue",
+    "McdocBoolean",
     "McdocBooleanType",
-    "McdocStringType",
-    "McdocNumericType",
-    "McdocPrimitiveArrayType",
-    "McdocListType",
-    "McdocTupleType",
+    "McdocChildren",
+    "McdocDispatchStatement",
+    "McdocDispatcherType",
+    "McdocDocComment",
+    "McdocDynamicIndex",
+    "McdocDynamicKey",
     "McdocEnum",
     "McdocEnumField",
     "McdocEnumValue",
+    "McdocFallbackIndexKey",
+    "McdocFloat",
+    "McdocFloatRange",
+    "McdocIdentifier",
+    "McdocIndex",
+    "McdocIndexBody",
+    "McdocInteger",
+    "McdocIntegerRange",
+    "McdocItem",
+    "McdocKeyIndexKey",
+    "McdocListType",
+    "McdocNode",
+    "McdocNoneIndexKey",
+    "McdocNumericType",
+    "McdocParentIndexKey",
+    "McdocPath",
+    "McdocPathSegment",
+    "McdocPrelim",
+    "McdocPrimitiveArrayType",
+    "McdocReferenceType",
+    "McdocResourceLocation",
+    "McdocSpread",
+    "McdocStaticIndex",
+    "McdocString",
+    "McdocStringType",
     "McdocStruct",
     "McdocStructField",
     "McdocStructKey",
-    "McdocDynamicKey",
-    "McdocSpread",
-    "McdocReferenceType",
-    "McdocDispatcherType",
-    "McdocUnionType",
-    "McdocIndexBody",
-    "McdocIndex",
-    "McdocStaticIndex",
-    "McdocFallbackIndexKey",
-    "McdocNoneIndexKey",
-    "McdocUnknownIndexKey",
-    "McdocDynamicIndex",
-    "McdocAccessor",
-    "McdocKeyIndexKey",
-    "McdocParentIndexKey",
-    "McdocTypeArgBlock",
-    "Mcdoc",
-    "McdocItem",
+    "McdocSuper",
+    "McdocTupleType",
+    "McdocType",
     "McdocTypeAlias",
+    "McdocTypeArgBlock",
+    "McdocTypeModifier",
+    "McdocTypedNumber",
+    "McdocUnionType",
+    "McdocUnknownIndexKey",
     "McdocUseStatement",
-    "McdocDispatchStatement",
-    "McdocAttribute",
-    "McdocAttributeValue",
-    "McdocAttributeTree",
-    "McdocAttributeTreeNamedValue",
-    "McdocAttributeTreeName",
     "parse_mcdoc",
 ]
 
+from collections.abc import Callable, Iterator
 from contextlib import contextmanager
 from dataclasses import dataclass, replace
-from typing import (
-    Callable,
-    Iterator,
-    List,
-    Literal,
-    Optional,
-    Set,
-    TypeAlias,
-    TypeVar,
-    Union,
-)
+from typing import Literal
+
+from tokenstream import InvalidSyntax, TokenPattern, TokenStream, set_location
 
 from beet.core.utils import required_field
-from tokenstream import InvalidSyntax, TokenPattern, TokenStream, set_location
 
 from mecha import AbstractChildren, AbstractNode
 from mecha.utils import QuoteHelper
-
-McdocNodeType = TypeVar("McdocNodeType", bound="McdocNode", covariant=True)
 
 PATTERN_INTEGER: str = r"[-+]?[1-9][0-9]*|0"
 PATTERN_FLOAT: str = r"[-+]?(?:[0-9]*\.[0-9]+|[0-9]+)(?:[eE][-+]?[0-9]+)?"
@@ -93,7 +83,7 @@ PATTERN_RESOURCE_LOCATION: str = r"[a-z0-9_.-]*:(?!:)[a-z0-9_.-]*(?:/[a-z0-9_.-]
 PATTERN_IDENTIFIER: str = r"[a-zA-Z0-9_]+"
 
 
-RESERVED_WORDS: Set[str] = {
+RESERVED_WORDS: set[str] = {
     "any",
     "boolean",
     "byte",
@@ -126,14 +116,14 @@ MCDOC_QUOTE_HELPER: QuoteHelper = QuoteHelper(
 class McdocNode(AbstractNode):
     """Base class for mcdoc nodes."""
 
-    def __iter__(self) -> Iterator["McdocNode"]:
+    def __iter__(self) -> Iterator[McdocNode]:
         return super().__iter__()  # pyright: ignore[reportReturnType]
 
-    def walk(self) -> Iterator["McdocNode"]:
+    def walk(self) -> Iterator[McdocNode]:
         return super().walk()  # pyright: ignore[reportReturnType]
 
 
-class McdocChildren(AbstractChildren[McdocNodeType]):
+class McdocChildren[McdocNodeType: McdocNode](AbstractChildren[McdocNodeType]):
     """Specialized tuple subclass for holding multiple child mcdoc nodes."""
 
 
@@ -149,7 +139,7 @@ class McdocPrelim(McdocNode):
     """Mcdoc prelim node."""
 
     doc_comments: McdocChildren[McdocDocComment] = required_field()
-    attributes: McdocChildren["McdocAttribute"] = required_field()
+    attributes: McdocChildren[McdocAttribute] = required_field()
 
 
 @dataclass(frozen=True, slots=True)
@@ -177,7 +167,7 @@ class McdocFloat(McdocNode):
 class McdocTypedNumber(McdocNode):
     """Mcdoc typed number node."""
 
-    value: Union[int, float] = required_field()
+    value: int | float = required_field()
     type: Literal["byte", "short", "int", "long", "float", "double"] = required_field()
 
 
@@ -185,18 +175,18 @@ class McdocTypedNumber(McdocNode):
 class McdocIntegerRange(McdocNode):
     """Mcdoc integer range node."""
 
-    left: Optional[int] = required_field()
+    left: int | None = required_field()
     delimiter: Literal["..", "..<", "<..", "<..<"] = required_field()
-    right: Optional[int] = required_field()
+    right: int | None = required_field()
 
 
 @dataclass(frozen=True, slots=True)
 class McdocFloatRange(McdocNode):
     """Mcdoc float range node."""
 
-    left: Optional[float] = required_field()
+    left: float | None = required_field()
     delimiter: Literal["..", "..<", "<..", "<..<"] = required_field()
-    right: Optional[float] = required_field()
+    right: float | None = required_field()
 
 
 @dataclass(frozen=True, slots=True)
@@ -225,10 +215,10 @@ class McdocPath(McdocNode):
     """Mcdoc path node."""
 
     absolute: bool = required_field()
-    segments: McdocChildren["McdocPathSegment"] = required_field()
+    segments: McdocChildren[McdocPathSegment] = required_field()
 
 
-McdocPathSegment: TypeAlias = Union[McdocIdentifier, "McdocSuper"]
+type McdocPathSegment = McdocIdentifier | McdocSuper
 
 
 @dataclass(frozen=True, slots=True)
@@ -240,30 +230,30 @@ class McdocSuper(McdocNode):
 class McdocType(McdocNode):
     """Mcdoc type node."""
 
-    attributes: McdocChildren["McdocAttribute"] = required_field()
-    unattributed_type: "McDocUnattributedType" = required_field()
-    modifiers: McdocChildren["McdocTypeModifier"] = required_field()
+    attributes: McdocChildren[McdocAttribute] = required_field()
+    unattributed_type: McDocUnattributedType = required_field()
+    modifiers: McdocChildren[McdocTypeModifier] = required_field()
 
 
-McDocUnattributedType: TypeAlias = Union[
-    "McdocAnyType",
-    "McdocBooleanType",
-    "McdocStringType",
-    McdocBoolean,
-    McdocString,
-    McdocTypedNumber,
-    "McdocNumericType",
-    "McdocPrimitiveArrayType",
-    "McdocListType",
-    "McdocTupleType",
-    "McdocEnum",
-    "McdocStruct",
-    "McdocReferenceType",
-    "McdocDispatcherType",
-    "McdocUnionType",
-]
+type McDocUnattributedType = (
+    McdocAnyType
+    | McdocBooleanType
+    | McdocStringType
+    | McdocBoolean
+    | McdocString
+    | McdocTypedNumber
+    | McdocNumericType
+    | McdocPrimitiveArrayType
+    | McdocListType
+    | McdocTupleType
+    | McdocEnum
+    | McdocStruct
+    | McdocReferenceType
+    | McdocDispatcherType
+    | McdocUnionType
+)
 
-McdocTypeModifier: TypeAlias = Union["McdocIndexBody", "McdocTypeArgBlock"]
+type McdocTypeModifier = McdocIndexBody | McdocTypeArgBlock
 
 
 @dataclass(frozen=True, slots=True)
@@ -280,7 +270,7 @@ class McdocBooleanType(McdocNode):
 class McdocStringType(McdocNode):
     """Mcdoc string type node."""
 
-    length: Optional[McdocIntegerRange] = None
+    length: McdocIntegerRange | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -288,7 +278,7 @@ class McdocNumericType(McdocNode):
     """Mcdoc numeric type node."""
 
     name: Literal["byte", "short", "int", "long", "float", "double"] = required_field()
-    constraint: Optional[McdocIntegerRange] = None
+    constraint: McdocIntegerRange | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -296,8 +286,8 @@ class McdocPrimitiveArrayType(McdocNode):
     """Mcdoc primitive array type node."""
 
     name: Literal["byte", "int", "long"] = required_field()
-    constraint: Optional[McdocIntegerRange] = None
-    length: Optional[McdocIntegerRange] = None
+    constraint: McdocIntegerRange | None = None
+    length: McdocIntegerRange | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -305,7 +295,7 @@ class McdocListType(McdocNode):
     """Mcdoc list type node."""
 
     element: McdocType = required_field()
-    length: Optional[McdocIntegerRange] = None
+    length: McdocIntegerRange | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -329,8 +319,8 @@ class McdocEnum(McdocNode):
         "float",
         "double",
     ] = required_field()
-    identifier: Optional[McdocIdentifier] = required_field()
-    fields: McdocChildren["McdocEnumField"] = required_field()
+    identifier: McdocIdentifier | None = required_field()
+    fields: McdocChildren[McdocEnumField] = required_field()
 
 
 @dataclass(frozen=True, slots=True)
@@ -339,10 +329,10 @@ class McdocEnumField(McdocNode):
 
     prelim: McdocPrelim = required_field()
     identifier: McdocIdentifier = required_field()
-    value: "McdocEnumValue" = required_field()
+    value: McdocEnumValue = required_field()
 
 
-McdocEnumValue: TypeAlias = Union[McdocTypedNumber, McdocString]
+type McdocEnumValue = McdocTypedNumber | McdocString
 
 
 @dataclass(frozen=True, slots=True)
@@ -350,8 +340,8 @@ class McdocStruct(McdocNode):
     """Mcdoc struct node."""
 
     prelim: McdocPrelim = required_field()
-    identifier: Optional[McdocIdentifier] = required_field()
-    fields: McdocChildren[Union["McdocStructField", "McdocSpread"]] = required_field()
+    identifier: McdocIdentifier | None = required_field()
+    fields: McdocChildren[McdocStructField | McdocSpread] = required_field()
 
 
 @dataclass(frozen=True, slots=True)
@@ -359,12 +349,12 @@ class McdocStructField(McdocNode):
     """Mcdoc struct field node."""
 
     prelim: McdocPrelim = required_field()
-    key: "McdocStructKey" = required_field()
+    key: McdocStructKey = required_field()
     optional: bool = required_field()
     type: McdocType = required_field()
 
 
-McdocStructKey: TypeAlias = Union[McdocString, McdocIdentifier, "McdocDynamicKey"]
+type McdocStructKey = McdocString | McdocIdentifier | McdocDynamicKey
 
 
 @dataclass(frozen=True, slots=True)
@@ -378,7 +368,7 @@ class McdocDynamicKey(McdocNode):
 class McdocSpread(McdocNode):
     """Mcdoc spread node."""
 
-    attributes: McdocChildren["McdocAttribute"] = required_field()
+    attributes: McdocChildren[McdocAttribute] = required_field()
     type: McdocType = required_field()
 
 
@@ -394,7 +384,7 @@ class McdocDispatcherType(McdocNode):
     """Mcdoc dispatcher type node."""
 
     resource_location: McdocResourceLocation = required_field()
-    indices: McdocChildren["McdocIndex"] = required_field()
+    indices: McdocChildren[McdocIndex] = required_field()
 
 
 @dataclass(frozen=True, slots=True)
@@ -408,22 +398,19 @@ class McdocUnionType(McdocNode):
 class McdocIndexBody(McdocNode):
     """Mcdoc index body node."""
 
-    indices: McdocChildren["McdocIndex"] = required_field()
+    indices: McdocChildren[McdocIndex] = required_field()
 
 
-McdocIndex: TypeAlias = Union[
-    "McdocStaticIndex",
-    "McdocDynamicIndex",
-]
+type McdocIndex = McdocStaticIndex | McdocDynamicIndex
 
-McdocStaticIndex: TypeAlias = Union[
-    "McdocFallbackIndexKey",
-    "McdocNoneIndexKey",
-    "McdocUnknownIndexKey",
-    McdocIdentifier,
-    McdocString,
-    McdocResourceLocation,
-]
+type McdocStaticIndex = (
+    McdocFallbackIndexKey
+    | McdocNoneIndexKey
+    | McdocUnknownIndexKey
+    | McdocIdentifier
+    | McdocString
+    | McdocResourceLocation
+)
 
 
 @dataclass(frozen=True, slots=True)
@@ -445,15 +432,12 @@ class McdocUnknownIndexKey(McdocNode):
 class McdocDynamicIndex(McdocNode):
     """Mcdoc dynamic index node."""
 
-    accessors: McdocChildren["McdocAccessor"] = required_field()
+    accessors: McdocChildren[McdocAccessor] = required_field()
 
 
-McdocAccessor: TypeAlias = Union[
-    "McdocKeyIndexKey",
-    "McdocParentIndexKey",
-    McdocIdentifier,
-    McdocString,
-]
+type McdocAccessor = (
+    McdocKeyIndexKey | McdocParentIndexKey | McdocIdentifier | McdocString
+)
 
 
 @dataclass(frozen=True, slots=True)
@@ -477,16 +461,16 @@ class McdocTypeArgBlock(McdocNode):
 class Mcdoc(McdocNode):
     """Mcdoc node."""
 
-    items: McdocChildren["McdocItem"] = required_field()
+    items: McdocChildren[McdocItem] = required_field()
 
 
-McdocItem: TypeAlias = Union[
-    McdocStruct,
-    McdocEnum,
-    "McdocTypeAlias",
-    "McdocUseStatement",
-    "McdocDispatchStatement",
-]
+type McdocItem = (
+    McdocStruct
+    | McdocEnum
+    | McdocTypeAlias
+    | McdocUseStatement
+    | McdocDispatchStatement
+)
 
 
 @dataclass(frozen=True, slots=True)
@@ -504,16 +488,16 @@ class McdocUseStatement(McdocNode):
     """Mcdoc use statement node."""
 
     path: McdocPath = required_field()
-    alias: Optional[McdocIdentifier] = None
+    alias: McdocIdentifier | None = None
 
 
 @dataclass(frozen=True, slots=True)
 class McdocDispatchStatement(McdocNode):
     """Mcdoc dispatch statement node."""
 
-    attributes: McdocChildren["McdocAttribute"] = required_field()
+    attributes: McdocChildren[McdocAttribute] = required_field()
     resource_location: McdocResourceLocation = required_field()
-    indices: McdocChildren["McdocStaticIndex"] = required_field()
+    indices: McdocChildren[McdocStaticIndex] = required_field()
     parameters: McdocChildren[McdocIdentifier] = required_field()
     type: McdocType = required_field()
 
@@ -523,10 +507,10 @@ class McdocAttribute(McdocNode):
     """Mcdoc attribute node."""
 
     identifier: McdocIdentifier = required_field()
-    value: Optional["McdocAttributeValue"] = None
+    value: McdocAttributeValue | None = None
 
 
-McdocAttributeValue: TypeAlias = Union[McdocType, "McdocAttributeTree"]
+type McdocAttributeValue = McdocType | McdocAttributeTree
 
 
 @dataclass(frozen=True, slots=True)
@@ -535,18 +519,18 @@ class McdocAttributeTree(McdocNode):
 
     flavor: Literal["brace", "bracket", "curly"] = required_field()
     positional_values: McdocChildren[McdocAttributeValue] = required_field()
-    named_values: McdocChildren["McdocAttributeTreeNamedValue"] = required_field()
+    named_values: McdocChildren[McdocAttributeTreeNamedValue] = required_field()
 
 
 @dataclass(frozen=True, slots=True)
 class McdocAttributeTreeNamedValue(McdocNode):
     """Mcdoc attribute tree named value node."""
 
-    name: "McdocAttributeTreeName" = required_field()
+    name: McdocAttributeTreeName = required_field()
     value: McdocAttributeValue = required_field()
 
 
-McdocAttributeTreeName: TypeAlias = Union[McdocIdentifier, McdocString]
+type McdocAttributeTreeName = McdocIdentifier | McdocString
 
 
 @contextmanager
@@ -562,7 +546,7 @@ def parse_prelim(stream: TokenStream) -> McdocPrelim:
                 pass
 
             start = stream.peek()
-            doc_comments: List[McdocDocComment] = []
+            doc_comments: list[McdocDocComment] = []
 
             for token in stream.collect("doc_comment"):
                 node = McdocDocComment(text=token.value)
@@ -689,7 +673,7 @@ def parse_path(stream: TokenStream) -> McdocPath:
         start = stream.get("delimiter")
 
         absolute = bool(start)
-        segments: List[McdocPathSegment] = []
+        segments: list[McdocPathSegment] = []
 
         while True:
             if token := stream.get("super"):
@@ -709,14 +693,14 @@ def parse_type(stream: TokenStream) -> McdocType:
         attributes = parse_attributes(stream)
 
         unattributed_type: McDocUnattributedType = parse_unattributed_type(stream)
-        modifiers: List[McdocTypeModifier] = []
+        modifiers: list[McdocTypeModifier] = []
 
         for open_bracket, open_angle in stream.collect(
             ("bracket", "["),
             ("angle", "<"),
         ):
             if open_bracket:
-                indices: List[McdocIndex] = []
+                indices: list[McdocIndex] = []
                 close_bracket = expect_sequence(
                     stream,
                     indices,
@@ -732,7 +716,7 @@ def parse_type(stream: TokenStream) -> McdocType:
                 modifiers.append(set_location(node, open_bracket, close_bracket))
 
             elif open_angle:
-                arguments: List[McdocType] = []
+                arguments: list[McdocType] = []
                 close_angle = expect_sequence(
                     stream,
                     arguments,
@@ -892,7 +876,7 @@ def parse_enum(stream: TokenStream) -> McdocEnum:
         with stream.alternative():
             identifier = parse_identifier(stream)
 
-        fields: List[McdocEnumField] = []
+        fields: list[McdocEnumField] = []
         stream.expect(("curly", "{"))
         close_curly = expect_sequence(
             stream,
@@ -932,7 +916,7 @@ def parse_struct(stream: TokenStream) -> McdocStruct:
         with stream.alternative():
             identifier = parse_identifier(stream)
 
-        fields: List[Union[McdocStructField, McdocSpread]] = []
+        fields: list[McdocStructField | McdocSpread] = []
         stream.expect(("curly", "{"))
         close_curly = expect_sequence(
             stream,
@@ -990,7 +974,7 @@ def parse_dispatcher_type(stream: TokenStream) -> McdocDispatcherType:
         resource_location = parse_resource_location(stream)
 
         open_bracket = stream.expect(("bracket", "["))
-        indices: List[McdocIndex] = []
+        indices: list[McdocIndex] = []
         close_bracket = expect_sequence(
             stream,
             indices,
@@ -1012,7 +996,7 @@ def parse_dispatcher_type(stream: TokenStream) -> McdocDispatcherType:
 def parse_union_type(stream: TokenStream) -> McdocUnionType:
     with stream.syntax(brace=r"\(|\)", pipe=r"\|"):
         open_brace = stream.expect(("brace", "("))
-        types: List[McdocType] = []
+        types: list[McdocType] = []
         close_brace = expect_sequence(
             stream,
             types,
@@ -1047,7 +1031,7 @@ def parse_dynamic_index(stream: TokenStream) -> McdocDynamicIndex:
     with stream.syntax(bracket=r"\[|\]", dot=r"\."):
         open_bracket = stream.expect(("bracket", "["))
 
-        accessors: List[McdocAccessor] = [parse_accessor(stream)]
+        accessors: list[McdocAccessor] = [parse_accessor(stream)]
         for _ in stream.collect("dot"):
             accessors.append(parse_accessor(stream))
 
@@ -1075,7 +1059,7 @@ def parse_accessor(stream: TokenStream) -> McdocAccessor:
 
 def parse_mcdoc(stream: TokenStream) -> Mcdoc:
     with ignore_comments(stream):
-        items: List[McdocItem] = []
+        items: list[McdocItem] = []
 
         while stream.peek():
             item = choose_alternative(
@@ -1103,7 +1087,7 @@ def parse_type_alias(stream: TokenStream) -> McdocTypeAlias:
         stream.expect("type")
         identifier = parse_identifier(stream)
 
-        parameters: List[McdocIdentifier] = []
+        parameters: list[McdocIdentifier] = []
         if stream.get(("angle", "<")):
             expect_sequence(
                 stream,
@@ -1152,7 +1136,7 @@ def parse_dispatch_statement(stream: TokenStream) -> McdocDispatchStatement:
         resource_location = parse_resource_location(stream)
 
         open_bracket = stream.expect(("bracket", "["))
-        indices: List[McdocStaticIndex] = []
+        indices: list[McdocStaticIndex] = []
         close_bracket = expect_sequence(
             stream,
             indices,
@@ -1164,7 +1148,7 @@ def parse_dispatch_statement(stream: TokenStream) -> McdocDispatchStatement:
             exc = InvalidSyntax("Expected at least one index.")
             raise set_location(exc, open_bracket, close_bracket)
 
-        parameters: List[McdocIdentifier] = []
+        parameters: list[McdocIdentifier] = []
         if stream.get(("angle", "<")):
             expect_sequence(
                 stream,
@@ -1189,7 +1173,7 @@ def parse_dispatch_statement(stream: TokenStream) -> McdocDispatchStatement:
 
 def parse_attributes(stream: TokenStream) -> McdocChildren[McdocAttribute]:
     with stream.syntax(attribute=r"#\[|\]", equal=r"="):
-        attributes: List[McdocAttribute] = []
+        attributes: list[McdocAttribute] = []
 
         for open_attribute in stream.collect(("attribute", "#[")):
             identifier = parse_identifier(stream)
@@ -1225,8 +1209,8 @@ def parse_attribute_tree(stream: TokenStream) -> McdocAttributeTree:
             else ("curly", "}")
         )
 
-        positional_values: List[McdocAttributeValue] = []
-        named_values: List[McdocAttributeTreeNamedValue] = []
+        positional_values: list[McdocAttributeValue] = []
+        named_values: list[McdocAttributeTreeNamedValue] = []
 
         for _ in stream.peek_until(close_pattern):
             value = choose_alternative(
@@ -1271,9 +1255,9 @@ def parse_attribute_tree_named_value(
         return set_location(node, name, value)
 
 
-def expect_sequence(
+def expect_sequence[McdocNodeType: McdocNode](
     stream: TokenStream,
-    nodes: List[McdocNodeType],
+    nodes: list[McdocNodeType],
     parser: Callable[[TokenStream], McdocNodeType],
     until: TokenPattern,
     separator: str = r",",
@@ -1287,7 +1271,7 @@ def expect_sequence(
         return stream.current
 
 
-def choose_alternative(
+def choose_alternative[McdocNodeType: McdocNode](
     stream: TokenStream,
     *args: Callable[[TokenStream], McdocNodeType],
 ) -> McdocNodeType:

@@ -9,7 +9,7 @@ __all__ = [
 import json
 import re
 from dataclasses import dataclass
-from typing import Any, ClassVar, Optional, cast
+from typing import Any, ClassVar, cast
 
 from beet import Context, JsonFile, NamespaceFileScope
 from beet.core.utils import TextComponent
@@ -39,7 +39,7 @@ class MessageManager:
         self.ctx.require(self.cleanup)
         self.ctx.data.extend_namespace.append(Message)
 
-    def get(self, name: str, path: Optional[str] = None) -> TextComponent:
+    def get(self, name: str, path: str | None = None) -> TextComponent:
         """Retrieve a message."""
         message: Any = self.ctx.data[Message][name].data
 
@@ -51,7 +51,7 @@ class MessageManager:
 
         return message
 
-    def get_as_string(self, name: str, path: Optional[str] = None) -> str:
+    def get_as_string(self, name: str, path: str | None = None) -> str:
         """Retrieve a message and serialize it."""
         return json.dumps(self.get(name, path))
 

@@ -1,43 +1,43 @@
 __all__ = [
     "Atlas",
+    "Blockstate",
+    "Equipment",
+    "Font",
+    "FragmentShader",
+    "GlslShader",
+    "GlyphSizes",
+    "ItemModel",
+    "Language",
+    "Model",
+    "Particle",
+    "PostEffect",
     "ResourcePack",
     "ResourcePackNamespace",
-    "Blockstate",
-    "Model",
-    "Language",
-    "Font",
-    "GlyphSizes",
-    "TrueTypeFont",
-    "ShaderPost",
     "Shader",
-    "FragmentShader",
-    "VertexShader",
-    "GlslShader",
-    "Text",
-    "TextJson",
-    "TextureMcmeta",
-    "Texture",
+    "ShaderPost",
     "Sound",
     "SoundConfig",
-    "Particle",
-    "ItemModel",
+    "Text",
+    "TextJson",
+    "Texture",
+    "TextureMcmeta",
+    "TrueTypeFont",
+    "VertexShader",
     "WaypointStyle",
-    "PostEffect",
-    "Equipment",
 ]
 
 
+from collections.abc import Mapping
 from contextlib import suppress
 from copy import deepcopy
 from dataclasses import dataclass
-from typing import ClassVar, Dict, Optional, Type
-
-from beet.resources.pack_format_registry import PackFormatRegistryContainer
+from typing import ClassVar
 
 from PIL.Image import Image
 
 from beet.core.file import BinaryFile, BinaryFileContent, JsonFile, PngFile, TextFile
 from beet.core.utils import JsonDict, extra_field
+from beet.resources.pack_format_registry import PackFormatRegistryContainer
 
 from .base import (
     LATEST_MINECRAFT_VERSION,
@@ -82,8 +82,13 @@ class Language(JsonFile):
     scope: ClassVar[NamespaceFileScope] = ("lang",)
     extension: ClassVar[str] = ".json"
 
-    def merge(self, other: "Language") -> bool:  # pyright: ignore[reportIncompatibleMethodOverride]
-        self.data.update(other.data)
+    def merge(self, other: object) -> bool:
+        if isinstance(other, JsonFile):
+            other = other.data
+        if not isinstance(other, Mapping):
+            return False
+
+        self.data.update(other)
         return True
 
 
@@ -93,10 +98,15 @@ class Font(JsonFile):
     scope: ClassVar[NamespaceFileScope] = ("font",)
     extension: ClassVar[str] = ".json"
 
-    def merge(self, other: "Font") -> bool:  # pyright: ignore[reportIncompatibleMethodOverride]
+    def merge(self, other: object) -> bool:
+        if isinstance(other, JsonFile):
+            other = other.data
+        if not isinstance(other, Mapping):
+            return False
+
         providers = self.data.setdefault("providers", [])
 
-        for provider in other.data.get("providers", []):
+        for provider in other.get("providers", []):
             providers.append(deepcopy(provider))
         return True
 
@@ -183,12 +193,12 @@ class Texture(PngFile):
     """Class representing a texture."""
 
     content: BinaryFileContent[Image] = None
-    mcmeta: Optional[JsonDict] = extra_field(default=None)
+    mcmeta: JsonDict | None = extra_field(default=None)
 
     scope: ClassVar[NamespaceFileScope] = ("textures",)
     extension: ClassVar[str] = ".png"
 
-    def bind(self, pack: "ResourcePack", path: str):
+    def bind(self, pack: ResourcePack, path: str):
         super().bind(pack, path)
 
         if self.mcmeta is not None:
@@ -199,20 +209,20 @@ class Texture(PngFile):
 class Sound(BinaryFile):
     """Class representing a sound file."""
 
-    event: Optional[str] = extra_field(default=None)
-    subtitle: Optional[str] = extra_field(default=None)
-    replace: Optional[bool] = extra_field(default=None)
-    volume: Optional[float] = extra_field(default=None)
-    pitch: Optional[float] = extra_field(default=None)
-    weight: Optional[int] = extra_field(default=None)
-    stream: Optional[bool] = extra_field(default=None)
-    attenuation_distance: Optional[int] = extra_field(default=None)
-    preload: Optional[bool] = extra_field(default=None)
+    event: str | None = extra_field(default=None)
+    subtitle: str | None = extra_field(default=None)
+    replace: bool | None = extra_field(default=None)
+    volume: float | None = extra_field(default=None)
+    pitch: float | None = extra_field(default=None)
+    weight: int | None = extra_field(default=None)
+    stream: bool | None = extra_field(default=None)
+    attenuation_distance: int | None = extra_field(default=None)
+    preload: bool | None = extra_field(default=None)
 
     scope: ClassVar[NamespaceFileScope] = ("sounds",)
     extension: ClassVar[str] = ".ogg"
 
-    def bind(self, pack: "ResourcePack", path: str):
+    def bind(self, pack: ResourcePack, path: str):
         super().bind(pack, path)
 
         namespace, _, path = path.partition(":")
@@ -245,8 +255,13 @@ class Sound(BinaryFile):
 class SoundConfig(JsonFile):
     """Class representing the sounds.json configuration."""
 
-    def merge(self, other: "SoundConfig") -> bool:  # pyright: ignore[reportIncompatibleMethodOverride]
-        for key, other_event in other.data.items():
+    def merge(self, other: object) -> bool:
+        if isinstance(other, JsonFile):
+            other = other.data
+        if not isinstance(other, Mapping):
+            return False
+
+        for key, other_event in other.items():
             if other_event.get("replace"):
                 self.data[key] = deepcopy(other_event)
                 continue
@@ -277,23 +292,33 @@ class Atlas(JsonFile):
     scope: ClassVar[NamespaceFileScope] = ("atlases",)
     extension: ClassVar[str] = ".json"
 
-    def merge(self, other: "Atlas") -> bool:  # pyright: ignore[reportIncompatibleMethodOverride]
+    def merge(self, other: object) -> bool:
+        if isinstance(other, JsonFile):
+            other = other.data
+        if not isinstance(other, Mapping):
+            return False
+
         values = self.data.setdefault("sources", [])
 
-        for value in other.data.get("sources", []):
+        for value in other.get("sources", []):
             if value not in values:
                 values.append(deepcopy(value))
         return True
 
-    def append(self, other: "Atlas"):
+    def append(self, other: object):
         """Append values from another atlas."""
         self.merge(other)
 
-    def prepend(self, other: "Atlas"):
+    def prepend(self, other: object):
         """Prepend values from another atlas."""
+        if isinstance(other, JsonFile):
+            other = other.data
+        if not isinstance(other, Mapping):
+            return False
+
         values = self.data.setdefault("sources", [])
 
-        for value in other.data.get("sources", []):
+        for value in other.get("sources", []):
             if value not in values:
                 values.insert(0, deepcopy(value))
 
@@ -333,9 +358,7 @@ class ResourcePackNamespace(Namespace):
 
     directory = "assets"
 
-    sound_config: ExtraPin[Optional[SoundConfig]] = ExtraPin(
-        "sounds.json", default=None
-    )
+    sound_config: ExtraPin[SoundConfig | None] = ExtraPin("sounds.json", default=None)
 
     # fmt: off
     blockstates:      NamespacePin[Blockstate]     = NamespacePin(Blockstate)
@@ -363,7 +386,7 @@ class ResourcePackNamespace(Namespace):
     # fmt: on
 
     @classmethod
-    def get_extra_info(cls) -> Dict[str, Type[PackFile]]:
+    def get_extra_info(cls) -> dict[str, type[PackFile]]:
         return {**super().get_extra_info(), "sounds.json": SoundConfig}
 
 
@@ -378,7 +401,7 @@ class ResourcePack(Pack[ResourcePackNamespace]):
     )
     latest_pack_format = pack_format_registry[LATEST_MINECRAFT_VERSION]
 
-    language_config = McmetaPin[Dict[str, JsonDict]]("language", default_factory=dict)
+    language_config = McmetaPin[dict[str, JsonDict]]("language", default_factory=dict)
 
     # fmt: off
     blockstates:      NamespaceProxyDescriptor[Blockstate]     = NamespaceProxyDescriptor(Blockstate)

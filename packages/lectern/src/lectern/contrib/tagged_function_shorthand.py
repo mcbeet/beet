@@ -1,11 +1,11 @@
 __all__ = [
-    "tagged_function_shorthand",
     "TaggedFunctionDirective",
+    "tagged_function_shorthand",
 ]
 
 
+from collections.abc import Sequence
 from dataclasses import dataclass, replace
-from typing import Dict, Sequence, Type
 
 from beet import (
     Context,
@@ -24,7 +24,7 @@ from lectern import Document, Fragment, NamespacedResourceDirective
 
 
 class TaggedFunctionOptions(PluginOptions):
-    tags: Dict[str, ListOption[str]] = {}
+    tags: dict[str, ListOption[str]] = {}
 
 
 def beet_default(ctx: Context):
@@ -48,7 +48,7 @@ class TaggedFunctionDirective(NamespacedResourceDirective):
     tags: Sequence[str] = required_field()
     generate: Generator = required_field()
 
-    file_type: Type[NamespaceFile] = Function
+    file_type: type[NamespaceFile] = Function
 
     def __call__(self, fragment: Fragment, assets: ResourcePack, data: DataPack):
         if not fragment.arguments:

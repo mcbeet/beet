@@ -1,47 +1,30 @@
 __all__ = [
+    "Channel",
+    "Connection",
+    "MessageQueue",
     "Worker",
-    "WorkerThread",
     "WorkerError",
     "WorkerPool",
     "WorkerPoolHandle",
-    "MessageQueue",
-    "Channel",
-    "Connection",
+    "WorkerThread",
 ]
 
 
 import logging
+from collections.abc import Iterator
 from contextlib import ExitStack, contextmanager
 from dataclasses import dataclass, field
 from queue import Queue
 from threading import Thread
-from typing import (
-    Any,
-    Dict,
-    Generic,
-    Iterator,
-    Optional,
-    Protocol,
-    Set,
-    Tuple,
-    TypeVar,
-    Union,
-)
+from typing import Any, Protocol, Self
 
 from beet.core.error import BubbleException, WrappedException
 from beet.core.utils import SENTINEL_OBJ, Sentinel, format_obj, pop_traceback
 
-T = TypeVar("T")
-U = TypeVar("U")
-SendType = TypeVar("SendType")
-RecvType = TypeVar("RecvType")
-SelfType = TypeVar("SelfType")
-
-
 logger = logging.getLogger(__name__)
 
 
-class Worker(Protocol[SendType, RecvType]):
+class Worker[SendType, RecvType](Protocol):
     """Protocol for detecting workers.
 
     Workers can be arbitrary objects as long as they can be called with
@@ -49,7 +32,7 @@ class Worker(Protocol[SendType, RecvType]):
     clients.
     """
 
-    def __call__(self, connection: "Connection[SendType, RecvType]") -> Any: ...
+    def __call__(self, connection: Connection[SendType, RecvType]) -> Any: ...
 
 
 class WorkerError(WrappedException):
@@ -66,7 +49,7 @@ class WorkerError(WrappedException):
 
 
 @dataclass
-class MessageQueue(Generic[T]):
+class MessageQueue[T]:
     """Closeable threadsafe queue.
 
     This class is a small wrapper around the builtin Queue. The API is
@@ -75,7 +58,7 @@ class MessageQueue(Generic[T]):
     messages once the queue is closed.
     """
 
-    queue: "Queue[Union[T, Sentinel, BaseException]]" = field(default_factory=Queue)
+    queue: Queue[T | Sentinel | BaseException] = field(default_factory=Queue)
     closed: bool = False
 
     def send(self, message: T):
@@ -116,7 +99,7 @@ class MessageQueue(Generic[T]):
             raise message
         return message
 
-    def __enter__(self: SelfType) -> SelfType:
+    def __enter__(self) -> Self:
         return self
 
     def __exit__(self, *_):
@@ -124,7 +107,7 @@ class MessageQueue(Generic[T]):
 
 
 @dataclass
-class Channel(Generic[T, U]):
+class Channel[T, U]:
     """A bidirectional communication channel.
 
     Channels are meant to be created entangled with one another, meaning
@@ -169,14 +152,17 @@ class Channel(Generic[T, U]):
             self.close()
             raise
 
-    def __enter__(self: SelfType) -> SelfType:
+    def recv(self) -> T:
+        return next(self)
+
+    def __enter__(self) -> Self:
         return self
 
     def __exit__(self, *_):
         self.close()
 
     @classmethod
-    def entangled_pair(cls) -> Tuple["Channel[Any, Any]", "Channel[Any, Any]"]:
+    def entangled_pair(cls) -> tuple[Channel[Any, Any], Channel[Any, Any]]:
         """Return a pair of channels that can communicate with each other.
 
         Messages sent from one channel will be received by the other.
@@ -187,7 +173,7 @@ class Channel(Generic[T, U]):
 
 
 @dataclass
-class Connection(MessageQueue[Channel[T, U]]):
+class Connection[T, U](MessageQueue[Channel[T, U]]):
     """The connection that allows workers to interact with clients.
 
     The worker connection is a queue of channels. By iterating over the
@@ -199,7 +185,7 @@ class Connection(MessageQueue[Channel[T, U]]):
     """
 
     long_lived: bool = False
-    current_client: Optional[Channel[T, U]] = None
+    current_client: Channel[T, U] | None = None
 
     def __next__(self) -> Channel[T, U]:
         self.current_client = super().__next__()
@@ -211,7 +197,7 @@ class Connection(MessageQueue[Channel[T, U]]):
             client.close()
 
 
-class WorkerThread(Thread, Generic[T, U]):
+class WorkerThread[T, U](Thread):
     """The thread that runs the worker.
 
     Worker threads can be used as context managers. When exiting the
@@ -220,7 +206,7 @@ class WorkerThread(Thread, Generic[T, U]):
 
     func: Worker[T, U]
     connection: Connection[T, U]
-    exc: Optional[Exception]
+    exc: Exception | None
 
     def __init__(self, func: Worker[T, U], connection: Connection[T, U]):
         super().__init__()
@@ -243,12 +229,12 @@ class WorkerThread(Thread, Generic[T, U]):
         ):
             self.connection.current_client.throw(self.exc)
 
-    def join(self, timeout: Optional[float] = None):
+    def join(self, timeout: float | None = None):
         super().join(timeout=timeout)
         if self.exc:
             raise self.exc
 
-    def __enter__(self: SelfType) -> SelfType:
+    def __enter__(self) -> Self:
         return self
 
     def __exit__(self, *_):
@@ -259,15 +245,15 @@ class WorkerThread(Thread, Generic[T, U]):
 class WorkerPoolHandle:
     """Persistent handle that spawns and manages worker threads."""
 
-    exit_stack: Optional[ExitStack]
+    exit_stack: ExitStack | None
     long_lived: bool = False
-    connections: Dict[Worker[Any, Any], Connection[Any, Any]] = field(
+    connections: dict[Worker[Any, Any], Connection[Any, Any]] = field(
         default_factory=dict
     )
-    active_workers: Dict[str, Worker[Any, Any]] = field(default_factory=dict)
-    reload_skipped: Set[str] = field(default_factory=set)
+    active_workers: dict[str, Worker[Any, Any]] = field(default_factory=dict)
+    reload_skipped: set[str] = field(default_factory=set)
 
-    def __call__(self, func: Worker[T, U]) -> Channel[U, T]:
+    def __call__[T, U](self, func: Worker[T, U]) -> Channel[U, T]:
         if self.exit_stack is None:
             raise ValueError("Worker pool has shut down.")
 
@@ -289,7 +275,7 @@ class WorkerPoolHandle:
         return channel2
 
     @contextmanager
-    def spawn(self, func: Worker[T, U]) -> Iterator[Connection[T, U]]:
+    def spawn[T, U](self, func: Worker[T, U]) -> Iterator[Connection[T, U]]:
         """Create a worker thread and return the connection.
 
         The thread will be joined at the end of the scope.
@@ -301,10 +287,9 @@ class WorkerPoolHandle:
         self.connections[func] = connection
 
         try:
-            with WorkerThread(func, connection) as thread:
-                with connection:
-                    thread.start()
-                    yield connection
+            with WorkerThread(func, connection) as thread, connection:
+                thread.start()
+                yield connection
         finally:
             del self.connections[func]
             del self.active_workers[ident]
@@ -314,7 +299,7 @@ class WorkerPoolHandle:
 class WorkerPool:
     """Class that creates and keeps a reference to the pool handle."""
 
-    resolved_handle: Optional[WorkerPoolHandle] = None
+    resolved_handle: WorkerPoolHandle | None = None
 
     @contextmanager
     def handle(self) -> Iterator[WorkerPoolHandle]:

@@ -1,0 +1,57 @@
+b = 20
+range_tuple = 10..b
+---
+<class 'mecha.ast.AstRoot'>
+  location: SourceLocation(pos=0, lineno=1, colno=1)
+  end_location: SourceLocation(pos=27, lineno=3, colno=1)
+  commands:
+    <class 'bolt.ast.AstStatement'>
+      location: SourceLocation(pos=0, lineno=1, colno=1)
+      end_location: SourceLocation(pos=6, lineno=1, colno=7)
+      identifier: 'mecha:sentinel'
+      arguments:
+        <class 'bolt.ast.AstAssignment'>
+          location: SourceLocation(pos=0, lineno=1, colno=1)
+          end_location: SourceLocation(pos=6, lineno=1, colno=7)
+          operator: '='
+          target:
+            <class 'bolt.ast.AstTargetIdentifier'>
+              location: SourceLocation(pos=0, lineno=1, colno=1)
+              end_location: SourceLocation(pos=1, lineno=1, colno=2)
+              value: 'b'
+              rebind: False
+          value:
+            <class 'bolt.ast.AstValue'>
+              location: SourceLocation(pos=4, lineno=1, colno=5)
+              end_location: SourceLocation(pos=6, lineno=1, colno=7)
+              value: 20
+          type_annotation: None
+    <class 'bolt.ast.AstStatement'>
+      location: SourceLocation(pos=7, lineno=2, colno=1)
+      end_location: SourceLocation(pos=26, lineno=2, colno=20)
+      identifier: 'mecha:sentinel'
+      arguments:
+        <class 'bolt.ast.AstAssignment'>
+          location: SourceLocation(pos=7, lineno=2, colno=1)
+          end_location: SourceLocation(pos=26, lineno=2, colno=20)
+          operator: '='
+          target:
+            <class 'bolt.ast.AstTargetIdentifier'>
+              location: SourceLocation(pos=7, lineno=2, colno=1)
+              end_location: SourceLocation(pos=18, lineno=2, colno=12)
+              value: 'range_tuple'
+              rebind: False
+          value:
+            <class 'bolt.ast.AstTuple'>
+              location: SourceLocation(pos=21, lineno=2, colno=15)
+              end_location: SourceLocation(pos=26, lineno=2, colno=20)
+              items:
+                <class 'bolt.ast.AstValue'>
+                  location: SourceLocation(pos=21, lineno=2, colno=15)
+                  end_location: SourceLocation(pos=23, lineno=2, colno=17)
+                  value: 10
+                <class 'bolt.ast.AstIdentifier'>
+                  location: SourceLocation(pos=25, lineno=2, colno=19)
+                  end_location: SourceLocation(pos=26, lineno=2, colno=20)
+                  value: 'b'
+          type_annotation: None

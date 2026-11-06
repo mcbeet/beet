@@ -29,7 +29,7 @@ item replace entity @s weapon.offhand from entity @s weapon.mainhand
     <class 'mecha.ast.AstCommand'>
       location: SourceLocation(pos=17, lineno=2, colno=1)
       end_location: SourceLocation(pos=85, lineno=2, colno=69)
-      identifier: 'item:replace:entity:targets:slot:from:entity:source:sourceSlot'
+      identifier: 'item:replace:entity:target:slots:from:entity:source:sourceSlots'
       arguments:
         <class 'mecha.ast.AstSelector'>
           location: SourceLocation(pos=37, lineno=2, colno=21)
@@ -37,7 +37,7 @@ item replace entity @s weapon.offhand from entity @s weapon.mainhand
           variable: 's'
           arguments:
             <empty>
-        <class 'mecha.ast.AstItemSlot'>
+        <class 'mecha.ast.AstItemSlots'>
           location: SourceLocation(pos=40, lineno=2, colno=24)
           end_location: SourceLocation(pos=54, lineno=2, colno=38)
           value: 'weapon.offhand'
@@ -47,7 +47,7 @@ item replace entity @s weapon.offhand from entity @s weapon.mainhand
           variable: 's'
           arguments:
             <empty>
-        <class 'mecha.ast.AstItemSlot'>
+        <class 'mecha.ast.AstItemSlots'>
           location: SourceLocation(pos=70, lineno=2, colno=54)
           end_location: SourceLocation(pos=85, lineno=2, colno=69)
           value: 'weapon.mainhand'

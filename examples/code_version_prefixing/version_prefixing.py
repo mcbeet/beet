@@ -1,7 +1,7 @@
 from beet import Context
-from beet.contrib.rename_files import rename_files
 from beet.contrib.find_replace import find_replace
 from beet.contrib.function_header import function_header
+from beet.contrib.rename_files import rename_files
 
 
 def beet_default(ctx: Context):

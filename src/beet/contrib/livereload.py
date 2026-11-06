@@ -1,11 +1,11 @@
 """Plugin for automatically reloading the data pack after the build."""
 
 __all__ = [
-    "livereload",
-    "create_livereload_data_pack",
-    "livereload_server",
     "LogCallback",
     "LogWatcher",
+    "create_livereload_data_pack",
+    "livereload",
+    "livereload_server",
 ]
 
 
@@ -13,9 +13,10 @@ import json
 import logging
 import re
 import time
+from collections.abc import Callable
 from pathlib import Path
 from threading import Event, Thread
-from typing import Any, Callable, List, Optional, Tuple, overload
+from typing import Any, Self, overload
 
 from beet import Connection, Context, DataPack, Function, PackOverwrite
 from beet.contrib.autosave import Autosave
@@ -93,7 +94,7 @@ def create_livereload_data_pack() -> DataPack:
     return data
 
 
-def livereload_server(connection: Connection[Tuple[Optional[str], Path], None]):
+def livereload_server(connection: Connection[tuple[str | None, Path], None]):
     minecraft_path = None
     livereload_path = None
 
@@ -118,7 +119,7 @@ def livereload_server(connection: Connection[Tuple[Optional[str], Path], None]):
                     continue
 
                 @log_watcher.tail(log_file_path)
-                def _(args: JsonDict):
+                def _(args: JsonDict, livereload_path=livereload_path):
                     if LIVERELOAD_REGEX.search(args["message"]) and livereload_path:
                         remove_path(livereload_path)
 
@@ -128,7 +129,7 @@ LogCallback = Callable[[JsonDict], Any]
 
 class LogWatcher:
     event: Event
-    thread: Optional[Thread]
+    thread: Thread | None
 
     def __init__(self):
         self.event = Event()
@@ -143,7 +144,7 @@ class LogWatcher:
     def tail(
         self,
         path: FileSystemPath,
-        callback: Optional[LogCallback] = None,
+        callback: LogCallback | None = None,
     ) -> Any:
         def decorator(callback: LogCallback):
             if self.thread:
@@ -159,7 +160,7 @@ class LogWatcher:
             return decorator
 
     def target(self, path: FileSystemPath, callback: LogCallback):
-        queue: List[str] = []
+        queue: list[str] = []
 
         with open(path, "r", encoding="utf-8", errors="ignore") as f:
             f.seek(0, 2)
@@ -177,7 +178,7 @@ class LogWatcher:
                         self.handle_message(queue, callback)
                     queue.append(line)
 
-    def handle_message(self, queue: List[str], callback: LogCallback):
+    def handle_message(self, queue: list[str], callback: LogCallback):
         message, *details = queue
         queue.clear()
 
@@ -210,7 +211,7 @@ class LogWatcher:
             self.event.set()
             self.thread.join()
 
-    def __enter__(self) -> "LogWatcher":
+    def __enter__(self) -> Self:
         return self
 
     def __exit__(self, *_):

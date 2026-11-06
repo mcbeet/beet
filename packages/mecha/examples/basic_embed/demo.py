@@ -1,9 +1,10 @@
+from collections.abc import Generator
 from dataclasses import dataclass, replace
-from typing import Generator
+
+from nbtlib import String
 
 from beet import Context, LootTable
 from beet.core.utils import required_field
-from nbtlib import String
 
 from mecha import (
     AbstractNode,

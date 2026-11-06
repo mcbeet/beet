@@ -1,21 +1,24 @@
 __all__ = [
-    "MultiCache",
     "Cache",
     "CachePin",
     "CacheTransaction",
     "DownloadManager",
+    "MultiCache",
 ]
 
 
 import json
 import logging
 import shutil
+from collections.abc import Mapping
 from concurrent.futures import Executor, ThreadPoolExecutor
 from contextlib import closing, contextmanager
 from datetime import datetime, timedelta
+from functools import partial
 from pathlib import Path
 from textwrap import indent
-from typing import Any, BinaryIO, ClassVar, Mapping, Optional, Set, Type, TypeVar, Union
+from time import time
+from typing import Any, BinaryIO, ClassVar, Self
 from urllib.request import Request, urlopen
 
 from .container import Container, MatchMixin, Pin
@@ -29,10 +32,6 @@ from .utils import (
     log_time,
     normalize_string,
 )
-
-PinType = TypeVar("PinType", covariant=True)
-CacheType = TypeVar("CacheType", bound="Cache")
-
 
 logger = logging.getLogger("cache")
 
@@ -61,14 +60,14 @@ class Cache:
     index_path: Path
     index: JsonDict
     transaction: CacheTransaction
-    download_manager: "DownloadManager"
+    download_manager: DownloadManager
 
     index_file: ClassVar[str] = "index.json"
 
     def __init__(
         self,
         directory: FileSystemPath,
-        transaction: Optional[CacheTransaction] = None,
+        transaction: CacheTransaction | None = None,
     ):
         self.deleted = False
         self.directory = Path(directory).resolve()
@@ -105,6 +104,22 @@ class Cache:
     def json(self, value: JsonDict):
         self.index["json"] = value
 
+    def update(self, path: FileSystemPath, *, max_age: int | None = None) -> bool:
+        """Update a cached file or directory if needed."""
+        if not isinstance(path, Path):
+            path = Path(path)
+
+        if max_age is not None:
+            timestamps = self.index.setdefault("timestamps", {})
+            key = str(path.resolve().relative_to(self.directory))
+            now = int(time())
+            age = now - timestamps.get(key, 0)
+            if age > max_age:
+                timestamps[key] = now
+                return True
+
+        return not path.exists()
+
     def get_path(self, key: str) -> Path:
         """Return a unique file path associated with the given key."""
         keys = self.index.setdefault("keys", {})
@@ -118,7 +133,7 @@ class Cache:
         return self.directory / path
 
     @contextmanager
-    def parallel_downloads(self, max_workers: Optional[int] = None):
+    def parallel_downloads(self, max_workers: int | None = None):
         """Launch multiple requests at the same time."""
         with DownloadManager.parallel(max_workers) as parallel_download_manager:
             previous_manager = self.download_manager
@@ -130,10 +145,11 @@ class Cache:
 
     def download(
         self,
-        arg: Union[str, Request],
-        path: Optional[FileSystemPath] = None,
+        arg: str | Request,
+        path: FileSystemPath | None = None,
         *,
         headers: Mapping[str, str] = {},
+        max_age: int | None = None,
     ) -> Path:
         """Download and cache a given url."""
         if headers:
@@ -146,10 +162,15 @@ class Cache:
             path = self.get_path(
                 arg.get_full_url() if isinstance(arg, Request) else arg
             )
+        elif not isinstance(path, Path):
+            path = Path(path)
 
-        return self.download_manager.download(arg, path)
+        if self.update(path, max_age=max_age):
+            self.download_manager.download(arg, path)
 
-    def has_changed(self, *filenames: Optional[FileSystemPath]) -> bool:
+        return path
+
+    def has_changed(self, *filenames: FileSystemPath | None) -> bool:
         """Return whether any of the given files changed since the last check."""
         mtime = self.index.setdefault("mtime", {})
         changed = False
@@ -168,7 +189,7 @@ class Cache:
 
         return changed
 
-    def invalidate_changes(self, *filenames: Optional[FileSystemPath]):
+    def invalidate_changes(self, *filenames: FileSystemPath | None):
         """Reset the modification time of the given files."""
         mtime = self.index.setdefault("mtime", {})
         for filename in filenames:
@@ -176,15 +197,15 @@ class Cache:
                 mtime.pop(str(Path(filename)), None)
 
     @property
-    def expire(self) -> Optional[datetime]:
+    def expire(self) -> datetime | None:
         expire = self.index["expire"]
         return expire and datetime.fromisoformat(expire)
 
     @expire.setter
-    def expire(self, value: Optional[datetime]):
+    def expire(self, value: datetime | None):
         self.index["expire"] = value and value.isoformat()
 
-    def timeout(self, delta: Optional[timedelta] = None, **kwargs: Any) -> "Cache":
+    def timeout(self, delta: timedelta | None = None, **kwargs: Any) -> Cache:
         """Invalidate the cache after a given timeout."""
         if not delta:
             delta = timedelta()
@@ -202,7 +223,7 @@ class Cache:
 
         self.index["timestamp"] = now.isoformat()
 
-    def __enter__(self) -> "Cache":
+    def __enter__(self) -> Self:
         self.transaction.enter()
         return self
 
@@ -242,7 +263,7 @@ class Cache:
     def override(self, **data: Any):
         """Temporarily update the json data."""
         to_restore: JsonDict = {}
-        to_remove: Set[str] = set()
+        to_remove: set[str] = set()
 
         for key, value in data.items():
             if key in self.json:
@@ -274,20 +295,20 @@ class Cache:
         )
 
 
-class CachePin(Pin[str, PinType]):
+class CachePin[PinType](Pin[str, PinType]):
     """Descriptor that makes cache data accessible through attribute lookup."""
 
     def forward(self, obj: Any) -> JsonDict:
         return obj.cache.json if isinstance(obj.cache, Cache) else {}
 
 
-class MultiCache(MatchMixin, Container[str, CacheType]):
+class MultiCache[CacheType: Cache](MatchMixin, Container[str, CacheType]):
     """A container of lazily instantiated named caches."""
 
     path: Path
     default_cache: str
     gitignore: bool
-    cache_type: Type[CacheType]
+    cache_type: type[CacheType]
     transaction: CacheTransaction
 
     def __init__(
@@ -295,7 +316,7 @@ class MultiCache(MatchMixin, Container[str, CacheType]):
         directory: FileSystemPath,
         default_cache: str = "default",
         gitignore: bool = True,
-        cache_type: Type[CacheType] = Cache,
+        cache_type: type[CacheType] = Cache,
     ):
         super().__init__()
         self.path = Path(directory).resolve()
@@ -321,7 +342,7 @@ class MultiCache(MatchMixin, Container[str, CacheType]):
     def json(self) -> JsonDict:
         return self[self.default_cache].json
 
-    def __enter__(self) -> "MultiCache[CacheType]":
+    def __enter__(self) -> MultiCache[CacheType]:
         self.transaction.enter()
         return self
 
@@ -363,33 +384,43 @@ class MultiCache(MatchMixin, Container[str, CacheType]):
 class DownloadManager:
     """Download manager."""
 
-    executor: Optional[Executor]
+    executor: Executor | None
 
-    def __init__(self, executor: Optional[Executor] = None):
+    def __init__(self, executor: Executor | None = None):
         self.executor = executor
 
     @classmethod
     @contextmanager
-    def parallel(cls, max_workers: Optional[int] = None):
+    def parallel(cls, max_workers: int | None = None):
         """Create a download manager that launches multiple requests at the same time."""
         with ThreadPoolExecutor(max_workers) as executor:
             yield cls(executor)
 
-    def download(self, arg: Union[str, Request], path: FileSystemPath) -> Path:
-        """Download and cache a given url."""
-        path = Path(path)
+    def download(self, arg: str | Request, path: Path):
+        """Download a given url."""
+        if isinstance(arg, str):
+            arg = Request(arg)
 
-        if not path.is_file():
-            fileobj = path.open("wb")
-            if self.executor:
-                self.executor.submit(self.retrieve, arg, fileobj)
-            else:
-                self.retrieve(arg, fileobj)
+        if path.is_file():
+            func = partial(self.update, arg, path)
+        else:
+            func = partial(self.retrieve, arg, path.open("wb"))
 
-        return path
+        if self.executor:
+            self.executor.submit(func)
+        else:
+            func()
 
-    def retrieve(self, arg: Union[str, Request], fileobj: BinaryIO):
-        """Retrieve file from url."""
-        url = arg.get_full_url() if isinstance(arg, Request) else arg
-        with log_time('Download "%s".', url), closing(fileobj), urlopen(arg) as f:
-            fileobj.write(f.read())
+    def update(self, request: Request, path: Path):
+        """Retrieve new version of existing file from url."""
+        url = request.get_full_url()
+        with log_time(f'Download "{url}".', suppress=f'Download failed "{url}".'):
+            with urlopen(request) as f:
+                path.write_bytes(f.read())
+
+    def retrieve(self, request: Request, fileobj: BinaryIO):
+        """Retrieve missing file from url."""
+        url = request.get_full_url()
+        with log_time(f'Download "{url}".'):
+            with closing(fileobj), urlopen(request) as f:
+                fileobj.write(f.read())

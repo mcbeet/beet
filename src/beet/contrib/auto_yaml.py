@@ -1,14 +1,14 @@
 """Plugin that automatically translates yaml resources to json."""
 
 __all__ = [
-    "use_auto_yaml",
     "create_extra_handler",
-    "create_namespace_handler",
     "create_namespace_extra_handler",
+    "create_namespace_handler",
+    "use_auto_yaml",
 ]
 
 
-from typing import Any, ClassVar, Tuple, Type
+from typing import Any, ClassVar
 
 from beet import (
     Context,
@@ -55,10 +55,10 @@ def use_auto_yaml(pack: Pack[Any]):
 
 
 def create_namespace_handler(
-    file_type: Type[JsonFileBase[Any]],
-    namespace_scope: Tuple[str, ...],
+    file_type: type[JsonFileBase[Any]],
+    namespace_scope: tuple[str, ...],
     namespace_extension: str,
-) -> Type[NamespaceFile]:
+) -> type[NamespaceFile]:
     """Create handler that turns yaml namespace files into json."""
 
     class AutoYamlNamespaceHandler(YamlFile):
@@ -77,8 +77,8 @@ def create_namespace_handler(
 
 def create_extra_handler(
     filename: str,
-    file_type: Type[JsonFileBase[Any]],
-) -> Type[YamlFile]:
+    file_type: type[JsonFileBase[Any]],
+) -> type[YamlFile]:
     """Create handler that turns yaml extra files into json."""
 
     class AutoYamlExtraHandler(YamlFile):
@@ -94,8 +94,8 @@ def create_extra_handler(
 
 def create_namespace_extra_handler(
     filename: str,
-    file_type: Type[JsonFileBase[Any]],
-) -> Type[YamlFile]:
+    file_type: type[JsonFileBase[Any]],
+) -> type[YamlFile]:
     """Create handler that turns yaml namespace extra files into json."""
 
     class AutoYamlExtraHandler(YamlFile):

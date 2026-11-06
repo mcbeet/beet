@@ -1,9 +1,11 @@
 import os
 
 import pytest
-from beet import run_beet
-from lectern import Document
 from pytest_insta import SnapshotFixture
+
+from beet import run_beet
+
+from lectern import Document
 
 
 @pytest.mark.parametrize("directory", sorted(os.listdir("examples")))

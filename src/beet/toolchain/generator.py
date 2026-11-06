@@ -1,29 +1,16 @@
 __all__ = [
-    "Generator",
     "Draft",
     "DraftCacheSignal",
+    "Generator",
 ]
 
 
 import json
 from collections import defaultdict
+from collections.abc import Callable, Iterable, Iterator
 from contextlib import ExitStack, contextmanager
 from dataclasses import dataclass, field, replace
-from typing import (
-    TYPE_CHECKING,
-    Any,
-    Callable,
-    DefaultDict,
-    Iterable,
-    Iterator,
-    Optional,
-    Tuple,
-    Type,
-    TypeVar,
-    Union,
-    cast,
-    overload,
-)
+from typing import TYPE_CHECKING, Any, Self, cast, overload
 
 from beet.core.container import Container
 from beet.core.file import TextFileBase
@@ -39,29 +26,24 @@ if TYPE_CHECKING:
     from .context import Context
 
 
-T = TypeVar("T", contravariant=True)
-GeneratorType = TypeVar("GeneratorType", bound="Generator")
-NamespaceFileType = TypeVar("NamespaceFileType", bound="NamespaceFile")
-
-
 @dataclass
 class Generator:
     """Helper for generating assets and data pack resources."""
 
-    ctx: "Context"
-    scope: Tuple[Any, ...] = ()
-    registry: DefaultDict[Tuple[Any, ...], int] = field(
+    ctx: Context
+    scope: tuple[Any, ...] = ()
+    registry: defaultdict[tuple[Any, ...], int] = field(
         default_factory=lambda: defaultdict(int)
     )
 
     assets: ResourcePack = field(default_factory=ResourcePack)
     data: DataPack = field(default_factory=DataPack)
-    overlays: "GeneratorOverlays" = field(default_factory=lambda: GeneratorOverlays())
+    overlays: GeneratorOverlays = field(default_factory=lambda: GeneratorOverlays())
 
     def __post_init__(self):
         self.overlays.setdefault(None, self)
 
-    def __getitem__(self: GeneratorType, key: Any) -> GeneratorType:
+    def __getitem__(self, key: Any) -> Self:
         return replace(self, scope=self.scope + (key,))
 
     @contextmanager
@@ -151,11 +133,11 @@ class Generator:
     ) -> str: ...
 
     @overload
-    def __call__(
+    def __call__[NamespaceFileType: NamespaceFile](
         self,
         fmt: str,
         *,
-        default: Union[Type[NamespaceFileType], NamespaceFileType],
+        default: type[NamespaceFileType] | NamespaceFileType,
         hash: Any = None,
     ) -> NamespaceFileType: ...
 
@@ -179,9 +161,9 @@ class Generator:
     def __call__(
         self,
         *args: Any,
-        render: Optional[TextFileBase[Any]] = None,
-        merge: Optional[NamespaceFile] = None,
-        default: Optional[Union[Type[NamespaceFile], NamespaceFile]] = None,
+        render: TextFileBase[Any] | None = None,
+        merge: NamespaceFile | None = None,
+        default: type[NamespaceFile] | NamespaceFile | None = None,
         hash: Any = None,
         **kwargs: Any,
     ) -> Any:
@@ -211,7 +193,7 @@ class Generator:
                 fmt = None
 
             if hash is None and not render:
-                hash = lambda: file_instance.ensure_serialized()  # noqa: E731
+                hash = lambda: file_instance.ensure_serialized()
 
             file_type = type(file_instance)
 
@@ -270,7 +252,7 @@ class Generator:
         fmt: str = "{incr}",
         hash: Any = None,
         criterion: str = "dummy",
-        display: Optional[TextComponent] = None,
+        display: TextComponent | None = None,
     ) -> str:
         """Generate a scoreboard objective."""
         template = self.ctx.meta.get("generate_objective", "{namespace}.{scope}")
@@ -284,35 +266,35 @@ class Generator:
         return objective
 
     @overload
-    def function_tree(
+    def function_tree[T](
         self,
         fmt: str,
         items: Iterable[T],
         /,
         *,
-        key: Optional[Callable[[T], int]] = None,
+        key: Callable[[T], int] | None = None,
         hash: Any = None,
-        name: Optional[str] = None,
-    ) -> Iterator[Tuple[TreeNode[T], Function]]: ...
+        name: str | None = None,
+    ) -> Iterator[tuple[TreeNode[T], Function]]: ...
 
     @overload
-    def function_tree(
+    def function_tree[T](
         self,
         items: Iterable[T],
         /,
         *,
-        key: Optional[Callable[[T], int]] = None,
+        key: Callable[[T], int] | None = None,
         hash: Any = None,
-        name: Optional[str] = None,
-    ) -> Iterator[Tuple[TreeNode[T], Function]]: ...
+        name: str | None = None,
+    ) -> Iterator[tuple[TreeNode[T], Function]]: ...
 
     def function_tree(
         self,
         *args: Any,
-        key: Optional[Callable[[Any], int]] = None,
+        key: Callable[[Any], int] | None = None,
         hash: Any = None,
-        name: Optional[str] = None,
-    ) -> Iterator[Tuple[TreeNode[Any], Function]]:
+        name: str | None = None,
+    ) -> Iterator[tuple[TreeNode[Any], Function]]:
         """Generate a function tree."""
         if len(args) == 2:
             fmt, items = args
@@ -321,7 +303,7 @@ class Generator:
             fmt = None
 
         if hash is None:
-            hash = lambda: str(items)  # noqa: E731
+            hash = lambda: str(items)
 
         root = self[Function].path(fmt, hash) if fmt else self[Function].path(hash=hash)
 
@@ -329,7 +311,7 @@ class Generator:
             yield node, self.data.functions.setdefault(node.parent, Function())
 
     @contextmanager
-    def draft(self) -> Iterator["Draft"]:
+    def draft(self) -> Iterator[Draft]:
         """Work on an intermediate draft."""
         assets = ResourcePack().configure(self.assets)
         data = DataPack().configure(self.data)
@@ -353,10 +335,10 @@ class Generator:
         self.data.merge(data)
 
 
-class GeneratorOverlays(Container[Optional[str], Generator]):
+class GeneratorOverlays(Container[str | None, Generator]):
     """Generator overlays."""
 
-    def missing(self, key: Optional[str]) -> Generator:
+    def missing(self, key: str | None) -> Generator:
         if key is None:
             raise KeyError(key)
         base = self[None]
@@ -394,13 +376,13 @@ class Draft(Generator):
         key = f"{key} {zipped=}"
 
         if cache.json.get("draft_key") == key:
-            with log_time_scope('Load draft "%s" from cache.', name):
+            with log_time_scope(f'Load draft "{name}" from cache.'):
                 self.assets.load(cached_resource_pack)
                 self.data.load(cached_data_pack)
             raise DraftCacheSignal()
 
         @self.exit_stack.callback
-        @log_time_scope('Update cache for draft "%s".', name)
+        @log_time_scope(f'Update cache for draft "{name}".')
         def _():
             if self.assets:
                 self.assets.save(path=cached_resource_pack, overwrite=True)
@@ -408,4 +390,4 @@ class Draft(Generator):
                 self.data.save(path=cached_data_pack, overwrite=True)
             cache.json["draft_key"] = key
 
-        self.exit_stack.enter_context(log_time_scope('Generate draft "%s".', name))
+        self.exit_stack.enter_context(log_time_scope(f'Generate draft "{name}".'))

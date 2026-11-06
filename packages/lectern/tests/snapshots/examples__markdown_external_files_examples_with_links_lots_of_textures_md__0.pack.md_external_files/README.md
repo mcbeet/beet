@@ -8,12 +8,12 @@
 {
   "pack": {
     "min_format": [
-      88,
-      0
+      97,
+      1
     ],
     "max_format": [
-      88,
-      0
+      97,
+      1
     ],
     "description": ""
   }

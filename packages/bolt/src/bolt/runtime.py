@@ -1,18 +1,23 @@
 __all__ = [
-    "Runtime",
     "Evaluator",
     "NonFunctionSerializer",
+    "Runtime",
 ]
 
 
 import builtins
+from collections.abc import Callable, Iterable
 from dataclasses import dataclass, field
 from functools import partial
 from importlib.resources import files
-from typing import Any, Callable, Dict, Iterable, List, Optional, Set, Union
+from typing import Any
+
+from pathspec import PathSpec
+from tokenstream import set_location
 
 from beet import Context, TextFileBase, generate_tree
 from beet.core.utils import JsonDict, extra_field, required_field
+
 from mecha import (
     AstRoot,
     CommandSpec,
@@ -27,8 +32,6 @@ from mecha import (
 )
 from mecha.contrib.nested_location import NestedLocationResolver
 from mecha.contrib.relative_location import resolve_relative_location
-from pathspec import PathSpec
-from tokenstream import set_location
 
 from .ast import AstNonFunctionRoot
 from .codegen import Codegen
@@ -50,19 +53,19 @@ from .utils import internal
 class Runtime(CommandEmitter):
     """The bolt runtime."""
 
-    helpers: Dict[str, Any]
+    helpers: dict[str, Any]
     globals: JsonDict
-    builtins: Set[str]
+    builtins: set[str]
 
     memo: MemoHandler
 
     modules: ModuleManager
-    evaluate: "Evaluator"
+    evaluate: Evaluator
 
     spec: CommandSpec
     module_provider: CompilationUnitProvider
 
-    def __init__(self, ctx: Union[Context, Mecha]):
+    def __init__(self, ctx: Context | Mecha):
         super().__init__()
         self.helpers = get_bolt_helpers()
         self.globals = {"_bolt_runtime": self, "ctx": None, "loop_info": loop_info}
@@ -214,24 +217,24 @@ class Evaluator(Visitor):
 
     modules: ModuleManager = required_field()
 
-    entrypoint: List[str] = field(default_factory=list)
-    entrypoint_spec: PathSpec = extra_field(init=False)
+    entrypoint: list[str] = field(default_factory=list)
+    entrypoint_spec: PathSpec[Any] = extra_field(init=False)
 
     def __post_init__(self):
         super().__post_init__()
         self.add_entrypoint()
 
-    def add_entrypoint(self, *args: Union[str, Iterable[str]]):
+    def add_entrypoint(self, *args: str | Iterable[str]):
         self.entrypoint.extend(
             entry
             for patterns in args
             for entry in ([patterns] if isinstance(patterns, str) else patterns)
         )
-        self.entrypoint_spec = PathSpec.from_lines("gitwildmatch", self.entrypoint)
+        self.entrypoint_spec = PathSpec.from_lines("gitignore", self.entrypoint)
 
     @rule(AstRoot)
     @internal
-    def root(self, node: AstRoot) -> Optional[AstRoot]:
+    def root(self, node: AstRoot) -> AstRoot | None:
         compilation_unit, module = self.modules.match_ast(node)
 
         if (
@@ -270,7 +273,7 @@ class NonFunctionSerializer(Visitor):
     database: CompilationDatabase = required_field()
 
     @rule(AstNonFunctionRoot)
-    def non_function_root(self, node: AstNonFunctionRoot, result: List[str]):
+    def non_function_root(self, node: AstNonFunctionRoot, result: list[str]):
         if source := self.database[self.database.current].source:
             result.append(source)
         if node.commands:

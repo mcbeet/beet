@@ -1,28 +1,28 @@
 __all__ = [
-    "LexicalScope",
-    "GlobalScope",
+    "Binding",
+    "ClassScope",
     "FunctionScope",
+    "GlobalScope",
+    "InconsistentIdentifierStorage",
+    "LexicalScope",
     "MacroScope",
     "ProcMacroScope",
-    "ClassScope",
-    "Variable",
-    "Binding",
-    "UndefinedIdentifier",
     "UnboundLocalIdentifier",
-    "InconsistentIdentifierStorage",
+    "UndefinedIdentifier",
+    "Variable",
 ]
 
 
 from dataclasses import dataclass, field, replace
-from typing import Dict, List, Literal, Optional, Set, Tuple, Type, TypeVar
+from typing import Literal
 
-from beet.core.utils import extra_field
-from mecha import AstNode
 from tokenstream import InvalidSyntax, set_location
 
-from .utils import suggest_typo
+from beet.core.utils import extra_field
 
-LexicalScopeType = TypeVar("LexicalScopeType", bound="LexicalScope")
+from mecha import AstNode
+
+from .utils import suggest_typo
 
 
 class UndefinedIdentifier(InvalidSyntax):
@@ -37,9 +37,9 @@ class UndefinedIdentifier(InvalidSyntax):
     """
 
     identifier: str
-    lexical_scope: "LexicalScope"
+    lexical_scope: LexicalScope
 
-    def __init__(self, identifier: str, lexical_scope: "LexicalScope"):
+    def __init__(self, identifier: str, lexical_scope: LexicalScope):
         super().__init__(identifier, lexical_scope)
         self.identifier = identifier
         self.lexical_scope = lexical_scope
@@ -61,7 +61,7 @@ class UnboundLocalIdentifier(UndefinedIdentifier):
     with no local binding in the current scope.
     """
 
-    def __init__(self, identifier: str, lexical_scope: "LexicalScope"):
+    def __init__(self, identifier: str, lexical_scope: LexicalScope):
         super().__init__(identifier, lexical_scope)
         if lexical_scope.parent and lexical_scope.parent.has_variable(identifier):
             self.notes.append(
@@ -84,13 +84,13 @@ class InconsistentIdentifierStorage(InvalidSyntax):
 
     identifier: str
     storage: Literal["local", "nonlocal", "global"]
-    lexical_scope: "LexicalScope"
+    lexical_scope: LexicalScope
 
     def __init__(
         self,
         identifier: str,
         storage: Literal["local", "nonlocal", "global"],
-        lexical_scope: "LexicalScope",
+        lexical_scope: LexicalScope,
     ):
         super().__init__(identifier, storage, lexical_scope)
         self.identifier = identifier
@@ -116,18 +116,18 @@ class Binding:
     """
 
     origin: AstNode
-    references: List[AstNode] = field(default_factory=list)
+    references: list[AstNode] = field(default_factory=list)
 
     cutoff: int = extra_field(default=0)
 
-    def fork(self) -> "Binding":
+    def fork(self) -> Binding:
         return replace(
             self,
             references=self.references.copy(),
             cutoff=len(self.references),
         )
 
-    def reconcile(self, binding: "Binding"):
+    def reconcile(self, binding: Binding):
         self.references += binding.references[binding.cutoff :]
 
 
@@ -146,7 +146,7 @@ class Variable:
     """
 
     storage: Literal["local", "nonlocal", "global", "deleted"] = "local"
-    bindings: List[Binding] = field(default_factory=list)
+    bindings: list[Binding] = field(default_factory=list)
 
     cutoff: int = extra_field(default=0)
 
@@ -157,7 +157,7 @@ class Variable:
             cutoff=len(self.bindings),
         )
 
-    def reconcile(self, variable: "Variable"):
+    def reconcile(self, variable: Variable):
         for i, binding in enumerate(variable.bindings[: variable.cutoff]):
             self.bindings[i].reconcile(binding)
 
@@ -180,17 +180,17 @@ class LexicalScope:
         variables or bindings were introduced.
     """
 
-    variables: Dict[str, Variable] = field(default_factory=dict)
+    variables: dict[str, Variable] = field(default_factory=dict)
 
-    anchor: Optional[AstNode] = extra_field(default=None)
-    parent: Optional["LexicalScope"] = extra_field(default=None)
-    children: List["LexicalScope"] = extra_field(default_factory=list)
+    anchor: AstNode | None = extra_field(default=None)
+    parent: LexicalScope | None = extra_field(default=None)
+    children: list[LexicalScope] = extra_field(default_factory=list)
 
     dirty: bool = extra_field(default=False)
 
-    next_branch: Optional["LexicalScope"] = extra_field(default=None)
-    next_deferred: Optional["LexicalScope"] = extra_field(default=None)
-    pending_bindings: List[Tuple[str, AstNode]] = extra_field(default_factory=list)
+    next_branch: LexicalScope | None = extra_field(default=None)
+    next_deferred: LexicalScope | None = extra_field(default=None)
+    pending_bindings: list[tuple[str, AstNode]] = extra_field(default_factory=list)
 
     def has_binding(self, identifier: str, search_parents: bool = False) -> bool:
         variable = self.variables.get(identifier)
@@ -210,7 +210,7 @@ class LexicalScope:
             self.parent and self.parent.has_variable(identifier)
         )
 
-    def list_variables(self) -> Set[str]:
+    def list_variables(self) -> set[str]:
         all_variables = set(self.variables)
         if self.parent:
             all_variables |= self.parent.list_variables()
@@ -220,7 +220,7 @@ class LexicalScope:
         self,
         identifier: str,
         node: AstNode,
-        scope: Optional["LexicalScope"] = None,
+        scope: LexicalScope | None = None,
     ):
         if not scope:
             scope = self
@@ -280,12 +280,16 @@ class LexicalScope:
 
         variable.bindings.append(Binding(origin=node))
 
-    def push(self, scope_type: Type["LexicalScopeType"]) -> "LexicalScopeType":
+    def push[LexicalScopeType: LexicalScope](
+        self, scope_type: type[LexicalScopeType]
+    ) -> LexicalScopeType:
         child = scope_type(parent=self)
         self.children.append(child)
         return child
 
-    def deferred(self, scope_type: Type["LexicalScopeType"]) -> "LexicalScopeType":
+    def deferred[LexicalScopeType: LexicalScope](
+        self, scope_type: type[LexicalScopeType]
+    ) -> LexicalScopeType:
         if not isinstance(self.next_deferred, scope_type):
             self.next_deferred = self.push(scope_type)
         return self.next_deferred
@@ -293,7 +297,7 @@ class LexicalScope:
     def deferred_complete(self):
         self.next_deferred = None
 
-    def fork(self) -> "LexicalScope":
+    def fork(self) -> LexicalScope:
         return replace(
             self,
             parent=self.parent and self.parent.fork(),
@@ -301,20 +305,20 @@ class LexicalScope:
             variables=self.fork_variables(),
         )
 
-    def fork_variables(self) -> Dict[str, Variable]:
+    def fork_variables(self) -> dict[str, Variable]:
         return {
             identifier: variable.fork()
             for identifier, variable in self.variables.items()
         }
 
-    def reconcile(self, lexical_scope: "LexicalScope"):
+    def reconcile(self, lexical_scope: LexicalScope):
         if lexical_scope.dirty:
             self.dirty = True
             self.reconcile_variables(lexical_scope.variables)
             if self.parent and lexical_scope.parent:
                 self.parent.reconcile(lexical_scope.parent)
 
-    def reconcile_variables(self, variables: Dict[str, Variable]):
+    def reconcile_variables(self, variables: dict[str, Variable]):
         for identifier, variable in variables.items():
             if current_variable := self.variables.get(identifier):
                 current_variable.reconcile(variable)
@@ -334,19 +338,19 @@ class LexicalScope:
 class GlobalScope(LexicalScope):
     """Specialized global scope to fork more efficiently."""
 
-    identifiers: Set[str] = field(default_factory=set)
+    identifiers: set[str] = field(default_factory=set)
 
     def has_variable(self, identifier: str) -> bool:
         return identifier in self.identifiers or super().has_variable(identifier)
 
-    def list_variables(self) -> Set[str]:
+    def list_variables(self) -> set[str]:
         return self.identifiers | super().list_variables()
 
     def reference_variable(
         self,
         identifier: str,
         node: AstNode,
-        scope: Optional["LexicalScope"] = None,
+        scope: LexicalScope | None = None,
     ):
         if identifier not in self.identifiers or identifier in self.variables:
             super().reference_variable(identifier, node, scope)
@@ -367,7 +371,9 @@ class ProcMacroScope(FunctionScope):
 class ClassScope(LexicalScope):
     """Dedicated type for class scope."""
 
-    def push(self, scope_type: Type["LexicalScopeType"]) -> "LexicalScopeType":
+    def push[LexicalScopeType: LexicalScope](
+        self, scope_type: type[LexicalScopeType]
+    ) -> LexicalScopeType:
         if issubclass(scope_type, FunctionScope):
             if not self.parent:
                 raise ValueError("Class scope has no parent.")

@@ -4,9 +4,10 @@ __all__ = [
 ]
 
 
-from typing import Any, Optional, Tuple
+from typing import Any
 
 import click
+
 from beet import ErrorMessage, run_beet
 from beet.toolchain.cli import error_handler
 
@@ -69,11 +70,11 @@ from .prefetch import MarkdownPrefetcher
 @error_handler(should_exit=True)
 def lectern(
     ctx: click.Context,
-    path: Tuple[str, ...],
-    data_pack: Optional[str],
-    resource_pack: Optional[str],
-    external_files: Optional[str],
-    prefetch_urls: Optional[str],
+    path: tuple[str, ...],
+    data_pack: str | None,
+    resource_pack: str | None,
+    external_files: str | None,
+    prefetch_urls: str | None,
     sort: bool,
     flat: bool,
     overwrite: bool,

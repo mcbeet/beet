@@ -1,0 +1,9 @@
+data_pack:
+  load: "src"
+require:
+  - bolt
+pipeline:
+  - mecha
+meta:
+  mecha:
+    formatting: preserve

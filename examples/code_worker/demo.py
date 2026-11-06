@@ -1,5 +1,3 @@
-from typing import Tuple
-
 from beet import Connection, Context, Function
 
 
@@ -26,7 +24,7 @@ def other(ctx: Context):
         ctx.data[name] = function
 
 
-def thing(connection: Connection[int, Tuple[str, Function]]):
+def thing(connection: Connection[int, tuple[str, Function]]):
     counter = 0
     for client in connection:
         for number in client:

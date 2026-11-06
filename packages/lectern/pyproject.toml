@@ -1,10 +1,10 @@
 [build-system]
-requires = ["uv_build>=0.9.8,<0.10.0"]
+requires = ["uv_build>=0.13.0,<0.14.0"]
 build-backend = "uv_build"
 
 [project]
 name = "lectern"
-version = "0.35.0"
+version = "0.37.0"
 description = "Literate Minecraft data packs and resource packs"
 authors = [{ name = "Valentin Berlier", email = "berlier.v@gmail.com" }]
 license = "MIT"
@@ -20,8 +20,13 @@ keywords = [
 
 requires-python = ">=3.14"
 dependencies = [
-    "beet>=0.113.0",
+    "beet>=0.121.0",
     "markdown-it-py>=4.0.0",
+]
+
+classifiers = [
+    "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: 3.15",
 ]
 
 [project.urls]
@@ -36,8 +41,8 @@ lectern = "lectern.pytest_plugin"
 [tool.uv.sources]
 beet = { workspace = true }
 
-[tool.pytest.ini_options]
-addopts = "tests --import-mode=importlib"
+[tool.pytest]
+addopts = ["tests", "--import-mode=importlib"]
 
 [tool.semantic_release]
 commit_parser = "conventional-monorepo"

@@ -1,5 +1,3 @@
-from typing import List
-
 from beet import Context, Function, PluginOptions, configurable
 from beet.core.utils import JsonDict
 
@@ -25,7 +23,7 @@ def plugin2(ctx: Context, opts: JsonDict):
 
 
 class TestOptions(PluginOptions):
-    commands: List[str]
+    commands: list[str]
 
 
 @configurable(validator=TestOptions)

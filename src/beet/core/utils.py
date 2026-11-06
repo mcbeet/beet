@@ -1,33 +1,33 @@
 __all__ = [
-    "JsonDict",
-    "FileSystemPath",
-    "TextComponent",
-    "FormatsRangeDict",
-    "SupportedFormats",
-    "Sentinel",
     "SENTINEL_OBJ",
+    "FileSystemPath",
+    "FormatsRangeDict",
+    "JsonDict",
+    "Sentinel",
+    "SupportedFormats",
+    "TextComponent",
+    "VersionNumber",
+    "change_directory",
     "dump_json",
     "extra_field",
-    "required_field",
-    "intersperse",
-    "normalize_string",
-    "snake_case",
-    "VersionNumber",
-    "split_version",
+    "format_directory",
+    "format_exc",
+    "format_obj",
+    "format_validation_error",
     "get_import_string",
     "import_from_string",
-    "resolve_packageable_path",
+    "intersperse",
     "local_import_path",
     "log_time",
     "log_time_scope",
-    "remove_path",
-    "format_obj",
-    "format_exc",
-    "format_validation_error",
-    "format_directory",
+    "normalize_string",
     "pop_traceback",
-    "change_directory",
+    "remove_path",
+    "required_field",
+    "resolve_packageable_path",
     "resolve_within",
+    "snake_case",
+    "split_version",
 ]
 
 
@@ -38,34 +38,22 @@ import re
 import shutil
 import sys
 import time
+from collections.abc import Generator, Iterable, Iterator
 from contextlib import contextmanager
 from dataclasses import field
 from importlib import import_module
 from importlib.util import find_spec
 from pathlib import Path
 from traceback import format_exception
-from typing import (
-    Any,
-    Dict,
-    Iterable,
-    Iterator,
-    List,
-    Optional,
-    Tuple,
-    TypedDict,
-    TypeVar,
-    Union,
-)
+from typing import Any, TypedDict
 
 from pydantic import ValidationError
 
 from .error import BubbleException
 
-T = TypeVar("T")
-
-JsonDict = Dict[str, Any]
-FileSystemPath = str | os.PathLike[str]
-TextComponent = Union[str, List[Any], JsonDict]
+type JsonDict = dict[str, Any]
+type FileSystemPath = str | os.PathLike[str]
+type TextComponent = str | list[Any] | JsonDict
 
 
 class FormatsRangeDict(TypedDict):
@@ -73,7 +61,7 @@ class FormatsRangeDict(TypedDict):
     max_inclusive: int
 
 
-SupportedFormats = Union[int, List[int], FormatsRangeDict]
+type SupportedFormats = int | list[int] | FormatsRangeDict
 
 
 class Sentinel:
@@ -100,7 +88,7 @@ def _raise_required_field() -> Any:
     raise ValueError("Field required.")
 
 
-def intersperse(iterable: Iterable[T], delimitter: T) -> Iterator[T]:
+def intersperse[T](iterable: Iterable[T], delimitter: T) -> Iterator[T]:
     it = iter(iterable)
     yield next(it)
     for x in it:
@@ -122,10 +110,10 @@ def snake_case(string: str) -> str:
     return CAMEL_REGEX.sub(r"_\1", string).lower()
 
 
-VersionNumber = Union[str, int, float, Tuple[Union[str, int], ...]]
+type VersionNumber = str | int | float | tuple[str | int, ...]
 
 
-def split_version(version: VersionNumber) -> Tuple[int, ...]:
+def split_version(version: VersionNumber) -> tuple[int, ...]:
     if isinstance(version, (int, float)):
         version = str(version)
     if isinstance(version, str):
@@ -139,8 +127,8 @@ def get_import_string(obj: Any) -> str:
 
 def import_from_string(
     dotted_path: str,
-    default_member: Optional[str] = None,
-    whitelist: Optional[List[str]] = None,
+    default_member: str | None = None,
+    whitelist: list[str] | None = None,
 ) -> Any:
     if whitelist is not None and dotted_path not in whitelist:
         raise ModuleNotFoundError(f"No module named {dotted_path!r}")
@@ -160,7 +148,7 @@ def import_from_string(
     return getattr(module, default_member) if default_member else module
 
 
-def resolve_packageable_path(value: T) -> Union[T, Path]:
+def resolve_packageable_path[T](value: T) -> T | Path:
     value_str = str(value)
 
     if value_str.startswith("@"):
@@ -220,25 +208,33 @@ time_logger = logging.getLogger("time")
 
 
 @contextmanager
-def log_time(message: str, *args: Any, **kwargs: Any) -> Iterator[None]:
+def log_time(message: str, *, suppress: str | None = None) -> Generator[None]:
+    level = logging.DEBUG
+    fmt = "%(message)s %(duration)s"
+    kwargs = {}
     start = time.time()
     try:
         yield
     except BubbleException:
         raise
     except Exception as exc:
-        tb = exc.__traceback__
-        kwargs["exc_info"] = exc.with_traceback(tb.tb_next) if tb else exc
-        raise
+        if suppress:
+            level = logging.WARNING
+            fmt = suppress
+        else:
+            level = logging.ERROR
+            tb = exc.__traceback__
+            kwargs["exc_info"] = exc.with_traceback(tb.tb_next) if tb else exc
+            raise
     finally:
-        message = f"{message} (took {time.time() - start:.2f}s)"
-        time_logger.debug(message, *args, **kwargs)
+        args = {"message": message, "duration": f"(took {time.time() - start:.2f}s)"}
+        time_logger.log(level, fmt, args, **kwargs)
 
 
 @contextmanager
-def log_time_scope(message: str, *args: Any, **kwargs: Any) -> Iterator[None]:
-    time_logger.debug(f"{message} (start)", *args, **kwargs)
-    with log_time(message, *args, **kwargs):
+def log_time_scope(message: str, *, suppress: str | None = None) -> Generator[None]:
+    time_logger.debug(f"{message} (start)")
+    with log_time(message, suppress=suppress):
         yield
 
 
@@ -287,14 +283,14 @@ def format_directory(directory: FileSystemPath, prefix: str = "") -> Iterator[st
     max_entries = 8
     crop_entries = 5
 
-    entries = list(sorted(Path(directory).iterdir()))
+    entries = sorted(Path(directory).iterdir())
 
     count = len(entries)
     if count > max_entries:
         del entries[crop_entries:]
 
     indents = ["├─"] * len(entries)
-    if count <= max_entries:
+    if indents and count <= max_entries:
         indents[-1] = "└─"
 
     for indent, entry in zip(indents, entries):
@@ -308,10 +304,9 @@ def format_directory(directory: FileSystemPath, prefix: str = "") -> Iterator[st
         yield f"{prefix}└─ ... ({count - crop_entries} more entries)"
 
 
-ExceptionType = TypeVar("ExceptionType", bound=BaseException)
-
-
-def pop_traceback(exc: ExceptionType, n: int = 1) -> ExceptionType:
+def pop_traceback[ExceptionType: BaseException](
+    exc: ExceptionType, n: int = 1
+) -> ExceptionType:
     tb = exc.__traceback__
     for _ in range(n):
         tb = getattr(exc.__traceback__, "tb_next", tb)
@@ -319,7 +314,7 @@ def pop_traceback(exc: ExceptionType, n: int = 1) -> ExceptionType:
 
 
 @contextmanager
-def change_directory(directory: Optional[FileSystemPath] = None):
+def change_directory(directory: FileSystemPath | None = None):
     if not directory:
         yield
         return

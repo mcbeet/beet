@@ -1,4 +1,5 @@
 import pytest
+
 from beet import run_beet
 
 

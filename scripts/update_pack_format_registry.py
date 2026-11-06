@@ -1,10 +1,12 @@
 #!/usr/bin/env python
 import json
-from typing import Any
-import requests
-from beet.resources.pack_format_registry import pack_format_registry_path
 from importlib.resources import files
+from typing import Any
+
+import requests
+
 from beet.core.utils import split_version
+from beet.resources.pack_format_registry import pack_format_registry_path
 
 URL_VERSIONS = "https://raw.githubusercontent.com/misode/mcmeta/refs/heads/summary/versions/data.json"
 URL_COMMAND_TREE = "https://raw.githubusercontent.com/misode/mcmeta/refs/tags/{version}-summary/commands/data.json"
