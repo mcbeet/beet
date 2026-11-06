@@ -2,14 +2,13 @@
 Plugin to load snapshot pack formats and command trees from misode/mcmeta (or custom).
 """
 
-from beet import Context, DataPack, ResourcePack
+from beet import Context, DataPack, ResourcePack, configurable
 from beet.resources.pack_format_registry import (
     PackFormatRegistry,
     all_versions,
     pack_format_registry,
 )
 from beet.toolchain.context import PluginOptions
-from beet import configurable
 
 
 class SnapshotOptions(PluginOptions):

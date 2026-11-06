@@ -13,7 +13,6 @@ from pydantic import BaseModel
 
 from beet import ErrorMessage
 from beet.core.utils import FileSystemPath, JsonDict, VersionNumber, split_version
-from pydantic import BaseModel
 from beet.resources.pack_format_registry import search_version
 
 

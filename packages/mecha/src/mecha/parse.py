@@ -87,10 +87,9 @@ from uuid import UUID
 from nbtlib import Byte, Double, Float, Int, Long, OutOfRange, Short, String
 from tokenstream import InvalidSyntax, SourceLocation, TokenStream, set_location
 
-from beet.resources.pack_format_registry import search_version
-
 from beet import LATEST_MINECRAFT_VERSION
 from beet.core.utils import VersionNumber, split_version
+from beet.resources.pack_format_registry import search_version
 
 from .ast import (
     AstAdvancementPredicate,

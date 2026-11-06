@@ -16,11 +16,10 @@ import json
 from importlib.resources import files
 from typing import Literal
 
-
 from pydantic import BaseModel
-from beet.core.utils import VersionNumber
+
 from beet.core.container import Container
-from beet.core.utils import VersionNumber, normalize_string
+from beet.core.utils import VersionNumber
 from beet.toolchain.config import FormatSpecifier
 
 
@@ -68,8 +67,7 @@ def search_version(version: VersionNumber) -> str:
                 continue
             if len(search_splitted) == 3:
                 search_patch = int(search_splitted[2])
-                if search_patch > max_patch:
-                    max_patch = search_patch
+                max_patch = max(max_patch, search_patch)
 
         if max_patch == 0:
             return f"{major}.{minor}"
