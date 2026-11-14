@@ -8,6 +8,7 @@ __all__ = [
 
 import filecmp
 import hashlib
+import io
 import json
 import os
 from contextlib import suppress
@@ -15,6 +16,7 @@ from pathlib import Path
 from typing import Any
 
 from beet import Context, ListOption, PluginOptions, configurable
+from beet.core.file import TextFileBase
 from beet.core.utils import FileSystemPath, log_time_scope
 from beet.library.base import Pack, PackFile
 
@@ -34,6 +36,7 @@ def beet_default(ctx: Context):
 def scan_directory(directory: Path) -> dict[str, tuple[int, int]]:
     """Return the size and modification time of every file below the directory.
 
+    Symlinks and junctions are removed on the way, as a full save would, so that no write goes through one into its target.
     `os.scandir()` is deliberate over pathlib. On Windows the entry already carries the size and the mtime,
     so `entry.stat()` costs no syscall. Elsewhere it still skips building a Path per file.
     On a 4500 file pack that is 48ms against 473ms for Path.walk on Windows, and 60ms against 84ms for Path.iterdir on Linux.
@@ -47,7 +50,9 @@ def scan_directory(directory: Path) -> dict[str, tuple[int, int]]:
         path, prefix = pending.pop()
         with os.scandir(path) as entries:
             for entry in entries:
-                if entry.is_dir(follow_symlinks=False):
+                if entry.is_symlink() or entry.is_junction():
+                    os.unlink(entry.path)
+                elif entry.is_dir(follow_symlinks=False):
                     pending.append((entry.path, f"{prefix}{entry.name}/"))
                 else:
                     stat = entry.stat(follow_symlinks=False)
@@ -75,12 +80,26 @@ def content_signature(pack_file: PackFile) -> str:
         and pack_file.source_stop is None
     ):
         stat = os.stat(pack_file.source_path)
-        return f"source:{stat.st_size}:{stat.st_mtime_ns}"
+        return f"source:{os.fspath(pack_file.source_path)}:{stat.st_size}:{stat.st_mtime_ns}"
 
-    serialized: str | bytes = pack_file.ensure_serialized()
-    if isinstance(serialized, str):
-        serialized = serialized.encode(getattr(pack_file, "encoding", None) or "utf-8")
-    return f"sha1:{hashlib.sha1(serialized).hexdigest()}"
+    return f"sha1:{hashlib.sha1(rendered_bytes(pack_file)).hexdigest()}"
+
+
+def rendered_bytes(pack_file: PackFile) -> bytes:
+    """Return the bytes the pack file writes to disk, with its own encoding and line endings applied."""
+    if not isinstance(pack_file, TextFileBase):
+        return pack_file.ensure_serialized()
+
+    buffer = io.BytesIO()
+    with io.TextIOWrapper(
+        buffer,
+        encoding=pack_file.encoding,
+        errors=pack_file.errors,
+        newline=pack_file.newline,
+    ) as text_io:
+        text_io.write(pack_file.ensure_serialized())
+        text_io.flush()
+        return buffer.getvalue()
 
 
 def file_differs(pack_file: PackFile, disk_path: Path) -> bool:
@@ -97,12 +116,8 @@ def file_differs(pack_file: PackFile, disk_path: Path) -> bool:
             return not filecmp.cmp(pack_file.source_path, disk_path, shallow=False)
         return True
 
-    serialized: str | bytes = pack_file.ensure_serialized()
-    with suppress(OSError, UnicodeDecodeError):
-        if isinstance(serialized, str):
-            encoding: str = getattr(pack_file, "encoding", None) or "utf-8"
-            return disk_path.read_text(encoding=encoding) != serialized
-        return disk_path.read_bytes() != serialized
+    with suppress(OSError):
+        return disk_path.read_bytes() != rendered_bytes(pack_file)
     return True
 
 
@@ -171,6 +186,9 @@ def incremental_save(
             written[rel_path] = (*current, signature)
             continue
 
+        # A hard link would carry the write into every other name of the same file
+        if current is not None:
+            disk_path.unlink()
         disk_path.parent.mkdir(parents=True, exist_ok=True)
         pack_file.dump(output_path, rel_path)
         stat = disk_path.stat()
