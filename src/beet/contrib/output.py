@@ -8,8 +8,8 @@ __all__ = [
 
 import filecmp
 import hashlib
-import io
 import json
+import locale
 import os
 from contextlib import suppress
 from pathlib import Path
@@ -36,7 +36,8 @@ def beet_default(ctx: Context):
 def scan_directory(directory: Path) -> dict[str, tuple[int, int]]:
     """Return the size and modification time of every file below the directory.
 
-    Symlinks and junctions are removed on the way, as a full save would, so that no write goes through one into its target.
+    Symlinks, junctions and hard links are removed on the way, as a full save would, so that no write reaches another file.
+    Windows leaves `st_nlink` at 0 in a scandir entry, so hard links are only caught on other systems.
     `os.scandir()` is deliberate over pathlib. On Windows the entry already carries the size and the mtime,
     so `entry.stat()` costs no syscall. Elsewhere it still skips building a Path per file.
     On a 4500 file pack that is 48ms against 473ms for Path.walk on Windows, and 60ms against 84ms for Path.iterdir on Linux.
@@ -56,6 +57,9 @@ def scan_directory(directory: Path) -> dict[str, tuple[int, int]]:
                     pending.append((entry.path, f"{prefix}{entry.name}/"))
                 else:
                     stat = entry.stat(follow_symlinks=False)
+                    if stat.st_nlink > 1:
+                        os.unlink(entry.path)
+                        continue
                     result[f"{prefix}{entry.name}"] = (stat.st_size, stat.st_mtime_ns)
     return result
 
@@ -90,16 +94,14 @@ def rendered_bytes(pack_file: PackFile) -> bytes:
     if not isinstance(pack_file, TextFileBase):
         return pack_file.ensure_serialized()
 
-    buffer = io.BytesIO()
-    with io.TextIOWrapper(
-        buffer,
-        encoding=pack_file.encoding,
-        errors=pack_file.errors,
-        newline=pack_file.newline,
-    ) as text_io:
-        text_io.write(pack_file.ensure_serialized())
-        text_io.flush()
-        return buffer.getvalue()
+    serialized: str = pack_file.ensure_serialized()
+    newline: str = os.linesep if pack_file.newline is None else pack_file.newline
+    if newline not in ("", "\n"):
+        serialized = serialized.replace("\n", newline)
+    return serialized.encode(
+        pack_file.encoding or locale.getpreferredencoding(False),
+        pack_file.errors or "strict",
+    )
 
 
 def file_differs(pack_file: PackFile, disk_path: Path) -> bool:
@@ -186,9 +188,6 @@ def incremental_save(
             written[rel_path] = (*current, signature)
             continue
 
-        # A hard link would carry the write into every other name of the same file
-        if current is not None:
-            disk_path.unlink()
         disk_path.parent.mkdir(parents=True, exist_ok=True)
         pack_file.dump(output_path, rel_path)
         stat = disk_path.stat()

@@ -43,6 +43,9 @@ def test_switching_source_with_same_stat(tmp_path: Path):
     assert (out / "data/demo/function/a.mcfunction").read_text() == "say 2\n"
 
 
+@pytest.mark.skipif(
+    sys.platform == "win32", reason="Scandir reports no link count on Windows"
+)
 def test_hard_link_target_untouched(tmp_path: Path):
     source = tmp_path / "source.mcfunction"
     source.write_text("user source\n")
