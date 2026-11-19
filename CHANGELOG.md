@@ -2,6 +2,15 @@
 
 <!-- version list -->
 
+## v0.122.0 (2026-11-19)
+
+### Features
+
+- **output**: Implement incremental save functionality for packs (fixes #512)
+  ([#513](https://github.com/mcbeet/beet/pull/513),
+  [`0904806`](https://github.com/mcbeet/beet/commit/090480692dad5c88e7dba19e8432787edaafcc8f))
+
+
 ## v0.121.2 (2026-10-22)
 
 ### Bug Fixes
